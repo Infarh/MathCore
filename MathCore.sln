@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathCore", "MathCore\MathCore.csproj", "{AFA60C84-107F-4582-8EED-2273957E89C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3B53E842-750F-4865-97C0-1703CDDE4C9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathCore.Tests", "Tests\MathCore.Tests\MathCore.Tests.csproj", "{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA60C84-107F-4582-8EED-2273957E89C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA60C84-107F-4582-8EED-2273957E89C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5C46D916-D8DA-4B92-A70C-6EE0C6B01CAD}
+	EndGlobalSection
+EndGlobal
