@@ -1,0 +1,617 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using MathCore.Annotations;
+using MathCore.MathParser.ExpressionTrees.Nodes;
+using MathCore.Values;
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace MathCore.MathParser
+{
+    /// <summary>Парсер математических выражений</summary>
+    public class ExpressionParser
+    {
+        /// <summary>Событие возникает при добавлении нового узла в дерево выражения</summary>
+        public event EventHandler<EventArgs<ExpressionTreeNode>> NewNodeAdded;
+
+        /// <summary>При добавлении нового узла в дерево выражения</summary>
+        /// <param name="e">Аргумент события, содержащий добавляемй узел</param>
+        protected virtual void OnNewNodeAdded([NotNull] EventArgs<ExpressionTreeNode> e)
+        {
+            Contract.Requires(e != null);
+            Contract.Requires(e.Argument != null);
+            Contract.Ensures(e.Argument != null);
+
+            NewNodeAdded?.Invoke(this, e);
+        }
+
+        /// <summary>Обработка очередного добавляемого в дерево узла</summary>
+        /// <param name="NewNode">Новый добавляемый узел дерева выражения</param>
+        protected virtual void OnNewNodeAdded([NotNull] ref ExpressionTreeNode NewNode)
+        {
+            Contract.Requires(NewNode != null);
+            Contract.Ensures(Contract.ValueAtReturn(out NewNode) != null);
+
+            ProcessNewNode(ref NewNode);
+
+            var e = new EventArgs<ExpressionTreeNode>(NewNode);
+            NewNodeAdded?.Invoke(this, e);
+            if (!ReferenceEquals(e.Argument, NewNode))
+                NewNode = e.Argument;
+        }
+
+        /// <summary>Обработка нового узла дерева выражения</summary>
+        /// <param name="NewNode">Новый добавляемый узел</param>
+        protected virtual void ProcessNewNode([NotNull] ref ExpressionTreeNode NewNode)
+        {
+            Contract.Requires(NewNode != null);
+            Contract.Ensures(Contract.ValueAtReturn(out NewNode) != null);
+            switch (NewNode)
+            {
+                case CharNode char_node:
+                {
+                    switch (char_node.Value)
+                    {
+                        case '.':
+                            if (NewNode.Parent is CharNode && ((CharNode) NewNode.Parent).Value == '.')
+                            {
+                                var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left == null);
+                                NewNode["./."].Right = null;
+                                var parent = value_node.Parent;
+                                var interval_node = new IntervalNode(value_node);
+                                if (parent != null) parent.Right = interval_node;
+                                NewNode = interval_node;
+                            }
+                            break;
+                    }
+                    break;
+                }
+                case OperatorNode _:
+                    break;
+            }
+        }
+
+        /// <summary>Событие предобработки входящей строки</summary>
+        public event EventHandler<EventArgs<string>> StringPreprocessing;
+
+        /// <summary>Генерация события предобработки входящей строки</summary>
+        /// <param name="args">Аргумент события, содержащий обрабатываемую строку</param>
+        protected virtual void OnStringPreprocessing([NotNull] EventArgs<string> args)
+        {
+            Contract.Requires(args != null);
+            Contract.Requires(args.Argument != null);
+            Contract.Requires(args.Argument != string.Empty);
+            Contract.Ensures(args.Argument != null);
+            Contract.Ensures(args.Argument != string.Empty);
+            StringPreprocessing?.Invoke(this, args);
+        }
+
+        /// <summary>Генерация события предобработки входящей строки</summary>
+        /// <param name="StrExpression">Обрабатываемая строка</param>
+        private void OnStringPreprocessing([NotNull] ref string StrExpression)
+        {
+            Contract.Requires(!string.IsNullOrEmpty(StrExpression));
+            Contract.Ensures(Contract.ValueAtReturn(out StrExpression) != null);
+            Contract.Ensures(Contract.ValueAtReturn(out StrExpression) != string.Empty);
+            var args = new EventArgs<string>(StrExpression);
+            OnStringPreprocessing(args);
+            StrExpression = args.Argument;
+        }
+
+        /// <summary>Аргумент события обнаружения функции</summary>
+        public sealed class FindFunctionEventArgs : EventArgs
+        {
+            /// <summary>Имя обнаруженой функции</summary>
+            public string Name { get; }
+            /// <summary>Массив имён аргументов функции</summary>
+            public string[] Arguments { get; }
+
+            /// <summary>Количество аргументов функции</summary>
+            public int ArgumentCount => Arguments.Length;
+
+            /// <summary>Делегат функции, который надо использовать при её вычислении</summary>
+            public Delegate Function { get; set; }
+            /// <summary>Инициализация аргумента события обнаружения функции</summary>
+            /// <param name="Name">Имя функции</param>
+            /// <param name="Arguments">Массив имён аргументов функции</param>
+            public FindFunctionEventArgs([NotNull] string Name, [NotNull] string[] Arguments)
+            {
+                Contract.Requires(Arguments != null);
+                Contract.Requires(!string.IsNullOrEmpty(Name));
+                this.Name = Name;
+                this.Arguments = Arguments;
+            }
+
+            /// <summary>Проверка на совпадение сигнатуры функции по имени и числу переменных</summary>
+            /// <param name="name">Имя проверяемой функции</param>
+            /// <param name="ArgumentsCount">Число переменных</param>
+            /// <returns></returns>
+            public bool SignatureEqual([NotNull] string name, int ArgumentsCount)
+            {
+                Contract.Requires(!string.IsNullOrEmpty(name));
+                return Name == name && ArgumentsCount == ArgumentCount;
+            }
+        }
+
+        /// <summary>Событие, возникающее в процессе разбора математического выражения при обнаружении функции</summary>
+        public event EventHandler<FindFunctionEventArgs> FindFunction;
+
+        /// <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
+        /// <param name="Args">Аргументы события, содержащие имя функции, имена аргументов и делегат метода функции</param>
+        protected virtual void OnFindFunction([NotNull] FindFunctionEventArgs Args)
+        {
+            Contract.Requires(Args != null);
+            FindFunction?.Invoke(this, Args);
+        }
+
+        /// <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
+        /// <param name="Name">Имя функции</param>
+        /// <param name="Arguments">Аргументы функции</param>
+        /// <returns>Делегат функции</returns>
+        private Delegate OnFunctionFind([NotNull] string Name, [NotNull] string[] Arguments)
+        {
+            Contract.Requires(!string.IsNullOrEmpty(Name));
+            Contract.Requires(Arguments != null);
+            Contract.Ensures(Contract.Result<Delegate>() != null);
+            var args = new FindFunctionEventArgs(Name, Arguments);
+            OnFindFunction(args);
+            return args.Function;
+        }
+
+        /// <summary>Событие обработки переменных при разборе мат.выражений</summary>
+        public event EventHandler<EventArgs<ExpressionVariabel>> VariableProcessing;
+
+        /// <summary> Обработка обнаруженной переменной</summary>
+        /// <param name="e">Обнаруженная переменная</param>
+        protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariabel> e)
+        {
+            Contract.Requires(e != null);
+            Contract.Requires(e.Argument != null);
+            Contract.Ensures(e.Argument != null);
+            VariableProcessing?.Invoke(this, e);
+        }
+
+        /// <summary> Обработка обнаруженной переменной</summary>
+        /// <param name="Variable">Обнаруженная переменная</param>
+        private void OnVariableProcessing([NotNull] ExpressionVariabel Variable)
+        {
+            Contract.Requires(Variable != null);
+            OnVariableProcessing(new EventArgs<ExpressionVariabel>(Variable));
+        }
+
+        /// <summary>Множество запрещённых символов</summary>
+        [NotNull]
+        private readonly SetOf<char> _ExcludeCharsSet = new SetOf<char>(" \r\n");
+
+        /// <summary>Словарь констант</summary>
+        [NotNull]
+        private readonly Dictionary<string, double> _Constans = new Dictionary<string, double>();
+
+        /// <summary>Множество запрещённых симовлов</summary>
+        [NotNull]
+        public SetOf<char> ExcludeCharsSet => _ExcludeCharsSet;
+
+        /// <summary>Разделитель выражений (по умолчанию ';')</summary>
+        public char ExpressionSeparator { get; set; }
+
+        /// <summary>Разделитель целой части и мантисы десятичного числа</summary>
+        public char DecimalSeparator { get; set; }
+
+        /// <summary>Константы</summary>
+        [NotNull]
+        public Dictionary<string, double> Constants => _Constans;
+
+        /// <summary>Парсер математических выражений</summary>
+        public ExpressionParser()
+        {
+            ExpressionSeparator = ',';
+            DecimalSeparator = '.';
+
+            #region Добавление стандартных констант
+
+            _Constans.Add("pi", Math.PI);
+            _Constans.Add("pi2", Consts.pi2);
+            _Constans.Add("pi05", Consts.pi05);
+            _Constans.Add("e", Math.E);
+            _Constans.Add("sqrt2", Consts.sqrt_2);
+            _Constans.Add("sqrt2inv", Consts.sqrt_2_inv);
+            _Constans.Add("sqrt3", Consts.sqrt_3);
+            _Constans.Add("sqrt5", Consts.sqrt_5);
+            _Constans.Add("ToDeg", Consts.Geometry.ToDeg);
+            _Constans.Add("ToRad", Consts.Geometry.ToRad);
+
+            #endregion
+        }
+
+        /// <summary>Предварительная обработка входного строкового выражения</summary>
+        /// <param name="Str">Обрабатываемая строка</param>
+        // Удаление из строки всех символов, из множества запрещённых симоволов
+        protected virtual void StrPreprocessing([NotNull] ref string Str)
+        {
+            Contract.Requires(!string.IsNullOrEmpty(Str));
+            Contract.Ensures(!string.IsNullOrEmpty(Contract.ValueAtReturn(out Str)));
+            Str = new string(Str.Where(_ExcludeCharsSet.NotContains).ToArray());
+        }
+
+        /// <summary>Разобрать строку математического выражения</summary>
+        /// <param name="StrExpression">Строковое представление математического выражения</param>
+        /// <returns>Математическое выражение</returns>
+        [NotNull]
+        public MathExpression Parse([NotNull] string StrExpression)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(StrExpression));
+            Contract.Ensures(Contract.Result<MathExpression>() != null);
+            StrPreprocessing(ref StrExpression);
+            OnStringPreprocessing(ref StrExpression);
+
+            var expression = new MathExpression(StrExpression, this);
+
+            ProcessVariables(expression);
+            ProcessFunctions(expression);
+
+            return expression;
+        }
+
+        /// <summary>Обработка переменных</summary>
+        /// <param name="Expression">Обрабатываемое математическое выражение</param>
+        internal void ProcessVariables([NotNull] MathExpression Expression)
+        {
+            Contract.Requires(Expression != null);
+            var tree_vars = Expression.Tree.Root.GetVariables().ToArray();
+            Expression.Variable
+                .Where(v => !tree_vars.Contains(v))
+                .ToArray()
+                .Foreach(v => Expression.Variable.Remove(v));
+            foreach (var variable in Expression.Variable.ToArray())
+            {
+                if (_Constans.ContainsKey(variable.Name))
+                {
+                    Expression.Variable.MoveToConstCollection(variable);
+                    variable.Value = _Constans[variable.Name];
+                }
+                OnVariableProcessing(variable);
+            }
+        }
+
+        /// <summary>Обработка функций</summary>
+        /// <param name="Expression">Обрабатываемое математическое выражение</param>
+        [SuppressMessage("ReSharper", "CyclomaticComplexity")]
+        internal void ProcessFunctions([NotNull] MathExpression Expression)
+        {
+            Contract.Requires(Expression != null);
+            foreach (var function in Expression.Functions)
+                switch (function.Name)
+                {
+                    case "Sin":
+                    case "SIN":
+                    case "sin":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Sin);
+                        break;
+                    case "COS":
+                    case "Cos":
+                    case "cos":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Cos);
+                        break;
+                    case "TAN":
+                    case "Tan":
+                    case "tan":
+                    case "tn":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Tan);
+                        break;
+                    case "ATAN":
+                    case "ATan":
+                    case "Atan":
+                    case "atan":
+                    case "atn":
+                    case "Atn":
+                        switch (function.Arguments.Length)
+                        {
+                            case 1: function.Delegate = new Func<double, double>(Math.Atan); break;
+                            case 2: function.Delegate = new Func<double, double, double>(Math.Atan2); break;
+                            default: goto default;
+                        }
+                        break;
+                    case "Atan2":
+                    case "atan2":
+                        if (function.Arguments.Length != 2) goto default;
+                        function.Delegate = new Func<double, double, double>(Math.Atan2);
+                        break;
+                    case "CTG":
+                    case "Ctg":
+                    case "ctg":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(x => 1 / Math.Tan(x));
+                        break;
+                    case "Sign":
+                    case "sign":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(x => Math.Sign(x));
+                        break;
+                    case "Abs":
+                    case "abs":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Abs);
+                        break;
+                    case "Exp":
+                    case "EXP":
+                    case "exp":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Exp);
+                        break;
+                    case "Sqrt":
+                    case "SQRT":
+                    case "√":
+                    case "sqrt":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Sqrt);
+                        break;
+                    case "log10":
+                    case "Log10":
+                    case "LOG10":
+                    case "lg":
+                    case "Lg":
+                    case "LG":
+                        if (function.Arguments.Length != 1) goto default;
+                        function.Delegate = new Func<double, double>(Math.Log10);
+                        break;
+                    case "loge":
+                    case "Loge":
+                    case "LOGe":
+                    case "ln":
+                    case "Ln":
+                    case "LN":
+                        if (function.Arguments.Length != 1)
+                            goto default;
+                        function.Delegate = new Func<double, double>(Math.Log);
+                        break;
+                    case "log":
+                    case "Log":
+                    case "LOG":
+                        if (function.Arguments.Length != 2) goto default;
+                        function.Delegate = new Func<double, double, double>(Math.Log);
+                        break;
+                    default:
+                        function.Delegate = OnFunctionFind(function.Name, function.Arguments) 
+                                            ?? throw new NotSupportedException($"Обработка функции {function.Name} не поддерживается");
+                        break;
+                }
+        }
+
+        /// <summary>Метод определения узла дерева, реализующего оператор</summary>
+        /// <param name="Name">Имя оператора</param>
+        /// <returns>Узел дерева оператора</returns>
+        [NotNull]
+        public virtual ExpressionTreeNode GetOperatorNode(char Name)
+        {
+            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
+            switch (Name)
+            {
+                case '+': return new AdditionOperatorNode();
+                case '-': return new SubstractionOperatorNode();
+                case '*':
+                case '×': 
+                case '·': return new MultiplicationOperatorNode();
+                case '/': return new DivisionOperatorNode();
+                case '^': return new PowerOperatorNode();
+                case '=': return new EqualityOperatorNode();
+                case '>': return new GreaterThenOperatorNode();
+                case '<': return new LessThenOperatorNode();
+                case '!':
+                case '≠': return new NotOperatorNode();
+                case ':': return new VariantOperatorNode();
+                case '?': return new SelectorOperatorNode();
+                case '&': return new AndOperatorNode();
+                case '|': return new OrOperatorNode();
+                default: return new CharNode(Name);
+            }
+        }
+
+        /// <summary>Метод определения функционала по имени</summary>
+        /// <param name="Name">Имя функционала</param>
+        /// <returns>Функционал</returns>
+        /// <exception cref="NotSupportedException">Возникает для неопределённых имён функционалов</exception>
+        public Functional GetFunctional(string Name)
+        {
+            switch (Name)
+            {
+                case "summ":
+                case "Sum":
+                case "Σ": return new SummOperator(Name);
+                case "int":
+                case "integral":
+                case "Int":
+                case "Integral":
+                case "∫": return new IntegralOperator(Name);
+                //case "d":
+                //case "Diff": return new DifferentialOperator(Name);
+                default: throw new NotSupportedException($"Функционал {Name} не поддерживается");
+            }
+        }
+
+        /// <summary>Метод излвечения корня дерева из последовательности элементов математического выражения</summary>
+        /// <param name="Group">группа элементов математического выражения</param>
+        /// <param name="MathExpression">Ссылка на математическое выражение</param>
+        /// <returns>Корень дерева мат.выражения</returns>
+        internal ExpressionTreeNode GetRoot([NotNull] Term[] Group, [NotNull] MathExpression MathExpression)
+        {
+            Contract.Requires(Group != null);
+            Contract.Requires(MathExpression != null);
+            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
+
+            // Ссылка на последний обработанный узел дерева
+            ExpressionTreeNode last = null;
+            for (var i = 0; i < Group.Length; i++) // в цикле по всем элементам группы
+            {
+                var node = Group[i].GetSubTree(this, MathExpression); // извлеч поддерево для текущего элемента группы
+                // Если очередной элемент группы...
+
+                switch (Group[i])
+                {
+                    case NumberTerm _: // ...очередной элемент число, то
+                        //...если есть впереди ещё два элемента и прошла удачная попытка считать разделитель дробного числи и мантиссу  
+                        if (i + 2 < Group.Length && NumberTerm.TryAddFractionPart(ref node, Group[i + 1], DecimalSeparator, Group[i + 2]))
+                            i += 2; //...то увеличить индекс текущей группы на два.
+                        break;
+                    case BlockTerm block: //...очередной элемент блок (со скобками)
+                        node = new ComputedBracketNode( // очередной узел дерева - это вычислимый блок
+                            new Bracket( //вид скобок:
+                                block.OpenBracket, // копируем вид открывающей скобки
+                                block.CloseBracket),  // копируем вид закрывающей скобки
+                            node); //Внутри узел дерева
+                        break;
+                }
+
+                //Проводим комбинацию текущего узла предыдущим узлом дерева
+                Combine(last, last = node); // и назначаем текущий узел дерева предыдущим
+
+                if (last.IsRoot && last is VariantOperatorNode && last.Left is VariableValueNode)
+                    last = new FunctionArgumentNameNode(((VariableValueNode)last.Left).Name);
+
+                OnNewNodeAdded(ref last);
+            }
+
+            // Если ссылка на предыдущий узел отсутствует, то это ошибка формата
+            if (last == null) throw new FormatException();
+            return last.Root; // вернуть корень дерева текущего элемента
+        }
+
+        /// <summary>Комбинация предыдущего и текущего узлов дерева</summary>
+        /// <param name="Last">Предыдущий узел дерева (уже интегрированный в дерево)</param>
+        /// <param name="Node">Текущий узел, который надо вставить в дерево</param>
+        // ReSharper disable once CyclomaticComplexity
+        public virtual void Combine([CanBeNull] ExpressionTreeNode Last, [NotNull] ExpressionTreeNode Node)
+        {
+            Contract.Requires(Node != null);
+            if (Last == null) return; // Если предыдущий узел дерева не указан, возврат
+
+            if (Node is CharNode) // Если текущий узел - символьный узел, то
+            {
+                Last.LastRightChild = Node; // просто назначить его самым правым дочерним
+                return;
+            }
+
+            // представляем текущий узел в виде узла-оператора
+            if (Node is OperatorNode operator_node)  // если текущий узел является оператором...
+            {
+                //Пытаемся получить оператор предыдущего узла:
+                // пытаемся привести предыдущий узел к типу узла оператора
+                // либо пытаемся привести родительский узел предыдущего узла к типу узла оператора
+                var parent_operator = Last as OperatorNode ?? Last.Parent as OperatorNode;
+
+                if (parent_operator != null) // Если получена ссылка не предыдущий узел-оператор (и текущий является оператором)... то
+                {
+                    // Если левое поддерево предыдущего операторо пусто и родитель предыдущего оператора - тоже оператор
+                    //      op <- устанавливаем предыдущим оператором родителя
+                    //      |
+                    //      op 
+                    //     /  \
+                    //  null   ?
+                    if (parent_operator.Left == null && parent_operator.Parent is OperatorNode)
+                        parent_operator = (OperatorNode)parent_operator.Parent;
+
+
+                    if (parent_operator.Left == null)          // Если левое поддерево предыдущего оператора пусто...
+                        operator_node.Left = parent_operator; //  устанавливаем предыдущий оператор в качестве левого поддерева текущего
+                    else if (parent_operator.Right == null)    // Иначе если правое поддерево пусто
+                        parent_operator.Right = Node;         //  установить текущий оператор правым поддеревом предыдущего
+                    else                                      // Иначе если конфликт приоритетов
+                    {
+                        var priority = operator_node.Priority;  // извлекаем приоритет текущего узла
+                        // Если приоритет текущего оператора меньше, либо равен приоритету предыдущего
+                        if (priority <= parent_operator.Priority)
+                        {
+                            // то надо подниматься вверх под дереву до тех пор
+                            parent_operator = (OperatorNode)parent_operator.Parents
+                                        // пока встречаемые на пути операторы имеют приоритет выше приоритета текущего оператора
+                                        .TakeWhile(n => n is OperatorNode && priority <= ((OperatorNode)n).Priority)
+                                        // взять последний из последовательности
+                                        .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
+
+                            // На текущий момент предыдущий оператор имеет приоритет выше приоритета текущего оператора
+
+                            if (parent_operator.IsRoot) // Если предыдущий оператор - корень дерева
+                                // Если приоритет оператора в корне дерева больше, либо равен приоритету текущего оператора
+                                if (priority <= parent_operator.Priority) // todo: проверить необходимость условия
+                                    // Присвоить левому поддереву текущего оператора предыдущий
+                                    operator_node.Left = parent_operator;
+                                // todo: проверить достижимость следующего блока
+                                else // если оператор в корне дерева имеет меньший приоритет, чем приоритет текущего оператора
+                                {    //  то вставить текущий оператор в правое поддерево родителя предыдущего оператора
+                                    throw new NotImplementedException("!!!");
+                                    //var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
+                                    //parent_operator.Right = Node; // У предыдущего оператора в правое поддерево внести текущий оператор
+                                    //operator_node.Left = right;   // В левое поддерево текущего оператора внести сохранённое правое поддерево
+                                }
+                            else // Иначе если предыдущий оператор не корень
+                            {
+                                var parent = parent_operator.Parent; // сохранить ссылку на родителя предыдущего оператора
+                                parent.Right = Node;                 // записать текущий оператор в качестве правого поддерева
+                                operator_node.Left = parent_operator;// записать предыдущий оператора левым поддеревом текущего
+                            }
+                        }
+                        else //если приоритет текущего оператора больше приоритета предыдущего
+                        {
+                            // то надо спускаться в правое поддерево до тех пор
+                            parent_operator = (OperatorNode)parent_operator.RightNodes
+                                        // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
+                                        .TakeWhile(n => n is OperatorNode && n.Left != null && ((OperatorNode)n).Priority < priority)
+                                        // взять последний из последовательности
+                                        .LastOrDefault() ?? parent_operator;  // если вернулась пустая ссылка, то взять предыдущий оператор
+
+                            // На текущий момент предыдущий оператор имеет приоритет ниже приоритета текущего оператора
+
+                            var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
+                            parent_operator.Right = Node;      // в правое поддерево предыдущего оператора попадает текущий
+                            operator_node.Left = right;        // в левое поддерево текущего оператора записывается сохранённое правое 
+                        }
+                    }
+                }
+                else // Если предыдущий узел не является оператором
+                {
+                    var parent = Last.Parent;
+                    var is_left = Last.IsLeftSubtree;
+                    var is_right = Last.IsRightSubtree;
+                    operator_node.Left = Last; // записать предыдущий узел левым поддеревом текущего
+                    if (is_left) 
+                        parent.Left = operator_node;
+                    else if (is_right)
+                        parent.Right = operator_node;
+                }
+                return; // возврат
+            }
+            // Если текущий узел оператором не является
+
+            if (Last is OperatorNode) // если предыдущий узел является оператором
+            {
+                Last.Right = Node; // добавыить текуий в правое поддерево предыдущего
+                return;            // возврат
+            }
+            // Если ни текущий не придыдущий узлы не являются операторами
+
+            //Если предыдущий узел был числом, или предыдущий узел был скобками и текущий - скобки
+            if (Last is ConstValueNode || (Last is ComputedBracketNode && Node is ComputedBracketNode))
+            {
+                //Сохряняем ссылку на родителя предыдущего узла
+                var parent = Last.Parent;
+                if (parent != null) // если родитель есть
+                    // в правое поддерево родителя записываем оператор перемножения предыдущего узла и текущего
+                    parent.Right = new MultiplicationOperatorNode(Last, Node);
+                else // если предыдущий узел был узлом дерева
+                    // создаём новый узел-оператор умножения предыдущего узла и текущего, который становится новым корнем дерева
+                    new MultiplicationOperatorNode(Last, Node);
+                return; // возврат.
+            }
+
+            Last.Right = Node;
+            //throw new FormatException(); // Если не сработало ни одно условие, то это ошибка формата
+        }
+    }
+}

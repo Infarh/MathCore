@@ -1,0 +1,14 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<# 
+	var src = File.ReadAllText( Path.GetDirectoryName(this.Host.TemplateFile) + "\\Matrix.cs");
+	this.Write(src.Replace("double", "long").Replace("Matrix", "MatrixLong"));
+#>

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="MathCore.MathParser.MathExpression">
+    <Position X="0.5" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AEEQAAAAABCIAAAsYA0AAAcACAJAIAgAAAQRAAAIBHE=</HashCode>
+      <FileName>MathParser\MathExpression.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tree" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.ExpressionTree">
+    <Position X="5" Y="0.5" Width="3.75" />
+    <NestedTypes>
+      <Enum Name="MathCore.MathParser.ExpressionTrees.ExpressionTree.BypassingType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MathParser\ExpressionTrees\ExpressionTree.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAADAMAAAABAAAAAABAAAEAIAAAABAABA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\ExpressionTree.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Root" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Orientation="Right" Position="0.103" />
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode">
+    <Position X="5" Y="4.5" Width="4" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.ParentsIterator" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MathParser\ExpressionTrees\Nodes\ExpressionTreeNode.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAngBADIMCCIBRAAABBABgAUkCQCAAAAIQBA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ExpressionTreeNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Right" Position="0.1" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

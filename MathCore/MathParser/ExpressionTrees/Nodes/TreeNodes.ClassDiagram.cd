@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.OperatorNode" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEAAAAIAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\OperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ComputedNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAngBADIMCCIBRAAABBABgAUkCQCAAAAIQBA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ExpressionTreeNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ParsedNode" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ParsedNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ComputedBracketNode" Collapsed="true">
+    <Position X="6.75" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AEAAEAAAAAAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ComputedBracketNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode" Collapsed="true">
+    <Position X="9" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAEAAIgAAQAAAAAAAQAAIAAAAAAYFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\FunctionalNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode" Collapsed="true">
+    <Position X="10.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAABAAAEAAAAAAYAAAAAAAAIIAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\FunctionNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ValueNode" Collapsed="true">
+    <Position X="12.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ValueNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.CharNode" Collapsed="true">
+    <Position X="16" Y="1" Width="1.5" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.ParsedNode" FixedFromPoint="true">
+      <Path>
+        <Point X="15.5" Y="0.812" />
+        <Point X="15.74" Y="0.812" />
+        <Point X="15.74" Y="1.346" />
+        <Point X="16" Y="1.346" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\CharNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.IntervalNode" Collapsed="true">
+    <Position X="16" Y="1.75" Width="1.5" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.ParsedNode" FixedFromPoint="true">
+      <Path>
+        <Point X="15.5" Y="0.812" />
+        <Point X="15.74" Y="0.812" />
+        <Point X="15.74" Y="2.096" />
+        <Point X="16" Y="2.096" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEEAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\IntervalNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.StringNode" Collapsed="true">
+    <Position X="16" Y="2.5" Width="1.5" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.ParsedNode" FixedFromPoint="true">
+      <Path>
+        <Point X="15.5" Y="0.812" />
+        <Point X="15.74" Y="0.812" />
+        <Point X="15.74" Y="2.846" />
+        <Point X="16" Y="2.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAEAAAAAIAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\StringNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode" Collapsed="true">
+    <Position X="3.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFE=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\AdditionOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.DivisionOperatorNode" Collapsed="true">
+    <Position X="3.25" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFE=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\DivisionOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode" Collapsed="true">
+    <Position X="6" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAACAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\FunctionArgumentNameNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNode" Collapsed="true">
+    <Position X="6" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAACgAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\FunctionArgumentNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" Collapsed="true">
+    <Position X="6" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\LogicOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode" Collapsed="true">
+    <Position X="3.25" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFE=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\MultiplicationOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.PowerOperatorNode" Collapsed="true">
+    <Position X="3.25" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\PowerOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode" Collapsed="true">
+    <Position X="6" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\SelectorOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode" Collapsed="true">
+    <Position X="3.25" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\SubstractionOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode" Collapsed="true">
+    <Position X="6" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\VariantOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode" Collapsed="true">
+    <Position X="8.5" Y="4" Width="1.75" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.625" />
+        <Point X="10.49" Y="3.625" />
+        <Point X="10.49" Y="4.312" />
+        <Point X="10.25" Y="4.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\AndOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode" Collapsed="true">
+    <Position X="10.75" Y="4" Width="2.25" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.625" />
+        <Point X="10.49" Y="3.625" />
+        <Point X="10.49" Y="4.312" />
+        <Point X="10.75" Y="4.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQAAAAAAAAAQAAQAAAAAAAAAACAARA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\EqualityOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode" Collapsed="true">
+    <Position X="10.75" Y="4.75" Width="2.25" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.625" />
+        <Point X="10.49" Y="3.625" />
+        <Point X="10.49" Y="5.096" />
+        <Point X="10.75" Y="5.096" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAARA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\GreaterThenOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode" Collapsed="true">
+    <Position X="10.75" Y="5.5" Width="2.25" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.625" />
+        <Point X="10.49" Y="3.625" />
+        <Point X="10.49" Y="5.846" />
+        <Point X="10.75" Y="5.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAARA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\LessThenOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode" Collapsed="true">
+    <Position X="8.5" Y="5.5" Width="1.75" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.625" />
+        <Point X="10.49" Y="3.625" />
+        <Point X="10.49" Y="5.812" />
+        <Point X="10.25" Y="5.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQEAAABAAAAAAAAAAAAAAAAAAAAARA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\NotOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode" Collapsed="true">
+    <Position X="8.5" Y="4.75" Width="1.75" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="3.625" />
+        <Point X="10.49" Y="3.625" />
+        <Point X="10.49" Y="5.062" />
+        <Point X="10.25" Y="5.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\OrOperatorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode" Collapsed="true">
+    <Position X="13.5" Y="3" Width="1.75" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.ValueNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.25" Y="2.691" />
+        <Point X="13.25" Y="3.375" />
+        <Point X="13.5" Y="3.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ConstValueNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.VariableValueNode" Collapsed="true">
+    <Position X="11.25" Y="3" Width="1.75" />
+    <InheritanceLine Type="MathCore.MathParser.ExpressionTrees.Nodes.ValueNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.25" Y="2.691" />
+        <Point X="13.25" Y="3.375" />
+        <Point X="13" Y="3.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAABAAAQAEAAAAAAQAAAAAAAAAAAQgAAAAQFA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\VariableValueNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

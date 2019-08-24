@@ -1,0 +1,18 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<# 
+	var src = File.ReadAllText( Path.GetDirectoryName(this.Host.TemplateFile) + "\\Matrix.cs");
+	src = src.Replace("public partial class", "public class");
+	src = src.Replace("double", "int");
+	src = src.Replace("Matrix", "MatrixInt");
+	src = src.Replace("public int Norm_k", "public double Norm_k");
+	this.Write(src);
+#>

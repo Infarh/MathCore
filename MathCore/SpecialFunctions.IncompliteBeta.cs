@@ -144,6 +144,7 @@ namespace MathCore
             *************************************************************************/
 
             [DebuggerStepThrough]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0059:Ненужное присваивание значения", Justification = "<Ожидание>")]
             public static double IncompleteBetaInversed(double a, double b, double y)
             {
                 Contract.Requires(y >= 0 && y <= 1, "y должен находиться в пределах [0;1]");

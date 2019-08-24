@@ -1,0 +1,31 @@
+using System;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
+
+namespace MathCore
+{
+    /// <summary>Класс-обёртка для inline-доступа к свойствам созданного объекта, наследующего интерфейс IDisposasble</summary>
+    /// <typeparam name="T">Тип используемого объекта, наследующего интерфейс IDIsposable</typeparam>
+    public class UsingDisposableObject<T> : UsingObject<T> where T : IDisposable
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Новая обёртка для используемого объекта</summary>
+        /// <param name="Obj">Используемый объект</param>
+        [DebuggerStepThrough]
+        public UsingDisposableObject(T Obj) : base(Obj, o => o.Dispose()) { }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Получить значение от объекта</summary>
+        /// <typeparam name="TValue">Тип значения, получаемого от объекта</typeparam>
+        /// <param name="f">Метод получения значения</param>
+        /// <returns>Значение, полученное от объекта указанным методом</returns>
+        [DebuggerStepThrough]
+        public TValue GetValue<TValue>(Func<T, TValue> f) { Contract.Requires(f != null); return f(Object); }
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+}

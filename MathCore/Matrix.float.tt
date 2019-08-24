@@ -1,0 +1,19 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<# 
+	var src = File.ReadAllText( Path.GetDirectoryName(this.Host.TemplateFile) + "\\Matrix.cs");
+	src = src.Replace("public partial class", "public class");
+	src = src.Replace("double", "float");
+	src = src.Replace("Matrix", "MatrixFloat");
+	src = src.Replace("return Math.Sqrt(v)", "return (float)Math.Sqrt(v)");
+	src = src.Replace("V[i] = 1 / lv_AMax;", "V[i] = (float)(1 / lv_AMax);");
+	this.Write(src);
+#>

@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="MathCore.MathParser.Term">
+    <Position X="5.75" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAECAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>MathParser\Term.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.BlockTerm">
+    <Position X="4.5" Y="3.25" Width="2.75" />
+    <Members>
+      <Field Name="_CloseBracket" Hidden="true" />
+      <Field Name="_OpenBracket" Hidden="true" />
+      <Field Name="_Terms" Hidden="true" />
+    </Members>
+    <InheritanceLine Type="MathCore.MathParser.Term" FixedToPoint="true">
+      <Path>
+        <Point X="7.125" Y="2.44" />
+        <Point X="7.125" Y="2.875" />
+        <Point X="5.875" Y="2.875" />
+        <Point X="5.875" Y="3.25" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Terms" Type="MathCore.MathParser.Term" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.062" Y="3.25" />
+        <Point X="5.062" Y="1.562" />
+        <Point X="5.75" Y="1.562" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAACAgAAAAAAAAUCBAAAAAAAAABAgAAAAAEIEAAAAA=</HashCode>
+      <FileName>MathParser\BlockTerm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Terms" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MathCore.MathParser.CharTerm">
+    <Position X="1.5" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>MathParser\CharTerm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.NumberTerm">
+    <Position X="7.5" Y="3.25" Width="2.75" />
+    <Members>
+      <Field Name="_IntValue" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAIAQAAAAAAAAAACAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>MathParser\NumberTerm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.StringTerm">
+    <Position X="10.5" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MathParser\StringTerm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

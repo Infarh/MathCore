@@ -1,0 +1,22 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<# 
+	var src = File.ReadAllText( Path.GetDirectoryName(this.Host.TemplateFile) + "\\Matrix.cs");
+
+	src = src.Replace("public partial class", "public class");
+	src = src.Replace("double", "decimal");
+	src = src.Replace("Matrix", "MatrixDecimal");
+	src = src.Replace("var lv_AMax = 0d;", "var lv_AMax = 0m;");
+	src = Regex.Replace(src, @"Math.Sqrt\((.+)\)(?=[; ])", "$1.Sqrt()");
+
+	this.Write(src);
+#>

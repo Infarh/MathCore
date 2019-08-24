@@ -1,0 +1,20 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<# 
+	var src = File.ReadAllText( Path.GetDirectoryName(this.Host.TemplateFile) + "\\Matrix.cs");
+	
+	src = src.Replace("double", "Complex");
+	src = src.Replace("Matrix", "MatrixComplex");
+	src = src.Replace("GetUnitaryArrayMatrixComplex", "GetUnitaryArrayMatrix");
+
+	this.Write(src);
+#>

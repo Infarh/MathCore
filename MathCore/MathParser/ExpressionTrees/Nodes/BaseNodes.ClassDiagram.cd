@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode">
+    <Position X="11.5" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ComputedNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode">
+    <Position X="3" Y="0.5" Width="8.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.ParentsIterator">
+        <TypeIdentifier>
+          <NewMemberFileName>MathParser\ExpressionTrees\Nodes\ExpressionTreeNode.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAngBADIMCCIBRAAABBABgAUkCQCAAAAIQBA=</HashCode>
+      <FileName>MathParser\ExpressionTrees\Nodes\ExpressionTreeNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

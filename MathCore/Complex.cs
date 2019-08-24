@@ -253,8 +253,8 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        ///// <summary>Преобразование комплексного числа в выражение</summary>
-        //public CopmlexConstantExpression Expression => ComplexExpression.Mod(_Re, _Im);
+        /// <summary>Преобразование комплексного числа в выражение</summary>
+        public CopmlexConstantExpression Expression => ComplexExpression.Mod(_Re, _Im);
 
         /// <summary>Действительная часть</summary>
         public double Re => _Re;

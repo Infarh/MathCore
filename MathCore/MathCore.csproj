@@ -13,6 +13,26 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Complex.Decimal.cs</LastGenOutput>
     </None>
+    <None Update="Matrix.complex.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.complex.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.decimal.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.decimal.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.float.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.float.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.int.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.int.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.long.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.long.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +44,31 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Complex.Decimal.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.complex.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.complex.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.decimal.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.decimal.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.float.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.float.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.int.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.int.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.long.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.long.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
