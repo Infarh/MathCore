@@ -1,0 +1,47 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<# 
+//	var src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.cs");
+//	src = src.Replace("double", "decimal").Replace("Complex", "ComplexDecimal");
+//	
+//	var RegEx = new Regex(@"Math\.(?<Func>[A-Za-z_][A-Za-z0-9]+)\((?<Value>[A-Za-z0-9.]*?)\)",
+//	    RegexOptions.IgnoreCase
+//	    | RegexOptions.CultureInvariant
+//	    | RegexOptions.IgnorePatternWhitespace
+//	    | RegexOptions.Compiled
+//		| RegexOptions.IgnorePatternWhitespace
+//	    );
+//	var regexReplace = @"(decimal)Math.${Func}(decimal.ToDouble(${Value}))";
+//	src = RegEx.Replace(src, regexReplace);
+//	
+//	RegEx = new Regex(@"Math\.(?<Func>[A-Za-z_][A-Za-z0-9]+)\((?<Value1>[A-Za-z0-9.]*?),\s(?<Value2>[A-Za-z0-9.]*?)\)",
+//	    RegexOptions.IgnoreCase
+//	    | RegexOptions.CultureInvariant
+//	    | RegexOptions.IgnorePatternWhitespace
+//	    | RegexOptions.Compiled
+//		| RegexOptions.IgnorePatternWhitespace
+//	    );
+//	regexReplace = @"(decimal)Math.${Func}(decimal.ToDouble(${Value1}), decimal.ToDouble(${Value2}))";
+//	src = RegEx.Replace(src, regexReplace);
+//	
+//	this.Write(src);
+	//this.WriteLine();
+	
+//	src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.Extentions.cs");
+//	this.Write(src.Replace("double", "decimal").Replace("Complex", "CompleDecimal"));
+//	
+//	src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.Operators.cs");
+//	this.Write(src.Replace("double", "decimal").Replace("Complex", "CompleDecimal"));
+//	
+//	src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.TypeConverter.cs");
+//	this.Write(src.Replace("double", "decimal").Replace("Complex", "CompleDecimal"));
+#>
