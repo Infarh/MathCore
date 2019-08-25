@@ -9,7 +9,7 @@ namespace MathCore.Values
 
         public override int Power => _Enimerable.Count();
 
-        public LamdaSetOf(IEnumerable<T> enimerable) { _Enimerable = enimerable; }
+        public LamdaSetOf(IEnumerable<T> enimerable) => _Enimerable = enimerable;
 
         public override IEnumerator<T> GetEnumerator() => _Enimerable.GetEnumerator();
     }

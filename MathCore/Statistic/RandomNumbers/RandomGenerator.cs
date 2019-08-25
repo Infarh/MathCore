@@ -34,7 +34,7 @@ namespace MathCore.Statistic.RandomNumbers
 
         protected RandomGenerator() { }
 
-        protected RandomGenerator(double sigma) { _sigma = sigma; }
+        protected RandomGenerator(double sigma) => _sigma = sigma;
 
         protected RandomGenerator(double sigma, double mu) { _sigma = sigma; _mu = mu; }
 

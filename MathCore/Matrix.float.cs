@@ -141,7 +141,7 @@ namespace MathCore
         /// <param name="N">Число строк</param>
         /// <param name="M">Число столбцов</param>
         [DST]
-        public MatrixFloat(int N, int M) { _Data = new float[_N = N, _M = M]; }
+        public MatrixFloat(int N, int M) => _Data = new float[_N = N, _M = M];
 
         /// <summary>Квадратная матрица</summary>
         /// <param name="N">Размерность</param>

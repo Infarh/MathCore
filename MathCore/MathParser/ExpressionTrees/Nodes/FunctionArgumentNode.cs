@@ -34,7 +34,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Инициализация узла-аргумента</summary>
         /// <param name="Node">Узел поддерева аргумента</param>
-        public FunctionArgumentNode(FunctionArgumentNameNode Node) : this() { Left = Node; }
+        public FunctionArgumentNode(FunctionArgumentNameNode Node) : this() => Left = Node;
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>Значение узла</returns>

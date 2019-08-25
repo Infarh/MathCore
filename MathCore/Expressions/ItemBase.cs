@@ -14,7 +14,7 @@ namespace System.Linq.Expressions
         public AttributesExtractor ObjectAttribute => _ObjectAttributes ?? (_ObjectAttributes = new AttributesExtractor(_ObjectType));
 
 
-        protected ItemBase(object Obj, string Name) : this((Obj).GetType(), Name) { _Object = Obj; }
+        protected ItemBase(object Obj, string Name) : this((Obj).GetType(), Name) => _Object = Obj;
 
         public ItemBase(Type type, string Name)
         {

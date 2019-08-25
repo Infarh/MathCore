@@ -4,6 +4,6 @@ namespace MathCore.Expressions.Complex
     {
         public ComplexExpression Value { get; private set; }
 
-        protected ComplexUnaryExpression(ComplexExpression Value) { this.Value = Value; }
+        protected ComplexUnaryExpression(ComplexExpression Value) => this.Value = Value;
     }
 }

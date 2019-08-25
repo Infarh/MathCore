@@ -72,7 +72,7 @@ namespace MathCore
 
         public RotationAxe Axe { get; }
 
-        public Roration3DMatrix(double Angle, RotationAxe Axe) : base(GetData(Angle, Axe)) { this.Axe = Axe; }
+        public Roration3DMatrix(double Angle, RotationAxe Axe) : base(GetData(Angle, Axe)) => this.Axe = Axe;
 
         public static Vector3D operator ^(Roration3DMatrix M, Vector3D v)
         {

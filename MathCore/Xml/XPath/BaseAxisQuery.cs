@@ -35,7 +35,7 @@ namespace System.Xml.XPath
 
         internal BaseAxisQuery() { }
 
-        internal BaseAxisQuery(Query queryInput) { QueryInput = queryInput; }
+        internal BaseAxisQuery(Query queryInput) => QueryInput = queryInput;
 
         internal BaseAxisQuery(Query queryInput, string name, string prefix, XPathNodeType nodeType)
         {

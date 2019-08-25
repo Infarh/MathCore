@@ -15,7 +15,7 @@ namespace MathCore.Evulations
 
         /// <summary>Инициализация нового вычисления функции</summary>
         /// <param name="Function">Вычисляемая функция</param>
-        public FunctionEvulation(Func<T> Function) { this.Function = Function; }
+        public FunctionEvulation(Func<T> Function) => this.Function = Function;
 
         /// <inheritdoc />
         public override T GetValue() => Function();
@@ -50,7 +50,7 @@ namespace MathCore.Evulations
         /// <summary>Инициализация нового вычисления значения функции</summary>
         /// <param name="Function">Вычисляемая функция</param>
         /// <param name="Name">Имя функции</param>
-        public NamedFunctionEvulation(Func<T> Function, string Name) : base(Function) { this.Name = Name; }
+        public NamedFunctionEvulation(Func<T> Function, string Name) : base(Function) => this.Name = Name;
 
         /// <inheritdoc />
         public override string ToString() => $"{(Name.IsNullOrWhiteSpace() ? "_" : Name)}()";

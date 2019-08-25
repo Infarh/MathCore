@@ -10,7 +10,7 @@ namespace MathCore.MathParser
         private readonly object _Differentiate_LockObject = new object();
         private ParameterExpression _Differential_Parameter;
 
-        public DifferentialTransformationVisitor() { throw new NotImplementedException(); }
+        public DifferentialTransformationVisitor() => throw new NotImplementedException();
 
         public Expression Differentiate<TDelegate>(Expression<TDelegate> expression, string ParameterName)
         {

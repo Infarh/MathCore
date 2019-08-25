@@ -135,7 +135,7 @@ namespace MathCore.Interpolation
     {
         private double[] FactorialLookup;
 
-        public BezierCurve2() { CreateFactorialTable(); }
+        public BezierCurve2() => CreateFactorialTable();
 
         // just check if n is appropriate, then return the result
         private double FastFactorial(int n)

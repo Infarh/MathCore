@@ -32,7 +32,7 @@ namespace MathCore.MathParser
             _IntValue = int.Parse(Str);
         }
 
-        public NumberTerm(int Value) : base(Value.ToString()) { _IntValue = Value; }
+        public NumberTerm(int Value) : base(Value.ToString()) => _IntValue = Value;
 
         /// <summary>Извлеч поддерево</summary>
         /// <param name="Parser">Парсер</param>

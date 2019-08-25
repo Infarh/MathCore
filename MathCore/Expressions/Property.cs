@@ -435,7 +435,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        public AttributesExtractor(MemberInfo Info) { _Info = Info; }
+        public AttributesExtractor(MemberInfo Info) => _Info = Info;
 
         public IEnumerable<Attribute> GetAttributes(string Name) { return GetAttributes(Name, Inherit); }
 

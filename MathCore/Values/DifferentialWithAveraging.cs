@@ -13,7 +13,7 @@ namespace MathCore.Values
         public bool Initialized { get; protected set; }
 
         public DifferentialWithAveraging() { }
-        public DifferentialWithAveraging(double Tau) { this.Tau = Tau; }
+        public DifferentialWithAveraging(double Tau) => this.Tau = Tau;
 
         //public DifferentialWithAveraging(double Tau, double Value) : this(Tau) { Add(Value); }
 

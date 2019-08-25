@@ -21,7 +21,7 @@ namespace System
         public class SetLengthArgs : EventArgs
         {
             public long Length { get; private set; }
-            public SetLengthArgs(long Length) { this.Length = Length; }
+            public SetLengthArgs(long Length) => this.Length = Length;
         }
 
         public class ReadArgs : EventArgs
@@ -76,7 +76,7 @@ namespace System
 
         private readonly Stream _DataStream;
 
-        public StreamWrapper(Stream Source) { _DataStream = Source; }
+        public StreamWrapper(Stream Source) => _DataStream = Source;
 
 
         public override void Flush()

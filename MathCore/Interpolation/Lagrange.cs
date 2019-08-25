@@ -59,10 +59,7 @@ namespace MathCore.Interpolation
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public Lagrange([NotNull]double[] X, [NotNull]double[] Y)
-        {
-            _InitializationResult = ((Initializator)Initialize).BeginInvoke(X, Y, OnInitializationComplite, null);
-        }
+        public Lagrange([NotNull]double[] X, [NotNull]double[] Y) => _InitializationResult = ((Initializator)Initialize).BeginInvoke(X, Y, OnInitializationComplite, null);
 
         public Lagrange([NotNull]params Vector2D[] P)
         {

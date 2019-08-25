@@ -108,7 +108,7 @@ namespace System.Reflection
         ///<param name="o">Объект, для которого определяется свойство</param>
         ///<param name="Name">Имя свйосвта</param>
         ///<param name="Private">Является ли свойство скрытым</param>
-        public Property(TObject o, string Name, bool Private = false) { Initialize(o, Name, Private); }
+        public Property(TObject o, string Name, bool Private = false) => Initialize(o, Name, Private);
 
         /* ------------------------------------------------------------------------------------------ */
 

@@ -112,14 +112,11 @@ namespace MathCore.Values
         private readonly LazyValue<TValue> _Value;
         private DateTime _LastAccessTime = DateTime.MinValue;
 
-        public TimeBufferedValue(Func<TValue> Generator, TimeSpan Timeout)
-        {
-            _Value = new LazyValue<TValue>(() =>
-            {
-                _LastAccessTime = DateTime.Now;
-                return Generator();
-            });
-        }
+        public TimeBufferedValue(Func<TValue> Generator, TimeSpan Timeout) => _Value = new LazyValue<TValue>(() =>
+                                                                            {
+                                                                                _LastAccessTime = DateTime.Now;
+                                                                                return Generator();
+                                                                            });
 
         public TValue Create()
         {

@@ -66,9 +66,9 @@ namespace MathCore.Values
     {
         private Func<double, double> _AverageFunc;
 
-        public TimeAverage3Value(double tau) : base(tau) { _AverageFunc = Average; }
+        public TimeAverage3Value(double tau) : base(tau) => _AverageFunc = Average;
 
-        public TimeAverage3Value(double tau, double Value) : base(tau, Value) { _AverageFunc = Average; }
+        public TimeAverage3Value(double tau, double Value) : base(tau, Value) => _AverageFunc = Average;
 
         public override double Add(double value) => _AverageFunc(value);
 

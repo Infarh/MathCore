@@ -39,7 +39,7 @@ namespace System
         /// <summary>Новый аргумент события генерации исключения</summary>
         /// <param name="Error">Исключение</param>
         [DebuggerStepThrough]
-        public ExceptionEventHandlerArgs(TException Error) : base(Error) { Contract.Requires(Error != null); }
+        public ExceptionEventHandlerArgs(TException Error) : base(Error) => Contract.Requires(Error != null);
 
         /* ------------------------------------------------------------------------------------------ */
 

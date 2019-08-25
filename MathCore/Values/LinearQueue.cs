@@ -30,7 +30,7 @@ namespace MathCore.Values
             }
         }
 
-        public LinearQueue(int Length) { _Buffer = new T[this.Length = Length]; }
+        public LinearQueue(int Length) => _Buffer = new T[this.Length = Length];
 
         public void Add(T t)
         {

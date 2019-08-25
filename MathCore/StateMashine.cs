@@ -56,7 +56,7 @@ namespace MathCore
             }
         }
 
-        public LamdaStateMashine(TState State = default) { _State = State; }
+        public LamdaStateMashine(TState State = default) => _State = State;
 
         public void Add(TValue Value)
         {

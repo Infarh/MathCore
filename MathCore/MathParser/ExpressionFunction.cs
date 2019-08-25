@@ -17,7 +17,7 @@ namespace MathCore.MathParser
         /// <summary>Инициализация новой функции структуры математического выражения по сигнатуре</summary>
         /// <param name="Name">Имя функции</param>
         /// <param name="Arguments">списко имён аргументов</param>
-        public ExpressionFunction(string Name, string[] Arguments) : base(Name) { this.Arguments = Arguments; }
+        public ExpressionFunction(string Name, string[] Arguments) : base(Name) => this.Arguments = Arguments;
 
         /// <summary>Метод получения значения функции по массиву значений её аргументов</summary>
         /// <param name="arguments">Массив аргументов функции</param>

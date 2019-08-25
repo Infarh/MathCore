@@ -65,9 +65,9 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        public XPathCollection() { _XPathes = new Hashtable(); }
+        public XPathCollection() => _XPathes = new Hashtable();
 
-        public XPathCollection(XmlNamespaceManager NsManager) : this() { NamespaceManager = NsManager; }
+        public XPathCollection(XmlNamespaceManager NsManager) : this() => NamespaceManager = NsManager;
 
         #endregion
 

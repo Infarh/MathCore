@@ -17,7 +17,7 @@ namespace MathCore.Statistic.RandomNumbers
         private readonly Random _RND = new Random();
         private ulong _LastRND;
         public const ulong RAND_MAX = ulong.MaxValue;
-        public PolyformRandomGenertor() { _LastRND = (ulong)_RND.Next(); }
+        public PolyformRandomGenertor() => _LastRND = (ulong)_RND.Next();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public ulong BasicRandGenerator() => (_LastRND << 32) & (_LastRND = (ulong)_RND.Next());

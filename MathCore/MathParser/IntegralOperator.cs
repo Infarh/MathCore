@@ -20,10 +20,7 @@ namespace MathCore.MathParser
 
         /// <summary>Создание нового комплексного интегритора интегрирования</summary>
         /// <param name="Name">Имя оператора</param>
-        public IntegralOperator([NotNull] string Name) : base(Name)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(Name));
-        }
+        public IntegralOperator([NotNull] string Name) : base(Name) => Contract.Requires(!string.IsNullOrEmpty(Name));
 
         /// <summary>Инициализация оператора</summary>
         /// <param name="Parameters">Блок параметров</param>

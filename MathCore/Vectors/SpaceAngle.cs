@@ -168,7 +168,7 @@ namespace MathCore.Vectors
         }
 
         [DebuggerStepThrough]
-        public SpaceAngle(double Thetta, double Phi, in AngleType AngleType) : this(Thetta, Phi) { _AngleType = AngleType; }
+        public SpaceAngle(double Thetta, double Phi, in AngleType AngleType) : this(Thetta, Phi) => _AngleType = AngleType;
 
         [DebuggerStepThrough]
         public SpaceAngle(in SpaceAngle Angle) : this(Angle._Thetta, Angle._Phi, Angle._AngleType) { }

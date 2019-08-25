@@ -5,7 +5,7 @@ namespace System.Linq.Reactive
         private readonly int _Count;
         private int _Position;
 
-        public TakeObserver(IObservable<T> observer, int Count) : base(observer) { _Count = Count; }
+        public TakeObserver(IObservable<T> observer, int Count) : base(observer) => _Count = Count;
 
         public override void OnNext(T item)
         {

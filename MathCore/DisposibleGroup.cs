@@ -53,10 +53,7 @@ namespace MathCore
         /// <param name="items">Перечисление <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></param>
         [DebuggerStepThrough]
         public DisposableGroup(IEnumerable<T> items)
-            : this(items.ToArray())
-        {
-            Contract.Requires(items != null, "Передана нулевая ссылка на перечисление элементов группы");
-        }
+            : this(items.ToArray()) => Contract.Requires(items != null, "Передана нулевая ссылка на перечисление элементов группы");
 
         /* ------------------------------------------------------------------------------------------ */
 

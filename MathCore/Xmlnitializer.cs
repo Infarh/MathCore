@@ -280,7 +280,7 @@ namespace MathCore
         public XmlNamespaceManager Namespace { get; set; } = new XmlNamespaceManager(new NameTable());
 
         public XmInitializer() { }
-        public XmInitializer([NotNull]params Rule[] Rules) : this() { _Rules.AddRange(Rules); }
+        public XmInitializer([NotNull]params Rule[] Rules) : this() => _Rules.AddRange(Rules);
 
         #region Методы обработки XML
 

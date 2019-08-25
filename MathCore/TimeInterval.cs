@@ -1,69 +1,51 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace MathCore
 {
     /// <summary>Интервальный предикат</summary>
     [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     //[System.ComponentModel.TypeConverter(typeof(IntervalConverter))]
-    public class TimeInterval
+    public readonly struct TimeInterval
     {
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Включена ли нижняя граница интервала?</summary>
-        private bool _MinInclude = true;
+        private readonly bool _MinInclude;
         /// <summary>Включена ли верхняя граница интервала?</summary>
-        private bool _MaxInclude = true;
+        private readonly bool _MaxInclude;
         /// <summary>Нижняя граница интервала</summary>
-        private TimeSpan _Min;
+        private readonly TimeSpan _Min;
         /// <summary>Верхняя граница интервала</summary>
-        private TimeSpan _Max;
+        private readonly TimeSpan _Max;
 
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Включена ли нижняя граница интервала?</summary>
-        public bool MinInclude { get => _MinInclude; set => _MinInclude = value; }
+        public bool MinInclude => _MinInclude;
+
         /// <summary>Включена ли верхняя граница интервала?</summary>
-        public bool MaxInclude { get => _MaxInclude; set => _MaxInclude = value; }
+        public bool MaxInclude => _MaxInclude;
 
         /// <summary>Нижняя граница интервала</summary>
-        public TimeSpan Min { get => _Min; set => _Min = value; }
-        /// <summary>Верхняя граница интервала</summary>
-        public TimeSpan Max { get => _Max; set => _Max = value; }
-        /// <summary>Протяжённость интервала</summary>
-        public TimeSpan Length
-        {
-            get => _Max - _Min;
-            set
-            {
-                var lv_M = Middle;
-                value = TimeSpan.FromSeconds(value.TotalSeconds / 2);
-                _Min = lv_M - value;
-                _Max = lv_M + value;
-            }
-        }
+        public TimeSpan Min => _Min;
 
-        public TimeSpan Middle
-        {
-            get => TimeSpan.FromSeconds((_Min + _Max).TotalSeconds / 2);
-            set
-            {
-                var lv_L2 = TimeSpan.FromSeconds(Length.TotalSeconds / 2);
-                _Min = value - lv_L2;
-                _Max = value + lv_L2;
-            }
-        }
+        /// <summary>Верхняя граница интервала</summary>
+        public TimeSpan Max => _Max;
+        /// <summary>Протяжённость интервала</summary>
+        public TimeSpan Length => _Max - _Min;
+
+        public TimeSpan Middle => TimeSpan.FromSeconds((_Min + _Max).TotalSeconds / 2);
 
         /// <summary>Интервал</summary>
         /// <param name="Max">Верхняя граница интервала</param>
-        public TimeInterval(TimeSpan Max)
-        {
-            _Max = Max;
-        }
+        public TimeInterval(TimeSpan Max) : this(default, true, Max, true) { }
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
         /// <param name="Max">Верзняя граница интервала</param>
-        public TimeInterval(TimeSpan Min, TimeSpan Max) : this(Max) => _Min = Min;
+        public TimeInterval(TimeSpan Min, TimeSpan Max) : this(Min, true, Max, true) { }
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
@@ -75,14 +57,14 @@ namespace MathCore
         /// <param name="Min">Нижняя граница интервала</param>
         /// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
         /// <param name="Max">Верхняя граница интервала</param>
-        public TimeInterval(TimeSpan Min, bool MinInclude, TimeSpan Max) : this(Min, Max) => _MinInclude = MinInclude;
-
-        /// <summary>Интервал</summary>
-        /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
-        /// <param name="Max">Верхняя граница интервала</param>
         /// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
-        public TimeInterval(TimeSpan Min, bool MinInclude, TimeSpan Max, bool MaxInclude) : this(Min, MinInclude, Max) => _MaxInclude = MaxInclude;
+        public TimeInterval(TimeSpan Min, bool MinInclude, TimeSpan Max, bool MaxInclude)
+        {
+            _Min = Min;
+            _Max = Max;
+            _MinInclude = MinInclude;
+            _MaxInclude = MaxInclude;
+        }
 
         /// <summary>Проверка на входжение в интервал</summary>
         /// <param name="X">Проверяемая величина</param>
@@ -112,13 +94,13 @@ namespace MathCore
 
         public bool IsIntersect(TimeInterval I)
         {
-            if(_Min == I._Min && _Max == I._Max) return true;
+            if (_Min == I._Min && _Max == I._Max) return true;
 
             var min_include = Check(I._Min);
-            if(!I._MinInclude && I._Min == _Max) min_include = false;
+            if (!I._MinInclude && I._Min == _Max) min_include = false;
 
             var max_include = Check(I._Max);
-            if(!I._MaxInclude && I._Max == _Min) max_include = false;
+            if (!I._MaxInclude && I._Max == _Min) max_include = false;
 
             return min_include || max_include;
         }
@@ -251,13 +233,13 @@ namespace MathCore
 
         public bool IsIntersect(DateTimeInterval I)
         {
-            if(I.Min == Min && I.Max == Max) return true;
+            if (I.Min == Min && I.Max == Max) return true;
 
             var min_include = Check(I.Min);
-            if(!I.MinInclude && I.Min == Max) min_include = false;
+            if (!I.MinInclude && I.Min == Max) min_include = false;
 
             var max_include = Check(I.Max);
-            if(!I.MaxInclude && I.Max == Min) max_include = false;
+            if (!I.MaxInclude && I.Max == Min) max_include = false;
 
             return min_include || max_include;
         }

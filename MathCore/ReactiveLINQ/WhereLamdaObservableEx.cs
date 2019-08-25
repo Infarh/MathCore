@@ -4,9 +4,6 @@ namespace System.Linq.Reactive
     {
         private readonly IObserver<T> _Observer;
 
-        public WhereLamdaObservableEx(IObservable<T> observable, Func<T, bool> WhereSelector)
-        {
-            _Observer = new WhereLamdaObserverEx<T>(observable, this, WhereSelector);
-        }
+        public WhereLamdaObservableEx(IObservable<T> observable, Func<T, bool> WhereSelector) => _Observer = new WhereLamdaObserverEx<T>(observable, this, WhereSelector);
     }
 }

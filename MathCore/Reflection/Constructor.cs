@@ -10,10 +10,7 @@ namespace System.Reflection
         private Type[] _Types;
 
         // Methods
-        public Constructor(T o, bool Private = false, params Type[] Types)
-        {
-            Initialize(_Object = o, Types, _Private = Private);
-        }
+        public Constructor(T o, bool Private = false, params Type[] Types) => Initialize(_Object = o, Types, _Private = Private);
 
         // Properties
         public bool IsExist => (_Info != null);

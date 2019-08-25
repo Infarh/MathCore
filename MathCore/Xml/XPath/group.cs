@@ -31,7 +31,7 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        internal Group(AstNode groupNode) { GroupNode = groupNode; }
+        internal Group(AstNode groupNode) => GroupNode = groupNode;
 
         #endregion
     }

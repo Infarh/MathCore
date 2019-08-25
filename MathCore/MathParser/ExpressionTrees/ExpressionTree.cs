@@ -40,7 +40,7 @@ namespace MathCore.MathParser.ExpressionTrees
         public ExpressionTree() { }
 
         /// <summary>Инициализация нового дерева математического выражения</summary><param name="Root">Узел - корень дерева</param>
-        public ExpressionTree(ExpressionTreeNode Root) { this.Root = Root; }
+        public ExpressionTree(ExpressionTreeNode Root) => this.Root = Root;
 
         /* --------------------------------------------------------------------------------------------- */
 

@@ -78,7 +78,7 @@ namespace MathCore.Logging
 
         public LogItem this[string value] => _Items.FirstOrDefault(i => i.Value == value);
 
-        private Log(string Name) { _Name = Name; }
+        private Log(string Name) => _Name = Name;
 
         public void Clear()
         {

@@ -25,7 +25,7 @@ namespace System.Linq.Expressions
         private readonly List<Rule> _NewValues;
 
         public LambdaExpressionRebuilder(params Rule[] NewValues) : this((IEnumerable<Rule>)NewValues) { }
-        public LambdaExpressionRebuilder(IEnumerable<Rule> NewValues) { _NewValues = NewValues.ToList(); }
+        public LambdaExpressionRebuilder(IEnumerable<Rule> NewValues) => _NewValues = NewValues.ToList();
 
         public override Expression Visit(Expression node)
         {

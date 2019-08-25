@@ -19,12 +19,12 @@ namespace MathCore.Evulations
 
         /// <summary>Инициализация нового вычисления преобразования типов</summary>
         /// <param name="Converter">Метод преобразования входного значения в выходное</param>
-        public ConvertEvulation(Func<TInput, TOutput> Converter) { this.Converter = Converter; }
+        public ConvertEvulation(Func<TInput, TOutput> Converter) => this.Converter = Converter;
 
         /// <summary>Инициализация нового вычисления преобразования типов</summary>
         /// <param name="InputEvulation">Вычисление входного значения</param>
         /// <param name="Converter">Метод преобразования входного значения в выходное</param>
-        public ConvertEvulation(Evulation<TInput> InputEvulation, Func<TInput, TOutput> Converter) : this(Converter) { this.InputEvulation = InputEvulation; }
+        public ConvertEvulation(Evulation<TInput> InputEvulation, Func<TInput, TOutput> Converter) : this(Converter) => this.InputEvulation = InputEvulation;
 
         /// <inheritdoc />
         public override TOutput GetValue() => Converter(InputEvulation.GetValue());

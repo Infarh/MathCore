@@ -25,10 +25,7 @@ namespace MathCore
         //    }
         //}
 
-        public MultyDemensionsArray(int Dimensions)
-        {
-            _Dimensions = Dimensions;
-        }
+        public MultyDemensionsArray(int Dimensions) => _Dimensions = Dimensions;
 
 
     }

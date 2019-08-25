@@ -524,7 +524,7 @@ namespace System.Xml.XPath
 
         private readonly XmlReader _Reader;
 
-        public XmlReaderWrapper(XmlReader reader) { _Reader = reader; }
+        public XmlReaderWrapper(XmlReader reader) => _Reader = reader;
 
         private XmlNodeType _OldNodeType;
         private string _OldLocalName;

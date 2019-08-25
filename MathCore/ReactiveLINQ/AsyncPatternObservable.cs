@@ -9,10 +9,7 @@ namespace System.Linq.Reactive
             (
             Func<AsyncCallback, object, IAsyncResult> BeginInvoke,
             Func<IAsyncResult, T> EndInvoke
-            )
-        {
-            _AsyncResult = BeginInvoke(CallBack, EndInvoke);
-        }
+            ) => _AsyncResult = BeginInvoke(CallBack, EndInvoke);
 
         private void CallBack(IAsyncResult result)
         {

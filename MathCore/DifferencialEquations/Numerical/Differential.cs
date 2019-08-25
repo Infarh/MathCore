@@ -9,13 +9,11 @@ namespace MathCore.DifferencialEquations.Numerical
     {
         public static class Differential
         {
-            static Differential()
-            {
+            static Differential() =>
                 //Contract.Requires(diff_a.GetLength(0) == dif_a.Length);
                 //Contract.Requires(diff_a.GetLength(0) == diff_b.Length);
                 //Contract.Requires(dif_a.Length == diff_b.Length);
                 __methodsCount = diff_b.Length;
-            }
 
             private static readonly int __methodsCount;
 

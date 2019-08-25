@@ -23,19 +23,13 @@ namespace MathCore.Evulations
         /// <summary>»нициализаци€ нового унарного вычислени€</summary>
         /// <param name="Operator">ќѕератор преобразовани€ выражени€ операнда в выражение вычислени€</param>
         public UnaryOperatorEvulation(Func<Ex, Ex> Operator)
-            : base(GetOperation(Operator))
-        {
-            _Operator = Operator;
-        }
+            : base(GetOperation(Operator)) => _Operator = Operator;
 
         /// <summary>»нициализаци€ нового унарного вычислени€</summary>
         /// <param name="Operator">ќператор преобразовани€ выражени€ операнда в выражение вычислени€</param>
         /// <param name="value">¬ычисление операнда</param>
         public UnaryOperatorEvulation(Func<Ex, Ex> Operator, Evulation<TObject> value)
-            : base(value, GetOperation(Operator))
-        {
-            _Operator = Operator;
-        }
+            : base(value, GetOperation(Operator)) => _Operator = Operator;
 
         /// <inheritdoc />
         public override Ex GetExpression() => _Operator(InputEvulation.GetExpression());

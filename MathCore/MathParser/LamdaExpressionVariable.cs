@@ -19,7 +19,7 @@ namespace MathCore.MathParser
         /// <summary>Инициализация нового экземпляра лямда-переменной</summary>
         /// <param name="Name">Имя переменной</param>
         /// <param name="Source">Лямда-функция получения значения переменной</param>
-        public LamdaExpressionVariable(string Name, Func<double> Source) : base(Name) { _Value = Source; }
+        public LamdaExpressionVariable(string Name, Func<double> Source) : base(Name) => _Value = Source;
 
         /// <summary>Получить значение переменной</summary>
         /// <returns>Численное значение переменной</returns>

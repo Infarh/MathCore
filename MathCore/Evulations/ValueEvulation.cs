@@ -15,7 +15,7 @@ namespace MathCore.Evulations
 
         /// <summary>»нициализаци€ нового вычислени€ конкретного значени€</summary>
         /// <param name="value">¬озвращаемое значение</param>
-        public ValueEvulation(T value) { Value = value; }
+        public ValueEvulation(T value) => Value = value;
 
         /// <inheritdoc />
         public override T GetValue() => Value;
@@ -51,7 +51,7 @@ namespace MathCore.Evulations
         /// <summary>»нициализаци€ нового именованного вычислени€ конкретного значени€</summary>
         /// <param name="value">¬озвращаемое значение</param>
         /// <param name="name">»м€ вычислени€</param>
-        public NamedValueEvulation(T value, string name) : base(value) { Name = name; }
+        public NamedValueEvulation(T value, string name) : base(value) => Name = name;
 
         /// <summary>≈сли вычисление €вл€етс€ параметром, то возвращаетс€ выражение параметра, иначе возвращаетс€ вычисление значени€</summary>
         /// <returns>¬ыражение, соответствующее данному вычислению</returns>

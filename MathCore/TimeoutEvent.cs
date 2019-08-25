@@ -123,13 +123,13 @@ namespace MathCore
         /// <summary>Инициализация нового объекта задержки генерации соытия</summary>
         /// <param name="Timeout">Временная задержка в миллисекундах</param>
         /// <param name="OnTimeout">Метод вторичной обработки события</param>
-        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout) : this(Timeout) { Timeouted += (s, e) => OnTimeout(e.EventSender, e.E); }
+        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout) : this(Timeout) => Timeouted += (s, e) => OnTimeout(e.EventSender, e.E);
 
         /// <summary>Инициализация нового объекта задержки генерации соытия</summary>
         /// <param name="Timeout">Временная задержка в миллисекундах</param>
         /// <param name="OnTimeout">Метод вторичной обработки события</param>
         /// <param name="OnInvoke">Метод первичной обработки события</param>
-        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout, EventHandler<TEventArgs> OnInvoke) : this(Timeout, OnTimeout) { Invoked += (s, e) => OnInvoke(e.EventSender, e.E); }
+        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout, EventHandler<TEventArgs> OnInvoke) : this(Timeout, OnTimeout) => Invoked += (s, e) => OnInvoke(e.EventSender, e.E);
 
         /* ------------------------------------------------------------------------------------------ */
 

@@ -25,17 +25,14 @@ namespace MathCore.Evulations
 
         /// <summary>Инициализация нового функционального бинарного оператора вычисления</summary>
         /// <param name="Operator">Функция, определяющая как объекдинить два выражения операндов в бинарный оператор</param>
-        public BinaryFunctionOperatorEvulation(Func<Ex, Ex, bEx> Operator) : base(GetOperatorFunction(Operator)) { _Operator = Operator; }
+        public BinaryFunctionOperatorEvulation(Func<Ex, Ex, bEx> Operator) : base(GetOperatorFunction(Operator)) => _Operator = Operator;
 
         /// <summary>Инициализация нового функционального бинарного оператора на основе функции генерации бинарного оператора и двух вычислений операндов</summary>
         /// <param name="Operator">Функция, определяющая как объекдинить два выражения операндов в бинарный оператор</param>
         /// <param name="a">Вычисление первого операнда</param>
         /// <param name="b">Вычисление аоторого операнда</param>
-        public BinaryFunctionOperatorEvulation(Func<Ex, Ex, bEx> Operator, Evulation<T> a, Evulation<T> b) 
-            : base(GetOperatorFunction(Operator), a, b)
-        {
-            _Operator = Operator;
-        }
+        public BinaryFunctionOperatorEvulation(Func<Ex, Ex, bEx> Operator, Evulation<T> a, Evulation<T> b)
+            : base(GetOperatorFunction(Operator), a, b) => _Operator = Operator;
 
         /// <inheritdoc />
         public override Ex GetExpression() => _Operator(A.GetExpression(), B.GetExpression());

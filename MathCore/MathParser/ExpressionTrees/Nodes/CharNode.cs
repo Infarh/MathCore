@@ -11,7 +11,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Инициализация нового строкового узла</summary>
         /// <param name="value">Значение узла</param>
-        public CharNode(char value) { Value = value; }
+        public CharNode(char value) => Value = value;
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

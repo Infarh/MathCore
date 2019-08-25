@@ -1711,10 +1711,7 @@ namespace System
             /// <summary>Инициализация нового результата дискретизации по кортежу дискретов функции и оценки точности дискретизации</summary>
             /// <param name="SamplingResult">Кортеж дискретов функции и оценки точности дскретизации</param>
             private SimpleSamplingResult(Tuple<LinkedList<Result>, double> SamplingResult)
-                : base(SamplingResult.Item1.ToArray(), SamplingResult.Item2)
-            {
-                _List = SamplingResult.Item1;
-            }
+                : base(SamplingResult.Item1.ToArray(), SamplingResult.Item2) => _List = SamplingResult.Item1;
 
             /// <summary>Инициализация нового результата дискретизации</summary>
             /// <param name="f">Дискретизируемая функция</param>
@@ -1877,10 +1874,7 @@ namespace System
             /// <summary>Инициализация нового адаптивного дискретизацтора</summary>
             /// <param name="SamplingResult">Список отсчётов дискретизации функции и оценка точности дискретизации</param>
             private AdaptiveSamplingResult(Tuple<LinkedList<Result>, double> SamplingResult)
-                : base(SamplingResult.Item1.ToArray(), SamplingResult.Item2)
-            {
-                _List = SamplingResult.Item1;
-            }
+                : base(SamplingResult.Item1.ToArray(), SamplingResult.Item2) => _List = SamplingResult.Item1;
 
             /// <summary>Инициализация нового адаптивного дискретизацтора</summary>
             /// <param name="f">Дискретизируемая функция</param>

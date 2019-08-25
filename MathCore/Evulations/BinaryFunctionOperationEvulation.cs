@@ -22,7 +22,7 @@ namespace MathCore.Evulations
 
         /// <summary>Инициализация нового бинарного вычисления</summary>
         /// <param name="Operation">Метод вычисления результата вычисления на основе результатов вычисления значений операндов</param>
-        protected BinaryFunctionOperationEvulation(Func<T, T, T> Operation) { this.Operation = Operation; }
+        protected BinaryFunctionOperationEvulation(Func<T, T, T> Operation) => this.Operation = Operation;
 
         /// <summary>Инициализация нового бинарного вычисления</summary>
         /// <param name="Operation">Метод вычисления результата вычисления на основе результатов вычисления значений операндов</param>

@@ -5,7 +5,7 @@ namespace System.Collections.Generic
     {
         private readonly IDictionary<TKey, TValue> _Dictionary;
 
-        public DictionaryReadOnly(IDictionary<TKey, TValue> Dictionary) { _Dictionary = Dictionary; }
+        public DictionaryReadOnly(IDictionary<TKey, TValue> Dictionary) => _Dictionary = Dictionary;
 
         #region Implementation of IEnumerable
 

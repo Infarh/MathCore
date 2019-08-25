@@ -4,10 +4,7 @@ namespace System.Linq.Reactive
     {
         private readonly SelectLamdaObserverEx<T, Q> _Observer;
 
-        public SelectLamdaObservableEx(IObservable<T> observable, Func<T, Q> Selector)
-        {
-            _Observer = new SelectLamdaObserverEx<T, Q>(observable, this, Selector);
-        }
+        public SelectLamdaObservableEx(IObservable<T> observable, Func<T, Q> Selector) => _Observer = new SelectLamdaObserverEx<T, Q>(observable, this, Selector);
 
         public override void Dispose()
         {

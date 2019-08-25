@@ -19,9 +19,9 @@ namespace MathCore.Vectors
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public Vector(int Demention) { _Elements = new T[Demention]; }
+        public Vector(int Demention) => _Elements = new T[Demention];
 
-        public Vector(T[] Elements) { _Elements = (T[])Elements.Clone(); }
+        public Vector(T[] Elements) => _Elements = (T[])Elements.Clone();
 
         public Vector(IEnumerable<T> Elements) : this(Elements.ToArray()) { }
 

@@ -12,12 +12,13 @@ namespace MathCore
 {
     public class SyncronizedQueue<T> : IDisposable
     {
-        private readonly Queue<T> _Queue;
-        private readonly AutoResetEvent _Event = new AutoResetEvent(false);
+        [NotNull] private readonly Queue<T> _Queue;
+        [NotNull] private readonly AutoResetEvent _Event = new AutoResetEvent(false);
 
+        // ReSharper disable once InconsistentlySynchronizedField
         public int Count => _Queue.Count;
 
-        public SyncronizedQueue() { _Queue = new Queue<T>(); }
+        public SyncronizedQueue() => _Queue = new Queue<T>();
 
         public SyncronizedQueue(int Capacity)
         {

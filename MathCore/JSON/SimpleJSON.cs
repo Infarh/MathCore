@@ -32,7 +32,7 @@ namespace MathCore.JSON
 
         /// <summary>Инициализация нового генератора JSON-объектов</summary>
         /// <param name="obj"></param>
-        public JSONObjectCreator(T obj = default) { _Obj = obj; }
+        public JSONObjectCreator(T obj = default) => _Obj = obj;
 
         /// <summary>Добавить новый метод определения поля JSON-объекта из объекта-прототипа</summary>
         /// <param name="Name">Имя поля</param>

@@ -89,7 +89,7 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        private XPathParser(XPathScanner scanner) { _Scanner = scanner; }
+        private XPathParser(XPathScanner scanner) => _Scanner = scanner;
 
         #endregion
 

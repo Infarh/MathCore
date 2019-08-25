@@ -320,7 +320,7 @@ namespace System.Linq.Expressions
 
             public Expression DifferentialExpression { get; set; }
 
-            public MethodDifferentialEventArgs(MethodCallExpression Method) { this.Method = Method; }
+            public MethodDifferentialEventArgs(MethodCallExpression Method) => this.Method = Method;
         }
 
         public event EventHandler<MethodDifferentialEventArgs> MethodDifferential;

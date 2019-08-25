@@ -10,11 +10,11 @@ namespace MathCore.Values
         public double Value { get; set; }
 
         /// <summary>Инициализация нового экземпляра <see cref="MaxValue"/></summary>
-        public MaxValue() { Value = double.NegativeInfinity; }
+        public MaxValue() => Value = double.NegativeInfinity;
 
         /// <summary>Инициализация нового экземпляра <see cref="MaxValue"/></summary>
         /// <param name="StartValue">Начальное значение</param>
-        public MaxValue(double StartValue) { Value = StartValue; }
+        public MaxValue(double StartValue) => Value = StartValue;
 
         /// <summary>Добавить новое значение</summary>
         /// <param name="value">Добавляемое значение</param>

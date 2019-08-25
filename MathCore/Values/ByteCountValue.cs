@@ -11,9 +11,9 @@ namespace MathCore.Values
 		public ByteDymynsionEnum Demension { get; set; }
 
 
-		public ByteCountValue(double Value) : this() { Count = Value; }
+        public ByteCountValue(double Value) : this() => Count = Value;
 
-		public ByteCountValue(double Value, ByteDymynsionEnum Demension)
+        public ByteCountValue(double Value, ByteDymynsionEnum Demension)
 			: this()
 		{
 			Count = Value;

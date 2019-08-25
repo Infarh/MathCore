@@ -53,7 +53,7 @@ namespace System
             public int Iteration { get; set; }
 
             /// <summary>Инициализация нового экземпляра <see cref="ObjectSelector{TSource,TResult}"/></summary>
-            public ObjectSelector() { Continue = true; }
+            public ObjectSelector() => Continue = true;
 
             /// <summary>Переход к следующей итерации</summary>
             /// <param name="result">Результат итерации</param>

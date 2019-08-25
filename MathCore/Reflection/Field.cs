@@ -19,10 +19,7 @@ namespace System.Reflection
 
         public TValue Value { get { return (TValue)_FieldInfo.GetValue(_Object); } set { _FieldInfo.SetValue(_Object, value); } }
 
-        public Field(TObject o, string Name, bool Private = false)
-        {
-            Initialize(_Object = o, _Name = Name, _Private = Private);
-        }
+        public Field(TObject o, string Name, bool Private = false) => Initialize(_Object = o, _Name = Name, _Private = Private);
 
         private void Initialize(TObject o, string Name, bool Private)
         {

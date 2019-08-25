@@ -56,7 +56,7 @@ namespace MathCore.Values
 
         /// <summary>Новое множество элементов</summary>
         /// <param name="element">Элементы множества</param>
-        public SetOf(params T[] element) : this((IEnumerable<T>)element) { Contract.Requires(element != null); }
+        public SetOf(params T[] element) : this((IEnumerable<T>)element) => Contract.Requires(element != null);
 
 
         /// <summary>Преобразование в список</summary>

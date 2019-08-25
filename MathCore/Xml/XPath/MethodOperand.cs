@@ -11,11 +11,7 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        internal MethodOperand(Query opnd, Function.FunctionType FuncType)
-        {
-            _FuncType = FuncType;
-            //_Opnd = opnd;
-        }
+        internal MethodOperand(Query opnd, Function.FunctionType FuncType) => _FuncType = FuncType;//_Opnd = opnd;
 
         #endregion
 

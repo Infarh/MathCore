@@ -194,7 +194,7 @@ namespace System.Xml.XPath
             ArgumentList = new ArrayList(argumentList);
         }
 
-        internal Function(FunctionType ftype) { TypeOfFunction = ftype; }
+        internal Function(FunctionType ftype) => TypeOfFunction = ftype;
 
         internal Function(FunctionType ftype, AstNode arg)
         {

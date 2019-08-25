@@ -38,17 +38,11 @@ namespace System.Linq.Expressions
         //----------------------------------------------------------------------------------------//
 
         //  онструктор принимает выражение, которое будет преобразовано в формат TeX-а
-        public TeXExpressionVisitor(Expression expression)
-        {
-            Visit(expression);
-        }
+        public TeXExpressionVisitor(Expression expression) => Visit(expression);
 
         // Ћ€мбда-выражение анализируетс€ несколько по-иному, поскольку нам нужно только тело
         // выражени€, без первого параметра
-        public TeXExpressionVisitor(LambdaExpression expression)
-        {
-            Visit(expression.Body);
-        }
+        public TeXExpressionVisitor(LambdaExpression expression) => Visit(expression.Body);
 
 
         //----------------------------------------------------------------------------------------//

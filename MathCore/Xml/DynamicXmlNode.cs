@@ -8,8 +8,8 @@ namespace System.Xml.Linq
     {
         readonly XElement _Node;
         public DynamicXmlNode() { }
-        public DynamicXmlNode(XElement node) { _Node = node; }
-        public DynamicXmlNode(string name) { _Node = new XElement(name); }
+        public DynamicXmlNode(XElement node) => _Node = node;
+        public DynamicXmlNode(string name) => _Node = new XElement(name);
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             var node = _Node.Element(binder.Name);

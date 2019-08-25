@@ -13,10 +13,7 @@ namespace MathCore.MathParser
 
         /// <summary>Новый строковый элемент</summary>
         /// <param name="Name">Имя строкового элемента</param>
-        public StringTerm([NotNull] string Name) : base(Name)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(Name));
-        }
+        public StringTerm([NotNull] string Name) : base(Name) => Contract.Requires(!string.IsNullOrEmpty(Name));
 
         /// <summary>Поддерево элемента, состоящее из узла-переменной</summary>
         /// <param name="Parser">Парсер</param>

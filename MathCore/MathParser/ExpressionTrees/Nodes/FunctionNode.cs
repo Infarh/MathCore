@@ -25,7 +25,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Инициализация нового функционального узла</summary>
         /// <param name="Name">Имя функции</param>
-        internal FunctionNode(string Name) { this.Name = Name; }
+        internal FunctionNode(string Name) => this.Name = Name;
 
         /// <summary>Инициализация нового функционального узла</summary>
         /// <param name="Name">Имя функции</param>

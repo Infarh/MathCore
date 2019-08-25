@@ -141,7 +141,7 @@ namespace MathCore
         /// <param name="N">Число строк</param>
         /// <param name="M">Число столбцов</param>
         [DST]
-        public MatrixDecimal(int N, int M) { _Data = new decimal[_N = N, _M = M]; }
+        public MatrixDecimal(int N, int M) => _Data = new decimal[_N = N, _M = M];
 
         /// <summary>Квадратная матрица</summary>
         /// <param name="N">Размерность</param>
