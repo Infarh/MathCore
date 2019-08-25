@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Tests", "Tests\Mat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "Tests\ConsoleTest\ConsoleTest.csproj", "{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1568FA3-D7EB-4AC6-8208-7F6095E14ED6}"
+	ProjectSection(SolutionItems) = preProject
+		BuildAndTest.bat = BuildAndTest.bat
+		BuildRelease.bat = BuildRelease.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
