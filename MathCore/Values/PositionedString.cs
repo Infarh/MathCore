@@ -14,7 +14,7 @@ namespace MathCore.Values
             this.Position = Position;
         }
 
-        public string GetSubstringForward(int Length) { return String.Substring(Position, Length); }
+        public string GetSubstringForward(int Length) => String.Substring(Position, Length);
 
         public string GetSubstringBackward(int Length)
         {
@@ -39,7 +39,7 @@ namespace MathCore.Values
             return str;
         }
 
-        public void ShowCursor() { ShowCursor(Position); }
+        public void ShowCursor() => ShowCursor(Position);
         public void ShowCursor(int position)
         {
             var sub_str = "";
@@ -53,14 +53,14 @@ namespace MathCore.Values
             Console.WriteLine("{0}^({1})", new string(' ', position), visual_pos);
         }
 
-        public void ShowSubstringForward(int length) { ShowSubstringForward(Position, length); }
+        public void ShowSubstringForward(int length) => ShowSubstringForward(Position, length);
         public void ShowSubstringForward(int position, int length)
         {
             Console.WriteLine(String);
             Console.WriteLine("{0}{1}", new string(' ', position), new string('^', length));
         }
 
-        public void ShowSubstringBackward(int length) { ShowSubstringBackward(Position, length); }
+        public void ShowSubstringBackward(int length) => ShowSubstringBackward(Position, length);
         public void ShowSubstringBackward(int position, int length)
         {
             Console.WriteLine(String);

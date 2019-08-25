@@ -11,7 +11,7 @@ namespace MathCore.Expressions.Complex
 
         internal CopmlexConstantExpression(Expression Re, Expression Im) { _Re = Re; _Im = Im; }
 
-        protected override Expression GetRe() { return _Re; }
-        protected override Expression GetIm() { return _Im; }
+        protected override Expression GetRe() => _Re;
+        protected override Expression GetIm() => _Im;
     }
 }

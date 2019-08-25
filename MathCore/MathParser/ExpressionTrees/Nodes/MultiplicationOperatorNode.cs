@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -22,17 +23,21 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>Произведение значений корней правого и левого поддеревьев</returns>
-        public override double Compute() => (Left == null ? 1 : ((ComputedNode)Left).Compute()) * ((ComputedNode)Right).Compute();
+        public override double Compute() => (((ComputedNode) Left)?.Compute() ?? 1) * ((ComputedNode)Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compute();
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile() => Expression.Multiply(((ComputedNode) Left)?.Compile() ?? Expression.Constant(1.0), ((ComputedNode)Right).Compile());
+        public override Expression Compile() => Expression.Multiply(((ComputedNode) Left)?.Compile() ?? Expression.Constant(1.0), ((ComputedNode)Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compile());
 
         /// <summary>Компиляция узла</summary>
         /// <param name="Parameters">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => 
-            Expression.Multiply(((ComputedNode) Left)?.Compile(Parameters) ?? Expression.Constant(1.0), ((ComputedNode)Right).Compile(Parameters));
+        public override Expression Compile(params ParameterExpression[] Parameters)
+        {
+            return Expression.Multiply(
+                ((ComputedNode) Left)?.Compile(Parameters) ?? Expression.Constant(1.0),
+                ((ComputedNode) Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compile(Parameters));
+        }
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

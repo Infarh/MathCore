@@ -7,9 +7,6 @@ namespace MathCore.Vectors.Feelds
 
     public static class VectorFeeld3DExtentions
     {
-        public static VectorFeeld3D GetVectorFeeld(Func<double, double> fx, Func<double, double> fy, Func<double, double> fz)
-        {
-            return r => new Vector3D(fx(r.X), fy(r.Y), fz(r.Z));
-        }
+        public static VectorFeeld3D GetVectorFeeld(Func<double, double> fx, Func<double, double> fy, Func<double, double> fz) => r => new Vector3D(fx(r.X), fy(r.Y), fz(r.Z));
     }
 }

@@ -5,8 +5,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using MathCore.Annotations;
 
 namespace MathCore.Logging
@@ -63,7 +61,7 @@ namespace MathCore.Logging
 
         public LogType Type
         {
-            get { return _Type; }
+            get => _Type;
             set
             {
                 if(_Type == value) return;

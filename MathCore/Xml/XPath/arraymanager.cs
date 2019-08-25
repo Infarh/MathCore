@@ -57,8 +57,8 @@ namespace System.Xml.XPath
 
         private Queue BufferQueue
         {
-            get { return _BufferQueue ?? (_BufferQueue = new Queue()); }
-            set { _BufferQueue = value; }
+            get => _BufferQueue ?? (_BufferQueue = new Queue());
+            set => _BufferQueue = value;
         }
 
         private int Offset { get; set; }

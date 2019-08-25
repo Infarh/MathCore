@@ -49,10 +49,7 @@ namespace MathCore
 
         public override string ToString() => $"{_Numerator}/{_Denomirator}";
 
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
+        public override bool Equals(object obj) => base.Equals(obj);
 
         public bool Equals(Fraction other)
         {

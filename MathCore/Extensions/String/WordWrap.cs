@@ -22,22 +22,19 @@ namespace MathCore.Extentions.String
 
         /// <summary>Проверяет, является ли символ согласным</summary>
         /// <param name="c"></param><returns></returns>
-        private static bool isSogl(char c) { return SoglChar.Contains(c); }
+        private static bool isSogl(char c) => SoglChar.Contains(c);
 
         /// <summary>Проверяет, является ли символ гласным</summary>
         /// <param name="c"></param><returns></returns>
-        private static bool isGlas(char c) { return GlasChar.Contains(c); }
+        private static bool isGlas(char c) => GlasChar.Contains(c);
 
         /// <summary>Проверяет, является ли символ специальным (в данном контексте - разделителем)</summary>
         /// <param name="c"></param><returns></returns>
-        private static bool isSpecSign(char c) { return SpecSign.Contains(c); }
+        private static bool isSpecSign(char c) => SpecSign.Contains(c);
 
         /// <summary>Возвращает тип символа: согласный, гласный, разделитель, неопределен</summary>
         /// <param name="c"></param><returns></returns>
-        private static SymbType GetSymbType(char c)
-        {
-            return isSogl(c) ? SymbType.Sogl : (isGlas(c) ? SymbType.Glas : (isSpecSign(c) ? SymbType.Spec : SymbType.NoDefined));
-        }
+        private static SymbType GetSymbType(char c) => isSogl(c) ? SymbType.Sogl : (isGlas(c) ? SymbType.Glas : (isSpecSign(c) ? SymbType.Spec : SymbType.NoDefined));
 
         /// <summary>Определяет, можно ли сделать перенос в массиве "с" в промежутке от start до len</summary>
         /// <param name="c"></param><param name="Start"></param><returns></returns>
@@ -170,6 +167,6 @@ namespace MathCore.Extentions.String
         /// <summary>На вход ей подается просто некая строка, дальше она ее обрабатывает и возвращает строку с переносами</summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string SetHyphString(string s) { return SetHyph(s, s.Length * 2); }
+        public static string SetHyphString(string s) => SetHyph(s, s.Length * 2);
     }
 }

@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Runtime.CompilerServices;
 using System.Text;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -110,23 +108,23 @@ namespace System
         /// <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
         /// <param name="Str">Проверяемая строка</param>
         /// <returns>Истина, если трока пуста, либо если передана нулевая ссылка</returns>
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static bool IsNullOrEmpty(this string Str) => string.IsNullOrEmpty(Str);
 
         /// <summary>Строка присутствует и не пуста</summary>
         /// <param name="Str">Проверяемая строка</param>
         /// <returns>Истина, если трокане  пуста, и если передана ненулевая ссылка</returns>
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static bool IsNotNullOrEmpty(this string Str) => !string.IsNullOrEmpty(Str);
 
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static bool IsNullOrWhiteSpace(this string Str)
         {
             Contract.Ensures(Contract.Result<bool>() == string.IsNullOrWhiteSpace(Str));
             return string.IsNullOrWhiteSpace(Str);
         }
 
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static bool IsNotNullOrWhiteSpace(this string Str)
         {
             Contract.Ensures(Contract.Result<bool>() == !string.IsNullOrWhiteSpace(Str));

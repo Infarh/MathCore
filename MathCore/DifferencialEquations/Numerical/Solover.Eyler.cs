@@ -1,5 +1,5 @@
 ﻿
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using DU = System.Func<double, double, double>;
 
 namespace MathCore.DifferencialEquations.Numerical
@@ -8,13 +8,10 @@ namespace MathCore.DifferencialEquations.Numerical
     {
         public static class Eyler
         {
-            [DebuggerStepThrough]
-            public static double[] FixedStep(double y0, double start, double stop, int Count, DU f)
-            {
-                return FixedStep(y0, new Interval(start, stop), Count, f);
-            }
+            [DST]
+            public static double[] FixedStep(double y0, double start, double stop, int Count, DU f) => FixedStep(y0, new Interval(start, stop), Count, f);
 
-            [DebuggerStepThrough]
+            [DST]
             public static double[] FixedStep(double y0, Interval interval, int Count, DU f)
             {
                 var lenght = interval.Length;
@@ -32,7 +29,7 @@ namespace MathCore.DifferencialEquations.Numerical
                 return Y;
             }
 
-            public static double NextValue(double x0, double dx, double y0, DU f) { return y0 + dx * f(x0, y0); }
+            public static double NextValue(double x0, double dx, double y0, DU f) => y0 + dx * f(x0, y0);
 
             public static double NextValue_Modyfed(double x0, double dx, double y0, DU f)
             {

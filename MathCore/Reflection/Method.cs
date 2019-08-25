@@ -17,7 +17,7 @@ namespace System.Reflection
         // Methods
         public string Name
         {
-            get { return _Name; }
+            get => _Name;
             set
             {
                 Contract.Requires(!string.IsNullOrEmpty(value));
@@ -27,16 +27,16 @@ namespace System.Reflection
 
         public TObject Object
         {
-            get { return _Object; }
-            set { Initialize(_Object = value, _Name, _Private); }
+            get => _Object;
+            set => Initialize(_Object = value, _Name, _Private);
         }
 
         // Properties
 
         public bool Private
         {
-            get { return _Private; }
-            set { Initialize(_Object, _Name, _Private = value); }
+            get => _Private;
+            set => Initialize(_Object, _Name, _Private = value);
         }
 
         public Method(TObject o, string Name, bool Private = false)
@@ -64,9 +64,9 @@ namespace System.Reflection
                 : PrivateInvoke;
         }
 
-        public TResult Invoke(params object[] Args) { return _Method(Args); }
+        public TResult Invoke(params object[] Args) => _Method(Args);
 
-        private TResult PrivateInvoke(params object[] Args) { return (TResult)_MethodInfo.Invoke(_Object, Args); }
+        private TResult PrivateInvoke(params object[] Args) => (TResult)_MethodInfo.Invoke(_Object, Args);
 
 
     }

@@ -1,12 +1,11 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Globalization;
+﻿using System.Diagnostics.Contracts;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System
 {
     public static class TimeSpanExtentions
     {
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static string ToShortString(this TimeSpan time)
         {
             var result = "";

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace System.Collections
@@ -93,7 +93,7 @@ namespace System.Collections
         /// <param name="bits">Битовый массив</param>
         /// <param name="PartyBit">Бит чётности</param>
         /// <returns>Истина, если сумма бит по модулю 2 и бита чётности равна 0</returns>
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static bool IsPartyCorrect(this BitArray bits, bool PartyBit)
         {
             var result = PartyBit;
@@ -107,7 +107,7 @@ namespace System.Collections
         /// <summary>Сумма бит по модулю 2</summary>
         /// <param name="bits">Битовый массив</param>
         /// <returns>Результат сложения бит массива по модулю 2</returns>
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static bool GetBitSummMod2(this BitArray bits)
         {
             var result = false;

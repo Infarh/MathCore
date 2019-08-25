@@ -23,7 +23,7 @@ namespace MathCore.Values
         /// <summary>Постоянная времени</summary>
         public double Tau
         {
-            get { return _Tau; }
+            get => _Tau;
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {

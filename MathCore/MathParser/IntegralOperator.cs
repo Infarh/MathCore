@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
@@ -74,8 +75,10 @@ namespace MathCore.MathParser
                 else
                     iterator_node.Parent.Parent.Parent.Right = null;
                 iterator_node.Parent.Parent = null;
-                Parameters.Tree.Root = new FunctionArgumentNode("Domain", Parameters.Tree.Root);
-                Parameters.Tree.Root.Right = new FunctionArgumentNode("step", iterator_node.Parent);
+                Parameters.Tree.Root = new FunctionArgumentNode("Domain", Parameters.Tree.Root)
+                {
+                    Right = new FunctionArgumentNode("step", iterator_node.Parent)
+                };
             }
             Parameters.Tree
                 .OfType<VariableValueNode>()

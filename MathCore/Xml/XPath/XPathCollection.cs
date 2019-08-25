@@ -42,7 +42,7 @@ namespace System.Xml.XPath
 
         #region Properties
 
-        internal XPathReader SetReader { set { _Reader = value; } }
+        internal XPathReader SetReader { set => _Reader = value; }
 
         internal int ProcessCount { get; set; } = 0;
 

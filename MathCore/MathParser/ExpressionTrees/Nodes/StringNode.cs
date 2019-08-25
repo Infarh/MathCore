@@ -28,11 +28,11 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Оператор неявного преобразования строки к типу строкового узла</summary>
         /// <param name="value">Строковое значение</param>
         /// <returns>Строковый узел</returns>
-        public static implicit operator StringNode(string value) { return new StringNode(value); }
+        public static implicit operator StringNode(string value) => new StringNode(value);
 
         /// <summary>Оператор неявного преобразования строкового узла к строковому типу</summary>
         /// <param name="node">Строковый узел</param>
         /// <returns>Значение строкового узла</returns>
-        public static implicit operator string(StringNode node) { return node.Value; }
+        public static implicit operator string(StringNode node) => node.Value;
     }
 }

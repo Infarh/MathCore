@@ -8,9 +8,6 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
 
         public CollectionAssertChecker(ICollection ActualCollection) => _ActualCollection = ActualCollection;
 
-        public void AreEquals(ICollection ExpectedCollection)
-        {
-            CollectionAssert.AreEqual(ExpectedCollection, _ActualCollection);
-        }
+        public void AreEquals(ICollection ExpectedCollection) => CollectionAssert.AreEqual(ExpectedCollection, _ActualCollection);
     }
 }

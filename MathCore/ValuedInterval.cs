@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
@@ -169,7 +168,7 @@ namespace MathCore
         /// <summary>Проверка на вхождение значения в интервал</summary>
         /// <param name="value">Проверяемое значение</param>
         /// <returns>Истина, если значение входит в интервал</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public bool Check(double value) =>
             (_MinInclude && _Min.CompareTo(value) == 0)
             || (_MaxInclude && _Max.CompareTo(value) == 0)

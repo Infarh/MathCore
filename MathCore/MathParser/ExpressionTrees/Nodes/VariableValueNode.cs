@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -24,7 +24,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override double Value { get => _Variable.Value; set => _Variable.Value = value; }
 
         /// <summary>Имя переменной</summary> 
-        public string Name { [DebuggerStepThrough] get { return _Variable.Name; } }
+        public string Name { [DST] get => _Variable.Name; }
 
         /// <summary>Новый узел переменной</summary>
         /// <param name="Variable">Переменная</param>
@@ -40,7 +40,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычислить значение поддерева</summary>
         /// <returns>Численное значение поддерева</returns>
-        [DebuggerStepThrough]
+        [DST]
         public override double Compute() => _Variable.GetValue();
 
         /// <summary>Скомпилировать в выражение</summary>

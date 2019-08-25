@@ -33,13 +33,13 @@ namespace System.Collections.Generic
         /// Добавляет элемент в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </summary>
         /// <param name="item">Объект, добавляемый в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
-        public void Add(KeyValuePair<TKey, TValue> item) { throw new NotSupportedException(); }
+        public void Add(KeyValuePair<TKey, TValue> item) => throw new NotSupportedException();
 
         /// <summary>
         /// Удаляет все элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </summary>
         /// <exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения. </exception>
-        public void Clear() { throw new NotSupportedException(); }
+        public void Clear() => throw new NotSupportedException();
 
         /// <summary>
         /// Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.
@@ -64,7 +64,7 @@ namespace System.Collections.Generic
         /// Значение true, если объект <paramref name="item"/> успешно удален из <see cref="T:System.Collections.Generic.ICollection`1"/>, в противном случае — значение false. Этот метод также возвращает значение false, если параметр <paramref name="item"/> не найден в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
         /// <param name="item">Объект, который необходимо удалить из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
-        public bool Remove(KeyValuePair<TKey, TValue> item) { throw new NotSupportedException(); }
+        public bool Remove(KeyValuePair<TKey, TValue> item) => throw new NotSupportedException();
 
         /// <summary>
         /// Получает число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
@@ -99,7 +99,7 @@ namespace System.Collections.Generic
         /// Добавляет элемент с указанными ключом и значением в <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </summary>
         /// <param name="key">Объект, используемый в качестве ключа добавляемого элемента.</param><param name="value">Объект, используемый в качестве значения добавляемого элемента.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception><exception cref="T:System.ArgumentException">Элемент с таким ключом уже существует в <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception><exception cref="T:System.NotSupportedException">Объект <see cref="T:System.Collections.Generic.IDictionary`2"/> доступен только для чтения.</exception>
-        public void Add(TKey key, TValue value) { throw new NotSupportedException(); }
+        public void Add(TKey key, TValue value) => throw new NotSupportedException();
 
         /// <summary>
         /// Удаляет элемент с указанным ключом из <see cref="T:System.Collections.Generic.IDictionary`2"/>.
@@ -108,7 +108,7 @@ namespace System.Collections.Generic
         /// Значение true, если элемент успешно удален, в противном случае — значение false.  Этот метод также возвращает значение false, если параметр <paramref name="key"/> не найден в исходном объекте <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
         /// <param name="key">Ключ элемента, который необходимо удалить.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception><exception cref="T:System.NotSupportedException">Объект <see cref="T:System.Collections.Generic.IDictionary`2"/> доступен только для чтения.</exception>
-        public bool Remove(TKey key) { throw new NotSupportedException(); }
+        public bool Remove(TKey key) => throw new NotSupportedException();
 
         /// <summary>
         /// Получает значение, связанное с указанным ключом.
@@ -126,7 +126,7 @@ namespace System.Collections.Generic
         /// Элемент с указанным ключом.
         /// </returns>
         /// <param name="key">Ключ элемента, который требуется получить или задать.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception><exception cref="T:System.Collections.Generic.KeyNotFoundException">Свойство получено и параметр <paramref name="key"/> не найден.</exception><exception cref="T:System.NotSupportedException">Свойство задано, и объект <see cref="T:System.Collections.Generic.IDictionary`2"/> доступен только для чтения.</exception>
-        public TValue this[TKey key] { get { return _Dictionary[key]; } set { throw new NotSupportedException(); } }
+        public TValue this[TKey key] { get => _Dictionary[key]; set => throw new NotSupportedException(); }
 
         /// <summary>
         /// Получает интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>, содержащий ключи <see cref="T:System.Collections.Generic.IDictionary`2"/>.

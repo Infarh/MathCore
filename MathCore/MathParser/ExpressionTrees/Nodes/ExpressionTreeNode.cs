@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
@@ -85,7 +85,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         private ExpressionTreeNode _Right;
 
         /// <summary>Признак возможности получения тревиального значения</summary>
-        public virtual bool IsPrecomputable { [DebuggerStepThrough] get; } = false;
+        public virtual bool IsPrecomputable { [DST] get; } = false;
 
         /// <summary>Является ли узел дерева корнем?</summary>
         public bool IsRoot => Parent == null;
@@ -93,7 +93,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Признак - является ли текущий узел левым поддеревом</summary>
         public bool IsLeftSubtree
         {
-            [DebuggerStepThrough]
+            [DST]
             get
             {
                 Contract.Ensures(Contract.Result<bool>() == (Parent != null && Parent.Left == this));
@@ -104,7 +104,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Признак - является ли текущий узел правым поддеревом</summary>
         public bool IsRightSubtree
         {
-            [DebuggerStepThrough]
+            [DST]
             get
             {
                 Contract.Ensures(Contract.Result<bool>() == (Parent != null && Parent.Right == this));
@@ -119,8 +119,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         [CanBeNull]
         public ExpressionTreeNode Left
         {
-            [DebuggerStepThrough]
-            get { return _Left; }
+            [DST]
+            get => _Left;
             set
             {
                 Contract.Ensures(_Left == value);
@@ -140,8 +140,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         [CanBeNull]
         public ExpressionTreeNode Right
         {
-            [DebuggerStepThrough]
-            get { return _Right; }
+            [DST]
+            get => _Right;
             set
             {
                 Contract.Ensures(_Right == value);

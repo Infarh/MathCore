@@ -11,10 +11,7 @@ namespace MathCore.MathParser
 
         /// <summary>Метод генерации события</summary>
         /// <param name="Args">Аргумент события</param>
-        protected virtual void OnCall(EventArgs<double> Args)
-        {
-            Call?.Invoke(this, Args);
-        }
+        protected virtual void OnCall(EventArgs<double> Args) => Call?.Invoke(this, Args);
 
         /// <summary>Аргумент события</summary>
         private readonly EventArgs<double> _EventArg = new EventArgs<double>(0);
@@ -23,13 +20,13 @@ namespace MathCore.MathParser
         private bool _ClearAtCall;
 
         /// <summary>Значение переменной</summary>
-        public override double Value { get { return _EventArg.Argument; } set { _EventArg.Argument = value; } }
+        public override double Value { get => _EventArg.Argument; set => _EventArg.Argument = value; }
 
         /// <summary>Признак предвычислимости всегда = false</summary>
         public override bool IsPrecomputable => false;
 
         /// <summary>Флаг предварительной очистки значения аргумента события</summary>
-        public bool ClearAtCall { get { return _ClearAtCall; } set { _ClearAtCall = value; } }
+        public bool ClearAtCall { get => _ClearAtCall; set => _ClearAtCall = value; }
 
         /// <summary>Инициализация новой событийной переменной</summary>
         public EventExpressionVariable() : this("") { }

@@ -134,7 +134,7 @@ namespace MathCore.Values
 
         /// <summary>ОПератор неявного приведнеия вещественного числа к скользящему среднему</summary>
         /// <param name="Data">Вещественное число</param>
-        public static implicit operator AverageValue(double Data) { return new AverageValue(Data); }
+        public static implicit operator AverageValue(double Data) => new AverageValue(Data);
 
         /* --------------------------------------------------------------------------------------------- */
 

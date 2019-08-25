@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore
@@ -13,25 +13,25 @@ namespace MathCore
     /// <summary>Класс объектов-свойств, определяемых методами установки и чтения значения</summary>
     public class LambdaProperty<T> : LambdaPropertyBase, INotifyPropertyChanged, IEquatable<LambdaProperty<T>>
     {
-        private event PropertyChangedEventHandler e_PropertyChanged;
+        private event PropertyChangedEventHandler _PropertyChanged;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
-            [DebuggerStepThrough]
+            [DST]
             add
             {
-                if(value != null) lock(e_PropertyChanged)
-                        if(e_PropertyChanged == null)
-                            e_PropertyChanged = value;
+                if(value != null) lock(_PropertyChanged)
+                        if(_PropertyChanged == null)
+                            _PropertyChanged = value;
                         else
-                            e_PropertyChanged += value;
+                            _PropertyChanged += value;
             }
-            [DebuggerStepThrough]
+            [DST]
             remove
             {
-                if(value != null) lock(e_PropertyChanged)
-                        if(e_PropertyChanged != null)
-                            e_PropertyChanged -= value;
+                if(value != null) lock(_PropertyChanged)
+                        if(_PropertyChanged != null)
+                            _PropertyChanged -= value;
             }
         }
 
@@ -45,58 +45,55 @@ namespace MathCore
         /// <summary>Метод получения значения свойства</summary>
         public Func<T> GetMethod
         {
-            [DebuggerStepThrough]
+            [DST]
             get => _GetMethod;
-            [DebuggerStepThrough]
+            [DST]
             set => _GetMethod = value;
         }
 
         /// <summary>Метод установки значения свойства</summary>
         public Action<T> SetMethod
         {
-            [DebuggerStepThrough]
+            [DST]
             get => _SetMethod;
-            [DebuggerStepThrough]
+            [DST]
             set => _SetMethod = value;
         }
 
         /// <summary>Признак возможности чтения значения свойства (если задан метод чтения)</summary>
-        public bool CanRead { [DebuggerStepThrough] get => _GetMethod != null; }
+        public bool CanRead { [DST] get => _GetMethod != null; }
 
         /// <summary>Признак возможности устанавливать значение свойства (если задан метод записи)</summary>
-        public bool CanWrite { [DebuggerStepThrough] get => _SetMethod != null; }
+        public bool CanWrite { [DST] get => _SetMethod != null; }
 
         /// <summary>Значение свойства</summary>
         public T Value
         {
-            [DebuggerStepThrough]
+            [DST]
             get => _GetMethod();
-            [DebuggerStepThrough]
+            [DST]
             set
             {
                 _SetMethod(value);
-                e_PropertyChanged?.Invoke(this, __ValuePropertyCahnged);
+                _PropertyChanged?.Invoke(this, __ValuePropertyCahnged);
             }
         }
 
         /// <summary>Новое лямда свойство</summary>
         /// <param name="GetMethod">Метод чтения значения</param>
         /// <param name="SetMethod">Метод записи значения</param>
-        [DebuggerStepThrough]
+        [DST]
         public LambdaProperty(Func<T> GetMethod, Action<T> SetMethod)
         {
             this.GetMethod = GetMethod;
             this.SetMethod = SetMethod;
         }
 
-        public override string ToString()
-        {
-            return $"lProperty({(CanRead ? "R" : "")}.{(CanWrite ? "W" : "")}){(CanRead ? $":Value = {Value}" : "")}";
-        }
+        public override string ToString() => $"lProperty({(CanRead ? "R" : "")}.{(CanWrite ? "W" : "")}){(CanRead ? $":Value = {Value}" : "")}";
 
         public override bool Equals(object obj)
         {
-            return !ReferenceEquals(null, obj) 
+            return obj is { }
                 && (ReferenceEquals(this, obj) 
                     || obj.GetType() == typeof(LambdaProperty<T>) 
                     && Equals((LambdaProperty<T>) obj));
@@ -107,7 +104,7 @@ namespace MathCore
         /// <param name="other">Объект, который требуется сравнить с данным объектом.</param>
         public bool Equals(LambdaProperty<T> other)
         {
-            return !ReferenceEquals(null, other) 
+            return other is { }
                 && (ReferenceEquals(this, other) 
                     || Equals(other._GetMethod, _GetMethod) 
                     && Equals(other._SetMethod, _SetMethod));

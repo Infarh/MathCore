@@ -10,8 +10,8 @@ namespace MathCore.Statistic.RandomNumbers
 
         public override double Distribution(double x)
         {
-            var sigma2 = sigma / 2;
-            return Distributions.Uniform(x, mu - sigma2, mu + sigma2);
+            var sigma2 = Sigma / 2;
+            return Distributions.Uniform(x, Mu - sigma2, Mu + sigma2);
         }
 
         protected override double GetNextValue() => SystemRandomGenerator.Value.NextDouble() - 0.5;

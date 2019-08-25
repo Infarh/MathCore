@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace System
@@ -19,7 +19,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         /// <typeparam name="TException">Тип исключения</typeparam>
-        [DebuggerStepThrough]
+        [DST]
         public static void Start<TException>(this ExceptionEventHandler<TException> Handler, object Sender,
             ExceptionEventHandlerArgs<TException> e) where TException : Exception
         {
@@ -43,7 +43,7 @@ namespace System
         /// <param name="CallBack">Делегат заврешения вызова события</param>
         /// <param name="State">ОБъект состояния, передаваемый в обработчик завершающего метода</param>
         /// <typeparam name="TException">Тип исключения</typeparam>
-        [DebuggerStepThrough]
+        [DST]
         public static void StartAsync<TException>(this ExceptionEventHandler<TException> Handler, object Sender,
             ExceptionEventHandlerArgs<TException> e, AsyncCallback CallBack, object @State) where TException : Exception
         {
@@ -57,7 +57,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         /// <typeparam name="TException">Тип события</typeparam>
-        [DebuggerStepThrough]
+        [DST]
         public static void FastStart<TException>(this ExceptionEventHandler<TException> Handler, object Sender,
             ExceptionEventHandlerArgs<TException> e)
             where TException : Exception
@@ -81,7 +81,7 @@ namespace System
         /// </param>
         /// <typeparam name="TException">Тип исключения</typeparam>
         /// <exception cref="Exception"><typeparamref name="TException">Исключение</typeparamref> генерируется при отсутствии обработки его обработчиками события</exception>
-        [DebuggerStepThrough]
+        [DST]
         public static void ThrowIfUnhandled<TException>(this ExceptionEventHandler<TException> Handler,
             object Sender, ExceptionEventHandlerArgs<TException> e, bool? IsHandledDefault = null) where TException : Exception
         {

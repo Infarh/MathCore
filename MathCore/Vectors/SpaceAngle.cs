@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 using MathCore.Extentions.Expressions;
 using static System.Math;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Vectors
@@ -20,10 +19,10 @@ namespace MathCore.Vectors
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Константа преобразования угла в радианах в градусы</summary>
-        private const double c_ToDeg = Consts.Geometry.ToDeg;
+        private const double __ToDeg = Consts.Geometry.ToDeg;
 
         /// <summary>Константа преобразования угла в градусах в радианы</summary>
-        private const double c_ToRad = Consts.Geometry.ToRad;
+        private const double __ToRad = Consts.Geometry.ToRad;
 
         /// <summary>Число Пи</summary>
         public const double pi = Consts.pi;
@@ -49,13 +48,13 @@ namespace MathCore.Vectors
                 Abs(Max - Min) * (rnd.NextDouble() - .5) + (Max + Min) * .5);
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public static SpaceAngle Value(double thetta, double phi, in AngleType type = AngleType.Rad) => new SpaceAngle(thetta, phi, type);
 
-        [DebuggerStepThrough]
+        [DST]
         public static SpaceAngle Direction(in Vector3D r) => r.Angle;
 
-        [DebuggerStepThrough]
+        [DST]
         public static SpaceAngle Direction(double x, double y, double z = 0)
             => new SpaceAngle(Atan2(Sqrt(x * x + y * y), z), Atan2(y, x));
 
@@ -96,47 +95,33 @@ namespace MathCore.Vectors
         public bool IsZerro => _Thetta.Equals(0d) && _Phi.Equals(0d);
 
         /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Thetta"/>, мнимой частью - направляющий синус</summary>
-        public Complex ComplexCosThetta => _AngleType == AngleType.Rad ? Complex.Exp(_Thetta) : Complex.Exp(_Thetta * c_ToRad);
+        public Complex ComplexCosThetta => _AngleType == AngleType.Rad ? Complex.Exp(_Thetta) : Complex.Exp(_Thetta * __ToRad);
 
         /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Phi"/>, мнимой частью - направляющий синус</summary>
-        public Complex ComplexCosPhi => _AngleType == AngleType.Rad ? Complex.Exp(_Phi) : Complex.Exp(_Phi * c_ToRad);
+        public Complex ComplexCosPhi => _AngleType == AngleType.Rad ? Complex.Exp(_Phi) : Complex.Exp(_Phi * __ToRad);
 
         /// <summary>Тип угла</summary>
         public AngleType AngleType => _AngleType;
 
         /// <summary>Представление угла в градусах</summary>
         /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
-        public SpaceAngle InDeg
-        {
-            get
+        public SpaceAngle InDeg =>
+            _AngleType switch
             {
-                switch(_AngleType)
-                {
-                    default: throw new NotSupportedException("Неизвестный тип угла");
-                    case AngleType.Deg:
-                        return this; //new SpaceAngle(_Thetta, _Phi, AngleType.Deg);
-                    case AngleType.Rad:
-                        return new SpaceAngle(_Thetta * c_ToDeg, _Phi * c_ToDeg, AngleType.Deg);
-                }
-            }
-        }
+                AngleType.Deg => this, //new SpaceAngle(_Thetta, _Phi, AngleType.Deg);
+                AngleType.Rad => new SpaceAngle(_Thetta * __ToDeg, _Phi * __ToDeg, AngleType.Deg),
+                _ => throw new NotSupportedException("Неизвестный тип угла")
+            };
 
         /// <summary>Представлкние угла в радианах</summary>
         /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
-        public SpaceAngle InRad
-        {
-            get
+        public SpaceAngle InRad =>
+            _AngleType switch
             {
-                switch(_AngleType)
-                {
-                    default: throw new NotSupportedException("Неизвестный тип угла");
-                    case AngleType.Deg:
-                        return new SpaceAngle(_Thetta * c_ToRad, _Phi * c_ToRad, AngleType.Rad);
-                    case AngleType.Rad:
-                        return this; //new SpaceAngle(_Thetta, _Phi, AngleType.Rad);
-                }
-            }
-        }
+                AngleType.Deg => new SpaceAngle(_Thetta * __ToRad, _Phi * __ToRad, AngleType.Rad),
+                AngleType.Rad => this, //new SpaceAngle(_Thetta, _Phi, AngleType.Rad);
+                _ => throw new NotSupportedException("Неизвестный тип угла")
+            };
 
         public Vector3D DirectionalVector => new Vector3D(this);
 
@@ -159,7 +144,7 @@ namespace MathCore.Vectors
         /// <summary>Пространственный угол в радианах</summary>
         /// <param name="Thetta">Угол места [рад]</param>
         /// <param name="Phi">Азимутальный угол [рад]</param>
-        [DebuggerStepThrough]
+        [DST]
         public SpaceAngle(double Thetta, double Phi)
         {
             _Phi = Phi;
@@ -167,14 +152,14 @@ namespace MathCore.Vectors
             _AngleType = AngleType.Rad;
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public SpaceAngle(double Thetta, double Phi, in AngleType AngleType) : this(Thetta, Phi) => _AngleType = AngleType;
 
-        [DebuggerStepThrough]
+        [DST]
         public SpaceAngle(in SpaceAngle Angle) : this(Angle._Thetta, Angle._Phi, Angle._AngleType) { }
 
         /// <exception cref="NotSupportedException">Если AngleType != Deg || Rad - Неизвестный тип угла</exception>
-        [DebuggerStepThrough]
+        [DST]
         public SpaceAngle(in SpaceAngle Angle, in AngleType AngleType)
             : this(Angle._Thetta, Angle._Phi, AngleType)
         {
@@ -187,8 +172,8 @@ namespace MathCore.Vectors
                         default: throw new NotSupportedException("Неизвестный тип угла");
                         case AngleType.Deg: break;
                         case AngleType.Rad:
-                            _Thetta *= c_ToDeg;
-                            _Phi *= c_ToDeg;
+                            _Thetta *= __ToDeg;
+                            _Phi *= __ToDeg;
                             break;
                     }
                     break;
@@ -197,8 +182,8 @@ namespace MathCore.Vectors
                     {
                         default: throw new NotSupportedException("Неизвестный тип угла");
                         case AngleType.Deg:
-                            _Thetta *= c_ToRad;
-                            _Phi *= c_ToRad;
+                            _Thetta *= __ToRad;
+                            _Phi *= __ToRad;
                             break;
                         case AngleType.Rad: break;
                     }
@@ -397,20 +382,16 @@ namespace MathCore.Vectors
             return a => f(r(a));
         }
 
-        [DebuggerStepThrough]
-        public SpaceAngle In(in AngleType type)
-        {
-            if(_AngleType == type) return this;
-            switch(type)
-            {
-                case AngleType.Rad:
-                    return InRad;
-                case AngleType.Deg:
-                    return InDeg;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-        }
+        [DST]
+        public SpaceAngle In(in AngleType type) =>
+            _AngleType == type
+                ? this
+                : type switch
+                {
+                    AngleType.Rad => InRad,
+                    AngleType.Deg => InDeg,
+                    _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                };
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -420,21 +401,21 @@ namespace MathCore.Vectors
             phi = _Phi;
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public object Clone() => new SpaceAngle(this, AngleType);
 
-        [DebuggerStepThrough]
+        [DST]
         public override string ToString() => $"(Thetta:{_Thetta}; Phi:{_Phi}):{_AngleType}";
 
-        [DebuggerStepThrough]
+        [DST]
         public override int GetHashCode()
         {
             if(_AngleType == AngleType.Deg) return InRad.GetHashCode();
             unchecked { return (_Thetta.GetHashCode() * 397) ^ _Phi.GetHashCode(); }
         }
 
-        [DebuggerStepThrough]
-        public override bool Equals(object obj) => !ReferenceEquals(null, obj) && obj is SpaceAngle a && Equals(a);
+        [DST]
+        public override bool Equals(object obj) => obj is { } && obj is SpaceAngle a && Equals(a);
 
         /* -------------------------------------------------------------------------------------------- */
 

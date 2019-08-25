@@ -41,7 +41,7 @@ namespace System.Linq.Expressions
 
         public Func<PropertyInfo, bool> PropertiesFilter
         {
-            get { return _PropertiesFilter; }
+            get => _PropertiesFilter;
             set
             {
                 if(ReferenceEquals(_PropertiesFilter, value)) return;
@@ -51,7 +51,7 @@ namespace System.Linq.Expressions
         }
         public Func<FieldInfo, bool> FieldsFilter
         {
-            get { return _FieldsFilter; }
+            get => _FieldsFilter;
             set
             {
                 if(ReferenceEquals(_FieldsFilter, value)) return;

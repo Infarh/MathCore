@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MathCore.Vectors;
 using static System.Math;
 
@@ -40,10 +36,7 @@ namespace MathCore.Geolocation
 
         public static double ParallelLength(double latitude) => ParallelEquatorLength * Cos(latitude * c_ToRad);
 
-        public static double Degree(int degrees, int minutes, double seconds = 0d)
-        {
-            return degrees + minutes / 60d + seconds / 3600d;
-        }
+        public static double Degree(int degrees, int minutes, double seconds = 0d) => degrees + minutes / 60d + seconds / 3600d;
 
         /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
         /// <param name="latitude1">Широта первой точки в градусах</param>

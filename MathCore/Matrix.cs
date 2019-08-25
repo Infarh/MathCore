@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
@@ -15,8 +15,6 @@ using static MathCore.Matrix.Array.Operator;
 
 namespace MathCore
 {
-    using DST = DebuggerStepThroughAttribute;
-
     /// <summary>Матрица NxM</summary>
     /// <remarks>
     /// i (первый индекс) - номер строки, 
@@ -350,13 +348,13 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] Matrix B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] Matrix B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         [DST] public static bool operator !=([CanBeNull] Matrix A, [CanBeNull] Matrix B) => !(A == B);
 
         [DST] public static bool operator ==([CanBeNull] double[,] A, [CanBeNull] Matrix B) => B == A;
 
-        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] double[,] B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] double[,] B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         [DST] public static bool operator !=([CanBeNull] double[,] A, [CanBeNull] Matrix B) => !(A == B);
 
@@ -446,15 +444,15 @@ namespace MathCore
         #region IEquatable Members
 
         /// <inheritdoc/>
-        [DST] public bool Equals(double[,] other) => !ReferenceEquals(null, other) && Array.AreEquals(_Data, other);
+        [DST] public bool Equals(double[,] other) => other is { } && Array.AreEquals(_Data, other);
 
         /// <inheritdoc/>
-        [DST] public bool Equals(Matrix other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
+        [DST] public bool Equals(Matrix other) => other is { } && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
 
         #endregion
 
         /// <inheritdoc/>
-        [DST] public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || Equals(obj as Matrix) || Equals(obj as double[,]));
+        [DST] public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || Equals(obj as Matrix) || Equals(obj as double[,]));
 
         /// <inheritdoc/>
         [DST]

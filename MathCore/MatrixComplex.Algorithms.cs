@@ -1,11 +1,11 @@
 ﻿using MathCore.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
@@ -332,7 +332,7 @@ namespace MathCore
             /// <param name="N">Число строк матриы</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DebuggerStepThrough, Pure]
+            [DST, Pure]
             public static void GetLength([NotNull] Complex[,] matrix, out int N, out int M)
             {
                 Contract.Requires(matrix != null);
@@ -347,7 +347,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="N">Число строк матриы</param>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DebuggerStepThrough, Pure]
+            [DST, Pure]
             public static void GetRowsCount([NotNull] Complex[,] matrix, out int N)
             {
                 Contract.Requires(matrix != null);
@@ -360,7 +360,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DebuggerStepThrough, Pure]
+            [DST, Pure]
             public static void GetColsCount([NotNull] Complex[,] matrix, out int M)
             {
                 Contract.Requires(matrix != null);
@@ -373,7 +373,7 @@ namespace MathCore
             /// <param name="N">Размерность матрицы</param>
             /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="N"/> меньше 1</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static Complex[,] GetUnitaryArrayMatrix(int N)
             {
                 if (N < 1) throw new ArgumentOutOfRangeException(nameof(N), @"Размерность матрицы должна быть больше 0");
@@ -387,7 +387,7 @@ namespace MathCore
             /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void InitializeUnitaryArrayMatrix([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -442,7 +442,7 @@ namespace MathCore
             /// <returns>Матрица-столбец, составленная из элементов столбца матрицы c индексом j</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static Complex[,] GetCol([NotNull] Complex[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -458,7 +458,7 @@ namespace MathCore
             /// <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static Complex[] GetCol_Array(Complex[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -476,7 +476,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если массив <paramref name="result"/> не задан</exception>
             /// <exception cref="ArgumentException">В случае если размер массива <paramref name="result"/> не соответствует числу строк матрицы</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void GetCol_Array([NotNull] Complex[,] matrix, int j, [NotNull] Complex[] result)
             {
                 GetRowsCount(matrix, out var N);
@@ -492,7 +492,7 @@ namespace MathCore
             /// <returns>Матрица-строка, составленная из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static Complex[,] GetRow([NotNull] Complex[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -508,7 +508,7 @@ namespace MathCore
             /// <returns>Массив, составленный из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static Complex[] GetRow_Array([NotNull] Complex[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -526,7 +526,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если массив <paramref name="result"/> не задан</exception>
             /// <exception cref="ArgumentException">В случае если размер массива <paramref name="result"/> не соответствует числу столбцов матрицы</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void GetRow_Array([NotNull] Complex[,] matrix, int i, [NotNull] Complex[] result)
             {
                 GetColsCount(matrix, out var M);
@@ -686,7 +686,7 @@ namespace MathCore
             /// <summary>Транспонирование матрицы</summary>
             /// <returns>Транспонированная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static Complex[,] Transponse([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -700,7 +700,7 @@ namespace MathCore
             /// <param name="result">Транспонированная матрица</param>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="result"/> не задана</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void Transponse([NotNull] Complex[,] matrix, [NotNull] Complex[,] result)
             {
                 GetLength(matrix, out var N, out var M);
@@ -818,7 +818,7 @@ namespace MathCore
 
             /// <summary>Поменять значения местами</summary>
             /// <typeparam name="T">Тип значения</typeparam>
-            [DebuggerStepThrough] private static void Swap<T>(ref T v1, ref T v2) { var t = v1; v1 = v2; v2 = t; }
+            [DST] private static void Swap<T>(ref T v1, ref T v2) { var t = v1; v1 = v2; v2 = t; }
 
             /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
             /// <remarks>

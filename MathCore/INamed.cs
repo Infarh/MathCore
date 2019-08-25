@@ -22,6 +22,6 @@ namespace MathCore
         /// <summary>Изменить имя объекта</summary>
         /// <param name="obj">Объект, имя которого требуется изменить</param>
         /// <param name="NewName">Новое имя объекта</param>
-        public static void Rename(this INamed obj, string NewName) { obj.Name = NewName; }
+        public static void Rename(this INamed obj, string NewName) => obj.Name = NewName;
     }
 }

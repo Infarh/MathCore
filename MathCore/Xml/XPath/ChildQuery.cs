@@ -32,10 +32,7 @@ namespace System.Xml.XPath
         // e[e1 = 1]
         // Can't move the reader forward.
         /// <exception cref="XPathReaderException">Can't get the child value</exception>
-        internal override object GetValue(XPathReader reader)
-        {
-            throw new XPathReaderException("Can't get the child value");
-        }
+        internal override object GetValue(XPathReader reader) => throw new XPathReaderException("Can't get the child value");
 
         #endregion
     }

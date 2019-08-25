@@ -41,7 +41,7 @@ namespace System.Reflection
         ///<summary>Имя свойства</summary>
         public string Name
         {
-            get { return _Name; }
+            get => _Name;
             set
             {
                 Contract.Requires(value != null);
@@ -53,7 +53,7 @@ namespace System.Reflection
         ///<summary>Объект, определяющий свойтсво</summary>
         public TObject Object
         {
-            get { return _Object; }
+            get => _Object;
             set
             {
                 Contract.Requires(value != null);
@@ -64,15 +64,15 @@ namespace System.Reflection
         ///<summary>Признак - является ли свойство пиватным</summary>
         public bool Private
         {
-            get { return _Private; }
-            set { Initialize(_Object, _Name, _Private = value); }
+            get => _Private;
+            set => Initialize(_Object, _Name, _Private = value);
         }
 
         ///<summary>Признак </summary>
         public bool IsExist => _PropertyInfo != null;
 
         ///<summary>Значение свйоства</summary>
-        public TValue Value { get { return _GetMethod(); } set { _SetMethod(value); } }
+        public TValue Value { get => _GetMethod(); set => _SetMethod(value); }
 
         ///<summary>Признак возможности читать значение</summary>
         public bool CanRead => _PropertyInfo != null && _PropertyInfo.CanRead;
@@ -118,7 +118,7 @@ namespace System.Reflection
             Contract.Requires(!string.IsNullOrEmpty(Name));
 
             if(_Descriptor != null
-                && !ReferenceEquals(_Object, null)
+                && _Object is { }
                 && !ReferenceEquals(o, _Object)
                 && _Name != Name)
                 _Descriptor.RemoveValueChanged(o, PropertyValueChanged);
@@ -130,7 +130,7 @@ namespace System.Reflection
             _Descriptor = _Object != null
                 ? TypeDescriptor.GetProperties(_Object).Find(Name, true)
                 : TypeDescriptor.GetProperties(typeof(TObject)).Find(Name, true);
-            if(_Descriptor != null && !ReferenceEquals(_Object, null) && _Descriptor.SupportsChangeEvents)
+            if(_Descriptor != null && _Object is { } && _Descriptor.SupportsChangeEvents)
                 _Descriptor.AddValueChanged(_Object, PropertyValueChanged);
 
 
@@ -138,10 +138,10 @@ namespace System.Reflection
             _SetMethod = SetValue;
 
             var type = typeof(TObject);
-            if(type == typeof(object) && !ReferenceEquals(o, null))
+            if(type == typeof(object) && o is { })
                 type = o.GetType();
 
-            var IsStatic = ReferenceEquals(o, null) ? BindingFlags.Static : BindingFlags.Instance;
+            var IsStatic = o == null ? BindingFlags.Static : BindingFlags.Instance;
             var IsPublic = Private ? BindingFlags.NonPublic : BindingFlags.Public;
 
             _PropertyInfo = type.GetProperty(Name, IsStatic | IsPublic);

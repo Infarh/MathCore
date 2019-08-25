@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using MathCore;
 using MathCore.Extentions.Expressions;
@@ -8,8 +8,6 @@ using MathCore.Extentions.Expressions;
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
-    using DST = DebuggerStepThroughAttribute;
-
     /// <summary>ћатрица выражений NxM</summary>
     /// <remarks>
     /// i (первый индекс) - номер строки, 
@@ -40,7 +38,7 @@ namespace System.Linq.Expressions
         {
             var v0 = 0d.ToExpression();
             var v1 = 1d.ToExpression();
-            return new ExpressionMatrix(N, (i, j) => (i == j ? v1 : v0));
+            return new ExpressionMatrix(N, (i, j) => i == j ? v1 : v0);
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -442,7 +440,7 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==(ExpressionMatrix A, ExpressionMatrix B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+        public static bool operator ==(ExpressionMatrix A, ExpressionMatrix B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         public static bool operator !=(ExpressionMatrix A, ExpressionMatrix B) => !(A == B);
 
@@ -667,7 +665,7 @@ namespace System.Linq.Expressions
 
         #region IEquatable<ExpressionMatrix> Members
 
-        public bool Equals(ExpressionMatrix other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || other._N == _N && other._M == _M && Equals(other._Data, _Data));
+        public bool Equals(ExpressionMatrix other) => other is { } && (ReferenceEquals(this, other) || other._N == _N && other._M == _M && Equals(other._Data, _Data));
 
         private static bool Equals(Expression[,] E1, Expression[,] E2)
         {
@@ -688,7 +686,7 @@ namespace System.Linq.Expressions
 
         #endregion
 
-        public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || Equals(obj as ExpressionMatrix));
+        public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || Equals(obj as ExpressionMatrix));
 
         [DST]
         public override int GetHashCode()

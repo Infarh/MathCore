@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore.Annotations;
 
 namespace System.Collections.Generic
@@ -15,7 +15,7 @@ namespace System.Collections.Generic
         ///<param name="ClearBefore">Очищать предварительно (по умолчанию)</param>
         ///<typeparam name="T">Тип элементов списка</typeparam>
         ///<returns>Инициализированный список</returns>
-        [DebuggerStepThrough, CanBeNull]
+        [DST, CanBeNull]
         public static IList<T> Initialize<T>
         (
             [CanBeNull] this IList<T> list, 
@@ -47,7 +47,7 @@ namespace System.Collections.Generic
         ///<typeparam name="T">Тип элементов списка</typeparam>
         ///<typeparam name="TParameter">Тип параметра инициализации</typeparam>
         ///<returns>Инициализированный список</returns>
-        [DebuggerStepThrough, CanBeNull]
+        [DST, CanBeNull]
         public static IList<T> Initialize<T, TParameter>
         (
             [CanBeNull] this IList<T> list,

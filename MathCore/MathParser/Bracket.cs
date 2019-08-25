@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
@@ -42,12 +43,12 @@ namespace MathCore.MathParser
         /// <summary>Проверка на эквивалентность другим скобкам</summary>
         /// <param name="other">Проверяемые на эквивалентность скобки</param>
         /// <returns>Истина, если проверяемые скобки эквивалентны данным</returns>
-        public bool Equals(Bracket other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || string.Equals(Start, other.Start) && string.Equals(Stop, other.Stop));
+        public bool Equals(Bracket other) => other is { } && (ReferenceEquals(this, other) || string.Equals(Start, other.Start) && string.Equals(Stop, other.Stop));
 
         /// <summary>Проверка на эквивалентность</summary>
         /// <param name="obj">Проверяемый объект</param>
         /// <returns>Истина, если объект - скобки и вид скобок совпадает</returns>
-        public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Bracket)obj));
+        public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Bracket)obj));
 
         /// <summary>Получить хэш-код</summary>
         /// <returns>Хэш-код</returns>

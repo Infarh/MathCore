@@ -40,6 +40,6 @@ namespace MathCore.Interpolation
             return Maping.GetValue(x, _X[i1], _X[i2], _Y[i1], _Y[i2]);
         }
 
-        public Func<double, double> GetFunction() { return Value; }
+        public Func<double, double> GetFunction() => Value;
     }
 }

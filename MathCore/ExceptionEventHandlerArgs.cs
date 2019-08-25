@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System
 {
@@ -20,17 +20,17 @@ namespace System
         /// <summary>Исключение обработано</summary>
         public bool IsHandled
         {
-            [DebuggerStepThrough]
-            get { return !_Unhandled && _IsHandled; }
-            [DebuggerStepThrough]
-            set { _IsHandled = value; }
+            [DST]
+            get => !_Unhandled && _IsHandled;
+            [DST]
+            set => _IsHandled = value;
         }
 
         /// <summary>Признак необходимости генерации исключения</summary>
         public bool NeedToThrow
         {
-            [DebuggerStepThrough]
-            get { return _Unhandled || !IsHandled; }
+            [DST]
+            get => _Unhandled || !IsHandled;
         }
 
         /* ------------------------------------------------------------------------------------------ */
@@ -38,29 +38,26 @@ namespace System
 
         /// <summary>Новый аргумент события генерации исключения</summary>
         /// <param name="Error">Исключение</param>
-        [DebuggerStepThrough]
+        [DST]
         public ExceptionEventHandlerArgs(TException Error) : base(Error) => Contract.Requires(Error != null);
 
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Исключение обработано</summary>
-        [DebuggerStepThrough]
-        public void Handled() { IsHandled = true; }
+        [DST]
+        public void Handled() => IsHandled = true;
 
         /// <summary>Исключение должно быть сгенерировано в любом случае</summary>
-        [DebuggerStepThrough]
-        public void Unhandled() { _Unhandled = true; }
+        [DST]
+        public void Unhandled() => _Unhandled = true;
 
         /* ------------------------------------------------------------------------------------------ */
 
-        [DebuggerStepThrough]
-        public static implicit operator TException(ExceptionEventHandlerArgs<TException> arg) { return arg.Argument; }
+        [DST]
+        public static implicit operator TException(ExceptionEventHandlerArgs<TException> arg) => arg.Argument;
 
-        [DebuggerStepThrough]
-        public static implicit operator ExceptionEventHandlerArgs<TException>(TException exception)
-        {
-            return new ExceptionEventHandlerArgs<TException>(exception);
-        }
+        [DST]
+        public static implicit operator ExceptionEventHandlerArgs<TException>(TException exception) => new ExceptionEventHandlerArgs<TException>(exception);
 
         /* ------------------------------------------------------------------------------------------ */
     }

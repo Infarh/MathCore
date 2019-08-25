@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -2315,8 +2316,8 @@ namespace System
         /// <returns>Результаты дискретизации</returns>
         private static Tuple<SamplingResult<T>.Result[], double> SamplingAdaptive_HalfDivision_<T>
         (
-            this Func<double, T> f,
-            Func<T, double> converter,
+            [NotNull] this Func<double, T> f,
+            [NotNull] Func<T, double> converter,
             double x1,
             double x2,
             double eps

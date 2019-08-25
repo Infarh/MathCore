@@ -1,6 +1,4 @@
-using System.Numerics;
-
-namespace MathCore
+namespace System.Numerics
 {
     public static class BigIntegerExtentions
     {

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using MathCore.Annotations;
 
 namespace MathCore
@@ -11,14 +10,14 @@ namespace MathCore
         /// <summary>Явное приведение типов полинома к делегату функции преобразования double->double</summary>
         /// <param name="P">Полином</param>
         /// <returns>Делегат функции преобразования</returns>
-        [Pure, DebuggerStepThrough, NotNull]
+        [Pure, DST, NotNull]
         public static implicit operator Func<double, double>([NotNull] Polynom P)
         {
             Contract.Ensures(Contract.Result<Func<double, double>>() != null);
             return P.Value;
         }
 
-        [Pure, DebuggerStepThrough, NotNull]
+        [Pure, DST, NotNull]
         public static implicit operator Func<Complex, Complex>([NotNull] Polynom P)
         {
             Contract.Ensures(Contract.Result<Func<Complex, Complex>>() != null);
@@ -29,7 +28,7 @@ namespace MathCore
         /// <param name="P">Первое слагаемое</param>
         /// <param name="Q">Второе слагаемое</param>
         /// <returns>Сумма полиномов</returns>
-        [DebuggerStepThrough, Pure, NotNull]
+        [DST, Pure, NotNull]
         public static Polynom operator +([NotNull] Polynom P, [NotNull] Polynom Q)
         {
             Contract.Requires(P != null);
@@ -97,19 +96,19 @@ namespace MathCore
         /// <summary>Оператор неявного преведения типа полинома в массив вещественных значений коэффициентов</summary>
         /// <param name="p">Полином</param>
         /// <returns>Массив значений коэффициентов</returns>
-        [DebuggerStepThrough, NotNull]
+        [DST, NotNull]
         public static explicit operator double[] ([NotNull] Polynom p) => p.Coefficients;
 
-        [DebuggerStepThrough, NotNull]
+        [DST, NotNull]
         public static implicit operator Polynom(double a) => new Polynom(a);
 
-        [DebuggerStepThrough, NotNull]
+        [DST, NotNull]
         public static implicit operator Polynom(float a) => new Polynom(a);
 
-        [DebuggerStepThrough, NotNull]
+        [DST, NotNull]
         public static implicit operator Polynom(int a) => new Polynom(a);
 
-        [DebuggerStepThrough, NotNull]
+        [DST, NotNull]
         public static implicit operator Polynom(short a) => new Polynom(a);
     }
 }

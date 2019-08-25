@@ -122,7 +122,7 @@ namespace System
 
         public override long Position
         {
-            get { return _DataStream.Position; }
+            get => _DataStream.Position;
             set
             {
                 var old = _DataStream.Position;

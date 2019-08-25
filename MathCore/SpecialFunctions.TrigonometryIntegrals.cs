@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
@@ -47,7 +47,7 @@ namespace MathCore
             Copyright 1984, 1987, 1989 by Stephen L. Moshier
             *************************************************************************/
 
-            [DebuggerStepThrough]
+            [DST]
             public static void SineCosineIntegrals(double x, out double si, out double ci)
             {
 
@@ -254,7 +254,7 @@ namespace MathCore
             Copyright 1984, 1987, 2000 by Stephen L. Moshier
             *************************************************************************/
 
-            [DebuggerStepThrough]
+            [DST]
             public static void HyperbolicSineCosineIntegrals(double x, out double shi, out double chi)
             {
                 int sg;

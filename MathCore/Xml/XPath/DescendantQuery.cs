@@ -34,10 +34,7 @@ namespace System.Xml.XPath
         // current context node need to be saved if
         // we need to solve the case for future.
         /// <exception cref="XPathReaderException">Can't get the decendent nodes value</exception>
-        internal override object GetValue(XPathReader reader)
-        {
-            throw new XPathReaderException("Can't get the decendent nodes value");
-        }
+        internal override object GetValue(XPathReader reader) => throw new XPathReaderException("Can't get the decendent nodes value");
 
         #endregion
     }

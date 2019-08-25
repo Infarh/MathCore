@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
@@ -351,7 +350,7 @@ namespace System
         ///<typeparam name="TIn">Тип элементов массива области определения</typeparam>
         ///<typeparam name="TOut">Тип элементов массива области значения</typeparam>
         ///<returns>Массив значений функции</returns>
-        [DebuggerStepThrough, NotNull]
+        [DST, NotNull]
         public static TOut[] Function<TIn, TOut>([NotNull] this TIn[] array, [NotNull] Func<TIn, TOut> f)
         {
             Contract.Requires(f != null);

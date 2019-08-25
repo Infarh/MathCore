@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
-    //[Diagnostics.DebuggerStepThrough]
+    //[Diagnostics.DST]
     public abstract class ExpressionVisitorEx
     {
         public virtual Expression Visit(Expression Node)

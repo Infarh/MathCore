@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
@@ -9,7 +9,7 @@ namespace System
 {
     /// <summary>Аргумент события с типизированным параметром</summary>
     /// <typeparam name="TArgument">Тип параметра аргумента</typeparam>
-    [DebuggerStepThrough]
+    [DST]
     public class EventArgs<TArgument> : EventArgs
     {
         /* ------------------------------------------------------------------------------------------ */
@@ -56,7 +56,7 @@ namespace System
     /// <summary>Аргумент события с двумя типизированными параметрами</summary>
     /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
     /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
-    [DebuggerStepThrough]
+    [DST]
     public class EventArgs<TArgument1, TArgument2> : EventArgs
     {
         /// <summary>Первый аргумент</summary>
@@ -92,7 +92,7 @@ namespace System
     /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
     /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
     /// <typeparam name="TArgument3">Тип третьего параметра</typeparam>
-    [DebuggerStepThrough]
+    [DST]
     public class EventArgs<TArgument1, TArgument2, TArgument3> : EventArgs
     {
         /// <summary>Первый аргумент</summary>
@@ -122,7 +122,7 @@ namespace System
     /// <summary>Аргумент события с типизированным параметром</summary>
     /// <typeparam name="TSender">Тип источника события</typeparam>
     /// <typeparam name="TArgument">Тип параметра аргумента</typeparam>
-    [DebuggerStepThrough]
+    [DST]
     public class EventSenderArgs<TSender, TArgument> : EventArgs<TArgument>
     {
         /* ------------------------------------------------------------------------------------------ */
@@ -160,7 +160,7 @@ namespace System
     /// <typeparam name="TSender">Тип источника события</typeparam>
     /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
     /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
-    [DebuggerStepThrough]
+    [DST]
     public class EventSenderArgs<TSender, TArgument1, TArgument2> : EventArgs<TArgument1, TArgument2>
     {
         /// <summary>Источник события</summary>
@@ -181,7 +181,7 @@ namespace System
     /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
     /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
     /// <typeparam name="TArgument3">Тип третьего параметра</typeparam>
-    [DebuggerStepThrough]
+    [DST]
     public class EventSenderArgs<TSender, TArgument1, TArgument2, TArgument3> : EventArgs<TArgument1, TArgument2, TArgument3>
     {
         /// <summary>Источник события</summary>

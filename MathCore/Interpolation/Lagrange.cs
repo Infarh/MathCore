@@ -70,14 +70,11 @@ namespace MathCore.Interpolation
         }
 
         [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_Polynom != null);
-        }
+        private void ObjectInvariant() => Contract.Invariant(_Polynom != null);
 
         /* ------------------------------------------------------------------------------------------ */
 
-        private void Initialize([NotNull]double[] X, [NotNull]double[] Y) { _Polynom = GetPolynom(X, Y); }
+        private void Initialize([NotNull]double[] X, [NotNull]double[] Y) => _Polynom = GetPolynom(X, Y);
 
         private void OnInitializationComplite([NotNull]IAsyncResult Result) => Invoke_OnInitialized();
 

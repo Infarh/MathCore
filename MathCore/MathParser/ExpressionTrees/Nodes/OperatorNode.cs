@@ -8,8 +8,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         {
             get
             {
-                var is_left_null = ReferenceEquals(Left, null);
-                var is_right_null = ReferenceEquals(Right, null);
+                var is_left_null = Left is null;
+                var is_right_null = Right is null;
                 return !(is_left_null && is_right_null) && !is_left_null && Left.IsPrecomputable && !is_right_null && Right.IsPrecomputable;
             }
         }

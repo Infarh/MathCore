@@ -8,10 +8,7 @@ namespace MathCore.DifferencialEquations.Numerical
 
         public static class RungeKutta
         {
-            public static double[] FixedStep(double y0, double start, double stop, int Count, DU f)
-            {
-                return FixedStep(y0, new Interval(start, stop), Count, f);
-            }
+            public static double[] FixedStep(double y0, double start, double stop, int Count, DU f) => FixedStep(y0, new Interval(start, stop), Count, f);
 
             public static double[] FixedStep(double y0, Interval interval, int Count, DU f)
             {

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MathCore;
 
 namespace ConsoleTest
 {
@@ -11,8 +6,9 @@ namespace ConsoleTest
     {
         static void Main(string[] args)
         {
-            var z = new Complex(5, 7);
-            Console.WriteLine(z);
+            var q = '0'.ToDigit();
+
+            Console.WriteLine(q);
 
             Console.ReadLine();
         }

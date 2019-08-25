@@ -7,10 +7,7 @@ namespace MathCore.Interpolation
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        public static double GetValue(double x, double x0, double y0, double x1, double y1)
-        {
-            return (y1 - y0) / (x1 - x0) * (x - x0) + y0;
-        }
+        public static double GetValue(double x, double x0, double y0, double x1, double y1) => (y1 - y0) / (x1 - x0) * (x - x0) + y0;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -19,8 +16,10 @@ namespace MathCore.Interpolation
         public double X1 { get; set; }
         public double Y1 { get; set; }
 
-        public Vector2D P1 { get { return new Vector2D(X0, Y0); } set { X0 = value.X; Y0 = value.Y; } }
-        public Vector2D P2 { get { return new Vector2D(X1, Y1); } set { X1 = value.X; Y1 = value.Y; } }
+        public Vector2D P1 { get => new Vector2D(X0, Y0);
+            set { X0 = value.X; Y0 = value.Y; } }
+        public Vector2D P2 { get => new Vector2D(X1, Y1);
+            set { X1 = value.X; Y1 = value.Y; } }
 
         public double this[double x] => Value(x);
 
@@ -40,13 +39,13 @@ namespace MathCore.Interpolation
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public double Value(double x) { return GetValue(x, X0, Y0, X1, Y1); }
+        public double Value(double x) => GetValue(x, X0, Y0, X1, Y1);
 
-        public Func<double, double> GetFunction() { return Value; }
+        public Func<double, double> GetFunction() => Value;
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public static implicit operator Func<double, double>(Maping Interpolator) { return Interpolator.Value; }
+        public static implicit operator Func<double, double>(Maping Interpolator) => Interpolator.Value;
 
         /* ------------------------------------------------------------------------------------------ */
     }

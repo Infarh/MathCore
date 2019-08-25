@@ -15,7 +15,7 @@ namespace MathCore.MathParser
         /// <summary>Численное значение элемента</summary>
         public int Value
         {
-            get { return _IntValue; }
+            get => _IntValue;
             set
             {
                 _IntValue = value;

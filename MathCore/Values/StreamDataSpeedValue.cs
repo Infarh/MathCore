@@ -1,8 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.CompilerServices;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.Values
 {
@@ -15,7 +15,7 @@ namespace MathCore.Values
         private static readonly string[] __DataNames = Consts.DataLength.Bytes.GetDataNames().Initialize((s, i) => s + "/с");
 
         /// <summary>Текущее время</summary>
-        private static DateTime Now { [DebuggerStepThrough] get { return DateTime.Now; } }
+        private static DateTime Now { [DST] get => DateTime.Now; }
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -46,22 +46,20 @@ namespace MathCore.Values
         /// <summary>Количество знаков после запятой в строковом представлении</summary>
         public int Round
         {
-            [DebuggerStepThrough]
-            get { return _Round; }
-            [DebuggerStepThrough]
-            set { _Round = value; }
+            [DST] get => _Round;
+            [DST] set => _Round = value;
         }
 
         /// <summary>Мгновенное значение скорости</summary>
-        public double Value { [DebuggerStepThrough] get { return CheckSpeed(); } }
+        public double Value { [DST] get => CheckSpeed(); }
 
         /// <summary>Усреднённое значение скорости</summary>
-        public double AverageValue { [DebuggerStepThrough] get { return _AverageValue.Add(Value); } }
+        public double AverageValue { [DST] get => _AverageValue.Add(Value); }
 
         /// <summary>Строковое представление скорости</summary>
         public string SpeedStr
         {
-            [DebuggerStepThrough]
+            [DST]
             get
             {
                 var speed = Value;
@@ -74,18 +72,16 @@ namespace MathCore.Values
         /// <summary>Постоянная времени усреднения </summary>
         public double AverageTau
         {
-            [DebuggerStepThrough]
-            get { return _AverageValue.Tau; }
-            [DebuggerStepThrough]
-            set { _AverageValue.Tau = value; }
+            [DST] get => _AverageValue.Tau;
+            [DST] set => _AverageValue.Tau = value;
         }
 
         /// <summary>Минимально домустимый интервал времени проверки скорости</summary>
         public double SpeedCheckTimeout
         {
-            [DebuggerStepThrough]
-            get { return _SpeedCheckTimeout; }
-            [DebuggerStepThrough]
+            [DST]
+            get => _SpeedCheckTimeout;
+            [DST]
             set
             {
                 Contract.Requires(value >= 0);
@@ -147,7 +143,7 @@ namespace MathCore.Values
         /// <summary>Неявное преобразование измерителя скорости к значению скорости (усреднённому)</summary>
         /// <param name="speed">Измеритель скорости</param>
         /// <returns>Значение скосроти</returns>
-        public static implicit operator double(StreamDataSpeedValue speed) { return speed.AverageValue; }
+        public static implicit operator double(StreamDataSpeedValue speed) => speed.AverageValue;
 
         /* ------------------------------------------------------------------------------------------ */
 

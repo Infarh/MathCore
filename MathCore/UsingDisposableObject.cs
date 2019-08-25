@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace MathCore
@@ -14,7 +14,7 @@ namespace MathCore
 
         /// <summary>Новая обёртка для используемого объекта</summary>
         /// <param name="Obj">Используемый объект</param>
-        [DebuggerStepThrough]
+        [DST]
         public UsingDisposableObject(T Obj) : base(Obj, o => o.Dispose()) { }
 
         /* ------------------------------------------------------------------------------------------ */
@@ -23,7 +23,7 @@ namespace MathCore
         /// <typeparam name="TValue">Тип значения, получаемого от объекта</typeparam>
         /// <param name="f">Метод получения значения</param>
         /// <returns>Значение, полученное от объекта указанным методом</returns>
-        [DebuggerStepThrough]
+        [DST]
         public TValue GetValue<TValue>(Func<T, TValue> f) { Contract.Requires(f != null); return f(Object); }
 
         /* ------------------------------------------------------------------------------------------ */

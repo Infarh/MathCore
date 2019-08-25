@@ -21,7 +21,7 @@ namespace MathCore.Trees
         /// <summary>Индексатор объекта</summary><param name="index">Индекс</param>
         public Tree<T> this[int index]
         {
-            get { return _SubTreeList.Initialized ? _SubTreeList.Value[index] : null; }
+            get => _SubTreeList.Initialized ? _SubTreeList.Value[index] : null;
             set
             {
                 if(_SubTreeList.Initialized)
@@ -32,10 +32,10 @@ namespace MathCore.Trees
         }
 
         /// <summary>Индексатор объекта</summary><param name="index">Индекс</param>
-        ITree<T> IIndexable<int, ITree<T>>.this[int index] { get { return this[index]; } set { this[index] = value as Tree<T>; } }
+        ITree<T> IIndexable<int, ITree<T>>.this[int index] { get => this[index]; set => this[index] = value as Tree<T>; }
 
         /// <summary>Индексатор объекта только для записи</summary><param name="index">Индекс</param>
-        ITree<T> IIndexableWrite<int, ITree<T>>.this[int index] { set { this[index] = value as Tree<T>; } }
+        ITree<T> IIndexableWrite<int, ITree<T>>.this[int index] { set => this[index] = value as Tree<T>; }
 
         /// <summary>Индексатор объекта только для чтения</summary>
         /// <param name="index">Индекс</param>
@@ -92,7 +92,7 @@ namespace MathCore.Trees
         /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
         /// </returns>
         /// <filterpriority>2</filterpriority>
-        IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable<ITree<T>>)this).GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ITree<T>>)this).GetEnumerator();
 
         /* ------------------------------------------------------------------------------------------ */
     }

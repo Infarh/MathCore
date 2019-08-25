@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using cEx = System.Linq.Expressions.ConstantExpression;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -76,10 +75,10 @@ namespace System
         public static IEnumerable<TResult> SelectObj<TSource, TResult>
         (
             this TSource source,
-            Action<ObjectSelector<TSource, TResult>> Selector
+            [NotNull] Action<ObjectSelector<TSource, TResult>> Selector
         )
         {
-            Contract.Requires(!ReferenceEquals(Selector, null));
+            Contract.Requires(Selector is { });
             var selector = new ObjectSelector<TSource, TResult>
             {
                 Object = source,
@@ -103,7 +102,7 @@ namespace System
         [DST]
         public static TResult SelectObject<TSource, TResult>(this TSource source, Func<TSource, TResult> Selector)
         {
-            Contract.Requires(!ReferenceEquals(Selector, null));
+            Contract.Requires(Selector is { });
             return Selector(source);
         }
 
@@ -115,7 +114,7 @@ namespace System
         [DST]
         public static string ToFormattedString(this object obj, string Format = "{0}")
         {
-            Contract.Requires(!ReferenceEquals(obj, null)); obj.ToConsole();
+            Contract.Requires(obj is { }); obj.ToConsole();
             return string.Format(Format, obj);
         }
 
@@ -127,7 +126,7 @@ namespace System
         [DST, StringFormatMethod("Format")]
         public static string ToFormattedString(this object obj, string Format, params object[] args)
         {
-            Contract.Requires(!ReferenceEquals(obj, null)); obj.ToConsole();
+            Contract.Requires(obj is { }); obj.ToConsole();
             return args?.Length != 0 ? string.Format(Format, args.AppendFirst(obj).ToArray()) : string.Format(Format, obj);
         }
 
@@ -193,7 +192,7 @@ namespace System
         public static TAttribute[] GetObjectAttributes<TAttribute>(this object o, bool Inherited = false)
             where TAttribute : Attribute
         {
-            Contract.Requires(!ReferenceEquals(o, null));
+            Contract.Requires(o is { });
             return o.GetType().GetCustomAttributes<TAttribute>(Inherited);
         }
 
@@ -203,8 +202,8 @@ namespace System
         [DST, Diagnostics.Contracts.Pure]
         public static bool IsNotNull(this object o)
         {
-            Contract.Ensures(Contract.Result<bool>() != ReferenceEquals(o, null));
-            return !ReferenceEquals(o, null);
+            Contract.Ensures(Contract.Result<bool>() != o is null);
+            return o is { };
         }
 
         /// <summary>Ссылка на объект равна null</summary>
@@ -213,8 +212,8 @@ namespace System
         [DST, Diagnostics.Contracts.Pure]
         public static bool IsNull(this object o)
         {
-            Contract.Ensures(Contract.Result<bool>() == ReferenceEquals(o, null));
-            return ReferenceEquals(o, null);
+            Contract.Ensures(Contract.Result<bool>() == o is null);
+            return o is null;
         }
 
         /// <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
@@ -239,8 +238,8 @@ namespace System
             [CanBeNull]Action<T> Initializator
         ) where T : class
         {
-            Contract.Requires(!ReferenceEquals(obj, null));
-            Contract.Ensures(!ReferenceEquals(Contract.Result<T>(), null));
+            Contract.Requires(obj is { });
+            Contract.Ensures(Contract.Result<T>() is { });
             Contract.Ensures(ReferenceEquals(Contract.Result<T>(), obj));
             Initializator?.Invoke(obj);
             return obj;
@@ -261,8 +260,8 @@ namespace System
             [CanBeNull]Action<T, TParameter> Initializator
         ) where T : class
         {
-            Contract.Requires(!ReferenceEquals(obj, null));
-            Contract.Ensures(!ReferenceEquals(Contract.Result<T>(), null));
+            Contract.Requires(obj is { });
+            Contract.Ensures(Contract.Result<T>() is { });
             Contract.Ensures(ReferenceEquals(Contract.Result<T>(), obj));
             Initializator?.Invoke(obj, parameter);
             return obj;
@@ -309,7 +308,7 @@ namespace System
         [DST]
         public static void ToConsole<T>([CanBeNull]this T Obj)
         {
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             Console.Write(Obj);
         }
 
@@ -322,7 +321,7 @@ namespace System
         public static void ToConsole<TObject>([CanBeNull]this TObject Obj, [NotNull] string Format, [NotNull, ItemNotNull] params object[] args)
         {
             if (Format is null) throw new ArgumentNullException(nameof(Format));
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             if (args?.Length != 0)
                 Console.Write(Format, args.AppendFirst(Obj).ToArray());
             else
@@ -335,7 +334,7 @@ namespace System
         [DST]
         public static void ToConsoleLN<T>([CanBeNull]this T Obj)
         {
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             Console.WriteLine(Obj);
         }
 
@@ -348,7 +347,7 @@ namespace System
         public static void ToConsoleLN<TObject>([CanBeNull]this TObject Obj, [NotNull] string Format, [NotNull, ItemNotNull] params object[] args)
         {
             if (Format is null) throw new ArgumentNullException(nameof(Format));
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             if (args?.Length != 0)
                 Console.WriteLine(Format, args.AppendFirst(Obj).ToArray());
             else
@@ -361,7 +360,7 @@ namespace System
         [DST, Conditional("DEBUG")]
         public static void ToDubugOut<T>([CanBeNull]this T Obj)
         {
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             Debug.Write(Obj);
         }
 
@@ -372,7 +371,7 @@ namespace System
         [DST, Conditional("DEBUG")]
         public static void ToDubugOut<T>([CanBeNull]this T Obj, bool Condition)
         {
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             Debug.WriteIf(Condition, Obj);
         }
 
@@ -382,7 +381,7 @@ namespace System
         [DST, Conditional("DEBUG")]
         public static void ToDubugOutLN<T>([CanBeNull]this T Obj)
         {
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             Debug.WriteLine(Obj);
         }
 
@@ -393,7 +392,7 @@ namespace System
         [DST, Conditional("DEBUG")]
         public static void ToDubugOutLN<T>([CanBeNull]this T Obj, bool Condition)
         {
-            if (ReferenceEquals(Obj, null)) return;
+            if (Obj == null) return;
             Debug.WriteLineIf(Condition, Obj);
         }
 

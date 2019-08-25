@@ -11,28 +11,28 @@ namespace System.Reflection
 
         public bool IsExist => _FieldInfo != null;
 
-        public string Name { get { return _Name; } set { Initialize(_Object, _Name = value, _Private); } }
+        public string Name { get => _Name; set => Initialize(_Object, _Name = value, _Private); }
 
-        public TObject Object { get { return _Object; } set { Initialize(_Object = value, _Name, _Private); } }
+        public TObject Object { get => _Object; set => Initialize(_Object = value, _Name, _Private); }
 
-        public bool Private { get { return _Private; } set { Initialize(_Object, _Name, _Private = value); } }
+        public bool Private { get => _Private; set => Initialize(_Object, _Name, _Private = value); }
 
-        public TValue Value { get { return (TValue)_FieldInfo.GetValue(_Object); } set { _FieldInfo.SetValue(_Object, value); } }
+        public TValue Value { get => (TValue)_FieldInfo.GetValue(_Object); set => _FieldInfo.SetValue(_Object, value); }
 
         public Field(TObject o, string Name, bool Private = false) => Initialize(_Object = o, _Name = Name, _Private = Private);
 
-        private void Initialize(TObject o, string Name, bool Private)
+        private void Initialize(TObject o, string FieldName, bool IsPrivate)
         {
-            Contract.Requires(!string.IsNullOrEmpty(Name));
+            Contract.Requires(!string.IsNullOrEmpty(FieldName));
 
             var type = typeof(TObject);
             if(type == typeof(TObject) && o != null)
                 type = o.GetType();
 
-            var IsPrivate = Private ? BindingFlags.NonPublic : BindingFlags.Public;
-            var IsStatic = ReferenceEquals(o, null) ? BindingFlags.Static : BindingFlags.Instance;
+            var is_private = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
+            var is_static = o == null ? BindingFlags.Static : BindingFlags.Instance;
 
-            _FieldInfo = type.GetField(Name, IsPrivate | IsStatic);
+            _FieldInfo = type.GetField(FieldName, is_private | is_static);
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore;
 
 namespace System
 {
     public static class ShortExtentions
     {
-        [DebuggerStepThrough]
+        [DST]
         public static bool IsPrime(this short x)
         {
             if(x % 2 == 0) return x == 2;
@@ -22,24 +22,20 @@ namespace System
         /// <summary>Является ли число степенью двойки?</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
-        [DebuggerStepThrough]
-        public static bool IsPowerOf2(this short x)
-        {
-            //return (Math.Round(Math.Log(x, 2)) % 1) == 0;
-            return (x & (x - 1)) == 0 || x == 1;
-        }
+        [DST]
+        public static bool IsPowerOf2(this short x) => (x & (x - 1)) == 0 || x == 1;
 
         /// <summary>Число бит числа</summary>
         /// <param name="x">Значащее число</param>
         /// <returns>Число бит числа</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static int BitCount(this short x) => (int)Math.Round(Math.Log(x, 2));
 
         /// <summary>Реверсирование бит числа</summary>
         /// <param name="x">исходное число</param>
         /// <param name="N">Число реверсируемых бит</param>
         /// <returns>Реверсированное число</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static short BitReversing(this short x, int N)
         {
             short Result = 0;
@@ -55,28 +51,28 @@ namespace System
         /// <summary>Реверсирование всех 16 бит числа</summary>
         /// <param name="x">исходное число</param>
         /// <returns>Реверсированное число</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static short BitReversing(this short x) => x.BitReversing(16);
 
-        [DebuggerStepThrough]
-        public static bool IsDevidedTo(this short x, short y) => (x % y) == 0;
+        [DST]
+        public static bool IsDevidedTo(this short x, short y) => x % y == 0;
 
-        [DebuggerStepThrough]
-        public static short GetAbsMod(this short x, short mod) => (short)((x % mod) + (x < 0 ? mod : 0));
+        [DST]
+        public static short GetAbsMod(this short x, short mod) => (short)(x % mod + (x < 0 ? mod : 0));
 
         /// <summary>Является ли число нечётным</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число нечётное</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static bool IsOdd(this short x) => !x.IsEven();
 
         /// <summary>Является ли число чётным</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static bool IsEven(this short x) => x.IsDevidedTo(2);
 
-        [DebuggerStepThrough]
+        [DST]
         public static short Power(this short x, int n)
         {
             if(n > 1000 || n < -1000) return (short)Math.Pow(x, n);
@@ -86,16 +82,16 @@ namespace System
             return (short)result;
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public static double Power(this short x, short y) => Math.Pow(x, y);
 
-        [DebuggerStepThrough]
+        [DST]
         public static Complex Power(this short x, Complex z) => x ^ z;
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static short GetFlags(this short Value, short Mask) => (short)(Value & Mask);
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static short SetFlag(this short Value, short Flag, short Mask) => (short)((Value & ~Mask) | (Flag & Mask));
     }
 }

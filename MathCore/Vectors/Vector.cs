@@ -31,7 +31,7 @@ namespace MathCore.Vectors
 
         public bool Equals(Vector<T> other)
         {
-            if(ReferenceEquals(other, null)) return false;
+            if(other is null) return false;
             if(ReferenceEquals(other, this)) return true;
             if(other.Demention != Demention) return false;
 
@@ -50,9 +50,9 @@ namespace MathCore.Vectors
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public static implicit operator Vector<T>(T[] e) { return new Vector<T>(e); }
+        public static implicit operator Vector<T>(T[] e) => new Vector<T>(e);
 
-        public static implicit operator Vector<T>(List<T> e) { return new Vector<T>(e); }
+        public static implicit operator Vector<T>(List<T> e) => new Vector<T>(e);
 
         /* ------------------------------------------------------------------------------------------ */
     }

@@ -7,20 +7,11 @@ namespace System
 {
     public static class StringExtentionsRegEx
     {
-        public static string FindRegEx(this string str, Regex regex, string Default = "")
-        {
-            return regex.Match(str).OrDefault(Default);
-        }
+        public static string FindRegEx(this string str, Regex regex, string Default = "") => regex.Match(str).OrDefault(Default);
 
-        public static IEnumerable<Match> FindAllRegExMatch(this string str, Regex regex)
-        {
-            return regex.Matches(str).Cast<Match>();
-        }
+        public static IEnumerable<Match> FindAllRegExMatch(this string str, Regex regex) => regex.Matches(str).Cast<Match>();
 
-        public static IEnumerable<string> FindAllRegEx(this string str, Regex regex)
-        {
-            return str.FindAllRegExMatch(regex).Select(m => m.Value);
-        }
+        public static IEnumerable<string> FindAllRegEx(this string str, Regex regex) => str.FindAllRegExMatch(regex).Select(m => m.Value);
     }
 }
 

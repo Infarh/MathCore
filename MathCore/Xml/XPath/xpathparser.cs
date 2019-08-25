@@ -15,6 +15,7 @@
 
 using System.Collections;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System.Xml.XPath
 {
@@ -402,15 +403,15 @@ namespace System.Xml.XPath
         //>> NodeTest ::= NameTest | 'comment ()' | 'text ()' | 'node ()' | 'processing-instruction ('  Literal ? ')'
         private AstNode ParseNodeTest(AstNode QyInput, Axis.AxisType AxisType, XPathNodeType NodeType)
         {
-            string lv_NodeName, lv_NodePrefix;
+            string node_name, node_prefix;
 
             switch(_Scanner.Kind)
             {
                 case XPathScanner.LexKind.Name:
                     if(_Scanner.CanBeFunction && IsNodeType(_Scanner))
                     {
-                        lv_NodePrefix = string.Empty;
-                        lv_NodeName = string.Empty;
+                        node_prefix = string.Empty;
+                        node_name = string.Empty;
                         NodeType = _Scanner.Name == "comment"
                             ? XPathNodeType.Comment
                             : _Scanner.Name == "text"
@@ -430,7 +431,7 @@ namespace System.Xml.XPath
                             {
                                 //>> 'processing-instruction (' Literal ')'
                                 CheckToken(XPathScanner.LexKind.String);
-                                lv_NodeName = _Scanner.StringValue;
+                                node_name = _Scanner.StringValue;
                                 NextLex();
                             }
 
@@ -438,21 +439,21 @@ namespace System.Xml.XPath
                     }
                     else
                     {
-                        lv_NodePrefix = _Scanner.Prefix;
-                        lv_NodeName = _Scanner.Name;
+                        node_prefix = _Scanner.Prefix;
+                        node_name = _Scanner.Name;
                         NextLex();
-                        if(lv_NodeName == "*") lv_NodeName = string.Empty;
+                        if(node_name == "*") node_name = string.Empty;
                     }
                     break;
                 case XPathScanner.LexKind.Star:
-                    lv_NodePrefix = string.Empty;
-                    lv_NodeName = string.Empty;
+                    node_prefix = string.Empty;
+                    node_name = string.Empty;
                     NextLex();
                     break;
                 default:
                     throw new XPathException($"Expression {_Scanner.SourceText} must evaluate to a node-set.");
             }
-            return new Axis(AxisType, QyInput, lv_NodePrefix, lv_NodeName, NodeType);
+            return new Axis(AxisType, QyInput, node_prefix, node_name, NodeType);
         }
 
         private static bool IsPrimaryExpr(XPathScanner scanner) => scanner.Kind == XPathScanner.LexKind.String ||
@@ -499,7 +500,7 @@ namespace System.Xml.XPath
 
         private AstNode ParseMethod(AstNode QyInput)
         {
-            var lv_ArgList = new ArrayList();
+            var arg_list = new ArrayList();
             var name = _Scanner.Name;
             var prefix = _Scanner.Prefix;
             PassToken(XPathScanner.LexKind.Name);
@@ -508,37 +509,37 @@ namespace System.Xml.XPath
             {
                 do
                 {
-                    lv_ArgList.Add(ParseExpresion(QyInput));
+                    arg_list.Add(ParseExpresion(QyInput));
                     if(_Scanner.Kind == XPathScanner.LexKind.RParens) break;
                     PassToken(XPathScanner.LexKind.Comma);
                 } while(true);
             }
             PassToken(XPathScanner.LexKind.RParens);
-            if(prefix != string.Empty) return new Function(prefix, name, lv_ArgList);
+            if(prefix != string.Empty) return new Function(prefix, name, arg_list);
             var pi = (ParamInfo)_FunctionTable[name];
-            if(pi == null) return new Function(prefix, name, lv_ArgList);
-            var lv_ArgCount = lv_ArgList.Count;
-            if(lv_ArgCount < pi.Minargs)
+            if(pi == null) return new Function(prefix, name, arg_list);
+            var arg_count = arg_list.Count;
+            if(arg_count < pi.Minargs)
                 throw new XPathException($"Function '{name}' in '{_Scanner.SourceText}' has invalid number of arguments.");
             if(pi.FType == Function.FunctionType.FuncConcat)
             {
-                for(var i = 0; i < lv_ArgCount; i++)
+                for(var i = 0; i < arg_count; i++)
                 {
-                    var arg = (AstNode)lv_ArgList[i];
+                    var arg = (AstNode)arg_list[i];
                     if(arg.ReturnType != XPathResultType.String)
                         arg = new Function(Function.FunctionType.FuncString, arg);
-                    lv_ArgList[i] = arg;
+                    arg_list[i] = arg;
                 }
             }
             else
             {
-                if(pi.Maxargs < lv_ArgCount)
+                if(pi.Maxargs < arg_count)
                     throw new XPathException($"Function '{name}' in '{_Scanner.SourceText}' has invalid number of arguments.");
-                if(pi.ArgTypes.Length < lv_ArgCount)
-                    lv_ArgCount = pi.ArgTypes.Length; // argument we have the type specified (can be < pi.Minargs)
-                for(var i = 0; i < lv_ArgCount; i++)
+                if(pi.ArgTypes.Length < arg_count)
+                    arg_count = pi.ArgTypes.Length; // argument we have the type specified (can be < pi.Minargs)
+                for(var i = 0; i < arg_count; i++)
                 {
-                    var arg = (AstNode)lv_ArgList[i];
+                    var arg = (AstNode)arg_list[i];
                     if(pi.ArgTypes[i] == XPathResultType.Any || pi.ArgTypes[i] == arg.ReturnType) continue;
                     switch(pi.ArgTypes[i])
                     {
@@ -558,10 +559,10 @@ namespace System.Xml.XPath
                             arg = new Function(Function.FunctionType.FuncBoolean, arg);
                             break;
                     }
-                    lv_ArgList[i] = arg;
+                    arg_list[i] = arg;
                 }
             }
-            return new Function(pi.FType, lv_ArgList);
+            return new Function(pi.FType, arg_list);
         }
 
         // --------------- Pattern Parsing ----------------------
@@ -620,7 +621,7 @@ namespace System.Xml.XPath
         private AstNode ParseIdKeyPattern(AstNode QyInput)
         {
             Debug.Assert(_Scanner.CanBeFunction);
-            var lv_ArgList = new ArrayList();
+            var arg_list = new ArrayList();
             if(_Scanner.Prefix.Length != 0) return null;
             switch(_Scanner.Name)
             {
@@ -629,22 +630,22 @@ namespace System.Xml.XPath
                     NextLex();
                     PassToken(XPathScanner.LexKind.LParens);
                     CheckToken(XPathScanner.LexKind.String);
-                    lv_ArgList.Add(new Operand(_Scanner.StringValue));
+                    arg_list.Add(new Operand(_Scanner.StringValue));
                     NextLex();
                     PassToken(XPathScanner.LexKind.RParens);
-                    return new Function(pi.FType, lv_ArgList);
+                    return new Function(pi.FType, arg_list);
                 case "key":
                     NextLex();
                     PassToken(XPathScanner.LexKind.LParens);
                     CheckToken(XPathScanner.LexKind.String);
-                    lv_ArgList.Add(new Operand(_Scanner.StringValue));
+                    arg_list.Add(new Operand(_Scanner.StringValue));
                     NextLex();
                     PassToken(XPathScanner.LexKind.Comma);
                     CheckToken(XPathScanner.LexKind.String);
-                    lv_ArgList.Add(new Operand(_Scanner.StringValue));
+                    arg_list.Add(new Operand(_Scanner.StringValue));
                     NextLex();
                     PassToken(XPathScanner.LexKind.RParens);
-                    return new Function("", "key", lv_ArgList);
+                    return new Function("", "key", arg_list);
             }
             return null;
         }
@@ -672,26 +673,26 @@ namespace System.Xml.XPath
         //>> ChildOrAttributeAxisSpecifier    ::=    @ ? | ('child' | 'attribute') '::' 
         private AstNode ParseStepPattern(AstNode QyInput)
         {
-            var lv_AxisType = Axis.AxisType.Child;
+            var axis_type = Axis.AxisType.Child;
             switch(_Scanner.Kind)
             {
                 case XPathScanner.LexKind.At: //>> '@'
-                    lv_AxisType = Axis.AxisType.Attribute;
+                    axis_type = Axis.AxisType.Attribute;
                     NextLex();
                     break;
                 case XPathScanner.LexKind.Axe: //>> AxisName '::'
-                    lv_AxisType = GetAxis(_Scanner);
-                    if(lv_AxisType != Axis.AxisType.Child && lv_AxisType != Axis.AxisType.Attribute)
+                    axis_type = GetAxis(_Scanner);
+                    if(axis_type != Axis.AxisType.Child && axis_type != Axis.AxisType.Attribute)
                         throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.");
                     NextLex();
                     break;
             }
-            var lv_NodeType = lv_AxisType == Axis.AxisType.Attribute
+            var node_type = axis_type == Axis.AxisType.Attribute
                 ? XPathNodeType.Attribute
                 : /* default: */
                   XPathNodeType.Element;
 
-            var opnd = ParseNodeTest(QyInput, lv_AxisType, lv_NodeType);
+            var opnd = ParseNodeTest(QyInput, axis_type, node_type);
 
             while(XPathScanner.LexKind.LBracket == _Scanner.Kind)
                 opnd = new Filter(opnd, ParsePredicate(opnd));

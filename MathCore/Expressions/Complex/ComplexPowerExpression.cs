@@ -12,8 +12,8 @@ namespace MathCore.Expressions.Complex
         private Expression arg => _arg ?? (_arg = Add(Multiply(Left.Arg, Right.Re), Multiply(GetLog(Left.Abs), Right.Im)));
         public ComplexPowerExpression(ComplexExpression Left, ComplexExpression Right) : base(Left, Right) { }
 
-        protected override Expression GetRe() { return Multiply(r, GetCos(arg)); }
+        protected override Expression GetRe() => Multiply(r, GetCos(arg));
 
-        protected override Expression GetIm() { return Multiply(r, GetSin(arg)); }
+        protected override Expression GetIm() => Multiply(r, GetSin(arg));
     }
 }

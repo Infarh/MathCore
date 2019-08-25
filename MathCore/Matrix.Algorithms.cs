@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MathCore.Annotations;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using MathCore.Annotations;
+using System.Runtime.CompilerServices;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMember.Local
@@ -224,14 +225,14 @@ namespace MathCore
                 var m = matrix.CloneObject();
                 // ReSharper disable CompareOfFloatsByEqualityOperator
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                    {
-                        var j = 0;
-                        while (j < N && (int)p[i, j] != 1) j++;
-                        if (j == N) continue;
-                        if (p[i, j] != p[j, i]) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
-                        if (j >= i) continue;
-                        m.SwapRows(i, j);
-                    }
+                {
+                    var j = 0;
+                    while (j < N && (int)p[i, j] != 1) j++;
+                    if (j == N) continue;
+                    if (p[i, j] != p[j, i]) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
+                    if (j >= i) continue;
+                    m.SwapRows(i, j);
+                }
                 // ReSharper restore CompareOfFloatsByEqualityOperator
                 System.Array.Copy(m, matrix, matrix.Length);
             }
@@ -259,14 +260,14 @@ namespace MathCore
                 if (N == 1) return;
                 var m = matrix.CloneObject();
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                    {
-                        var j = 0;
-                        while (j < N && (int)p[i, j] != 1) j++;
-                        if (j == N) continue;
-                        if (!p[i, j].Equals(p[j, i])) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
-                        if (j >= i) continue;
-                        m.SwapCols(i, j);
-                    }
+                {
+                    var j = 0;
+                    while (j < N && (int)p[i, j] != 1) j++;
+                    if (j == N) continue;
+                    if (!p[i, j].Equals(p[j, i])) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
+                    if (j >= i) continue;
+                    m.SwapCols(i, j);
+                }
                 System.Array.Copy(m, matrix, matrix.Length);
             }
 
@@ -280,12 +281,12 @@ namespace MathCore
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                    {
-                        var j = 0;
-                        while (j < N && (int)p[i, j] != 1) j++;
-                        if (j == N || j >= i) continue;
-                        matrix.SwapRows(i, j);
-                    }
+                {
+                    var j = 0;
+                    while (j < N && (int)p[i, j] != 1) j++;
+                    if (j == N || j >= i) continue;
+                    matrix.SwapRows(i, j);
+                }
             }
 
             /// <summary>Применение матрицы перестановок справа (перестановка столбцов) без проверок</summary>
@@ -298,12 +299,12 @@ namespace MathCore
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                    {
-                        var j = 0;
-                        while (j < N && (int)p[i, j] != 1) j++;
-                        if (j == N || j >= i) continue;
-                        matrix.SwapCols(i, j);
-                    }
+                {
+                    var j = 0;
+                    while (j < N && (int)p[i, j] != 1) j++;
+                    if (j == N || j >= i) continue;
+                    matrix.SwapCols(i, j);
+                }
             }
 
             /// <summary>Создать двумерный массив элементов матрицы-столбца</summary>
@@ -347,7 +348,7 @@ namespace MathCore
             /// <param name="N">Число строк матриы</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DebuggerStepThrough, Pure]
+            [DST, Pure]
             public static void GetLength([NotNull] double[,] matrix, out int N, out int M)
             {
                 Contract.Requires(matrix != null);
@@ -364,7 +365,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="N">Число строк матриы</param>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DebuggerStepThrough, Pure]
+            [DST, Pure]
             public static void GetRowsCount([NotNull] double[,] matrix, out int N)
             {
                 Contract.Requires(matrix != null);
@@ -379,7 +380,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DebuggerStepThrough, Pure]
+            [DST, Pure]
             public static void GetColsCount([NotNull] double[,] matrix, out int M)
             {
                 Contract.Requires(matrix != null);
@@ -394,7 +395,7 @@ namespace MathCore
             /// <param name="N">Размерность матрицы</param>
             /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="N"/> меньше 1</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static double[,] GetUnitaryArrayMatrix(int N)
             {
                 if (N < 1)
@@ -410,7 +411,7 @@ namespace MathCore
             /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void InitializeUnitaryMatrix([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -473,7 +474,7 @@ namespace MathCore
             /// <returns>Матрица-столбец, составленная из элементов столбца матрицы c индексом j</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static double[,] GetCol([NotNull] double[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -491,7 +492,7 @@ namespace MathCore
             /// <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static double[] GetCol_Array([NotNull] double[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -511,7 +512,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если массив <paramref name="result"/> не задан</exception>
             /// <exception cref="ArgumentException">В случае если размер массива <paramref name="result"/> не соответствует числу строк матрицы</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void GetCol_Array([NotNull] double[,] matrix, int j, [NotNull] double[] result)
             {
                 GetRowsCount(matrix, out var N);
@@ -533,7 +534,7 @@ namespace MathCore
             /// <returns>Матрица-строка, составленная из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static double[,] GetRow([NotNull] double[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -552,7 +553,7 @@ namespace MathCore
             /// <returns>Массив, составленный из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static double[] GetRow_Array([NotNull] double[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -574,7 +575,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если массив <paramref name="result"/> не задан</exception>
             /// <exception cref="ArgumentException">В случае если размер массива <paramref name="result"/> не соответствует числу столбцов матрицы</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void GetRow_Array([NotNull] double[,] matrix, int i, [NotNull] double[] result)
             {
                 GetColsCount(matrix, out var M);
@@ -734,11 +735,11 @@ namespace MathCore
                     var m = matrix[i0, i0];
                     if (!m.Equals(1d)) for (var j = 0; j < b_M; j++) temp_b[i0, j] /= m;
                     for (var i = i0 - 1; i >= 0; i--) if (!matrix[i, i0].Equals(0d))
-                        {
-                            var k = matrix[i, i0];
-                            matrix[i, i0] = 0d;
-                            for (var j = 0; j < b_M; j++) temp_b[i, j] -= temp_b[i0, j] * k;
-                        }
+                    {
+                        var k = matrix[i, i0];
+                        matrix[i, i0] = 0d;
+                        for (var j = 0; j < b_M; j++) temp_b[i, j] -= temp_b[i0, j] * k;
+                    }
                 }
                 if (clone_b)
                     b = temp_b;
@@ -750,7 +751,7 @@ namespace MathCore
             /// <summary>Транспонирование матрицы</summary>
             /// <returns>Транспонированная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [DebuggerStepThrough, NotNull, Pure]
+            [DST, NotNull, Pure]
             public static double[,] Transponse([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -766,7 +767,7 @@ namespace MathCore
             /// <param name="result">Транспонированная матрица</param>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="result"/> не задана</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static void Transponse([NotNull] double[,] matrix, [NotNull] double[,] result)
             {
                 GetLength(matrix, out var N, out var M);
@@ -815,12 +816,12 @@ namespace MathCore
             {
                 var i0 = 0;
                 for (var i = 0; i < N; i++) if (i != n)
-                    {
-                        var j0 = 0;
-                        for (var j = 0; j < M; j++) if (j != m)
-                                result[i0, j0++] = matrix[i, j];
-                        i0++;
-                    }
+                {
+                    var j0 = 0;
+                    for (var j = 0; j < M; j++) if (j != m)
+                            result[i0, j0++] = matrix[i, j];
+                    i0++;
+                }
             }
 
             /// <summary>Минор матрицы по определённому элементу</summary>
@@ -913,7 +914,7 @@ namespace MathCore
 
             /// <summary>Поменять значения местами</summary>
             /// <typeparam name="T">Тип значения</typeparam>
-            [DebuggerStepThrough] private static void Swap<T>(ref T v1, ref T v2) { var t = v1; v1 = v2; v2 = t; }
+            [DST] private static void Swap<T>(ref T v1, ref T v2) { var t = v1; v1 = v2; v2 = t; }
 
             /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
             /// <remarks>
@@ -1354,11 +1355,11 @@ namespace MathCore
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                        {
-                            var k = matrix[i, i0] / main;
-                            matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                        }
+                    {
+                        var k = matrix[i, i0] / main;
+                        matrix[i, i0] = 0d;
+                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                    }
                 }
                 p = CreatePermutationMatrix(p_index);
                 return N1;
@@ -1406,11 +1407,11 @@ namespace MathCore
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                        {
-                            var k = matrix[i, i0] / main;
-                            matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                        }
+                    {
+                        var k = matrix[i, i0] / main;
+                        matrix[i, i0] = 0d;
+                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                    }
                 }
                 return N1;
             }
@@ -1470,12 +1471,12 @@ namespace MathCore
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                        {
-                            var k = matrix[i, i0] / main;
-                            matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                            for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
-                        }
+                    {
+                        var k = matrix[i, i0] / main;
+                        matrix[i, i0] = 0d;
+                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                        for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
+                    }
                 }
                 if (N1 >= N) return N1;
                 for (var i = N1; i < N; i++) for (var j = 0; j < B_M; j++) b[i, j] = 0d;
@@ -1595,14 +1596,14 @@ namespace MathCore
 
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                        {
-                            var k = matrix[i, i0] / main;
-                            matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++)
-                                matrix[i, j] -= matrix[i0, j] * k;
-                            for (var j = 0; j < B_M; j++)
-                                b[i, j] -= b[i0, j] * k;
-                        }
+                    {
+                        var k = matrix[i, i0] / main;
+                        matrix[i, i0] = 0d;
+                        for (var j = i0 + 1; j < M; j++)
+                            matrix[i, j] -= matrix[i0, j] * k;
+                        for (var j = 0; j < B_M; j++)
+                            b[i, j] -= b[i0, j] * k;
+                    }
                 }
                 p = CreatePermutationMatrix(p_index);
                 if (N1 >= N) return N1;
@@ -1621,7 +1622,7 @@ namespace MathCore
             {
                 if (ReferenceEquals(A, B))
                     return true;
-                if (ReferenceEquals(B, null) || ReferenceEquals(A, null))
+                if (B is null || A is null)
                     return false;
                 GetLength(A, out var N, out var M);
                 if (N != B.GetLength(0) || M != B.GetLength(1))
@@ -1643,7 +1644,7 @@ namespace MathCore
             {
                 if (ReferenceEquals(A, B))
                     return true;
-                if (ReferenceEquals(B, null) || ReferenceEquals(A, null))
+                if (B is null || A is null)
                     return false;
                 GetLength(A, out var N, out var M);
                 if (N != B.GetLength(0) || M != B.GetLength(1))
@@ -1892,6 +1893,18 @@ namespace MathCore
                 QRDecomposition(matrix, q, r);
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static double PyThag(double a, double b)
+            {
+                var absa = Math.Abs(a);
+                var absb = Math.Abs(b);
+                return absa > absb ? absa * Math.Sqrt(1d + Sqr(absb / absa)) :
+                    absb.Equals(0d) ? 0d : absb * Math.Sqrt(1d + Sqr(absa / absb));
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static double Sign(double a, double b) => b >= 0d ? Math.Abs(a) : -Math.Abs(a);
+
             /// <summary>SVD-разложение</summary>
             /// <param name="matrix">Разлагаемая матрица</param>
             /// <param name="u">Матрица левых сингулярных векторов</param>
@@ -1903,19 +1916,6 @@ namespace MathCore
             // ReSharper disable once CyclomaticComplexity
             public static void SVD(double[,] matrix, out double[,] u, out double[] w, out double[,] v)
             {
-                double sqr(double a) => a * a;
-
-                double pythag(double a, double b)
-                {
-                    var absa = Math.Abs(a);
-                    var absb = Math.Abs(b);
-                    if (absa > absb)
-                        return absa * Math.Sqrt(1d + sqr(absb / absa));
-                    return absb.Equals(0d) ? 0d : absb * Math.Sqrt(1d + sqr(absa / absb));
-                }
-
-                double sign(double a, double b) => b >= 0d ? Math.Abs(a) : -Math.Abs(a);
-
                 GetLength(matrix, out var N, out var M);
 
                 if (M > N)
@@ -1952,7 +1952,7 @@ namespace MathCore
                                 s += u[k, i] * u[k, i];
                             }
                             var f = u[i, i];
-                            g = -sign(Math.Sqrt(s), f);
+                            g = -Sign(Math.Sqrt(s), f);
                             var h = f * g - s;
                             u[i, i] = f - g;
                             for (var j = l; j < M; j++)
@@ -1983,7 +1983,7 @@ namespace MathCore
                                 s += u[i, k] * u[i, k];
                             }
                             var f = u[i, l];
-                            g = -sign(Math.Sqrt(s), f);
+                            g = -Sign(Math.Sqrt(s), f);
                             var h = f * g - s;
                             u[i, l] = f - g;
                             for (var k = l; k < M; k++)
@@ -2091,7 +2091,7 @@ namespace MathCore
                                 if ((Math.Abs(f) + anorm).Equals(anorm))
                                     break;
                                 g = w[i - 1];
-                                h = pythag(f, g);
+                                h = PyThag(f, g);
                                 w[i - 1] = h;
                                 h = 1d / h;
                                 c = g * h;
@@ -2126,8 +2126,8 @@ namespace MathCore
                         g = rv1[nm - 1];
                         h = rv1[k - 1];
                         f = ((y - z) * (y + z) + (g - h) * (g + h)) / (2 * h * y);
-                        g = pythag(f, 1d);
-                        f = ((x - z) * (x + z) + h * (y / (f + sign(g, f)) - h)) / x;
+                        g = PyThag(f, 1d);
+                        f = ((x - z) * (x + z) + h * (y / (f + Sign(g, f)) - h)) / x;
                         c = 1d;
                         s = 1d;
                         /* Next QR transformation: */
@@ -2138,7 +2138,7 @@ namespace MathCore
                             y = w[i];
                             h = s * g;
                             g = c * g;
-                            z = pythag(f, h);
+                            z = PyThag(f, h);
                             rv1[j0] = z;
                             c = f / z;
                             s = h / z;
@@ -2153,7 +2153,7 @@ namespace MathCore
                                 v[j, j0] = x * c + z * s;
                                 v[j, i] = z * c - x * s;
                             }
-                            z = pythag(f, h);
+                            z = PyThag(f, h);
                             w[j0] = z;
                             /* Rotation can be arbitrary if z = 0. */
                             if (!z.Equals(0d))
@@ -2737,8 +2737,8 @@ namespace MathCore
                     if (Y is null) throw new ArgumentNullException(nameof(Y));
                     var rows_count = A.GetLength(0);
                     var cols_count = A.GetLength(1);
-                    if(rows_count != Y.Length) throw new ArgumentException($"Число строк матрицы ({rows_count}) не равно длине вектора результата Y ({Y.Length})");
-                    if(cols_count != X.Length) throw new ArgumentException($"Число столбцов матрицы ({cols_count}) не равно длине вектора X ({X.Length})");
+                    if (rows_count != Y.Length) throw new ArgumentException($"Число строк матрицы ({rows_count}) не равно длине вектора результата Y ({Y.Length})");
+                    if (cols_count != X.Length) throw new ArgumentException($"Число столбцов матрицы ({cols_count}) не равно длине вектора X ({X.Length})");
 
                     for (var i = 0; i < rows_count; i++)
                     {

@@ -62,7 +62,7 @@ namespace System.Xml.XPath
 
         #region Fields
 
-        internal AstNode _input;
+        internal AstNode _Input;
         internal string _name;
         internal string _prefix;
         internal bool AbbrAxis;
@@ -79,7 +79,7 @@ namespace System.Xml.XPath
 
         internal override XPathResultType ReturnType => XPathResultType.NodeSet;
 
-        internal AstNode Input { get { return _input; } set { _input = value; } }
+        internal AstNode Input { get => _Input; set => _Input = value; }
 
         internal string Urn => _Urn;
 
@@ -93,11 +93,11 @@ namespace System.Xml.XPath
 
         internal string AxisName => Str[(int)Axistype];
 
-        internal override double DefaultPriority => _input != null
+        internal override double DefaultPriority => _Input != null
             ? 0.5
-            : (Axistype != AxisType.Child && Axistype != AxisType.Attribute
+            : Axistype != AxisType.Child && Axistype != AxisType.Attribute
                 ? 0.5
-                : (!string.IsNullOrEmpty(_name) ? 0 : (!string.IsNullOrEmpty(_prefix) ? -0.25 : -0.5)));
+                : !string.IsNullOrEmpty(_name) ? 0 : (!string.IsNullOrEmpty(_prefix) ? -0.25 : -0.5);
 
         #endregion
 
@@ -112,7 +112,7 @@ namespace System.Xml.XPath
             XPathNodeType nodetype)
         {
             Axistype = axistype;
-            _input = input;
+            _Input = input;
             _prefix = prefix;
             _name = name;
             Nodetype = nodetype;
@@ -122,7 +122,7 @@ namespace System.Xml.XPath
         internal Axis(AxisType axistype, AstNode input)
         {
             Axistype = axistype;
-            _input = input;
+            _Input = input;
             _prefix = string.Empty;
             _name = string.Empty;
             Nodetype = XPathNodeType.All;

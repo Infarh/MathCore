@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -11,7 +11,7 @@ namespace System
         /// <param name="x">Число, квадратный корень которого требуется вычислить</param>
         /// <param name="epsilon">Требуемая точность</param>
         /// <returns>Квадратный корень числа</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static decimal Sqrt(this decimal x, decimal epsilon = 0.0M)
         {
             var current = (decimal)Math.Sqrt((double)x);
@@ -29,25 +29,25 @@ namespace System
         /// <summary>Является ли число целым?</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число целое</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static bool IsInt(this decimal x) => decimal.Round(x) - x == 0;
 
-        [DebuggerStepThrough]
+        [DST]
         public static decimal Round(this decimal x, int n = 0) => decimal.Round(x, n);
 
         /// <summary>Получить обратное число</summary>
         /// <param name="x">Инвертируемое число</param>
         /// <returns>Число, обратное к исходном</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static decimal GetInverse(this decimal x) => 1 / x;
 
-        //[Diagnostics.DebuggerStepThrough, Pure]
+        //[Diagnostics.DST, Pure]
         //public static double GetAbsMod(this decimal x, decimal mod) { return x % mod + (x < 0 ? mod : 0); }
 
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static decimal GetAbs(this decimal x) => x < 0 ? -x : x;
 
-        //[Diagnostics.DebuggerStepThrough]
+        //[Diagnostics.DST]
         //public static double GetPower(this decimal x, int n)
         //{
         //    if(n > 1000 || n < -1000) return Math.Pow(x, n);
@@ -58,25 +58,25 @@ namespace System
         //    return result;
         //}
 
-        [DebuggerStepThrough]
+        [DST]
         public static decimal Power(this decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
 
-        //[Diagnostics.DebuggerStepThrough]
+        //[Diagnostics.DST]
         //public static Complex GetPower(this decimal x, Complex z) { return x ^ z; }
 
-        [DebuggerStepThrough]
+        [DST]
         public static decimal In_dB(this decimal x) => 20 * (decimal)Math.Log10((double)x);
-        //[Diagnostics.DebuggerStepThrough]
+        //[Diagnostics.DST]
         //public static double In_dB_byPower(this decimal x) { return 10 * Math.Log10(x); }
 
-        [DebuggerStepThrough]
+        [DST]
         public static double From_dB(this decimal db) => Math.Pow(10, (double)(db / 20));
-        [DebuggerStepThrough]
+        [DST]
         public static double From_dB_byPower(this decimal db) => Math.Pow(10, (double)(db / 10));
 
-        //[Diagnostics.DebuggerStepThrough]
+        //[Diagnostics.DST]
         //public static double ToRad(this decimal deg) { return deg * Consts.Geometry.ToRad; }
-        //[Diagnostics.DebuggerStepThrough]
+        //[Diagnostics.DST]
         //public static double ToDeg(this decimal rad) { return rad * Consts.Geometry.ToDeg; }
     }
 }

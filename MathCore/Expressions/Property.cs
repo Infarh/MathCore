@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq.Reactive;
 using System.Reflection;
 using MathCore.Annotations;
@@ -25,10 +26,7 @@ namespace System.Linq.Expressions
                 .CreateLambda<Func<TObject, T>>(expr_object);
         }
 
-        public static Func<TObject, T> GetExtractor<TObject>(string PropertyName, bool IsPublicOnly)
-        {
-            return GetExtractorExpression<TObject>(PropertyName, IsPublicOnly).Compile();
-        }
+        public static Func<TObject, T> GetExtractor<TObject>(string PropertyName, bool IsPublicOnly) => GetExtractorExpression<TObject>(PropertyName, IsPublicOnly).Compile();
 
 
         /// <summary>Событие изменения свойства</summary>
@@ -437,7 +435,7 @@ namespace System.Linq.Expressions
 
         public AttributesExtractor(MemberInfo Info) => _Info = Info;
 
-        public IEnumerable<Attribute> GetAttributes(string Name) { return GetAttributes(Name, Inherit); }
+        public IEnumerable<Attribute> GetAttributes(string Name) => GetAttributes(Name, Inherit);
 
         public IEnumerable<Attribute> GetAttributes(string Name, bool Inherit)
         {

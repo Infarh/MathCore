@@ -18,7 +18,7 @@ namespace System.Linq.Reactive
             if(Start) this.Start();
         }
 
-        protected override void OnReset(IObserverEx<TimeSpan> observer) { throw new NotSupportedException(); }
+        protected override void OnReset(IObserverEx<TimeSpan> observer) => throw new NotSupportedException();
 
         public void Start()
         {
@@ -50,7 +50,7 @@ namespace System.Linq.Reactive
                 observer.OnCompleted();
         }
 
-        public override void OnNext(TimeSpan item) { throw new NotSupportedException(); }
+        public override void OnNext(TimeSpan item) => throw new NotSupportedException();
 
         private void SyncThreadMethod()
         {

@@ -89,7 +89,7 @@ namespace MathCore.Values
         }
 
         [Pure]
-        public bool Equals(SetOf<T> other) => !ReferenceEquals(other, null)
+        public bool Equals(SetOf<T> other) => other is { }
                                               && (other.Power == Power
                                                   && (!this.Any(other.NotContains)
                                                       && !other.Any(NotContains)));

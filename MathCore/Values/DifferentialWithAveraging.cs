@@ -17,7 +17,7 @@ namespace MathCore.Values
 
         //public DifferentialWithAveraging(double Tau, double Value) : this(Tau) { Add(Value); }
 
-        public void Reset() { Initialized = false; }
+        public void Reset() => Initialized = false;
 
         public virtual double Add(double value)
         {
@@ -42,10 +42,7 @@ namespace MathCore.Values
             return Value = dv / dt;
         }
 
-        public static implicit operator double(DifferentialWithAveraging D)
-        {
-            return D.Value;
-        }
+        public static implicit operator double(DifferentialWithAveraging D) => D.Value;
     }
 
     [Serializable]

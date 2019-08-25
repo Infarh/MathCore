@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MathCore.Annotations;
 
 namespace MathCore.IoC
@@ -254,11 +252,7 @@ namespace MathCore.IoC
 
         //~ServiceManager() => Dispose(false);
 
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-            //GC.SuppressFinalize(this);
-        }
+        void IDisposable.Dispose() => Dispose(true);//GC.SuppressFinalize(this);
 
         #region ICloneable
 

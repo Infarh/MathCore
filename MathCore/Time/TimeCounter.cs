@@ -19,7 +19,8 @@ namespace MathCore.Time
         private TimeSpan _TotalTime;
 
         /// <summary>Состояние измерителя</summary>
-        public bool IsStarted { get { return _Started; } set { if(value) Start(); else Stop(); } }
+        public bool IsStarted { get => _Started;
+            set { if(value) Start(); else Stop(); } }
 
         /// <summary>Прошло времени</summary>
         public TimeSpan TotalTime => _TotalTime;

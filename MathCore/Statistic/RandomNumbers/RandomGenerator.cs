@@ -9,23 +9,22 @@ namespace MathCore.Statistic.RandomNumbers
     public abstract class RandomGenerator : IValueRead<double>
     {
         /// <summary>Датчик случайных чисел с равномерным распределением</summary>
-        protected static readonly LazyValue<Random> SystemRandomGenerator =
-            new LazyValue<Random>(() => new Random(DateTime.Now.TimeOfDay.Milliseconds));
+        protected static readonly LazyValue<Random> SystemRandomGenerator = new LazyValue<Random>(() => new Random(DateTime.Now.TimeOfDay.Milliseconds));
 
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Дисперсия</summary>
-        protected double _sigma = 1;
+        protected double _Sigma = 1;
         /// <summary>Математическое ожидание</summary>
-        protected double _mu;
+        protected double _Mu;
 
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Дисперсия</summary>
-        public double sigma { get { return _sigma; } set { _sigma = value; } }
+        public double Sigma { get => _Sigma; set => _Sigma = value; }
 
         /// <summary>Математическое ожидание</summary>
-        public double mu { get { return _mu; } set { _mu = value; } }
+        public double Mu { get => _Mu; set => _Mu = value; }
 
         /// <summary>Случайное значение</summary>
         public double Value => GetValue();
@@ -34,16 +33,16 @@ namespace MathCore.Statistic.RandomNumbers
 
         protected RandomGenerator() { }
 
-        protected RandomGenerator(double sigma) => _sigma = sigma;
+        protected RandomGenerator(double sigma) => _Sigma = sigma;
 
-        protected RandomGenerator(double sigma, double mu) { _sigma = sigma; _mu = mu; }
+        protected RandomGenerator(double sigma, double mu) { _Sigma = sigma; _Mu = mu; }
 
         /* ------------------------------------------------------------------------------------------ */
 
         public abstract double Distribution(double x);
 
         /// <summary>Новое случайное число</summary><returns>Случайное число</returns>
-        protected double GetValue() => GetValue(_sigma, _mu);
+        protected double GetValue() => GetValue(_Sigma, _Mu);
 
         public double GetValue(double sigma, double m) => GetNextValue() * sigma + m;
 

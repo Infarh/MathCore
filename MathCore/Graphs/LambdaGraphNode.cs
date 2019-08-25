@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.Graphs
 {
@@ -16,10 +16,10 @@ namespace MathCore.Graphs
 
         /// <inheritdoc />
         public IEnumerable<IGraphLink<TValue, TWeight>> Links => _Buffered
-            ? (_Links ?? (_Links = (_GetChields(Value) ?? Enumerable.Empty<TValue>())
-                .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChields, _GetWeight, _Buffered))
-                .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight, _Buffered))
-                .Cast<IGraphLink<TValue, TWeight>>().ToArray()))
+            ? _Links ??= (_GetChields(Value) ?? Enumerable.Empty<TValue>())
+               .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChields, _GetWeight, _Buffered))
+               .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight, _Buffered))
+               .Cast<IGraphLink<TValue, TWeight>>().ToArray()
             : (_GetChields(Value) ?? Enumerable.Empty<TValue>())
                 .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChields, _GetWeight))
                 .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight))
@@ -50,28 +50,28 @@ namespace MathCore.Graphs
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        [DebuggerStepThrough]
+        [DST]
         public static bool operator ==(LambdaGraphNode<TValue, TWeight> left, LambdaGraphNode<TValue, TWeight> right) => Equals(left, right);
 
-        [DebuggerStepThrough]
+        [DST]
         public static bool operator !=(LambdaGraphNode<TValue, TWeight> left, LambdaGraphNode<TValue, TWeight> right) => !Equals(left, right);
 
-        public override bool Equals(object obj) => !ReferenceEquals(null, obj) &&
+        public override bool Equals(object obj) => obj is { } &&
                                                    (ReferenceEquals(this, obj) ||
                                                     obj.GetType() == GetType() &&
                                                     Equals((LambdaGraphNode<TValue, TWeight>)obj));
 
-        public bool Equals(LambdaGraphNode<TValue, TWeight> other) => !ReferenceEquals(null, other) 
+        public bool Equals(LambdaGraphNode<TValue, TWeight> other) => other is { }
             && (ReferenceEquals(this, other) 
             || Equals(_GetChields, other._GetChields) 
             && Equals(_GetWeight, other._GetWeight) 
             && EqualityComparer<TValue>.Default.Equals(Value, other.Value));
 
-        [DebuggerStepThrough]
+        [DST]
         public IEnumerator<IGraphNode<TValue, TWeight>> GetEnumerator() => Links.Select(link => link.Node).GetEnumerator();
 
-        [DebuggerStepThrough]
-        public override string ToString() => $"λ[{(ReferenceEquals(Value, null) ? "" : Value.ToString())}]";
+        [DST]
+        public override string ToString() => $"λ[{(Value == null ? "" : Value.ToString())}]";
     }
 
     public class LambdaGraphNode<V> : IGraphNode<V>, IEquatable<LambdaGraphNode<V>>
@@ -82,10 +82,10 @@ namespace MathCore.Graphs
 
         /// <summary>Связи узла</summary>
         public IEnumerable<IGraphNode<V>> Childs => _Buffered
-            ? _Childs ?? (_Childs = (_GetChields(Value) ?? Enumerable.Empty<V>())
-                  .Select(value => new LambdaGraphNode<V>(value, _GetChields, _Buffered))
-                  .Cast<IGraphNode<V>>()
-                  .ToArray())
+            ? _Childs ??= (_GetChields(Value) ?? Enumerable.Empty<V>())
+               .Select(value => new LambdaGraphNode<V>(value, _GetChields, _Buffered))
+               .Cast<IGraphNode<V>>()
+               .ToArray()
             : (_GetChields(Value) ?? Enumerable.Empty<V>()).Select(value => new LambdaGraphNode<V>(value, _GetChields, _Buffered));
 
         /// <summary>Значение узла</summary>
@@ -101,19 +101,19 @@ namespace MathCore.Graphs
         }
 
         /// <inheritdoc />
-        [DebuggerStepThrough]
+        [DST]
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <inheritdoc />
-        [DebuggerStepThrough]
+        [DST]
         public IEnumerator<IGraphNode<V>> GetEnumerator() => Childs.GetEnumerator();
 
         /// <inheritdoc />
-        [DebuggerStepThrough]
+        [DST]
         public override string ToString() => $"λ:{Value}";
 
         /// <inheritdoc />
-        public bool Equals(LambdaGraphNode<V> other) => !ReferenceEquals(null, other) 
+        public bool Equals(LambdaGraphNode<V> other) => other is { }
                                                         && (ReferenceEquals(this, other) 
                                                             || EqualityComparer<V>.Default.Equals(Value, other.Value));
 

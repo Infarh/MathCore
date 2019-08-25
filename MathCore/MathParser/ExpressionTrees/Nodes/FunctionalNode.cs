@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    using DST = DebuggerStepThroughAttribute;
     public class FunctionalNode : ComputedNode
     {
         /// <summary>Имя узла</summary>

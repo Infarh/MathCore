@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
@@ -23,7 +23,7 @@ namespace MathCore
                 return y;
             }
 
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             public static Complex GetValue([NotNull] double[] A, Complex z)
             {
                 var length = A.Length;
@@ -35,7 +35,7 @@ namespace MathCore
                 return y;
             }
 
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             public static Complex GetValue([NotNull] Complex[] Z, Complex z)
             {
                 var length = Z.Length;

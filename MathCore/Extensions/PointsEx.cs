@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MathCore;
+﻿using MathCore;
 using MathCore.Vectors;
 
 namespace System.Drawing

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Reflection;
 
 namespace System.Linq.Expressions
@@ -18,7 +19,7 @@ namespace System.Linq.Expressions
 
         public T Value
         {
-            get { return _Reader(); }
+            get => _Reader();
             set
             {
                 if(IsReadOnly) throw new NotSupportedException();
@@ -26,16 +27,16 @@ namespace System.Linq.Expressions
             }
         }
 
-        public AttributesExtractor Attribute => _Attributes ?? (_Attributes = new AttributesExtractor(_FieldInfo));
+        public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
 
 
         // ReSharper disable once RedundantAssignment
-        private static void Set(ref T field, T value) { field = value; }
+        private static void Set(ref T field, T value) => field = value;
 
         public Field(Type type, string Name, bool IsPublicOnly = true)
             : base(type, Name)
         {
-            var lv_ValueType = typeof(T);
+            var value_type = typeof(T);
             _FieldInfo = _ObjectType.GetField(Name, BindingFlags.Static | (IsPublicOnly
                                                           ? BindingFlags.Public
                                                           : BindingFlags.Public | BindingFlags.NonPublic));
@@ -44,7 +45,7 @@ namespace System.Linq.Expressions
             var ReaderExpr = Expression.Lambda<Func<T>>(field);
             _Reader = ReaderExpr.Compile();
             if(IsReadOnly) return;
-            var value = Expression.Parameter(lv_ValueType, "value");
+            var value = Expression.Parameter(value_type, "value");
             var call = Expression.Call(null,
                 typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
             var expr = Expression.Lambda<Action<T>>(call, value);
@@ -59,13 +60,13 @@ namespace System.Linq.Expressions
         {
             _FieldInfo = info;
             Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
-            var lv_ValueType = info.FieldType;
+            var value_type = info.FieldType;
             var ObjConstant = Expression.Constant(Obj);
             var field = Expression.Field(ObjConstant, Name);
             var ReaderExpr = Expression.Lambda<Func<T>>(field);
             _Reader = ReaderExpr.Compile();
             if(IsReadOnly) return;
-            var value = Expression.Parameter(lv_ValueType, "value");
+            var value = Expression.Parameter(value_type, "value");
             var call = Expression.Call(null, typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
             var expr = Expression.Lambda<Action<T>>(call, value);
             _Writer = expr.Compile();
@@ -87,7 +88,7 @@ namespace System.Linq.Expressions
 
         public object Value
         {
-            get { return _Reader(); }
+            get => _Reader();
             set
             {
                 if(IsReadOnly) throw new NotSupportedException();
@@ -98,7 +99,7 @@ namespace System.Linq.Expressions
         public AttributesExtractor Attribute => _Attributes ?? (_Attributes = new AttributesExtractor(_FieldInfo));
 
         // ReSharper disable once RedundantAssignment
-        private static void Set(ref object field, object value) { field = value; }
+        private static void Set(ref object field, object value) => field = value;
 
         public Field(Type type, string Name, bool IsPublicOnly = true)
             : base(type, Name)
@@ -108,14 +109,14 @@ namespace System.Linq.Expressions
                                                           : BindingFlags.Public | BindingFlags.NonPublic));
             Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
 
-            var lv_ValueType = _FieldInfo.FieldType;
+            var value_type = _FieldInfo.FieldType;
 
             var field = Expression.Field(null, _FieldInfo);
             var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
             _Reader = ReaderExpr.Compile();
 
             if(IsReadOnly) return;
-            var value = Expression.Parameter(lv_ValueType, "value");
+            var value = Expression.Parameter(value_type, "value");
             var call = Expression.Call(null, typeof(Field).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
             var expr = Expression.Lambda<Action<object>>(call, value);
             _Writer = expr.Compile();
@@ -130,14 +131,14 @@ namespace System.Linq.Expressions
             _FieldInfo = info;
             Debug.Assert(_FieldInfo != null, "_FieldInfo != null");
 
-            var lv_ValueType = info.FieldType;
+            var value_type = info.FieldType;
 
             var ObjConstant = Expression.Constant(Obj);
             var field = Expression.Field(ObjConstant, Name);
             var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
             _Reader = ReaderExpr.Compile();
             if(IsReadOnly) return;
-            var value = Expression.Parameter(lv_ValueType, "value");
+            var value = Expression.Parameter(value_type, "value");
             var call = Expression.Call(null, typeof(Field).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
             var expr = Expression.Lambda<Action<object>>(call, value);
             _Writer = expr.Compile();

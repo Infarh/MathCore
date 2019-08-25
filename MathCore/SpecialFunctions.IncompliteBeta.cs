@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace MathCore
@@ -49,7 +49,7 @@ namespace MathCore
             Cephes Math Library, Release 2.8:  June, 2000
             Copyright 1984, 1995, 2000 by Stephen L. Moshier
             *************************************************************************/
-            [DebuggerStepThrough]
+            [DST]
             public static double IncompleteBeta(double a, double b, double x)
             {
                 Contract.Requires(a > 0, "a > 0");
@@ -143,7 +143,7 @@ namespace MathCore
             Copyright 1984, 1996, 2000 by Stephen L. Moshier
             *************************************************************************/
 
-            [DebuggerStepThrough]
+            [DST]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0059:Ненужное присваивание значения", Justification = "<Ожидание>")]
             public static double IncompleteBetaInversed(double a, double b, double y)
             {

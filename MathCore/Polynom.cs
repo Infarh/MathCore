@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable UnusedMember.Global
 
@@ -59,7 +59,7 @@ namespace MathCore
         [NotNull, XmlArray(ElementName = "a")]
         public double[] Coefficients
         {
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             get
             {
                 Contract.Ensures(Contract.Result<double[]>() != null);
@@ -71,7 +71,7 @@ namespace MathCore
         /// <summary>Степень полинома = число коэффициентов - 1</summary>
         public int Power
         {
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             get
             {
                 Contract.Ensures(Contract.Result<int>() >= 0);
@@ -83,7 +83,7 @@ namespace MathCore
         /// <summary>Длина полинома - число коэффициентов</summary>
         public int Length
         {
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             get
             {
                 Contract.Ensures(Contract.Result<int>() > 0);
@@ -99,14 +99,14 @@ namespace MathCore
         ///<param name="n">Степень a[0]+a[1]*x+a[2]*x^2+...<b>+a[<paramref name="n"/>]*x^<paramref name="n"/>+</b>...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
         public double this[int n]
         {
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             get
             {
                 Contract.Requires(n >= 0);
                 Contract.Requires(n < Coefficients.Length);
                 return _a[n];
             }
-            [DebuggerStepThrough]
+            [DST]
             set
             {
                 Contract.Requires(n >= 0);
@@ -119,7 +119,7 @@ namespace MathCore
 
         /// <summary>Полином степени N, нулевой элемент массива a[0] при младшей степени x^0</summary>
         /// <param name="a">a[0]+a[1]*x+a[2]*x^2+...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
-        [DebuggerStepThrough]
+        [DST]
         public Polynom([NotNull] params double[] a)
         {
             Contract.Requires(a != null);
@@ -130,7 +130,7 @@ namespace MathCore
             _a = a ?? throw new ArgumentNullException(nameof(a));
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public Polynom([NotNull] IEnumerable<double> a)
             : this(a.ToArray())
         {
@@ -141,7 +141,7 @@ namespace MathCore
             Contract.Ensures(Power >= 0);
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public Polynom([NotNull] IEnumerable<int> a)
             : this(a.Select(v => (double)v))
         {
@@ -157,10 +157,10 @@ namespace MathCore
         /// <summary>Получить значение полинома</summary>
         /// <param name="x">Переменная</param>
         /// <returns>Значение полинома в точке x</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public double Value(double x) => Array.GetValue(_a, x);
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public Complex Value(Complex z) => Array.GetValue(_a, z);
 
         [NotNull] public Func<double, double> GetFunction() => Value;
@@ -274,12 +274,12 @@ namespace MathCore
         [NotNull] public Polynom Clone() => new Polynom((double[])_a.Clone());
         object ICloneable.Clone() => Clone();
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public override bool Equals(object obj) => Equals(obj as Polynom);
 
         #endregion
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public override int GetHashCode() => _a.Select((i, a) => i.GetHashCode() ^ a.GetHashCode()).Aggregate(0x285da41, (S, s) => S ^ s);
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<double>)this).GetEnumerator();

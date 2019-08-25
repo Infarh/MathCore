@@ -32,7 +32,7 @@ namespace System.Xml.XPath
 
         public string Value
         {
-            get { return _Value; }
+            get => _Value;
             private set
             {
                 _Value = value;
@@ -105,13 +105,11 @@ namespace System.Xml.XPath
         //
         // report if the current query is matched
         //
-        internal bool Match()
-        {
+        internal bool Match() =>
 #if DEBUG1
             Console.WriteLine("GetState: Query: {0}, matchState {1}", xpath, matchState);
 #endif
-            return _MatchState;
-        }
+            _MatchState;
 
 
         //

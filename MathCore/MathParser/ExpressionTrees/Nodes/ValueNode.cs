@@ -1,5 +1,3 @@
-using System;
-
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
     /// <summary>Узел дерева мат.выражения, хранящий значение</summary>

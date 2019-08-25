@@ -18,7 +18,7 @@ namespace MathCore.Graphs
             set
             {
                 var last = _Prev;
-                if (!ReferenceEquals(last, null))
+                if (last is { })
                 {
                     if (ReferenceEquals(last.Next, this)) last._Next = null;
                     else if (ReferenceEquals(last.Child, this)) last._Child = null;
@@ -33,7 +33,7 @@ namespace MathCore.Graphs
             set
             {
                 var last = _Next;
-                if (!ReferenceEquals(last, null)) last.Prev = null;
+                if (last is { }) last.Prev = null;
                 _Next = value;
                 value.Prev = this;
             }
@@ -45,7 +45,7 @@ namespace MathCore.Graphs
             set
             {
                 var last = _Child;
-                if (!ReferenceEquals(last, null)) last.Prev = null;
+                if (last is { }) last.Prev = null;
                 _Child = value;
                 value.Prev = this;
             }
@@ -78,11 +78,11 @@ namespace MathCore.Graphs
         {
             var index = 0;
             var find = false;
-            if (!ReferenceEquals(item, null))
+            if (item is { })
                 for (var node = this; node != null && !(find = Equals(item, node.Value)); node = node.Next)
                     index++;
             else
-                for (var node = this; node != null && !(find = ReferenceEquals(node.Value, null)); node = node.Next)
+                for (var node = this; node != null && !(find = node.Value == null); node = node.Next)
                     index++;
             return find ? index : -1;
         }
@@ -114,7 +114,7 @@ namespace MathCore.Graphs
             prev.Next = next;
         }
 
-        void IList<TreeListNode<TValue>>.RemoveAt(int index) { RemoveAt(index); }
+        void IList<TreeListNode<TValue>>.RemoveAt(int index) => RemoveAt(index);
 
         public TreeListNode<TValue> this[int i]
         {
@@ -162,8 +162,8 @@ namespace MathCore.Graphs
         }
 
         public bool IsFirst => _Prev == null || ReferenceEquals(_Prev.Child, this);
-        public bool IsLast => ReferenceEquals(_Next, null);
-        public bool IsRoot => ReferenceEquals(_Prev, null);
+        public bool IsLast => _Next is null;
+        public bool IsRoot => _Prev is null;
         public bool IsChild => !IsRoot && ReferenceEquals(_Prev.Child, this);
 
         public TreeListNode<TValue> Root => this[n => n.Prev].First(n => n.IsRoot);
@@ -241,8 +241,8 @@ namespace MathCore.Graphs
         /// <summary>ќпредел€ет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.</summary>
         /// <returns>«начение true, если объект <paramref name="item"/> найден в <see cref="T:System.Collections.Generic.ICollection`1"/>; в противном случае Ч значение false.</returns>
         /// <param name="item">ќбъект, который требуетс€ найти в <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-        public bool Contains(TValue item) => ReferenceEquals(item, null)
-            ? ((IEnumerable<TreeListNode<TValue>>)this).Any(n => ReferenceEquals(n, null))
+        public bool Contains(TValue item) => item == null
+            ? ((IEnumerable<TreeListNode<TValue>>)this).Any(n => n is null)
             : ((IEnumerable<TreeListNode<TValue>>)this).Any(n => item.Equals(n.Value));
 
         /// <summary>
@@ -265,8 +265,8 @@ namespace MathCore.Graphs
         public bool Remove(TValue item)
         {
             if (ReferenceEquals(item, Value)) return false;
-            var node = ReferenceEquals(item, null)
-                ? ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => ReferenceEquals(n.Value, null))
+            var node = item == null
+                ? ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => n.Value == null)
                 : ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => item.Equals(n.Value));
             if (node == null) return false;
             if (node.IsChild) node.Prev.Child = node.Next; else node.Prev.Next = node.Next;
@@ -341,7 +341,7 @@ namespace MathCore.Graphs
         /// <returns>»нтерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоватьс€ дл€ перебора элементов коллекции.</returns>
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => ((IEnumerable<TreeListNode<TValue>>)this).Select(n => n.Value).GetEnumerator();
 
-        public override string ToString() => $"{Value}{(ReferenceEquals(_Child, null) ? "" : $"{{{_Child}}}")}{(ReferenceEquals(_Next, null) ? "" : $",{_Next}")}";
+        public override string ToString() => $"{Value}{(_Child is null ? "" : $"{{{_Child}}}")}{(_Next is null ? "" : $",{_Next}")}";
 
         public static implicit operator TValue(TreeListNode<TValue> Node) => Node.Value;
         public static implicit operator TreeListNode<TValue>(TValue Value) => new TreeListNode<TValue>(Value);

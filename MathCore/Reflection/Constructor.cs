@@ -17,20 +17,20 @@ namespace System.Reflection
 
         public T Object
         {
-            get { return _Object; }
-            set { Initialize(_Object = value, _Types, _Private); }
+            get => _Object;
+            set => Initialize(_Object = value, _Types, _Private);
         }
 
         public bool Private
         {
-            get { return _Private; }
-            set { Initialize(_Object, _Types, _Private = value); }
+            get => _Private;
+            set => Initialize(_Object, _Types, _Private = value);
         }
 
         public Type[] Types
         {
-            get { return _Types; }
-            set { Initialize(_Object, _Types = value, _Private); }
+            get => _Types;
+            set => Initialize(_Object, _Types = value, _Private);
         }
 
         private void Initialize(T o, Type[] Types, bool Private)

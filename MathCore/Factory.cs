@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedMember.Global
 
@@ -10,8 +10,7 @@ namespace MathCore
     {
         /// <summary>Создать новый объект</summary>
         /// <returns>Новый объект типа <typeparamref name="T"/></returns>
-        [DebuggerStepThrough]
-        T Create();
+        [DST] T Create();
     }
 
     /// <summary>Генератор объектов типа <typeparamref name="T"/></summary>
@@ -20,18 +19,16 @@ namespace MathCore
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private event PropertyChangedEventHandler e_PropertyChanged;
+        private event PropertyChangedEventHandler _PropertyChanged;
 
         /// <summary>Событие возникает при генерации новой строки</summary>
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
-            [DebuggerStepThrough]
-            add => e_PropertyChanged += value;
-            [DebuggerStepThrough]
-            remove => e_PropertyChanged -= value;
+            [DST] add => _PropertyChanged += value;
+            [DST] remove => _PropertyChanged -= value;
         }
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => e_PropertyChanged?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => _PropertyChanged?.Invoke(this, e);
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -39,7 +36,7 @@ namespace MathCore
         private Func<T> _FactoryMethod;
 
         private T _Last;
-        private readonly PropertyChangedEventArgs c_PropertyLastChengedArgs = new PropertyChangedEventArgs(nameof(Last));
+        private readonly PropertyChangedEventArgs _PropertyLastChengedArgs = new PropertyChangedEventArgs(nameof(Last));
 
         protected bool _RaiseLastChangedEvents = true;
 
@@ -48,22 +45,22 @@ namespace MathCore
         /// <summary>Последний сгенерированный объект</summary>
         public T Last
         {
-            [DebuggerStepThrough]
+            [DST]
             get => _Last;
             private set
             {
                 _Last = value;
                 if(_RaiseLastChangedEvents)
-                    OnPropertyChanged(c_PropertyLastChengedArgs);
+                    OnPropertyChanged(_PropertyLastChengedArgs);
             }
         }
 
         /// <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
         public Func<T> FactoryMethod
         {
-            [DebuggerStepThrough]
+            [DST]
             get => _FactoryMethod;
-            [DebuggerStepThrough]
+            [DST]
             set => _FactoryMethod = value;
         }
 
@@ -73,19 +70,19 @@ namespace MathCore
 
         /// <summary>Новый генератор объектов типа <typeparamref name="T"/></summary>
         /// <param name="CreateMethod">Метод генерации объектов типа <typeparamref name="T"/></param>
-        [DebuggerStepThrough]
+        [DST]
         public Factory(Func<T> CreateMethod) => _FactoryMethod = CreateMethod;
 
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Создать новый объект</summary>
         /// <returns>Новый объект типа <typeparamref name="T"/></returns>
-        [DebuggerStepThrough]
+        [DST]
         public virtual T Create() => _FactoryMethod == null ? default : Last = _FactoryMethod();
 
         /* ------------------------------------------------------------------------------------------ */
 
-        [DebuggerStepThrough]
+        [DST]
         public override int GetHashCode() => typeof(T).GetHashCode() ^ _FactoryMethod.GetHashCode();
 
         /* ------------------------------------------------------------------------------------------ */

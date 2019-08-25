@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System
 {
@@ -10,7 +10,7 @@ namespace System
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
-        [DebuggerStepThrough]
+        [DST]
         public static void Start<TS, TE1, TE2>(this EventHandler<TS, TE1, TE2> Handler, TS Sender, EventArgs<TE1, TE2> e)
         {
             var handler = Handler;
@@ -31,21 +31,21 @@ namespace System
         /// <param name="e">Аргумент события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
         /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
-        [DebuggerStepThrough]
+        [DST]
         public static void StartAsync<TSender, TEventArgs1, TEventArgs2>(this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e,
                                               AsyncCallback CallBack = null, object State = null) => Handler?.BeginInvoke(Sender, e, CallBack, State);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
-        [DebuggerStepThrough]
+        [DST]
         public static void FastStart<TSender, TEventArgs1, TEventArgs2>(this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, TSender Sender) => Handler?.Invoke(Sender, default);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
-        [DebuggerStepThrough]
+        [DST]
         public static void FastStart<TSender, TEventArgs1, TEventArgs2>(this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e) => Handler?.Invoke(Sender, e);
 
         ///// <summary>Быстрая генерация события</summary>
@@ -109,7 +109,7 @@ namespace System
         ///// <typeparam name="TResult">Тип результата обработки события</typeparam>
         ///// <typeparam name="TSender">Тип источника события</typeparam>
         ///// <returns>Массив результатов обработки события</returns>
-        //[DebuggerStepThrough]
+        //[DST]
         //public static TResult[] Start<TResult, TSender, TArgs>(this EventHandler<TResult, TSender, TArgs> Handler,
         //                                                       TSender Sender, TArgs Args)
         //{

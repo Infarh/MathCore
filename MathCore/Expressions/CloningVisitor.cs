@@ -1,7 +1,9 @@
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
-    [Diagnostics.DebuggerStepThrough]
+    [DST]
     public class CloningVisitor : ExpressionVisitorEx
     {
         #region Overrides of ExpressionVisitorEx

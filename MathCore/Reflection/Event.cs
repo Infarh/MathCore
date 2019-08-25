@@ -27,11 +27,11 @@ namespace System.Reflection
             _Object = o;
 
             var type = typeof(TObject);
-            if(type == typeof(object) && !ReferenceEquals(o, null))
+            if(type == typeof(object) && o is { })
                 type = o.GetType();
 
             var IsPrivate = Private ? BindingFlags.NonPublic : BindingFlags.Public;
-            var IsStatic = ReferenceEquals(o, null) ? BindingFlags.Static : BindingFlags.Instance;
+            var IsStatic = o == null ? BindingFlags.Static : BindingFlags.Instance;
 
             _EventInfo = type.GetEvent(Name, IsPrivate | IsStatic);
         }

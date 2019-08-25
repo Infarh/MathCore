@@ -1,7 +1,6 @@
-﻿
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using DU = System.Func<double, double, double>;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.DifferencialEquations.Numerical
 {
@@ -11,15 +10,15 @@ namespace MathCore.DifferencialEquations.Numerical
 
         public static IEnumerable<double> RungeKutta4(this IEnumerable<double> X, double y0, DU f)
         {
-            using(var xx = X.GetEnumerator())
+            using (var xx = X.GetEnumerator())
             {
-                if(!xx.MoveNext()) yield break;
+                if (!xx.MoveNext()) yield break;
 
                 var x = xx.Current;
                 var y = y0;
                 yield return y;
 
-                while(xx.MoveNext())
+                while (xx.MoveNext())
                 {
                     var x1 = xx.Current;
                     var dx = x1 - x;
@@ -43,15 +42,15 @@ namespace MathCore.DifferencialEquations.Numerical
 
         public static IEnumerable<double> Eyler_Simple(this IEnumerable<double> X, double y0, DU f)
         {
-            using(var xx = X.GetEnumerator())
+            using (var xx = X.GetEnumerator())
             {
-                if(!xx.MoveNext()) yield break;
+                if (!xx.MoveNext()) yield break;
 
                 var x = xx.Current;
                 var y = y0;
                 yield return y;
 
-                while(xx.MoveNext())
+                while (xx.MoveNext())
                 {
                     var x1 = xx.Current;
                     var dx = x1 - x;
@@ -62,13 +61,10 @@ namespace MathCore.DifferencialEquations.Numerical
             }
         }
 
-        [DebuggerStepThrough]
-        public static double[] FixedStep(double y0, double start, double stop, int Count, DU f, NextValueMethod NextValue)
-        {
-            return FixedStep(y0, new Interval(start, stop), Count, f, NextValue);
-        }
+        [DST]
+        public static double[] FixedStep(double y0, double start, double stop, int Count, DU f, NextValueMethod NextValue) => FixedStep(y0, new Interval(start, stop), Count, f, NextValue);
 
-        [DebuggerStepThrough]
+        [DST]
         public static double[] FixedStep(double y0, Interval interval, int Count, DU f, NextValueMethod NextValue)
         {
             var lenght = interval.Length;
@@ -79,7 +75,7 @@ namespace MathCore.DifferencialEquations.Numerical
             var Y = new double[Count];
             Y[0] = y;
 
-            for(var n = 1; n < Count; n++, x += dx)
+            for (var n = 1; n < Count; n++, x += dx)
                 Y[n] = y = NextValue(x, dx, y, f);
             //y = result[n] = y + dx * f(x, y);
 
@@ -92,7 +88,7 @@ namespace MathCore.DifferencialEquations.Numerical
 
             var x = X[0];
             var y = Y[0] = y0;
-            for(var i = 1; i < Y.Length; i++)
+            for (var i = 1; i < Y.Length; i++)
             {
                 var x1 = X[i];
                 Y[i] = y = NextValue(x, x1 - x, y, f);

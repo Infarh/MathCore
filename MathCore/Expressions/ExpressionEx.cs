@@ -65,22 +65,16 @@ namespace System.Linq.Expressions
         }
 
         public static Expression Replace(this Expression expression,
-            Expression searchEx, Expression replaceEx)
-        {
-            return new ReplaceVisitor(searchEx, replaceEx).Visit(expression);
-        }
+            Expression searchEx, Expression replaceEx) => new ReplaceVisitor(searchEx, replaceEx).Visit(expression);
 
         public static Expression<Func<TSource, bool>> IsNotNull<TSource, TKey>(
-            this Expression<Func<TSource, TKey>> expression)
-        {
-            return expression.Compose(key => key != null);
-        }
+            this Expression<Func<TSource, TKey>> expression) => expression.Compose(key => key != null);
     }
 
     public static class PredicateBuilder
     {
-        public static Expression<Func<T, bool>> True<T>() { return f => true; }
-        public static Expression<Func<T, bool>> False<T>() { return f => false; }
+        public static Expression<Func<T, bool>> True<T>() => f => true;
+        public static Expression<Func<T, bool>> False<T>() => f => false;
 
         public static Expression<Func<T, bool>> Or<T>(
             this Expression<Func<T, bool>> expr1,

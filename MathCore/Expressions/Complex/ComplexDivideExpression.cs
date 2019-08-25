@@ -4,7 +4,7 @@ namespace MathCore.Expressions.Complex
 {
     public sealed class ComplexDivideExpression : ComplexLambdaBinaryExpression
     {
-        private static Expression GetNorma(ComplexExpression R) { return Add(GetPower(R.Re, Constant(2d)), GetPower(R.Im, Constant(2d))); }
+        private static Expression GetNorma(ComplexExpression R) => Add(GetPower(R.Re, Constant(2d)), GetPower(R.Im, Constant(2d)));
 
         internal ComplexDivideExpression(ComplexExpression Left, ComplexExpression Right)
                     : base(Left, Right,

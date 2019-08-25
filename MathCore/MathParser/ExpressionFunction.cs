@@ -41,8 +41,8 @@ namespace MathCore.MathParser
             if(args.Length != Arguments.Length) return false;
             for(int i = 0, N = args.Length; i < N; i++)
             {
-                var arg_null = ReferenceEquals(args[i], null);
-                var Arg_null = ReferenceEquals(Arguments[i], null);
+                var arg_null = args[i] is null;
+                var Arg_null = Arguments[i] is null;
                 if(arg_null != Arg_null) return false;
                 if(!arg_null && args[i] != Arguments[i]) return false;
                 if(!Arg_null && Arguments[i] != args[i]) return false;

@@ -118,9 +118,6 @@ namespace MathCore.Values
                                                                                 return Generator();
                                                                             });
 
-        public TValue Create()
-        {
-            throw new NotImplementedException();
-        }
+        public TValue Create() => throw new NotImplementedException();
     }
 }

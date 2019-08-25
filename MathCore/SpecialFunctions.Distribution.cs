@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace MathCore
@@ -15,7 +15,7 @@ namespace MathCore
                 /// <summary>Интеграл от exp{-t^2} от нуля до x / .5 sqrt(pi)</summary>
                 /// <param name="x">Аргумент функции нормального распределения</param>
                 /// <returns>Значение нормального распределения</returns>
-                [DebuggerStepThrough]
+                [DST]
                 public static double ErrorFunction(double x)
                 {
                     var s = Math.Sign(x);
@@ -43,7 +43,7 @@ namespace MathCore
                     return x >= 10 ? s : s * (1 - ErrorFunctionComform(x));
                 }
 
-                [DebuggerStepThrough]
+                [DST]
                 public static double ErrorFunctionComform(double x)
                 {
                     if(x < 0)
@@ -77,13 +77,13 @@ namespace MathCore
                     return Math.Exp(-(x * x)) * p / q;
                 }
 
-                [DebuggerStepThrough]
+                [DST]
                 public static double NormalDistribution(double x) => .5 * (ErrorFunction(x / 1.41421356237309504880) + 1);
 
-                [DebuggerStepThrough]
+                [DST]
                 public static double ErrorFunctionInversed(double e) => NormalDistributionInversed(.5 * (e + 1)) / Consts.sqrt_2;
 
-                [DebuggerStepThrough]
+                [DST]
                 public static double NormalDistributionInversed(double y0)
                 {
                     const double expm2 = .13533528323661269189;
@@ -182,7 +182,7 @@ namespace MathCore
 
             public static class Student
             {
-                [DebuggerStepThrough]
+                [DST]
                 public static double StudenttDistribution(int k, double t)
                 {
                     Contract.Requires(k > 0, "Функция определена для положительных чисел k");
@@ -236,7 +236,7 @@ namespace MathCore
                     return .5 + .5 * (t < 0 ? -p : p);
                 }
 
-                [DebuggerStepThrough]
+                [DST]
                 public static double StudenttDistributionInversed(int k, double p)
                 {
                     Contract.Requires(k > 0, "k должно быть больше 0");
@@ -268,7 +268,7 @@ namespace MathCore
                     return __MaxRealNumber * z < rk ? rflg * __MaxRealNumber : rflg * Math.Sqrt(rk / z - rk);
                 }
 
-                [DebuggerStepThrough]
+                [DST]
                 public static double QuantileHi2(int n, double alpha = .05)
                 {
                     if(alpha < .001 || alpha > .999)

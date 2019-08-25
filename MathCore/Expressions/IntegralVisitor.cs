@@ -39,14 +39,14 @@ namespace System.Linq.Expressions
             if(!CheckNumType(type)) throw new NotSupportedException("Неподдерживаемый тип данных " + type);
         }
 
-        private static Expression sAdd(Expression a, Expression b) { return sAdd(Expression.Add(a, b)); }
-        private static Expression sAdd(double a, Expression b) { return sAdd(Expression.Add(Expression.Constant(a), b)); }
-        private static Expression sAdd(Expression a, double b) { return sAdd(Expression.Add(a, Expression.Constant(b))); }
-        private static Expression sInc(Expression a) { return sAdd(a, 1); }
-        private static Expression sSubtract(Expression a, Expression b) { return sAdd(Expression.Subtract(a, b)); }
-        private static Expression sSubtract(double a, Expression b) { return sAdd(Expression.Subtract(Expression.Constant(a), b)); }
-        private static Expression sSubtract(Expression a, double b) { return sAdd(Expression.Subtract(a, Expression.Constant(b))); }
-        private static Expression sDec(Expression a) { return sSubtract(a, 1); }
+        private static Expression sAdd(Expression a, Expression b) => sAdd(Expression.Add(a, b));
+        private static Expression sAdd(double a, Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
+        private static Expression sAdd(Expression a, double b) => sAdd(Expression.Add(a, Expression.Constant(b)));
+        private static Expression sInc(Expression a) => sAdd(a, 1);
+        private static Expression sSubtract(Expression a, Expression b) => sAdd(Expression.Subtract(a, b));
+        private static Expression sSubtract(double a, Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
+        private static Expression sSubtract(Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
+        private static Expression sDec(Expression a) => sSubtract(a, 1);
         private static Expression sAdd(BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
@@ -65,9 +65,9 @@ namespace System.Linq.Expressions
             return b;
         }
 
-        private static Expression sMultiply(Expression a, Expression b) { return sMultiply(Expression.Multiply(a, b)); }
-        private static Expression sMultiply(double a, Expression b) { return sMultiply(Expression.Multiply(Expression.Constant(a), b)); }
-        private static Expression sMultiply(Expression a, double b) { return sMultiply(Expression.Multiply(a, Expression.Constant(b))); }
+        private static Expression sMultiply(Expression a, Expression b) => sMultiply(Expression.Multiply(a, b));
+        private static Expression sMultiply(double a, Expression b) => sMultiply(Expression.Multiply(Expression.Constant(a), b));
+        private static Expression sMultiply(Expression a, double b) => sMultiply(Expression.Multiply(a, Expression.Constant(b)));
         private static Expression sMultiply(BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
@@ -88,9 +88,9 @@ namespace System.Linq.Expressions
             return b;
         }
 
-        private static Expression sDivade(Expression a, Expression b) { return sDivade(Expression.Divide(a, b)); }
-        private static Expression sDivade(double a, Expression b) { return sDivade(Expression.Divide(Expression.Constant(a), b)); }
-        private static Expression sDivade(Expression a, double b) { return sDivade(Expression.Divide(a, Expression.Constant(b))); }
+        private static Expression sDivade(Expression a, Expression b) => sDivade(Expression.Divide(a, b));
+        private static Expression sDivade(double a, Expression b) => sDivade(Expression.Divide(Expression.Constant(a), b));
+        private static Expression sDivade(Expression a, double b) => sDivade(Expression.Divide(a, Expression.Constant(b)));
         private static Expression sDivade(BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
@@ -111,8 +111,8 @@ namespace System.Linq.Expressions
             return b;
         }
 
-        private static Expression sPower(Expression a, Expression b) { return sPower(Expression.Power(a, b)); }
-        private static Expression sPower(Expression a, double b) { return sPower(Expression.Power(a, Expression.Constant(b))); }
+        private static Expression sPower(Expression a, Expression b) => sPower(Expression.Power(a, b));
+        private static Expression sPower(Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
         private static Expression sPower(BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
@@ -138,7 +138,7 @@ namespace System.Linq.Expressions
             return Expression.Call(typeof(Math), Name, null, p);
         }
 
-        public Expression Visit(LambdaExpression exp, double constant) { return Visit(exp, Expression.Constant(constant)); }
+        public Expression Visit(LambdaExpression exp, double constant) => Visit(exp, Expression.Constant(constant));
         public Expression Visit(LambdaExpression exp, Expression constant)
         {
             exp = (LambdaExpression)base.Visit(exp);

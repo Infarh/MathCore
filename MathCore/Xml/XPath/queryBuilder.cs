@@ -15,6 +15,7 @@
 
 using System.Collections;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System.Xml.XPath
 {
@@ -323,10 +324,10 @@ namespace System.Xml.XPath
 
             while(query != null)
             {
-                if(query is BaseAxisQuery)
+                if(query is BaseAxisQuery axis_query)
                 {
                     stack.Push(query);
-                    query = ((BaseAxisQuery)query).QueryInput;
+                    query = axis_query.QueryInput;
                 }
                 else
                 {
@@ -346,22 +347,22 @@ namespace System.Xml.XPath
             while(stack.Count > 0)
             {
                 CompiledXPath.Add(stack.Pop());
-                var lv_CurrentQuery = (BaseAxisQuery)CompiledXPath[CompiledXPath.Count - 1];
+                var current_query = (BaseAxisQuery)CompiledXPath[CompiledXPath.Count - 1];
 
                 FilterQuery lv_FilterQuery = null;
 
-                if(lv_CurrentQuery is FilterQuery)
+                if(current_query is FilterQuery filter_query)
                 {
-                    lv_FilterQuery = (FilterQuery)lv_CurrentQuery;
-                    lv_CurrentQuery = ((FilterQuery)lv_CurrentQuery).Axis;
+                    lv_FilterQuery = filter_query;
+                    current_query = filter_query.Axis;
                 }
 
-                if(lv_CurrentQuery is ChildQuery || lv_CurrentQuery is AttributeQuery || lv_CurrentQuery is DescendantQuery)
+                if(current_query is ChildQuery || current_query is AttributeQuery || current_query is DescendantQuery)
                     ++depth;
-                else if(lv_CurrentQuery is AbsoluteQuery)
+                else if(current_query is AbsoluteQuery)
                     depth = 0;
 
-                lv_CurrentQuery.Depth = depth;
+                current_query.Depth = depth;
 
                 if(lv_FilterQuery != null)
                     lv_FilterQuery.Depth = depth;

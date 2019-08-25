@@ -50,7 +50,7 @@ namespace MathCore.Logging
 
         public DateTime Time
         {
-            get { return _Time; }
+            get => _Time;
             private set
             {
                 if(_Time.Equals(value)) return;
@@ -59,11 +59,11 @@ namespace MathCore.Logging
             }
         }
 
-        public string Value { get { return _Value; } set { Add(value, _Type); } }
+        public string Value { get => _Value; set => Add(value, _Type); }
 
         public LogType Type
         {
-            get { return _Type; }
+            get => _Type;
             set
             {
                 if(_Type == value) return;
@@ -74,7 +74,7 @@ namespace MathCore.Logging
 
         public string Message
         {
-            get { return _Message; }
+            get => _Message;
             set
             {
                 if(_Message == value) return;
@@ -85,7 +85,7 @@ namespace MathCore.Logging
 
         public object Data
         {
-            get { return _Data; }
+            get => _Data;
             set
             {
                 if(ReferenceEquals(_Data, value)) return;

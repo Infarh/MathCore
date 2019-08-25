@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
@@ -15,8 +15,6 @@ using static MathCore.MatrixComplex.Array.Operator;
 
 namespace MathCore
 {
-    using DST = DebuggerStepThroughAttribute;
-
     /// <summary>Матрица NxM</summary>
     /// <remarks>
     /// i (первый индекс) - номер строки, 
@@ -350,13 +348,13 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] MatrixComplex B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] MatrixComplex B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         [DST] public static bool operator !=([CanBeNull] MatrixComplex A, [CanBeNull] MatrixComplex B) => !(A == B);
 
         [DST] public static bool operator ==([CanBeNull] Complex[,] A, [CanBeNull] MatrixComplex B) => B == A;
 
-        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] Complex[,] B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] Complex[,] B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         [DST] public static bool operator !=([CanBeNull] Complex[,] A, [CanBeNull] MatrixComplex B) => !(A == B);
 
@@ -446,15 +444,15 @@ namespace MathCore
         #region IEquatable Members
 
         /// <inheritdoc/>
-        [DST] public bool Equals(Complex[,] other) => !ReferenceEquals(null, other) && Array.AreEquals(_Data, other);
+        [DST] public bool Equals(Complex[,] other) => other is { } && Array.AreEquals(_Data, other);
 
         /// <inheritdoc/>
-        [DST] public bool Equals(MatrixComplex other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
+        [DST] public bool Equals(MatrixComplex other) => other is { } && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
 
         #endregion
 
         /// <inheritdoc/>
-        [DST] public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || Equals(obj as MatrixComplex) || Equals(obj as Complex[,]));
+        [DST] public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || Equals(obj as MatrixComplex) || Equals(obj as Complex[,]));
 
         /// <inheritdoc/>
         [DST]

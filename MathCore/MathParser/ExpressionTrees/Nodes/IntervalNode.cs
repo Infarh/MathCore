@@ -4,10 +4,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
     public class IntervalNode : ParsedNode
     {
         /// <summary>Минимальное значение</summary>
-        public ExpressionTreeNode Min { get { return Left; } set { Left = value; } }
+        public ExpressionTreeNode Min { get => Left; set => Left = value; }
 
         /// <summary>Максимальное значение</summary>
-        public ExpressionTreeNode Max { get { return Right; } set { Right = value; } }
+        public ExpressionTreeNode Max { get => Right; set => Right = value; }
 
         public IntervalNode(double Min, double Max) : this(new ConstValueNode(Min), new ConstValueNode(Max)) { }
 

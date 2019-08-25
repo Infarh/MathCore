@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System
 {
@@ -13,26 +13,23 @@ namespace System
     {
         private sealed class PairOfTypes
         {
-            private readonly Type first;
-            private readonly Type second;
+            private readonly Type _First;
+            private readonly Type _Second;
             public PairOfTypes(Type first, Type second)
             {
-                this.first = first;
-                this.second = second;
+                _First = first;
+                _Second = second;
             }
-            public override int GetHashCode() => 31 * first.GetHashCode() + second.GetHashCode();
+            public override int GetHashCode() => 31 * _First.GetHashCode() + _Second.GetHashCode();
 
-            public override bool Equals(object obj)
-            {
-                if(ReferenceEquals(obj, this)) return true;
-                var other = obj as PairOfTypes;
-                return other != null && first == other.first && second == other.second;
-            }
+            public override bool Equals(object obj) =>
+                ReferenceEquals(obj, this) ||
+                obj is PairOfTypes other && _First == other._First && _Second == other._Second;
         }
 
         private static readonly IDictionary<PairOfTypes, Func<object, object>> __CastersDictionary = new Dictionary<PairOfTypes, Func<object, object>>();
 
-        private static readonly ParameterExpression convParameter = Expression.Parameter(typeof(object), "value");
+        private static readonly ParameterExpression __ConvParameter = Expression.Parameter(typeof(object), "value");
 
         private static Func<object, object> GetCasterFrom([NotNull]Type TargetType, [CanBeNull]object Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
 
@@ -42,13 +39,13 @@ namespace System
             Func<object, object> res;
             var key = new PairOfTypes(SourceType, TargetType);
             lock (__CastersDictionary) if(!__CastersDictionary.TryGetValue(key, out res))
-                {
-                    var expr_tObject2tSource = Expression.Convert(convParameter, SourceType);
-                    var expr_tSource2tTarget = Expression.Convert(expr_tObject2tSource, TargetType);
-                    var expr_tTarget2tObject = Expression.Convert(expr_tSource2tTarget, typeof(object));
-                    res = Expression.Lambda<Func<object, object>>(expr_tTarget2tObject, convParameter).Compile();
-                    __CastersDictionary.Add(key, res);
-                }
+            {
+                var object_2_source = Expression.Convert(__ConvParameter, SourceType);
+                var source_2_target = Expression.Convert(object_2_source, TargetType);
+                var target_2_object = Expression.Convert(source_2_target, typeof(object));
+                res = Expression.Lambda<Func<object, object>>(target_2_object, __ConvParameter).Compile();
+                __CastersDictionary.Add(key, res);
+            }
             return res;
         }
 
@@ -73,7 +70,7 @@ namespace System
         public static Expression GetCastExpression(this Type FromType, Type ToType, ref ParameterExpression parameter)
         {
             if(parameter == null) parameter = Expression.Parameter(typeof(object), "value");
-            return Expression.Convert(Expression.Convert(Expression.Convert(convParameter, FromType), ToType), typeof(object));
+            return Expression.Convert(Expression.Convert(Expression.Convert(__ConvParameter, FromType), ToType), typeof(object));
         }
 
         public static LambdaExpression GetConvertExpression(this Type FromType, Type ToType)
@@ -92,9 +89,9 @@ namespace System
             var exprs_pConverter = c_to == null
                 ? new Expression[] { expr_tFrom2tObject, Expression.Constant(ToType) }
                 : new Expression[] { expr_tFrom2tObject };
-            var expr_Conversation = Expression.Call(expr_cConverter, method, exprs_pConverter);
+            var expr_conversation = Expression.Call(expr_cConverter, method, exprs_pConverter);
 
-            return Expression.Lambda(Expression.Convert(expr_Conversation, ToType), expr_pFrom);
+            return Expression.Lambda(Expression.Convert(expr_conversation, ToType), expr_pFrom);
         }
 
         public static Expression<Func<object, object>> GetConvertExpression_Object(this Type FromType, Type ToType)
@@ -125,27 +122,27 @@ namespace System
         /// <summary>Получить тип по его имени из всех загруженных сборок</summary>
         /// <param name="TypeName">Имя типа</param>
         /// <returns>Тип</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static Type GetType(string TypeName)
         {
-            var lv_TypeArray = AppDomain.CurrentDomain.GetAssemblies().
-                SelectMany((a, i) => a.GetTypes()).Where(t => (t.Name == TypeName)).ToArray();
-            return lv_TypeArray.Length != 0 ? lv_TypeArray[0] : null;
+            var type_array = AppDomain.CurrentDomain.GetAssemblies().
+                SelectMany((a, i) => a.GetTypes()).Where(t => t.Name == TypeName).ToArray();
+            return type_array.Length != 0 ? type_array[0] : null;
         }
 
         /// <summary>Получить все атрибуты типа указанного типа</summary>
         /// <typeparam name="TAttribute">Тип требуемых атрибутов</typeparam>
         /// <param name="T">Тип, атрибуты которого требуется получить</param>
         /// <returns>Массив атрибутов типа указанного типа</returns>
-        [DebuggerStepThrough]
+        [DST]
         public static TAttribute[] GetCustomAttributes<TAttribute>(this Type T)
             where TAttribute : Attribute => GetCustomAttributes<TAttribute>(T, false);
 
-        [DebuggerStepThrough]
+        [DST]
         public static TAttribute[] GetCustomAttributes<TAttribute>(this Type T, bool Inherited)
              where TAttribute : Attribute => T.GetCustomAttributes(typeof(TAttribute), Inherited).OfType<TAttribute>().ToArray();
 
-        [DebuggerStepThrough]
+        [DST]
         public static object CreateObject(this Type type)
         {
             //var lv_Info = type.GetConstructor(new Type[] { });
@@ -165,30 +162,30 @@ namespace System
             return Activator.CreateInstance(type);
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public static T Create<T>(this Type type) => (T)type.CreateObject();
 
-        [DebuggerStepThrough]
+        [DST]
         public static T Create<T>(this Type type, params object[] Params) => (T)type.CreateObject(Params);
 
-        [DebuggerStepThrough]
+        [DST]
         public static object CreateObject(this Type type, params object[] Params)
         {
             Contract.Requires(type != null);
             return Activator.CreateInstance(type, Params);
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public static object CreateObject(this Type type, BindingFlags Flags, Binder binder, params object[] Params)
         {
             Contract.Requires(type != null);
             return Activator.CreateInstance(type, Flags, binder, Params);
         }
 
-        [DebuggerStepThrough]
+        [DST]
         public static T Create<T>(params object[] Params) => (T)CreateObject(typeof(T), Params);
 
-        [DebuggerStepThrough]
+        [DST]
         public static T Create<T>(BindingFlags Flags, Binder binder, params object[] Params) => (T)CreateObject(typeof(T), Flags, binder, Params);
 
         public static void AddConvreter(this Type type, Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));

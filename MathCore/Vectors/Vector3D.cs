@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Xml.Serialization;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.Vectors
 {
@@ -11,17 +11,17 @@ namespace MathCore.Vectors
     {
         /* -------------------------------------------------------------------------------------------- */
 
-        [DebuggerStepThrough]
+        [DST]
         public static Vector3D RThettaPhi(double R, double Thetta, double Phi) => new Vector3D(R, new SpaceAngle(Thetta, Phi));
 
-        [DebuggerStepThrough]
+        [DST]
         public static Vector3D XYZ(double X, double Y, double Z) => new Vector3D(X, Y, Z);
 
         public static Vector3D Random(double min = -100, double max = 100)
         {
-            var rnd = new Random();
-            Func<double> RND = () => Math.Abs(max - min) * (rnd.NextDouble() - .5) + (max + min) * .5;
-            return new Vector3D(RND(), RND(), RND());
+            var random = new Random();
+            double Rnd() => Math.Abs(max - min) * (random.NextDouble() - .5) + (max + min) * .5;
+            return new Vector3D(Rnd(), Rnd(), Rnd());
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -71,36 +71,36 @@ namespace MathCore.Vectors
 
         /// <summary>Угол проекции в плоскости XOY</summary>
         public double AngleXOY => Math.Abs(_X) < double.Epsilon
-                    ? (Math.Abs(_Y) < double.Epsilon       // X == 0
-                                ? 0                                 //  Y == 0 => 0
-                                : Math.Sign(_Y) * Consts.pi05)     //  Y != 0 => pi/2 * sign(Y)
-                    : (Math.Abs(_Y) < double.Epsilon       // X != 0
-                                ? (Math.Sign(_X) > 0
-                                            ? 0
-                                            : Consts.pi)
-                                : Math.Atan2(_Y, _X));
+                    ? Math.Abs(_Y) < double.Epsilon       // X == 0
+                        ? 0                                 //  Y == 0 => 0
+                        : Math.Sign(_Y) * Consts.pi05     //  Y != 0 => pi/2 * sign(Y)
+                    : Math.Abs(_Y) < double.Epsilon       // X != 0
+                        ? Math.Sign(_X) > 0
+                            ? 0
+                            : Consts.pi
+                        : Math.Atan2(_Y, _X);
 
         /// <summary>Угол проекции в плоскости XOZ</summary>
         public double AngleXOZ => Math.Abs(_X) < double.Epsilon
-                    ? (Math.Abs(_Z) < double.Epsilon       // X == 0
-                                ? 0                                 //  Z == 0 => 0
-                                : Math.Sign(_Z) * Consts.pi05)     //  Z != 0 => pi/2 * sign(Z)
-                    : (Math.Abs(_Z) < double.Epsilon       // X != 0
-                                ? (Math.Sign(_X) > 0
-                                            ? 0
-                                            : Consts.pi)
-                                : Math.Atan2(_Z, _X));
+                    ? Math.Abs(_Z) < double.Epsilon       // X == 0
+                        ? 0                                 //  Z == 0 => 0
+                        : Math.Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Z)
+                    : Math.Abs(_Z) < double.Epsilon       // X != 0
+                        ? Math.Sign(_X) > 0
+                            ? 0
+                            : Consts.pi
+                        : Math.Atan2(_Z, _X);
 
         /// <summary>Угол проекции в плоскости YOZ</summary>
         public double AngleYOZ => Math.Abs(_Y) < double.Epsilon
-                    ? (Math.Abs(_Z) < double.Epsilon       // Y == 0
-                                ? 0                                 //  Z == 0 => 0
-                                : Math.Sign(_Z) * Consts.pi05)     //  Z != 0 => pi/2 * sign(Y)
-                    : (Math.Abs(_Z) < double.Epsilon       // Y != 0
-                                ? (Math.Sign(_Y) > 0
-                                            ? 0
-                                            : Consts.pi)
-                                : Math.Atan2(_Z, _Y));
+                    ? Math.Abs(_Z) < double.Epsilon       // Y == 0
+                        ? 0                                 //  Z == 0 => 0
+                        : Math.Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Y)
+                    : Math.Abs(_Z) < double.Epsilon       // Y != 0
+                        ? Math.Sign(_Y) > 0
+                            ? 0
+                            : Consts.pi
+                        : Math.Atan2(_Z, _Y);
 
         /// <summary>Азимутальный угол</summary>
         [XmlIgnore]
@@ -138,21 +138,21 @@ namespace MathCore.Vectors
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DebuggerStepThrough]
+        [DST]
         public Vector3D(double X) { _X = X; _Y = 0; _Z = 0; }
 
 
-        [DebuggerStepThrough]
+        [DST]
         public Vector3D(double X, double Y) { _X = X; _Y = Y; _Z = 0; }
 
-        [DebuggerStepThrough]
+        [DST]
         public Vector3D(double X, double Y, double Z) { _X = X; _Y = Y; _Z = Z; }
 
-        //[System.Diagnostics.DebuggerStepThrough]
+        //[System.Diagnostics.DST]
         public Vector3D(in SpaceAngle Angle) : this(1, Angle) { }
 
 
-        //[System.Diagnostics.DebuggerStepThrough]
+        //[System.Diagnostics.DST]
         public Vector3D(double R, in SpaceAngle Angle)
         {
             double thetta;
@@ -175,7 +175,7 @@ namespace MathCore.Vectors
         }
         private Vector3D(in Vector3D V) : this(V._X, V._Y, V._Z) { }
 
-        //[System.Diagnostics.DebuggerStepThrough]
+        //[System.Diagnostics.DST]
         public Vector3D InBasis(in Basis3D b) => new Vector3D(
             b.xx * _X + b.xy * _Y + b.xz * _Z,
             b.yx * _X + b.yy * _Y + b.yz * _Z,
@@ -202,10 +202,10 @@ namespace MathCore.Vectors
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DebuggerStepThrough]
+        [DST]
         public override string ToString() => $"({_X};{_Y};{_Z})";
 
-        [DebuggerStepThrough]
+        [DST]
         public override int GetHashCode()
         {
             unchecked
@@ -219,22 +219,22 @@ namespace MathCore.Vectors
 
         /// <summary>Создает новый объект, который является копией текущего экземпляра.</summary>
         /// <returns>Новый объект, являющийся копией этого экземпляра.</returns><filterpriority>2</filterpriority>
-        [DebuggerStepThrough]
+        [DST]
         object ICloneable.Clone() => Clone();
 
-        [DebuggerStepThrough]
+        [DST]
         public Vector3D Clone() => new Vector3D(this);
 
-        [DebuggerStepThrough]
+        [DST]
         public override bool Equals(object obj) => obj is Vector3D && Equals((Vector3D)obj);
 
-        [DebuggerStepThrough]
+        [DST]
         public string ToString(string Format) => $"({_X.ToString(Format)};{_Y.ToString(Format)};{_Z.ToString(Format)})";
 
-        [DebuggerStepThrough]
+        [DST]
         public string ToString(string Format, IFormatProvider Provider) => $"({_X.ToString(Format, Provider)};{_Y.ToString(Format, Provider)};{_Z.ToString(Format, Provider)})";
 
-        public void Deconstruct(double x, double y, double z)
+        public void Deconstruct(out double x, out double y, out double z)
         {
             x = _X;
             y = _Y;
@@ -248,7 +248,7 @@ namespace MathCore.Vectors
         /// <summary>Точность сравнения (по умолчанию 10^-16)</summary>
         public static double ComparisonsAccuracy { get; set; } = 1e-16;
 
-        //[System.Diagnostics.DebuggerStepThrough]
+        //[System.Diagnostics.DST]
         public bool Equals(Vector3D other)
         {
             var eps = ComparisonsAccuracy;

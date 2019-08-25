@@ -16,8 +16,8 @@ namespace MathCore.Expressions.Complex
             _GetIm = GetIm;
         }
 
-        protected override Expression GetRe() { return _GetRe(Value); }
+        protected override Expression GetRe() => _GetRe(Value);
 
-        protected override Expression GetIm() { return _GetIm(Value); }
+        protected override Expression GetIm() => _GetIm(Value);
     }
 }

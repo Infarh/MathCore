@@ -69,7 +69,7 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public long this[int i, int j] { get { return _Data[i, j]; } set { _Data[i, j] = value; } }
+        public long this[int i, int j] { get => _Data[i, j]; set => _Data[i, j] = value; }
 
         /// <summary>Вектор-стольбец</summary>
         /// <param name="j">Номер столбца</param>
@@ -215,10 +215,7 @@ namespace MathCore
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
-        public MatrixLong GetAdjunct(int n, int m)
-        {
-            return (((n + m) % 2) == 0 ? 1 : -1) * GetMinor(n, m).GetDeterminant();
-        }
+        public MatrixLong GetAdjunct(int n, int m) => (((n + m) % 2) == 0 ? 1 : -1) * GetMinor(n, m).GetDeterminant();
 
         /// <summary>Минор матрицы по определённому элементу</summary>
         /// <param name="n">Номер столбца</param>
@@ -442,21 +439,11 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public override string ToString()
-        {
-            return string.Format("MatrixLong[{0}x{1}]", N, M);
-        }
+        public override string ToString() => string.Format("MatrixLong[{0}x{1}]", N, M);
 
-        public string ToStringFormat(string Format)
-        {
-            return ToStringFormat('\t', Format);
-        }
+        public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
 
-        public string ToStringFormat(char Splitter)
-        {
-            return ToStringFormat(Splitter, "r");
-
-        }
+        public string ToStringFormat(char Splitter) => ToStringFormat(Splitter, "r");
 
         public string ToStringFormat(char Splitter = '\t', string Format = "r")
         {
@@ -726,21 +713,12 @@ namespace MathCore
             return lv_Result;
         }
 
-        public static explicit operator long[,](MatrixLong M)
-        {
-            return (long[,])M._Data.Clone();
-        }
+        public static explicit operator long[,](MatrixLong M) => (long[,])M._Data.Clone();
 
         //[CLSCompliant(false)]
-        public static explicit operator MatrixLong(long[,] Data)
-        {
-            return new MatrixLong(Data);
-        }
+        public static explicit operator MatrixLong(long[,] Data) => new MatrixLong(Data);
 
-        public static explicit operator MatrixLong(long[] Data)
-        {
-            return new MatrixLong(Data);
-        }
+        public static explicit operator MatrixLong(long[] Data) => new MatrixLong(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -748,21 +726,18 @@ namespace MathCore
 
         public bool Equals(MatrixLong other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return other._N == _N && other._M == _M && Equals(other._Data, _Data);
         }
 
-        bool IEquatable<MatrixLong>.Equals(MatrixLong other)
-        {
-            return Equals(other);
-        }
+        bool IEquatable<MatrixLong>.Equals(MatrixLong other) => Equals(other);
 
         #endregion
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == typeof(MatrixLong) && Equals((MatrixLong)obj);
         }

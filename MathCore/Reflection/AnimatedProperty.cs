@@ -16,11 +16,12 @@ namespace MathCore.Reflection
         private Thread _Thread;
         private ThreadPriority _Priority = ThreadPriority.Normal;
 
-        public bool Enable { get { return _Enabled; } set { if(value) Start(); else Stop(); } }
+        public bool Enable { get => _Enabled;
+            set { if(value) Start(); else Stop(); } }
 
         public ThreadPriority Priority
         {
-            get { return _Priority; }
+            get => _Priority;
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {

@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Numerics;
 using MathCore;
 using Complex = MathCore.Complex;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 namespace System
@@ -17,21 +17,21 @@ namespace System
         /// <param name="x">Целое основание</param>
         /// <param name="N">Целый показатель степени</param>
         /// <returns>Результат возведения целого основания в целую степень</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int Power(this int x, int N) => (int)Math.Pow(x, N);
 
         /// <summary>Возведение целого числа в вещественную степень</summary>
         /// <param name="x">Целое основание</param>
         /// <param name="q">Вещественный показатель степени</param>
         /// <returns>Результат возведения целого основания в вещественную степень</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static double Power(this int x, double q) => Math.Pow(x, q);
 
         /// <summary>Возведение целого числа в комплексную степень</summary>
         /// <param name="x">Целое основание</param>
         /// <param name="z">Комплексный показатель степени</param>
         /// <returns>Результат возведения целого основания в комплексную степень</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static Complex Power(this int x, Complex z) => x ^ z;
 
         /// <summary>Факторизация целого числа</summary>
@@ -132,7 +132,7 @@ namespace System
         /// <summary>Проверка - является ли число простым?</summary>
         /// <param name="n">Проверяемое число</param>
         /// <returns>Истина, если число простое</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static bool IsPrime(this int n)
         {
             if(n < 0) n = -n;
@@ -148,7 +148,7 @@ namespace System
         /// <summary>Является ли число степенью двойки?</summary>
         /// <param name="n">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static bool IsPowerOf2(this int n)
         {
             if(n < 0) n = -n;
@@ -158,14 +158,14 @@ namespace System
         /// <summary>Число бит числа</summary>
         /// <param name="n">Значащее число</param>
         /// <returns>Число бит числа</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int BitCount(this int n) => n.GetNumberOfDigits(2);
 
         /// <summary>Получить число разрядов в указаной системе счисления</summary>
         /// <param name="n">Рассматриваемое число</param>
         /// <param name="Base">Основание системы счисления. По умолчанию = 10</param>
         /// <returns>Количество разрядов в указанной системе счисления</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int GetNumberOfDigits(this int n, int Base = 10)
         {
             Contract.Requires(Base >= 2, "Основание системы не может быть меньше 2");
@@ -177,7 +177,7 @@ namespace System
         /// <param name="Value">Преобразуемое число</param>
         /// <param name="Length">Длина результирующего массива бит. По умолчанию = 32 битам</param>
         /// <returns>Битовый массив числа</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static BitArray GetBitArray(this int Value, int Length = 32)
         {
             Contract.Requires(Length > 0);
@@ -198,7 +198,7 @@ namespace System
         /// <param name="x">исходное число</param>
         /// <param name="N">Число реверсируемых бит</param>
         /// <returns>Реверсированное число</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int BitReversing(this int x, int N)
         {
             Contract.Requires(N >= 0, "Число инвертируемых бит не может быть меньше 0");
@@ -216,14 +216,14 @@ namespace System
         /// <summary>Реверсирование всех 32 бит числа</summary>
         /// <param name="x">исходное число</param>
         /// <returns>Реверсированное число</returns>
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static int BitReversing(this int x) => x.BitReversing(sizeof(int) * 8);
 
         /// <summary>Проверка делимости числа на делитель</summary>
         /// <param name="x">Делимое</param>
         /// <param name="y">Делитель</param>
         /// <returns>Истина, если остаток от целочисленного деления равен 0</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static bool IsDevidedTo(this int x, int y)
         {
             Contract.Ensures(Contract.Result<bool>() == ((x % y) == 0));
@@ -235,7 +235,7 @@ namespace System
         /// <param name="x">Делимое</param>
         /// <param name="mod">Модуль</param>
         /// <returns>Остаток от деления</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int GetAbsMod(this int x, int mod)
         {
             Contract.Ensures(Contract.Result<int>() >= 0, "Значение оказалось меньше 0");
@@ -247,14 +247,14 @@ namespace System
         /// <summary>Получить абсолютное значение числа</summary>
         /// <param name="x">Вещественное число</param>
         /// <returns>Модуль числа</returns>
-        [DebuggerStepThrough, Pure]
+        [DST, Pure]
         public static int GetAbs(this int x) => Math.Abs(x);
 
         /// <summary>Наибольший общий делитель</summary>
         /// <param name="Y">Первое число</param>
         /// <param name="X">Второе число</param>
         /// <returns>Наибольший общий делитель</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int GetNOD(this int Y, int X)
         {
             while(X != Y) if(X < Y) Y -= X; else X -= Y;
@@ -264,19 +264,19 @@ namespace System
         /// <summary>Является ли число нечётным</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число нечётное</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static bool IsOdd(this int x) => !x.IsEven();
 
         /// <summary>Является ли число чётным</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static bool IsEven(this int x) => x.IsDevidedTo(2);
 
         /// <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
         /// <param name="n">Исходное число</param>
         /// <returns>Факториал числа</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static long Factorial(this int n)
         {
             //Contract.Requires(n >= 0, "Значение факториала может быть рассчитано для аргумента только >= 0");
@@ -308,7 +308,7 @@ namespace System
         /// <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
         /// <param name="n">Исходное число</param>
         /// <returns>Факториал числа</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static BigInteger FactorialBigInt(this int n)
         {
             if (n < 0) return (long)SpecialFunctions.Gamma.G(n);
@@ -324,7 +324,7 @@ namespace System
         /// <summary>Приведение целого числа в 10 системе счисления к виду системы счисления по основанию 8</summary>
         /// <param name="n">Число в 10-ой системе счисления</param>
         /// <returns>Представление числа в 8-ричной системе счисления</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int ToOctBase(this int n)
         {
             var num = 0;
@@ -339,7 +339,7 @@ namespace System
         /// <summary>Приведение целого числа в 8 системе счисления к виду системы счисления по основанию 10</summary>
         /// <param name="x">Число в 8-ой системе счисления</param>
         /// <returns>Представление числа в 10-ричной системе счисления</returns>
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int FromOctalBase(this int x)
         {
             var num = x % 10;
@@ -371,7 +371,7 @@ namespace System
         }
 
         [Obsolete("Используйте метод ToBase(Base:10)")]
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int[] GetDigits(this int x)
         {
             var result = new List<int>(20);
@@ -383,10 +383,10 @@ namespace System
             return result.ToArray();
         }
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int GetFlags(this int Value, int Mask) => Value & Mask;
 
-        [Pure, DebuggerStepThrough]
+        [Pure, DST]
         public static int SetFlag(this int Value, int Flag, int Mask) => (Value & ~Mask) | (Flag & Mask);
 
         public static int ToInteger(this byte[] data, int Offset = 0, bool IsMsbFirst = true)

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace MathCore
@@ -103,7 +103,7 @@ namespace MathCore
             /// <summary>Функция Бесселя 0 порядка</summary>
             /// <param name="x">Аргумент</param>
             /// <returns>Значение функции Бесселя нулевого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double J0(double x)
             {
                 x = Math.Abs(x);
@@ -143,7 +143,7 @@ namespace MathCore
             /// <summary>Функция Бесселя 1 порядка</summary>
             /// <param name="x">Аргумент функции</param>
             /// <returns>Значение функции Бесселя первого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double J1(double x)
             {
                 double s = Math.Sign(x);
@@ -188,7 +188,7 @@ namespace MathCore
             /// <param name="n">Порядок функции Бесселя</param>
             /// <param name="x">Аргумент Функции Бесселя</param>
             /// <returns>Значение функции Бесселя n порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double Jn(int n, double x)
             {
                 int sg;
@@ -247,7 +247,7 @@ namespace MathCore
             /// <summary>Функция Бесселя второго типа, нулевого порядка</summary>
             /// <param name="x">Аргумент функции Бесселя второго типа, нулевого порядка</param>
             /// <returns>Значение функции Бесселя второго типа, нулевого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double Y0(double x)
             {
                 if(x > 8)
@@ -285,7 +285,7 @@ namespace MathCore
             /// <summary>Функция Бесселя второго типа, первого порядка</summary>
             /// <param name="x">Аргумент функции Бесселя второго типа, первого порядка</param>
             /// <returns>Значение функции Бесселя второго типа, первого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double Y1(double x)
             {
                 if(x > 8)
@@ -325,7 +325,7 @@ namespace MathCore
             /// <param name="n">Порядок функции Бесселя второго типа</param>
             /// <param name="x">Аргумент функции Бесселя второго типа, n порядка</param>
             /// <returns>Значение функции Бесселя второго типа, n порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double Yn(int n, double x)
             {
                 double s = 1;
@@ -354,7 +354,7 @@ namespace MathCore
             /// <summary>Модифицированная функция Бесселя нулевого порядка </summary>
             /// <param name="x">Аргумент модифицированной функции Бесселя нулевого порядка</param>
             /// <returns>Значение модифицированной функции Бесселя нулевого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double I0(double x)
             {
                 if(x < 0) x = -x;
@@ -431,7 +431,7 @@ namespace MathCore
             /// <summary>Модифицированная функция Бесселя первого порядка </summary>
             /// <param name="x">Аргумент модифицированной функции Бесселя первого порядка</param>
             /// <returns>Значение модифицированной функции Бесселя первого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double I1(double x)
             {
                 double y;
@@ -511,7 +511,7 @@ namespace MathCore
             /// <summary>Модифицированная функция Бесселя второго типа, нулевого порядка </summary>
             /// <param name="x">Аргумент модифицированной функции Бесселя второго типа, нулевого порядка</param>
             /// <returns>Значение модифицированной функции Бесселя второго типа, нулевого порядка</returns>
-            [DebuggerStepThrough]
+            [DST]
             public static double K0(double x)
             {
                 Contract.Requires(x > 0, "Функция K0 определена на x > 0");
@@ -571,7 +571,7 @@ namespace MathCore
             /// <param name="x">Аргумент модифицированной функции Бесселя второго типа, первого порядка</param>
             /// <returns>Значение модифицированной функции Бесселя второго типа, первого порядка</returns>
             /// <exception cref="ArgumentOutOfRangeException">x меньше 0</exception>
-            [DebuggerStepThrough]
+            [DST]
             public static double K1(double x)
             {
                 Contract.Requires(x > 0, "Функция K1 определена на x > 0");
@@ -635,7 +635,7 @@ namespace MathCore
             /// <exception cref="ArgumentOutOfRangeException">при x меньше, либо = 0</exception>
             /// <exception cref="ArgumentOutOfRangeException">|n| больше 31</exception>
             /// <exception cref="OverflowException"></exception>
-            [DebuggerStepThrough]
+            [DST]
             public static double Kn(int n, double x)
             {
                 Contract.Requires(Math.Abs(n) <= 31, "Порядок Kn больше 31");

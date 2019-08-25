@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 using System.Linq.Expressions;
 using MathCore.MathParser.ExpressionTrees.Nodes;
@@ -38,19 +39,19 @@ namespace MathCore.MathParser
                         .FirstOrDefault();
 
             Function.Variable.ClearCollection();
-            if(iterator_var != null) Function.Variable.Add(iterator_var);
+            if (iterator_var != null) Function.Variable.Add(iterator_var);
             Function.Tree
                 .Where(n => n is VariableValueNode)
                 .Cast<VariableValueNode>()
                 .Where(n => !ReferenceEquals(n.Variable, iterator_var))
-                .Foreach(n => Function.Variable.Add(n.Variable = Expression.Variable[n.Variable.Name]));
+                .Foreach(Expression, Function, (n, i, expr, f) => f.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
 
             Parameters.Variable.ClearCollection();
             Parameters.Tree
                 .Where(n => n is VariableValueNode)
                 .Cast<VariableValueNode>()
                 .Where(n => !ReferenceEquals(n.Variable, iterator_var))
-                .Foreach(n => Parameters.Variable.Add(n.Variable = Expression.Variable[n.Variable.Name]));
+                .Foreach(Expression, Function, (n, i, expr, f) => f.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
         }
 
         /// <summary>Метод определения значения</summary>
@@ -62,17 +63,17 @@ namespace MathCore.MathParser
             Debug.Assert(iterator != null, "iterator != null");
             var interval = (IntervalNode)parameters_root.Right;
             Debug.Assert(interval != null, "interval != null");
-            var min = ((ComputedNode)(interval.Min)).Compute();
-            var max = ((ComputedNode)(interval.Max)).Compute();
+            var min = ((ComputedNode)interval.Min).Compute();
+            var max = ((ComputedNode)interval.Max).Compute();
             var summ = 0.0;
-            if(min < max)
-                for(int i = (int)min, Max = (int)max; i < Max; i++)
+            if (min < max)
+                for (int i = (int)min, Max = (int)max; i < Max; i++)
                 {
                     iterator.Value = i;
                     summ += Function.Compute();
                 }
             else
-                for(int i = (int)min, Min = (int)max - 1; i >= Min; i--)
+                for (int i = (int)min, Min = (int)max - 1; i >= Min; i--)
                 {
                     iterator.Value = i;
                     summ += Function.Compute();
@@ -101,11 +102,11 @@ namespace MathCore.MathParser
             var S = 0.0;
             var xx = new object[pp_len + 1];
             Array.Copy(Parameters, 0, xx, 1, pp_len);
-            if(Min < Max)
-                for(xx[0] = Min; (double)xx[0] < Max; xx[0] = ((double)xx[0]) + 1)
+            if (Min < Max)
+                for (xx[0] = Min; (double)xx[0] < Max; xx[0] = (double)xx[0] + 1)
                     S += (double)d.DynamicInvoke(xx);
             else
-                for(xx[0] = Min; (double)xx[0] > Max; xx[0] = ((double)xx[0]) - 1)
+                for (xx[0] = Min; (double)xx[0] > Max; xx[0] = (double)xx[0] - 1)
                     S += (double)d.DynamicInvoke(xx);
             return S;
         }
@@ -165,7 +166,7 @@ namespace MathCore.MathParser
             var expr_p = new[]
             {
                 Expression.Constant(expr), min, max,
-                Expression.NewArrayInit(typeof(double), Parameters)
+                Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray())
             };
 
             return Expression.Call(new SummDelegate(GetSumm).Method, expr_p);

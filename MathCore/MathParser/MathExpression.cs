@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,8 +13,6 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    using DST = DebuggerStepThroughAttribute;
-
     /// <summary>Математическое выражение</summary>
     public class MathExpression : IDisposable, ICloneable<MathExpression>
     {
@@ -226,9 +224,9 @@ namespace MathCore.MathParser
             // Словарь индексов переменных
             var var_dictionary = new Dictionary<string, int>();
 
-            ParameterExpression[] vars; // Выходной массив параметров выражения, получаемый при сборке дерева
+            // Выходной массив параметров выражения, получаемый при сборке дерева
             // Сборка дерева
-            var compilation = GetExpression(out vars, ArgumentName);
+            var compilation = GetExpression(out var vars, ArgumentName);
 
             // Если массив имён компилируемых входных переменных не пуст
             if((ArgumentName?.Length ?? 0) > 0)
@@ -284,8 +282,7 @@ namespace MathCore.MathParser
         public TDelegate Compile<TDelegate>([NotNull] params string[] ArgumentName)
         {
             Contract.Requires(ArgumentName != null);
-            ParameterExpression[] vars;
-            var compilation = GetExpression<TDelegate>(out vars, ArgumentName);
+            var compilation = GetExpression<TDelegate>(out var vars, ArgumentName);
             return Expression.Lambda<TDelegate>(compilation, vars).Compile();
         }
 

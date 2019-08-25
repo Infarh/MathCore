@@ -704,65 +704,29 @@ namespace System.Xml.XPath
 
         public override XmlNameTable NameTable => _Reader.NameTable;
 
-        public override string GetAttribute(string name)
-        {
-            return _Reader.GetAttribute(name);
-        }
+        public override string GetAttribute(string name) => _Reader.GetAttribute(name);
 
-        public override string GetAttribute(string name, string namespaceURI)
-        {
-            return _Reader.GetAttribute(name, namespaceURI);
-        }
+        public override string GetAttribute(string name, string namespaceURI) => _Reader.GetAttribute(name, namespaceURI);
 
-        public override string GetAttribute(int i)
-        {
-            return _Reader.GetAttribute(i);
-        }
+        public override string GetAttribute(int i) => _Reader.GetAttribute(i);
 
-        public override bool MoveToAttribute(string name)
-        {
-            return _Reader.MoveToAttribute(name);
-        }
+        public override bool MoveToAttribute(string name) => _Reader.MoveToAttribute(name);
 
-        public override bool MoveToAttribute(string name, string ns)
-        {
-            return _Reader.MoveToAttribute(name, ns);
-        }
+        public override bool MoveToAttribute(string name, string ns) => _Reader.MoveToAttribute(name, ns);
 
-        public override bool MoveToFirstAttribute()
-        {
-            return _Reader.MoveToFirstAttribute();
-        }
+        public override bool MoveToFirstAttribute() => _Reader.MoveToFirstAttribute();
 
-        public override bool MoveToNextAttribute()
-        {
-            return _Reader.MoveToNextAttribute();
-        }
+        public override bool MoveToNextAttribute() => _Reader.MoveToNextAttribute();
 
-        public override bool MoveToElement()
-        {
-            return _Reader.MoveToElement();
-        }
+        public override bool MoveToElement() => _Reader.MoveToElement();
 
-        public override bool ReadAttributeValue()
-        {
-            return _Reader.ReadAttributeValue();
-        }
+        public override bool ReadAttributeValue() => _Reader.ReadAttributeValue();
 
-        public override string LookupNamespace(string prefix)
-        {
-            return _Reader.LookupNamespace(prefix);
-        }
+        public override string LookupNamespace(string prefix) => _Reader.LookupNamespace(prefix);
 
-        public override void ResolveEntity()
-        {
-            _Reader.ResolveEntity();
-        }
+        public override void ResolveEntity() => _Reader.ResolveEntity();
 
         /// <inheritdoc />
-        public override void Close()
-        {
-            _Reader.Close();
-        }
+        public override void Close() => _Reader.Close();
     }
 }

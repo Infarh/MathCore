@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -8,8 +8,6 @@ using System.Text;
 
 namespace MathCore
 {
-    using DST = DebuggerStepThroughAttribute;
-
     /// <summary>Матрица NxM</summary>
     /// <remarks>
     /// i (первый индекс) - номер строки, 
@@ -78,7 +76,9 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public float this[int i, int j] { [DST] get { return _Data[i, j]; } [DST] set { _Data[i, j] = value; } }
+        public float this[int i, int j] { [DST] get => _Data[i, j];
+            [DST] set => _Data[i, j] = value;
+        }
 
         /// <summary>Вектор-стольбец</summary>
         /// <param name="j">Номер столбца</param>
@@ -562,8 +562,8 @@ namespace MathCore
 
         public static bool operator ==(MatrixFloat A, MatrixFloat B)
         {
-            return ReferenceEquals(A, null) && (ReferenceEquals(B, null))
-                   || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+            return A is null && (B is null)
+                   || A is { } && B is { } && A.Equals(B);
         }
 
         public static bool operator !=(MatrixFloat A, MatrixFloat B) { return !(A == B); }
@@ -781,16 +781,16 @@ namespace MathCore
         /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
         [DST]
-        public static implicit operator MatrixFloat(float X) { return new MatrixFloat(1, 1) { [0, 0] = X }; }
+        public static implicit operator MatrixFloat(float X) => new MatrixFloat(1, 1) { [0, 0] = X };
 
         [DST]
-        public static explicit operator float[,](MatrixFloat M) { return (float[,])M._Data.Clone(); }
+        public static explicit operator float[,](MatrixFloat M) => (float[,])M._Data.Clone();
 
         [DST]
-        public static explicit operator MatrixFloat(float[,] Data) { return new MatrixFloat(Data); }
+        public static explicit operator MatrixFloat(float[,] Data) => new MatrixFloat(Data);
 
         [DST]
-        public static explicit operator MatrixFloat(float[] Data) { return new MatrixFloat(Data); }
+        public static explicit operator MatrixFloat(float[] Data) => new MatrixFloat(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -798,7 +798,7 @@ namespace MathCore
 
         public bool Equals(MatrixFloat other)
         {
-            return !ReferenceEquals(null, other)
+            return other is { }
                    && (ReferenceEquals(this, other)
                         || other._N == _N
                             && other._M == _M
@@ -806,13 +806,13 @@ namespace MathCore
         }
 
         [DST]
-        bool IEquatable<MatrixFloat>.Equals(MatrixFloat other) { return Equals(other); }
+        bool IEquatable<MatrixFloat>.Equals(MatrixFloat other) => Equals(other);
 
         #endregion
 
         public override bool Equals(object obj)
         {
-            return !ReferenceEquals(null, obj)
+            return obj is { }
                    && (ReferenceEquals(this, obj)
                         || obj.GetType() == typeof(MatrixFloat)
                                 && Equals((MatrixFloat)obj));

@@ -32,37 +32,37 @@ namespace MathCore.MathParser
             [DST]
             get
             {
-                if(Name == null) throw new ArgumentNullException(nameof(Name));
-                if(string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
+                if (Name == null) throw new ArgumentNullException(nameof(Name));
+                if (string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 Contract.EndContractBlock();
                 return (_Variabels.Find(v => v.Name == Name)
-                       ?? new ExpressionVariabel(Name).InitializeObject(v => Add(v))) 
+                       ?? new ExpressionVariabel(Name).InitializeObject(this, (v, vc) => vc.Add(v)))
                        ?? throw new InvalidOperationException();
             }
             [DST]
             set
             {
-                if(value == null) throw new ArgumentNullException(nameof(value));
-                if(Name == null) throw new ArgumentNullException(nameof(Name));
-                if(string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                if (Name == null) throw new ArgumentNullException(nameof(Name));
+                if (string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 Contract.EndContractBlock();
                 var old_var = _Variabels.Find(v => v.Name == Name);
 
-                if(value is LamdaExpressionVariable || value is EventExpressionVariable)
+                if (value is LamdaExpressionVariable || value is EventExpressionVariable)
                 {
                     value.Name = Name;
                     _Expression.Tree //Обойти все узлы дерева
-                                      // являющиеся узлами переменных
+                                     // являющиеся узлами переменных
                                 .Where(node => node is VariableValueNode)
                                 .Cast<VariableValueNode>()
                                 // у которых имя соответствует заданному
                                 .Where(node => node.Variable.Name == Name)
                                 // и для каждого узла заменить переменную на указанную
-                                .Foreach(node => node.Variable = value);
+                                .Foreach(value, (node, v) => node.Variable = v);
                     _Variabels.Remove(old_var);
                     Add(value);
                 }
-                else if(old_var == null)
+                else if (old_var == null)
                     Add(value);
                 else
                     old_var.Value = value.GetValue();
@@ -112,7 +112,7 @@ namespace MathCore.MathParser
             Contract.Requires(Variable != null);
             Contract.Ensures(Contract.OldValue(Count) == Count + 1);
             var variable = _Variabels.Find(v => v.Name == Variable.Name);
-            if(variable != null) return false;
+            if (variable != null) return false;
             Variable.IsConstant = false;
             _Variabels.Add(Variable);
             return true;
@@ -125,11 +125,11 @@ namespace MathCore.MathParser
 
             var replaced = false;
             var old_var = _Variabels.Find(v => v.Name == Name);
-            if(old_var == null) return false;
+            if (old_var == null) return false;
 
 
             _Expression.Tree //Обойти все узлы дерева
-                              // являющиеся узлами переменных
+                             // являющиеся узлами переменных
                                 .Where(node => node is VariableValueNode)
                                 .Cast<VariableValueNode>()
                                 // у которых имя соответствует заданному
@@ -142,7 +142,7 @@ namespace MathCore.MathParser
                                 });
             _Variabels.Remove(old_var);
             Add(variable);
-            if(replaced)
+            if (replaced)
                 variable.Name = Name;
             return replaced;
         }
@@ -174,7 +174,7 @@ namespace MathCore.MathParser
             Contract.Requires(Variable != null);
             return !_Expression.Tree
                         .Where(n => n is VariableValueNode)
-                        .Any(n => ReferenceEquals(((VariableValueNode)n).Variable, Variable)) 
+                        .Any(n => ReferenceEquals(((VariableValueNode)n).Variable, Variable))
                     && _Variabels.Remove(Variable);
         }
 

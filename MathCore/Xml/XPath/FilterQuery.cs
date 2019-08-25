@@ -97,10 +97,7 @@ namespace System.Xml.XPath
         // /e/e1[e2[@a='1'] = 1]
         //
         /// <exception cref="XPathReaderException">Can't get value</exception>
-        internal override object GetValue(XPathReader reader)
-        {
-            throw new XPathReaderException("Can't get value");
-        }
+        internal override object GetValue(XPathReader reader) => throw new XPathReaderException("Can't get value");
 
         #endregion
     }

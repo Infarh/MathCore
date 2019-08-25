@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 
 namespace MathCore
@@ -9,7 +9,7 @@ namespace MathCore
         /// <summary>Гамма-функция</summary>
         public static class Gamma
         {
-            [Pure, DebuggerStepThrough]
+            [Pure, DST]
             public static double G(double x)
             {
                 double z;
@@ -68,7 +68,7 @@ namespace MathCore
                 return z * pp / qq;
             }
 
-            [DebuggerStepThrough]
+            [DST]
             private static double GStir(double x)
             {
                 var w = 1 / x;
@@ -89,10 +89,10 @@ namespace MathCore
                 return 2.50662827463100050242 * y * w;
             }
 
-            [DebuggerStepThrough]
+            [DST]
             public static double LnG(double x) => LnG(x, out _);
 
-            [DebuggerStepThrough]
+            [DST]
             public static double LnG(double x, out int sign)
             {
                 double p;

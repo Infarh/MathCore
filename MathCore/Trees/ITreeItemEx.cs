@@ -28,7 +28,7 @@ namespace MathCore.Trees
             }
         }
 
-        private static void DebugWrite(string str, params object[] obj) { Console.Title = string.Format(str, obj); }
+        private static void DebugWrite(string str, params object[] obj) => Console.Title = string.Format(str, obj);
 
         /// <summary>ќпределение корн€ дерева</summary>
         /// <typeparam name="T">“ип элемента, €вл€ющегос€ классом и определ€ющего интерфейс элемента дерева</typeparam>

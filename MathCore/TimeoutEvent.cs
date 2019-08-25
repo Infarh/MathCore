@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
@@ -27,7 +28,7 @@ namespace MathCore
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Константа бесконечного периода ожидания</summary>
-        private const int c_Infinite = System.Threading.Timeout.Infinite;
+        private const int __Infinite = System.Threading.Timeout.Infinite;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -41,7 +42,7 @@ namespace MathCore
             /// <summary>Аргумент события</summary>
             /// <param name="EventSender">Источник исходного события</param>
             /// <param name="e">Аргумент исходного события</param>
-            [System.Diagnostics.DebuggerStepThrough]
+            [DST]
             public Info(object EventSender, TEventArgs e)
             {
                 this.EventSender = EventSender;
@@ -54,13 +55,11 @@ namespace MathCore
 
         /// <summary>Метод первичной генерации события <see cref="Invoked"/></summary>
         /// <param name="e">Аргумент первичного вызова события</param>
-        //[System.Diagnostics.DebuggerStepThrough]
+        //[System.Diagnostics.DST]
         protected virtual void OnInvoked(Info e)
         {
             _LastEventArgs = e;
-            var handlers = Invoked;
-            if(handlers != null)
-                handlers.Invoke(this, e);
+            Invoked?.Invoke(this, e);
         }
 
         /// <summary>Событие, возникающее после последнего вызова метода <see cref="Invoke"/> через период времени <see cref="Timeout"/></summary>
@@ -68,13 +67,7 @@ namespace MathCore
 
         /// <summary>Мeтод генерации события <see cref="Timeouted"/></summary>
         /// <param name="e">Аргумент события</param>
-        //[System.Diagnostics.DebuggerStepThrough]
-        protected virtual void OnTimeouted(Info e)
-        {
-            var handlers = Timeouted;
-            if(handlers != null)
-                handlers.Invoke(this, e);
-        }
+        [DST] protected virtual void OnTimeouted(Info e) => Timeouted?.Invoke(this, e);
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -99,7 +92,7 @@ namespace MathCore
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Задейржка во времени генерации события <see cref="Timeouted"/> в миллисекундах</summary>
-        public int Timeout { get { return _Timeout; } set { _Timeout = value; } }
+        public int Timeout { get => _Timeout; set => _Timeout = value; }
 
         /// <summary>Время последнего выхова метода <see cref="Invoke"/></summary>
         public DateTime LastCallTime => _LastCallTime;
@@ -108,7 +101,7 @@ namespace MathCore
         public bool InProcess => _InProcess;
 
         /// <summary>Признак отмены генерации собития <see cref="Timeouted"/></summary>
-        public bool NeedAbort { get { return _NeedAbort; } set { _NeedAbort = value; } }
+        public bool NeedAbort { get => _NeedAbort; set => _NeedAbort = value; }
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -117,7 +110,7 @@ namespace MathCore
         public TimeoutEvent(int Timeout)
         {
             _Timeout = Timeout;
-            _Timer = new Timer(OnTimer, null, c_Infinite, c_Infinite);
+            _Timer = new Timer(OnTimer, null, __Infinite, __Infinite);
         }
 
         /// <summary>Инициализация нового объекта задержки генерации соытия</summary>
@@ -151,7 +144,7 @@ namespace MathCore
                 if(timeouted = dt <= 0)
                     _InProcess = false;
                 else
-                    _Timer.Change((int)dt, c_Infinite);
+                    _Timer.Change((int)dt, __Infinite);
             }
             if(timeouted) OnTimeouted(_LastEventArgs);
         }
@@ -168,7 +161,7 @@ namespace MathCore
                 if(!_InProcess)
                 {
                     _InProcess = true;
-                    _Timer.Change(_Timeout, c_Infinite);
+                    _Timer.Change(_Timeout, __Infinite);
                 }
             }
             OnInvoked(new Info(EventSender, args));

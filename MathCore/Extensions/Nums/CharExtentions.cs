@@ -1,13 +1,17 @@
-﻿
-using System.Diagnostics;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System
 {
     public static class CharExtentions
     {
-        [DebuggerStepThrough]
-        public static bool IsDigit(this char c) => char.IsDigit(c);//            for(var i = 0; i < 10; i++)//                if(c == i.ToString()[0]) return true;//            return false;
+        [DST] public static bool IsDigit(this char c) => char.IsDigit(c);
 
-        public static int ToDigit(this char c) => int.Parse(new string(c, 1));
+        private const int __IndexOf0 = (int)'0';
+        [DST]
+        public static int ToDigit(this char c)
+        {
+            if (!char.IsDigit(c)) throw new InvalidOperationException($"Символ \'{c}\' не является цифрой");
+            return (int)c - __IndexOf0;
+        }
     }
 }

@@ -709,10 +709,7 @@ namespace MathCore.Tests
         ///A test for GetPower
         ///</summary>
         [TestMethod]
-        public void PowerTest()
-        {
-            Assert.AreEqual(5 * 5 + 7 * 7, new Complex(5, 7).Power, "(5+7i)*(5+7i)^* != 5^2 + 7^2");
-        }
+        public void PowerTest() => Assert.AreEqual(5 * 5 + 7 * 7, new Complex(5, 7).Power, "(5+7i)*(5+7i)^* != 5^2 + 7^2");
 
         /// <summary>
         ///A test for Re

@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 namespace System.Linq.Expressions
 {
     /// <summary>Пересборщик дерева выражения Linq.Expression</summary>
-    //[Diagnostics.DebuggerStepThrough]
+    //[Diagnostics.DST]
     public class ExpressionRebuilder : ExpressionVisitorEx
     {
         /// <summary>Метод генерации события посещения узла типа Expression</summary>

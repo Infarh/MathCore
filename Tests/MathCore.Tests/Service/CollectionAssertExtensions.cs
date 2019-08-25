@@ -18,9 +18,6 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         private readonly ICollection<T> _ActualCollection;
         public CollectionAssertChecker(ICollection<T> ActualCollection) => _ActualCollection = ActualCollection;
 
-        public void AreEquals(ICollection<T> ExpectedCollection)
-        {
-            CollectionAssert.AreEqual((ICollection)ExpectedCollection, (ICollection)_ActualCollection);
-        }
+        public void AreEquals(ICollection<T> ExpectedCollection) => CollectionAssert.AreEqual((ICollection)ExpectedCollection, (ICollection)_ActualCollection);
     }
 }
