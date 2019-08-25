@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <Authors>Shmachilin@gmail.com</Authors>
+    <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
+    <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
+    <AssemblyVersion>0.0.0.1</AssemblyVersion>
+    <FileVersion>0.0.0.1</FileVersion>
+    <PackageTags>Mathematic, Logik</PackageTags>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +24,10 @@
     <None Remove="MathParser\MathParserDiagram.dgml" />
     <None Remove="MathParser\Operations.xml" />
     <None Remove="MathParser\Operations.xsd" />
+    <None Include="..\license.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
