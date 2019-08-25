@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Serialization;
 using MathCore.Annotations;
-//using MathCore.Expressions.Complex;
+using MathCore.Expressions.Complex;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable MissingAnnotation
 

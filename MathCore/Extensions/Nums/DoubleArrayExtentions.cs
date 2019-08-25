@@ -2,9 +2,9 @@
 using System.Linq;
 using MathCore;
 using MathCore.Annotations;
-//using MathCore.Interpolation;
-//using MathCore.Statistic;
-//using MathCore.Values;
+using MathCore.Interpolation;
+using MathCore.Statistic;
+using MathCore.Values;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable CompareOfFloatsByEqualityOperator
@@ -213,12 +213,12 @@ namespace System
             return array;
         }
 
-        //[DST, NotNull]
-        //public static double[] GetAKF([NotNull] this double[] array)
-        //{
-        //    Contract.Requires(array != null);
-        //    return array.GetConvolution(array.GetReversed());
-        //}
+        [DST, NotNull]
+        public static double[] GetAKF([NotNull] this double[] array)
+        {
+            Contract.Requires(array != null);
+            return array.GetConvolution(array.GetReversed());
+        }
 
         [DST, NotNull]
         public static double[] GetConvolution([NotNull] this double[] s, [NotNull] double[] h)
@@ -233,42 +233,42 @@ namespace System
             return k;
         }
 
-        //[DST, NotNull]
-        //public static CubicSpline GetCubicSpline([NotNull] this double[] Y, [NotNull] double[] X)
-        //{
-        //    Contract.Requires(Y != null);
-        //    Contract.Requires(X != null);
-        //    Contract.Ensures(Contract.Result<CubicSpline>() != null);
-        //    return new CubicSpline(X, Y);
-        //}
+        [DST, NotNull]
+        public static CubicSpline GetCubicSpline([NotNull] this double[] Y, [NotNull] double[] X)
+        {
+            Contract.Requires(Y != null);
+            Contract.Requires(X != null);
+            Contract.Ensures(Contract.Result<CubicSpline>() != null);
+            return new CubicSpline(X, Y);
+        }
 
-        //[DST, NotNull]
-        //public static CubicSpline GetCubicSpline([NotNull] this double[] Y, double dx, double x0 = 0.0)
-        //{
-        //    Contract.Requires(Y != null);
-        //    Contract.Requires(dx > 0);
-        //    Contract.Ensures(Contract.Result<CubicSpline>() != null);
-        //    return new double[Y.Length].Initialize(i => i * dx + x0).GetCubicSpline(Y);
-        //}
+        [DST, NotNull]
+        public static CubicSpline GetCubicSpline([NotNull] this double[] Y, double dx, double x0 = 0.0)
+        {
+            Contract.Requires(Y != null);
+            Contract.Requires(dx > 0);
+            Contract.Ensures(Contract.Result<CubicSpline>() != null);
+            return new double[Y.Length].Initialize(i => i * dx + x0).GetCubicSpline(Y);
+        }
 
-        //[DST, NotNull]
-        //public static double[] GetDivaded([NotNull] this double[] array, double value)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Requires(value != 0);
-        //    Contract.Ensures(Contract.Result<double[]>() != null);
-        //    Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-        //    return new double[array.Length].Initialize(i => array[i] / value);
-        //}
+        [DST, NotNull]
+        public static double[] GetDivaded([NotNull] this double[] array, double value)
+        {
+            Contract.Requires(array != null);
+            Contract.Requires(value != 0);
+            Contract.Ensures(Contract.Result<double[]>() != null);
+            Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
+            return new double[array.Length].Initialize(i => array[i] / value);
+        }
 
-        //[DST, NotNull]
-        //public static Histogram GetHistogram([NotNull] this double[] X, int IntervalsCount)
-        //{
-        //    Contract.Requires(X != null);
-        //    Contract.Requires(IntervalsCount > 0);
-        //    Contract.Ensures(Contract.Result<Histogram>() != null);
-        //    return new Histogram(X, IntervalsCount);
-        //}
+        [DST, NotNull]
+        public static Histogram GetHistogram([NotNull] this double[] X, int IntervalsCount)
+        {
+            Contract.Requires(X != null);
+            Contract.Requires(IntervalsCount > 0);
+            Contract.Ensures(Contract.Result<Histogram>() != null);
+            return new Histogram(X, IntervalsCount);
+        }
 
         [DST]
         public static double GetIntegral([NotNull] this double[] Y, double dx)
@@ -335,121 +335,121 @@ namespace System
             return 0.5 * result * dx;
         }
 
-        //[DST, NotNull]
-        //public static MNK GetMNKInterp([NotNull] this double[] Y, int m, [NotNull] double[] X)
-        //{
-        //    Contract.Requires(Y != null);
-        //    Contract.Requires(X != null);
-        //    Contract.Ensures(Contract.Result<MNK>() != null);
-        //    return new MNK(X, Y, m);
-        //}
+        [DST, NotNull]
+        public static MNK GetMNKInterp([NotNull] this double[] Y, int m, [NotNull] double[] X)
+        {
+            Contract.Requires(Y != null);
+            Contract.Requires(X != null);
+            Contract.Ensures(Contract.Result<MNK>() != null);
+            return new MNK(X, Y, m);
+        }
 
-        //[DST, NotNull]
-        //public static MNK GetMNKInterp([NotNull] this double[] Y, int m, double dx, double x0 = 0.0)
-        //{
-        //    Contract.Requires(Y != null);
-        //    Contract.Requires(dx > 0);
-        //    Contract.Ensures(Contract.Result<MNK>() != null);
-        //    return Y.GetMNKInterp(m, new double[Y.Length].Initialize(i => i * dx + x0));
-        //}
+        [DST, NotNull]
+        public static MNK GetMNKInterp([NotNull] this double[] Y, int m, double dx, double x0 = 0.0)
+        {
+            Contract.Requires(Y != null);
+            Contract.Requires(dx > 0);
+            Contract.Ensures(Contract.Result<MNK>() != null);
+            return Y.GetMNKInterp(m, new double[Y.Length].Initialize(i => i * dx + x0));
+        }
 
-        //[DST, NotNull]
-        //public static double[] GetMultiplyed([NotNull] this double[] array, double value)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.Result<double[]>() != null);
-        //    Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-        //    return new double[array.Length].Initialize(i => array[i] * value);
-        //}
+        [DST, NotNull]
+        public static double[] GetMultiplyed([NotNull] this double[] array, double value)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.Result<double[]>() != null);
+            Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
+            return new double[array.Length].Initialize(i => array[i] * value);
+        }
 
-        //[DST, NotNull]
-        //public static double[] GetNormalized([NotNull] this double[] array)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.Result<double[]>() != null);
-        //    Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-        //    var max = array.Max();
-        //    return new double[array.Length].Initialize(i => array[i] / max);
-        //}
+        [DST, NotNull]
+        public static double[] GetNormalized([NotNull] this double[] array)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.Result<double[]>() != null);
+            Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
+            var max = array.Max();
+            return new double[array.Length].Initialize(i => array[i] / max);
+        }
 
-        //[DST, NotNull]
-        //public static double[] GetSubstract([NotNull] this double[] array, double value)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.Result<double[]>() != null);
-        //    return new double[array.Length].Initialize(i => array[i] - value);
-        //}
+        [DST, NotNull]
+        public static double[] GetSubstract([NotNull] this double[] array, double value)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.Result<double[]>() != null);
+            return new double[array.Length].Initialize(i => array[i] - value);
+        }
 
-        //[DST, NotNull]
-        //public static double[] GetSumm([NotNull] this double[] array, double value)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.Result<double[]>() != null);
-        //    Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-        //    return new double[array.Length].Initialize(i => array[i] + value);
-        //}
+        [DST, NotNull]
+        public static double[] GetSumm([NotNull] this double[] array, double value)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.Result<double[]>() != null);
+            Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
+            return new double[array.Length].Initialize(i => array[i] + value);
+        }
 
-        //[DST]
-        //public static double Max([NotNull] this double[] array)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.ForAll(array, v => v <= Contract.Result<double>()));
-        //    Contract.Ensures(array.Length > 0 || double.IsNegativeInfinity(Contract.Result<double>()));
-        //    Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Max());
-        //    var max = new MaxValue();
-        //    for(var i = 0; i < array.Length; i++)
-        //        max.AddValue(array[i]);
-        //    return max;
-        //}
+        [DST]
+        public static double Max([NotNull] this double[] array)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.ForAll(array, v => v <= Contract.Result<double>()));
+            Contract.Ensures(array.Length > 0 || double.IsNegativeInfinity(Contract.Result<double>()));
+            Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Max());
+            var max = new MaxValue();
+            for (var i = 0; i < array.Length; i++)
+                max.AddValue(array[i]);
+            return max;
+        }
 
-        //[DST]
-        //public static double Max([NotNull] this double[] array, out int MaxPos)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.ForAll(array, v => v <= Contract.Result<double>()));
-        //    Contract.Ensures(array.Length > 0 || double.IsNegativeInfinity(Contract.Result<double>()));
-        //    Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Max());
-        //    Contract.Ensures(array.Length > 0 || Contract.ValueAtReturn(out MaxPos) == -1);
-        //    Contract.Ensures(array.Length == 0 || Contract.ValueAtReturn(out MaxPos) >= 0 && Contract.ValueAtReturn(out MaxPos) < array.Length);
-        //    Contract.Ensures(array.Length == 0 || array[Contract.ValueAtReturn(out MaxPos)] == Contract.Result<double>());
-        //    var max = new MaxValue();
-        //    MaxPos = -1;
-        //    for(var i = 0; i < array.Length; i++)
-        //        if(max.AddValue(array[i]))
-        //            MaxPos = i;
-        //    return max;
-        //}
+        [DST]
+        public static double Max([NotNull] this double[] array, out int MaxPos)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.ForAll(array, v => v <= Contract.Result<double>()));
+            Contract.Ensures(array.Length > 0 || double.IsNegativeInfinity(Contract.Result<double>()));
+            Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Max());
+            Contract.Ensures(array.Length > 0 || Contract.ValueAtReturn(out MaxPos) == -1);
+            Contract.Ensures(array.Length == 0 || Contract.ValueAtReturn(out MaxPos) >= 0 && Contract.ValueAtReturn(out MaxPos) < array.Length);
+            Contract.Ensures(array.Length == 0 || array[Contract.ValueAtReturn(out MaxPos)] == Contract.Result<double>());
+            var max = new MaxValue();
+            MaxPos = -1;
+            for (var i = 0; i < array.Length; i++)
+                if (max.AddValue(array[i]))
+                    MaxPos = i;
+            return max;
+        }
 
-        //[DST]
-        //public static double Min([NotNull] this double[] array)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.ForAll(array, v => v >= Contract.Result<double>()));
-        //    Contract.Ensures(array.Length > 0 || double.IsPositiveInfinity(Contract.Result<double>()));
-        //    Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Min());
-        //    var min = new MinValue();
-        //    for(var i = 0; i < array.Length; i++)
-        //        min.AddValue(array[i]);
-        //    return min;
-        //}
+        [DST]
+        public static double Min([NotNull] this double[] array)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.ForAll(array, v => v >= Contract.Result<double>()));
+            Contract.Ensures(array.Length > 0 || double.IsPositiveInfinity(Contract.Result<double>()));
+            Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Min());
+            var min = new MinValue();
+            for (var i = 0; i < array.Length; i++)
+                min.AddValue(array[i]);
+            return min;
+        }
 
-        //[DST]
-        //public static double Min([NotNull] this double[] array, out int MinPos)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Ensures(Contract.ForAll(array, v => v <= Contract.Result<double>()));
-        //    Contract.Ensures(array.Length > 0 || double.IsPositiveInfinity(Contract.Result<double>()));
-        //    Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Min());
-        //    Contract.Ensures(array.Length > 0 || Contract.ValueAtReturn(out MinPos) == -1);
-        //    Contract.Ensures(array.Length == 0 || Contract.ValueAtReturn(out MinPos) >= 0 && Contract.ValueAtReturn(out MinPos) < array.Length);
-        //    Contract.Ensures(array.Length == 0 || array[Contract.ValueAtReturn(out MinPos)] == Contract.Result<double>());
-        //    var min = new MinValue();
-        //    MinPos = -1;
-        //    for(var i = 0; i < array.Length; i++)
-        //        if(min.AddValue(array[i]))
-        //            MinPos = i;
-        //    return min;
-        //}
+        [DST]
+        public static double Min([NotNull] this double[] array, out int MinPos)
+        {
+            Contract.Requires(array != null);
+            Contract.Ensures(Contract.ForAll(array, v => v <= Contract.Result<double>()));
+            Contract.Ensures(array.Length > 0 || double.IsPositiveInfinity(Contract.Result<double>()));
+            Contract.Ensures(array.Length == 0 || Contract.Result<double>() == array.Min());
+            Contract.Ensures(array.Length > 0 || Contract.ValueAtReturn(out MinPos) == -1);
+            Contract.Ensures(array.Length == 0 || Contract.ValueAtReturn(out MinPos) >= 0 && Contract.ValueAtReturn(out MinPos) < array.Length);
+            Contract.Ensures(array.Length == 0 || array[Contract.ValueAtReturn(out MinPos)] == Contract.Result<double>());
+            var min = new MinValue();
+            MinPos = -1;
+            for (var i = 0; i < array.Length; i++)
+                if (min.AddValue(array[i]))
+                    MinPos = i;
+            return min;
+        }
 
         [DST]
         public static void Multiply([NotNull] this double[] array, double value)
