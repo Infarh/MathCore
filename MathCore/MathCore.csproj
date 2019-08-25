@@ -2,7 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MathParser\OperationsRegistry.cs" />
+    <Compile Remove="MathParser\ToolsHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MathParser\MathParserDiagram.dgml" />
+    <None Remove="MathParser\Operations.xml" />
+    <None Remove="MathParser\Operations.xsd" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
@@ -44,11 +56,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Complex.Decimal.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Matrix.complex.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Matrix.complex.tt</DependentUpon>
     </Compile>
     <Compile Update="Matrix.decimal.cs">
       <DesignTime>True</DesignTime>
