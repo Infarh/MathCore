@@ -1,26 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using MathCore.Annotations;
-using static MathCore.MatrixLong.Array.Operator;
-// ReSharper disable ExceptionNotThrown
-// ReSharper disable InconsistentNaming
-// ReSharper disable MemberCanBePrivate.Global
-
-// ReSharper disable UnusedMethodReturnValue.Global
-// ReSharper disable LocalizableElement
-// ReSharper disable UnusedMember.Global
+using System.Text;
 
 namespace MathCore
 {
-    using DST = DebuggerStepThroughAttribute;
-
     /// <summary>Матрица NxM</summary>
     /// <remarks>
-    /// i (первый индекс) - номер строки, 
-    /// j (второй индекс) - номер столбца
     /// ------------ j ---------->
     /// | a11 a12 a13 a14 a15 a16 a1M
     /// | a21........................
@@ -32,51 +17,45 @@ namespace MathCore
     /// \/
     /// </remarks>
     [Serializable]
-    public partial class MatrixLong : ICloneable<MatrixLong>, ICloneable<long[,]>, IFormattable,
-        IEquatable<MatrixLong>, IEquatable<long[,]>, IIndexable<int, int, long>
+    public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>, IIndexable<int, int, long>
     {
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
-        /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
-        /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        [NotNull] public static MatrixLong CreateCol([NotNull] params long[] data) => new MatrixLong(Array.CreateColArray(data));
-
-        /// <summary>Создать матрицу-строку</summary><param name="data">Элементы строки</param><returns>Матрица-строка</returns>
-        /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
-        /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        [NotNull] public static MatrixLong CreateRow([NotNull] params long[] data) => new MatrixLong(Array.CreateRowArray(data));
-
-        /// <summary>Создать диагональную матрицу</summary><param name="elements">Элементы диагональной матрицы</param>
-        /// <returns>Диагональная матрица</returns>
-        [NotNull] public static MatrixLong CreateDiagonalMatrixLong([NotNull] params long[] elements) => new MatrixLong(Array.CreateDiagonal(elements));
-
-        /// <summary>Операции над двумерными массивами</summary>
-        public static partial class Array
+        /// <summary>Получить единичную матрицу размерности NxN</summary>
+        /// <param name="N">Размерность матрицы</param>
+        /// <returns>Единичная матрица размерности NxN</returns>
+        public static MatrixLong GetUnitaryMatryx(int N)
         {
-            /// <summary>Операторы над двумерными массивами</summary>
-            public static partial class Operator { }
+            var Result = new MatrixLong(N);
+            for (var i = 0; i < N; i++) Result[i, i] = 1;
+            return Result;
         }
 
-        /// <summary>Получить единичную матрицу размерности NxN</summary>
-        /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
-        [DST]
-        public static MatrixLong GetUnitaryMatryx(int N) => new MatrixLong(Array.GetUnitaryArrayMatrixLong(N));
-
-        /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Оборный столбец</param>
+        /// <summary>Трансвекция матрицы</summary>
+        /// <param name="A">Трансвецируемая матрица</param>
+        /// <param name="j">Оборный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
-        public static MatrixLong GetTransvection(MatrixLong A, int j) => new MatrixLong(Array.GetTransvection(A._Data, j));
+        public static MatrixLong GetTransvection(MatrixLong A, int j)
+        {
+            if (!A.IsSquare)
+                throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
+
+            var lv_Result = GetUnitaryMatryx(A.N);
+            for (var i = 0; i < A.N; i++)
+                lv_Result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
+            return lv_Result;
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Число строк матрицы</summary>
         private readonly int _N;
 
-        /// <summary>Число столбцов матрицы</summary>
+        /// <summary>Число столбцов матриц</summary>
         private readonly int _M;
 
         /// <summary>Элементы матрицы</summary>
-        [NotNull] private readonly long[,] _Data;
+        private readonly long[,] _Data;
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -90,118 +69,74 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public long this[int i, int j] { [DST] get => _Data[i, j]; [DST] set => _Data[i, j] = value; }
+        public long this[int i, int j] { get { return _Data[i, j]; } set { _Data[i, j] = value; } }
 
-        /// <summary>Вектор-стольбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
-        [NotNull] public MatrixLong this[int j] => GetCol(j);
+        /// <summary>Вектор-стольбец</summary>
+        /// <param name="j">Номер столбца</param>
+        /// <returns>Столбец матрицы</returns>
+        public MatrixLong this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
-        public bool IsSquare => _M == _N;
+        public bool IsSquare => M == N;
 
         /// <summary>Матрица является столбцом</summary>
-        public bool IsCol => _M == 1;
+        public bool IsCol => !IsSquare && M == 1;
 
         /// <summary>Матрица является строкой</summary>
-        public bool IsRow => _N == 1;
+        public bool IsRow => !IsSquare && N == 1;
 
         /// <summary>Матрица является числом</summary>
-        public bool IsScalar => _N == 1 && _M == 1;
+        public bool IsDigit => N == 1 && M == 1;
 
-        /// <summary>Транспонированная матрица</summary>
         public MatrixLong T => GetTransponse();
-
-        /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
-        public long Norm_m => Array.GetMaxRowAbsSumm(_Data);
-
-        /// <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
-        public long Norm_l => Array.GetMaxColAbsSumm(_Data);
-
-        /// <summary>Среднеквадратическое значение элементов матрицы</summary>
-        public long Norm_k => Array.GetRMS(_Data);
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Матрица</summary><param name="N">Число строк</param><param name="M">Число столбцов</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="N"/> &lt; 0 || <paramref name="M"/> &lt; 0</exception>
-        [DST]
+        /// <summary>Матрица</summary>
+        /// <param name="N">Число строк</param>
+        /// <param name="M">Число столбцов</param>
         public MatrixLong(int N, int M)
         {
-            if (N <= 0) throw new ArgumentOutOfRangeException(nameof(N), N, "N должна быть больше 0");
-            if (M <= 0) throw new ArgumentOutOfRangeException(nameof(M), M, "M должна быть больше 0");
-            Contract.EndContractBlock();
-
-            _Data = new long[_N = N, _M = M];
+            _N = N;
+            _M = M;
+            _Data = new long[N, M];
         }
 
-        /// <summary>Квадратная матрица</summary><param name="N">Размерность</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="N" /> &lt; 0</exception>
-        [DST] public MatrixLong(int N) : this(N, N) { }
-
-        /// <summary>Метод определения значения элемента матрицы</summary>
-        /// <param name="i">Номер строки</param><param name="j">Номер столбца</param>
-        /// <returns>Значение элемента матрицы M[<paramref name="i"/>, <paramref name="j"/>]</returns>
-        public delegate long MatrixLongItemCreator(int i, int j);
+        /// <summary>Квадратная матрица</summary>
+        /// <param name="N">Размерность</param>
+        public MatrixLong(int N) : this(N, N) { }
 
         /// <summary>Квадратная матрица</summary>
         /// <param name="N">Размерность</param>
         /// <param name="CreateFunction">Порождающая функция</param>
-        [DST] public MatrixLong(int N, [NotNull] MatrixLongItemCreator CreateFunction) : this(N, N, CreateFunction) { }
+        public MatrixLong(int N, Func<int, int, long> CreateFunction) : this(N, N, CreateFunction) { }
 
-        /// <summary>Матрица</summary><param name="N">Число строк</param><param name="M">Число столбцов</param>
+        /// <summary>Матрица</summary>
+        /// <param name="N">Число строк</param>
+        /// <param name="M">Число столбцов</param>
         /// <param name="CreateFunction">Порождающая функция</param>
-        [DST]
-        public MatrixLong(int N, int M, [NotNull] MatrixLongItemCreator CreateFunction) : this(N, M)
+        public MatrixLong(int N, int M, Func<int, int, long> CreateFunction)
+            : this(N, M)
         {
-            Contract.Requires(N > 0);
-            Contract.Requires(M > 0);
-            Contract.Requires(CreateFunction != null);
-            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) _Data[i, j] = CreateFunction(i, j);
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                    _Data[i, j] = CreateFunction(i, j);
         }
 
-        /// <summary>Инициализация новой матрицы по двумерному массиву её элементов</summary>
-        /// <param name="Data">Двумерный массив элементов матрицы</param>
-        /// <param name="clone">Создать копию данных</param>
-        [DST]
-        public MatrixLong([NotNull] long[,] Data, bool clone = false)
+        //[CLSCompliant(false)]
+        public MatrixLong(long[,] Data)
+            : this(Data.GetLength(0), Data.GetLength(1))
         {
-            Contract.Requires(Data != null);
-            _N = Data.GetLength(0);
-            _M = Data.GetLength(1);
-            _Data = clone ? Data.CloneObject() : Data;
+            for (var i = 0; i < _N; i++)
+                for (var j = 0; j < _M; j++)
+                    _Data[i, j] = Data[i, j];
         }
 
-        /// <summary>Инициализация новой матрицы - столбца/строки</summary>
-        /// <param name="DataCol">Элементы столбца матрицы</param>
-        /// <param name="IsColumn">Создаётся матрица-столбец</param>
-        [DST]
-        public MatrixLong([NotNull] IList<long> DataCol, bool IsColumn = true) : this(IsColumn ? DataCol.Count : 1, IsColumn ? 1 : DataCol.Count)
+        public MatrixLong(IList<long> DataRow)
+            : this(DataRow.Count, 1)
         {
-            Contract.Requires(DataCol != null);
-            if (IsColumn) for (var i = 0; i < _N; i++) _Data[i, 0] = DataCol[i];
-            else for (var j = 0; j < _M; j++) _Data[0, j] = DataCol[j];
-        }
-
-        /// <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
-        /// <param name="Items">Перечисление строк, состоящих из перечисления эламентов строк</param>
-        public MatrixLong([NotNull] IEnumerable<IEnumerable<long>> Items) : this(GetElements(Items)) { }
-
-        /// <summary>Получить двумерный массив элементов матрицы</summary>
-        /// <param name="ColsItems">Перечисление элементов (по столбцам)</param>
-        /// <returns>Двумерный массив элементов матрицы</returns>
-        [DST, NotNull]
-        private static long[,] GetElements([NotNull] IEnumerable<IEnumerable<long>> ColsItems)
-        {
-            Contract.Requires(ColsItems != null);
-            var cols = ColsItems.Select(col => col.ToListFast()).ToList();
-            var cols_count = cols.Count;
-            var rows_count = cols.Max(col => col.Count);
-            var data = new long[rows_count, cols_count];
-            for (var j = 0; j < cols_count; j++)
-            {
-                var col = cols[j];
-                for (var i = 0; i < col.Count && i < rows_count; i++) data[i, j] = col[i];
-            }
-            return data;
+            for (var i = 0; i < _N; i++)
+                _Data[i, 0] = DataRow[i];
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -209,267 +144,638 @@ namespace MathCore
         /// <summary>Получить столбец матрицы</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы номер j</returns>
-        [DST, NotNull] public MatrixLong GetCol(int j) => new MatrixLong(Array.GetCol(_Data, j));
+        public MatrixLong GetCol(int j)
+        {
+            var lv_A = new MatrixLong(N, 1);
+            for (var i = 0; i < N; i++) lv_A[i, j] = this[i, j];
+            return lv_A;
+        }
 
         /// <summary>Получить строку матрицы</summary>
         /// <param name="i">Номер строки</param>
         /// <returns>Строка матрицы номер i</returns>
-        [DST, NotNull] public MatrixLong GetRow(int i) => new MatrixLong(Array.GetRow(_Data, i));
-
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <param name="P">Матрица перестановок</param>
-        /// <param name="rank">Ранг матрицы</param>
-        /// <param name="D">Определитель</param>
-        /// <returns>Триугольная матрица</returns>
-        [NotNull]
-        public MatrixLong GetTriangle([NotNull] out MatrixLong P, out int rank, out long D)
+        public MatrixLong GetRow(int i)
         {
-            var result = new MatrixLong(Array.GetTriangle(_Data, out var p, out rank, out D));
-            P = new MatrixLong(p);
-            return result;
+            var lv_A = new MatrixLong(1, M);
+            for (var j = 0; j < M; j++) lv_A[i, j] = this[i, j];
+            return lv_A;
         }
 
         /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <param name="B">Присоединённая матрица правой части СЛАУ</param>
-        /// <param name="CloneB">Работать с клоном матрицы <paramref name="B"/></param>
-        /// <returns>Триугольная матрица</returns>
-        /// <exception cref="ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
-        [NotNull]
-        public MatrixLong GetTriangle([NotNull] ref MatrixLong B, bool CloneB = true)
+        /// <returns></returns>
+        public MatrixLong GetTriangle()
         {
-            var b = CloneB ? B._Data.CloneObject() : B._Data;
-            var result = new MatrixLong(Array.GetTriangle(_Data, b, out var _, out var _));
-            if (CloneB) B = new MatrixLong(b);
-            return result;
+            var lv_Result = (MatrixLong)Clone();
+            var lv_RowCount = N;
+            var lv_ColCount = M;
+            var row = new long[lv_ColCount];
+            for (var lv_FirstRowIndex = 0; lv_FirstRowIndex < lv_RowCount - 1; lv_FirstRowIndex++)
+            {
+                var lv_A = lv_Result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
+                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < lv_Result.M; lv_RowElementI++) //Нормируем строку по первому элементу
+                    row[lv_RowElementI] = lv_Result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
+
+                for (var i = lv_FirstRowIndex + 1; i < lv_RowCount; i++) //Для всех оставшихся строк:
+                {
+                    lv_A = lv_Result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
+                    for (var j = lv_FirstRowIndex; j < lv_ColCount; j++)
+                        lv_Result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
+                }
+            }
+            return lv_Result;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <param name="B">Матрица правой части СЛАУ</param>
-        /// <param name="P">Матрица перестановок</param>
-        /// <param name="rank">Ранг матрицы</param>
-        /// <param name="d">Определитель матрицы</param>
-        /// <param name="CloneB">Клонировать матрицу правой части</param>
-        /// <returns>Треугольная матрица</returns>
-        [NotNull]
-        public MatrixLong GetTriangle([NotNull] ref MatrixLong B, [NotNull] out MatrixLong P, out int rank, out long d, bool CloneB = true)
-        {
-            var b = B._Data;
-            var result = new MatrixLong(Array.GetTriangle(_Data, ref b, out var p, out rank, out d, CloneB));
-            P = new MatrixLong(p);
-            if (CloneB) B = new MatrixLong(b);
-            return result;
-        }
-
-        /// <summary>Получить обратную матрицу</summary>                                                     
-        /// <param name="P">Матрица перестановок</param>
+        /// <summary>Получить обратную матрицу</summary>
         /// <returns>Обратная матрица</returns>
-        [NotNull]
-        public MatrixLong GetInverse(out MatrixLong P)
+        public MatrixLong GetImverse()
         {
-            var inverse = new MatrixLong(Array.Inverse(_Data, out var p));
-            P = new MatrixLong(p);
-            return inverse;
+            if (!IsSquare)
+                throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
+
+            var lv_Result = GetTransvection(this, 0);
+            for (var i = 1; i < N; i++)
+                lv_Result *= GetTransvection(this, i);
+            return lv_Result;
         }
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST, NotNull] public MatrixLong GetTransponse() => new MatrixLong(Array.Transponse(_Data));
+        public MatrixLong GetTransponse()
+        {
+            var Result = new MatrixLong(M, N);
+
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                    Result[j, i] = this[i, j];
+
+            return Result;
+        }
 
         /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
-        public long GetAdjunct(int n, int m) => Array.GetAdjunct(_Data, n, m);
+        public MatrixLong GetAdjunct(int n, int m)
+        {
+            return (((n + m) % 2) == 0 ? 1 : -1) * GetMinor(n, m).GetDeterminant();
+        }
 
         /// <summary>Минор матрицы по определённому элементу</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Минор элемента матрицы [n,m]</returns>
-        [NotNull] public MatrixLong GetMinor(int n, int m) => new MatrixLong(Array.GetMinor(_Data, n, m));
-
-        /// <summary>Определитель матрицы</summary>
-        public long GetDeterminant() => Array.GetDeterminant(_Data);
-
-        /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
-        /// <param name="L">Нижне-треугольная матрица</param>
-        /// <param name="U">Верхнетреугольная матрица</param>
-        /// <param name="P">Матрица преобразований P*X = L*U</param>
-        /// <param name="D">Знак определителя</param>
-        /// <returns>Истина, если разложение выполнено успешно, ложь - если матрица вырожденная</returns>
-        public bool GetLUDecomposition([CanBeNull] out MatrixLong L, [CanBeNull] out MatrixLong U, [CanBeNull] out MatrixLong P, out long D)
+        public MatrixLong GetMinor(int n, int m)
         {
-            if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной метрицы");
+            var lv_Result = new MatrixLong(N - 1, M - 1);
 
-            var decomposition_success = Array.GetLUPDecomposition(_Data, out var l, out var u, out var p, out var d);
-            L = decomposition_success ? new MatrixLong(l) : null;
-            U = decomposition_success ? new MatrixLong(u) : null;
-            P = decomposition_success ? new MatrixLong(p) : null;
-            D = decomposition_success ? d : 0;
-            return decomposition_success;
+            var i0 = 0;
+            for (var i = 0; i < N; i++)
+                if (i != n)
+                {
+                    var j0 = 0;
+                    for (var j = 0; j < _M; j++)
+                        if (j != m) lv_Result[i0, j0++] = this[i, j];
+                    i0++;
+                }
+            return lv_Result;
         }
 
-        /// <summary>Получить внутренний массив элементов матрицы</summary>
-        /// <returns></returns>
-        [DST, NotNull] public long[,] GetData() => _Data;
+        /// <summary>Определитель матрицы</summary>
+        public long GetDeterminant()
+        {
+            if (_N != _M)
+                throw new InvalidOperationException("Нельзя найти определитель неквадратной матрицы!");
+            var n = _N;
+            if (n == 1) return this[0, 0];
+
+            if (n == 2) return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
+
+            var DArray = (long[,])_Data.Clone();
+
+            long det = 1;
+            for (var k = 0; k <= n; k++)
+            {
+                int i;
+                int j;
+                if (DArray[k, k] == 0)
+                {
+                    j = k;
+                    while (j < n && DArray[k, j] == 0) j++;
+
+                    if (DArray[k, j] == 0) return 0;
+
+                    for (i = k; i <= n; i++)
+                    {
+                        var save = DArray[i, j];
+                        DArray[i, j] = DArray[i, k];
+                        DArray[i, k] = save;
+                    }
+                    det = -det;
+                }
+                var ArrayK = DArray[k, k];
+
+                det *= ArrayK;
+
+                if (k >= n) continue;
+
+                var k1 = k + 1;
+                for (i = k1; i <= n; i++)
+                    for (j = k1; j <= n; j++)
+                        DArray[i, j] -= DArray[i, k] * DArray[k, j] / ArrayK;
+            }
+
+            //MatrixLong L, U, P;
+            //GetLUDecomposition(out L, out U, out P);
+            //long det = 1;
+            //for(var i = 0; i < N; i++)
+            //    det *= L[i, i] * U[i, i];
+
+            //long det = 0;
+            //for(int j = 0, k = 1; j < M; j++, k *= -1)
+            //    det += this[0, j] * k * GetMinor(0, j).GetDeterminant();
+
+            return det;
+        }
+
+        public void GetLUDecomposition(out MatrixLong L, out MatrixLong U, out MatrixLong P)
+        {
+            long[,] l, u, p;
+            LUDecomposition(_Data, out l, out u, out p);
+            L = new MatrixLong(l);
+            U = new MatrixLong(u);
+            P = new MatrixLong(p);
+        }
+
+        /// <summary>
+        /// Returns the LU Decomposition of a matrix. 
+        /// the output is: lower triangular matrix L, upper
+        /// triangular matrix U, and permutation matrix P so that
+        ///	P*X = L*U.
+        /// In case of an error the error is raised as an exception.
+        /// Note: This method is based on the 'LU Decomposition and Its Applications'
+        /// section of Numerical Recipes in C by William H. Press,
+        /// Saul A. Teukolsky, William T. Vetterling and Brian P. Flannery,
+        /// University of Cambridge Press 1992.  
+        /// </summary>
+        /// <param name="Mat">Array which will be LU Decomposed</param>
+        /// <param name="L">An array where the lower traingular matrix is returned</param>
+        /// <param name="U">An array where the upper traingular matrix is returned</param>
+        /// <param name="P">An array where the permutation matrix is returned</param>
+        private static void LUDecomposition(long[,] Mat, out long[,] L, out long[,] U, out long[,] P)
+        {
+            var A = (long[,])Mat.Clone();
+            var Rows = Mat.GetUpperBound(0);
+            var Cols = Mat.GetUpperBound(1);
+
+            if (Rows != Cols) throw new ArgumentException("Матрица не квадратная", nameof(Mat));
+
+
+            var N = Rows;
+            var lv_Indexex = new int[N + 1];
+            var V = new long[N * 10];
+
+            int i, j;
+            long lv_AMax;
+            for (i = 0; i <= N; i++)
+            {
+                lv_AMax = 0;
+                for (j = 0; j <= N; j++)
+                    if (Math.Abs(A[i, j]) > lv_AMax)
+                        lv_AMax = Math.Abs(A[i, j]);
+
+                if (lv_AMax == 0)
+                    throw new ArgumentException("Матрица вырождена", nameof(Mat));
+
+                V[i] = 1 / lv_AMax;
+            }
+
+            for (j = 0; j <= N; j++)
+            {
+                int k;
+                long Sum;
+                if (j > 0)
+                    for (i = 0; i < j; i++)
+                    {
+                        Sum = A[i, j];
+                        if (i <= 0) continue;
+                        for (k = 0; k < i; k++)
+                            Sum -= A[i, k] * A[k, j];
+                        A[i, j] = Sum;
+                    }
+
+                lv_AMax = 0;
+                long Dum;
+                var lv_IMax = 0;
+                for (i = j; i <= N; i++)
+                {
+                    Sum = A[i, j];
+                    if (j > 0)
+                    {
+                        for (k = 0; k < j; k++)
+                            Sum -= A[i, k] * A[k, j];
+                        A[i, j] = Sum;
+                    }
+                    Dum = V[i] * Math.Abs(Sum);
+                    if (Dum < lv_AMax) continue;
+                    lv_IMax = i;
+                    lv_AMax = Dum;
+                }
+
+                if (j != lv_IMax)
+                {
+                    for (k = 0; k <= N; k++)
+                    {
+                        Dum = A[lv_IMax, k];
+                        A[lv_IMax, k] = A[j, k];
+                        A[j, k] = Dum;
+                    }
+                    V[lv_IMax] = V[j];
+                }
+
+                lv_Indexex[j] = lv_IMax;
+
+                if (j == N) continue;
+
+                // ReSharper disable RedundantCast
+                if (A[j, j] == 0)
+                    A[j, j] = (long)1E-20;
+                // ReSharper restore RedundantCast
+
+                Dum = 1 / A[j, j];
+
+                for (i = j + 1; i <= N; i++)
+                    A[i, j] = A[i, j] * Dum;
+            }
+
+            // ReSharper disable RedundantCast
+            if (A[N, N] == 0)
+                A[N, N] = (long)1E-20;
+            // ReSharper restore RedundantCast
+
+            var count = 0;
+            var l = new long[N + 1, N + 1];
+            var u = new long[N + 1, N + 1];
+
+            for (i = 0; i <= N; i++, count++)
+                for (j = 0; j <= count; j++)
+                {
+                    if (i != 0) l[i, j] = A[i, j];
+                    if (i == j) l[i, j] = 1;
+                    u[N - i, N - j] = A[N - i, N - j];
+                }
+
+            L = l;
+            U = u;
+
+            P = Identity(N + 1);
+            for (i = 0; i <= N; i++)
+                P.SwapRows(i, lv_Indexex[i]);
+        }
+
+        private static long[,] Identity(int n)
+        {
+            var temp = new long[n, n];
+            for (var i = 0; i < n; i++)
+                temp[i, i] = 1;
+            return temp;
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <inheritdoc/>
-        [DST] public override string ToString() => $"MatrixLong[{_N}x{_M}]";
+        public override string ToString()
+        {
+            return string.Format("MatrixLong[{0}x{1}]", N, M);
+        }
 
-        /// <summary>Преобразование матрицы в строку с форматированием</summary>
-        /// <param name="Format">Строка формата вывода чисел</param>
-        /// <param name="Splitter">Разделитель элементов матрицы</param>
-        /// <param name="provider">Механизм форматирования чисел матрицы</param>
-        /// <returns>Строковое представление матрицы</returns>
-        [DST, NotNull]
-        public string ToStringFormat
-        (
-            [NotNull] string Format = "r",
-            [CanBeNull] string Splitter = "\t",
-            [CanBeNull] IFormatProvider provider = null
-        ) => _Data.ToStringFormatView(Format, Splitter, provider) ?? throw new InvalidOperationException();
+        public string ToStringFormat(string Format)
+        {
+            return ToStringFormat('\t', Format);
+        }
 
-        /// <inheritdoc/>
-        [DST] public string ToString([NotNull] string format, [CanBeNull] IFormatProvider provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
+        public string ToStringFormat(char Splitter)
+        {
+            return ToStringFormat(Splitter, "r");
+
+        }
+
+        public string ToStringFormat(char Splitter = '\t', string Format = "r")
+        {
+            var lv_Result = new StringBuilder();
+
+            for (var i = 0; i < _N; i++)
+            {
+                var lv_Str = _Data[i, 0].ToString(Format);
+                for (var j = 1; j < _M; j++)
+                    lv_Str += Splitter + _Data[i, j].ToString(Format);
+                lv_Result.AppendLine(lv_Str);
+            }
+            return lv_Result.ToString();
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
         #region ICloneable Members
 
-        /// <inheritdoc/>
-        [DST] object ICloneable.Clone() => Clone();
-
-        /// <inheritdoc/>
-        [DST, NotNull] long[,] ICloneable<long[,]>.Clone() => _Data.CloneObject();
-
-        /// <inheritdoc/>
-        [DST, NotNull] public MatrixLong Clone() => new MatrixLong(_Data, true);
+        /// <summary>Клонирование матрицы</summary>
+        /// <returns>Копия текущей матрицы</returns>
+        public object Clone()
+        {
+            var lv_Result = new MatrixLong(N, M);
+            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) lv_Result[i, j] = this[i, j];
+            return lv_Result;
+        }
 
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST] public static bool operator ==([CanBeNull] MatrixLong A, [CanBeNull] MatrixLong B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
-
-        [DST] public static bool operator !=([CanBeNull] MatrixLong A, [CanBeNull] MatrixLong B) => !(A == B);
-
-        [DST] public static bool operator ==([CanBeNull] long[,] A, [CanBeNull] MatrixLong B) => B == A;
-
-        [DST] public static bool operator ==([CanBeNull] MatrixLong A, [CanBeNull] long[,] B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
-
-        [DST] public static bool operator !=([CanBeNull] long[,] A, [CanBeNull] MatrixLong B) => !(A == B);
-
-        [DST] public static bool operator !=([CanBeNull] MatrixLong A, [CanBeNull] long[,] B) => !(A == B);
-
-        [DST, NotNull] public static MatrixLong operator +([NotNull] MatrixLong M, long x) => new MatrixLong(Add(M._Data, x));
-
-        [DST, NotNull] public static MatrixLong operator +(long x, [NotNull] MatrixLong M) => new MatrixLong(Add(M._Data, x));
-
-        [DST, NotNull] public static MatrixLong operator -([NotNull] MatrixLong M, long x) => new MatrixLong(Substract(M._Data, x));
-
-        [DST, NotNull] public static MatrixLong operator -([NotNull] MatrixLong M) => new MatrixLong(new long[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
-
-        [DST, NotNull] public static MatrixLong operator -(long x, [NotNull] MatrixLong M) => new MatrixLong(Substract(x, M._Data));
-
-        [DST, NotNull] public static MatrixLong operator *([NotNull] MatrixLong M, long x) => new MatrixLong(Multiply(M._Data, x));
-
-        [DST, NotNull] public static MatrixLong operator *(long x, [NotNull] MatrixLong M) => new MatrixLong(Multiply(M._Data, x));
-
-        [DST, NotNull] public static MatrixLong operator *([NotNull] long[,] A, [NotNull] MatrixLong B) => new MatrixLong(Multiply(A, B._Data));
-
-        [DST, NotNull] public static MatrixLong operator *([NotNull] long[] A, [NotNull] MatrixLong B) => new MatrixLong(Multiply(Array.CreateColArray(A), B._Data));
-
-        [DST, NotNull] public static MatrixLong operator *([NotNull] MatrixLong A, [NotNull] long[] B) => new MatrixLong(Multiply(A._Data, Array.CreateColArray(B)));
-
-        [DST, NotNull] public static MatrixLong operator *([NotNull] MatrixLong A, [NotNull] long[,] B) => new MatrixLong(Multiply(A._Data, B));
-
-        [DST, NotNull] public static MatrixLong operator /([NotNull] MatrixLong M, long x) => new MatrixLong(Divade(M._Data, x));
-
-        [DST, NotNull] public static MatrixLong operator /(long x, [NotNull] MatrixLong M) => new MatrixLong(Divade(x, M._Data));
-
-        [DST, NotNull]
-        public static MatrixLong operator ^([NotNull] MatrixLong M, int n)
+        public static bool operator ==(MatrixLong A, MatrixLong B)
         {
-            if (!M.IsSquare) throw new ArgumentException("Матрица не квадратная", nameof(M));
-            switch (n)
-            {
-                case 1: return M.Clone();
-                case -1: return M.GetInverse(out _);
-                default:
-                    var m = M._Data;
-                    if (n < 0)
-                    {
-                        m = Array.Inverse(m, out _);
-                        n = -n;
-                    }
-                    var result = Array.GetUnitaryArrayMatrixLong(M._N);
-                    for (var i = 0; i < n; i++) result = Multiply(result, m);
-                    return new MatrixLong(result);
-            }
+            if (((object)A == null) && (object)B == null) return true;
+            if (((object)A == null) || ((object)B == null)) return false;
+            return A.Equals(B);
+        }
+
+        public static bool operator !=(MatrixLong A, MatrixLong B)
+        {
+            return !(A == B);
+        }
+
+        public static MatrixLong operator +(MatrixLong M, long x)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] + x;
+            return lv_Result;
+        }
+
+        public static MatrixLong operator +(long x, MatrixLong M)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] + x;
+            return lv_Result;
+        }
+
+        public static MatrixLong operator -(MatrixLong M, long x)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] - x;
+            return lv_Result;
+        }
+
+        public static MatrixLong operator -(long x, MatrixLong M)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] - x;
+            return lv_Result;
+        }
+
+        public static MatrixLong operator *(MatrixLong M, long x)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] * x;
+            return lv_Result;
+        }
+
+        public static MatrixLong operator *(long x, MatrixLong M)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] * x;
+            return lv_Result;
+        }
+
+        //[CLSCompliant(false)]
+        public static MatrixLong operator *(long[,] A, MatrixLong B)
+        {
+            return (((MatrixLong)A) * B);
+        }
+
+        //[CLSCompliant(false)]
+        public static MatrixLong operator *(long[] A, MatrixLong B)
+        {
+            return (((MatrixLong)A) * B);
+        }
+
+        //[CLSCompliant(false)]
+        public static MatrixLong operator *(MatrixLong A, long[] B)
+        {
+            return (A * ((MatrixLong)B));
+        }
+
+        //[CLSCompliant(false)]
+        public static MatrixLong operator *(MatrixLong A, long[,] B)
+        {
+            return (A * ((MatrixLong)B));
+        }
+
+        public static MatrixLong operator /(MatrixLong M, long x)
+        {
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] / x;
+            return lv_Result;
+        }
+
+        public static MatrixLong operator /(long x, MatrixLong M)
+        {
+            M = M.GetImverse();
+            var lv_Result = new MatrixLong(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] * x;
+            return lv_Result;
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Сумма двух матриц</returns>
-        [DST, NotNull] public static MatrixLong operator +([NotNull] MatrixLong A, [NotNull] MatrixLong B) => new MatrixLong(Add(A._Data, B._Data));
+        /// <param name="A">Первое слогаемое</param>
+        /// <param name="B">Второе слогаемое</param>
+        /// <returns>Сумма двух матриц</returns>
+        public static MatrixLong operator +(MatrixLong A, MatrixLong B)
+        {
+            if (A.N != B.N || A.M != B.M)
+                throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
+
+            var lv_Result = new MatrixLong(A.N, A.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    lv_Result[i, j] = A[i, j] + B[i, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Оператор разности двух матриц</summary>
-        /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static MatrixLong operator -([NotNull] MatrixLong A, [NotNull] MatrixLong B) => new MatrixLong(Substract(A._Data, B._Data));
+        /// <param name="A">Уменьшаемое</param>
+        /// <param name="B">Вычитаемое</param>
+        /// <returns>Разность двух матриц</returns>
+        public static MatrixLong operator -(MatrixLong A, MatrixLong B)
+        {
+            if (A.N != B.N || A.M != B.M)
+                throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
+
+            var lv_Result = new MatrixLong(A.N, A.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    lv_Result[i, j] = A[i, j] - B[i, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Оператор произведения двух матриц</summary>
-        /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>
-        [DST, NotNull] public static MatrixLong operator *([NotNull] MatrixLong A, [NotNull] MatrixLong B) => new MatrixLong(Multiply(A._Data, B._Data));
+        /// <param name="A">Первый сомножитель</param>
+        /// <param name="B">Второй сомножитель</param>
+        /// <returns>Произведение двух матриц</returns>
+        public static MatrixLong operator *(MatrixLong A, MatrixLong B)
+        {
+            if (A.M != B.N)
+                throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
+
+            var lv_Result = new MatrixLong(A.N, B.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    for (var k = 0; k < A.M; k++)
+                        lv_Result[i, j] += A[i, k] * B[k, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Оператор деления двух матриц</summary>
-        /// <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
-        [DST, NotNull] public static MatrixLong operator /([NotNull] MatrixLong A, [NotNull] MatrixLong B) => new MatrixLong(Divade(A._Data, B._Data));
+        /// <param name="A">Делимое</param>
+        /// <param name="B">Делитель</param>
+        /// <returns>Частное двух матриц</returns>
+        public static MatrixLong operator /(MatrixLong A, MatrixLong B)
+        {
+            B = B.GetImverse();
+            if (A.M != B.N)
+                throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
+
+            var lv_Result = new MatrixLong(A.N, B.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    for (var k = 0; k < A.M; k++)
+                        lv_Result[i, j] += A[i, k] * B[k, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Объединённая матрица</returns>
-        [DST, NotNull] public static MatrixLong operator |([NotNull] MatrixLong A, [NotNull] MatrixLong B) => new MatrixLong(Concatinate(A._Data, B._Data));
+        /// <param name="A">Первое слогаемое</param>
+        /// <param name="B">Второе слогаемое</param>
+        /// <returns>Объединённая матрица</returns>
+        public static MatrixLong operator |(MatrixLong A, MatrixLong B)
+        {
+            MatrixLong lv_Result;
+            if (A.M == B.M) // Конкатинация по строкам
+            {
+                lv_Result = new MatrixLong(A.N + B.N, A.M);
+                for (var i = 0; i < A.N; i++)
+                    for (var j = 0; j < A.M; j++)
+                        lv_Result[i, j] = A[i, j];
+                var i0 = A.N;
+                for (var i = 0; i < B.N; i++)
+                    for (var j = 0; j < B.M; j++)
+                        lv_Result[i + i0, j] = B[i, j];
+
+            }
+            else if (A.N == B.N) //Конкатинация по строкам
+            {
+                lv_Result = new MatrixLong(A.N, A.M + B.M);
+                for (var i = 0; i < A.N; i++)
+                    for (var j = 0; j < A.M; j++)
+                        lv_Result[i, j] = A[i, j];
+                var j0 = A.M;
+                for (var i = 0; i < B.N; i++)
+                    for (var j = 0; j < B.M; j++)
+                        lv_Result[i, j + j0] = B[i, j];
+            }
+            else
+                throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
+
+            return lv_Result;
+        }
+
+
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-        /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
-        [DST, NotNull] public static implicit operator MatrixLong(long X) => new MatrixLong(1, 1) { [0, 0] = X };
+        /// <summary>
+        /// Оператор неявного преведения типа вещественного числа двойной точнойсти к типу 
+        /// Матрица порядка 1х1
+        /// </summary>
+        /// <param name="X">Приводимое число</param>
+        /// <returns>Матрица порадка 1х1</returns>
+        public static implicit operator MatrixLong(long X)
+        {
+            var lv_Result = new MatrixLong(1, 1);
+            lv_Result[0, 0] = X;
+            return lv_Result;
+        }
 
-        [DST, NotNull] public static explicit operator long[,] ([NotNull] MatrixLong M) => M._Data;
+        public static explicit operator long[,](MatrixLong M)
+        {
+            return (long[,])M._Data.Clone();
+        }
 
-        [DST, NotNull] public static explicit operator MatrixLong([NotNull] long[,] Data) => new MatrixLong(Data);
+        //[CLSCompliant(false)]
+        public static explicit operator MatrixLong(long[,] Data)
+        {
+            return new MatrixLong(Data);
+        }
 
-        [DST, NotNull] public static explicit operator MatrixLong([NotNull] long[] Data) => new MatrixLong(Data);
+        public static explicit operator MatrixLong(long[] Data)
+        {
+            return new MatrixLong(Data);
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
-        #region IEquatable Members
+        #region IEquatable<MatrixLong> Members
 
-        /// <inheritdoc/>
-        [DST] public bool Equals(long[,] other) => !ReferenceEquals(null, other) && Array.AreEquals(_Data, other);
+        public bool Equals(MatrixLong other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return other._N == _N && other._M == _M && Equals(other._Data, _Data);
+        }
 
-        /// <inheritdoc/>
-        [DST] public bool Equals(MatrixLong other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
+        bool IEquatable<MatrixLong>.Equals(MatrixLong other)
+        {
+            return Equals(other);
+        }
 
         #endregion
 
-        /// <inheritdoc/>
-        [DST] public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || Equals(obj as MatrixLong) || Equals(obj as long[,]));
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == typeof(MatrixLong) && Equals((MatrixLong)obj);
+        }
 
-        /// <inheritdoc/>
-        [DST]
         public override int GetHashCode()
         {
             unchecked
             {
-                var result = (_N * 397) ^ _M;
-                for (var i = 0; i < _N; i++)
-                    for (var j = 0; j < _M; j++)
-                        result = (result * 397) ^ i ^ j ^ _Data[i, j].GetHashCode();
+                var result = _N;
+                result = (result * 397) ^ _M;
+                result = (result * 397) ^ (_Data != null ? _Data.GetHashCode() : 0);
                 return result;
             }
         }
-
-        /* -------------------------------------------------------------------------------------------- */
     }
 }

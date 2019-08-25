@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using MathCore.Annotations;
-using static MathCore.MatrixDecimal.Array.Operator;
-// ReSharper disable ExceptionNotThrown
-// ReSharper disable InconsistentNaming
-// ReSharper disable MemberCanBePrivate.Global
-
-// ReSharper disable UnusedMethodReturnValue.Global
-// ReSharper disable LocalizableElement
+using System.Text;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore
@@ -32,40 +25,35 @@ namespace MathCore
     /// \/
     /// </remarks>
     [Serializable]
-    public class MatrixDecimal : ICloneable<MatrixDecimal>, ICloneable<decimal[,]>, IFormattable,
-        IEquatable<MatrixDecimal>, IEquatable<decimal[,]>, IIndexable<int, int, decimal>
+    public class MatrixDecimal : ICloneable, IEquatable<MatrixDecimal>, IIndexable<int, int, decimal>
     {
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
-        /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
-        /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        [NotNull] public static MatrixDecimal CreateCol([NotNull] params decimal[] data) => new MatrixDecimal(Array.CreateColArray(data));
-
-        /// <summary>Создать матрицу-строку</summary><param name="data">Элементы строки</param><returns>Матрица-строка</returns>
-        /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
-        /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        [NotNull] public static MatrixDecimal CreateRow([NotNull] params decimal[] data) => new MatrixDecimal(Array.CreateRowArray(data));
-
-        /// <summary>Создать диагональную матрицу</summary><param name="elements">Элементы диагональной матрицы</param>
-        /// <returns>Диагональная матрица</returns>
-        [NotNull] public static MatrixDecimal CreateDiagonalMatrixDecimal([NotNull] params decimal[] elements) => new MatrixDecimal(Array.CreateDiagonal(elements));
-
-        /// <summary>Операции над двумерными массивами</summary>
-        public static partial class Array
+        /// <summary>Получить единичную матрицу размерности NxN</summary>
+        /// <param name="N">Размерность матрицы</param>
+        /// <returns>Единичная матрица размерности NxN</returns>
+        [DST]
+        public static MatrixDecimal GetUnitaryMatryx(int N)
         {
-            /// <summary>Операторы над двумерными массивами</summary>
-            public static partial class Operator { }
+            var Result = new MatrixDecimal(N);
+            for (var i = 0; i < N; i++) Result[i, i] = 1;
+            return Result;
         }
 
-        /// <summary>Получить единичную матрицу размерности NxN</summary>
-        /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
-        [DST]
-        public static MatrixDecimal GetUnitaryMatryx(int N) => new MatrixDecimal(Array.GetUnitaryArrayMatrixDecimal(N));
-
-        /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Оборный столбец</param>
+        /// <summary>Трансвекция матрицы</summary>
+        /// <param name="A">Трансвецируемая матрица</param>
+        /// <param name="j">Оборный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
-        public static MatrixDecimal GetTransvection(MatrixDecimal A, int j) => new MatrixDecimal(Array.GetTransvection(A._Data, j));
+        public static MatrixDecimal GetTransvection(MatrixDecimal A, int j)
+        {
+            if (!A.IsSquare)
+                throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
+
+            var lv_Result = GetUnitaryMatryx(A.N);
+            for (var i = 0; i < A.N; i++)
+                lv_Result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
+            return lv_Result;
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -76,7 +64,7 @@ namespace MathCore
         private readonly int _M;
 
         /// <summary>Элементы матрицы</summary>
-        [NotNull] private readonly decimal[,] _Data;
+        private readonly decimal[,] _Data;
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -90,116 +78,137 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public decimal this[int i, int j] { [DST] get => _Data[i, j]; [DST] set => _Data[i, j] = value; }
+        public decimal this[int i, int j] { [DST] get { return _Data[i, j]; } [DST] set { _Data[i, j] = value; } }
 
-        /// <summary>Вектор-стольбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
-        [NotNull] public MatrixDecimal this[int j] => GetCol(j);
+        /// <summary>Вектор-стольбец</summary>
+        /// <param name="j">Номер столбца</param>
+        /// <returns>Столбец матрицы</returns>
+        public MatrixDecimal this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
-        public bool IsSquare => _M == _N;
+        public bool IsSquare => M == N;
 
         /// <summary>Матрица является столбцом</summary>
-        public bool IsCol => _M == 1;
+        public bool IsCol => !IsSquare && M == 1;
 
         /// <summary>Матрица является строкой</summary>
-        public bool IsRow => _N == 1;
+        public bool IsRow => !IsSquare && N == 1;
 
         /// <summary>Матрица является числом</summary>
-        public bool IsScalar => _N == 1 && _M == 1;
+        public bool IsDigit => N == 1 && M == 1;
 
-        /// <summary>Транспонированная матрица</summary>
         public MatrixDecimal T => GetTransponse();
 
-        /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
-        public decimal Norm_m => Array.GetMaxRowAbsSumm(_Data);
+        public decimal Norm_m
+        {
+            get
+            {
+                var v = new decimal[N];
+                for (var i = 0; i < N; i++)
+                    for (var j = 0; j < M; j++)
+                        v[i] += Math.Abs(_Data[i, j]);
+                return v.Max();
+            }
+        }
 
-        /// <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
-        public decimal Norm_l => Array.GetMaxColAbsSumm(_Data);
+        public decimal Norm_l
+        {
+            get
+            {
+                var v = new decimal[M];
+                for (var j = 0; j < M; j++)
+                    for (var i = 0; i < N; i++)
+                        v[j] += Math.Abs(_Data[i, j]);
+                return v.Max();
+            }
+        }
 
-        /// <summary>Среднеквадратическое значение элементов матрицы</summary>
-        public decimal Norm_k => Array.GetRMS(_Data);
+        public decimal Norm_k
+        {
+            get
+            {
+                var v = default(decimal);
+                for (var i = 0; i < N; i++)
+                    for (var j = 0; j < M; j++)
+                        v += _Data[i, j] * _Data[i, j];
+                return v.Sqrt();
+            }
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Матрица</summary><param name="N">Число строк</param><param name="M">Число столбцов</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="N"/> &lt; 0 || <paramref name="M"/> &lt; 0</exception>
+        /// <summary>Матрица</summary>
+        /// <param name="N">Число строк</param>
+        /// <param name="M">Число столбцов</param>
         [DST]
-        public MatrixDecimal(int N, int M)
-        {
-            if (N <= 0) throw new ArgumentOutOfRangeException(nameof(N), N, "N должна быть больше 0");
-            if (M <= 0) throw new ArgumentOutOfRangeException(nameof(M), M, "M должна быть больше 0");
-            Contract.EndContractBlock();
+        public MatrixDecimal(int N, int M) { _Data = new decimal[_N = N, _M = M]; }
 
-            _Data = new decimal[_N = N, _M = M];
-        }
-
-        /// <summary>Квадратная матрица</summary><param name="N">Размерность</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="N" /> &lt; 0</exception>
-        [DST] public MatrixDecimal(int N) : this(N, N) { }
+        /// <summary>Квадратная матрица</summary>
+        /// <param name="N">Размерность</param>
+        [DST]
+        public MatrixDecimal(int N) : this(N, N) { }
 
         /// <summary>Метод определения значения элемента матрицы</summary>
-        /// <param name="i">Номер строки</param><param name="j">Номер столбца</param>
+        /// <param name="i">Номер строки</param>
+        /// <param name="j">Номер столбца</param>
         /// <returns>Значение элемента матрицы M[<paramref name="i"/>, <paramref name="j"/>]</returns>
         public delegate decimal MatrixDecimalItemCreator(int i, int j);
 
         /// <summary>Квадратная матрица</summary>
         /// <param name="N">Размерность</param>
         /// <param name="CreateFunction">Порождающая функция</param>
-        [DST] public MatrixDecimal(int N, [NotNull] MatrixDecimalItemCreator CreateFunction) : this(N, N, CreateFunction) { }
+        [DST]
+        public MatrixDecimal(int N, MatrixDecimalItemCreator CreateFunction) : this(N, N, CreateFunction) { }
 
-        /// <summary>Матрица</summary><param name="N">Число строк</param><param name="M">Число столбцов</param>
+        /// <summary>Матрица</summary>
+        /// <param name="N">Число строк</param>
+        /// <param name="M">Число столбцов</param>
         /// <param name="CreateFunction">Порождающая функция</param>
         [DST]
-        public MatrixDecimal(int N, int M, [NotNull] MatrixDecimalItemCreator CreateFunction) : this(N, M)
+        public MatrixDecimal(int N, int M, MatrixDecimalItemCreator CreateFunction)
+            : this(N, M)
         {
             Contract.Requires(N > 0);
             Contract.Requires(M > 0);
             Contract.Requires(CreateFunction != null);
-            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) _Data[i, j] = CreateFunction(i, j);
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                    _Data[i, j] = CreateFunction(i, j);
         }
 
-        /// <summary>Инициализация новой матрицы по двумерному массиву её элементов</summary>
-        /// <param name="Data">Двумерный массив элементов матрицы</param>
-        /// <param name="clone">Создать копию данных</param>
         [DST]
-        public MatrixDecimal([NotNull] decimal[,] Data, bool clone = false)
+        public MatrixDecimal(decimal[,] Data)
+            : this(Data.GetLength(0), Data.GetLength(1))
         {
             Contract.Requires(Data != null);
-            _N = Data.GetLength(0);
-            _M = Data.GetLength(1);
-            _Data = clone ? Data.CloneObject() : Data;
+            for (var i = 0; i < _N; i++)
+                for (var j = 0; j < _M; j++)
+                    _Data[i, j] = Data[i, j];
         }
 
-        /// <summary>Инициализация новой матрицы - столбца/строки</summary>
-        /// <param name="DataCol">Элементы столбца матрицы</param>
-        /// <param name="IsColumn">Создаётся матрица-столбец</param>
         [DST]
-        public MatrixDecimal([NotNull] IList<decimal> DataCol, bool IsColumn = true) : this(IsColumn ? DataCol.Count : 1, IsColumn ? 1 : DataCol.Count)
+        public MatrixDecimal(IList<decimal> DataRow)
+            : this(DataRow.Count, 1)
         {
-            Contract.Requires(DataCol != null);
-            if (IsColumn) for (var i = 0; i < _N; i++) _Data[i, 0] = DataCol[i];
-            else for (var j = 0; j < _M; j++) _Data[0, j] = DataCol[j];
+            Contract.Requires(DataRow != null);
+            for (var i = 0; i < _N; i++)
+                _Data[i, 0] = DataRow[i];
         }
 
-        /// <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
-        /// <param name="Items">Перечисление строк, состоящих из перечисления эламентов строк</param>
-        public MatrixDecimal([NotNull] IEnumerable<IEnumerable<decimal>> Items) : this(GetElements(Items)) { }
+        public MatrixDecimal(IEnumerable<IEnumerable<decimal>> Items) : this(GetElements(Items)) { }
 
-        /// <summary>Получить двумерный массив элементов матрицы</summary>
-        /// <param name="ColsItems">Перечисление элементов (по столбцам)</param>
-        /// <returns>Двумерный массив элементов матрицы</returns>
-        [DST, NotNull]
-        private static decimal[,] GetElements([NotNull] IEnumerable<IEnumerable<decimal>> ColsItems)
+        private static decimal[,] GetElements(IEnumerable<IEnumerable<decimal>> Items)
         {
-            Contract.Requires(ColsItems != null);
-            var cols = ColsItems.Select(col => col.ToListFast()).ToList();
+            Contract.Requires(Items != null);
+            var cols = Items.Select(col => col.ToListFast()).ToList();
             var cols_count = cols.Count;
             var rows_count = cols.Max(col => col.Count);
             var data = new decimal[rows_count, cols_count];
             for (var j = 0; j < cols_count; j++)
             {
                 var col = cols[j];
-                for (var i = 0; i < col.Count && i < rows_count; i++) data[i, j] = col[i];
+                for (var i = 0; i < col.Count && i < rows_count; i++)
+                    data[i, j] = col[i];
             }
             return data;
         }
@@ -209,267 +218,621 @@ namespace MathCore
         /// <summary>Получить столбец матрицы</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы номер j</returns>
-        [DST, NotNull] public MatrixDecimal GetCol(int j) => new MatrixDecimal(Array.GetCol(_Data, j));
+        [DST]
+        public MatrixDecimal GetCol(int j)
+        {
+            var lv_A = new MatrixDecimal(N, 1);
+            for (var i = 0; i < N; i++) lv_A[i, j] = this[i, j];
+            return lv_A;
+        }
 
         /// <summary>Получить строку матрицы</summary>
         /// <param name="i">Номер строки</param>
         /// <returns>Строка матрицы номер i</returns>
-        [DST, NotNull] public MatrixDecimal GetRow(int i) => new MatrixDecimal(Array.GetRow(_Data, i));
-
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <param name="P">Матрица перестановок</param>
-        /// <param name="rank">Ранг матрицы</param>
-        /// <param name="D">Определитель</param>
-        /// <returns>Триугольная матрица</returns>
-        [NotNull]
-        public MatrixDecimal GetTriangle([NotNull] out MatrixDecimal P, out int rank, out decimal D)
+        [DST]
+        public MatrixDecimal GetRow(int i)
         {
-            var result = new MatrixDecimal(Array.GetTriangle(_Data, out var p, out rank, out D));
-            P = new MatrixDecimal(p);
-            return result;
+            var lv_A = new MatrixDecimal(1, M);
+            for (var j = 0; j < M; j++) lv_A[i, j] = this[i, j];
+            return lv_A;
         }
 
         /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <param name="B">Присоединённая матрица правой части СЛАУ</param>
-        /// <param name="CloneB">Работать с клоном матрицы <paramref name="B"/></param>
-        /// <returns>Триугольная матрица</returns>
-        /// <exception cref="ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
-        [NotNull]
-        public MatrixDecimal GetTriangle([NotNull] ref MatrixDecimal B, bool CloneB = true)
+        /// <returns></returns>
+        public MatrixDecimal GetTriangle()
         {
-            var b = CloneB ? B._Data.CloneObject() : B._Data;
-            var result = new MatrixDecimal(Array.GetTriangle(_Data, b, out var _, out var _));
-            if (CloneB) B = new MatrixDecimal(b);
-            return result;
+            var lv_Result = (MatrixDecimal)Clone();
+            var lv_RowCount = N;
+            var lv_ColCount = M;
+            var row = new decimal[lv_ColCount];
+            for (var lv_FirstRowIndex = 0; lv_FirstRowIndex < lv_RowCount - 1; lv_FirstRowIndex++)
+            {
+                var lv_A = lv_Result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
+                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < lv_Result.M; lv_RowElementI++) //Нормируем строку по первому элементу
+                    row[lv_RowElementI] = lv_Result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
+
+                for (var i = lv_FirstRowIndex + 1; i < lv_RowCount; i++) //Для всех оставшихся строк:
+                {
+                    lv_A = lv_Result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
+                    for (var j = lv_FirstRowIndex; j < lv_ColCount; j++)
+                        lv_Result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
+                }
+            }
+            return lv_Result;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <param name="B">Матрица правой части СЛАУ</param>
-        /// <param name="P">Матрица перестановок</param>
-        /// <param name="rank">Ранг матрицы</param>
-        /// <param name="d">Определитель матрицы</param>
-        /// <param name="CloneB">Клонировать матрицу правой части</param>
-        /// <returns>Треугольная матрица</returns>
-        [NotNull]
-        public MatrixDecimal GetTriangle([NotNull] ref MatrixDecimal B, [NotNull] out MatrixDecimal P, out int rank, out decimal d, bool CloneB = true)
-        {
-            var b = B._Data;
-            var result = new MatrixDecimal(Array.GetTriangle(_Data, ref b, out var p, out rank, out d, CloneB));
-            P = new MatrixDecimal(p);
-            if (CloneB) B = new MatrixDecimal(b);
-            return result;
-        }
-
-        /// <summary>Получить обратную матрицу</summary>                                                     
-        /// <param name="P">Матрица перестановок</param>
+        /// <summary>Получить обратную матрицу</summary>
         /// <returns>Обратная матрица</returns>
-        [NotNull]
-        public MatrixDecimal GetInverse(out MatrixDecimal P)
+        public MatrixDecimal GetInverse()
         {
-            var inverse = new MatrixDecimal(Array.Inverse(_Data, out var p));
-            P = new MatrixDecimal(p);
-            return inverse;
+            if (!IsSquare)
+                throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
+
+            var lv_Result = GetTransvection(this, 0);
+            for (var i = 1; i < N; i++)
+                lv_Result *= GetTransvection(this, i);
+            return lv_Result;
         }
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST, NotNull] public MatrixDecimal GetTransponse() => new MatrixDecimal(Array.Transponse(_Data));
+        [DST]
+        public MatrixDecimal GetTransponse()
+        {
+            var Result = new MatrixDecimal(M, N);
+
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                    Result[j, i] = this[i, j];
+
+            return Result;
+        }
 
         /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
-        public decimal GetAdjunct(int n, int m) => Array.GetAdjunct(_Data, n, m);
+        public MatrixDecimal GetAdjunct(int n, int m) => ((n + m) % 2 == 0 ? 1 : -1) * GetMinor(n, m).GetDeterminant();
 
         /// <summary>Минор матрицы по определённому элементу</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Минор элемента матрицы [n,m]</returns>
-        [NotNull] public MatrixDecimal GetMinor(int n, int m) => new MatrixDecimal(Array.GetMinor(_Data, n, m));
-
-        /// <summary>Определитель матрицы</summary>
-        public decimal GetDeterminant() => Array.GetDeterminant(_Data);
-
-        /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
-        /// <param name="L">Нижне-треугольная матрица</param>
-        /// <param name="U">Верхнетреугольная матрица</param>
-        /// <param name="P">Матрица преобразований P*X = L*U</param>
-        /// <param name="D">Знак определителя</param>
-        /// <returns>Истина, если разложение выполнено успешно, ложь - если матрица вырожденная</returns>
-        public bool GetLUDecomposition([CanBeNull] out MatrixDecimal L, [CanBeNull] out MatrixDecimal U, [CanBeNull] out MatrixDecimal P, out decimal D)
+        public MatrixDecimal GetMinor(int n, int m)
         {
-            if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной метрицы");
+            var lv_Result = new MatrixDecimal(N - 1, M - 1);
 
-            var decomposition_success = Array.GetLUPDecomposition(_Data, out var l, out var u, out var p, out var d);
-            L = decomposition_success ? new MatrixDecimal(l) : null;
-            U = decomposition_success ? new MatrixDecimal(u) : null;
-            P = decomposition_success ? new MatrixDecimal(p) : null;
-            D = decomposition_success ? d : 0;
-            return decomposition_success;
+            var i0 = 0;
+            for (var i = 0; i < N; i++)
+                if (i != n)
+                {
+                    var j0 = 0;
+                    for (var j = 0; j < _M; j++)
+                        if (j != m) lv_Result[i0, j0++] = this[i, j];
+                    i0++;
+                }
+            return lv_Result;
         }
 
-        /// <summary>Получить внутренний массив элементов матрицы</summary>
-        /// <returns></returns>
-        [DST, NotNull] public decimal[,] GetData() => _Data;
+        /// <summary>Определитель матрицы</summary>
+        public decimal GetDeterminant()
+        {
+            if (_N != _M)
+                throw new InvalidOperationException("Нельзя найти определитель неквадратной матрицы!");
+            var n = _N;
+            if (n == 1) return this[0, 0];
+
+            if (n == 2) return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
+
+            var lv_DataArray = (decimal[,])_Data.Clone();
+
+            //var det = 1.0;
+            //for(var k = 0; k <= n; k++)
+            //{
+            //    int i;
+            //    int j;
+            //    if(lv_DataArray[k, k].Equals(0))
+            //    {
+            //        j = k;
+            //        while(j < n && lv_DataArray[k, j].Equals(0)) j++;
+
+            //        if(lv_DataArray[k, j].Equals(0)) return 0;
+
+            //        for(i = k; i <= n; i++)
+            //        {
+            //            var save = lv_DataArray[i, j];
+            //            lv_DataArray[i, j] = lv_DataArray[i, k];
+            //            lv_DataArray[i, k] = save;
+            //        }
+            //        det = -det;
+            //    }
+            //    var doagonal_item = lv_DataArray[k, k];
+
+            //    det *= doagonal_item;
+
+            //    if(k >= n) continue;
+
+            //    var k1 = k + 1;
+            //    for(i = k1; i <= n; i++)
+            //        for(j = k1; j <= n; j++)
+            //            lv_DataArray[i, j] -= lv_DataArray[i, k] * lv_DataArray[k, j] / doagonal_item;
+            //}
+
+            #region
+
+            MatrixDecimal L, U, P;
+            GetLUDecomposition(out L, out U, out P);
+            decimal det = 1;
+            for (var i = 0; i < N; i++)
+                det *= U[i, i];
+
+            //decimal det = 0;
+            //for(int j = 0, k = 1; j < M; j++, k *= -1)
+            //    det += this[0, j] * k * GetMinor(0, j).GetDeterminant();
+
+            #endregion
+
+
+            return det;
+        }
+
+        public void GetLUDecomposition(out MatrixDecimal L, out MatrixDecimal U, out MatrixDecimal P)
+        {
+            decimal[,] l, u, p;
+            LUDecomposition(_Data, out l, out u, out p);
+            L = new MatrixDecimal(l);
+            U = new MatrixDecimal(u);
+            P = new MatrixDecimal(p);
+        }
+
+        /// <summary>
+        /// Returns the LU Decomposition of a matrix. 
+        /// the output is: lower triangular matrix L, upper
+        /// triangular matrix U, and permutation matrix P so that
+        ///	P*X = L*U.
+        /// In case of an error the error is raised as an exception.
+        /// Note - This method is based on the 'LU Decomposition and Its Applications'
+        /// section of Numerical Recipes in C by William H. Press,
+        /// Saul A. Teukolsky, William T. Vetterling and Brian P. Flannery,
+        /// University of Cambridge Press 1992.  
+        /// </summary>
+        /// <param name="Mat">Array which will be LU Decomposed</param>
+        /// <param name="L">An array where the lower traingular matrix is returned</param>
+        /// <param name="U">An array where the upper traingular matrix is returned</param>
+        /// <param name="P">An array where the permutation matrix is returned</param>
+        private static void LUDecomposition(decimal[,] Mat, out decimal[,] L, out decimal[,] U, out decimal[,] P)
+        {
+            var A = (decimal[,])Mat.Clone();
+            var Rows = Mat.GetUpperBound(0);
+            var Cols = Mat.GetUpperBound(1);
+
+            if (Rows != Cols) throw new ArgumentException("Матрица не квадратная", nameof(Mat));
+
+
+            var N = Rows;
+            var lv_Indexex = new int[N + 1];
+            var V = new decimal[N * 10];
+
+            int i, j;
+            for (i = 0; i <= N; i++)
+            {
+                var lv_AMax = 0m;
+                for (j = 0; j <= N; j++)
+                    if (Math.Abs(A[i, j]) > lv_AMax)
+                        lv_AMax = Math.Abs(A[i, j]);
+
+                if (lv_AMax.Equals(0))
+                    throw new ArgumentException("Матрица вырождена", nameof(Mat));
+
+                V[i] = 1 / lv_AMax;
+            }
+
+            for (j = 0; j <= N; j++)
+            {
+                int k;
+                decimal Sum;
+                if (j > 0)
+                    for (i = 0; i < j; i++)
+                    {
+                        Sum = A[i, j];
+                        if (i <= 0) continue;
+                        for (k = 0; k < i; k++)
+                            Sum -= A[i, k] * A[k, j];
+                        A[i, j] = Sum;
+                    }
+
+                var lv_AMax = 0m;
+                decimal Dum;
+                var lv_IMax = 0;
+                for (i = j; i <= N; i++)
+                {
+                    Sum = A[i, j];
+                    if (j > 0)
+                    {
+                        for (k = 0; k < j; k++)
+                            Sum -= A[i, k] * A[k, j];
+                        A[i, j] = Sum;
+                    }
+                    Dum = V[i] * Math.Abs(Sum);
+                    if (Dum < lv_AMax) continue;
+                    lv_IMax = i;
+                    lv_AMax = Dum;
+                }
+
+                if (j != lv_IMax)
+                {
+                    for (k = 0; k <= N; k++)
+                    {
+                        Dum = A[lv_IMax, k];
+                        A[lv_IMax, k] = A[j, k];
+                        A[j, k] = Dum;
+                    }
+                    V[lv_IMax] = V[j];
+                }
+
+                lv_Indexex[j] = lv_IMax;
+
+                if (j == N) continue;
+
+                // ReSharper disable RedundantCast
+                if (A[j, j].Equals(0))
+                    A[j, j] = (decimal)1E-20;
+                // ReSharper restore RedundantCast
+
+                Dum = 1 / A[j, j];
+
+                for (i = j + 1; i <= N; i++)
+                    A[i, j] = A[i, j] * Dum;
+            }
+
+            // ReSharper disable RedundantCast
+            if (A[N, N].Equals(0))
+                A[N, N] = (decimal)1E-20;
+            // ReSharper restore RedundantCast
+
+            var count = 0;
+            var l = new decimal[N + 1, N + 1];
+            var u = new decimal[N + 1, N + 1];
+
+            for (i = 0; i <= N; i++, count++)
+                for (j = 0; j <= count; j++)
+                {
+                    if (i != 0) l[i, j] = A[i, j];
+                    if (i == j) l[i, j] = 1;
+                    u[N - i, N - j] = A[N - i, N - j];
+                }
+
+            L = l;
+            U = u;
+
+            P = Identity(N + 1);
+            for (i = 0; i <= N; i++)
+                P.SwapRows(i, lv_Indexex[i]);
+        }
+
+        private static decimal[,] Identity(int n)
+        {
+            var temp = new decimal[n, n];
+            for (var i = 0; i < n; i++)
+                temp[i, i] = 1;
+            return temp;
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <inheritdoc/>
-        [DST] public override string ToString() => $"MatrixDecimal[{_N}x{_M}]";
+        [DST]
+        public override string ToString() => $"MatrixDecimal[{N}x{M}]";
 
-        /// <summary>Преобразование матрицы в строку с форматированием</summary>
-        /// <param name="Format">Строка формата вывода чисел</param>
-        /// <param name="Splitter">Разделитель элементов матрицы</param>
-        /// <param name="provider">Механизм форматирования чисел матрицы</param>
-        /// <returns>Строковое представление матрицы</returns>
-        [DST, NotNull]
-        public string ToStringFormat
-        (
-            [NotNull] string Format = "r",
-            [CanBeNull] string Splitter = "\t",
-            [CanBeNull] IFormatProvider provider = null
-        ) => _Data.ToStringFormatView(Format, Splitter, provider) ?? throw new InvalidOperationException();
+        [DST]
+        public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
 
-        /// <inheritdoc/>
-        [DST] public string ToString([NotNull] string format, [CanBeNull] IFormatProvider provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
+        //[DST] public string ToStringFormat(char Splitter) { return ToStringFormat(Splitter, "r"); }
+
+        public string ToStringFormat(char Splitter = '\t', string Format = "r")
+        {
+            var lv_Result = new StringBuilder();
+
+            for (var i = 0; i < _N; i++)
+            {
+                var lv_Str = _Data[i, 0].ToString(Format);
+                for (var j = 1; j < _M; j++)
+                    lv_Str += Splitter + _Data[i, j].ToString(Format);
+                lv_Result.AppendLine(lv_Str);
+            }
+            return lv_Result.ToString();
+        }
 
         /* -------------------------------------------------------------------------------------------- */
 
         #region ICloneable Members
 
-        /// <inheritdoc/>
-        [DST] object ICloneable.Clone() => Clone();
-
-        /// <inheritdoc/>
-        [DST, NotNull] decimal[,] ICloneable<decimal[,]>.Clone() => _Data.CloneObject();
-
-        /// <inheritdoc/>
-        [DST, NotNull] public MatrixDecimal Clone() => new MatrixDecimal(_Data, true);
+        /// <summary>Клонирование матрицы</summary>
+        /// <returns>Копия текущей матрицы</returns>
+        [DST]
+        public object Clone()
+        {
+            var lv_Result = new MatrixDecimal(N, M);
+            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) lv_Result[i, j] = this[i, j];
+            return lv_Result;
+        }
 
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST] public static bool operator ==([CanBeNull] MatrixDecimal A, [CanBeNull] MatrixDecimal B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
-
-        [DST] public static bool operator !=([CanBeNull] MatrixDecimal A, [CanBeNull] MatrixDecimal B) => !(A == B);
-
-        [DST] public static bool operator ==([CanBeNull] decimal[,] A, [CanBeNull] MatrixDecimal B) => B == A;
-
-        [DST] public static bool operator ==([CanBeNull] MatrixDecimal A, [CanBeNull] decimal[,] B) => ReferenceEquals(A, null) && ReferenceEquals(B, null) || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
-
-        [DST] public static bool operator !=([CanBeNull] decimal[,] A, [CanBeNull] MatrixDecimal B) => !(A == B);
-
-        [DST] public static bool operator !=([CanBeNull] MatrixDecimal A, [CanBeNull] decimal[,] B) => !(A == B);
-
-        [DST, NotNull] public static MatrixDecimal operator +([NotNull] MatrixDecimal M, decimal x) => new MatrixDecimal(Add(M._Data, x));
-
-        [DST, NotNull] public static MatrixDecimal operator +(decimal x, [NotNull] MatrixDecimal M) => new MatrixDecimal(Add(M._Data, x));
-
-        [DST, NotNull] public static MatrixDecimal operator -([NotNull] MatrixDecimal M, decimal x) => new MatrixDecimal(Substract(M._Data, x));
-
-        [DST, NotNull] public static MatrixDecimal operator -([NotNull] MatrixDecimal M) => new MatrixDecimal(new decimal[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
-
-        [DST, NotNull] public static MatrixDecimal operator -(decimal x, [NotNull] MatrixDecimal M) => new MatrixDecimal(Substract(x, M._Data));
-
-        [DST, NotNull] public static MatrixDecimal operator *([NotNull] MatrixDecimal M, decimal x) => new MatrixDecimal(Multiply(M._Data, x));
-
-        [DST, NotNull] public static MatrixDecimal operator *(decimal x, [NotNull] MatrixDecimal M) => new MatrixDecimal(Multiply(M._Data, x));
-
-        [DST, NotNull] public static MatrixDecimal operator *([NotNull] decimal[,] A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Multiply(A, B._Data));
-
-        [DST, NotNull] public static MatrixDecimal operator *([NotNull] decimal[] A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Multiply(Array.CreateColArray(A), B._Data));
-
-        [DST, NotNull] public static MatrixDecimal operator *([NotNull] MatrixDecimal A, [NotNull] decimal[] B) => new MatrixDecimal(Multiply(A._Data, Array.CreateColArray(B)));
-
-        [DST, NotNull] public static MatrixDecimal operator *([NotNull] MatrixDecimal A, [NotNull] decimal[,] B) => new MatrixDecimal(Multiply(A._Data, B));
-
-        [DST, NotNull] public static MatrixDecimal operator /([NotNull] MatrixDecimal M, decimal x) => new MatrixDecimal(Divade(M._Data, x));
-
-        [DST, NotNull] public static MatrixDecimal operator /(decimal x, [NotNull] MatrixDecimal M) => new MatrixDecimal(Divade(x, M._Data));
-
-        [DST, NotNull]
-        public static MatrixDecimal operator ^([NotNull] MatrixDecimal M, int n)
+        public static bool operator ==(MatrixDecimal A, MatrixDecimal B)
         {
-            if (!M.IsSquare) throw new ArgumentException("Матрица не квадратная", nameof(M));
-            switch (n)
-            {
-                case 1: return M.Clone();
-                case -1: return M.GetInverse(out _);
-                default:
-                    var m = M._Data;
-                    if (n < 0)
-                    {
-                        m = Array.Inverse(m, out _);
-                        n = -n;
-                    }
-                    var result = Array.GetUnitaryArrayMatrixDecimal(M._N);
-                    for (var i = 0; i < n; i++) result = Multiply(result, m);
-                    return new MatrixDecimal(result);
-            }
+            return ReferenceEquals(A, null) && (ReferenceEquals(B, null))
+                   || !ReferenceEquals(A, null) && !ReferenceEquals(B, null) && A.Equals(B);
+        }
+
+        public static bool operator !=(MatrixDecimal A, MatrixDecimal B) { return !(A == B); }
+
+        [DST]
+        public static MatrixDecimal operator +(MatrixDecimal M, decimal x)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] + x;
+            return lv_Result;
+        }
+
+        [DST]
+        public static MatrixDecimal operator +(decimal x, MatrixDecimal M)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] + x;
+            return lv_Result;
+        }
+
+        [DST]
+        public static MatrixDecimal operator -(MatrixDecimal M, decimal x)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] - x;
+            return lv_Result;
+        }
+
+        [DST]
+        public static MatrixDecimal operator -(decimal x, MatrixDecimal M)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = x - M[i, j];
+            return lv_Result;
+        }
+
+        [DST]
+        public static MatrixDecimal operator *(MatrixDecimal M, decimal x)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] * x;
+            return lv_Result;
+        }
+
+        [DST]
+        public static MatrixDecimal operator *(decimal x, MatrixDecimal M)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] * x;
+            return lv_Result;
+        }
+
+        [DST]
+        public static MatrixDecimal operator *(decimal[,] A, MatrixDecimal B) { return (MatrixDecimal)A * B; }
+
+        [DST]
+        public static MatrixDecimal operator *(decimal[] A, MatrixDecimal B) { return (MatrixDecimal)A * B; }
+
+        [DST]
+        public static MatrixDecimal operator *(MatrixDecimal A, decimal[] B) { return A * (MatrixDecimal)B; }
+
+        [DST]
+        public static MatrixDecimal operator *(MatrixDecimal A, decimal[,] B) { return A * (MatrixDecimal)B; }
+
+        [DST]
+        public static MatrixDecimal operator /(MatrixDecimal M, decimal x)
+        {
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] / x;
+            return lv_Result;
+        }
+
+        public static MatrixDecimal operator /(decimal x, MatrixDecimal M)
+        {
+            M = M.GetInverse();
+            var lv_Result = new MatrixDecimal(M.N, M.M);
+            for (var i = 0; i < M.N; i++)
+                for (var j = 0; j < M.M; j++)
+                    lv_Result[i, j] = M[i, j] * x;
+            return lv_Result;
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Сумма двух матриц</returns>
-        [DST, NotNull] public static MatrixDecimal operator +([NotNull] MatrixDecimal A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Add(A._Data, B._Data));
+        /// <param name="A">Первое слогаемое</param>
+        /// <param name="B">Второе слогаемое</param>
+        /// <returns>Сумма двух матриц</returns>
+        [DST]
+        public static MatrixDecimal operator +(MatrixDecimal A, MatrixDecimal B)
+        {
+            if (A.N != B.N || A.M != B.M)
+                throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
+
+            var lv_Result = new MatrixDecimal(A.N, A.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    lv_Result[i, j] = A[i, j] + B[i, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Оператор разности двух матриц</summary>
-        /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static MatrixDecimal operator -([NotNull] MatrixDecimal A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Substract(A._Data, B._Data));
+        /// <param name="A">Уменьшаемое</param>
+        /// <param name="B">Вычитаемое</param>
+        /// <returns>Разность двух матриц</returns>
+        [DST]
+        public static MatrixDecimal operator -(MatrixDecimal A, MatrixDecimal B)
+        {
+            if (A.N != B.N || A.M != B.M)
+                throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
+
+            var lv_Result = new MatrixDecimal(A.N, A.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    lv_Result[i, j] = A[i, j] - B[i, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Оператор произведения двух матриц</summary>
-        /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>
-        [DST, NotNull] public static MatrixDecimal operator *([NotNull] MatrixDecimal A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Multiply(A._Data, B._Data));
+        /// <param name="A">Первый сомножитель</param>
+        /// <param name="B">Второй сомножитель</param>
+        /// <returns>Произведение двух матриц</returns>
+        [DST]
+        public static MatrixDecimal operator *(MatrixDecimal A, MatrixDecimal B)
+        {
+            if (A.M != B.N)
+                throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
+
+            var lv_Result = new MatrixDecimal(A.N, B.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    for (var k = 0; k < A.M; k++)
+                        lv_Result[i, j] += A[i, k] * B[k, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Оператор деления двух матриц</summary>
-        /// <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
-        [DST, NotNull] public static MatrixDecimal operator /([NotNull] MatrixDecimal A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Divade(A._Data, B._Data));
+        /// <param name="A">Делимое</param>
+        /// <param name="B">Делитель</param>
+        /// <returns>Частное двух матриц</returns>
+        public static MatrixDecimal operator /(MatrixDecimal A, MatrixDecimal B)
+        {
+            B = B.GetInverse();
+            if (A.M != B.N)
+                throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
+
+            var lv_Result = new MatrixDecimal(A.N, B.M);
+
+            for (var i = 0; i < lv_Result.N; i++)
+                for (var j = 0; j < lv_Result.M; j++)
+                    for (var k = 0; k < A.M; k++)
+                        lv_Result[i, j] += A[i, k] * B[k, j];
+
+            return lv_Result;
+        }
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Объединённая матрица</returns>
-        [DST, NotNull] public static MatrixDecimal operator |([NotNull] MatrixDecimal A, [NotNull] MatrixDecimal B) => new MatrixDecimal(Concatinate(A._Data, B._Data));
+        /// <param name="A">Первое слогаемое</param>
+        /// <param name="B">Второе слогаемое</param>
+        /// <returns>Объединённая матрица</returns>
+        public static MatrixDecimal operator |(MatrixDecimal A, MatrixDecimal B)
+        {
+            MatrixDecimal lv_Result;
+            if (A.M == B.M) // Конкатинация по строкам
+            {
+                lv_Result = new MatrixDecimal(A.N + B.N, A.M);
+                for (var i = 0; i < A.N; i++)
+                    for (var j = 0; j < A.M; j++)
+                        lv_Result[i, j] = A[i, j];
+                var i0 = A.N;
+                for (var i = 0; i < B.N; i++)
+                    for (var j = 0; j < B.M; j++)
+                        lv_Result[i + i0, j] = B[i, j];
+
+            }
+            else if (A.N == B.N) //Конкатинация по строкам
+            {
+                lv_Result = new MatrixDecimal(A.N, A.M + B.M);
+                for (var i = 0; i < A.N; i++)
+                    for (var j = 0; j < A.M; j++)
+                        lv_Result[i, j] = A[i, j];
+                var j0 = A.M;
+                for (var i = 0; i < B.N; i++)
+                    for (var j = 0; j < B.M; j++)
+                        lv_Result[i, j + j0] = B[i, j];
+            }
+            else
+                throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
+
+            return lv_Result;
+        }
+
+
 
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
-        [DST, NotNull] public static implicit operator MatrixDecimal(decimal X) => new MatrixDecimal(1, 1) { [0, 0] = X };
+        [DST]
+        public static implicit operator MatrixDecimal(decimal X) { return new MatrixDecimal(1, 1) { [0, 0] = X }; }
 
-        [DST, NotNull] public static explicit operator decimal[,] ([NotNull] MatrixDecimal M) => M._Data;
+        [DST]
+        public static explicit operator decimal[,](MatrixDecimal M) { return (decimal[,])M._Data.Clone(); }
 
-        [DST, NotNull] public static explicit operator MatrixDecimal([NotNull] decimal[,] Data) => new MatrixDecimal(Data);
+        [DST]
+        public static explicit operator MatrixDecimal(decimal[,] Data) { return new MatrixDecimal(Data); }
 
-        [DST, NotNull] public static explicit operator MatrixDecimal([NotNull] decimal[] Data) => new MatrixDecimal(Data);
+        [DST]
+        public static explicit operator MatrixDecimal(decimal[] Data) { return new MatrixDecimal(Data); }
 
         /* -------------------------------------------------------------------------------------------- */
 
-        #region IEquatable Members
+        #region IEquatable<MatrixDecimal> Members
 
-        /// <inheritdoc/>
-        [DST] public bool Equals(decimal[,] other) => !ReferenceEquals(null, other) && Array.AreEquals(_Data, other);
+        public bool Equals(MatrixDecimal other)
+        {
+            return !ReferenceEquals(null, other)
+                   && (ReferenceEquals(this, other)
+                        || other._N == _N
+                            && other._M == _M
+                            && Equals(other._Data, _Data));
+        }
 
-        /// <inheritdoc/>
-        [DST] public bool Equals(MatrixDecimal other) => !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
+        [DST]
+        bool IEquatable<MatrixDecimal>.Equals(MatrixDecimal other) { return Equals(other); }
 
         #endregion
 
-        /// <inheritdoc/>
-        [DST] public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || Equals(obj as MatrixDecimal) || Equals(obj as decimal[,]));
+        public override bool Equals(object obj)
+        {
+            return !ReferenceEquals(null, obj)
+                   && (ReferenceEquals(this, obj)
+                        || obj.GetType() == typeof(MatrixDecimal)
+                                && Equals((MatrixDecimal)obj));
+        }
 
-        /// <inheritdoc/>
         [DST]
         public override int GetHashCode()
         {
             unchecked
             {
-                var result = (_N * 397) ^ _M;
-                for (var i = 0; i < _N; i++)
-                    for (var j = 0; j < _M; j++)
-                        result = (result * 397) ^ i ^ j ^ _Data[i, j].GetHashCode();
+                var result = _N;
+                result = (result * 397) ^ _M;
+                _Data.Foreach((i, j, v) => result = (result * 397) ^ i ^ j ^ v.GetHashCode());
+                //result = (result * 397) ^ (_Data != null ? _Data.GetHashCode() : 0);
                 return result;
             }
         }
 
         /* -------------------------------------------------------------------------------------------- */
+
+        public decimal[,] GetData() => _Data;
     }
 }
