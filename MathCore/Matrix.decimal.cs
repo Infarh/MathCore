@@ -47,10 +47,10 @@ namespace MathCore
             if (!A.IsSquare)
                 throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
 
-            var lv_Result = GetUnitaryMatryx(A.N);
+            var result = GetUnitaryMatryx(A.N);
             for (var i = 0; i < A.N; i++)
-                lv_Result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
-            return lv_Result;
+                result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
+            return result;
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -241,24 +241,24 @@ namespace MathCore
         /// <returns></returns>
         public MatrixDecimal GetTriangle()
         {
-            var lv_Result = (MatrixDecimal)Clone();
+            var result = (MatrixDecimal)Clone();
             var lv_RowCount = N;
             var lv_ColCount = M;
             var row = new decimal[lv_ColCount];
             for (var lv_FirstRowIndex = 0; lv_FirstRowIndex < lv_RowCount - 1; lv_FirstRowIndex++)
             {
-                var lv_A = lv_Result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < lv_Result.M; lv_RowElementI++) //Нормируем строку по первому элементу
-                    row[lv_RowElementI] = lv_Result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
+                var lv_A = result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
+                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < result.M; lv_RowElementI++) //Нормируем строку по первому элементу
+                    row[lv_RowElementI] = result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
 
                 for (var i = lv_FirstRowIndex + 1; i < lv_RowCount; i++) //Для всех оставшихся строк:
                 {
-                    lv_A = lv_Result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
+                    lv_A = result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
                     for (var j = lv_FirstRowIndex; j < lv_ColCount; j++)
-                        lv_Result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
+                        result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
                 }
             }
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Получить обратную матрицу</summary>
@@ -268,10 +268,10 @@ namespace MathCore
             if (!IsSquare)
                 throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
 
-            var lv_Result = GetTransvection(this, 0);
+            var result = GetTransvection(this, 0);
             for (var i = 1; i < N; i++)
-                lv_Result *= GetTransvection(this, i);
-            return lv_Result;
+                result *= GetTransvection(this, i);
+            return result;
         }
 
         /// <summary>Транспонирование матрицы</summary>
@@ -300,7 +300,7 @@ namespace MathCore
         /// <returns>Минор элемента матрицы [n,m]</returns>
         public MatrixDecimal GetMinor(int n, int m)
         {
-            var lv_Result = new MatrixDecimal(N - 1, M - 1);
+            var result = new MatrixDecimal(N - 1, M - 1);
 
             var i0 = 0;
             for (var i = 0; i < N; i++)
@@ -308,10 +308,10 @@ namespace MathCore
                 {
                     var j0 = 0;
                     for (var j = 0; j < _M; j++)
-                        if (j != m) lv_Result[i0, j0++] = this[i, j];
+                        if (j != m) result[i0, j0++] = this[i, j];
                     i0++;
                 }
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Определитель матрицы</summary>
@@ -360,8 +360,7 @@ namespace MathCore
 
             #region
 
-            MatrixDecimal L, U, P;
-            GetLUDecomposition(out L, out U, out P);
+            GetLUDecomposition(out var L, out var U, out var P);
             decimal det = 1;
             for (var i = 0; i < N; i++)
                 det *= U[i, i];
@@ -378,8 +377,7 @@ namespace MathCore
 
         public void GetLUDecomposition(out MatrixDecimal L, out MatrixDecimal U, out MatrixDecimal P)
         {
-            decimal[,] l, u, p;
-            LUDecomposition(_Data, out l, out u, out p);
+            LUDecomposition(_Data, out var l, out var u, out var p);
             L = new MatrixDecimal(l);
             U = new MatrixDecimal(u);
             P = new MatrixDecimal(p);
@@ -410,21 +408,21 @@ namespace MathCore
 
 
             var N = Rows;
-            var lv_Indexex = new int[N + 1];
+            var indexex = new int[N + 1];
             var V = new decimal[N * 10];
 
             int i, j;
             for (i = 0; i <= N; i++)
             {
-                var lv_AMax = 0m;
+                var a_max = 0m;
                 for (j = 0; j <= N; j++)
-                    if (Math.Abs(A[i, j]) > lv_AMax)
-                        lv_AMax = Math.Abs(A[i, j]);
+                    if (Math.Abs(A[i, j]) > a_max)
+                        a_max = Math.Abs(A[i, j]);
 
-                if (lv_AMax.Equals(0))
+                if (a_max.Equals(0))
                     throw new ArgumentException("Матрица вырождена", nameof(Mat));
 
-                V[i] = 1 / lv_AMax;
+                V[i] = 1 / a_max;
             }
 
             for (j = 0; j <= N; j++)
@@ -441,9 +439,9 @@ namespace MathCore
                         A[i, j] = Sum;
                     }
 
-                var lv_AMax = 0m;
+                var a_max = 0m;
                 decimal Dum;
-                var lv_IMax = 0;
+                var i_max = 0;
                 for (i = j; i <= N; i++)
                 {
                     Sum = A[i, j];
@@ -454,23 +452,23 @@ namespace MathCore
                         A[i, j] = Sum;
                     }
                     Dum = V[i] * Math.Abs(Sum);
-                    if (Dum < lv_AMax) continue;
-                    lv_IMax = i;
-                    lv_AMax = Dum;
+                    if (Dum < a_max) continue;
+                    i_max = i;
+                    a_max = Dum;
                 }
 
-                if (j != lv_IMax)
+                if (j != i_max)
                 {
                     for (k = 0; k <= N; k++)
                     {
-                        Dum = A[lv_IMax, k];
-                        A[lv_IMax, k] = A[j, k];
+                        Dum = A[i_max, k];
+                        A[i_max, k] = A[j, k];
                         A[j, k] = Dum;
                     }
-                    V[lv_IMax] = V[j];
+                    V[i_max] = V[j];
                 }
 
-                lv_Indexex[j] = lv_IMax;
+                indexex[j] = i_max;
 
                 if (j == N) continue;
 
@@ -507,7 +505,7 @@ namespace MathCore
 
             P = Identity(N + 1);
             for (i = 0; i <= N; i++)
-                P.SwapRows(i, lv_Indexex[i]);
+                P.SwapRows(i, indexex[i]);
         }
 
         private static decimal[,] Identity(int n)
@@ -530,16 +528,16 @@ namespace MathCore
 
         public string ToStringFormat(char Splitter = '\t', string Format = "r")
         {
-            var lv_Result = new StringBuilder();
+            var result = new StringBuilder();
 
             for (var i = 0; i < _N; i++)
             {
                 var lv_Str = _Data[i, 0].ToString(Format);
                 for (var j = 1; j < _M; j++)
                     lv_Str += Splitter + _Data[i, j].ToString(Format);
-                lv_Result.AppendLine(lv_Str);
+                result.AppendLine(lv_Str);
             }
-            return lv_Result.ToString();
+            return result.ToString();
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -551,113 +549,109 @@ namespace MathCore
         [DST]
         public object Clone()
         {
-            var lv_Result = new MatrixDecimal(N, M);
-            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) lv_Result[i, j] = this[i, j];
-            return lv_Result;
+            var result = new MatrixDecimal(N, M);
+            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) result[i, j] = this[i, j];
+            return result;
         }
 
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==(MatrixDecimal A, MatrixDecimal B)
-        {
-            return A is null && (B is null)
-                   || A is { } && B is { } && A.Equals(B);
-        }
+        public static bool operator ==(MatrixDecimal A, MatrixDecimal B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
-        public static bool operator !=(MatrixDecimal A, MatrixDecimal B) { return !(A == B); }
+        public static bool operator !=(MatrixDecimal A, MatrixDecimal B) => !(A == B);
 
         [DST]
         public static MatrixDecimal operator +(MatrixDecimal M, decimal x)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] + x;
-            return lv_Result;
+                    result[i, j] = M[i, j] + x;
+            return result;
         }
 
         [DST]
         public static MatrixDecimal operator +(decimal x, MatrixDecimal M)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] + x;
-            return lv_Result;
+                    result[i, j] = M[i, j] + x;
+            return result;
         }
 
         [DST]
         public static MatrixDecimal operator -(MatrixDecimal M, decimal x)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] - x;
-            return lv_Result;
+                    result[i, j] = M[i, j] - x;
+            return result;
         }
 
         [DST]
         public static MatrixDecimal operator -(decimal x, MatrixDecimal M)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = x - M[i, j];
-            return lv_Result;
+                    result[i, j] = x - M[i, j];
+            return result;
         }
 
         [DST]
         public static MatrixDecimal operator *(MatrixDecimal M, decimal x)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] * x;
-            return lv_Result;
+                    result[i, j] = M[i, j] * x;
+            return result;
         }
 
         [DST]
         public static MatrixDecimal operator *(decimal x, MatrixDecimal M)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] * x;
-            return lv_Result;
+                    result[i, j] = M[i, j] * x;
+            return result;
         }
 
         [DST]
-        public static MatrixDecimal operator *(decimal[,] A, MatrixDecimal B) { return (MatrixDecimal)A * B; }
+        public static MatrixDecimal operator *(decimal[,] A, MatrixDecimal B) => (MatrixDecimal)A * B;
 
         [DST]
-        public static MatrixDecimal operator *(decimal[] A, MatrixDecimal B) { return (MatrixDecimal)A * B; }
+        public static MatrixDecimal operator *(decimal[] A, MatrixDecimal B) => (MatrixDecimal)A * B;
 
         [DST]
-        public static MatrixDecimal operator *(MatrixDecimal A, decimal[] B) { return A * (MatrixDecimal)B; }
+        public static MatrixDecimal operator *(MatrixDecimal A, decimal[] B) => A * (MatrixDecimal)B;
 
         [DST]
-        public static MatrixDecimal operator *(MatrixDecimal A, decimal[,] B) { return A * (MatrixDecimal)B; }
+        public static MatrixDecimal operator *(MatrixDecimal A, decimal[,] B) => A * (MatrixDecimal)B;
 
         [DST]
         public static MatrixDecimal operator /(MatrixDecimal M, decimal x)
         {
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] / x;
-            return lv_Result;
+                    result[i, j] = M[i, j] / x;
+            return result;
         }
 
         public static MatrixDecimal operator /(decimal x, MatrixDecimal M)
         {
             M = M.GetInverse();
-            var lv_Result = new MatrixDecimal(M.N, M.M);
+            var result = new MatrixDecimal(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] * x;
-            return lv_Result;
+                    result[i, j] = M[i, j] * x;
+            return result;
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
@@ -670,13 +664,13 @@ namespace MathCore
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
-            var lv_Result = new MatrixDecimal(A.N, A.M);
+            var result = new MatrixDecimal(A.N, A.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
-                    lv_Result[i, j] = A[i, j] + B[i, j];
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
+                    result[i, j] = A[i, j] + B[i, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Оператор разности двух матриц</summary>
@@ -689,13 +683,13 @@ namespace MathCore
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
-            var lv_Result = new MatrixDecimal(A.N, A.M);
+            var result = new MatrixDecimal(A.N, A.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
-                    lv_Result[i, j] = A[i, j] - B[i, j];
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
+                    result[i, j] = A[i, j] - B[i, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Оператор произведения двух матриц</summary>
@@ -708,14 +702,14 @@ namespace MathCore
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
-            var lv_Result = new MatrixDecimal(A.N, B.M);
+            var result = new MatrixDecimal(A.N, B.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
                     for (var k = 0; k < A.M; k++)
-                        lv_Result[i, j] += A[i, k] * B[k, j];
+                        result[i, j] += A[i, k] * B[k, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Оператор деления двух матриц</summary>
@@ -728,14 +722,14 @@ namespace MathCore
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
-            var lv_Result = new MatrixDecimal(A.N, B.M);
+            var result = new MatrixDecimal(A.N, B.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
                     for (var k = 0; k < A.M; k++)
-                        lv_Result[i, j] += A[i, k] * B[k, j];
+                        result[i, j] += A[i, k] * B[k, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
@@ -744,34 +738,34 @@ namespace MathCore
         /// <returns>Объединённая матрица</returns>
         public static MatrixDecimal operator |(MatrixDecimal A, MatrixDecimal B)
         {
-            MatrixDecimal lv_Result;
+            MatrixDecimal result;
             if (A.M == B.M) // Конкатинация по строкам
             {
-                lv_Result = new MatrixDecimal(A.N + B.N, A.M);
+                result = new MatrixDecimal(A.N + B.N, A.M);
                 for (var i = 0; i < A.N; i++)
                     for (var j = 0; j < A.M; j++)
-                        lv_Result[i, j] = A[i, j];
+                        result[i, j] = A[i, j];
                 var i0 = A.N;
                 for (var i = 0; i < B.N; i++)
                     for (var j = 0; j < B.M; j++)
-                        lv_Result[i + i0, j] = B[i, j];
+                        result[i + i0, j] = B[i, j];
 
             }
             else if (A.N == B.N) //Конкатинация по строкам
             {
-                lv_Result = new MatrixDecimal(A.N, A.M + B.M);
+                result = new MatrixDecimal(A.N, A.M + B.M);
                 for (var i = 0; i < A.N; i++)
                     for (var j = 0; j < A.M; j++)
-                        lv_Result[i, j] = A[i, j];
+                        result[i, j] = A[i, j];
                 var j0 = A.M;
                 for (var i = 0; i < B.N; i++)
                     for (var j = 0; j < B.M; j++)
-                        lv_Result[i, j + j0] = B[i, j];
+                        result[i, j + j0] = B[i, j];
             }
             else
                 throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
 
-            return lv_Result;
+            return result;
         }
 
 
@@ -810,13 +804,11 @@ namespace MathCore
 
         #endregion
 
-        public override bool Equals(object obj)
-        {
-            return obj is { }
-                   && (ReferenceEquals(this, obj)
-                        || obj.GetType() == typeof(MatrixDecimal)
-                                && Equals((MatrixDecimal)obj));
-        }
+        public override bool Equals(object obj) =>
+            obj is { }
+            && (ReferenceEquals(this, obj)
+                || obj.GetType() == typeof(MatrixDecimal)
+                && Equals((MatrixDecimal)obj));
 
         [DST]
         public override int GetHashCode()

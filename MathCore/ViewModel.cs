@@ -77,7 +77,7 @@ namespace MathCore.ViewModels
         {
             lock (_PropertiesDependencesSyncRoot)
             {
-                var handlers = _PropertyChangedHandlers ?? (_PropertyChangedHandlers = new Dictionary<string, Action>());
+                var handlers = _PropertyChangedHandlers ??= new Dictionary<string, Action>();
                 if (handlers.TryGetValue(PropertyName, out var h)) handlers[PropertyName] = h + handler;
                 else handlers.Add(PropertyName, handler);
             }

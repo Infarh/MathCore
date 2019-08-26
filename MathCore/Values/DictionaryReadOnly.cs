@@ -1,5 +1,4 @@
-﻿
-namespace System.Collections.Generic
+﻿namespace System.Collections.Generic
 {
     public class DictionaryReadOnly<TKey, TValue> : IDictionary<TKey, TValue>
     {

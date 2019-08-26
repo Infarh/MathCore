@@ -44,65 +44,28 @@ namespace System.Xml.XPath
 
         #region Methods
 
-        internal override object GetValue(XPathReader reader)
-        {
-            var obj = new object();
-
-            switch(_FuncType)
+        internal override object GetValue(XPathReader reader) =>
+            _FuncType switch
             {
-                case FT.FuncString:
-                    obj = toString(reader);
-                    break;
+                FT.FuncString => toString(reader),
+                FT.FuncConcat => Concat(reader),
+                FT.FuncStartsWith => Startswith(reader),
+                FT.FuncContains => Contains(reader),
+                FT.FuncSubstringBefore => Substringbefore(reader),
+                FT.FuncSubstringAfter => Substringafter(reader),
+                FT.FuncSubstring => Substring(reader),
+                FT.FuncStringLength => StringLength(reader),
+                FT.FuncNormalize => Normalize(reader),
+                FT.FuncTranslate => Translate(reader),
+                _ => new object()
+            };
 
-                case FT.FuncConcat:
-                    obj = Concat(reader);
-                    break;
-
-                case FT.FuncStartsWith:
-                    obj = Startswith(reader);
-                    break;
-
-                case FT.FuncContains:
-                    obj = Contains(reader);
-                    break;
-
-                case FT.FuncSubstringBefore:
-                    obj = Substringbefore(reader);
-                    break;
-
-                case FT.FuncSubstringAfter:
-                    obj = Substringafter(reader);
-                    break;
-
-                case FT.FuncSubstring:
-                    obj = Substring(reader);
-                    break;
-
-                case FT.FuncStringLength:
-                    obj = StringLength(reader);
-                    break;
-
-                case FT.FuncNormalize:
-                    obj = Normalize(reader);
-                    break;
-
-                case FT.FuncTranslate:
-                    obj = Translate(reader);
-                    break;
-            }
-
-            return obj;
-        }
-
-        internal override XPathResultType ReturnType()
-        {
-            if(_FuncType == FT.FuncStringLength)
-                return XPathResultType.Number;
-            if(_FuncType == FT.FuncStartsWith ||
-                _FuncType == FT.FuncContains)
-                return XPathResultType.Boolean;
-            return XPathResultType.String;
-        }
+        internal override XPathResultType ReturnType() =>
+            _FuncType == FT.FuncStringLength
+                ? XPathResultType.Number
+                : _FuncType == FT.FuncStartsWith || _FuncType == FT.FuncContains
+                    ? XPathResultType.Boolean
+                    : XPathResultType.String;
 
 
         private static string toString(double num) => Convert.ToString(num);
@@ -201,24 +164,22 @@ namespace System.Xml.XPath
 
         private string Normalize(XPathReader reader)
         {
-            string str1;
-            if(_ArgList != null && _ArgList.Count > 0)
-                str1 = ((Query)_ArgList[0]).GetValue(reader).ToString().Trim();
-            else
-                str1 = string.Empty;
+            var str1 = _ArgList != null && _ArgList.Count > 0
+                ? ((Query) _ArgList[0]).GetValue(reader).ToString().Trim()
+                : string.Empty;
             var count = 0;
             var str2 = new StringBuilder();
-            var lv_FirstSpace = true;
+            var first_space = true;
             while(count < str1.Length)
             {
                 if(!XmlCharType.IsWhiteSpace(str1[count]))
                 {
-                    lv_FirstSpace = true;
+                    first_space = true;
                     str2.Append(str1[count]);
                 }
-                else if(lv_FirstSpace)
+                else if(first_space)
                 {
-                    lv_FirstSpace = false;
+                    first_space = false;
                     str2.Append(str1[count]);
                 }
                 count++;

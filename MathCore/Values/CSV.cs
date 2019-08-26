@@ -89,26 +89,24 @@ namespace MathCore.Values
         public IEnumerator<Item> GetEnumerator()
         {
             var separator = _Separator;
-            using (var reader = new StreamReader(new FileStream(_FileName, FileMode.Open, FileAccess.Read, FileShare.Read), _Encoding))
+            using var reader = new StreamReader(new FileStream(_FileName, FileMode.Open, FileAccess.Read, FileShare.Read), _Encoding);
+            for (var skip = _SkipFirstLines; skip > 0 && !reader.EndOfStream; skip--) reader.ReadLine();
+
+            ReadOnlyCollection<string> header = null;
+            if (_HeaderLine && !reader.EndOfStream)
             {
-                for (var skip = _SkipFirstLines; skip > 0 && !reader.EndOfStream; skip--) reader.ReadLine();
+                var header_line = reader.ReadLine();
+                if (string.IsNullOrEmpty(header_line))
+                    throw new FormatException("Ошибка формата файла - отсутствует требуемая строка заголовка");
+                header = new List<string>(header_line?.Split(separator) ?? throw new InvalidOperationException()).AsReadOnly();
+            }
 
-                ReadOnlyCollection<string> header = null;
-                if (_HeaderLine && !reader.EndOfStream)
-                {
-                    var header_line = reader.ReadLine();
-                    if (string.IsNullOrEmpty(header_line))
-                        throw new FormatException("Ошибка формата файла - отсутствует требуемая строка заголовка");
-                    header = new List<string>(header_line?.Split(separator) ?? throw new InvalidOperationException()).AsReadOnly();
-                }
-
-                while (!reader.EndOfStream)
-                {
-                    var item_line = reader.ReadLine()?.Split(separator);
-                    if (item_line is null) continue;
-                    if (_SkipEmptyLines && item_line.All(string.IsNullOrWhiteSpace)) continue;
-                    yield return new Item(header, item_line);
-                }
+            while (!reader.EndOfStream)
+            {
+                var item_line = reader.ReadLine()?.Split(separator);
+                if (item_line is null) continue;
+                if (_SkipEmptyLines && item_line.All(string.IsNullOrWhiteSpace)) continue;
+                yield return new Item(header, item_line);
             }
         }
 

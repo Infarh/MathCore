@@ -59,12 +59,12 @@ namespace MathCore.JSON
         public JSONObject Create(T obj)
         {
             var fields = new List<JSONObject>(_FieldsDescriptions.Count);
-            foreach(var field in _FieldsDescriptions)
+            foreach(var (key, func) in _FieldsDescriptions)
             {
-                var name = field.Key;
-                var value = field.Value?.Invoke(obj);
-                if(value is JSONObjectCreatorBase)
-                    fields.Add(new JSONObject(name, ((JSONObjectCreatorBase)value).Create(obj)));
+                var name = key;
+                var value = func?.Invoke(obj);
+                if(value is JSONObjectCreatorBase creator_base)
+                    fields.Add(new JSONObject(name, creator_base.Create(obj)));
                 else
                     fields.Add(new JSONObject(name, value?.ToString()));
             }
@@ -186,15 +186,15 @@ namespace MathCore.JSON
         /// <summary>Преобразование значения структуры к целому числу</summary>
         /// <param name="Default">Значение по умолчанию</param>
         /// <returns>Целочисленное значение структуры, либо значение по умолчанию, если преобразование невозможно</returns>
-        public int? ToInt(int? Default = null) { int v; return int.TryParse(_Data, out v) ? v : Default; }
+        public int? ToInt(int? Default = null) => int.TryParse(_Data, out var v) ? v : Default;
         /// <summary>Преобразование значения структуры к вещественному числу</summary>
         /// <param name="Default">Значение по умолчанию</param>
         /// <returns>Вещественное значение структуры, либо значение по умолчанию, если преобразование невозможно</returns>
-        public double? ToDouble(double? Default = null) { double v; return double.TryParse(_Data, out v) ? v : Default; }
+        public double? ToDouble(double? Default = null) => double.TryParse(_Data, out var v) ? v : Default;
         /// <summary>Преобразование значения структуры к логическому значению</summary>
         /// <param name="Default">Значение по умолчанию</param>
         /// <returns>Логическое значение структуры, либо значение по умолчанию, если преобразование невозможно</returns>
-        public bool? ToBool(bool? Default = null) { bool v; return bool.TryParse(_Data, out v) ? v : Default; }
+        public bool? ToBool(bool? Default = null) => bool.TryParse(_Data, out var v) ? v : Default;
 
         /// <summary>Строковое представление структуры</summary>
         /// <returns>Строковое представление структуры</returns>

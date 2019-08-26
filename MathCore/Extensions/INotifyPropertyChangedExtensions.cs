@@ -133,14 +133,14 @@ namespace System.ComponentModel
                     _Handler = (s, e) =>
                     {
                         if(!_Dependences.ContainsKey(e.PropertyName)) return;
-                        if(e is DependentPropertyChangedEventArgs)
+                        if(e is DependentPropertyChangedEventArgs args)
                         {
-                            var p_stack = ((DependentPropertyChangedEventArgs)e).FromProperties ?? new string[0];
+                            var p_stack = args.FromProperties ?? new string[0];
                             if(p_stack.Contains(str => e.PropertyName.Equals(str))) return;
-                            foreach(var property in _Dependences[e.PropertyName])
+                            foreach(var property in _Dependences[args.PropertyName])
                             {
                                 var new_p_stack = new string[p_stack.Length + 1];
-                                new_p_stack[0] = e.PropertyName;
+                                new_p_stack[0] = args.PropertyName;
                                 Array.Copy(p_stack, 0, new_p_stack, 1, new_p_stack.Length);
                                 OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new_p_stack));
                             }
@@ -468,13 +468,12 @@ namespace System.ComponentModel
                     object_subscribers.Remove(EventName);
                     if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
                 }
-                else foreach (var k in object_subscribers.ToArray())
-                    {
-                        k.Value.ClearHandlers();
-
-                        object_subscribers.Remove(k.Key);
-                        if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
-                    }
+                else foreach (var (key, value) in object_subscribers.ToArray())
+                {
+                    value.ClearHandlers();
+                    object_subscribers.Remove(key);
+                    if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
+                }
             }
         }
     }

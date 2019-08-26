@@ -245,25 +245,15 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 var elements = Path.ToLower().Split('/', '\\');
                 for(var i = 0; i < elements.Length; i++)
                 {
-                    var element = elements[i];
-                    switch(element)
+                    node = elements[i] switch
                     {
-                        case ".":
-                            node = node.Parent;
-                            break;
-                        case "..":
-                            node = node.Root;
-                            break;
-                        case "l":
-                            node = node.Left;
-                            break;
-                        case "r":
-                            node = node.Right;
-                            break;
-                        default:
-                            throw new FormatException($"Неверный параметр в пути узла {Path} -> {element}",
-                                new ArgumentException(nameof(Path)));
-                    }
+                        "." => node.Parent,
+                        ".." => node.Root,
+                        "l" => node.Left,
+                        "r" => node.Right,
+                        _ => throw new FormatException($"Неверный параметр в пути узла {Path} -> {elements[i]}",
+                            new ArgumentException(nameof(Path)))
+                    };
                     if(node == null) return null;
                 }
                 return node;

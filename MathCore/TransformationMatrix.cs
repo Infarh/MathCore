@@ -39,31 +39,13 @@ namespace MathCore
             var s = Math.Sin(Angle);
             var c = Math.Cos(Angle);
 
-            switch(Axe)
+            return Axe switch
             {
-                default: throw new ArgumentOutOfRangeException(nameof(Axe), Axe, null);
-                case RotationAxe.X:
-                    return new[,]
-                    {
-                        {1, 0, 0},
-                        {0, c, -s},
-                        {0, s, c}
-                    };
-                case RotationAxe.Y:
-                    return new[,]
-                    {
-                        {c, 0, s},
-                        {0, 1, 0},
-                        {-s, 0, c}
-                    };
-                case RotationAxe.Z:
-                    return new[,]
-                    {
-                        {c, -s, 0},
-                        {s, c, 0},
-                        {0, 0, 1}
-                    };
-            }
+                RotationAxe.X => new[,] {{1, 0, 0}, {0, c, -s}, {0, s, c}},
+                RotationAxe.Y => new[,] {{c, 0, s}, {0, 1, 0}, {-s, 0, c}},
+                RotationAxe.Z => new[,] {{c, -s, 0}, {s, c, 0}, {0, 0, 1}},
+                _ => throw new ArgumentOutOfRangeException(nameof(Axe), Axe, null)
+            };
         }
 
         public RotationAxe Axe { get; }

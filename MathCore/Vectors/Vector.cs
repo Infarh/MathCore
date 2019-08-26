@@ -38,7 +38,7 @@ namespace MathCore.Vectors
             return !_Elements.Where((v, i) => !v.Equals(other[i])).Any();
         }
 
-        public override bool Equals(object obj) => (obj is Vector<T>) && Equals(obj as Vector<T>);
+        public override bool Equals(object obj) => (obj is Vector<T> vector) && Equals(vector);
 
         public Vector<T> Clone() => new Vector<T>(_Elements);
 

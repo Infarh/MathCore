@@ -257,7 +257,7 @@ namespace MathCore.MathParser
             {
                 var call = e.Argument; // Извлекаем ссылку на узел
                 //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 
-                if(!(call.Object is ConstantExpression && ((ConstantExpression)call.Object).Value is ExpressionVariabel))
+                if(!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariabel))
                     return call; // пропускаем узел
                 //Извлекаем из узла переменную дерева
                 var v = (ExpressionVariabel)((ConstantExpression)call.Object).Value;
@@ -390,10 +390,10 @@ namespace MathCore.MathParser
             var xT = x.Tree.Clone();
             var yT = y.Tree.Clone();
 
-            if(xT.Root is OperatorNode && ((OperatorNode)xT.Root).Priority < node.Priority)
-                xT.Root = new ComputedBracketNode(Bracket.NewRound, xT.Root);
-            if(yT.Root is OperatorNode && ((OperatorNode)yT.Root).Priority < node.Priority)
-                yT.Root = new ComputedBracketNode(Bracket.NewRound, yT.Root);
+            if(xT.Root is OperatorNode x_operator_node && x_operator_node.Priority < node.Priority)
+                xT.Root = new ComputedBracketNode(Bracket.NewRound, x_operator_node);
+            if(yT.Root is OperatorNode y_operator_noderoot && y_operator_noderoot.Priority < node.Priority)
+                yT.Root = new ComputedBracketNode(Bracket.NewRound, y_operator_noderoot);
 
             node.Left = xT.Root;
             node.Right = yT.Root;

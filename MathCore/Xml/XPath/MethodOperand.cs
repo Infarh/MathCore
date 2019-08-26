@@ -22,37 +22,16 @@ namespace System.Xml.XPath
         //  <E a='1' xmlns='test'> <E1/> </E>
         //
         //  /E/E1[namespaceuri(../E)= 'test']
-        internal override object GetValue(XPathReader reader)
-        {
-            object ret = null;
-
-            // the Opnd must be attribute, otherwise it will be in error
-            switch(_FuncType)
+        internal override object GetValue(XPathReader reader) =>
+            _FuncType switch
             {
-                case Function.FunctionType.FuncCount:
-                    ret = reader.AttributeCount;
-                    break;
-
-                case Function.FunctionType.FuncPosition:
-                    //we need to go back to the fileter query to get count
-                    ret = PositionCount;
-                    break;
-
-                case Function.FunctionType.FuncNameSpaceUri:
-                    ret = reader.NamespaceURI;
-                    break;
-
-                case Function.FunctionType.FuncLocalName:
-                    ret = reader.LocalName;
-                    break;
-
-                case Function.FunctionType.FuncName:
-                    ret = reader.Name;
-                    break;
-            }
-
-            return ret;
-        }
+                Function.FunctionType.FuncCount => (object) reader.AttributeCount,
+                Function.FunctionType.FuncPosition => PositionCount,
+                Function.FunctionType.FuncNameSpaceUri => reader.NamespaceURI,
+                Function.FunctionType.FuncLocalName => reader.LocalName,
+                Function.FunctionType.FuncName => reader.Name,
+                _ => null
+            };
 
         internal override XPathResultType ReturnType() => _FuncType <= Function.FunctionType.FuncCount
             ? XPathResultType.Number

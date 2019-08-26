@@ -201,7 +201,7 @@ namespace MathCore.MathParser
             // Разбиваем последовательность элементов выражения на группы, разделённые симовлом-разделителем
             // Излвекаем из каждой группы корень дерева выражений и складываем их в массив
             var roots = Terms
-                .Split(t => t is CharTerm && ((CharTerm)t).Value == separator)
+                .Split(t => t is CharTerm term && term.Value == separator)
                 .Select(g => Parser.GetRoot(g, Expression)).ToArray();
 
 
@@ -214,11 +214,11 @@ namespace MathCore.MathParser
                 ExpressionTreeNode arg;          // Если очередной корень дерева
                 if(root is FunctionArgumentNode) // - аргумент функции
                     arg = root;                  // -- оставляем его без изменений
-                else if(root is FunctionArgumentNameNode)  // - узел имени аргумента
+                else if(root is FunctionArgumentNameNode name_node)  // - узел имени аргумента
                     // -- создаём новый именованный аргумент функции
-                    arg = new FunctionArgumentNode(root as FunctionArgumentNameNode);
-                else if(root is VariantOperatorNode && root.Left is VariableValueNode)
-                    arg = new FunctionArgumentNode(((VariableValueNode)root.Left).Name, root.Right);
+                    arg = new FunctionArgumentNode(name_node);
+                else if(root is VariantOperatorNode && root.Left is VariableValueNode value_node)
+                    arg = new FunctionArgumentNode(value_node.Name, root.Right);
                 else // - во всех остальных случаях
                     arg = new FunctionArgumentNode("", root); // -- создаём аргумент функции без имени
                 if(argument == null) argument = arg; // Если аргумент не был указан, то сохраняем полученный узел, как аргумент

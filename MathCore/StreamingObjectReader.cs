@@ -109,8 +109,8 @@ namespace System
             _Speed.Reset();
             base.Initializer();
             Monitor.Status = "Reading...";
-            if(_DataStream is FileStream)
-                Monitor.Information = $"File:{((FileStream)_DataStream).Name}";
+            if(_DataStream is FileStream stream)
+                Monitor.Information = $"File:{stream.Name}";
             Monitor.InformationChecker = () =>
             {
 

@@ -10,7 +10,7 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Collections;
@@ -57,7 +57,7 @@ namespace System.Xml.XPath
 
         private Queue BufferQueue
         {
-            get => _BufferQueue ?? (_BufferQueue = new Queue());
+            get => _BufferQueue ??= new Queue();
             set => _BufferQueue = value;
         }
 

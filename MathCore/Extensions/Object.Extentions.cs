@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using cEx = System.Linq.Expressions.ConstantExpression;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -162,10 +163,10 @@ namespace System
             Contract.Requires(Objects != null);
             var hash = Consts.BigPrime_int;
             foreach (var obj in Objects)
-            unchecked
-            {
+                unchecked
+                {
                     hash = (hash * 397) ^ obj.GetHashCode();
-            }
+                }
             return hash == Consts.BigPrime_int ? 0 : hash;
         }
 
@@ -662,7 +663,7 @@ namespace System.Tags
             {
                 lock (__Lock)
                 {
-                    var tags = __Tags ?? (__Tags = new Dictionary<WeakReference, Dictionary<Type, object>>());
+                    var tags = __Tags ??= new Dictionary<WeakReference, Dictionary<Type, object>>();
 
                     tags.Keys.Where(w => !w.IsAlive).ToArray().Foreach(w => tags.Remove(w));
                     bool Selector(WeakReference w) => o.Equals(w.Target);
@@ -683,6 +684,9 @@ namespace System.Tags
                 }
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static bool IsAlive(WeakReference w) => !w.IsAlive;
+
             /// <summary>Получить метку указанного типа для указанного объекта</summary>
             /// <typeparam name="TTagType">Тип объекта-метки</typeparam>
             /// <param name="o">Целевой объект</param>
@@ -691,16 +695,17 @@ namespace System.Tags
             public static TTagType Tag<TTagType>([NotNull] object o)
             {
                 bool Selector(WeakReference w) => o.Equals(w.Target);
-                bool IsAlive(WeakReference w) => !w.IsAlive;
+
                 lock (__Lock)
                 {
                     var tags = __Tags;
-                    tags?.Keys.Where(IsAlive).Foreach(w => tags.Remove(w));
+                    tags?.Keys.Where(IsAlive).Foreach(tags, (w, t) => t.Remove(w));
                     var reference = tags?.Keys.Find(Selector);
-                    if (reference is null) return default;
-                    var dictionary = tags[reference];
-                    if (!dictionary.TryGetValue(typeof(TTagType), out var result)) return default;
-                    return (TTagType)result;
+                    return reference is null 
+                        ? default 
+                        : !tags[reference].TryGetValue(typeof(TTagType), out var result) 
+                            ? default 
+                            : (TTagType) result;
                 }
             }
         }

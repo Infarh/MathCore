@@ -29,22 +29,14 @@ namespace System.Xml.XPath
 
         internal override XPathResultType ReturnType => _Type;
 
-        internal string OperandType
-        {
-            get
+        internal string OperandType =>
+            _Type switch
             {
-                switch (_Type)
-                {
-                    case XPathResultType.Number:
-                        return "number";
-                    case XPathResultType.String:
-                        return "string";
-                    case XPathResultType.Boolean:
-                        return "boolean";
-                }
-                return null;
-            }
-        }
+                XPathResultType.Number => "number",
+                XPathResultType.String => "string",
+                XPathResultType.Boolean => "boolean",
+                _ => null
+            };
 
         internal object OperandValue { get; }
 

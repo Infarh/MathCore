@@ -39,23 +39,16 @@ namespace System.Xml.XPath
             if(Op != Operator.Op.Negate)
                 n2 = Convert.ToDouble(Opnd2.GetValue(reader));
 
-            switch(Op)
+            return Op switch
             {
-                case Operator.Op.Plus:
-                    return n1 + n2;
-                case Operator.Op.Minus:
-                    return n1 - n2;
-                case Operator.Op.Mod:
-                    return n1 % n2;
-                case Operator.Op.Div:
-                    return n1 / n2;
-                case Operator.Op.Mul:
-                    return n1 * n2;
-                case Operator.Op.Negate:
-                    return -n1;
-            }
-
-            return null;
+                Operator.Op.Plus => (n1 + n2),
+                Operator.Op.Minus => (n1 - n2),
+                Operator.Op.Mod => (n1 % n2),
+                Operator.Op.Div => (n1 / n2),
+                Operator.Op.Mul => (n1 * n2),
+                Operator.Op.Negate => -n1,
+                _ => (object)null
+            };
         }
 
         internal override XPathResultType ReturnType() => XPathResultType.Number;

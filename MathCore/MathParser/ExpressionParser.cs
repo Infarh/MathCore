@@ -58,7 +58,7 @@ namespace MathCore.MathParser
                     switch (char_node.Value)
                     {
                         case '.':
-                            if (NewNode.Parent is CharNode && ((CharNode) NewNode.Parent).Value == '.')
+                            if (NewNode.Parent is CharNode c && c.Value == '.')
                             {
                                 var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left == null);
                                 NewNode["./."].Right = null;
@@ -389,52 +389,45 @@ namespace MathCore.MathParser
         /// <param name="Name">Имя оператора</param>
         /// <returns>Узел дерева оператора</returns>
         [NotNull]
-        public virtual ExpressionTreeNode GetOperatorNode(char Name)
-        {
-            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-            switch (Name)
+        public virtual ExpressionTreeNode GetOperatorNode(char Name) =>
+            Name switch
             {
-                case '+': return new AdditionOperatorNode();
-                case '-': return new SubstractionOperatorNode();
-                case '*':
-                case '×': 
-                case '·': return new MultiplicationOperatorNode();
-                case '/': return new DivisionOperatorNode();
-                case '^': return new PowerOperatorNode();
-                case '=': return new EqualityOperatorNode();
-                case '>': return new GreaterThenOperatorNode();
-                case '<': return new LessThenOperatorNode();
-                case '!':
-                case '≠': return new NotOperatorNode();
-                case ':': return new VariantOperatorNode();
-                case '?': return new SelectorOperatorNode();
-                case '&': return new AndOperatorNode();
-                case '|': return new OrOperatorNode();
-                default: return new CharNode(Name);
-            }
-        }
+                '+' => (ExpressionTreeNode) new AdditionOperatorNode(),
+                '-' => new SubstractionOperatorNode(),
+                '*' => new MultiplicationOperatorNode(),
+                '×' => new MultiplicationOperatorNode(),
+                '·' => new MultiplicationOperatorNode(),
+                '/' => new DivisionOperatorNode(),
+                '^' => new PowerOperatorNode(),
+                '=' => new EqualityOperatorNode(),
+                '>' => new GreaterThenOperatorNode(),
+                '<' => new LessThenOperatorNode(),
+                '!' => new NotOperatorNode(),
+                '≠' => new NotOperatorNode(),
+                ':' => new VariantOperatorNode(),
+                '?' => new SelectorOperatorNode(),
+                '&' => new AndOperatorNode(),
+                '|' => new OrOperatorNode(),
+                _ => new CharNode(Name)
+            };
 
         /// <summary>Метод определения функционала по имени</summary>
         /// <param name="Name">Имя функционала</param>
         /// <returns>Функционал</returns>
         /// <exception cref="NotSupportedException">Возникает для неопределённых имён функционалов</exception>
-        public Functional GetFunctional(string Name)
-        {
-            switch (Name)
+        public Functional GetFunctional(string Name) =>
+            Name switch
             {
-                case "summ":
-                case "Sum":
-                case "Σ": return new SummOperator(Name);
-                case "int":
-                case "integral":
-                case "Int":
-                case "Integral":
-                case "∫": return new IntegralOperator(Name);
-                //case "d":
-                //case "Diff": return new DifferentialOperator(Name);
-                default: throw new NotSupportedException($"Функционал {Name} не поддерживается");
-            }
-        }
+                "summ" => (Functional) new SummOperator(Name),
+                "Sum" => new SummOperator(Name),
+                "Σ" => new SummOperator(Name),
+                "int" => new IntegralOperator(Name),
+                "integral" => new IntegralOperator(Name),
+                "Int" => new IntegralOperator(Name),
+                "Integral" => new IntegralOperator(Name),
+                "∫" => new IntegralOperator(Name),
+                _ => throw new NotSupportedException($"Функционал {Name} не поддерживается")
+            };
 
         /// <summary>Метод излвечения корня дерева из последовательности элементов математического выражения</summary>
         /// <param name="Group">группа элементов математического выражения</param>
@@ -472,8 +465,8 @@ namespace MathCore.MathParser
                 //Проводим комбинацию текущего узла предыдущим узлом дерева
                 Combine(last, last = node); // и назначаем текущий узел дерева предыдущим
 
-                if (last.IsRoot && last is VariantOperatorNode && last.Left is VariableValueNode)
-                    last = new FunctionArgumentNameNode(((VariableValueNode)last.Left).Name);
+                if (last.IsRoot && last is VariantOperatorNode && last.Left is VariableValueNode variable)
+                    last = new FunctionArgumentNameNode(variable.Name);
 
                 OnNewNodeAdded(ref last);
             }
@@ -514,8 +507,8 @@ namespace MathCore.MathParser
                     //      op 
                     //     /  \
                     //  null   ?
-                    if (parent_operator.Left == null && parent_operator.Parent is OperatorNode)
-                        parent_operator = (OperatorNode)parent_operator.Parent;
+                    if (parent_operator.Left == null && parent_operator.Parent is OperatorNode @operator)
+                        parent_operator = @operator;
 
 
                     if (parent_operator.Left == null)          // Если левое поддерево предыдущего оператора пусто...
@@ -531,7 +524,7 @@ namespace MathCore.MathParser
                             // то надо подниматься вверх под дереву до тех пор
                             parent_operator = (OperatorNode)parent_operator.Parents
                                         // пока встречаемые на пути операторы имеют приоритет выше приоритета текущего оператора
-                                        .TakeWhile(n => n is OperatorNode && priority <= ((OperatorNode)n).Priority)
+                                        .TakeWhile(n => n is OperatorNode node && priority <= node.Priority)
                                         // взять последний из последовательности
                                         .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
 
@@ -562,7 +555,7 @@ namespace MathCore.MathParser
                             // то надо спускаться в правое поддерево до тех пор
                             parent_operator = (OperatorNode)parent_operator.RightNodes
                                         // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
-                                        .TakeWhile(n => n is OperatorNode && n.Left != null && ((OperatorNode)n).Priority < priority)
+                                        .TakeWhile(n => n is OperatorNode node && node.Left != null && node.Priority < priority)
                                         // взять последний из последовательности
                                         .LastOrDefault() ?? parent_operator;  // если вернулась пустая ссылка, то взять предыдущий оператор
 

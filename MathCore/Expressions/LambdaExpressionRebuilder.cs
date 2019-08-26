@@ -19,7 +19,7 @@ namespace System.Linq.Expressions
 
         public class Rule<T> : Rule where T : Expression
         {
-            public Rule(Func<T, bool> Selector, Func<Expression, Expression> Node) : base(s => s is T && Selector((T)s), Node) { }
+            public Rule(Func<T, bool> Selector, Func<Expression, Expression> Node) : base(s => s is T expression && Selector(expression), Node) { }
         }
 
         private readonly List<Rule> _NewValues;

@@ -38,56 +38,51 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию отрицания НЕ</returns>
-        public override Expression LogicCompile()
-        {
-            if(Left == null)
-                return Right is LogicOperatorNode node
-                    ? (Expression)Expression.Not(node.LogicCompile())
+        public override Expression LogicCompile() =>
+            Left == null
+                ? Right is LogicOperatorNode node
+                    ? (Expression) Expression.Not(node.LogicCompile())
                     : Expression.LessThan
-                        (
-                            EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile()),
-                            Expression.Constant(EqualityOperatorNode.__Epsilon)
-                        );
-
-            return Left is LogicOperatorNode operator_node && Right is LogicOperatorNode
-                ? Expression.NotEqual(operator_node.LogicCompile(), ((LogicOperatorNode)Right).LogicCompile())
-                : Expression.GreaterThanOrEqual
+                    (
+                        EqualityOperatorNode.GetAbsMethodCall(((ComputedNode) Right).Compile()),
+                        Expression.Constant(EqualityOperatorNode.__Epsilon)
+                    )
+                : Left is LogicOperatorNode operator_node && Right is LogicOperatorNode logic_operator_node
+                    ? Expression.NotEqual(operator_node.LogicCompile(), logic_operator_node.LogicCompile())
+                    : Expression.GreaterThanOrEqual
                     (
                         EqualityOperatorNode.GetAbsMethodCall(Expression.Subtract
-                        (
-                            ((ComputedNode)Left).Compile(),
-                            ((ComputedNode)Right).Compile())
+                            (
+                                ((ComputedNode) Left).Compile(),
+                                ((ComputedNode) Right).Compile())
                         ),
                         Expression.Constant(EqualityOperatorNode.__Epsilon)
                     );
-        }
 
         /// <summary>Компиляция логики узла</summary>
         /// <param name="Parameters">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию отрицания НЕ</returns>
-        public override Expression LogicCompile(ParameterExpression[] Parameters)
-        {
-            if(Left == null)
-                return Right is LogicOperatorNode node
-                    ? (Expression)Expression.Not(node.LogicCompile(Parameters))
+        public override Expression LogicCompile(ParameterExpression[] Parameters) =>
+            Left == null
+                ? Right is LogicOperatorNode node
+                    ? (Expression) Expression.Not(node.LogicCompile(Parameters))
                     : Expression.LessThan
-                        (
-                            EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile(Parameters)),
-                            Expression.Constant(EqualityOperatorNode.__Epsilon)
-                        );
-
-            return Left is LogicOperatorNode operator_node && Right is LogicOperatorNode
-                ? Expression.NotEqual(operator_node.LogicCompile(Parameters), ((LogicOperatorNode)Right).LogicCompile(Parameters))
-                : Expression.GreaterThanOrEqual
+                    (
+                        EqualityOperatorNode.GetAbsMethodCall(((ComputedNode) Right).Compile(Parameters)),
+                        Expression.Constant(EqualityOperatorNode.__Epsilon)
+                    )
+                : Left is LogicOperatorNode operator_node && Right is LogicOperatorNode logic_operator_node
+                    ? Expression.NotEqual(operator_node.LogicCompile(Parameters),
+                        logic_operator_node.LogicCompile(Parameters))
+                    : Expression.GreaterThanOrEqual
                     (
                         EqualityOperatorNode.GetAbsMethodCall(Expression.Subtract
-                        (
-                            ((ComputedNode)Left).Compile(Parameters),
-                            ((ComputedNode)Right).Compile(Parameters))
+                            (
+                                ((ComputedNode) Left).Compile(Parameters),
+                                ((ComputedNode) Right).Compile(Parameters))
                         ),
                         Expression.Constant(EqualityOperatorNode.__Epsilon)
                     );
-        }
 
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>

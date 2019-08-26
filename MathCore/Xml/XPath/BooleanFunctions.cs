@@ -30,30 +30,15 @@ namespace System.Xml.XPath
 
         internal override object GetValue(XPathReader reader)
         {
-            var obj = new object();
-
-            switch(_FuncType)
+            var obj = _FuncType switch
             {
-                case Function.FunctionType.FuncBoolean:
-                    obj = ToBoolean(reader);
-                    break;
-
-                case Function.FunctionType.FuncNot:
-                    obj = Not(reader);
-                    break;
-
-                case Function.FunctionType.FuncTrue:
-                    obj = true;
-                    break;
-
-                case Function.FunctionType.FuncFalse:
-                    obj = false;
-                    break;
-
-                case Function.FunctionType.FuncLang:
-                    obj = Lang(reader);
-                    break;
-            }
+                Function.FunctionType.FuncBoolean => ToBoolean(reader),
+                Function.FunctionType.FuncNot => Not(reader),
+                Function.FunctionType.FuncTrue => true,
+                Function.FunctionType.FuncFalse => false,
+                Function.FunctionType.FuncLang => Lang(reader),
+                _ => new object()
+            };
             return obj;
         }
 

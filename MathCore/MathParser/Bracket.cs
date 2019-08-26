@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global

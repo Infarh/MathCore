@@ -357,7 +357,7 @@ namespace MathCore
 
         #region Свойства
 
-        public double RandomValue => (__Random ?? (__Random = new Random())).NextDouble() * Length + _Min;
+        public double RandomValue => (__Random ??= new Random()).NextDouble() * Length + _Min;
 
         /// <summary>Включена ли нижняя граница интервала?</summary>
         public bool MinInclude => _MinInclude;

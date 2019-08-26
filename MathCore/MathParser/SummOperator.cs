@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 using System.Linq.Expressions;
 using MathCore.MathParser.ExpressionTrees.Nodes;

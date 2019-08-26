@@ -81,16 +81,16 @@ namespace MathCore.DifferencialEquations.Numerical
             }
 
             [NotNull]
-            public static Task<double[]> GetDifferentialAsync([NotNull] double[] X, int n = -1)
+            public static Task<double[]> GetDifferentialAsync([NotNull] double[] X, int N = -1)
             {
                 Contract.Requires(X != null);
-                Contract.Requires(n < MethodsCount);
+                Contract.Requires(N < MethodsCount);
 
                 return Task.Factory.StartNew(o =>
                 {
-                    var t = (Tuple<double[], int>)o;
-                    return GetDifferential(t.Item1, t.Item2);
-                }, new Tuple<double[], int>(X, n));
+                    var (x, n) = (Tuple<double[], int>)o;
+                    return GetDifferential(x, n);
+                }, new Tuple<double[], int>(X, N));
             }
         }
     }

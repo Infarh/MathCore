@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests
@@ -310,9 +311,9 @@ namespace MathCore.Tests
                 Y = Rnd;
             } while (Y.Abs == 0);
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
-            var result = X / Y;
-            Assert.AreEqual(X * Y.Re / q, result.Re, 1e-15);
-            Assert.AreEqual(-X * Y.Im / q, result.Im, 1e-15);
+            var (re, im) = X / Y;
+            Assert.AreEqual(X * Y.Re / q, re, 1e-15);
+            Assert.AreEqual(-X * Y.Im / q, im, 1e-15);
         }
 
         /// <summary>
@@ -328,9 +329,9 @@ namespace MathCore.Tests
                 Y = Rnd;
             } while (Y.Abs == 0);
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
-            var result = X / Y;
-            Assert.AreEqual((X.Re * Y.Re + X.Im * Y.Im) / q, result.Re, 1e-15);
-            Assert.AreEqual((X.Im * Y.Re - X.Re * Y.Im) / q, result.Im, 1e-15);
+            var (re, im) = X / Y;
+            Assert.AreEqual((X.Re * Y.Re + X.Im * Y.Im) / q, re, 1e-15);
+            Assert.AreEqual((X.Im * Y.Re - X.Re * Y.Im) / q, im, 1e-15);
         }
 
         /// <summary>
@@ -395,9 +396,9 @@ namespace MathCore.Tests
             {
                 Y = Random;
             } while (Y == 0);
-            var expected = X / Y;
-            Assert.AreEqual(X.Re / Y, expected.Re, 1e-15);
-            Assert.AreEqual(X.Im / Y, expected.Im, 1e-15);
+            var (re, im) = X / Y;
+            Assert.AreEqual(X.Re / Y, re, 1e-15);
+            Assert.AreEqual(X.Im / Y, im, 1e-15);
         }
 
         /// <summary>
@@ -424,10 +425,10 @@ namespace MathCore.Tests
             var arg = X.Arg;
             var R = Math.Pow(r, Y.Re) * Math.Pow(Math.E, -Y.Im * arg);
             var Arg = Y.Re * arg + Y.Im * Math.Log(r);
-            var expected = Complex.Exp(R, Arg);
-            var actual = X ^ Y;
-            Assert.AreEqual(expected.Re, actual.Re, 1e-15);
-            Assert.AreEqual(expected.Re, actual.Re, 1e-15);
+            var (expected_re, expected_im) = Complex.Exp(R, Arg);
+            var (actual_re, actual_im) = X ^ Y;
+            Assert.AreEqual(expected_re, actual_re, 1e-15);
+            Assert.AreEqual(expected_re, actual_re, 1e-15);
         }
 
         /// <summary>
@@ -438,10 +439,10 @@ namespace MathCore.Tests
         {
             var Z = Rnd;
             var X = Random;
-            var actual = Z ^ X;
-            var expected = Complex.Exp(Math.Pow(Z.Abs, X), Z.Arg * X);
-            Assert.AreEqual(expected.Re, actual.Re, 1e-15);
-            Assert.AreEqual(expected.Im, actual.Im, 1e-15);
+            var (actual_re, actual_im) = Z ^ X;
+            var (expected_re, expected_im) = Complex.Exp(Math.Pow(Z.Abs, X), Z.Arg * X);
+            Assert.AreEqual(expected_re, actual_re, 1e-15);
+            Assert.AreEqual(expected_im, actual_im, 1e-15);
         }
 
         /// <summary>
@@ -463,9 +464,9 @@ namespace MathCore.Tests
                     expected = Complex.Exp(Math.Pow(X, Z.Re), Z.Im * Math.Log(X));
                 else
                 {
-                    var lnX = Math.Log(Math.Abs(X));
+                    var ln_x = Math.Log(Math.Abs(X));
                     const double pi = Consts.pi;
-                    expected = Complex.Exp(Z.Re * lnX - pi * Z.Im, pi * Z.Re + lnX * Z.Im);
+                    expected = Complex.Exp(Z.Re * ln_x - pi * Z.Im, pi * Z.Re + ln_x * Z.Im);
                 }
                 var actual = X ^ Z;
                 Assert.AreEqual(expected.Re, actual.Re, 1e-15, $"expected:({expected}) != actual({actual}) | x={X}, z={Z}");
@@ -534,9 +535,9 @@ namespace MathCore.Tests
         {
             var X = Random;
             var Y = Rnd;
-            var actual = X * Y;
-            Assert.AreEqual(X * Y.Re, actual.Re, 1e-15);
-            Assert.AreEqual(X * Y.Im, actual.Im, 1e-15);
+            var (re, im) = X * Y;
+            Assert.AreEqual(X * Y.Re, re, 1e-15);
+            Assert.AreEqual(X * Y.Im, im, 1e-15);
         }
 
         /// <summary>
@@ -547,9 +548,9 @@ namespace MathCore.Tests
         {
             var X = Rnd;
             var Y = Random;
-            var actual = X * Y;
-            Assert.AreEqual(X.Re * Y, actual.Re, 1e-15);
-            Assert.AreEqual(X.Im * Y, actual.Im, 1e-15);
+            var (re, im) = X * Y;
+            Assert.AreEqual(X.Re * Y, re, 1e-15);
+            Assert.AreEqual(X.Im * Y, im, 1e-15);
         }
 
         /// <summary>
@@ -577,9 +578,9 @@ namespace MathCore.Tests
         {
             var X = Rnd;
             var Y = Rnd;
-            var actual = X * Y;
-            Assert.AreEqual(X.Re * Y.Re - X.Im * Y.Im, actual.Re);
-            Assert.AreEqual(X.Re * Y.Im + X.Im * Y.Re, actual.Im);
+            var (re, im) = X * Y;
+            Assert.AreEqual(X.Re * Y.Re - X.Im * Y.Im, re);
+            Assert.AreEqual(X.Re * Y.Im + X.Im * Y.Re, im);
         }
 
         /// <summary>
@@ -590,10 +591,10 @@ namespace MathCore.Tests
         {
             var X = Random;
             var Y = Rnd;
-            var expected = new Complex(X - Y.Re, -Y.Im);
-            var actual = X - Y;
-            Assert.AreEqual(expected.Re, actual.Re, 1e-15);
-            Assert.AreEqual(expected.Im, actual.Im, 1e-15);
+            var (expected_re, expected_im) = new Complex(X - Y.Re, -Y.Im);
+            var (actual_re, actual_im) = X - Y;
+            Assert.AreEqual(expected_re, actual_re, 1e-15);
+            Assert.AreEqual(expected_im, actual_im, 1e-15);
         }
 
         /// <summary>
@@ -636,10 +637,10 @@ namespace MathCore.Tests
         {
             var X = Rnd;
             var Y = Random;
-            var expected = new Complex(X.Re - Y, X.Im);
-            var actual = X - Y;
-            Assert.AreEqual(expected.Re, actual.Re, 1e-15);
-            Assert.AreEqual(expected.Im, actual.Im, 1e-15);
+            var (expected_re, expected_im) = new Complex(X.Re - Y, X.Im);
+            var (actual_re, actual_im) = X - Y;
+            Assert.AreEqual(expected_re, actual_re, 1e-15);
+            Assert.AreEqual(expected_im, actual_im, 1e-15);
         }
 
         /// <summary>A test for op_Subtraction</summary>
@@ -648,10 +649,10 @@ namespace MathCore.Tests
         {
             var X = Rnd;
             var Y = Rnd;
-            var expected = new Complex(X.Re - Y.Re, X.Im - Y.Im);
-            var actual = X - Y;
-            Assert.AreEqual(expected.Re, actual.Re, 1e-15);
-            Assert.AreEqual(expected.Im, actual.Im, 1e-15);
+            var (expected_re, expected_im) = new Complex(X.Re - Y.Re, X.Im - Y.Im);
+            var (actual_re, actual_im) = X - Y;
+            Assert.AreEqual(expected_re, actual_re, 1e-15);
+            Assert.AreEqual(expected_im, actual_im, 1e-15);
         }
 
         /// <summary>A test for Abs</summary>
@@ -664,15 +665,16 @@ namespace MathCore.Tests
             Assert.AreEqual(expected, actual, 1e-14, "Разница меду ожидаемым и полученным значением составила {0}({1:p}) ", expected - actual, Math.Abs(expected - actual) / expected);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double GetArg(Complex z) =>
+            Math.Abs(z.Re) < double.Epsilon
+                ? Math.Abs(z.Im) < double.Epsilon ? 0 : z.Im > 0 ? Math.PI / 2 : -Math.PI / 2
+                : Math.Abs(z.Im) < double.Epsilon ? z.Re > 0 ? 0 : Math.PI : Math.Atan(z.Im / z.Re);
+
         /// <summary>A test for Arg</summary>
         [TestMethod]
         public void ArgTest()
         {
-            Func<Complex, double> GetArg = z =>
-                Math.Abs(z.Re) < double.Epsilon
-                    ? (Math.Abs(z.Im) < double.Epsilon ? 0 : (z.Im > 0 ? Math.PI / 2 : -Math.PI / 2))
-                    : (Math.Abs(z.Im) < double.Epsilon ? (z.Re > 0 ? 0 : Math.PI) : Math.Atan(z.Im / z.Re));
-
             var target = new Complex();
             Assert.AreEqual(GetArg(target) / pi, target.Arg / pi, 1e-15);
             target = new Complex(RandomPositive);
@@ -738,11 +740,11 @@ namespace MathCore.Tests
         {
             const double im = 1.9652382426275;
             var z = new Complex(0, im);
-            var actual_asin = Complex.Trigonomerty.Asin(z);
+            var (actual_asin_re, actual_asin_im) = Complex.Trigonomerty.Asin(z);
 
             const double expected_asin_im = 1.427980580692356;
-            Assert.That.Value(actual_asin.Im).AreEqual(expected_asin_im, 2.23e-16);
-            Assert.That.Value(actual_asin.Re).AreEqual(0);
+            Assert.That.Value(actual_asin_im).AreEqual(expected_asin_im, 2.23e-16);
+            Assert.That.Value(actual_asin_re).AreEqual(0);
         }
 
         [TestMethod]
@@ -750,12 +752,12 @@ namespace MathCore.Tests
         {
             const double im = 1.9652382426275;
             var z = new Complex(0, im);
-            var actual_acos = Complex.Trigonomerty.Acos(z);
+            var (actual_acos_re, actual_acos_im) = Complex.Trigonomerty.Acos(z);
 
             const double expected_acos_re = 1.570796326794897;
             const double expected_asin_im = -1.427980580692356;
-            Assert.That.Value(actual_acos.Re).AreEqual(expected_acos_re, 4.45e-16);
-            Assert.That.Value(actual_acos.Im).AreEqual(expected_asin_im, 2.23e-16);
+            Assert.That.Value(actual_acos_re).AreEqual(expected_acos_re, 4.45e-16);
+            Assert.That.Value(actual_acos_im).AreEqual(expected_asin_im, 2.23e-16);
         }
     }
 }

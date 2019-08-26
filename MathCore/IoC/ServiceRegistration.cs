@@ -77,7 +77,7 @@ namespace MathCore.IoC
             private readonly ConstructorInfo _Constructor;
             private ParameterInfo[] _Parameters;
 
-            public ParameterInfo[] Parameters => _Parameters ?? (_Parameters = _Constructor.GetParameters());
+            public ParameterInfo[] Parameters => _Parameters ??= _Constructor.GetParameters();
             public IEnumerable<Type> ParameterTypes => Parameters.Select(p => p.ParameterType);
 
             public bool IsDefault => Parameters.Length == 0;
@@ -107,8 +107,7 @@ namespace MathCore.IoC
         private object CreateInstanceByReflection()
         {
             var service_manager = _Manager;
-            var constructors = _Constructors;
-            var constructor = constructors.FirstOrDefault(ctor => ctor.ParameterTypes.All(service_manager.ServiceRegistered))
+            var constructor = _Constructors.FirstOrDefault(ctor => ctor.ParameterTypes.All(service_manager.ServiceRegistered))
                            ?? throw new ServiceConstructorNotFoundException(typeof(TService));
 
             return constructor.CreateInstance(service_manager.Get);

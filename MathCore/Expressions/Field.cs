@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Reflection;
 
 namespace System.Linq.Expressions
@@ -96,7 +95,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        public AttributesExtractor Attribute => _Attributes ?? (_Attributes = new AttributesExtractor(_FieldInfo));
+        public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
 
         // ReSharper disable once RedundantAssignment
         private static void Set(ref object field, object value) => field = value;

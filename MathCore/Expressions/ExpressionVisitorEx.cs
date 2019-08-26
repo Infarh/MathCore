@@ -7,89 +7,67 @@ namespace System.Linq.Expressions
     //[Diagnostics.DST]
     public abstract class ExpressionVisitorEx
     {
-        public virtual Expression Visit(Expression Node)
-        {
-            if(Node == null) return null;
-            switch(Node.NodeType)
-            {
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.ArrayLength:
-                case ExpressionType.Quote:
-                case ExpressionType.TypeAs:
-                    return VisitUnary((UnaryExpression)Node);
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.Divide:
-                case ExpressionType.Modulo:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.Equal:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Coalesce:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.RightShift:
-                case ExpressionType.LeftShift:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.Power:
-                    return VisitBinary((BinaryExpression)Node);
-                case ExpressionType.TypeIs:
-                    return VisitTypeIs((TypeBinaryExpression)Node);
-                case ExpressionType.Conditional:
-                    return VisitConditional((ConditionalExpression)Node);
-                case ExpressionType.Constant:
-                    return VisitConstant((ConstantExpression)Node);
-                case ExpressionType.Parameter:
-                    return VisitParameter((ParameterExpression)Node);
-                case ExpressionType.MemberAccess:
-                    return VisitMemberAccess((MemberExpression)Node);
-                case ExpressionType.Call:
-                    return VisitMethodCall((MethodCallExpression)Node);
-                case ExpressionType.Lambda:
-                    return VisitLambda((LambdaExpression)Node);
-                case ExpressionType.New:
-                    return VisitNew((NewExpression)Node);
-                case ExpressionType.NewArrayInit:
-                case ExpressionType.NewArrayBounds:
-                    return VisitNewArray((NewArrayExpression)Node);
-                case ExpressionType.Invoke:
-                    return VisitInvocation((InvocationExpression)Node);
-                case ExpressionType.MemberInit:
-                    return VisitMemberInit((MemberInitExpression)Node);
-                case ExpressionType.ListInit:
-                    return VisitListInit((ListInitExpression)Node);
-                default:
-                    throw new Exception($"Unhandled expression type: '{Node.NodeType}'");
-            }
-        }
+        public virtual Expression Visit(Expression Node) =>
+            Node == null
+                ? null
+                : Node.NodeType switch
+                {
+                    ExpressionType.Negate => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.NegateChecked => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.Not => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.Convert => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.ConvertChecked => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.ArrayLength => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.Quote => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.TypeAs => VisitUnary((UnaryExpression) Node),
+                    ExpressionType.Add => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.AddChecked => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Subtract => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.SubtractChecked => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Multiply => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.MultiplyChecked => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Divide => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Modulo => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.And => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.AndAlso => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Or => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.OrElse => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.LessThan => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.LessThanOrEqual => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.GreaterThan => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.GreaterThanOrEqual => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Equal => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.NotEqual => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Coalesce => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.ArrayIndex => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.RightShift => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.LeftShift => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.ExclusiveOr => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.Power => VisitBinary((BinaryExpression) Node),
+                    ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression) Node),
+                    ExpressionType.Conditional => VisitConditional((ConditionalExpression) Node),
+                    ExpressionType.Constant => VisitConstant((ConstantExpression) Node),
+                    ExpressionType.Parameter => VisitParameter((ParameterExpression) Node),
+                    ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression) Node),
+                    ExpressionType.Call => VisitMethodCall((MethodCallExpression) Node),
+                    ExpressionType.Lambda => VisitLambda((LambdaExpression) Node),
+                    ExpressionType.New => VisitNew((NewExpression) Node),
+                    ExpressionType.NewArrayInit => VisitNewArray((NewArrayExpression) Node),
+                    ExpressionType.NewArrayBounds => VisitNewArray((NewArrayExpression) Node),
+                    ExpressionType.Invoke => VisitInvocation((InvocationExpression) Node),
+                    ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression) Node),
+                    ExpressionType.ListInit => VisitListInit((ListInitExpression) Node),
+                    _ => throw new Exception($"Unhandled expression type: '{Node.NodeType}'")
+                };
 
-        protected virtual MemberBinding VisitBinding(MemberBinding binding)
-        {
-            switch(binding.BindingType)
+        protected virtual MemberBinding VisitBinding(MemberBinding binding) =>
+            binding.BindingType switch
             {
-                case MemberBindingType.Assignment:
-                    return VisitMemberAssignment((MemberAssignment)binding);
-                case MemberBindingType.MemberBinding:
-                    return VisitMemberMemberBinding((MemberMemberBinding)binding);
-                case MemberBindingType.ListBinding:
-                    return VisitMemberListBinding((MemberListBinding)binding);
-                default:
-                    throw new Exception($"Unhandled binding type '{binding.BindingType}'");
-            }
-        }
+                MemberBindingType.Assignment => (MemberBinding) VisitMemberAssignment((MemberAssignment) binding),
+                MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding) binding),
+                MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding) binding),
+                _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'")
+            };
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
         {
@@ -109,9 +87,9 @@ namespace System.Linq.Expressions
             var right = Visit(b.Right);
             var conversion = Visit(b.Conversion);
             return left != b.Left || right != b.Right || conversion != b.Conversion
-                ? (b.NodeType == ExpressionType.Coalesce && b.Conversion != null
+                ? b.NodeType == ExpressionType.Coalesce && b.Conversion != null
                     ? Expression.Coalesce(left, right, conversion as LambdaExpression)
-                    : Expression.MakeBinary(b.NodeType, left, right, b.IsLiftedToNull, b.Method))
+                    : Expression.MakeBinary(b.NodeType, left, right, b.IsLiftedToNull, b.Method)
                 : b;
         }
 
@@ -126,10 +104,10 @@ namespace System.Linq.Expressions
         protected virtual Expression VisitConditional(ConditionalExpression c)
         {
             var test = Visit(c.Test);
-            var ifTrue = Visit(c.IfTrue);
-            var ifFalse = Visit(c.IfFalse);
-            return test != c.Test || ifTrue != c.IfTrue || ifFalse != c.IfFalse
-                ? Expression.Condition(test, ifTrue, ifFalse)
+            var if_true = Visit(c.IfTrue);
+            var if_false = Visit(c.IfFalse);
+            return test != c.Test || if_true != c.IfTrue || if_false != c.IfFalse
+                ? Expression.Condition(test, if_true, if_false)
                 : c;
         }
 

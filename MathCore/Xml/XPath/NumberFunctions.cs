@@ -32,35 +32,15 @@ namespace System.Xml.XPath
 
         //
         //
-        internal override object GetValue(XPathReader reader)
-        {
-            var obj = new object();
-
-            switch(_FuncType)
+        internal override object GetValue(XPathReader reader) =>
+            _FuncType switch
             {
-                case Function.FunctionType.FuncNumber:
-                    obj = Number(reader);
-                    break;
-
-                // case FT.FuncSum:
-                //     obj = Sum(reader);
-                //     break;
-
-                case Function.FunctionType.FuncFloor:
-                    obj = Floor(reader);
-                    break;
-
-                case Function.FunctionType.FuncCeiling:
-                    obj = Ceiling(reader);
-                    break;
-
-                case Function.FunctionType.FuncRound:
-                    obj = Round(reader);
-                    break;
-            }
-
-            return obj;
-        }
+                Function.FunctionType.FuncNumber => Number(reader),
+                Function.FunctionType.FuncFloor => Floor(reader),
+                Function.FunctionType.FuncCeiling => Ceiling(reader),
+                Function.FunctionType.FuncRound => Round(reader),
+                _ => new object()
+            };
 
         //
         //

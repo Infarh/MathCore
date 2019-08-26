@@ -16,11 +16,11 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <returns>Скомпилированное логическое выражение, реализующее операцию ИЛИ</returns>
         public override Expression LogicCompile()
         {
-            var left = Left is LogicOperatorNode
-                        ? ((LogicOperatorNode)Left).LogicCompile()
+            var left = Left is LogicOperatorNode left_operation
+                        ? left_operation.LogicCompile()
                         : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile()), Expression.Constant(0.0));
-            var right = Right is LogicOperatorNode
-                        ? ((LogicOperatorNode)Right).LogicCompile()
+            var right = Right is LogicOperatorNode right_operation
+                        ? right_operation.LogicCompile()
                         : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile()), Expression.Constant(0.0));
             return Expression.OrElse(left, right);
         }
@@ -30,11 +30,11 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <returns>Скомпилированное логическое выражение, реализующее операцию ИЛИ</returns>
         public override Expression LogicCompile(ParameterExpression[] Parameters)
         {
-            var left = Left is LogicOperatorNode
-                        ? ((LogicOperatorNode)Left).LogicCompile(Parameters)
+            var left = Left is LogicOperatorNode left_operation
+                        ? left_operation.LogicCompile(Parameters)
                         : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile(Parameters)), Expression.Constant(0.0));
-            var right = Right is LogicOperatorNode
-                        ? ((LogicOperatorNode)Right).LogicCompile(Parameters)
+            var right = Right is LogicOperatorNode right_operation
+                        ? right_operation.LogicCompile(Parameters)
                         : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile(Parameters)), Expression.Constant(0.0));
             return Expression.OrElse(left, right);
         }

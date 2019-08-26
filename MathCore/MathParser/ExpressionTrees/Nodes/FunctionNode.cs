@@ -41,21 +41,14 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
             var arg = Term.Block.GetSubTree(Parser, Expression);
             if (!(arg is FunctionArgumentNode))
-                switch (arg)
+                arg = arg switch
                 {
-                    case FunctionArgumentNameNode name:
-                        arg = new FunctionArgumentNode(name);
-                        break;
-                    case VariableValueNode _:
-                        arg = new FunctionArgumentNode(null, arg);
-                        break;
-                    case VariantOperatorNode _ when arg.Left is VariableValueNode:
-                        arg = new FunctionArgumentNode(((VariableValueNode)arg.Left).Name, arg.Right);
-                        break;
-                    default:
-                        arg = new FunctionArgumentNode(null, arg);
-                        break;
-                }
+                    FunctionArgumentNameNode name => new FunctionArgumentNode(name),
+                    VariableValueNode _ => new FunctionArgumentNode(null, arg),
+                    VariantOperatorNode _ when arg.Left is VariableValueNode => new FunctionArgumentNode(
+                        ((VariableValueNode) arg.Left).Name, arg.Right),
+                    _ => new FunctionArgumentNode(null, arg)
+                };
             Right = arg;
             Function = Expression.Functions[Name, ArgumentsNames];
         }

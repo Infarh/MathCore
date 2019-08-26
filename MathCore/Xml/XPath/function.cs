@@ -101,74 +101,41 @@ namespace System.Xml.XPath
 
         internal override QueryType TypeOfAst => QueryType.Function;
 
-        internal override XPathResultType ReturnType
-        {
-            get
+        internal override XPathResultType ReturnType =>
+            TypeOfFunction switch
             {
-                switch(TypeOfFunction)
-                {
-                    case FunctionType.FuncLast:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncPosition:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncCount:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncID:
-                        return XPathResultType.NodeSet;
-                    case FunctionType.FuncLocalName:
-                        return XPathResultType.String;
-                    case FunctionType.FuncNameSpaceUri:
-                        return XPathResultType.String;
-                    case FunctionType.FuncName:
-                        return XPathResultType.String;
-                    case FunctionType.FuncString:
-                        return XPathResultType.String;
-                    case FunctionType.FuncBoolean:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncNumber:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncTrue:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncFalse:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncNot:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncConcat:
-                        return XPathResultType.String;
-                    case FunctionType.FuncStartsWith:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncContains:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncSubstringBefore:
-                        return XPathResultType.String;
-                    case FunctionType.FuncSubstringAfter:
-                        return XPathResultType.String;
-                    case FunctionType.FuncSubstring:
-                        return XPathResultType.String;
-                    case FunctionType.FuncStringLength:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncNormalize:
-                        return XPathResultType.String;
-                    case FunctionType.FuncTranslate:
-                        return XPathResultType.String;
-                    case FunctionType.FuncLang:
-                        return XPathResultType.Boolean;
-                    case FunctionType.FuncSum:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncFloor:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncCeiling:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncRound:
-                        return XPathResultType.Number;
-                    case FunctionType.FuncUserDefined:
-                        return XPathResultType.Error;
-                }
-                return XPathResultType.Error;
-            }
-        }
+                FunctionType.FuncLast => XPathResultType.Number,
+                FunctionType.FuncPosition => XPathResultType.Number,
+                FunctionType.FuncCount => XPathResultType.Number,
+                FunctionType.FuncID => XPathResultType.NodeSet,
+                FunctionType.FuncLocalName => XPathResultType.String,
+                FunctionType.FuncNameSpaceUri => XPathResultType.String,
+                FunctionType.FuncName => XPathResultType.String,
+                FunctionType.FuncString => XPathResultType.String,
+                FunctionType.FuncBoolean => XPathResultType.Boolean,
+                FunctionType.FuncNumber => XPathResultType.Number,
+                FunctionType.FuncTrue => XPathResultType.Boolean,
+                FunctionType.FuncFalse => XPathResultType.Boolean,
+                FunctionType.FuncNot => XPathResultType.Boolean,
+                FunctionType.FuncConcat => XPathResultType.String,
+                FunctionType.FuncStartsWith => XPathResultType.Boolean,
+                FunctionType.FuncContains => XPathResultType.Boolean,
+                FunctionType.FuncSubstringBefore => XPathResultType.String,
+                FunctionType.FuncSubstringAfter => XPathResultType.String,
+                FunctionType.FuncSubstring => XPathResultType.String,
+                FunctionType.FuncStringLength => XPathResultType.Number,
+                FunctionType.FuncNormalize => XPathResultType.String,
+                FunctionType.FuncTranslate => XPathResultType.String,
+                FunctionType.FuncLang => XPathResultType.Boolean,
+                FunctionType.FuncSum => XPathResultType.Number,
+                FunctionType.FuncFloor => XPathResultType.Number,
+                FunctionType.FuncCeiling => XPathResultType.Number,
+                FunctionType.FuncRound => XPathResultType.Number,
+                FunctionType.FuncUserDefined => XPathResultType.Error,
+                _ => XPathResultType.Error
+            };
 
-        internal FunctionType TypeOfFunction { get; } = FunctionType.Error;
+        internal FunctionType TypeOfFunction { get; }
 
         internal ArrayList ArgumentList { get; }
 

@@ -738,7 +738,7 @@ namespace System.Linq
         /// <param name="Enum">Последовательность, преобразуемая в список</param>
         /// <returns>Список элементов последовательности</returns>
         [NotNull]
-        public static IList<T> ToListFast<T>([NotNull] this IEnumerable<T> Enum) => Enum is IList<T> ? (IList<T>)Enum : Enum.ToList();
+        public static IList<T> ToListFast<T>([NotNull] this IEnumerable<T> Enum) => Enum is IList<T> list ? list : Enum.ToList();
 
         /// <summary>Сумма последовательности комплексных чисел</summary>
         /// <param name="collection">Последовательность комплексных чисел</param>

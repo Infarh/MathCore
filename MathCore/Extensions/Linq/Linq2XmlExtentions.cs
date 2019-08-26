@@ -162,8 +162,8 @@ namespace System.Xml.Linq
                         return
                             $"/{(comment.Document?.Nodes().OfType<XComment>().Count() != 1 ? $"comment()[{comment.NodesBeforeSelf().OfType<XComment>().Count() + 1}]" : "comment()")}";
                     default:
-                        return xobj is XProcessingInstruction pi
-                            ? $"/{(pi.Document?.Nodes().OfType<XProcessingInstruction>().Count() != 1 ? $"processing-instruction()[{pi.NodesBeforeSelf().OfType<XProcessingInstruction>().Count() + 1}]" : "processing-instruction()")}"
+                        return xobj is XProcessingInstruction processing_instruction
+                            ? $"/{(processing_instruction.Document?.Nodes().OfType<XProcessingInstruction>().Count() != 1 ? $"processing-instruction()[{processing_instruction.NodesBeforeSelf().OfType<XProcessingInstruction>().Count() + 1}]" : "processing-instruction()")}"
                             : null;
                 }
 

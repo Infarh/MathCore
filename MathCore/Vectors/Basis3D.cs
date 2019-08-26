@@ -4,7 +4,7 @@ using MathCore.Annotations;
 
 namespace MathCore.Vectors
 {
-    public struct Basis3D
+    public readonly struct Basis3D
     {
         public static readonly Basis3D Evclid = new Basis3D(
             1, 0, 0,
@@ -19,44 +19,34 @@ namespace MathCore.Vectors
                 0, 0, kz);
         }
 
-        public static Basis3D RotateOX(double Angle, bool Positive = true)
-        {
-            return new Basis3D(
+        public static Basis3D RotateOX(double Angle, bool Positive = true) =>
+            new Basis3D(
                 1, 0, 0,
                 0, Math.Cos(Angle), (Positive ? -1 : 1) * Math.Sin(Angle),
                 0, (Positive ? 1 : -1) * Math.Sin(Angle), Math.Cos(Angle));
-        }
 
-        public static Basis3D RotateOY(double Angle, bool Positive = true)
-        {
-            return new Basis3D(
+        public static Basis3D RotateOY(double Angle, bool Positive = true) =>
+            new Basis3D(
                 Math.Cos(Angle), 0, (Positive ? -1 : 1) * Math.Sin(Angle),
                 0, 1, 0,
                 (Positive ? 1 : -1) * Math.Sin(Angle), 0, Math.Cos(Angle));
-        }
 
-        public static Basis3D RotateOZ(double Angle, bool Positive = true)
-        {
-            Func<double, double> sin1 = Math.Sin;
-            Func<double, double> cos1 = Math.Cos;
-            return new Basis3D(
-                cos1(Angle), (Positive ? -1 : 1) * sin1(Angle), 0,
-                (Positive ? 1 : -1) * sin1(Angle), cos1(Angle), 0,
+        public static Basis3D RotateOZ(double Angle, bool Positive = true) =>
+            new Basis3D(
+                Math.Cos(Angle), (Positive ? -1 : 1) * Math.Sin(Angle), 0,
+                (Positive ? 1 : -1) * Math.Sin(Angle), Math.Cos(Angle), 0,
                 0, 0, 1);
-        }
 
         public static Basis3D Rotate(double alpha, double betta, double gamma)
         {
-            Func<double, double> sin1 = Math.Sin;
-            var sin_a = sin1(alpha);
-            Func<double, double> cos1 = Math.Cos;
-            var cos_a = cos1(alpha);
+            var sin_a = Math.Sin(alpha);
+            var cos_a = Math.Cos(alpha);
 
-            var sin_b = sin1(betta);
-            var cos_b = cos1(betta);
+            var sin_b = Math.Sin(betta);
+            var cos_b = Math.Cos(betta);
 
-            var sin_g = sin1(gamma);
-            var cos_g = cos1(gamma);
+            var sin_g = Math.Sin(gamma);
+            var cos_g = Math.Cos(gamma);
 
             return new Basis3D(
                         cos_a * cos_b, cos_g * sin_b * sin_g - sin_a * cos_g, cos_a * sin_b * cos_g + sin_a * sin_g,
@@ -66,8 +56,8 @@ namespace MathCore.Vectors
 
         public static Basis3D Rotate(in Vector3D v, double thetta)
         {
-            var sin_t = ((Func<double, double>)Math.Sin)(thetta);
-            var cos_t = ((Func<double, double>)Math.Cos)(thetta);
+            var sin_t = Math.Sin(thetta);
+            var cos_t = Math.Cos(thetta);
             var cos_t1 = 1 - cos_t;
 
             var x = v.X;
@@ -88,27 +78,27 @@ namespace MathCore.Vectors
                 cos_t1 * xz - sin_ty, cos_t1 * yz + sin_tx, cos_t + cos_t1 * z * z);
         }
 
-        private double _xx;
-        private double _xy;
-        private double _xz;
-        private double _yx;
-        private double _yy;
-        private double _yz;
-        private double _zx;
-        private double _zy;
-        private double _zz;
+        private readonly double _xx;
+        private readonly double _xy;
+        private readonly double _xz;
+        private readonly double _yx;
+        private readonly double _yy;
+        private readonly double _yz;
+        private readonly double _zx;
+        private readonly double _zy;
+        private readonly double _zz;
 
-        public double xx { get => _xx; set => _xx = value; }
-        public double xy { get => _xy; set => _xy = value; }
-        public double xz { get => _xz; set => _xz = value; }
+        public double xx => _xx;
+        public double xy => _xy;
+        public double xz => _xz;
 
-        public double yx { get => _yx; set => _yx = value; }
-        public double yy { get => _yy; set => _yy = value; }
-        public double yz { get => _yz; set => _yz = value; }
+        public double yx => _yx;
+        public double yy => _yy;
+        public double yz => _yz;
 
-        public double zx { get => _zx; set => _zx = value; }
-        public double zy { get => _zy; set => _zy = value; }
-        public double zz { get => _zz; set => _zz = value; }
+        public double zx => _zx;
+        public double zy => _zy;
+        public double zz => _zz;
 
         public Basis3D(double xx, double xy, double xz, double yx, double yy, double yz, double zx, double zy, double zz)
         {

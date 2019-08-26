@@ -15,7 +15,6 @@
 
 using System.Collections;
 using System.Diagnostics;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System.Xml.XPath
 {
@@ -237,35 +236,16 @@ namespace System.Xml.XPath
 
         //
         ///
-        private Query ProcessAxis(Axis root, Query QyInput)
-        {
-            Query result = null;
-
-            switch(root.TypeOfAxis)
+        private Query ProcessAxis(Axis root, Query QyInput) =>
+            root.TypeOfAxis switch
             {
-                case Axis.AxisType.Attribute:
-                    result = new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type);
-                    break;
-
-                case Axis.AxisType.Self:
-                    result = new XPathSelfQuery(QyInput, root.Name, root.Prefix, root.Type);
-                    break;
-
-                case Axis.AxisType.Child:
-                    result = new ChildQuery(QyInput, root.Name, root.Prefix, root.Type);
-                    break;
-
-                case Axis.AxisType.Descendant:
-                case Axis.AxisType.DescendantOrSelf:
-                    result = new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type);
-                    break;
-
-                default:
-                    throw new XPathReaderException("xpath is not supported!");
-            }
-
-            return result;
-        }
+                Axis.AxisType.Attribute => (Query) new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type),
+                Axis.AxisType.Self => new XPathSelfQuery(QyInput, root.Name, root.Prefix, root.Type),
+                Axis.AxisType.Child => new ChildQuery(QyInput, root.Name, root.Prefix, root.Type),
+                Axis.AxisType.Descendant => new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type),
+                Axis.AxisType.DescendantOrSelf => new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type),
+                _ => throw new XPathReaderException("xpath is not supported!")
+            };
 
         private Query ProcessNode(AstNode root, Query QyInput)
         {

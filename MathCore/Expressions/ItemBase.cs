@@ -11,10 +11,10 @@ namespace System.Linq.Expressions
 
         public object Object => _Object;
 
-        public AttributesExtractor ObjectAttribute => _ObjectAttributes ?? (_ObjectAttributes = new AttributesExtractor(_ObjectType));
+        public AttributesExtractor ObjectAttribute => _ObjectAttributes ??= new AttributesExtractor(_ObjectType);
 
 
-        protected ItemBase(object Obj, string Name) : this((Obj).GetType(), Name) => _Object = Obj;
+        protected ItemBase(object Obj, string Name) : this(Obj.GetType(), Name) => _Object = Obj;
 
         public ItemBase(Type type, string Name)
         {

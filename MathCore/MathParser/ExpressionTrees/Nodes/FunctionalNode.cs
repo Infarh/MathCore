@@ -48,10 +48,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 .Where(n => n is VariableValueNode) // проходим по всем узлам с переменными
                 .Cast<VariableValueNode>()
                 .Where(v => !v.Variable.IsConstant)
-                .Foreach(v =>
+                .Foreach(_ParametersExpression, (v, e) =>
                 {
-                    _ParametersExpression.Variable.RemoveFromCollection(v.Variable);
-                    _ParametersExpression.Variable.Add(v.Variable = _CoreExpression.Variable[v.Variable.Name]);
+                    e.Variable.RemoveFromCollection(v.Variable);
+                    e.Variable.Add(v.Variable = _CoreExpression.Variable[v.Variable.Name]);
                 });
 
             //Запрос к парсеру о операторе
@@ -64,8 +64,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         {
             ExpressionVariabel iterator = null;
             var params_node = _ParametersExpression.Tree.Root;
-            if(params_node is EqualityOperatorNode && params_node.Left is VariableValueNode)
-                iterator = ((VariableValueNode)params_node.Left).Variable;
+            if(params_node is EqualityOperatorNode && params_node.Left is VariableValueNode node)
+                iterator = node.Variable;
             return _CoreExpression.Tree.Root.GetVariables().Where(v => v != iterator);
         }
 

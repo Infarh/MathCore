@@ -14,7 +14,6 @@
 //------------------------------------------------------------------------------
 
 using System.Diagnostics;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace System.Xml.XPath
 {

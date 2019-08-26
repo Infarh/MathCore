@@ -22,7 +22,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public ExpressionTreeNode ArgumentSubtree => Left is FunctionArgumentNameNode ? Left.Right : Left;
 
         /// <summary>Имя аргумента - левое поддерево</summary>
-        public string ArgumentName => Left is FunctionArgumentNameNode ? ((FunctionArgumentNameNode)Left).ArgumentName : "";
+        public string ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : "";
 
         /// <summary>Инициализация узла-аргумента</summary>
         public FunctionArgumentNode() : base(",", -20) { }

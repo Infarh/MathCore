@@ -122,23 +122,15 @@ namespace System.ComponentModel
                 base.OnCollectionChanged(Sender, E);
                 var handlers = OnClooectionChangedEventHandlers;
                 if (handlers is null) return;
-                ICollection<TItem> collection;
-                switch (E.Action)
+                var collection = E.Action switch
                 {
-                    case NotifyCollectionChangedAction.Add:
-                        collection = E.NewItems.Cast<TItem>().ToArray();
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        collection = E.OldItems.Cast<TItem>().ToArray();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                    case NotifyCollectionChangedAction.Move:
-                    case NotifyCollectionChangedAction.Reset:
-                        collection = (ICollection<TItem>)Sender;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    NotifyCollectionChangedAction.Add => E.NewItems.Cast<TItem>().ToArray(),
+                    NotifyCollectionChangedAction.Remove => E.OldItems.Cast<TItem>().ToArray(),
+                    NotifyCollectionChangedAction.Replace => (ICollection<TItem>) Sender,
+                    NotifyCollectionChangedAction.Move => (ICollection<TItem>) Sender,
+                    NotifyCollectionChangedAction.Reset => (ICollection<TItem>) Sender,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
                 handlers.Invoke(collection);
             }
 
@@ -227,11 +219,10 @@ namespace System.ComponentModel
                     if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
                 }
                 else
-                    foreach (var k in object_subscribers.ToArray())
+                    foreach (var (key, value) in object_subscribers.ToArray())
                     {
-                        k.Value.ClearHandlers();
-
-                        object_subscribers.Remove(k.Key);
+                        value.ClearHandlers();
+                        object_subscribers.Remove(key);
                         if (object_subscribers.Count == 0) __Subscribers.Remove(obj);
                     }
             }

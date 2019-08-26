@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq.Reactive;
 using System.Reflection;
 using MathCore.Annotations;
@@ -90,7 +89,7 @@ namespace System.Linq.Expressions
         /// <summary>Признак реализации объектом-хозяином свойства интерфейса <see cref="INotifyPropertyChanged"/></summary>
         public bool IsNotifyPropertyChanged { get; }
 
-        public AttributesExtractor Attributes => _Attributes ?? (_Attributes = new AttributesExtractor(_PropertyInfo));
+        public AttributesExtractor Attributes => _Attributes ??= new AttributesExtractor(_PropertyInfo);
 
         public PropertyInfo Info => _PropertyInfo;
 
@@ -302,7 +301,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        public AttributesExtractor Attribute => _Attributes ?? (_Attributes = new AttributesExtractor(_PropertyInfo));
+        public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_PropertyInfo);
 
         /// <summary>Инициализация доступа к статическому свойству</summary>
         /// <param name="type">Рассматриваемый тип</param>

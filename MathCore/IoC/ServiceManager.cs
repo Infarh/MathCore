@@ -44,13 +44,14 @@ namespace MathCore.IoC
             where TServiceType : class
         {
             lock (_SyncRoot)
-                switch (mode)
+                return mode switch
                 {
-                    case ServiceRegistrationMode.Singleton: return RegisterSingleton<TServiceType>();
-                    case ServiceRegistrationMode.SingleCall: return RegisterSingleCall<TServiceType>();
-                    case ServiceRegistrationMode.SingleThread: return RegisterSingleThread<TServiceType>();
-                    default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-                }
+                    ServiceRegistrationMode.Singleton =>
+                    (ServiceRegistration<TServiceType>) RegisterSingleton<TServiceType>(),
+                    ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceType>(),
+                    ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceType>(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+                };
         }
 
         #region Регистрация сервисов
@@ -103,13 +104,14 @@ namespace MathCore.IoC
             where TService : class, TServiceInterface
         {
             lock (_SyncRoot)
-                switch (mode)
+                return mode switch
                 {
-                    case ServiceRegistrationMode.Singleton: return RegisterSingleton<TServiceInterface, TService>();
-                    case ServiceRegistrationMode.SingleCall: return RegisterSingleCall<TServiceInterface, TService>();
-                    case ServiceRegistrationMode.SingleThread: return RegisterSingleThread<TServiceInterface, TService>();
-                    default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-                }
+                    ServiceRegistrationMode.Singleton => (ServiceRegistration<TService>)
+                    RegisterSingleton<TServiceInterface, TService>(),
+                    ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceInterface, TService>(),
+                    ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceInterface, TService>(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+                };
         }
 
         public SingletonServiceRegistration<TService> RegisterSingleton<TServiceInterface, TService>()
@@ -154,13 +156,14 @@ namespace MathCore.IoC
         public ServiceRegistration<TService> Register<TService>(Func<TService> FactoryMethod, in ServiceRegistrationMode mode = ServiceRegistrationMode.Singleton) where TService : class
         {
             lock (_SyncRoot)
-                switch (mode)
+                return mode switch
                 {
-                    case ServiceRegistrationMode.Singleton: return RegisterSingleton(FactoryMethod);
-                    case ServiceRegistrationMode.SingleCall: return RegisterSingleCall(FactoryMethod);
-                    case ServiceRegistrationMode.SingleThread: return RegisterSingleThread(FactoryMethod);
-                    default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-                }
+                    ServiceRegistrationMode.Singleton => (ServiceRegistration<TService>) RegisterSingleton(
+                        FactoryMethod),
+                    ServiceRegistrationMode.SingleCall => RegisterSingleCall(FactoryMethod),
+                    ServiceRegistrationMode.SingleThread => RegisterSingleThread(FactoryMethod),
+                    _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+                };
         }
 
         public SingletonServiceRegistration<TService> RegisterSingleton<TService>(Func<TService> FactoryMethod) where TService : class
@@ -260,8 +263,8 @@ namespace MathCore.IoC
         public IServiceManager Clone()
         {
             var new_manager = new ServiceManager();
-            foreach (var registration in _Services.Where(s => s.Key != typeof(IServiceManager)))
-                new_manager._Services.Add(registration.Key, registration.Value.CloneFor(new_manager));
+            foreach (var (key, value) in _Services.Where(s => s.Key != typeof(IServiceManager)))
+                new_manager._Services.Add(key, value.CloneFor(new_manager));
 
             return new_manager;
         }

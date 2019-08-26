@@ -226,7 +226,7 @@ namespace MathCore.Vectors
         public Vector3D Clone() => new Vector3D(this);
 
         [DST]
-        public override bool Equals(object obj) => obj is Vector3D && Equals((Vector3D)obj);
+        public override bool Equals(object obj) => obj is Vector3D vector_3d && Equals(vector_3d);
 
         [DST]
         public string ToString(string Format) => $"({_X.ToString(Format)};{_Y.ToString(Format)};{_Z.ToString(Format)})";

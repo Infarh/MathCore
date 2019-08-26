@@ -80,11 +80,10 @@ namespace System.Linq.Expressions
 
         public override Expression Visit(Expression node)
         {
-            if(node is ConstantExpression)
+            if(node is ConstantExpression constant)
             {
-                var meta = (ConstantExpression)node;
-                _Result.Append(meta.Value);
-                return Expression.Constant(meta.Value, meta.Type);
+                _Result.Append(constant.Value);
+                return Expression.Constant(constant.Value, constant.Type);
             }
             return base.Visit(node);
         }
@@ -100,9 +99,9 @@ namespace System.Linq.Expressions
             // Ёто очень проста€ реализаци€ поиска определенных методов.
             // ƒл€ промышленного кода мы можем добавить кэширование или что-то
             // подобное, здесь же этого соверешнно достаточно
-            var powMethod = typeof(Math).GetMethod("Pow");
+            var pow_method = typeof(Math).GetMethod("Pow");
 
-            if(node.Method == powMethod)
+            if(node.Method == pow_method)
             {
                 Visit(node.Arguments[0]);
                 _Result.AppendFormat("^{{{0}}}", node.Arguments[1]);
@@ -116,17 +115,13 @@ namespace System.Linq.Expressions
         //----------------------------------------------------------------------------------------//
 
         // ћетодв возвращает true, если выражение нужно оборачивать в скобки: ()
-        private static bool RequiresPrecedence(ExpressionType nodeType)
-        {
-            switch(nodeType)
+        private static bool RequiresPrecedence(ExpressionType nodeType) =>
+            nodeType switch
             {
-                case ExpressionType.Add:
-                case ExpressionType.Subtract:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+                ExpressionType.Add => true,
+                ExpressionType.Subtract => true,
+                _ => false
+            };
 
         // ќператор делени€ несколько отличаетс€ от всех остальных операторов с двум€ аргументами,
         // поскольку он требует другого пор€дка аргументов
@@ -136,8 +131,8 @@ namespace System.Linq.Expressions
         // {arg1} op {arg2}
         private Expression VisitInfixBinary(BinaryExpression node)
         {
-            var lv_RequiresPrecedence = RequiresPrecedence(node.NodeType);
-            if(lv_RequiresPrecedence) _Result.Append("(");
+            var requires_precedence = RequiresPrecedence(node.NodeType);
+            if(requires_precedence) _Result.Append("(");
 
             Visit(node.Left);
 
@@ -158,7 +153,7 @@ namespace System.Linq.Expressions
 
             Visit(node.Right);
 
-            if(lv_RequiresPrecedence) _Result.Append(")");
+            if(requires_precedence) _Result.Append(")");
             return node;
         }
 

@@ -164,17 +164,15 @@ namespace System
             if (Handler == null) return;
             var invokations = Handler.GetInvocationList();
             foreach (var d in invokations)
-            {
                 switch (d.Target)
                 {
                     case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
-                        synchronize_invoke.Invoke(d, new[] { Sender, e });
+                        synchronize_invoke.Invoke(d, new[] {Sender, e});
                         break;
                     default:
                         d.DynamicInvoke(Sender, e);
                         break;
                 }
-            }
         }
 
         /// <summary>Потоко-безопасная асинхроная генерация события</summary>
@@ -190,17 +188,16 @@ namespace System
             object Sender,
             TEventArgs e,
             [CanBeNull] AsyncCallback CallBack = null,
-            object State = null)
-            where TEventArgs : EventArgs
-        {
-            if (Handler == null) return null;
-            return ((Action)(() =>
-            {
-                var invocation_list = Handler.GetInvocationList();
-                foreach (var action in invocation_list)
-                    action.DynamicInvoke(Sender, e);
-            })).BeginInvoke(CallBack, State);
-        }
+            [CanBeNull] object State = null)
+            where TEventArgs : EventArgs =>
+            Handler == null
+                ? null
+                : ((Action) (() =>
+                {
+                    var invocation_list = Handler.GetInvocationList();
+                    foreach (var action in invocation_list)
+                        action.DynamicInvoke(Sender, e);
+                })).BeginInvoke(CallBack, State);
 
         /// <summary>Потоко-безопасная генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
@@ -217,8 +214,8 @@ namespace System
             Contract.Assume(Handler != null);
             return Handler
                 .GetInvocationList()
-                .Select(d => (TResult)(d.Target is ISynchronizeInvoke && ((ISynchronizeInvoke)d.Target).InvokeRequired
-                    ? ((ISynchronizeInvoke)d.Target).Invoke(d, new object[] { Sender, Args })
+                .Select(d => (TResult)(d.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired
+                    ? invoke.Invoke(d, new object[] { Sender, Args })
                     : d.DynamicInvoke(Sender, Args))).ToArray();
         }
     }

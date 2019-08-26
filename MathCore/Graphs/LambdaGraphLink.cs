@@ -11,7 +11,7 @@ namespace MathCore.Graphs
         public IGraphNode<TValue, TWeight> Node { get; }
 
         public TWeight Weight => _Buffered
-            ? (TWeight) (_Weight ?? (_Weight = _GetWeight(_From.Value, Node.Value)))
+            ? (TWeight) (_Weight ??= _GetWeight(_From.Value, Node.Value))
             : _GetWeight(_From.Value, Node.Value);
 
         public LambdaGraphLink(IGraphNode<TValue, TWeight> From, IGraphNode<TValue, TWeight> To, Func<TValue, TValue, TWeight> GetWeight, bool Buffered = false)
