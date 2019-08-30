@@ -13,6 +13,11 @@
     <PackageTags>Mathematic, Logik</PackageTags>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <Description>Библиотека прикладных алгоритмов</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>MathCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +29,6 @@
     <None Remove="MathParser\MathParserDiagram.dgml" />
     <None Remove="MathParser\Operations.xml" />
     <None Remove="MathParser\Operations.xsd" />
-    <None Include="..\license.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ActionList.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ActionList.cs</LastGenOutput>
+    </None>
     <None Update="Complex.Decimal.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Complex.Decimal.cs</LastGenOutput>
@@ -66,6 +71,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="ActionList.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActionList.tt</DependentUpon>
+    </Compile>
     <Compile Update="Complex.Decimal.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
