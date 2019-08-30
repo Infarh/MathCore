@@ -77,7 +77,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                     : Expression.GreaterThanOrEqual
                     (
                         EqualityOperatorNode.GetAbsMethodCall(Expression.Subtract
-                            (
+                        (
                                 ((ComputedNode) Left).Compile(Parameters),
                                 ((ComputedNode) Right).Compile(Parameters))
                         ),
