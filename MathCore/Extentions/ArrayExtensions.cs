@@ -32,7 +32,7 @@ namespace System
         }
 
         [NotNull]
-        public static IEnumerable<T> TakeLast<T>([NotNull] this IEnumerable<T> Items, int Count)
+        public static IEnumerable<T> TakeLastElements<T>([NotNull] this IEnumerable<T> Items, int Count)
         {
             var buffer = new T[Count];
             var index = 0;

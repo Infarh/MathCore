@@ -13881,6 +13881,19 @@
             <param name="BufferSize">Размер буфера (по умолчанию 4096 байта)</param>
             <returns>Буферизованный поток данных</returns>
         </member>
+        <member name="T:System.Xml.Serialization.IXmlSerializableAsync">
+            <summary>Асинхронно сериализуемый в XML объект</summary>
+        </member>
+        <member name="M:System.Xml.Serialization.IXmlSerializableAsync.ReadXmlAsync(System.Xml.XmlReader)">
+            <summary>Асинхронное чтение данных из XML</summary>
+            <param name="reader">Источник данных XML</param>
+            <returns>Задача процесса чтения данных</returns>
+        </member>
+        <member name="M:System.Xml.Serialization.IXmlSerializableAsync.WriteXmlAsync(System.Xml.XmlWriter)">
+            <summary>Асинхронная запись данных в XML</summary>
+            <param name="writer">Объект записи данных</param>
+            <returns>Задача записи данных</returns>
+        </member>
         <member name="M:System.Xml.XPath.ChildQuery.GetValue(System.Xml.XPath.XPathReader)">
             <exception cref="T:System.Xml.XPath.XPathReaderException">Can't get the child value</exception>
         </member>
