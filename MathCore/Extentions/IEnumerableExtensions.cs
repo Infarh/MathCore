@@ -26,7 +26,7 @@ namespace System.Linq
         /// <param name="values">Добавляемый элемент</param>
         /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         [NN]
-        public static IEnumerable<T> InsertBefore<T>([CanBeNull] this IEnumerable<T> collection, [CanBeNull] params T[] values)
+        public static IEnumerable<T> InsertBefore<T>([CN] this IEnumerable<T> collection, [CN] params T[] values)
         {
             Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
             if (values != null) foreach (var v in values) yield return v;
@@ -39,7 +39,7 @@ namespace System.Linq
         /// <param name="values">Добавляемый элемент</param>
         /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         [NN]
-        public static IEnumerable<T> InsertBefore<T>([CanBeNull] this IEnumerable<T> collection, [CanBeNull] IEnumerable<T> values)
+        public static IEnumerable<T> InsertBefore<T>([CN] this IEnumerable<T> collection, [CN] IEnumerable<T> values)
         {
             Contract.Requires(collection != null);
             Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
@@ -254,9 +254,9 @@ namespace System.Linq
         }
 
         /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
-        /// <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
-        /// <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
-        /// <param name="collection">Исходное перечисление</param>
+        /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
+        /// <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+        /// <param name="items">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов</param>
         /// <returns>
         /// Если ссылка на исходное перечисление не пуста, то
@@ -264,14 +264,8 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [CN]
-        public static TValue[] ToArray<TItem, TValue>([CN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter)
-        {
-            Requires(converter != null);
-            Ensures(collection is null == Result<TValue[]>() is null);
-
-            return collection?.Select(converter).ToArray();
-        }
+        [NN]
+        public static TV[] ToArray<T, TV>([NN] this IEnumerable<T> items, [NN] Func<T, TV> converter) => items.Select(converter).ToArray();
 
         /// <summary>Преобразование перечисления в список с преобразованием элементов</summary>
         /// <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
@@ -287,7 +281,6 @@ namespace System.Linq
         [CN]
         public static List<TValue> ToList<TItem, TValue>([CN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter)
         {
-            Requires(converter != null);
             Ensures(collection is null == Result<List<TValue>>() is null);
 
             return collection?.Select(converter).ToList();

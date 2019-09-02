@@ -5,9 +5,38 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    /// <summary>Методы-расширения для генератора случайных чисел</summary>
     public static class RandomExtensions
     {
+        /// <summary>Массив случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="D">Дисперсия</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <returns>Массив случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static double[] NextUniform([NotNull] this Random rnd, int Count, double D = 1, double M = 0)
+        {
+            var result = new double[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.NextUniform(D, M);
+            return result;
+        }
 
+        /// <summary>Массив случайных чисел с нормальным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="D">Дисперсия</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <returns>Массив случайных чисел с нормальным распределением</returns>
+        [NotNull]
+        public static double[] NextNormal([NotNull] this Random rnd, int Count, double D = 1, double M = 0)
+        {
+            var result = new double[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.NextNormal(D, M);
+            return result;
+        }
 
         //public static double NextNormal(this Random rnd, double D = 1, double M = 0) => Math.Tan(Math.PI * (rnd.NextDouble() - 0.5)) * D + M;
 
@@ -27,6 +56,11 @@ namespace System
             return mu + sigma * normal; //random normal(m,D^2)
         }
 
+        /// <summary>Случайное число с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="D">Дисперсия</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <returns>Случайное число в равномерным распределением</returns>
         public static double NextUniform(this Random rnd, double D = 1, double M = 0) => (rnd.NextDouble() - 0.5) * D + M;
 
         /// <summary>Generates values from a triangular distribution.</summary>
@@ -103,6 +137,12 @@ namespace System
             return result.ToArray();
         }
 
+        /// <summary>Случайных элемент из перечисленных вариантов</summary>
+        /// <typeparam name="T">Тип вариантов выбора</typeparam>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="count">Количество результатов выбора</param>
+        /// <param name="variants">Перечисление вариантов выбора</param>
+        /// <returns>Последовательность случайных вариантов</returns>
         [NotNull, ItemCanBeNull]
         public static IEnumerable<T> Next<T>([NotNull] this Random rnd, int count, [NotNull, ItemCanBeNull] params T[] variants)
         {
@@ -114,30 +154,52 @@ namespace System
                 yield return variants[rnd.Next(0, variants_count)];
         }
 
+        /// <summary>Последовательность случайных целых чисел в указанном интервале</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="min">Нижняя граница интервала (входит)</param>
+        /// <param name="max">Верхняя граница интервала (не входит)</param>
+        /// <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
+        /// <returns>Последовательность случайных целых чисел в указанном интервале</returns>
         [NotNull]
         public static IEnumerable<int> Sequence([NotNull] this Random rnd, int min, int max, int count = -1)
         {
             if (rnd is null) throw new ArgumentNullException(nameof(rnd));
 
-            for (var i = 0; count == -1 || i < count; i++)
+            if (count == 0) yield break;
+            if (count < 0) while (true) yield return rnd.Next(min, max);
+            for (var i = 0; i < count; i++)
                 yield return rnd.Next(min, max);
         }
 
+        /// <summary>Последовательность случайных вещественных чисел с равномерным распределением в интервале (0,1)</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
+        /// <returns>Последовательность случайных вещественных чисел в интервале (0,1)</returns>
         [NotNull]
         public static IEnumerable<double> Sequence([NotNull] this Random rnd, int count = -1)
         {
             if (rnd is null) throw new ArgumentNullException(nameof(rnd));
 
+            if (count == 0) yield break;
+            if (count < 0) while (true) yield return rnd.NextDouble();
             for (var i = 0; count == -1 || i < count; i++)
                 yield return rnd.NextDouble();
         }
 
+        /// <summary>Последовательность случайных вещественных чисел с нормальным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <param name="D">Дисперсия</param>
+        /// <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
+        /// <returns>Последовательность случайных вещественных чисел</returns>
         [NotNull]
         public static IEnumerable<double> SequenceNormal([NotNull] this Random rnd, double D = 1, double M = 0, int count = -1)
         {
             if (rnd is null) throw new ArgumentNullException(nameof(rnd));
 
-            for (var i = 0; count == -1 || i < count; i++)
+            if (count == 0) yield break;
+            if (count < 0) while (true) yield return rnd.NextNormal(D, M);
+            for (var i = 0; i < count; i++)
                 yield return rnd.NextNormal(D, M);
         }
     }

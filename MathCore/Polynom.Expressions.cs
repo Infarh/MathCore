@@ -7,8 +7,12 @@ namespace MathCore
 {
     public partial class Polynom
     {
+        /// <summary>Класс операций над полиномом, связанных с деревьями выражений</summary>
         public static class Expression
         {
+            /// <summary>Построение дерева выражения на основе коэффициентов полинома</summary>
+            /// <param name="A">Коэффициенты полинома</param>
+            /// <returns>Дерево выражения, представляющее собой метод вычисления значения полинома</returns>
             [NotNull]
             public static Expression<Func<double, double>> GetExpression([NotNull] double[] A)
             {
@@ -26,6 +30,9 @@ namespace MathCore
                 return Ex.Lambda<Func<double, double>>(y, px);
             }
 
+            /// <summary>Построение дерева комплексного выражения на основе коэффициентов полинома</summary>
+            /// <param name="A">Коэффициенты полинома</param>
+            /// <returns>Дерево выражения, представляющее собой метод вычисления комплексного значения полинома</returns>
             [NotNull]
             public static Expression<Func<Complex, Complex>> GetExpressionComplex([NotNull] double[] A)
             {
@@ -43,6 +50,9 @@ namespace MathCore
                 return Ex.Lambda<Func<Complex, Complex>>(y, px);
             }
 
+            /// <summary>Построение дерева комплексного выражения на основе комплексных коэффициентов полинома</summary>
+            /// <param name="A">Комплексные коэффициенты полинома</param>
+            /// <returns>Дерево выражения, представляющее собой метод вычисления комплексного значения полинома</returns>
             [NotNull]
             public static Expression<Func<Complex, Complex>> GetExpression([NotNull] Complex[] A)
             {
@@ -61,8 +71,12 @@ namespace MathCore
             }
         }
 
+        /// <summary>Получение дерева выражения полинома</summary>
+        /// <returns>Дерево выражения полинома</returns>
         [NotNull] public Expression<Func<double, double>> GetExpression() => Expression.GetExpression(_a);
 
+        /// <summary>Получение дерева выражения полинома</summary>
+        /// <returns>Дерево выражения полинома</returns>
         [NotNull] public Expression<Func<Complex, Complex>> GetExpressionComplex() => Expression.GetExpressionComplex(_a);
     }
 }

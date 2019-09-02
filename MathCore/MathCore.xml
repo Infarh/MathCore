@@ -11198,9 +11198,9 @@
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
-            <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
-            <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
-            <param name="collection">Исходное перечисление</param>
+            <typeparam name="T">Тип элементов исходного перечисления</typeparam>
+            <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+            <param name="items">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
             <returns>
             Если ссылка на исходное перечисление не пуста, то

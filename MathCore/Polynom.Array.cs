@@ -9,8 +9,13 @@ namespace MathCore
 {
     public partial class Polynom
     {
+        /// <summary>Операции над коэффициентами полинома, в представлении массива значений</summary>
         public static class Array
         {
+            /// <summary>Расчитать значение полинома</summary>
+            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <param name="x">Аргумент полинома</param>
+            /// <returns>Значение полинома</returns>
             [Pure]
             public static double GetValue([NotNull] double[] A, double x)
             {
@@ -23,6 +28,10 @@ namespace MathCore
                 return y;
             }
 
+            /// <summary>Расчитать комплексное значение полинома</summary>
+            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <param name="z">Аргумент полинома</param>
+            /// <returns>Комплексное значение полинома</returns>
             [Pure, DST]
             public static Complex GetValue([NotNull] double[] A, Complex z)
             {
@@ -35,6 +44,10 @@ namespace MathCore
                 return y;
             }
 
+            /// <summary>Расчитать комплексное значение полинома с комплексными коэффициентами</summary>
+            /// <param name="Z">Массив комплексных коэффициентов полинома</param>
+            /// <param name="z">Комплексный аргумент полинома</param>
+            /// <returns>Комплексное значение полинома</returns>
             [Pure, DST]
             public static Complex GetValue([NotNull] Complex[] Z, Complex z)
             {
@@ -46,6 +59,10 @@ namespace MathCore
                 return y;
             }
 
+            /// <summary>Расчитать значение полинома</summary>
+            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <param name="x">Аргумент полинома</param>
+            /// <returns>Значение полинома</returns>
             public static double GetValue([NotNull] IEnumerable<double> A, double x)
             {
                 if (A is null)
@@ -66,12 +83,16 @@ namespace MathCore
                 return v;
             }
 
-            public static Complex GetValue([NotNull] IEnumerable<double> A, Complex x)
+            /// <summary>Расчитать комплексное значение полинома</summary>
+            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <param name="z">Аргумент полинома</param>
+            /// <returns>Комплексное значение полинома</returns>
+            public static Complex GetValue([NotNull] IEnumerable<double> A, Complex z)
             {
                 if (A is null)
                     throw new ArgumentNullException(nameof(A));
 
-                if (x.Equals(0d))
+                if (z.Equals(0d))
                     return A.First();
 
                 var v = new Complex();
@@ -80,13 +101,13 @@ namespace MathCore
                 {
                     if (!a.Equals(0d))
                         v += a * xx;
-                    xx *= x;
+                    xx *= z;
                 }
 
                 return v;
             }
 
-            /// <summary>Преобразовать массив корней полинома в коэффициенты прои степенях</summary>
+            /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при степенях</returns>
             [NotNull]
@@ -116,6 +137,9 @@ namespace MathCore
                 return a;
             }
 
+            /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
+            /// <param name="Root">Корни полинома</param>
+            /// <returns>Коэффициенты при обратных степенях</returns>
             [NotNull]
             public static double[] GetCoefficientsInverted([NotNull] params double[] Root)
             {
@@ -143,7 +167,7 @@ namespace MathCore
                 return a;
             }
 
-            /// <summary>Преобразовать массив корней полинома в коэффициенты прои степенях</summary>
+            /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при степенях</returns>
             [NotNull]
@@ -172,6 +196,10 @@ namespace MathCore
 
                 return a;
             }
+
+            /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
+            /// <param name="Root">Корни полинома</param>
+            /// <returns>Коэффициенты при обратных степенях</returns>
 
             [NotNull]
             public static Complex[] GetCoefficientsInverted([NotNull] params Complex[] Root)
@@ -202,6 +230,10 @@ namespace MathCore
 
             #region Интегрирование/дифференцирование
 
+            /// <summary>Дифференциал полинома</summary>
+            /// <param name="p">Массив коэффициентов полинома</param>
+            /// <param name="Order">Порядок дифференцирования</param>
+            /// <returns>Массив коэффициентов полинома - дифференциала</returns>
             [NotNull]
             public static double[] GetDifferential([NotNull] double[] p, int Order = 1)
             {
@@ -222,6 +254,10 @@ namespace MathCore
                 return p;
             }
 
+            /// <summary>Дифференциал полинома</summary>
+            /// <param name="p">Массив комплексных коэффициентов полинома</param>
+            /// <param name="Order">Порядок дифференцирования</param>
+            /// <returns>Массив комплексных коэффициентов полинома - дифференциала</returns>
             [NotNull]
             public static Complex[] GetDifferential([NotNull] Complex[] p, int Order = 1)
             {
@@ -242,6 +278,10 @@ namespace MathCore
                 return p;
             }
 
+            /// <summary>Интеграл полинома</summary>
+            /// <param name="p">Массив коэффициентов полинома</param>
+            /// <param name="C">Константа интегрирования</param>
+            /// <returns>Массив коэффициентов полинома - интеграла</returns>
             [NotNull]
             public static double[] GetIntegral([NotNull] double[] p, double C = 0)
             {
@@ -255,6 +295,10 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Интеграл полинома</summary>
+            /// <param name="p">Массив комплексных коэффициентов полинома</param>
+            /// <param name="C">Константа интегрирования</param>
+            /// <returns>Массив комплексных коэффициентов полинома - интеграла</returns>
             [NotNull]
             public static Complex[] GetIntegral([NotNull] Complex[] p, Complex C = default)
             {
@@ -272,6 +316,10 @@ namespace MathCore
 
             #region Операторы
 
+            /// <summary>Суммирование полиномов</summary>
+            /// <param name="p">Коэффициенты полинома - первого слагаемого</param>
+            /// <param name="q">Коэффициенты полинома - первого слагаемого</param>
+            /// <returns>Коэффициенты полинома - суммы</returns>
             public static double[] Sum([NotNull] double[] p, [NotNull] double[] q)
             {
                 if (p is null)
@@ -299,6 +347,10 @@ namespace MathCore
                 }
             }
 
+            /// <summary>Разность полиномов</summary>
+            /// <param name="p">Коэффициенты полинома - первого уменьшаемого</param>
+            /// <param name="q">Коэффициенты полинома - первого вычитаемого</param>
+            /// <returns>Коэффициенты полинома - разности</returns>
             public static double[] Substract([NotNull] double[] p, [NotNull] double[] q)
             {
                 if (p is null)
@@ -328,6 +380,11 @@ namespace MathCore
                 }
             }
 
+            /// <summary>Деление полиномов</summary>
+            /// <param name="dividend">Коэффициенты полинома - делимое</param>
+            /// <param name="divisor">Коэффициенты полинома - делитель</param>
+            /// <param name="quotient">Коэффициенты полинома - остаток от деления</param>
+            /// <returns>Коэффициенты полинома - частное</returns>
             [Copyright("", url = "http://losev-al.blogspot.ru/2012/09/blog-post_14.htm")]
             public static void Devide([NotNull] double[] dividend, [NotNull] double[] divisor, [NotNull] out double[] quotient, [NotNull] out double[] remainder)
             {
@@ -347,7 +404,11 @@ namespace MathCore
                 }
             }
 
-            public static double[] Multiply(double[] p, double[] q)
+            /// <summary>Умножение полиномов</summary>
+            /// <param name="p">Коэффициенты полинома - первый сомножитель</param>
+            /// <param name="q">Коэффициенты полинома - второй сомножитель</param>
+            /// <returns>Коэффициенты полинома - произведение</returns>
+            public static double[] Multiply([NotNull] double[] p, [NotNull] double[] q)
             {
                 var length = p.Length + q.Length;
                 var a = new double[length + 1];
@@ -367,6 +428,10 @@ namespace MathCore
                 return a;
             }
 
+            /// <summary>Сложение полинома с вещественным числом</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <param name="x">Вещественное число</param>
+            /// <returns>Коэффициенты полинома - суммы</returns>
             [NotNull]
             public static double[] Add([NotNull] double[] p, double x)
             {
@@ -378,6 +443,10 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Вычитание вещественного числа из полинома</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <param name="x">Вещественное число</param>
+            /// <returns>Коэффициенты полинома - разности</returns>
             [NotNull]
             public static double[] Substract([NotNull] double[] p, double x)
             {
@@ -389,6 +458,10 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Вычитание полинома из вещественного числа</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <param name="x">Вещественное число</param>
+            /// <returns>Коэффициенты полинома - разности</returns>
             [NotNull]
             public static double[] Substract(double x, [NotNull] double[] p)
             {
@@ -400,6 +473,9 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Отрицание полинома</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <returns>Коэффициенты полинома Q(x) = 0 - P(x)</returns>
             [NotNull]
             public static double[] Negate([NotNull] double[] p)
             {
@@ -411,6 +487,10 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Умножение полинома на вещественное число</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <param name="x">Вещественное число</param>
+            /// <returns>Коэффициенты полинома - произведения</returns>
             [NotNull]
             public static double[] Multiply([NotNull] double[] p, double x)
             {
@@ -422,6 +502,10 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Деление полинома на вещественное число</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <param name="x">Вещественное число</param>
+            /// <returns>Коэффициенты полинома - частного</returns>
             [NotNull]
             public static double[] Divade([NotNull] double[] p, double x)
             {
@@ -433,6 +517,10 @@ namespace MathCore
                 return result;
             }
 
+            /// <summary>Скалярное деление полинома на вещественное число</summary>
+            /// <param name="p">Коэффициенты полинома</param>
+            /// <param name="x">Вещественное число</param>
+            /// <returns>Коэффициенты полинома - частного</returns>
             [NotNull]
             public static double[] DivadeScalar(double x, [NotNull] double[] p)
             {
@@ -448,7 +536,7 @@ namespace MathCore
         }
 
         /// <summary>Результат деления полиномов</summary>
-        public struct PolynomDevisionResult
+        public readonly struct PolynomDevisionResult
         {
             /// <summary>Частное полиномов</summary>
             public readonly Polynom Result;
@@ -456,6 +544,7 @@ namespace MathCore
             /// <summary>Остаток деления полиновов</summary>
             public readonly Polynom Remainder;
 
+            /// <summary>Полином - делитель</summary>
             public readonly Polynom Divisor;
 
             /// <summary>Инициализация результата деления полиномов</summary>
@@ -469,8 +558,13 @@ namespace MathCore
                 this.Divisor = Divisor;
             }
 
+            /// <summary>Значение результата деления полиномов</summary>
+            /// <param name="x">Аргумент</param>
+            /// <returns>Результат вычисления значения результата деления полиномов</returns>
             public double Value(double x) => Result.Value(x) + Remainder.Value(x) / Divisor.Value(x);
 
+            /// <summary>Получить функцию</summary>
+            /// <returns>Функция вычисления значения результата деления полиномов</returns>
             public Func<double, double> GetFunction() => Value;
 
             public override string ToString() => $"({Result.ToMathString()}) + ({Remainder.ToMathString()}) / ({Divisor.ToMathString()})";
@@ -481,10 +575,16 @@ namespace MathCore
             public static implicit operator Polynom(PolynomDevisionResult Result) => Result.Result;
         }
 
+        /// <summary>Случайный полином</summary>
+        /// <param name="Power">Степень полинома</param>
+        /// <param name="Ma">Математическое ожидание коэффициентов полинома</param>
+        /// <param name="Da">Дисперсия коэффициентов полинома</param>
+        /// <returns>Случайный полином</returns>
         [NotNull]
         public static Polynom Random(int Power = 3, double Ma = 0, double Da = 1)
         {
             var rnd = new Random();
+            rnd.NextBoolean()
             var a = new double[Power];
             for (var i = 0; i < Power; i++)
                 a[i] = (rnd.NextDouble() - .5) * Da + Ma;
