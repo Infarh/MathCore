@@ -11138,6 +11138,20 @@
         <member name="T:System.Linq.IEnumerableExtensions">
             <summary>Класс методов-расширений для интерфейса перечисления</summary>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.InsertBefore``1(System.Collections.Generic.IEnumerable{``0},``0[])">
+            <summary>Добавить элемент в начало последовательности</summary>
+            <typeparam name="T">Тип элементов последовательности</typeparam>
+            <param name="collection">Исходная последовательность элементов</param>
+            <param name="values">Добавляемый элемент</param>
+            <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.InsertBefore``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>Добавить элемент в начало последовательности</summary>
+            <typeparam name="T">Тип элементов последовательности</typeparam>
+            <param name="collection">Исходная последовательность элементов</param>
+            <param name="values">Добавляемый элемент</param>
+            <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.Where(System.Collections.Generic.IEnumerable{System.String},System.Text.RegularExpressions.Regex)">
             <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
             <param name="strings">Последовательность строк</param>
@@ -12302,6 +12316,226 @@
             <param name="A">Буфферный массив соответствующей длины</param>
             <param name="B">Перечень устанавливаемых значений</param>
             <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="T:System.Threading.Tasks.CancellationTokenExtensions">
+            <summary>Extension methods for CancellationToken.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.CancellationTokenExtensions.CancelAndThrow(System.Threading.CancellationTokenSource)">
+            <summary>Cancels a CancellationTokenSource and throws a corresponding OperationCanceledException.</summary>
+            <param name="source">The source to be canceled.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.CancellationTokenExtensions.CreateLinkedSource(System.Threading.CancellationToken)">
+            <summary>Creates a CancellationTokenSource that will be canceled when the specified token has cancellation requested.</summary>
+            <param name="token">The token.</param>
+            <returns>The created CancellationTokenSource.</returns>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskCompletionSourceExtensions">
+            <summary>Extension methods for TaskCompletionSource.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.SetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task)">
+            <summary>Transfers the result of a Task to the TaskCompletionSource.</summary>
+            <typeparam name="TResult">Specifies the type of the result.</typeparam>
+            <param name="ResultSetter">The TaskCompletionSource.</param>
+            <param name="task">The task whose completion results should be transfered.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.SetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task{``0})">
+            <summary>Transfers the result of a Task to the TaskCompletionSource.</summary>
+            <typeparam name="TResult">Specifies the type of the result.</typeparam>
+            <param name="ResultSetter">The TaskCompletionSource.</param>
+            <param name="task">The task whose completion results should be transfered.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.TrySetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task)">
+            <summary>Attempts to transfer the result of a Task to the TaskCompletionSource.</summary>
+            <typeparam name="TResult">Specifies the type of the result.</typeparam>
+            <param name="ResultSetter">The TaskCompletionSource.</param>
+            <param name="task">The task whose completion results should be transfered.</param>
+            <returns>Whether the transfer could be completed.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.TrySetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task{``0})">
+            <summary>Attempts to transfer the result of a Task to the TaskCompletionSource.</summary>
+            <typeparam name="TResult">Specifies the type of the result.</typeparam>
+            <param name="ResultSetter">The TaskCompletionSource.</param>
+            <param name="task">The task whose completion results should be transfered.</param>
+            <returns>Whether the transfer could be completed.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.YieldAsync">
+            <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.SwitchContext(System.Threading.Tasks.TaskScheduler)">
+            <summary>Переключиться в контекст планировщика потоков</summary>
+            <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Select``2(System.Threading.Tasks.Task{``0},System.Func{``0,``1})">
+            https://blogs.msdn.microsoft.com/pfxteam/2010/04/04/a-tour-of-parallelextensionsextras/
+        </member>
+        <member name="T:System.Threading.Tasks.TaskEx.OneElementGrouping`2">
+            <summary>Represents a grouping of one element.</summary>
+            <typeparam name="TKey">The type of the key for the element.</typeparam>
+            <typeparam name="TElement">The type of the element.</typeparam>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ContinueWith(System.Threading.Tasks.Task,System.Action{System.Threading.Tasks.Task},System.Threading.Tasks.TaskFactory)">
+            <summary>Creates a continuation task using the specified TaskFactory.</summary>
+            <param name="task">The antecedent Task.</param>
+            <param name="ContinuationAction">The continuation action.</param>
+            <param name="factory">The TaskFactory.</param>
+            <returns>A continuation task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ContinueWith``1(System.Threading.Tasks.Task,System.Func{System.Threading.Tasks.Task,``0},System.Threading.Tasks.TaskFactory)">
+            <summary>Creates a continuation task using the specified TaskFactory.</summary>
+            <param name="task">The antecedent Task.</param>
+            <param name="ContinuationFunction">The continuation function.</param>
+            <param name="factory">The TaskFactory.</param>
+            <returns>A continuation task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ContinueWith``1(System.Threading.Tasks.Task{``0},System.Action{System.Threading.Tasks.Task{``0}},System.Threading.Tasks.TaskFactory{``0})">
+            <summary>Creates a continuation task using the specified TaskFactory.</summary>
+            <param name="task">The antecedent Task.</param>
+            <param name="ContinuationAction">The continuation action.</param>
+            <param name="factory">The TaskFactory.</param>
+            <returns>A continuation task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ContinueWith``2(System.Threading.Tasks.Task{``0},System.Func{System.Threading.Tasks.Task{``0},``1},System.Threading.Tasks.TaskFactory{``0})">
+            <summary>Creates a continuation task using the specified TaskFactory.</summary>
+            <param name="task">The antecedent Task.</param>
+            <param name="ContinuationFunction">The continuation function.</param>
+            <param name="factory">The TaskFactory.</param>
+            <returns>A continuation task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ToAsync(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Creates a Task that represents the completion of another Task, and 
+            that schedules an AsyncCallback to run upon completion.
+            </summary>
+            <param name="task">The antecedent Task.</param>
+            <param name="callback">The AsyncCallback to run.</param>
+            <param name="state">The object state to use with the AsyncCallback.</param>
+            <returns>The new task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ToAsync``1(System.Threading.Tasks.Task{``0},System.AsyncCallback,System.Object)">
+            <summary>
+            Creates a Task that represents the completion of another Task, and 
+            that schedules an AsyncCallback to run upon completion.
+            </summary>
+            <param name="task">The antecedent Task.</param>
+            <param name="callback">The AsyncCallback to run.</param>
+            <param name="state">The object state to use with the AsyncCallback.</param>
+            <returns>The new task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.IgnoreExceptions(System.Threading.Tasks.Task)">
+            <summary>Suppresses default exception handling of a Task that would otherwise reraise the exception on the finalizer thread.</summary>
+            <param name="task">The Task to be monitored.</param>
+            <returns>The original Task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.IgnoreExceptions``1(System.Threading.Tasks.Task{``0})">
+            <summary>Suppresses default exception handling of a Task that would otherwise reraise the exception on the finalizer thread.</summary>
+            <param name="task">The Task to be monitored.</param>
+            <returns>The original Task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.FailFastOnException(System.Threading.Tasks.Task)">
+            <summary>Fails immediately when an exception is encountered.</summary>
+            <param name="task">The Task to be monitored.</param>
+            <returns>The original Task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.FailFastOnException``1(System.Threading.Tasks.Task{``0})">
+            <summary>Fails immediately when an exception is encountered.</summary>
+            <param name="task">The Task to be monitored.</param>
+            <returns>The original Task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.PropagateExceptions(System.Threading.Tasks.Task)">
+            <summary>Propagates any exceptions that occurred on the specified task.</summary>
+            <param name="task">The Task whose exceptions are to be propagated.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.PropagateExceptions(System.Threading.Tasks.Task[])">
+            <summary>Propagates any exceptions that occurred on the specified tasks.</summary>
+            <param name="tasks">The Tassk whose exceptions are to be propagated.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.ToObservable``1(System.Threading.Tasks.Task{``0})">
+            <summary>Creates an IObservable that represents the completion of a Task.</summary>
+            <typeparam name="TResult">Specifies the type of data returned by the Task.</typeparam>
+            <param name="task">The Task to be represented as an IObservable.</param>
+            <returns>An IObservable that represents the completion of the Task.</returns>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskEx.TaskObservable`1">
+            <summary>An implementation of IObservable that wraps a Task.</summary>
+            <typeparam name="TResult">The type of data returned by the task.</typeparam>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskEx.CancelOnDispose">
+            <summary>Translate a call to IDisposable.Dispose to a CancellationTokenSource.Cancel.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.WithTimeout(System.Threading.Tasks.Task,System.TimeSpan@)">
+            <summary>Creates a new Task that mirrors the supplied task but that will be canceled after the specified timeout.</summary>
+            <param name="task">The task.</param>
+            <param name="timeout">The timeout.</param>
+            <returns>The new Task that may time out.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.WithTimeout``1(System.Threading.Tasks.Task{``0},System.TimeSpan)">
+            <summary>Creates a new Task that mirrors the supplied task but that will be canceled after the specified timeout.</summary>
+            <typeparam name="TResult">Specifies the type of data contained in the task.</typeparam>
+            <param name="task">The task.</param>
+            <param name="timeout">The timeout.</param>
+            <returns>The new Task that may time out.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.AttachToParent(System.Threading.Tasks.Task)">
+            <summary>
+            Ensures that a parent task can't transition into a completed state
+            until the specified task has also completed, even if it's not
+            already a child task.
+            </summary>
+            <param name="task">The task to attach to the current task as a child.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.WaitForCompletionStatus(System.Threading.Tasks.Task)">
+            <summary>Waits for the task to complete execution, returning the task's final status.</summary>
+            <param name="task">The task for which to wait.</param>
+            <returns>The completion status of the task.</returns>
+            <remarks>Unlike Wait, this method will not throw an exception if the task ends in the Faulted or Canceled state.</remarks>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then(System.Threading.Tasks.Task,System.Action)">
+            <summary>Creates a task that represents the completion of a follow-up action when a task completes.</summary>
+            <param name="task">The task.</param>
+            <param name="next">The action to run when the task completes.</param>
+            <returns>The task that represents the completion of both the task and the action.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then``1(System.Threading.Tasks.Task,System.Func{``0})">
+            <summary>Creates a task that represents the completion of a follow-up function when a task completes.</summary>
+            <param name="task">The task.</param>
+            <param name="next">The function to run when the task completes.</param>
+            <returns>The task that represents the completion of both the task and the function.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then``1(System.Threading.Tasks.Task{``0},System.Action{``0})">
+            <summary>Creates a task that represents the completion of a follow-up action when a task completes.</summary>
+            <param name="task">The task.</param>
+            <param name="next">The action to run when the task completes.</param>
+            <returns>The task that represents the completion of both the task and the action.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then``2(System.Threading.Tasks.Task{``0},System.Func{``0,``1})">
+            <summary>Creates a task that represents the completion of a follow-up function when a task completes.</summary>
+            <param name="task">The task.</param>
+            <param name="next">The function to run when the task completes.</param>
+            <returns>The task that represents the completion of both the task and the function.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then(System.Threading.Tasks.Task,System.Func{System.Threading.Tasks.Task})">
+            <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+            <param name="task">The first task.</param>
+            <param name="next">The function that produces the second task.</param>
+            <returns>The task that represents the completion of both the first and second task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then``1(System.Threading.Tasks.Task{``0},System.Func{``0,System.Threading.Tasks.Task})">
+            <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+            <param name="task">The first task.</param>
+            <param name="next">The function that produces the second task based on the result of the first task.</param>
+            <returns>The task that represents the completion of both the first and second task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then``1(System.Threading.Tasks.Task,System.Func{System.Threading.Tasks.Task{``0}})">
+            <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+            <param name="task">The first task.</param>
+            <param name="next">The function that produces the second task.</param>
+            <returns>The task that represents the completion of both the first and second task.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskEx.Then``2(System.Threading.Tasks.Task{``0},System.Func{``0,System.Threading.Tasks.Task{``1}})">
+            <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+            <param name="task">The first task.</param>
+            <param name="next">The function that produces the second task based on the result of the first.</param>
+            <returns>The task that represents the completion of both the first and second task.</returns>
         </member>
         <member name="T:System.ComponentModel.INotifyPropertyChangedExtensions">
             <summary>Класс методов-расширений интерфейса <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></summary>
@@ -13816,6 +14050,19 @@
             <param name="filter">Фильтр файлов</param>
             <returns>Объект наблюдатель</returns>
         </member>
+        <member name="M:System.IO.DirectoryInfoExsentions.SubDirectoryOrCreate(System.IO.DirectoryInfo,System.String)">
+            <summary>Получение поддиректории по заданному пути. Если поддиректория отсутствует, то создать новую</summary>
+            <param name="ParentDirectory">Родительская директория</param>
+            <param name="SubDirectoryPath">Относительный путь к поддиректории</param>
+            <returns>Поддиректория</returns>
+        </member>
+        <member name="M:System.IO.DirectoryInfoExsentions.SubDirectory(System.IO.DirectoryInfo,System.String)">
+            <summary>Формирование информации о поддиректории, заданной своим именем, либо относительным путём</summary>
+            <param name="Directory">Корнневая директория</param><param name="SubDirectoryPath">Путь к поддиректории</param>
+            <exception cref="T:System.ArgumentNullException">Если указана пустая ссылка на <paramref name="Directory"/></exception>
+            <exception cref="T:System.ArgumentNullException">Если указана пустая ссылка на <paramref name="SubDirectoryPath"/></exception>
+            <returns>Информация о поддиректории</returns>
+        </member>
         <member name="T:System.IO.FileInfoExtensions">
             <summary>Класс методов расширений для объектов класса System.IO.FileInfo</summary>
         </member>
@@ -13884,12 +14131,26 @@
             <returns>Объект наблюдатель</returns>
         </member>
         <member name="M:System.IO.StreamExtensions.GetBufferedStream(System.IO.Stream,System.Int32)">
-            <summary>
-            Создать буферизованный поток данных
-            </summary>
+            <summary>Создать буферизованный поток данных</summary>
             <param name="DataStream">Исходный поток данных</param>
             <param name="BufferSize">Размер буфера (по умолчанию 4096 байта)</param>
             <returns>Буферизованный поток данных</returns>
+        </member>
+        <member name="T:System.Xml.Serialization.XmlSerializerExtentions">
+            <summary>Класс методов-расширений для XML-сериализаторов</summary>
+        </member>
+        <member name="F:System.Xml.Serialization.XmlSerializerExtentions.__XmlSerializersPool">
+            <summary>Словарь типов - сериализаторов</summary>
+        </member>
+        <member name="M:System.Xml.Serialization.XmlSerializerExtentions.GetXmlSerializer(System.Type)">
+            <summary>Получить XML-сериализатор по указанному типу</summary>
+            <param name="type">Тип XML-сериализатора</param>
+            <returns>XML-сериализатор</returns>
+        </member>
+        <member name="M:System.Xml.Serialization.XmlSerializerExtentions.GetXmlSerializer``1">
+            <summary>Получить XML-сериализатор по указанному типу</summary>
+            <param name="type">Тип XML-сериализатора</param>
+            <returns>XML-сериализатор</returns>
         </member>
         <member name="T:System.Xml.Serialization.IXmlSerializableAsync">
             <summary>Асинхронно сериализуемый в XML объект</summary>
@@ -13955,6 +14216,9 @@
             <devdoc>
                 <para>[To be supplied.]</para>
             </devdoc>
+        </member>
+        <member name="M:System.Xml.XPath.XmlReaderWrapper.Close">
+            <inheritdoc />
         </member>
         <member name="M:System.Xml.XPath.XPathCollection.MatchesAny(System.Collections.ArrayList,System.Int32)">
             <exception cref="T:System.ArgumentNullException"><paramref name="list"/> is <see langword="null" />.</exception>
@@ -14310,9 +14574,6 @@
             <devdoc>
                 <para>[To be supplied.]</para>
             </devdoc>
-        </member>
-        <member name="M:System.Xml.XPath.XmlReaderWrapper.Close">
-            <inheritdoc />
         </member>
         <member name="T:System.Xml.XPath.XPathReaderException">
             <devdoc>
@@ -14682,7 +14943,7 @@
         <member name="M:System.ObjectExtentions.ObjectSelector`2.Next(`1,System.Boolean)">
             <summary>Переход к следующей итерации</summary>
             <param name="result">Результат итерации</param>
-            <param name="continue">Продолжать выборку</param>
+            <param name="CanContinue">Продолжать выборку</param>
         </member>
         <member name="M:System.ObjectExtentions.SelectObj``2(``0,System.Action{System.ObjectExtentions.ObjectSelector{``0,``1}})">
             <summary>Генерация последовательности значений на основе алгоритма выборки</summary>
@@ -14753,6 +15014,15 @@
             <summary>Ссылка на объект равна null</summary>
             <param name="o">Проверяемый объект</param>
             <returns>Истина, если проверяемый объект null</returns>
+        </member>
+        <member name="M:System.ObjectExtentions.ParamNotNull``1(``0,System.String,System.String)">
+            <summary>Проверка параметра на <see langword="null"/></summary>
+            <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
+            <param name="obj">Проверяемый на <see langword="null"/> объект</param>
+            <param name="ParameterName">Имя параметра для указания его в исключении</param>
+            <param name="Message">Обциональное сообщение</param>
+            <returns>Объект, гарантированн не <see langword="null"/></returns>
+            <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
         </member>
         <member name="M:System.ObjectExtentions.GetAttributes``2(``1,System.Boolean)">
             <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
@@ -14906,13 +15176,6 @@
             <param name="actions">Словарь возможных действий над объектом</param>
             <param name="Default">Действие по умолчанию</param>
         </member>
-        <member name="T:System.ObjectExtentions.StructureReader`1">
-            <summary>Метод чтения структуры данных из массива байт</summary>
-            <typeparam name="T">Тип структуры</typeparam>
-            <param name="data">Массив байт</param>
-            <param name="offset">Смещение в массиве байт</param>
-            <param name="value">Прочитанная структура</param>
-        </member>
         <member name="M:System.ObjectExtentions.ToEvulation``1(``0)">
             <summary>Преобразование объекта в вычисление</summary>
             <typeparam name="T">Тип исходного элемента</typeparam>
@@ -15037,6 +15300,16 @@
         <member name="T:System.StringExtentions">
             <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
         </member>
+        <member name="M:System.StringExtentions.Compress(System.String)">
+            <summary>Сжать строку в последовательность байт</summary>
+            <param name="str">Сжимаемая строка</param>
+            <returns>Сжатая строка в виде последовательности байт</returns>
+        </member>
+        <member name="M:System.StringExtentions.DecompressAsString(System.Byte[])">
+            <summary>Разархивировать последовательность байт в строку</summary>
+            <param name="bytes">Сжатая последовательность бай, содержащая строку</param>
+            <returns>Разжатая последовательность байт в строковом представлении</returns>
+        </member>
         <member name="M:System.StringExtentions.FindBlock(System.String,System.String)">
             <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
             <param name="Str">Разбиваемая строка</param>
@@ -15044,13 +15317,9 @@
             <returns>Перечисление подстрок</returns>
         </member>
         <member name="M:System.StringExtentions.GetBracketText(System.String,System.Int32@,System.String,System.String)">
-            <summary>
-            Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения
-            </summary>
+            <summary>Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения</summary>
             <param name="Str">Входная строка</param>
-            <param name="Offset">
-            Смещеине во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска
-            </param>
+            <param name="Offset">Смещеине во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска</param>
             <param name="Open">Шаблон начала подстроки</param>
             <param name="Close">Шаблон окончания подстроки</param>
             <returns>Подстрока, заключённая между указанными шаблонами начала и окончания</returns>
@@ -15091,6 +15360,15 @@
             <summary>Удаление служебных символов в начале и конце строки</summary>
             <param name="str">Обрабатываемая строка</param>
             <returns>Новая строка с удалёнными служебными символами в началеи конце</returns>
+        </member>
+        <member name="M:System.StringExtentions.NotEmpty(System.String,System.String,System.String)">
+            <summary>Проверка на пустоту строки</summary>
+            <param name="str">Проверяемая строка</param>
+            <param name="ParameterName">Имя параметра, добавляемое в исключение в случае его генерации</param>
+            <param name="Message">Сообщение, добавляемое в исключение в случае его генерации</param>
+            <exception cref="T:System.ArgumentNullException">Если переданна пустая ссылка на строку <paramref name="str"/></exception>
+            <exception cref="T:System.ArgumentException">Если переданная строка <paramref name="str"/> является пустой</exception>
+            <returns>Строка, гарантированно не являющаяся пустой</returns>
         </member>
         <member name="M:System.Text.RegularExpressions.RegExExtentions.OrDefault(System.Text.RegularExpressions.Match,System.String)">
             <summary>Метод получения значения из результатов совпадения поиска</summary>
