@@ -71,7 +71,7 @@ namespace MathCore.Graphs
         public IEnumerator<IGraphNode<TValue, TWeight>> GetEnumerator() => Links.Select(link => link.Node).GetEnumerator();
 
         [DST]
-        public override string ToString() => $"λ[{(Value == null ? "" : Value.ToString())}]";
+        public override string ToString() => $"λ[{(Value is null ? "" : Value.ToString())}]";
     }
 
     public class LambdaGraphNode<V> : IGraphNode<V>, IEquatable<LambdaGraphNode<V>>

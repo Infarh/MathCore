@@ -57,7 +57,7 @@ namespace MathCore.Trees
             stack.Push(new TreeLevelItem<T>(Item, level));
             Action<T, int> Push = (t, l) =>
                                       {
-                                          if(t == null) return;
+                                          if(t is null) return;
                                           stack.Push(new TreeLevelItem<T>(t, l));
                                       };
 

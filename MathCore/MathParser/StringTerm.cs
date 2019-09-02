@@ -5,7 +5,7 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Строковый элемент выражения</summary>
-    class StringTerm : Term
+    internal class StringTerm : Term
     {
         /// <summary>Имя строкового элемента</summary>
         [NotNull]

@@ -51,7 +51,7 @@ namespace System.Reflection
             Contract.Requires(Name != "");
 
             var IsPublic = Private ? BindingFlags.NonPublic : BindingFlags.Public;
-            var IsStatic = o == null ? BindingFlags.Static : BindingFlags.Instance;
+            var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
             var type = typeof(TObject);
             if(type == typeof(object) && o != null)

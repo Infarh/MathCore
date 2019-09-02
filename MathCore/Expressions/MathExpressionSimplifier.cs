@@ -1,7 +1,7 @@
-
 using MathCore;
 using MathCore.Vectors;
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     public class MathExpressionSimplifier : ExpressionVisitorEx
@@ -27,7 +27,7 @@ namespace System.Linq.Expressions
             var @base = base.VisitBinary(b);
 
             b = @base as BinaryExpression;
-            if(b == null) return @base;
+            if(b is null) return @base;
 
             if (!(b.Left is ConstantExpression l) || !(b.Right is ConstantExpression r)) return @base;
             if (!IsNumerical(l.Value) || !IsNumerical(r.Value)) return @base;

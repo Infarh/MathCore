@@ -5,7 +5,7 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Функциональный элемент выражения</summary>
-    class FunctionTerm : StringTerm
+    internal class FunctionTerm : StringTerm
     {
         /// <summary>Блок со скобками</summary>
         [NotNull]

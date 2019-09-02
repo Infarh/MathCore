@@ -9,7 +9,7 @@ namespace MathCore.Vectors
         public override object ConvertFrom(ITypeDescriptorContext Context, CultureInfo Info, object value)
         {
             //Не указано объекта для преобразования
-            if(value == null)
+            if(value is null)
                 throw new ArgumentNullException(nameof(value));
 
             //Оргумент не является трокой, либо строка пуста
@@ -63,7 +63,7 @@ namespace MathCore.Vectors
                     }
 
                 var vv = V[i].AsDouble();
-                if(vv == null) continue;
+                if(vv is null) continue;
                 if(!th_set)
                 {
                     thetta = vv.Value;

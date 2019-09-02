@@ -7,6 +7,9 @@ namespace MathCore
 {
     public partial struct Complex
     {
+        /// <summary>Деконструктор комплексного числа</summary>
+        /// <param name="re">Действительная часть</param>
+        /// <param name="im">Мнимая часть</param>
         public void Deconstruct(out double re, out double im)
         {
             re = _Re;
@@ -515,12 +518,17 @@ namespace MathCore
         /// <summary>ОПератор неявного приведения к дробному типу чисел с двойной точностью</summary>
         /// <param name="Z">Приводимое комплексное число</param>
         /// <returns>Модуль комплексного числа</returns>
-        [DST] public static explicit operator double(in Complex Z) => Z.Abs;
+        public static explicit operator double(in Complex Z) => Z.Abs;
 
         /// <summary>Оператор неявного приведения дробного числа двойной точности к комплексному виду</summary>
         /// <param name="X">Вещественное число двойной точности</param>
         /// <returns>Комплексное число</returns>
-        [DST] public static implicit operator Complex(in double X) => new Complex(X);
+        public static implicit operator Complex(in double X) => new Complex(X);
+
+        /// <summary>Оператор неявного приведения целого числа к комплексному виду</summary>
+        /// <param name="X">Целое число</param>
+        /// <returns>Комплексное число</returns>
+        public static implicit operator Complex(in int X) => new Complex(X);
 
         #endregion
 

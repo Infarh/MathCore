@@ -80,7 +80,7 @@ namespace System.Xml.XPath
         internal bool MatchesAny(ArrayList list, int depth)
         {
 
-            if(list == null)
+            if(list is null)
                 throw new ArgumentNullException(nameof(list));
 
             list.Clear();
@@ -146,7 +146,7 @@ namespace System.Xml.XPath
         {
             XPathQuery xpathexpr;
 
-            if(_Reader == null)
+            if(_Reader is null)
                 xpathexpr = new XPathQuery(expression);
             else
             {

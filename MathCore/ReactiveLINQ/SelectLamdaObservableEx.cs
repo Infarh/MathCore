@@ -1,6 +1,6 @@
 namespace System.Linq.Reactive
 {
-    sealed class SelectLamdaObservableEx<T, Q> : SimpleObservableEx<Q>
+    internal sealed class SelectLamdaObservableEx<T, Q> : SimpleObservableEx<Q>
     {
         private readonly SelectLamdaObserverEx<T, Q> _Observer;
 

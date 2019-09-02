@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Обработчик событий генерации исключения</summary>
@@ -27,7 +27,7 @@ namespace System
             ExceptionEventHandlerArgs<TException> e) where TException : Exception
         {
             var handler = Handler;
-            if(handler == null) return;
+            if(handler is null) return;
             var invocations = handler.GetInvocationList();
             for(var i = 0; i < invocations.Length; i++)
             {

@@ -98,7 +98,7 @@ namespace MathCore.Values
         /// <exception cref="ArgumentNullException">Исключение возникает при нуливой ссылке на поток данных</exception>
         public StreamDataSpeedValue(Stream DataStream)
         {
-            Contract.Requires(DataStream != null, "DataStream == null");
+            Contract.Requires(DataStream != null, "DataStream is null");
             _DataStream = DataStream;
             Reset();
         }

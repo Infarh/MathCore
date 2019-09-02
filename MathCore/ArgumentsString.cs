@@ -52,7 +52,7 @@ namespace MathCore
 
         public override string ToString()
         {
-            if(_Arguments == null) return "";
+            if(_Arguments is null) return "";
             var last_index = _Arguments.Length - 1;
             return _Arguments.Aggregate(new StringBuilder(), (S, s, i) => S.AppendFormat(i != last_index ? "{0} " : "{0}", s))
                 .ToString();

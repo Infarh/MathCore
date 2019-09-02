@@ -23,7 +23,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>—троковое представление узла</summary>
         /// <returns>—троковое представление узла</returns>
-        public override string ToString() => $"{(Left == null ? "" : $"{Left}")}{Value}{(Right == null ? "" : $"{Right}")}";
+        public override string ToString() => $"{(Left is null ? "" : $"{Left}")}{Value}{(Right is null ? "" : $"{Right}")}";
 
         /// <summary>ќператор не€вного преобразовани€ строки к типу строкового узла</summary>
         /// <param name="value">—троковое значение</param>

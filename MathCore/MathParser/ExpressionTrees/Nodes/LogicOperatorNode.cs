@@ -45,7 +45,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
     [ContractClassFor(typeof(LogicOperatorNode))]
     [ExcludeFromCodeCoverage]
-    abstract class LogicOperatorNodeContract : LogicOperatorNode
+    internal abstract class LogicOperatorNodeContract : LogicOperatorNode
     {
         private LogicOperatorNodeContract(string Name, int Priority) : base(Name, Priority) { }
 

@@ -60,7 +60,7 @@ namespace MathCore.MathParser
                         case '.':
                             if (NewNode.Parent is CharNode c && c.Value == '.')
                             {
-                                var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left == null);
+                                var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left is null);
                                 NewNode["./."].Right = null;
                                 var parent = value_node.Parent;
                                 var interval_node = new IntervalNode(value_node);
@@ -472,7 +472,7 @@ namespace MathCore.MathParser
             }
 
             // Если ссылка на предыдущий узел отсутствует, то это ошибка формата
-            if (last == null) throw new FormatException();
+            if (last is null) throw new FormatException();
             return last.Root; // вернуть корень дерева текущего элемента
         }
 
@@ -483,7 +483,7 @@ namespace MathCore.MathParser
         public virtual void Combine([CanBeNull] ExpressionTreeNode Last, [NotNull] ExpressionTreeNode Node)
         {
             Contract.Requires(Node != null);
-            if (Last == null) return; // Если предыдущий узел дерева не указан, возврат
+            if (Last is null) return; // Если предыдущий узел дерева не указан, возврат
 
             if (Node is CharNode) // Если текущий узел - символьный узел, то
             {
@@ -507,13 +507,13 @@ namespace MathCore.MathParser
                     //      op 
                     //     /  \
                     //  null   ?
-                    if (parent_operator.Left == null && parent_operator.Parent is OperatorNode @operator)
+                    if (parent_operator.Left is null && parent_operator.Parent is OperatorNode @operator)
                         parent_operator = @operator;
 
 
-                    if (parent_operator.Left == null)          // Если левое поддерево предыдущего оператора пусто...
+                    if (parent_operator.Left is null)          // Если левое поддерево предыдущего оператора пусто...
                         operator_node.Left = parent_operator; //  устанавливаем предыдущий оператор в качестве левого поддерева текущего
-                    else if (parent_operator.Right == null)    // Иначе если правое поддерево пусто
+                    else if (parent_operator.Right is null)    // Иначе если правое поддерево пусто
                         parent_operator.Right = Node;         //  установить текущий оператор правым поддеревом предыдущего
                     else                                      // Иначе если конфликт приоритетов
                     {

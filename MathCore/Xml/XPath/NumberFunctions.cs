@@ -86,10 +86,10 @@ namespace System.Xml.XPath
 
         private double Number(XPathReader reader)
         {
-            if(_Qy == null) return double.NaN;
+            if(_Qy is null) return double.NaN;
             var obj = _Qy.GetValue(reader);
 
-            return obj == null ? double.NaN : Convert.ToDouble(obj);
+            return obj is null ? double.NaN : Convert.ToDouble(obj);
         }
 
 

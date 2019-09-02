@@ -23,7 +23,7 @@ namespace System.Xml.XPath
     /// <internalonly />
     /// <devdoc>
     /// </devdoc>
-    internal sealed class XmlCharType
+    internal static class XmlCharType
     {
         #region Static
 
@@ -255,7 +255,6 @@ namespace System.Xml.XPath
         }
 
         // Don't create any instances of this class
-        private XmlCharType() { }
 
         #endregion
 
@@ -295,7 +294,7 @@ namespace System.Xml.XPath
         // [13] PubidChar ::=  #x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%] Section 2.3 of spec
         public static bool IsPubidChar(char ch) => (_SCharProperties[ch] & Fpublicid) != 0;
 
-        internal static bool IsOnlyWhitespace(string str) => str == null || str.All(IsWhiteSpace);
+        internal static bool IsOnlyWhitespace(string str) => str is null || str.All(IsWhiteSpace);
 
         #endregion
     }

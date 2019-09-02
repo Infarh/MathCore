@@ -391,7 +391,7 @@ namespace System.Linq.Expressions
                 var doagonal_item = data[k, k];
 
                 // Определитель- произведение элементов главной диагонали треугольной матрицы
-                det = det == null
+                det = det is null
                     ? (negate ? doagonal_item.Negate() : doagonal_item)
                     : (negate
                         ? (Expression)det.MultiplyWithConversion(doagonal_item).Negate()

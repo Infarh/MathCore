@@ -2,7 +2,7 @@ namespace System.Linq.Reactive
 {
     /// <summary>Управляемый наблюдаемый объект</summary>
     /// <typeparam name="T">Тип объекта последовательности</typeparam>
-    sealed class TriggeredObservable<T> : SimpleObservableEx<T>
+    internal sealed class TriggeredObservable<T> : SimpleObservableEx<T>
     {
         /// <summary>Наблюдатель</summary>
         private readonly IObserver<T> _Observer;

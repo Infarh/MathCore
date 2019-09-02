@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.Vectors
 {
     /// <summary>Трёхмерный вектор</summary>
     [TypeConverter(typeof(Vector3DConverter))]
-    public partial struct Vector3D : IEquatable<Vector3D>, ICloneable<Vector3D>, IFormattable
+    public readonly partial struct Vector3D : IEquatable<Vector3D>, ICloneable<Vector3D>, IFormattable
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -138,21 +139,15 @@ namespace MathCore.Vectors
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST]
-        public Vector3D(double X) { _X = X; _Y = 0; _Z = 0; }
+        [DST] public Vector3D(double X) { _X = X; _Y = 0; _Z = 0; }
 
 
-        [DST]
-        public Vector3D(double X, double Y) { _X = X; _Y = Y; _Z = 0; }
+        [DST] public Vector3D(double X, double Y) { _X = X; _Y = Y; _Z = 0; }
 
-        [DST]
-        public Vector3D(double X, double Y, double Z) { _X = X; _Y = Y; _Z = Z; }
+        [DST] public Vector3D(double X, double Y, double Z) { _X = X; _Y = Y; _Z = Z; }
 
-        //[System.Diagnostics.DST]
         public Vector3D(in SpaceAngle Angle) : this(1, Angle) { }
 
-
-        //[System.Diagnostics.DST]
         public Vector3D(double R, in SpaceAngle Angle)
         {
             double thetta;
@@ -173,9 +168,9 @@ namespace MathCore.Vectors
             _X = r * Math.Cos(phi);
             _Y = r * Math.Sin(phi);
         }
-        private Vector3D(in Vector3D V) : this(V._X, V._Y, V._Z) { }
 
-        //[System.Diagnostics.DST]
+        private Vector3D(in Vector3D V) => (_X, _Y, _Z) = V;
+
         public Vector3D InBasis(in Basis3D b) => new Vector3D(
             b.xx * _X + b.xy * _Y + b.xz * _Z,
             b.yx * _X + b.yy * _Y + b.yz * _Z,
@@ -202,8 +197,7 @@ namespace MathCore.Vectors
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST]
-        public override string ToString() => $"({_X};{_Y};{_Z})";
+        [DST] public override string ToString() => $"({_X};{_Y};{_Z})";
 
         [DST]
         public override int GetHashCode()
@@ -228,7 +222,7 @@ namespace MathCore.Vectors
         [DST]
         public override bool Equals(object obj) => obj is Vector3D vector_3d && Equals(vector_3d);
 
-        [DST]
+        [DST, NotNull] 
         public string ToString(string Format) => $"({_X.ToString(Format)};{_Y.ToString(Format)};{_Z.ToString(Format)})";
 
         [DST]

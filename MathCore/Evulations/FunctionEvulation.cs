@@ -22,7 +22,7 @@ namespace MathCore.Evulations
 
         /// <inheritdoc />
         public override Ex GetExpression() => Ex.Call(
-            Function.Target == null ? null : Ex.Constant(Function.Target),
+            Function.Target is null ? null : Ex.Constant(Function.Target),
             Function.Method);
 
         /// <inheritdoc />

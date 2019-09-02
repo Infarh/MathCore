@@ -2557,9 +2557,9 @@ namespace MathCore
                 [NotNull]
                 public static double[,] Add([NotNull] double[,] A, [NotNull] double[,] B)
                 {
-                    if (A == null)
+                    if (A is null)
                         throw new ArgumentNullException(nameof(A));
-                    if (B == null)
+                    if (B is null)
                         throw new ArgumentNullException(nameof(B));
                     Contract.Ensures(A.GetLength(0) == B.GetLength(0));
                     Contract.Ensures(A.GetLength(1) == B.GetLength(1));
@@ -2590,9 +2590,9 @@ namespace MathCore
                 [NotNull]
                 public static double[,] Substract([NotNull] double[,] A, [NotNull] double[,] B)
                 {
-                    if (A == null)
+                    if (A is null)
                         throw new ArgumentNullException(nameof(A));
-                    if (B == null)
+                    if (B is null)
                         throw new ArgumentNullException(nameof(B));
                     Contract.Ensures(A.GetLength(0) == B.GetLength(0));
                     Contract.Ensures(A.GetLength(1) == B.GetLength(1));
@@ -2623,9 +2623,9 @@ namespace MathCore
                 [NotNull]
                 public static double[] MultylyCol([NotNull] double[,] A, [NotNull] double[] col)
                 {
-                    if (A == null)
+                    if (A is null)
                         throw new ArgumentNullException(nameof(A));
-                    if (col == null)
+                    if (col is null)
                         throw new ArgumentNullException(nameof(col));
                     Contract.Ensures(A.GetLength(1) == col.Length);
                     Contract.Ensures(Contract.Result<double[]>() != null);
@@ -2652,9 +2652,9 @@ namespace MathCore
                 [NotNull]
                 public static double[] MultylyRow([NotNull] double[] row, [NotNull] double[,] B)
                 {
-                    if (B == null)
+                    if (B is null)
                         throw new ArgumentNullException(nameof(B));
-                    if (row == null)
+                    if (row is null)
                         throw new ArgumentNullException(nameof(row));
                     Contract.Ensures(B.GetLength(0) == row.Length);
                     Contract.Ensures(Contract.Result<double[]>() != null);
@@ -2680,9 +2680,9 @@ namespace MathCore
                 /// <exception cref="ArgumentException">В случае если размерности строки и столбца не равны</exception>
                 public static double MultylyRowToCol([NotNull] double[] row, [NotNull] double[] col)
                 {
-                    if (row == null)
+                    if (row is null)
                         throw new ArgumentNullException(nameof(row));
-                    if (col == null)
+                    if (col is null)
                         throw new ArgumentNullException(nameof(col));
                     if (col.Length != row.Length)
                         throw new ArgumentException(@"Число столбцов элементов строки не равно числу элементов столбца", nameof(row));
@@ -2703,9 +2703,9 @@ namespace MathCore
                 [NotNull]
                 public static double[,] Multiply([NotNull] double[,] A, [NotNull] double[,] B)
                 {
-                    if (A == null)
+                    if (A is null)
                         throw new ArgumentNullException(nameof(A));
-                    if (B == null)
+                    if (B is null)
                         throw new ArgumentNullException(nameof(B));
                     if (A.GetLength(1) != B.GetLength(0))
                         throw new ArgumentOutOfRangeException(nameof(B), @"Число столбцов матрицы А не равно числу строк матрицы B");
@@ -2772,11 +2772,11 @@ namespace MathCore
                 /// <exception cref="ArgumentException">В случае если число столбцов <paramref name="result"/> не равно числу строк <paramref name="B"/></exception>
                 public static void Multiply([NotNull] double[,] A, [NotNull] double[,] B, [NotNull] double[,] result)
                 {
-                    if (A == null)
+                    if (A is null)
                         throw new ArgumentNullException(nameof(A));
-                    if (B == null)
+                    if (B is null)
                         throw new ArgumentNullException(nameof(B));
-                    if (result == null)
+                    if (result is null)
                         throw new ArgumentNullException(nameof(result));
                     if (A.GetLength(1) != B.GetLength(0))
                         throw new ArgumentOutOfRangeException(nameof(B), @"Матрицы несогласованных порядков.");

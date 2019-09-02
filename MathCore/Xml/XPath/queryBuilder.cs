@@ -251,7 +251,7 @@ namespace System.Xml.XPath
         {
             Query result = null;
 
-            if(root == null)
+            if(root is null)
                 return null;
 
             switch(root.TypeOfAst)

@@ -5,7 +5,7 @@ using System.Threading;
 namespace System.Linq.Expressions
 {
     [NotImplemented]
-    class IntegralVisitor : ExpressionVisitorEx
+    internal class IntegralVisitor : ExpressionVisitorEx
     {
         private readonly Dictionary<int, ParameterExpression> _Parameters = new Dictionary<int, ParameterExpression>();
 
@@ -19,7 +19,7 @@ namespace System.Linq.Expressions
             set
             {
                 var id = Thread.CurrentThread.ManagedThreadId;
-                if(value == null)
+                if(value is null)
                     _Parameters.Remove(id);
                 else
                     _Parameters.Add(id, value);
@@ -58,7 +58,7 @@ namespace System.Linq.Expressions
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
-            if(l == null && r == null) return b;
+            if(l is null && r is null) return b;
             if(l != null && r != null)
                 return b.NodeType == ExpressionType.Add
                     ? Expression.Constant((double)l.Value + (double)r.Value)
@@ -82,7 +82,7 @@ namespace System.Linq.Expressions
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
-            if(l == null && r == null) return b;
+            if(l is null && r is null) return b;
             if(l != null && r != null)
                 return Expression.Constant((double)l.Value * (double)r.Value);
             if(l?.Value.Equals(0.0) == true) return l;
@@ -102,7 +102,7 @@ namespace System.Linq.Expressions
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
-            if(l == null && r == null) return b;
+            if(l is null && r is null) return b;
             if(l != null && r != null) return Expression.Constant((double)l.Value / (double)r.Value);
             if(l?.Value.Equals(0.0) == true) return l;
             if(l?.Value.Equals(1.0) == true) return b;
@@ -119,7 +119,7 @@ namespace System.Linq.Expressions
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
-            if(l == null && r == null) return b;
+            if(l is null && r is null) return b;
             if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value, (double)r.Value));
             if(l != null && (l.Value.Equals(0.0) || l.Value.Equals(1.0))) return l;
             if(r?.Value.Equals(0.0) == true) return Expression.Constant(1.0);

@@ -34,10 +34,10 @@ namespace MathCore.MathParser
             {
                 Contract.Requires(!string.IsNullOrWhiteSpace(Name));
                 Contract.Ensures(Contract.Result<ExpressionVariabel>() != null);
-                if(Name == null) throw new ArgumentNullException(nameof(Name));
+                if(Name is null) throw new ArgumentNullException(nameof(Name));
                 if(string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 var c = _Items.Find(v => v.Name == Name);
-                if(c == null) throw new ArgumentException($"Константа с именем {Name} не найдена");
+                if(c is null) throw new ArgumentException($"Константа с именем {Name} не найдена");
                 return c;
             }
         }

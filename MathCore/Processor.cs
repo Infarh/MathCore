@@ -182,7 +182,7 @@ namespace System
         public DateTime? StopTime { [DST] get => _StopTime; protected set { _StopTime = value; OnPropertyChanged(); } }
 
         /// <summary>Время, прошедшее после запуска</summary>
-        public TimeSpan? ElapsedTime { [DST] get { var start = _StartTime; return start == null ? (TimeSpan?)null : Now - start.Value; } }
+        public TimeSpan? ElapsedTime { [DST] get { var start = _StartTime; return start is null ? (TimeSpan?)null : Now - start.Value; } }
 
         /// <summary>ОБъект-наблюдатель за состоянием процессора</summary>
         public ProgressMonitor Monitor => _Monitor;
@@ -281,13 +281,13 @@ namespace System
 
         /// <summary>Блокировать поток до запуска процессора</summary>
         [DST]
-        public bool WaitToStart(TimeSpan? Timeout = null) => Timeout == null || Timeout.Value.Ticks == 0
+        public bool WaitToStart(TimeSpan? Timeout = null) => Timeout is null || Timeout.Value.Ticks == 0
             ? _StartWaitHandle.WaitOne()
             : _StartWaitHandle.WaitOne(Timeout.Value);
 
         /// <summary>Блокировать пото до остановки процессора</summary>
         [DST]
-        public bool WaitToStop(TimeSpan? Timeout = null) => Timeout == null || Timeout.Value.Ticks == 0
+        public bool WaitToStop(TimeSpan? Timeout = null) => Timeout is null || Timeout.Value.Ticks == 0
             ? _StopWaitHandle.WaitOne()
             : _StopWaitHandle.WaitOne(Timeout.Value);
 

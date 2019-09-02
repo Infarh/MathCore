@@ -7,7 +7,7 @@ namespace MathCore.MathParser
 {
     /// <summary>Элемент математического выражения</summary>
     [ContractClass(typeof(TermContract))]
-    abstract class Term
+    internal abstract class Term
     {
         /// <summary>Строковое содержимое</summary>
         protected string _Value;
@@ -29,7 +29,7 @@ namespace MathCore.MathParser
     }
 
     [ContractClassFor(typeof(Term)), ExcludeFromCodeCoverage]
-    abstract class TermContract : Term
+    internal abstract class TermContract : Term
     {
         private TermContract(string Value) : base(Value) { }
 

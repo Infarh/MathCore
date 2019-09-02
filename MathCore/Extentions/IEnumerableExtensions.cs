@@ -10,7 +10,7 @@ using MathCore.Values;
 using static System.Diagnostics.Contracts.Contract;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using NN = MathCore.Annotations.NotNullAttribute;
-using СN = MathCore.Annotations.CanBeNullAttribute;
+using CN = MathCore.Annotations.CanBeNullAttribute;
 using InN = MathCore.Annotations.ItemNotNullAttribute;
 using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
 
@@ -20,6 +20,33 @@ namespace System.Linq
     /// <summary>Класс методов-расширений для интерфейса перечисления</summary>
     public static class IEnumerableExtensions
     {
+        /// <summary>Добавить элемент в начало последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Исходная последовательность элементов</param>
+        /// <param name="values">Добавляемый элемент</param>
+        /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
+        [NN]
+        public static IEnumerable<T> InsertBefore<T>([CanBeNull] this IEnumerable<T> collection, [CanBeNull] params T[] values)
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
+            if (values != null) foreach (var v in values) yield return v;
+            if (collection != null) foreach (var v in collection) yield return v;
+        }
+
+        /// <summary>Добавить элемент в начало последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Исходная последовательность элементов</param>
+        /// <param name="values">Добавляемый элемент</param>
+        /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
+        [NN]
+        public static IEnumerable<T> InsertBefore<T>([CanBeNull] this IEnumerable<T> collection, [CanBeNull] IEnumerable<T> values)
+        {
+            Contract.Requires(collection != null);
+            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
+            if (values != null) foreach (var v in values) yield return v;
+            if (collection != null) foreach (var v in collection) yield return v;
+        }
+
         public static T FirstOrDefault<T, TParameter>(this IEnumerable<T> collection, TParameter parameter, Func<T, TParameter, bool> Selector)
         {
             foreach (var item in collection)
@@ -37,7 +64,7 @@ namespace System.Linq
         }
 
         [NN]
-        public static IEnumerable<T> SelectMany<T>([СN] this IEnumerable<IEnumerable<T>> collection)
+        public static IEnumerable<T> SelectMany<T>([CN] this IEnumerable<IEnumerable<T>> collection)
         {
             if (collection is null) yield break;
             foreach (var items in collection)
@@ -104,7 +131,7 @@ namespace System.Linq
                     yield return i;
         }
 
-        public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> collection, [СN] T item)
+        public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> collection, [CN] T item)
         {
             var index = -1;
             foreach (var element in collection)
@@ -115,7 +142,7 @@ namespace System.Linq
             return index;
         }
 
-        public static int LastIndexOf<T>([NN, IcN] this IEnumerable<T> collection, [СN] T item)
+        public static int LastIndexOf<T>([NN, IcN] this IEnumerable<T> collection, [CN] T item)
         {
             var i = 0;
             var index = -1;
@@ -127,25 +154,25 @@ namespace System.Linq
             return index;
         }
 
-        public static IEnumerable Concat([СN] this IEnumerable source, [СN] IEnumerable other)
+        public static IEnumerable Concat([CN] this IEnumerable source, [CN] IEnumerable other)
         {
             if (source != null) foreach (var src in source) yield return src;
             if(other != null) foreach (var oth in other) yield return oth;
         }
 
-        [СN]
+        [CN]
         public static LambdaEnumerable<TValue> GetLamdaEnumerable<TObject, TValue>(this TObject obj,
             Func<TObject, IEnumerable<TValue>> Creator) => new LambdaEnumerable<TValue>(() => Creator(obj));
 
-        [СN]
-        public static IEnumerable<T> WhereNotNull<T>([СN] this IEnumerable<T> items) where T : class => items?.Where(i => i is { });
+        [CN]
+        public static IEnumerable<T> WhereNotNull<T>([CN] this IEnumerable<T> items) where T : class => items?.Where(i => i is { });
 
         /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
         /// <param name="strings">Последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
-        [СN]
-        public static IEnumerable<string> Where([СN] this IEnumerable<string> strings, [NN] Regex regex)
+        [CN]
+        public static IEnumerable<string> Where([CN] this IEnumerable<string> strings, [NN] Regex regex)
         {
             Requires(regex != null);
             Ensures(strings is null == Result<IEnumerable<string>>() is null);
@@ -157,8 +184,8 @@ namespace System.Linq
         /// <param name="strings">Фильтруемая последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
-        [СN]
-        public static IEnumerable<string> WhereNot([СN] this IEnumerable<string> strings, [NN] Regex regex)
+        [CN]
+        public static IEnumerable<string> WhereNot([CN] this IEnumerable<string> strings, [NN] Regex regex)
         {
             Requires(regex != null);
             Ensures(strings is null == Result<IEnumerable<string>>() is null);
@@ -170,8 +197,8 @@ namespace System.Linq
         /// <param name="strings">Последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
-        [СN]
-        public static IEnumerable<string> Where([СN] this IEnumerable<string> strings, [NN] string regex)
+        [CN]
+        public static IEnumerable<string> Where([CN] this IEnumerable<string> strings, [NN] string regex)
         {
             Requires(!string.IsNullOrEmpty(regex));
             Ensures(strings is null == Result<IEnumerable<string>>() is null);
@@ -183,8 +210,8 @@ namespace System.Linq
         /// <param name="strings">Фильтруемая последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
-        [СN]
-        public static IEnumerable<string> WhereNot([СN] this IEnumerable<string> strings, [NN] string regex)
+        [CN]
+        public static IEnumerable<string> WhereNot([CN] this IEnumerable<string> strings, [NN] string regex)
         {
             Requires(!string.IsNullOrEmpty(regex));
             Ensures(strings is null == Result<IEnumerable<string>>() is null);
@@ -200,8 +227,8 @@ namespace System.Linq
         /// <param name="NotSelector">Функция для проверки каждого элемента на не соответствие условию.</param>
         /// <typeparam name="T">Тип элементов последовательности <paramref name="collection"/>.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="collection"/> или <paramref name="NotSelector"/> — null.</exception>
-        [СN]
-        public static IEnumerable<T> WhereNot<T>([СN]this IEnumerable<T> collection, [NN]Func<T, bool> NotSelector)
+        [CN]
+        public static IEnumerable<T> WhereNot<T>([CN] this IEnumerable<T> collection, [NN]Func<T, bool> NotSelector)
         {
             Requires(NotSelector != null);
             Ensures(collection is null == Result<IEnumerable<T>>() is null);
@@ -217,8 +244,8 @@ namespace System.Linq
         /// <param name="NotSelector">Функция для проверки каждого элемента на соответствие условию.</param>
         /// <typeparam name="T">Тип элементов последовательности <paramref name="collection"/>.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="collection"/> или <paramref name="NotSelector"/> — null.</exception>
-        [СN]
-        public static IEnumerable<T> TakeWhileNot<T>([СN]this IEnumerable<T> collection, [NN]Func<T, bool> NotSelector)
+        [CN]
+        public static IEnumerable<T> TakeWhileNot<T>([CN] this IEnumerable<T> collection, [NN]Func<T, bool> NotSelector)
         {
             Requires(NotSelector != null);
             Ensures(collection is null == Result<IEnumerable<T>>() is null);
@@ -237,8 +264,8 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [СN]
-        public static TValue[] ToArray<TItem, TValue>([СN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter)
+        [CN]
+        public static TValue[] ToArray<TItem, TValue>([CN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter)
         {
             Requires(converter != null);
             Ensures(collection is null == Result<TValue[]>() is null);
@@ -257,8 +284,8 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на список
         /// </returns>
-        [СN]
-        public static List<TValue> ToList<TItem, TValue>([СN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter)
+        [CN]
+        public static List<TValue> ToList<TItem, TValue>([CN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter)
         {
             Requires(converter != null);
             Ensures(collection is null == Result<List<TValue>>() is null);
@@ -307,8 +334,8 @@ namespace System.Linq
         /// <summary>Объединение перечисления строк в единую строку с разделителем - переносом строки</summary>
         /// <param name="Lines">Перечисление строк</param>
         /// <returns>Если ссылка на перечисление пуста, то пустая ссылка на строку, иначе - объединение строк с разделителем - переносом строки</returns>
-        [СN]
-        public static string Aggregate([СN] this IEnumerable<string> Lines)
+        [CN]
+        public static string Aggregate([CN] this IEnumerable<string> Lines)
         {
             Ensures(Lines is null == Result<string>() is null);
 
@@ -349,7 +376,7 @@ namespace System.Linq
         /// <param name="converter">Метод определения ключа элемента</param>
         public static void AddToDictionary<TKey, TValue>
         (
-            [СN] this IEnumerable<TValue> collection,
+            [CN] this IEnumerable<TValue> collection,
             [NN] IDictionary<TKey, TValue> dictionary,
             [NN] Func<TValue, TKey> converter
         )
@@ -367,8 +394,8 @@ namespace System.Linq
         /// <typeparam name="TValue">Тип элементов, в которые преобразуются исходные</typeparam>
         /// <param name="collection">Последовательность исходных элементов</param>
         /// <returns>Последовательность элементов преобразованного типа</returns>
-        [СN]
-        public static IEnumerable<TValue> ConvertToType<TItem, TValue>([СN] this IEnumerable<TItem> collection)
+        [CN]
+        public static IEnumerable<TValue> ConvertToType<TItem, TValue>([CN] this IEnumerable<TItem> collection)
         {
             Ensures(collection is null == Result<IEnumerable<TValue>>() is null);
 
@@ -397,7 +424,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<TValue> SelectWithLastValue<TItem, TValue>
         (
-            [СN] this IEnumerable<TItem> collection,
+            [CN] this IEnumerable<TItem> collection,
             [NN] Func<TItem, TItem, TValue> converter
         )
         {
@@ -425,7 +452,7 @@ namespace System.Linq
         /// <param name="action">Действие, выполняемое для первого элемента последовательности в момент её перечисления</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
-        public static IEnumerable<T> AtFirst<T>([СN] this IEnumerable<T> collection, [NN] Action<T> action)
+        public static IEnumerable<T> AtFirst<T>([CN] this IEnumerable<T> collection, [NN] Action<T> action)
         {
             Requires(action != null);
             Ensures(Result<IEnumerable<T>>() != null);
@@ -449,7 +476,7 @@ namespace System.Linq
         /// <param name="action">Действие, выполняемое для последнего элемента в момент её перечисления. Если последовательность элементов просмотрена до конца</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
-        public static IEnumerable<T> AtLast<T>([СN] this IEnumerable<T> collection, [NN] Action<T> action)
+        public static IEnumerable<T> AtLast<T>([CN] this IEnumerable<T> collection, [NN] Action<T> action)
         {
             Requires(action != null);
             Ensures(Result<IEnumerable<T>>() != null);
@@ -472,7 +499,7 @@ namespace System.Linq
         /// <param name="ActionBefore">Действие, выполняемое до начала перечисления элементов последовательности</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
-        public static IEnumerable<T> Before<T>([СN] this IEnumerable<T> collection, [NN] Action ActionBefore)
+        public static IEnumerable<T> Before<T>([CN] this IEnumerable<T> collection, [NN] Action ActionBefore)
         {
             Requires(ActionBefore != null);
             Ensures(Result<IEnumerable<T>>() != null);
@@ -488,7 +515,7 @@ namespace System.Linq
         /// <param name="CompliteAction">ДЕйствие, выполняемое по завершению перечисления коллекции</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
-        public static IEnumerable<T> OnComplite<T>([СN] this IEnumerable<T> collection, [NN] Action CompliteAction)
+        public static IEnumerable<T> OnComplite<T>([CN] this IEnumerable<T> collection, [NN] Action CompliteAction)
         {
             Requires(CompliteAction != null);
             Ensures(Result<IEnumerable<T>>() != null);
@@ -663,8 +690,8 @@ namespace System.Linq
         (
             [NN] this IEnumerable<T> collection,
             [NN] Func<T, double> selector,
-            [СN] out T Min,
-            [СN] out T Max
+            [CN] out T Min,
+            [CN] out T Max
         )
         {
             Requires(collection != null, "Отсутствует ссылка на перечисление");
@@ -694,9 +721,9 @@ namespace System.Linq
         (
             [NN] this IEnumerable<T> collection,
             [NN] Func<T, double> selector,
-            [СN] out T Min,
+            [CN] out T Min,
             out int MinIndex,
-            [СN] out T Max,
+            [CN] out T Max,
             out int MaxIndex
         )
         {
@@ -918,7 +945,7 @@ namespace System.Linq
         /// <typeparam name="TParameter">Тип параметра процесса перебора</typeparam>
         [DST]
         public static void Foreach<T, TParameter>([NN] this IEnumerable<T> collection,
-            [СN] TParameter parameter, [NN] Action<T, TParameter> Action)
+            [CN] TParameter parameter, [NN] Action<T, TParameter> Action)
         {
             Requires(collection != null, "Отсутствует ссылка на перечисление");
             Requires(Action != null);
@@ -962,7 +989,7 @@ namespace System.Linq
         [DST]
         public static void Foreach<T, TParameter>(
             [NN] this IEnumerable<T> collection,
-            [СN] TParameter parameter, 
+            [CN] TParameter parameter, 
             [NN] Action<T, int, TParameter> Action,
             int index = 0)
         {
@@ -990,8 +1017,8 @@ namespace System.Linq
         [DST]
         public static void Foreach<T, TParameter1, TParameter2>(
             [NN] this IEnumerable<T> collection,
-            [СN] TParameter1 parameter1,
-            [СN] TParameter2 parameter2,
+            [CN] TParameter1 parameter1,
+            [CN] TParameter2 parameter2,
             [NN] Action<T, int, TParameter1, TParameter2> Action,
             int index = 0)
         {
@@ -1043,7 +1070,7 @@ namespace System.Linq
         (
             [NN] this IEnumerable<T> collection,
             [NN] Func<T, bool> Predicat,
-            [СN] Action<T> Action
+            [CN] Action<T> Action
         )
         {
             Requires(collection != null, "Отсутствует ссылка на перечисление");
@@ -1061,7 +1088,7 @@ namespace System.Linq
         /// <param name="Action">Выполняемое действие</param>
         /// <returns>Последовательность элементов, для элементов которой выполняется отложенное действие</returns>
         [Pure, DST, NN]
-        public static IEnumerable<T> ForeachLazy<T>([NN] this IEnumerable<T> collection, [СN] Action<T> Action)
+        public static IEnumerable<T> ForeachLazy<T>([NN] this IEnumerable<T> collection, [CN] Action<T> Action)
         {
             Requires(collection != null, "Отсутствует ссылка на перечисление");
             Ensures(Action is null // Если действие не указано
@@ -1083,7 +1110,7 @@ namespace System.Linq
         /// <param name="action">Действие, Выполняемое после выдачи элемента последовательности</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
-        public static IEnumerable<T> ForeachLazyLast<T>([NN] this IEnumerable<T> collection, [СN] Action<T> action)
+        public static IEnumerable<T> ForeachLazyLast<T>([NN] this IEnumerable<T> collection, [CN] Action<T> action)
         {
             Requires(collection != null, "Отсутствует ссылка на перечисление");
             if (action is null)
@@ -1106,7 +1133,7 @@ namespace System.Linq
         public static IEnumerable<T> ForeachLazy<T>
         (
             [NN] this IEnumerable<T> collection,
-            [СN] Action<T, int> Action,
+            [CN] Action<T, int> Action,
             int index = 0
         )
         {
@@ -1347,7 +1374,7 @@ namespace System.Linq
                 var next_b = b.MoveNext();
                 while(next_a && next_b)
                 {
-                    if(a.Current == null && b.Current is { }) return false;
+                    if(a.Current is null && b.Current is { }) return false;
                     if(a.Current is null || !a.Current.Equals(b.Current)) return false;
                     next_a = a.MoveNext();
                     next_b = b.MoveNext();
@@ -1475,7 +1502,7 @@ namespace System.Linq
         /// <param name="Separator">Разделитель элементов в строке</param>
         /// <returns>Строка, составленная из строковых представлений объектов последовательности, разделённых указанной строкой-разделителем</returns>
         [NN]
-        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [СN] string Separator = "")
+        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "")
         {
             Requires(collection != null, "Отсутствует ссылка на перечисление");
 
@@ -1499,14 +1526,14 @@ namespace System.Linq
         /// <param name="obj">Добавляемый объект</param>
         /// <returns>Последовательность, составленная из элементов исходной последовательности и добавленного элемента</returns>
         [NN]
-        public static IEnumerable<T> AppendLast<T>([СN]this IEnumerable<T> collection, [СN] T obj)
+        public static IEnumerable<T> AppendLast<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
             Ensures(Result<IEnumerable<T>>() != null);
 
             if (collection != null && !(collection is T[] array && array.Length == 0))
                 foreach (var value in collection)
                     yield return value;
-            if (!Equals(obj, null))
+            if (obj is { })
                 yield return obj;
         }
 
@@ -1518,8 +1545,8 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AppendLast<T>
         (
-            [СN]this IEnumerable<T> first_collection,
-            [СN] IEnumerable<T> last_collection
+            [CN] this IEnumerable<T> first_collection,
+            [CN] IEnumerable<T> last_collection
         )
         {
             Ensures(Result<IEnumerable<T>>() != null);
@@ -1527,9 +1554,9 @@ namespace System.Linq
             if(first_collection != null && !(first_collection is T[] first_array && first_array.Length == 0))
                 foreach(var value in first_collection)
                     yield return value;
-            if(last_collection != null && !(last_collection is T[] last_array && last_array.Length == 0))
-                foreach(var value in last_collection)
-                    yield return value;
+            if (last_collection is null || last_collection is T[] last_array && last_array.Length == 0) yield break;
+            foreach (var value in last_collection)
+                yield return value;
         }
 
         /// <summary>Добавить объект в начало перечисления</summary>
@@ -1538,15 +1565,14 @@ namespace System.Linq
         /// <param name="obj">Объект, добавляемый в начало перечисления</param>
         /// <returns>Перечисление объектов, составленное из первого объекта и остального перечисления</returns>
         [NN]
-        public static IEnumerable<T> AppendFirst<T>([СN] this IEnumerable<T> collection, [СN] T obj)
+        public static IEnumerable<T> AppendFirst<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
             Ensures(Result<IEnumerable<T>>() != null);
 
-            if(!Equals(obj, null))
-                yield return obj;
-            if(collection != null && !(collection is T[] items && items.Length == 0))
-                foreach(var value in collection)
-                    yield return value;
+            if(obj is { }) yield return obj;
+            if (collection is null || collection is T[] items && items.Length == 0) yield break;
+            foreach(var value in collection)
+                yield return value;
         }
 
         /// <summary>Добавить перечисление объектов в начало основного перечисления</summary>
@@ -1557,8 +1583,8 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AppendFirst<T>
         (
-            [СN]this IEnumerable<T> last_collection,
-            [СN] IEnumerable<T> first_collection
+            [CN] this IEnumerable<T> last_collection,
+            [CN] IEnumerable<T> first_collection
         )
         {
             Ensures(Result<IEnumerable<T>>() != null);
@@ -1566,9 +1592,9 @@ namespace System.Linq
             if(first_collection != null && !(first_collection is T[] first_array && first_array.Length == 0))
                 foreach(var value in first_collection)
                     yield return value;
-            if(last_collection != null && !(last_collection is T[] last_array && last_array.Length == 0))
-                foreach(var value in last_collection)
-                    yield return value;
+            if (last_collection is null || last_collection is T[] last_array && last_array.Length == 0) yield break;
+            foreach (var value in last_collection)
+                yield return value;
         }
 
         /// <summary>Вставить элемент в указанное положение в последовательности</summary>
@@ -1663,7 +1689,10 @@ namespace System.Linq
             Requires(collection != null, "Отсутствует ссылка на входную последовательность");
             Ensures(Result<IEnumerable<T>>() != null);
 
-            return collection.Where((v, i) => i % N == k);
+            var i = 0;
+            foreach (var v in collection)
+                if (i++ % N == k)
+                    yield return v;
         }
     }
 }

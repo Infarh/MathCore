@@ -38,7 +38,7 @@ namespace System
             Contract.Requires(function != null);
             Contract.Ensures(Contract.Result<FunctionEvulation<T>>() != null);
 
-            return Name == null ? new FunctionEvulation<T>(function) : new NamedFunctionEvulation<T>(function, Name);
+            return Name is null ? new FunctionEvulation<T>(function) : new NamedFunctionEvulation<T>(function, Name);
         }
 
         /// <summary>Поиск нуля функции методом Ньютона</summary>
@@ -1721,7 +1721,7 @@ namespace System
             public SimpleSamplingResult([NotNull] Function f, double x1, double x2, double dx)
                 : this(Sampling(f, x1, x2, dx))
             {
-                if(f == null) throw new ArgumentNullException(nameof(f));
+                if(f is null) throw new ArgumentNullException(nameof(f));
                 if(dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
                 Contract.EndContractBlock();
 
@@ -1745,7 +1745,7 @@ namespace System
                     var result = 0d;
                     var next = current.Next;
 
-                    if(next == null) return 0d;
+                    if(next is null) return 0d;
                     do
                     {
                         var current_value = current.Value;
@@ -1896,8 +1896,8 @@ namespace System
                 Contract.Requires(x1 < x2);
                 Contract.Requires(dx > 0);
 
-                if(f == null) throw new ArgumentNullException(nameof(f));
-                if(converter == null) throw new ArgumentNullException(nameof(converter));
+                if(f is null) throw new ArgumentNullException(nameof(f));
+                if(converter is null) throw new ArgumentNullException(nameof(converter));
                 if(dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
                 Contract.EndContractBlock();
 
@@ -1922,7 +1922,7 @@ namespace System
                     var result = 0d;
                     var next = current.Next;
 
-                    if(next == null) return 0d;
+                    if(next is null) return 0d;
                     do
                     {
                         var current_value = current.Value;

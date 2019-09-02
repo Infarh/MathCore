@@ -424,10 +424,10 @@ namespace System.Linq.Expressions
             get
             {
                 var attribute = this[Name];
-                if(attribute == null) return null;
+                if(attribute is null) return null;
                 var type = attribute.GetType();
                 var property = type.GetProperty(ValueName, BindingFlags.Instance | BindingFlags.Public);
-                if(property == null || !property.CanRead) return null;
+                if(property is null || !property.CanRead) return null;
                 return property.GetValue(attribute, null);
             }
         }

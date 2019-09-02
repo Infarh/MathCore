@@ -66,17 +66,17 @@ namespace MathCore.MathParser.ExpressionTrees
             Node.Left = null;
             Node.Right = null;
 
-            if(parent == null) // Если у узла нет родительского узла
+            if(parent is null) // Если у узла нет родительского узла
                 if(Node == Root)    // и при этом он является корнем
                 {
-                    if(left == null)
+                    if(left is null)
                     {
-                        if(right == null) return;
+                        if(right is null) return;
                         right.Parent = null; // обнулить ссылку на корень
                         Root = right;
                         return;
                     }
-                    if(right == null) // Если нет правого поддерева
+                    if(right is null) // Если нет правого поддерева
                     {
                         left.Parent = null; // Обнулить ссылку у левого поддерева на корень
                         Root = left;
@@ -95,7 +95,7 @@ namespace MathCore.MathParser.ExpressionTrees
             // узел не является корневым.
             if(Node.IsLeftSubtree) // Если узел является левым поддеревом
             {
-                if(left == null) // Если левого поддерева нет
+                if(left is null) // Если левого поддерева нет
                     parent.Left = right; // то левым поддеревом родительского узла будет правое поддерево
                 else
                 {   //иначе - левое поддерево
@@ -106,7 +106,7 @@ namespace MathCore.MathParser.ExpressionTrees
             }
             else // иначе узел является правым поддеревом
             {
-                if(right == null) // Если правого поддерева нет
+                if(right is null) // Если правого поддерева нет
                     parent.Right = left; // то правым поддеревом родительского узла будет левое поддерево
                 else
                 {   //иначе - правое поддерево

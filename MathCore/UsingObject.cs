@@ -41,7 +41,7 @@ namespace MathCore
             Contract.Requires(Disposer is { });
             Contract.Ensures(_Obj is { });
             Contract.Ensures(_Disposer is { });
-            if(obj == null) throw new ArgumentNullException(nameof(obj));
+            if(obj is null) throw new ArgumentNullException(nameof(obj));
             if(Disposer is null) throw new ArgumentNullException(nameof(Disposer));
 
             _Obj = obj;

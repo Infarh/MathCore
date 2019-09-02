@@ -162,27 +162,27 @@ namespace MathCore
 
             }
 
-            //public static double sn_inverse(double sn, double k)
-            //{
-            //    var kk = GetKValues(k).AppendFirst(k).ToArray();
+            public static double sn_inverse(double sn, double k)
+            {
+                var kk = GetKValues(k).AppendFirst(k).ToArray();
 
-            //    var u = sn;
-            //    for (var i = 1; i < kk.Length; i++)
-            //        u *= 2 / (1 + kk[i]) / (1 + Math.Sqrt(1 - (kk[i - 1] * u).Pow2()));
+                var u = sn;
+                for (var i = 1; i < kk.Length; i++)
+                    u *= 2 / (1 + kk[i]) / (1 + Math.Sqrt(1 - (kk[i - 1] * u).Pow2()));
 
-            //    return 2 * Math.Asin(u) / Math.PI;
-            //}
+                return 2 * Math.Asin(u) / Math.PI;
+            }
 
-            //public static Complex sn_inverse(in Complex sn, double k)
-            //{
-            //    var kk = GetKValues(k).AppendFirst(k).ToArray();
+            public static Complex sn_inverse(in Complex sn, double k)
+            {
+                var kk = GetKValues(k).AppendFirst(k).ToArray();
 
-            //    var u = sn;
-            //    for (var i = 1; i < kk.Length; i++)
-            //        u *= 2 / (1 + kk[i]) / (1 + Complex.Sqrt(1 - (kk[i - 1] * u).Pow2()));
+                var u = sn;
+                for (var i = 1; i < kk.Length; i++)
+                    u *= 2 / (1 + kk[i]) / (1 + Complex.Sqrt(1 - (kk[i - 1] * u).Pow2()));
 
-            //    return 2 * Complex.Trigonomerty.Asin(u) / Math.PI;
-            //}
+                return 2 * Complex.Trigonomerty.Asin(u) / Math.PI;
+            }
 
             public static double sn_inverse_recursive(double sn, double k)
             {
@@ -192,16 +192,16 @@ namespace MathCore
                     : 2 * Math.Asin(sn) / Math.PI;
             }
 
-            //public static double cd_inverse(double cd, double k)
-            //{
-            //    var kk = GetKValues(k).AppendFirst(k).ToArray();
+            public static double cd_inverse(double cd, double k)
+            {
+                var kk = GetKValues(k).AppendFirst(k).ToArray();
 
-            //    var u = cd;
-            //    for (var i = 1; i < kk.Length; i++)
-            //        u *= 2 / ((1 + kk[i]) * (1 + Math.Sqrt(1 - (kk[i - 1] * kk[i - 1] * u * u))));
+                var u = cd;
+                for (var i = 1; i < kk.Length; i++)
+                    u *= 2 / ((1 + kk[i]) * (1 + Math.Sqrt(1 - (kk[i - 1] * kk[i - 1] * u * u))));
 
-            //    return 2 * Math.Acos(u) / Math.PI;
-            //}
+                return 2 * Math.Acos(u) / Math.PI;
+            }
 
             public static double cd_inverse_recursive(double cd, double k)
             {

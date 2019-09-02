@@ -24,7 +24,7 @@ namespace MathCore.Attributes
         /// <inheritdoc />
         public override string ToString()
         {
-            if(Name == null) throw new FormatException();
+            if(Name is null) throw new FormatException();
             return Name;
         }
 
@@ -35,7 +35,7 @@ namespace MathCore.Attributes
         public override bool Equals(object obj)
         {
             var A = obj as ElementNameAttribute;
-            if(A == null) return base.Equals(obj);
+            if(A is null) return base.Equals(obj);
             return A.Name == Name;
         }
 

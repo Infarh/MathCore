@@ -516,7 +516,7 @@ namespace System.Xml.XPath
             PassToken(XPathScanner.LexKind.RParens);
             if(prefix != string.Empty) return new Function(prefix, name, arg_list);
             var pi = (ParamInfo)_FunctionTable[name];
-            if(pi == null) return new Function(prefix, name, arg_list);
+            if(pi is null) return new Function(prefix, name, arg_list);
             var arg_count = arg_list.Count;
             if(arg_count < pi.Minargs)
                 throw new XPathException($"Function '{name}' in '{_Scanner.SourceText}' has invalid number of arguments.");
@@ -791,7 +791,7 @@ namespace System.Xml.XPath
         {
             Debug.Assert(scaner.Kind == XPathScanner.LexKind.Axe);
             var axis = _AxesTable[scaner.Name];
-            if(axis == null) throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.");
+            if(axis is null) throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.");
             return (Axis.AxisType)axis;
         }
 

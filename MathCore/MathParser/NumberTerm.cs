@@ -7,7 +7,7 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Числовой элемент математического выражения</summary>
-    sealed class NumberTerm : Term
+    internal sealed class NumberTerm : Term
     {
         /// <summary>Численное значение элемента</summary>
         private int _IntValue;
@@ -50,11 +50,11 @@ namespace MathCore.MathParser
         public static bool TryAddFractionPart(ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FrationPartTerm)
         {
             var value = node as ConstValueNode;
-            if(value == null) throw new ArgumentException("Неверный тип узла дерева");
+            if(value is null) throw new ArgumentException("Неверный тип узла дерева");
             var separator = SeparatorTerm as CharTerm;
-            if(separator == null || separator.Value != DecimalSeparator) return false;
+            if(separator is null || separator.Value != DecimalSeparator) return false;
             var fraction = FrationPartTerm as NumberTerm;
-            if(fraction == null) return false;
+            if(fraction is null) return false;
 
             var v_value = fraction.Value;
             if(v_value == 0) return true;

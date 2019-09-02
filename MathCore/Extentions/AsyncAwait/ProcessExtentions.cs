@@ -2,7 +2,7 @@
 using MathCore.Annotations;
 
 // ReSharper disable UnusedMember.Global
-
+// ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks
 {
     public static class ProcessExtentions

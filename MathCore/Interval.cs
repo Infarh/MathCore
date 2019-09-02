@@ -187,6 +187,14 @@ namespace MathCore
             max = _Max;
         }
 
+        public void Deconstruct(out T min, out bool IncludeMin, out T max, out bool IncludeMax)
+        {
+            min = _Min;
+            max = _Max;
+            IncludeMin = _MinInclude;
+            IncludeMax = _MaxInclude;
+        }
+
         /// <summary>Играет роль хэш-функции для определенного типа. </summary>
         /// <returns>Хэш-код для текущего объекта <see cref="T:System.Object"/>.</returns>
         /// <filterpriority>2</filterpriority>

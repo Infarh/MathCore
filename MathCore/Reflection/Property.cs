@@ -141,12 +141,12 @@ namespace System.Reflection
             if(type == typeof(object) && o is { })
                 type = o.GetType();
 
-            var IsStatic = o == null ? BindingFlags.Static : BindingFlags.Instance;
+            var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
             var IsPublic = Private ? BindingFlags.NonPublic : BindingFlags.Public;
 
             _PropertyInfo = type.GetProperty(Name, IsStatic | IsPublic);
 
-            if(_PropertyInfo == null)
+            if(_PropertyInfo is null)
             {
                 var lv_GetMethod = new Method<TObject, TValue>(o, $"get_{Name}", Private);
                 var lv_SetMethod = new Method<TObject, object>(o, $"set_{Name}", Private);
@@ -192,9 +192,9 @@ namespace System.Reflection
 
         public override string ToString()
         {
-            var PropertyType = _Object == null ? "Static property" : "Property";
+            var PropertyType = _Object is null ? "Static property" : "Property";
 
-            if(_PropertyInfo == null)
+            if(_PropertyInfo is null)
                 return $"Incorrect {PropertyType.ToLower()} of {typeof(TObject)} name {_Name}";
 
             var value = CanRead ? $" = {Value}" : "";

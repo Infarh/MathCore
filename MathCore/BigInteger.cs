@@ -905,7 +905,7 @@ namespace MathCore
 
         public bool Equals(BigInteger bi)
         {
-            if (bi == null) return false;
+            if (bi is null) return false;
 
             if (dataLength != bi.dataLength) return false;
 

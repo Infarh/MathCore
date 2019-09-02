@@ -37,6 +37,6 @@ namespace MathCore.CommandProcessor
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление аргумента</returns>
-        public override string ToString() => $"{Name}{(Values == null || Values.Length == 0 ? "" : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
+        public override string ToString() => $"{Name}{(Values is null || Values.Length == 0 ? "" : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
     }
 }

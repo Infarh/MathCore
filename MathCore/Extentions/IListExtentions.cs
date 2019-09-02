@@ -6,7 +6,7 @@ namespace System.Collections.Generic
     /// <summary>Методы расширения для интерфейса списка</summary>
     public static class IListExtentions
     {
-        public static bool IsNullOrEmpty<T>(this IList<T> list) => list == null || list.Count == 0;
+        public static bool IsNullOrEmpty<T>(this IList<T> list) => list is null || list.Count == 0;
 
         ///<summary>Метод расширения для инициализации списка</summary>
         ///<param name="list">Инициализируемый объект</param>
@@ -24,7 +24,7 @@ namespace System.Collections.Generic
             bool ClearBefore = true
         )
         {
-            if (list == null) return null;
+            if (list is null) return null;
             if(list is List<T> l)
             {
                 if(ClearBefore) l.Clear();
@@ -57,7 +57,7 @@ namespace System.Collections.Generic
             bool ClearBefore = true
         )
         {
-            if(list == null) return null;
+            if(list is null) return null;
             if(list is List<T> l)
             {
                 if(ClearBefore) l.Clear();

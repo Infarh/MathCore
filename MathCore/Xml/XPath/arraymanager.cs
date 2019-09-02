@@ -91,7 +91,7 @@ namespace System.Xml.XPath
             get
             {
                 var ch = '\0';
-                if(_CurrentBuffer == null)
+                if(_CurrentBuffer is null)
                 {
                     if(BufferQueue.Count > 0)
                         _CurrentBuffer = (Buffer)BufferQueue.Dequeue();
@@ -130,7 +130,7 @@ namespace System.Xml.XPath
 
         internal void CleanUp(int InternalBufferOffset)
         {
-            if(_CurrentBuffer == null) return;
+            if(_CurrentBuffer is null) return;
             _CurrentBuffer._offset += InternalBufferOffset - Offset;
             Offset = 0;
         }

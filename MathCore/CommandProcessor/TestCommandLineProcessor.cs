@@ -97,7 +97,7 @@ namespace MathCore.CommandProcessor
             switch(SetArg.Name.ToLower())
             {
                 case "prompt":
-                    Prompt = SetArg.Values == null || SetArg.Values.Length == 0 ? "" : SetArg.Values[0];
+                    Prompt = SetArg.Values is null || SetArg.Values.Length == 0 ? "" : SetArg.Values[0];
                     break;
                 case "work":
                     if(bool.TryParse(SetArg.Value, out var work))

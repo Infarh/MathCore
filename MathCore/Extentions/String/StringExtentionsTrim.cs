@@ -7,10 +7,10 @@ namespace System
         public static string TrimByLength(this string Str, int Length, string ReplacementPattern = "..")
         {
             Contract.Requires(Length >= 0);
-            Contract.Ensures((Str == null && Contract.Result<string>() == null)
+            Contract.Ensures((Str is null && Contract.Result<string>() is null)
                 || (Str != null && Contract.Result<string>() != null));
 
-            if(Str == null) return null;
+            if(Str is null) return null;
             if(Str.Length <= Length) return Str;
             if(Length == 0) return "";
 

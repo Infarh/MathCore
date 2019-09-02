@@ -34,7 +34,7 @@ namespace System
         [DST]
         public static void Start(this NotifyCollectionChangedEventHandler Handler, object Sender, NotifyCollectionChangedEventArgs e)
         {
-            if (Handler == null) return;
+            if (Handler is null) return;
             var invocations = Handler.GetInvocationList();
             foreach (var d in invocations)
                 switch (d.Target)
@@ -62,8 +62,8 @@ namespace System
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static void Start(this PropertyChangedEventHandler Handler, object Sender, params string[] PropertyName)
         {
-            if (PropertyName == null) throw new ArgumentNullException(nameof(PropertyName));
-            if (Handler == null || PropertyName.Length == 0) return;
+            if (PropertyName is null) throw new ArgumentNullException(nameof(PropertyName));
+            if (Handler is null || PropertyName.Length == 0) return;
             var args = PropertyName.ToArray(name => new PropertyChangedEventArgs(name));
             foreach (var d in Handler.GetInvocationList())
                 switch (d.Target)
@@ -86,7 +86,7 @@ namespace System
         [DST]
         public static void Start(this PropertyChangedEventHandler Handler, object Sender, PropertyChangedEventArgs e)
         {
-            if (Handler == null) return;
+            if (Handler is null) return;
             foreach (var d in Handler.GetInvocationList())
                 switch (d.Target)
                 {
@@ -106,7 +106,7 @@ namespace System
         [DST]
         public static void Start(this EventHandler Handler, object Sender, EventArgs e)
         {
-            if (Handler == null) return;
+            if (Handler is null) return;
             var invokations = Handler.GetInvocationList();
             foreach (var d in invokations)
                 switch (d.Target)
@@ -128,7 +128,7 @@ namespace System
         /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
         [DST]
         public static IAsyncResult StartAsync(this EventHandler Handler, object Sender, EventArgs e, AsyncCallback CallBack = null, object State = null) =>
-            Handler == null ? null : ((Action)(() => Handler.Invoke(Sender, e))).BeginInvoke(CallBack, State);
+            Handler is null ? null : ((Action)(() => Handler.Invoke(Sender, e))).BeginInvoke(CallBack, State);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
@@ -161,7 +161,7 @@ namespace System
         public static void Start<TEventArgs>(this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e)
                     where TEventArgs : EventArgs
         {
-            if (Handler == null) return;
+            if (Handler is null) return;
             var invokations = Handler.GetInvocationList();
             foreach (var d in invokations)
                 switch (d.Target)
@@ -190,7 +190,7 @@ namespace System
             [CanBeNull] AsyncCallback CallBack = null,
             [CanBeNull] object State = null)
             where TEventArgs : EventArgs =>
-            Handler == null
+            Handler is null
                 ? null
                 : ((Action) (() =>
                 {
@@ -210,7 +210,7 @@ namespace System
         [DST]
         public static TResult[] Start<TResult, TSender, TArgs>(this EventHandler<TResult, TSender, TArgs> Handler, TSender Sender, TArgs Args)
         {
-            if (Handler == null) return new TResult[0];
+            if (Handler is null) return new TResult[0];
             Contract.Assume(Handler != null);
             return Handler
                 .GetInvocationList()

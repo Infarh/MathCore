@@ -123,7 +123,7 @@ namespace System.Xml.XPath
 
             var lv_OpndVar1 = _Opnd1.GetValue(reader);
             var lv_OpndVar2 = _Opnd2.GetValue(reader);
-            if(lv_OpndVar1 == null || lv_OpndVar2 == null)
+            if(lv_OpndVar1 is null || lv_OpndVar2 is null)
                 return false;
             var s1 = lv_OpndVar1.ToString();
             var s2 = lv_OpndVar2.ToString();

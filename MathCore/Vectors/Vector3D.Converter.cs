@@ -9,7 +9,7 @@ namespace MathCore.Vectors
         public override object ConvertFrom(ITypeDescriptorContext Context, CultureInfo Info, object value)
         {
             //Не указано объекта для преобразования
-            if(value == null)
+            if(value is null)
                 throw new ArgumentNullException(nameof(value));
 
             //Аргумент не является трокой, либо строка пуста

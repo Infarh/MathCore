@@ -32,14 +32,14 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>0 - если разность между x и y по модулю меньше Epsilon и 1 во всех остальных случаях</returns>
-        public override double Compute() => Left == null
+        public override double Compute() => Left is null
                     ? ComparerSingle(((ComputedNode)Right).Compute())
                     : Comparer(((ComputedNode)Left).Compute(), ((ComputedNode)Right).Compute());
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию отрицания НЕ</returns>
         public override Expression LogicCompile() =>
-            Left == null
+            Left is null
                 ? Right is LogicOperatorNode node
                     ? (Expression) Expression.Not(node.LogicCompile())
                     : Expression.LessThan
@@ -63,7 +63,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <param name="Parameters">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию отрицания НЕ</returns>
         public override Expression LogicCompile(ParameterExpression[] Parameters) =>
-            Left == null
+            Left is null
                 ? Right is LogicOperatorNode node
                     ? (Expression) Expression.Not(node.LogicCompile(Parameters))
                     : Expression.LessThan
@@ -86,7 +86,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>
-        public override string ToString() => Right == null ? base.ToString() : $"{Left}≠{Right}";
+        public override string ToString() => Right is null ? base.ToString() : $"{Left}≠{Right}";
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

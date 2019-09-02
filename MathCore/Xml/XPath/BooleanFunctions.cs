@@ -86,7 +86,7 @@ namespace System.Xml.XPath
             }
             else if(obj is bool)
                 ret = Convert.ToBoolean(obj);
-            else if(obj == null && reader.NodeType != XmlNodeType.EndElement)
+            else if(obj is null && reader.NodeType != XmlNodeType.EndElement)
                 ret = false;
 
             return ret;

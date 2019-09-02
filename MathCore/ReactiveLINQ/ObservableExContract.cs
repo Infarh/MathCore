@@ -5,7 +5,7 @@ namespace System.Linq.Reactive
     /// <summary>Класс контрактов для интерфейса <see cref="IObservableEx&lt;T&gt;"/></summary>
     /// <typeparam name="T">Тип объектов последовательности событий</typeparam>
     [ContractClassFor(typeof(IObservableEx<>))]
-    sealed class ObservableExContract<T> : IObservableEx<T>
+    internal sealed class ObservableExContract<T> : IObservableEx<T>
     {
         public IDisposable Subscribe(IObserverEx<T> observer) => Subscribe((IObserver<T>)observer);
 

@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
@@ -8,32 +9,32 @@ namespace System.IO
 {
     public static class StreamExtensions
     {
-        public static byte[] ComputeSHA256(this Stream stream)
+        [NotNull]
+        public static byte[] ComputeSHA256([NotNull] this Stream stream)
         {
-            using(var sha256 = new Security.Cryptography.SHA256Managed())
-                return sha256.ComputeHash(stream);
+            using var sha256 = new Security.Cryptography.SHA256Managed();
+            return sha256.ComputeHash(stream);
         }
 
-        public static byte[] ComputeMD5(this Stream stream)
+        [NotNull]
+        public static byte[] ComputeMD5([NotNull] this Stream stream)
         {
-            using(var md5 = new Security.Cryptography.MD5CryptoServiceProvider())
-                return md5.ComputeHash(stream);
+            using var md5 = new Security.Cryptography.MD5CryptoServiceProvider();
+            return md5.ComputeHash(stream);
         }
 
-        /// <summary>
-        /// Создать буферизованный поток данных
-        /// </summary>
+        /// <summary>Создать буферизованный поток данных</summary>
         /// <param name="DataStream">Исходный поток данных</param>
         /// <param name="BufferSize">Размер буфера (по умолчанию 4096 байта)</param>
         /// <returns>Буферизованный поток данных</returns>
-        [DST]
-        public static BufferedStream GetBufferedStream(this Stream DataStream, int BufferSize = 4096) => new BufferedStream(DataStream, BufferSize);
+        [DST, NotNull]
+        public static BufferedStream GetBufferedStream([NotNull] this Stream DataStream, int BufferSize = 4096) => new BufferedStream(DataStream, BufferSize);
+
+        [DST, NotNull]
+        public static StreamWrapper GetWrapper([NotNull] this Stream BaseStream) => new StreamWrapper(BaseStream);
 
         [DST]
-        public static StreamWrapper GetWrapper(this Stream BaseStream) => new StreamWrapper(BaseStream);
-
-        [DST]
-        public static T ReadStructure<T>(this Stream stream)
+        public static T ReadStructure<T>([NotNull] this Stream stream)
         {
             var size = Marshal.SizeOf(typeof(T));
             var data = new byte[size];
@@ -49,7 +50,7 @@ namespace System.IO
             }
         }
 
-        public static void WriteStructure<T>(this Stream stream, T value) where T : struct
+        public static void WriteStructure<T>([NotNull] this Stream stream, T value) where T : struct
         {
             var size = Marshal.SizeOf(value);
             var buffer = new byte[size]; // создать массив
@@ -65,14 +66,16 @@ namespace System.IO
             stream.Write(buffer, 0, size);
         }
 
-        public static byte[] ToArray(this Stream stream)
+        [NotNull]
+        public static byte[] ToArray([NotNull] this Stream stream)
         {
             var array = new byte[stream.Length];
             stream.Read(array, 0, array.Length);
             return array;
         }
 
-        public static async Task<byte[]> ToArrayAsync(this Stream stream, CancellationToken cancel = default(CancellationToken))
+        [NotNull, ItemNotNull]
+        public static async Task<byte[]> ToArrayAsync([NotNull] this Stream stream, CancellationToken cancel = default(CancellationToken))
         {
             var array = new byte[stream.Length];
             await stream.ReadAsync(array, 0, array.Length, cancel).ConfigureAwait(false);

@@ -26,7 +26,7 @@ namespace MathCore.Values
 
         public Set(IEqualityComparer<TElement> comparer)
         {
-            if(comparer == null) comparer = EqualityComparer<TElement>.Default;
+            if(comparer is null) comparer = EqualityComparer<TElement>.Default;
             _Comparer = comparer;
             _Buckets = new int[7];
             _Slots = new Slot[7];

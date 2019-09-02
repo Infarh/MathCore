@@ -3,7 +3,7 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Символьный элемент математического выражения</summary>
-    sealed class CharTerm : Term
+    internal sealed class CharTerm : Term
     {
         /// <summary>Символьное значение элемента</summary>
         public char Value => _Value[0];

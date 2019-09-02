@@ -47,7 +47,7 @@ namespace MathCore.MathParser
             get => _Name;
             set
             {
-                if(value == null)
+                if(value is null)
                     throw new ArgumentNullException(nameof(value), @"Не указано имя функции");
                 if(string.IsNullOrEmpty(value))
                     throw new ArgumentException(@"Указано пустое имя функции", nameof(value));
@@ -326,7 +326,7 @@ namespace MathCore.MathParser
             }
             else
                 vars = ArgumentName.Select(name => Expression.Parameter(typeof(double), name)).ToArray();
-            var compilation = vars == null
+            var compilation = vars is null
                 ? ((ComputedNode)_ExpressionTree.Root).Compile()
                 : ((ComputedNode)_ExpressionTree.Root).Compile(vars);
             return compilation;

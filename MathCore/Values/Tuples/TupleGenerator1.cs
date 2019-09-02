@@ -1475,7 +1475,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1>))
 //            return false;
@@ -1522,7 +1522,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -1543,7 +1543,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -1648,7 +1648,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -2517,7 +2517,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2>))
 //            return false;
@@ -2567,7 +2567,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -2589,7 +2589,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -2703,7 +2703,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -3511,7 +3511,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3>))
 //            return false;
@@ -3564,7 +3564,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -3587,7 +3587,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -3710,7 +3710,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -4453,7 +4453,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4>))
 //            return false;
@@ -4509,7 +4509,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -4533,7 +4533,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -4665,7 +4665,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -5347,7 +5347,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4, T5>))
 //            return false;
@@ -5406,7 +5406,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4, T5> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -5431,7 +5431,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -5572,7 +5572,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -6197,7 +6197,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4, T5, T6>))
 //            return false;
@@ -6259,7 +6259,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4, T5, T6> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -6285,7 +6285,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -6435,7 +6435,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -7007,7 +7007,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4, T5, T6, T7>))
 //            return false;
@@ -7072,7 +7072,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4, T5, T6, T7> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -7099,7 +7099,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -7258,7 +7258,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -7781,7 +7781,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4, T5, T6, T7, T8>))
 //            return false;
@@ -7849,7 +7849,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4, T5, T6, T7, T8> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -7877,7 +7877,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -8045,7 +8045,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -8523,7 +8523,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>))
 //            return false;
@@ -8594,7 +8594,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -8623,7 +8623,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException("pArray");
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException("pIndex");
@@ -8800,7 +8800,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);
@@ -9236,7 +9236,7 @@
 //    /// <returns>A value indicating if this object is equal to the one passed in.</returns>
 //    public override bool Equals(Object pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 //        if(!(pObj is Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>))
 //            return false;
@@ -9310,7 +9310,7 @@
 //    /// <returns>A value indicating weather this tuple is equal to another tuple of the same length and type.</returns>
 //    public bool Equals(Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> pObj)
 //    {
-//        if(pObj == null)
+//        if(pObj is null)
 //            return false;
 
 //        var result = true;
@@ -9340,7 +9340,7 @@
 //    /// <param name="pIndex">The offset in the array at which to start inserting the values.</param>
 //    void ICollection.CopyTo(Array pArray, int pIndex)
 //    {
-//        if (pArray == null)
+//        if (pArray is null)
 //            throw new ArgumentNullException(nameof(pArray));
 //        if (pIndex < 0)
 //            throw new ArgumentOutOfRangeException(nameof(pIndex));
@@ -9526,7 +9526,7 @@
 //        if(ReferenceEquals(pA, pB))
 //            return true;
 
-//        if((object)pA == null || (object)pB == null)
+//        if((object)pA is null || (object)pB is null)
 //            return false;
 
 //        return pA.Equals(pB);

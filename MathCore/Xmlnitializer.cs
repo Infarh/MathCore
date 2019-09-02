@@ -90,7 +90,7 @@ namespace MathCore
                 //Тело выражения конвертера из строки в нужный тип данных
                 var converter_body = converter?.Body;
                 //Если конвертера не указано (тело отсутствует)
-                if(converter_body == null)
+                if(converter_body is null)
                 {
                     //Проверяем - можно ли преобразовать строку напрямую к нужному типу параметра
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
@@ -151,7 +151,7 @@ namespace MathCore
                 //Тело выражения конвертера
                 var converter_body = converter?.Body;
                 //Если конвертер не указан - тело конвертера отсутствует
-                if(converter_body == null)
+                if(converter_body is null)
                 {
                     //Проверяем - возможно ли прямое привоение строкового параметру целевого типа
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
@@ -199,7 +199,7 @@ namespace MathCore
                 //Тело выражения конвертера
                 var converter_body = converter?.Body;
                 //Если конвертер не указан - тело конвертера отсутствует
-                if(converter_body == null)
+                if(converter_body is null)
                 {
                     //Проверяем - возможно ли прямое привоение строкового параметру целевого типа
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
@@ -296,13 +296,13 @@ namespace MathCore
 
         public void Initialize([NotNull] TObject obj, XElement e, [NotNull] IXmlNamespaceResolver ns)
         {
-            if(e == null) return;
+            if(e is null) return;
             _Rules.ForEach(r => r.Execute(obj, e, ns));
         }
 
         public void Initialize(XElement e, [NotNull] IXmlNamespaceResolver ns)
         {
-            if(e == null) return;
+            if(e is null) return;
             _Rules.Where(r => r.IsObjectLess).Foreach(r => r.Execute(e, ns));
         }
 
@@ -317,7 +317,7 @@ namespace MathCore
         public void Initialize([NotNull] TObject obj, [NotNull] XmlReader reader) => Initialize(obj, reader, Namespace);
         public void Initialize([NotNull] TObject obj, [NotNull] XmlReader Reader, [CanBeNull]XmlNamespaceManager ns)
         {
-            var path = ns == null ? new XPathCollection() : new XPathCollection(ns);
+            var path = ns is null ? new XPathCollection() : new XPathCollection(ns);
             _Rules.Select(r => new XPathQuery(r.XPath) { Tag = r })
                 .ForeachLazy(q => path.Add(q))
                 .Foreach(q => q.QueryMatch += (s, e) => ((Rule)q.Tag).Update(obj, e.Argument));
@@ -354,7 +354,7 @@ namespace MathCore
             [CanBeNull]Expression<Func<string, string>> conv = null
         ) => _Rules.Add
             (
-                conv == null
+                conv is null
                     ? new Rule<string>(path, expr)
                     : new Rule<string>(path, expr, conv)
             );

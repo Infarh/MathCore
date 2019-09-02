@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Xml.Serialization;
 
 namespace MathCore.Vectors
@@ -8,7 +7,7 @@ namespace MathCore.Vectors
     /// <summary>Двумерный вектор</summary>
     [Serializable]
     [TypeConverter(typeof(Vector2DConverter))]
-    public struct Vector2D : IEquatable<Vector2D>, ICloneable<Vector2D>
+    public readonly struct Vector2D : IEquatable<Vector2D>, ICloneable<Vector2D>
     {
         /// <summary>Координата X</summary>
         private readonly double _X;
@@ -31,14 +30,14 @@ namespace MathCore.Vectors
         [XmlIgnore]
         public double Angle =>
             _X.Equals(0)
-                ? (_Y.Equals(0)
+                ? _Y.Equals(0)
                     ? 0
-                    : Math.Sign(_Y) * Consts.pi05)
-                : (_Y.Equals(0)
-                    ? (Math.Sign(_X) > 0
+                    : Math.Sign(_Y) * Consts.pi05
+                : _Y.Equals(0)
+                    ? Math.Sign(_X) > 0
                         ? 0
-                        : Consts.pi)
-                    : Math.Atan2(_Y, _X));
+                        : Consts.pi
+                    : Math.Atan2(_Y, _X);
 
         /// <summary>Инициализация двумерного вектора</summary>
         /// <param name="X">Координата X</param>
@@ -47,7 +46,7 @@ namespace MathCore.Vectors
 
         /// <summary>Инициализация вектора по по комплексному числу</summary>
         /// <param name="Z">Комплексное число X + iY</param>
-        private Vector2D(in Complex Z) { _X = Z.Re; _Y = Z.Im; }
+        private Vector2D(in Complex Z) => (_X, _Y) = Z;
 
         /// <summary>Представление вектора в базисе</summary>
         /// <param name="b">Базис</param>
@@ -64,16 +63,11 @@ namespace MathCore.Vectors
 
         public override bool Equals(object obj) => obj is Vector2D v && Equals(v);
 
-
         public override int GetHashCode() { unchecked { return (_X.GetHashCode() * 0x18d) ^ _Y.GetHashCode(); } }
 
         #region Операторы
 
-        public void Deconstruct(out double x, out double y)
-        {
-            x = _X;
-            y = _Y;
-        }
+        public void Deconstruct(out double x, out double y) { x = _X; y = _Y; }
 
         public static bool operator ==(in Vector2D a, in Vector2D b) => a.Equals(b);
         public static bool operator !=(in Vector2D a, in Vector2D b) => !(a == b);
@@ -96,33 +90,20 @@ namespace MathCore.Vectors
 
         public static Vector2D operator *(Vector2D a, double b) => new Vector2D(a.X * b, a.Y * b);
 
-        public static Vector2D operator /(in Vector2D a, double b)
-        {
-            Contract.Requires(!b.Equals(0d), "b == 0");
-            return new Vector2D(a.X / b, a.Y / b);
-        }
+        public static Vector2D operator /(in Vector2D a, double b) => new Vector2D(a.X / b, a.Y / b);
 
         public static Vector2D operator +(double a, in Vector2D b) => new Vector2D(a + b.X, a + b.Y);
         public static Vector2D operator -(double a, in Vector2D b) => new Vector2D(a - b.X, a - b.Y);
 
         public static Vector2D operator *(double a, in Vector2D b) => new Vector2D(a * b.X, a * b.Y);
 
-        public static Vector2D operator /(double a, in Vector2D b)
-        {
-            Contract.Requires(!b.X.Equals(0d), "b.X == 0");
-            Contract.Requires(!b.Y.Equals(0d), "b.Y == 0");
-            return new Vector2D(a / b.X, a / b.Y);
-        }
+        public static Vector2D operator /(double a, in Vector2D b) => new Vector2D(a / b.X, a / b.Y);
 
         public static double operator ^(in Vector2D a, in Vector2D b) => (a * b) / (a.R * b.R);
         public static bool operator |(in Vector2D a, in Vector2D b) => (a ^ b).Equals(1d);
         public static bool operator &(in Vector2D a, in Vector2D b) => (a ^ b).Equals(0d);
 
-        public static double operator %(in Vector2D a, in Vector2D b)
-        {
-            Contract.Requires(!b.R.Equals(0), "b.R == 0");
-            return (a * b) / b.R;
-        }
+        public static double operator %(in Vector2D a, in Vector2D b) => (a * b) / b.R;
         public static Vector2D operator %(in Vector2D a, in Basis2D b) => a.InBasis(b);
 
         public static Vector2D operator +(in Vector2D a, float b) => new Vector2D(a.X + b, a.Y + b);
@@ -130,46 +111,28 @@ namespace MathCore.Vectors
 
         public static Vector2D operator *(in Vector2D a, float b) => new Vector2D(a.X * b, a.Y * b);
 
-        public static Vector2D operator /(in Vector2D a, float b)
-        {
-            Contract.Requires(!b.Equals(0f), "b == 0");
-            return new Vector2D(a.X / b, a.Y / b);
-        }
+        public static Vector2D operator /(in Vector2D a, float b) => new Vector2D(a.X / b, a.Y / b);
 
         public static Vector2D operator +(float a, in Vector2D b) => new Vector2D(a + b.X, a + b.Y);
         public static Vector2D operator -(float a, in Vector2D b) => new Vector2D(a - b.X, a - b.Y);
 
         public static Vector2D operator *(float a, in Vector2D b) => new Vector2D(a * b.X, a * b.Y);
 
-        public static Vector2D operator /(float a, in Vector2D b)
-        {
-            Contract.Requires(!b.X.Equals(0f), "b.X == 0");
-            Contract.Requires(!b.Y.Equals(0f), "b.Y == 0");
-            return new Vector2D(a / b.X, a / b.Y);
-        }
+        public static Vector2D operator /(float a, in Vector2D b) => new Vector2D(a / b.X, a / b.Y);
 
         public static Vector2D operator +(in Vector2D a, int b) => new Vector2D(a.X + b, a.Y + b);
         public static Vector2D operator -(in Vector2D a, int b) => new Vector2D(a.X - b, a.Y - b);
 
         public static Vector2D operator *(in Vector2D a, int b) => new Vector2D(a.X * b, a.Y * b);
 
-        public static Vector2D operator /(in Vector2D a, int b)
-        {
-            Contract.Requires(!b.Equals(0), "b == 0");
-            return new Vector2D(a.X / b, a.Y / b);
-        }
+        public static Vector2D operator /(in Vector2D a, int b) => new Vector2D(a.X / b, a.Y / b);
 
         public static Vector2D operator +(int a, in Vector2D b) => new Vector2D(a + b.X, a + b.Y);
         public static Vector2D operator -(int a, in Vector2D b) => new Vector2D(a - b.X, a - b.Y);
 
         public static Vector2D operator *(int a, in Vector2D b) => new Vector2D(a * b.X, a * b.Y);
 
-        public static Vector2D operator /(int a, in Vector2D b)
-        {
-            Contract.Requires(!b.X.Equals(0), "b.X == 0");
-            Contract.Requires(!b.Y.Equals(0), "b.Y == 0");
-            return new Vector2D(a / b.X, a / b.Y);
-        }
+        public static Vector2D operator /(int a, in Vector2D b) => new Vector2D(a / b.X, a / b.Y);
 
         #endregion
     }

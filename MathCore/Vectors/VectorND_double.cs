@@ -29,7 +29,7 @@ namespace MathCore.Vectors
 
         public static VectorND_double GetVectorProduction(VectorND_double[] Vectors)
         {
-            if(Vectors == null || Vectors.Length == 0)
+            if(Vectors is null || Vectors.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(Vectors),
                     "Векторное произведение не может быть рассчитано для пустого множества векторов");
 

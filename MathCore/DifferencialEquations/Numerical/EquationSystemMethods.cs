@@ -25,7 +25,7 @@ namespace MathCore.DifferencialEquations.Numerical
             public override string ToString() => $"{x}:{{{string.Join(",", y)}}}";
         }
 
-        static double[] Add(this double[] X, double[] Y, double k = 1)
+        private static double[] Add(this double[] X, double[] Y, double k = 1)
         {
             var result = new double[X.Length];
             for(var i = 0; i < result.Length; i++)
@@ -33,7 +33,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return result;
         }
 
-        static Complex[] Add(this Complex[] X, Complex[] Y, double k = 1)
+        private static Complex[] Add(this Complex[] X, Complex[] Y, double k = 1)
         {
             var result = new Complex[X.Length];
             for(var i = 0; i < result.Length; i++)
@@ -41,7 +41,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return result;
         }
 
-        static Vector2D[] Add(this Vector2D[] X, Vector2D[] Y, double k = 1)
+        private static Vector2D[] Add(this Vector2D[] X, Vector2D[] Y, double k = 1)
         {
             var result = new Vector2D[X.Length];
             for(var i = 0; i < result.Length; i++)
@@ -49,7 +49,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return result;
         }
 
-        static Vector3D[] Add(this Vector3D[] X, Vector3D[] Y, double k = 1)
+        private static Vector3D[] Add(this Vector3D[] X, Vector3D[] Y, double k = 1)
         {
             var result = new Vector3D[X.Length];
             for(var i = 0; i < result.Length; i++)
@@ -57,7 +57,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return result;
         }
 
-        static double[] GetRungeKuttaResult(this double[] Y, double[] K1, double[] K2, double[] K3, double[] K4, double dx)
+        private static double[] GetRungeKuttaResult(this double[] Y, double[] K1, double[] K2, double[] K3, double[] K4, double dx)
         {
             for(var i = 0; i < Y.Length; i++)
             {
@@ -68,7 +68,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return K1;
         }
 
-        static Vector2D[] GetRungeKuttaResult(this Vector2D[] Y, Vector2D[] K1, Vector2D[] K2, Vector2D[] K3, Vector2D[] K4, double dx)
+        private static Vector2D[] GetRungeKuttaResult(this Vector2D[] Y, Vector2D[] K1, Vector2D[] K2, Vector2D[] K3, Vector2D[] K4, double dx)
         {
             for(var i = 0; i < Y.Length; i++)
             {
@@ -79,7 +79,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return K1;
         }
 
-        static Vector3D[] GetRungeKuttaResult(this Vector3D[] Y, Vector3D[] K1, Vector3D[] K2, Vector3D[] K3, Vector3D[] K4, double dx)
+        private static Vector3D[] GetRungeKuttaResult(this Vector3D[] Y, Vector3D[] K1, Vector3D[] K2, Vector3D[] K3, Vector3D[] K4, double dx)
         {
             for(var i = 0; i < Y.Length; i++)
             {
@@ -90,7 +90,7 @@ namespace MathCore.DifferencialEquations.Numerical
             return K1;
         }
 
-        static Complex[] GetRungeKuttaResult(this Complex[] Y, Complex[] K1, Complex[] K2, Complex[] K3, Complex[] K4, double dx)
+        private static Complex[] GetRungeKuttaResult(this Complex[] Y, Complex[] K1, Complex[] K2, Complex[] K3, Complex[] K4, double dx)
         {
             for(var i = 0; i < Y.Length; i++)
             {

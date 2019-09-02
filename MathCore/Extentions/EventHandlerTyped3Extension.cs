@@ -14,7 +14,7 @@ namespace System
         public static void Start<TSender, TEventArgs1, TEventArgs2, TEventArgs3>(this EventHandler<TSender, TEventArgs1, TEventArgs2, TEventArgs3> Handler, TSender Sender, EventArgs<TEventArgs1, TEventArgs2, TEventArgs3> e)
         {
             var handler = Handler;
-            if(handler == null) return;
+            if(handler is null) return;
             var invocations = handler.GetInvocationList();
             foreach (var invocation in invocations)
             {
@@ -72,7 +72,7 @@ namespace System
         //    where TEventArgs : EventArgs
         //{
         //    var lv_Handler = Handler;
-        //    if(lv_Handler == null) return;
+        //    if(lv_Handler is null) return;
         //    var invocations = lv_Handler.GetInvocationList();
         //    for(var i = 0; i < invocations.Length; i++)
         //    {
@@ -114,7 +114,7 @@ namespace System
         //                                                       TSender Sender, TArgs Args)
         //{
         //    var lv_Handler = Handler;
-        //    if(lv_Handler == null) return new TResult[0];
+        //    if(lv_Handler is null) return new TResult[0];
 
         //    return lv_Handler
         //                .GetInvocationList()

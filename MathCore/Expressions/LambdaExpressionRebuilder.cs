@@ -30,7 +30,7 @@ namespace System.Linq.Expressions
         public override Expression Visit(Expression node)
         {
             var V = _NewValues.First(v => v.Selector(node));
-            return V == null ? base.Visit(node) : V.NewNode(node);
+            return V is null ? base.Visit(node) : V.NewNode(node);
         }
 
         public void Add(Func<Expression, bool> Selector, Func<Expression, Expression> NewNode) => _NewValues.Add(new Rule(Selector, NewNode));

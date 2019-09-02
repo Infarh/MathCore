@@ -5,7 +5,7 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Блок определения функции</summary>
-    sealed class FunctionalTerm : FunctionTerm
+    internal sealed class FunctionalTerm : FunctionTerm
     {
         /// <summary>Параметры оператора</summary>
         [NotNull]

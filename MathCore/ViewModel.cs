@@ -91,10 +91,10 @@ namespace MathCore.ViewModels
         {
             lock (_PropertiesDependencesSyncRoot)
             {
-                if (_PropertyChangedHandlers == null || _PropertyChangedHandlers.Count == 0 || !_PropertyChangedHandlers.TryGetValue(PropertyName, out var h)) return false;
+                if (_PropertyChangedHandlers is null || _PropertyChangedHandlers.Count == 0 || !_PropertyChangedHandlers.TryGetValue(PropertyName, out var h)) return false;
                 // ReSharper disable once DelegateSubtraction
                 h -= handler;
-                if (h == null)
+                if (h is null)
                     _PropertyChangedHandlers.Remove(PropertyName);
                 else
                     _PropertyChangedHandlers[PropertyName] = h;
@@ -117,7 +117,7 @@ namespace MathCore.ViewModels
         {
             lock (_PropertiesDependencesSyncRoot)
             {
-                if (_PropertyChangedHandlers == null || _PropertyChangedHandlers.Count == 0) return false;
+                if (_PropertyChangedHandlers is null || _PropertyChangedHandlers.Count == 0) return false;
                 _PropertyChangedHandlers.Clear();
                 _PropertyChangedHandlers = null;
                 return true;
@@ -260,7 +260,7 @@ namespace MathCore.ViewModels
                         dependences = properties_dependences_dictionary[PropertyName].Where(name => name != PropertyName).ToArray();
             var dependency_handlers = _PropertyChangedHandlers;
             if (dependency_handlers != null && dependency_handlers.TryGetValue(PropertyName, out var handler)) handler?.Invoke();
-            if (dependences == null) return;
+            if (dependences is null) return;
             handlers.Start(this, dependences);
             if (dependency_handlers != null)
                 foreach (var dependence in dependences)
@@ -324,7 +324,7 @@ namespace MathCore.ViewModels
                 foreach (var changed_handler_attribute in property.GetCustomAttributes(typeof(ChangedHandlerAttribute), true).OfType<ChangedHandlerAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.MethodName)))
                 {
                     var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
-                    if (handler == null) throw new InvalidOperationException(
+                    if (handler is null) throw new InvalidOperationException(
                         $"Для свойства {property.Name} определён аттрибут {typeof(ChangedHandlerAttribute).Name}, но в классе {type.Name} отсутствует " +
                         $"указанный в аттрибуте метод реакции на изменеие значения свйоства {changed_handler_attribute.MethodName}");
                     PropertyChanged_AddHandler(property.Name, (Action)Delegate.CreateDelegate(typeof(Action), this, handler));

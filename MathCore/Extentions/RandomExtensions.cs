@@ -92,6 +92,7 @@ namespace System
             {
                 var r = rnd.Next(1, n + 1 - i);
 
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var q in sorted)
                     if (r >= q) r++;
 

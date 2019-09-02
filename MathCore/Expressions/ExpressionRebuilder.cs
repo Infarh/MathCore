@@ -19,7 +19,7 @@ namespace System.Linq.Expressions
         {
             // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
             var element = Base(Node); // Вызываем базовый метод для получения замены
-            if(Handlers == null) return element;
+            if(Handlers is null) return element;
             var node = element as TExpressionNode;
             return node != null
                 ? Handlers(this, new EventArgs<TExpressionNode>(node))
@@ -36,7 +36,7 @@ namespace System.Linq.Expressions
         {
             // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
             var element = Base(Node); // Вызываем базовый метод для получения замены
-            if(Handlers == null) return element;
+            if(Handlers is null) return element;
             // Генерируем событие с передачей в него узла, полученного от базового дерева
             return Handlers(this, new EventArgs<TOut>(element));
         }

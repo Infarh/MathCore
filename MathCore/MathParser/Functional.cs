@@ -66,7 +66,7 @@ namespace MathCore.MathParser
 
     [ContractClassFor(typeof(Functional))]
     [ExcludeFromCodeCoverage]
-    abstract class FunctionalContract : Functional
+    internal abstract class FunctionalContract : Functional
     {
         private FunctionalContract(string Name) : base(Name) { }
 

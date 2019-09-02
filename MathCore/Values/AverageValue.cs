@@ -146,7 +146,7 @@ namespace MathCore.Values
         private AverageValue([NotNull] SerializationInfo info, StreamingContext context)
         {
             Contract.Requires(info != null);
-            if (info == null) throw new ArgumentNullException(nameof(info));
+            if (info is null) throw new ArgumentNullException(nameof(info));
             _Value = info.GetDouble("Value");
             _N = info.GetInt32("N");
             Length = info.GetInt32("Length");
@@ -156,18 +156,18 @@ namespace MathCore.Values
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null) throw new ArgumentNullException(nameof(info));
+            if (info is null) throw new ArgumentNullException(nameof(info));
             GetObjectData(info, context);
         }
 
         /// <summary>Получить состояние объекта</summary>
         /// <param name="info">Объект сериализации</param>
         /// <param name="context">Конекст операции сериализации</param>
-        /// <exception cref="ArgumentNullException">Если <paramref name="info"/> == null</exception>
+        /// <exception cref="ArgumentNullException">Если <paramref name="info"/> is null</exception>
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         protected virtual void GetObjectData([NotNull] SerializationInfo info, StreamingContext context)
         {
-            if (info == null) throw new ArgumentNullException(nameof(info));
+            if (info is null) throw new ArgumentNullException(nameof(info));
 
             info.AddValue("Value", _Value);
             info.AddValue("N", _N);

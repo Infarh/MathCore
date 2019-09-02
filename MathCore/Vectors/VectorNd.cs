@@ -10,13 +10,13 @@ namespace MathCore.Vectors
 
         public T[] Values { get; }
 
-        public bool IsFinite => _Demention == null;
+        public bool IsFinite => _Demention is null;
 
         public VectorND(int[] Dementions) : this(Dementions, 0) { }
 
         private VectorND(int[] Dementions, int i)
         {
-            if(Dementions == null) throw new ArgumentNullException(nameof(Dementions));
+            if(Dementions is null) throw new ArgumentNullException(nameof(Dementions));
             if(i + 1 > Dementions.Length) 
                 throw new ArgumentOutOfRangeException(nameof(i), "Запрашиваемый индекс оси превышает указанную размерность");
 

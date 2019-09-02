@@ -2,7 +2,7 @@ namespace System.Linq.Reactive
 {
     /// <summary>Наблюдаемый объект с указанным числом генерации событий</summary>
     /// <typeparam name="T">Тип объектов последовательности</typeparam>
-    sealed class TakeObservable<T> : SimpleObservableEx<T>
+    internal sealed class TakeObservable<T> : SimpleObservableEx<T>
     {
         /// <summary>Исходный наблюдатель</summary>
         private readonly IObserver<T> _Observer;

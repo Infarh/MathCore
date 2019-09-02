@@ -90,7 +90,7 @@ namespace MathCore.Values
         }
 
 
-        void Test()
+        private void Test()
         {
             //Используем уничтожаемую группу объектов
             using(var readers = new DisposableGroup<StreamReader>(                          //Объекты чтения из потока

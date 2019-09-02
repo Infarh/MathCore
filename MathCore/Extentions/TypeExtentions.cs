@@ -33,8 +33,8 @@ namespace System
 
         private static Func<object, object> GetCasterFrom([NotNull]Type TargetType, [CanBeNull]object Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
 
-        public static Func<object, object> GetCasterTo([NotNull]this Type SourceType, [NotNull]Type TargetType) => TargetType.GetCasterFrom(SourceType);
-        public static Func<object, object> GetCasterFrom([NotNull]this Type TargetType, [NotNull]Type SourceType)
+        public static Func<object, object> GetCasterTo([NotNull] this Type SourceType, [NotNull]Type TargetType) => TargetType.GetCasterFrom(SourceType);
+        public static Func<object, object> GetCasterFrom([NotNull] this Type TargetType, [NotNull]Type SourceType)
         {
             Func<object, object> res;
             var key = new PairOfTypes(SourceType, TargetType);
@@ -69,7 +69,7 @@ namespace System
 
         public static Expression GetCastExpression(this Type FromType, Type ToType, ref ParameterExpression parameter)
         {
-            if(parameter == null) parameter = Expression.Parameter(typeof(object), "value");
+            if(parameter is null) parameter = Expression.Parameter(typeof(object), "value");
             return Expression.Convert(Expression.Convert(Expression.Convert(__ConvParameter, FromType), ToType), typeof(object));
         }
 
@@ -82,11 +82,11 @@ namespace System
             var expr_pFrom = Expression.Parameter(FromType, "pFrom");
             var expr_tFrom2tObject = Expression.Convert(expr_pFrom, typeof(object));
             var expr_cConverter = Expression.Constant(c_to ?? c);
-            var method = (c_to == null
+            var method = (c_to is null
                             ? (Delegate)(Func<object, Type, object>)c.ConvertTo
                             : (Func<object, object>)c_to.ConvertFrom)
                             .Method;
-            var exprs_pConverter = c_to == null
+            var exprs_pConverter = c_to is null
                 ? new Expression[] { expr_tFrom2tObject, Expression.Constant(ToType) }
                 : new Expression[] { expr_tFrom2tObject };
             var expr_conversation = Expression.Call(expr_cConverter, method, exprs_pConverter);
@@ -102,11 +102,11 @@ namespace System
                 throw new NotSupportedException($"Преобразование из {FromType} в {ToType} не поддерживается");
             var expr_pFrom = Expression.Parameter(typeof(object), "pFrom");
             var expr_cConverter = Expression.Constant(c_to ?? c);
-            var method = (c_to == null
+            var method = (c_to is null
                             ? (Delegate)(Func<object, Type, object>)c.ConvertTo
                             : (Func<object, object>)c_to.ConvertFrom)
                             .Method;
-            var exprs_pConverter = c_to == null
+            var exprs_pConverter = c_to is null
                 ? new Expression[] { expr_pFrom, Expression.Constant(ToType) }
                 : new Expression[] { expr_pFrom };
             var expr_Conversation = Expression.Call(expr_cConverter, method, exprs_pConverter);
@@ -146,7 +146,7 @@ namespace System
         public static object CreateObject(this Type type)
         {
             //var lv_Info = type.GetConstructor(new Type[] { });
-            //if(lv_Info == null)
+            //if(lv_Info is null)
             //    throw new InvalidOperationException("Не найден конструктор типа " +
             //        type + " без параметров. Для данного типа доступны следующие конструкторы " +
             //        type.GetConstructors().ConvertObjectTo(CInfo =>

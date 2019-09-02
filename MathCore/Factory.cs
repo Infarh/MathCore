@@ -78,7 +78,7 @@ namespace MathCore
         /// <summary>Создать новый объект</summary>
         /// <returns>Новый объект типа <typeparamref name="T"/></returns>
         [DST]
-        public virtual T Create() => _FactoryMethod == null ? default : Last = _FactoryMethod();
+        public virtual T Create() => _FactoryMethod is null ? default : Last = _FactoryMethod();
 
         /* ------------------------------------------------------------------------------------------ */
 

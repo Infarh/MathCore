@@ -20,7 +20,7 @@ namespace MathCore
         private readonly Func<TKey, bool> _Remove;
 
         /// <inheritdoc />
-        public bool IsReadOnly => _ElementSetter == null;
+        public bool IsReadOnly => _ElementSetter is null;
 
         /// <inheritdoc />
         public int Count => _ElementsGetter().Count();
@@ -59,7 +59,7 @@ namespace MathCore
         // ReSharper disable once UnusedParameter.Local
         private void CheckSupported(Delegate action, string message)
         {
-            if(action == null)
+            if(action is null)
                 throw new NotSupportedException(message);
         }
 

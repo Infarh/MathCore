@@ -18,7 +18,7 @@ namespace MathCore.CommandProcessor
             processor["exit"] += (command, index, commands) => work = false;
             processor["help"] += (command, index, commands) => processor.GetRegistredCommands().Foreach(Console.WriteLine);
             var set = processor["set"];
-            set["prompt"] += (command, index, commands, arg) => Prompt = arg.Values == null || arg.Values.Length == 0 ? "" : arg.Values[0];
+            set["prompt"] += (command, index, commands, arg) => Prompt = arg.Values is null || arg.Values.Length == 0 ? "" : arg.Values[0];
             set["work"] += (command, index, commands, arg) => {
                 if(bool.TryParse(arg.Value, out var can_work)) work = can_work; };
 
@@ -45,7 +45,7 @@ namespace MathCore.CommandProcessor
             }
 
             var handler = CommandProcess;
-            if(handler == null) return;
+            if(handler is null) return;
             var invocations = handler.GetInvocationList();
             for(var i = 0; !Arg.Handled && i < invocations.Length; i++)
             {
@@ -77,7 +77,7 @@ namespace MathCore.CommandProcessor
         protected virtual void OnUnhandledCommand(CommandEventArgs Arg)
         {
             var handlers = UnhandledCommand;
-            if(handlers == null) return;
+            if(handlers is null) return;
             var invocations = handlers.GetInvocationList();
             for(var i = 0; i < invocations.Length; i++)
             {

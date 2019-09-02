@@ -1,6 +1,6 @@
 namespace System.Linq.Reactive
 {
-    sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
+    internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
     {
         private readonly IAsyncResult _AsyncResult;
         private T _Result;

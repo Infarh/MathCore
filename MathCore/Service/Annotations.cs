@@ -103,7 +103,7 @@ namespace MathCore.Annotations
     /// </summary>
     /// <example><code>
     /// public void Foo(string param) {
-    ///   if (param == null)
+    ///   if (param is null)
     ///     throw new ArgumentNullException("par"); // Warning: Cannot resolve symbol
     /// }
     /// </code></example>

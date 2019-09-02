@@ -88,7 +88,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public virtual bool IsPrecomputable { [DST] get; } = false;
 
         /// <summary>Является ли узел дерева корнем?</summary>
-        public bool IsRoot => Parent == null;
+        public bool IsRoot => Parent is null;
 
         /// <summary>Признак - является ли текущий узел левым поддеревом</summary>
         public bool IsLeftSubtree
@@ -124,10 +124,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             set
             {
                 Contract.Ensures(_Left == value);
-                Contract.Ensures(value == null || value.Parent == this);
+                Contract.Ensures(value is null || value.Parent == this);
                 if(_Left != null) _Left.Parent = null;
                 _Left = value;
-                if(value == null) return;
+                if(value is null) return;
                 if(value.IsLeftSubtree)
                     value.Parent.Left = null;
                 else if(value.IsRightSubtree)
@@ -145,10 +145,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             set
             {
                 Contract.Ensures(_Right == value);
-                Contract.Ensures(value == null || value.Parent == this);
+                Contract.Ensures(value is null || value.Parent == this);
                 if(_Right != null) _Right.Parent = null;
                 _Right = value;
-                if(value == null) return;
+                if(value is null) return;
                 if(value.IsLeftSubtree)
                     value.Parent.Left = null;
                 else if(value.IsRightSubtree)
@@ -254,7 +254,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                         _ => throw new FormatException($"Неверный параметр в пути узла {Path} -> {elements[i]}",
                             new ArgumentException(nameof(Path)))
                     };
-                    if(node == null) return null;
+                    if(node is null) return null;
                 }
                 return node;
             }
@@ -498,17 +498,17 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             //   *    ->  L
             //  / \        \
             // L   R        R
-            if(parent == null) // Если узел является корнем 
+            if(parent is null) // Если узел является корнем 
             {
                 Left = null;
                 Right = null;
-                if(left == null) // Если нет левого поддерева
+                if(left is null) // Если нет левого поддерева
                 {
                     if(right != null) // Если есть правое поддерево
                         right.Parent = null; // обнулить ссылку на корень
                     return right;
                 }
-                if(right == null) // Если нет правого поддерева
+                if(right is null) // Если нет правого поддерева
                 {
                     left.Parent = null; // Обнулить ссылку у левого поддерева на корень
                     return left;
@@ -530,7 +530,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             // L    R      ...   R    
             if(IsLeftSubtree) // Узел является левым поддеревом
             {
-                if(left == null) // Если левого поддерева нет
+                if(left is null) // Если левого поддерева нет
                     parent.Left = right; // то левым поддеревом родительского узла будет правое поддерево
                 else
                 {   //иначе - левое поддерево
@@ -546,7 +546,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             //     L   R            L   ...
             else // Узел является правым поддеревом
             {
-                if(right == null) // Если правого поддерева нет
+                if(right is null) // Если правого поддерева нет
                     parent.Right = left; // то правым поддеревом родительского узла будет левое поддерево
                 else
                 {   //иначе - правое поддерево
@@ -593,7 +593,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             {
                 last = node;
                 node = node.Parent;
-            } while(!(node == null || node.Right == last));
+            } while(!(node is null || node.Right == last));
 
             return node?.Left;
         }
@@ -676,7 +676,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
     [ContractClassFor(typeof(ExpressionTreeNode))]
     [ExcludeFromCodeCoverage]
-    abstract class ExpressionTreeNodeContract : ExpressionTreeNode
+    internal abstract class ExpressionTreeNodeContract : ExpressionTreeNode
     {
         private ExpressionTreeNodeContract() { }
 

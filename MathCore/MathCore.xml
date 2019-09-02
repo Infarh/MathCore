@@ -557,6 +557,11 @@
             <summary>Вычисление квадратного корня числа</summary>
             <returns>Квадратный корень числа</returns>
         </member>
+        <member name="M:MathCore.Complex.Deconstruct(System.Double@,System.Double@)">
+            <summary>Деконструктор комплексного числа</summary>
+            <param name="re">Действительная часть</param>
+            <param name="im">Мнимая часть</param>
+        </member>
         <member name="M:MathCore.Complex.op_UnaryNegation(MathCore.Complex@)">
             <summary>Унарный оператор разности. Возвращает число -Re-jIm</summary>
             <param name="z">Комплексное число</param>
@@ -798,6 +803,11 @@
         <member name="M:MathCore.Complex.op_Implicit(System.Double@)~MathCore.Complex">
             <summary>Оператор неявного приведения дробного числа двойной точности к комплексному виду</summary>
             <param name="X">Вещественное число двойной точности</param>
+            <returns>Комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Implicit(System.Int32@)~MathCore.Complex">
+            <summary>Оператор неявного приведения целого числа к комплексному виду</summary>
+            <param name="X">Целое число</param>
             <returns>Комплексное число</returns>
         </member>
         <member name="T:MathCore.Complex.Trigonomerty">
@@ -8015,7 +8025,7 @@
             </summary>
             <example><code>
             public void Foo(string param) {
-              if (param == null)
+              if (param is null)
                 throw new ArgumentNullException("par"); // Warning: Cannot resolve symbol
             }
             </code></example>
@@ -9039,7 +9049,7 @@
             <summary>Получить состояние объекта</summary>
             <param name="info">Объект сериализации</param>
             <param name="context">Конекст операции сериализации</param>
-            <exception cref="T:System.ArgumentNullException">Если <paramref name="info"/> == null</exception>
+            <exception cref="T:System.ArgumentNullException">Если <paramref name="info"/> is null</exception>
         </member>
         <member name="T:MathCore.Values.CSV">
             <summary>Файл текстовых данных, разделённых запятой</summary>
@@ -14762,9 +14772,33 @@
         <member name="M:System.ObjectExtentions.InitializeObject``2(``0,``1,System.Action{``0,``1})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
-            <typeparam name="TParameter">Тип параметра инициализации</typeparam>
+            <typeparam name="TP">Тип параметра инициализации</typeparam>
             <param name="obj">Инициализируемый объект</param>
             <param name="parameter">Параметр инициализации</param>
+            <param name="Initializator">Действие инициализации</param>
+            <returns>Инициализированный объект</returns>
+        </member>
+        <member name="M:System.ObjectExtentions.InitializeObject``3(``0,``1,``2,System.Action{``0,``1,``2})">
+            <summary>Инициализировать объект ссылочного типа</summary>
+            <typeparam name="T">Тип объекта</typeparam>
+            <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
+            <typeparam name="TP2">Тип параметра 2 инициализации</typeparam>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="parameter1">Параметр 1 инициализации</param>
+            <param name="parameter2">Параметр 2 инициализации</param>
+            <param name="Initializator">Действие инициализации</param>
+            <returns>Инициализированный объект</returns>
+        </member>
+        <member name="M:System.ObjectExtentions.InitializeObject``4(``0,``1,``2,``3,System.Action{``0,``1,``2,``3})">
+            <summary>Инициализировать объект ссылочного типа</summary>
+            <typeparam name="T">Тип объекта</typeparam>
+            <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
+            <typeparam name="TP2">Тип параметра 2 инициализации</typeparam>
+            <typeparam name="TP3">Тип параметра 3 инициализации</typeparam>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="parameter1">Параметр инициализации</param>
+            <param name="parameter2">Параметр инициализации</param>
+            <param name="parameter3">Параметр инициализации</param>
             <param name="Initializator">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
@@ -14778,9 +14812,33 @@
         <member name="M:System.ObjectExtentions.InitializeObject``2(``0,``1,System.Func{``0,``1,``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
-            <typeparam name="TParameter">Тип параметра инициализации</typeparam>
+            <typeparam name="TP">Тип параметра инициализации</typeparam>
             <param name="obj">Инициализируемый объект</param>
             <param name="parameter">Параметр инициализации</param>
+            <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+            <returns>Объект, возвращённый функцией инициализации</returns>
+        </member>
+        <member name="M:System.ObjectExtentions.InitializeObject``4(``0,``1,``2,``3,System.Func{``0,``1,``2,``3,``0})">
+            <summary>Инициализировать объект ссылочного типа</summary>
+            <typeparam name="T">Тип объекта</typeparam>
+            <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
+            <typeparam name="TP2">Тип параметра 2 инициализации</typeparam>
+            <typeparam name="TP3">Тип параметра 3 инициализации</typeparam>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="parameter1">Параметр 1 инициализации</param>
+            <param name="parameter2">Параметр 2 инициализации</param>
+            <param name="parameter3">Параметр 3 инициализации</param>
+            <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+            <returns>Объект, возвращённый функцией инициализации</returns>
+        </member>
+        <member name="M:System.ObjectExtentions.InitializeObject``3(``0,``1,``2,System.Func{``0,``1,``2,``0})">
+            <summary>Инициализировать объект ссылочного типа</summary>
+            <typeparam name="T">Тип объекта</typeparam>
+            <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
+            <typeparam name="TP2">Тип параметра 2 инициализации</typeparam>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="parameter1">Параметр 1 инициализации</param>
+            <param name="parameter2">Параметр 2 инициализации</param>
             <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>

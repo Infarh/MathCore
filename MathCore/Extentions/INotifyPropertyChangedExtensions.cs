@@ -129,7 +129,7 @@ namespace System.ComponentModel
             /// <param name="OnPropertyChanged">Метод генерации события <see cref="INotifyPropertyChanged.PropertyChanged"/> в объекте <paramref name="obj"/></param>
             public void Subscribe(INotifyPropertyChanged obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             {
-                if(_Handler == null)
+                if(_Handler is null)
                     _Handler = (s, e) =>
                     {
                         if(!_Dependences.ContainsKey(e.PropertyName)) return;
@@ -224,7 +224,7 @@ namespace System.ComponentModel
             lock (__ObjectsSet)
             {
                 var w_ref = __ObjectsSet.FirstOrDefault(wr => obj.Equals(wr.Target));
-                if(w_ref == null) return;
+                if(w_ref is null) return;
                 var type = typeof(T);
                 type.GetRegistrator().UnSubscrige(obj);
                 __ObjectsSet.Remove(w_ref);

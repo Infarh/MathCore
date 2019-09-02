@@ -11,7 +11,7 @@ namespace MathCore
     }
 
     [ContractClassFor(typeof(ICountable))]
-    abstract class ContractClassICountable : ICountable
+    internal abstract class ContractClassICountable : ICountable
     {
         #region Implementation of ICountable
 

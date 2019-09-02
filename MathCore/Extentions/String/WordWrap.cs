@@ -5,7 +5,7 @@ namespace MathCore.Extentions.String
 {
     [Copyright("http://www.excode.ru/art4524p13.html")]
     [Copyright("http://www.programmersforum.ru/showthread.php?t=3926")]
-    static class WordWrap
+    internal static class WordWrap
     {
         private enum SymbType { Empty, NoDefined, Glas, Sogl, Spec }
 
@@ -72,8 +72,7 @@ namespace MathCore.Extentions.String
             {
                 HypBuff[Cur++] = pc[i];
 
-                if(i >= len - 2)
-                    continue;
+                if(i >= len - 2) continue;
                 if(h[i] == SymbType.NoDefined)
                 {
                     cw = 0;
@@ -87,10 +86,7 @@ namespace MathCore.Extentions.String
                     continue;
                 }
 
-                if(cw <= 1)
-                    continue;
-                if(!isSlogMore(h, i + 1))
-                    continue;
+                if(cw <= 1 || !isSlogMore(h, i + 1)) continue;
 
                 if((h[i] == SymbType.Sogl && h[i - 1] == SymbType.Glas && h[i + 1] == SymbType.Sogl && h[i + 2] == SymbType.Spec)
                     || (h[i] == SymbType.Glas && h[i - 1] == SymbType.Sogl && h[i + 1] == SymbType.Sogl && h[i + 2] == SymbType.Glas)
@@ -115,10 +111,8 @@ namespace MathCore.Extentions.String
         {
             while(p[pos] != (char)0)
             {
-                if(Spaces.Contains(p[pos]))
-                    return false;
-                if(isGlas(p[pos++]))
-                    return true;
+                if(Spaces.Contains(p[pos])) return false;
+                if(isGlas(p[pos++])) return true;
             }
             return false;
         }
@@ -136,8 +130,7 @@ namespace MathCore.Extentions.String
 
             while(p[pos] != (char)0)
             {
-                if(Spaces.Contains(p[pos]))
-                    break;
+                if(Spaces.Contains(p[pos])) break;
                 if(!BeGlas) BeGlas = isGlas(p[pos]);
                 if(!BeSogl) BeSogl = isSogl(p[pos]);
                 pos++;
@@ -152,17 +145,13 @@ namespace MathCore.Extentions.String
         /// <param name="p"></param>
         /// <param name="pos"></param>
         /// <returns></returns>
-        private static bool MayBeHyph(string p, int pos)
-        {
-            var i = pos;
-            var Len = p.Length;
-            return Len > 3 && i > 2
-                && (i != 0 && !Spaces.Contains(p[i]) && !Spaces.Contains(p[i + 1]) && !Spaces.Contains(p[i - 1]))
-                && ((isSogl(p[i]) && isGlas(p[i - 1]) && isSogl(p[i + 1]) && Red_SlogMore(p, i + 1))
-                    || (isGlas(p[i]) && isSogl(p[i - 1]) && isSogl(p[i + 1]) && isGlas(p[i + 2]))
-                    || (isGlas(p[i]) && isSogl(p[i - 1]) && isGlas(p[i + 1]) && Red_SlogMore(p, i + 1))
-                    || isSpecSign(p[i]));
-        }
+        private static bool MayBeHyph(string p, int pos) =>
+            p.Length > 3 && pos > 2
+                         && (pos != 0 && !Spaces.Contains(p[pos]) && !Spaces.Contains(p[pos + 1]) && !Spaces.Contains(p[pos - 1]))
+                         && ((isSogl(p[pos]) && isGlas(p[pos - 1]) && isSogl(p[pos + 1]) && Red_SlogMore(p, pos + 1))
+                             || (isGlas(p[pos]) && isSogl(p[pos - 1]) && isSogl(p[pos + 1]) && isGlas(p[pos + 2]))
+                             || (isGlas(p[pos]) && isSogl(p[pos - 1]) && isGlas(p[pos + 1]) && Red_SlogMore(p, pos + 1))
+                             || isSpecSign(p[pos]));
 
         /// <summary>На вход ей подается просто некая строка, дальше она ее обрабатывает и возвращает строку с переносами</summary>
         /// <param name="s"></param>

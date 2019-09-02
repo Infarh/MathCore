@@ -37,7 +37,7 @@ namespace System.Xml.Linq
         {
             var str = element.ValueOrDefault();
             if(str is T) return (T)(object)str;
-            if(str == null) return Default;
+            if(str is null) return Default;
             var converter = TypeDescriptor.GetConverter(typeof(T));
             if(!converter.CanConvertFrom(typeof(string)))
                 throw new InvalidOperationException($"Невозможно преобразовать тип {typeof(string)} к типу {typeof(T)}");
@@ -46,27 +46,27 @@ namespace System.Xml.Linq
 
         public static string ValueOrDefault(this XAttribute element, string Default = null) => element?.Value ?? Default;
 
-        public static int ValueIntOrDefault(this XElement e, int Default = 0) => e == null || !int.TryParse(e.Value, out var v) ? Default : v;
+        public static int ValueIntOrDefault(this XElement e, int Default = 0) => e is null || !int.TryParse(e.Value, out var v) ? Default : v;
 
-        public static int ValueIntOrDefault(this XAttribute e, int Default = 0) => e == null || !int.TryParse(e.Value, out var v) ? Default : v;
+        public static int ValueIntOrDefault(this XAttribute e, int Default = 0) => e is null || !int.TryParse(e.Value, out var v) ? Default : v;
 
-        public static int? ValueIntOrNull(this XAttribute e) => e == null || !int.TryParse(e.Value, out var v) ? (int?)null : v;
+        public static int? ValueIntOrNull(this XAttribute e) => e is null || !int.TryParse(e.Value, out var v) ? (int?)null : v;
 
-        public static int ValueIntHexOrDefault(this XElement e, int Default = 0) => e == null || !int.TryParse(e.Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var v) ? Default : v;
+        public static int ValueIntHexOrDefault(this XElement e, int Default = 0) => e is null || !int.TryParse(e.Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var v) ? Default : v;
 
-        public static int ValueIntHexOrDefault(this XAttribute e, int Default = 0) => e == null || !int.TryParse(e.Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var v) ? Default : v;
+        public static int ValueIntHexOrDefault(this XAttribute e, int Default = 0) => e is null || !int.TryParse(e.Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var v) ? Default : v;
 
-        public static double ValueDoubleOrDefault(this XElement e, double Default = 0) => e == null || !double.TryParse(e.Value, out var v) ? Default : v;
+        public static double ValueDoubleOrDefault(this XElement e, double Default = 0) => e is null || !double.TryParse(e.Value, out var v) ? Default : v;
 
-        public static double ValueDoubleOrDefault(this XAttribute e, double Default = 0) => e == null || !double.TryParse(e.Value, out var v) ? Default : v;
+        public static double ValueDoubleOrDefault(this XAttribute e, double Default = 0) => e is null || !double.TryParse(e.Value, out var v) ? Default : v;
 
-        public static bool ValueBoolOrDefault(this XElement e, bool Default = false) => e == null || !bool.TryParse(e.Value, out var v) ? Default : v;
+        public static bool ValueBoolOrDefault(this XElement e, bool Default = false) => e is null || !bool.TryParse(e.Value, out var v) ? Default : v;
 
-        public static bool ValueBoolOrDefault(this XAttribute e, bool Default = false) => e == null || !bool.TryParse(e.Value, out var v) ? Default : v;
+        public static bool ValueBoolOrDefault(this XAttribute e, bool Default = false) => e is null || !bool.TryParse(e.Value, out var v) ? Default : v;
 
         public static T ValueOrDefault<T>(this XAttribute e, T Default = default)
         {
-            if(e == null) return Default;
+            if(e is null) return Default;
             var str = e.Value;
             if(str is T) return (T)(object)str;
             var converter = TypeDescriptor.GetConverter(typeof(T));
@@ -149,7 +149,7 @@ namespace System.Xml.Linq
         [CanBeNull]
         public static string GetXPath([NotNull] this XObject xobj)
         {
-            if(xobj.Parent == null)
+            if(xobj.Parent is null)
                 switch (xobj)
                 {
                     case XDocument _:
@@ -198,7 +198,7 @@ namespace System.Xml.Linq
 
         public static int Int32OrDefault([CanBeNull] this XAttribute attribute, int @default = 0)
         {
-            if (@attribute == null) return @default;
+            if (@attribute is null) return @default;
             var str = attribute.Value;
             if (string.IsNullOrEmpty(str)) return @default;
             return !int.TryParse(str, out var value) ? @default : value;
@@ -207,7 +207,7 @@ namespace System.Xml.Linq
         [CanBeNull]
         public static string StringOrDefault([CanBeNull] this XAttribute attribute, [CanBeNull] string @default = null)
         {
-            if (@attribute == null) return @default;
+            if (@attribute is null) return @default;
             var str = attribute?.Value;
             return string.IsNullOrEmpty(str) ? @default : str;
         }

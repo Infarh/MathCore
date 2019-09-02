@@ -17,7 +17,7 @@ namespace MathCore
                 {
                     var old_handlers = __Approaches;
                     __Approaches += value;
-                    if(old_handlers == null) Start();
+                    if(old_handlers is null) Start();
                 }
             }
             remove
@@ -25,7 +25,7 @@ namespace MathCore
                 lock (__SyncRoot)
                 {
                     __Approaches -= value;
-                    if(__Approaches == null) Stop();
+                    if(__Approaches is null) Stop();
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace MathCore
                 {
                     var old_handlers = __Complite;
                     __Complite += value;
-                    if(old_handlers == null) Start();
+                    if(old_handlers is null) Start();
                 }
             }
             remove
@@ -49,7 +49,7 @@ namespace MathCore
                 lock (__SyncRoot)
                 {
                     __Complite -= value;
-                    if(__Complite == null) Stop();
+                    if(__Complite is null) Stop();
                 }
             }
         }

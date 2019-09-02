@@ -57,10 +57,10 @@ namespace MathCore.Statistic.RandomNumbers
         private static double[] __Normal_StairHeight;
         private static bool __Normal_Initialized;
         private static readonly object __Normal_Initialization_SyncRoot = new object();
-        const double c_Normal_x1 = 3.6541528853610088;
+        private const double c_Normal_x1 = 3.6541528853610088;
 
         /// <summary>area under rectangle</summary>
-        const double c_Normal_A = 4.92867323399e-3;
+        private const double c_Normal_A = 4.92867323399e-3;
 
         private static bool InitializeNormal()
         {
@@ -274,7 +274,7 @@ namespace MathCore.Statistic.RandomNumbers
             return k * E1;
         }
 
-        double GO(double k)
+        private double GO(double k)
         {
             // Assume that k > 3
             var m = k - 1;

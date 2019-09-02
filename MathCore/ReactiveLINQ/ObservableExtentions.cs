@@ -19,28 +19,28 @@ namespace System.Linq.Reactive
 
         public static void OnCompleted<T>(this IEnumerable<IObserver<T>> Observers)
         {
-            if (Observers == null) return;
+            if (Observers is null) return;
             foreach(var observer in Observers)
                 observer.OnCompleted();
         }
 
         public static void OnError<T>(this IEnumerable<IObserver<T>> Observers, Exception error)
         {
-            if (Observers == null) return;
+            if (Observers is null) return;
             foreach(var observer in Observers)
                 observer.OnError(error);
         }
 
         public static void OnNext<T>(this IEnumerable<IObserver<T>> Observers, T value)
         {
-            if (Observers == null) return;
+            if (Observers is null) return;
             foreach(var observer in Observers)
                 observer.OnNext(value);
         }
 
         public static void OnReset<T>(this IEnumerable<IObserverEx<T>> Observers)
         {
-            if (Observers == null) return;
+            if (Observers is null) return;
             foreach(var observer in Observers)
                 observer.OnReset();
         }
@@ -397,8 +397,8 @@ namespace System.Linq.Reactive
             this IObservable<TSource> source,
             Func<TSource, IEnumerable<TResult>> selector)
         {
-            if(source == null) throw new ArgumentNullException(nameof(source));
-            if(selector == null) throw new ArgumentNullException(nameof(selector));
+            if(source is null) throw new ArgumentNullException(nameof(source));
+            if(selector is null) throw new ArgumentNullException(nameof(selector));
             Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
@@ -413,8 +413,8 @@ namespace System.Linq.Reactive
             this IObservable<TSource> source,
             Func<TSource, int, IEnumerable<TResult>> selector)
         {
-            if(source == null) throw new ArgumentNullException(nameof(source));
-            if(selector == null) throw new ArgumentNullException(nameof(selector));
+            if(source is null) throw new ArgumentNullException(nameof(source));
+            if(selector is null) throw new ArgumentNullException(nameof(selector));
             Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
@@ -431,9 +431,9 @@ namespace System.Linq.Reactive
             Func<TSource, int, IEnumerable<TCollection>> collectionSelector,
             Func<TSource, TCollection, TResult> resultSelector)
         {
-            if(source == null) throw new ArgumentNullException(nameof(source));
-            if(collectionSelector == null) throw new ArgumentNullException(nameof(collectionSelector));
-            if(resultSelector == null) throw new ArgumentNullException(nameof(resultSelector));
+            if(source is null) throw new ArgumentNullException(nameof(source));
+            if(collectionSelector is null) throw new ArgumentNullException(nameof(collectionSelector));
+            if(resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
             Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
@@ -450,9 +450,9 @@ namespace System.Linq.Reactive
             Func<TSource, IEnumerable<TCollection>> collectionSelector,
             Func<TSource, TCollection, TResult> resultSelector)
         {
-            if(source == null) throw new ArgumentNullException(nameof(source));
-            if(collectionSelector == null) throw new ArgumentNullException(nameof(collectionSelector));
-            if(resultSelector == null) throw new ArgumentNullException(nameof(resultSelector));
+            if(source is null) throw new ArgumentNullException(nameof(source));
+            if(collectionSelector is null) throw new ArgumentNullException(nameof(collectionSelector));
+            if(resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
             Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();

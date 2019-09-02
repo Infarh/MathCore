@@ -31,7 +31,7 @@ namespace System.Reflection
                 type = o.GetType();
 
             var IsPrivate = Private ? BindingFlags.NonPublic : BindingFlags.Public;
-            var IsStatic = o == null ? BindingFlags.Static : BindingFlags.Instance;
+            var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
             _EventInfo = type.GetEvent(Name, IsPrivate | IsStatic);
         }

@@ -2333,8 +2333,8 @@ namespace MathCore
                 [NotNull]
                 public static Complex[,] Add([NotNull] Complex[,] A, [NotNull] Complex[,] B)
                 {
-                    if (A == null) throw new ArgumentNullException(nameof(A));
-                    if (B == null) throw new ArgumentNullException(nameof(B));
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (B is null) throw new ArgumentNullException(nameof(B));
                     Contract.Ensures(A.GetLength(0) == B.GetLength(0));
                     Contract.Ensures(A.GetLength(1) == B.GetLength(1));
                     Contract.Ensures(Contract.Result<Complex[,]>() != null);
@@ -2361,8 +2361,8 @@ namespace MathCore
                 [NotNull]
                 public static Complex[,] Substract([NotNull] Complex[,] A, [NotNull] Complex[,] B)
                 {
-                    if (A == null) throw new ArgumentNullException(nameof(A));
-                    if (B == null) throw new ArgumentNullException(nameof(B));
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (B is null) throw new ArgumentNullException(nameof(B));
                     Contract.Ensures(A.GetLength(0) == B.GetLength(0));
                     Contract.Ensures(A.GetLength(1) == B.GetLength(1));
                     Contract.Ensures(Contract.Result<Complex[,]>() != null);
@@ -2389,8 +2389,8 @@ namespace MathCore
                 [NotNull]
                 public static Complex[] MultylyCol([NotNull] Complex[,] A, [NotNull] Complex[] col)
                 {
-                    if (A == null) throw new ArgumentNullException(nameof(A));
-                    if (col == null) throw new ArgumentNullException(nameof(col));
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (col is null) throw new ArgumentNullException(nameof(col));
                     Contract.Ensures(A.GetLength(1) == col.Length);
                     Contract.Ensures(Contract.Result<Complex[]>() != null);
                     Contract.Ensures(Contract.Result<Complex[]>().Length == A.GetLength(0));
@@ -2413,8 +2413,8 @@ namespace MathCore
                 [NotNull]
                 public static Complex[] MultylyRow([NotNull] Complex[] row, [NotNull] Complex[,] B)
                 {
-                    if (B == null) throw new ArgumentNullException(nameof(B));
-                    if (row == null) throw new ArgumentNullException(nameof(row));
+                    if (B is null) throw new ArgumentNullException(nameof(B));
+                    if (row is null) throw new ArgumentNullException(nameof(row));
                     Contract.Ensures(B.GetLength(0) == row.Length);
                     Contract.Ensures(Contract.Result<Complex[]>() != null);
                     Contract.Ensures(Contract.Result<Complex[]>().Length == B.GetLength(1));
@@ -2436,8 +2436,8 @@ namespace MathCore
                 /// <exception cref="ArgumentException">В случае если размерности строки и столбца не равны</exception>
                 public static Complex MultylyRowToCol([NotNull] Complex[] row, [NotNull] Complex[] col)
                 {
-                    if (row == null) throw new ArgumentNullException(nameof(row));
-                    if (col == null) throw new ArgumentNullException(nameof(col));
+                    if (row is null) throw new ArgumentNullException(nameof(row));
+                    if (col is null) throw new ArgumentNullException(nameof(col));
                     if (col.Length != row.Length) throw new ArgumentException(@"Число столбцов элементов строки не равно числу элементов столбца", nameof(row));
                     Contract.EndContractBlock();
 
@@ -2455,8 +2455,8 @@ namespace MathCore
                 [NotNull]
                 public static Complex[,] Multiply([NotNull] Complex[,] A, [NotNull] Complex[,] B)
                 {
-                    if (A == null) throw new ArgumentNullException(nameof(A));
-                    if (B == null) throw new ArgumentNullException(nameof(B));
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (B is null) throw new ArgumentNullException(nameof(B));
                     if (A.GetLength(1) != B.GetLength(0)) throw new ArgumentOutOfRangeException(nameof(B), @"Число столбцов матрицы А не равно числу строк матрицы B");
                     Contract.Ensures(Contract.Result<Complex[,]>() != null);
                     Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == A.GetLength(0));
@@ -2490,9 +2490,9 @@ namespace MathCore
                 /// <exception cref="ArgumentException">В случае если число столбцов <paramref name="result"/> не равно числу строк <paramref name="B"/></exception>
                 public static void Multiply([NotNull] Complex[,] A, [NotNull] Complex[,] B, [NotNull] Complex[,] result)
                 {
-                    if (A == null) throw new ArgumentNullException(nameof(A));
-                    if (B == null) throw new ArgumentNullException(nameof(B));
-                    if (result == null) throw new ArgumentNullException(nameof(result));
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (B is null) throw new ArgumentNullException(nameof(B));
+                    if (result is null) throw new ArgumentNullException(nameof(result));
                     if (A.GetLength(1) != B.GetLength(0)) throw new ArgumentOutOfRangeException(nameof(B), @"Матрицы несогласованных порядков.");
                     if (result.GetLength(0) != A.GetLength(0)) throw new ArgumentException(@"Число строк матрицы результата не равно числу строк первой матрицы", nameof(result));
                     if (result.GetLength(1) != B.GetLength(1)) throw new ArgumentException(@"Число столбцов матрицы результата не равно числу строк второй матрицы", nameof(result));

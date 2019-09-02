@@ -21,7 +21,7 @@ namespace MathCore
             add
             {
                 if(value != null) lock(_PropertyChanged)
-                        if(_PropertyChanged == null)
+                        if(_PropertyChanged is null)
                             _PropertyChanged = value;
                         else
                             _PropertyChanged += value;

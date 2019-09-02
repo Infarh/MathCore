@@ -30,7 +30,7 @@ namespace System.Reflection
                 type = o.GetType();
 
             var is_private = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
-            var is_static = o == null ? BindingFlags.Static : BindingFlags.Instance;
+            var is_static = o is null ? BindingFlags.Static : BindingFlags.Instance;
 
             _FieldInfo = type.GetField(FieldName, is_private | is_static);
         }

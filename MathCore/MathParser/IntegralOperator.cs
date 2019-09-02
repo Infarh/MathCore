@@ -47,14 +47,14 @@ namespace MathCore.MathParser
                         .Where(n => n.Parent is EqualityOperatorNode)
                         .Select(n => n.Variable)
                         .FirstOrDefault();
-            if(iterator_var == null)
+            if(iterator_var is null)
                 throw new FormatException();
             var iterator_var_name = iterator_var.Name;
             var iterator_node = Parameters.Tree
                         .OfType<VariableValueNode>()
                         .FirstOrDefault(n => n.Parent is EqualityOperatorNode && n.Variable.Name == $"d{iterator_var_name}");
             var iterator_diff_var = iterator_node?.Variable;
-            _IsAdaptive = iterator_diff_var == null;
+            _IsAdaptive = iterator_diff_var is null;
 
             Function.Variable.ClearCollection();
             Function.Variable.Add(iterator_var);

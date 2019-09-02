@@ -2,7 +2,7 @@ using MathCore.Annotations;
 
 namespace System.Linq.Reactive
 {
-    sealed class SelectLamdaObserverEx<T, Q> : LamdaObserver<T>
+    internal sealed class SelectLamdaObserverEx<T, Q> : LamdaObserver<T>
     {
         public SelectLamdaObserverEx
         (

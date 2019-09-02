@@ -1,5 +1,4 @@
-﻿
-using DU = System.Func<double, double, double>;
+﻿using DU = System.Func<double, double, double>;
 
 namespace MathCore.DifferencialEquations.Numerical
 {

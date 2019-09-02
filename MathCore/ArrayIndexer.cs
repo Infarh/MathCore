@@ -1,4 +1,3 @@
-using System;
 using MathCore.Annotations;
 
 namespace MathCore

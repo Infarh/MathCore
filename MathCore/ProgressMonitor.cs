@@ -89,7 +89,7 @@ namespace MathCore
             get
             {
                 var statusF = _StatusStrFunc;
-                if(statusF == null) return _Status;
+                if(statusF is null) return _Status;
                 return Status = statusF();
             }
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -108,7 +108,7 @@ namespace MathCore
             get
             {
                 var informationF = _InformationStrFunc;
-                if(informationF == null) return _Informaion;
+                if(informationF is null) return _Informaion;
                 return Information = informationF();
             }
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -127,7 +127,7 @@ namespace MathCore
             get
             {
                 var progressF = _ProgressFunc;
-                if(progressF == null) return _Progress;
+                if(progressF is null) return _Progress;
                 return Progress = progressF();
             }
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -220,7 +220,7 @@ namespace MathCore
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void ClearEventHandlers()
         {
-            if(_ConnectedMonitor == null) return;
+            if(_ConnectedMonitor is null) return;
 
             _ConnectedMonitor.StatusChanged -= OnMonitorStatusChanged;
             _ConnectedMonitor.InformationChanged -= OnMonitorInformationChanged;

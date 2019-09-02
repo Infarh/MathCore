@@ -32,7 +32,7 @@ namespace MathCore.MathParser
             [DST]
             get
             {
-                if (Name == null) throw new ArgumentNullException(nameof(Name));
+                if (Name is null) throw new ArgumentNullException(nameof(Name));
                 if (string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 Contract.EndContractBlock();
                 return (_Variabels.Find(v => v.Name == Name)
@@ -42,8 +42,8 @@ namespace MathCore.MathParser
             [DST]
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(value));
-                if (Name == null) throw new ArgumentNullException(nameof(Name));
+                if (value is null) throw new ArgumentNullException(nameof(value));
+                if (Name is null) throw new ArgumentNullException(nameof(Name));
                 if (string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 Contract.EndContractBlock();
                 var old_var = _Variabels.Find(v => v.Name == Name);
@@ -62,7 +62,7 @@ namespace MathCore.MathParser
                     _Variabels.Remove(old_var);
                     Add(value);
                 }
-                else if (old_var == null)
+                else if (old_var is null)
                     Add(value);
                 else
                     old_var.Value = value.GetValue();
@@ -125,7 +125,7 @@ namespace MathCore.MathParser
 
             var replaced = false;
             var old_var = _Variabels.Find(v => v.Name == Name);
-            if (old_var == null) return false;
+            if (old_var is null) return false;
 
 
             _Expression.Tree //Обойти все узлы дерева

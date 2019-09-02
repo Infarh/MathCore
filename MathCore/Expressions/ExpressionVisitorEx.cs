@@ -8,7 +8,7 @@ namespace System.Linq.Expressions
     public abstract class ExpressionVisitorEx
     {
         public virtual Expression Visit(Expression Node) =>
-            Node == null
+            Node is null
                 ? null
                 : Node.NodeType switch
                 {

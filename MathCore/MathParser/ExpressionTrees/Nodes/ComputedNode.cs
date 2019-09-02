@@ -26,7 +26,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
     }
 
     [ContractClassFor(typeof(ComputedNode)), ExcludeFromCodeCoverage]
-    abstract class ComputedNodeContract : ComputedNode
+    internal abstract class ComputedNodeContract : ComputedNode
     {
         private ComputedNodeContract() { }
 

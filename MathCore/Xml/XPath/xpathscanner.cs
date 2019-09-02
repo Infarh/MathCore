@@ -135,7 +135,7 @@ namespace System.Xml.XPath
 
         public XPathScanner(string XpathExpr)
         {
-            if(XpathExpr == null)
+            if(XpathExpr is null)
                 throw new XPathException($"'{string.Empty}' is an invalid expression.");
             SourceText = XpathExpr;
             NextChar();

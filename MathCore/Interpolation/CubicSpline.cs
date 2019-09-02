@@ -15,7 +15,7 @@ namespace MathCore.Interpolation
         /// <summary>Структура, описывающая сплайн на каждом сегменте сетки</summary>
         private struct SplineState
         {
-            public readonly double a;
+            public double a;
             public double b;
             public double c;
             public double d;
@@ -36,40 +36,34 @@ namespace MathCore.Interpolation
 
         public double this[double x] => Value(x);
 
-
         /* -------------------------------------------------------------------------------------------- */
 
-        public CubicSpline(double[] X, double[] Y)
+        public CubicSpline([NotNull] double[] X, [NotNull] double[] Y) => Initialize(X, Y);
+
+        public CubicSpline([NotNull] IList<Complex> Points)
         {
-            Contract.Requires(X != null);
-            Contract.Requires(Y != null);
-            Initialize(X, Y);
+            var count = Points.Count;
+            var x = new double[count];
+            var y = new double[count];
+            for(var i = 0; i < count; i++)
+            {
+                x[i] = Points[i].Re;
+                y[i] = Points[i].Im;
+            }
+            Initialize(x, y);
         }
 
-        public CubicSpline(IList<Complex> Points)
+        public CubicSpline([NotNull] IList<Vector2D> Points)
         {
-            Contract.Requires(Points != null);
-            var lv_X = new double[Points.Count];
-            var lv_Y = new double[Points.Count];
-            for(var i = 0; i < Points.Count; i++)
+            var count = Points.Count;
+            var x = new double[count];
+            var y = new double[count];
+            for(var i = 0; i < count; i++)
             {
-                lv_X[i] = Points[i].Re;
-                lv_Y[i] = Points[i].Im;
+                x[i] = Points[i].X;
+                y[i] = Points[i].Y;
             }
-            Initialize(lv_X, lv_Y);
-        }
-
-        public CubicSpline(IList<Vector2D> Points)
-        {
-            Contract.Requires(Points != null);
-            var lv_X = new double[Points.Count];
-            var lv_Y = new double[Points.Count];
-            for(var i = 0; i < Points.Count; i++)
-            {
-                lv_X[i] = Points[i].X;
-                lv_Y[i] = Points[i].Y;
-            }
-            Initialize(lv_X, lv_Y);
+            Initialize(x, y);
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -77,45 +71,43 @@ namespace MathCore.Interpolation
         /// <summary>Инициализация сплайна</summary>
         /// <param name="X">Массив аргументов</param><param name="Y">Массив значений</param>
         /// <exception cref="ArgumentException">Возникает в случае, если размерности массивов не равны</exception>
-        public void Initialize(double[] X, double[] Y)
+        public void Initialize([NotNull] double[] X, [NotNull] double[] Y)
         {
-            Contract.Requires(X != null);
-            Contract.Requires(Y != null);
-            Contract.Requires(X.Length == Y.Length, "Размеры массивов должны совпадать");
             if(X.Length != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
+            Contract.EndContractBlock();
 
-            var lv_N = X.Length;
-            _SplinStates = new SplineState[lv_N];
+            var count = X.Length;
+            _SplinStates = new SplineState[count];
 
-            for(var i = 0; i < lv_N; i++)
+            for(var i = 0; i < count; i++)
                 _SplinStates[i] = new SplineState(Y[i], X[i]);
 
-            _SplinStates[0].c = _SplinStates[lv_N - 1].c = 0;
+            _SplinStates[0].c = _SplinStates[count - 1].c = 0;
 
             // Решение СЛАУ относительно коэфициентов сплайнов c[i] методом прогонки для трехдиагональных матриц
             // Вычисление прогоночных коэфициентов - прямой ход метода прогонки
-            var alpha = new double[lv_N - 1];
-            var beta = new double[lv_N - 1];
+            var alpha = new double[count - 1];
+            var beta = new double[count - 1];
             alpha[0] = beta[0] = 0;
-            for(var i = 1; i < lv_N - 1; i++)
+            for(var i = 1; i < count - 1; i++)
             {
                 var h_i = X[i] - X[i - 1];
                 var h_i1 = X[i + 1] - X[i];
-                var A = h_i;
-                var C = 2 * (h_i + h_i1);
-                var B = h_i1;
-                var F = 6 * ((Y[i + 1] - Y[i]) / h_i1 - (Y[i] - Y[i - 1]) / h_i);
-                var z = (A * alpha[i - 1] + C);
-                alpha[i] = -B / z;
-                beta[i] = (F - A * beta[i - 1]) / z;
+                var a = h_i;
+                var c = 2 * (h_i + h_i1);
+                var b = h_i1;
+                var f = 6 * ((Y[i + 1] - Y[i]) / h_i1 - (Y[i] - Y[i - 1]) / h_i);
+                var z = a * alpha[i - 1] + c;
+                alpha[i] = -b / z;
+                beta[i] = (f - a * beta[i - 1]) / z;
             }
 
             // Нахождение решения - обратный ход метода прогонки
-            for(var i = lv_N - 2; i > 0; i--)
+            for(var i = count - 2; i > 0; i--)
                 _SplinStates[i].c = alpha[i] * _SplinStates[i + 1].c + beta[i];
 
             // По известным коэфициентам c[i] находим значения b[i] и d[i]
-            for(var i = lv_N - 1; i > 0; i--)
+            for(var i = count - 1; i > 0; i--)
             {
                 var h_i = X[i] - X[i - 1];
                 _SplinStates[i].d = (_SplinStates[i].c - _SplinStates[i - 1].c) / h_i;
@@ -127,33 +119,29 @@ namespace MathCore.Interpolation
 
         public double Value(double x)
         {
-            var lv_N = _SplinStates.Length;
-            SplineState lv_State;
+            var count = _SplinStates.Length;
+            SplineState state;
             if(x <= _SplinStates[0].x) // Если x меньше точки сетки x[0] - пользуемся первым эл-тов массива
-                lv_State = _SplinStates[0];
-            else if(x >= _SplinStates[lv_N - 1].x) // Если x больше точки сетки x[n - 1] - пользуемся последним эл-том массива
-                lv_State = _SplinStates[lv_N - 1];
+                state = _SplinStates[0];
+            else if(x >= _SplinStates[count - 1].x) // Если x больше точки сетки x[n - 1] - пользуемся последним эл-том массива
+                state = _SplinStates[count - 1];
             else // Иначе x лежит между граничными точками сетки - производим бинарный поиск нужного эл-та массива
             {
-                int i = 0, j = lv_N - 1;
+                int i = 0, j = count - 1;
                 while(i + 1 < j)
                 {
                     var k = i + (j - i) / 2;
                     if(x <= _SplinStates[k].x) j = k; else i = k;
                 }
-                lv_State = _SplinStates[j];
+                state = _SplinStates[j];
             }
 
-            var dx = (x - lv_State.x);
+            var dx = x - state.x;
             // Вычисляем значение сплайна в заданной точке по схеме Горнера 
-            return lv_State.a + (lv_State.b + (lv_State.c / 2 + lv_State.d * dx / 6) * dx) * dx;
+            return state.a + (state.b + (state.c / 2 + state.d * dx / 6) * dx) * dx;
         }
 
         [NotNull]
-        public Func<double, double> GetFunction()
-        {
-            Contract.Ensures(Contract.Result<Func<double, double>>() != null);
-            return Value;
-        }
+        public Func<double, double> GetFunction() => Value;
     }
 }

@@ -96,7 +96,7 @@ namespace System
 
         protected StreamingObjectReader(Stream DataStream)
         {
-            Contract.Requires(DataStream != null, "DataStream == null");
+            Contract.Requires(DataStream != null, "DataStream is null");
             _Speed = new StreamDataSpeedValue(_DataStream = DataStream);
             Monitor.ProgressChecker = () => Complited;
         }
@@ -115,7 +115,7 @@ namespace System
             {
 
                 var time = RemainingTime;
-                return time == null ? Speed.ToString() :
+                return time is null ? Speed.ToString() :
                     $"{Speed}: {((TimeSpan)time).ToShortString()}";
             };
         }
@@ -127,7 +127,7 @@ namespace System
             try
             {
                 T obj;
-                if(_DataStream.Position == _DataStream.Length || ((obj = Read()) == null))
+                if(_DataStream.Position == _DataStream.Length || ((obj = Read()) is null))
                 {
                     _Enabled = false;
                     return;
@@ -152,7 +152,7 @@ namespace System
         [MethodImpl(MethodImplOptions.Synchronized)]
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if(_ObservableObject == null) _ObservableObject = new SimpleObservableEx<T>();
+            if(_ObservableObject is null) _ObservableObject = new SimpleObservableEx<T>();
             return _ObservableObject.Subscribe(observer);
         }
 

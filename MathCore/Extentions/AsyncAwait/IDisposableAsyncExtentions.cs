@@ -1,5 +1,4 @@
-﻿using MathCore.Annotations;
-using NN = MathCore.Annotations.NotNullAttribute;
+﻿using NN = MathCore.Annotations.NotNullAttribute;
 using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
 
 // ReSharper disable once CheckNamespace

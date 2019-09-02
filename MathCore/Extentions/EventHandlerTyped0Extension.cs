@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Класс методов расширений для обработчиков событий</summary>
@@ -14,7 +15,7 @@ namespace System
         public static void Start<TS, TE>(this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e)
         {
             var handler = Handler;
-            if(handler == null) return;
+            if(handler is null) return;
             var invocations = handler.GetInvocationList();
             foreach (var invocation in invocations)
             {
@@ -54,12 +55,8 @@ namespace System
         ///// <param name="e">Аргументы события</param>
         //[DST]
         //public static void FastStart<TEventArgs>(this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e)
-        //    where TEventArgs : EventArgs
-        //{
-        //    var lv_Handler = Handler;
-        //    if(lv_Handler != null)
-        //        lv_Handler.Invoke(Sender, e);
-        //}
+        //    where TEventArgs : EventArgs =>
+        //    Handler?.Invoke(Sender, e);
 
         ///// <summary>Потоко-безопасная генерация события</summary>
         ///// <param name="Handler">Обработчик события</param>
@@ -70,9 +67,9 @@ namespace System
         //public static void Start<TEventArgs>(this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e)
         //    where TEventArgs : EventArgs
         //{
-        //    var lv_Handler = Handler;
-        //    if(lv_Handler == null) return;
-        //    var invocations = lv_Handler.GetInvocationList();
+        //    var handler = Handler;
+        //    if(handler is null) return;
+        //    var invocations = handler.GetInvocationList();
         //    for(var i = 0; i < invocations.Length; i++)
         //    {
         //        var I = invocations[i];
@@ -107,10 +104,10 @@ namespace System
         //public static TResult[] Start<TResult, TSender, TArgs>(this EventHandler<TResult, TSender, TArgs> Handler,
         //                                                       TSender Sender, TArgs Args)
         //{
-        //    var lv_Handler = Handler;
-        //    if(lv_Handler == null) return new TResult[0];
+        //    var handler = Handler;
+        //    if(handler is null) return new TResult[0];
 
-        //    return lv_Handler
+        //    return handler
         //                .GetInvocationList()
         //                .Select(I => (TResult)(I.Target is ISynchronizeInvoke && ((ISynchronizeInvoke)I.Target).InvokeRequired
         //                                                   ? ((ISynchronizeInvoke)I.Target)

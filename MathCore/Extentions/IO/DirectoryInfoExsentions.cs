@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace System.IO
 {
     /// <summary>Класс методов-расширений для объектов класса System.IO.DirectoryInfo</summary>
     public static class DirectoryInfoExsentions
-    {
+    {  
         [NotNull]
         public static Process ShowInFileExplorer([NotNull] this FileSystemInfo dir) => Process.Start("explorer", $"/select,\"{dir.FullName}\"") ?? throw new InvalidOperationException();
 
@@ -156,5 +157,39 @@ namespace System.IO
 
         public static bool IsSubdirectoryOf([NotNull] this DirectoryInfo directory, [NotNull] DirectoryInfo parent) => directory.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
         public static bool IsParentOf([NotNull] this DirectoryInfo parent, [NotNull] DirectoryInfo directory) => directory.IsSubdirectoryOf(parent);
+
+        [NotNull, ItemNotNull] public static IEnumerable<FileInfo> FindFiles([NotNull] this DirectoryInfo dir, [NotNull] string mask) => dir.EnumerateDirectories().SelectMany(d => d.FindFiles(mask)).InsertBefore(dir.EnumerateFiles(mask));
+
+        /// <summary>Получение поддиректории по заданному пути. Если поддиректория отсутствует, то создать новую</summary>
+        /// <param name="ParentDirectory">Родительская директория</param>
+        /// <param name="SubDirectoryPath">Относительный путь к поддиректории</param>
+        /// <returns>Поддиректория</returns>
+        [NotNull]
+        public static DirectoryInfo SubDirectoryOrCreate([NotNull] this DirectoryInfo ParentDirectory, [NotNull] string SubDirectoryPath)
+        {
+            if (ParentDirectory is null) throw new ArgumentNullException(nameof(ParentDirectory));
+            if (SubDirectoryPath is null) throw new ArgumentNullException(nameof(SubDirectoryPath));
+            if (string.IsNullOrWhiteSpace(SubDirectoryPath)) throw new ArgumentException("Не указан путь дочернего каталога", nameof(SubDirectoryPath));
+
+            var sub_dir_path = Path.Combine(ParentDirectory.FullName, SubDirectoryPath);
+            var sub_dir = new DirectoryInfo(sub_dir_path);
+            if (sub_dir.Exists) return sub_dir;
+            sub_dir.Create();
+            sub_dir.Refresh();
+            return sub_dir;
+        }
+
+        /// <summary>Формирование информации о поддиректории, заданной своим именем, либо относительным путём</summary>
+        /// <param name="Directory">Корнневая директория</param><param name="SubDirectoryPath">Путь к поддиректории</param>
+        /// <exception cref="ArgumentNullException">Если указана пустая ссылка на <paramref name="Directory"/></exception>
+        /// <exception cref="ArgumentNullException">Если указана пустая ссылка на <paramref name="SubDirectoryPath"/></exception>
+        /// <returns>Информация о поддиректории</returns>
+        [NotNull]
+        public static DirectoryInfo SubDirectory([NotNull] this DirectoryInfo Directory, [NotNull] string SubDirectoryPath)
+        {
+            if (Directory is null) throw new ArgumentNullException(nameof(Directory));
+            if (SubDirectoryPath is null) throw new ArgumentNullException(nameof(SubDirectoryPath));
+            return string.IsNullOrEmpty(SubDirectoryPath) ? Directory : new DirectoryInfo(Path.Combine(Directory.FullName, SubDirectoryPath));
+        }
     }
 }

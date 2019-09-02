@@ -131,7 +131,7 @@ namespace MathCore.Interpolation
         /* -------------------------------------------------------------------------------------------- */
     }
 
-    class BezierCurve2
+    internal class BezierCurve2
     {
         private double[] FactorialLookup;
 

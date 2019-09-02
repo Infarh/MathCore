@@ -82,7 +82,7 @@ namespace MathCore.Graphs
                 for (var node = this; node != null && !(find = Equals(item, node.Value)); node = node.Next)
                     index++;
             else
-                for (var node = this; node != null && !(find = node.Value == null); node = node.Next)
+                for (var node = this; node != null && !(find = node.Value is null); node = node.Next)
                     index++;
             return find ? index : -1;
         }
@@ -91,7 +91,7 @@ namespace MathCore.Graphs
         /// <param name="index">Индекс (с нуля), по которому следует вставить параметр <paramref name="item"/>.</param><param name="item">Объект, вставляемый в <see cref="T:System.Collections.Generic.IList`1"/>.</param><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> не является допустимым индексом в <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">Объект <see cref="T:System.Collections.Generic.IList`1"/> доступен только для чтения.</exception>
         public void Insert(int index, TreeListNode<TValue> item)
         {
-            if (index == 0 || item == null) return;
+            if (index == 0 || item is null) return;
             var prev = this[index - 1] ?? Last;
             var next = prev.Next;
             prev.Next = item;
@@ -122,14 +122,14 @@ namespace MathCore.Graphs
             {
                 //Contract.Requires(i >= 0);
                 var node = this[n => n.Next].FirstOrDefault(n => i-- == 0);
-                if (node == null) throw new IndexOutOfRangeException();
+                if (node is null) throw new IndexOutOfRangeException();
                 return node;
             }
             set
             {
                 i--;
                 var node = this[n => n.Next].FirstOrDefault(n => i-- == 0);
-                if (node == null) throw new IndexOutOfRangeException();
+                if (node is null) throw new IndexOutOfRangeException();
                 var next = node.Next;
                 node.Next = value;
                 value.Next = next;
@@ -149,7 +149,7 @@ namespace MathCore.Graphs
         {
             get
             {
-                if (index == null || index.Length == 1 && index[0] == 0) return this;
+                if (index is null || index.Length == 1 && index[0] == 0) return this;
                 var result = this;
                 for (var i = 0; result != null && i < index.Length; i++)
                 {
@@ -161,7 +161,7 @@ namespace MathCore.Graphs
             }
         }
 
-        public bool IsFirst => _Prev == null || ReferenceEquals(_Prev.Child, this);
+        public bool IsFirst => _Prev is null || ReferenceEquals(_Prev.Child, this);
         public bool IsLast => _Next is null;
         public bool IsRoot => _Prev is null;
         public bool IsChild => !IsRoot && ReferenceEquals(_Prev.Child, this);
@@ -241,7 +241,7 @@ namespace MathCore.Graphs
         /// <summary>Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.</summary>
         /// <returns>Значение true, если объект <paramref name="item"/> найден в <see cref="T:System.Collections.Generic.ICollection`1"/>; в противном случае — значение false.</returns>
         /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-        public bool Contains(TValue item) => item == null
+        public bool Contains(TValue item) => item is null
             ? ((IEnumerable<TreeListNode<TValue>>)this).Any(n => n is null)
             : ((IEnumerable<TreeListNode<TValue>>)this).Any(n => item.Equals(n.Value));
 
@@ -265,10 +265,10 @@ namespace MathCore.Graphs
         public bool Remove(TValue item)
         {
             if (ReferenceEquals(item, Value)) return false;
-            var node = item == null
-                ? ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => n.Value == null)
+            var node = item is null
+                ? ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => n.Value is null)
                 : ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => item.Equals(n.Value));
-            if (node == null) return false;
+            if (node is null) return false;
             if (node.IsChild) node.Prev.Child = node.Next; else node.Prev.Next = node.Next;
             return true;
         }
@@ -305,7 +305,7 @@ namespace MathCore.Graphs
         {
             if (ReferenceEquals(item, this)) return false;
             var node = ((IEnumerable<TreeListNode<TValue>>)this).FirstOrDefault(n => ReferenceEquals(n, item));
-            if (node == null) return false;
+            if (node is null) return false;
             if (node.IsChild) node.Prev.Child = node.Next; else node.Prev.Next = node.Next; return true;
         }
 
@@ -319,7 +319,7 @@ namespace MathCore.Graphs
 
         public void Add(IEnumerable<TValue> collection) => collection.Aggregate(this, (current, value) => current.Add(value));
 
-        public void AddChild(TreeListNode<TValue> Node) { if (Child == null) Child = Node; else Child.Add(Node); }
+        public void AddChild(TreeListNode<TValue> Node) { if (Child is null) Child = Node; else Child.Add(Node); }
         public TreeListNode<TValue> AddChild(TValue value)
         {
             var node = new TreeListNode<TValue>(value);
@@ -327,7 +327,7 @@ namespace MathCore.Graphs
             return node;
         }
 
-        public void AddChild(IEnumerable<TValue> collection) => collection.Aggregate<TValue, TreeListNode<TValue>>(null, (current, item) => current == null ? AddChild(item) : current.Add(item));
+        public void AddChild(IEnumerable<TValue> collection) => collection.Aggregate<TValue, TreeListNode<TValue>>(null, (current, item) => current is null ? AddChild(item) : current.Add(item));
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

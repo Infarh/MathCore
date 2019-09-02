@@ -1,5 +1,4 @@
-﻿
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using DU = System.Func<double, double, double>;
 
 namespace MathCore.DifferencialEquations.Numerical

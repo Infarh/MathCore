@@ -105,7 +105,7 @@ namespace MathCore.Data
                 .GetProperties(Destination)
                 .Find(DestinationPropertyName, true);
 
-            if(_DestinationPropertyDescriptor == null)
+            if(_DestinationPropertyDescriptor is null)
                 throw new ArgumentException(
                             $"Не удалось найти свойство элемента управления с именем {DestinationPropertyName}", nameof(DestinationPropertyName));
 
@@ -117,7 +117,7 @@ namespace MathCore.Data
                 .GetProperties(Source)
                 .Find(SourcePropertyName, true);
 
-            if(_SourcePropertyDescriptor == null)
+            if(_SourcePropertyDescriptor is null)
                 throw new ArgumentException(
                             $"Не удалось найти свойство {SourcePropertyName} источника данных {Source}", nameof(SourcePropertyName));
 

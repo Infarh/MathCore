@@ -1,6 +1,6 @@
 namespace System.Linq.Reactive
 {
-    sealed class TakeObserver<T> : SimpleObserverEx<T>
+    internal sealed class TakeObserver<T> : SimpleObserverEx<T>
     {
         private readonly int _Count;
         private int _Position;

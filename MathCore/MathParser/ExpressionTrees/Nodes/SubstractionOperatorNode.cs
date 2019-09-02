@@ -25,7 +25,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <param name="Parameters">Список параметров выражения</param>
         /// <returns>Скомпилированное выражение узла</returns>
         /// <returns></returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => Left == null
+        public override Expression Compile(ParameterExpression[] Parameters) => Left is null
                     ? (Expression)Expression.Negate(((ComputedNode)Right).Compile(Parameters))
                     : Expression.Subtract(((ComputedNode)Left).Compile(Parameters), ((ComputedNode)Right).Compile(Parameters));
 

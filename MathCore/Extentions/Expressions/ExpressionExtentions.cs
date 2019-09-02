@@ -119,12 +119,12 @@ namespace MathCore.Extentions.Expressions
 
             var lv_MainParameter = MainEx.Parameters.FirstOrDefault(p => p.Name == ParameterName);
 
-            if(lv_MainParameter == null)
+            if(lv_MainParameter is null)
                 throw new Exception($"Could not find input parameter \"{ParameterName}\" in Expression \"{MainEx}\"");
 
             var lv_SubstitutionParameter = SubstExpression.Parameters.FirstOrDefault(p => p.Name == ParameterName);
 
-            if(lv_SubstitutionParameter == null)
+            if(lv_SubstitutionParameter is null)
                 throw new Exception($"Could not find substitution parameter \"{ParameterName}\" in Expression \"{SubstExpression}\"");
 
             if(lv_SubstitutionParameter.Type != lv_MainParameter.Type)
@@ -244,7 +244,7 @@ namespace MathCore.Extentions.Expressions
             var i = 0;
             Ex l;
             if(left != null) l = left;
-            else if(right == null || right.Length == i) return null;
+            else if(right is null || right.Length == i) return null;
             else l = right[i++];
             while(i < right.Length)
                 l = l.AddWithConversion(right[i++]);
@@ -282,7 +282,7 @@ namespace MathCore.Extentions.Expressions
             var i = 0;
             Ex l;
             if(left != null) l = left;
-            else if(right == null || right.Length == i) return null;
+            else if(right is null || right.Length == i) return null;
             else l = right[i++];
             while(i < right.Length)
                 l = l.MultiplyWithConversion(right[i++]);
@@ -357,7 +357,7 @@ namespace MathCore.Extentions.Expressions
             var i = 0;
             Ex l;
             if(left != null) l = left;
-            else if(right == null || right.Length == i) return null;
+            else if(right is null || right.Length == i) return null;
             else l = right[i++];
             while(i < right.Length)
                 l = l.Coalesce(right[i++]);
@@ -373,7 +373,7 @@ namespace MathCore.Extentions.Expressions
             var i = 0;
             Ex l;
             if(left != null) l = left;
-            else if(right == null || right.Length == i) return null;
+            else if(right is null || right.Length == i) return null;
             else l = right[i++];
             while(i < right.Length)
                 l = l.XOR(right[i++]);
@@ -470,7 +470,7 @@ namespace MathCore.Extentions.Expressions
 
         public static Ex[] CloneArray(this Ex[] expr)
         {
-            if(expr == null) return null;
+            if(expr is null) return null;
             var visitor = new CloningVisitor();
             var result = new Ex[expr.Length];
             for(var i = 0; i < result.Length; i++)
@@ -479,7 +479,7 @@ namespace MathCore.Extentions.Expressions
         }
         public static Ex[,] CloneArray(this Ex[,] expr)
         {
-            if(expr == null) return null;
+            if(expr is null) return null;
             var visitor = new CloningVisitor();
 
             var N = expr.GetLength(0);
@@ -1260,7 +1260,7 @@ namespace MathCore.Extentions.Expressions
                 //    var vars = right_operands.Except(consts).ToList();
 
                 //    Expression sum = null;
-                //    while(sum == null && consts.Count > 0)
+                //    while(sum is null && consts.Count > 0)
                 //        if()
 
                 //            if(consts.Count > 1)
@@ -1268,7 +1268,7 @@ namespace MathCore.Extentions.Expressions
                 //                for(var i = 0; i < consts.Count; i++)
                 //                {
                 //                    var s = AddValues((sum as cEx)?.Value, (consts[i] as cEx)?.Value);
-                //                    if(s == null)
+                //                    if(s is null)
                 //        }
                 //            }
                 //}
@@ -1279,7 +1279,7 @@ namespace MathCore.Extentions.Expressions
 
             private static IEnumerable<Expression> GetOperands_Addition(bEx expr)
             {
-                if(expr == null || expr.NodeType != ExpressionType.Add || expr.NodeType != ExpressionType.Subtract) yield break;
+                if(expr is null || expr.NodeType != ExpressionType.Add || expr.NodeType != ExpressionType.Subtract) yield break;
 
                 var left = expr.Left;
                 if(left is bEx && left.NodeType == ExpressionType.Add || left.NodeType == ExpressionType.Subtract)

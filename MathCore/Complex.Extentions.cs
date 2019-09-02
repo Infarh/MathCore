@@ -16,7 +16,7 @@ namespace MathCore
         [CanBeNull]
         public static double[] ToRe([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new double[c.Length];
 
@@ -31,7 +31,7 @@ namespace MathCore
         [CanBeNull]
         public static double[] ToIm([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new double[c.Length];
 
@@ -46,7 +46,7 @@ namespace MathCore
         [CanBeNull]
         public static double[] ToAbs([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new double[c.Length];
 
@@ -61,7 +61,7 @@ namespace MathCore
         [CanBeNull]
         public static double[] ToArg([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new double[c.Length];
 
@@ -73,7 +73,7 @@ namespace MathCore
         [CanBeNull]
         public static double[] ToArgDeg([CanBeNull] this Complex[] c)
         {
-            if (c == null) return null;
+            if (c is null) return null;
 
             var result = new double[c.Length];
 
@@ -92,7 +92,7 @@ namespace MathCore
         [CanBeNull]
         public static double[,] ToReImArray([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new double[c.Length, 2];
             for(var i = 0; i < c.Length; i++)
@@ -113,7 +113,7 @@ namespace MathCore
         [CanBeNull]
         public static double[,] ToAbsArgArray([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new double[c.Length, 2];
             for(var i = 0; i < c.Length; i++)
@@ -130,7 +130,7 @@ namespace MathCore
         [CanBeNull]
         public static Complex[] ToComplex([CanBeNull] this double[] Re)
         {
-            if(Re == null) return null;
+            if(Re is null) return null;
 
             var result = new Complex[Re.Length];
 
@@ -146,7 +146,7 @@ namespace MathCore
         [CanBeNull]
         public static Complex[] ToComplex([CanBeNull] this double[,] Values)
         {
-            if(Values == null) return null;
+            if(Values is null) return null;
 
             if(Values.GetLength(1) != 2)
                 throw new ArgumentException("Операция возможна для массива с размерностью [N,2]");
@@ -162,7 +162,7 @@ namespace MathCore
         [CanBeNull]
         public static Complex[] GetAbs([CanBeNull] this Complex[] c)
         {
-            if(c == null) return null;
+            if(c is null) return null;
 
             var result = new Complex[c.Length];
             for(var i = 0; i < c.Length; i++)

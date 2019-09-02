@@ -8,7 +8,7 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Элемент мат.выражения - блок со скобками</summary>
-    sealed class BlockTerm : Term
+    internal sealed class BlockTerm : Term
     {
         /// <summary>Строковое значение открывающейся скобки</summary>
         private readonly string _OpenBracket;
@@ -106,7 +106,7 @@ namespace MathCore.MathParser
         [CanBeNull]
         private static Term[] GetTerms([CanBeNull] string Str)
         {
-            if(Str == null) return null;
+            if(Str is null) return null;
             if(Str.Length == 0) return new Term[0];
             var pos = 0;
             var len = Str.Length;
@@ -221,12 +221,12 @@ namespace MathCore.MathParser
                     arg = new FunctionArgumentNode(value_node.Name, root.Right);
                 else // - во всех остальных случаях
                     arg = new FunctionArgumentNode("", root); // -- создаём аргумент функции без имени
-                if(argument == null) argument = arg; // Если аргумент не был указан, то сохраняем полученный узел, как аргумент
+                if(argument is null) argument = arg; // Если аргумент не был указан, то сохраняем полученный узел, как аргумент
                 else                                 // иначе
                     argument = argument.Right = arg; //  сохраняем полученный узел в правое поддерево аргумента
             }
             // Если аргумент не был выделен, то что-то пошло не так - ошибка формата
-            if(argument == null) throw new FormatException("Не определён аргумент функции");
+            if(argument is null) throw new FormatException("Не определён аргумент функции");
             return argument.Root; // Вернуть корень аргумента
         }
     }

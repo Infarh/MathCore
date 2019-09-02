@@ -279,10 +279,10 @@ namespace System
             Contract.Ensures(Contract.Result<TOut[]>() != null);
             Contract.Ensures(Contract.Result<TOut[]>().Length == In.Length);
 
-            var lv_Out = new TOut[In.Length];
+            var result = new TOut[In.Length];
             for (var i = 0; i < In.Length; i++)
-                lv_Out[i] = converter(In[i]);
-            return lv_Out;
+                result[i] = converter(In[i]);
+            return result;
         }
 
         ///<summary>Выполнение действия для всех элементов массива</summary>
@@ -387,13 +387,13 @@ namespace System
             Contract.Ensures(Contract.Result<TArray[]>() != null);
             Contract.Ensures(Contract.Result<TArray[]>().Length == Length);
 
-            var lv_Result = new TArray[Length];
+            var result = new TArray[Length];
 
             var j_Length = Start + Length;
             for (int i = 0, j = Start; i < Length && j < j_Length; i++, j++)
-                lv_Result[i] = array[j];
+                result[i] = array[j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Инициализация массива</summary>
@@ -957,7 +957,7 @@ namespace System
             for (var i = 1; i < array.Length; i++)
             {
                 var v = array[i];
-                if (max == null || max.CompareTo(v) <= 0) continue;
+                if (max is null || max.CompareTo(v) <= 0) continue;
                 i_max = i;
                 max = v;
             }
@@ -1141,7 +1141,7 @@ namespace System
         [DST, CanBeNull]
         public static string ToStringView<T>([CanBeNull] this T[,] matrix, [CanBeNull] string Splitter = "\t")
         {
-            if (matrix == null) return null;
+            if (matrix is null) return null;
             var N = matrix.GetLength(0);
             var M = matrix.GetLength(1);
             if (N == 0 || M == 0) return "";
@@ -1171,11 +1171,11 @@ namespace System
             [CanBeNull] IFormatProvider provider = null
         ) where T : IFormattable
         {
-            if (matrix == null) return null;
+            if (matrix is null) return null;
             var N = matrix.GetLength(0);
             var M = matrix.GetLength(1);
             if (N == 0 || M == 0) return "";
-            if (provider == null) provider = CultureInfo.InvariantCulture;
+            if (provider is null) provider = CultureInfo.InvariantCulture;
             var result = new StringBuilder();
             var line = new StringBuilder();
 

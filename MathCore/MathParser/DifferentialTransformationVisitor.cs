@@ -15,7 +15,7 @@ namespace MathCore.MathParser
         public Expression Differentiate<TDelegate>(Expression<TDelegate> expression, string ParameterName)
         {
             var parameter = (from p in expression.Parameters where p.Name == ParameterName select p).FirstOrDefault();
-            if(parameter == null)
+            if(parameter is null)
                 throw new ArgumentException(@"Не задан параметр дифференцирования", nameof(ParameterName));
 
             lock(_Differentiate_LockObject)

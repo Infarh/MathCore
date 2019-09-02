@@ -104,7 +104,7 @@ namespace System
                     return func();
                 } catch(Exception)
                 {
-                    return OnException == null ? default : OnException();
+                    return OnException is null ? default : OnException();
                 }
             };
         }
@@ -118,7 +118,7 @@ namespace System
                     return func(t);
                 } catch(Exception)
                 {
-                    return OnException == null ? default : OnException(t);
+                    return OnException is null ? default : OnException(t);
                 }
             };
         }
@@ -133,7 +133,7 @@ namespace System
                     return func();
                 } catch(TException)
                 {
-                    return OnException == null ? default : OnException();
+                    return OnException is null ? default : OnException();
                 }
             };
         }
@@ -149,7 +149,7 @@ namespace System
                     return func(t);
                 } catch(TException)
                 {
-                    return OnException == null ? default : OnException(t);
+                    return OnException is null ? default : OnException(t);
                 }
             };
         }

@@ -61,13 +61,13 @@ namespace System.Linq.Reactive
 
         void IDisposable.Dispose()
         {
-            Contract.Ensures(_Observer == null);
-            Contract.Ensures(_Observers == null);
+            Contract.Ensures(_Observer is null);
+            Contract.Ensures(_Observers is null);
             Contract.Ensures(!Contract.Exists(_Observers, o => Equals(o, _Observer)));
-            if(_Observer == null) return;
+            if(_Observer is null) return;
             lock(_SyncRoot)
             {
-                if(_Observer == null) return;
+                if(_Observer is null) return;
                 lock(__Links)
                 {
                     __Links.Remove(GetHash(_Observers, _Observer));
