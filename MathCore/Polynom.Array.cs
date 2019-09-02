@@ -584,7 +584,6 @@ namespace MathCore
         public static Polynom Random(int Power = 3, double Ma = 0, double Da = 1)
         {
             var rnd = new Random();
-            rnd.NextBoolean()
             var a = new double[Power];
             for (var i = 0; i < Power; i++)
                 a[i] = (rnd.NextDouble() - .5) * Da + Ma;
