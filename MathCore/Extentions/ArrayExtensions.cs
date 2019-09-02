@@ -13,6 +13,18 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
+        public static void Deconstruct<T>(this T[,] array, out int N, out int M)
+        {
+            N = array.GetLength(0);
+            M = array.GetLength(1);
+        }
+        public static void Deconstruct<T>(this T[,,] array, out int N, out int M, out int K)
+        {
+            N = array.GetLength(0);
+            M = array.GetLength(1);
+            K = array.GetLength(2);
+        }
+
         [NotNull]
         public static IEnumerable<T> AsRandomEnumerable<T>([NotNull] this T[] Items, [CanBeNull] Random Rnd = null)
         {

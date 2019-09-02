@@ -63,8 +63,7 @@ namespace MathCore
             [NotNull, Pure]
             public static double[,] ColsArrayToMatrix([NotNull] params double[][] cols)
             {
-                if (cols is null)
-                    throw new ArgumentNullException(nameof(cols));
+                if (cols is null) throw new ArgumentNullException(nameof(cols));
 
                 var M = cols.Length;
                 var N = cols[0].Length;
@@ -80,8 +79,7 @@ namespace MathCore
             [NotNull, Pure]
             public static double[,] RowsArrayToMatrix([NotNull] params double[][] rows)
             {
-                if (rows is null)
-                    throw new ArgumentNullException(nameof(rows));
+                if (rows is null) throw new ArgumentNullException(nameof(rows));
 
                 var N = rows.Length;
                 var M = rows[0].Length;
@@ -99,16 +97,14 @@ namespace MathCore
             [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
             public static bool IsMatrixSungular([NotNull] double[,] matrix)
             {
-                if (matrix is null)
-                    throw new ArgumentNullException(nameof(matrix));
-                if (matrix.Length == 0)
-                    throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                if (matrix.GetLength(0) != matrix.GetLength(1))
-                    throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
+                if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+                if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
+                if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
 
                 Contract.Ensures(Contract.Result<bool>() ^ GetDeterminant(matrix) != 0);
                 Contract.Ensures(Contract.Result<bool>() ^ Rank(matrix) == matrix.GetLength(0));
                 Contract.Ensures(Contract.Result<bool>() ^ Rank(matrix) == matrix.GetLength(1));
+                Contract.EndContractBlock();
 
                 return Rank(matrix) != matrix.GetLength(0);
             }
@@ -121,9 +117,7 @@ namespace MathCore
             [Pure]
             public static int Rank([NotNull] double[,] matrix)
             {
-                if (matrix is null)
-
-                    throw new ArgumentNullException(nameof(matrix));
+                if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
                 Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= matrix.GetLength(0) && Contract.Result<int>() <= matrix.GetLength(1));
                 Contract.Ensures(IsMatrixSungular(matrix) ^ (Contract.Result<int>() == matrix.GetLength(0) && Contract.Result<int>() == matrix.GetLength(1)));
@@ -260,14 +254,14 @@ namespace MathCore
                 if (N == 1) return;
                 var m = matrix.CloneObject();
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                {
-                    var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
-                    if (j == N) continue;
-                    if (!p[i, j].Equals(p[j, i])) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
-                    if (j >= i) continue;
-                    m.SwapCols(i, j);
-                }
+                    {
+                        var j = 0;
+                        while (j < N && (int)p[i, j] != 1) j++;
+                        if (j == N) continue;
+                        if (!p[i, j].Equals(p[j, i])) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
+                        if (j >= i) continue;
+                        m.SwapCols(i, j);
+                    }
                 System.Array.Copy(m, matrix, matrix.Length);
             }
 
@@ -281,12 +275,12 @@ namespace MathCore
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                {
-                    var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
-                    if (j == N || j >= i) continue;
-                    matrix.SwapRows(i, j);
-                }
+                    {
+                        var j = 0;
+                        while (j < N && (int)p[i, j] != 1) j++;
+                        if (j == N || j >= i) continue;
+                        matrix.SwapRows(i, j);
+                    }
             }
 
             /// <summary>Применение матрицы перестановок справа (перестановка столбцов) без проверок</summary>
@@ -299,12 +293,12 @@ namespace MathCore
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                {
-                    var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
-                    if (j == N || j >= i) continue;
-                    matrix.SwapCols(i, j);
-                }
+                    {
+                        var j = 0;
+                        while (j < N && (int)p[i, j] != 1) j++;
+                        if (j == N || j >= i) continue;
+                        matrix.SwapCols(i, j);
+                    }
             }
 
             /// <summary>Создать двумерный массив элементов матрицы-столбца</summary>
@@ -735,11 +729,11 @@ namespace MathCore
                     var m = matrix[i0, i0];
                     if (!m.Equals(1d)) for (var j = 0; j < b_M; j++) temp_b[i0, j] /= m;
                     for (var i = i0 - 1; i >= 0; i--) if (!matrix[i, i0].Equals(0d))
-                    {
-                        var k = matrix[i, i0];
-                        matrix[i, i0] = 0d;
-                        for (var j = 0; j < b_M; j++) temp_b[i, j] -= temp_b[i0, j] * k;
-                    }
+                        {
+                            var k = matrix[i, i0];
+                            matrix[i, i0] = 0d;
+                            for (var j = 0; j < b_M; j++) temp_b[i, j] -= temp_b[i0, j] * k;
+                        }
                 }
                 if (clone_b)
                     b = temp_b;
@@ -816,12 +810,12 @@ namespace MathCore
             {
                 var i0 = 0;
                 for (var i = 0; i < N; i++) if (i != n)
-                {
-                    var j0 = 0;
-                    for (var j = 0; j < M; j++) if (j != m)
-                            result[i0, j0++] = matrix[i, j];
-                    i0++;
-                }
+                    {
+                        var j0 = 0;
+                        for (var j = 0; j < M; j++) if (j != m)
+                                result[i0, j0++] = matrix[i, j];
+                        i0++;
+                    }
             }
 
             /// <summary>Минор матрицы по определённому элементу</summary>
@@ -1355,11 +1349,11 @@ namespace MathCore
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                    }
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = 0d;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                        }
                 }
                 p = CreatePermutationMatrix(p_index);
                 return N1;
@@ -1407,11 +1401,11 @@ namespace MathCore
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                    }
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = 0d;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                        }
                 }
                 return N1;
             }
@@ -1471,12 +1465,12 @@ namespace MathCore
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                        for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
-                    }
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = 0d;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                            for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
+                        }
                 }
                 if (N1 >= N) return N1;
                 for (var i = N1; i < N; i++) for (var j = 0; j < B_M; j++) b[i, j] = 0d;
@@ -1596,14 +1590,14 @@ namespace MathCore
 
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
-                        for (var j = i0 + 1; j < M; j++)
-                            matrix[i, j] -= matrix[i0, j] * k;
-                        for (var j = 0; j < B_M; j++)
-                            b[i, j] -= b[i0, j] * k;
-                    }
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = 0d;
+                            for (var j = i0 + 1; j < M; j++)
+                                matrix[i, j] -= matrix[i0, j] * k;
+                            for (var j = 0; j < B_M; j++)
+                                b[i, j] -= b[i0, j] * k;
+                        }
                 }
                 p = CreatePermutationMatrix(p_index);
                 if (N1 >= N) return N1;
