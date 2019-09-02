@@ -68,4 +68,3 @@ namespace MathCore.Values
         public static implicit operator Interval(MinMaxValue value) => value.Interval;
     }
 }
-

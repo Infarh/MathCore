@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using MathCore.Annotations;
 
 namespace MathCore
 {
@@ -46,25 +47,28 @@ namespace MathCore
             __KeyCharsList = event_args.KeyCharsList;
         }
 
-        public ArgumentsString(string[] Arguments) { _Arguments = Arguments; }
+        public ArgumentsString(string[] Arguments) => _Arguments = Arguments;
 
         /* ------------------------------------------------------------------------------------------ */
 
         public override string ToString()
         {
-            if(_Arguments is null) return "";
+            if (_Arguments is null) return "";
             var last_index = _Arguments.Length - 1;
-            return _Arguments.Aggregate(new StringBuilder(), (S, s, i) => S.AppendFormat(i != last_index ? "{0} " : "{0}", s))
-                .ToString();
+            return _Arguments
+               .Aggregate(new StringBuilder(), (S, s, i) => S.AppendFormat(i != last_index ? "{0} " : "{0}", s))
+               .ToString();
         }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public static implicit operator ArgumentsString(string[] Arguments) { return new ArgumentsString(Arguments); }
+        [NotNull]
+        public static implicit operator ArgumentsString(string[] Arguments) => new ArgumentsString(Arguments);
 
-        public static implicit operator string[](ArgumentsString Arguments) { return Arguments._Arguments; }
+        public static implicit operator string[]([NotNull] ArgumentsString Arguments) => Arguments._Arguments;
 
-        public static explicit operator string(ArgumentsString Argument) { return Argument.ToString(); }
+        [NotNull]
+        public static explicit operator string([NotNull] ArgumentsString Argument) => Argument.ToString();
 
         /* ------------------------------------------------------------------------------------------ */
     }

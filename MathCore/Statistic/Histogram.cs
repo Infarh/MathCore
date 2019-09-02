@@ -106,4 +106,3 @@ namespace MathCore.Statistic
                 sb => sb.ToString().RemoveFromEnd(1));
     }
 }
-

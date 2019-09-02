@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -22,29 +21,17 @@ namespace MathCore.Attributes
         public ElementNameAttribute([NotNull] string Name) => this.Name = Name;
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            if(Name is null) throw new FormatException();
-            return Name;
-        }
+        public override string ToString() => Name ?? throw new FormatException();
 
         /// <inheritdoc />
         public override int GetHashCode() => Name.GetHashCode() ^ typeof(ElementNameAttribute).GetHashCode();
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            var A = obj as ElementNameAttribute;
-            if(A is null) return base.Equals(obj);
-            return A.Name == Name;
-        }
+        public override bool Equals(object obj) => obj is ElementNameAttribute A ? A.Name == Name : base.Equals(obj);
 
         /// <summary>Оператор неявного приведения типа <see cref="ElementNameAttribute"/> к <see cref="string"/></summary>
         /// <param name="A">Атрибут имени</param>
-        public static implicit operator string(ElementNameAttribute A)
-        {
-            Contract.Requires(A != null);
-            return A.Name;
-        }
+        [NotNull]
+        public static implicit operator string([NotNull] ElementNameAttribute A) => A.Name;
     }
 }

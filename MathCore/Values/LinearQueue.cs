@@ -1,11 +1,8 @@
-﻿
-using System;
+﻿using System;
 
 namespace MathCore.Values
 {
-    /// <summary>
-    /// Очередь с линейным доступом
-    /// </summary>
+    /// <summary>Очередь с линейным доступом</summary>
     /// <typeparam name="T">Тип элементов очереди</typeparam>
     public class LinearQueue<T>
     {

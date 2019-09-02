@@ -1,11 +1,8 @@
-﻿
-using System;
+﻿using System;
 
 namespace MathCore.Time
 {
-    /// <summary>
-    /// Измеритель времени
-    /// </summary>
+    /// <summary>Измеритель времени</summary>
     public sealed class TimeCounter
     {
         /// <summary>Флаг состояния</summary>
@@ -68,17 +65,4 @@ namespace MathCore.Time
             }
         }
     }
-
-    ///// <summary>Структура события времени</summary>
-    //sealed class TimeEvent
-    //{
-    //    /// <summary>Начало события</summary>
-    //    public TimeSpan StartTime;
-
-    //    /// <summary>Конец события</summary>
-    //    public TimeSpan StopTime;
-
-    //    /// <summary>Длительность</summary>
-    //    public TimeSpan TimeLength { get { return StopTime - StartTime; } }
-    //}
 }

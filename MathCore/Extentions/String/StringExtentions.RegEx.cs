@@ -13,9 +13,7 @@ namespace System
 
         public static IEnumerable<string> FindAllRegEx(this string str, Regex regex) => str.FindAllRegExMatch(regex).Select(m => m.Value);
     }
-}
-
-namespace System.Text.RegularExpressions
+}namespace System.Text.RegularExpressions
 {
     public static class RegExExtentions
     {

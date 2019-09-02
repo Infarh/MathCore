@@ -49,12 +49,9 @@ namespace MathCore.MathParser
         /// <returns>Истина, если действие совершено успешно. Ложь, если в последующих блоках не содержится нужной информации</returns>
         public static bool TryAddFractionPart(ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FrationPartTerm)
         {
-            var value = node as ConstValueNode;
-            if(value is null) throw new ArgumentException("Неверный тип узла дерева");
-            var separator = SeparatorTerm as CharTerm;
-            if(separator is null || separator.Value != DecimalSeparator) return false;
-            var fraction = FrationPartTerm as NumberTerm;
-            if(fraction is null) return false;
+            if(!(node is ConstValueNode value)) throw new ArgumentException("Неверный тип узла дерева");
+            if(!(SeparatorTerm is CharTerm separator) || separator.Value != DecimalSeparator) return false;
+            if(!(FrationPartTerm is NumberTerm fraction)) return false;
 
             var v_value = fraction.Value;
             if(v_value == 0) return true;

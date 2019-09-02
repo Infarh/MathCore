@@ -706,9 +706,7 @@ namespace System
     /// <summary>Словарь действий</summary>
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Actions : Dictionary<object, Action<object>> { }
-}
-
-namespace System.Tags
+}namespace System.Tags
 {
     /// <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложенны к другим объектам</summary>
     public static class TagExtentions

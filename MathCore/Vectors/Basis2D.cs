@@ -1,11 +1,12 @@
-﻿
-using System;
+﻿using System;
 using MathCore.Annotations;
 
 namespace MathCore.Vectors
 {
+    /// <summary>Двумерный базис</summary>
     public readonly struct Basis2D
     {
+        /// <summary>Базис Эвклидова пространства</summary>
         public static readonly Basis2D Evclid = new Basis2D(
             1, 0,
             0, 1);

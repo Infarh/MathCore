@@ -1,7 +1,7 @@
-﻿
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.Contracts;
 
+// ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
     public class Method<TObject, TResult>

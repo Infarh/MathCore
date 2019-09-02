@@ -1,18 +1,11 @@
-﻿
-using System;
+﻿using System;
 using MathCore.Annotations;
 
 // ReSharper disable InconsistentNaming
-
 namespace MathCore
 {
     public partial class Matrix
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <returns></returns>
         [NotNull]
         public static implicit operator MatrixComplex([NotNull] Matrix matrix)
         {
@@ -23,11 +16,6 @@ namespace MathCore
             return new MatrixComplex(complex_data);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <returns></returns>
         [NotNull]
         public static explicit operator Matrix([NotNull] MatrixComplex matrix)
         {
@@ -50,10 +38,6 @@ namespace MathCore
             return new MatrixInt(int_data);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [NotNull]
         public MatrixInt Ceiling()
         {
@@ -64,10 +48,6 @@ namespace MathCore
             return new MatrixInt(int_data);
         } 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [NotNull]
         public MatrixInt Floor()
         {
@@ -78,10 +58,6 @@ namespace MathCore
             return new MatrixInt(int_data);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [NotNull]
         public MatrixInt Round()
         {
@@ -92,11 +68,6 @@ namespace MathCore
             return new MatrixInt(int_data);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Digits"></param>
-        /// <returns></returns>
         [NotNull]
         public MatrixInt Round(int Digits)
         {
@@ -107,12 +78,6 @@ namespace MathCore
             return new MatrixInt(int_data);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Digits"></param>
-        /// <param name="Rounding"></param>
-        /// <returns></returns>
         [NotNull]
         public MatrixInt Round(int Digits, MidpointRounding Rounding)
         {
@@ -123,11 +88,6 @@ namespace MathCore
             return new MatrixInt(int_data);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <returns></returns>
         [NotNull]
         public static implicit operator Matrix([NotNull] MatrixInt matrix)
         {

@@ -76,4 +76,3 @@ namespace MathCore
         [NotNull] public static implicit operator Func<double, double>([NotNull] MNK mnk) => mnk.GetApproximation();
     }
 }
-
