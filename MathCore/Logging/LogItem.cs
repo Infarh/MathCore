@@ -25,26 +25,26 @@ namespace MathCore.Logging
         private string _Message;
         private object _Data;
         private LogType _Type;
-        private readonly List<LogItem> _Items = new List<LogItem>();
+        [NotNull, ItemNotNull] private readonly List<LogItem> _Items = new List<LogItem>();
         private bool _Initialized;
 
         public int ItemsCount => _Items.Count;
 
-        public LogItem First => _Items.Count == 0 ? this : _Items[0];
-        public LogItem Last => this;
+        [NotNull] public LogItem First => _Items.Count == 0 ? this : _Items[0];
+        [NotNull] public LogItem Last => this;
 
         public TimeSpan TimeDelta
         {
             get
             {
-                this.GetMinMax(i => i.Time.Ticks, out LogItem begin, out LogItem end);
+                this.GetMinMax(i => i.Time.Ticks, out var begin, out var end);
                 return end.Time - begin.Time;
             }
         }
 
         public LogItem this[int Index] => Index == _Items.Count ? this : _Items[Index];
 
-        public LogItem this[DateTime time] => this.Select(item => new { item, delta = (item.Time - time).TotalSeconds.Abs() }).GetMin(i => i.delta).item;
+        public LogItem this[DateTime time] => this.Select(item => (item, delta: (item.Time - time).TotalSeconds.Abs())).GetMin(i => i.delta).item;
 
         public LogItem this[string value] => this.FirstOrDefault(i => i.Value == value);
 
@@ -95,6 +95,7 @@ namespace MathCore.Logging
         }
 
         internal LogItem() { }
+
         internal LogItem(DateTime Time, string Value, LogType Type)
         {
             _Initialized = true;
@@ -114,8 +115,9 @@ namespace MathCore.Logging
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
-        public LogItem Add(string value, LogType type = LogType.Information) => Add(DateTime.Now, value, type);
+        [NotNull] public LogItem Add(string value, LogType type = LogType.Information) => Add(DateTime.Now, value, type);
 
+        [NotNull]
         public LogItem Add(DateTime time, string value, LogType type = LogType.Information)
         {
             var old_value = _Value;

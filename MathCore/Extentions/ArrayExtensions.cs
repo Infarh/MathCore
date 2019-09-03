@@ -450,17 +450,17 @@ namespace System
 
         /// <summary>Инициализация массива</summary>
         /// <typeparam name="TValue">Тип элементов масива</typeparam>
-        /// <typeparam name="TParameter">Тип параметра инициализации</typeparam>
+        /// <typeparam name="TP">Тип параметра инициализации</typeparam>
         /// <param name="array">Инициализированный масив</param>
-        /// <param name="parameter">Параметр инициализации</param>
+        /// <param name="p">Параметр инициализации</param>
         /// <param name="Initializer">Метод инициализации</param>
         /// <returns>Инициализированный массив</returns>
         [DST, NotNull]
-        public static TValue[] Initialize<TValue, TParameter>
+        public static TValue[] Initialize<TValue, TP>
         (
             [NotNull] this TValue[] array,
-            [CanBeNull] TParameter parameter,
-            [NotNull] Func<int, TParameter, TValue> Initializer
+            [CanBeNull] TP p,
+            [NotNull] Func<int, TP, TValue> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -470,7 +470,7 @@ namespace System
             Contract.Ensures(ReferenceEquals(Contract.Result<TValue[]>(), array));
 
             for (var i = 0; i < array.Length; i++)
-                array[i] = Initializer(i, parameter);
+                array[i] = Initializer(i, p);
             return array;
         }
 
@@ -478,20 +478,20 @@ namespace System
 
         /// <summary>Инициализация массива</summary>
         /// <typeparam name="TValue">Тип элементов масива</typeparam>
-        /// <typeparam name="TParameter1">Тип первого параметра инициализации</typeparam>
-        /// <typeparam name="TParameter2">Тип второго параметра инициализации</typeparam>
+        /// <typeparam name="TP1">Тип первого параметра инициализации</typeparam>
+        /// <typeparam name="TP2">Тип второго параметра инициализации</typeparam>
         /// <param name="array">Инициализированный масив</param>
-        /// <param name="parameter1">Первый параметр инициализации</param>
-        /// <param name="parameter2">Второй параметр инициализации</param>
+        /// <param name="p1">Первый параметр инициализации</param>
+        /// <param name="p2">Второй параметр инициализации</param>
         /// <param name="Initializer">Метод инициализации</param>
         /// <returns>Инициализированный массив</returns>
         [DST, NotNull]
-        public static TValue[] Initialize<TValue, TParameter1, TParameter2>
+        public static TValue[] Initialize<TValue, TP1, TP2>
         (
             [NotNull] this TValue[] array,
-            [CanBeNull] TParameter1 parameter1,
-            [CanBeNull] TParameter2 parameter2,
-            [NotNull] Func<int, TParameter1, TParameter2, TValue> Initializer
+            [CanBeNull] TP1 p1,
+            [CanBeNull] TP2 p2,
+            [NotNull] Func<int, TP1, TP2, TValue> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -501,7 +501,7 @@ namespace System
             Contract.Ensures(ReferenceEquals(Contract.Result<TValue[]>(), array));
 
             for (var i = 0; i < array.Length; i++)
-                array[i] = Initializer(i, parameter1, parameter2);
+                array[i] = Initializer(i, p1, p2);
             return array;
         }
 
@@ -524,11 +524,11 @@ namespace System
         }
 
         [DST, NotNull]
-        public static TArray[] Initialize<TArray, TParameter>
+        public static TArray[] Initialize<TArray, TP>
         (
             [NotNull] this TArray[] array,
-            [CanBeNull] TParameter parameter,
-            [NotNull] Func<TArray, int, TParameter, TArray> Initializer
+            [CanBeNull] TP p,
+            [NotNull] Func<TArray, int, TP, TArray> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -538,17 +538,17 @@ namespace System
             Contract.Ensures(ReferenceEquals(Contract.Result<TArray[]>(), array));
 
             for (var i = 0; i < array.Length; i++)
-                array[i] = Initializer(array[i], i, parameter);
+                array[i] = Initializer(array[i], i, p);
             return array;
         }
 
         [DST, NotNull]
-        public static TArray[] Initialize<TArray, TParameter1, TParameter2>
+        public static TArray[] Initialize<TArray, TP1, TP2>
         (
             [NotNull] this TArray[] array,
-            [CanBeNull] TParameter1 parameter1,
-            [CanBeNull] TParameter2 parameter2,
-            [NotNull] Func<TArray, int, TParameter1, TParameter2, TArray> Initializer
+            [CanBeNull] TP1 p1,
+            [CanBeNull] TP2 p2,
+            [NotNull] Func<TArray, int, TP1, TP2, TArray> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -558,7 +558,7 @@ namespace System
             Contract.Ensures(ReferenceEquals(Contract.Result<TArray[]>(), array));
 
             for (var i = 0; i < array.Length; i++)
-                array[i] = Initializer(array[i], i, parameter1, parameter2);
+                array[i] = Initializer(array[i], i, p1, p2);
             return array;
         }
 
@@ -583,11 +583,11 @@ namespace System
         }
 
         [DST, NotNull]
-        public static TArray[,] Initialize<TArray, TParameter>
+        public static TArray[,] Initialize<TArray, TP>
         (
             [NotNull] this TArray[,] array,
-            [CanBeNull] TParameter parameter,
-            [NotNull] Func<int, int, TParameter, TArray> Initializer
+            [CanBeNull] TP p,
+            [NotNull] Func<int, int, TP, TArray> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -599,17 +599,17 @@ namespace System
             var length_j = array.GetLength(1);
             for (var i = 0; i < length_i; i++)
                 for (var j = 0; j < length_j; j++)
-                    array[i, j] = Initializer(i, j, parameter);
+                    array[i, j] = Initializer(i, j, p);
             return array;
         }
 
         [DST, NotNull]
-        public static TArray[,] Initialize<TArray, TParameter1, TParameter2>
+        public static TArray[,] Initialize<TArray, TP1, TP2>
         (
             [NotNull] this TArray[,] array,
-            [CanBeNull] TParameter1 parameter1,
-            [CanBeNull] TParameter2 parameter2,
-            [NotNull] Func<int, int, TParameter1, TParameter2, TArray> Initializer
+            [CanBeNull] TP1 p1,
+            [CanBeNull] TP2 p2,
+            [NotNull] Func<int, int, TP1, TP2, TArray> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -621,7 +621,30 @@ namespace System
             var length_j = array.GetLength(1);
             for (var i = 0; i < length_i; i++)
                 for (var j = 0; j < length_j; j++)
-                    array[i, j] = Initializer(i, j, parameter1, parameter2);
+                    array[i, j] = Initializer(i, j, p1, p2);
+            return array;
+        } 
+
+        [DST, NotNull]
+        public static TArray[,] Initialize<TArray, TP1, TP2, TP3>
+        (
+            [NotNull] this TArray[,] array,
+            [CanBeNull] TP1 p1,
+            [CanBeNull] TP2 p2,
+            [CanBeNull] TP3 p3,
+            [NotNull] Func<int, int, TP1, TP2, TP3, TArray> Initializer
+        )
+        {
+            Contract.Requires(array != null);
+            Contract.Requires(Initializer != null);
+            Contract.Ensures(Contract.Result<TArray[,]>() != null);
+            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[,]>(), array));
+
+            var length_i = array.GetLength(0);
+            var length_j = array.GetLength(1);
+            for (var i = 0; i < length_i; i++)
+                for (var j = 0; j < length_j; j++)
+                    array[i, j] = Initializer(i, j, p1, p2, p3);
             return array;
         }
 
@@ -649,12 +672,12 @@ namespace System
         }
 
         [DST, NotNull]
-        public static TArray[][] Initialize<TArray, TParameter>
+        public static TArray[][] Initialize<TArray, TP>
         (
             [NotNull] this TArray[][] array,
-            [CanBeNull] TParameter parameter,
-            [NotNull] Func<int, TParameter, TArray[]> ArrayInitializer,
-            [NotNull] Func<int, int, TParameter, TArray> Initializer
+            [CanBeNull] TP p,
+            [NotNull] Func<int, TP, TArray[]> ArrayInitializer,
+            [NotNull] Func<int, int, TP, TArray> Initializer
         )
         {
             Contract.Requires(array != null);
@@ -665,37 +688,63 @@ namespace System
 
             for (var i = 0; i < array.Length; i++)
             {
-                array[i] = ArrayInitializer(i, parameter);
+                array[i] = ArrayInitializer(i, p);
                 for (var j = 0; j < array[i].Length; j++)
-                    array[i][j] = Initializer(i, j, parameter);
+                    array[i][j] = Initializer(i, j, p);
             }
             return array;
         }
 
-        //[DST, NotNull]
-        //public static TArray[][] Initialize<TArray, TParameter1, TParameter2>
-        //(
-        //    [NotNull] this TArray[][] array,
-        //    [CanBeNull] TParameter1 parameter1,
-        //    [CanBeNull] TParameter2 parameter2,
-        //    [NotNull] Func<int, TParameter1, TParameter2, TArray[]> ArrayInitializer,
-        //    [NotNull] Func<int, int, TParameter1, TParameter2, TArray> Initializer
-        //)
-        //{
-        //    Contract.Requires(array != null);
-        //    Contract.Requires(ArrayInitializer != null);
-        //    Contract.Requires(Initializer != null);
-        //    Contract.Ensures(Contract.Result<TArray[][]>() != null);
-        //    Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
+        [DST, NotNull]
+        public static TArray[][] Initialize<TArray, TP1, TP2>
+        (
+            [NotNull] this TArray[][] array,
+            [CanBeNull] TP1 p1,
+            [CanBeNull] TP2 p2,
+            [NotNull] Func<int, TP1, TP2, TArray[]> ArrayInitializer,
+            [NotNull] Func<int, int, TP1, TP2, TArray> Initializer
+        )
+        {
+            Contract.Requires(array != null);
+            Contract.Requires(ArrayInitializer != null);
+            Contract.Requires(Initializer != null);
+            Contract.Ensures(Contract.Result<TArray[][]>() != null);
+            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
 
-        //    for(var i = 0; i < array.Length; i++)
-        //    {
-        //        array[i] = ArrayInitializer(i, parameter1, parameter2);
-        //        for(var j = 0; j < array[i].Length; j++)
-        //            array[i][j] = Initializer(i, j, parameter1, parameter2);
-        //    }
-        //    return array;
-        //}
+            for (var i = 0; i < array.Length; i++)
+            {
+                array[i] = ArrayInitializer(i, p1, p2);
+                for (var j = 0; j < array[i].Length; j++)
+                    array[i][j] = Initializer(i, j, p1, p2);
+            }
+            return array;
+        }
+
+        [DST, NotNull]
+        public static TArray[][] Initialize<TArray, TP1, TP2, TP3>
+        (
+            [NotNull] this TArray[][] array,
+            [CanBeNull] TP1 p1,
+            [CanBeNull] TP2 p2,
+            [CanBeNull] TP3 p3,
+            [NotNull] Func<int, TP1, TP2, TP3, TArray[]> ArrayInitializer,
+            [NotNull] Func<int, int, TP1, TP2, TP3, TArray> Initializer
+        )
+        {
+            Contract.Requires(array != null);
+            Contract.Requires(ArrayInitializer != null);
+            Contract.Requires(Initializer != null);
+            Contract.Ensures(Contract.Result<TArray[][]>() != null);
+            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                array[i] = ArrayInitializer(i, p1, p2, p3);
+                for (var j = 0; j < array[i].Length; j++)
+                    array[i][j] = Initializer(i, j, p1, p2, p3);
+            }
+            return array;
+        }
 
         [DST]
         public static void Reverse<TArray>([NotNull] this TArray[] array)
@@ -725,7 +774,7 @@ namespace System
             Contract.Ensures(Contract.Result<TArray[,]>() != null);
 
             var l = array.Select(a => a.Length).ToArray();
-            return new TArray[array.Length, l.Max()].Initialize((i, j) => j >= l[i] ? default : array[i][j]);
+            return new TArray[array.Length, l.Max()].Initialize(array, l, (i, j, a, ll) => j >= ll[i] ? default : a[i][j]);
         }
 
         [DST, NotNull]
@@ -736,7 +785,8 @@ namespace System
             Contract.Requires(array.GetLength(1) > 0);
             Contract.Ensures(Contract.Result<TArray[][]>() != null);
 
-            return new TArray[array.GetLength(0)][].Initialize(i => new TArray[array.GetLength(1)].Initialize(j => array[i, j]));
+            return new TArray[array.GetLength(0)][]
+               .Initialize(array, (i, a) => new TArray[a.GetLength(1)].Initialize(i, a, (j, ii, aa) => aa[ii, j]));
         }
 
         [DST]

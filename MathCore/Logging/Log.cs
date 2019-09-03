@@ -15,21 +15,21 @@ namespace MathCore.Logging
         {
             private readonly Dictionary<string, Log> _LogDictionary = new Dictionary<string, Log>();
 
-            public Log this[string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new Log(name));
+            public Log this[[NotNull] string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new Log(name));
 
             internal LogPool() { }
 
-            public bool Remove(Log log) => _LogDictionary.Remove(log.Name);
+            public bool Remove([NotNull] Log log) => _LogDictionary.Remove(log.Name);
 
             public void Clear() => _LogDictionary.Clear();
 
-            public bool Contain(string Name) => _LogDictionary.ContainsKey(Name);
+            public bool Contain([NotNull] string Name) => _LogDictionary.ContainsKey(Name);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string PropertyName = null) => PropertyChanged.Start(this, PropertyName);
+        private void OnPropertyChanged([CallerMemberName] [CanBeNull] string PropertyName = null) => PropertyChanged.Start(this, PropertyName);
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -45,14 +45,14 @@ namespace MathCore.Logging
 
         public int ItemsCount => _Items.Count;
 
-        public LogItem First => ItemsCount == 0 ? null : _Items[0];
-        public LogItem Last => ItemsCount == 0 ? null : _Items[_Items.Count - 1];
+        [CanBeNull] public LogItem First => ItemsCount == 0 ? null : _Items[0];
+        [CanBeNull] public LogItem Last => ItemsCount == 0 ? null : _Items[_Items.Count - 1];
 
         public TimeSpan TimeDelta
         {
             get
             {
-                this.GetMinMax(i => i.Time.Ticks, out LogItem begin, out LogItem end);
+                this.GetMinMax(i => i.Time.Ticks, out var begin, out var end);
                 return end.Time - begin.Time;
             }
         }
@@ -72,9 +72,9 @@ namespace MathCore.Logging
 
         public LogItem this[int Index] => _Items[Index];
 
-        public LogItem this[DateTime time] => _Items.Select(item => new { item, delta = (item.Time - time).TotalSeconds.Abs() }).GetMin(i => i.delta).item;
+        public LogItem this[DateTime time] => _Items.Select(item => (item, delta:(item.Time - time).TotalSeconds.Abs())).GetMin(i => i.delta).item;
 
-        public LogItem this[string value] => _Items.FirstOrDefault(i => i.Value == value);
+        [CanBeNull] public LogItem this[string value] => _Items.FirstOrDefault(i => i.Value == value);
 
         private Log(string Name) => _Name = Name;
 
@@ -86,6 +86,7 @@ namespace MathCore.Logging
 
         public LogItem Add(string value, LogType type = LogType.Information) => Add(DateTime.Now, value, type);
 
+        [NotNull]
         public LogItem Add(DateTime time, string value, LogType type = LogType.Information)
         {
             var item = new LogItem(time, value, type);

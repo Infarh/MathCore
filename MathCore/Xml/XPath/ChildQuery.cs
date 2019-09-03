@@ -13,15 +13,12 @@ namespace System.Xml.XPath
         // try to match the node
         internal override bool MatchNode(XPathReader reader)
         {
-            var ret = true;
-
-            if(NodeType == XPathNodeType.All) return ret;
+            if(NodeType == XPathNodeType.All) return true;
             if(!MatchType(NodeType, reader.NodeType))
-                ret = false;
-            else if(Name != string.Empty && (Name != reader.LocalName || (Prefix.Length != 0 && reader.MapPrefixWithNamespace(Prefix) == false)))
-                ret = false; //currently the AstNode build initial the name as String.Empty
-
-            return ret;
+                return false;
+            if(Name != string.Empty && (Name != reader.LocalName || (Prefix.Length != 0 && !reader.MapPrefixWithNamespace(Prefix))))
+                return false; //currently the AstNode build initial the name as String.Empty
+            return true;
         }
 
 

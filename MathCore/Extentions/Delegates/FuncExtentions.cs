@@ -24,8 +24,10 @@ namespace System
     /// <summary>Класс методов-расширений для функции</summary>
     public static class FuncExtentions
     {
-        public static Task<TResult> InvokeAsync<TResult>(this Func<TResult> func) => Task.Factory.FromAsync(func.BeginInvoke, func.EndInvoke, null);
-        public static Task<TResult> InvokeAsync<TValue, TResult>(this Func<TValue, TResult> func, TValue value) => Task.Factory.FromAsync(func.BeginInvoke, func.EndInvoke, value, null);
+        [NotNull]
+        public static Task<TResult> InvokeAsync<TResult>([NotNull] this Func<TResult> func) => Task.Factory.FromAsync(func.BeginInvoke, func.EndInvoke, null);
+        [NotNull]
+        public static Task<TResult> InvokeAsync<TValue, TResult>([NotNull] this Func<TValue, TResult> func, TValue value) => Task.Factory.FromAsync(func.BeginInvoke, func.EndInvoke, value, null);
 
         /// <summary>Преобразование функции в вычисление</summary>
         /// <typeparam name="T">Тип возвращаемого функцией результата</typeparam>
@@ -33,7 +35,7 @@ namespace System
         /// <param name="Name">Имя вычисления</param>
         /// <returns>Вычисление функции</returns>
         [NotNull]
-        public static FunctionEvulation<T> ToEvulation<T>([NotNull] this Func<T> function, string Name = null)
+        public static FunctionEvulation<T> ToEvulation<T>([NotNull] this Func<T> function, [CanBeNull] string Name = null)
         {
             Contract.Requires(function != null);
             Contract.Ensures(Contract.Result<FunctionEvulation<T>>() != null);
@@ -571,7 +573,7 @@ namespace System
         /// <param name="x0">Смещение</param>
         /// <returns>Автокорреляционная функция</returns>
         [NotNull]
-        public static Function GetAkf(this Function f, double deltaX, double x0 = 0.0)
+        public static Function GetAkf([NotNull] this Function f, double deltaX, double x0 = 0.0)
         {
             Contract.Requires(f != null);
             Contract.Requires(deltaX > 0);
@@ -1127,7 +1129,7 @@ namespace System
             x = (5 * _data[0] + 13 * _data[1] + 13 * _data[N - 1] + 5 * _data[N]) / 12;
             var tmp = 0.0;
 
-            for(i = 2; i < N - 1; i++) tmp = tmp + _data[i];
+            for(i = 2; i < N - 1; i++) tmp += _data[i];
             x = (x + tmp) * dx - (c[0] + c[N1 - 1]) * dx * dx * dx / 36;
             return x;
         }
@@ -1221,6 +1223,7 @@ namespace System
             do { yield return f(x += dx); } while(x <= x2);
         }
 
+        [NotNull]
         public static T[] Sampling<T>([NotNull] this Func<double, T> f, double x1, double dx, int SamplesCount)
         {
             if (f is null) throw new ArgumentNullException(nameof(f));
@@ -1390,79 +1393,6 @@ namespace System
             return a.Equals(0d) ? f : x => f(x) - a;
         }
 
-        #region Вложенный тип: FuncCalculator - вычислитель функции
-
-        /// <summary>Вычислитель функции для распараллеливания процесса вычисления значений функции</summary>
-        /// <typeparam name="TArgument">Тип аргумента функции</typeparam>
-        /// <typeparam name="TResult">ТИп значения функции</typeparam>
-        private sealed class FuncCalculator<TArgument, TResult>
-        {
-            /// <summary>Структура раезультата вычисления значения функции</summary>
-            public struct func
-            {
-                /// <summary>Значение аргумента функции</summary>
-                public TArgument x;
-                /// <summary>Вычисляемая функция</summary>
-                public Func<TArgument, TResult> f;
-            }
-
-            /// <summary>Список аргументов функции</summary>
-            [NotNull]
-            private readonly List<TArgument> Argument;
-            /// <summary>Список значений функции</summary>
-            [NotNull]
-            public readonly List<TResult> Result;
-            /// <summary>Число завершённых итераций рассчёта</summary>
-            private int _Complited;
-            /// <summary>Общее количество итераций вычисления</summary>
-            private int _Count;
-
-            /// <summary>Инициализация нового вычислителя функции</summary>
-            public FuncCalculator()
-            {
-                Contract.Ensures(Argument != null);
-                Contract.Ensures(Result != null);
-
-                Argument = new List<TArgument>();
-                Result = new List<TResult>();
-            }
-
-            /// <summary>Событие завершения процесса вычисления</summary>
-            public event EventHandler<EventArgs<List<TArgument>, List<TResult>>> OnComplited;
-
-            /// <summary>Расчёт значения функции в указанном узле</summary>
-            /// <param name="State">Объект, созержащий структуру с значением аргумента и функции для расчёта значения</param>
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            public void Calculate(object State)
-            {
-                Contract.Requires(State != null);
-
-                var function = (func)State;
-                Argument.Add(function.x);
-                Result.Add(function.f(function.x));
-                _Complited++;
-                Check();
-            }
-
-            /// <summary>Процерка на завершение процесса вычисления значений функции - если число расчитанных итераций равно общему числу итераций, то расчёт завершён</summary>
-            private void Check()
-            {
-                if(_Count == _Complited)
-                    OnComplited?.Invoke(this, new EventArgs<List<TArgument>, List<TResult>>(Argument, Result));
-            }
-
-            /// <summary>Установка общего количества требуемых итераций расчёта</summary>
-            /// <param name="Count">Требуемое количество итераций расчёта</param>
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            public void SetCount(int Count)
-            {
-                Contract.Ensures(_Count == Count);
-
-                _Count = Count;
-                Check();
-            }
-        }
-
         ///<summary>Вычислить значения функции параллельно</summary>
         ///<param name="f">Вычисляемая функция</param>
         ///<param name="Arguments">Область определения</param>
@@ -1470,32 +1400,10 @@ namespace System
         ///<typeparam name="TResult">Тип значения</typeparam>
         ///<returns>Массив значений функции</returns>
         [NotNull]
-        public static TResult[] GetValuesParralel<TArgument, TResult>
-        (
+        public static TResult[] GetValuesParralel<TArgument, TResult>(
             [NotNull] this Func<TArgument, TResult> f,
-            [NotNull] IEnumerable<TArgument> Arguments
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(Arguments != null);
-            Contract.Ensures(Contract.Result<TResult[]>() != null);
-            Contract.Ensures(Contract.Result<TResult[]>().Length == Arguments.Count());
-
-            var reset = new AutoResetEvent(false);
-            var calculator = new FuncCalculator<TArgument, TResult>();
-            calculator.OnComplited += (Sender, Args) => reset.Set();
-            var count = 0;
-            Arguments.Foreach(x =>
-            {
-                count++;
-                ThreadPool.QueueUserWorkItem(calculator.Calculate, new FuncCalculator<TArgument, TResult>.func { x = x, f = f });
-            });
-            calculator.SetCount(count);
-            reset.WaitOne();
-            return calculator.Result.ToArray();
-        }
-
-        #endregion
+            [NotNull] IEnumerable<TArgument> Arguments) 
+            => Arguments.Select(X => X.Async(f, (x, ff) => ff(x))).WhenAll().Result;
 
         /// <summary>Интегратор функции</summary>
         public sealed class Integrator
@@ -1552,13 +1460,8 @@ namespace System
             /// <summary>Получить функцию, равную интегралу от интегрируемой функции</summary>
             /// <param name="eps">Точность интегрирования</param>
             /// <returns>Интеграл функци</returns>
-            public Function GetIntegral(double eps = 1e-6)
-            {
-                Contract.Requires(eps > 0);
-                Contract.Ensures(Contract.Result<Function>() != null);
-
-                return x => GetValue(x, eps);
-            }
+            [NotNull]
+            public Function GetIntegral(double eps = 1e-6) => x => GetValue(x, eps);
         }
 
         /// <summary>Делегат функции сложения двух векторов</summary>
@@ -1576,6 +1479,7 @@ namespace System
         /// <summary>Метод генерации быстрого сумматора двух векторов вещественных чисел</summary>
         /// <returns>Метод сложения двух векторов вещественных чисел</returns>
         [Copyright("Оптимизация .NET приложения", url = "http://professorweb.ru/my/csharp/optimization/level7/7_8.php")]
+        [NotNull]
         public static VectorAddDelegate CreateFastFloatSummator()
         {
             if(__VectorAddDelegate != null) return __VectorAddDelegate;
@@ -1631,6 +1535,7 @@ namespace System
 
                 /// <summary>Оператор неявного приведения отсчёта функции к картежу двух элементов - значение отсчёта функции - значение функции</summary>
                 /// <param name="result">Отсчёт функции</param>
+                [NotNull]
                 public static implicit operator Tuple<double, TValue>(Result result) =>
                     new Tuple<double, TValue>(result.Argument, result.Value);
             }
@@ -1666,6 +1571,7 @@ namespace System
             /// <param name="x2">Конец интервала дискретизации</param>
             /// <param name="dx">Шаг дискретизации</param>
             /// <returns>Кортеж, содержащий связанный список дискретов функции и оценку точности дискретизации</returns>
+            [NotNull]
             private static Tuple<LinkedList<Result>, double> Sampling
             (
                 [NotNull] Function f,
@@ -1710,7 +1616,7 @@ namespace System
 
             /// <summary>Инициализация нового результата дискретизации по кортежу дискретов функции и оценки точности дискретизации</summary>
             /// <param name="SamplingResult">Кортеж дискретов функции и оценки точности дскретизации</param>
-            private SimpleSamplingResult(Tuple<LinkedList<Result>, double> SamplingResult)
+            private SimpleSamplingResult([NotNull] Tuple<LinkedList<Result>, double> SamplingResult)
                 : base(SamplingResult.Item1.ToArray(), SamplingResult.Item2) => _List = SamplingResult.Item1;
 
             /// <summary>Инициализация нового результата дискретизации</summary>
@@ -1721,6 +1627,7 @@ namespace System
             public SimpleSamplingResult([NotNull] Function f, double x1, double x2, double dx)
                 : this(Sampling(f, x1, x2, dx))
             {
+                // ReSharper disable once JoinNullCheckWithUsage
                 if(f is null) throw new ArgumentNullException(nameof(f));
                 if(dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
                 Contract.EndContractBlock();
@@ -1780,11 +1687,13 @@ namespace System
 
             /// <summary>Метод получения отсчётов функции</summary>
             /// <returns>Массив отсчётов функции</returns>
+            [NotNull]
             public Result[] GetValues() { lock(_List) return _List.OrderBy(v => v.Argument).ToArray(); }
 
             /// <summary>Оператор неявного приведения типа результата дискретизации к типу массива отсчётов функции</summary>
             /// <param name="result">Результат дискретизации</param>
-            public static implicit operator Result[] (SimpleSamplingResult result) => result.GetValues();
+            [NotNull]
+            public static implicit operator Result[] ([NotNull] SimpleSamplingResult result) => result.GetValues();
         }
 
         /// <summary>Адаптивный метод дискретизации вещественной функции</summary>
@@ -1793,6 +1702,7 @@ namespace System
         /// <param name="x2">Окончание интервала дискретизации</param>
         /// <param name="eps">Точность дискретизации</param>
         /// <returns>Результат дискретизации вещественной функции</returns>
+        [NotNull]
         public static SimpleSamplingResult SamplingAdaptive([NotNull] this Function f, double x1, double x2, double eps)
             => new SimpleSamplingResult(f, Math.Min(x1, x2), Math.Max(x1, x2), eps);
 
@@ -1803,6 +1713,7 @@ namespace System
         /// <param name="x2">Окончание интервала дискретизации</param>
         /// <param name="eps">Точность дискретизации</param>
         /// <returns>Результат дискретизации функции</returns>
+        [NotNull]
         public static AdaptiveSamplingResult<T> SamplingAdaptive<T>
         (
             [NotNull] this Func<double, T> f,
@@ -1823,6 +1734,7 @@ namespace System
             /// <param name="x2">Конец интервала дискретизации</param>
             /// <param name="dx">НАчальный шаг дискретизации</param>
             /// <returns>Кортеж со списком значений функции и вещественным число, оценивающим точность дискретизации</returns>
+            [NotNull]
             private static Tuple<LinkedList<Result>, double> Sampling
             (
                 [NotNull] Func<double, T> f,
@@ -1873,7 +1785,7 @@ namespace System
 
             /// <summary>Инициализация нового адаптивного дискретизацтора</summary>
             /// <param name="SamplingResult">Список отсчётов дискретизации функции и оценка точности дискретизации</param>
-            private AdaptiveSamplingResult(Tuple<LinkedList<Result>, double> SamplingResult)
+            private AdaptiveSamplingResult([NotNull] Tuple<LinkedList<Result>, double> SamplingResult)
                 : base(SamplingResult.Item1.ToArray(), SamplingResult.Item2) => _List = SamplingResult.Item1;
 
             /// <summary>Инициализация нового адаптивного дискретизацтора</summary>
@@ -1896,7 +1808,9 @@ namespace System
                 Contract.Requires(x1 < x2);
                 Contract.Requires(dx > 0);
 
+                // ReSharper disable once JoinNullCheckWithUsage
                 if(f is null) throw new ArgumentNullException(nameof(f));
+                // ReSharper disable once JoinNullCheckWithUsage
                 if(converter is null) throw new ArgumentNullException(nameof(converter));
                 if(dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
                 Contract.EndContractBlock();
@@ -1959,11 +1873,13 @@ namespace System
 
             /// <summary>Получить отсчёты функции в виде массива значений</summary>
             /// <returns>Массив значений функции</returns>
+            [NotNull]
             public Result[] GetValues() { lock(_List) return _List.OrderBy(v => v.Argument).ToArray(); }
 
             /// <summary>Оператор неявного преобразования результатов адаптивной дискретизации функции в массив её значений</summary>
             /// <param name="result">Результаты адаптивной дискретизации функции</param>
-            public static implicit operator Result[] (AdaptiveSamplingResult<T> result) => result.GetValues();
+            [NotNull]
+            public static implicit operator Result[] ([NotNull] AdaptiveSamplingResult<T> result) => result.GetValues();
         }
 
         #endregion
@@ -1993,7 +1909,7 @@ namespace System
                 Contract.Requires(eps > 0);
                 Contract.Requires(dx > 0);
 
-                Values = f.SamplingAdaptive_OneWay_(x1, x2, eps, dx, a => Accuracy = a);
+                Values = f.SamplingAdaptive_OneWay(x1, x2, eps, dx, a => Accuracy = a);
             }
         }
 
@@ -2004,6 +1920,7 @@ namespace System
         /// <param name="eps">Требуемая точность дискретизации</param>
         /// <param name="dx">Начальный шаг дискретизации</param>
         /// <returns>Результат дискретизации</returns>
+        [NotNull]
         public static SamplingResult<double> SamplingAdaptive_OneWay
         (
             [NotNull] this Function f,
@@ -2030,7 +1947,7 @@ namespace System
         /// <param name="dx">Начальный шаг дискретизации</param>
         /// <param name="UpdateAccuracy">Метод обновления значения точности дискретизации в процесс самой дискретизации</param>
         /// <returns>Перечисление результатов дискретизации</returns>
-        private static IEnumerable<SamplingResult<double>.Result> SamplingAdaptive_OneWay_
+        private static IEnumerable<SamplingResult<double>.Result> SamplingAdaptive_OneWay
         (
             [NotNull] this Func<double, double> f,
             double x1,
@@ -2085,7 +2002,7 @@ namespace System
                 Contract.Requires(dx > 0);
                 Contract.Requires(eps > 0);
 
-                Values = f.SamplingAdaptive_OneWayT_(converter, x1, x2, eps, dx, a => Accuracy = a);
+                Values = f.SamplingAdaptive_OneWayT(converter, x1, x2, eps, dx, a => Accuracy = a);
             }
         }
 
@@ -2098,6 +2015,7 @@ namespace System
         /// <param name="eps">Требуемая точность дискретизации</param>
         /// <param name="dx">Начальный шаг дискретизации</param>
         /// <returns>Результат дискретизации функции</returns>
+        [NotNull]
         public static SamplingResult<T> SamplingAdaptive_OneWay<T>
         (
             [NotNull] this Func<double, T> f,
@@ -2127,7 +2045,7 @@ namespace System
         /// <param name="dx">Начальный шаг дискретизации</param>
         /// <param name="UpdateAccuracy">Метод обновления значения текущего уровня точности дискретизации</param>
         /// <returns>Перечисление отсчётов функции</returns>
-        private static IEnumerable<SamplingResult<T>.Result> SamplingAdaptive_OneWayT_<T>
+        private static IEnumerable<SamplingResult<T>.Result> SamplingAdaptive_OneWayT<T>
         (
             [NotNull] this Func<double, T> f,
             [NotNull] Func<T, double> converter,
@@ -2174,7 +2092,7 @@ namespace System
         {
             /// <summary>Инициализация нового экземпляра результата дискретизации методом половинного деления</summary>
             /// <param name="Result">Результаты дискретизации, содержащие массив отсчётов функции и значение точности</param>
-            private SamplingResultHalfDivision(Tuple<Result[], double> Result) : base(Result.Item1, Result.Item2) { }
+            private SamplingResultHalfDivision([NotNull] Tuple<Result[], double> Result) : base(Result.Item1, Result.Item2) { }
 
             /// <summary>Инициализация нового экземпляра результата дискретизации функции методом половинного деления</summary>
             /// <param name="f">Дискретизируемая функция</param>
@@ -2190,6 +2108,7 @@ namespace System
         /// <param name="x2">Конец интервала дискретизации</param>
         /// <param name="eps">Требуемая точность</param>
         /// <returns>Результат дискретизации функции методом половинного деления</returns>
+        [NotNull]
         public static SamplingResult<double> SamplingAdaptive_HalfDivision(this Function f, double x1, double x2, double eps)
         {
             Contract.Requires(f != null);
@@ -2206,9 +2125,10 @@ namespace System
         /// <param name="x2">Конец интервала дискретизации</param>
         /// <param name="eps">Требуемая точность</param>
         /// <returns>Результаты дискретизации</returns>
+        [NotNull]
         private static Tuple<SamplingResult<double>.Result[], double> SamplingAdaptive_HalfDivision_
         (
-            this Function f,
+            [NotNull] this Function f,
             double x1,
             double x2,
             double eps
@@ -2269,7 +2189,7 @@ namespace System
         {
             /// <summary>Инициализация нового экземпляра результата дискретизации методом половинного деления</summary>
             /// <param name="Result">Результаты дискретизации, содержащие массив отсчётов функции и значение точности</param>
-            private SamplingResultHalfDivisionT(Tuple<Result[], double> Result) : base(Result.Item1, Result.Item2) { }
+            private SamplingResultHalfDivisionT([NotNull] Tuple<Result[], double> Result) : base(Result.Item1, Result.Item2) { }
 
             /// <summary>Инициализация нового экземпляра результата дискретизации функции методом половинного деления</summary>
             /// <param name="f">Дискретизируемая функция</param>
@@ -2277,7 +2197,7 @@ namespace System
             /// <param name="x1">Начало интервала дискретизации</param>
             /// <param name="x2">Конец интервала дискретизации</param>
             /// <param name="eps">Требуемая точность</param>
-            public SamplingResultHalfDivisionT(Func<double, T> f, Func<T, double> converter, double x1, double x2, double eps)
+            public SamplingResultHalfDivisionT([NotNull] Func<double, T> f, [NotNull] Func<T, double> converter, double x1, double x2, double eps)
                 : this(f.SamplingAdaptive_HalfDivision_(converter, x1, x2, eps)) { }
         }
 
@@ -2288,10 +2208,11 @@ namespace System
         /// <param name="x2">Конец интервала дискретизации</param>
         /// <param name="eps">Требуемая точность</param>
         /// <returns>Результат дискретизации функции методом половинного деления</returns>
+        [NotNull]
         public static SamplingResult<T> SamplingAdaptive_HalfDivision<T>
         (
-            this Func<double, T> f,
-            Func<T, double> converter,
+            [NotNull] this Func<double, T> f,
+            [NotNull] Func<T, double> converter,
             double x1,
             double x2,
             double eps
@@ -2313,6 +2234,7 @@ namespace System
         /// <param name="x2">Конец интервала дискретизации</param>
         /// <param name="eps">Требуемая точность</param>
         /// <returns>Результаты дискретизации</returns>
+        [NotNull]
         private static Tuple<SamplingResult<T>.Result[], double> SamplingAdaptive_HalfDivision_<T>
         (
             [NotNull] this Func<double, T> f,

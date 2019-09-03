@@ -25,7 +25,7 @@ namespace System.Xml.XPath
         {
             var ret = _Opnd1.GetValue(reader);
 
-            if(Convert.ToBoolean(ret) == false)
+            if(!Convert.ToBoolean(ret))
                 ret = _Opnd2.GetValue(reader);
 #if DEBUG1
             Console.WriteLine("OrExpr: {0}", ret);

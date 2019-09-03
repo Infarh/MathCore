@@ -1,3 +1,4 @@
+using System;
 using MathCore.Annotations;
 
 namespace MathCore
@@ -16,13 +17,13 @@ namespace MathCore
 
         public T this[int index] { get => _Array[index]; set => _Array[index] = value; }
 
-        [NotNull] public T[] Array { get => _Array; set => _Array = value ?? new T[0]; }
+        [NotNull] public T[] Array { get => _Array; set => _Array = value ?? throw new ArgumentNullException(nameof(value)); }
 
         public ArrayIndexer() => _Array = new T[0];
 
         public ArrayIndexer([NotNull] T[] Array, int Index = 0)
         {
-            _Array = Array;
+            _Array = Array ?? throw new ArgumentNullException(nameof(Array));
             _Index = Index;
         }
 

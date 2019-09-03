@@ -25,9 +25,9 @@ namespace System
 
         public static int OrDefault(this Match match, int DefaultInt) => int.TryParse(match.OrDefault(), out var v) ? v : DefaultInt;
 
-        public static string OrDefault(this Group group, string DefaultString = "") => @group.Success ? @group.Value : DefaultString;
+        public static string OrDefault(this Group group, string DefaultString = "") => group.Success ? group.Value : DefaultString;
 
-        public static int OrDefault(this Group group, int DefaultInt) => int.TryParse(@group.OrDefault(), out var v) ? v : DefaultInt;
+        public static int OrDefault(this Group group, int DefaultInt) => int.TryParse(group.OrDefault(), out var v) ? v : DefaultInt;
 
         public static Match Find(this string Str, Regex regex) => regex.Match(Str);
 

@@ -1,7 +1,9 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
     /// <summary>Класс объектов-связей между наблюдателем и списком наблюдателей, позволяющих удалять наблюдатель из писка наблюдателей в случае если объект удаляется из памяти</summary>
@@ -16,27 +18,18 @@ namespace System.Linq.Reactive
 
         /// <summary>Словарь связей</summary>
         [NotNull]
-        private static readonly Dictionary<int, ObserverLink<T>> __Links = new Dictionary<int, ObserverLink<T>>();
+        private static readonly ConcurrentDictionary<int, ObserverLink<T>> __Links = new ConcurrentDictionary<int, ObserverLink<T>>();
 
         /// <summary>Получить связь между наблюдателем и списком наблюдателей</summary>
         /// <param name="Observers">Коллекция наблюдателей</param>
         /// <param name="Observer">Добавляемый наблюдатель</param>
         /// <returns>Связь между наблюдателем и списком наблюдателей</returns>
         [NotNull]
-        public static ObserverLink<T> GetLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer)
-        {
-            var hash = GetHash(Observers, Observer);
-            lock(__Links)
-                return __Links.TryGetValue(hash, out ObserverLink<T> link)
-                    ? link
-                    : (__Links[hash] = new ObserverLink<T>(Observers, Observer));
-        }
+        public static ObserverLink<T> GetLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), h => new ObserverLink<T>(Observers, Observer));
 
         /// <summary>Удаляемый наблюдатель</summary>
-        [NotNull]
         private IObserver<T> _Observer;
         /// <summary>Коллекция наблюдателей, из которой требуется удалить отслеживаемый наблюдатель</summary>
-        [NotNull]
         private ICollection<IObserver<T>> _Observers;
         /// <summary>Объект межпотоковой синхроницации</summary>
         [NotNull]
@@ -47,34 +40,31 @@ namespace System.Linq.Reactive
         /// <param name="Observer">Отслеживаемый наблюдатель</param>
         private ObserverLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull]IObserver<T> Observer)
         {
-            Contract.Requires(Observer != null);
-            Contract.Requires(Observers != null);
             Contract.Ensures(_Observer != null);
             Contract.Ensures(_Observers != null);
             Contract.Ensures(_Observers.Count > 0);
             Contract.Ensures(Contract.Exists(_Observers, o => Equals(o, _Observer)));
             _Observers = Observers;
             _Observer = Observer;
-            if(!_Observers.Contains(_Observer))
+            if (!_Observers.Contains(_Observer))
                 _Observers.Add(_Observer);
         }
 
+        private bool _IsDisposed;
         void IDisposable.Dispose()
         {
             Contract.Ensures(_Observer is null);
             Contract.Ensures(_Observers is null);
             Contract.Ensures(!Contract.Exists(_Observers, o => Equals(o, _Observer)));
-            if(_Observer is null) return;
-            lock(_SyncRoot)
+            if (_IsDisposed) return;
+            lock (_SyncRoot)
             {
-                if(_Observer is null) return;
-                lock(__Links)
-                {
-                    __Links.Remove(GetHash(_Observers, _Observer));
-                    _Observers.Remove(_Observer);
-                }
-                _Observer = null;
+                if (_IsDisposed) return;
+                _IsDisposed = true;
+                __Links.TryRemove(GetHash(_Observers, _Observer), out _);
+                _Observers.Remove(_Observer);
                 _Observers = null;
+                _Observer = null;
             }
         }
 

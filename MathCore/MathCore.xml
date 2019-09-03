@@ -1720,6 +1720,56 @@
             <summary>Создать новый объект</summary>
             <returns>Новый объект типа <typeparamref name="T"/></returns>
         </member>
+        <member name="T:MathCore.Fraction">
+            <summary>Дробь</summary>
+        </member>
+        <member name="M:MathCore.Fraction.GCD(System.Int32,System.Int32)">
+            <summary>Наибольшее общее кратное двух чисел</summary>
+        </member>
+        <member name="M:MathCore.Fraction.Simplify(System.Int32@,System.Int32@)">
+            <summary>Упрощение дроби</summary>
+            <param name="Numerator">Числитель</param>
+            <param name="Denominator">Знаменатель</param>
+            <returns>Истина, если дробь можно упростить</returns>
+        </member>
+        <member name="F:MathCore.Fraction._Numerator">
+            <summary>Числитель</summary>
+        </member>
+        <member name="F:MathCore.Fraction._Denomirator">
+            <summary>Знаменатель</summary>
+        </member>
+        <member name="P:MathCore.Fraction.Numerator">
+            <summary>Числитель</summary>
+        </member>
+        <member name="P:MathCore.Fraction.Deniminator">
+            <summary>Знаменатель</summary>
+        </member>
+        <member name="P:MathCore.Fraction.DecimalValue">
+            <summary>Десятичное значение дроби</summary>
+        </member>
+        <member name="M:MathCore.Fraction.#ctor(System.Int32,System.Int32)">
+            <summary>Новая дробь</summary>
+            <param name="Nominator">Числитель</param>
+            <param name="Deniminator">Знаменатель</param>
+        </member>
+        <member name="M:MathCore.Fraction.GetSimplified">
+            <summary>Получить упрощённую дробь</summary>
+            <returns>Упрощённая дробь</returns>
+        </member>
+        <member name="M:MathCore.Fraction.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Fraction.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Fraction.Equals(MathCore.Fraction)">
+            <summary>Проверка на эквивалентность дроби</summary>
+            <param name="other">Проверяемая дробь</param>
+            <returns>Истина, если дроби идентичные</returns>
+        </member>
+        <member name="M:MathCore.Fraction.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.GCWacher">
             <summary>Наблюдатель за сборщиком мусора</summary>
         </member>
@@ -5853,6 +5903,10 @@
             <param name="S"></param>
             <param name="V"></param>
         </member>
+        <member name="M:MathCore.Matrix.op_Explicit(MathCore.Matrix)~MathCore.MatrixInt">
+            <summary>Оператор явного приведения вещественной матрицы к целочисленной</summary>
+            <param name="matrix">Вещественная матрица</param>
+        </member>
         <member name="M:MathCore.Matrix.CreateCol(System.Double[])">
             <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
             <exception cref="T:System.ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
@@ -6055,6 +6109,88 @@
         <member name="M:MathCore.Matrix.Clone">
             <inheritdoc/>
         </member>
+        <member name="M:MathCore.Matrix.op_Equality(MathCore.Matrix,MathCore.Matrix)">
+            <summary>Оператор равенства двух матриц</summary>
+            <returns>Истина, если матрицы совпадают по размеру и поэлементно</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Inequality(MathCore.Matrix,MathCore.Matrix)">
+            <summary>Оператор неравенства двух матриц</summary>
+            <returns>Истина, если матрицы несовпадают по размеру или поэлементно</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Equality(System.Double[0:,0:],MathCore.Matrix)">
+            <summary>Оператор равенства матрицы и двумерного массива</summary>
+            <returns>Истина, если матрица и двумерный массив совпадают по размеру и поэлементно</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Equality(MathCore.Matrix,System.Double[0:,0:])">
+            <summary>Оператор равенства матрицы и двумерного массива</summary>
+            <returns>Истина, если матрица и двумерный массив совпадают по размеру и поэлементно</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Inequality(System.Double[0:,0:],MathCore.Matrix)">
+            <summary>Оператор неравенства матрицы и двумерного массива</summary>
+            <returns>Истина, если матрица и двумерный массив несовпадают по размеру или поэлементно</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Inequality(MathCore.Matrix,System.Double[0:,0:])">
+            <summary>Оператор неравенства матрицы и двумерного массива</summary>
+            <returns>Истина, если матрица и двумерный массив несовпадают по размеру или поэлементно</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Addition(MathCore.Matrix,System.Double)">
+            <summary>Оператор суммы матрицы и числа</summary>
+            <returns>Матрица, элементы которой равны сумме элементов исходной матрицы и числа</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Addition(System.Double,MathCore.Matrix)">
+            <summary>Оператор суммы матрицы и числа</summary>
+            <returns>Матрица, элементы которой равны сумме элементов исходной матрицы и числа</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Subtraction(MathCore.Matrix,System.Double)">
+            <summary>Оператор разности матрицы и числа</summary>
+            <returns>Матрица, элементы которой равны разности элементов исходной матрицы и числа</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_UnaryNegation(MathCore.Matrix)">
+            <summary>Оператор отрицания элементов матрицы</summary>
+            <returns>Матрица, элементы которой являются отрицательными по отношению к элементам исходной матрицы</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Subtraction(System.Double,MathCore.Matrix)">
+            <summary>Оператор разности числа и матрицы</summary>
+            <returns>Матрица, элементы которой равны разности числа и элементов исходной матрицы</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Multiply(MathCore.Matrix,System.Double)">
+            <summary>Оператор произведения матрицы и числа</summary>
+            <returns>Матрица, элементы которой равны произведения элементов исходной матрицы и числа</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Multiply(System.Double,MathCore.Matrix)">
+            <summary>Оператор суммы матрицы и числа</summary>
+            <returns>Матрица, элементы которой равны сумме элементов исходной матрицы и числа</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Multiply(System.Double[0:,0:],MathCore.Matrix)">
+            <summary>Оператор матричного произведения двумерного массива и матрицы</summary>
+            <returns>Матрица - результат матричного умножения двумергного массива и матрицы</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Multiply(System.Double[],MathCore.Matrix)">
+            <summary>Оператор матричного произведения одномерного массива (строки) и матрицы</summary>
+            <returns>Матрица - результат матричного умножения одномерного массива (строки) и матрицы</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Multiply(MathCore.Matrix,System.Double[])">
+            <summary>Оператор матричного произведения матрицы и одномерного массива (стобца)</summary>
+            <returns>Матрица - результат матричного умножения матрицы и одномерного массива (столбца)</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Multiply(MathCore.Matrix,System.Double[0:,0:])">
+            <summary>Оператор матричного произведения матрицы и двумерного массива</summary>
+            <returns>Матрица - результат матричного умножения матрицы и двумерного массива</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Division(MathCore.Matrix,System.Double)">
+            <summary>Оператор деления матрицы и числа</summary>
+            <returns>Матрица, элементы которой равны результату деления элементов исходной матрицы и числа</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Division(System.Double,MathCore.Matrix)">
+            <summary>Оператор деления числа и матрицы</summary>
+            <returns>Матрица, элементы которой равны результату деления числа и элементов исходной матрицы</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_ExclusiveOr(MathCore.Matrix,System.Int32)">
+            <summary>Оператор возведения матрицы в степень</summary>
+            <param name="M">Матрица - основание</param>
+            <param name="n">Показатель степени</param>
+            <returns>Матрица - результат возведения исходной матрицы в целую степень</returns>
+        </member>
         <member name="M:MathCore.Matrix.op_Addition(MathCore.Matrix,MathCore.Matrix)">
             <summary>Оператор сложения двух матриц</summary>
             <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Сумма двух матриц</returns>
@@ -6078,6 +6214,18 @@
         <member name="M:MathCore.Matrix.op_Implicit(System.Double)~MathCore.Matrix">
             <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
             <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+        </member>
+        <member name="M:MathCore.Matrix.op_Explicit(MathCore.Matrix)~System.Double[0:,0:]">
+            <summary>Оператор явного приведения матрицы к двумерному массиву</summary>
+            <param name="M">Исходная матрица</param>
+        </member>
+        <member name="M:MathCore.Matrix.op_Explicit(System.Double[0:,0:])~MathCore.Matrix">
+            <summary>Оператор явного приведения типа двумерного массива к матрице</summary>
+            <param name="Data">Двумерный массив</param>
+        </member>
+        <member name="M:MathCore.Matrix.op_Explicit(System.Double[])~MathCore.Matrix">
+            <summary>Оператор явного приведения одномерного массива к матрице (столбцу)</summary>
+            <param name="Data">Одномерный массив</param>
         </member>
         <member name="M:MathCore.Matrix.Equals(System.Double[0:,0:])">
             <inheritdoc/>
@@ -7840,15 +7988,148 @@
             Нулевой элемент массива при нулевой степени члена полинома 
             </summary>
         </member>
+        <member name="T:MathCore.Polynom.Array">
+            <summary>Операции над коэффициентами полинома, в представлении массива значений</summary>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetValue(System.Double[],System.Double)">
+            <summary>Расчитать значение полинома</summary>
+            <param name="A">Массив коэффициентов полинома</param>
+            <param name="x">Аргумент полинома</param>
+            <returns>Значение полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetValue(System.Double[],MathCore.Complex)">
+            <summary>Расчитать комплексное значение полинома</summary>
+            <param name="A">Массив коэффициентов полинома</param>
+            <param name="z">Аргумент полинома</param>
+            <returns>Комплексное значение полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetValue(MathCore.Complex[],MathCore.Complex)">
+            <summary>Расчитать комплексное значение полинома с комплексными коэффициентами</summary>
+            <param name="Z">Массив комплексных коэффициентов полинома</param>
+            <param name="z">Комплексный аргумент полинома</param>
+            <returns>Комплексное значение полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetValue(System.Collections.Generic.IEnumerable{System.Double},System.Double)">
+            <summary>Расчитать значение полинома</summary>
+            <param name="A">Массив коэффициентов полинома</param>
+            <param name="x">Аргумент полинома</param>
+            <returns>Значение полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetValue(System.Collections.Generic.IEnumerable{System.Double},MathCore.Complex)">
+            <summary>Расчитать комплексное значение полинома</summary>
+            <param name="A">Массив коэффициентов полинома</param>
+            <param name="z">Аргумент полинома</param>
+            <returns>Комплексное значение полинома</returns>
+        </member>
         <member name="M:MathCore.Polynom.Array.GetCoefficients(System.Double[])">
-            <summary>Преобразовать массив корней полинома в коэффициенты прои степенях</summary>
+            <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             <param name="Root">Корни полинома</param>
             <returns>Коэффициенты при степенях</returns>
         </member>
+        <member name="M:MathCore.Polynom.Array.GetCoefficientsInverted(System.Double[])">
+            <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
+            <param name="Root">Корни полинома</param>
+            <returns>Коэффициенты при обратных степенях</returns>
+        </member>
         <member name="M:MathCore.Polynom.Array.GetCoefficients(MathCore.Complex[])">
-            <summary>Преобразовать массив корней полинома в коэффициенты прои степенях</summary>
+            <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             <param name="Root">Корни полинома</param>
             <returns>Коэффициенты при степенях</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetCoefficientsInverted(MathCore.Complex[])">
+            <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
+            <param name="Root">Корни полинома</param>
+            <returns>Коэффициенты при обратных степенях</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetDifferential(System.Double[],System.Int32)">
+            <summary>Дифференциал полинома</summary>
+            <param name="p">Массив коэффициентов полинома</param>
+            <param name="Order">Порядок дифференцирования</param>
+            <returns>Массив коэффициентов полинома - дифференциала</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetDifferential(MathCore.Complex[],System.Int32)">
+            <summary>Дифференциал полинома</summary>
+            <param name="p">Массив комплексных коэффициентов полинома</param>
+            <param name="Order">Порядок дифференцирования</param>
+            <returns>Массив комплексных коэффициентов полинома - дифференциала</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetIntegral(System.Double[],System.Double)">
+            <summary>Интеграл полинома</summary>
+            <param name="p">Массив коэффициентов полинома</param>
+            <param name="C">Константа интегрирования</param>
+            <returns>Массив коэффициентов полинома - интеграла</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.GetIntegral(MathCore.Complex[],MathCore.Complex)">
+            <summary>Интеграл полинома</summary>
+            <param name="p">Массив комплексных коэффициентов полинома</param>
+            <param name="C">Константа интегрирования</param>
+            <returns>Массив комплексных коэффициентов полинома - интеграла</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Sum(System.Double[],System.Double[])">
+            <summary>Суммирование полиномов</summary>
+            <param name="p">Коэффициенты полинома - первого слагаемого</param>
+            <param name="q">Коэффициенты полинома - первого слагаемого</param>
+            <returns>Коэффициенты полинома - суммы</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Substract(System.Double[],System.Double[])">
+            <summary>Разность полиномов</summary>
+            <param name="p">Коэффициенты полинома - первого уменьшаемого</param>
+            <param name="q">Коэффициенты полинома - первого вычитаемого</param>
+            <returns>Коэффициенты полинома - разности</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Devide(System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>Деление полиномов</summary>
+            <param name="dividend">Коэффициенты полинома - делимое</param>
+            <param name="divisor">Коэффициенты полинома - делитель</param>
+            <param name="quotient">Коэффициенты полинома - остаток от деления</param>
+            <returns>Коэффициенты полинома - частное</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Multiply(System.Double[],System.Double[])">
+            <summary>Умножение полиномов</summary>
+            <param name="p">Коэффициенты полинома - первый сомножитель</param>
+            <param name="q">Коэффициенты полинома - второй сомножитель</param>
+            <returns>Коэффициенты полинома - произведение</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Add(System.Double[],System.Double)">
+            <summary>Сложение полинома с вещественным числом</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <param name="x">Вещественное число</param>
+            <returns>Коэффициенты полинома - суммы</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Substract(System.Double[],System.Double)">
+            <summary>Вычитание вещественного числа из полинома</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <param name="x">Вещественное число</param>
+            <returns>Коэффициенты полинома - разности</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Substract(System.Double,System.Double[])">
+            <summary>Вычитание полинома из вещественного числа</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <param name="x">Вещественное число</param>
+            <returns>Коэффициенты полинома - разности</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Negate(System.Double[])">
+            <summary>Отрицание полинома</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <returns>Коэффициенты полинома Q(x) = 0 - P(x)</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Multiply(System.Double[],System.Double)">
+            <summary>Умножение полинома на вещественное число</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <param name="x">Вещественное число</param>
+            <returns>Коэффициенты полинома - произведения</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.Divade(System.Double[],System.Double)">
+            <summary>Деление полинома на вещественное число</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <param name="x">Вещественное число</param>
+            <returns>Коэффициенты полинома - частного</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Array.DivadeScalar(System.Double,System.Double[])">
+            <summary>Скалярное деление полинома на вещественное число</summary>
+            <param name="p">Коэффициенты полинома</param>
+            <param name="x">Вещественное число</param>
+            <returns>Коэффициенты полинома - частного</returns>
         </member>
         <member name="T:MathCore.Polynom.PolynomDevisionResult">
             <summary>Результат деления полиномов</summary>
@@ -7859,16 +8140,45 @@
         <member name="F:MathCore.Polynom.PolynomDevisionResult.Remainder">
             <summary>Остаток деления полиновов</summary>
         </member>
+        <member name="F:MathCore.Polynom.PolynomDevisionResult.Divisor">
+            <summary>Полином - делитель</summary>
+        </member>
         <member name="M:MathCore.Polynom.PolynomDevisionResult.#ctor(MathCore.Polynom,MathCore.Polynom,MathCore.Polynom)">
             <summary>Инициализация результата деления полиномов</summary>
             <param name="Divisor"></param>
             <param name="Result">Частоное</param>
             <param name="Remainder">Остаток от деления</param>
         </member>
+        <member name="M:MathCore.Polynom.PolynomDevisionResult.Value(System.Double)">
+            <summary>Значение результата деления полиномов</summary>
+            <param name="x">Аргумент</param>
+            <returns>Результат вычисления значения результата деления полиномов</returns>
+        </member>
+        <member name="M:MathCore.Polynom.PolynomDevisionResult.GetFunction">
+            <summary>Получить функцию</summary>
+            <returns>Функция вычисления значения результата деления полиномов</returns>
+        </member>
         <member name="M:MathCore.Polynom.PolynomDevisionResult.op_Implicit(MathCore.Polynom.PolynomDevisionResult)~MathCore.Polynom">
             <summary>Оператор неявного преобразования результата деления полиномов в полином результата</summary>
             <param name="Result">Результат деления полиномов</param>
             <returns>Частное</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Random(System.Int32,System.Double,System.Double)">
+            <summary>Случайный полином</summary>
+            <param name="Power">Степень полинома</param>
+            <param name="Ma">Математическое ожидание коэффициентов полинома</param>
+            <param name="Da">Дисперсия коэффициентов полинома</param>
+            <returns>Случайный полином</returns>
+        </member>
+        <member name="M:MathCore.Polynom.FromCoefficients(System.Double[])">
+            <summary>Создание нового полинома из массива его коэффициентов</summary>
+            <param name="a">Массив коэффициентов полинома</param>
+            <returns>Полином, созданный на основе массива его коэффициентов</returns>
+        </member>
+        <member name="M:MathCore.Polynom.FromRoots(System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Создание нового полинома на основе его корней</summary>
+            <param name="roots">Корни полинома</param>
+            <returns>Полином, собранный из массива корней</returns>
         </member>
         <member name="M:MathCore.Polynom.FromRoots(System.Double[])">
             <summary>Получить полином из корней полинома</summary>
@@ -7902,15 +8212,110 @@
             <summary>Полином степени N, нулевой элемент массива a[0] при младшей степени x^0</summary>
             <param name="a">a[0]+a[1]*x+a[2]*x^2+...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
         </member>
+        <member name="M:MathCore.Polynom.#ctor(System.Collections.Generic.IEnumerable{System.Double})">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.#ctor(System.Collections.Generic.IEnumerable{System.Int32})">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.Polynom.Value(System.Double)">
             <summary>Получить значение полинома</summary>
-            <param name="x">Переменная</param>
+            <param name="x">Аргумент</param>
             <returns>Значение полинома в точке x</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Value(MathCore.Complex)">
+            <summary>Вычислить комплексное значение полинома</summary>
+            <param name="z">Комплексный аргумент</param>
+            <returns>Комплексное значение полинома в точке</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetFunction">
+            <summary>Получить функцию полинома</summary>
+            <returns>Функция полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetComplexFunction">
+            <summary>Получить комплексную функцию полинома</summary>
+            <returns>Комплексная функция полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.DivideTo(MathCore.Polynom,MathCore.Polynom@)">
+            <summary>Выполнить операцию деления полинома на полином</summary>
+            <param name="Divisor">Полином - делимое</param>
+            <param name="Remainder">Полином - делитель</param>
+            <returns>Полином - частное</returns>
+        </member>
+        <member name="M:MathCore.Polynom.ToMathString">
+            <summary>Представить полином в виде математической записи в степенной форме</summary>
+            <returns>Строковое представление полинома в степенной форме</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetDifferential(System.Int32)">
+            <summary>Дифференцирование полинома</summary>
+            <param name="Order">Порядок дифференциала</param>
+            <returns>Полином - результат дифференцирования</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetIntegral(System.Double)">
+            <summary>Интегрирование полинома</summary>
+            <param name="C">Константа интегрирования</param>
+            <returns>Полином - результат интегрирования полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetInversed">
+            <summary>Вычислить обратный полином</summary>
+            <returns>Полином, являющийся обратным к текущим</returns>
+        </member>
+        <member name="M:MathCore.Polynom.ScalePolynom(System.Double)">
+            <summary>Масштабирование полинома</summary>
+            <param name="c">Коэффициент масштабирования полинома</param>
+            <returns>Отмасштабированный полином</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Substite(MathCore.Polynom)">
+            <summary>Подстановка полинома x' = P(x) в полином Q(x')=Q(P(x))</summary>
+            <param name="P">Полином - подстановка</param>
+            <returns>Полином - результат подстановки</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.ToString(System.String)">
+            <summary>Строковое представление полинома с форматированием</summary>
+            <param name="Format">Строка форматирования</param>
+            <returns>Форматированное представление полинома</returns>
+        </member>
+        <member name="T:MathCore.Polynom.Expression">
+            <summary>Класс операций над полиномом, связанных с деревьями выражений</summary>
+        </member>
+        <member name="M:MathCore.Polynom.Expression.GetExpression(System.Double[])">
+            <summary>Построение дерева выражения на основе коэффициентов полинома</summary>
+            <param name="A">Коэффициенты полинома</param>
+            <returns>Дерево выражения, представляющее собой метод вычисления значения полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Expression.GetExpressionComplex(System.Double[])">
+            <summary>Построение дерева комплексного выражения на основе коэффициентов полинома</summary>
+            <param name="A">Коэффициенты полинома</param>
+            <returns>Дерево выражения, представляющее собой метод вычисления комплексного значения полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.Expression.GetExpression(MathCore.Complex[])">
+            <summary>Построение дерева комплексного выражения на основе комплексных коэффициентов полинома</summary>
+            <param name="A">Комплексные коэффициенты полинома</param>
+            <returns>Дерево выражения, представляющее собой метод вычисления комплексного значения полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetExpression">
+            <summary>Получение дерева выражения полинома</summary>
+            <returns>Дерево выражения полинома</returns>
+        </member>
+        <member name="M:MathCore.Polynom.GetExpressionComplex">
+            <summary>Получение дерева выражения полинома</summary>
+            <returns>Дерево выражения полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.op_Implicit(MathCore.Polynom)~System.Func{System.Double,System.Double}">
             <summary>Явное приведение типов полинома к делегату функции преобразования double->double</summary>
             <param name="P">Полином</param>
             <returns>Делегат функции преобразования</returns>
+        </member>
+        <member name="M:MathCore.Polynom.op_Implicit(MathCore.Polynom)~System.Func{MathCore.Complex,MathCore.Complex}">
+            <summary>Явное приведение типов полинома к делегату комплексной функции преобразования Complex->Complex</summary>
+            <param name="P">Полином</param>
+            <returns>Делегат комплексной функции преобразования</returns>
         </member>
         <member name="M:MathCore.Polynom.op_Addition(MathCore.Polynom,MathCore.Polynom)">
             <summary>Оператор сложения двух полиномов</summary>
@@ -7937,10 +8342,44 @@
             <param name="q">Полином делителя</param>
             <returns>Результат деления полиномов, включающий частное и остаток от деления</returns>
         </member>
+        <member name="M:MathCore.Polynom.op_Multiply(MathCore.Polynom,System.Double)">
+            <summary>Умножение полинома на вещественное число</summary>
+            <param name="P">Полином</param>
+            <param name="q">Вещественное число</param>
+            <returns>Полином - результат умножения исходного полинома на вещественное число</returns>
+        </member>
+        <member name="M:MathCore.Polynom.op_Multiply(System.Double,MathCore.Polynom)">
+            <summary>Умножение полинома на вещественное число</summary>
+            <param name="p">Вещественное число</param>
+            <param name="Q">Полином</param>
+            <returns>Полином - результат умножения исходного полинома на вещественное число</returns>
+        </member>
+        <member name="M:MathCore.Polynom.op_Division(MathCore.Polynom,System.Double)">
+            <summary>Деление полинома на вещественное число</summary>
+            <param name="P">Полином</param>
+            <param name="q">Вещественное число</param>
+            <returns>Полином - результат деления исходного полинома на вещественное число</returns>
+        </member>
         <member name="M:MathCore.Polynom.op_Explicit(MathCore.Polynom)~System.Double[]">
             <summary>Оператор неявного преведения типа полинома в массив вещественных значений коэффициентов</summary>
             <param name="p">Полином</param>
             <returns>Массив значений коэффициентов</returns>
+        </member>
+        <member name="M:MathCore.Polynom.op_Implicit(System.Double)~MathCore.Polynom">
+            <summary>Оператор приведения типа вещественного числа к типу полинома</summary>
+            <param name="a">Вещественное число</param>
+        </member>
+        <member name="M:MathCore.Polynom.op_Implicit(System.Single)~MathCore.Polynom">
+            <summary>Оператор приведения типа вещественного числа к типу полинома</summary>
+            <param name="a">Вещественное число</param>
+        </member>
+        <member name="M:MathCore.Polynom.op_Implicit(System.Int32)~MathCore.Polynom">
+            <summary>Оператор приведения типа целого числа к типу полинома</summary>
+            <param name="a">Целое число</param>
+        </member>
+        <member name="M:MathCore.Polynom.op_Implicit(System.Int16)~MathCore.Polynom">
+            <summary>Оператор приведения типа целого числа к типу полинома</summary>
+            <param name="a">Целое число</param>
         </member>
         <member name="T:MathCore.Annotations.CanBeNullAttribute">
             <summary>
@@ -8720,9 +9159,7 @@
             <summary>Отмена реакции на событие</summary>
         </member>
         <member name="T:MathCore.Time.TimeCounter">
-            <summary>
-            Измеритель времени
-            </summary>
+            <summary>Измеритель времени</summary>
         </member>
         <member name="F:MathCore.Time.TimeCounter._Started">
             <summary>Флаг состояния</summary>
@@ -9197,9 +9634,7 @@
             <returns>"Ленивое" значение с указанным методом инициализации</returns>
         </member>
         <member name="T:MathCore.Values.LinearQueue`1">
-            <summary>
-            Очередь с линейным доступом
-            </summary>
+            <summary>Очередь с линейным доступом</summary>
             <typeparam name="T">Тип элементов очереди</typeparam>
         </member>
         <member name="T:MathCore.Values.MaxValue">
@@ -9587,6 +10022,12 @@
         </member>
         <member name="M:MathCore.Values.TimeAverageValue.Reset">
             <summary>Сброс состояния</summary>
+        </member>
+        <member name="T:MathCore.Vectors.Basis2D">
+            <summary>Двумерный базис</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Basis2D.Evclid">
+            <summary>Базис Эвклидова пространства</summary>
         </member>
         <member name="T:MathCore.Vectors.SpaceAngle">
             <summary>Пространственный угол</summary>
@@ -15253,6 +15694,25 @@
             <param name="o">Целевой объект</param>
             <returns>Объект-метка</returns>
         </member>
+        <member name="T:System.RandomExtensions">
+            <summary>Методы-расширения для генератора случайных чисел</summary>
+        </member>
+        <member name="M:System.RandomExtensions.NextUniform(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Массив случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Массив случайных чисел с равномерным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Массив случайных чисел с нормальным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Массив случайных чисел с нормальным распределением</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Double,System.Double)">
             <summary>
             Generates normally distributed numbers. Each operation makes two Gaussians for the price of one, and apparently they can be cached or something for better performance, but who cares.
@@ -15261,6 +15721,13 @@
             <param name="mu">Mean of the distribution</param>
             <param name="sigma">Standard deviation</param>
             <returns></returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextUniform(System.Random,System.Double,System.Double)">
+            <summary>Случайное число с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Случайное число в равномерным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextTriangular(System.Random,System.Double,System.Double,System.Double)">
             <summary>Generates values from a triangular distribution.</summary>
@@ -15296,6 +15763,36 @@
             <param name="n">Maximum number possible.</param>
             <param name="k">How many numbers to return.</param>
             <returns></returns>
+        </member>
+        <member name="M:System.RandomExtensions.Next``1(System.Random,System.Int32,``0[])">
+            <summary>Случайных элемент из перечисленных вариантов</summary>
+            <typeparam name="T">Тип вариантов выбора</typeparam>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="count">Количество результатов выбора</param>
+            <param name="variants">Перечисление вариантов выбора</param>
+            <returns>Последовательность случайных вариантов</returns>
+        </member>
+        <member name="M:System.RandomExtensions.Sequence(System.Random,System.Int32,System.Int32,System.Int32)">
+            <summary>Последовательность случайных целых чисел в указанном интервале</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="min">Нижняя граница интервала (входит)</param>
+            <param name="max">Верхняя граница интервала (не входит)</param>
+            <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
+            <returns>Последовательность случайных целых чисел в указанном интервале</returns>
+        </member>
+        <member name="M:System.RandomExtensions.Sequence(System.Random,System.Int32)">
+            <summary>Последовательность случайных вещественных чисел с равномерным распределением в интервале (0,1)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
+            <returns>Последовательность случайных вещественных чисел в интервале (0,1)</returns>
+        </member>
+        <member name="M:System.RandomExtensions.SequenceNormal(System.Random,System.Double,System.Double,System.Int32)">
+            <summary>Последовательность случайных вещественных чисел с нормальным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="M">Математическое ожидание</param>
+            <param name="D">Дисперсия</param>
+            <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
+            <returns>Последовательность случайных вещественных чисел</returns>
         </member>
         <member name="T:System.StringExtentions">
             <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
@@ -15375,6 +15872,16 @@
             <param name="match">Результат совпадения поиска</param>
             <param name="DefaultString">Значение по умолчанию</param>
             <returns>Результат поска, либо значение по умолчанию</returns>
+        </member>
+        <member name="T:System.StringExtentionsTrim">
+            <summary>Ограничение длины строки с удалением центральной её части</summary>
+        </member>
+        <member name="M:System.StringExtentionsTrim.TrimByLength(System.String,System.Int32,System.String)">
+            <summary>Ограничение длины строки с удалением центральной её части</summary>
+            <param name="Str">Обрезаемая строка</param>
+            <param name="Length">Требуемая длина</param>
+            <param name="ReplacementPattern">Шаблон замены</param>
+            <returns>Строка с удалённой внутренней частью</returns>
         </member>
         <member name="M:System.TypeExtentions.GetTypeConverter(System.Type)">
             <summary>Получить конвертер значений для указанного типа данных</summary>

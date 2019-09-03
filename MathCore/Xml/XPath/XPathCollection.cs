@@ -86,7 +86,7 @@ namespace System.Xml.XPath
             list.Clear();
 
             var ret = false;
-            foreach(XPathQuery expr in this.Cast<XPathQuery>().Where(expr => expr.Match()))
+            foreach(var expr in this.Cast<XPathQuery>().Where(expr => expr.Match()))
             {
                 list.Add(expr.Key);
                 ret = true;

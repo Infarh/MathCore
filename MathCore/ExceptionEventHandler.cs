@@ -52,7 +52,7 @@ namespace System
             object Sender,
             ExceptionEventHandlerArgs<TException> e, 
             AsyncCallback CallBack,
-            object @State) 
+            object State) 
             where TException : Exception =>
             Handler?.BeginInvoke(Sender, e, CallBack, State);
 

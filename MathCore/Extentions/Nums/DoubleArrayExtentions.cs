@@ -9,6 +9,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class DoubleArrayExtentions
@@ -248,7 +249,7 @@ namespace System
             Contract.Requires(Y != null);
             Contract.Requires(dx > 0);
             Contract.Ensures(Contract.Result<CubicSpline>() != null);
-            return new double[Y.Length].Initialize(i => i * dx + x0).GetCubicSpline(Y);
+            return new double[Y.Length].Initialize(dx, x0, (i, Dx, X0) => i * Dx + X0).GetCubicSpline(Y);
         }
 
         [DST, NotNull]
@@ -258,7 +259,7 @@ namespace System
             Contract.Requires(value != 0);
             Contract.Ensures(Contract.Result<double[]>() != null);
             Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-            return new double[array.Length].Initialize(i => array[i] / value);
+            return new double[array.Length].Initialize(array, value, (i, a, v) => a[i] / v);
         }
 
         [DST, NotNull]
@@ -350,7 +351,7 @@ namespace System
             Contract.Requires(Y != null);
             Contract.Requires(dx > 0);
             Contract.Ensures(Contract.Result<MNK>() != null);
-            return Y.GetMNKInterp(m, new double[Y.Length].Initialize(i => i * dx + x0));
+            return Y.GetMNKInterp(m, new double[Y.Length].Initialize(dx, x0, (i, Dx, X0) => i * Dx + X0));
         }
 
         [DST, NotNull]
@@ -359,7 +360,7 @@ namespace System
             Contract.Requires(array != null);
             Contract.Ensures(Contract.Result<double[]>() != null);
             Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-            return new double[array.Length].Initialize(i => array[i] * value);
+            return new double[array.Length].Initialize(array, value, (i, a, v) => a[i] * v);
         }
 
         [DST, NotNull]
@@ -369,7 +370,7 @@ namespace System
             Contract.Ensures(Contract.Result<double[]>() != null);
             Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
             var max = array.Max();
-            return new double[array.Length].Initialize(i => array[i] / max);
+            return new double[array.Length].Initialize(array, max, (i, a, m) => a[i] / m);
         }
 
         [DST, NotNull]
@@ -377,7 +378,7 @@ namespace System
         {
             Contract.Requires(array != null);
             Contract.Ensures(Contract.Result<double[]>() != null);
-            return new double[array.Length].Initialize(i => array[i] - value);
+            return new double[array.Length].Initialize(array, value, (i, a, v) => a[i] - v);
         }
 
         [DST, NotNull]
@@ -386,7 +387,7 @@ namespace System
             Contract.Requires(array != null);
             Contract.Ensures(Contract.Result<double[]>() != null);
             Contract.Ensures(Contract.Result<double[]>().Length == array.Length);
-            return new double[array.Length].Initialize(i => array[i] + value);
+            return new double[array.Length].Initialize(array, value, (i, a, v) => a[i] + v);
         }
 
         [DST]

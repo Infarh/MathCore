@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using MathCore.Annotations;
 using MathCore.Vectors;
 
@@ -11,18 +12,11 @@ namespace MathCore.Interpolation
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private delegate void Initializator([NotNull]double[] X, [NotNull]double[] Y);
-
-        /* ------------------------------------------------------------------------------------------ */
+        [NotNull, ItemNotNull]
+        private static Task<Polynom> GetPolynomAsync([NotNull] double[] X, [NotNull] double[] Y) => (X, Y).Async(p => GetPolynom(p.X, p.Y));
 
         [NotNull]
-        public static Polynom GetPolynom([NotNull]double[] X, [NotNull]double[] Y)
-        {
-            Contract.Requires(X != null);
-            Contract.Requires(Y != null);
-            Contract.Ensures(Contract.Result<Polynom>() != null);
-            return Y.Select((y, i) => new { i, y, p = Polynom.FromRoots(X.Where((x, j) => j != i)) }).Select(v => (v.y / v.p.Value(X[v.i])) * v.p).Sum();
-        }
+        public static Polynom GetPolynom([NotNull] double[] X, [NotNull] double[] Y) => Y.Select((y, i) => (i, y, p:Polynom.FromRoots(X.Where((x, j) => j != i)))).Select(v => (v.y / v.p.Value(X[v.i])) * v.p).Sum();
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -33,66 +27,39 @@ namespace MathCore.Interpolation
 
         /* ------------------------------------------------------------------------------------------ */
 
-        [NotNull]
-        private Polynom _Polynom;
-        private readonly IAsyncResult _InitializationResult;
+        [NotNull] private readonly Task<Polynom> _PolynomTask;
 
         /* ------------------------------------------------------------------------------------------ */
 
         [NotNull]
-        public Polynom P
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<Polynom>() != null);
-                return _Polynom;
-            }
-            set
-            {
-                Contract.Requires(value != null);
-                _Polynom = value;
-            }
-        }
-        public bool Initialized => _InitializationResult.IsCompleted;
+        public Polynom Polynom => _PolynomTask.Result;
+
+        public bool Initialized => _PolynomTask.Status == TaskStatus.RanToCompletion;
 
         public double this[double x] => Value(x);
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public Lagrange([NotNull]double[] X, [NotNull]double[] Y) => _InitializationResult = ((Initializator)Initialize).BeginInvoke(X, Y, OnInitializationComplite, null);
+        public Lagrange([NotNull] double[] X, [NotNull] double[] Y) => _PolynomTask = GetPolynomAsync(X, Y);
 
-        public Lagrange([NotNull]params Vector2D[] P)
+        public Lagrange([NotNull] params Vector2D[] P)
         {
             var x = new double[P.Length];
             var y = new double[P.Length];
             for(var i = 0; i < P.Length; i++) { x[i] = P[i].X; y[i] = P[i].Y; }
-            _InitializationResult = ((Initializator)Initialize).BeginInvoke(x, y, OnInitializationComplite, null);
-        }
 
-        [ContractInvariantMethod]
-        private void ObjectInvariant() => Contract.Invariant(_Polynom != null);
+            _PolynomTask = GetPolynomAsync(x, y);
+        }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        private void Initialize([NotNull]double[] X, [NotNull]double[] Y) => _Polynom = GetPolynom(X, Y);
-
-        private void OnInitializationComplite([NotNull]IAsyncResult Result) => Invoke_OnInitialized();
-
-        public double Value(double x)
-        {
-            if(!Initialized) _InitializationResult.AsyncWaitHandle.WaitOne();
-            return _Polynom.Value(x);
-        }
+        public double Value(double x) => Polynom.Value(x);
 
         [NotNull]
-        public Func<double, double> GetFunction()
-        {
-            Contract.Ensures(Contract.Result<Func<double, double>>() != null);
-            return Value;
-        }
+        public Func<double, double> GetFunction() => Polynom.Value;
 
         [NotNull]
-        public Expression<Func<double, double>> GetExpression() => _Polynom.GetExpression();
+        public Expression<Func<double, double>> GetExpression() => Polynom.GetExpression();
 
         /* ------------------------------------------------------------------------------------------ */
     }

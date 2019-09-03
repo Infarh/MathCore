@@ -61,7 +61,7 @@ namespace MathCore.MathParser
             Function.Tree
                 .OfType<VariableValueNode>()
                 .Where(n => !ReferenceEquals(n.Variable, iterator_var))
-                .Foreach(n => Function.Variable.Add(n.Variable = Expression.Variable[n.Variable.Name]));
+                .Foreach(Function, Expression, (n, func, expr) => func.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
 
             Parameters.Variable.ClearCollection();
             Parameters.Variable.Add(iterator_var);
@@ -82,13 +82,13 @@ namespace MathCore.MathParser
             Parameters.Tree
                 .OfType<VariableValueNode>()
                 .Where(n => !ReferenceEquals(n.Variable, iterator_var) && !ReferenceEquals(n.Variable, iterator_diff_var))
-                .Foreach(n => Parameters.Variable.Add(n.Variable = Expression.Variable[n.Variable.Name]));
+                .Foreach(Parameters, Expression, (n, pp, expr) => pp.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
 
         }
 
         /// <summary>Метод определения значения</summary>
         /// <returns>Численное значение элемента выражения</returns>
-        public override double GetValue([NotNull] MathExpression ParametersExpression, [NotNull] MathExpression Function)
+        public override double GetValue(MathExpression ParametersExpression, MathExpression Function)
         {
             Contract.Requires(ParametersExpression != null);
             Contract.Requires(Function != null);
@@ -100,7 +100,7 @@ namespace MathCore.MathParser
             var interval = (IntervalNode)x_node.Parent.Right;
             Debug.Assert(interval?.Left != null, "interval?.Left != null");
             var min = ((ComputedNode)interval.Left).Compute();
-            Debug.Assert(interval?.Right != null, "interval?.Right != null");
+            Debug.Assert(interval.Right != null, "interval?.Right != null");
             var max = ((ComputedNode)interval.Right).Compute();
 
             Func<double, double> f = xx =>
@@ -189,7 +189,7 @@ namespace MathCore.MathParser
 
         /// <summary>Скомпилировать в выражение</summary>
         /// <returns>Скомпилированное выражение <see cref="System.Linq.Expressions"/></returns>
-        public override Expression Compile([NotNull] MathExpression ParametersExpression, [NotNull] MathExpression Function)
+        public override Expression Compile(MathExpression ParametersExpression, MathExpression Function)
         {
             Contract.Requires(ParametersExpression != null);
             Contract.Requires(Function != null);
@@ -200,24 +200,23 @@ namespace MathCore.MathParser
                         .Cast<VariableValueNode>()
                         .First(n => ReferenceEquals(iterator, n.Variable));
 
-            var interval = (IntervalNode)x_node.Parent.Right;
-            var min = ((ComputedNode)interval.Left).Compile();
-            var max = ((ComputedNode)interval.Right).Compile();
+            var interval = (IntervalNode)x_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
+            var interval_left = (ComputedNode)interval.Left ?? throw new InvalidOperationException("Отсуствует левое поддерево");
+            var interval_right = (ComputedNode)interval.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево");
+            var min = interval_left.Compile();
+            var max = interval_right.Compile();
 
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
-            var _parameters = new[] { iterator_parameter };
-            var _body = ((ComputedNode)Function.Tree.Root).Compile(_parameters);
-            var _expr = Expression.Lambda(_body, _parameters).Compile();
+            var parameters = new[] { iterator_parameter };
+            var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
+            var expr = Expression.Lambda(body, parameters).Compile();
 
             if(_IsAdaptive)
-            {
-                var expr_p = new[]
+                return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
                 {
-                    Expression.Constant(_expr), min, max,
-                    Expression.NewArrayInit(typeof(double), new Expression[0])
-                };
-                return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, expr_p);
-            }
+                    Expression.Constant(expr), min, max,
+                    Expression.NewArrayInit(typeof(double))
+                });
 
             var dx_var = ParametersExpression.Variable[1];
             var dx_node = ParametersExpression.Tree
@@ -226,14 +225,12 @@ namespace MathCore.MathParser
                         .First(n => ReferenceEquals(dx_var, n.Variable));
             var dx = dx_node.Compile();
 
-            var expr_p_adapt = new[]
+            return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
             {
-                Expression.Constant(_expr), min, max,
+                Expression.Constant(expr), min, max,
                 Expression.NewArrayInit(typeof(double)),
                 dx
-            };
-
-            return Expression.Call(new IntegralDelegate(GetIntegral).Method, expr_p_adapt);
+            });
         }
 
         /// <summary>Скомпилировать в выражение</summary>
@@ -243,9 +240,9 @@ namespace MathCore.MathParser
         /// <returns>Скомпилированное выражение <see cref="System.Linq.Expressions"/></returns>
         public override Expression Compile
         (
-            [NotNull] MathExpression ParametersExpression,
-            [NotNull] MathExpression Function,
-            [NotNull] ParameterExpression[] Parameters
+            MathExpression ParametersExpression,
+            MathExpression Function,
+            ParameterExpression[] Parameters
         )
         {
             Contract.Requires(ParametersExpression != null);
@@ -259,24 +256,23 @@ namespace MathCore.MathParser
                         .Cast<VariableValueNode>()
                         .First(n => ReferenceEquals(iterator, n.Variable));
 
-            var interval = (IntervalNode)x_node.Parent.Right;
-            var min = ((ComputedNode)interval.Left).Compile(Parameters);
-            var max = ((ComputedNode)interval.Right).Compile(Parameters);
+            var interval = (IntervalNode)x_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
+            var interval_left = (ComputedNode)interval.Left ?? throw new InvalidOperationException("Отсуствует левое поддерево");
+            var interval_right = (ComputedNode)interval.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево");
+            var min = interval_left.Compile();
+            var max = interval_right.Compile();
 
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
-            var _parameters = new[] { iterator_parameter };
-            var _body = ((ComputedNode)Function.Tree.Root).Compile(_parameters);
-            var _expr = Expression.Lambda(_body, _parameters).Compile();
+            var parameters = new[] { iterator_parameter };
+            var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
+            var expr = Expression.Lambda(body, parameters).Compile();
 
             if(_IsAdaptive)
-            {
-                var expr_p = new[]
+                return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
                 {
-                    Expression.Constant(_expr), min, max,
+                    Expression.Constant(expr), min, max,
                     Expression.NewArrayInit(typeof(double))
-                };
-                return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, expr_p);
-            }
+                });
 
             var dx_var = ParametersExpression.Variable[1];
             var dx_node = ParametersExpression.Tree
@@ -285,14 +281,12 @@ namespace MathCore.MathParser
                         .First(n => ReferenceEquals(dx_var, n.Variable));
             var dx = dx_node.Compile();
 
-            var expr_p_adapt = new[]
+            return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
             {
-                Expression.Constant(_expr), min, max,
-                Expression.NewArrayInit(typeof(double), Parameters),
+                Expression.Constant(expr), min, max,
+                Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray()),
                 dx
-            };
-
-            return Expression.Call(new IntegralDelegate(GetIntegral).Method, expr_p_adapt);
+            });
         }
     }
 }

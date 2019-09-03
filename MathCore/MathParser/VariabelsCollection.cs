@@ -74,27 +74,11 @@ namespace MathCore.MathParser
         /// <param name="i">Индекс переменной</param>
         /// <returns>Переменная с указанным индексом</returns>
         [NotNull]
-        public ExpressionVariabel this[int i]
-        {
-            get
-            {
-                Contract.Requires(i >= 0);
-                Contract.Requires(i < Count);
-                Contract.Ensures(Contract.Result<ExpressionVariabel>() != null);
-                return _Variabels[i];
-            }
-        }
+        public ExpressionVariabel this[int i] => _Variabels[i];
 
         /// <summary>Перечисление всех имён переменных колеекции</summary>
         [NotNull]
-        public IEnumerable<string> Names
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-                return _Variabels.Select(v => v.Name);
-            }
-        }
+        public IEnumerable<string> Names => _Variabels.Select(v => v.Name);
 
         /// <summary>Инициализация новой коллекции переменных</summary>
         /// <param name="expression">Математическое выражение, которому принадлежит коллекция</param>
@@ -135,6 +119,7 @@ namespace MathCore.MathParser
                                 // у которых имя соответствует заданному
                                 .Where(node => node.Variable.Name == Name)
                                 // и для каждого узла заменить переменную на указанную
+                                // ReSharper disable once HeapView.CanAvoidClosure
                                 .Foreach(node =>
                                 {
                                     node.Variable = variable;

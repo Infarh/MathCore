@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using MathCore.Annotations;
 
 namespace MathCore.Values
 {
@@ -14,14 +15,14 @@ namespace MathCore.Values
     /// void Test()
     /// {
     ///    //Используем уничтожаемую группу объектов
-    ///   using(var readers = new DisposableGroup<StreamReader>(                          //Объекты чтения из потока
+    ///   using(var readers = new DisposableGroup&lt;StreamReader&gt;(//Объекты чтения из потока
     ///           Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f))))  //для всех файлов C:\*.txt
     ///   {
     ///     var rnd = new Random();                                         //Генератор случайных чисел
-    ///     var oSelecter = new ObjectSelector<string>(                     //Создаём объект выбора строк
+    ///     var oSelecter = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
     ///                 SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
     ///                 () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
-    ///                 readers.Select(r => (Func<string>)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
+    ///                 readers.Select(r => (Func&lt;string&gt;)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
     ///     while(oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
     ///   }
     /// }
@@ -45,7 +46,7 @@ namespace MathCore.Values
             get
             {
                 //Получить массив значений от всех "ленивых" значений обхектов
-                var values = new T[_Values.Length].Initialize(i => _Values[i].Value);
+                var values = new T[_Values.Length].Initialize(_Values, (i, vv) => vv[i].Value);
                 //Выбрать индекс интересующего обхекта
                 var index = _Selector(values);
                 //Выбрать объект из массива значений
@@ -66,15 +67,12 @@ namespace MathCore.Values
         /// <param name="Selector">Метод выбора значения</param>
         /// <param name="CanRead">Метод определения возможности чтения значения</param>
         /// <param name="Generator">Массив генераторов объектов "ленивых" значений</param>
-        public ObjectSelector(Func<T[], int> Selector, Func<bool> CanRead, params Func<T>[] Generator)
+        public ObjectSelector(Func<T[], int> Selector, Func<bool> CanRead, [NotNull] params Func<T>[] Generator)
         {
-            Contract.Requires(Selector != null, "Метод выбора не может быть пуст");
-            Contract.Requires(CanRead != null, "Метод определения возможности чтения не может быть пуст");
-            Contract.Requires(Generator != null, "Массив генераторов значений не может отсутствовать");
             Contract.Requires(Generator.Length > 0, "Массив генераторов значений не может быть нуливой длины");
 
             //Создать массив "ленивых" значений
-            _Values = new LazyValue<T>[Generator.Length].Initialize(i => new LazyValue<T>(Generator[i]));
+            _Values = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new LazyValue<T>(g[i]));
             _Selector = Selector;
             _CanRead = CanRead;
         }
@@ -83,27 +81,25 @@ namespace MathCore.Values
         /// <param name="Selector">Метод выбора значения</param>
         /// <param name="CanRead">Метод определения возможности чтения значения</param>
         /// <param name="GeneratorsEnum">Массив генераторов объектов "ленивых" значений</param>
-        public ObjectSelector(Func<T[], int> Selector, Func<bool> CanRead, IEnumerable<Func<T>> GeneratorsEnum)
+        public ObjectSelector(
+            Func<T[], int> Selector,
+            Func<bool> CanRead,
+            [NotNull] IEnumerable<Func<T>> GeneratorsEnum)
             : this(Selector, CanRead, GeneratorsEnum.ToArray())
-        {
+        { }
 
-        }
-
-
-        private void Test()
-        {
-            //Используем уничтожаемую группу объектов
-            using(var readers = new DisposableGroup<StreamReader>(                          //Объекты чтения из потока
-                    Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f))))  //для всех файлов C:\*.txt
-            {
-                var rnd = new Random();                                         //Генератор случайных чисел
-                var oSelecter = new ObjectSelector<string>(                     //Создаём объект выбора строк
-                            SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
-                            () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
-                            readers.Select(r => (Func<string>)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
-                while(oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
-            }
-        }
+        //private void Test()
+        //{
+        //    //Используем уничтожаемую группу объектов
+        //    using var readers = new DisposableGroup<StreamReader>(//Объекты чтения из потока
+        //        Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f)));
+        //    var rnd = new Random();                                         //Генератор случайных чисел
+        //    var oSelecter = new ObjectSelector<string>(                     //Создаём объект выбора строк
+        //        SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
+        //        () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
+        //        readers.Select(r => (Func<string>)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
+        //    while (oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
+        //}
 
         /* ------------------------------------------------------------------------------------------ */
     }

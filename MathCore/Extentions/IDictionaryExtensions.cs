@@ -428,7 +428,7 @@ namespace System.Collections.Generic
         {
             var result = new List<TValue>(dictionary.Count);
             foreach(var key in keys)
-                if(dictionary.TryGetValue(key, out TValue value))
+                if(dictionary.TryGetValue(key, out var value))
                 {
                     result.Add(value);
                     dictionary.Remove(key);

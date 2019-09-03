@@ -37,10 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="ActionList.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ActionList.cs</LastGenOutput>

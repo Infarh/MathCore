@@ -54,7 +54,7 @@ namespace MathCore.DifferencialEquations.Numerical
                 {
                     var x1 = xx.Current;
                     var dx = x1 - x;
-                    y = y + dx * f(x, y);
+                    y += dx * f(x, y);
                     x = x1;
                     yield return y;
                 }

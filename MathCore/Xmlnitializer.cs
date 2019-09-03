@@ -36,7 +36,7 @@ namespace MathCore
             /// <summary>XPath-выражение - путь в структуре xml</summary>
             public string XPath => _XPath;
 
-            public bool IsObjectLess { get; private set; }
+            public bool IsObjectLess { get; }
 
             /// <summary>Скомпилированный метод инициализации</summary>
             public Action<TObject, string> Update => _Update;
@@ -44,6 +44,7 @@ namespace MathCore
             /// <summary>Инициализация нового правила</summary>
             /// <param name="XPath">XPath-путь в структуре xml</param>
             /// <param name="Expression">Выражение инициализации</param>
+            /// <param name="IsObjectLess"></param>
             protected Rule([NotNull] string XPath, [NotNull] Expression<Action<TObject, string>> Expression, bool IsObjectLess = false)
             {
                 this.IsObjectLess = IsObjectLess;
@@ -59,14 +60,14 @@ namespace MathCore
             /// <param name="ns">Описание пространств имён</param>
             public void Execute(TObject obj, XElement e, [NotNull] IXmlNamespaceResolver ns) => e
                 .GetXPathValues(_XPath, ns) //Пытаемся найти все значения по указанному пути
-                .Foreach(s => _Update(obj, s)); //Каждое найденное значение передаём в метод инициализации
+                .Foreach(_Update, obj, (s, update, o) => update(o, s)); //Каждое найденное значение передаём в метод инициализации
 
             /// <summary>Выполнить инициализацию</summary>
             /// <param name="e">Корень структуры xml</param>
             /// <param name="ns">Описание пространств имён</param>
             public void Execute(XElement e, [NotNull] IXmlNamespaceResolver ns) => e
                 .GetXPathValues(_XPath, ns) //Пытаемся найти все значения по указанному пути
-                .Foreach(s => _Update(default, s)); //Каждое найденное значение передаём в метод инициализации
+                .Foreach(_Update, (s, update) => update(default, s)); //Каждое найденное значение передаём в метод инициализации
         }
 
         /// <summary>Типизированное правило инициализации</summary>
@@ -77,6 +78,7 @@ namespace MathCore
             /// <param name="expression">Выражение определения инициализируемого параметра объекта</param>
             /// <param name="converter">Выражение преобразования строки в тип объекта</param>
             /// <returns>Выражение инициализации, как процедура с параметром - объектом и строкой xml-узла</returns>
+            [NotNull]
             private static Expression<Action<TObject, string>> GetExpression
             (
                 [NotNull] Expression<Func<TObject, TValue>> expression,
@@ -134,6 +136,7 @@ namespace MathCore
             /// <param name="expression">Выражение инициализации</param>
             /// <param name="converter">Конвертер преобразования строки в нужный тип данных</param>
             /// <returns>Выражение инициализации объекта по строке xml-структуры</returns>
+            [NotNull]
             private static Expression<Action<TObject, string>> GetExpression
             (
                 [NotNull] Expression<Action<TObject, TValue>> expression,
@@ -186,7 +189,8 @@ namespace MathCore
                     );
             }
 
-            private static Expression<Action<TObject, string>> GetExpression(Expression<Action<TValue>> expression, Expression<Func<string, TValue>> converter)
+            [NotNull]
+            private static Expression<Action<TObject, string>> GetExpression([NotNull] Expression<Action<TValue>> expression, [CanBeNull] Expression<Func<string, TValue>> converter)
             {
                 //Параметр выражения инициализации, содержащий объект инициализации
                 var pObj = Parameter(typeof(TObject), "o");
@@ -300,10 +304,10 @@ namespace MathCore
             _Rules.ForEach(r => r.Execute(obj, e, ns));
         }
 
-        public void Initialize(XElement e, [NotNull] IXmlNamespaceResolver ns)
+        public void Initialize(XElement Element, [NotNull] IXmlNamespaceResolver NamespaceResolver)
         {
-            if(e is null) return;
-            _Rules.Where(r => r.IsObjectLess).Foreach(r => r.Execute(e, ns));
+            if(Element is null) return;
+            _Rules.Where(r => r.IsObjectLess).Foreach(Element, NamespaceResolver, (r, e, ns) => r.Execute(e, ns));
         }
 
         #endregion
@@ -320,7 +324,7 @@ namespace MathCore
             var path = ns is null ? new XPathCollection() : new XPathCollection(ns);
             _Rules.Select(r => new XPathQuery(r.XPath) { Tag = r })
                 .ForeachLazy(q => path.Add(q))
-                .Foreach(q => q.QueryMatch += (s, e) => ((Rule)q.Tag).Update(obj, e.Argument));
+                .Foreach(obj, (q, o) => q.QueryMatch += (s, e) => ((Rule)q.Tag).Update(o, e.Argument));
             var reader = new XPathReader(Reader, path);
             while(reader.ReadUntilMatch()) { }
         }
@@ -377,13 +381,13 @@ namespace MathCore
 
         bool ICollection<Rule>.IsReadOnly => false;
 
-        void ICollection<Rule>.Add([CanBeNull]Rule item) => _Rules.Add(item);
+        void ICollection<Rule>.Add(Rule item) => _Rules.Add(item);
 
-        bool ICollection<Rule>.Contains([CanBeNull]Rule item) => _Rules.Contains(item);
+        bool ICollection<Rule>.Contains(Rule item) => _Rules.Contains(item);
 
-        void ICollection<Rule>.CopyTo(Rule[] array, int arrayIndex) => _Rules.CopyTo(array, arrayIndex);
+        void ICollection<Rule>.CopyTo(Rule[] array, int ArrayIndex) => _Rules.CopyTo(array, ArrayIndex);
 
-        bool ICollection<Rule>.Remove([CanBeNull]Rule item) => _Rules.Remove(item);
+        bool ICollection<Rule>.Remove(Rule item) => _Rules.Remove(item);
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Rules).GetEnumerator();
 

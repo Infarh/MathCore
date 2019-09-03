@@ -189,7 +189,7 @@ namespace MathCore
 
             //var result = this;
             //while (Order-- > 0 && result.Length > 0)
-            //    result = new Polynom(result.Select((a, i) => new { a, i }).Skip(1).Select(v => v.a * v.i));
+            //    result = new Polynom(result.Select((a, i) => (a, i)).Skip(1).Select(v => v.a * v.i));
             //return result;
             return new Polynom(Array.GetDifferential(_a, Order));
         }
