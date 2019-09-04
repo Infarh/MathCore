@@ -1,11 +1,12 @@
-﻿using System.Diagnostics.Contracts;
+﻿using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class TimeSpanExtentions
     {
-        [DST, Pure]
+        [DST, NotNull]
         public static string ToShortString(this TimeSpan time)
         {
             var result = "";
@@ -39,9 +40,9 @@ namespace System
             var miliseconds = time.Milliseconds;
 
             return empty
-                    ? (seconds == 0 && miliseconds == 0
+                    ? seconds == 0 && miliseconds == 0
                         ? "0"
-                        : $"{seconds + (double)miliseconds / 1000}")
+                        : $"{seconds + (double)miliseconds / 1000}"
                     : seconds >= 10 
                         ? $"{result}:{seconds + (double)miliseconds/1000}" : $"{result}:0{seconds + (double)miliseconds/1000}";
         }

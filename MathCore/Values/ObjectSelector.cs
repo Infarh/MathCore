@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Values
 {
@@ -69,8 +69,6 @@ namespace MathCore.Values
         /// <param name="Generator">Массив генераторов объектов "ленивых" значений</param>
         public ObjectSelector(Func<T[], int> Selector, Func<bool> CanRead, [NotNull] params Func<T>[] Generator)
         {
-            Contract.Requires(Generator.Length > 0, "Массив генераторов значений не может быть нуливой длины");
-
             //Создать массив "ленивых" значений
             _Values = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new LazyValue<T>(g[i]));
             _Selector = Selector;

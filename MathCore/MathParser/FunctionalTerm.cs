@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
@@ -14,12 +13,7 @@ namespace MathCore.MathParser
         /// <summary>Инициализация блока комплексного оператора</summary>
         /// <param name="Header">Заголовок блока</param>
         /// <param name="Body">Тело блока</param>
-        public FunctionalTerm([NotNull] FunctionTerm Header, [NotNull] BlockTerm Body) : base(Header.Name, Body)
-        {
-            Contract.Requires(Header != null);
-            Contract.Requires(Body != null);
-            Parameters = Header.Block;
-        }
+        public FunctionalTerm([NotNull] FunctionTerm Header, [NotNull] BlockTerm Body) : base(Header.Name, Body) => Parameters = Header.Block;
 
         /// <summary>Получить поддерево комплексного оператора</summary>
         /// <param name="Parser">Парсер</param>

@@ -9,8 +9,6 @@ namespace System.Threading.Tasks
     {
         //public static TaskAwaiter<int> GetAwaiter([NotNull] this Process process)
         //{
-        //    Contract.Requires(process != null);
-
         //    var tcs = new TaskCompletionSource<int>();
         //    process.EnableRaisingEvents = true;
         //    process.Exited += (s, e) => tcs.TrySetResult(process.ExitCode);

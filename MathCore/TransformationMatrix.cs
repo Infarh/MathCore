@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using MathCore.Vectors;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -11,20 +11,7 @@ namespace MathCore
 
     public abstract class Transformation3DMatrix : TransformationMatrix
     {
-        protected Transformation3DMatrix(double[,] Data) : base(Data)
-        {
-            Contract.Requires(Data.GetLength(0) == 3);
-            Contract.Requires(Data.GetLength(1) == 3);
-            Contract.Ensures(M == 3);
-            Contract.Ensures(N == 3);
-        }
-
-        [ContractInvariantMethod]
-        protected void ObjectInvariant()
-        {
-            Contract.Invariant(M == 3);
-            Contract.Invariant(N == 3);
-        }
+        protected Transformation3DMatrix(double[,] Data) : base(Data) { }
     }
 
     public class Roration3DMatrix : Transformation3DMatrix
@@ -33,9 +20,6 @@ namespace MathCore
 
         private static double[,] GetData(double Angle, RotationAxe Axe)
         {
-            Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == 3);
-            Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == 3);
-
             var s = Math.Sin(Angle);
             var c = Math.Cos(Angle);
 
@@ -59,11 +43,11 @@ namespace MathCore
             var y = v.Y;
             var z = v.Z;
             return new Vector3D
-                (
-                    m[0, 0] * x + m[0, 1] * y + m[0, 2] * z,
-                    m[1, 0] * x + m[1, 1] * y + m[1, 2] * z,
-                    m[2, 0] * x + m[2, 1] * y + m[2, 2] * z
-                );
+            (
+                m[0, 0] * x + m[0, 1] * y + m[0, 2] * z,
+                m[1, 0] * x + m[1, 1] * y + m[1, 2] * z,
+                m[2, 0] * x + m[2, 1] * y + m[2, 2] * z
+            );
         }
     }
 

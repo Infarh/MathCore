@@ -1,6 +1,5 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
 namespace MathCore
@@ -10,20 +9,20 @@ namespace MathCore
         /// <summary>Явное приведение типов полинома к делегату функции преобразования double->double</summary>
         /// <param name="P">Полином</param>
         /// <returns>Делегат функции преобразования</returns>
-        [Pure, DST, NotNull]
+        [DST, NotNull]
         public static implicit operator Func<double, double>([NotNull] Polynom P) => P.GetFunction();
 
         /// <summary>Явное приведение типов полинома к делегату комплексной функции преобразования Complex->Complex</summary>
         /// <param name="P">Полином</param>
         /// <returns>Делегат комплексной функции преобразования</returns>
-        [Pure, DST, NotNull]
+        [DST, NotNull]
         public static implicit operator Func<Complex, Complex>([NotNull] Polynom P) => P.GetComplexFunction();
 
         /// <summary>Оператор сложения двух полиномов</summary>
         /// <param name="P">Первое слагаемое</param>
         /// <param name="Q">Второе слагаемое</param>
         /// <returns>Сумма полиномов</returns>
-        [DST, Pure, NotNull]
+        [DST, NotNull]
         public static Polynom operator +([NotNull] Polynom P, [NotNull] Polynom Q) => new Polynom(Array.Sum(P._a, Q._a));
 
         /// <summary>

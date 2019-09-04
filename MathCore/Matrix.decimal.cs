@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 // ReSharper disable UnusedMember.Global
@@ -168,9 +167,6 @@ namespace MathCore
         public MatrixDecimal(int N, int M, MatrixDecimalItemCreator CreateFunction)
             : this(N, M)
         {
-            Contract.Requires(N > 0);
-            Contract.Requires(M > 0);
-            Contract.Requires(CreateFunction != null);
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     _Data[i, j] = CreateFunction(i, j);
@@ -180,7 +176,6 @@ namespace MathCore
         public MatrixDecimal(decimal[,] Data)
             : this(Data.GetLength(0), Data.GetLength(1))
         {
-            Contract.Requires(Data != null);
             for (var i = 0; i < _N; i++)
                 for (var j = 0; j < _M; j++)
                     _Data[i, j] = Data[i, j];
@@ -190,7 +185,6 @@ namespace MathCore
         public MatrixDecimal(IList<decimal> DataRow)
             : this(DataRow.Count, 1)
         {
-            Contract.Requires(DataRow != null);
             for (var i = 0; i < _N; i++)
                 _Data[i, 0] = DataRow[i];
         }
@@ -199,7 +193,6 @@ namespace MathCore
 
         private static decimal[,] GetElements(IEnumerable<IEnumerable<decimal>> Items)
         {
-            Contract.Requires(Items != null);
             var cols = Items.Select(col => col.ToListFast()).ToList();
             var cols_count = cols.Count;
             var rows_count = cols.Max(col => col.Count);
@@ -324,7 +317,7 @@ namespace MathCore
 
             if (n == 2) return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
 
-            var lv_DataArray = (decimal[,])_Data.Clone();
+            var data_array = (decimal[,])_Data.Clone();
 
             //var det = 1.0;
             //for(var k = 0; k <= n; k++)

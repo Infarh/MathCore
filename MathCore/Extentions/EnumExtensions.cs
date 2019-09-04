@@ -1,9 +1,9 @@
 using System.Linq;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Text;
 using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class EnumExtensions
@@ -23,7 +23,6 @@ namespace System
         [CanBeNull]
         public static string GetValueDescription(this Enum value)
         {
-            Contract.Requires(value != null);
             var attributes = value.GetValueAttribute<DescriptionAttribute>();
             return attributes?.Length == 0 ? "" : attributes?.Aggregate(new StringBuilder(), (S, a) => S.AppendLine(a.Description), S => S.ToString());
         }

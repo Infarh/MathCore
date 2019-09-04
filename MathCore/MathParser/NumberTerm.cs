@@ -1,8 +1,7 @@
 using System;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser
 {
@@ -25,12 +24,7 @@ namespace MathCore.MathParser
 
         /// <summary>Новый численный элемент мат.выражения</summary>
         /// <param name="Str">Строковое значение элемента</param>
-        public NumberTerm([NotNull] string Str) : base(Str)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(Str));
-            Contract.Requires(Str.All(char.IsDigit));
-            _IntValue = int.Parse(Str);
-        }
+        public NumberTerm([NotNull] string Str) : base(Str) => _IntValue = int.Parse(Str);
 
         public NumberTerm(int Value) : base(Value.ToString()) => _IntValue = Value;
 

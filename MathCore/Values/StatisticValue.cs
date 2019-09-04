@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace MathCore.Values
@@ -40,8 +39,6 @@ namespace MathCore.Values
         /// <param name="Length">Требуемый размер выборки</param>
         public StatisticValue([MinValue(1)] int Length = 100)
         {
-            Contract.Requires(Length > 0);
-
             _Average = new AverageValue(Length);
             _Average2 = new AverageValue(Length);
             _MinMax = new MinMaxValue();

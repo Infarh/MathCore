@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq.Reactive;
 using System.Runtime.CompilerServices;
@@ -41,44 +40,19 @@ namespace System
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Потока данных</summary>
-        public Stream DataStream
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<Stream>().IsNotNull());
-                return _DataStream;
-            }
-        }
+        public Stream DataStream => _DataStream;
 
         /// <summary>Процент готовности</summary>
-        public double Complited
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<double>() >= 0);
-                Contract.Ensures(Contract.Result<double>() <= 1);
-
-                return _DataStream.Position / (double)_DataStream.Length;
-            }
-        }
+        public double Complited => _DataStream.Position / (double)_DataStream.Length;
 
         /// <summary>Скорость обработки данных</summary>
-        public StreamDataSpeedValue Speed
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<StreamDataSpeedValue>().IsNotNull());
-                return _Speed;
-            }
-        }
+        public StreamDataSpeedValue Speed => _Speed;
 
         /// <summary>Оставшееся время до окончания обработки</summary>
         public TimeSpan? RemainingTime
         {
             get
             {
-                //Contract.Ensures(Contract.Result<StreamDataSpeedValue>().IsNotNull());
-
                 var speed = Speed.Value;
                 if(Math.Abs(speed) < double.Epsilon) return null;
                 var length = DataStream.Length;
@@ -96,7 +70,6 @@ namespace System
 
         protected StreamingObjectReader(Stream DataStream)
         {
-            Contract.Requires(DataStream != null, "DataStream is null");
             _Speed = new StreamDataSpeedValue(_DataStream = DataStream);
             Monitor.ProgressChecker = () => Complited;
         }

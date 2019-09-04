@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Values
 {
@@ -17,87 +18,49 @@ namespace MathCore.Values
         private readonly List<T> _List;
 
         /// <summary>Мощность множества</summary>
-        public override int Power
-        {
-            [Pure]
-            get
-            {
-                Contract.Ensures(Contract.Result<int>() >= 0);
-                Contract.Ensures(Contract.Result<int>() == _List.Count);
-                return _List.Count;
-            }
-        }
+        public override int Power => _List.Count;
 
         /// <summary>Новое множество элементов</summary>
-        public SetOf()
-        {
-            Contract.Ensures(_List != null);
-            _List = new List<T>();
-        }
+        public SetOf() => _List = new List<T>();
 
         /// <summary>Новое множество элементов</summary>
         /// <param name="Capacity">Ёмкость множества</param>
-        public SetOf(int Capacity)
-        {
-            Contract.Requires(Capacity >= 0);
-            Contract.Ensures(_List != null);
-            Contract.Ensures(_List.Capacity == Capacity);
-            _List = new List<T>(Capacity);
-        }
+        public SetOf(int Capacity) => _List = new List<T>(Capacity);
 
         /// <summary>Новое множество элементов</summary>
         /// <param name="collection">Коллекция элементов</param>
-        public SetOf(IEnumerable<T> collection)
-        {
-            Contract.Requires(collection != null);
-            Contract.Ensures(_List != null);
-            _List = new List<T>(collection);
-        }
+        public SetOf([NotNull] IEnumerable<T> collection) => _List = new List<T>(collection);
 
         /// <summary>Новое множество элементов</summary>
         /// <param name="element">Элементы множества</param>
-        public SetOf(params T[] element) : this((IEnumerable<T>)element) => Contract.Requires(element != null);
+        public SetOf([NotNull] params T[] element) : this((IEnumerable<T>)element) { }
 
 
         /// <summary>Преобразование в список</summary>
         /// <returns>Список элементов</returns>
-        [Pure]
-        public List<T> ToList()
-        {
-            Contract.Ensures(Contract.Result<List<T>>() != null);
-            var reslt = new List<T>(_List);
-            return (List<T>)(Mixed ? reslt.Mix() : reslt);
-        }
+        public List<T> ToList() => (List<T>)(Mixed ? new List<T>(_List).Mix() : new List<T>(_List));
 
         /// <summary>Преобразование множества элементов в массив</summary>
         /// <returns>Массив элементов</returns>
-        [Pure]
         public T[] ToArray()
         {
-            Contract.Ensures(Contract.Result<T[]>() != null);
             var result = _List.ToArray();
             return (T[])(Mixed ? IListExtentions.Mix(result) : result);
         }
 
         /// <summary>Клонирование множества элементов</summary>
         /// <returns></returns>
-        [Pure]
-        public SetOf<T> Clone()
-        {
-            Contract.Ensures(Contract.Result<SetOf<T>>().Equals(this));
-            return new SetOf<T>(this);
-        }
+        [NotNull]
+        public SetOf<T> Clone() => new SetOf<T>(this);
 
-        [Pure]
         public bool Equals(SetOf<T> other) => other is { }
                                               && (other.Power == Power
                                                   && (!this.Any(other.NotContains)
                                                       && !other.Any(NotContains)));
 
-        [Pure]
         public override string ToString() => $"Set of {typeof(T).Name}[{Power}]: {{{this.ToSeparatedStr(",").TrimByLength(40, " ... ")}}}";
 
-        [Pure] object ICloneable.Clone() => Clone();
+        object ICloneable.Clone() => Clone();
 
         #region Implementation of IEnumerable
 
@@ -106,7 +69,6 @@ namespace MathCore.Values
         /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        [Pure]
         public override IEnumerator<T> GetEnumerator() => ToList().GetEnumerator();
 
         /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>
@@ -114,7 +76,6 @@ namespace MathCore.Values
         /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
         /// </returns>
         /// <filterpriority>2</filterpriority>
-        [Pure]
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #endregion
@@ -125,9 +86,6 @@ namespace MathCore.Values
         /// <param name="item">Объект, добавляемый в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
         public bool Add(T item)
         {
-            //Contract.Requires(!ReferenceEquals(item, null));
-            //Contract.Ensures(Contains(item));
-            Contract.Ensures(_List.Contains(item));
             if (_List.Contains(item)) return false;
             _List.Add(item);
             return true;
@@ -135,15 +93,12 @@ namespace MathCore.Values
 
         void ICollection<T>.Add(T item) => Add(item);
 
-        public KeyValuePair<T, bool>[] AddRange(IEnumerable<T> collection) => collection.Select(item => new KeyValuePair<T, bool>(item, Add(item))).ToArray();
+        [NotNull]
+        public KeyValuePair<T, bool>[] AddRange([NotNull] IEnumerable<T> collection) => collection.Select(item => new KeyValuePair<T, bool>(item, Add(item))).ToArray();
 
         /// <summary>Удаляет все элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
         /// <exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения. </exception>
-        public void Clear()
-        {
-            Contract.Ensures(Power == 0);
-            _List.Clear();
-        }
+        public void Clear() => _List.Clear();
 
         /// <summary>
         /// Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.
@@ -152,12 +107,7 @@ namespace MathCore.Values
         /// Значение true, если объект <paramref name="item"/> найден в <see cref="T:System.Collections.Generic.ICollection`1"/>; в противном случае — значение false.
         /// </returns>
         /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-        [Pure]
-        public override bool Contains(T item)
-        {
-            Contract.Ensures(Contract.Result<bool>() == _List.Contains(item));
-            return _List.Contains(item);
-        }
+        public override bool Contains(T item) => _List.Contains(item);
 
         /// <summary>
         /// Копирует элементы <see cref="T:System.Collections.Generic.ICollection`1"/> в массив <see cref="T:System.Array"/>, начиная с указанного индекса <see cref="T:System.Array"/>.
@@ -194,7 +144,6 @@ namespace MathCore.Values
         /// <returns>
         /// Число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
-        [Pure]
         int ICollection<T>.Count => Power;
 
         /// <summary>
@@ -203,7 +152,6 @@ namespace MathCore.Values
         /// <returns>
         /// Значение true, если интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения, в противном случае — значение false.
         /// </returns>
-        [Pure]
         bool ICollection<T>.IsReadOnly => false;
 
         #endregion

@@ -1,6 +1,6 @@
-using System.Diagnostics.Contracts;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Аргументы события исключения</summary>
@@ -18,20 +18,10 @@ namespace System
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Исключение обработано</summary>
-        public bool IsHandled
-        {
-            [DST]
-            get => !_Unhandled && _IsHandled;
-            [DST]
-            set => _IsHandled = value;
-        }
+        public bool IsHandled { [DST] get => !_Unhandled && _IsHandled; [DST] set => _IsHandled = value; }
 
         /// <summary>Признак необходимости генерации исключения</summary>
-        public bool NeedToThrow
-        {
-            [DST]
-            get => _Unhandled || !IsHandled;
-        }
+        public bool NeedToThrow => _Unhandled || !IsHandled;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -39,7 +29,7 @@ namespace System
         /// <summary>Новый аргумент события генерации исключения</summary>
         /// <param name="Error">Исключение</param>
         [DST]
-        public ExceptionEventHandlerArgs(TException Error) : base(Error) => Contract.Requires(Error != null);
+        public ExceptionEventHandlerArgs(TException Error) : base(Error) { }
 
         /* ------------------------------------------------------------------------------------------ */
 

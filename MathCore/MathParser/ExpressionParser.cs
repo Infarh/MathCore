@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
@@ -23,10 +22,6 @@ namespace MathCore.MathParser
         /// <param name="e">Аргумент события, содержащий добавляемй узел</param>
         protected virtual void OnNewNodeAdded([NotNull] EventArgs<ExpressionTreeNode> e)
         {
-            Contract.Requires(e != null);
-            Contract.Requires(e.Argument != null);
-            Contract.Ensures(e.Argument != null);
-
             NewNodeAdded?.Invoke(this, e);
         }
 
@@ -34,9 +29,6 @@ namespace MathCore.MathParser
         /// <param name="NewNode">Новый добавляемый узел дерева выражения</param>
         protected virtual void OnNewNodeAdded([NotNull] ref ExpressionTreeNode NewNode)
         {
-            Contract.Requires(NewNode != null);
-            Contract.Ensures(Contract.ValueAtReturn(out NewNode) != null);
-
             ProcessNewNode(ref NewNode);
 
             var e = new EventArgs<ExpressionTreeNode>(NewNode);
@@ -49,28 +41,26 @@ namespace MathCore.MathParser
         /// <param name="NewNode">Новый добавляемый узел</param>
         protected virtual void ProcessNewNode([NotNull] ref ExpressionTreeNode NewNode)
         {
-            Contract.Requires(NewNode != null);
-            Contract.Ensures(Contract.ValueAtReturn(out NewNode) != null);
             switch (NewNode)
             {
                 case CharNode char_node:
-                {
-                    switch (char_node.Value)
                     {
-                        case '.':
-                            if (NewNode.Parent is CharNode c && c.Value == '.')
-                            {
-                                var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left is null);
-                                NewNode["./."].Right = null;
-                                var parent = value_node.Parent;
-                                var interval_node = new IntervalNode(value_node);
-                                if (parent != null) parent.Right = interval_node;
-                                NewNode = interval_node;
-                            }
-                            break;
+                        switch (char_node.Value)
+                        {
+                            case '.':
+                                if (NewNode.Parent is CharNode c && c.Value == '.')
+                                {
+                                    var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left is null);
+                                    NewNode["./."].Right = null;
+                                    var parent = value_node.Parent;
+                                    var interval_node = new IntervalNode(value_node);
+                                    if (parent != null) parent.Right = interval_node;
+                                    NewNode = interval_node;
+                                }
+                                break;
+                        }
+                        break;
                     }
-                    break;
-                }
                 case OperatorNode _:
                     break;
             }
@@ -83,11 +73,6 @@ namespace MathCore.MathParser
         /// <param name="args">Аргумент события, содержащий обрабатываемую строку</param>
         protected virtual void OnStringPreprocessing([NotNull] EventArgs<string> args)
         {
-            Contract.Requires(args != null);
-            Contract.Requires(args.Argument != null);
-            Contract.Requires(args.Argument != string.Empty);
-            Contract.Ensures(args.Argument != null);
-            Contract.Ensures(args.Argument != string.Empty);
             StringPreprocessing?.Invoke(this, args);
         }
 
@@ -95,9 +80,6 @@ namespace MathCore.MathParser
         /// <param name="StrExpression">Обрабатываемая строка</param>
         private void OnStringPreprocessing([NotNull] ref string StrExpression)
         {
-            Contract.Requires(!string.IsNullOrEmpty(StrExpression));
-            Contract.Ensures(Contract.ValueAtReturn(out StrExpression) != null);
-            Contract.Ensures(Contract.ValueAtReturn(out StrExpression) != string.Empty);
             var args = new EventArgs<string>(StrExpression);
             OnStringPreprocessing(args);
             StrExpression = args.Argument;
@@ -121,8 +103,6 @@ namespace MathCore.MathParser
             /// <param name="Arguments">Массив имён аргументов функции</param>
             public FindFunctionEventArgs([NotNull] string Name, [NotNull] string[] Arguments)
             {
-                Contract.Requires(Arguments != null);
-                Contract.Requires(!string.IsNullOrEmpty(Name));
                 this.Name = Name;
                 this.Arguments = Arguments;
             }
@@ -133,7 +113,6 @@ namespace MathCore.MathParser
             /// <returns></returns>
             public bool SignatureEqual([NotNull] string name, int ArgumentsCount)
             {
-                Contract.Requires(!string.IsNullOrEmpty(name));
                 return Name == name && ArgumentsCount == ArgumentCount;
             }
         }
@@ -145,7 +124,6 @@ namespace MathCore.MathParser
         /// <param name="Args">Аргументы события, содержащие имя функции, имена аргументов и делегат метода функции</param>
         protected virtual void OnFindFunction([NotNull] FindFunctionEventArgs Args)
         {
-            Contract.Requires(Args != null);
             FindFunction?.Invoke(this, Args);
         }
 
@@ -155,9 +133,6 @@ namespace MathCore.MathParser
         /// <returns>Делегат функции</returns>
         private Delegate OnFunctionFind([NotNull] string Name, [NotNull] string[] Arguments)
         {
-            Contract.Requires(!string.IsNullOrEmpty(Name));
-            Contract.Requires(Arguments != null);
-            Contract.Ensures(Contract.Result<Delegate>() != null);
             var args = new FindFunctionEventArgs(Name, Arguments);
             OnFindFunction(args);
             return args.Function;
@@ -170,9 +145,6 @@ namespace MathCore.MathParser
         /// <param name="e">Обнаруженная переменная</param>
         protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariabel> e)
         {
-            Contract.Requires(e != null);
-            Contract.Requires(e.Argument != null);
-            Contract.Ensures(e.Argument != null);
             VariableProcessing?.Invoke(this, e);
         }
 
@@ -180,7 +152,6 @@ namespace MathCore.MathParser
         /// <param name="Variable">Обнаруженная переменная</param>
         private void OnVariableProcessing([NotNull] ExpressionVariabel Variable)
         {
-            Contract.Requires(Variable != null);
             OnVariableProcessing(new EventArgs<ExpressionVariabel>(Variable));
         }
 
@@ -233,8 +204,6 @@ namespace MathCore.MathParser
         // Удаление из строки всех символов, из множества запрещённых симоволов
         protected virtual void StrPreprocessing([NotNull] ref string Str)
         {
-            Contract.Requires(!string.IsNullOrEmpty(Str));
-            Contract.Ensures(!string.IsNullOrEmpty(Contract.ValueAtReturn(out Str)));
             Str = new string(Str.Where(_ExcludeCharsSet.NotContains).ToArray());
         }
 
@@ -244,8 +213,6 @@ namespace MathCore.MathParser
         [NotNull]
         public MathExpression Parse([NotNull] string StrExpression)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(StrExpression));
-            Contract.Ensures(Contract.Result<MathExpression>() != null);
             StrPreprocessing(ref StrExpression);
             OnStringPreprocessing(ref StrExpression);
 
@@ -261,7 +228,6 @@ namespace MathCore.MathParser
         /// <param name="Expression">Обрабатываемое математическое выражение</param>
         internal void ProcessVariables([NotNull] MathExpression Expression)
         {
-            Contract.Requires(Expression != null);
             var tree_vars = Expression.Tree.Root.GetVariables().ToArray();
             Expression.Variable
                 .Where(v => !tree_vars.Contains(v))
@@ -283,106 +249,74 @@ namespace MathCore.MathParser
         [SuppressMessage("ReSharper", "CyclomaticComplexity")]
         internal void ProcessFunctions([NotNull] MathExpression Expression)
         {
-            Contract.Requires(Expression != null);
             foreach (var function in Expression.Functions)
-                switch (function.Name)
+                function.Delegate = function.Arguments.Length switch
                 {
-                    case "Sin":
-                    case "SIN":
-                    case "sin":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Sin);
-                        break;
-                    case "COS":
-                    case "Cos":
-                    case "cos":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Cos);
-                        break;
-                    case "TAN":
-                    case "Tan":
-                    case "tan":
-                    case "tn":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Tan);
-                        break;
-                    case "ATAN":
-                    case "ATan":
-                    case "Atan":
-                    case "atan":
-                    case "atn":
-                    case "Atn":
-                        switch (function.Arguments.Length)
-                        {
-                            case 1: function.Delegate = new Func<double, double>(Math.Atan); break;
-                            case 2: function.Delegate = new Func<double, double, double>(Math.Atan2); break;
-                            default: goto default;
-                        }
-                        break;
-                    case "Atan2":
-                    case "atan2":
-                        if (function.Arguments.Length != 2) goto default;
-                        function.Delegate = new Func<double, double, double>(Math.Atan2);
-                        break;
-                    case "CTG":
-                    case "Ctg":
-                    case "ctg":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(x => 1 / Math.Tan(x));
-                        break;
-                    case "Sign":
-                    case "sign":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(x => Math.Sign(x));
-                        break;
-                    case "Abs":
-                    case "abs":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Abs);
-                        break;
-                    case "Exp":
-                    case "EXP":
-                    case "exp":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Exp);
-                        break;
-                    case "Sqrt":
-                    case "SQRT":
-                    case "√":
-                    case "sqrt":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Sqrt);
-                        break;
-                    case "log10":
-                    case "Log10":
-                    case "LOG10":
-                    case "lg":
-                    case "Lg":
-                    case "LG":
-                        if (function.Arguments.Length != 1) goto default;
-                        function.Delegate = new Func<double, double>(Math.Log10);
-                        break;
-                    case "loge":
-                    case "Loge":
-                    case "LOGe":
-                    case "ln":
-                    case "Ln":
-                    case "LN":
-                        if (function.Arguments.Length != 1)
-                            goto default;
-                        function.Delegate = new Func<double, double>(Math.Log);
-                        break;
-                    case "log":
-                    case "Log":
-                    case "LOG":
-                        if (function.Arguments.Length != 2) goto default;
-                        function.Delegate = new Func<double, double, double>(Math.Log);
-                        break;
-                    default:
-                        function.Delegate = OnFunctionFind(function.Name, function.Arguments) 
-                                            ?? throw new NotSupportedException($"Обработка функции {function.Name} не поддерживается");
-                        break;
-                }
+                    1 => (function.Name switch
+                    {
+                        "Sin" => new Func<double, double>(Math.Sin),
+                        "SIN" => new Func<double, double>(Math.Sin),
+                        "sin" => new Func<double, double>(Math.Sin),
+                        "COS" => new Func<double, double>(Math.Cos),
+                        "Cos" => new Func<double, double>(Math.Cos),
+                        "cos" => new Func<double, double>(Math.Cos),
+                        "TAN" => new Func<double, double>(Math.Tan),
+                        "Tan" => new Func<double, double>(Math.Tan),
+                        "tan" => new Func<double, double>(Math.Tan),
+                        "tn" => new Func<double, double>(Math.Tan),
+                        "ATAN" => new Func<double, double>(Math.Atan),
+                        "ATan" => new Func<double, double>(Math.Atan),
+                        "Atan" => new Func<double, double>(Math.Atan),
+                        "atan" => new Func<double, double>(Math.Atan),
+                        "atn" => new Func<double, double>(Math.Atan),
+                        "Atn" => new Func<double, double>(Math.Atan),
+                        "CTG" => new Func<double, double>(x => 1 / Math.Tan(x)),
+                        "Ctg" => new Func<double, double>(x => 1 / Math.Tan(x)),
+                        "ctg" => new Func<double, double>(x => 1 / Math.Tan(x)),
+                        "Sign" => new Func<double, double>(x => Math.Sign(x)),
+                        "sign" => new Func<double, double>(x => Math.Sign(x)),
+                        "Abs" => new Func<double, double>(Math.Abs),
+                        "abs" => new Func<double, double>(Math.Abs),
+                        "Exp" => new Func<double, double>(Math.Exp),
+                        "EXP" => new Func<double, double>(Math.Exp),
+                        "exp" => new Func<double, double>(Math.Exp),
+                        "Sqrt" => new Func<double, double>(Math.Sqrt),
+                        "SQRT" => new Func<double, double>(Math.Sqrt),
+                        "√" => new Func<double, double>(Math.Sqrt),
+                        "sqrt" => new Func<double, double>(Math.Sqrt),
+                        "log10" => new Func<double, double>(Math.Log10),
+                        "Log10" => new Func<double, double>(Math.Log10),
+                        "LOG10" => new Func<double, double>(Math.Log10),
+                        "lg" => new Func<double, double>(Math.Log10),
+                        "Lg" => new Func<double, double>(Math.Log10),
+                        "LG" => new Func<double, double>(Math.Log10),
+                        "loge" => new Func<double, double>(Math.Log),
+                        "Loge" => new Func<double, double>(Math.Log),
+                        "LOGe" => new Func<double, double>(Math.Log),
+                        "ln" => new Func<double, double>(Math.Log),
+                        "Ln" => new Func<double, double>(Math.Log),
+                        "LN" => new Func<double, double>(Math.Log),
+                        _ => (OnFunctionFind(function.Name, function.Arguments) ??
+                              throw new NotSupportedException($"Обработка функции {function.Name} не поддерживается"))
+                    }),
+                    2 => (function.Name switch
+                    {
+                        "ATAN" => new Func<double, double, double>(Math.Atan2),
+                        "ATan" => new Func<double, double, double>(Math.Atan2),
+                        "Atan" => new Func<double, double, double>(Math.Atan2),
+                        "atan" => new Func<double, double, double>(Math.Atan2),
+                        "atn" => new Func<double, double, double>(Math.Atan2),
+                        "Atn" => new Func<double, double, double>(Math.Atan2),
+                        "Atan2" => new Func<double, double, double>(Math.Atan2),
+                        "atan2" => new Func<double, double, double>(Math.Atan2),
+                        "log" => new Func<double, double, double>(Math.Log),
+                        "Log" => new Func<double, double, double>(Math.Log),
+                        "LOG" => new Func<double, double, double>(Math.Log),
+                        _ => function.Delegate
+                    }),
+                    _ => (OnFunctionFind(function.Name, function.Arguments) ??
+                          throw new NotSupportedException($"Обработка функции {function.Name} не поддерживается"))
+                };
         }
 
         /// <summary>Метод определения узла дерева, реализующего оператор</summary>
@@ -392,7 +326,7 @@ namespace MathCore.MathParser
         public virtual ExpressionTreeNode GetOperatorNode(char Name) =>
             Name switch
             {
-                '+' => (ExpressionTreeNode) new AdditionOperatorNode(),
+                '+' => (ExpressionTreeNode)new AdditionOperatorNode(),
                 '-' => new SubstractionOperatorNode(),
                 '*' => new MultiplicationOperatorNode(),
                 '×' => new MultiplicationOperatorNode(),
@@ -415,10 +349,10 @@ namespace MathCore.MathParser
         /// <param name="Name">Имя функционала</param>
         /// <returns>Функционал</returns>
         /// <exception cref="NotSupportedException">Возникает для неопределённых имён функционалов</exception>
-        public Functional GetFunctional(string Name) =>
+        [NotNull] public static Functional GetFunctional([NotNull] string Name) =>
             Name switch
             {
-                "summ" => (Functional) new SummOperator(Name),
+                "summ" => (Functional)new SummOperator(Name),
                 "Sum" => new SummOperator(Name),
                 "Σ" => new SummOperator(Name),
                 "int" => new IntegralOperator(Name),
@@ -433,12 +367,9 @@ namespace MathCore.MathParser
         /// <param name="Group">группа элементов математического выражения</param>
         /// <param name="MathExpression">Ссылка на математическое выражение</param>
         /// <returns>Корень дерева мат.выражения</returns>
+        [NotNull]
         internal ExpressionTreeNode GetRoot([NotNull] Term[] Group, [NotNull] MathExpression MathExpression)
         {
-            Contract.Requires(Group != null);
-            Contract.Requires(MathExpression != null);
-            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-
             // Ссылка на последний обработанный узел дерева
             ExpressionTreeNode last = null;
             for (var i = 0; i < Group.Length; i++) // в цикле по всем элементам группы
@@ -482,7 +413,6 @@ namespace MathCore.MathParser
         // ReSharper disable once CyclomaticComplexity
         public virtual void Combine([CanBeNull] ExpressionTreeNode Last, [NotNull] ExpressionTreeNode Node)
         {
-            Contract.Requires(Node != null);
             if (Last is null) return; // Если предыдущий узел дерева не указан, возврат
 
             if (Node is CharNode) // Если текущий узел - символьный узел, то
@@ -573,7 +503,7 @@ namespace MathCore.MathParser
                     var is_left = Last.IsLeftSubtree;
                     var is_right = Last.IsRightSubtree;
                     operator_node.Left = Last; // записать предыдущий узел левым поддеревом текущего
-                    if (is_left) 
+                    if (is_left)
                         parent.Left = operator_node;
                     else if (is_right)
                         parent.Right = operator_node;

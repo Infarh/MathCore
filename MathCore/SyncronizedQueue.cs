@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,11 +19,7 @@ namespace MathCore
 
         public SyncronizedQueue() => _Queue = new Queue<T>();
 
-        public SyncronizedQueue(int Capacity)
-        {
-            Contract.Requires(Capacity > 0);
-            _Queue = new Queue<T>(Capacity);
-        }
+        public SyncronizedQueue(int Capacity) => _Queue = new Queue<T>(Capacity);
 
         public void Add(T value)
         {
@@ -69,9 +64,6 @@ namespace MathCore
 
         public SyncronizedItemsProcessor(Action<T> action, int ThreadCount = 1)
         {
-            Contract.Requires(action != null);
-            Contract.Requires(ThreadCount > 0);
-
             _Cancelation = new CancellationTokenSource();
             var cancelation_token = _Cancelation.Token;
             _Tasks = Enumerable.Range(0, ThreadCount)
@@ -85,9 +77,6 @@ namespace MathCore
 
         public SyncronizedItemsProcessor(Action<T> action, Action<T, Exception> Catch, int ThreadCount = 1)
         {
-            Contract.Requires(action != null);
-            Contract.Requires(ThreadCount > 0);
-
             _Cancelation = new CancellationTokenSource();
             _Tasks = Enumerable.Range(0, ThreadCount)
                 .Select(i => Task.Factory.StartNew(() =>

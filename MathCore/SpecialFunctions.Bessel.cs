@@ -1,6 +1,5 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 
 namespace MathCore
 {
@@ -514,10 +513,6 @@ namespace MathCore
             [DST]
             public static double K0(double x)
             {
-                Contract.Requires(x > 0, "Функция K0 определена на x > 0");
-                //if(x <= 0)
-                //    throw new ArgumentOutOfRangeException("x", "Функция K0 определена на x > 0");
-
                 double b0 = 0;
                 double b1 = 0;
                 double b2 = 0;
@@ -574,10 +569,6 @@ namespace MathCore
             [DST]
             public static double K1(double x)
             {
-                Contract.Requires(x > 0, "Функция K1 определена на x > 0");
-                //if(x <= 0)
-                //    throw new ArgumentOutOfRangeException("x", "Функция K1 определена на x > 0");
-
                 double b0 = 0;
                 double b1 = 0;
                 double b2 = 0;
@@ -638,13 +629,6 @@ namespace MathCore
             [DST]
             public static double Kn(int n, double x)
             {
-                Contract.Requires(Math.Abs(n) <= 31, "Порядок Kn больше 31");
-                Contract.Requires(x > 0, "Область определения x > 0");
-                //if(nn > 31)
-                //    throw new ArgumentOutOfRangeException("n", "Порядок Kn больше 31"); 
-                //if(x <= 0)
-                //    throw new ArgumentOutOfRangeException("x", "Область определения x > 0");
-
                 var nn = Math.Abs(n);
                 double k;
                 double nk1f;
@@ -699,11 +683,9 @@ namespace MathCore
                                 t = nk1f * zn / kf;
                                 s += t;
 
-                                Contract.Assert(__MaxRealNumber - Math.Abs(t) > Math.Abs(s), "Overflow");
                                 if(__MaxRealNumber - Math.Abs(t) <= Math.Abs(s))
                                     throw new OverflowException();
 
-                                Contract.Assert(tox <= 1 || __MaxRealNumber / tox >= zmn, "Overflow");
                                 if(tox > 1 & __MaxRealNumber / tox < zmn)
                                     throw new OverflowException();
 
@@ -713,11 +695,9 @@ namespace MathCore
                             s *= .5;
                             t = Math.Abs(s);
 
-                            Contract.Assert(zmn <= 1 || __MaxRealNumber / zmn >= t, "Overflow");
                             if(zmn > 1 & __MaxRealNumber / zmn < t)
                                 throw new OverflowException();
 
-                            Contract.Assert(t <= 1 || __MaxRealNumber / t >= zmn, "Overflow");
                             if(t > 1 && __MaxRealNumber / t < zmn)
                                 throw new OverflowException();
 

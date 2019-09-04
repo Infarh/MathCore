@@ -1,10 +1,8 @@
-﻿using MathCore.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
@@ -24,7 +22,7 @@ namespace MathCore
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <returns>Массив столбцов</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[][] MatrixToColsArray([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -42,7 +40,7 @@ namespace MathCore
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <returns>Массив строк</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[][] MatrixToRowsArray([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -60,7 +58,7 @@ namespace MathCore
             /// <param name="cols">Массив столбцов матрицы</param>
             /// <returns>Двумерный массив элементов матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="cols"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] ColsArrayToMatrix([NotNull] params double[][] cols)
             {
                 if (cols is null) throw new ArgumentNullException(nameof(cols));
@@ -76,7 +74,7 @@ namespace MathCore
             /// <param name="rows">Массив строк матрицы</param>
             /// <returns>Двумерный массив элементов матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="rows"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] RowsArrayToMatrix([NotNull] params double[][] rows)
             {
                 if (rows is null) throw new ArgumentNullException(nameof(rows));
@@ -93,7 +91,6 @@ namespace MathCore
             /// <returns>Истина, если определитель матрицы равен нулю</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не содержит элементов, или если матрица не квазратная</exception>
-            [Pure]
             [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
             public static bool IsMatrixSungular([NotNull] double[,] matrix)
             {
@@ -101,10 +98,6 @@ namespace MathCore
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
                 if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
 
-                Contract.Ensures(Contract.Result<bool>() ^ GetDeterminant(matrix) != 0);
-                Contract.Ensures(Contract.Result<bool>() ^ Rank(matrix) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<bool>() ^ Rank(matrix) == matrix.GetLength(1));
-                Contract.EndContractBlock();
 
                 return Rank(matrix) != matrix.GetLength(0);
             }
@@ -114,14 +107,10 @@ namespace MathCore
             /// <returns>Ранг матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
-            [Pure]
             public static int Rank([NotNull] double[,] matrix)
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= matrix.GetLength(0) && Contract.Result<int>() <= matrix.GetLength(1));
-                Contract.Ensures(IsMatrixSungular(matrix) ^ (Contract.Result<int>() == matrix.GetLength(0) && Contract.Result<int>() == matrix.GetLength(1)));
-                Contract.EndContractBlock();
 
                 GetTriangle(matrix, out var rank, out var _);
                 return rank;
@@ -140,12 +129,6 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(elements));
                 if (elements.Length == 0)
                     throw new ArgumentException(@"Массив не содержит элементов", nameof(elements));
-                Contract.Ensures(Contract.Result<double[,]>() != null);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == elements.Length);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == elements.Length);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == Contract.Result<double[,]>().GetLength(1));
-                Contract.Ensures(Contract.ForAll(0, elements.Length, i => elements[i] == Contract.Result<double[,]>()[i, i]));
-                Contract.EndContractBlock();
 
                 var N = elements.Length;
                 var result = new double[N, N];
@@ -164,10 +147,6 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0)
                     throw new ArgumentException(@"Массив не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.Result<double[]>() != null);
-                Contract.Ensures(Contract.Result<double[]>().Length > 0);
-                Contract.Ensures(Contract.Result<double[]>().Length == Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
                 var result = new double[Math.Min(M, N)];
@@ -186,10 +165,6 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0)
                     throw new ArgumentException(@"Массив не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.Result<IEnumerable<double>>() != null);
-                Contract.Ensures(Contract.Result<IEnumerable<double>>().Any());
-                Contract.Ensures(Contract.Result<IEnumerable<double>>().Count() == Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
                 for (int i = 0, length = Math.Min(M, N); i < length; i++) yield return matrix[i, i];
@@ -212,21 +187,21 @@ namespace MathCore
                     throw new ArgumentException(@"Матрица перестановок не квадратная", nameof(p));
                 if (matrix.GetLength(0) != p.GetLength(1))
                     throw new ArgumentException(@"Число строк матрицы не равно числу столбцов матрицы перестановок", nameof(matrix));
-                Contract.EndContractBlock();
 
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 var m = matrix.CloneObject();
                 // ReSharper disable CompareOfFloatsByEqualityOperator
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
-                {
-                    var j = 0;
-                    while (j < N && (int)p[i, j] != 1) j++;
-                    if (j == N) continue;
-                    if (p[i, j] != p[j, i]) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
-                    if (j >= i) continue;
-                    m.SwapRows(i, j);
-                }
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
+                    {
+                        var j = 0;
+                        while (j < N && (int)p[i, j] != 1) j++;
+                        if (j == N) continue;
+                        if (p[i, j] != p[j, i]) throw new InvalidOperationException($@"Ошибка в матрице перестановок: элемент p[{i},{j}] не соответствует элементу p[{j},{i}]");
+                        if (j >= i) continue;
+                        m.SwapRows(i, j);
+                    }
                 // ReSharper restore CompareOfFloatsByEqualityOperator
                 System.Array.Copy(m, matrix, matrix.Length);
             }
@@ -248,12 +223,12 @@ namespace MathCore
                     throw new ArgumentException(@"Матрица перестановок не квадратная", nameof(p));
                 if (matrix.GetLength(0) != p.GetLength(1))
                     throw new ArgumentException(@"Число строк матрицы не равно числу столбцов матрицы перестановок", nameof(matrix));
-                Contract.EndContractBlock();
 
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 var m = matrix.CloneObject();
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -274,7 +249,8 @@ namespace MathCore
             {
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -292,7 +268,8 @@ namespace MathCore
             {
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -342,12 +319,9 @@ namespace MathCore
             /// <param name="N">Число строк матриы</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DST, Pure]
+            [DST]
             public static void GetLength([NotNull] double[,] matrix, out int N, out int M)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.ValueAtReturn(out N) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out M) == matrix.GetLength(1));
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
 
@@ -359,11 +333,9 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="N">Число строк матриы</param>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DST, Pure]
+            [DST]
             public static void GetRowsCount([NotNull] double[,] matrix, out int N)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.ValueAtReturn(out N) == matrix.GetLength(0));
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
 
@@ -374,11 +346,9 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DST, Pure]
+            [DST]
             public static void GetColsCount([NotNull] double[,] matrix, out int M)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.ValueAtReturn(out M) == matrix.GetLength(1));
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
 
@@ -389,7 +359,7 @@ namespace MathCore
             /// <param name="N">Размерность матрицы</param>
             /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="N"/> меньше 1</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static double[,] GetUnitaryArrayMatrix(int N)
             {
                 if (N < 1)
@@ -422,7 +392,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="A"/></exception>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="A"/> не квадратная</exception>
             /// <exception cref="ArgumentException">В случае если опорная строка <paramref name="i0"/> матрицы <paramref name="A"/> &lt; 0 и &gt; числа строк матрицы</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] GetTransvection([NotNull] double[,] A, int i0)
             {
                 GetRowsCount(A, out var N);
@@ -468,7 +438,7 @@ namespace MathCore
             /// <returns>Матрица-столбец, составленная из элементов столбца матрицы c индексом j</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static double[,] GetCol([NotNull] double[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -486,7 +456,7 @@ namespace MathCore
             /// <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static double[] GetCol_Array([NotNull] double[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -528,7 +498,7 @@ namespace MathCore
             /// <returns>Матрица-строка, составленная из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static double[,] GetRow([NotNull] double[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -547,7 +517,7 @@ namespace MathCore
             /// <returns>Массив, составленный из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static double[] GetRow_Array([NotNull] double[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -591,7 +561,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] Inverse([NotNull] double[,] matrix)
             {
                 var result = Inverse(matrix, out var p);
@@ -607,7 +577,7 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             /// <exception cref="ArgumentOutOfRangeException">Размерность массива 0х0</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] Inverse([NotNull] double[,] matrix, [NotNull] out double[,] p)
             {
                 GetLength(matrix, out var N, out var M);
@@ -657,11 +627,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static double[,] GetSolve([NotNull] double[,] matrix, [NotNull] double[,] b, [NotNull] out double[,] p)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.EnsuresOnThrow<InvalidOperationException>(ReferenceEquals(b, Contract.ValueAtReturn(out b)));
 
                 var x = b;
                 if (!TrySolve(matrix, ref x, out p, true))
@@ -680,12 +645,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static void Solve([NotNull] double[,] matrix, [NotNull] ref double[,] b, [NotNull] out double[,] p, bool clone_b = false)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(clone_b ^ (Contract.Result<bool>() && !ReferenceEquals(b, Contract.ValueAtReturn(out b))));
-                Contract.EnsuresOnThrow<InvalidOperationException>(ReferenceEquals(b, Contract.ValueAtReturn(out b)));
 
                 if (!TrySolve(matrix, ref b, out p, clone_b))
                     throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
@@ -711,12 +670,6 @@ namespace MathCore
                     throw new ArgumentException(@"Матрица системы не квадратная", nameof(matrix));
                 if (matrix.GetLength(0) != b.GetLength(0))
                     throw new ArgumentException(@"Число строк матрицы правой части не равно числу строк матрицы системы", nameof(b));
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(clone_b ^ (Contract.Result<bool>() && !ReferenceEquals(b, Contract.ValueAtReturn(out b))));
-                Contract.EndContractBlock();
 
                 var temp_b = b.CloneObject();
                 Triangulate(ref matrix, ref temp_b, out p, out var d);
@@ -728,7 +681,8 @@ namespace MathCore
                 {
                     var m = matrix[i0, i0];
                     if (!m.Equals(1d)) for (var j = 0; j < b_M; j++) temp_b[i0, j] /= m;
-                    for (var i = i0 - 1; i >= 0; i--) if (!matrix[i, i0].Equals(0d))
+                    for (var i = i0 - 1; i >= 0; i--)
+                        if (!matrix[i, i0].Equals(0d))
                         {
                             var k = matrix[i, i0];
                             matrix[i, i0] = 0d;
@@ -745,7 +699,7 @@ namespace MathCore
             /// <summary>Транспонирование матрицы</summary>
             /// <returns>Транспонированная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static double[,] Transponse([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -794,9 +748,9 @@ namespace MathCore
                 if (m < 0 || m >= matrix.GetLength(1))
                     throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
 
-                if ((n + m) % 2 == 0)
-                    return GetDeterminant(GetMinor(matrix, n, m));
-                return -GetDeterminant(GetMinor(matrix, n, m));
+                return (n + m) % 2 == 0
+                    ? GetDeterminant(GetMinor(matrix, n, m))
+                    : -GetDeterminant(GetMinor(matrix, n, m));
             }
 
             /// <summary>Скопировать минор из матрицы в матрицу результата</summary>
@@ -809,7 +763,8 @@ namespace MathCore
             private static void CopyMinor([NotNull] double[,] matrix, int n, int m, int N, int M, [NotNull] double[,] result)
             {
                 var i0 = 0;
-                for (var i = 0; i < N; i++) if (i != n)
+                for (var i = 0; i < N; i++)
+                    if (i != n)
                     {
                         var j0 = 0;
                         for (var j = 0; j < M; j++) if (j != m)
@@ -875,17 +830,13 @@ namespace MathCore
             /// <returns>Определитель матрицы</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
-            [Pure, SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+            [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
             public static double GetDeterminant([NotNull] double[,] matrix)
             {
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) != matrix.GetLength(1))
                     throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
-                Contract.Ensures(Contract.Result<double>() == 0 ^ !IsMatrixSungular(matrix));
-                Contract.Ensures(Contract.Result<double>() == 0 ^ Rank(matrix) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double>() == 0 ^ Rank(matrix) == matrix.GetLength(1));
-                Contract.EndContractBlock();
 
                 GetRowsCount(matrix, out var N);
 
@@ -1142,12 +1093,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
             public static bool GetLUDecomposition([NotNull] double[,] matrix, [CanBeNull] out double[,] c)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(matrix.GetLength(0) > 0);
-                Contract.Requires(matrix.GetLength(0) == matrix.GetLength(1));
-                Contract.Ensures(Contract.Result<bool>() ^ Contract.ValueAtReturn(out c) is null);
-                Contract.Ensures(Contract.ValueAtReturn(out c).GetLength(0) == matrix.GetLength(0) && Contract.ValueAtReturn(out c).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out c).GetLength(1) == matrix.GetLength(1));
 
                 GetRowsCount(matrix, out var N);
                 if (N != matrix.GetLength(1))
@@ -1188,19 +1133,10 @@ namespace MathCore
             /// <param name="d">Определитель матрицы</param>
             /// <returns>Триугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] GetTriangle(double[,] matrix, out double[,] p, out int rank, out double d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<double[,]>() != null);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0);
 
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
@@ -1215,16 +1151,10 @@ namespace MathCore
             /// <param name="d">Определитель матрицы</param>
             /// <returns>Триугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] GetTriangle([NotNull] double[,] matrix, out int rank, out double d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<double[,]>() != null);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0);
 
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
@@ -1242,18 +1172,10 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static double[,] GetTriangle([NotNull] double[,] matrix, double[,] b, out int rank, out double d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Requires(b.GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double[,]>() != null);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0);
 
                 if (matrix is null)
                     throw new ArgumentNullException(nameof(matrix));
@@ -1286,21 +1208,7 @@ namespace MathCore
                 bool clone_b = true
             )
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Requires(b.GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double[,]>() != null);
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(0));
-                Contract.Ensures(clone_b ^ !ReferenceEquals(b, Contract.ValueAtReturn(out b)));
-                Contract.Requires(Contract.ValueAtReturn(out b).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0d);
 
                 rank = Triangulate(ref matrix, ref b, out p, out d, false, clone_b);
                 return matrix;
@@ -1314,12 +1222,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             public static int Triangulate([NotNull] double[,] matrix, out double[,] p, out double d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(!(Contract.Result<int>() < Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0d));
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0) && Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(1));
 
                 GetLength(matrix, out var N, out var M);
                 d = 1d;
@@ -1348,7 +1251,8 @@ namespace MathCore
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(0d))
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
@@ -1366,10 +1270,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             public static int Triangulate(double[,] matrix, out double d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(!(Contract.Result<int>() < Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0d));
 
                 GetLength(matrix, out var N, out var M);
                 d = 1d;
@@ -1400,7 +1301,8 @@ namespace MathCore
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(0d))
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
@@ -1420,12 +1322,7 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static int Triangulate(double[,] matrix, double[,] b, out double d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.Result<int>() > 0);
-                Contract.Ensures(Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(!(Contract.Result<int>() < Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0d));
 
                 GetLength(matrix, out var N, out var M);
                 if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1464,7 +1361,8 @@ namespace MathCore
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(0d))
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
@@ -1488,11 +1386,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static int Triangulate([NotNull] ref double[,] matrix, [NotNull] double[,] b, out double d, bool clone = true)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.Ensures(Contract.ValueAtReturn(out matrix) != null);
-                Contract.Ensures(clone ^ ReferenceEquals(matrix, Contract.ValueAtReturn(out matrix)));
 
                 GetRowsCount(matrix, out var N);
                 if (b is null)
@@ -1526,16 +1419,6 @@ namespace MathCore
                 bool clone_b = true
             )
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.Ensures(Contract.ValueAtReturn(out matrix) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(clone_matrix ^ ReferenceEquals(matrix, Contract.ValueAtReturn(out matrix)));
-                Contract.Ensures(clone_b ^ ReferenceEquals(b, Contract.ValueAtReturn(out b)));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == Contract.ValueAtReturn(out p).GetLength(0));
 
                 GetLength(matrix, out var N, out var M);
                 if (b is null)
@@ -1589,7 +1472,8 @@ namespace MathCore
                     d *= main;
 
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(0d))
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(0d))
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
@@ -1773,7 +1657,6 @@ namespace MathCore
                     throw new ArgumentException(@"Число строк массива правой части СЛАУ не совпадает с числом строк матрицы системы", nameof(x));
                 if (b.GetLength(1) != x.GetLength(1))
                     throw new ArgumentException(@"Число столбцов массива правых частей не совпадает с числом столбцов массива неизвестных", nameof(b));
-                Contract.EndContractBlock();
 
                 var x1 = x;
                 var x0 = x1.CloneObject();
@@ -1811,13 +1694,6 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0)
                     throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.ValueAtReturn(out q) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out r) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(1) == matrix.GetLength(1));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
 
@@ -1873,13 +1749,6 @@ namespace MathCore
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.ValueAtReturn(out q) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out r) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(1) == matrix.GetLength(1));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
                 q = new double[N, M];
@@ -2317,10 +2186,6 @@ namespace MathCore
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new double[N, M];
@@ -2342,10 +2207,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(a));
                     if (b is null)
                         throw new ArgumentNullException(nameof(b));
-                    Contract.Ensures(Contract.Result<double[]>() != null);
-                    Contract.Ensures(Contract.Result<double[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<double[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new double[a.Length];
                     for (var i = 0; i < result.Length; i++)
@@ -2368,10 +2229,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(b));
                     if (a.Length != b.Length)
                         throw new InvalidOperationException(@"Размеры векторов не совпадают");
-                    Contract.Ensures(Contract.Result<double[]>() != null);
-                    Contract.Ensures(Contract.Result<double[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<double[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new double[a.Length];
                     for (var i = 0; i < result.Length; i++)
@@ -2393,10 +2250,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(b));
                     if (a.Length != b.Length)
                         throw new InvalidOperationException(@"Размеры векторов не совпадают");
-                    Contract.Ensures(Contract.Result<double[]>() != null);
-                    Contract.Ensures(Contract.Result<double[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<double[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new double[a.Length];
                     for (var i = 0; i < a.Length; i++)
@@ -2415,10 +2268,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(a));
                     if (b is null)
                         throw new ArgumentNullException(nameof(b));
-                    Contract.Ensures(Contract.Result<double[]>() != null);
-                    Contract.Ensures(Contract.Result<double[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<double[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new double[a.Length];
                     for (var i = 0; i < result.Length; i++)
@@ -2436,10 +2285,6 @@ namespace MathCore
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new double[N, M];
@@ -2459,10 +2304,6 @@ namespace MathCore
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new double[N, M];
@@ -2482,10 +2323,6 @@ namespace MathCore
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new double[N, M];
@@ -2505,10 +2342,6 @@ namespace MathCore
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new double[N, M];
@@ -2528,10 +2361,6 @@ namespace MathCore
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new double[N, M];
@@ -2555,14 +2384,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(A));
                     if (B is null)
                         throw new ArgumentNullException(nameof(B));
-                    Contract.Ensures(A.GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(A.GetLength(1) == B.GetLength(1));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == A.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == A.GetLength(1));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var N, out var M);
                     if (N != B.GetLength(0) || M != B.GetLength(1))
@@ -2588,14 +2409,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(A));
                     if (B is null)
                         throw new ArgumentNullException(nameof(B));
-                    Contract.Ensures(A.GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(A.GetLength(1) == B.GetLength(1));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == A.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == A.GetLength(1));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var N, out var M);
                     if (N != B.GetLength(0) || M != B.GetLength(1))
@@ -2621,10 +2434,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(A));
                     if (col is null)
                         throw new ArgumentNullException(nameof(col));
-                    Contract.Ensures(A.GetLength(1) == col.Length);
-                    Contract.Ensures(Contract.Result<double[]>() != null);
-                    Contract.Ensures(Contract.Result<double[]>().Length == A.GetLength(0));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var N, out var M);
                     if (M != col.Length)
@@ -2650,10 +2459,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(B));
                     if (row is null)
                         throw new ArgumentNullException(nameof(row));
-                    Contract.Ensures(B.GetLength(0) == row.Length);
-                    Contract.Ensures(Contract.Result<double[]>() != null);
-                    Contract.Ensures(Contract.Result<double[]>().Length == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(B, out var N, out var M);
                     if (B.Length != N)
@@ -2680,7 +2485,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(col));
                     if (col.Length != row.Length)
                         throw new ArgumentException(@"Число столбцов элементов строки не равно числу элементов столбца", nameof(row));
-                    Contract.EndContractBlock();
 
                     var result = default(double);
                     for (var i = 0; i < row.Length; i++)
@@ -2703,10 +2507,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(B));
                     if (A.GetLength(1) != B.GetLength(0))
                         throw new ArgumentOutOfRangeException(nameof(B), @"Число столбцов матрицы А не равно числу строк матрицы B");
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == A.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var A_N, out var A_M);
                     GetColsCount(B, out var B_M);
@@ -2778,7 +2578,6 @@ namespace MathCore
                         throw new ArgumentException(@"Число строк матрицы результата не равно числу строк первой матрицы", nameof(result));
                     if (result.GetLength(1) != B.GetLength(1))
                         throw new ArgumentException(@"Число столбцов матрицы результата не равно числу строк второй матрицы", nameof(result));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var A_N, out var A_M);
                     GetColsCount(B, out var B_M);
@@ -2811,8 +2610,6 @@ namespace MathCore
                         throw new ArgumentNullException(nameof(A));
                     if (B is null)
                         throw new ArgumentNullException(nameof(B));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var A_N, out var A_M);
                     GetLength(B, out var B_N, out var B_M);
@@ -2868,7 +2665,6 @@ namespace MathCore
                         throw new ArgumentException($@"Длина вектора {nameof(x)} не равна числу строк матрицы {nameof(a)}", nameof(x));
                     if (y.Length != a.GetLength(1))
                         throw new ArgumentException($@"Длина вектора {nameof(y)} не равна числу столбцов матрицы {nameof(a)}", nameof(y));
-                    Contract.EndContractBlock();
 
                     var result = default(double);
 
@@ -2913,10 +2709,6 @@ namespace MathCore
                         throw new ArgumentException($@"Число столбцов матрицы {nameof(x)} не равно числу строк матрицы {nameof(a)}", nameof(x));
                     if (y.GetLength(0) != a.GetLength(1))
                         throw new ArgumentException($@"Число строк матрицы {nameof(y)} не равно числу столбцов матрицы {nameof(a)}", nameof(y));
-                    Contract.Ensures(Contract.Result<double[,]>() != null);
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(0) == x.GetLength(0));
-                    Contract.Ensures(Contract.Result<double[,]>().GetLength(1) == x.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetRowsCount(x, out var x_N);
                     GetLength(a, out var N, out var M);
@@ -2962,7 +2754,6 @@ namespace MathCore
                         throw new ArgumentException($@"Матрица {nameof(a)} билинейной формы X*A*X^T не квадратная", nameof(a));
                     if (x.Length != a.GetLength(0))
                         throw new ArgumentException($@"Длина вектора {nameof(x)} не равна числу строк матрицы {nameof(a)}", nameof(x));
-                    Contract.EndContractBlock();
 
                     if (x.Length == 0)
                         return double.NaN;

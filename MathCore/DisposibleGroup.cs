@@ -2,15 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace MathCore
 {
     /// <summary>Группа объектов, поддерживающих интерфейс <see cref="T:System.IDisposable">освобождения ресурсов</see></summary>
     /// <typeparam name="T">Тип объектов, подерживающих интерфейс <see cref="T:System.IDisposable"/></typeparam>
-    public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<int, T>
-        where T : IDisposable
+    public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<int, T> where T : IDisposable
     {
         /* ------------------------------------------------------------------------------------------ */
 
@@ -23,15 +21,7 @@ namespace MathCore
         public int Count => _Items.Length;
 
         /// <summary>Массив элементов группы</summary>
-        public T[] Items
-        {
-            [DST]
-            get
-            {
-                Contract.Ensures(Contract.Result<T[]>() != null, "Свойство вернуло нулевую ссылку на массив элементов группы");
-                return _Items;
-            }
-        }
+        public T[] Items => _Items;
 
         /// <summary>Элемент группы</summary>
         /// <param name="i">Номер элемента группы</param>
@@ -43,17 +33,12 @@ namespace MathCore
         /// <summary>Группа <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></summary>
         /// <param name="item"><typeparam name="T">Объект</typeparam> интерфейса <see cref="T:System.IDisposable"/></param>
         [DST]
-        public DisposableGroup(params T[] item)
-        {
-            Contract.Requires(item != null, "Передана нуливая ссылка на массив элементов группы");
-            _Items = item;
-        }
+        public DisposableGroup(params T[] item) => _Items = item;
 
         /// <summary>Группа <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></summary>
         /// <param name="items">Перечисление <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></param>
         [DST]
-        public DisposableGroup(IEnumerable<T> items)
-            : this(items.ToArray()) => Contract.Requires(items != null, "Передана нулевая ссылка на перечисление элементов группы");
+        public DisposableGroup(IEnumerable<T> items) : this(items.ToArray()) { }
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -64,12 +49,7 @@ namespace MathCore
         /// <summary>Получить перечислитель элементов группы</summary>
         /// <returns>Перечислитель элементов группы</returns>
         [DST]
-        public IEnumerator<T> GetEnumerator()
-        {
-            Contract.Ensures(Contract.Result<IEnumerator<T>>() != null,
-                "В результате работы метода получения итератора была возвращена нулевая ссылка на перечислитель элементов группы");
-            return new List<T>(_Items).GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)_Items).GetEnumerator();
 
 
         /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>

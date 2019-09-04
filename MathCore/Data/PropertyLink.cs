@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
 namespace MathCore.Data
@@ -82,19 +81,8 @@ namespace MathCore.Data
         /// <param name="Destination">Приёмник данных</param>
         /// <param name="DestinationPropertyName">Имя свойства приёмника данных</param>
         /// <param name="Enable">Признак активности связи (по умолчанию = true)</param>
-        public PropertyLink(TSource Source, string SourcePropertyName, TDestination Destination, string DestinationPropertyName, bool Enable = true)
+        public PropertyLink(TSource Source, [NotNull] string SourcePropertyName, TDestination Destination, [NotNull] string DestinationPropertyName, bool Enable = true)
         {
-            // ReSharper disable InvocationIsSkipped
-            Contract.Requires(Source != null);
-            Contract.Requires(!string.IsNullOrEmpty(SourcePropertyName));
-            Contract.Requires(Destination != null);
-            Contract.Requires(!string.IsNullOrEmpty(DestinationPropertyName));
-            Contract.Ensures(_SourcePropertyDescriptor != null);
-            Contract.Ensures(_DestinationPropertyDescriptor != null);
-            Contract.Ensures(_Source != null);
-            Contract.Ensures(_Destination != null);
-            // ReSharper restore InvocationIsSkipped
-
             _Enable = Enable;
 
             _Source = Source;

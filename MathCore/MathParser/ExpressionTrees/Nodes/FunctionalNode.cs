@@ -56,7 +56,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                     });
 
             //Запрос к парсеру о операторе
-            Operator = Parser.GetFunctional(term.Name);
+            Operator = ExpressionParser.GetFunctional(term.Name);
             //Инициализация оператора
             Operator.Initialize(_ParametersExpression, _CoreExpression, Parser, Expression);
         }

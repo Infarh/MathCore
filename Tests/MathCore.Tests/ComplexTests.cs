@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using MathCore.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable UnusedMember.Local
 
 namespace MathCore.Tests
 {
@@ -23,14 +24,7 @@ namespace MathCore.Tests
 
         private static Complex Rnd => new Complex(Random, Random);
 
-        private static int GetRNDInt(int Min = 5, int Max = 15)
-        {
-            Contract.Requires(Min <= Max);
-            Contract.Ensures(Contract.Result<int>() >= Min);
-            Contract.Ensures(Contract.Result<int>() <= Max);
-            //System.Diagnostics.Contracts.Contract.Re
-            return RndGenerator.Next(Min, Max);
-        }
+        private static int GetRNDInt(int Min = 5, int Max = 15) => RndGenerator.Next(Min, Max);
 
         private static double GetRNDDouble(double Min = -20, double Max = 20)
         {
@@ -38,6 +32,7 @@ namespace MathCore.Tests
             return delta * RndGenerator.NextDouble() - Min;
         }
 
+        [NotNull]
         private static double[] GetRandomVector(int Length = 0) => new double[Length == 0 ? GetRNDInt() : Length].Initialize(i => GetRNDDouble());
 
         /* ------------------------------------------------------------------------------------------ */

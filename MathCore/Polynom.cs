@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -42,13 +41,7 @@ namespace MathCore
         /// <param name="Root">Корни полинома</param>
         /// <returns>Полином с указанными корнями</returns>
         [NotNull]
-        public static Polynom FromRoots([NotNull] params double[] Root)
-        {
-            Contract.Requires(Root != null);
-            Contract.Ensures(Contract.Result<Polynom>() != null);
-
-            return new Polynom(Array.GetCoefficients(Root));
-        }
+        public static Polynom FromRoots([NotNull] params double[] Root) => new Polynom(Array.GetCoefficients(Root));
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -91,40 +84,24 @@ namespace MathCore
 
         /// <inheritdoc />
         [DST]
-        public Polynom([NotNull] IEnumerable<double> a)
-            : this(a.ToArray())
-        {
-            Contract.Requires(a != null);
-            Contract.Requires(a.Any());
-            Contract.Ensures(_a != null);
-            Contract.Ensures(_a.Length > 0);
-            Contract.Ensures(Power >= 0);
-        }
+        public Polynom([NotNull] IEnumerable<double> a) : this(a.ToArray()) { }
 
         /// <inheritdoc />
         [DST]
-        public Polynom([NotNull] IEnumerable<int> a)
-            : this(a.Select(v => (double)v))
-        {
-            Contract.Requires(a != null);
-            Contract.Requires(a.Any());
-            Contract.Ensures(_a != null);
-            Contract.Ensures(_a.Length > 0);
-            Contract.Ensures(Power >= 0);
-        }
+        public Polynom([NotNull] IEnumerable<int> a) : this(a.Select(v => (double)v)) { }
 
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Получить значение полинома</summary>
         /// <param name="x">Аргумент</param>
         /// <returns>Значение полинома в точке x</returns>
-        [Pure, DST]
+        [DST]
         public double Value(double x) => Array.GetValue(_a, x);
 
         /// <summary>Вычислить комплексное значение полинома</summary>
         /// <param name="z">Комплексный аргумент</param>
         /// <returns>Комплексное значение полинома в точке</returns>
-        [Pure, DST]
+        [DST]
         public Complex Value(Complex z) => Array.GetValue(_a, z);
 
         /// <summary>Получить функцию полинома</summary>
@@ -183,16 +160,7 @@ namespace MathCore
         /// <param name="Order">Порядок дифференциала</param>
         /// <returns>Полином - результат дифференцирования</returns>
         [NotNull]
-        public Polynom GetDifferential(int Order = 1)
-        {
-            Contract.Requires(Order > 0);
-
-            //var result = this;
-            //while (Order-- > 0 && result.Length > 0)
-            //    result = new Polynom(result.Select((a, i) => (a, i)).Skip(1).Select(v => v.a * v.i));
-            //return result;
-            return new Polynom(Array.GetDifferential(_a, Order));
-        }
+        public Polynom GetDifferential(int Order = 1) => new Polynom(Array.GetDifferential(_a, Order));
 
         /// <summary>Интегрирование полинома</summary>
         /// <param name="C">Константа интегрирования</param>
@@ -263,13 +231,13 @@ namespace MathCore
         [NotNull] public Polynom Clone() => new Polynom((double[])_a.Clone());
         object ICloneable.Clone() => Clone();
 
-        [Pure, DST]
+        [DST]
         public override bool Equals(object obj) => Equals(obj as Polynom);
 
         #endregion
 
         /// <inheritdoc />
-        [Pure, DST]
+        [DST]
         public override int GetHashCode() => _a.Select((i, a) => i.GetHashCode() ^ a.GetHashCode()).Aggregate(0x285da41, (S, s) => S ^ s);
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<double>)this).GetEnumerator();

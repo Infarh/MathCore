@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
@@ -46,7 +45,7 @@ namespace MathCore
         /// <summary>Символ Кронекера δ(i,j) = 1 - если i = j, и = 0 - если i ≠ j</summary>
         /// <param name="i">Индекс</param><param name="j">Индекс</param>
         /// <returns>1 - если i = j, и = 0 - если i ≠ j</returns>
-        [DST, Pure]
+        [DST]
         public static int KroneckerDelta(int i, int j) => i == j ? 1 : 0;
     }
 }

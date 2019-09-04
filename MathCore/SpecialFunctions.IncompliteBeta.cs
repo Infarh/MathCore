@@ -1,6 +1,5 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 
 namespace MathCore
 {
@@ -52,9 +51,6 @@ namespace MathCore
             [DST]
             public static double IncompleteBeta(double a, double b, double x)
             {
-                Contract.Requires(a > 0, "a > 0");
-                Contract.Requires(b > 0, "b > 0");
-                Contract.Requires(x >= 0 && x <= 1, "0 <= x <= 1");
                 if(a <= 0) throw new ArgumentOutOfRangeException(nameof(a), "a должна быть > 0");
                 if(b <= 0) throw new ArgumentOutOfRangeException(nameof(b), "b должна быть > 0");
                 if(x < 0 || x > 1) throw new ArgumentOutOfRangeException(nameof(x), "a должна быть в пределах [0;1]");
@@ -147,10 +143,6 @@ namespace MathCore
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0059:Ненужное присваивание значения", Justification = "<Ожидание>")]
             public static double IncompleteBetaInversed(double a, double b, double y)
             {
-                Contract.Requires(y >= 0 && y <= 1, "y должен находиться в пределах [0;1]");
-                //if(y < 0 || y > 1)
-                //    throw new ArgumentOutOfRangeException("y", "y должен находиться в пределах [0;1]");
-
                 //
                 // special cases
                 //
@@ -235,7 +227,7 @@ namespace MathCore
                         lgm = (yp * yp - 3) / 6;
                         x = 2 / (1 / (2 * aaa - 1) + 1 / (2 * bbb - 1));
                         d = yp * Math.Sqrt(x + lgm) / x - (1 / (2 * bbb - 1) - 1 / (2 * aaa - 1)) *
-                            (lgm + 5 / 6 - 2 / (3 * x));
+                            (lgm + 5d / 6 - 2 / (3 * x));
 
                         d *= 2;
 

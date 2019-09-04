@@ -1,6 +1,6 @@
 ﻿using System;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 
 namespace MathCore
 {
@@ -19,15 +19,7 @@ namespace MathCore
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Используемый объект</summary>
-        public T Object
-        {
-            [DST]
-            get
-            {
-                Contract.Ensures(Contract.Result<T>() is { });
-                return _Obj;
-            }
-        }
+        public T Object => _Obj;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -35,17 +27,11 @@ namespace MathCore
         /// <param name="obj">Уничтожаемый объект</param>
         /// <param name="Disposer">Метод освобождения ресурсов</param>
         [DST]
-        public UsingObject(T obj, Action<T> Disposer)
+        public UsingObject([NotNull] T obj, [NotNull] Action<T> Disposer)
         {
-            Contract.Requires(obj is { });
-            Contract.Requires(Disposer is { });
-            Contract.Ensures(_Obj is { });
-            Contract.Ensures(_Disposer is { });
             if(obj is null) throw new ArgumentNullException(nameof(obj));
-            if(Disposer is null) throw new ArgumentNullException(nameof(Disposer));
-
             _Obj = obj;
-            _Disposer = Disposer;
+            _Disposer = Disposer ?? throw new ArgumentNullException(nameof(Disposer));
         }
 
         /* ------------------------------------------------------------------------------------------ */
@@ -60,7 +46,7 @@ namespace MathCore
         /// <param name="obj">ОБъект-оболочка</param>
         /// <returns>Внутренний объект</returns>
         [DST]
-        public static implicit operator T(UsingObject<T> obj) => obj._Obj;
+        public static implicit operator T([NotNull] UsingObject<T> obj) => obj._Obj;
 
         /* ------------------------------------------------------------------------------------------ */
     }

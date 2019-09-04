@@ -1,5 +1,6 @@
-﻿using System.Diagnostics.Contracts;
-
+﻿
+// ReSharper disable UnusedMember.Global
+// ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
     public class Field<TObject, TValue>
@@ -23,8 +24,6 @@ namespace System.Reflection
 
         private void Initialize(TObject o, string FieldName, bool IsPrivate)
         {
-            Contract.Requires(!string.IsNullOrEmpty(FieldName));
-
             var type = typeof(TObject);
             if(type == typeof(TObject) && o != null)
                 type = o.GetType();

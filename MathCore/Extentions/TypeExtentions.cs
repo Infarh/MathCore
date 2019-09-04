@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class TypeExtentions
@@ -49,7 +50,7 @@ namespace System
             return res;
         }
 
-        public static object Cast(this Type type, object obj) => GetCasterFrom(type, obj)(obj);
+        public static object Cast([NotNull] this Type type, object obj) => GetCasterFrom(type, obj)(obj);
 
         private static readonly IDictionary<PairOfTypes, Func<object, object>> __ConvertersDictionary = new Dictionary<PairOfTypes, Func<object, object>>();
 
@@ -67,13 +68,15 @@ namespace System
         }
 
 
-        public static Expression GetCastExpression(this Type FromType, Type ToType, ref ParameterExpression parameter)
+        [NotNull]
+        public static Expression GetCastExpression([NotNull] this Type FromType, [NotNull] Type ToType, [NotNull] ref ParameterExpression parameter)
         {
             if(parameter is null) parameter = Expression.Parameter(typeof(object), "value");
             return Expression.Convert(Expression.Convert(Expression.Convert(__ConvParameter, FromType), ToType), typeof(object));
         }
 
-        public static LambdaExpression GetConvertExpression(this Type FromType, Type ToType)
+        [NotNull]
+        public static LambdaExpression GetConvertExpression([NotNull] this Type FromType, [NotNull] Type ToType)
         {
             var c = FromType.GetTypeConverter();
             TypeConverter c_to = null;
@@ -94,7 +97,8 @@ namespace System
             return Expression.Lambda(Expression.Convert(expr_conversation, ToType), expr_pFrom);
         }
 
-        public static Expression<Func<object, object>> GetConvertExpression_Object(this Type FromType, Type ToType)
+        [NotNull]
+        public static Expression<Func<object, object>> GetConvertExpression_Object(this Type FromType, [NotNull] Type ToType)
         {
             var c = FromType.GetTypeConverter();
             TypeConverter c_to = null;
@@ -117,12 +121,13 @@ namespace System
         /// <summary>Получить конвертер значений для указанного типа данных</summary>
         /// <param name="type">Тип, для которого требуется получить конвертер</param>
         /// <returns>Конвертер указанного типа данных</returns>
-        public static TypeConverter GetTypeConverter(this Type type) => TypeDescriptor.GetConverter(type);
+        [NotNull]
+        public static TypeConverter GetTypeConverter([NotNull] this Type type) => TypeDescriptor.GetConverter(type);
 
         /// <summary>Получить тип по его имени из всех загруженных сборок</summary>
         /// <param name="TypeName">Имя типа</param>
         /// <returns>Тип</returns>
-        [DST]
+        [DST, CanBeNull]
         public static Type GetType(string TypeName)
         {
             var type_array = AppDomain.CurrentDomain.GetAssemblies().
@@ -138,63 +143,39 @@ namespace System
         public static TAttribute[] GetCustomAttributes<TAttribute>(this Type T)
             where TAttribute : Attribute => GetCustomAttributes<TAttribute>(T, false);
 
-        [DST]
-        public static TAttribute[] GetCustomAttributes<TAttribute>(this Type T, bool Inherited)
+        [DST, NotNull]
+        public static TAttribute[] GetCustomAttributes<TAttribute>([NotNull] this Type T, bool Inherited)
              where TAttribute : Attribute => T.GetCustomAttributes(typeof(TAttribute), Inherited).OfType<TAttribute>().ToArray();
 
-        [DST]
-        public static object CreateObject(this Type type)
-        {
-            //var lv_Info = type.GetConstructor(new Type[] { });
-            //if(lv_Info is null)
-            //    throw new InvalidOperationException("Не найден конструктор типа " +
-            //        type + " без параметров. Для данного типа доступны следующие конструкторы " +
-            //        type.GetConstructors().ConvertObjectTo(CInfo =>
-            //        {
-            //            if(CInfo.Length == 0) return "{}";
-            //            var Result = "{" + CInfo[0].ToString();
-            //            for(var i = 1; i < CInfo.Length; i++)
-            //                Result += "; " + CInfo[i].ToString();
-            //            return Result + "}";
-            //        }));
-            //return lv_Info.Invoke(new object[] { });
-            Contract.Requires(type != null);
-            return Activator.CreateInstance(type);
-        }
+        [DST, NotNull]
+        public static object CreateObject([NotNull] this Type type) => Activator.CreateInstance(type);
 
-        [DST]
-        public static T Create<T>(this Type type) => (T)type.CreateObject();
+        [DST, NotNull]
+        public static T Create<T>([NotNull] this Type type) => (T)type.CreateObject();
 
         [DST]
         public static T Create<T>(this Type type, params object[] Params) => (T)type.CreateObject(Params);
 
-        [DST]
-        public static object CreateObject(this Type type, params object[] Params)
-        {
-            Contract.Requires(type != null);
-            return Activator.CreateInstance(type, Params);
-        }
+        [DST, NotNull]
+        public static object CreateObject([NotNull] this Type type, params object[] Params) => Activator.CreateInstance(type, Params);
 
-        [DST]
-        public static object CreateObject(this Type type, BindingFlags Flags, Binder binder, params object[] Params)
-        {
-            Contract.Requires(type != null);
-            return Activator.CreateInstance(type, Flags, binder, Params);
-        }
+        [DST, NotNull]
+        public static object CreateObject([NotNull] this Type type, BindingFlags Flags, Binder binder, params object[] Params) => Activator.CreateInstance(type, Flags, binder, Params);
 
-        [DST]
+        [DST, NotNull]
         public static T Create<T>(params object[] Params) => (T)CreateObject(typeof(T), Params);
 
-        [DST]
+        [DST, NotNull]
         public static T Create<T>(BindingFlags Flags, Binder binder, params object[] Params) => (T)CreateObject(typeof(T), Flags, binder, Params);
 
-        public static void AddConvreter(this Type type, Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
+        public static void AddConvreter([NotNull] this Type type, [NotNull] Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
 
-        public static void AddConvreter(this Type type, params Type[] ConverterTypes) => 
+        public static void AddConvreter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) => 
             TypeDescriptor.AddAttributes(type, ConverterTypes.Select(t => new TypeConverterAttribute(t)).Cast<Attribute>().ToArray());
 
-        public static TypeDescriptionProvider GetProvider(this Type type) => TypeDescriptor.GetProvider(type);
+        [NotNull]
+        public static TypeDescriptionProvider GetProvider([NotNull] this Type type) => TypeDescriptor.GetProvider(type);
 
-        public static void AddProvider(this Type type, TypeDescriptionProvider provider) => TypeDescriptor.AddProvider(provider, type);
+        public static void AddProvider([NotNull] this Type type, [NotNull] TypeDescriptionProvider provider) => TypeDescriptor.AddProvider(provider, type);
     }
 }

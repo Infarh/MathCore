@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -145,7 +144,6 @@ namespace MathCore.Values
         /// <param name="context">Контекст сериализации</param>
         private AverageValue([NotNull] SerializationInfo info, StreamingContext context)
         {
-            Contract.Requires(info != null);
             if (info is null) throw new ArgumentNullException(nameof(info));
             _Value = info.GetDouble("Value");
             _N = info.GetInt32("N");
@@ -165,6 +163,7 @@ namespace MathCore.Values
         /// <param name="context">Конекст операции сериализации</param>
         /// <exception cref="ArgumentNullException">Если <paramref name="info"/> is null</exception>
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        // ReSharper disable once UnusedParameter.Global
         protected virtual void GetObjectData([NotNull] SerializationInfo info, StreamingContext context)
         {
             if (info is null) throw new ArgumentNullException(nameof(info));

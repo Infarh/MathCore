@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace MathCore.Statistic
@@ -13,9 +12,6 @@ namespace MathCore.Statistic
             private static double modelB_(double A, int n) => Math.Pow(A, n) / n.Factorial();
             public static double ModelB(double A, int N, int n)
             {
-                Contract.Requires(N > 0);
-                Contract.Requires(n >= 0);
-
                 double P = 1, q = 1, Q = 0;
 
                 for(var i = 1; i <= N; i++)

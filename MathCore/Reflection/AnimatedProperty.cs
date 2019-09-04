@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -35,10 +34,6 @@ namespace MathCore.Reflection
             bool Private = false)
             : base(o, Name, Private)
         {
-            Contract.Requires(Samples > 0);
-            Contract.Requires(Timeout >= 0);
-            Contract.Requires(Translator != null);
-
             _Samples = Samples;
             _Timeout = Timeout;
             _Translator = Translator;
@@ -79,13 +74,6 @@ namespace MathCore.Reflection
                 Value = _Translator(i, count);
                 Thread.Sleep(timeout);
             }
-        }
-
-        [ContractInvariantMethod]
-        private void InvariantCheck()
-        {
-            Contract.Invariant(_Samples > 0);
-            Contract.Invariant(_Timeout >= 0);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Values
 {
@@ -25,12 +25,7 @@ namespace MathCore.Values
         {
             get => _Tau;
             [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                Contract.Requires(value >= 0);
-                Contract.Ensures(_Tau >= 0);
-                _Tau = value;
-            }
+            set => _Tau = value;
         }
 
         /// <summary>Значение</summary>
@@ -54,8 +49,6 @@ namespace MathCore.Values
         /// <param name="tau">Постоянная времени усреднения >= 0</param>
         public TimeAverageValue(double tau)
         {
-            Contract.Requires(tau > 0, "Tau >= 0");
-            Contract.Ensures(Tau >= 0);
             Initialized = false;
             _StartTime = _LastTime = DateTime.Now;
             Tau = tau;

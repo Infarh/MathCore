@@ -1,6 +1,6 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -9,7 +9,7 @@ namespace MathCore
         /// <summary>Гамма-функция</summary>
         public static class Gamma
         {
-            [Pure, DST]
+            [DST]
             public static double G(double x)
             {
                 double z;

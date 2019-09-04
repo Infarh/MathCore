@@ -1,5 +1,5 @@
-﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
+﻿using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -21,11 +21,7 @@ namespace System
 
         /// <summary>Новый аргумент события с типизированным параметром</summary>
         /// <param name="Argument">Параметр аргумента</param>
-        public EventArgs(TArgument Argument)
-        {
-            Contract.Requires(Argument != null);
-            this.Argument = Argument;
-        }
+        public EventArgs(TArgument Argument) => this.Argument = Argument;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -41,13 +37,14 @@ namespace System
         /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
         /// <param name="Args">Аргумент события</param>
         /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument(EventArgs<TArgument> Args) => Args.Argument;
+        public static implicit operator TArgument([NotNull] EventArgs<TArgument> Args) => Args.Argument;
 
         /// <summary>
         /// Оgератор неявного преобразования типа зранимого значения в обёртку из аргумента события, содержащего это значение
         /// </summary>
         /// <param name="Argument">Объект аргумента события</param>
         /// <returns>Аргумент события</returns>
+        [NotNull]
         public static implicit operator EventArgs<TArgument>(TArgument Argument) => new EventArgs<TArgument>(Argument);
 
         /* ------------------------------------------------------------------------------------------ */
@@ -80,12 +77,12 @@ namespace System
         /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
         /// <param name="Args">Аргумент события</param>
         /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument1(EventArgs<TArgument1, TArgument2> Args) => Args.Argument1;
+        public static implicit operator TArgument1([NotNull] EventArgs<TArgument1, TArgument2> Args) => Args.Argument1;
 
         /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
         /// <param name="Args">Аргумент события</param>
         /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument2(EventArgs<TArgument1, TArgument2> Args) => Args.Argument2;
+        public static implicit operator TArgument2([NotNull] EventArgs<TArgument1, TArgument2> Args) => Args.Argument2;
     }
 
     /// <summary>Аргумент события с двумя типизированными параметрами</summary>
@@ -151,7 +148,7 @@ namespace System
         /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
         /// <param name="Args">Аргумент события</param>
         /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument(EventSenderArgs<TSender, TArgument> Args) => Args.Argument;
+        public static implicit operator TArgument([NotNull] EventSenderArgs<TSender, TArgument> Args) => Args.Argument;
 
         /* ------------------------------------------------------------------------------------------ */
     }

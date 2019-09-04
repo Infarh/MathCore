@@ -1,8 +1,8 @@
 using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.CompilerServices;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Values
 {
@@ -82,13 +82,7 @@ namespace MathCore.Values
             [DST]
             get => _SpeedCheckTimeout;
             [DST]
-            set
-            {
-                Contract.Requires(value >= 0);
-                Contract.Ensures(_SpeedCheckTimeout >= 0);
-
-                _SpeedCheckTimeout = value;
-            }
+            set => _SpeedCheckTimeout = value;
         }
 
         /* ------------------------------------------------------------------------------------------ */
@@ -98,7 +92,6 @@ namespace MathCore.Values
         /// <exception cref="ArgumentNullException">Исключение возникает при нуливой ссылке на поток данных</exception>
         public StreamDataSpeedValue(Stream DataStream)
         {
-            Contract.Requires(DataStream != null, "DataStream is null");
             _DataStream = DataStream;
             Reset();
         }
@@ -144,19 +137,6 @@ namespace MathCore.Values
         /// <param name="speed">Измеритель скорости</param>
         /// <returns>Значение скосроти</returns>
         public static implicit operator double(StreamDataSpeedValue speed) => speed.AverageValue;
-
-        /* ------------------------------------------------------------------------------------------ */
-
-        // ReSharper disable UnusedMember.Local
-        // ReSharper disable InvocationIsSkipped
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_SpeedCheckTimeout >= 0);
-            Contract.Invariant(_DataStream != null);
-        }
-        // ReSharper restore InvocationIsSkipped
-        // ReSharper restore UnusedMember.Local
 
         /* ------------------------------------------------------------------------------------------ */
     }

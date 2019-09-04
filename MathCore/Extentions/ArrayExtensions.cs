@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -13,12 +12,12 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
-        public static void Deconstruct<T>(this T[,] array, out int N, out int M)
+        public static void Deconstruct<T>([NotNull] this T[,] array, out int N, out int M)
         {
             N = array.GetLength(0);
             M = array.GetLength(1);
         }
-        public static void Deconstruct<T>(this T[,,] array, out int N, out int M, out int K)
+        public static void Deconstruct<T>([NotNull] this T[,,] array, out int N, out int M, out int K)
         {
             N = array.GetLength(0);
             M = array.GetLength(1);
@@ -28,7 +27,7 @@ namespace System
         [NotNull]
         public static IEnumerable<T> AsRandomEnumerable<T>([NotNull] this T[] Items, [CanBeNull] Random Rnd = null)
         {
-            if(Rnd is null) Rnd = new Random();
+            if (Rnd is null) Rnd = new Random();
             var index = CreateSequence(Items.Length).MixRef(Rnd);
             for (var i = 0; i < Items.Length; i++)
                 yield return Items[index[i]];
@@ -37,7 +36,7 @@ namespace System
         [NotNull]
         public static IEnumerable<T> TakeLast<T>([NotNull] this T[] Items, int Count)
         {
-            if(Count <= 0) yield break;
+            if (Count <= 0) yield break;
 
             for (var i = Math.Max(0, Items.Length - Count); i < Items.Length; i++)
                 yield return Items[i];
@@ -60,7 +59,7 @@ namespace System
         }
 
         [NotNull]
-        public static IEnumerable<T> EnumerateElements<T>(this T[,] array)
+        public static IEnumerable<T> EnumerateElements<T>([NotNull] this T[,] array)
         {
             var N = array.GetLength(0);
             var M = array.GetLength(1);
@@ -82,10 +81,6 @@ namespace System
         [DST, NotNull]
         public static T[][] Split<T>([NotNull] this T[] array, [NotNull] Func<T, bool> Splitter)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Splitter != null);
-            Contract.Ensures(Contract.Result<T[][]>() != null);
-
             var result = new List<T[]>(array.Length);
             var aggregator = new List<T>(array.Length);
 
@@ -141,11 +136,6 @@ namespace System
         /// <param name="high">Верхняя граница индекса сортировки</param>
         public static void QuickSort<T>([NotNull] this T[] A, int low, int high) where T : IComparable
         {
-            Contract.Requires(A != null);
-            Contract.Requires(low >= 0);
-            Contract.Requires(high < A.Length);
-            Contract.Requires(low < high);
-
             var i = low;
             var j = high;
             var x = A[(low + high) / 2];  // x - опорный элемент посредине между low и high
@@ -173,11 +163,6 @@ namespace System
         /// <param name="high">Верхняя граница индекса сортировки</param>
         public static void QuickSortT<T>([NotNull] this T[] A, int low, int high) where T : IComparable<T>
         {
-            Contract.Requires(A != null);
-            Contract.Requires(low >= 0);
-            Contract.Requires(high < A.Length);
-            Contract.Requires(low < high);
-
             var i = low;
             var j = high;
             var x = A[(low + high) / 2];  // x - опорный элемент посредине между low и high
@@ -204,7 +189,6 @@ namespace System
         /// <returns>Хеш-сумма элементов массива</returns>
         public static int GetComplexHashCode<T>([NotNull] this T[] Objects)
         {
-            Contract.Requires(Objects != null);
             if (Objects.Length == 0) return 0;
 
             var hash = Objects[0].GetHashCode();
@@ -215,7 +199,7 @@ namespace System
                 }
 
             return hash;
-        }  
+        }
 
         ///<summary>Объединение с массивом элементов</summary>
         ///<param name="A">Исходный массив</param>
@@ -225,11 +209,6 @@ namespace System
         [DST, NotNull]
         public static TArray[] Concatinate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[] B)
         {
-            Contract.Requires(A != null);
-            Contract.Requires(B != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == A.Length + B.Length);
-
             var Result = new TArray[A.Length + B.Length];
             A.CopyTo(Result, 0);
             B.CopyTo(Result, A.Length);
@@ -239,11 +218,6 @@ namespace System
         [NotNull]
         public static TArray[] Concatinate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[][] B)
         {
-            Contract.Requires(A != null);
-            Contract.Requires(B != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == A.Length + B.Length);
-
             var result = new TArray[A.Length + B.Sum(l => l.Length)];
             A.CopyTo(result, 0);
             var pos = A.Length;
@@ -264,12 +238,9 @@ namespace System
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         ///<typeparam name="TOut">Тип выходного элемента</typeparam>
         ///<returns>Выбранный элемент массива</returns>
-        [DST]
+        [DST, CanBeNull]
         public static TOut GetSelectedValue<TArray, TOut>([NotNull] this TArray[] A, [NotNull] Func<TArray, TOut, TOut> Selector)
         {
-            Contract.Requires(Selector != null);
-            Contract.Requires(A != null);
-
             var result = default(TOut);
             var len = A.Length;
             for (var i = 0; i < len; i++)
@@ -286,11 +257,6 @@ namespace System
         [DST, NotNull]
         public static TOut[] ConvertTo<TIn, TOut>([NotNull] this TIn[] In, [NotNull] Converter<TIn, TOut> converter)
         {
-            Contract.Requires(In != null);
-            Contract.Requires(converter != null);
-            Contract.Ensures(Contract.Result<TOut[]>() != null);
-            Contract.Ensures(Contract.Result<TOut[]>().Length == In.Length);
-
             var result = new TOut[In.Length];
             for (var i = 0; i < In.Length; i++)
                 result[i] = converter(In[i]);
@@ -302,12 +268,7 @@ namespace System
         ///<param name="action">Выполняемой действие</param>
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         [DST]
-        public static void Foreach<TArray>([NotNull] this TArray[] array, [NotNull] Action<TArray> action)
-        {
-            Contract.Requires(array != null);
-            Contract.Requires(action != null);
-            Array.ForEach(array, action);
-        }
+        public static void Foreach<TArray>([NotNull] this TArray[] array, [NotNull] Action<TArray> action) => Array.ForEach(array, action);
 
         ///<summary>Выполнение действия для всех элементов массива с обработкой исключений</summary>
         ///<param name="array">Массив элементов</param>
@@ -315,14 +276,7 @@ namespace System
         ///<param name="ErrorHandler">Обработчик исключения</param>
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         [DST]
-        public static void Foreach<TArray>([NotNull] this TArray[] array, [NotNull] Action<TArray> action, [NotNull] Func<Exception, bool> ErrorHandler)
-        {
-            Contract.Requires(array != null);
-            Contract.Requires(action != null);
-            Contract.Requires(ErrorHandler != null);
-
-            array.Foreach<TArray, Exception>(action, ErrorHandler);
-        }
+        public static void Foreach<TArray>([NotNull] this TArray[] array, [NotNull] Action<TArray> action, [NotNull] Func<Exception, bool> ErrorHandler) => array.Foreach<TArray, Exception>(action, ErrorHandler);
 
         /// <summary>Выполнение действия для всех элементов массива</summary>
         /// <param name="array">Массив элементов</param>
@@ -339,10 +293,6 @@ namespace System
             [NotNull] Func<TException, bool> ErrorHandler
         ) where TException : Exception
         {
-            Contract.Requires(array != null);
-            Contract.Requires(action != null);
-            Contract.Requires(ErrorHandler != null);
-
             var length = array.Length;
             for (var i = 0; i < length; i++)
                 try
@@ -363,14 +313,7 @@ namespace System
         ///<typeparam name="TOut">Тип элементов массива области значения</typeparam>
         ///<returns>Массив значений функции</returns>
         [DST, NotNull]
-        public static TOut[] Function<TIn, TOut>([NotNull] this TIn[] array, [NotNull] Func<TIn, TOut> f)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(array != null);
-            Contract.Ensures(Contract.Result<TOut[]>() != null);
-            return array.Select(f).ToArray();
-            //return array.ConvertAll(x => f(x));
-        }
+        public static TOut[] Function<TIn, TOut>([NotNull] this TIn[] array, [NotNull] Func<TIn, TOut> f) => array.Select(f).ToArray();
 
         /// <summary>Получить массив, индексы элементов которого имеют обратный порядок</summary>
         /// <typeparam name="TArray">Тип элементов массива</typeparam>
@@ -379,10 +322,6 @@ namespace System
         [DST, NotNull]
         public static TArray[] GetReversed<TArray>([NotNull] this TArray[] array)
         {
-            Contract.Requires(array != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == array.Length);
-
             var len = array.Length;
             var result = new TArray[len];
             for (var i = 0; i < len; i++)
@@ -393,12 +332,6 @@ namespace System
         [DST, NotNull]
         public static TArray[] GetSubArray<TArray>([NotNull] this TArray[] array, int Length, int Start = 0)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Length >= 0);
-            Contract.Requires(array.Length >= Start + Length);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == Length);
-
             var result = new TArray[Length];
 
             var j_Length = Start + Length;
@@ -420,12 +353,6 @@ namespace System
             [NotNull] Func<int, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == array.Length);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[]>(), array));
-
             for (var i = 0; i < array.Length; i++)
                 array[i] = Initializer(i);
             return array;
@@ -463,12 +390,6 @@ namespace System
             [NotNull] Func<int, TP, TValue> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TValue[]>() != null);
-            Contract.Ensures(Contract.Result<TValue[]>().Length == array.Length);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TValue[]>(), array));
-
             for (var i = 0; i < array.Length; i++)
                 array[i] = Initializer(i, p);
             return array;
@@ -494,12 +415,6 @@ namespace System
             [NotNull] Func<int, TP1, TP2, TValue> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TValue[]>() != null);
-            Contract.Ensures(Contract.Result<TValue[]>().Length == array.Length);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TValue[]>(), array));
-
             for (var i = 0; i < array.Length; i++)
                 array[i] = Initializer(i, p1, p2);
             return array;
@@ -512,12 +427,6 @@ namespace System
             [NotNull] Func<TArray, int, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == array.Length);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[]>(), array));
-
             for (var i = 0; i < array.Length; i++)
                 array[i] = Initializer(array[i], i);
             return array;
@@ -531,12 +440,6 @@ namespace System
             [NotNull] Func<TArray, int, TP, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == array.Length);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[]>(), array));
-
             for (var i = 0; i < array.Length; i++)
                 array[i] = Initializer(array[i], i, p);
             return array;
@@ -551,12 +454,6 @@ namespace System
             [NotNull] Func<TArray, int, TP1, TP2, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-            Contract.Ensures(Contract.Result<TArray[]>().Length == array.Length);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[]>(), array));
-
             for (var i = 0; i < array.Length; i++)
                 array[i] = Initializer(array[i], i, p1, p2);
             return array;
@@ -569,11 +466,6 @@ namespace System
             [NotNull] Func<int, int, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[,]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[,]>(), array));
-
             var length_i = array.GetLength(0);
             var length_j = array.GetLength(1);
             for (var i = 0; i < length_i; i++)
@@ -590,11 +482,6 @@ namespace System
             [NotNull] Func<int, int, TP, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[,]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[,]>(), array));
-
             var length_i = array.GetLength(0);
             var length_j = array.GetLength(1);
             for (var i = 0; i < length_i; i++)
@@ -612,18 +499,13 @@ namespace System
             [NotNull] Func<int, int, TP1, TP2, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[,]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[,]>(), array));
-
             var length_i = array.GetLength(0);
             var length_j = array.GetLength(1);
             for (var i = 0; i < length_i; i++)
                 for (var j = 0; j < length_j; j++)
                     array[i, j] = Initializer(i, j, p1, p2);
             return array;
-        } 
+        }
 
         [DST, NotNull]
         public static TArray[,] Initialize<TArray, TP1, TP2, TP3>
@@ -635,11 +517,6 @@ namespace System
             [NotNull] Func<int, int, TP1, TP2, TP3, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[,]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[,]>(), array));
-
             var length_i = array.GetLength(0);
             var length_j = array.GetLength(1);
             for (var i = 0; i < length_i; i++)
@@ -656,12 +533,6 @@ namespace System
             [NotNull] Func<int, int, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(ArrayInitializer != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[][]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
-
             for (var i = 0; i < array.Length; i++)
             {
                 array[i] = ArrayInitializer(i);
@@ -680,12 +551,6 @@ namespace System
             [NotNull] Func<int, int, TP, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(ArrayInitializer != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[][]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
-
             for (var i = 0; i < array.Length; i++)
             {
                 array[i] = ArrayInitializer(i, p);
@@ -705,12 +570,6 @@ namespace System
             [NotNull] Func<int, int, TP1, TP2, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(ArrayInitializer != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[][]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
-
             for (var i = 0; i < array.Length; i++)
             {
                 array[i] = ArrayInitializer(i, p1, p2);
@@ -731,12 +590,6 @@ namespace System
             [NotNull] Func<int, int, TP1, TP2, TP3, TArray> Initializer
         )
         {
-            Contract.Requires(array != null);
-            Contract.Requires(ArrayInitializer != null);
-            Contract.Requires(Initializer != null);
-            Contract.Ensures(Contract.Result<TArray[][]>() != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<TArray[][]>(), array));
-
             for (var i = 0; i < array.Length; i++)
             {
                 array[i] = ArrayInitializer(i, p1, p2, p3);
@@ -747,22 +600,11 @@ namespace System
         }
 
         [DST]
-        public static void Reverse<TArray>([NotNull] this TArray[] array)
-        {
-            Contract.Requires(array != null);
-
-            Array.Reverse(array);
-        }
+        public static void Reverse<TArray>([NotNull] this TArray[] array) => Array.Reverse(array);
 
         [DST]
         public static void SetValues<TArray>([NotNull] this TArray[] array, int StartIndex, [NotNull] params TArray[] Values)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(StartIndex >= 0);
-            Contract.Requires(StartIndex < array.Length);
-            Contract.Requires(Values != null);
-            Contract.Requires(Values.Length > 0);
-
             for (var i = 0; i + StartIndex < array.Length && i < Values.Length; i++)
                 array[i + StartIndex] = Values[i];
         }
@@ -770,34 +612,18 @@ namespace System
         [DST, NotNull]
         public static TArray[,] ToAligned<TArray>([NotNull] this TArray[][] array)
         {
-            Contract.Requires(array != null);
-            Contract.Ensures(Contract.Result<TArray[,]>() != null);
-
             var l = array.Select(a => a.Length).ToArray();
             return new TArray[array.Length, l.Max()].Initialize(array, l, (i, j, a, ll) => j >= ll[i] ? default : a[i][j]);
         }
 
         [DST, NotNull]
-        public static TArray[][] ToNonAligned<TArray>([NotNull] this TArray[,] array)
-        {
-            Contract.Requires(array != null);
-            Contract.Requires(array.GetLength(0) > 0);
-            Contract.Requires(array.GetLength(1) > 0);
-            Contract.Ensures(Contract.Result<TArray[][]>() != null);
-
-            return new TArray[array.GetLength(0)][]
+        public static TArray[][] ToNonAligned<TArray>([NotNull] this TArray[,] array) =>
+            new TArray[array.GetLength(0)][]
                .Initialize(array, (i, a) => new TArray[a.GetLength(1)].Initialize(i, a, (j, ii, aa) => aa[ii, j]));
-        }
 
         [DST]
         public static void SetCol<TArray>([NotNull] this TArray[,] array, [NotNull] TArray[] Col, int m = 0)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Col != null);
-            Contract.Requires(array.GetLength(0) != Col.Length, "Длина столбца не совпадает с высотой массива");
-            Contract.Requires(m >= 0);
-            Contract.Requires(m < array.GetLength(1), "Указанный номер столбца выходит за пределы размеров массива");
-
             var N = array.GetLength(0);
             var M = array.GetLength(1);
 
@@ -812,12 +638,6 @@ namespace System
         [DST]
         public static void SetRow<TArray>([NotNull] this TArray[,] array, [NotNull]  TArray[] Row, int n = 0)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(Row != null);
-            Contract.Requires(array.GetLength(1) != Row.Length, "Длина строки не совпадает с шириной массива");
-            Contract.Requires(n >= 0);
-            Contract.Requires(n < array.GetLength(0), "Указанный номер строки выходит за пределы размеров массива");
-
             var N = array.GetLength(0);
             var M = array.GetLength(1);
 
@@ -832,13 +652,6 @@ namespace System
         [DST, NotNull]
         public static TArray[] GetCol<TArray>([NotNull] this TArray[,] array, int m)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.GetLength(0) > 0);
-            Contract.Requires(array.GetLength(1) > 0);
-            Contract.Requires(m >= 0);
-            Contract.Requires(m < array.GetLength(1));
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-
             var N = array.GetLength(0);
             var M = array.GetLength(1);
 
@@ -854,11 +667,6 @@ namespace System
         [DST, NotNull]
         public static TArray[] GetRow<TArray>([NotNull] this TArray[,] array, int n)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(n >= 0);
-            Contract.Requires(n < array.GetLength(0));
-            Contract.Ensures(Contract.Result<TArray[]>() != null);
-
             var N = array.GetLength(0);
             var M = array.GetLength(1);
 
@@ -874,12 +682,6 @@ namespace System
         [DST]
         public static void SwapRows<T>([NotNull] this T[,] array, int i1, int i2)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(i1 >= 0);
-            Contract.Requires(i1 < array.GetLength(1));
-            Contract.Requires(i2 >= 0);
-            Contract.Requires(i2 < array.GetLength(1));
-
             var N = array.GetLength(0);
             for (var j = 0; j < N; j++)
             {
@@ -897,12 +699,6 @@ namespace System
         [DST]
         public static void SwapCols<T>([NotNull] this T[,] array, int j1, int j2)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(j1 >= 0);
-            Contract.Requires(j1 < array.GetLength(0));
-            Contract.Requires(j2 >= 0);
-            Contract.Requires(j2 < array.GetLength(0));
-
             var M = array.GetLength(1);
             for (var i = 0; i < M; i++)
             {
@@ -914,11 +710,6 @@ namespace System
 
         public static int GetMinIndex<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Requires(compare != null);
-            Contract.Ensures(Contract.Result<int>() >= 0);
-            Contract.Ensures(Contract.Result<int>() < array.Length);
             var i_min = 0;
             var min = array[i_min];
             for (var i = 1; i < array.Length; i++)
@@ -933,11 +724,6 @@ namespace System
 
         public static int GetMinIndex<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Requires(converter != null);
-            Contract.Ensures(Contract.Result<int>() >= 0);
-            Contract.Ensures(Contract.Result<int>() < array.Length);
             var i_max = 0;
             var min = converter(array[i_max]);
             for (var i = 1; i < array.Length; i++)
@@ -953,10 +739,6 @@ namespace System
 
         public static int GetMinIndex<T>([NotNull] this T[] array) where T : IComparable<T>
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Ensures(Contract.Result<int>() >= 0);
-            Contract.Ensures(Contract.Result<int>() < array.Length);
             var i_min = 0;
             var min = array[i_min];
             for (var i = 1; i < array.Length; i++)
@@ -971,11 +753,6 @@ namespace System
 
         public static int GetMaxIndex<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Requires(compare != null);
-            Contract.Ensures(Contract.Result<int>() >= 0);
-            Contract.Ensures(Contract.Result<int>() < array.Length);
             var i_max = 0;
             var max = array[i_max];
             for (var i = 1; i < array.Length; i++)
@@ -990,11 +767,6 @@ namespace System
 
         public static int GetMaxIndex<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Requires(converter != null);
-            Contract.Ensures(Contract.Result<int>() >= 0);
-            Contract.Ensures(Contract.Result<int>() < array.Length);
             var i_max = 0;
             var max = converter(array[i_max]);
             for (var i = 1; i < array.Length; i++)
@@ -1010,10 +782,6 @@ namespace System
 
         public static int GetMaxIndex<T>([NotNull] this T[] array) where T : IComparable<T>
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Ensures(Contract.Result<int>() >= 0);
-            Contract.Ensures(Contract.Result<int>() < array.Length);
             var i_max = 0;
             var max = array[i_max];
             for (var i = 1; i < array.Length; i++)
@@ -1033,12 +801,6 @@ namespace System
         [DST, NotNull]
         public static int[] CreateSequence(int length, int offset = 0)
         {
-            Contract.Requires(length > 0);
-            Contract.Requires(offset >= 0);
-            Contract.Requires(offset < length);
-            Contract.Ensures(Contract.Result<int[]>() != null);
-            Contract.Ensures(Contract.Result<int[]>().Length == length);
-
             var result = new int[length];
             for (var i = 0; i < length; i++)
                 result[i] = i + offset;
@@ -1050,13 +812,7 @@ namespace System
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Копия исходного массива с перемешанным созержимым</returns>
         [DST, NotNull]
-        public static T[] Mix<T>([NotNull] this T[] array)
-        {
-            Contract.Requires(array != null);
-            Contract.Ensures(Contract.Result<T[]>() != null);
-
-            return ((T[])array.Clone()).MixRef();
-        }
+        public static T[] Mix<T>([NotNull] this T[] array) => ((T[])array.Clone()).MixRef();
 
         /// <summary>Перемешать массив</summary>
         /// <typeparam name="T">Тип элементов массива</typeparam>
@@ -1064,14 +820,10 @@ namespace System
         /// <param name="rnd">Генератор случайных чисел</param>
         /// <returns>Исходный массив с перемешанным содержимым</returns>
         [DST, NotNull]
-        public static T[] MixRef<T>([NotNull] this T[] array, Random rnd = null)
+        public static T[] MixRef<T>([NotNull] this T[] array, Random rnd)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Ensures(Contract.Result<T[]>() != null);
-
             var length = array.Length;
-            if(rnd is null) rnd = new Random();
+            if (rnd is null) rnd = new Random();
             var temp = array[0];
             var index = 0;
             for (var i = 1; i <= length; i++)
@@ -1088,10 +840,6 @@ namespace System
         [DST, NotNull]
         public static T[] MixRef<T>([NotNull] this T[] array)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(array.Length > 0);
-            Contract.Ensures(Contract.Result<T[]>() != null);
-
             var length = array.Length - 1;
             var rnd = new Random();
             var temp = array[0];
@@ -1107,13 +855,9 @@ namespace System
         /// <param name="A">Буфферный массив соответствующей длины</param>
         /// <param name="B">Перечень устанавливаемых значений</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
-        [DST, NotNull]
+        [DST]
         public static void SetSubArrays<T>([NotNull] this T[] A, [NotNull] params T[][] B)
         {
-            Contract.Requires(A != null);
-            Contract.Requires(B != null);
-            Contract.Requires(A.Length == B.Select(b => b.Length).Sum());
-
             var index = 0;
             B.Foreach(b =>
             {
@@ -1122,19 +866,12 @@ namespace System
             });
         }
 
-        [DST, NotNull]
-        public static bool IsContains<T>([NotNull] this T[] array, T item)
-        {
-            Contract.Requires(array != null);
-            return Array.IndexOf(array, item) != -1;
-        }
+        [DST]
+        public static bool IsContains<T>([NotNull] this T[] array, T item) => Array.IndexOf(array, item) != -1;
 
         [DST, NotNull]
         public static T[] Liniarize<T>([NotNull] this T[][] array)
         {
-            Contract.Requires(array != null);
-            Contract.Ensures(Contract.Result<T[]>() != null);
-
             var result_length = array.Sum(a => a.Length);
             if (result_length == 0) return new T[0];
             var result = new T[result_length];
@@ -1147,12 +884,9 @@ namespace System
             return result;
         }
 
-        [DST, NotNull]
+        [DST]
         public static void Foreach<T>([NotNull] this T[,] array, [NotNull] Action<T> action)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(action != null);
-
             var I = array.GetLength(0);
             var J = array.GetLength(1);
             for (var i = 0; i < I; i++)
@@ -1160,12 +894,9 @@ namespace System
                     action(array[i, j]);
         }
 
-        [DST, NotNull]
+        [DST]
         public static void Foreach<T>([NotNull] this T[,] array, [NotNull] Action<int, int, T> action)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(action != null);
-
             var I = array.GetLength(0);
             var J = array.GetLength(1);
             for (var i = 0; i < I; i++)
@@ -1176,10 +907,6 @@ namespace System
         [DST, NotNull]
         public static IEnumerable<Q> Select<T, Q>([NotNull] this T[,] array, [NotNull] Func<T, Q> selector)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<IEnumerable<Q>>() != null);
-
             var I = array.GetLength(0);
             var J = array.GetLength(1);
             for (var i = 0; i < I; i++)
@@ -1190,9 +917,6 @@ namespace System
         [DST, NotNull]
         public static IEnumerable<Q> Select<T, Q>([NotNull] this T[,] array, [NotNull] Func<int, int, T, Q> selector)
         {
-            Contract.Requires(array != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<IEnumerable<Q>>() != null);
             var I = array.GetLength(0);
             var J = array.GetLength(1);
             for (var i = 0; i < I; i++)

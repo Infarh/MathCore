@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMethodReturnValue.Global
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
@@ -20,7 +20,7 @@ namespace MathCore
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <returns>Массив столбцов</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[][] MatrixToColsArray([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -38,7 +38,7 @@ namespace MathCore
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <returns>Массив строк</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[][] MatrixToRowsArray([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -56,7 +56,7 @@ namespace MathCore
             /// <param name="cols">Массив столбцов матрицы</param>
             /// <returns>Двумерный массив элементов матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="cols"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[,] ColsArrayToMatrix([NotNull] params Complex[][] cols)
             {
                 if (cols is null) throw new ArgumentNullException(nameof(cols));
@@ -71,7 +71,7 @@ namespace MathCore
             /// <param name="rows">Массив строк матрицы</param>
             /// <returns>Двумерный массив элементов матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="rows"/> is <see langword="null"/></exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[,] RowsArrayToMatrix([NotNull] params Complex[][] rows)
             {
                 if (rows is null) throw new ArgumentNullException(nameof(rows));
@@ -87,16 +87,12 @@ namespace MathCore
             /// <returns>Истина, если определитель матрицы равен нулю</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не содержит элементов, или если матрица не квазратная</exception>
-            [Pure]
             [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
             public static bool IsMatrixSungular([NotNull] Complex[,] matrix)
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
                 if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
-                Contract.Ensures(Contract.Result<bool>() ^ Determinant(matrix) != 0);
-                Contract.Ensures(Contract.Result<bool>() ^ Rank(matrix) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<bool>() ^ Rank(matrix) == matrix.GetLength(1));
                 return Rank(matrix) != matrix.GetLength(0);
             }
 
@@ -105,16 +101,11 @@ namespace MathCore
             /// <returns>Значение определителя матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-            [Pure]
             [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
             public static Complex Determinant([NotNull] Complex[,] matrix)
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
-                Contract.Ensures(Contract.Result<Complex>() == 0 ^ !IsMatrixSungular(matrix));
-                Contract.Ensures(Contract.Result<Complex>() == 0 ^ Rank(matrix) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex>() == 0 ^ Rank(matrix) == matrix.GetLength(1));
-                Contract.EndContractBlock();
                 if (matrix.Length == 0) return Complex.NaN;
                 GetTriangle(matrix, out var _, out var d);
                 return d;
@@ -125,14 +116,10 @@ namespace MathCore
             /// <returns>Ранг матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
-            [Pure]
             public static int Rank([NotNull] Complex[,] matrix)
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= matrix.GetLength(0) && Contract.Result<int>() <= matrix.GetLength(1));
-                Contract.Ensures(IsMatrixSungular(matrix) ^ (Contract.Result<int>() == matrix.GetLength(0) && Contract.Result<int>() == matrix.GetLength(1)));
-                Contract.EndContractBlock();
                 GetTriangle(matrix, out var rank, out var _);
                 return rank;
             }
@@ -148,12 +135,6 @@ namespace MathCore
             {
                 if (elements is null) throw new ArgumentNullException(nameof(elements));
                 if (elements.Length == 0) throw new ArgumentException(@"Массив не содержит элементов", nameof(elements));
-                Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == elements.Length);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == elements.Length);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == Contract.Result<Complex[,]>().GetLength(1));
-                Contract.Ensures(Contract.ForAll(0, elements.Length, i => elements[i] == Contract.Result<Complex[,]>()[i, i]));
-                Contract.EndContractBlock();
                 var N = elements.Length;
                 var result = new Complex[N, N];
                 for (var i = 0; i < N; i++) result[i, i] = elements[i];
@@ -165,14 +146,11 @@ namespace MathCore
             /// <returns>Массив элементов тени матрицы</returns>
             /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
+            [NotNull]
             public static Complex[] GetMatrixShadow([NotNull] Complex[,] matrix)
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException(@"Массив не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.Result<Complex[]>() != null);
-                Contract.Ensures(Contract.Result<Complex[]>().Length > 0);
-                Contract.Ensures(Contract.Result<Complex[]>().Length == Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
                 var result = new Complex[Math.Min(M, N)];
@@ -189,10 +167,6 @@ namespace MathCore
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0) throw new ArgumentException(@"Массив не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.Result<IEnumerable<Complex>>() != null);
-                Contract.Ensures(Contract.Result<IEnumerable<Complex>>().Any());
-                Contract.Ensures(Contract.Result<IEnumerable<Complex>>().Count() == Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
                 if (N == 0 || M == 0) throw new ArgumentException(@"Массив не содержит элементов", nameof(matrix));
@@ -212,13 +186,13 @@ namespace MathCore
                 if (p is null) throw new ArgumentNullException(nameof(p));
                 if (p.GetLength(0) != p.GetLength(1)) throw new ArgumentException(@"Матрица перестановок не квадратная", nameof(p));
                 if (p.GetLength(1) != matrix.GetLength(0)) throw new ArgumentException(@"Число строк матрицы не равно числу столбцов матрицы перестановок", nameof(matrix));
-                Contract.EndContractBlock();
 
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 var m = matrix.CloneObject();
                 // ReSharper disable CompareOfFloatsByEqualityOperator
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -244,12 +218,12 @@ namespace MathCore
                 if (p is null) throw new ArgumentNullException(nameof(p));
                 if (p.GetLength(0) != p.GetLength(1)) throw new ArgumentException(@"Матрица перестановок не квадратная", nameof(p));
                 if (p.GetLength(1) != matrix.GetLength(0)) throw new ArgumentException(@"Число строк матрицы не равно числу столбцов матрицы перестановок", nameof(matrix));
-                Contract.EndContractBlock();
 
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
                 var m = matrix.CloneObject();
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -270,7 +244,8 @@ namespace MathCore
             {
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -288,7 +263,8 @@ namespace MathCore
             {
                 GetRowsCount(p, out var N);
                 if (N == 1) return;
-                for (var i = 0; i < N; i++) if ((int)p[i, i] != 1)
+                for (var i = 0; i < N; i++)
+                    if ((int)p[i, i] != 1)
                     {
                         var j = 0;
                         while (j < N && (int)p[i, j] != 1) j++;
@@ -332,12 +308,9 @@ namespace MathCore
             /// <param name="N">Число строк матриы</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DST, Pure]
+            [DST]
             public static void GetLength([NotNull] Complex[,] matrix, out int N, out int M)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.ValueAtReturn(out N) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out M) == matrix.GetLength(1));
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 N = matrix.GetLength(0);
                 M = matrix.GetLength(1);
@@ -347,11 +320,9 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="N">Число строк матриы</param>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DST, Pure]
+            [DST]
             public static void GetRowsCount([NotNull] Complex[,] matrix, out int N)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.ValueAtReturn(out N) == matrix.GetLength(0));
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 N = matrix.GetLength(0);
             }
@@ -360,11 +331,9 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            [DST, Pure]
+            [DST]
             public static void GetColsCount([NotNull] Complex[,] matrix, out int M)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.ValueAtReturn(out M) == matrix.GetLength(1));
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 M = matrix.GetLength(1);
             }
@@ -373,7 +342,7 @@ namespace MathCore
             /// <param name="N">Размерность матрицы</param>
             /// <returns>Квадратный двумерный массив размерности NxN с 1 на главной диагонали</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы <paramref name="N"/> меньше 1</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static Complex[,] GetUnitaryArrayMatrix(int N)
             {
                 if (N < 1) throw new ArgumentOutOfRangeException(nameof(N), @"Размерность матрицы должна быть больше 0");
@@ -402,7 +371,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="A"/></exception>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="A"/> не квадратная</exception>
             /// <exception cref="ArgumentException">В случае если опорная строка <paramref name="i0"/> матрицы <paramref name="A"/> &lt; 0 и &gt; числа строк матрицы</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[,] GetTransvection([NotNull] Complex[,] A, int i0)
             {
                 GetRowsCount(A, out var N);
@@ -442,7 +411,7 @@ namespace MathCore
             /// <returns>Матрица-столбец, составленная из элементов столбца матрицы c индексом j</returns>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static Complex[,] GetCol([NotNull] Complex[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
@@ -458,8 +427,8 @@ namespace MathCore
             /// <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
-            [DST, NotNull, Pure]
-            public static Complex[] GetCol_Array(Complex[,] matrix, int j)
+            [DST, NotNull]
+            public static Complex[] GetCol_Array([NotNull] Complex[,] matrix, int j)
             {
                 GetRowsCount(matrix, out var N);
                 if (j < 0 || j > N) throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
@@ -492,7 +461,7 @@ namespace MathCore
             /// <returns>Матрица-строка, составленная из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static Complex[,] GetRow([NotNull] Complex[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -508,7 +477,7 @@ namespace MathCore
             /// <returns>Массив, составленный из элементов строки матрицы с индексом <paramref name="i"/></returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если указанный номер строки <paramref name="i"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа строк матрицы</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static Complex[] GetRow_Array([NotNull] Complex[,] matrix, int i)
             {
                 GetColsCount(matrix, out var M);
@@ -542,7 +511,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[,] Inverse([NotNull] Complex[,] matrix)
             {
                 var result = Inverse(matrix, out var p);
@@ -558,7 +527,7 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             /// <exception cref="ArgumentOutOfRangeException">Размерность массива 0х0</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[,] Inverse([NotNull] Complex[,] matrix, [NotNull] out Complex[,] p)
             {
                 GetLength(matrix, out var N, out var M);
@@ -578,13 +547,9 @@ namespace MathCore
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
             /// <exception cref="ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            [NotNull]
             public static Complex[,] GetSolve([NotNull] Complex[,] matrix, [NotNull] Complex[,] b, [NotNull] out Complex[,] p)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.EnsuresOnThrow<InvalidOperationException>(ReferenceEquals(b, Contract.ValueAtReturn(out b)));
 
                 var x = b;
                 if (!TrySolve(matrix, ref x, out p, true)) throw new InvalidOperationException(@"Невозможно найти обратную матрицу для вырожденной матрицы");
@@ -602,12 +567,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static void Solve([NotNull] Complex[,] matrix, [NotNull] ref Complex[,] b, [NotNull] out Complex[,] p, bool clone_b = false)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(clone_b ^ (Contract.Result<bool>() && !ReferenceEquals(b, Contract.ValueAtReturn(out b))));
-                Contract.EnsuresOnThrow<InvalidOperationException>(ReferenceEquals(b, Contract.ValueAtReturn(out b)));
 
                 if (!TrySolve(matrix, ref b, out p, clone_b)) throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
             }
@@ -628,12 +587,6 @@ namespace MathCore
                 if (b is null) throw new ArgumentNullException(nameof(b));
                 if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица системы не квадратная", nameof(matrix));
                 if (matrix.GetLength(0) != b.GetLength(0)) throw new ArgumentException(@"Число строк матрицы правой части не равно числу строк матрицы системы", nameof(b));
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(clone_b ^ (Contract.Result<bool>() && !ReferenceEquals(b, Contract.ValueAtReturn(out b))));
-                Contract.EndContractBlock();
 
                 var temp_b = b.CloneObject();
                 Triangulate(ref matrix, ref temp_b, out p, out var d);
@@ -645,7 +598,8 @@ namespace MathCore
                 {
                     var m = matrix[i0, i0];
                     if (!m.Equals(1)) for (var j = 0; j < b_M; j++) temp_b[i0, j] /= m;
-                    for (var i = i0 - 1; i >= 0; i--) if (!matrix[i, i0].Equals(default(Complex)))
+                    for (var i = i0 - 1; i >= 0; i--)
+                        if (!matrix[i, i0].Equals(default(Complex)))
                         {
                             var k = matrix[i, i0];
                             matrix[i, i0] = default;
@@ -686,7 +640,7 @@ namespace MathCore
             /// <summary>Транспонирование матрицы</summary>
             /// <returns>Транспонированная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [DST, NotNull, Pure]
+            [DST, NotNull]
             public static Complex[,] Transponse([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
@@ -739,12 +693,13 @@ namespace MathCore
             private static void CopyMinor([NotNull] Complex[,] matrix, int n, int m, int N, int M, [NotNull] Complex[,] result)
             {
                 var i0 = 0;
-                for (var i = 0; i < N; i++) if (i != n)
-                {
-                    var j0 = 0;
-                    for (var j = 0; j < M; j++) if (j != m) result[i0, j0++] = matrix[i, j];
-                    i0++;
-                }
+                for (var i = 0; i < N; i++)
+                    if (i != n)
+                    {
+                        var j0 = 0;
+                        for (var j = 0; j < M; j++) if (j != m) result[i0, j0++] = matrix[i, j];
+                        i0++;
+                    }
             }
 
             /// <summary>Минор матрицы по определённому элементу</summary>
@@ -1007,7 +962,7 @@ namespace MathCore
             /// <returns>Истина, если процедура выполнена успешно</returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-            public static bool GetLUPDecomposition(Complex[,] matrix, out Complex[,] c, out Complex d)
+            public static bool GetLUPDecomposition([NotNull] Complex[,] matrix, out Complex[,] c, out Complex d)
             {
                 GetRowsCount(matrix, out var N);
                 if (N != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
@@ -1050,12 +1005,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
             public static bool GetLUDecomposition([NotNull] Complex[,] matrix, [CanBeNull] out Complex[,] c)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(matrix.GetLength(0) > 0);
-                Contract.Requires(matrix.GetLength(0) == matrix.GetLength(1));
-                Contract.Ensures(Contract.Result<bool>() ^ Contract.ValueAtReturn(out c) is null);
-                Contract.Ensures(Contract.ValueAtReturn(out c).GetLength(0) == matrix.GetLength(0) && Contract.ValueAtReturn(out c).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out c).GetLength(1) == matrix.GetLength(1));
 
                 GetRowsCount(matrix, out var N);
                 if (N != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
@@ -1079,7 +1028,8 @@ namespace MathCore
             /// <param name="indexes">Массив индексов элементов стольцов</param>
             /// <returns>Матрица перестановок</returns>
             // ReSharper disable once SuggestBaseTypeForParameter
-            private static Complex[,] CreatePermutationMatrix(int[] indexes)
+            [NotNull]
+            private static Complex[,] CreatePermutationMatrix([NotNull] int[] indexes)
             {
                 var N = indexes.Length;
                 var P = new Complex[N, N];
@@ -1094,19 +1044,10 @@ namespace MathCore
             /// <param name="d">Определитель матрицы</param>
             /// <returns>Триугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [NotNull, Pure]
-            public static Complex[,] GetTriangle(Complex[,] matrix, out Complex[,] p, out int rank, out Complex d)
+            [NotNull]
+            public static Complex[,] GetTriangle([NotNull] Complex[,] matrix, out Complex[,] p, out int rank, out Complex d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0);
 
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 var result = matrix.CloneObject();
@@ -1120,16 +1061,10 @@ namespace MathCore
             /// <param name="d">Определитель матрицы</param>
             /// <returns>Триугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            [NotNull, Pure]
+            [NotNull]
             public static Complex[,] GetTriangle([NotNull] Complex[,] matrix, out int rank, out Complex d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0);
 
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 var result = matrix.CloneObject();
@@ -1146,18 +1081,10 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-            [NotNull, Pure]
-            public static Complex[,] GetTriangle([NotNull] Complex[,] matrix, Complex[,] b, out int rank, out Complex d)
+            [NotNull]
+            public static Complex[,] GetTriangle([NotNull] Complex[,] matrix, [NotNull] Complex[,] b, out int rank, out Complex d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Requires(b.GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == 0);
 
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1188,21 +1115,7 @@ namespace MathCore
                 bool clone_b = true
             )
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Requires(b.GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(0));
-                Contract.Ensures(clone_b ^ !ReferenceEquals(b, Contract.ValueAtReturn(out b)));
-                Contract.Requires(Contract.ValueAtReturn(out b).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out rank) > 0 && Contract.ValueAtReturn(out rank) <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(Contract.ValueAtReturn(out rank) == Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == default(Complex));
 
                 rank = Triangulate(ref matrix, ref b, out p, out d, false, clone_b);
                 return matrix;
@@ -1214,14 +1127,9 @@ namespace MathCore
             /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            public static int Triangulate([NotNull] Complex[,] matrix, out Complex[,] p, out Complex d)
+            public static int Triangulate([NotNull] Complex[,] matrix, [NotNull] out Complex[,] p, out Complex d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(!(Contract.Result<int>() < Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == default(Complex)));
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0) && Contract.ValueAtReturn(out p).GetLength(1) == matrix.GetLength(1));
 
                 GetLength(matrix, out var N, out var M);
                 d = Complex.Real;
@@ -1250,12 +1158,13 @@ namespace MathCore
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(default(Complex)))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = default;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                    }
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(default(Complex)))
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = default;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                        }
                 }
                 p = CreatePermutationMatrix(p_index);
                 return N1;
@@ -1266,12 +1175,9 @@ namespace MathCore
             /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            public static int Triangulate(Complex[,] matrix, out Complex d)
+            public static int Triangulate([NotNull] Complex[,] matrix, out Complex d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(!(Contract.Result<int>() < Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == default(Complex)));
 
                 GetLength(matrix, out var N, out var M);
                 d = Complex.Real;
@@ -1302,12 +1208,13 @@ namespace MathCore
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(default(Complex)))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = default;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                    }
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(default(Complex)))
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = default;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                        }
                 }
                 return N1;
             }
@@ -1320,14 +1227,9 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-            public static int Triangulate(Complex[,] matrix, Complex[,] b, out Complex d)
+            public static int Triangulate([NotNull] Complex[,] matrix, [NotNull] Complex[,] b, out Complex d)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.Result<int>() > 0);
-                Contract.Ensures(Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                Contract.Ensures(!(Contract.Result<int>() < Math.Min(matrix.GetLength(0), matrix.GetLength(1)) ^ Contract.ValueAtReturn(out d) == default(Complex)));
 
                 GetLength(matrix, out var N, out var M);
                 if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1366,13 +1268,14 @@ namespace MathCore
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(default(Complex)))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = default;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                        for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
-                    }
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(default(Complex)))
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = default;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                            for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
+                        }
                 }
                 if (N1 >= N) return N1;
                 for (var i = N1; i < N; i++) for (var j = 0; j < B_M; j++) b[i, j] = default;
@@ -1390,11 +1293,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static int Triangulate([NotNull] ref Complex[,] matrix, [NotNull] Complex[,] b, out Complex d, bool clone = true)
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.Ensures(Contract.ValueAtReturn(out matrix) != null);
-                Contract.Ensures(clone ^ ReferenceEquals(matrix, Contract.ValueAtReturn(out matrix)));
 
                 GetRowsCount(matrix, out var N);
                 if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1425,16 +1323,6 @@ namespace MathCore
                 bool clone_b = true
             )
             {
-                Contract.Requires(matrix != null);
-                Contract.Requires(b != null);
-                Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= Math.Min(matrix.GetLength(0), matrix.GetLength(1)));
-                Contract.Ensures(Contract.ValueAtReturn(out matrix) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out b) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out p) != null);
-                Contract.Ensures(clone_matrix ^ ReferenceEquals(matrix, Contract.ValueAtReturn(out matrix)));
-                Contract.Ensures(clone_b ^ ReferenceEquals(b, Contract.ValueAtReturn(out b)));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out p).GetLength(1) == Contract.ValueAtReturn(out p).GetLength(0));
 
                 GetLength(matrix, out var N, out var M);
                 if (b is null) throw new ArgumentNullException(nameof(b));
@@ -1480,13 +1368,14 @@ namespace MathCore
                     d *= main;
 
                     //Нормируем строку основной матрицы по первому элементу
-                    for (var i = i0 + 1; i < N; i++) if (!matrix[i, i0].Equals(default(Complex)))
-                    {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = default;
-                        for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                        for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
-                    }
+                    for (var i = i0 + 1; i < N; i++)
+                        if (!matrix[i, i0].Equals(default(Complex)))
+                        {
+                            var k = matrix[i, i0] / main;
+                            matrix[i, i0] = default;
+                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                            for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
+                        }
                 }
                 p = CreatePermutationMatrix(p_index);
                 if (N1 >= N) return N1;
@@ -1529,7 +1418,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static Complex GetMaxRowAbsSumm(Complex[,] matrix)
+            public static Complex GetMaxRowAbsSumm([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = default(Complex);
@@ -1546,7 +1435,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static Complex GetMaxColAbsSumm(Complex[,] matrix)
+            public static Complex GetMaxColAbsSumm([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = default(Complex);
@@ -1563,7 +1452,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Среднеквадратическое значение элементов матрицы</returns>
             /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-            public static Complex GetRMS(Complex[,] matrix)
+            public static Complex GetRMS([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var s = default(Complex);
@@ -1633,7 +1522,6 @@ namespace MathCore
                 if (x.GetLength(0) != matrix.GetLength(0)) throw new ArgumentException(@"Число строк массива неизвестных не совпадает с числом строк матрицы системы", nameof(x));
                 if (b.GetLength(0) != matrix.GetLength(0)) throw new ArgumentException(@"Число строк массива правой части СЛАУ не совпадает с числом строк матрицы системы", nameof(x));
                 if (b.GetLength(1) != x.GetLength(1)) throw new ArgumentException(@"Число столбцов массива правых частей не совпадает с числом столбцов массива неизвестных", nameof(b));
-                Contract.EndContractBlock();
 
                 var x1 = x;
                 var x0 = x1.CloneObject();
@@ -1666,13 +1554,6 @@ namespace MathCore
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.ValueAtReturn(out q) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out r) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(1) == matrix.GetLength(1));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
 
@@ -1724,13 +1605,6 @@ namespace MathCore
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
-                Contract.Ensures(Contract.ValueAtReturn(out q) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out r) != null);
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out q).GetLength(1) == matrix.GetLength(1));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(0) == matrix.GetLength(0));
-                Contract.Ensures(Contract.ValueAtReturn(out r).GetLength(1) == matrix.GetLength(1));
-                Contract.EndContractBlock();
 
                 GetLength(matrix, out var N, out var M);
                 q = new Complex[N, M];
@@ -1762,7 +1636,7 @@ namespace MathCore
             /// <exception cref="InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
             // ReSharper disable once FunctionComplexityOverflow
             // ReSharper disable once CyclomaticComplexity
-            public static void SVD(Complex[,] matrix, out Complex[,] u, out Complex[] w, out Complex[,] v)
+            public static void SVD([NotNull] Complex[,] matrix, out Complex[,] u, out Complex[] w, out Complex[,] v)
             {
                 GetLength(matrix, out var N, out var M);
 
@@ -2073,6 +1947,7 @@ namespace MathCore
                 /// <param name="v2">Второй сомножитель - число, на которое должны быть умножены все элементы вектора</param>
                 /// <returns>Вектор произведений элементов входного вектора и числа</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
+                [NotNull]
                 public static Complex[] Multiply([NotNull] Complex[] v1, Complex v2)
                 {
                     if (v1 is null) throw new ArgumentNullException(nameof(v1));
@@ -2088,6 +1963,7 @@ namespace MathCore
                 /// <param name="v2">Число-делитель</param>
                 /// <returns>Вектор, составленный из частного элементов вектора-делимого и числового делителя</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
+                [NotNull]
                 public static Complex[] Divade([NotNull] Complex[] v1, Complex v2)
                 {
                     if (v1 is null) throw new ArgumentNullException(nameof(v1));
@@ -2102,6 +1978,7 @@ namespace MathCore
                 /// <returns>Вектор - произведение компонентов исходных векторов</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="v1"/> or <paramref name="v2"/> is <see langword="null"/></exception>
                 /// <exception cref="ArgumentException">Длины векторов не совпадают</exception>
+                [NotNull]
                 public static Complex[] Projection([NotNull] Complex[] v1, [NotNull] Complex[] v2)
                 {
                     if (v1 is null) throw new ArgumentNullException(nameof(v1));
@@ -2130,10 +2007,6 @@ namespace MathCore
                 public static Complex[,] Add([NotNull] Complex[,] matrix, Complex x)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new Complex[N, M];
@@ -2151,10 +2024,6 @@ namespace MathCore
                 {
                     if (a is null) throw new ArgumentNullException(nameof(a));
                     if (b is null) throw new ArgumentNullException(nameof(b));
-                    Contract.Ensures(Contract.Result<Complex[]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new Complex[a.Length];
                     for (var i = 0; i < result.Length; i++) result[i] = a[i] + b[i];
@@ -2173,10 +2042,6 @@ namespace MathCore
                     if (a is null) throw new ArgumentNullException(nameof(a));
                     if (b is null) throw new ArgumentNullException(nameof(b));
                     if (a.Length != b.Length) throw new InvalidOperationException(@"Размеры векторов не совпадают");
-                    Contract.Ensures(Contract.Result<Complex[]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new Complex[a.Length];
                     for (var i = 0; i < result.Length; i++) result[i] = a[i] - b[i];
@@ -2189,15 +2054,12 @@ namespace MathCore
                 /// <returns>Вектор элементов произведения</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
                 /// <exception cref="InvalidOperationException">Размеры векторов не совпадают</exception>
+                [NotNull]
                 public static Complex[] MultiplyComponent([NotNull] Complex[] a, [NotNull] Complex[] b)
                 {
                     if (a is null) throw new ArgumentNullException(nameof(a));
                     if (b is null) throw new ArgumentNullException(nameof(b));
                     if (a.Length != b.Length) throw new InvalidOperationException(@"Размеры векторов не совпадают");
-                    Contract.Ensures(Contract.Result<Complex[]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new Complex[a.Length];
                     for (var i = 0; i < a.Length; i++) result[i] = a[i] * b[i];
@@ -2209,14 +2071,11 @@ namespace MathCore
                 /// <param name="b">Вектор - делитель</param>
                 /// <returns>Вектор, составленный из поэлементного частного элементов векторов делимого и делителя</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
+                [NotNull]
                 public static Complex[] DivadeComponent([NotNull] Complex[] a, [NotNull] Complex[] b)
                 {
                     if (a is null) throw new ArgumentNullException(nameof(a));
                     if (b is null) throw new ArgumentNullException(nameof(b));
-                    Contract.Ensures(Contract.Result<Complex[]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == a.Length);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == b.Length);
-                    Contract.EndContractBlock();
 
                     var result = new Complex[a.Length];
                     for (var i = 0; i < result.Length; i++) result[i] = a[i] / b[i];
@@ -2232,10 +2091,6 @@ namespace MathCore
                 public static Complex[,] Substract([NotNull] Complex[,] matrix, Complex x)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new Complex[N, M];
@@ -2252,10 +2107,6 @@ namespace MathCore
                 public static Complex[,] Substract(Complex x, [NotNull] Complex[,] matrix)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new Complex[N, M];
@@ -2272,10 +2123,6 @@ namespace MathCore
                 public static Complex[,] Multiply([NotNull] Complex[,] matrix, Complex x)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new Complex[N, M];
@@ -2292,10 +2139,6 @@ namespace MathCore
                 public static Complex[,] Divade([NotNull] Complex[,] matrix, Complex x)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new Complex[N, M];
@@ -2312,10 +2155,6 @@ namespace MathCore
                 public static Complex[,] Divade(Complex x, [NotNull] Complex[,] matrix)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == matrix.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == matrix.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(matrix, out var N, out var M);
                     var result = new Complex[N, M];
@@ -2335,14 +2174,6 @@ namespace MathCore
                 {
                     if (A is null) throw new ArgumentNullException(nameof(A));
                     if (B is null) throw new ArgumentNullException(nameof(B));
-                    Contract.Ensures(A.GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(A.GetLength(1) == B.GetLength(1));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == A.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == A.GetLength(1));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var N, out var M);
                     if (N != B.GetLength(0) || M != B.GetLength(1)) throw new ArgumentException(@"Размеры матриц не равны.", nameof(B));
@@ -2363,14 +2194,6 @@ namespace MathCore
                 {
                     if (A is null) throw new ArgumentNullException(nameof(A));
                     if (B is null) throw new ArgumentNullException(nameof(B));
-                    Contract.Ensures(A.GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(A.GetLength(1) == B.GetLength(1));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == A.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == A.GetLength(1));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == B.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var N, out var M);
                     if (N != B.GetLength(0) || M != B.GetLength(1)) throw new ArgumentException(@"Размеры матриц не равны.", nameof(B));
@@ -2391,10 +2214,6 @@ namespace MathCore
                 {
                     if (A is null) throw new ArgumentNullException(nameof(A));
                     if (col is null) throw new ArgumentNullException(nameof(col));
-                    Contract.Ensures(A.GetLength(1) == col.Length);
-                    Contract.Ensures(Contract.Result<Complex[]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == A.GetLength(0));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var N, out var M);
                     if (M != col.Length) throw new ArgumentException(@"Число столбцов матрицы А не равно числу элементов массива col", nameof(col));
@@ -2415,10 +2234,6 @@ namespace MathCore
                 {
                     if (B is null) throw new ArgumentNullException(nameof(B));
                     if (row is null) throw new ArgumentNullException(nameof(row));
-                    Contract.Ensures(B.GetLength(0) == row.Length);
-                    Contract.Ensures(Contract.Result<Complex[]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[]>().Length == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(B, out var N, out var M);
                     if (B.Length != N) throw new ArgumentException(@"Число столбцов матрицы B не равно числу элементов массива row", nameof(row));
@@ -2439,7 +2254,6 @@ namespace MathCore
                     if (row is null) throw new ArgumentNullException(nameof(row));
                     if (col is null) throw new ArgumentNullException(nameof(col));
                     if (col.Length != row.Length) throw new ArgumentException(@"Число столбцов элементов строки не равно числу элементов столбца", nameof(row));
-                    Contract.EndContractBlock();
 
                     var result = default(Complex);
                     for (var i = 0; i < row.Length; i++) result += row[i] * col[i];
@@ -2458,10 +2272,6 @@ namespace MathCore
                     if (A is null) throw new ArgumentNullException(nameof(A));
                     if (B is null) throw new ArgumentNullException(nameof(B));
                     if (A.GetLength(1) != B.GetLength(0)) throw new ArgumentOutOfRangeException(nameof(B), @"Число столбцов матрицы А не равно числу строк матрицы B");
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(0) == A.GetLength(0));
-                    Contract.Ensures(Contract.Result<Complex[,]>().GetLength(1) == B.GetLength(1));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var A_N, out var A_M);
                     GetColsCount(B, out var B_M);
@@ -2496,7 +2306,6 @@ namespace MathCore
                     if (A.GetLength(1) != B.GetLength(0)) throw new ArgumentOutOfRangeException(nameof(B), @"Матрицы несогласованных порядков.");
                     if (result.GetLength(0) != A.GetLength(0)) throw new ArgumentException(@"Число строк матрицы результата не равно числу строк первой матрицы", nameof(result));
                     if (result.GetLength(1) != B.GetLength(1)) throw new ArgumentException(@"Число столбцов матрицы результата не равно числу строк второй матрицы", nameof(result));
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var A_N, out var A_M);
                     GetColsCount(B, out var B_M);
@@ -2526,8 +2335,6 @@ namespace MathCore
                 {
                     if (A is null) throw new ArgumentNullException(nameof(A));
                     if (B is null) throw new ArgumentNullException(nameof(B));
-                    Contract.Ensures(Contract.Result<Complex[,]>() != null);
-                    Contract.EndContractBlock();
 
                     GetLength(A, out var A_N, out var A_M);
                     GetLength(B, out var B_N, out var B_M);
@@ -2542,6 +2349,7 @@ namespace MathCore
                     return result;
                 }
 
+                [NotNull]
                 private static Complex[,] ConcatinateByCols(Complex[,] A, Complex[,] B, int A_N, int A_M, int B_M, int B_N)
                 {
                     var result = new Complex[A_N, A_M + B_M];
@@ -2554,6 +2362,7 @@ namespace MathCore
                     return result;
                 }
 
+                [NotNull]
                 private static Complex[,] ConcatinateByRows(Complex[,] A, Complex[,] B, int A_N, int B_N, int A_M, int B_M)
                 {
                     var result = new Complex[A_N + B_N, A_M];

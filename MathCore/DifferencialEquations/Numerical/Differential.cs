@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using MathCore.Annotations;
 
@@ -9,40 +8,33 @@ namespace MathCore.DifferencialEquations.Numerical
     {
         public static class Differential
         {
-            static Differential() =>
-                //Contract.Requires(diff_a.GetLength(0) == dif_a.Length);
-                //Contract.Requires(diff_a.GetLength(0) == diff_b.Length);
-                //Contract.Requires(dif_a.Length == diff_b.Length);
-                __methodsCount = diff_b.Length;
+            static Differential() => __MethodsCount = diff_b.Length;
 
-            private static readonly int __methodsCount;
+            private static readonly int __MethodsCount;
 
             internal static readonly int[] diff_b = { 1, 2, 6, 12, 60 };
 
             internal static readonly int[,] diff_a = {
-                                                       {-1, 1, 0, 0, 0, 0},
-                                                       {-3, 4, -1, 0, 0, 0},
-                                                       {-11, 18, -9, 2, 0, 0},
-                                                       {-25, 48, -36, 16, -3, 0},
-                                                       {-137, 300, -300, 200, -75, 12}
-                                                   };
+                {-1, 1, 0, 0, 0, 0},
+                {-3, 4, -1, 0, 0, 0},
+                {-11, 18, -9, 2, 0, 0},
+                {-25, 48, -36, 16, -3, 0},
+                {-137, 300, -300, 200, -75, 12}
+            };
 
             private static readonly int[][] dif_a = {
-                                                       new[] {-1, 1},
-                                                       new[] {-3, 4, -1},
-                                                       new[] {-11, 18, -9, 2},
-                                                       new[] {-25, 48, -36, 16, -3},
-                                                       new[] {-137, 300, -300, 200, -75, 12}
-                                                   };
+                new[] {-1, 1},
+                new[] {-3, 4, -1},
+                new[] {-11, 18, -9, 2},
+                new[] {-25, 48, -36, 16, -3},
+                new[] {-137, 300, -300, 200, -75, 12}
+            };
 
-            public static int MethodsCount => __methodsCount;
+            public static int MethodsCount => __MethodsCount;
 
             [NotNull]
             public static double[] GetDifferential([NotNull] double[] X, int n = -1)
             {
-                Contract.Requires(X != null);
-                Contract.Requires(n < MethodsCount);
-
                 var N = X.Length;
                 var Y = new double[N];
                 if(N == 0) return Y;
@@ -65,7 +57,7 @@ namespace MathCore.DifferencialEquations.Numerical
                 {
                     n = N - i - 2;
                     if(n < 0) break;
-                    if(n >= __methodsCount) n = __methodsCount - 1;
+                    if(n >= __MethodsCount) n = __MethodsCount - 1;
 
                     var a = dif_a[n];
                     var a_len = a.Length;
@@ -81,17 +73,7 @@ namespace MathCore.DifferencialEquations.Numerical
             }
 
             [NotNull]
-            public static Task<double[]> GetDifferentialAsync([NotNull] double[] X, int N = -1)
-            {
-                Contract.Requires(X != null);
-                Contract.Requires(N < MethodsCount);
-
-                return Task.Factory.StartNew(o =>
-                {
-                    var (x, n) = (Tuple<double[], int>)o;
-                    return GetDifferential(x, n);
-                }, new Tuple<double[], int>(X, N));
-            }
+            public static Task<double[]> GetDifferentialAsync([NotNull] double[] X, int N = -1) => (X, N).Async(v => GetDifferential(v.X, v.N));
         }
     }
 }

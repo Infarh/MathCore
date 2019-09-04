@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using MathCore.Annotations;
@@ -51,7 +50,6 @@ namespace MathCore.MathParser
                     throw new ArgumentNullException(nameof(value), @"Не указано имя функции");
                 if(string.IsNullOrEmpty(value))
                     throw new ArgumentException(@"Указано пустое имя функции", nameof(value));
-                Contract.EndContractBlock();
                 _Name = value;
             }
         }
@@ -83,7 +81,6 @@ namespace MathCore.MathParser
         /// <param name="Name">Имя функции</param>
         public MathExpression([NotNull] string Name = "f")
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(Name));
             _Name = Name;
             _Variables = new VariabelsCollection(this); // Коллекция переменных
             _Constants = new ConstantsCollection(this); // Коллекция констант
@@ -97,7 +94,6 @@ namespace MathCore.MathParser
         private MathExpression([NotNull] ExpressionTree Tree, [NotNull] string Name = "f")
             : this(Name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(Name));
             _ExpressionTree = Tree; //Сохраняем ссылку на корень дерева
 
             foreach(var tree_node in Tree) // обходим все элементы дерева
@@ -124,8 +120,6 @@ namespace MathCore.MathParser
         internal MathExpression([NotNull] string StrExpression, [NotNull] ExpressionParser Parser)
             : this()
         {
-            Contract.Requires(!string.IsNullOrEmpty(StrExpression));
-            Contract.Ensures(Tree != null);
             var terms = new BlockTerm(StrExpression);    // разбить строку на элементы
             var root = terms.GetSubTree(Parser, this);   // выделить корень дерева из первого элемента
             _ExpressionTree = new ExpressionTree(root); // Создать дерево выражения из корня
@@ -181,17 +175,15 @@ namespace MathCore.MathParser
         [NotNull]
         public Func<double[], double> CompileMultyParameters([NotNull] params string[] ArgumentName)
         {
-            Contract.Requires(ArgumentName != null);
-            Contract.Ensures(Contract.Result<Func<double[], double>>() != null);
             // Словарь индексов переменных
             var var_dictionary = new Dictionary<string, int>();
 
             // Выходной массив параметров выражения, получаемый при сборке дерева
             // Сборка дерева
-            var compilation = GetExpression(out var vars, ArgumentName);
+            var compilation = GetExpression(out _, ArgumentName);
 
             // Если массив имён компилируемых входных переменных не пуст
-            if((ArgumentName?.Length ?? 0) > 0)
+            if((ArgumentName.Length) > 0)
                 ArgumentName.Foreach(var_dictionary.Add); // то заполняем словарь индексов
             else // Если массив переменых не указан, то сиздаём функцию по всем переменным
                 Variable.Select(v => v.Name).Foreach(var_dictionary.Add);
@@ -267,9 +259,6 @@ namespace MathCore.MathParser
             [CanBeNull] out ParameterExpression[] vars,
             [NotNull] params string[] ArgumentName)
         {
-            Contract.Requires(typeof(TDelegate).IsSubclassOf(typeof(Delegate)));
-            Contract.Ensures(Contract.Result<Expression>() != null);
-
             var t = typeof(TDelegate);
             vars = null;
             if(ArgumentName.Length == 0)
@@ -320,7 +309,6 @@ namespace MathCore.MathParser
         /// A new object that is a copy of this instance.
         /// </returns>
         /// <filterpriority>2</filterpriority>
-        [NotNull]
         object ICloneable.Clone() => Clone();
 
         /// <summary>Комбинация двух выражений с использованием узла-оператора</summary>
@@ -331,11 +319,6 @@ namespace MathCore.MathParser
         [NotNull]
         protected static MathExpression CombineExpressions([NotNull] MathExpression x, [NotNull] MathExpression y, [NotNull] OperatorNode node)
         {
-            Contract.Requires(x != null);
-            Contract.Requires(y != null);
-            Contract.Requires(node != null);
-            Contract.Ensures(Contract.Result<MathExpression>() != null);
-
             var x_tree = x.Tree.Clone();
             var y_tree = y.Tree.Clone();
 
@@ -404,20 +387,6 @@ namespace MathCore.MathParser
         /// <param name="expr">Математическое выражения</param>
         /// <returns>Результат компиляции математического выражения</returns>
         [NotNull]
-        public static implicit operator Func<double>([NotNull] MathExpression expr)
-        {
-            Contract.Requires(expr != null);
-            return expr.Compile();
-        }
-
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_Variables != null);
-            Contract.Invariant(_Constants != null);
-            Contract.Invariant(_Functions != null);
-            Contract.Invariant(_Functionals != null);
-            Contract.Invariant(_Name != null);
-        }
+        public static implicit operator Func<double>([NotNull] MathExpression expr) => expr.Compile();
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using MathCore.Annotations;
 using MathCore.Extentions.Expressions;
@@ -8,7 +6,6 @@ using MathCore.Extentions.Expressions;
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
     /// <summary>Узел дерева мат.выражения, реализующий логическую операцию</summary>
-    [ContractClass(typeof(LogicOperatorNodeContract))]
     public abstract class LogicOperatorNode : OperatorNode
     {
         protected LogicOperatorNode(string Name, int Priority) : base(Name, Priority) { }
@@ -25,32 +22,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         [NotNull]
-        public override Expression Compile()
-        {
-            Contract.Ensures(Contract.Result<Expression>() != null);
-            return LogicCompile().Condition(1d.ToExpression(), 0d.ToExpression());
-        }
+        public override Expression Compile() => LogicCompile().Condition(1d.ToExpression(), 0d.ToExpression());
 
         /// <summary>Компиляция узла</summary>
         /// <param name="Parameters">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         [NotNull]
-        public override Expression Compile(ParameterExpression[] Parameters)
-        {
-            Contract.Requires(Parameters != null);
-            Contract.Ensures(Contract.Result<Expression>() != null);
-            return LogicCompile(Parameters).Condition(1d.ToExpression(), 0d.ToExpression());
-        }
-    }
-
-    [ContractClassFor(typeof(LogicOperatorNode))]
-    [ExcludeFromCodeCoverage]
-    internal abstract class LogicOperatorNodeContract : LogicOperatorNode
-    {
-        private LogicOperatorNodeContract(string Name, int Priority) : base(Name, Priority) { }
-
-        public override Expression LogicCompile() => throw new NotImplementedException();
-
-        public override Expression LogicCompile(ParameterExpression[] Parameters) => throw new NotImplementedException();
+        public override Expression Compile(ParameterExpression[] Parameters) => LogicCompile(Parameters).Condition(1d.ToExpression(), 0d.ToExpression());
     }
 }

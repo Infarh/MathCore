@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -16,7 +15,7 @@ namespace MathCore
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName]string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
+        private void OnPropertyChanged([CallerMemberName] [CanBeNull] string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
 
         public event EventHandler StatusChanged;
         public event EventHandler StatusCheckerChanged;
@@ -140,6 +139,7 @@ namespace MathCore
             }
         }
 
+        [NotNull]
         public string ProgressStr
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -155,9 +155,9 @@ namespace MathCore
         /* ------------------------------------------------------------------------------------------ */
 
         public ProgressMonitor(
-            Func<double> ProgressFunc = null,
-            Func<string> StatusFunc = null,
-            Func<string> InformationFunc = null)
+            [CanBeNull] Func<double> ProgressFunc = null,
+            [CanBeNull] Func<string> StatusFunc = null,
+            [CanBeNull] Func<string> InformationFunc = null)
         {
             _StatusStrFunc = StatusFunc;
             _InformationStrFunc = InformationFunc;
@@ -176,7 +176,6 @@ namespace MathCore
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Connect(ProgressMonitor Monitor)
         {
-            Contract.Requires(!ReferenceEquals(Monitor, this), "Нельзя подключать монитор к себе по методам изъятия значений");
             if(ReferenceEquals(Monitor, this))
                 throw new ArgumentException("Нельзя подключать монитор к себе по методам изъятия значений");
 
@@ -188,9 +187,8 @@ namespace MathCore
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void ConnectStrong(ProgressMonitor Monitor)
+        public void ConnectStrong([NotNull] ProgressMonitor Monitor)
         {
-            Contract.Requires(!ReferenceEquals(Monitor, this), "Нельзя подключать монитор к себе по методам изъятия значений");
             if(ReferenceEquals(Monitor, this))
                 throw new ArgumentException("Нельзя подключать монитор к себе по обработчикам событий");
 

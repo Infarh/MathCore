@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -34,9 +33,8 @@ namespace MathCore.MathParser
         /// <param name="Stop">Строка закрывающей скобки</param>
         public Bracket([NotNull] string Start, [NotNull] string Stop)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(Start));
-            Contract.Requires(!string.IsNullOrWhiteSpace(Stop));
-            this.Start = Start; this.Stop = Stop;
+            this.Start = Start;
+            this.Stop = Stop;
         }
 
         /// <summary>Проверка на эквивалентность другим скобкам</summary>
@@ -53,30 +51,16 @@ namespace MathCore.MathParser
         /// <returns>Хэш-код</returns>
         public override int GetHashCode() { unchecked { return ((Start?.GetHashCode() ?? 0) * 397) ^ (Stop?.GetHashCode() ?? 0); } }
 
-        [NotNull]
-        object ICloneable.Clone()
-        {
-            Contract.Ensures(Contract.Result<object>() != null);
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
         /// <summary>Клонирование скобок</summary>
         /// <returns>Клон скобок</returns>
         [NotNull]
-        public virtual Bracket Clone()
-        {
-            Contract.Ensures(Contract.Result<Bracket>() != null);
-            return new Bracket(Start, Stop);
-        }
+        public virtual Bracket Clone() => new Bracket(Start, Stop);
 
         /// <summary>Строковое представление скобок</summary>
         /// <returns>Строковое представление</returns>
-        [NotNull]
-        public override string ToString()
-        {
-            Contract.Ensures(Contract.Result<string>() != null);
-            return Suround("...");
-        }
+        public override string ToString() => Suround("...");
 
         /// <summary>Разместить текст в скобках</summary>
         /// <param name="str">Размещаемый текст</param>
@@ -84,16 +68,8 @@ namespace MathCore.MathParser
         [NotNull]
         public string Suround([CanBeNull] string str)
         {
-            Contract.Ensures(Contract.Result<string>() != null);
             Trace.TraceWarning("В обёртку блока скобок передана пустая строка");
             return $"{Start}{str}{Stop}";
-        }
-
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(!string.IsNullOrWhiteSpace(Start));
-            Contract.Invariant(!string.IsNullOrWhiteSpace(Stop));
         }
     }
 }

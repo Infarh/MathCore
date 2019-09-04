@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore
@@ -10,12 +11,8 @@ namespace MathCore
         private readonly Func<T, T, bool> _Comparer;
         private readonly Func<T, int> _HashFunction;
 
-        public LambdaEqualityComparer(Func<T, T, bool> Comparer, Func<T, int> HashFunction = null)
+        public LambdaEqualityComparer(Func<T, T, bool> Comparer, [CanBeNull] Func<T, int> HashFunction = null)
         {
-            Contract.Requires(Comparer != null);
-            Contract.Ensures(_Comparer == Comparer);
-            Contract.Ensures(_HashFunction != null);
-
             _Comparer = Comparer;
             _HashFunction = HashFunction ?? (o => o.GetHashCode());
         }
@@ -35,7 +32,8 @@ namespace MathCore
 
     public static class LambdaEqualityComparer
     {
-        public static LambdaEqualityComparer<T> Create<T>(this Func<T, T, bool> Comparer, Func<T, int> HashFunction = null) 
+        [NotNull]
+        public static LambdaEqualityComparer<T> Create<T>(this Func<T, T, bool> Comparer, [CanBeNull] Func<T, int> HashFunction = null) 
             => new LambdaEqualityComparer<T>(Comparer, HashFunction);
     }
 }

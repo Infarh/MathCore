@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MathCore.Annotations;
 
 namespace MathCore.Graphs
 {
@@ -106,7 +107,6 @@ namespace MathCore.Graphs
         /// <param name="index">»ндекс (с нул€) удал€емого элемента.</param><exception cref="T:System.ArgumentOutOfRangeException">«начение параметра <paramref name="index"/> не €вл€етс€ допустимым индексом в <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">ќбъект <see cref="T:System.Collections.Generic.IList`1"/> доступен только дл€ чтени€.</exception>
         public void RemoveAt(int index)
         {
-            //Contract.Requires(index >= 0);
             if (index == 0) return;
             var node = this[index];
             var prev = node.Prev;
@@ -116,11 +116,11 @@ namespace MathCore.Graphs
 
         void IList<TreeListNode<TValue>>.RemoveAt(int index) => RemoveAt(index);
 
+        [NotNull]
         public TreeListNode<TValue> this[int i]
         {
             get
             {
-                //Contract.Requires(i >= 0);
                 var node = this[n => n.Next].FirstOrDefault(n => i-- == 0);
                 if (node is null) throw new IndexOutOfRangeException();
                 return node;
@@ -145,7 +145,8 @@ namespace MathCore.Graphs
             set => this[index].Value = value;
         }
 
-        public TreeListNode<TValue> this[params int[] index]
+        [CanBeNull]
+        public TreeListNode<TValue> this[[CanBeNull] params int[] index]
         {
             get
             {
@@ -172,6 +173,7 @@ namespace MathCore.Graphs
 
         public delegate TreeListNode<TValue> NodeSelector(TreeListNode<TValue> Prev, TreeListNode<TValue> Next, TreeListNode<TValue> Chield);
 
+        [ItemNotNull]
         public IEnumerable<TreeListNode<TValue>> this[NodeSelector Selector]
         {
             get
@@ -181,6 +183,7 @@ namespace MathCore.Graphs
             }
         }
 
+        [ItemNotNull]
         public IEnumerable<TreeListNode<TValue>> this[Func<TreeListNode<TValue>, TreeListNode<TValue>> Selector]
         {
             get
@@ -193,7 +196,7 @@ namespace MathCore.Graphs
         public TreeListNode() { }
         public TreeListNode(TValue Value) => this.Value = Value;
 
-        public TreeListNode(IEnumerable<TValue> Collection)
+        public TreeListNode([NotNull] IEnumerable<TValue> Collection)
         {
             var first = true;
             var node = this;
@@ -207,6 +210,7 @@ namespace MathCore.Graphs
                     node = node.Add(item);
         }
 
+        [NotNull]
         public TreeListNode<TValue> Add(TValue Value)
         {
             var node = new TreeListNode<TValue>(Value);
@@ -317,9 +321,10 @@ namespace MathCore.Graphs
         /// <returns>«начение true, если интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только дл€ чтени€, в противном случае Ч значение false.</returns>
         public bool IsReadOnly => false;
 
-        public void Add(IEnumerable<TValue> collection) => collection.Aggregate(this, (current, value) => current.Add(value));
+        public void Add([NotNull] IEnumerable<TValue> collection) => collection.Aggregate(this, (current, value) => current.Add(value));
 
         public void AddChild(TreeListNode<TValue> Node) { if (Child is null) Child = Node; else Child.Add(Node); }
+        [NotNull]
         public TreeListNode<TValue> AddChild(TValue value)
         {
             var node = new TreeListNode<TValue>(value);
@@ -327,7 +332,7 @@ namespace MathCore.Graphs
             return node;
         }
 
-        public void AddChild(IEnumerable<TValue> collection) => collection.Aggregate<TValue, TreeListNode<TValue>>(null, (current, item) => current is null ? AddChild(item) : current.Add(item));
+        public void AddChild([NotNull] IEnumerable<TValue> collection) => collection.Aggregate<TValue, TreeListNode<TValue>>(null, (current, item) => current is null ? AddChild(item) : current.Add(item));
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -343,7 +348,8 @@ namespace MathCore.Graphs
 
         public override string ToString() => $"{Value}{(_Child is null ? "" : $"{{{_Child}}}")}{(_Next is null ? "" : $",{_Next}")}";
 
-        public static implicit operator TValue(TreeListNode<TValue> Node) => Node.Value;
+        public static implicit operator TValue([NotNull] TreeListNode<TValue> Node) => Node.Value;
+        [NotNull]
         public static implicit operator TreeListNode<TValue>(TValue Value) => new TreeListNode<TValue>(Value);
     }
 }

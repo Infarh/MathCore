@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using MathCore;
@@ -7,7 +6,9 @@ using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable EventNeverSubscribedTo.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Класс объектов, выполняющих некоторое циклическое действие в отдельном фоновом потоке</summary>
@@ -27,20 +28,20 @@ namespace System
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
             [MethodImpl(MethodImplOptions.Synchronized), DST]
-            add => PropertyChanged_ += value;
+            add => _PropertyChanged += value;
             [MethodImpl(MethodImplOptions.Synchronized), DST]
-            remove => PropertyChanged_ -= value;
+            remove => _PropertyChanged -= value;
         }
-        private event PropertyChangedEventHandler PropertyChanged_;
+        private event PropertyChangedEventHandler _PropertyChanged;
         /// <summary>Вызов события изменения свойства объекта</summary>
         ///  <param name="e">Параметры события изменения свойства объекта, содержашие имя свойства</param>
         [DST]
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged_?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => _PropertyChanged?.Invoke(this, e);
 
         /// <summary>Вызов собйтия изменения свойтсва объекта с указанием имени свойства</summary>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
         [DST, NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName]string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
+        protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
 
         /// <summary>Событие изменения свойства активности процессора</summary>
         public event EventHandler EnableChanged;
@@ -159,17 +160,10 @@ namespace System
         public int JoinThreadTimeout
         {
             [DST]
-            get
-            {
-                Contract.Ensures(Contract.Result<int>() >= 0);
-
-                return _JoinThreadTimeout;
-            }
+            get => _JoinThreadTimeout;
             [DST]
             set
             {
-                Contract.Requires(value >= 0);
-
                 _JoinThreadTimeout = value;
                 OnPropertyChanged();
             }
@@ -195,9 +189,6 @@ namespace System
             [DST]
             set
             {
-                Contract.Requires(value >= 0);
-                Contract.Ensures(_ActionTimeout >= 0);
-
                 if(_ActionTimeout == value) return;
                 _ActionTimeout = value;
                 _Set_Timeout?.Invoke(value);

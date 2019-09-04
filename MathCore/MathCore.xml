@@ -30,7 +30,7 @@
         <member name="T:MathCore.BigInteger">
             <summary> Целочисленная арифметика с большими числами  </summary>
         </member>
-        <member name="F:MathCore.BigInteger.c_MaxLength">
+        <member name="F:MathCore.BigInteger.__MaxLength">
             <summary>Максимальная длина числа в байтах</summary>
         </member>
         <member name="F:MathCore.BigInteger.PrimesBelow2000">
@@ -2173,9 +2173,6 @@
         <member name="P:MathCore.ICountable.Count">
             <summary>Число элементов</summary>
         </member>
-        <member name="P:MathCore.ContractClassICountable.Count">
-            <summary>Число элементов</summary>
-        </member>
         <member name="T:MathCore.IIndexableRead`2">
             <summary>Объект индексируемый только для чтения значений</summary>
             <typeparam name="TIndex">Тип индекса</typeparam>
@@ -2261,9 +2258,9 @@
         <member name="M:MathCore.Interpolation.BezierCurve.BinomCoefficient(System.Int32,System.Int32)">
             <summary>
             Биномиальный коэффициент (1+x)^n из <paramref name="n"/> по <paramref name="k"/>
-            <see cref="!:http://ru.wikipedia.org/wiki/Биномиальный_коэффициент">Википедия:Биномиальный коэффициент</see>>
+            <see cref="!:http://ru.wikipedia.org/wiki/Биномиальный_коэффициент">Википедия:Биномиальный коэффициент</see>
             </summary>
-            <param name="n">Степень <see cref="!:http://ru.wikipedia.org/wiki/Бином_Ньютона">бинома Ньютона</see>></param>
+            <param name="n">Степень <see cref="!:http://ru.wikipedia.org/wiki/Бином_Ньютона">бинома Ньютона</see></param>
             <param name="k">Номер коэффициента</param>
             <returns>Коэффициент разложения Бинома Ньютона (1+x)^n</returns>
         </member>
@@ -2295,6 +2292,9 @@
         <member name="M:MathCore.Interpolation.BezierCurve.Initialize(System.Collections.Generic.IEnumerable{MathCore.Vectors.Vector2D})">
             <summary>Инициализировать кривую Безье</summary>
             <param name="Points">Набор точек</param>
+        </member>
+        <member name="M:MathCore.Interpolation.BezierCurve2.Bernstein(System.Int32,System.Int32,System.Double)">
+            <summary>Calculate Bernstein basis</summary>
         </member>
         <member name="T:MathCore.Interpolation.CubicSpline">
             <summary>Интерполирование функций естественными кубическими сплайнами</summary>
@@ -3654,7 +3654,7 @@
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Item(System.String)">
             <summary>Доступ к элементам узла по указанному пути</summary>
-            <param name="Path">Путь к элементам узла Пример:.\.\l\r\r\l  ..\l\r\r</param>
+            <param name="path">Путь к элементам узла Пример:.\.\l\r\r\l  ..\l\r\r</param>
             <returns>Элемент узла, выбранный по указанному пути</returns>
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Item(System.Func{MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode,MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode,MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode})">
@@ -4439,33 +4439,6 @@
             <summary>Добавить функционал в коллекцию</summary>
             <param name="Operator">Добавляемый функционал</param>
             <returns>Истина, если добавление прошло успешно</returns>
-        </member>
-        <member name="M:MathCore.MathParser.FunctionalsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#Functional}#GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the collection.
-            </summary>
-            <returns>
-            An enumerator that can be used to iterate through the collection.
-            </returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:MathCore.MathParser.FunctionalsCollection.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through a collection.
-            </summary>
-            <returns>
-            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-            </returns>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="M:MathCore.MathParser.FunctionalsCollection.ToString">
-            <summary>
-            Returns a string that represents the current object.
-            </summary>
-            <returns>
-            A string that represents the current object.
-            </returns>
-            <filterpriority>2</filterpriority>
         </member>
         <member name="T:MathCore.MathParser.FunctionalTerm">
             <summary>Блок определения функции</summary>
@@ -9736,7 +9709,28 @@
             <summary>Оператор неявного приведения типа <see cref="T:MathCore.Values.MinValue"/> к <see cref="T:System.Double"/></summary>
             <param name="MinValue">Минимальное значение</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:MathCore.Values.ObjectSelector`1" -->
+        <member name="T:MathCore.Values.ObjectSelector`1">
+            <summary>Система псевдопараллельного потокового доступа к значению ряда источников объектов</summary>
+            <typeparam name="T">Тип объектов в источниках</typeparam>
+            <example>
+            Прмером использования может быть способ последовательного выбора данных из ряда потоков чтения 
+            с выбором последовательности данных, выводимых в общий поток.
+            void Test()
+            {
+               //Используем уничтожаемую группу объектов
+              using(var readers = new DisposableGroup&lt;StreamReader&gt;(//Объекты чтения из потока
+                      Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f))))  //для всех файлов C:\*.txt
+              {
+                var rnd = new Random();                                         //Генератор случайных чисел
+                var oSelecter = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
+                            SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
+                            () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
+                            readers.Select(r => (Func&lt;string&gt;)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
+                while(oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
+              }
+            }
+            </example>
+        </member>
         <member name="F:MathCore.Values.ObjectSelector`1._Selector">
             <summary>Метод выбора одного из значений ряда источников объектов</summary>
         </member>
@@ -9766,6 +9760,8 @@
         </member>
         <member name="T:MathCore.Values.SetOf`1">
             <summary>Множество объектов типа <typeparamref name="T"/></summary>
+            <typeparam name="T">Тип элементов множества</typeparam>
+            <summary>Множество</summary>
             <typeparam name="T">Тип элементов множества</typeparam>
         </member>
         <member name="P:MathCore.Values.SetOf`1.Mixed">
@@ -10482,6 +10478,7 @@
             <summary>Инициализация нового правила</summary>
             <param name="XPath">XPath-путь в структуре xml</param>
             <param name="Expression">Выражение инициализации</param>
+            <param name="IsObjectLess"></param>
         </member>
         <member name="M:MathCore.XmInitializer`1.Rule.Execute(`0,System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
             <summary>Выполнить инициализацию</summary>
@@ -10626,9 +10623,6 @@
         </member>
         <member name="M:System.ElementDescriptionAttribute.ToString">
             <inheritdoc />
-        </member>
-        <member name="M:System.ElementDescriptionAttribute.ContractInvariantMethod">
-            <summary>Инвариант класса</summary>
         </member>
         <member name="T:System.GreaterOrEqualAttribute">
             <summary>Значение должно быть больше, либо равно</summary>
@@ -11879,7 +11873,7 @@
             <param name="index">Индекс элемента коллекции</param>
             <returns>Результат объединения коллекции элементов</returns>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+        <member name="M:System.Linq.IEnumerableExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>Проверка на наличие элемиента в коллекции</summary>
             <typeparam name="T">Тип элемента</typeparam>
             <param name="collection">Проверяемая коллекция</param>
@@ -11902,10 +11896,32 @@
         <member name="M:System.Linq.IEnumerableExtensions.Foreach``2(System.Collections.Generic.IEnumerable{``0},``1,System.Action{``0,``1})">
             <summary>Выполнение действия для всех элементов коллекции</summary>
             <param name="collection">Коллекция элементов</param>
-            <param name="parameter">Параметр действия</param>
+            <param name="p">Параметр действия</param>
             <param name="Action">Выполняемое действие</param>
             <typeparam name="T">Тип элементов коллекции</typeparam>
-            <typeparam name="TParameter">Тип параметра процесса перебора</typeparam>
+            <typeparam name="TP">Тип параметра процесса перебора</typeparam>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Foreach``3(System.Collections.Generic.IEnumerable{``0},``1,``2,System.Action{``0,``1,``2})">
+            <summary>Выполнение действия для всех элементов коллекции</summary>
+            <param name="collection">Коллекция элементов</param>
+            <param name="p1">Параметр 1 действия</param>
+            <param name="p2">Параметр 2 действия</param>
+            <param name="Action">Выполняемое действие</param>
+            <typeparam name="T">Тип элементов коллекции</typeparam>
+            <typeparam name="TP1">Тип параметра 1 процесса перебора</typeparam>
+            <typeparam name="TP2">Тип параметра 2 процесса перебора</typeparam>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Foreach``4(System.Collections.Generic.IEnumerable{``0},``1,``2,``3,System.Action{``0,``1,``2,``3})">
+            <summary>Выполнение действия для всех элементов коллекции</summary>
+            <param name="collection">Коллекция элементов</param>
+            <param name="p1">Параметр 1 действия</param>
+            <param name="p2">Параметр 2 действия</param>
+            <param name="p3">Параметр 3 действия</param>
+            <param name="Action">Выполняемое действие</param>
+            <typeparam name="T">Тип элементов коллекции</typeparam>
+            <typeparam name="TP1">Тип 1 параметра процесса перебора</typeparam>
+            <typeparam name="TP2">Тип 2 параметра процесса перебора</typeparam>
+            <typeparam name="TP3">Тип 3 параметра процесса перебора</typeparam>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Foreach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Int32},System.Int32)">
             <summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
@@ -11917,22 +11933,35 @@
         <member name="M:System.Linq.IEnumerableExtensions.Foreach``2(System.Collections.Generic.IEnumerable{``0},``1,System.Action{``0,System.Int32,``1},System.Int32)">
             <summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
             <param name="collection">Коллекция элементов</param>
-            <param name="parameter">Параметр действия</param>
+            <param name="p">Параметр действия</param>
             <param name="Action">Действие над элементом</param>
             <param name="index">Смещение индекса элемента колеекции</param>
             <typeparam name="T">Тип элемента колекции</typeparam>
-            <typeparam name="TParameter">Тип параметра процесса перебора</typeparam>
+            <typeparam name="TP">Тип параметра процесса перебора</typeparam>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Foreach``3(System.Collections.Generic.IEnumerable{``0},``1,``2,System.Action{``0,System.Int32,``1,``2},System.Int32)">
             <summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
             <param name="collection">Коллекция элементов</param>
-            <param name="parameter1">Параметр действия 1</param>
-            <param name="parameter2">Параметр действия 2</param>
+            <param name="p1">Параметр действия 1</param>
+            <param name="p2">Параметр действия 2</param>
             <param name="Action">Действие над элементом</param>
             <param name="index">Смещение индекса элемента колеекции</param>
             <typeparam name="T">Тип элемента колекции</typeparam>
-            <typeparam name="TParameter1">Тип параметра процесса перебора 1</typeparam>
-            <typeparam name="TParameter2">Тип параметра процесса перебора 2</typeparam>
+            <typeparam name="TP1">Тип параметра процесса перебора 1</typeparam>
+            <typeparam name="TP2">Тип параметра процесса перебора 2</typeparam>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Foreach``4(System.Collections.Generic.IEnumerable{``0},``1,``2,``3,System.Action{``0,System.Int32,``1,``2,``3},System.Int32)">
+            <summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
+            <param name="collection">Коллекция элементов</param>
+            <param name="p1">Параметр действия 1</param>
+            <param name="p2">Параметр действия 2</param>
+            <param name="p3">Параметр действия 3</param>
+            <param name="Action">Действие над элементом</param>
+            <param name="index">Смещение индекса элемента колеекции</param>
+            <typeparam name="T">Тип элемента колекции</typeparam>
+            <typeparam name="TP1">Тип параметра процесса перебора 1</typeparam>
+            <typeparam name="TP2">Тип параметра процесса перебора 2</typeparam>
+            <typeparam name="TP3">Тип параметра процесса перебора 3</typeparam>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.CastLazy``1(System.Collections.IEnumerable)">
             <summary>Ленивое преобразование типов, пропускающее непреобразуемые объекты</summary>
@@ -11988,9 +12017,6 @@
         <member name="F:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumirator._Enumerator">
             <summary>Перечислитель коллекции аргументов функции</summary>
         </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumirator._Function">
-            <summary>Вычисляемая функция</summary>
-        </member>
         <member name="P:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumirator.Current">
             <summary>Текцущий элемент коллекции значений функции</summary>
         </member>
@@ -12012,9 +12038,6 @@
         <member name="M:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumirator.Reset">
             <summary>Сброс состояния перечислителя</summary>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumirator.Invariant">
-            <summary>Инвариант класса</summary>
-        </member>
         <member name="F:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2._Collection">
             <summary>Коллекция аргументов функции</summary>
         </member>
@@ -12033,9 +12056,6 @@
         <member name="M:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.System#Collections#IEnumerable#GetEnumerator">
             <summary>Неявное получение перечислителя</summary>
             <returns>Перечислитель расссчитанных значений функции</returns>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.Invariant">
-            <summary>Инвариант класса</summary>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ExistingItems``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>Пересечение последовательностей</summary>
@@ -12079,7 +12099,7 @@
             <returns>Истина, если последовательности равны с точностью до элементов</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.NotIntersection``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
-            <summary>ОПределение объектов, которые не входят в пересечение двух последовательностей</summary>
+            <summary>Определение объектов, которые не входят в пересечение двух последовательностей</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
             <param name="A">Исходная последовательность</param>
             <param name="B">Вторичная последовательность</param>
@@ -12213,10 +12233,6 @@
         </member>
         <member name="F:System.Linq.Reactive.LamdaObservable`1._OnReset">
             <summary>Действие обработки сброса состояния наблюдаемого объекта</summary>
-        </member>
-        <member name="T:System.Linq.Reactive.ObservableExContract`1">
-            <summary>Класс контрактов для интерфейса <see cref="T:System.Linq.Reactive.IObservableEx`1"/></summary>
-            <typeparam name="T">Тип объектов последовательности событий</typeparam>
         </member>
         <member name="T:System.Linq.Reactive.ObservableExtentions">
             <summary>Методы-расширения интерфейса наблюдаемых объектов <see cref="T:System.Linq.Reactive.IObservableEx`1"/></summary>
@@ -12703,20 +12719,20 @@
         <member name="M:System.ArrayExtensions.Initialize``2(``0[],``1,System.Func{System.Int32,``1,``0})">
             <summary>Инициализация массива</summary>
             <typeparam name="TValue">Тип элементов масива</typeparam>
-            <typeparam name="TParameter">Тип параметра инициализации</typeparam>
+            <typeparam name="TP">Тип параметра инициализации</typeparam>
             <param name="array">Инициализированный масив</param>
-            <param name="parameter">Параметр инициализации</param>
+            <param name="p">Параметр инициализации</param>
             <param name="Initializer">Метод инициализации</param>
             <returns>Инициализированный массив</returns>
         </member>
         <member name="M:System.ArrayExtensions.Initialize``3(``0[],``1,``2,System.Func{System.Int32,``1,``2,``0})">
             <summary>Инициализация массива</summary>
             <typeparam name="TValue">Тип элементов масива</typeparam>
-            <typeparam name="TParameter1">Тип первого параметра инициализации</typeparam>
-            <typeparam name="TParameter2">Тип второго параметра инициализации</typeparam>
+            <typeparam name="TP1">Тип первого параметра инициализации</typeparam>
+            <typeparam name="TP2">Тип второго параметра инициализации</typeparam>
             <param name="array">Инициализированный масив</param>
-            <param name="parameter1">Первый параметр инициализации</param>
-            <param name="parameter2">Второй параметр инициализации</param>
+            <param name="p1">Первый параметр инициализации</param>
+            <param name="p2">Второй параметр инициализации</param>
             <param name="Initializer">Метод инициализации</param>
             <returns>Инициализированный массив</returns>
         </member>
@@ -13906,49 +13922,6 @@
             <param name="a">вычитаемое из функции число</param>
             <returns>Функция, значения которой численно равны разности значений исходной функции и указанного числа</returns>
         </member>
-        <member name="T:System.FuncExtentions.FuncCalculator`2">
-            <summary>Вычислитель функции для распараллеливания процесса вычисления значений функции</summary>
-            <typeparam name="TArgument">Тип аргумента функции</typeparam>
-            <typeparam name="TResult">ТИп значения функции</typeparam>
-        </member>
-        <member name="T:System.FuncExtentions.FuncCalculator`2.func">
-            <summary>Структура раезультата вычисления значения функции</summary>
-        </member>
-        <member name="F:System.FuncExtentions.FuncCalculator`2.func.x">
-            <summary>Значение аргумента функции</summary>
-        </member>
-        <member name="F:System.FuncExtentions.FuncCalculator`2.func.f">
-            <summary>Вычисляемая функция</summary>
-        </member>
-        <member name="F:System.FuncExtentions.FuncCalculator`2.Argument">
-            <summary>Список аргументов функции</summary>
-        </member>
-        <member name="F:System.FuncExtentions.FuncCalculator`2.Result">
-            <summary>Список значений функции</summary>
-        </member>
-        <member name="F:System.FuncExtentions.FuncCalculator`2._Complited">
-            <summary>Число завершённых итераций рассчёта</summary>
-        </member>
-        <member name="F:System.FuncExtentions.FuncCalculator`2._Count">
-            <summary>Общее количество итераций вычисления</summary>
-        </member>
-        <member name="M:System.FuncExtentions.FuncCalculator`2.#ctor">
-            <summary>Инициализация нового вычислителя функции</summary>
-        </member>
-        <member name="E:System.FuncExtentions.FuncCalculator`2.OnComplited">
-            <summary>Событие завершения процесса вычисления</summary>
-        </member>
-        <member name="M:System.FuncExtentions.FuncCalculator`2.Calculate(System.Object)">
-            <summary>Расчёт значения функции в указанном узле</summary>
-            <param name="State">Объект, созержащий структуру с значением аргумента и функции для расчёта значения</param>
-        </member>
-        <member name="M:System.FuncExtentions.FuncCalculator`2.Check">
-            <summary>Процерка на завершение процесса вычисления значений функции - если число расчитанных итераций равно общему числу итераций, то расчёт завершён</summary>
-        </member>
-        <member name="M:System.FuncExtentions.FuncCalculator`2.SetCount(System.Int32)">
-            <summary>Установка общего количества требуемых итераций расчёта</summary>
-            <param name="Count">Требуемое количество итераций расчёта</param>
-        </member>
         <member name="M:System.FuncExtentions.GetValuesParralel``2(System.Func{``0,``1},System.Collections.Generic.IEnumerable{``0})">
             <summary>Вычислить значения функции параллельно</summary>
             <param name="f">Вычисляемая функция</param>
@@ -14158,7 +14131,7 @@
             <param name="dx">Начальный шаг дискретизации</param>
             <returns>Результат дискретизации</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWay_(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
+        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWay(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
             <summary>Метод однопроходной адаптивной дискретизации функции</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14183,7 +14156,7 @@
             <param name="dx">Начальный шаг дискретизации</param>
             <returns>Результат дискретизации функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWayT_``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
+        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWayT``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
             <summary>МЕтод последовательной дискретизации функции с адаптивным шагом</summary>
             <typeparam name="T">Тип значений функции</typeparam>
             <param name="f">Дискретизируемая функция</param>
@@ -16228,9 +16201,7 @@
             <summary>Атрибуты свойства</summary>
         </member>
         <member name="P:System.Reflection.Property`2.Descriptor">
-            <summary>
-            Дескриптор свйоства объекта
-            </summary>
+            <summary>Дескриптор свйоства объекта</summary>
         </member>
         <member name="M:System.Reflection.Property`2.#ctor(System.String,System.Boolean)">
             <summary>Новый объект "Свойство" для позднего связывания</summary>

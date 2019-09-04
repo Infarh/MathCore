@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
     public static class PrimeNumbers
     {
-        //[Pure, System.Diagnostics.DST]
+        //[System.Diagnostics.DST]
         //public static bool IsPrime(int n)
         //{
         //    if(n < 0) n = -n;
@@ -21,7 +21,8 @@ namespace MathCore
         //}
 
         [Copyright("Bodigrim@HabarHabar:\"Еще раз о поиске простых чисел\"", url = "http://habrahabr.ru/blogs/algorithm/133037/")]
-        [Pure, DST]
+        [DST]
+        [NotNull]
         public static IEnumerable<int> GetNumbersTo(int n)
         {
             var result = new int[n + 1];

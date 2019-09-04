@@ -1,22 +1,17 @@
-using System.Diagnostics.Contracts;
 
+// ReSharper disable once CheckNamespace
 namespace System.ComponentModel
 {
     public static class BindingListExtensions
     {
         public static BindingList<T> Initialize<T>
         (
-            this BindingList<T> list, 
-            int ElementsCount, 
+            this BindingList<T> list,
+            int ElementsCount,
             Func<int, T> Initializer
         )
         {
-            Contract.Requires(Initializer != null);
-            Contract.Requires(list != null);
-            Contract.Requires(ElementsCount >= 0);
-            Contract.Ensures(Contract.Result<BindingList<T>>() == list);
-
-            for(var i = 0; i < ElementsCount; i++)
+            for (var i = 0; i < ElementsCount; i++)
                 list.Add(Initializer(i));
             return list;
         }
@@ -29,12 +24,7 @@ namespace System.ComponentModel
             Func<int, TParameter, T> Initializer
         )
         {
-            Contract.Requires(Initializer != null);
-            Contract.Requires(list != null);
-            Contract.Requires(ElementsCount >= 0);
-            Contract.Ensures(Contract.Result<BindingList<T>>() == list);
-
-            for(var i = 0; i < ElementsCount; i++)
+            for (var i = 0; i < ElementsCount; i++)
                 list.Add(Initializer(i, parameter));
             return list;
         }

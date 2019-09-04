@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
@@ -140,39 +139,27 @@ namespace MathCore
         /// <param name="Y">Вещественный делитель</param>
         /// <returns>Комплексное частное</returns>
         [DST]
-        public static Complex operator /(in Complex X, double Y)
-        {
-            Contract.Requires(!Y.Equals(0d));
-            return new Complex(X.Re / Y, X.Im / Y);
-        }
+        public static Complex operator /(in Complex X, double Y) => new Complex(X.Re / Y, X.Im / Y);
 
         /// <summary>Оператор деления комплексного числа на целое</summary>
         /// <param name="X">Комплексное делимое число</param>
         /// <param name="Y">Целый делитель</param>
         /// <returns>Комплексное частное</returns>
         [DST]
-        public static Complex operator /(in Complex X, int Y)
-        {
-            Contract.Requires(Y != 0);
-            return new Complex(X.Re / Y, X.Im / Y);
-        }
+        public static Complex operator /(in Complex X, int Y) => new Complex(X.Re / Y, X.Im / Y);
 
         /// <summary>Оператор деления комплексного числа на вещественное одинарной точности</summary>
         /// <param name="X">Комплексное делимое число</param>
         /// <param name="Y">Вещественный делитель одинарной точности</param>
         /// <returns>Комплексное частное</returns>
         [DST]
-        public static Complex operator /(in Complex X, float Y)
-        {
-            Contract.Requires(!Y.Equals(0f));
-            return new Complex(X.Re / Y, X.Im / Y);
-        }
+        public static Complex operator /(in Complex X, float Y) => new Complex(X.Re / Y, X.Im / Y);
 
         /// <summary>Оператор произведения вещественного и комплексного числа</summary>
         /// <param name="X">Вещественное число</param>
         /// <param name="Y">Комплексное число</param>
         /// <returns>Комплексное произведение</returns>
-        [DST, Pure] public static Complex operator *(double X, in Complex Y) => new Complex(Y.Re * X, Y.Im * X);
+        [DST] public static Complex operator *(double X, in Complex Y) => new Complex(Y.Re * X, Y.Im * X);
 
         /// <summary>Оператор произведения целого и комплексного числа</summary>
         /// <param name="X">Целое число</param>

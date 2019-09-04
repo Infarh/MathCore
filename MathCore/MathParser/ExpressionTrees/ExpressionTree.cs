@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser.ExpressionTrees
 {
@@ -55,7 +55,6 @@ namespace MathCore.MathParser.ExpressionTrees
         /// <summary>Удалить узел</summary><param name="Node">Удаляемый узел</param>
         public void Remove([NotNull] ExpressionTreeNode Node)
         {
-            Contract.Requires(Node != null);
             // сохраняем ссылку на предка узла
             var parent = Node.Parent;
             // Сохраняем ссылки на поддеревья
@@ -120,8 +119,6 @@ namespace MathCore.MathParser.ExpressionTrees
         /// <summary>Заменить узел</summary><param name="OldNode">Исходный узел</param><param name="NewNode">Новый узел</param>
         public void Swap([NotNull] ExpressionTreeNode OldNode, [NotNull] ExpressionTreeNode NewNode)
         {
-            Contract.Requires(OldNode != null);
-            Contract.Requires(NewNode != null);
             OldNode.SwapTo(NewNode);
             if(Root == OldNode) Root = NewNode;
         }
@@ -129,7 +126,6 @@ namespace MathCore.MathParser.ExpressionTrees
         /// <summary>Переместить узел вниз</summary><param name="Node">Перемещаемый узел</param>
         public void MoveParentDown([NotNull] ExpressionTreeNode Node)
         {
-            Contract.Requires(Node != null);
             var parent = Node.Parent;
             var is_left_subtree = Node.IsLeftSubtree;
 
@@ -177,11 +173,7 @@ namespace MathCore.MathParser.ExpressionTrees
 
         /// <summary>Обойти дерево</summary><param name="type">Способ обхода</param><returns>Перечисление узлов дерева по указанному способу обхода</returns>
         [NotNull]
-        public IEnumerable<ExpressionTreeNode> Bypass(BypassingType type = BypassingType.LeftRootRight)
-        {
-            Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
-            return Root.Bypassing(type);
-        }
+        public IEnumerable<ExpressionTreeNode> Bypass(BypassingType type = BypassingType.LeftRootRight) => Root.Bypassing(type);
 
         /* --------------------------------------------------------------------------------------------- */
 
@@ -197,33 +189,17 @@ namespace MathCore.MathParser.ExpressionTrees
 
         /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
         [NotNull]
-        public ExpressionTree Clone()
-        {
-            Contract.Ensures(Contract.Result<ExpressionTree>() != null);
-            return new ExpressionTree(Root.Clone());
-        }
+        public ExpressionTree Clone() => new ExpressionTree(Root.Clone());
 
         /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
         [NotNull]
-        object ICloneable.Clone()
-        {
-            Contract.Ensures(Contract.Result<object>() != null);
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
         /// <summary>Получить перечислитель узлов дерева по методу ЛКП</summary><returns>Перечислитель узлов дерева по методу ЛКП</returns>
         [NotNull]
-        public IEnumerator<ExpressionTreeNode> GetEnumerator()
-        {
-            Contract.Ensures(Contract.Result<IEnumerator<ExpressionTreeNode>>() != null);
-            return Bypass().GetEnumerator();
-        }
+        public IEnumerator<ExpressionTreeNode> GetEnumerator() => Bypass().GetEnumerator();
 
         [NotNull]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            Contract.Ensures(Contract.Result<IEnumerator>() != null);
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

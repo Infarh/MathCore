@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.Contracts;
-
+﻿// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
     /// <summary>Обозреваемый объект</summary>
     /// <typeparam name="T">Тип объектов последовательности событий</typeparam>
-    [ContractClass(typeof(ObservableExContract<>))]
     public interface IObservableEx<T> : IObservable<T>
     {
         /// <summary>Метод получения наблюдателя</summary>

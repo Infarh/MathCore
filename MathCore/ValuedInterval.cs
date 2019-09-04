@@ -1,31 +1,12 @@
 using System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
-    //public class ValuedInterval<TValue> : Interval<TValue>
-    //{
-    //    public TValue IntervalValue { get; set; }
-
-    //    public ValuedInterval(double Min, double Max, TValue Value) : base(Min, Max) { IntervalValue = Value; }
-
-    //    public ValuedInterval(double Min, double Max, bool IncludeLimits, TValue Value) : base(Min, Max, IncludeLimits) { IntervalValue = Value; }
-
-    //    public ValuedInterval(double Min, bool MinInclude, double Max, TValue Value) : base(Min, MinInclude, Max) { this.IntervalValue = Value; }
-
-    //    public ValuedInterval(double Min, bool MinInclude, double Max, bool MaxInclude, TValue Value) : base(Min, MinInclude, Max, MaxInclude) { IntervalValue = Value; }
-
-    //    public ValuedInterval(Interval<TValue> interval, TValue Value) : this(interval.Min, interval.MinInclude, interval.Max, interval.MaxInclude, Value) { }
-
-
-    //    /// <inheritdoc />
-    //    public override string ToString() => $"{base.ToString()} - {IntervalValue}";
-    //}
-
     /// <summary>Интервал вещественых значений двойной точности</summary>
     [Serializable]
     public struct ValuedInterval<TValue> : IComparable<double>, IFormattable
@@ -78,7 +59,7 @@ namespace MathCore
         /// <summary>Середина интервала</summary>
         public double Middle => (_Min + _Max) / 2;
 
-        public TValue Value => Value;
+        public TValue Value => _Value;
 
         #endregion
 
@@ -168,7 +149,7 @@ namespace MathCore
         /// <summary>Проверка на вхождение значения в интервал</summary>
         /// <param name="value">Проверяемое значение</param>
         /// <returns>Истина, если значение входит в интервал</returns>
-        [Pure, DST]
+        [DST]
         public bool Check(double value) =>
             (_MinInclude && _Min.CompareTo(value) == 0)
             || (_MaxInclude && _Max.CompareTo(value) == 0)
@@ -203,11 +184,8 @@ namespace MathCore
 
         #region Цыклы
 
-        public void For(int samples, Action<double> Do)
+        public void For(int samples, [NotNull] Action<double> Do)
         {
-            Contract.Requires(Do != null);
-            Contract.Requires(samples > 0);
-
             var len = Length;
             var min = _Min;
             if (!_MaxInclude) len -= double.Epsilon;
@@ -221,11 +199,8 @@ namespace MathCore
                 Do(min + i * dx);
         }
 
-        public void For(int samples, Action<int, double> Do)
+        public void For(int samples, [NotNull] Action<int, double> Do)
         {
-            Contract.Requires(Do != null);
-            Contract.Requires(samples > 0);
-
             var len = Length;
             var min = _Min;
             if (!_MaxInclude) len -= double.Epsilon;
@@ -239,7 +214,7 @@ namespace MathCore
                 Do(i, min + i * dx);
         }
 
-        public void WhileInInterval(double step, Action<double> Do)
+        public void WhileInInterval(double step, [NotNull] Action<double> Do)
         {
             var min = Math.Min(_Max, _Min);
             step = _Max < _Min && step > 0 ? -step : step;

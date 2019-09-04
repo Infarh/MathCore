@@ -15,7 +15,6 @@ namespace MathCore
         //{
         //    get
         //    {
-        //        Contract.Assert(index.Length <= _Dimensions);
 
         //    }
         //    set

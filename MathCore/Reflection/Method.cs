@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics.Contracts;
+using MathCore.Annotations;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
@@ -18,11 +19,7 @@ namespace System.Reflection
         public string Name
         {
             get => _Name;
-            set
-            {
-                Contract.Requires(!string.IsNullOrEmpty(value));
-                Initialize(_Object, _Name = value, _Private);
-            }
+            set => Initialize(_Object, _Name = value, _Private);
         }
 
         public TObject Object
@@ -39,35 +36,26 @@ namespace System.Reflection
             set => Initialize(_Object, _Name, _Private = value);
         }
 
-        public Method(TObject o, string Name, bool Private = false)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(Name));
-            Initialize(_Object = o, _Name = Name, _Private = Private);
-        }
+        public Method(TObject o, string Name, bool Private = false) => Initialize(_Object = o, _Name = Name, _Private = Private);
 
-        private void Initialize(TObject o, string Name, bool Private)
+        private void Initialize([CanBeNull] TObject obj, [NotNull] string MethodName, bool IsPrivate)
         {
-            Contract.Requires(Name != null);
-            Contract.Requires(Name != "");
-
-            var IsPublic = Private ? BindingFlags.NonPublic : BindingFlags.Public;
-            var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
+            var IsPublic = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
+            var IsStatic = obj is null ? BindingFlags.Static : BindingFlags.Instance;
 
             var type = typeof(TObject);
-            if(type == typeof(object) && o != null)
-                type = o.GetType();
+            if(type == typeof(object) && obj != null)
+                type = obj.GetType();
 
-            _MethodInfo = type.GetMethod(Name, IsStatic | IsPublic);
+            _MethodInfo = type.GetMethod(MethodName, IsStatic | IsPublic);
 
-            _Method = o != null && o is ISynchronizeInvoke
-                ? (Func<object[], TResult>)(Args => (TResult)((ISynchronizeInvoke)o).Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args }))
+            _Method = obj != null && obj is ISynchronizeInvoke
+                ? (Func<object[], TResult>)(Args => (TResult)((ISynchronizeInvoke)obj).Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args }))
                 : PrivateInvoke;
         }
 
         public TResult Invoke(params object[] Args) => _Method(Args);
 
         private TResult PrivateInvoke(params object[] Args) => (TResult)_MethodInfo.Invoke(_Object, Args);
-
-
     }
 }

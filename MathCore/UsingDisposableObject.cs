@@ -1,6 +1,7 @@
 using System;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -24,7 +25,7 @@ namespace MathCore
         /// <param name="f">Метод получения значения</param>
         /// <returns>Значение, полученное от объекта указанным методом</returns>
         [DST]
-        public TValue GetValue<TValue>(Func<T, TValue> f) { Contract.Requires(f != null); return f(Object); }
+        public TValue GetValue<TValue>([NotNull] Func<T, TValue> f) => f(Object);
 
         /* ------------------------------------------------------------------------------------------ */
     }

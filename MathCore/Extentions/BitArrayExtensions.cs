@@ -1,18 +1,19 @@
-﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
+﻿using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
+// ReSharper disable once CheckNamespace
 namespace System.Collections
 {
     public static class BitArrayExtensions
     {
-        public static void Set(this BitArray A, int Value)
+        public static void Set([NotNull] this BitArray A, int Value)
         {
             var i_Length = A.Length;
             for(var i = 0; i < i_Length; i++, Value >>= 1)
                 A[i] = (Value & 1) == 1;
         }
 
-        public static byte GetInt8(this BitArray A)
+        public static byte GetInt8([NotNull] this BitArray A)
         {
             byte Result = 0;
             var i_Length = A.Length;
@@ -24,7 +25,7 @@ namespace System.Collections
             return Result;
         }
 
-        public static short GetInt16(this BitArray A)
+        public static short GetInt16([NotNull] this BitArray A)
         {
             short Result = 0;
             var i_Length = A.Length;
@@ -37,7 +38,7 @@ namespace System.Collections
         }
 
 
-        public static int GetInt32(this BitArray A)
+        public static int GetInt32([NotNull] this BitArray A)
         {
             var Result = 0;
             var i_Length = A.Length;
@@ -49,7 +50,7 @@ namespace System.Collections
             return Result;
         }
 
-        public static long GetInt64(this BitArray A)
+        public static long GetInt64([NotNull] this BitArray A)
         {
             long Result = 0;
             var i_Length = A.Length;
@@ -61,18 +62,19 @@ namespace System.Collections
             return Result;
         }
 
-        public static bool[] ToBoolArray(this BitArray A)
+        [NotNull]
+        public static bool[] ToBoolArray([NotNull] this BitArray A)
         {
             var Result = new bool[A.Length];
 
-            var i_Length = A.Length;
-            for(var i = 0; i < i_Length; i++)
+            var i_length = A.Length;
+            for(var i = 0; i < i_length; i++)
                 Result[i] = A[i];
 
             return Result;
         }
 
-        public static void Inverse(this BitArray A)
+        public static void Inverse([NotNull] this BitArray A)
         {
             var Bits = A.ToBoolArray();
             var i_Length = A.Length;
@@ -80,7 +82,8 @@ namespace System.Collections
                 A[i] = Bits[i_Length - i - 1];
         }
 
-        public static BitArray GetInversed(this BitArray A)
+        [NotNull]
+        public static BitArray GetInversed([NotNull] this BitArray A)
         {
             var B = new BitArray(A.Length);
             var i_Length = B.Length;
@@ -93,8 +96,8 @@ namespace System.Collections
         /// <param name="bits">Битовый массив</param>
         /// <param name="PartyBit">Бит чётности</param>
         /// <returns>Истина, если сумма бит по модулю 2 и бита чётности равна 0</returns>
-        [DST, Pure]
-        public static bool IsPartyCorrect(this BitArray bits, bool PartyBit)
+        [DST]
+        public static bool IsPartyCorrect([NotNull] this BitArray bits, bool PartyBit)
         {
             var result = PartyBit;
 
@@ -107,8 +110,8 @@ namespace System.Collections
         /// <summary>Сумма бит по модулю 2</summary>
         /// <param name="bits">Битовый массив</param>
         /// <returns>Результат сложения бит массива по модулю 2</returns>
-        [DST, Pure]
-        public static bool GetBitSummMod2(this BitArray bits)
+        [DST]
+        public static bool GetBitSummMod2([NotNull] this BitArray bits)
         {
             var result = false;
 

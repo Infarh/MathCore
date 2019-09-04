@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using MathCore.Annotations;
@@ -28,11 +27,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Новый узел переменной</summary>
         /// <param name="Variable">Переменная</param>
-        public VariableValueNode([NotNull] ExpressionVariabel Variable)
-        {
-            Contract.Requires(Variable != null);
-            _Variable = Variable;
-        }
+        public VariableValueNode([NotNull] ExpressionVariabel Variable) => _Variable = Variable;
 
         /// <summary>Преобразование в строковую форму</summary>
         /// <returns>Строковое представление</returns>
@@ -54,7 +49,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Скомпилировать в выражение</summary>
         /// <param name="Parameters">Массив параметров</param>
         /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => Parameters.Find(p => p.Name == Name) ?? Compile();
+        public override Expression Compile(params ParameterExpression[] Parameters) => Parameters.Find(p => p.Name == Name) ?? Compile();
 
         public override IEnumerable<ExpressionVariabel> GetVariables() => base.GetVariables().AppendFirst(_Variable);
 

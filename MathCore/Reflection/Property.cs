@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics.Contracts;
+using MathCore.Annotations;
 using MathCore.Values;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
     ///<summary>"Свойство" позднего связывания</summary>
@@ -36,29 +38,21 @@ namespace System.Reflection
         /// <summary>
         /// Тип значения свойства
         /// </summary>
+        [NotNull]
         public Type PropertyType => _PropertyInfo.PropertyType;
 
         ///<summary>Имя свойства</summary>
         public string Name
         {
             get => _Name;
-            set
-            {
-                Contract.Requires(value != null);
-                Contract.Requires(value != "");
-                Initialize(_Object, value, _Private);
-            }
+            set => Initialize(_Object, value, _Private);
         }
 
         ///<summary>Объект, определяющий свойтсво</summary>
         public TObject Object
         {
             get => _Object;
-            set
-            {
-                Contract.Requires(value != null);
-                Initialize(value, _Name, _Private);
-            }
+            set => Initialize(value, _Name, _Private);
         }
 
         ///<summary>Признак - является ли свойство пиватным</summary>
@@ -88,9 +82,7 @@ namespace System.Reflection
         ///<summary>Атрибуты свойства</summary>
         public PropertyAttributes Attributes => _PropertyInfo.Attributes;
 
-        /// <summary>
-        /// Дескриптор свйоства объекта
-        /// </summary>
+        /// <summary>Дескриптор свйоства объекта</summary>
         public PropertyDescriptor Descriptor => _Descriptor;
 
         public string DisplayName { get; private set; }
@@ -112,24 +104,21 @@ namespace System.Reflection
 
         /* ------------------------------------------------------------------------------------------ */
 
-        private void Initialize(TObject o, string Name, bool Private)
+        private void Initialize([CanBeNull] TObject o, [NotNull] string PropertyName, bool IsPrivate)
         {
-            //Contract.Requires(o != null);
-            Contract.Requires(!string.IsNullOrEmpty(Name));
-
             if(_Descriptor != null
                 && _Object is { }
                 && !ReferenceEquals(o, _Object)
-                && _Name != Name)
-                _Descriptor.RemoveValueChanged(o, PropertyValueChanged);
+                && _Name != PropertyName)
+                _Descriptor.RemoveValueChanged(o.IsNotNull(), PropertyValueChanged);
 
             _Object = o;
-            _Name = Name;
-            _Private = Private;
+            _Name = PropertyName;
+            _Private = IsPrivate;
 
             _Descriptor = _Object != null
-                ? TypeDescriptor.GetProperties(_Object).Find(Name, true)
-                : TypeDescriptor.GetProperties(typeof(TObject)).Find(Name, true);
+                ? TypeDescriptor.GetProperties(_Object).Find(PropertyName, true)
+                : TypeDescriptor.GetProperties(typeof(TObject)).Find(PropertyName, true);
             if(_Descriptor != null && _Object is { } && _Descriptor.SupportsChangeEvents)
                 _Descriptor.AddValueChanged(_Object, PropertyValueChanged);
 
@@ -142,17 +131,17 @@ namespace System.Reflection
                 type = o.GetType();
 
             var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
-            var IsPublic = Private ? BindingFlags.NonPublic : BindingFlags.Public;
+            var IsPublic = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
 
-            _PropertyInfo = type.GetProperty(Name, IsStatic | IsPublic);
+            _PropertyInfo = type.GetProperty(PropertyName, IsStatic | IsPublic);
 
             if(_PropertyInfo is null)
             {
-                var lv_GetMethod = new Method<TObject, TValue>(o, $"get_{Name}", Private);
-                var lv_SetMethod = new Method<TObject, object>(o, $"set_{Name}", Private);
+                var get_method = new Method<TObject, TValue>(o, $"get_{PropertyName}", IsPrivate);
+                var set_method = new Method<TObject, object>(o, $"set_{PropertyName}", IsPrivate);
 
-                _GetMethod = () => lv_GetMethod.Invoke();
-                _SetMethod = value => lv_SetMethod.Invoke(value);
+                _GetMethod = () => get_method.Invoke();
+                _SetMethod = value => set_method.Invoke(value);
             }
 
             if(!(o is ISynchronizeInvoke)) return;
@@ -177,29 +166,21 @@ namespace System.Reflection
 
         private void SetValue(TValue value) { if(CanWrite) _PropertyInfo.SetValue(_Object, value, null); }
 
+        [CanBeNull]
         private TValue GetValue() => CanRead ? (TValue)_PropertyInfo.GetValue(_Object, null) : default;
-
-        /* ------------------------------------------------------------------------------------------ */
-
-        [ContractInvariantMethod]
-        private void CheckAccessMethods()
-        {
-            Contract.Invariant(_GetMethod != null);
-            Contract.Invariant(_SetMethod != null);
-        }
 
         /* ------------------------------------------------------------------------------------------ */
 
         public override string ToString()
         {
-            var PropertyType = _Object is null ? "Static property" : "Property";
+            var property_type = _Object is null ? "Static property" : "Property";
 
             if(_PropertyInfo is null)
-                return $"Incorrect {PropertyType.ToLower()} of {typeof(TObject)} name {_Name}";
+                return $"Incorrect {property_type.ToLower()} of {typeof(TObject)} name {_Name}";
 
             var value = CanRead ? $" = {Value}" : "";
             var host = typeof(TObject).Name;
-            return string.Format("{0}({4}{5}{6}): {1}.{2}{3}", PropertyType, host, _Name, value,
+            return string.Format("{0}({4}{5}{6}): {1}.{2}{3}", property_type, host, _Name, value,
                 CanRead ? "R" : "", CanWrite ? "W" : "", SupportsChangeEvents ? "E" : "");
         }
 

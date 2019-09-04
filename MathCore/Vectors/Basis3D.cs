@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Vectors
 {
@@ -11,13 +11,11 @@ namespace MathCore.Vectors
             0, 1, 0,
             0, 0, 1);
 
-        public static Basis3D Scale(double kx, double ky, double kz)
-        {
-            return new Basis3D(
+        public static Basis3D Scale(double kx, double ky, double kz) =>
+            new Basis3D(
                 kx, 0, 0,
                 0, ky, 0,
                 0, 0, kz);
-        }
 
         public static Basis3D RotateOX(double Angle, bool Positive = true) =>
             new Basis3D(
@@ -107,41 +105,19 @@ namespace MathCore.Vectors
             _zx = zx; _zy = zy; _zz = zz;
         }
 
-        public static implicit operator Matrix(in Basis3D b)
-        {
-            Contract.Ensures(Contract.Result<Matrix>().M == 3, "Число столбцов матрицы = 3");
-            Contract.Ensures(Contract.Result<Matrix>().N == 3, "Число строк матрицы = 3");
+        [NotNull]
+        public static implicit operator Matrix(in Basis3D b) =>
+            new Matrix(new[,]
+            {
+                { b._xx, b._xy, b._xz },
+                { b._yx, b._yy, b._yz },
+                { b._zx, b._zy, b._zz }
+            });
 
-            //var M = new Matrix(3);
-            //M[0, 0] = b._xx; M[0, 1] = b._xy; M[0, 2] = b._xz;
-            //M[1, 0] = b._yx; M[1, 1] = b._yy; M[1, 2] = b._yz;
-            //M[2, 0] = b._zx; M[2, 1] = b._zy; M[2, 2] = b._zz;
-
-            //Contract.Ensures(M.IsSquare);
-            //Contract.Ensures(M.N == 3);
-            //Contract.Ensures(M.M == 3);
-            //return M;
-
-            return new Matrix(new[,]
-              {
-                  { b._xx, b._xy, b._xz },
-                  { b._yx, b._yy, b._yz },
-                  { b._zx, b._zy, b._zz }
-              });
-        }
-
-        public static explicit operator Basis3D([NotNull] Matrix M)
-        {
-            Contract.Requires(M.M == 3 && M.N == 3, "Матрица должна быть размера 3х3");
-
-            //if(M.M != 3 || M.N != 3)
-            //    throw new ArgumentException("Матрица должна быть размера 3х3");
-            //Contract.EndContractBlock();
-
-            return new Basis3D(
+        public static explicit operator Basis3D([NotNull] Matrix M) =>
+            new Basis3D(
                 M[0, 0], M[0, 1], M[0, 2],
                 M[1, 0], M[1, 1], M[1, 2],
                 M[2, 0], M[2, 1], M[2, 2]);
-        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 
 // ReSharper disable UnusedMember.Global
 
@@ -17,13 +16,7 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public LambdaComparer(Func<T, T, int> Comparer)
-        {
-            Contract.Requires(Comparer != null);
-            Contract.Ensures(_Comparer != null);
-
-            _Comparer = Comparer;
-        }
+        public LambdaComparer(Func<T, T, int> Comparer) => _Comparer = Comparer;
 
         /* ------------------------------------------------------------------------------------------ */
 

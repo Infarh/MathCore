@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.Contracts;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class LongExtentions
@@ -81,10 +82,10 @@ namespace System
             return result;
         }
 
-        [Pure, DST]
+        [DST]
         public static long GetFlags(this long Value, long Mask) => Value & Mask;
 
-        [Pure, DST]
+        [DST]
         public static long SetFlag(this long Value, long Flag, long Mask) => (Value & ~Mask) | (Flag & Mask);
     }
 }

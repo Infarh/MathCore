@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 using MathCore.Vectors;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Interpolation
 {
@@ -74,7 +74,6 @@ namespace MathCore.Interpolation
         public void Initialize([NotNull] double[] X, [NotNull] double[] Y)
         {
             if(X.Length != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
-            Contract.EndContractBlock();
 
             var count = X.Length;
             _SplinStates = new SplineState[count];

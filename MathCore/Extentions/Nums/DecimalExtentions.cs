@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
@@ -41,10 +40,10 @@ namespace System
         [DST]
         public static decimal GetInverse(this decimal x) => 1 / x;
 
-        //[Diagnostics.DST, Pure]
+        //[Diagnostics.DST]
         //public static double GetAbsMod(this decimal x, decimal mod) { return x % mod + (x < 0 ? mod : 0); }
 
-        [DST, Pure]
+        [DST]
         public static decimal GetAbs(this decimal x) => x < 0 ? -x : x;
 
         //[Diagnostics.DST]

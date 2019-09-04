@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.Contracts;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class ByteExtentions
@@ -78,10 +78,8 @@ namespace System
             return num;
         }
 
-        [Pure, DST]
-        public static byte GetFlags(this byte Value, byte Mask) => (byte)(Value & Mask);
+        [DST] public static byte GetFlags(this byte Value, byte Mask) => (byte)(Value & Mask);
 
-        [Pure, DST]
-        public static byte SetFlag(this byte Value, byte Flag, byte Mask) => (byte)((Value & ~Mask) | (Flag & Mask));
+        [DST] public static byte SetFlag(this byte Value, byte Flag, byte Mask) => (byte)((Value & ~Mask) | (Flag & Mask));
     }
 }

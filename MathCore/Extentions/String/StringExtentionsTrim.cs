@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -16,9 +15,6 @@ namespace System
         public static string TrimByLength([NotNull] this string Str, int Length, [NotNull] string ReplacementPattern = "..")
         {
             if (Str is null) throw new ArgumentNullException(nameof(Str));
-            Contract.Requires(Length >= 0);
-            Contract.Ensures((Str is null && Contract.Result<string>() is null)
-                || (Str != null && Contract.Result<string>() != null));
 
             if(Str.Length <= Length) return Str;
             if(Length == 0) return "";

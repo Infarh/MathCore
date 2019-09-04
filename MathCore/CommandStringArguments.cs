@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace MathCore
 {
-    public class CommandStringArguments :
-        IEnumerable<string>
+    public class CommandStringArguments : IEnumerable<string>
     {
         /* ------------------------------------------------------------------------------------------ */
 
@@ -14,37 +12,13 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public int Count
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<int>() >= 0);
-                Contract.Ensures(Contract.Result<int>() < _Arguments.Length);
+        public int Count => _Arguments.Length;
 
-                return _Arguments.Length;
-            }
-        }
-
-        public string this[int i]
-        {
-            get
-            {
-                Contract.Requires(i >= 0);
-                Contract.Requires(i < Count);
-
-                return _Arguments[i];
-            }
-        }
+        public string this[int i] => _Arguments[i];
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public CommandStringArguments(IEnumerable<string> Args)
-        {
-            Contract.Requires(Args != null);
-            Contract.Ensures(_Arguments != null);
-
-            _Arguments = Args.ToArray();
-        }
+        public CommandStringArguments(IEnumerable<string> Args) => _Arguments = Args.ToArray();
 
         /* ------------------------------------------------------------------------------------------ */
 

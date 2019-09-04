@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using MathCore;
@@ -94,18 +93,12 @@ namespace System.ComponentModel
         public sealed class DependentPropertyChangedEventArgs : PropertyChangedEventArgs
         {
             /// <summary>Перечень свойств, породивших изменение</summary>
-            public string[] FromProperties { get; private set; }
+            public string[] FromProperties { get; }
 
             /// <summary>Инициализация нового аргумента события изменения зависимого свойства</summary>
             /// <param name="PropertyName">Имя изменившегося свойства</param>
             /// <param name="FromProperties">Список свойств, породивших изменение</param>
-            public DependentPropertyChangedEventArgs([NotNull] string PropertyName, [NotNull] string[] FromProperties) : base(PropertyName)
-            {
-                Contract.Requires(!string.IsNullOrEmpty(PropertyName));
-                Contract.Requires(FromProperties != null);
-                Contract.Requires(FromProperties.Length > 0);
-                this.FromProperties = FromProperties;
-            }
+            public DependentPropertyChangedEventArgs([NotNull] string PropertyName, [NotNull] string[] FromProperties) : base(PropertyName) => this.FromProperties = FromProperties;
         }
 
         /// <summary>Перечень слабых ссылок на отслеживаемые объекты</summary>
@@ -122,11 +115,7 @@ namespace System.ComponentModel
 
             /// <summary>Инициализация нового экземпляра информации и связях между свойствами типа</summary>
             /// <param name="Dependences">Словарь имён свойст зависимостей</param>
-            public RegistratorInfo(Dictionary<string, string[]> Dependences)
-            {
-                Contract.Requires(Dependences != null);
-                _Dependences = Dependences;
-            }
+            public RegistratorInfo(Dictionary<string, string[]> Dependences) => _Dependences = Dependences;
 
             /// <summary>Метод установки обработчика событий обновления свойства объекта, генерирующего вторичные события обновления зависимых свойств</summary>
             /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
@@ -182,8 +171,6 @@ namespace System.ComponentModel
         public static void PropertyDependences_Register<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             where T : class, INotifyPropertyChanged
         {
-            Contract.Requires(obj != null);
-            Contract.Requires(OnPropertyChanged != null);
             lock (__ObjectsSet)
             {
                 if (__ObjectsSet.Any(wr => obj.Equals(wr.Target))) return;
@@ -204,8 +191,6 @@ namespace System.ComponentModel
         public static IDisposable PropertyDependences_Register_Disposable<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             where T : class, INotifyPropertyChanged
         {
-            Contract.Requires(obj != null);
-            Contract.Requires(OnPropertyChanged != null);
             lock (__ObjectsSet)
             {
                 if (__ObjectsSet.Any(wr => obj.Equals(wr.Target))) return new LambdaDisposable();
@@ -224,7 +209,6 @@ namespace System.ComponentModel
         /// <typeparam name="T">Тип объекта</typeparam>
         public static void PropertyDependences_Unregister<T>([NotNull] this T obj) where T : class, INotifyPropertyChanged
         {
-            Contract.Requires(obj != null);
             lock (__ObjectsSet)
             {
                 var w_ref = __ObjectsSet.FirstOrDefault(wr => obj.Equals(wr.Target));
@@ -244,7 +228,6 @@ namespace System.ComponentModel
         /// <returns>Информация о связях между свойствами объекта</returns>
         private static RegistratorInfo GetRegistrator([NotNull] this Type type)
         {
-            Contract.Requires(type != null);
             lock (__ObjectsSet)
             {
                 var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);

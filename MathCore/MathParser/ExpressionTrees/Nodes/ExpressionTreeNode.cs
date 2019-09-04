@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -14,7 +13,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
     using NodeSelector = Func<ExpressionTreeNode, ExpressionTreeNode>;
 
     /// <summary>Узел дерева вычислений</summary>
-    [ContractClass(typeof(ExpressionTreeNodeContract))]
     public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTreeNode>
     {
         /// <summary>Перечислитель предков узла</summary>
@@ -31,7 +29,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             {
                 get
                 {
-                    Contract.Requires(i >= 0);
                     var Parent = Node.Parent;
                     for(var j = 0; j < i && Parent != null; j++)
                         Parent = Parent.Parent;
@@ -41,34 +38,21 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
             /// <summary>Новый итератор предков узла</summary>
             /// <param name="Node">Обрабатываемый узел</param>
-            public ParentsIterator([NotNull] ExpressionTreeNode Node)
-            {
-                Contract.Requires(Node != null);
-                this.Node = Node;
-            }
+            public ParentsIterator([NotNull] ExpressionTreeNode Node) => this.Node = Node;
 
             /// <summary>Получить перечислитель предков узла</summary>
             /// <returns>Перечислитель предков узла</returns>
-            IEnumerator<ExpressionTreeNode> IEnumerable<ExpressionTreeNode>.GetEnumerator()
-            {
-                Contract.Ensures(Contract.Result<IEnumerator<ExpressionTreeNode>>() != null);
-                return GetParrentsEnumerable().GetEnumerator();
-            }
+            IEnumerator<ExpressionTreeNode> IEnumerable<ExpressionTreeNode>.GetEnumerator() => GetParrentsEnumerable().GetEnumerator();
 
             /// <summary>Получить перечислитель</summary>
             /// <returns>Перечислитель</returns>
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                Contract.Ensures(Contract.Result<IEnumerator>() != null);
-                return ((IEnumerable<ExpressionTreeNode>)this).GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ExpressionTreeNode>)this).GetEnumerator();
 
             /// <summary>Метод получения перечисления предков узла</summary>
             /// <returns>Перечисление предков узла</returns>
             [NotNull]
             private IEnumerable<ExpressionTreeNode> GetParrentsEnumerable()
             {
-                Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
                 for(var node = Node; node.Parent != null; node = node.Parent)
                     yield return node.Parent;
             }
@@ -91,26 +75,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public bool IsRoot => Parent is null;
 
         /// <summary>Признак - является ли текущий узел левым поддеревом</summary>
-        public bool IsLeftSubtree
-        {
-            [DST]
-            get
-            {
-                Contract.Ensures(Contract.Result<bool>() == (Parent != null && Parent.Left == this));
-                return Parent != null && Parent.Left == this;
-            }
-        }
+        public bool IsLeftSubtree => Parent != null && Parent.Left == this;
 
         /// <summary>Признак - является ли текущий узел правым поддеревом</summary>
-        public bool IsRightSubtree
-        {
-            [DST]
-            get
-            {
-                Contract.Ensures(Contract.Result<bool>() == (Parent != null && Parent.Right == this));
-                return Parent != null && Parent.Right == this;
-            }
-        }
+        public bool IsRightSubtree => Parent != null && Parent.Right == this;
 
         /// <summary>Ссылка на предка узла</summary>
         public ExpressionTreeNode Parent { get; set; }
@@ -123,8 +91,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             get => _Left;
             set
             {
-                Contract.Ensures(_Left == value);
-                Contract.Ensures(value is null || value.Parent == this);
                 if(_Left != null) _Left.Parent = null;
                 _Left = value;
                 if(value is null) return;
@@ -144,8 +110,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             get => _Right;
             set
             {
-                Contract.Ensures(_Right == value);
-                Contract.Ensures(value is null || value.Parent == this);
                 if(_Right != null) _Right.Parent = null;
                 _Right = value;
                 if(value is null) return;
@@ -159,90 +123,46 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Перечисление правых узлов правого поддерева включая корень</summary>
         [NotNull]
-        public IEnumerable<ExpressionTreeNode> RightNodes
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
-                return this[node => node.Right];
-            }
-        }
+        public IEnumerable<ExpressionTreeNode> RightNodes => this[node => node.Right];
 
         /// <summary>Перечисление левых узлов левого поддерева включая корень</summary>
         [NotNull]
-        public IEnumerable<ExpressionTreeNode> LeftNodes
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
-                return this[node => node.Left];
-            }
-        }
+        public IEnumerable<ExpressionTreeNode> LeftNodes => this[node => node.Left];
 
         /// <summary>Перечислитель предков узла</summary>
         [NotNull]
-        public ParentsIterator Parents
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ParentsIterator>() != null);
-                return new ParentsIterator(this);
-            }
-        }
+        public ParentsIterator Parents => new ParentsIterator(this);
 
         /// <summary>Ссылка на корень дерева</summary>
         [NotNull]
-        public ExpressionTreeNode Root
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-                return this[node => node.Parent].Last();
-            }
-        }
+        public ExpressionTreeNode Root => this[node => node.Parent].Last();
 
         /// <summary>Глубина положения узла в дереве</summary>
-        public int Depth
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<int>() >= 0);
-                return this[node => node.Parent].Count() - 1;
-            }
-        }
+        public int Depth => this[node => node.Parent].Count() - 1;
 
         /// <summary>Самый левый дочерний узел, либо текущий</summary>
         public ExpressionTreeNode LastLeftChild
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-                return this[node => node.Left].Last();
-            }
+            get => this[node => node.Left].Last();
             set => LastLeftChild.Left = value;
         }
 
         /// <summary>Самый правый дочерний узел, либо текущий</summary>
         public ExpressionTreeNode LastRightChild
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-                return this[node => node.Right].Last();
-            }
+            get => this[node => node.Right].Last();
             set => LastRightChild.Right = value;
         }
 
         /// <summary>Доступ к элементам узла по указанному пути</summary>
-        /// <param name="Path">Путь к элементам узла Пример:.\.\l\r\r\l  ..\l\r\r</param>
+        /// <param name="path">Путь к элементам узла Пример:.\.\l\r\r\l  ..\l\r\r</param>
         /// <returns>Элемент узла, выбранный по указанному пути</returns>
-        public ExpressionTreeNode this[[NotNull] string Path]
+        public ExpressionTreeNode this[[NotNull] string path]
         {
             get
             {
-                Contract.Requires(!string.IsNullOrEmpty(Path));
                 var node = this;
-                var elements = Path.ToLower().Split('/', '\\');
+                var elements = path.ToLower().Split('/', '\\');
                 for(var i = 0; i < elements.Length; i++)
                 {
                     node = elements[i] switch
@@ -251,8 +171,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                         ".." => node.Root,
                         "l" => node.Left,
                         "r" => node.Right,
-                        _ => throw new FormatException($"Неверный параметр в пути узла {Path} -> {elements[i]}",
-                            new ArgumentException(nameof(Path)))
+                        _ => throw new FormatException($"Неверный параметр в пути узла {path} -> {elements[i]}",
+                            new ArgumentException(nameof(path)))
                     };
                     if(node is null) return null;
                 }
@@ -268,8 +188,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         {
             get
             {
-                Contract.Requires(ChildSelector != null);
-                Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
                 yield return this;
                 for(var node = ChildSelector(Left, Right); node != null; node = ChildSelector(node.Left, node.Right))
                     yield return node;
@@ -284,8 +202,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         {
             get
             {
-                Contract.Requires(Selector != null);
-                Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
                 yield return this;
                 for(var node = Selector(this); node != null; node = Selector(node))
                     yield return node;
@@ -304,7 +220,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         [NotNull]
         public IEnumerable<ExpressionTreeNode> Bypassing(ExpressionTree.BypassingType type)
         {
-            Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
             switch(type)
             {
                 case ExpressionTree.BypassingType.RootRightLeft:
@@ -346,21 +261,13 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Перечисление дочерних элементов дерева</summary>
         /// <returns>Перечисление дочерних элементов дерева</returns>
         [NotNull]
-        public IEnumerable<ExpressionTreeNode> GetChilds()
-        {
-            Contract.Ensures(Contract.Result<IEnumerable<ExpressionTreeNode>>() != null);
-            return Bypassing(ExpressionTree.BypassingType.RootLeftRight).Skip(1);
-        }
+        public IEnumerable<ExpressionTreeNode> GetChilds() => Bypassing(ExpressionTree.BypassingType.RootLeftRight).Skip(1);
 
         /// <summary>Поменять узел местами с дочерним</summary>
         /// <param name="Parent">Материнский узел</param>
         /// <param name="Child">Дочерний узел</param>
         private static void SwapToChild([NotNull] ExpressionTreeNode Parent, [NotNull] ExpressionTreeNode Child)
         {
-            Contract.Requires(Parent != null);
-            Contract.Requires(Child != null);
-            Contract.Requires(Parent.Left == Child || Parent.Right == Child);
-
             var Parent_Parent = Parent.Parent;
             var IsParentLeft = Parent.IsLeftSubtree;
             Parent.Parent = null;
@@ -423,9 +330,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <param name="B">Подменяемый узел</param>
         public static void Swap([NotNull] ExpressionTreeNode A, [NotNull] ExpressionTreeNode B)
         {
-            Contract.Requires(A != null);
-            Contract.Requires(B != null);
-
             if(B.Left == A || B.Right == A) { SwapToChild(B, A); return; }
             if(A.Left == B || A.Right == B) { SwapToChild(A, B); return; }
 
@@ -479,11 +383,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Заменить узел на указанный</summary>
         /// <param name="Node">Ухел, на который производится замена</param>
-        public void SwapTo([NotNull] ExpressionTreeNode Node)
-        {
-            Contract.Requires(Node != null);
-            Swap(this, Node);
-        }
+        public void SwapTo([NotNull] ExpressionTreeNode Node) => Swap(this, Node);
 
         /// <summary>Удалить узел с перекоммутацией ссылок</summary>
         /// <returns>Если удаляется корень, то левое поддерево, иначе ссылка не предка узла</returns>
@@ -647,43 +547,17 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Преобразование узла в строку</summary>
         /// <returns>Строковое представление узла</returns>
         [NotNull]
-        public override string ToString()
-        {
-            Contract.Ensures(Contract.Result<string>() != null);
-            return $"{Left?.ToString() ?? ""}{Right?.ToString() ?? ""}";
-        }
+        public override string ToString() => $"{Left?.ToString() ?? ""}{Right?.ToString() ?? ""}";
 
         /// <summary>Клонирование поддерева</summary>
         /// <returns>Клон поддерева</returns>
         [NotNull]
-        object ICloneable.Clone()
-        {
-            Contract.Ensures(Contract.Result<object>() != null);
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
         /// <summary>Оператор неявного преобразования строки в узел дерева</summary>
         /// <param name="value">Строковое значение</param>
         /// <returns>Строковый узел дерева</returns>
         [NotNull]
-        public static implicit operator ExpressionTreeNode([NotNull] string value)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(value));
-            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-            return new StringNode(value);
-        }
-    }
-
-    [ContractClassFor(typeof(ExpressionTreeNode))]
-    [ExcludeFromCodeCoverage]
-    internal abstract class ExpressionTreeNodeContract : ExpressionTreeNode
-    {
-        private ExpressionTreeNodeContract() { }
-
-        public override ExpressionTreeNode Clone()
-        {
-            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-            throw new NotImplementedException();
-        }
+        public static implicit operator ExpressionTreeNode([NotNull] string value) => new StringNode(value);
     }
 }

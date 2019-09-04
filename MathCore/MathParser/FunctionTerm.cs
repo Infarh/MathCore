@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
@@ -14,18 +13,9 @@ namespace MathCore.MathParser
         /// <summary>Новый функциональный элемент выражения</summary>
         /// <param name="StrTerm">Строковый элемент выражения</param>
         /// <param name="Block">Блок выражения</param>
-        public FunctionTerm([NotNull] StringTerm StrTerm, [NotNull] BlockTerm Block) : this(StrTerm.Name, Block)
-        {
-            Contract.Requires(StrTerm != null);
-            Contract.Requires(Block != null);
-        }
+        public FunctionTerm([NotNull] StringTerm StrTerm, [NotNull] BlockTerm Block) : this(StrTerm.Name, Block) { }
 
-        public FunctionTerm([NotNull] string Name, [NotNull] BlockTerm Block) : base(Name)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(Name));
-            Contract.Requires(Block != null);
-            this.Block = Block;
-        }
+        public FunctionTerm([NotNull] string Name, [NotNull] BlockTerm Block) : base(Name) => this.Block = Block;
 
         /// <summary>Получить поддерево</summary>
         /// <param name="Parser">Парсер</param>
@@ -36,6 +26,6 @@ namespace MathCore.MathParser
 
         /// <summary>Преобразование в строковую форму</summary>
         /// <returns>Строковое представление элемента</returns>
-        public override string ToString() => $"{Name}{Block?.ToString() ?? ""}";
+        public override string ToString() => $"{Name}{Block.ToString() ?? ""}";
     }
 }

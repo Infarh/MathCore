@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using System.Threading;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ObjectCreationAsStatement
 
 // ReSharper disable UnusedMethodReturnValue.Global
 
@@ -55,11 +56,7 @@ namespace System.Linq.Reactive
         /// <param name="ProperyName">Имя свойства</param>
         /// <returns>Объект-наблюдатель за свойством</returns>
         [NotNull]
-        public static IObservable<T> FromProperty<T>([NotNull] this INotifyPropertyChanged obj, [NotNull] string ProperyName)
-        {
-            Contract.Requires(ProperyName != string.Empty);
-            return new Property<T>(obj, ProperyName);
-        }
+        public static IObservable<T> FromProperty<T>([NotNull] this INotifyPropertyChanged obj, [NotNull] string ProperyName) => new Property<T>(obj, ProperyName);
 
         /// <summary>Метод фильтрации событий</summary>
         /// <typeparam name="T">Тип объектов событий</typeparam>
@@ -98,32 +95,16 @@ namespace System.Linq.Reactive
         public static IObservableEx<Q> Select<T, Q>([NotNull] this IObservable<T> observable, [NotNull] Func<T, Q> Selector) => new SelectLamdaObservableEx<T, Q>(observable, Selector);
 
         [NotNull]
-        public static TimeIntervalObservable Interval_Seconds(double TimeInterval, bool Started = false)
-        {
-            Contract.Requires(TimeInterval >= 0);
-            return Interval(TimeSpan.FromSeconds(TimeInterval), Started);
-        }
+        public static TimeIntervalObservable Interval_Seconds(double TimeInterval, bool Started = false) => Interval(TimeSpan.FromSeconds(TimeInterval), Started);
 
         [NotNull]
-        public static TimeIntervalObservable Interval_MiliSeconds(double TimeInterval, bool Started = false)
-        {
-            Contract.Requires(TimeInterval >= 0);
-            return Interval(TimeSpan.FromMilliseconds(TimeInterval), Started);
-        }
+        public static TimeIntervalObservable Interval_MiliSeconds(double TimeInterval, bool Started = false) => Interval(TimeSpan.FromMilliseconds(TimeInterval), Started);
 
         [NotNull]
-        public static TimeIntervalObservable Interval_Minutes(double TimeInterval, bool Started = false)
-        {
-            Contract.Requires(TimeInterval >= 0);
-            return Interval(TimeSpan.FromMinutes(TimeInterval), Started);
-        }
+        public static TimeIntervalObservable Interval_Minutes(double TimeInterval, bool Started = false) => Interval(TimeSpan.FromMinutes(TimeInterval), Started);
 
         [NotNull]
-        public static TimeIntervalObservable Interval_Hours(double TimeInterval, bool Started = false)
-        {
-            Contract.Requires(TimeInterval >= 0);
-            return Interval(TimeSpan.FromHours(TimeInterval), Started);
-        }
+        public static TimeIntervalObservable Interval_Hours(double TimeInterval, bool Started = false) => Interval(TimeSpan.FromHours(TimeInterval), Started);
 
         [NotNull]
         public static TimeIntervalObservable Interval(this TimeSpan TimeInterval, bool Started = false) => new TimeIntervalObservable(TimeInterval, Started);
@@ -156,11 +137,8 @@ namespace System.Linq.Reactive
         /// <returns>Объект-ниблюдатель за событием</returns>
         [NotNull]
         public static IObservableEx<TEventArgs> FromEvent<TEventArgs>([NotNull] this object Obj, [NotNull] string EventName)
-            where TEventArgs : EventArgs
-        {
-            Contract.Requires(EventName != string.Empty);
-            return new EventObservableEx<TEventArgs>(Obj, EventName);
-        }
+            where TEventArgs : EventArgs =>
+            new EventObservableEx<TEventArgs>(Obj, EventName);
 
         /// <summary>Метод получения объекта-наблюдателя из объекта-перечисления</summary>
         /// <typeparam name="T">Тип объектов перечисления</typeparam>
@@ -185,11 +163,7 @@ namespace System.Linq.Reactive
         /// <param name="Count">Количество пропускаемых событий</param>
         /// <returns>Объект-наблюдатель с указанным количеством пропускаемых событий</returns>
         [NotNull]
-        public static IObservableEx<T> Take<T>([NotNull] this IObservable<T> observable, int Count)
-        {
-            Contract.Requires(Count >= 0);
-            return new TakeObservable<T>(observable, Count);
-        }
+        public static IObservableEx<T> Take<T>([NotNull] this IObservable<T> observable, int Count) => new TakeObservable<T>(observable, Count);
 
         /// <summary>Метод обработки последовательности событий с учётом разрешающей и запрещающей последовательностей</summary>
         /// <typeparam name="T">Тип объектов событий наблюдаемого объекта</typeparam>
@@ -219,9 +193,6 @@ namespace System.Linq.Reactive
         [NotNull]
         public static IObservableEx<T> TakeUntil<T, Q>(this IObservable<T> source, IObservable<Q> Selector, bool IsOpen = true)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(Selector != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
             var o = source as TriggeredObservable<T> ?? new TriggeredObservable<T>(source, IsOpen);
             Selector.ForeachAction(q => o.Open = false);
             return o;
@@ -237,9 +208,6 @@ namespace System.Linq.Reactive
         [NotNull]
         public static IObservableEx<T> SkipWhile<T, Q>(this IObservable<T> source, IObservable<Q> Selector, bool IsOpen = false)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(Selector != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
             var o = source as TriggeredObservable<T> ?? new TriggeredObservable<T>(source, IsOpen);
             Selector.ForeachAction(q => o.Open = true);
             return o;
@@ -264,11 +232,7 @@ namespace System.Linq.Reactive
         /// <param name="where">Метод выборки события <see cref="IObserverEx{T}.Next"/></param>
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
-        public static IObservable<T> ForeachAction<T>([NotNull] this IObservable<T> observable, [NotNull] Action<T> action, [NotNull] Func<T, bool> where)
-        {
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
-            return observable.InitializeObject(where, action, (o, w, a) => new LamdaObserver<T>(o, t => { if(w(t)) a(t); }));
-        }
+        public static IObservable<T> ForeachAction<T>([NotNull] this IObservable<T> observable, [NotNull] Action<T> action, [NotNull] Func<T, bool> where) => observable.InitializeObject(where, action, (o, w, a) => new LamdaObserver<T>(o, t => { if(w(t)) a(t); }));
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -278,9 +242,6 @@ namespace System.Linq.Reactive
         [CanBeNull]
         public static IObservable<T> ForeachAction<T>(this IObservable<T> observable, Action<T, int> action)
         {
-            Contract.Requires(observable != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
             var i = 0;
             // ReSharper disable once HeapView.CanAvoidClosure
             return observable.InitializeObject(o => new LamdaObserver<T>(o, t => action(t, i++)));
@@ -295,10 +256,6 @@ namespace System.Linq.Reactive
         [CanBeNull]
         public static IObservable<T> ForeachAction<T>(this IObservable<T> observable, Action<T, int> action, Func<T, int, bool> where)
         {
-            Contract.Requires(observable != null);
-            Contract.Requires(action != null);
-            Contract.Requires(where != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
             var i = 0;
             // ReSharper disable once HeapView.CanAvoidClosure
             return observable.InitializeObject(o => new LamdaObserver<T>(o, t => { if(where(t, i)) action(t, i++); }));
@@ -310,13 +267,7 @@ namespace System.Linq.Reactive
         /// <param name="OnError">Метод обработки события <see cref="Exception"/></param>
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
-        public static IObservable<T> OnError<T>(this IObservable<T> observable, Action<Exception> OnError)
-        {
-            Contract.Requires(observable != null);
-            Contract.Requires(OnError != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
-            return observable.InitializeObject(OnError, (o, e) => new LamdaObserver<T>(o, OnError: e));
-        }
+        public static IObservable<T> OnError<T>(this IObservable<T> observable, Action<Exception> OnError) => observable.InitializeObject(OnError, (o, e) => new LamdaObserver<T>(o, OnError: e));
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Complited"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -324,13 +275,7 @@ namespace System.Linq.Reactive
         /// <param name="OnComplited">Метод обработки события <see cref="IObserverEx{T}.Complited"/></param>
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
-        public static IObservable<T> OnComplited<T>(this IObservable<T> observable, Action OnComplited)
-        {
-            Contract.Requires(observable != null);
-            Contract.Requires(OnComplited != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
-            return observable.InitializeObject(OnComplited, (o, c) => new LamdaObserver<T>(o, OnComplited: c));
-        }
+        public static IObservable<T> OnComplited<T>(this IObservable<T> observable, Action OnComplited) => observable.InitializeObject(OnComplited, (o, c) => new LamdaObserver<T>(o, OnComplited: c));
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Reset"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -338,13 +283,7 @@ namespace System.Linq.Reactive
         /// <param name="OnReset">Метод обработки события <see cref="IObserverEx{T}.Reset"/></param>
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
-        public static IObservable<T> OnReset<T>(this IObservable<T> observable, Action OnReset)
-        {
-            Contract.Requires(observable != null);
-            Contract.Requires(OnReset != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
-            return observable.InitializeObject(OnReset, (o, r) => new LamdaObserver<T>(o, OnReset: r));
-        }
+        public static IObservable<T> OnReset<T>(this IObservable<T> observable, Action OnReset) => observable.InitializeObject(OnReset, (o, r) => new LamdaObserver<T>(o, OnReset: r));
 
         /// <summary>Создать метод генерации наблюдаемого объекта из шаблона асинхронной операции</summary>
         /// <typeparam name="T">Тип результата</typeparam>
@@ -361,9 +300,6 @@ namespace System.Linq.Reactive
         [NotNull]
         public static IObservableEx<T> SelectMany<T>(this IObservable<IEnumerable<T>> o)
         {
-            Contract.Requires(o != null);
-            Contract.Ensures(Contract.Result<IObservable<T>>() != null);
-
             var result = new SimpleObservableEx<T>();
             o.ForeachAction(t => t.Foreach(result.OnNext));
             o.OnComplited(result.OnCompleted);
@@ -379,7 +315,6 @@ namespace System.Linq.Reactive
         {
             if(source is null) throw new ArgumentNullException(nameof(source));
             if(selector is null) throw new ArgumentNullException(nameof(selector));
-            Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
             source.ForeachAction(t => selector(t).Foreach(result.OnNext));
@@ -396,7 +331,6 @@ namespace System.Linq.Reactive
         {
             if(source is null) throw new ArgumentNullException(nameof(source));
             if(selector is null) throw new ArgumentNullException(nameof(selector));
-            Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
             var i = 0;
@@ -416,7 +350,6 @@ namespace System.Linq.Reactive
             if(source is null) throw new ArgumentNullException(nameof(source));
             if(collectionSelector is null) throw new ArgumentNullException(nameof(collectionSelector));
             if(ResultSelector is null) throw new ArgumentNullException(nameof(ResultSelector));
-            Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
             var i = 0;
@@ -436,7 +369,6 @@ namespace System.Linq.Reactive
             if(source is null) throw new ArgumentNullException(nameof(source));
             if(collectionSelector is null) throw new ArgumentNullException(nameof(collectionSelector));
             if(ResultSelector is null) throw new ArgumentNullException(nameof(ResultSelector));
-            Contract.EndContractBlock();
 
             var result = new SimpleObservableEx<TResult>();
             source.ForeachAction(t => collectionSelector(t).Foreach(ResultSelector, result, t, (r, selector, rr, tt) => rr.OnNext(selector(tt, r))));
@@ -502,14 +434,12 @@ namespace System.Linq.Reactive
         private readonly int _BufferPeriod;
         private readonly int _BufferPhase;
 
-
         public CountedBufferedObservable([NotNull] IObservable<T> ObservableObject, int BufferLength,
             int BufferPeriod = 0, int BufferPhase = 0) : base(ObservableObject, BufferPeriod / BufferLength + 1, BufferLength)
         {
             _BufferPeriod = BufferPeriod;
             _BufferPhase = BufferPhase;
         }
-
         protected override void OnNext(T value)
         {
             T[] r;

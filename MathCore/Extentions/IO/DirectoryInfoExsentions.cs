@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -55,9 +54,6 @@ namespace System.IO
         [DST]
         public static long GetFilesCount(this DirectoryInfo Directory)
         {
-            Contract.Requires(Directory != null);
-            Contract.Ensures(Contract.Result<long>() >= 0);
-
             var result = 0L;
             var queue = new Queue<DirectoryInfo>();
             queue.Enqueue(Directory);
@@ -76,9 +72,6 @@ namespace System.IO
         [DST]
         public static long GetSize(this DirectoryInfo Directory)
         {
-            Contract.Requires(Directory != null);
-            Contract.Ensures(Contract.Result<long>() >= 0);
-
             var result = 0L;
             var queue = new Queue<DirectoryInfo>();
             queue.Enqueue(Directory);
@@ -97,9 +90,6 @@ namespace System.IO
         [DST]
         public static long GetSubdirectoriesCount(this DirectoryInfo Directory)
         {
-            Contract.Requires(Directory != null);
-            Contract.Ensures(Contract.Result<long>() >= 0);
-
             var num = 0L;
             var queue = new Queue<DirectoryInfo>();
             queue.Enqueue(Directory);
@@ -116,27 +106,17 @@ namespace System.IO
         /// <param name="Directory">Проверяемая дирректория</param>
         /// <returns>Истина, если дирректория пуста</returns>
         [DST]
-        public static bool IsEmpty(this DirectoryInfo Directory)
-        {
-            Contract.Requires(Directory != null);
-
-            return Directory.GetDirectories().Length == 0 && (Directory.GetFiles().Length == 0);
-        }
+        public static bool IsEmpty(this DirectoryInfo Directory) => Directory.GetDirectories().Length == 0 && (Directory.GetFiles().Length == 0);
 
         /// <summary>Получить объект наблюдения за дирректорией</summary>
         /// <param name="directory">Наблюдаемая дирректория</param>
         /// <param name="filter">Фильтр файлов</param>
         /// <returns>Объект наблюдатель</returns>
         [DST]
-        public static FileSystemWatcher GetWacher(this DirectoryInfo directory, string filter = null)
-        {
-            Contract.Requires(directory != null);
-            Contract.Ensures(Contract.Result<FileSystemWatcher>() != null);
-
-            return string.IsNullOrEmpty(filter)
+        public static FileSystemWatcher GetWacher(this DirectoryInfo directory, string filter = null) =>
+            string.IsNullOrEmpty(filter)
                 ? new FileSystemWatcher(directory.FullName)
                 : new FileSystemWatcher(directory.FullName, filter);
-        }
 
         [NotNull]
         public static FileSystemWatcher GetWatcher([NotNull] this DirectoryInfo directory, [CanBeNull] string filter, [CanBeNull] Action<FileSystemWatcher> initializer = null)

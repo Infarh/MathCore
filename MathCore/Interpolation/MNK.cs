@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace MathCore
 {
     /// <summary>Метод наименьших квадратов</summary>
@@ -23,24 +23,17 @@ namespace MathCore
         /// <param name="m">Степень полинома интерполяции</param>
         public MNK(double[] X, double[] Y, int m)
         {
-            Contract.Requires(X != null);
-            Contract.Requires(Y != null);
-            Contract.Requires(m > 0);
-            Contract.Ensures(_XData == X);
-            Contract.Ensures(_YData == Y);
-            Contract.Ensures(_M == m);
             _XData = X;
             _YData = Y;
             _M = m;
             Initialize();
         }
 
+        // ReSharper disable once UnusedMember.Global
         public double Approximate(double x) => Polynom.Array.GetValue(_A, x); //F(_A, x);
 
         private static double F([NotNull] IReadOnlyList<double> A, double x)
         {
-            Contract.Requires(A != null);
-            Contract.Requires(A.Count > 0);
             var d = x;
             var result = A[0];
             for (var i = 1; i < A.Count; i++)
@@ -54,15 +47,12 @@ namespace MathCore
         [NotNull]
         public Func<double, double> GetApproximation()
         {
-            Contract.Ensures(Contract.Result<Func<double, double>>() != null);
             var a = _A;
             return x => F(a, x);
         }
 
         private void Initialize()
         {
-            Contract.Ensures(_A != null);
-
             // Создаём матрицу из степеней области определения
             var matrix = new Matrix(_XData.Length, _M, (i, j) => Math.Pow(_XData[i], j));
             var transponse = matrix.GetTransponse(); // Транспонируем матрицу

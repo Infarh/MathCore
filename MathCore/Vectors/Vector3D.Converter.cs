@@ -16,7 +16,6 @@ namespace MathCore.Vectors
             if (!(value is string s) || string.IsNullOrWhiteSpace(s) || s.Length < 1)
                 return base.ConvertFrom(Context, Info, value);
 
-            //Contract.Requires(lv_Str.Length > 0);
             //Убираем все начальные и конечные скобки, ковычки и апострофы
             while(s[0] == '{' && s[s.Length - 1] == '}')
                 s = s.Substring(1, s.Length - 2);

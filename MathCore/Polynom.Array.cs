@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -16,7 +16,6 @@ namespace MathCore
             /// <param name="A">Массив коэффициентов полинома</param>
             /// <param name="x">Аргумент полинома</param>
             /// <returns>Значение полинома</returns>
-            [Pure]
             public static double GetValue([NotNull] double[] A, double x)
             {
                 var length = A.Length;
@@ -32,7 +31,7 @@ namespace MathCore
             /// <param name="A">Массив коэффициентов полинома</param>
             /// <param name="z">Аргумент полинома</param>
             /// <returns>Комплексное значение полинома</returns>
-            [Pure, DST]
+            [DST]
             public static Complex GetValue([NotNull] double[] A, Complex z)
             {
                 var length = A.Length;
@@ -48,7 +47,7 @@ namespace MathCore
             /// <param name="Z">Массив комплексных коэффициентов полинома</param>
             /// <param name="z">Комплексный аргумент полинома</param>
             /// <returns>Комплексное значение полинома</returns>
-            [Pure, DST]
+            [DST]
             public static Complex GetValue([NotNull] Complex[] Z, Complex z)
             {
                 var length = Z.Length;
@@ -326,8 +325,6 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(p));
                 if (q is null)
                     throw new ArgumentNullException(nameof(q));
-                Contract.Ensures(Contract.Result<double[]>() != null);
-                Contract.EndContractBlock();
 
                 var length_p = p.Length;
                 var length_q = q.Length;
@@ -357,7 +354,6 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(p));
                 if (q is null)
                     throw new ArgumentNullException(nameof(q));
-                Contract.Ensures(Contract.Result<double[]>() != null);
 
                 var length_p = p.Length;
                 var length_q = q.Length;
@@ -388,8 +384,6 @@ namespace MathCore
             [Copyright("", url = "http://losev-al.blogspot.ru/2012/09/blog-post_14.htm")]
             public static void Devide([NotNull] double[] dividend, [NotNull] double[] divisor, [NotNull] out double[] quotient, [NotNull] out double[] remainder)
             {
-                Contract.Requires(!dividend[dividend.Length - 1].Equals(0), "Старший член многочлена делимого не может быть 0");
-                Contract.Requires(!divisor[divisor.Length - 1].Equals(0), "Старший член многочлена делителя не может быть 0");
                 if (dividend[dividend.Length - 1].Equals(0)) throw new ArithmeticException("Старший член многочлена делимого не может быть 0");
                 if (divisor[divisor.Length - 1].Equals(0)) throw new ArithmeticException("Старший член многочлена делителя не может быть 0");
 

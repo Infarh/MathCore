@@ -3,7 +3,6 @@ using MathCore.Annotations;
 using MathCore.Evulations;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -13,6 +12,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using Ex = System.Linq.Expressions.Expression;
 using mcEx = System.Linq.Expressions.MethodCallExpression;
 
+// ReSharper disable UnusedMember.Global
 namespace System
 {
     /// <summary>Класс методов-расширений для объекта</summary>
@@ -82,7 +82,6 @@ namespace System
             [NotNull] Action<ObjectSelector<TSource, TResult>> Selector
         )
         {
-            Contract.Requires(Selector is { });
             var selector = new ObjectSelector<TSource, TResult>
             {
                 Object = source,
@@ -163,7 +162,7 @@ namespace System
         /// <param name="o">Объект, атрибут которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
         /// <returns>Искомый атрибут в случае его наличия, либо null, если атрибут не определён</returns>
-        [CanBeNull, DST, Pure]
+        [CanBeNull, DST]
         public static TAttribute GetObjectAttribute<TAttribute>([NotNull] this object o, bool Inherited = false)
             where TAttribute : Attribute
         {
@@ -176,7 +175,7 @@ namespace System
         /// <param name="o">Объект, атрибуты которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
         /// <returns>Массив атрибутов указанного типа, определённых для объекта</returns>
-        [CanBeNull, DST, Pure]
+        [CanBeNull, DST]
         public static TAttribute[] GetObjectAttributes<TAttribute>([CanBeNull] this object o, bool Inherited = false)
             where TAttribute : Attribute =>
             o?.GetType().GetCustomAttributes<TAttribute>(Inherited);
@@ -184,13 +183,13 @@ namespace System
         /// <summary>Ссылка на объект не равна null</summary>
         /// <param name="o">Проверяемый объект</param>
         /// <returns>Истина, если проверяемый объект не null</returns>
-        [DST, Pure]
+        [DST]
         public static bool IsNotNull([CanBeNull] this object o) => o is { };
 
         /// <summary>Ссылка на объект равна null</summary>
         /// <param name="o">Проверяемый объект</param>
         /// <returns>Истина, если проверяемый объект null</returns>
-        [DST, Pure]
+        [DST]
         public static bool IsNull([CanBeNull] this object o) => o is null;
 
         [NotNull]
@@ -213,7 +212,7 @@ namespace System
         /// <param name="o">Объект, атрибуты которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
         /// <returns>ассив атрибутов указанного типа, определённых для типа объекта</returns>
-        [CanBeNull, DST, Pure]
+        [CanBeNull, DST]
         public static TAttribute[] GetAttributes<TAttribute, TObject>(this TObject o, bool Inherited = false)
             where TAttribute : Attribute => typeof(TObject).GetCustomAttributes<TAttribute>(Inherited);
 
@@ -229,8 +228,6 @@ namespace System
             [CanBeNull]Action<T> Initializator
         ) where T : class
         {
-            Contract.Ensures(Contract.Result<T>() is { });
-            Contract.Ensures(ReferenceEquals(Contract.Result<T>(), obj));
             if (obj is { })
                 Initializator?.Invoke(obj);
             return obj;
@@ -251,9 +248,6 @@ namespace System
             [CanBeNull]Action<T, TP> Initializator
         ) where T : class
         {
-            Contract.Requires(obj is { });
-            Contract.Ensures(Contract.Result<T>() is { });
-            Contract.Ensures(ReferenceEquals(Contract.Result<T>(), obj));
             if (obj is { })
                 Initializator?.Invoke(obj, parameter);
             return obj;
@@ -277,9 +271,6 @@ namespace System
             [CanBeNull]Action<T, TP1, TP2> Initializator
         ) where T : class
         {
-            Contract.Requires(obj is { });
-            Contract.Ensures(Contract.Result<T>() is { });
-            Contract.Ensures(ReferenceEquals(Contract.Result<T>(), obj));
             if (obj is { })
                 Initializator?.Invoke(obj, parameter1, parameter2);
             return obj;
@@ -306,9 +297,6 @@ namespace System
             [CanBeNull]Action<T, TP1, TP2, TP3> Initializator
         ) where T : class
         {
-            Contract.Requires(obj is { });
-            Contract.Ensures(Contract.Result<T>() is { });
-            Contract.Ensures(ReferenceEquals(Contract.Result<T>(), obj));
             if (obj is { })
                 Initializator?.Invoke(obj, parameter1, parameter2, parameter3);
             return obj;
@@ -324,11 +312,8 @@ namespace System
         (
             [CanBeNull] this T obj,
             [CanBeNull]Func<T, T> Initializator
-        ) where T : class
-        {
-            Contract.Ensures(Initializator is null && ReferenceEquals(Contract.Result<T>(), obj));
-            return Initializator != null && obj is { } ? Initializator(obj) : obj;
-        }
+        ) where T : class =>
+            Initializator != null && obj is { } ? Initializator(obj) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -343,11 +328,8 @@ namespace System
             [CanBeNull] this T obj,
             [CanBeNull] TP parameter,
             [CanBeNull]Func<T, TP, T> Initializator
-        ) where T : class
-        {
-            Contract.Ensures(Initializator is null && ReferenceEquals(Contract.Result<T>(), obj));
-            return Initializator != null && obj is { } ? Initializator(obj, parameter) : obj;
-        }
+        ) where T : class =>
+            Initializator != null && obj is { } ? Initializator(obj, parameter) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -368,11 +350,8 @@ namespace System
             [CanBeNull] TP2 parameter2,
             [CanBeNull] TP3 parameter3,
             [CanBeNull]Func<T, TP1, TP2, TP3, T> Initializator
-        ) where T : class
-        {
-            Contract.Ensures(Initializator is null && ReferenceEquals(Contract.Result<T>(), obj));
-            return Initializator != null && obj is { } ? Initializator(obj, parameter1, parameter2, parameter3) : obj;
-        }
+        ) where T : class =>
+            Initializator != null && obj is { } ? Initializator(obj, parameter1, parameter2, parameter3) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -390,11 +369,8 @@ namespace System
             [CanBeNull] TP1 parameter1,
             [CanBeNull] TP2 parameter2,
             [CanBeNull]Func<T, TP1, TP2, T> Initializator
-        ) where T : class
-        {
-            Contract.Ensures(Initializator is null && ReferenceEquals(Contract.Result<T>(), obj));
-            return Initializator != null && obj is { } ? Initializator(obj, parameter1, parameter2) : obj;
-        }
+        ) where T : class =>
+            Initializator != null && obj is { } ? Initializator(obj, parameter1, parameter2) : obj;
 
         /// <summary>Печать объекта на консоли без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
@@ -442,7 +418,7 @@ namespace System
         {
             if (Format is null) throw new ArgumentNullException(nameof(Format));
             if (Obj is null) return;
-            if (args?.Length != 0)
+            if (args.Length != 0)
                 Console.WriteLine(Format, args.AppendFirst(Obj).ToArray());
             else
                 Console.WriteLine(Format, Obj);
@@ -691,14 +667,15 @@ namespace System
         /// <param name="p">Параметры метода</param>
         /// <returns>Выражение вызова метода</returns>
         [NotNull]
-        public static mcEx GetCallExpression([CanBeNull] this object obj, [NotNull] string MethodName, [NotNull, ItemNotNull] params Ex[] p)
+        public static mcEx GetCallExpression([NotNull] this object obj, [NotNull] string MethodName, [NotNull, ItemNotNull] params Ex[] p)
         {
             var type = obj.GetType();
             var method = type.GetMethod(MethodName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null,
                 p.Select(pp => pp.Type).ToArray(),
-                null);
+                null)
+               .NotNull();
             return obj.GetCallExpression(method, p);
         }
     }
@@ -706,7 +683,8 @@ namespace System
     /// <summary>Словарь действий</summary>
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Actions : Dictionary<object, Action<object>> { }
-}namespace System.Tags
+}
+namespace System.Tags
 {
     /// <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложенны к другим объектам</summary>
     public static class TagExtentions
@@ -716,22 +694,14 @@ namespace System
         /// <param name="o">Целевой объект</param>
         /// <returns>Объект метка, если он существует в указанном объекте</returns>
         [CanBeNull, DST]
-        public static TTag GetTag<TTag>([NotNull] this object o)
-        {
-            Contract.Requires(o != null);
-            return TagPool.Tag<TTag>(o);
-        }
+        public static TTag GetTag<TTag>([NotNull] this object o) => TagPool.Tag<TTag>(o);
 
         /// <summary>Установить объект-метку для указанного объекта</summary>
         /// <typeparam name="TTag">Тип объекта-метки</typeparam>
         /// <param name="o">Целевой объект</param>
         /// <param name="Tag">Объект-метка, прикладываемый к целевому объекту</param>
         [DST]
-        public static void SetTag<TTag>([NotNull] this object o, [CanBeNull] TTag Tag)
-        {
-            Contract.Requires(o != null);
-            TagPool.SetTag(o, Tag);
-        }
+        public static void SetTag<TTag>([NotNull] this object o, [CanBeNull] TTag Tag) => TagPool.SetTag(o, Tag);
 
         #region Nested type: TagPool
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using MathCore;
+using MathCore.Annotations;
 using MathCore.Extentions.Expressions;
 // ReSharper disable UnusedMember.Global
 
@@ -33,7 +33,7 @@ namespace System.Linq.Expressions
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param>
         /// <returns>Единичная матрица размерности NxN</returns>
-        [DST]
+        [DST, NotNull]
         public static ExpressionMatrix GetUnitaryMatryx(int N)
         {
             var v0 = 0d.ToExpression();
@@ -67,52 +67,18 @@ namespace System.Linq.Expressions
         public Expression this[int i, int j]
         {
             [DST]
-            get
-            {
-                Contract.Requires(i >= 0);
-                Contract.Requires(j >= 0);
-                Contract.Requires(i < N);
-                Contract.Requires(j < M);
-
-                return _Data[i, j];
-            }
+            get => _Data[i, j];
             [DST]
-            set
-            {
-                Contract.Requires(i >= 0);
-                Contract.Requires(j >= 0);
-                Contract.Requires(i < N);
-                Contract.Requires(j < M);
-                Contract.Requires(value != null);
-
-                _Data[i, j] = value.NodeType == ExpressionType.Lambda ? ((LambdaExpression)value).Body : value;
-            }
+            set => _Data[i, j] = value.NodeType == ExpressionType.Lambda ? ((LambdaExpression)value).Body : value;
         }
 
         /// <summary>Вектор-стольбец</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы</returns>
-        public ExpressionMatrix this[int j]
-        {
-            [DST]
-            get
-            {
-                Contract.Requires(j >= 0);
-                Contract.Requires(j < M);
-                return GetCol(j);
-            }
-        }
+        public ExpressionMatrix this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
-        public bool IsSquare
-        {
-            [DST]
-            get
-            {
-                Contract.Ensures(Contract.Result<bool>() == (M == N));
-                return M == N;
-            }
-        }
+        public bool IsSquare => M == N;
 
         /// <summary>Матрица является столбцом</summary>
         public bool IsCol => !IsSquare && M == 1;
@@ -134,15 +100,10 @@ namespace System.Linq.Expressions
         [DST]
         public ExpressionMatrix(int N, int M)
         {
-            Contract.Requires(N > 0);
-            Contract.Requires(M > 0);
-            Contract.Ensures(this.N == N);
-            Contract.Ensures(this.M == M);
-
             _Data = new Expression[_N = N, _M = M];
             var zerro = 0d.ToExpression();
-            for(var i = 0; i < N; i++)
-                for(var j = 0; j < M; j++)
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
                     _Data[i, j] = zerro;
         }
 
@@ -171,45 +132,41 @@ namespace System.Linq.Expressions
         public ExpressionMatrix(int N, int M, MatrixItemCreator CreateFunction)
             : this(N, M)
         {
-            Contract.Requires(CreateFunction != null);
-            for(var i = 0; i < N; i++)
-                for(var j = 0; j < M; j++)
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
                     _Data[i, j] = CreateFunction(i, j);
         }
 
         [DST]
-        public ExpressionMatrix(Expression[,] Data)
+        public ExpressionMatrix([NotNull] Expression[,] Data)
             : this(Data.GetLength(0), Data.GetLength(1))
         {
-            for(var i = 0; i < _N; i++)
-                for(var j = 0; j < _M; j++)
+            for (var i = 0; i < _N; i++)
+                for (var j = 0; j < _M; j++)
                     _Data[i, j] = Data[i, j];
         }
 
         [DST]
-        public ExpressionMatrix(IList<Expression> DataRow)
+        public ExpressionMatrix([NotNull] IList<Expression> DataRow)
             : this(DataRow.Count, 1)
         {
-            for(var i = 0; i < _N; i++)
+            for (var i = 0; i < _N; i++)
                 _Data[i, 0] = DataRow[i];
         }
 
 
         public ExpressionMatrix(IEnumerable<IEnumerable<Expression>> Items) : this(GetElements(Items)) { }
-        private static Expression[,] GetElements(IEnumerable<IEnumerable<Expression>> Items)
+        [NotNull]
+        private static Expression[,] GetElements([NotNull] IEnumerable<IEnumerable<Expression>> Items)
         {
-            Contract.Requires(Items != null);
-            Contract.Ensures(Contract.Result<Expression[,]>() != null);
-            Contract.Ensures(Contract.Result<Expression[,]>().GetLength(0) > 0);
-            Contract.Ensures(Contract.Result<Expression[,]>().GetLength(1) > 0);
             var cols = Items.Select(col => col.ToListFast()).ToList();
             var cols_count = cols.Count;
             var rows_count = cols.Max(col => col.Count);
             var data = new Expression[rows_count, cols_count];
-            for(var j = 0; j < cols_count; j++)
+            for (var j = 0; j < cols_count; j++)
             {
                 var col = cols[j];
-                for(var i = 0; i < col.Count && i < rows_count; i++)
+                for (var i = 0; i < col.Count && i < rows_count; i++)
                     data[i, j] = col[i];
             }
             return data;
@@ -220,50 +177,43 @@ namespace System.Linq.Expressions
         /// <summary>Получить столбец матрицы</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы номер j</returns>
-        [DST]
+        [DST, NotNull]
         public ExpressionMatrix GetCol(int j)
         {
-            Contract.Requires(j >= 0);
-            Contract.Requires(j < M);
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            var lv_A = new ExpressionMatrix(N, 1);
-            for(var i = 0; i < N; i++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new ExpressionMatrix(N, 1);
+            for (var i = 0; i < N; i++) a[i, j] = this[i, j];
+            return a;
         }
 
         /// <summary>Получить строку матрицы</summary>
         /// <param name="i">Номер строки</param>
         /// <returns>Строка матрицы номер i</returns>
-        [DST]
+        [DST, NotNull]
         public ExpressionMatrix GetRow(int i)
         {
-            Contract.Requires(i >= 0);
-            Contract.Requires(i < N);
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            var lv_A = new ExpressionMatrix(1, M);
-            for(var j = 0; j < M; j++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new ExpressionMatrix(1, M);
+            for (var j = 0; j < M; j++) a[i, j] = this[i, j];
+            return a;
         }
 
         /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
         /// <returns>Триугольная матрица</returns>
         public ExpressionMatrix GetTriangle()
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
             var result = Clone();
             var n = N;
             var m = M;
             var row = new Expression[m];
-            for(var i0 = 0; i0 < n - 1; i0++)
+            for (var i0 = 0; i0 < n - 1; i0++)
             {
                 var a = result[i0, i0]; //Захватываем первый элемент строки
-                for(var j = i0; j < m; j++) //Нормируем строку по первому элементу
+                for (var j = i0; j < m; j++) //Нормируем строку по первому элементу
                     row[j] = result[i0, j].Divide(a);
 
-                for(var i = i0 + 1; i < n; i++) //Для всех оставшихся строк:
+                for (var i = i0 + 1; i < n; i++) //Для всех оставшихся строк:
                 {
                     a = result[i, i0]; //Захватываем первый элемент строки
-                    for(var j = i0; j < m; j++)
+                    for (var j = i0; j < m; j++)
                         //Вычитаем рабочую строку, домноженную на первый элемент
                         result[i, j] = result[i, j].Subtract(a.MultiplyWithConversion(row[j]));
                 }
@@ -275,12 +225,11 @@ namespace System.Linq.Expressions
         /// <returns>Обратная матрица</returns>
         public ExpressionMatrix GetInverse()
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            if(!IsSquare)
+            if (!IsSquare)
                 throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
 
             var result = GetTransvection(0);
-            for(var i = 1; i < N; i++)
+            for (var i = 1; i < N; i++)
                 result *= GetTransvection(i);
             return result;
         }
@@ -288,15 +237,16 @@ namespace System.Linq.Expressions
         /// <summary>Трансвекция матрицы</summary>
         /// <param name="col">Оборный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
+        [NotNull]
         public ExpressionMatrix GetTransvection(int col)
         {
-            if(!IsSquare)
+            if (!IsSquare)
                 throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
 
             var u_matrix = GetUnitaryMatryx(_N);
             var a = _Data;
             var result = u_matrix._Data;
-            for(var row = 0; row < _N; row++)
+            for (var row = 0; row < _N; row++)
                 result[row, col] = row == col
                     ? 1d.ToExpression().DivideWithConversion(a[row, col])
                     : a[row, col].Negate().DivideWithConversion(a[col, col]);
@@ -305,16 +255,13 @@ namespace System.Linq.Expressions
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST]
+        [DST, NotNull]
         public ExpressionMatrix GetTransponse()
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            Contract.Ensures(Contract.Result<ExpressionMatrix>().M == M);
-            Contract.Ensures(Contract.Result<ExpressionMatrix>().N == N);
             var Result = new ExpressionMatrix(M, N);
 
-            for(var i = 0; i < N; i++)
-                for(var j = 0; j < M; j++)
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
                     Result[j, i] = this[i, j];
 
             return Result;
@@ -324,24 +271,24 @@ namespace System.Linq.Expressions
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
-        public ExpressionMatrix GetAdjunct(int n, int m) =>
-            ((n + m) % 2 == 0 ? 1d : -1d).ToExpression().MultiplyWithConversion(GetMinor(n, m).GetDeterminant());
+        public ExpressionMatrix GetAdjunct(int n, int m) => ((n + m) % 2 == 0 ? 1d : -1d).ToExpression().MultiplyWithConversion(GetMinor(n, m).GetDeterminant());
 
         /// <summary>Минор матрицы по определённому элементу</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Минор элемента матрицы [n,m]</returns>
+        [NotNull]
         public ExpressionMatrix GetMinor(int n, int m)
         {
             var minor = new ExpressionMatrix(N - 1, M - 1);
 
             var i0 = 0;
-            for(var i = 0; i < N; i++)
-                if(i != n)
+            for (var i = 0; i < N; i++)
+                if (i != n)
                 {
                     var j0 = 0;
-                    for(var j = 0; j < _M; j++)
-                        if(j != m)
+                    for (var j = 0; j < _M; j++)
+                        if (j != m)
                             minor[i0, j0++] = this[i, j];
                     i0++;
                 }
@@ -351,11 +298,11 @@ namespace System.Linq.Expressions
         /// <summary>Определитель матрицы</summary>
         public Expression GetDeterminant()
         {
-            if(_N != _M)
+            if (_N != _M)
                 throw new InvalidOperationException("Нельзя найти определитель неквадратной матрицы!");
 
             var n = _N;
-            switch(n)
+            switch (n)
             {
                 case 1:
                     return this[0, 0];
@@ -367,19 +314,19 @@ namespace System.Linq.Expressions
 
             Expression det = null;
             var negate = false;
-            for(var k = 0; k < n; k++) //Разложение по элементам первой строки
+            for (var k = 0; k < n; k++) //Разложение по элементам первой строки
             {
                 int i;
                 int j;
-                if((data[k, k] as ConstantExpression)?.Value?.Equals(0) == true) //!!!
+                if ((data[k, k] as ConstantExpression)?.Value?.Equals(0) == true) //!!!
                 {
                     j = k;
-                    while(j < n && (data[k, j] as ConstantExpression)?.Value?.Equals(0) == true) j++;
+                    while (j < n && (data[k, j] as ConstantExpression)?.Value?.Equals(0) == true) j++;
 
-                    if((data[k, j] as ConstantExpression)?.Value?.Equals(0) == true)
+                    if ((data[k, j] as ConstantExpression)?.Value?.Equals(0) == true)
                         return 0d.ToExpression();
 
-                    for(i = k; i <= n; i++)
+                    for (i = k; i <= n; i++)
                     {
                         var d = data[i, j];
                         data[i, j] = data[i, k];
@@ -397,12 +344,12 @@ namespace System.Linq.Expressions
                         ? (Expression)det.MultiplyWithConversion(doagonal_item).Negate()
                         : det.MultiplyWithConversion(doagonal_item));
 
-                if(k >= n) continue;
+                if (k >= n) continue;
 
                 // Приведение к нижне-треугольному виду
                 var k1 = k + 1;
-                for(i = k1; i < n; i++)
-                    for(j = k1; j < n; j++)
+                for (i = k1; i < n; i++)
+                    for (j = k1; j < n; j++)
                         data[i, j] = data[i, j].SubtractWithConversion(
                             data[i, k].MultiplyWithConversion(
                                 data[k, j].DivideWithConversion(
@@ -423,12 +370,11 @@ namespace System.Linq.Expressions
 
         /// <summary>Клонирование матрицы</summary>
         /// <returns>Копия текущей матрицы</returns>
-        [DST]
+        [DST, NotNull]
         public ExpressionMatrix Clone()
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
             var result = new ExpressionMatrix(N, M);
-            for(var i = 0; i < N; i++) for(var j = 0; j < M; j++) result[i, j] = this[i, j];
+            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) result[i, j] = this[i, j];
             return result;
         }
 
@@ -440,51 +386,27 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==(ExpressionMatrix A, ExpressionMatrix B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
+        public static bool operator ==([CanBeNull] ExpressionMatrix A, [CanBeNull] ExpressionMatrix B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
-        public static bool operator !=(ExpressionMatrix A, ExpressionMatrix B) => !(A == B);
+        public static bool operator !=([CanBeNull] ExpressionMatrix A, [CanBeNull] ExpressionMatrix B) => !(A == B);
 
-        [DST]
-        public static ExpressionMatrix operator +(ExpressionMatrix M, Expression x)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].AddWithConversion(x));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator +([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].AddWithConversion(x));
 
-        [DST]
-        public static ExpressionMatrix operator +(Expression x, ExpressionMatrix M)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => x.AddWithConversion(M[i, j]));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator +(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.AddWithConversion(M[i, j]));
 
-        [DST]
-        public static ExpressionMatrix operator -(ExpressionMatrix M, Expression x)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Subtract(x));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator -([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Subtract(x));
 
-        [DST]
-        public static ExpressionMatrix operator -(Expression x, ExpressionMatrix M)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => x.Subtract(M[i, j]));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator -(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.Subtract(M[i, j]));
 
-        [DST]
-        public static ExpressionMatrix operator *(ExpressionMatrix M, Expression x)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].MultiplyWithConversion(x));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator *([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].MultiplyWithConversion(x));
 
-        [DST]
-        public static ExpressionMatrix operator *(Expression x, ExpressionMatrix M)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator *(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
 
         [DST]
         public static ExpressionMatrix operator *(Expression[,] A, ExpressionMatrix B) => (ExpressionMatrix)A * B;
@@ -498,16 +420,12 @@ namespace System.Linq.Expressions
         [DST]
         public static ExpressionMatrix operator *(ExpressionMatrix A, Expression[,] B) => A * (ExpressionMatrix)B;
 
-        [DST]
-        public static ExpressionMatrix operator /(ExpressionMatrix M, Expression x)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Divide(x));
-        }
+        [DST, NotNull]
+        public static ExpressionMatrix operator /([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Divide(x));
 
+        [NotNull]
         public static ExpressionMatrix operator /(Expression x, ExpressionMatrix M)
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
             M = M.GetInverse();
             return new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
         }
@@ -516,11 +434,10 @@ namespace System.Linq.Expressions
         /// <param name="A">Первое слогаемое</param>
         /// <param name="B">Второе слогаемое</param>
         /// <returns>Сумма двух матриц</returns>
-        [DST]
-        public static ExpressionMatrix operator +(ExpressionMatrix A, ExpressionMatrix B)
+        [DST, NotNull]
+        public static ExpressionMatrix operator +([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            if(A.N != B.N || A.M != B.M)
+            if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
             return new ExpressionMatrix(A.N, A.M, (i, j) => A[i, j].AddWithConversion(B[i, j]));
@@ -530,11 +447,10 @@ namespace System.Linq.Expressions
         /// <param name="A">Уменьшаемое</param>
         /// <param name="B">Вычитаемое</param>
         /// <returns>Разность двух матриц</returns>
-        [DST]
-        public static ExpressionMatrix operator -(ExpressionMatrix A, ExpressionMatrix B)
+        [DST, NotNull]
+        public static ExpressionMatrix operator -([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            if(A.N != B.N || A.M != B.M)
+            if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
             return new ExpressionMatrix(A.N, A.M, (i, j) => A[i, j].Subtract(B[i, j]));
@@ -544,19 +460,18 @@ namespace System.Linq.Expressions
         /// <param name="A">Первый сомножитель</param>
         /// <param name="B">Второй сомножитель</param>
         /// <returns>Произведение двух матриц</returns>
-        [DST]
-        public static ExpressionMatrix operator *(ExpressionMatrix A, ExpressionMatrix B)
+        [DST, NotNull]
+        public static ExpressionMatrix operator *([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            if(A.M != B.N)
+            if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
             var result = new ExpressionMatrix(A.N, B.M);
             var data = result._Data;
 
-            for(var i = 0; i < result.N; i++)
-                for(var j = 0; j < result.M; j++)
-                    for(var k = 0; k < A.M; k++)
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
+                    for (var k = 0; k < A.M; k++)
                         data[i, j] = result[i, j].AddWithConversion(A[i, k].MultiplyWithConversion(B[k, j]));
 
             return result;
@@ -566,19 +481,19 @@ namespace System.Linq.Expressions
         /// <param name="A">Делимое</param>
         /// <param name="B">Делитель</param>
         /// <returns>Частное двух матриц</returns>
-        public static ExpressionMatrix operator /(ExpressionMatrix A, ExpressionMatrix B)
+        [NotNull]
+        public static ExpressionMatrix operator /([NotNull] ExpressionMatrix A, ExpressionMatrix B)
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
             B = B.GetInverse();
-            if(A.M != B.N)
+            if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
             var result = new ExpressionMatrix(A.N, B.M);
             var data = result._Data;
 
-            for(var i = 0; i < result.N; i++)
-                for(var j = 0; j < result.M; j++)
-                    for(var k = 0; k < A.M; k++)
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
+                    for (var k = 0; k < A.M; k++)
                         data[i, j] = result[i, j].AddWithConversion(A[i, k].MultiplyWithConversion(B[k, j]));
 
             return result;
@@ -588,35 +503,35 @@ namespace System.Linq.Expressions
         /// <param name="A">Первое слогаемое</param>
         /// <param name="B">Второе слогаемое</param>
         /// <returns>Объединённая матрица</returns>
-        public static ExpressionMatrix operator |(ExpressionMatrix A, ExpressionMatrix B)
+        [NotNull]
+        public static ExpressionMatrix operator |([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
             ExpressionMatrix result;
-            if(A.M == B.M) // Конкатинация по строкам
+            if (A.M == B.M) // Конкатинация по строкам
             {
                 result = new ExpressionMatrix(A.N + B.N, A.M);
                 var data = result._Data;
 
-                for(var i = 0; i < A.N; i++)
-                    for(var j = 0; j < A.M; j++)
+                for (var i = 0; i < A.N; i++)
+                    for (var j = 0; j < A.M; j++)
                         data[i, j] = A[i, j];
                 var i0 = A.N;
-                for(var i = 0; i < B.N; i++)
-                    for(var j = 0; j < B.M; j++)
+                for (var i = 0; i < B.N; i++)
+                    for (var j = 0; j < B.M; j++)
                         data[i + i0, j] = B[i, j];
 
             }
-            else if(A.N == B.N) //Конкатинация по строкам
+            else if (A.N == B.N) //Конкатинация по строкам
             {
                 result = new ExpressionMatrix(A.N, A.M + B.M);
                 var data = result._Data;
 
-                for(var i = 0; i < A.N; i++)
-                    for(var j = 0; j < A.M; j++)
+                for (var i = 0; i < A.N; i++)
+                    for (var j = 0; j < A.M; j++)
                         data[i, j] = A[i, j];
                 var j0 = A.M;
-                for(var i = 0; i < B.N; i++)
-                    for(var j = 0; j < B.M; j++)
+                for (var i = 0; i < B.N; i++)
+                    for (var j = 0; j < B.M; j++)
                         data[i, j + j0] = B[i, j];
             }
             else
@@ -631,53 +546,35 @@ namespace System.Linq.Expressions
 
         /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
-        [DST]
-        public static implicit operator ExpressionMatrix(Expression X)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            Contract.Ensures(Contract.Result<ExpressionMatrix>().N == 1);
-            Contract.Ensures(Contract.Result<ExpressionMatrix>().M == 1);
-            return new ExpressionMatrix(1, 1) { [0, 0] = X };
-        }
+        [DST, NotNull]
+        public static implicit operator ExpressionMatrix(Expression X) => new ExpressionMatrix(1, 1) { [0, 0] = X };
 
-        [DST]
-        public static explicit operator Expression[,] (ExpressionMatrix M)
-        {
-            Contract.Ensures(Contract.Result<Expression[,]>() != null);
-            return (Expression[,])M._Data.Clone();
-        }
+        [DST, NotNull]
+        public static explicit operator Expression[,]([NotNull] ExpressionMatrix M) => (Expression[,])M._Data.Clone();
 
-        [DST]
-        public static explicit operator ExpressionMatrix(Expression[,] Data)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(Data);
-        }
+        [DST, NotNull]
+        public static explicit operator ExpressionMatrix([NotNull] Expression[,] Data) => new ExpressionMatrix(Data);
 
-        [DST]
-        public static explicit operator ExpressionMatrix(Expression[] Data)
-        {
-            Contract.Ensures(Contract.Result<ExpressionMatrix>() != null);
-            return new ExpressionMatrix(Data);
-        }
+        [DST, NotNull]
+        public static explicit operator ExpressionMatrix([NotNull] Expression[] Data) => new ExpressionMatrix(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 
         #region IEquatable<ExpressionMatrix> Members
 
-        public bool Equals(ExpressionMatrix other) => other is { } && (ReferenceEquals(this, other) || other._N == _N && other._M == _M && Equals(other._Data, _Data));
+        public bool Equals([CanBeNull] ExpressionMatrix other) => other is { } && (ReferenceEquals(this, other) || other._N == _N && other._M == _M && Equals(other._Data, _Data));
 
         private static bool Equals(Expression[,] E1, Expression[,] E2)
         {
-            if(ReferenceEquals(E1, E2)) return true;
+            if (ReferenceEquals(E1, E2)) return true;
             var N1 = E1.GetLength(0);
             var M1 = E1.GetLength(1);
             var N2 = E2.GetLength(0);
             var M2 = E2.GetLength(1);
-            if(N1 != N2 || M1 != M2) return false;
-            for(var i = 0; i < N1; i++)
-                for(var j = 0; j < M1; j++)
-                    if(E1[i, j] != E2[i, j]) return false;
+            if (N1 != N2 || M1 != M2) return false;
+            for (var i = 0; i < N1; i++)
+                for (var j = 0; j < M1; j++)
+                    if (E1[i, j] != E2[i, j]) return false;
             return true;
         }
 

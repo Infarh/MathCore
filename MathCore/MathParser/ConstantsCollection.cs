@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -32,8 +31,6 @@ namespace MathCore.MathParser
         {
             get
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(Name));
-                Contract.Ensures(Contract.Result<ExpressionVariabel>() != null);
                 if(Name is null) throw new ArgumentNullException(nameof(Name));
                 if(string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 var c = _Items.Find(v => v.Name == Name);
@@ -44,17 +41,12 @@ namespace MathCore.MathParser
 
         /// <summary>Инициализация новой коллекции констант</summary>
         /// <param name="Expression">Математическое выражение, которому принадлежит коллекция</param>
-        public ConstantsCollection([NotNull] MathExpression Expression)
-        {
-            Contract.Requires(Expression != null);
-            _Expression = Expression;
-        }
+        public ConstantsCollection([NotNull] MathExpression Expression) => _Expression = Expression;
 
         /// <summary>Добавить элемент в коллекцию</summary>
         /// <param name="Constant">Добавляемое значение, как константа</param>
         public bool Add([NotNull] ExpressionVariabel Constant)
         {
-            Contract.Requires(Constant != null);
             if(_Items.Contains(v => v.Name == Constant.Name)) return false;
             Constant.IsConstant = true;
             _Items.Add(Constant);
@@ -64,11 +56,7 @@ namespace MathCore.MathParser
         /// <summary>Получить имена констант колеекции</summary>
         /// <returns>Перечисление имён констант колеекции</returns>
         [NotNull]
-        public IEnumerable<string> GetNames()
-        {
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-            return _Items.Select(v => v.Name);
-        }
+        public IEnumerable<string> GetNames() => _Items.Select(v => v.Name);
 
         /// <summary>Получить перечислитеь констант коллекци</summary>
         /// <returns>Перечислитель констант</returns>

@@ -1,10 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable UnusedMethodReturnValue.Global
-
 // ReSharper disable once CheckNamespace
 namespace System.Collections.Generic
 {
@@ -29,13 +28,7 @@ namespace System.Collections.Generic
             [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
             [NotNull] TKey key,
             TValue value
-        )
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            Contract.Requires(value != null);
-            dictionary.GetValueOrAddNew(key, () => new List<TValue>()).Add(value);
-        }
+        ) => dictionary.GetValueOrAddNew(key, () => new List<TValue>()).Add(value);
 
         /// <summary>ћетод добавлени€ значени€ в словарь списков значений</summary>
         /// <param name="dictionary">—ловарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
@@ -51,13 +44,8 @@ namespace System.Collections.Generic
             TObject obj,
             [NotNull] Func<TObject, TKey> KeySelector,
             [NotNull] Func<TObject, TValue> ValueSelector
-        )
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(KeySelector != null);
-            Contract.Requires(ValueSelector != null);
+        ) =>
             dictionary.AddValue(KeySelector(obj), ValueSelector(obj));
-        }
 
         /// <summary>ћетод добавлени€ значени€ в словарь списков значений</summary>
         /// <param name="dictionary">—ловарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
@@ -70,12 +58,8 @@ namespace System.Collections.Generic
             [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
             TValue value,
             [NotNull] Func<TValue, TKey> KeySelector
-        )
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(KeySelector != null);
+        ) =>
             dictionary.AddValue(KeySelector(value), value);
-        }
 
         /// <summary>ƒобавление значений в словарь</summary>
         /// <param name="dictionary">—ловарь в который надо добавить значени€</param>
@@ -88,13 +72,8 @@ namespace System.Collections.Generic
             [NotNull] this IDictionary<TKey, TValue> dictionary,
             [NotNull] IEnumerable<TValue> collection,
             [NotNull] Func<TValue, TKey> converter
-        )
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(collection != null);
-            Contract.Requires(converter != null);
+        ) =>
             collection.AddToDictionary(dictionary, converter);
-        }
 
         /// <summary>ѕолучить значение из словар€ в случае его наличи€, или добавить новое</summary>
         /// <param name="dictionary">–ассматриваемый словарь</param>
@@ -110,10 +89,7 @@ namespace System.Collections.Generic
             [NotNull] Func<TValue> creator
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            Contract.Requires(creator != null);
-            if(!dictionary.TryGetValue(key, out var value))
+            if (!dictionary.TryGetValue(key, out var value))
                 dictionary.Add(key, value = creator());
             return value;
         }
@@ -132,10 +108,7 @@ namespace System.Collections.Generic
             [NotNull] Func<TKey, TValue> creator
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            Contract.Requires(creator != null);
-            if(!dictionary.TryGetValue(key, out var value))
+            if (!dictionary.TryGetValue(key, out var value))
                 dictionary.Add(key, value = creator(key));
             return value;
         }
@@ -154,10 +127,7 @@ namespace System.Collections.Generic
             [NotNull] Func<TValue> creator
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            Contract.Requires(creator != null);
-            if(!dictionary.TryGetValue(key, out var value))
+            if (!dictionary.TryGetValue(key, out var value))
                 dictionary.Add(key, value = creator());
             return value;
         }
@@ -176,10 +146,7 @@ namespace System.Collections.Generic
             [NotNull] Func<TKey, TValue> creator
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            Contract.Requires(creator != null);
-            if(!dictionary.TryGetValue(key, out var value))
+            if (!dictionary.TryGetValue(key, out var value))
                 dictionary.Add(key, value = creator(key));
             return value;
         }
@@ -196,12 +163,8 @@ namespace System.Collections.Generic
             [NotNull] this Dictionary<TKey, TValue> dictionary,
             [NotNull] TKey key,
             TValue DefaultValue = default
-        )
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            return dictionary.TryGetValue(key, out var v) ? v : DefaultValue;
-        }
+        ) =>
+            dictionary.TryGetValue(key, out var v) ? v : DefaultValue;
 
         /// <summary>ѕолучить значение из словар€ в случае его наличи€, или добавить новое</summary>
         /// <param name="dictionary">–ассматриваемый словарь</param>
@@ -215,24 +178,15 @@ namespace System.Collections.Generic
             [NotNull] this IDictionary<TKey, TValue> dictionary,
             [NotNull] TKey key,
             TValue DefaultValue = default
-        )
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(key != null);
-            return dictionary.TryGetValue(key, out var value) ? value : DefaultValue;
-        }
+        ) =>
+            dictionary.TryGetValue(key, out var value) ? value : DefaultValue;
 
         /// <summary>ѕолучить значение из словар€ в случае его наличи€, или добавить новое</summary>
         /// <param name="dictionary">–ассматриваемый словарь</param>
         /// <param name="name">Ќазвание объекта, значение дл€ которого требуетс€ получить</param>
         /// <typeparam name="TValue">“ип значени€</typeparam>
         /// <returns>«начение словар€ дл€ указанного ключа</returns>
-        public static TValue GetValue<TValue>([NotNull] this Dictionary<string, object> dictionary, [NotNull] string name)
-        {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(name != null);
-            return dictionary.TryGetValue(name, out var value) ? (TValue)value : default;
-        }
+        public static TValue GetValue<TValue>([NotNull] this Dictionary<string, object> dictionary, [NotNull] string name) => dictionary.TryGetValue(name, out var value) ? (TValue)value : default;
 
         /// <summary>»нициализаци€ словар€ указанным методом дл€ указанного числа значений</summary>
         /// <param name="dictionary">»нициализируемый словарь</param>
@@ -249,12 +203,7 @@ namespace System.Collections.Generic
             [NotNull] Func<KeyValuePair<TKey, TValue>> initializer
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(count >= 0);
-            Contract.Requires(initializer != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<IDictionary<TKey, TValue>>(), dictionary));
-
-            for(var i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
                 dictionary.Add(initializer());
 
             return dictionary;
@@ -278,12 +227,7 @@ namespace System.Collections.Generic
             [NotNull] Func<TParameter, KeyValuePair<TKey, TValue>> initializer
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(count >= 0);
-            Contract.Requires(initializer != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<IDictionary<TKey, TValue>>(), dictionary));
-
-            for(var i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
                 dictionary.Add(initializer(parameter));
 
             return dictionary;
@@ -304,12 +248,7 @@ namespace System.Collections.Generic
             [NotNull] Func<int, KeyValuePair<TKey, TValue>> initializer
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(count >= 0);
-            Contract.Requires(initializer != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<IDictionary<TKey, TValue>>(), dictionary));
-
-            for(var i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
                 dictionary.Add(initializer(i));
 
             return dictionary;
@@ -333,12 +272,7 @@ namespace System.Collections.Generic
             [NotNull] Func<int, TParameter, KeyValuePair<TKey, TValue>> initializer
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(count >= 0);
-            Contract.Requires(initializer != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<IDictionary<TKey, TValue>>(), dictionary));
-
-            for(var i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
                 dictionary.Add(initializer(i, parameter));
 
             return dictionary;
@@ -359,13 +293,7 @@ namespace System.Collections.Generic
             [NotNull] Func<TKey, TValue> initializer
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(keys != null);
-            Contract.Requires(Contract.ForAll(keys, k => k != null));
-            Contract.Requires(initializer != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<IDictionary<TKey, TValue>>(), dictionary));
-
-            foreach(var key in keys)
+            foreach (var key in keys)
                 dictionary.Add(key, initializer(key));
 
             return dictionary;
@@ -389,12 +317,6 @@ namespace System.Collections.Generic
             [NotNull] Func<TKey, TParameter, TValue> initializer
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(keys != null);
-            Contract.Requires(Contract.ForAll(keys, k => k != null));
-            Contract.Requires(initializer != null);
-            Contract.Ensures(ReferenceEquals(Contract.Result<IDictionary<TKey, TValue>>(), dictionary));
-
             foreach (var key in keys)
                 dictionary.Add(key, initializer(key, parameter));
 
@@ -414,12 +336,8 @@ namespace System.Collections.Generic
             [NotNull] Func<KeyValuePair<TKey, TValue>, bool> selector
         )
         {
-            Contract.Requires(dictionary != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<KeyValuePair<TKey, TValue>[]>() != null);
-            Contract.Ensures(Contract.Result<KeyValuePair<TKey, TValue>[]>().Length >= 0);
             var to_remove = dictionary.Where(selector).ToArray();
-            foreach(var remove in to_remove)
+            foreach (var remove in to_remove)
                 dictionary.Remove(remove.Key);
             return to_remove;
         }
@@ -427,8 +345,8 @@ namespace System.Collections.Generic
         public static TValue[] RemoveItems<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IEnumerable<TKey> keys)
         {
             var result = new List<TValue>(dictionary.Count);
-            foreach(var key in keys)
-                if(dictionary.TryGetValue(key, out var value))
+            foreach (var key in keys)
+                if (dictionary.TryGetValue(key, out var value))
                 {
                     result.Add(value);
                     dictionary.Remove(key);

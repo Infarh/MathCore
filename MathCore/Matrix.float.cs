@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore
@@ -31,6 +32,7 @@ namespace MathCore
         /// <param name="N">Размерность матрицы</param>
         /// <returns>Единичная матрица размерности NxN</returns>
         [DST]
+        [NotNull]
         public static MatrixFloat GetUnitaryMatryx(int N)
         {
             var Result = new MatrixFloat(N);
@@ -42,7 +44,8 @@ namespace MathCore
         /// <param name="A">Трансвецируемая матрица</param>
         /// <param name="j">Оборный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
-        public static MatrixFloat GetTransvection(MatrixFloat A, int j)
+        [NotNull]
+        public static MatrixFloat GetTransvection([NotNull] MatrixFloat A, int j)
         {
             if (!A.IsSquare)
                 throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
@@ -168,38 +171,33 @@ namespace MathCore
         public MatrixFloat(int N, int M, MatrixFloatItemCreator CreateFunction)
             : this(N, M)
         {
-            Contract.Requires(N > 0);
-            Contract.Requires(M > 0);
-            Contract.Requires(CreateFunction != null);
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     _Data[i, j] = CreateFunction(i, j);
         }
 
         [DST]
-        public MatrixFloat(float[,] Data)
+        public MatrixFloat([NotNull] float[,] Data)
             : this(Data.GetLength(0), Data.GetLength(1))
         {
-            Contract.Requires(Data != null);
             for (var i = 0; i < _N; i++)
                 for (var j = 0; j < _M; j++)
                     _Data[i, j] = Data[i, j];
         }
 
         [DST]
-        public MatrixFloat(IList<float> DataRow)
+        public MatrixFloat([NotNull] IList<float> DataRow)
             : this(DataRow.Count, 1)
         {
-            Contract.Requires(DataRow != null);
             for (var i = 0; i < _N; i++)
                 _Data[i, 0] = DataRow[i];
         }
 
         public MatrixFloat(IEnumerable<IEnumerable<float>> Items) : this(GetElements(Items)) { }
 
-        private static float[,] GetElements(IEnumerable<IEnumerable<float>> Items)
+        [NotNull]
+        private static float[,] GetElements([NotNull] IEnumerable<IEnumerable<float>> Items)
         {
-            Contract.Requires(Items != null);
             var cols = Items.Select(col => col.ToListFast()).ToList();
             var cols_count = cols.Count;
             var rows_count = cols.Max(col => col.Count);
@@ -219,42 +217,45 @@ namespace MathCore
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы номер j</returns>
         [DST]
+        [NotNull]
         public MatrixFloat GetCol(int j)
         {
-            var lv_A = new MatrixFloat(N, 1);
-            for (var i = 0; i < N; i++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new MatrixFloat(N, 1);
+            for (var i = 0; i < N; i++) a[i, j] = this[i, j];
+            return a;
         }
 
         /// <summary>Получить строку матрицы</summary>
         /// <param name="i">Номер строки</param>
         /// <returns>Строка матрицы номер i</returns>
         [DST]
+        [NotNull]
         public MatrixFloat GetRow(int i)
         {
-            var lv_A = new MatrixFloat(1, M);
-            for (var j = 0; j < M; j++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new MatrixFloat(1, M);
+            for (var j = 0; j < M; j++) a[i, j] = this[i, j];
+            return a;
         }
 
         /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
         /// <returns></returns>
+        [NotNull]
         public MatrixFloat GetTriangle()
         {
             var result = (MatrixFloat)Clone();
-            var lv_RowCount = N;
-            var lv_ColCount = M;
-            var row = new float[lv_ColCount];
-            for (var lv_FirstRowIndex = 0; lv_FirstRowIndex < lv_RowCount - 1; lv_FirstRowIndex++)
+            var row_count = N;
+            var col_count = M;
+            var row = new float[col_count];
+            for (var first_row_index = 0; first_row_index < row_count - 1; first_row_index++)
             {
-                var lv_A = result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < result.M; lv_RowElementI++) //Нормируем строку по первому элементу
-                    row[lv_RowElementI] = result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
+                var lv_A = result[first_row_index, first_row_index]; //Захватываем первый элемент строки
+                for (var lv_RowElementI = first_row_index; lv_RowElementI < result.M; lv_RowElementI++) //Нормируем строку по первому элементу
+                    row[lv_RowElementI] = result[first_row_index, lv_RowElementI] / lv_A;
 
-                for (var i = lv_FirstRowIndex + 1; i < lv_RowCount; i++) //Для всех оставшихся строк:
+                for (var i = first_row_index + 1; i < row_count; i++) //Для всех оставшихся строк:
                 {
-                    lv_A = result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                    for (var j = lv_FirstRowIndex; j < lv_ColCount; j++)
+                    lv_A = result[i, first_row_index]; //Захватываем первый элемент строки
+                    for (var j = first_row_index; j < col_count; j++)
                         result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
                 }
             }
@@ -277,6 +278,7 @@ namespace MathCore
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
         [DST]
+        [NotNull]
         public MatrixFloat GetTransponse()
         {
             var Result = new MatrixFloat(M, N);
@@ -292,12 +294,14 @@ namespace MathCore
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
+        [NotNull]
         public MatrixFloat GetAdjunct(int n, int m) => ((n + m) % 2 == 0 ? 1 : -1) * GetMinor(n, m).GetDeterminant();
 
         /// <summary>Минор матрицы по определённому элементу</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Минор элемента матрицы [n,m]</returns>
+        [NotNull]
         public MatrixFloat GetMinor(int n, int m)
         {
             var result = new MatrixFloat(N - 1, M - 1);
@@ -324,7 +328,7 @@ namespace MathCore
 
             if (n == 2) return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
 
-            var lv_DataArray = (float[,])_Data.Clone();
+            //var data_array = (float[,])_Data.Clone();
 
             //var det = 1.0;
             //for(var k = 0; k <= n; k++)
@@ -360,7 +364,7 @@ namespace MathCore
 
             #region
 
-            GetLUDecomposition(out var L, out var U, out var P);
+            GetLUDecomposition(out _, out var U, out _);
             float det = 1;
             for (var i = 0; i < N; i++)
                 det *= U[i, i];
@@ -375,7 +379,7 @@ namespace MathCore
             return det;
         }
 
-        public void GetLUDecomposition(out MatrixFloat L, out MatrixFloat U, out MatrixFloat P)
+        public void GetLUDecomposition([NotNull] out MatrixFloat L, [NotNull] out MatrixFloat U, [NotNull] out MatrixFloat P)
         {
             LUDecomposition(_Data, out var l, out var u, out var p);
             L = new MatrixFloat(l);
@@ -398,7 +402,7 @@ namespace MathCore
         /// <param name="L">An array where the lower traingular matrix is returned</param>
         /// <param name="U">An array where the upper traingular matrix is returned</param>
         /// <param name="P">An array where the permutation matrix is returned</param>
-        private static void LUDecomposition(float[,] Mat, out float[,] L, out float[,] U, out float[,] P)
+        private static void LUDecomposition([NotNull] float[,] Mat, [NotNull] out float[,] L, [NotNull] out float[,] U, out float[,] P)
         {
             var A = (float[,])Mat.Clone();
             var Rows = Mat.GetUpperBound(0);
@@ -508,6 +512,7 @@ namespace MathCore
                 P.SwapRows(i, indexex[i]);
         }
 
+        [NotNull]
         private static float[,] Identity(int n)
         {
             var temp = new float[n, n];
@@ -526,6 +531,7 @@ namespace MathCore
 
         //[DST] public string ToStringFormat(char Splitter) { return ToStringFormat(Splitter, "r"); }
 
+        [NotNull]
         public string ToStringFormat(char Splitter = '\t', string Format = "r")
         {
             var result = new StringBuilder();
@@ -558,13 +564,14 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==(MatrixFloat A, MatrixFloat B) => A is null && (B is null)
+        public static bool operator ==([CanBeNull] MatrixFloat A, [CanBeNull] MatrixFloat B) => A is null && (B is null)
                    || A is { } && B is { } && A.Equals(B);
 
-        public static bool operator !=(MatrixFloat A, MatrixFloat B) => !(A == B);
+        public static bool operator !=([CanBeNull] MatrixFloat A, [CanBeNull] MatrixFloat B) => !(A == B);
 
         [DST]
-        public static MatrixFloat operator +(MatrixFloat M, float x)
+        [NotNull]
+        public static MatrixFloat operator +([NotNull] MatrixFloat M, float x)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -574,7 +581,8 @@ namespace MathCore
         }
 
         [DST]
-        public static MatrixFloat operator +(float x, MatrixFloat M)
+        [NotNull]
+        public static MatrixFloat operator +(float x, [NotNull] MatrixFloat M)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -584,7 +592,8 @@ namespace MathCore
         }
 
         [DST]
-        public static MatrixFloat operator -(MatrixFloat M, float x)
+        [NotNull]
+        public static MatrixFloat operator -([NotNull] MatrixFloat M, float x)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -594,7 +603,8 @@ namespace MathCore
         }
 
         [DST]
-        public static MatrixFloat operator -(float x, MatrixFloat M)
+        [NotNull]
+        public static MatrixFloat operator -(float x, [NotNull] MatrixFloat M)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -604,7 +614,8 @@ namespace MathCore
         }
 
         [DST]
-        public static MatrixFloat operator *(MatrixFloat M, float x)
+        [NotNull]
+        public static MatrixFloat operator *([NotNull] MatrixFloat M, float x)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -614,7 +625,8 @@ namespace MathCore
         }
 
         [DST]
-        public static MatrixFloat operator *(float x, MatrixFloat M)
+        [NotNull]
+        public static MatrixFloat operator *(float x, [NotNull] MatrixFloat M)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -636,7 +648,8 @@ namespace MathCore
         public static MatrixFloat operator *(MatrixFloat A, float[,] B) => A * (MatrixFloat)B;
 
         [DST]
-        public static MatrixFloat operator /(MatrixFloat M, float x)
+        [NotNull]
+        public static MatrixFloat operator /([NotNull] MatrixFloat M, float x)
         {
             var result = new MatrixFloat(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -645,6 +658,7 @@ namespace MathCore
             return result;
         }
 
+        [NotNull]
         public static MatrixFloat operator /(float x, MatrixFloat M)
         {
             M = M.GetInverse();
@@ -660,7 +674,8 @@ namespace MathCore
         /// <param name="B">Второе слогаемое</param>
         /// <returns>Сумма двух матриц</returns>
         [DST]
-        public static MatrixFloat operator +(MatrixFloat A, MatrixFloat B)
+        [NotNull]
+        public static MatrixFloat operator +([NotNull] MatrixFloat A, [NotNull] MatrixFloat B)
         {
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
@@ -679,7 +694,8 @@ namespace MathCore
         /// <param name="B">Вычитаемое</param>
         /// <returns>Разность двух матриц</returns>
         [DST]
-        public static MatrixFloat operator -(MatrixFloat A, MatrixFloat B)
+        [NotNull]
+        public static MatrixFloat operator -([NotNull] MatrixFloat A, [NotNull] MatrixFloat B)
         {
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
@@ -698,7 +714,8 @@ namespace MathCore
         /// <param name="B">Второй сомножитель</param>
         /// <returns>Произведение двух матриц</returns>
         [DST]
-        public static MatrixFloat operator *(MatrixFloat A, MatrixFloat B)
+        [NotNull]
+        public static MatrixFloat operator *([NotNull] MatrixFloat A, [NotNull] MatrixFloat B)
         {
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
@@ -717,7 +734,8 @@ namespace MathCore
         /// <param name="A">Делимое</param>
         /// <param name="B">Делитель</param>
         /// <returns>Частное двух матриц</returns>
-        public static MatrixFloat operator /(MatrixFloat A, MatrixFloat B)
+        [NotNull]
+        public static MatrixFloat operator /([NotNull] MatrixFloat A, MatrixFloat B)
         {
             B = B.GetInverse();
             if (A.M != B.N)
@@ -737,7 +755,8 @@ namespace MathCore
         /// <param name="A">Первое слогаемое</param>
         /// <param name="B">Второе слогаемое</param>
         /// <returns>Объединённая матрица</returns>
-        public static MatrixFloat operator |(MatrixFloat A, MatrixFloat B)
+        [NotNull]
+        public static MatrixFloat operator |([NotNull] MatrixFloat A, [NotNull] MatrixFloat B)
         {
             MatrixFloat result;
             if (A.M == B.M) // Конкатинация по строкам
@@ -776,22 +795,26 @@ namespace MathCore
         /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
         [DST]
+        [NotNull]
         public static implicit operator MatrixFloat(float X) => new MatrixFloat(1, 1) { [0, 0] = X };
 
         [DST]
-        public static explicit operator float[,](MatrixFloat M) => (float[,])M._Data.Clone();
+        [NotNull]
+        public static explicit operator float[,]([NotNull] MatrixFloat M) => (float[,])M._Data.Clone();
 
         [DST]
-        public static explicit operator MatrixFloat(float[,] Data) => new MatrixFloat(Data);
+        [NotNull]
+        public static explicit operator MatrixFloat([NotNull] float[,] Data) => new MatrixFloat(Data);
 
         [DST]
-        public static explicit operator MatrixFloat(float[] Data) => new MatrixFloat(Data);
+        [NotNull]
+        public static explicit operator MatrixFloat([NotNull] float[] Data) => new MatrixFloat(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 
         #region IEquatable<MatrixFloat> Members
 
-        public bool Equals(MatrixFloat other)
+        public bool Equals([CanBeNull] MatrixFloat other)
         {
             return other is { }
                    && (ReferenceEquals(this, other)

@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using MathCore;
 using MathCore.Annotations;
@@ -35,13 +33,7 @@ namespace System
         /// <param name="Name">Имя вычисления</param>
         /// <returns>Вычисление функции</returns>
         [NotNull]
-        public static FunctionEvulation<T> ToEvulation<T>([NotNull] this Func<T> function, [CanBeNull] string Name = null)
-        {
-            Contract.Requires(function != null);
-            Contract.Ensures(Contract.Result<FunctionEvulation<T>>() != null);
-
-            return Name is null ? new FunctionEvulation<T>(function) : new NamedFunctionEvulation<T>(function, Name);
-        }
+        public static FunctionEvulation<T> ToEvulation<T>([NotNull] this Func<T> function, [CanBeNull] string Name = null) => Name is null ? new FunctionEvulation<T>(function) : new NamedFunctionEvulation<T>(function, Name);
 
         /// <summary>Поиск нуля функции методом Ньютона</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -61,16 +53,10 @@ namespace System
             double eps = 1e-5
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(df != null);
-            Contract.Requires(max_iterations > 0);
-            Contract.Requires(eps > 0);
-            Contract.EnsuresOnThrow<IndexOutOfRangeException>(max_iterations == 0);
-
-            while(max_iterations-- > 0)
+            while (max_iterations-- > 0)
             {
                 var x = x0 - f(x0) / df(x0);
-                if(Math.Abs(x - x0) < eps) return x;
+                if (Math.Abs(x - x0) < eps) return x;
                 x0 = x;
             }
             throw new IndexOutOfRangeException("Метод превысил допустимое число шагов поиска");
@@ -93,16 +79,8 @@ namespace System
             double x0,
             int max_iterations,
             double eps = 1e-5
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(df != null);
-            Contract.Requires(max_iterations > 0);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return Task.Factory.StartNew(() => f.GetRoot_NewtonsMethod(df, x0, max_iterations, eps));
-        }
+        ) =>
+            Task.Factory.StartNew(() => f.GetRoot_NewtonsMethod(df, x0, max_iterations, eps));
 
         /// <summary> Поиск нуля функции методом бисекции</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -123,20 +101,14 @@ namespace System
             double eps = 1e-5
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(max_iterations > 0);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-            Contract.EnsuresOnThrow<IndexOutOfRangeException>(max_iterations == 0);
-
-            while(max_iterations-- > 0)
+            while (max_iterations-- > 0)
             {
                 var x = (x1 + x2) / 2;
 
                 var fx = f(x);
 
-                if(fx.Equals(0d) || (x2 - x1) / 2 < eps) return x;
-                if(Math.Sign(fx) == Math.Sign(f(x1)))
+                if (fx.Equals(0d) || (x2 - x1) / 2 < eps) return x;
+                if (Math.Sign(fx) == Math.Sign(f(x1)))
                     x1 = x;
                 else
                     x2 = x;
@@ -162,16 +134,8 @@ namespace System
             double x2,
             int max_iterations,
             double eps = 1e-5
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(max_iterations > 0);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return Task.Factory.StartNew(() => f.GetRoot_BisectionMethod(x1, x2, max_iterations, eps));
-        }
+        ) =>
+            Task.Factory.StartNew(() => f.GetRoot_BisectionMethod(x1, x2, max_iterations, eps));
 
         /// <summary> Поиск нуля функции методом Золотого сечения</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -182,22 +146,18 @@ namespace System
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public static double GetRoot_GoldenSection([NotNull] this Function f, double x1, double x2, double eps = 1e-5)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-
             const double k = Consts.GoldenRatio;
 
             var d = x2 - x1;
             var X1 = x1 + k * d;
             var X2 = x2 - k * d;
 
-            while(Math.Abs(X2 - X1) > eps)
+            while (Math.Abs(X2 - X1) > eps)
             {
                 var _X1 = f(X1);
                 var _X2 = f(X2);
 
-                if(_X2 < _X1)
+                if (_X2 < _X1)
                 {
                     x2 = X1;
                     X1 = X2;  //fd=fc;fc=f(c)
@@ -221,15 +181,7 @@ namespace System
         /// <returns>Значение аргумента нуля функции</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
-        public static Task<double> GetRoot_GoldenSectionAsync([NotNull] this Function f, double x1, double x2, double eps = 1e-5)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return f.GetRoot_GoldenSectionAsync(x1, x2, eps);
-        }
+        public static Task<double> GetRoot_GoldenSectionAsync([NotNull] this Function f, double x1, double x2, double eps = 1e-5) => f.GetRoot_GoldenSectionAsync(x1, x2, eps);
 
         /// <summary> Поиск нуля функции методом Троичного деления</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -240,16 +192,12 @@ namespace System
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public static double GetRoot_TernarySearch([NotNull] this Function f, double x1, double x2, double eps = 0.0001)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-
-            while(Math.Abs(x2 - x1) > eps)
+            while (Math.Abs(x2 - x1) > eps)
             {
                 var d = (x2 - x1) / 3;
                 var X1 = x1 + d;
                 var X2 = x2 - d;
-                if(f(X1) < f(X2)) x1 = X1; else x2 = X2;
+                if (f(X1) < f(X2)) x1 = X1; else x2 = X2;
             }
             return (x2 - x1) / 2;
         }
@@ -262,15 +210,7 @@ namespace System
         /// <returns>Значение аргумента нуля функции</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
-        public static Task<double> GetRoot_TernarySearchAsync([NotNull] this Function f, double x1, double x2, double eps = 0.0001)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return Task.Factory.StartNew(() => f.GetRoot_TernarySearch(x1, x2, eps));
-        }
+        public static Task<double> GetRoot_TernarySearchAsync([NotNull] this Function f, double x1, double x2, double eps = 0.0001) => Task.Factory.StartNew(() => f.GetRoot_TernarySearch(x1, x2, eps));
 
         /// <summary>Поиск нуля функции методом False position</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -288,39 +228,33 @@ namespace System
             int max_iterations,
             double eps = 0.0001
         )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(max_iterations > 0);
-            Contract.Requires(x1 < x2);
-
-            /* starting values at endpoints of interval */
+        {/* starting values at endpoints of interval */
             var _x1 = f(x1);
 
             var _x2 = f(x2);
 
             var x = 0d;
 
-            for(int n = 0, side = 0; n < max_iterations; n++)
+            for (int n = 0, side = 0; n < max_iterations; n++)
             {
                 x = (_x1 * x2 - _x2 * x1) / (_x1 - _x2);
-                if(Math.Abs(x2 - x1) < eps * Math.Abs(x2 + x1)) break;
+                if (Math.Abs(x2 - x1) < eps * Math.Abs(x2 + x1)) break;
                 var _x = f(x);
 
-                if(_x * _x2 > 0)
+                if (_x * _x2 > 0)
                 {
                     /* _x and ft have same sign, copy r to x2 */
                     x2 = x;
                     _x2 = _x;
-                    if(side == -1) _x1 /= 2;
+                    if (side == -1) _x1 /= 2;
                     side = -1;
                 }
-                else if(_x1 * _x > 0)
+                else if (_x1 * _x > 0)
                 {
                     /* _x and fs have same sign, copy r to x1 */
                     x1 = x;
                     _x1 = _x;
-                    if(side == +1) _x2 /= 2;
+                    if (side == +1) _x2 /= 2;
                     side = +1;
                 }
                 else //_x * f_ very small (looks like zero)
@@ -345,16 +279,8 @@ namespace System
             double x2,
             int max_iterations,
             double eps = 0.0001
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(max_iterations > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return Task.Factory.StartNew(() => f.GetRoot_FalsiPositionMethod(x1, x2, max_iterations, eps));
-        }
+        ) =>
+            Task.Factory.StartNew(() => f.GetRoot_FalsiPositionMethod(x1, x2, max_iterations, eps));
 
         /// <summary> Поиск нуля функции методом хорд</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -365,11 +291,7 @@ namespace System
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public static double GetRoot_MethodOfChords([NotNull] this Function f, double x1, double x2, double eps = 0.0001)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-
-            while(Math.Abs(x2 - x1) > eps)
+            while (Math.Abs(x2 - x1) > eps)
             {
                 var _x1 = f(x1);
 
@@ -388,15 +310,7 @@ namespace System
         /// <returns>Значение аргумента нуля функции</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
-        public static Task<double> GetRoot_MethodOfChordsAsync([NotNull] this Function f, double x1, double x2, double eps = 0.0001)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return Task.Factory.StartNew(() => f.GetRoot_MethodOfChords(x1, x2, eps));
-        }
+        public static Task<double> GetRoot_MethodOfChordsAsync([NotNull] this Function f, double x1, double x2, double eps = 0.0001) => Task.Factory.StartNew(() => f.GetRoot_MethodOfChords(x1, x2, eps));
 
         /// <summary>Карирование функции двух параметров</summary>
         /// <typeparam name="TArg1">Тип значение первого параметра функции</typeparam>
@@ -404,67 +318,34 @@ namespace System
         /// <typeparam name="TResult">Тип результата функции</typeparam>
         /// <param name="f">Карируемая функция</param>
         [NotNull]
-        public static Func<TArg2, Func<TArg1, TResult>> Carring<TArg1, TArg2, TResult>([NotNull] this Func<TArg1, TArg2, TResult> f)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Func<TArg2, Func<TArg1, TResult>>>() != null);
-
-            return y => x => f(x, y);
-        }
+        public static Func<TArg2, Func<TArg1, TResult>> Carring<TArg1, TArg2, TResult>([NotNull] this Func<TArg1, TArg2, TResult> f) => y => x => f(x, y);
 
         /// <summary>Сложение функции с числом g(x) = f(x) + a</summary>
         /// <param name="f">Исходная функция</param>
         /// <param name="a">Прибавляемое число</param>
         /// <returns>Новая функция, значения которой равны значениям исходной функции плюс указанному числу</returns>
         [NotNull]
-        public static Function Add([NotNull] this Function f, double a)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(a != 0d || ReferenceEquals(Contract.Result<Function>(), f));
-
-            return a.Equals(0) ? f : x => f(x) + a;
-        }
+        public static Function Add([NotNull] this Function f, double a) => a.Equals(0) ? f : x => f(x) + a;
 
         /// <summary>Сложение двух функций g(x) = f1(x) + f2(x)</summary>
         /// <param name="f1">Функция - первое слогаемое</param>
         /// <param name="f2">Функция - второе слогаемое</param>
         /// <returns>Функция, значения которой равны сумме значений двух исходных функций</returns>
         [NotNull]
-        public static Function Add([NotNull] this Function f1, [NotNull] Function f2)
-        {
-            Contract.Requires(f1 != null);
-            Contract.Requires(f2 != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f1(x) + f2(x);
-        }
+        public static Function Add([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) + f2(x);
 
         /// <summary>Изменение знака аргумента функции g(x) = f(-x)</summary>
         /// <param name="f">Исходная функция</param>
         /// <returns>Новая функция, значения аргумента которой отрицательны по отношению к аргументу исходной функци g(x) = f(-x)</returns>
         [NotNull]
-        public static Function ArgumentReverse([NotNull] this Function f)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f(-x);
-        }
+        public static Function ArgumentReverse([NotNull] this Function f) => x => f(-x);
 
         /// <summary>Смещение аргумента функции на указанное значение g(x) = f(x-a)</summary>
         /// <param name="f">Исходная функция</param>
         /// <param name="x0">Значение смещения аргумента</param>
         /// <returns>Новая функция со смещённым аргументом</returns>
         [NotNull]
-        public static Function ArgumentShift([NotNull] this Function f, double x0)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(x0 != 0 || ReferenceEquals(Contract.Result<Function>(), f));
-
-            return x0.Equals(0) ? f : x => f(x - x0);
-        }
+        public static Function ArgumentShift([NotNull] this Function f, double x0) => x0.Equals(0) ? f : x => f(x - x0);
 
         /// <summary>Сжатие аргумента функци g(x) = f(k * x + b)</summary>
         /// <param name="f">Исходная функция</param>
@@ -472,20 +353,14 @@ namespace System
         /// <param name="b">Коэффициент смещения аргумента</param>
         /// <returns>Новая функция со сжатым и смещённым аргументом</returns>
         [NotNull]
-        public static Function ArgumentCompression([NotNull] this Function f, double k, double b = 0d)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(k != 1 || b != 0 || ReferenceEquals(Contract.Result<Function>(), f));
-
-            return k.Equals(1) && b.Equals(0)
+        public static Function ArgumentCompression([NotNull] this Function f, double k, double b = 0d) =>
+            k.Equals(1) && b.Equals(0)
                 ? f
                 : (k.Equals(1)
                     ? f.ArgumentShift(b)
                     : (b.Equals(0)
                         ? (Function)(x => f(k * x))
                         : x => f(k * x + b)));
-        }
 
         /// <summary>Деление функции на число g(x) = f(x) / a</summary>
         /// <param name="f">Делимая функция</param>
@@ -496,42 +371,21 @@ namespace System
         /// аргумент больше нуля, -бесконечности, если аргумент меньше нуля и NaN, если аргумент равен нулю.
         /// </returns>
         [NotNull]
-        public static Function Divade([NotNull] this Function f, double a)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(a != 1 || ReferenceEquals(Contract.Result<Function>(), f));
-
-            return a.Equals(1) ? f : (a.Equals(0) ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN)) : x => f(x) / a);
-        }
+        public static Function Divade([NotNull] this Function f, double a) => a.Equals(1) ? f : (a.Equals(0) ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN)) : x => f(x) / a);
 
         /// <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
         /// <param name="f1">Функция - делимое</param>
         /// <param name="f2">Функция - делитель</param>
         /// <returns>Функция, значения которой равны отношению значений исходных функций</returns>
         [NotNull]
-        public static Function Divade([NotNull] this Function f1, [NotNull] Function f2)
-        {
-            Contract.Requires(f1 != null);
-            Contract.Requires(f2 != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f1(x) / f2(x);
-        }
+        public static Function Divade([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) / f2(x);
 
         /// <summary>Функция от функци q(f(x))</summary>
         /// <param name="f">Внутренняя функция</param>
         /// <param name="q">Внешняя функция</param>
         /// <returns>ФУнкция q от функции f</returns>
         [NotNull]
-        public static Function Func([NotNull] this Function f, [NotNull] Function q)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(q != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => q(f(x));
-        }
+        public static Function Func([NotNull] this Function f, [NotNull] Function q) => x => q(f(x));
 
         /// <summary>Функция от функции - функционал (преобразователь функции)</summary>
         /// <typeparam name="TIn">Тип аргумента функции</typeparam>
@@ -544,28 +398,15 @@ namespace System
         (
             [NotNull] this Func<TIn, TOut> f,
             [NotNull] Func<Func<TIn, TOut>, Func<TIn, TOut>> q
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(q != null);
-            Contract.Ensures(Contract.Result<Func<TIn, TOut>>() != null);
-
-            return q(f);
-        }
+        ) =>
+            q(f);
 
         /// <summary>Функция от функции f(q(x))</summary>
         /// <param name="f">Внешняя функция</param>
         /// <param name="q">Внутренняя функция</param>
         /// <returns>Функция f от функции q</returns>
         [NotNull]
-        public static Function FuncFor([NotNull] this Function f, [NotNull] Function q)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(q != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f(q(x));
-        }
+        public static Function FuncFor([NotNull] this Function f, [NotNull] Function q) => x => f(q(x));
 
         /// <summary>олучить автокорреляционную функцию от указанной функции</summary>
         /// <param name="f">Исходная функция</param>
@@ -573,14 +414,7 @@ namespace System
         /// <param name="x0">Смещение</param>
         /// <returns>Автокорреляционная функция</returns>
         [NotNull]
-        public static Function GetAkf([NotNull] this Function f, double deltaX, double x0 = 0.0)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(deltaX > 0);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return f.GetConvolution(f.ArgumentReverse(), deltaX, x0);
-        }
+        public static Function GetAkf([NotNull] this Function f, double deltaX, double x0 = 0.0) => f.GetConvolution(f.ArgumentReverse(), deltaX, x0);
 
         /// <summary>Функция корреляции между двумя функциями на указанному интервале корреляции с указанным смещеинем</summary>
         /// <param name="f">Первая функция</param>
@@ -591,11 +425,6 @@ namespace System
         [NotNull]
         public static Function GetConvolution([NotNull] this Function f, [NotNull] Function g, double deltaX, double x0 = 0.0)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(g != null);
-            Contract.Requires(deltaX > 0);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
             var min_x = x0 - deltaX / 2;
             var max_x = x0 + deltaX / 2;
             return x => ((Function)(t => f(t) * g(x - t))).GetIntegralValue_Adaptive(min_x, max_x);
@@ -609,15 +438,7 @@ namespace System
         /// <param name="n">Номер метода численного дифференцирования в пределах [0,4]</param>
         /// <returns>Функция численного дифференциала от исходной функции</returns>
         [NotNull]
-        public static Function GetDifferencial([NotNull] this Function f, double dx = 0.0001, int n = 0)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(n >= 0 && n <= 4, $"значение n должно быть в пределах 0 <= {nameof(n)} <= 4");
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f.GetDifferencialValue(x, dx, n);
-        }
+        public static Function GetDifferencial([NotNull] this Function f, double dx = 0.0001, int n = 0) => x => f.GetDifferencialValue(x, dx, n);
 
         /// <summary>Определение значения численного дифференциала в указанной точке, с указанным шагом дифференцирования и номером метода</summary>
         /// <param name="f">Дифференцируемая функция</param>
@@ -627,11 +448,7 @@ namespace System
         /// <returns>Численное значение дифференциала функции в указанной точке</returns>
         public static double GetDifferencialValue([NotNull] this Function f, double x, double dx = 0.0001, int n = 0)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(n >= 0 && n <= 4, $"значение n должно быть в пределах 0 <= {nameof(n)} <= 4");
-
-            if(n == 0)
+            if (n == 0)
             {
                 var Dx = dx / 2d;
                 var min_x = x - Dx;
@@ -649,7 +466,7 @@ namespace System
             n--;
             var result = 0d;
 
-            for(var i = 0; i < 6; i++) result += Solover.Differential.diff_a[n, i] * f(x + (i * dx));
+            for (var i = 0; i < 6; i++) result += Solover.Differential.diff_a[n, i] * f(x + (i * dx));
             return result / Solover.Differential.diff_b[n] / dx;
         }
 
@@ -666,16 +483,11 @@ namespace System
         /// <returns>Значение результата численного интегрирования функции методом трапеций</returns>
         public static double GetIntegralValue([NotNull] this Function f, double x1, double x2, double f0 = 0, double dx = 0.0001)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(dx > 0d);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-
-            if(x1.Equals(x2)) return f0;
+            if (x1.Equals(x2)) return f0;
 
             f0 += f(x1) / 2;
             x2 -= dx;
-            while((x1 += dx) < x2) f0 += f(x1);
+            while ((x1 += dx) < x2) f0 += f(x1);
             var v = f(x1 += dx);
             return ((v + (v = f(x2))) * (x2 - x1) + (2 * f0 + v) * dx) * .5;
         }
@@ -695,16 +507,8 @@ namespace System
             double x2,
             double f0 = 0,
             double dx = 0.0001
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-
-            return x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegralValue(x1, x2, f0, dx));
-        }
+        ) =>
+            x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegralValue(x1, x2, f0, dx));
 
         /// <summary>Двойной определённый численный интеграл функции (метод трапеций)</summary>
         /// <param name="f">Интегрируемая функция</param>
@@ -724,17 +528,12 @@ namespace System
             double dx = 0.0001
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(dx > 0d);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-
-            if(x1.Equals(x2)) return f0;
+            if (x1.Equals(x2)) return f0;
 
             var dx05 = dx * .5;
             var v = f(x1);
             x2 -= dx;
-            while(x1 < x2) f0 += f1 + (f1 += (v + (v = f(x1 += dx))) * dx05);
+            while (x1 < x2) f0 += f1 + (f1 += (v + (v = f(x1 += dx))) * dx05);
             return f0 * dx05 + (f1 + (v + f(x2 += dx)) * (dx05 = .5 * (x2 - x1))) * dx05;
         }
 
@@ -755,16 +554,8 @@ namespace System
             double f1 = 0,
             double f0 = 0,
             double dx = 0.0001
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(x1 < x2);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-
-            return x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(x1, x2, f1, f0, dx));
-        }
+        ) =>
+            x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(x1, x2, f1, f0, dx));
 
         /// <summary>Интегрирование функции с модификацией ядра интеграла</summary>
         /// <param name="f">Подинтегральная функция f(x)</param>
@@ -784,17 +575,11 @@ namespace System
             double dx = 0.0001
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(Core != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-
-            if(x1.Equals(x2)) return f0;
+            if (x1.Equals(x2)) return f0;
 
             f0 += f(x1) / 2;
             x2 -= dx;
-            while((x1 += dx) < x2) f0 += Core(f(x1), x1);
+            while ((x1 += dx) < x2) f0 += Core(f(x1), x1);
             var v = f(x1 += dx);
             return ((v + (v = Core(f(x2), x2))) * (x2 - x1) + (2 * f0 + v) * dx) * .5;
         }
@@ -816,17 +601,8 @@ namespace System
             double x2,
             double f0 = 0,
             double dx = 0.0001
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(Core != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegralValue(Core, x1, x2, dx));
-        }
+        ) =>
+            x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegralValue(Core, x1, x2, dx));
 
         /// <summary>Интегрирование функции с модификацией ядра интеграла</summary>
         /// <param name="f">Подинтегральная функция f(x)</param>
@@ -848,18 +624,12 @@ namespace System
             double dx = 0.0001
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(Core != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-
-            if(x1.Equals(x2)) return f0;
+            if (x1.Equals(x2)) return f0;
 
             var dx05 = dx * .5;
             var v = Core(f(x1), x1);
             x2 -= dx;
-            while(x1 < x2) f0 += f1 + (f1 += (v + (v = f(x1 += dx))) * dx05);
+            while (x1 < x2) f0 += f1 + (f1 += (v + (v = f(x1 += dx))) * dx05);
             return f0 * dx05 + (f1 + (v + Core(f(x2 += dx), x2)) * (dx05 = .5 * (x2 - x1))) * dx05;
         }
 
@@ -882,17 +652,8 @@ namespace System
             double f1 = 0,
             double f0 = 0,
             double dx = 0.0001
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(Core != null);
-            Contract.Requires(dx > 0);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == f0);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(Core, x1, x2, dx));
-        }
+        ) =>
+            x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(Core, x1, x2, dx));
 
         /// <summary>Численный расчёт определённого интеграла методом симпсона</summary>
         /// <param name="f">Интегрируемая функция</param>
@@ -902,19 +663,14 @@ namespace System
         /// <returns>Интеграл функции на отрезке метдом Симпсона</returns>
         public static double GetIntegralValue_Simpson([NotNull] this Function f, double x1, double x2, int N = 100)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(N > 2);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-
-            if(x1.Equals(x2)) return 0;
+            if (x1.Equals(x2)) return 0;
 
             var dx = Math.Abs(x2 - x1) / N;
             var dx05 = dx / 2;
             var x = x1;
             var s = .0;
             var s_dx05 = f(x + dx05);
-            for(var i = 1; i < N; i++)
+            for (var i = 1; i < N; i++)
             {
                 s += f(x += dx);
                 s_dx05 += f(x + dx05);
@@ -938,17 +694,13 @@ namespace System
             double dx
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-
-            if(x1.Equals(x2)) return 0;
+            if (x1.Equals(x2)) return 0;
 
             var dx05 = 0.5 * dx;
             var x = x1;
             var s = .0;
             var s_dx05 = f(x + dx05);
-            while((x += dx) < x2)
+            while ((x += dx) < x2)
             {
                 s += f(x);
                 s_dx05 += f(x + dx05);
@@ -963,16 +715,7 @@ namespace System
         /// <param name="N">Число интервало интегрирования N > 2</param>
         /// <returns>Интеграл функции на отрезке метдом Симпсона</returns>
         [NotNull]
-        public static Task<double> GetIntegralValue_SimpsonAsync([NotNull] this Function f, double x1, double x2, int N = 100)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(N > 2);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
-
-            return x1.Equals(x2) ? Task.FromResult(0d) : Task.Factory.StartNew(() => f.GetIntegralValue_Simpson(x1, x2, N));
-        }
+        public static Task<double> GetIntegralValue_SimpsonAsync([NotNull] this Function f, double x1, double x2, int N = 100) => x1.Equals(x2) ? Task.FromResult(0d) : Task.Factory.StartNew(() => f.GetIntegralValue_Simpson(x1, x2, N));
 
         /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения</summary>
         /// <param name="f">Интегрируемая функция</param>
@@ -989,13 +732,7 @@ namespace System
         /// </remarks>
         public static double GetIntegralValue_Adaptive([NotNull] this Function f, double x1, double x2, int N = 2, double eps = 1e-6)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(N > 2);
-            Contract.Requires(x1 <= x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-
-            if(x1.Equals(x2)) return 0;
+            if (x1.Equals(x2)) return 0;
 
             var I1 = f.GetIntegralValue_Simpson(x1, x2, N);
             var I2 = f.GetIntegralValue_Simpson(x1, x2, N <<= 1);
@@ -1022,18 +759,12 @@ namespace System
             double eps = 0.000001
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(N > 2);
-            Contract.Requires(x1 <= x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-
-            if(x1.Equals(x2)) return 0;
+            if (x1.Equals(x2)) return 0;
 
             var I1 = await f.GetIntegralValue_SimpsonAsync(x1, x2, N).ConfigureAwait(false);
             var I2 = await f.GetIntegralValue_SimpsonAsync(x1, x2, N <<= 1).ConfigureAwait(false);
 
-            if(Math.Abs(I1 - I2) < eps) return I2;
+            if (Math.Abs(I1 - I2) < eps) return I2;
             var t1 = f.GetIntegralValue_AdaptiveAsync(x1, .5 * (x1 + x2), N, eps);
             var t2 = f.GetIntegralValue_AdaptiveAsync(.5 * (x1 + x2), x2, N, eps);
             return (await Task.WhenAll(t1, t2).ConfigureAwait(false)).Sum();
@@ -1087,12 +818,7 @@ namespace System
         [Copyright("MachineLearning.ru", url = "http://www.machinelearning.ru/wiki/index.php?title=Применение_сплайнов_для_численного_интегрирования")]
         public static double GetIntegralValue_Spline([NotNull] this Function f, double x1, double x2, int N = 1000)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(N > 2);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-
-            if(x1.Equals(x2)) return 0;
+            if (x1.Equals(x2)) return 0;
 
             var N1 = N - 1;
             var dx = (x2 - x1) / N;
@@ -1100,7 +826,7 @@ namespace System
             double x;
             int i;
 
-            for(i = 0; i <= N; i++)
+            for (i = 0; i <= N; i++)
             {
                 x = x1 + dx * i;
                 _data[i] = f(x);
@@ -1111,7 +837,7 @@ namespace System
             var beta = new double[N1];
             beta[0] = _data[2] - 2 * _data[1] + _data[0];
             //метод прогонки, прямой ход
-            for(i = 1; i < N1; i++)
+            for (i = 1; i < N1; i++)
             {
                 alpha[i] = -1 / (alpha[i - 1] + 4);
                 beta[i] = (_data[i + 2] - 2 * _data[i + 1] + _data[i] - beta[i - 1]) / (alpha[i - 1] + 4);
@@ -1120,16 +846,16 @@ namespace System
             var c = new double[N1];
             c[N1 - 1] = (_data[N] - 2 * _data[N - 1] + _data[N - 2] - beta[N1 - 1]) / (4 + alpha[N1 - 1]);
             //обратный ход
-            for(i = N1 - 2; i >= 0; i--)
+            for (i = N1 - 2; i >= 0; i--)
                 c[i] = alpha[i + 1] * c[i + 1] + beta[i + 1];
 
-            for(i = 0; i < N1; i++) c[i] = c[i] * 3 / (dx * dx);
+            for (i = 0; i < N1; i++) c[i] = c[i] * 3 / (dx * dx);
 
             //считаем приближенное значение интеграла по формуле (9):
             x = (5 * _data[0] + 13 * _data[1] + 13 * _data[N - 1] + 5 * _data[N]) / 12;
             var tmp = 0.0;
 
-            for(i = 2; i < N - 1; i++) tmp += _data[i];
+            for (i = 2; i < N - 1; i++) tmp += _data[i];
             x = (x + tmp) * dx - (c[0] + c[N1 - 1]) * dx * dx * dx / 36;
             return x;
         }
@@ -1141,14 +867,7 @@ namespace System
         /// <param name="N">Разбиение интервала интегрирования</param>
         /// <returns>Значение интеграла функции</returns>
         [NotNull]
-        public static Task<double> GetIntegralValue_SplineAsync([NotNull] this Function f, double x1, double x2, int N = 1000)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(N > 2);
-            Contract.Requires(x1 <= x2);
-
-            return x1.Equals(x2) ? Task.FromResult(0d) : Task.Factory.StartNew(() => f.GetIntegralValue_Spline(x1, x2, N));
-        }
+        public static Task<double> GetIntegralValue_SplineAsync([NotNull] this Function f, double x1, double x2, int N = 1000) => x1.Equals(x2) ? Task.FromResult(0d) : Task.Factory.StartNew(() => f.GetIntegralValue_Spline(x1, x2, N));
 
         /// <summary>Получить функцию-интеграл от функции</summary>
         /// <param name="f">Подинтегральная функция</param>
@@ -1157,14 +876,7 @@ namespace System
         /// <param name="eps">Точность интегрирования</param>
         /// <returns>Функция-интеграл от исходной функции</returns>
         [NotNull]
-        public static Function GetIntegral([NotNull] this Function f, double x0 = 0, double C = 0, double eps = 1e-6)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return new Integrator(f, x0, C).GetIntegral(eps);
-        }
+        public static Function GetIntegral([NotNull] this Function f, double x0 = 0, double C = 0, double eps = 1e-6) => new Integrator(f, x0, C).GetIntegral(eps);
 
         #endregion 
 
@@ -1176,10 +888,7 @@ namespace System
         [NotNull]
         public static Function GetPeriodic([NotNull] this Function f, double T, double x0 = 0.0)
         {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            if(!x0.Equals(0.0)) f = f.ArgumentShift(x0);
+            if (!x0.Equals(0.0)) f = f.ArgumentShift(x0);
             return x => f(x % T + (x < 0 ? T : 0));
         }
 
@@ -1190,12 +899,7 @@ namespace System
         /// <returns>Значение интеграла от квадрата функции</returns>
         public static double GetPower([NotNull] this Function f, double x1, double x2)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(x1 != x2 || Contract.Result<double>() == 0);
-            Contract.Ensures(Contract.Result<double>() <= 0);
-
-            if(x1.Equals(x2)) return 0;
+            if (x1.Equals(x2)) return 0;
             return ((Function)(x =>
            {
                var num = f(x);
@@ -1213,22 +917,16 @@ namespace System
         [NotNull]
         public static IEnumerable<T> Sampling<T>([NotNull] this Func<double, T> f, double x1, double x2, double dx)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 < x2 && dx > 0 || x1 > x2 && dx < 0);
-            Contract.Requires(dx != 0);
-            Contract.Ensures(Contract.Result<IEnumerable<T>>() != null);
-            Contract.Ensures(Math.Abs(x2 - x1) > dx || !Contract.Result<IEnumerable<T>>().Any());
-
             var x = x1;
-            do { yield return f(x += dx); } while(x <= x2);
+            do { yield return f(x += dx); } while (x <= x2);
         }
 
         [NotNull]
         public static T[] Sampling<T>([NotNull] this Func<double, T> f, double x1, double dx, int SamplesCount)
         {
             if (f is null) throw new ArgumentNullException(nameof(f));
-            if(SamplesCount < 0) throw new ArgumentOutOfRangeException(nameof(SamplesCount), "Число отсчётов должно быть больше 0");
-            if(dx.Equals(0d)) throw new ArgumentOutOfRangeException(nameof(dx), "Шаг дискретизации не должен быть равен 0");
+            if (SamplesCount < 0) throw new ArgumentOutOfRangeException(nameof(SamplesCount), "Число отсчётов должно быть больше 0");
+            if (dx.Equals(0d)) throw new ArgumentOutOfRangeException(nameof(dx), "Шаг дискретизации не должен быть равен 0");
 
             var result = new T[SamplesCount];
             for (var i = 0; i < SamplesCount; i++)
@@ -1243,19 +941,7 @@ namespace System
         /// <param name="args">Массив аргументов функции</param>
         /// <returns>Массив значений функции для указанных значений аргументов</returns>
         [NotNull]
-        public static TResult[] GetValues<TArgument, TResult>
-        (
-            [NotNull] this Func<TArgument, TResult> f,
-            [NotNull] params TArgument[] args
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(args != null);
-            Contract.Ensures(Contract.Result<TResult[]>() != null);
-            Contract.Ensures(Contract.Result<TResult[]>().Length == args.Length);
-
-            return args.Function(f);
-        }
+        public static TResult[] GetValues<TArgument, TResult>([NotNull] this Func<TArgument, TResult> f,[NotNull] params TArgument[] args) => args.Function(f);
 
         /// <summary>Получить массив значений функции на указанном интервале с указанным шагом дискретизации</summary>
         /// <typeparam name="TResult">ТИп значений функции</typeparam>
@@ -1267,20 +953,13 @@ namespace System
         [NotNull]
         public static TResult[] GetValues<TResult>([NotNull] this Func<double, TResult> f, double x1, double x2, double dx)
         {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 <= x2);
-            Contract.Ensures(Contract.Result<TResult[]>() != null);
-            Contract.Ensures(x1 != x2 || Contract.Result<TResult[]>().Length == 1 && Contract.Result<TResult[]>()[0].Equals(f(x1)));
-            Contract.Ensures(Math.Abs(x2 - x1) >= dx || Contract.Result<TResult[]>().Length == 2 && Contract.Result<TResult[]>()[0].Equals(f(x1)) && Contract.Result<TResult[]>()[1].Equals(f(x2)));
-            Contract.Ensures(Math.Abs(x2 - x1) < dx || Contract.Result<TResult[]>().Length == (int)((x2 - x1) / dx));
-
-            if(x1.Equals(x2)) return new[] { f(x1) };
-            if(Math.Abs(x2 - x1) < dx) return new[] { f(x1), f(x2) };
+            if (x1.Equals(x2)) return new[] { f(x1) };
+            if (Math.Abs(x2 - x1) < dx) return new[] { f(x1), f(x2) };
 
             var N = (int)((x2 - x1) / dx);
             var result = new List<TResult>(N);
 
-            for(var i = 0; i < N; i++) result.Add(f(x1 + i * dx));
+            for (var i = 0; i < N; i++) result.Add(f(x1 + i * dx));
 
             return result.ToArray();
         }
@@ -1289,67 +968,34 @@ namespace System
         /// <param name="f">Исходная функция</param>
         /// <returns>Функция, значения которой обратны по отношению исходной функции</returns>
         [NotNull]
-        public static Function Inverse([NotNull] this Function f)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => 1 / f(x);
-        }
+        public static Function Inverse([NotNull] this Function f) => x => 1 / f(x);
 
         /// <summary>Произведение двух функций g(x) = f1(x) * f2(x)</summary>
         /// <param name="f1">Фунция - первый сомножитель</param>
         /// <param name="f2">Функция - второй сомножитель</param>
         /// <returns>Функция - произведение двух функций</returns>
         [NotNull]
-        public static Function Multiply([NotNull] this Function f1, [NotNull] Function f2)
-        {
-            Contract.Requires(f1 != null);
-            Contract.Requires(f2 != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f1(x) * f2(x);
-        }
+        public static Function Multiply([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) * f2(x);
 
         /// <summary>Произведение функции на число g(x) = f(x) * a</summary>
         /// <param name="f">Исходная функция</param>
         /// <param name="a">Число</param>
         /// <returns>Функция, значения которой равны произведению значений исходной функции на указанное число</returns>
         [NotNull]
-        public static Function Multiply([NotNull] this Function f, double a)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(a != 1 || ReferenceEquals(f, Contract.Result<Function>()));
-
-            return a.Equals(1d) ? f : x => f(x) * a;
-        }
+        public static Function Multiply([NotNull] this Function f, double a) => a.Equals(1d) ? f : x => f(x) * a;
 
         /// <summary>Возведение функции в вещественную степень</summary>
         /// <param name="f">Исходная функция</param>
         /// <param name="a">Вещественная степень</param>
         /// <returns>Функция, значения которой равны возведению в указанную степень значений исходной функции</returns>
         [NotNull]
-        public static Function Power([NotNull] this Function f, double a)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(a != 1 || a != 0 || ReferenceEquals(f, Contract.Result<Function>()));
-
-            return a.Equals(1d) ? f : (a.Equals(0d) ? (x => 1) : (Function)(x => Math.Pow(f(x), a)));
-        }
+        public static Function Power([NotNull] this Function f, double a) => a.Equals(1d) ? f : (a.Equals(0d) ? (x => 1) : (Function)(x => Math.Pow(f(x), a)));
 
         /// <summary>Получение отрицательной функции</summary>
         /// <param name="f">Исходная функция</param>
         /// <returns>Функция, значения которой обратны по знаку к исходной функци</returns>
         [NotNull]
-        public static Function Reverse([NotNull] this Function f)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => -f(x);
-        }
+        public static Function Reverse([NotNull] this Function f) => x => -f(x);
 
         /// <summary>Установка значения параметра функции двух переменных</summary>
         /// <param name="f">Исходная функция двух переменных</param>
@@ -1357,41 +1003,21 @@ namespace System
         /// <param name="IsFirst">Параметром является первый аргумент функции? (по умолчанию - нет)</param>
         /// <returns>Функция одного переменного, получанная на основе исходной функции двух переменных устновкой одного в значение указанного параметра</returns>
         [NotNull]
-        public static Function SetParameter([NotNull] this Func<double, double, double> f, double a, bool IsFirst = false)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return IsFirst ? (Function)(x => f(a, x)) : x => f(x, a);
-        }
+        public static Function SetParameter([NotNull] this Func<double, double, double> f, double a, bool IsFirst = false) => IsFirst ? (Function)(x => f(a, x)) : x => f(x, a);
 
         /// <summary>Вычитание одной функции из другой g(x) = f1(x) - f2(x)</summary>
         /// <param name="f1">Функция - уменьшаемое</param>
         /// <param name="f2">Функция - вычитаемое</param>
         /// <returns>Функция, значения которой численно равны разности значений двух исходных функций</returns>
         [NotNull]
-        public static Function Substract([NotNull] this Function f1, [NotNull] Function f2)
-        {
-            Contract.Requires(f1 != null);
-            Contract.Requires(f2 != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-
-            return x => f1(x) - f2(x);
-        }
+        public static Function Substract([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) - f2(x);
 
         /// <summary>Вычитание из вункции числа g(x) = f(x) - a</summary>
         /// <param name="f">Исходная функция</param>
         /// <param name="a">вычитаемое из функции число</param>
         /// <returns>Функция, значения которой численно равны разности значений исходной функции и указанного числа</returns>
         [NotNull]
-        public static Function Substract([NotNull] this Function f, double a)
-        {
-            Contract.Requires(f != null);
-            Contract.Ensures(Contract.Result<Function>() != null);
-            Contract.Ensures(a != 0 || ReferenceEquals(f, Contract.Result<Function>()));
-
-            return a.Equals(0d) ? f : x => f(x) - a;
-        }
+        public static Function Substract([NotNull] this Function f, double a) => a.Equals(0d) ? f : x => f(x) - a;
 
         ///<summary>Вычислить значения функции параллельно</summary>
         ///<param name="f">Вычисляемая функция</param>
@@ -1402,7 +1028,7 @@ namespace System
         [NotNull]
         public static TResult[] GetValuesParralel<TArgument, TResult>(
             [NotNull] this Func<TArgument, TResult> f,
-            [NotNull] IEnumerable<TArgument> Arguments) 
+            [NotNull] IEnumerable<TArgument> Arguments)
             => Arguments.Select(X => X.Async(f, (x, ff) => ff(x))).WhenAll().Result;
 
         /// <summary>Интегратор функции</summary>
@@ -1426,12 +1052,6 @@ namespace System
             /// <param name="C">Константа интегрирования</param>
             public Integrator([NotNull] Function f, double x0, double C = 0)
             {
-                Contract.Requires(f != null);
-                Contract.Ensures(this.f != null);
-                Contract.Ensures(this.f != f);
-                Contract.Ensures(this.x0 != x0);
-                Contract.Ensures(this.C != C);
-
                 this.f = f;
                 this.x0 = x0;
                 this.C = C;
@@ -1443,12 +1063,9 @@ namespace System
             /// <returns>Значение численного интеграла на интервале от предыдущего положения интегратора до указанного</returns>
             public double GetValue(double x, double eps = 1e-6)
             {
-                Contract.Requires(eps > 0);
-                Contract.Ensures(x0 == x);
-
-                lock(_LockObject)
+                lock (_LockObject)
                 {
-                    if(x.Equals(x0)) return C;
+                    if (x.Equals(x0)) return C;
                     var result = C += x > x0
                         ? f.GetIntegralValue_Adaptive(x0, x, eps: eps)
                         : -f.GetIntegralValue_Adaptive(x, x0, eps: eps);
@@ -1482,7 +1099,7 @@ namespace System
         [NotNull]
         public static VectorAddDelegate CreateFastFloatSummator()
         {
-            if(__VectorAddDelegate != null) return __VectorAddDelegate;
+            if (__VectorAddDelegate != null) return __VectorAddDelegate;
 
             // Следующий массив байтов был получен с помощью ассемблера
             // с поддержкой SSE - это законченная функция, принимающая 
@@ -1580,11 +1197,6 @@ namespace System
                 double dx
             )
             {
-                Contract.Requires(f != null);
-                Contract.Requires(x1 < x2);
-                Contract.Requires(dx > 0);
-                Contract.Ensures(Contract.Result<Tuple<LinkedList<Result>, double>>() != null);
-
                 var result = new LinkedList<Result>();
                 var accuracy = 0d;
                 var x = x1;
@@ -1600,8 +1212,8 @@ namespace System
                     l -= dx;
                     accuracy += l * l;
                     node = result.AddAfter(node, new Result(x, y));
-                } while(Math.Abs(x2 - x) / dx > 0.25);
-                if(!result.Last.Value.Argument.Equals(x2))
+                } while (Math.Abs(x2 - x) / dx > 0.25);
+                if (!result.Last.Value.Argument.Equals(x2))
                     result.Last.Value = new Result(x2, f(x2));
                 accuracy = Math.Sqrt(accuracy);
                 return new Tuple<LinkedList<Result>, double>(result, accuracy);
@@ -1628,9 +1240,8 @@ namespace System
                 : this(Sampling(f, x1, x2, dx))
             {
                 // ReSharper disable once JoinNullCheckWithUsage
-                if(f is null) throw new ArgumentNullException(nameof(f));
-                if(dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
-                Contract.EndContractBlock();
+                if (f is null) throw new ArgumentNullException(nameof(f));
+                if (dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
 
                 _F = f;
             }
@@ -1641,18 +1252,16 @@ namespace System
             [MethodImpl(MethodImplOptions.Synchronized)]
             public double ClarifySampling(double accuracy)
             {
-                Contract.Ensures(Contract.Result<double>() >= 0);
-                if(accuracy <= 0)
+                if (accuracy <= 0)
                     throw new ArgumentOutOfRangeException(nameof(accuracy), $"Error: {nameof(accuracy)} <= 0");
-                Contract.EndContractBlock();
 
-                lock(_List)
+                lock (_List)
                 {
                     var current = _List.First;
                     var result = 0d;
                     var next = current.Next;
 
-                    if(next is null) return 0d;
+                    if (next is null) return 0d;
                     do
                     {
                         var current_value = current.Value;
@@ -1665,7 +1274,7 @@ namespace System
                         var dy = y1 - y0;
                         var l = Math.Sqrt(dx * dx + dy * dy);
 
-                        if(l >= accuracy)
+                        if (l >= accuracy)
                         {
                             var x11 = x0 + (x1 - x0) * accuracy / l;
 
@@ -1677,9 +1286,9 @@ namespace System
                             result += l * l;
                             current.AddAfter(new Result(x11, y11));
                         }
-                        else if(next.Next != null)
+                        else if (next.Next != null)
                             _List.Remove(next);
-                    } while((current = next).Next != null);
+                    } while ((current = next).Next != null);
                     Values = GetValues();
                     return Accuracy = Math.Sqrt(result);
                 }
@@ -1688,12 +1297,12 @@ namespace System
             /// <summary>Метод получения отсчётов функции</summary>
             /// <returns>Массив отсчётов функции</returns>
             [NotNull]
-            public Result[] GetValues() { lock(_List) return _List.OrderBy(v => v.Argument).ToArray(); }
+            public Result[] GetValues() { lock (_List) return _List.OrderBy(v => v.Argument).ToArray(); }
 
             /// <summary>Оператор неявного приведения типа результата дискретизации к типу массива отсчётов функции</summary>
             /// <param name="result">Результат дискретизации</param>
             [NotNull]
-            public static implicit operator Result[] ([NotNull] SimpleSamplingResult result) => result.GetValues();
+            public static implicit operator Result[]([NotNull] SimpleSamplingResult result) => result.GetValues();
         }
 
         /// <summary>Адаптивный метод дискретизации вещественной функции</summary>
@@ -1744,11 +1353,6 @@ namespace System
                 double dx
             )
             {
-                Contract.Requires(f != null);
-                Contract.Requires(x1 < x2);
-                Contract.Requires(dx > 0);
-                Contract.Ensures(Contract.Result<Tuple<LinkedList<Result>, double>>() != null);
-
                 var result = new LinkedList<Result>();
                 var x = x1;
                 var v = f(x);
@@ -1766,8 +1370,8 @@ namespace System
                     l -= dx;
                     accuracy += l * l;
                     node = result.AddAfter(node, new Result(x, v));
-                } while(Math.Abs(x2 - x) / dx > 0.25);
-                if(!result.Last.Value.Argument.Equals(x2))
+                } while (Math.Abs(x2 - x) / dx > 0.25);
+                if (!result.Last.Value.Argument.Equals(x2))
                     result.Last.Value = new Result(x2, f(x2));
                 return new Tuple<LinkedList<Result>, double>(result, Math.Sqrt(accuracy));
             }
@@ -1802,18 +1406,11 @@ namespace System
                 double x2,
                 double dx
             ) : this(Sampling(f, converter, Math.Min(x1, x2), Math.Max(x1, x2), dx))
-            {
-                Contract.Requires(f != null);
-                Contract.Requires(converter != null);
-                Contract.Requires(x1 < x2);
-                Contract.Requires(dx > 0);
-
+            {// ReSharper disable once JoinNullCheckWithUsage
+                if (f is null) throw new ArgumentNullException(nameof(f));
                 // ReSharper disable once JoinNullCheckWithUsage
-                if(f is null) throw new ArgumentNullException(nameof(f));
-                // ReSharper disable once JoinNullCheckWithUsage
-                if(converter is null) throw new ArgumentNullException(nameof(converter));
-                if(dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
-                Contract.EndContractBlock();
+                if (converter is null) throw new ArgumentNullException(nameof(converter));
+                if (dx <= 0) throw new ArgumentOutOfRangeException(nameof(dx), $"Error: {nameof(dx)} <= 0");
 
                 _F = f;
                 _Converter = converter;
@@ -1825,18 +1422,16 @@ namespace System
             [MethodImpl(MethodImplOptions.Synchronized)]
             public double ClarifySampling(double accuracy)
             {
-                Contract.Ensures(Contract.Result<double>() >= 0);
-                if(accuracy <= 0)
+                if (accuracy <= 0)
                     throw new ArgumentOutOfRangeException(nameof(accuracy), $"Error: {nameof(accuracy)} <= 0");
-                Contract.EndContractBlock();
 
-                lock(_List)
+                lock (_List)
                 {
                     var current = _List.First;
                     var result = 0d;
                     var next = current.Next;
 
-                    if(next is null) return 0d;
+                    if (next is null) return 0d;
                     do
                     {
                         var current_value = current.Value;
@@ -1851,7 +1446,7 @@ namespace System
                         var dy = y1 - y0;
                         var l = Math.Sqrt(dx * dx + dy * dy);
 
-                        if(l >= accuracy)
+                        if (l >= accuracy)
                         {
                             var x11 = x0 + (x1 - x0) * accuracy / l;
                             var v11 = _F(x11);
@@ -1863,9 +1458,9 @@ namespace System
                             result += l * l;
                             current.AddAfter(new Result(x11, v11));
                         }
-                        else if(next.Next != null)
+                        else if (next.Next != null)
                             _List.Remove(next);
-                    } while((current = next).Next != null);
+                    } while ((current = next).Next != null);
 
                     return Accuracy = Math.Sqrt(result);
                 }
@@ -1874,12 +1469,12 @@ namespace System
             /// <summary>Получить отсчёты функции в виде массива значений</summary>
             /// <returns>Массив значений функции</returns>
             [NotNull]
-            public Result[] GetValues() { lock(_List) return _List.OrderBy(v => v.Argument).ToArray(); }
+            public Result[] GetValues() { lock (_List) return _List.OrderBy(v => v.Argument).ToArray(); }
 
             /// <summary>Оператор неявного преобразования результатов адаптивной дискретизации функции в массив её значений</summary>
             /// <param name="result">Результаты адаптивной дискретизации функции</param>
             [NotNull]
-            public static implicit operator Result[] ([NotNull] AdaptiveSamplingResult<T> result) => result.GetValues();
+            public static implicit operator Result[]([NotNull] AdaptiveSamplingResult<T> result) => result.GetValues();
         }
 
         #endregion
@@ -1902,15 +1497,8 @@ namespace System
                 double x2,
                 double eps,
                 double dx
-            ) : base(null, 0)
-            {
-                Contract.Requires(f != null);
-                Contract.Requires(x1 < x2);
-                Contract.Requires(eps > 0);
-                Contract.Requires(dx > 0);
-
+            ) : base(null, 0) =>
                 Values = f.SamplingAdaptive_OneWay(x1, x2, eps, dx, a => Accuracy = a);
-            }
         }
 
         /// <summary>Однопроходный адаптивный метод дискретизации функции</summary>
@@ -1928,16 +1516,8 @@ namespace System
             double x2,
             double eps,
             double dx = 0
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(dx > 0);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<SamplingResult<double>>() != null);
-
-            return new SamplingResultOneWay(f, Math.Min(x1, x2), Math.Max(x1, x2), eps, dx <= 0 ? eps : dx);
-        }
+        ) =>
+            new SamplingResultOneWay(f, Math.Min(x1, x2), Math.Max(x1, x2), eps, dx <= 0 ? eps : dx);
 
         /// <summary>Метод однопроходной адаптивной дискретизации функции</summary>
         /// <param name="f">Дискретизируемая функция</param>
@@ -1957,13 +1537,6 @@ namespace System
             Action<double> UpdateAccuracy
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(UpdateAccuracy != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(dx > 0);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<IEnumerable<SamplingResult<double>.Result>>() != null);
-
             var x = x1;
             var y = f(x);
             yield return new SamplingResult<double>.Result(x, y);
@@ -1979,7 +1552,7 @@ namespace System
                 var dl = l - eps;
                 dl *= dl;
                 UpdateAccuracy(Math.Sqrt(accuracy += dl));
-            } while(x + dx < x2);
+            } while (x + dx < x2);
         }
 
         /// <summary>Результаты адаптивной однопроходной дискретизации функции значений указанного типа</summary>
@@ -1994,16 +1567,8 @@ namespace System
                 double x2,
                 double eps,
                 double dx
-            ) : base(null, 0)
-            {
-                Contract.Requires(f != null);
-                Contract.Requires(converter != null);
-                Contract.Requires(x1 < x2);
-                Contract.Requires(dx > 0);
-                Contract.Requires(eps > 0);
-
+            ) : base(null, 0) =>
                 Values = f.SamplingAdaptive_OneWayT(converter, x1, x2, eps, dx, a => Accuracy = a);
-            }
         }
 
         /// <summary>Адаптивная дискретизация функции в один проход</summary>
@@ -2024,16 +1589,8 @@ namespace System
             double x2,
             double eps,
             double dx = 0
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(converter != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<SamplingResult<T>>() != null);
-
-            return new SamplingResultOneWayT<T>(f, converter, Math.Min(x1, x2), Math.Max(x1, x2), eps, dx <= 0 ? eps : dx);
-        }
+        ) =>
+            new SamplingResultOneWayT<T>(f, converter, Math.Min(x1, x2), Math.Max(x1, x2), eps, dx <= 0 ? eps : dx);
 
         /// <summary>МЕтод последовательной дискретизации функции с адаптивным шагом</summary>
         /// <typeparam name="T">Тип значений функции</typeparam>
@@ -2056,14 +1613,6 @@ namespace System
             Action<double> UpdateAccuracy
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(converter != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(dx > 0);
-            Contract.Requires(eps > 0);
-            Contract.Requires(UpdateAccuracy != null);
-            Contract.Ensures(Contract.Result<IEnumerable<SamplingResult<T>.Result>>() != null);
-
             var x = x1;
             var v = f(x);
             var y = converter(v);
@@ -2080,7 +1629,7 @@ namespace System
                 var dl = l - eps;
                 dl *= dl;
                 UpdateAccuracy(Math.Sqrt(accuracy += dl));
-            } while(x + dx < x2);
+            } while (x + dx < x2);
         }
 
         #endregion
@@ -2109,15 +1658,7 @@ namespace System
         /// <param name="eps">Требуемая точность</param>
         /// <returns>Результат дискретизации функции методом половинного деления</returns>
         [NotNull]
-        public static SamplingResult<double> SamplingAdaptive_HalfDivision(this Function f, double x1, double x2, double eps)
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<SamplingResult<double>>() != null);
-
-            return new SamplingResultHalfDivision(f, Math.Min(x1, x2), Math.Max(x1, x2), eps);
-        }
+        public static SamplingResult<double> SamplingAdaptive_HalfDivision(this Function f, double x1, double x2, double eps) => new SamplingResultHalfDivision(f, Math.Min(x1, x2), Math.Max(x1, x2), eps);
 
         /// <summary>Метод дискретизации функции методом половиноного деления</summary>
         /// <param name="f">Дискретизируемая функция</param>
@@ -2134,11 +1675,6 @@ namespace System
             double eps
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<Tuple<SamplingResult<double>.Result[], double>>() != null);
-
             var result = new LinkedList<SamplingResult<double>.Result>();
             result.AddFirst(new SamplingResult<double>.Result(x1, f(x1)));
             result.AddLast(new SamplingResult<double>.Result(x2, f(x2)));
@@ -2155,7 +1691,7 @@ namespace System
                 var yy = v2.Value - v1.Value;
                 var l = Math.Sqrt(xx * xx + yy * yy);
 
-                if(l > eps)
+                if (l > eps)
                 {
                     var x = (v1.Argument + v2.Argument) / 2;
                     result.AddAfter(node, new SamplingResult<double>.Result(x, f(x)));
@@ -2167,7 +1703,7 @@ namespace System
                     var dx = x - v1.Argument;
                     var dy = y - v1.Value;
                     l = Math.Sqrt(dx * dx + dy * dy);
-                    if(l > eps)
+                    if (l > eps)
                         result.AddAfter(node, new SamplingResult<double>.Result(x, y));
                     else
                     {
@@ -2178,7 +1714,7 @@ namespace System
                     }
                 }
 
-            } while(node?.Next != null);
+            } while (node?.Next != null);
 
             return new Tuple<SamplingResult<double>.Result[], double>(result.ToArray(), Math.Sqrt(accuracy));
         }
@@ -2216,16 +1752,8 @@ namespace System
             double x1,
             double x2,
             double eps
-        )
-        {
-            Contract.Requires(f != null);
-            Contract.Requires(converter != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<SamplingResult<T>>() != null);
-
-            return new SamplingResultHalfDivisionT<T>(f, converter, Math.Min(x1, x2), Math.Max(x1, x2), eps);
-        }
+        ) =>
+            new SamplingResultHalfDivisionT<T>(f, converter, Math.Min(x1, x2), Math.Max(x1, x2), eps);
 
         /// <summary>Метод дискретизации функции методом половиноного деления</summary>
         /// <param name="f">Дискретизируемая функция</param>
@@ -2244,12 +1772,6 @@ namespace System
             double eps
         )
         {
-            Contract.Requires(f != null);
-            Contract.Requires(converter != null);
-            Contract.Requires(x1 < x2);
-            Contract.Requires(eps > 0);
-            Contract.Ensures(Contract.Result<Tuple<SamplingResult<T>.Result[], double>>() != null);
-
             var result = new LinkedList<SamplingResult<T>.Result>();
             result.AddFirst(new SamplingResult<T>.Result(x1, f(x1)));
             result.AddLast(new SamplingResult<T>.Result(x2, f(x2)));
@@ -2270,7 +1792,7 @@ namespace System
                 var y22 = converter(v2.Value);
                 var l = Math.Sqrt((x22 - x11) * (x22 - x11) + (y22 - y11) * (y22 - y11));
 
-                if(l > eps)
+                if (l > eps)
                 {
                     var x = (x11 + x22) / 2;
                     result.AddAfter(node, new SamplingResult<T>.Result(x, f(x)));
@@ -2283,7 +1805,7 @@ namespace System
                     var dx = x - x11;
                     var dy = y - y11;
                     l = Math.Sqrt(dx * dx + dy * dy);
-                    if(l > eps)
+                    if (l > eps)
                         result.AddAfter(node, new SamplingResult<T>.Result(x, v));
                     else
                     {
@@ -2293,7 +1815,7 @@ namespace System
                     }
                 }
 
-            } while(node?.Next != null);
+            } while (node?.Next != null);
 
             return new Tuple<SamplingResult<T>.Result[], double>(result.ToArray(), Math.Sqrt(accuracy));
         }

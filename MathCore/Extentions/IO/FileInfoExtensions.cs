@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.IO.Compression;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.IO
@@ -99,13 +99,7 @@ namespace System.IO
         /// <returns>Файл копия</returns>
         [DST]
         [NotNull]
-        public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory)
-        {
-            Contract.Requires(SourceFile != null);
-            Contract.Requires(DestinationDirectory != null);
-
-            return SourceFile.CopyTo($@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}");
-        }
+        public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory) => SourceFile.CopyTo($@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}");
 
         /// <summary>Скопировать файл в дирректорию</summary>
         /// <param name="SourceFile">Файл источник</param>
@@ -116,64 +110,36 @@ namespace System.IO
         [NotNull]
         public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory, bool Owerride)
         {
-            Contract.Requires(SourceFile != null);
-            Contract.Requires(DestinationDirectory != null);
-
             var new_file = $@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}";
-            if (!Owerride && File.Exists(new_file)) return new FileInfo(new_file);
-            return SourceFile.CopyTo(new_file, true);
+            return !Owerride && File.Exists(new_file) ? new FileInfo(new_file) : SourceFile.CopyTo(new_file, true);
         }
 
         /// <summary>Скопировать файл</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationFile">Файл копия</param>
         [DST]
-        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile)
-        {
-            Contract.Requires(SourceFile != null);
-            Contract.Requires(DestinationFile != null);
-
-            SourceFile.CopyTo(DestinationFile.FullName);
-        }
+        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile) => SourceFile.CopyTo(DestinationFile.FullName);
 
         /// <summary>Скопировать файл</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationFile">Файл копия</param>
         /// <param name="Owerride">Перезаписать в случае наличия файла</param>
         [DST]
-        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile, bool Owerride)
-        {
-            Contract.Requires(SourceFile != null);
-            Contract.Requires(DestinationFile != null);
-
-            SourceFile.CopyTo(DestinationFile.FullName, Owerride);
-        }
+        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile, bool Owerride) => SourceFile.CopyTo(DestinationFile.FullName, Owerride);
 
         /// <summary>Получить имя файла без расширения</summary>
         /// <param name="file">Файл</param>
         /// <returns>Имя файла без расширения</returns>
         [DST]
         [NotNull]
-        public static string GetFileNameWithoutExtension([NotNull] this FileInfo file)
-        {
-            Contract.Requires(file != null);
-            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-
-            return Path.GetFileNameWithoutExtension(file.Name);
-        }
+        public static string GetFileNameWithoutExtension([NotNull] this FileInfo file) => Path.GetFileNameWithoutExtension(file.Name);
 
         /// <summary>Получить имя файла без расширения</summary>
         /// <param name="file">Файл</param>
         /// <returns>Имя файла без расширения</returns>
         [DST]
         [NotNull]
-        public static string GetFullFileNameWithoutExtension([NotNull] this FileInfo file)
-        {
-            Contract.Requires(file != null);
-            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-
-            return $"{Path.GetDirectoryName(file.FullName)}\\{Path.GetFileNameWithoutExtension(file.Name)}";
-        }
+        public static string GetFullFileNameWithoutExtension([NotNull] this FileInfo file) => $"{Path.GetDirectoryName(file.FullName)}\\{Path.GetFileNameWithoutExtension(file.Name)}";
 
         /// <summary>Получить имя файла c новым расширением</summary>
         /// <param name="file">Файл</param>
@@ -181,12 +147,7 @@ namespace System.IO
         /// <returns>Имя файла без расширения</returns>
         [DST]
         [NotNull]
-        public static string GetFullFileNameWithNewExtension([NotNull] this FileInfo file, string NewExt)
-        {
-            Contract.Requires(file != null);
-            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-            return Path.Combine(Path.GetDirectoryName(file.FullName), $"{Path.GetFileNameWithoutExtension(file.Name)}{NewExt}");
-        }
+        public static string GetFullFileNameWithNewExtension([NotNull] this FileInfo file, string NewExt) => Path.Combine(Path.GetDirectoryName(file.FullName).NotNull(), $"{Path.GetFileNameWithoutExtension(file.Name)}{NewExt}");
 
         /// <summary>Записать массив байт в файл</summary>
         /// <param name="file">Файл данных</param>
@@ -195,9 +156,6 @@ namespace System.IO
         [DST]
         public static void WriteAllBytes([NotNull] this FileInfo file, [NotNull] byte[] Data, bool Append = false)
         {
-            Contract.Requires(file != null);
-            Contract.Requires(Data != null);
-
             using var stream = new FileStream(file.FullName, Append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
             stream.Write(Data, 0, Data.Length);
         }
@@ -222,10 +180,6 @@ namespace System.IO
             [CanBeNull] Func<long, byte[], bool> CompliteHandler = null,
             [CanBeNull] EventHandler<EventArgs<FileInfo, Stream>> OnComplite = null)
         {
-            Contract.Requires(file != null);
-            Contract.Requires(DataStream != null);
-            Contract.Requires(DataStream.CanRead);
-
             var buffer = new byte[BufferSize];
             var write = true;
             using (var data = new FileStream(file.FullName, Append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read))
@@ -243,13 +197,13 @@ namespace System.IO
         /// <param name="file">Наблюдаемый файл</param>
         /// <returns>Объект наблюдатель</returns>
         [DST, CanBeNull]
-        public static FileSystemWatcher GetWatcher([CanBeNull] this FileInfo file) => file is null ? null : new FileSystemWatcher(file.Directory.FullName, file.Name);
+        public static FileSystemWatcher GetWatcher([CanBeNull] this FileInfo file) => file is null ? null : new FileSystemWatcher(file.Directory.NotNull().FullName, file.Name);
 
         [NotNull]
-        public static Process Execute([NotNull] string File, [NotNull] string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute });
+        public static Process Execute([NotNull] string File, [NotNull] string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute }).NotNull();
 
         [NotNull]
-        public static Process Execute([NotNull] this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute });
+        public static Process Execute([NotNull] this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute }).NotNull();
 
 
         [CanBeNull]

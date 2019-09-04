@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
+using MathCore.Annotations;
 
 namespace MathCore.Values
 {
@@ -28,7 +28,6 @@ namespace MathCore.Values
         {
             get
             {
-                Contract.Ensures(Contract.Result<bool>() && _Value != null);
                 bool result;
                 lock (_LockObject) result = _Initialized;
                 return result;
@@ -58,7 +57,6 @@ namespace MathCore.Values
         ///<param name="Initializator">Инициализатор значения</param>
         public LazyValue(Func<T> Initializator)
         {
-            Contract.Requires(Initializator != null);
             Initialize(Initializator);
         }
 
@@ -66,8 +64,6 @@ namespace MathCore.Values
         ///<param name="Initializator">Инициализатор</param>
         public void Initialize(Func<T> Initializator)
         {
-            Contract.Requires(Initializator != null);
-            Contract.Ensures(_Initializator != null);
             lock (_LockObject)
             {
                 _Initializator = Initializator;
@@ -88,21 +84,13 @@ namespace MathCore.Values
         ///<summary>Оператор неявного преобразования "ленивого" значения в обычное</summary>
         ///<param name="value">"Ленивое" значение</param>
         ///<returns>Обычное значение, получаемое при вычислении "ленивого" значения</returns>
-        public static implicit operator T(LazyValue<T> value) => value.Value;
+        public static implicit operator T([NotNull] LazyValue<T> value) => value.Value;
 
         ///<summary>Оператор неявного преобразования метода инициализации в "ленивое значение"</summary>
         ///<param name="Initializator">Метод инициализации "ленивого" значения</param>
         ///<returns>"Ленивое" значение с указанным методом инициализации</returns>
+        [NotNull]
         public static implicit operator LazyValue<T>(Func<T> Initializator) => new LazyValue<T>(Initializator);
-
-        /* ------------------------------------------------------------------------------------------ */
-
-        [ContractInvariantMethod]
-        private void InvariantMethod()
-        {
-            Contract.Invariant(_Initializator != null);
-            Contract.Invariant(!_Initialized || _Value != null);
-        }
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -113,10 +101,10 @@ namespace MathCore.Values
         private DateTime _LastAccessTime = DateTime.MinValue;
 
         public TimeBufferedValue(Func<TValue> Generator, TimeSpan Timeout) => _Value = new LazyValue<TValue>(() =>
-                                                                            {
-                                                                                _LastAccessTime = DateTime.Now;
-                                                                                return Generator();
-                                                                            });
+        {
+            _LastAccessTime = DateTime.Now;
+            return Generator();
+        });
 
         public TValue Create() => throw new NotImplementedException();
     }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -135,19 +135,19 @@ namespace System
         /// <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
         /// <param name="Str">Проверяемая строка</param>
         /// <returns>Истина, если трока пуста, либо если передана нулевая ссылка</returns>
-        [DST, Pure]
+        [DST]
         public static bool IsNullOrEmpty([CanBeNull] this string Str) => string.IsNullOrEmpty(Str);
 
         /// <summary>Строка присутствует и не пуста</summary>
         /// <param name="Str">Проверяемая строка</param>
         /// <returns>Истина, если трокане  пуста, и если передана ненулевая ссылка</returns>
-        [DST, Pure]
+        [DST]
         public static bool IsNotNullOrEmpty([CanBeNull] this string Str) => !string.IsNullOrEmpty(Str);
 
-        [DST, Pure]
+        [DST]
         public static bool IsNullOrWhiteSpace([CanBeNull] this string Str) => string.IsNullOrWhiteSpace(Str);
 
-        [DST, Pure]
+        [DST]
         public static bool IsNotNullOrWhiteSpace([CanBeNull] this string Str) => !string.IsNullOrWhiteSpace(Str);
 
         /// <summary>Удаление символов в начале строки</summary>

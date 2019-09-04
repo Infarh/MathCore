@@ -1,12 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
     /// <summary>Элемент математического выражения</summary>
-    [ContractClass(typeof(TermContract))]
     internal abstract class Term
     {
         /// <summary>Строковое содержимое</summary>
@@ -26,19 +23,5 @@ namespace MathCore.MathParser
         /// <summary>Строковое представление элемента мат.выражения</summary>
         /// <returns>Строковое содержимое элемета мат.выражения</returns>
         public override string ToString() => _Value;
-    }
-
-    [ContractClassFor(typeof(Term)), ExcludeFromCodeCoverage]
-    internal abstract class TermContract : Term
-    {
-        private TermContract(string Value) : base(Value) { }
-
-        public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
-        {
-            Contract.Requires(Parser != null);
-            Contract.Requires(Expression != null);
-            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
-            throw new System.NotImplementedException();
-        }
     }
 }

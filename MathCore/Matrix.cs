@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using static MathCore.Matrix.Array.Operator;
@@ -128,7 +127,6 @@ namespace MathCore
         {
             if (N <= 0) throw new ArgumentOutOfRangeException(nameof(N), N, "N должна быть больше 0");
             if (M <= 0) throw new ArgumentOutOfRangeException(nameof(M), M, "M должна быть больше 0");
-            Contract.EndContractBlock();
 
             _Data = new double[_N = N, _M = M];
         }
@@ -152,10 +150,9 @@ namespace MathCore
         [DST]
         public Matrix(int N, int M, [NotNull] MatrixItemCreator CreateFunction) : this(N, M)
         {
-            Contract.Requires(N > 0);
-            Contract.Requires(M > 0);
-            Contract.Requires(CreateFunction != null);
-            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) _Data[i, j] = CreateFunction(i, j);
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                    _Data[i, j] = CreateFunction(i, j);
         }
 
         /// <summary>Инициализация новой матрицы по двумерному массиву её элементов</summary>
@@ -164,7 +161,6 @@ namespace MathCore
         [DST]
         public Matrix([NotNull] double[,] Data, bool clone = false)
         {
-            Contract.Requires(Data != null);
             _N = Data.GetLength(0);
             _M = Data.GetLength(1);
             _Data = clone ? Data.CloneObject() : Data;
@@ -176,7 +172,6 @@ namespace MathCore
         [DST]
         public Matrix([NotNull] IList<double> DataCol, bool IsColumn = true) : this(IsColumn ? DataCol.Count : 1, IsColumn ? 1 : DataCol.Count)
         {
-            Contract.Requires(DataCol != null);
             if (IsColumn) for (var i = 0; i < _N; i++) _Data[i, 0] = DataCol[i];
             else for (var j = 0; j < _M; j++) _Data[0, j] = DataCol[j];
         }
@@ -191,7 +186,6 @@ namespace MathCore
         [DST, NotNull]
         private static double[,] GetElements([NotNull] IEnumerable<IEnumerable<double>> ColsItems)
         {
-            Contract.Requires(ColsItems != null);
             var cols = ColsItems.Select(col => col.ToListFast()).ToList();
             var cols_count = cols.Count;
             var rows_count = cols.Max(col => col.Count);

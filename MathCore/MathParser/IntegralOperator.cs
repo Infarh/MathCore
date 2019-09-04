@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using MathCore.Annotations;
@@ -20,7 +19,7 @@ namespace MathCore.MathParser
 
         /// <summary>Создание нового комплексного интегритора интегрирования</summary>
         /// <param name="Name">Имя оператора</param>
-        public IntegralOperator([NotNull] string Name) : base(Name) => Contract.Requires(!string.IsNullOrEmpty(Name));
+        public IntegralOperator([NotNull] string Name) : base(Name) { }
 
         /// <summary>Инициализация оператора</summary>
         /// <param name="Parameters">Блок параметров</param>
@@ -35,11 +34,6 @@ namespace MathCore.MathParser
             MathExpression Expression
         )
         {
-            Contract.Requires(Parameters != null);
-            Contract.Requires(Function != null);
-            Contract.Requires(Parser != null);
-            Contract.Requires(Expression != null);
-
             base.Initialize(Parameters, Function, Parser, Expression);
 
             var iterator_var = Parameters.Tree
@@ -90,9 +84,6 @@ namespace MathCore.MathParser
         /// <returns>Численное значение элемента выражения</returns>
         public override double GetValue(MathExpression ParametersExpression, MathExpression Function)
         {
-            Contract.Requires(ParametersExpression != null);
-            Contract.Requires(Function != null);
-
             var x = ParametersExpression.Variable[0];
             var x_node = ParametersExpression.Tree
                         .OfType<VariableValueNode>()
@@ -137,9 +128,6 @@ namespace MathCore.MathParser
         /// <returns>Значение интеграла</returns>
         private static double GetAdaptiveIntegral([NotNull] Delegate d, double Min, double Max, [NotNull] double[] Parameters)
         {
-            Contract.Requires(d != null);
-            Contract.Requires(Min <= Max);
-            Contract.Requires(Parameters != null);
             var pp_len = Parameters.Length;
 
             var xx = new object[pp_len + 1];
@@ -170,11 +158,6 @@ namespace MathCore.MathParser
         /// <returns>Значение интеграла</returns>
         private static double GetIntegral([NotNull] Delegate d, double Min, double Max, [NotNull] double[] Parameters, double dx)
         {
-            Contract.Requires(d != null);
-            Contract.Requires(Min <= Max);
-            Contract.Requires(Parameters != null);
-            Contract.Requires(dx > 0);
-
             var pp_len = Parameters.Length;
 
             var xx = new object[pp_len + 1];
@@ -191,9 +174,6 @@ namespace MathCore.MathParser
         /// <returns>Скомпилированное выражение <see cref="System.Linq.Expressions"/></returns>
         public override Expression Compile(MathExpression ParametersExpression, MathExpression Function)
         {
-            Contract.Requires(ParametersExpression != null);
-            Contract.Requires(Function != null);
-
             var iterator = ParametersExpression.Variable[0];
             var x_node = ParametersExpression.Tree
                         .Where(n => n is VariableValueNode)
@@ -245,11 +225,6 @@ namespace MathCore.MathParser
             ParameterExpression[] Parameters
         )
         {
-            Contract.Requires(ParametersExpression != null);
-            Contract.Requires(Function != null);
-            Contract.Requires(Parameters != null);
-            Contract.Ensures(Contract.Result<Expression>() != null);
-
             var iterator = ParametersExpression.Variable[0];
             var x_node = ParametersExpression.Tree
                         .Where(n => n is VariableValueNode)

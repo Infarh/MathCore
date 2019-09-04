@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.Vectors;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Interpolation
 {
@@ -65,7 +65,6 @@ namespace MathCore.Interpolation
         /// <param name="Y">Список кординат точек y</param>
         public BezierCurve([NotNull] IEnumerable<double> X, [NotNull] IEnumerable<double> Y)
         {
-            Contract.Requires(X.Count() == Y.Count());
             var x = X.Select((xx, i) => (X:xx, i));
             var y = Y.Select((yy, i) => (Y:yy, i));
             Initialize(x.Join(y, xx => xx.i, yy => yy.i, (xx, yy) => new Vector2D(xx.X, yy.Y)));
@@ -75,7 +74,6 @@ namespace MathCore.Interpolation
         /// <param name="Points">Набор точек в виде <see cref="MathCore.Complex">комплексных чисел</see></param>
         public BezierCurve([NotNull] IEnumerable<Complex> Points)
         {
-            Contract.Requires(Points != null);
             Initialize(Points.Select(c => (Vector2D)c));
         }
 
@@ -83,7 +81,6 @@ namespace MathCore.Interpolation
         /// <param name="Points">Набор точек</param>
         public BezierCurve(IEnumerable<Vector2D> Points)
         {
-            Contract.Requires(Points != null);
             Initialize(Points);
         }
 
@@ -107,9 +104,6 @@ namespace MathCore.Interpolation
 
         public Vector2D B(double t)
         {
-            Contract.Requires(t >= 0);
-            Contract.Requires(t <= 1);
-
             if(t < 0 || t > 1)
                 throw new ArgumentOutOfRangeException(nameof(t), "t в не интервала [0;1]");
 

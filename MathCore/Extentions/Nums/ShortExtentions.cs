@@ -1,7 +1,8 @@
-﻿using System.Diagnostics.Contracts;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class ShortExtentions
@@ -88,10 +89,10 @@ namespace System
         [DST]
         public static Complex Power(this short x, Complex z) => x ^ z;
 
-        [Pure, DST]
+        [DST]
         public static short GetFlags(this short Value, short Mask) => (short)(Value & Mask);
 
-        [Pure, DST]
+        [DST]
         public static short SetFlag(this short Value, short Flag, short Mask) => (short)((Value & ~Mask) | (Flag & Mask));
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
@@ -38,15 +37,14 @@ namespace MathCore.MathParser
         /// <param name="Str">Строковое значение блока</param>
         /// <param name="CloseBracket">Закрывающаяся скобка</param>
         public BlockTerm([NotNull] string OpenBracket, [NotNull] string Str, [NotNull] string CloseBracket)
-            : base(string.Format("{0}{2}{1}", OpenBracket ?? "", CloseBracket ?? "", Str))
+            : base(string.Format("{0}{2}{1}", OpenBracket, CloseBracket ?? string.Empty, Str))
         {
-            Contract.Requires(!string.IsNullOrEmpty(Str));
             _OpenBracket = OpenBracket;
             _CloseBracket = CloseBracket;
-            _Terms = GetTerms(Str);
+            _Terms = GetTerms(Str) ?? throw new InvalidOperationException();
         }
 
-        public BlockTerm(string OpenBracket, Term[] terms, string CloseBracket)
+        public BlockTerm(string OpenBracket, [NotNull] Term[] terms, string CloseBracket)
             : base($"{OpenBracket}{terms.ToSeparatedStr()}{CloseBracket}")
         {
             _Terms = terms;
@@ -60,10 +58,6 @@ namespace MathCore.MathParser
         /// <returns>Строка цифрового значения</returns>
         private static string GetNumberString([NotNull] string Str, ref int pos)
         {
-            Contract.Requires(!string.IsNullOrEmpty(Str));
-            Contract.Ensures(Contract.ValueAtReturn(out pos) >= 0);
-            Contract.Ensures(Contract.ValueAtReturn(out pos) < Str.Length);
-
             var p = pos;
             var l = Str.Length;
             while(p < l && !char.IsDigit(Str, p)) p++;
@@ -80,10 +74,6 @@ namespace MathCore.MathParser
         /// <returns>Строка имени</returns>
         private static string GetNameString([NotNull] string Str, ref int pos)
         {
-            Contract.Requires(!string.IsNullOrEmpty(Str));
-            Contract.Ensures(Contract.ValueAtReturn(out pos) >= 0);
-            Contract.Ensures(Contract.ValueAtReturn(out pos) < Str.Length);
-
             var result = "";
             var L = Str.Length;
             var i = pos;
@@ -122,8 +112,8 @@ namespace MathCore.MathParser
                         {
                             case '(':
                                 {
-                                    var blokStr = Str.GetBracketText(ref pos);
-                                    var block = new BlockTerm("(", blokStr, ")");
+                                    var blok_str = Str.GetBracketText(ref pos);
+                                    var block = new BlockTerm("(", blok_str, ")");
                                     value = new FunctionTerm((StringTerm)value, block);
                                 }
                                 break;
@@ -136,8 +126,8 @@ namespace MathCore.MathParser
                                 break;
                             case '{':
                                 {
-                                    var blokStr = Str.GetBracketText(ref pos, "{", "}");
-                                    var block = new BlockTerm("{", blokStr, "}");
+                                    var blok_str = Str.GetBracketText(ref pos, "{", "}");
+                                    var block = new BlockTerm("{", blok_str, "}");
                                     value = new FunctionTerm((StringTerm)value, block);
                                 }
                                 break;
@@ -157,22 +147,22 @@ namespace MathCore.MathParser
                     {
                         case '(':
                             {
-                                var blokStr = Str.GetBracketText(ref pos);
-                                var block = new BlockTerm("(", blokStr, ")");
+                                var blok_str = Str.GetBracketText(ref pos);
+                                var block = new BlockTerm("(", blok_str, ")");
                                 result.Add(block);
                             }
                             break;
                         case '[':
                             {
-                                var blokStr = Str.GetBracketText(ref pos, "[", "]");
-                                var block = new BlockTerm("[", blokStr, "]");
+                                var blok_str = Str.GetBracketText(ref pos, "[", "]");
+                                var block = new BlockTerm("[", blok_str, "]");
                                 result.Add(block);
                             }
                             break;
                         case '{':
                             {
-                                var blokStr = Str.GetBracketText(ref pos, "{", "}");
-                                var block = new BlockTerm("{", blokStr, "}");
+                                var blok_str = Str.GetBracketText(ref pos, "{", "}");
+                                var block = new BlockTerm("{", blok_str, "}");
                                 result.Add(block);
                             }
                             break;
@@ -194,9 +184,6 @@ namespace MathCore.MathParser
         /// <returns>Корень поддерева</returns>
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
         {
-            Contract.Requires(Parser != null);
-            Contract.Requires(Expression != null);
-            Contract.Ensures(Contract.Result<ExpressionTreeNode>() != null);
             var separator = Parser.ExpressionSeparator; // фиксируем символ-разделитель выражений
             // Разбиваем последовательность элементов выражения на группы, разделённые симовлом-разделителем
             // Излвекаем из каждой группы корень дерева выражений и складываем их в массив
@@ -208,22 +195,20 @@ namespace MathCore.MathParser
             if(roots.Length == 1) return roots[0]; // Если найден только один корень, то возвращаем его
             // Иначе корней найдено много
             ExpressionTreeNode argument = null; // объявляем ссылку на аргумент
-            for(var i = 0; i < roots.Length; i++) // проходим по всем найденным корням
+            // проходим по всем найденным корням
+            foreach (var root in roots)
             {
-                var root = roots[i];
-                ExpressionTreeNode arg;          // Если очередной корень дерева
-                if(root is FunctionArgumentNode) // - аргумент функции
-                    arg = root;                  // -- оставляем его без изменений
-                else if(root is FunctionArgumentNameNode name_node)  // - узел имени аргумента
-                    // -- создаём новый именованный аргумент функции
-                    arg = new FunctionArgumentNode(name_node);
-                else if(root is VariantOperatorNode && root.Left is VariableValueNode value_node)
-                    arg = new FunctionArgumentNode(value_node.Name, root.Right);
-                else // - во всех остальных случаях
-                    arg = new FunctionArgumentNode("", root); // -- создаём аргумент функции без имени
-                if(argument is null) argument = arg; // Если аргумент не был указан, то сохраняем полученный узел, как аргумент
-                else                                 // иначе
-                    argument = argument.Right = arg; //  сохраняем полученный узел в правое поддерево аргумента
+                var arg = root switch
+                {
+                    FunctionArgumentNode _ => root,
+                    FunctionArgumentNameNode name_node => new FunctionArgumentNode(name_node),
+                    VariantOperatorNode _ when root.Left is VariableValueNode value_node => new FunctionArgumentNode(value_node.Name, root.Right),
+                    _ => new FunctionArgumentNode(string.Empty, root)
+                };
+
+                argument = argument is null 
+                    ? arg                   // Если аргумент не был указан, то сохраняем полученный узел, как аргумент
+                    : argument.Right = arg; //  сохраняем полученный узел в правое поддерево аргумента
             }
             // Если аргумент не был выделен, то что-то пошло не так - ошибка формата
             if(argument is null) throw new FormatException("Не определён аргумент функции");

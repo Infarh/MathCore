@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -40,10 +39,6 @@ namespace System.Linq.Reactive
         /// <param name="Observer">Отслеживаемый наблюдатель</param>
         private ObserverLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull]IObserver<T> Observer)
         {
-            Contract.Ensures(_Observer != null);
-            Contract.Ensures(_Observers != null);
-            Contract.Ensures(_Observers.Count > 0);
-            Contract.Ensures(Contract.Exists(_Observers, o => Equals(o, _Observer)));
             _Observers = Observers;
             _Observer = Observer;
             if (!_Observers.Contains(_Observer))
@@ -53,9 +48,6 @@ namespace System.Linq.Reactive
         private bool _IsDisposed;
         void IDisposable.Dispose()
         {
-            Contract.Ensures(_Observer is null);
-            Contract.Ensures(_Observers is null);
-            Contract.Ensures(!Contract.Exists(_Observers, o => Equals(o, _Observer)));
             if (_IsDisposed) return;
             lock (_SyncRoot)
             {

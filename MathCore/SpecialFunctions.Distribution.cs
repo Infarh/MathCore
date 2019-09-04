@@ -1,6 +1,6 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using System.Diagnostics.Contracts;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -178,10 +178,6 @@ namespace MathCore
                 [DST]
                 public static double StudenttDistribution(int k, double t)
                 {
-                    Contract.Requires(k > 0, "Функция определена для положительных чисел k");
-                    //if(k <= 0)
-                    //    throw new ArgumentOutOfRangeException("k", "Функция определна для положительных чисел k");
-
                     if (Math.Abs(t - 0) < Eps) return .5;
                     if (t < -2)
                         return .5 * IncompliteBeta.IncompleteBeta(.5 * k, .5, k / (k + t * t));
@@ -232,13 +228,6 @@ namespace MathCore
                 [DST]
                 public static double StudenttDistributionInversed(int k, double p)
                 {
-                    Contract.Requires(k > 0, "k должно быть больше 0");
-                    Contract.Requires(p > 0 && p < 1, "p должно быть больше 0 и меньше 1");
-                    //if(k <= 0)
-                    //    throw new ArgumentOutOfRangeException("k", "k должно быть больше 0");
-                    //if(p <= 0 || p >= 1)
-                    //    throw new ArgumentOutOfRangeException("p", "p должно быть больше 0 и меньше единицы");
-
                     double z;
 
                     double rk = k;
