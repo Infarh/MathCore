@@ -5,17 +5,20 @@
         <IsPackable>true</IsPackable>
         <LangVersion>8</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>0.0.6</Version>
+        <Version>0.0.8</Version>
         <Authors>Shmachilin P.A.</Authors>
         <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
         <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
-        <AssemblyVersion>0.0.0.6</AssemblyVersion>
-        <FileVersion>0.0.0.6</FileVersion>
+        <AssemblyVersion>0.0.0.8</AssemblyVersion>
+        <FileVersion>0.0.0.8</FileVersion>
         <PackageTags>Mathematic, Logik</PackageTags>
         <PackageLicenseExpression></PackageLicenseExpression>
         <PackageLicenseFile>license.txt</PackageLicenseFile>
         <Description>Библиотека прикладных алгоритмов</Description>
-        <PackageReleaseNotes></PackageReleaseNotes>
+        <PackageReleaseNotes>Подписывание сборки - добавлено строгое имя</PackageReleaseNotes>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
+        <Copyright>shmachilin@gmail.com</Copyright>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -35,6 +38,10 @@
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Runtime" Version="4.3.1" />
     </ItemGroup>
 
     <ItemGroup>
