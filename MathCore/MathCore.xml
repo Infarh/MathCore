@@ -1628,7 +1628,7 @@
         <member name="M:MathCore.Evulations.NamedValueEvulation`1.ToString">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Extentions.Expressions.ExpressionExtentions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
+        <member name="M:MathCore.Extentions.Expressions.ExpressionExtensions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
             <exception cref="T:System.FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутсвуте подставляемый параметр</exception>
         </member>
         <member name="M:MathCore.Extentions.String.WordWrap.isSogl(System.Char)">
