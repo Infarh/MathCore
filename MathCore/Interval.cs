@@ -617,6 +617,16 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
+        public static implicit operator (double Min, double Max)(Interval I) => (I.Min, I.Max);
+
+        public static implicit operator Interval((double, double) V) => new Interval(V.Item1, V.Item2);
+
+        public static implicit operator Interval((double, double, bool) V) => new Interval(V.Item1, V.Item2, V.Item3);
+
+        public static implicit operator Interval((double, bool, double) V) => new Interval(V.Item1, V.Item2, V.Item3, false);
+
+        public static implicit operator Interval((double, bool, double, bool) V) => new Interval(V.Item1, V.Item2, V.Item3, V.Item4);
+
         public static implicit operator double(Interval I) => I.Length;
 
         public static explicit operator Interval(double V) => new Interval(0, true, V, true);

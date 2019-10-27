@@ -5,12 +5,12 @@
         <IsPackable>true</IsPackable>
         <LangVersion>8</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>0.0.9</Version>
+        <Version>0.0.10</Version>
         <Authors>Shmachilin P.A.</Authors>
         <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
         <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
-        <AssemblyVersion>0.0.0.9</AssemblyVersion>
-        <FileVersion>0.0.0.9</FileVersion>
+        <AssemblyVersion>0.0.0.10</AssemblyVersion>
+        <FileVersion>0.0.0.10</FileVersion>
         <PackageTags>Mathematic, Logik</PackageTags>
         <PackageLicenseExpression></PackageLicenseExpression>
         <PackageLicenseFile>license.txt</PackageLicenseFile>

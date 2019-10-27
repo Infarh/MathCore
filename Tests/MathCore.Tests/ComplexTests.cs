@@ -738,8 +738,8 @@ namespace MathCore.Tests
             var (actual_asin_re, actual_asin_im) = Complex.Trigonomerty.Asin(z);
 
             const double expected_asin_im = 1.427980580692356;
-            Assert.That.Value(actual_asin_im).AreEqual(expected_asin_im, 2.23e-16);
-            Assert.That.Value(actual_asin_re).AreEqual(0);
+            Assert.That.Value(actual_asin_im).IsEqual(expected_asin_im, 2.23e-16);
+            Assert.That.Value(actual_asin_re).IsEqual(0);
         }
 
         [TestMethod]
@@ -751,8 +751,8 @@ namespace MathCore.Tests
 
             const double expected_acos_re = 1.570796326794897;
             const double expected_asin_im = -1.427980580692356;
-            Assert.That.Value(actual_acos_re).AreEqual(expected_acos_re, 4.45e-16);
-            Assert.That.Value(actual_acos_im).AreEqual(expected_asin_im, 2.23e-16);
+            Assert.That.Value(actual_acos_re).IsEqual(expected_acos_re, 4.45e-16);
+            Assert.That.Value(actual_acos_im).IsEqual(expected_asin_im, 2.23e-16);
         }
     }
 }

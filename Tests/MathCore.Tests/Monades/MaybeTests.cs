@@ -23,8 +23,8 @@ namespace MathCore.Tests.Monades
 
             var two = one.Where(z => z > 0).Select(z => z + 1);
 
-            Assert.That.Value(one()).AreEqual(1);
-            Assert.That.Value(two()).AreEqual(2);
+            Assert.That.Value(one()).IsEqual(1);
+            Assert.That.Value(two()).IsEqual(2);
             Assert.ThrowsException<InvalidOperationException>(() => nothing2());
         }
     }

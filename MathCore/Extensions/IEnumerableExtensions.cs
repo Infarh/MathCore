@@ -613,19 +613,21 @@ namespace System.Linq
             Min = default;
             Max = default;
             MinIndex = MaxIndex = -1;
-            foreach (var (v, i) in collection.Select((v, i) => (v, i)))
+            var i = 0;
+            foreach (var item in collection)
             {
-                var f = selector(v);
+                var f = selector(item);
                 if (min.AddValue(f))
                 {
-                    Min = v;
+                    Min = item;
                     MinIndex = i;
                 }
                 if (max.AddValue(f))
                 {
-                    Max = v;
+                    Max = item;
                     MaxIndex = i;
                 }
+                i++;
             }
         }
 
@@ -639,7 +641,9 @@ namespace System.Linq
         {
             var max = new MaxValue();
             var result = default(T);
-            foreach (var v in collection.Where(t => max.AddValue(selector(t)))) result = v;
+            foreach (var v in collection)
+                if (max.AddValue(selector(v)))
+                    result = v;
             return result;
         }
 
@@ -654,14 +658,17 @@ namespace System.Linq
         {
             var max = new MaxValue();
             var result = default(T);
-            var I = -1;
-            foreach (var (t, i) in collection.Select((t, i) => (t, i)).Where(v => max.AddValue(selector(v.t))))
+            var i = 0;
+            index = -1;
+            foreach (var item in collection)
             {
-                result = t;
-                I = i;
+                if (max.AddValue(selector(item)))
+                {
+                    index = i;
+                    result = item;
+                }
+                i++;
             }
-
-            index = I;
             return result;
         }
 
@@ -675,7 +682,9 @@ namespace System.Linq
         {
             var min = new MinValue();
             var result = default(T);
-            foreach (var v in collection.Where(t => min.AddValue(selector(t)))) result = v;
+            foreach (var v in collection)
+                if (min.AddValue(selector(v)))
+                    result = v;
             return result;
         }
 
@@ -690,14 +699,17 @@ namespace System.Linq
         {
             var min = new MinValue();
             var result = default(T);
-            var I = -1;
-            foreach (var (t, i) in collection.Select((t, i) => (t, i)).Where(v => min.AddValue(selector(v.t))))
+            var i = 0;
+            index = -1;
+            foreach (var item in collection)
             {
-                result = t;
-                I = i;
+                if (min.AddValue(selector(item)))
+                {
+                    index = i;
+                    result = item;
+                }
+                i++;
             }
-
-            index = I;
             return result;
         }
 

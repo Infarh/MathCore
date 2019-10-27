@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MathCore;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -23,6 +24,96 @@ namespace System
             return result;
         }
 
+        /// <summary>Массив случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="Interval">Интервал</param>
+        /// <returns>Массив случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static double[] NextUniform([NotNull] this Random rnd, int Count, Interval Interval)
+        {
+            var D = Interval.Length;
+            var M = Interval.Middle;
+            var result = new double[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.NextUniform(D, M);
+            return result;
+        }
+
+        /// <summary>Массив случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="Interval">Интервал</param>
+        /// <returns>Массив случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static double[] NextUniform([NotNull] this Random rnd, params Interval[] Intervals)
+        {
+            var count = Intervals.Length;
+            var result = new double[count];
+            for (var i = 0; i < count; i++)
+                result[i] = rnd.NextUniform(Intervals[i].Length, Intervals[i].Middle);
+            return result;
+        }
+
+        /// <summary>Массив случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="Min">Минимум</param>
+        /// <param name="Max">Максимум</param>
+        /// <returns>Массив случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static double[] NextUniformInterval([NotNull] this Random rnd, int Count, double Min, double Max)
+        {
+            var D = Math.Abs(Max - Min);
+            var M = (Max + Min) / 2;
+            var result = new double[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.NextUniform(D, M);
+            return result;
+        }
+
+        /// <summary>Массив целых неотрицательных случайных чисел</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <returns>Массив целых неотрицательных случайных чисел</returns>
+        [NotNull]
+        public static int[] NextValues([NotNull] this Random rnd, int Count)
+        {
+            var result = new int[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.Next();
+            return result;
+        }
+
+        /// <summary>Массив целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="Max">Максимум (не входит)</param>
+        /// <returns>Массив целых неотрицательных случайных чисел (верхний предел не входит)</returns>
+        [NotNull]
+        public static int[] NextValues([NotNull] this Random rnd, int Count, int Max)
+        {
+            var result = new int[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.Next(Max);
+            return result;
+        }
+
+        /// <summary>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="Min">Минимум</param>
+        /// <param name="Max">Максимум (не входит)</param>
+        /// <returns>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
+        [NotNull]
+        public static int[] NextValues([NotNull] this Random rnd, int Count, int Min, int Max)
+        {
+            var result = new int[Count];
+            for (var i = 0; i < Count; i++)
+                result[i] = rnd.Next(Min, Max);
+            return result;
+        }
+
         /// <summary>Массив случайных чисел с нормальным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="Count">Размер массива</param>
@@ -40,13 +131,11 @@ namespace System
 
         //public static double NextNormal(this Random rnd, double D = 1, double M = 0) => Math.Tan(Math.PI * (rnd.NextDouble() - 0.5)) * D + M;
 
-        /// <summary>
-        /// Generates normally distributed numbers. Each operation makes two Gaussians for the price of one, and apparently they can be cached or something for better performance, but who cares.
-        /// </summary>
-        /// <param name="rnd"></param>
-        /// <param name="mu">Mean of the distribution</param>
-        /// <param name="sigma">Standard deviation</param>
-        /// <returns></returns>
+        /// <summary>Случайное число с нормальным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="sigma">Среднеквадратическое отклонение</param>
+        /// <param name="mu">Математическое ожидание</param>
+        /// <returns>Случайное число с нормальным распределением</returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
         public static double NextNormal(this Random rnd, double sigma = 1, double mu = 0)
         {
@@ -63,15 +152,13 @@ namespace System
         /// <returns>Случайное число в равномерным распределением</returns>
         public static double NextUniform(this Random rnd, double D = 1, double M = 0) => (rnd.NextDouble() - 0.5) * D + M;
 
-        /// <summary>Generates values from a triangular distribution.</summary>
-        /// <remarks>
-        /// See http://en.wikipedia.org/wiki/Triangular_distribution for a description of the triangular probability distribution and the algorithm for generating one.
-        /// </remarks>
-        /// <param name="rnd"></param>
-        /// <param name="min">Minimum</param>
-        /// <param name="max">Maximum</param>
-        /// <param name="mode">Mode (most frequent value)</param>
-        /// <returns></returns>
+        /// <summary>Случайное число с треугольным распределением</summary>
+        /// <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="min">Минимум</param>
+        /// <param name="max">МАксимум</param>
+        /// <param name="mode">Медиана</param>
+        /// <returns>Случайное число с треугольным расеределением</returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
         public static double NextTriangular(this Random rnd, double min, double max, double mode)
         {
@@ -82,12 +169,39 @@ namespace System
                 : max - Math.Sqrt((1 - u) * (max - min) * (max - mode));
         }
 
-        /// <summary>
-        ///   Equally likely to return true or false. Uses <see cref="Random.Next()"/>.
-        /// </summary>
-        /// <returns></returns>
-        [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
+        public static void FillUnuform(this Random rnd, double[] Array)
+        {
+            for (var i = 0; i < Array.Length; i++)
+                Array[i] = rnd.NextDouble();
+        }
+
+        public static void FillUnuform(this Random rnd, double[] Array, double D)
+        {
+            for (var i = 0; i < Array.Length; i++)
+                Array[i] = rnd.NextDouble(D);
+        }
+
+        public static void FillUnuform(this Random rnd, double[] Array, double D, double M)
+        {
+            for (var i = 0; i < Array.Length; i++)
+                Array[i] = rnd.NextDouble(D, M);
+        }
+
+        public static void FillNormal(this Random rnd, double[] Array, double sigma = 1, double mu = 0)
+        {
+            for (var i = 0; i < Array.Length; i++)
+                Array[i] = rnd.NextNormal(sigma, mu);
+        }
+
         public static bool NextBoolean(this Random rnd) => rnd.Next(2) > 0;
+
+        public static double NextDouble(this Random rnd, double D) => (rnd.NextDouble() - 0.5) * D;
+
+        public static double NextDouble(this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
+
+        public static double NextDoubleInterval(this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle); 
+
+        public static double NextDoubleInterval(this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min)); 
 
         /// <summary>
         ///   Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
@@ -95,7 +209,7 @@ namespace System
         /// <param name="rnd"></param>
         /// <param name = "list"></param>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
-        public static void Shuffle(this Random rnd, IList list)
+        public static void Mix(this Random rnd, IList list)
         {
             for (var i = 0; i < list.Count; i++)
             {
