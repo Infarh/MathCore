@@ -7953,6 +7953,60 @@
             <param name="X">Приводимое число</param>
             <returns>Матрица порадка 1х1</returns>
         </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm._Inertia">
+            <summary>Вес инерции</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm._LocalWeight">
+            <summary>Коэффициент локального веса</summary>
+        </member>
+        <member name="P:MathCore.Optimization.ParticleSwarm.Swarm.LocalWeight">
+            <summary>Коэффициент стремления точки к своему собственному лучшему значению</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm._GlobalWeight">
+            <summary>Коэффициент стремления всех точек к лучшему значению</summary>
+        </member>
+        <member name="P:MathCore.Optimization.ParticleSwarm.Swarm.GlobalWeight">
+            <summary>Коэффициент стремления всех точек к лучшему значению</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm1D._Inertia">
+            <summary>Вес инерции</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm1D._LocalWeight">
+            <summary>Коэффициент локального веса</summary>
+        </member>
+        <member name="P:MathCore.Optimization.ParticleSwarm.Swarm1D.LocalWeight">
+            <summary>Коэффициент стремления точки к своему собственному лучшему значению</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm1D._GlobalWeight">
+            <summary>Коэффициент стремления всех точек к лучшему значению</summary>
+        </member>
+        <member name="P:MathCore.Optimization.ParticleSwarm.Swarm1D.GlobalWeight">
+            <summary>Коэффициент стремления всех точек к лучшему значению</summary>
+        </member>
+        <member name="T:MathCore.Optimization.ParticleSwarm.Swarm2D">
+            <summary>Рой двумерных частиц</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm2D._Inertia">
+            <summary>Вес инерции</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm2D._LocalWeight">
+            <summary>Коэффициент локального веса</summary>
+        </member>
+        <member name="P:MathCore.Optimization.ParticleSwarm.Swarm2D.LocalWeight">
+            <summary>Коэффициент стремления точки к своему собственному лучшему значению</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm2D._GlobalWeight">
+            <summary>Коэффициент стремления всех точек к лучшему значению</summary>
+        </member>
+        <member name="P:MathCore.Optimization.ParticleSwarm.Swarm2D.GlobalWeight">
+            <summary>Коэффициент стремления всех точек к лучшему значению</summary>
+        </member>
+        <member name="T:MathCore.Optimization.ParticleSwarm.Swarm2D.Particle2D">
+            <summary>Частица</summary>
+        </member>
+        <member name="F:MathCore.Optimization.ParticleSwarm.Swarm2D._ParticleCount">
+            <summary>Размер роя</summary>
+        </member>
         <member name="T:MathCore.Polynom">
             <summary>
             Полином степени N-1
@@ -15678,6 +15732,49 @@
             <param name="M">Математическое ожидание</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextUniform(System.Random,System.Int32,MathCore.Interval)">
+            <summary>Массив случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="Interval">Интервал</param>
+            <returns>Массив случайных чисел с равномерным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextUniform(System.Random,MathCore.Interval[])">
+            <summary>Массив случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="Interval">Интервал</param>
+            <returns>Массив случайных чисел с равномерным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextUniformInterval(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Массив случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="Min">Минимум</param>
+            <param name="Max">Максимум</param>
+            <returns>Массив случайных чисел с равномерным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32)">
+            <summary>Массив целых неотрицательных случайных чисел</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <returns>Массив целых неотрицательных случайных чисел</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32,System.Int32)">
+            <summary>Массив целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="Max">Максимум (не входит)</param>
+            <returns>Массив целых неотрицательных случайных чисел (верхний предел не входит)</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32,System.Int32,System.Int32)">
+            <summary>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="Min">Минимум</param>
+            <param name="Max">Максимум (не входит)</param>
+            <returns>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Int32,System.Double,System.Double)">
             <summary>Массив случайных чисел с нормальным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
@@ -15687,13 +15784,11 @@
             <returns>Массив случайных чисел с нормальным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Double,System.Double)">
-            <summary>
-            Generates normally distributed numbers. Each operation makes two Gaussians for the price of one, and apparently they can be cached or something for better performance, but who cares.
-            </summary>
-            <param name="rnd"></param>
-            <param name="mu">Mean of the distribution</param>
-            <param name="sigma">Standard deviation</param>
-            <returns></returns>
+            <summary>Случайное число с нормальным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="sigma">Среднеквадратическое отклонение</param>
+            <param name="mu">Математическое ожидание</param>
+            <returns>Случайное число с нормальным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextUniform(System.Random,System.Double,System.Double)">
             <summary>Случайное число с равномерным распределением</summary>
@@ -15703,23 +15798,15 @@
             <returns>Случайное число в равномерным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextTriangular(System.Random,System.Double,System.Double,System.Double)">
-            <summary>Generates values from a triangular distribution.</summary>
-            <remarks>
-            See http://en.wikipedia.org/wiki/Triangular_distribution for a description of the triangular probability distribution and the algorithm for generating one.
-            </remarks>
-            <param name="rnd"></param>
-            <param name="min">Minimum</param>
-            <param name="max">Maximum</param>
-            <param name="mode">Mode (most frequent value)</param>
-            <returns></returns>
+            <summary>Случайное число с треугольным распределением</summary>
+            <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="min">Минимум</param>
+            <param name="max">МАксимум</param>
+            <param name="mode">Медиана</param>
+            <returns>Случайное число с треугольным расеределением</returns>
         </member>
-        <member name="M:System.RandomExtensions.NextBoolean(System.Random)">
-            <summary>
-              Equally likely to return true or false. Uses <see cref="M:System.Random.Next"/>.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:System.RandomExtensions.Shuffle(System.Random,System.Collections.IList)">
+        <member name="M:System.RandomExtensions.Mix(System.Random,System.Collections.IList)">
             <summary>
               Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
             </summary>

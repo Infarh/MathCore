@@ -11,11 +11,11 @@
         <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
         <AssemblyVersion>0.0.0.10</AssemblyVersion>
         <FileVersion>0.0.0.10</FileVersion>
-        <PackageTags>Mathematic, Logik</PackageTags>
+        <PackageTags>Mathematic, Logiс</PackageTags>
         <PackageLicenseExpression></PackageLicenseExpression>
         <PackageLicenseFile>license.txt</PackageLicenseFile>
         <Description>Библиотека прикладных алгоритмов</Description>
-        <PackageReleaseNotes>Расширение методов-расширений для деревьев выражений</PackageReleaseNotes>
+        <PackageReleaseNotes>Добавлен поиск экстремума функции методом роя частиц</PackageReleaseNotes>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
         <Copyright>shmachilin@gmail.com</Copyright>
