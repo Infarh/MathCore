@@ -5,17 +5,17 @@
         <IsPackable>true</IsPackable>
         <LangVersion>8</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>0.0.11</Version>
+        <Version>0.0.12</Version>
         <Authors>Shmachilin P.A.</Authors>
         <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
         <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
-        <AssemblyVersion>0.0.0.11</AssemblyVersion>
-        <FileVersion>0.0.0.11</FileVersion>
+        <AssemblyVersion>0.0.0.12</AssemblyVersion>
+        <FileVersion>0.0.0.12</FileVersion>
         <PackageTags>Mathematic, Logiс</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageLicenseFile></PackageLicenseFile>
         <Description>Библиотека прикладных алгоритмов</Description>
-        <PackageReleaseNotes>Лицензия MIT</PackageReleaseNotes>
+        <PackageReleaseNotes>Небобьшие изменения (коментарии, атрибуты, рефакторинг)</PackageReleaseNotes>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
         <Copyright>shmachilin@gmail.com</Copyright>

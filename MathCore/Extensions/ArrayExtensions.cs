@@ -205,7 +205,7 @@ namespace System
         ///<param name="A">Исходный массив</param>
         ///<param name="B">Присоединяемый массив</param>
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
-        ///<returns>Массив из объединёных элементов</returns>
+        ///<returns>Массив из объединенных элементов</returns>
         [DST, NotNull]
         public static TArray[] Concatinate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[] B)
         {
@@ -229,8 +229,6 @@ namespace System
 
             return result;
         }
-
-        //public delegate Complex BeamPattern(double Thetta, double Phi);
 
         ///<summary>Получить элемент массива</summary>
         ///<param name="A">Массив элементов</param>
@@ -280,7 +278,7 @@ namespace System
 
         /// <summary>Выполнение действия для всех элементов массива</summary>
         /// <param name="array">Массив элементов</param>
-        /// <param name="action">ВЫполняемое действие</param>
+        /// <param name="action">Выполняемое действие</param>
         /// <param name="ErrorHandler">Обработчик исключений</param>
         /// <exception cref="ApplicationException">Возникает в случае если в методе action возникшее исключение не было обработано</exception>
         /// <typeparam name="TArray">Тип элементов массива</typeparam>
@@ -342,9 +340,9 @@ namespace System
         }
 
         /// <summary>Инициализация массива</summary>
-        /// <typeparam name="TArray">Тип элементов масива</typeparam>
-        /// <param name="array">Инициализированный масив</param>
-        /// <param name="Initializer">МЕтод инициализации</param>
+        /// <typeparam name="TArray">Тип элементов массива</typeparam>
+        /// <param name="array">Инициализированный массив</param>
+        /// <param name="Initializer">Метод инициализации</param>
         /// <returns>Инициализированный массив</returns>
         [DST, NotNull]
         public static TArray[] Initialize<TArray>
@@ -358,7 +356,7 @@ namespace System
             return array;
         }
 
-        /// <summary>Инициализация массива одинм значением</summary>
+        /// <summary>Инициализация массива одним значением</summary>
         /// <typeparam name="TArray">Тип элементов массива</typeparam>
         /// <param name="array">Инициализируемый массив</param>
         /// <param name="value">Значение, размещаемое во всех элементах массива</param>
@@ -376,9 +374,9 @@ namespace System
         }
 
         /// <summary>Инициализация массива</summary>
-        /// <typeparam name="TValue">Тип элементов масива</typeparam>
+        /// <typeparam name="TValue">Тип элементов массива</typeparam>
         /// <typeparam name="TP">Тип параметра инициализации</typeparam>
-        /// <param name="array">Инициализированный масив</param>
+        /// <param name="array">Инициализированный массив</param>
         /// <param name="p">Параметр инициализации</param>
         /// <param name="Initializer">Метод инициализации</param>
         /// <returns>Инициализированный массив</returns>
@@ -398,10 +396,10 @@ namespace System
 
 
         /// <summary>Инициализация массива</summary>
-        /// <typeparam name="TValue">Тип элементов масива</typeparam>
+        /// <typeparam name="TValue">Тип элементов массива</typeparam>
         /// <typeparam name="TP1">Тип первого параметра инициализации</typeparam>
         /// <typeparam name="TP2">Тип второго параметра инициализации</typeparam>
-        /// <param name="array">Инициализированный масив</param>
+        /// <param name="array">Инициализированный массив</param>
         /// <param name="p1">Первый параметр инициализации</param>
         /// <param name="p2">Второй параметр инициализации</param>
         /// <param name="Initializer">Метод инициализации</param>
@@ -810,9 +808,17 @@ namespace System
         /// <summary>Создать копию массива с перемешанным содержимым</summary>
         /// <param name="array">Исходный массив</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
-        /// <returns>Копия исходного массива с перемешанным созержимым</returns>
+        /// <returns>Копия исходного массива с перемешанным содержимым</returns>
         [DST, NotNull]
         public static T[] Mix<T>([NotNull] this T[] array) => ((T[])array.Clone()).MixRef();
+
+        /// <summary>Создать копию массива с перемешанным содержимым</summary>
+        /// <param name="array">Исходный массив</param>
+        /// <typeparam name="T">Тип элементов массива</typeparam>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <returns>Копия исходного массива с перемешанным содержимым</returns>
+        [DST, NotNull]
+        public static T[] Mix<T>([NotNull] this T[] array, Random rnd) => ((T[])array.Clone()).MixRef(rnd);
 
         /// <summary>Перемешать массив</summary>
         /// <typeparam name="T">Тип элементов массива</typeparam>
@@ -851,8 +857,8 @@ namespace System
             return array;
         }
 
-        /// <summary>Последовательно скопировать набор массивов в буффер</summary>
-        /// <param name="A">Буфферный массив соответствующей длины</param>
+        /// <summary>Последовательно скопировать набор массивов в буфер</summary>
+        /// <param name="A">Буферный массив соответствующей длины</param>
         /// <param name="B">Перечень устанавливаемых значений</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         [DST]

@@ -54,7 +54,7 @@ namespace MathCore.Extensions.String
         }
 
         /// <summary>Фактически, она и проделывает всю работу</summary>
-        /// <param name="pc">Входной масив символов</param>
+        /// <param name="pc">Входной массив символов</param>
         /// <param name="MaxSize">Максимальный размер</param>
         /// <returns>Строка с расставленными знаками переноса</returns>
         public static string SetHyph(string pc, int MaxSize)
