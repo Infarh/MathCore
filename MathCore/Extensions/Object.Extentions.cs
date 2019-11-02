@@ -16,7 +16,7 @@ using mcEx = System.Linq.Expressions.MethodCallExpression;
 namespace System
 {
     /// <summary>Класс методов-расширений для объекта</summary>
-    public static class ObjectExtentions
+    public static class ObjectExtensions
     {
         /// <summary>Преобразование объекта в бесконечное перечисление</summary>
         /// <typeparam name="T">Тип элементов генерируемого перечисления</typeparam>
@@ -687,9 +687,9 @@ namespace System
 namespace System.Tags
 {
     /// <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложенны к другим объектам</summary>
-    public static class TagExtentions
+    public static class TagExtensions
     {
-        /// <summary>Получить объект-метку у казанного типа из целевого объекта</summary>
+        /// <summary>Получить объект-метку указанного типа из целевого объекта</summary>
         /// <typeparam name="TTag">Тип объекта-метки</typeparam>
         /// <param name="o">Целевой объект</param>
         /// <returns>Объект метка, если он существует в указанном объекте</returns>

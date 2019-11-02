@@ -6,7 +6,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    public static class StringExtentionsParse
+    public static class StringExtensionsParse
     {
         [DST]
         public static bool IsInt8(this string s) => byte.TryParse(s, out var i);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using MathCore.Annotations;
-using MathCore.Extentions.Expressions;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {

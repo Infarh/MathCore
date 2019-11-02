@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq.Reactive;
 using System.Reflection;
 using MathCore.Annotations;
-using MathCore.Extentions.Expressions;
+using MathCore.Extensions.Expressions;
 
 namespace System.Linq.Expressions
 {

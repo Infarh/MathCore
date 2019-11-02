@@ -13,7 +13,7 @@ namespace System
         where TException : Exception;
 
     /// <summary>Класс методов расширений для обработчика событий генерации исключений</summary>
-    public static class ExceptionEventHandlerExtentions
+    public static class ExceptionEventHandlerExtensions
     {
         /// <summary>Генерация события обработки исключения</summary>
         /// <param name="Handler">Обработчик события</param>

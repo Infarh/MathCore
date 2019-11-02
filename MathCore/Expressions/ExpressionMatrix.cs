@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore;
 using MathCore.Annotations;
-using MathCore.Extentions.Expressions;
+using MathCore.Extensions.Expressions;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace

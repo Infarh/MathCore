@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Permissions;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace

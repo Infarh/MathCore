@@ -45,7 +45,7 @@ namespace MathCore.Values
         public T[] ToArray()
         {
             var result = _List.ToArray();
-            return (T[])(Mixed ? IListExtentions.Mix(result) : result);
+            return (T[])(Mixed ? IListExtensions.Mix(result) : result);
         }
 
         /// <summary>Клонирование множества элементов</summary>

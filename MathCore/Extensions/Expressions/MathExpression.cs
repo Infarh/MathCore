@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace MathCore.Extentions.Expressions
+namespace MathCore.Extensions.Expressions
 {
     public static class MathExpression
     {

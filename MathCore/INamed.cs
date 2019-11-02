@@ -16,8 +16,8 @@ namespace MathCore
         new string Name { get; set; }
     }
 
-    /// <summary>Методы-расширения интерфейса именованых объектов</summary>
-    public static class NamedInterfaceExtentions
+    /// <summary>Методы-расширения интерфейса именованных объектов</summary>
+    public static class NamedInterfaceExtensions
     {
         /// <summary>Изменить имя объекта</summary>
         /// <param name="obj">Объект, имя которого требуется изменить</param>
