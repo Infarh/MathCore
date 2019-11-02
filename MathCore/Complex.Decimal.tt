@@ -36,7 +36,7 @@
 //	this.Write(src);
 	//this.WriteLine();
 	
-//	src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.Extentions.cs");
+//	src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.Extensions.cs");
 //	this.Write(src.Replace("double", "decimal").Replace("Complex", "CompleDecimal"));
 //	
 //	src = File.ReadAllText(Path.GetDirectoryName(this.Host.TemplateFile) + "\\Complex.Operators.cs");

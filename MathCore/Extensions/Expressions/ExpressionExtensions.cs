@@ -18,7 +18,7 @@ using uEx = System.Linq.Expressions.UnaryExpression;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
-namespace MathCore.Extentions.Expressions
+namespace MathCore.Extensions.Expressions
 {
     public static class ExpressionExtensions
     {

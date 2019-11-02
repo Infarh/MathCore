@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using MathCore.Exceptions;
-using MathCore.Extentions.Expressions;
+using MathCore.Extensions.Expressions;
 using static System.Math;
 // ReSharper disable MemberCanBePrivate.Global
 

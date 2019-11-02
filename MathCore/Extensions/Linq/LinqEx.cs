@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
 
-namespace MathCore.Extentions.Linq
+namespace MathCore.Extensions.Linq
 {
     public static class LinqEx
     {

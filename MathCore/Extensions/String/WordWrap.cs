@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace MathCore.Extentions.String
+namespace MathCore.Extensions.String
 {
     [Copyright("http://www.excode.ru/art4524p13.html")]
     [Copyright("http://www.programmersforum.ru/showthread.php?t=3926")]

@@ -861,30 +861,30 @@
             <param name="z">Комплексный аргумент</param>
             <returns>Гиперболический котангенс комплексного аргумента</returns>
         </member>
-        <member name="T:MathCore.ComplexExtentions">
+        <member name="T:MathCore.ComplexExtensions">
             <summary>Методы-расширения комплексных чисел</summary>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToRe(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.ToRe(MathCore.Complex[])">
             <summary>Преобразование массива комплексных чисел в масив действительных</summary>
             <param name="c">Массив комплексных чисел</param>
             <returns>Массив действительных чисел</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToIm(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.ToIm(MathCore.Complex[])">
             <summary>Массив комплексных чисел в массив значений мнимых чисел</summary>
             <param name="c">Массив комплексных чисел</param>
             <returns>Массив значений комплексных мнимых чисел</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToAbs(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.ToAbs(MathCore.Complex[])">
             <summary>Массив комплексных чисел в массив модулей</summary>
             <param name="c">Массив сомплексных чисел</param>
             <returns>Массив модулей комплексных чисел</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToArg(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.ToArg(MathCore.Complex[])">
             <summary>Массив сомплексных чисел в массив аргументов</summary>
             <param name="c">Массив комплексных чисел</param>
             <returns>Массив аргументов комплексных чисел</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToReImArray(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.ToReImArray(MathCore.Complex[])">
             <summary>
             Массив комплексных чисел в двумерный массив действительных и мнимых частей, где
             Re = V[i,0]
@@ -893,7 +893,7 @@
             <param name="c">Массив комплексных чисел</param>
             <returns>Двумерный массив вещественных и мнимых частей</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToAbsArgArray(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.ToAbsArgArray(MathCore.Complex[])">
             <summary>
             Массив комплексных чисел в двумерный массив модулей и аргументов частей, где
             Abs = V[i,0]
@@ -902,17 +902,17 @@
             <param name="c">Массив комплексных чисел</param>
             <returns>Двумерный массив Модулей и аргументов</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToComplex(System.Double[])">
+        <member name="M:MathCore.ComplexExtensions.ToComplex(System.Double[])">
             <summary>Преобразовать массив действительных в массив комплексных чисел</summary>
             <param name="Re">Массив действительных чисел</param>
             <returns>Массив комплексных чисел</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.ToComplex(System.Double[0:,0:])">
+        <member name="M:MathCore.ComplexExtensions.ToComplex(System.Double[0:,0:])">
             <summary>Преобразовать двумерный массив действительных в массив комплексных чисел</summary>
             <param name="Values">Двумерный массив действительных чисел, где Re = V[i,0], Im = V[i,1]</param>
             <returns>Массив комплексных чисел</returns>
         </member>
-        <member name="M:MathCore.ComplexExtentions.GetAbs(MathCore.Complex[])">
+        <member name="M:MathCore.ComplexExtensions.GetAbs(MathCore.Complex[])">
             <summary>Преобразование в массив модулей</summary>
             <param name="c">Массив комплексных чисел</param>
             <returns>Массив модулей комплексных чисел</returns>
@@ -1628,26 +1628,26 @@
         <member name="M:MathCore.Evulations.NamedValueEvulation`1.ToString">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Extentions.Expressions.ExpressionExtensions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
+        <member name="M:MathCore.Extensions.Expressions.ExpressionExtensions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
             <exception cref="T:System.FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутсвуте подставляемый параметр</exception>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.isSogl(System.Char)">
+        <member name="M:MathCore.Extensions.String.WordWrap.isSogl(System.Char)">
             <summary>Проверяет, является ли символ согласным</summary>
             <param name="c"></param><returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.isGlas(System.Char)">
+        <member name="M:MathCore.Extensions.String.WordWrap.isGlas(System.Char)">
             <summary>Проверяет, является ли символ гласным</summary>
             <param name="c"></param><returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.isSpecSign(System.Char)">
+        <member name="M:MathCore.Extensions.String.WordWrap.isSpecSign(System.Char)">
             <summary>Проверяет, является ли символ специальным (в данном контексте - разделителем)</summary>
             <param name="c"></param><returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.GetSymbType(System.Char)">
+        <member name="M:MathCore.Extensions.String.WordWrap.GetSymbType(System.Char)">
             <summary>Возвращает тип символа: согласный, гласный, разделитель, неопределен</summary>
             <param name="c"></param><returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.isSlogMore(MathCore.Extentions.String.WordWrap.SymbType[],System.Int32)">
+        <member name="M:MathCore.Extensions.String.WordWrap.isSlogMore(MathCore.Extensions.String.WordWrap.SymbType[],System.Int32)">
             <summary>Определяет, можно ли сделать перенос в массиве "с" в промежутке от start до len</summary>
             <param name="c"></param><param name="Start"></param><returns></returns>
             <remarks>
@@ -1655,13 +1655,13 @@
             из слова массив SymbType и дальше с помощью данной функции проверить, можно ли в нем сделать перенос
             </remarks>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.SetHyph(System.String,System.Int32)">
+        <member name="M:MathCore.Extensions.String.WordWrap.SetHyph(System.String,System.Int32)">
             <summary>Фактически, она и проделывает всю работу</summary>
             <param name="pc">Входной масив символов</param>
             <param name="MaxSize">Максимальный размер</param>
             <returns>Строка с расставленными знаками переноса</returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.Red_GlasMore(System.String,System.Int32)">
+        <member name="M:MathCore.Extensions.String.WordWrap.Red_GlasMore(System.String,System.Int32)">
             <summary>
             На вход функции подается указатель на строку и позиция символа, с которого начинается чтение. 
             Дальше функция проверяет, есть ли в данной строке гласная буква
@@ -1670,7 +1670,7 @@
             <param name="pos"></param>
             <returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.Red_SlogMore(System.String,System.Int32)">
+        <member name="M:MathCore.Extensions.String.WordWrap.Red_SlogMore(System.String,System.Int32)">
             <summary>
             Аналогично предыдущей функции, но для согласных
             </summary>
@@ -1678,7 +1678,7 @@
             <param name="pos"></param>
             <returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.MayBeHyph(System.String,System.Int32)">
+        <member name="M:MathCore.Extensions.String.WordWrap.MayBeHyph(System.String,System.Int32)">
             <summary>
             На вход подается указатель на строку и позиция, с которого начинается чтение. 
             Функция проверяет, можно ли сделать в данной строке перенос
@@ -1687,7 +1687,7 @@
             <param name="pos"></param>
             <returns></returns>
         </member>
-        <member name="M:MathCore.Extentions.String.WordWrap.SetHyphString(System.String)">
+        <member name="M:MathCore.Extensions.String.WordWrap.SetHyphString(System.String)">
             <summary>На вход ей подается просто некая строка, дальше она ее обрабатывает и возвращает строку с переносами</summary>
             <param name="s"></param>
             <returns></returns>
@@ -2244,10 +2244,10 @@
         <member name="P:MathCore.INamed.Name">
             <summary>Имя объекта</summary>
         </member>
-        <member name="T:MathCore.NamedInterfaceExtentions">
-            <summary>Методы-расширения интерфейса именованых объектов</summary>
+        <member name="T:MathCore.NamedInterfaceExtensions">
+            <summary>Методы-расширения интерфейса именованных объектов</summary>
         </member>
-        <member name="M:MathCore.NamedInterfaceExtentions.Rename(MathCore.INamed,System.String)">
+        <member name="M:MathCore.NamedInterfaceExtensions.Rename(MathCore.INamed,System.String)">
             <summary>Изменить имя объекта</summary>
             <param name="obj">Объект, имя которого требуется изменить</param>
             <param name="NewName">Новое имя объекта</param>
@@ -11073,17 +11073,17 @@
             <param name="Args">Аргументы события</param>
             <typeparam name="TException">Тип исключения</typeparam>
         </member>
-        <member name="T:System.ExceptionEventHandlerExtentions">
+        <member name="T:System.ExceptionEventHandlerExtensions">
             <summary>Класс методов расширений для обработчика событий генерации исключений</summary>
         </member>
-        <member name="M:System.ExceptionEventHandlerExtentions.Start``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0})">
+        <member name="M:System.ExceptionEventHandlerExtensions.Start``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0})">
             <summary>Генерация события обработки исключения</summary>
             <param name="Handler">Обработчик события</param>
             <param name="Sender">Источник события</param>
             <param name="e">Аргументы события</param>
             <typeparam name="TException">Тип исключения</typeparam>
         </member>
-        <member name="M:System.ExceptionEventHandlerExtentions.StartAsync``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0},System.AsyncCallback,System.Object)">
+        <member name="M:System.ExceptionEventHandlerExtensions.StartAsync``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0},System.AsyncCallback,System.Object)">
             <summary>Асинхронная генерация события обработки исключения</summary>
             <param name="Handler">Обработчик события</param>
             <param name="Sender">Источник события</param>
@@ -11092,14 +11092,14 @@
             <param name="State">ОБъект состояния, передаваемый в обработчик завершающего метода</param>
             <typeparam name="TException">Тип исключения</typeparam>
         </member>
-        <member name="M:System.ExceptionEventHandlerExtentions.FastStart``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0})">
+        <member name="M:System.ExceptionEventHandlerExtensions.FastStart``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0})">
             <summary>Быстрый запуск события без учёта многопоточных компонентов</summary>
             <param name="Handler">Обработчики события</param>
             <param name="Sender">Источник события</param>
             <param name="e">Аргументы события</param>
             <typeparam name="TException">Тип события</typeparam>
         </member>
-        <member name="M:System.ExceptionEventHandlerExtentions.ThrowIfUnhandled``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0},System.Nullable{System.Boolean})">
+        <member name="M:System.ExceptionEventHandlerExtensions.ThrowIfUnhandled``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0},System.Nullable{System.Boolean})">
             <summary>
             Вызвать <typeparamref name="TException">исключение</typeparamref>, 
             если обработчики его не обработали, либо если кто-либо из обработчиков принял решение вызвать исключение
@@ -12288,31 +12288,31 @@
         <member name="F:System.Linq.Reactive.LamdaObservable`1._OnReset">
             <summary>Действие обработки сброса состояния наблюдаемого объекта</summary>
         </member>
-        <member name="T:System.Linq.Reactive.ObservableExtentions">
+        <member name="T:System.Linq.Reactive.ObservableExtensions">
             <summary>Методы-расширения интерфейса наблюдаемых объектов <see cref="T:System.Linq.Reactive.IObservableEx`1"/></summary>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.AddObserver``1(System.Collections.Generic.ICollection{System.IObserver{``0}},System.IObserver{``0})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.AddObserver``1(System.Collections.Generic.ICollection{System.IObserver{``0}},System.IObserver{``0})">
             <summary>Добавить наблюдатель в список наблюдателей и получить объект-отписчик</summary>
             <typeparam name="T">Тип значений наблюдаемого объекта</typeparam>
             <param name="Observers">Коллекция наблюдателей</param>
             <param name="Observer">Добавляемый наблюдатель</param>
             <returns>Объект, удаляющий наблюдатель из списка наблюдателей в случае своей отписки</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.FromProperty``1(System.ComponentModel.INotifyPropertyChanged,System.String)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.FromProperty``1(System.ComponentModel.INotifyPropertyChanged,System.String)">
             <summary>Метод получения наблюдаемого объекта для объекта, реализующего интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>  для указанного имени свойства</summary>
             <typeparam name="T">Тип значения свойства</typeparam>
             <param name="obj">Наблюдаемый объект</param>
             <param name="ProperyName">Имя свойства</param>
             <returns>Объект-наблюдатель за свойством</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.Where``1(System.IObservable{``0},System.Func{``0,System.Boolean})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Where``1(System.IObservable{``0},System.Func{``0,System.Boolean})">
             <summary>Метод фильтрации событий</summary>
             <typeparam name="T">Тип объектов событий</typeparam>
             <param name="observable">Исходный объект-наблюдатель</param>
             <param name="Predicate">Метод фильтрации</param>
             <returns>Объекнаблюдатель с установленным методом фильтрации</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.Where``1(System.IObservable{``0},System.Func{``0,System.Boolean},System.Action{``0})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Where``1(System.IObservable{``0},System.Func{``0,System.Boolean},System.Action{``0})">
             <summary>Метод фильтрации событий</summary>
             <typeparam name="T">Тип объектов событий</typeparam>
             <param name="observable">Исходный объект-наблюдатель</param>
@@ -12320,7 +12320,7 @@
             <param name="ElseAction">Метод обработки невошедших событий</param>
             <returns>Объекнаблюдатель с установленным методом фильтрации</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.Select``2(System.IObservable{``0},System.Func{``0,``1})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Select``2(System.IObservable{``0},System.Func{``0,``1})">
             <summary>Метод преобразования объектов событий</summary>
             <typeparam name="T">Тип исходных объектов событий</typeparam>
             <typeparam name="Q">Тип результирующих объектов событий</typeparam>
@@ -12328,42 +12328,42 @@
             <param name="Selector">Объект-наблюдатель с преобразованными объектами событий</param>
             <returns>Объект-наблюдатель с преобразованными типами объектов</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.WhaitSync``1(System.IObservable{``0},System.TimeSpan)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.WhaitSync``1(System.IObservable{``0},System.TimeSpan)">
             <summary>Метод получения синхронно задержанных во времени событий</summary>
             <typeparam name="T">Тип объектов событий</typeparam>
             <param name="Observable">Исходный объект-наблюдатель</param>
             <param name="Interval">Интервал времени задержки событий</param>
             <returns>ОБъект-наблюдатель, события которого синхронно задержаны во времени на указанный интервал</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.WhaitAsync``1(System.IObservable{``0},System.TimeSpan)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.WhaitAsync``1(System.IObservable{``0},System.TimeSpan)">
             <summary>Метод получения задержанных во времени событий</summary>
             <typeparam name="T">Тип объектов событий</typeparam>
             <param name="Observable">Исходный объект-наблюдатель</param>
             <param name="Interval">Интервал времени задержки событий</param>
             <returns>ОБъект-наблюдатель, события которого задержаны во времени на указанный интервал</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.FromEvent``1(System.Object,System.String)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.FromEvent``1(System.Object,System.String)">
             <summary>Метод получения объекта-наблюдателя для указанного события</summary>
             <typeparam name="TEventArgs">Тип аргументов события</typeparam>
             <param name="Obj">Наблюдаемый объект</param>
             <param name="EventName">Имя события</param>
             <returns>Объект-ниблюдатель за событием</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.GetObservable``1(System.Collections.Generic.IEnumerable{``0},System.IObservable{``0}@)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.GetObservable``1(System.Collections.Generic.IEnumerable{``0},System.IObservable{``0}@)">
             <summary>Метод получения объекта-наблюдателя из объекта-перечисления</summary>
             <typeparam name="T">Тип объектов перечисления</typeparam>
             <param name="collection">Перечисление объектов</param>
             <param name="observable">Созданный объект-наблюдатель за перечислением объектов коллекции</param>
             <returns>Новое перечисление объектов, перечисление объектов которого вызывает события в наблюдателе</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.Take``1(System.IObservable{``0},System.Int32)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Take``1(System.IObservable{``0},System.Int32)">
             <summary>Метод получения объекта-нибулюдателя, пропускающего после создания указанное число событий</summary>
             <typeparam name="T">Тип объектов события</typeparam>
             <param name="observable">Исходный объект-наблюдатель</param>
             <param name="Count">Количество пропускаемых событий</param>
             <returns>Объект-наблюдатель с указанным количеством пропускаемых событий</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.Take``3(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.Boolean)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Take``3(System.IObservable{``0},System.IObservable{``1},System.IObservable{``2},System.Boolean)">
             <summary>Метод обработки последовательности событий с учётом разрешающей и запрещающей последовательностей</summary>
             <typeparam name="T">Тип объектов событий наблюдаемого объекта</typeparam>
             <typeparam name="O">Тип объектов событий разрешающей последовательности</typeparam>
@@ -12374,7 +12374,7 @@
             <param name="IsOpen">Исходное состояния разрешения событий в выходной последовательности (по умолчанию разрешено)</param>
             <returns>Управляемый объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.TakeUntil``2(System.IObservable{``0},System.IObservable{``1},System.Boolean)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.TakeUntil``2(System.IObservable{``0},System.IObservable{``1},System.Boolean)">
             <summary>Метод получения объекта-наблюдателя, события в котором пропускаются в выходную последовательность только до появления события в управляющей последовательности</summary>
             <typeparam name="T">Тип исходных объектов события</typeparam>
             <typeparam name="Q">Тип события управляющей последовательности</typeparam>
@@ -12383,7 +12383,7 @@
             <param name="IsOpen">Исходное состояние выходной последовательности</param>
             <returns>Объект-наблюдатель управляемый управляющей последовательностью</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.SkipWhile``2(System.IObservable{``0},System.IObservable{``1},System.Boolean)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.SkipWhile``2(System.IObservable{``0},System.IObservable{``1},System.Boolean)">
             <summary>Метод получения объекта-наблюдателя, события в котором пропускаются в выходную последовательность только после появления события в управляющей последовательности</summary>
             <typeparam name="T">Тип исходных объектов события</typeparam>
             <typeparam name="Q">Тип события управляющей последовательности</typeparam>
@@ -12392,29 +12392,14 @@
             <param name="IsOpen">Исходное состояние выходной последовательности</param>
             <returns>Объект-наблюдатель управляемый управляющей последовательностью</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.ForeachAction``1(System.IObservable{``0},System.Action{``0})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
             <param name="observable">Исходный обект-наблюдатель</param>
             <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.ForeachAction``1(System.IObservable{``0},System.Action{``0},System.Func{``0,System.Boolean})">
-            <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
-            <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
-            <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
-            <param name="where">Метод выборки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
-            <returns>Исходный объект-наблюдатель</returns>
-        </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.ForeachAction``1(System.IObservable{``0},System.Action{``0,System.Int32})">
-            <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
-            <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
-            <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
-            <returns>Исходный объект-наблюдатель</returns>
-        </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.ForeachAction``1(System.IObservable{``0},System.Action{``0,System.Int32},System.Func{``0,System.Int32,System.Boolean})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0},System.Func{``0,System.Boolean})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
             <param name="observable">Исходный обект-наблюдатель</param>
@@ -12422,41 +12407,56 @@
             <param name="where">Метод выборки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.OnError``1(System.IObservable{``0},System.Action{System.Exception})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0,System.Int32})">
+            <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
+            <typeparam name="T">Тип объектов наблюдения</typeparam>
+            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
+            <returns>Исходный объект-наблюдатель</returns>
+        </member>
+        <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0,System.Int32},System.Func{``0,System.Int32,System.Boolean})">
+            <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
+            <typeparam name="T">Тип объектов наблюдения</typeparam>
+            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
+            <param name="where">Метод выборки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
+            <returns>Исходный объект-наблюдатель</returns>
+        </member>
+        <member name="M:System.Linq.Reactive.ObservableExtensions.OnError``1(System.IObservable{``0},System.Action{System.Exception})">
             <summary>Метод обработки события <see cref="T:System.Exception"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
             <param name="observable">Исходный обект-наблюдатель</param>
             <param name="OnError">Метод обработки события <see cref="T:System.Exception"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.OnComplited``1(System.IObservable{``0},System.Action)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.OnComplited``1(System.IObservable{``0},System.Action)">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Complited"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
             <param name="observable">Исходный обект-наблюдатель</param>
             <param name="OnComplited">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Complited"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.OnReset``1(System.IObservable{``0},System.Action)">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.OnReset``1(System.IObservable{``0},System.Action)">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Reset"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
             <param name="observable">Исходный обект-наблюдатель</param>
             <param name="OnReset">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Reset"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.FromAsyncPattern``1(System.Func{System.AsyncCallback,System.Object,System.IAsyncResult},System.Func{System.IAsyncResult,``0})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.FromAsyncPattern``1(System.Func{System.AsyncCallback,System.Object,System.IAsyncResult},System.Func{System.IAsyncResult,``0})">
             <summary>Создать метод генерации наблюдаемого объекта из шаблона асинхронной операции</summary>
             <typeparam name="T">Тип результата</typeparam>
             <param name="BeginInvoke">Метод начала асинхронной операции</param>
             <param name="EndInvoke">Метод завершения асинхронной операции</param>
             <returns>Фунцкия, возвращающая наблюдаемый объект, генерирующий своё значение в момент завершения асинхронной операции</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.SelectMany``1(System.IObservable{System.Collections.Generic.IEnumerable{``0}})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.SelectMany``1(System.IObservable{System.Collections.Generic.IEnumerable{``0}})">
             <summary>Метод-лианиризатор событий для наблюдаемого объекта, возвращающего коллекцию объектов типа <see cref="!:T"/></summary>
             <typeparam name="T">Тип результирующих объектов</typeparam>
             <param name="o">Объект-наблюдатель коллекции</param>
             <returns>Объект-наблюдатель элементов коллекции</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtentions.Single``1(System.IObservable{``0})">
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Single``1(System.IObservable{``0})">
             <summary>Получить первое значение наблюдаемого объекта</summary>
             <typeparam name="T">Тип значений объекта</typeparam>
             <param name="ObservableObject">Наблюдаемый объект</param>
@@ -13347,10 +13347,10 @@
             <typeparam name="TValue">Тип значения</typeparam>
             <returns>Массив удалённых пар ключ-значение</returns>
         </member>
-        <member name="T:System.Collections.Generic.IListExtentions">
+        <member name="T:System.Collections.Generic.IListExtensions">
             <summary>Методы расширения для интерфейса списка</summary>
         </member>
-        <member name="M:System.Collections.Generic.IListExtentions.Initialize``1(System.Collections.Generic.IList{``0},System.Int32,System.Func{System.Int32,``0},System.Boolean)">
+        <member name="M:System.Collections.Generic.IListExtensions.Initialize``1(System.Collections.Generic.IList{``0},System.Int32,System.Func{System.Int32,``0},System.Boolean)">
             <summary>Метод расширения для инициализации списка</summary>
             <param name="list">Инициализируемый объект</param>
             <param name="Count">Требуемое число элементов</param>
@@ -13359,7 +13359,7 @@
             <typeparam name="T">Тип элементов списка</typeparam>
             <returns>Инициализированный список</returns>
         </member>
-        <member name="M:System.Collections.Generic.IListExtentions.Initialize``2(System.Collections.Generic.IList{``0},System.Int32,``1,System.Func{System.Int32,``1,``0},System.Boolean)">
+        <member name="M:System.Collections.Generic.IListExtensions.Initialize``2(System.Collections.Generic.IList{``0},System.Int32,``1,System.Func{System.Int32,``1,``0},System.Boolean)">
             <summary>Метод расширения для инициализации списка</summary>
             <param name="list">Инициализируемый объект</param>
             <param name="Count">Требуемое число элементов</param>
@@ -13370,7 +13370,7 @@
             <typeparam name="TParameter">Тип параметра инициализации</typeparam>
             <returns>Инициализированный список</returns>
         </member>
-        <member name="M:System.Collections.Generic.IListExtentions.Mix``1(System.Collections.Generic.IList{``0})">
+        <member name="M:System.Collections.Generic.IListExtensions.Mix``1(System.Collections.Generic.IList{``0})">
             <summary>Перемешать список</summary>
             <param name="list">Перемешиваемый список</param>
             <typeparam name="T">Тип элементов списка</typeparam>
@@ -13503,17 +13503,17 @@
             Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>, содержащий значения объекта, который реализует <see cref="T:System.Collections.Generic.IDictionary`2"/>.
             </returns>
         </member>
-        <member name="T:System.FuncExtentions">
+        <member name="T:System.FuncExtensions">
             <summary>Класс методов-расширений для функции</summary>
         </member>
-        <member name="M:System.FuncExtentions.ToEvulation``1(System.Func{``0},System.String)">
+        <member name="M:System.FuncExtensions.ToEvulation``1(System.Func{``0},System.String)">
             <summary>Преобразование функции в вычисление</summary>
             <typeparam name="T">Тип возвращаемого функцией результата</typeparam>
             <param name="function">Преобразуемая функция</param>
             <param name="Name">Имя вычисления</param>
             <returns>Вычисление функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_NewtonsMethod(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double},System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_NewtonsMethod(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double},System.Double,System.Int32,System.Double)">
             <summary>Поиск нуля функции методом Ньютона</summary>
             <param name="f">Исследуемая функция</param>
             <param name="df">Дифференциал исследуемой функции</param>
@@ -13524,7 +13524,7 @@
             <exception cref="T:System.IndexOutOfRangeException">Если корень не найден за указанное число шагов</exception>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_NewtonsMethodAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double},System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_NewtonsMethodAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double},System.Double,System.Int32,System.Double)">
             <summary>Поиск нуля функции методом Ньютона</summary>
             <param name="f">Исследуемая функция</param>
             <param name="df">Дифференциал исследуемой функции</param>
@@ -13535,7 +13535,7 @@
             <exception cref="T:System.IndexOutOfRangeException">Если корень не найден за указанное число шагов</exception>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_BisectionMethod(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_BisectionMethod(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
             <summary> Поиск нуля функции методом бисекции</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13547,7 +13547,7 @@
             <exception cref="T:System.IndexOutOfRangeException">Если корень не найден за указанное число шагов</exception>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_BisectionMethodAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_BisectionMethodAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
             <summary> Поиск нуля функции методом бисекции</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13559,7 +13559,7 @@
             <exception cref="T:System.IndexOutOfRangeException">Если корень не найден за указанное число шагов</exception>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_GoldenSection(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_GoldenSection(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary> Поиск нуля функции методом Золотого сечения</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13568,7 +13568,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_GoldenSectionAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_GoldenSectionAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary> Поиск нуля функции методом Золотого сечения</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13577,7 +13577,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_TernarySearch(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_TernarySearch(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary> Поиск нуля функции методом Троичного деления</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13586,7 +13586,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_TernarySearchAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_TernarySearchAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary> Поиск нуля функции методом Троичного деления</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13595,7 +13595,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_FalsiPositionMethod(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_FalsiPositionMethod(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
             <summary>Поиск нуля функции методом False position</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13605,7 +13605,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_FalsiPositionMethodAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_FalsiPositionMethodAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
             <summary>Поиск нуля функции методом False position</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13615,7 +13615,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_MethodOfChords(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_MethodOfChords(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary> Поиск нуля функции методом хорд</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13624,7 +13624,7 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.GetRoot_MethodOfChordsAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetRoot_MethodOfChordsAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary> Поиск нуля функции методом хорд</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала поиска</param>
@@ -13633,44 +13633,44 @@
             <returns>Значение аргумента нуля функции</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
         </member>
-        <member name="M:System.FuncExtentions.Carring``3(System.Func{``0,``1,``2})">
+        <member name="M:System.FuncExtensions.Carring``3(System.Func{``0,``1,``2})">
             <summary>Карирование функции двух параметров</summary>
             <typeparam name="TArg1">Тип значение первого параметра функции</typeparam>
             <typeparam name="TArg2">Тип значение второго параметра функции</typeparam>
             <typeparam name="TResult">Тип результата функции</typeparam>
             <param name="f">Карируемая функция</param>
         </member>
-        <member name="M:System.FuncExtentions.Add(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.Add(System.Func{System.Double,System.Double},System.Double)">
             <summary>Сложение функции с числом g(x) = f(x) + a</summary>
             <param name="f">Исходная функция</param>
             <param name="a">Прибавляемое число</param>
             <returns>Новая функция, значения которой равны значениям исходной функции плюс указанному числу</returns>
         </member>
-        <member name="M:System.FuncExtentions.Add(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Add(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Сложение двух функций g(x) = f1(x) + f2(x)</summary>
             <param name="f1">Функция - первое слогаемое</param>
             <param name="f2">Функция - второе слогаемое</param>
             <returns>Функция, значения которой равны сумме значений двух исходных функций</returns>
         </member>
-        <member name="M:System.FuncExtentions.ArgumentReverse(System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.ArgumentReverse(System.Func{System.Double,System.Double})">
             <summary>Изменение знака аргумента функции g(x) = f(-x)</summary>
             <param name="f">Исходная функция</param>
             <returns>Новая функция, значения аргумента которой отрицательны по отношению к аргументу исходной функци g(x) = f(-x)</returns>
         </member>
-        <member name="M:System.FuncExtentions.ArgumentShift(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.ArgumentShift(System.Func{System.Double,System.Double},System.Double)">
             <summary>Смещение аргумента функции на указанное значение g(x) = f(x-a)</summary>
             <param name="f">Исходная функция</param>
             <param name="x0">Значение смещения аргумента</param>
             <returns>Новая функция со смещённым аргументом</returns>
         </member>
-        <member name="M:System.FuncExtentions.ArgumentCompression(System.Func{System.Double,System.Double},System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.ArgumentCompression(System.Func{System.Double,System.Double},System.Double,System.Double)">
             <summary>Сжатие аргумента функци g(x) = f(k * x + b)</summary>
             <param name="f">Исходная функция</param>
             <param name="k">Коэффициент сжатия аргумента</param>
             <param name="b">Коэффициент смещения аргумента</param>
             <returns>Новая функция со сжатым и смещённым аргументом</returns>
         </member>
-        <member name="M:System.FuncExtentions.Divade(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.Divade(System.Func{System.Double,System.Double},System.Double)">
             <summary>Деление функции на число g(x) = f(x) / a</summary>
             <param name="f">Делимая функция</param>
             <param name="a">Вещественный делитель</param>
@@ -13680,19 +13680,19 @@
             аргумент больше нуля, -бесконечности, если аргумент меньше нуля и NaN, если аргумент равен нулю.
             </returns>
         </member>
-        <member name="M:System.FuncExtentions.Divade(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Divade(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
             <param name="f1">Функция - делимое</param>
             <param name="f2">Функция - делитель</param>
             <returns>Функция, значения которой равны отношению значений исходных функций</returns>
         </member>
-        <member name="M:System.FuncExtentions.Func(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Func(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Функция от функци q(f(x))</summary>
             <param name="f">Внутренняя функция</param>
             <param name="q">Внешняя функция</param>
             <returns>ФУнкция q от функции f</returns>
         </member>
-        <member name="M:System.FuncExtentions.FuncFrom``2(System.Func{``0,``1},System.Func{System.Func{``0,``1},System.Func{``0,``1}})">
+        <member name="M:System.FuncExtensions.FuncFrom``2(System.Func{``0,``1},System.Func{System.Func{``0,``1},System.Func{``0,``1}})">
             <summary>Функция от функции - функционал (преобразователь функции)</summary>
             <typeparam name="TIn">Тип аргумента функции</typeparam>
             <typeparam name="TOut">ТИп значения функции</typeparam>
@@ -13700,20 +13700,20 @@
             <param name="q">Метод преобразования исходной функции, тип значения которого соответствует типу исходной функции</param>
             <returns>Новая функция, преобразованная указанным методом на основе исходной функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.FuncFor(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.FuncFor(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Функция от функции f(q(x))</summary>
             <param name="f">Внешняя функция</param>
             <param name="q">Внутренняя функция</param>
             <returns>Функция f от функции q</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetAkf(System.Func{System.Double,System.Double},System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetAkf(System.Func{System.Double,System.Double},System.Double,System.Double)">
             <summary>олучить автокорреляционную функцию от указанной функции</summary>
             <param name="f">Исходная функция</param>
             <param name="deltaX">Диапазон коореляции</param>
             <param name="x0">Смещение</param>
             <returns>Автокорреляционная функция</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetConvolution(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double},System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetConvolution(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double},System.Double,System.Double)">
             <summary>Функция корреляции между двумя функциями на указанному интервале корреляции с указанным смещеинем</summary>
             <param name="f">Первая функция</param>
             <param name="g">Вторая функция</param>
@@ -13721,14 +13721,14 @@
             <param name="x0">Смещение</param>
             <returns>Функция корреляции двух исходных функций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetDifferencial(System.Func{System.Double,System.Double},System.Double,System.Int32)">
+        <member name="M:System.FuncExtensions.GetDifferencial(System.Func{System.Double,System.Double},System.Double,System.Int32)">
             <summary>Функция численного дифференцирования исходной функции</summary>
             <param name="f">Исходная функция</param>
             <param name="dx">Дифференциальный участок</param>
             <param name="n">Номер метода численного дифференцирования в пределах [0,4]</param>
             <returns>Функция численного дифференциала от исходной функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetDifferencialValue(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
+        <member name="M:System.FuncExtensions.GetDifferencialValue(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
             <summary>Определение значения численного дифференциала в указанной точке, с указанным шагом дифференцирования и номером метода</summary>
             <param name="f">Дифференцируемая функция</param>
             <param name="x">Точка дифференцирования</param>
@@ -13736,7 +13736,7 @@
             <param name="n">Номер метода</param>
             <returns>Численное значение дифференциала функции в указанной точке</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValue(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Определённый численный интеграл функции (метод трапеций)</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Начальное значение интервала интегрирования</param>
@@ -13745,7 +13745,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Значение результата численного интегрирования функции методом трапеций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValueAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValueAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Определённый численный интеграл функции (метод трапеций)</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Начальное значение интервала интегрирования</param>
@@ -13754,7 +13754,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Значение результата численного интегрирования функции методом трапеций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegral2Value(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegral2Value(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>Двойной определённый численный интеграл функции (метод трапеций)</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Начальное значение интервала интегрирования</param>
@@ -13764,7 +13764,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Значение результата двойного численного интегрирования функции методом трапеций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegral2ValueAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegral2ValueAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>Определённый численный интеграл функции (метод трапеций)</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Начальное значение интервала интегрирования</param>
@@ -13774,7 +13774,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Значение результата численного интегрирования функции методом трапеций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValue(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Интегрирование функции с модификацией ядра интеграла</summary>
             <param name="f">Подинтегральная функция f(x)</param>
             <param name="Core">Ядро интегрирования: Core(f(x),x)</param>
@@ -13784,7 +13784,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Значение определённого интеграла от ядра интегрирования методом тропеций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValueAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValueAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Расчитать интеграл функции асинхронно</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="Core">Ядро интегрирования</param>
@@ -13794,7 +13794,7 @@
             <param name="dx">ШАг интегрирования</param>
             <returns>Задача расчёта значения интеграла функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegral2Value(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegral2Value(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>Интегрирование функции с модификацией ядра интеграла</summary>
             <param name="f">Подинтегральная функция f(x)</param>
             <param name="Core">Ядро интегрирования: Core(f(x),x)</param>
@@ -13805,7 +13805,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Значение определённого интеграла от ядра интегрирования методом тропеций</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegral2ValueAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegral2ValueAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>Асинхронный расчёт двойного интеграла функции</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="Core">Ядро интегрирования</param>
@@ -13816,7 +13816,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Задача численного расчёта второго интеграла функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_Simpson(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_Simpson(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
             <summary>Численный расчёт определённого интеграла методом симпсона</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Нижний предел интегрирования</param>
@@ -13824,7 +13824,7 @@
             <param name="N">Число интервалов интегрирования N > 2</param>
             <returns>Интеграл функции на отрезке метдом Симпсона</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_Simpson(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_Simpson(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Численный расчёт определённого интеграла методом симпсона</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Нижний предел интегрирования</param>
@@ -13833,7 +13833,7 @@
             <param name="dx">Шаг интегрирования</param>
             <returns>Интеграл функции на отрезке метдом Симпсона</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_SimpsonAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_SimpsonAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
             <summary>Численный расчёт определённого интеграла методом симпсона</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Нижний предел интегрирования</param>
@@ -13841,7 +13841,7 @@
             <param name="N">Число интервало интегрирования N > 2</param>
             <returns>Интеграл функции на отрезке метдом Симпсона</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_Adaptive(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_Adaptive(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
             <summary>Численный расчёт определённого интеграла методом адаптивного разбиения</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Нижний предел интегрирования</param>
@@ -13856,7 +13856,7 @@
             числом точек для каждого из них. Для каждой половины рекурентно повторяется проделанная процедура 
             </remarks>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_AdaptiveAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_AdaptiveAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32,System.Double)">
             <summary>Численный расчёт определённого интеграла методом адаптивного разбиения</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Нижний предел интегрирования</param>
@@ -13865,7 +13865,7 @@
             <param name="eps">Точность вычисления интеграла</param>
             <returns>Адаптивный интеграл функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_Spline(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_Spline(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
             <summary>Значение интеграла функции методом сплайнов</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Начало отрезка интегрирования</param>
@@ -13873,7 +13873,7 @@
             <param name="N">Разбиение интервала интегрирования</param>
             <returns>Значение интеграла функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegralValue_SplineAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
+        <member name="M:System.FuncExtensions.GetIntegralValue_SplineAsync(System.Func{System.Double,System.Double},System.Double,System.Double,System.Int32)">
             <summary>Значение интеграла функции методом сплайнов</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x1">Начало отрезка интегрирования</param>
@@ -13881,7 +13881,7 @@
             <param name="N">Разбиение интервала интегрирования</param>
             <returns>Значение интеграла функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetIntegral(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetIntegral(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Получить функцию-интеграл от функции</summary>
             <param name="f">Подинтегральная функция</param>
             <param name="x0">Начальное положение интегрирования</param>
@@ -13889,21 +13889,21 @@
             <param name="eps">Точность интегрирования</param>
             <returns>Функция-интеграл от исходной функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetPeriodic(System.Func{System.Double,System.Double},System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetPeriodic(System.Func{System.Double,System.Double},System.Double,System.Double)">
             <summary>Создать периодическую функцию на основе исходной</summary>
             <param name="f">Исходная функция</param>
             <param name="T">Период</param>
             <param name="x0">Смещение</param>
             <returns>Периодическая функция</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetPower(System.Func{System.Double,System.Double},System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetPower(System.Func{System.Double,System.Double},System.Double,System.Double)">
             <summary>Определить мощность функции</summary>
             <param name="f">Исследуемая функция</param>
             <param name="x1">Начало интервала</param>
             <param name="x2">Конец интервала</param>
             <returns>Значение интеграла от квадрата функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.Sampling``1(System.Func{System.Double,``0},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.Sampling``1(System.Func{System.Double,``0},System.Double,System.Double,System.Double)">
             <summary>Дискретизация функции</summary>
             <typeparam name="T">Тип значения функции</typeparam>
             <param name="f">Дискретизируемая функция</param>
@@ -13912,7 +13912,7 @@
             <param name="dx">ШАг дискретизации</param>
             <returns>Перечисление дискретных значений функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetValues``2(System.Func{``0,``1},``0[])">
+        <member name="M:System.FuncExtensions.GetValues``2(System.Func{``0,``1},``0[])">
             <summary>Определение значений функции в дискретном перечне значений аргумента</summary>
             <typeparam name="TArgument">Тип аргумента</typeparam>
             <typeparam name="TResult">Тип значения функции</typeparam>
@@ -13920,7 +13920,7 @@
             <param name="args">Массив аргументов функции</param>
             <returns>Массив значений функции для указанных значений аргументов</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetValues``1(System.Func{System.Double,``0},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.GetValues``1(System.Func{System.Double,``0},System.Double,System.Double,System.Double)">
             <summary>Получить массив значений функции на указанном интервале с указанным шагом дискретизации</summary>
             <typeparam name="TResult">ТИп значений функции</typeparam>
             <param name="f">Дискретизируемая функция</param>
@@ -13929,54 +13929,54 @@
             <param name="dx">Шаг дискретизации</param>
             <returns>Массив значений функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.Inverse(System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Inverse(System.Func{System.Double,System.Double})">
             <summary>Получить функцию, значения которой обратны к значениям исходрной функции g(x) = 1 / f(x)</summary>
             <param name="f">Исходная функция</param>
             <returns>Функция, значения которой обратны по отношению исходной функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.Multiply(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Multiply(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Произведение двух функций g(x) = f1(x) * f2(x)</summary>
             <param name="f1">Фунция - первый сомножитель</param>
             <param name="f2">Функция - второй сомножитель</param>
             <returns>Функция - произведение двух функций</returns>
         </member>
-        <member name="M:System.FuncExtentions.Multiply(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.Multiply(System.Func{System.Double,System.Double},System.Double)">
             <summary>Произведение функции на число g(x) = f(x) * a</summary>
             <param name="f">Исходная функция</param>
             <param name="a">Число</param>
             <returns>Функция, значения которой равны произведению значений исходной функции на указанное число</returns>
         </member>
-        <member name="M:System.FuncExtentions.Power(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.Power(System.Func{System.Double,System.Double},System.Double)">
             <summary>Возведение функции в вещественную степень</summary>
             <param name="f">Исходная функция</param>
             <param name="a">Вещественная степень</param>
             <returns>Функция, значения которой равны возведению в указанную степень значений исходной функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.Reverse(System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Reverse(System.Func{System.Double,System.Double})">
             <summary>Получение отрицательной функции</summary>
             <param name="f">Исходная функция</param>
             <returns>Функция, значения которой обратны по знаку к исходной функци</returns>
         </member>
-        <member name="M:System.FuncExtentions.SetParameter(System.Func{System.Double,System.Double,System.Double},System.Double,System.Boolean)">
+        <member name="M:System.FuncExtensions.SetParameter(System.Func{System.Double,System.Double,System.Double},System.Double,System.Boolean)">
             <summary>Установка значения параметра функции двух переменных</summary>
             <param name="f">Исходная функция двух переменных</param>
             <param name="a">Устанавливаемое значение параметра</param>
             <param name="IsFirst">Параметром является первый аргумент функции? (по умолчанию - нет)</param>
             <returns>Функция одного переменного, получанная на основе исходной функции двух переменных устновкой одного в значение указанного параметра</returns>
         </member>
-        <member name="M:System.FuncExtentions.Substract(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Substract(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Вычитание одной функции из другой g(x) = f1(x) - f2(x)</summary>
             <param name="f1">Функция - уменьшаемое</param>
             <param name="f2">Функция - вычитаемое</param>
             <returns>Функция, значения которой численно равны разности значений двух исходных функций</returns>
         </member>
-        <member name="M:System.FuncExtentions.Substract(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.Substract(System.Func{System.Double,System.Double},System.Double)">
             <summary>Вычитание из вункции числа g(x) = f(x) - a</summary>
             <param name="f">Исходная функция</param>
             <param name="a">вычитаемое из функции число</param>
             <returns>Функция, значения которой численно равны разности значений исходной функции и указанного числа</returns>
         </member>
-        <member name="M:System.FuncExtentions.GetValuesParralel``2(System.Func{``0,``1},System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:System.FuncExtensions.GetValuesParralel``2(System.Func{``0,``1},System.Collections.Generic.IEnumerable{``0})">
             <summary>Вычислить значения функции параллельно</summary>
             <param name="f">Вычисляемая функция</param>
             <param name="Arguments">Область определения</param>
@@ -13984,86 +13984,86 @@
             <typeparam name="TResult">Тип значения</typeparam>
             <returns>Массив значений функции</returns>
         </member>
-        <member name="T:System.FuncExtentions.Integrator">
+        <member name="T:System.FuncExtensions.Integrator">
             <summary>Интегратор функции</summary>
         </member>
-        <member name="F:System.FuncExtentions.Integrator._LockObject">
+        <member name="F:System.FuncExtensions.Integrator._LockObject">
             <summary>Объект синхронизации потоков при доступе к параметрам интегратора</summary>
         </member>
-        <member name="P:System.FuncExtentions.Integrator.C">
+        <member name="P:System.FuncExtensions.Integrator.C">
             <summary>Константа интегрирования</summary>
         </member>
-        <member name="P:System.FuncExtentions.Integrator.x0">
+        <member name="P:System.FuncExtensions.Integrator.x0">
             <summary>Начальное положение интегратора</summary>
         </member>
-        <member name="P:System.FuncExtentions.Integrator.f">
+        <member name="P:System.FuncExtensions.Integrator.f">
             <summary>Интегрируемая функция</summary>
         </member>
-        <member name="M:System.FuncExtentions.Integrator.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.Integrator.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double)">
             <summary>Инициализация нового интегратора функции</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="x0">Начальное положение интегратора</param>
             <param name="C">Константа интегрирования</param>
         </member>
-        <member name="M:System.FuncExtentions.Integrator.GetValue(System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.Integrator.GetValue(System.Double,System.Double)">
             <summary>Метод расчёта интеграла от предыдущего положения интегратора до указанного</summary>
             <param name="x">Требуемое значение конца интервала интегрирования</param>
             <param name="eps">Точность процесса интегрирования</param>
             <returns>Значение численного интеграла на интервале от предыдущего положения интегратора до указанного</returns>
         </member>
-        <member name="M:System.FuncExtentions.Integrator.GetIntegral(System.Double)">
+        <member name="M:System.FuncExtensions.Integrator.GetIntegral(System.Double)">
             <summary>Получить функцию, равную интегралу от интегрируемой функции</summary>
             <param name="eps">Точность интегрирования</param>
             <returns>Интеграл функци</returns>
         </member>
-        <member name="T:System.FuncExtentions.VectorAddDelegate">
+        <member name="T:System.FuncExtensions.VectorAddDelegate">
             <summary>Делегат функции сложения двух векторов</summary>
             <param name="C">Вектор результата сложения</param>
             <param name="B">Вектор первого слогаемого</param>
             <param name="A">Вектор второго слогаемого</param>
             <param name="length">Длина векторов</param>
         </member>
-        <member name="M:System.FuncExtentions.CreateFastFloatSummator">
+        <member name="M:System.FuncExtensions.CreateFastFloatSummator">
             <summary>Метод генерации быстрого сумматора двух векторов вещественных чисел</summary>
             <returns>Метод сложения двух векторов вещественных чисел</returns>
         </member>
-        <member name="T:System.FuncExtentions.SamplingResult`1">
+        <member name="T:System.FuncExtensions.SamplingResult`1">
             <summary>Результат дескритезации функции</summary>
             <typeparam name="TValue">Тип значений функции</typeparam>
         </member>
-        <member name="T:System.FuncExtentions.SamplingResult`1.Result">
+        <member name="T:System.FuncExtensions.SamplingResult`1.Result">
             <summary>Отсчёт функции</summary>
         </member>
-        <member name="F:System.FuncExtentions.SamplingResult`1.Result.Argument">
+        <member name="F:System.FuncExtensions.SamplingResult`1.Result.Argument">
             <summary>Значение аргумента отсчёта</summary>
         </member>
-        <member name="F:System.FuncExtentions.SamplingResult`1.Result.Value">
+        <member name="F:System.FuncExtensions.SamplingResult`1.Result.Value">
             <summary>Значение функции</summary>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResult`1.Result.#ctor(System.Double,`0)">
+        <member name="M:System.FuncExtensions.SamplingResult`1.Result.#ctor(System.Double,`0)">
             <summary>Инициализация нового отсчёта функции</summary>
             <param name="Argument">Значение аргумента функции</param>
             <param name="Value">Значение функции</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResult`1.Result.op_Implicit(System.FuncExtentions.SamplingResult{`0}.Result)~System.Tuple{System.Double,`0}">
+        <member name="M:System.FuncExtensions.SamplingResult`1.Result.op_Implicit(System.FuncExtensions.SamplingResult{`0}.Result)~System.Tuple{System.Double,`0}">
             <summary>Оператор неявного приведения отсчёта функции к картежу двух элементов - значение отсчёта функции - значение функции</summary>
             <param name="result">Отсчёт функции</param>
         </member>
-        <member name="P:System.FuncExtentions.SamplingResult`1.Values">
+        <member name="P:System.FuncExtensions.SamplingResult`1.Values">
             <summary>Перечисление отсчётов функции</summary>
         </member>
-        <member name="P:System.FuncExtentions.SamplingResult`1.Accuracy">
+        <member name="P:System.FuncExtensions.SamplingResult`1.Accuracy">
             <summary>Оценка точности дискретизации</summary>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResult`1.#ctor(System.Collections.Generic.IEnumerable{System.FuncExtentions.SamplingResult{`0}.Result},System.Double)">
+        <member name="M:System.FuncExtensions.SamplingResult`1.#ctor(System.Collections.Generic.IEnumerable{System.FuncExtensions.SamplingResult{`0}.Result},System.Double)">
             <summary>Инициализация нового результата дискретизации функции</summary>
             <param name="Values">Перечисление отсчётов функции</param>
             <param name="Accuracy">Оценка точности дискретизации</param>
         </member>
-        <member name="T:System.FuncExtentions.SimpleSamplingResult">
+        <member name="T:System.FuncExtensions.SimpleSamplingResult">
             <summary>Результат дискретизации вещественной функции</summary>
         </member>
-        <member name="M:System.FuncExtentions.SimpleSamplingResult.Sampling(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SimpleSamplingResult.Sampling(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Метод дискретизации</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14071,37 +14071,37 @@
             <param name="dx">Шаг дискретизации</param>
             <returns>Кортеж, содержащий связанный список дискретов функции и оценку точности дискретизации</returns>
         </member>
-        <member name="F:System.FuncExtentions.SimpleSamplingResult._F">
+        <member name="F:System.FuncExtensions.SimpleSamplingResult._F">
             <summary>Дискретизируемая функция</summary>
         </member>
-        <member name="F:System.FuncExtentions.SimpleSamplingResult._List">
+        <member name="F:System.FuncExtensions.SimpleSamplingResult._List">
             <summary>Связанный список отсчётов функции</summary>
         </member>
-        <member name="M:System.FuncExtentions.SimpleSamplingResult.#ctor(System.Tuple{System.Collections.Generic.LinkedList{System.FuncExtentions.SamplingResult{System.Double}.Result},System.Double})">
+        <member name="M:System.FuncExtensions.SimpleSamplingResult.#ctor(System.Tuple{System.Collections.Generic.LinkedList{System.FuncExtensions.SamplingResult{System.Double}.Result},System.Double})">
             <summary>Инициализация нового результата дискретизации по кортежу дискретов функции и оценки точности дискретизации</summary>
             <param name="SamplingResult">Кортеж дискретов функции и оценки точности дскретизации</param>
         </member>
-        <member name="M:System.FuncExtentions.SimpleSamplingResult.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SimpleSamplingResult.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Инициализация нового результата дискретизации</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
             <param name="x2">Окончание интервала дискретизации</param>
             <param name="dx">Шаг дискретизации</param>
         </member>
-        <member name="M:System.FuncExtentions.SimpleSamplingResult.ClarifySampling(System.Double)">
+        <member name="M:System.FuncExtensions.SimpleSamplingResult.ClarifySampling(System.Double)">
             <summary>Уточнение результата дискретизации</summary>
             <param name="accuracy">Требуемая точность</param>
             <returns>Истина, если требуемая точность достигнута</returns>
         </member>
-        <member name="M:System.FuncExtentions.SimpleSamplingResult.GetValues">
+        <member name="M:System.FuncExtensions.SimpleSamplingResult.GetValues">
             <summary>Метод получения отсчётов функции</summary>
             <returns>Массив отсчётов функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.SimpleSamplingResult.op_Implicit(System.FuncExtentions.SimpleSamplingResult)~System.FuncExtentions.SamplingResult{System.Double}.Result[]">
+        <member name="M:System.FuncExtensions.SimpleSamplingResult.op_Implicit(System.FuncExtensions.SimpleSamplingResult)~System.FuncExtensions.SamplingResult{System.Double}.Result[]">
             <summary>Оператор неявного приведения типа результата дискретизации к типу массива отсчётов функции</summary>
             <param name="result">Результат дискретизации</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Адаптивный метод дискретизации вещественной функции</summary>
             <param name="f">Дискретизируемая вещественная функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14109,7 +14109,7 @@
             <param name="eps">Точность дискретизации</param>
             <returns>Результат дискретизации вещественной функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double)">
             <summary>Адаптивный метод дискретизации функции</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="converter">Конвертер преобразования значения функции в вещественное число для оценки точности дискретизации</param>
@@ -14118,11 +14118,11 @@
             <param name="eps">Точность дискретизации</param>
             <returns>Результат дискретизации функции</returns>
         </member>
-        <member name="T:System.FuncExtentions.AdaptiveSamplingResult`1">
+        <member name="T:System.FuncExtensions.AdaptiveSamplingResult`1">
             <summary>Результат адаптивной дискретизации</summary>
             <typeparam name="T">Тип значения дискретизируемой функци</typeparam>
         </member>
-        <member name="M:System.FuncExtentions.AdaptiveSamplingResult`1.Sampling(System.Func{System.Double,`0},System.Func{`0,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.AdaptiveSamplingResult`1.Sampling(System.Func{System.Double,`0},System.Func{`0,System.Double},System.Double,System.Double,System.Double)">
             <summary>Метод дискретизации функции</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="converter">Метод преобразования значений функции в вещественное число для оценки точности дискретизации</param>
@@ -14131,20 +14131,20 @@
             <param name="dx">НАчальный шаг дискретизации</param>
             <returns>Кортеж со списком значений функции и вещественным число, оценивающим точность дискретизации</returns>
         </member>
-        <member name="F:System.FuncExtentions.AdaptiveSamplingResult`1._List">
+        <member name="F:System.FuncExtensions.AdaptiveSamplingResult`1._List">
             <summary>СВязанный список с дискретами функции</summary>
         </member>
-        <member name="F:System.FuncExtentions.AdaptiveSamplingResult`1._F">
+        <member name="F:System.FuncExtensions.AdaptiveSamplingResult`1._F">
             <summary>Дискретизируемая функция</summary>
         </member>
-        <member name="F:System.FuncExtentions.AdaptiveSamplingResult`1._Converter">
+        <member name="F:System.FuncExtensions.AdaptiveSamplingResult`1._Converter">
             <summary>Метод преобразования значений функции в вещественное число для оценки качества дискретизации</summary>
         </member>
-        <member name="M:System.FuncExtentions.AdaptiveSamplingResult`1.#ctor(System.Tuple{System.Collections.Generic.LinkedList{System.FuncExtentions.SamplingResult{`0}.Result},System.Double})">
+        <member name="M:System.FuncExtensions.AdaptiveSamplingResult`1.#ctor(System.Tuple{System.Collections.Generic.LinkedList{System.FuncExtensions.SamplingResult{`0}.Result},System.Double})">
             <summary>Инициализация нового адаптивного дискретизацтора</summary>
             <param name="SamplingResult">Список отсчётов дискретизации функции и оценка точности дискретизации</param>
         </member>
-        <member name="M:System.FuncExtentions.AdaptiveSamplingResult`1.#ctor(System.Func{System.Double,`0},System.Func{`0,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.AdaptiveSamplingResult`1.#ctor(System.Func{System.Double,`0},System.Func{`0,System.Double},System.Double,System.Double,System.Double)">
             <summary>Инициализация нового адаптивного дискретизацтора</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="converter">Метод преобразования значений функции в вещественное число для оценки качества дискретизации</param>
@@ -14152,23 +14152,23 @@
             <param name="x2">Конец интервала дискретизации</param>
             <param name="dx">Начальный шаг дискретизации</param>
         </member>
-        <member name="M:System.FuncExtentions.AdaptiveSamplingResult`1.ClarifySampling(System.Double)">
+        <member name="M:System.FuncExtensions.AdaptiveSamplingResult`1.ClarifySampling(System.Double)">
             <summary>Точная дискретизации</summary>
             <param name="accuracy">Требуемая точность</param>
             <returns>Полученная точность дискретизации</returns>
         </member>
-        <member name="M:System.FuncExtentions.AdaptiveSamplingResult`1.GetValues">
+        <member name="M:System.FuncExtensions.AdaptiveSamplingResult`1.GetValues">
             <summary>Получить отсчёты функции в виде массива значений</summary>
             <returns>Массив значений функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.AdaptiveSamplingResult`1.op_Implicit(System.FuncExtentions.AdaptiveSamplingResult{`0})~System.FuncExtentions.SamplingResult{`0}.Result[]">
+        <member name="M:System.FuncExtensions.AdaptiveSamplingResult`1.op_Implicit(System.FuncExtensions.AdaptiveSamplingResult{`0})~System.FuncExtensions.SamplingResult{`0}.Result[]">
             <summary>Оператор неявного преобразования результатов адаптивной дискретизации функции в массив её значений</summary>
             <param name="result">Результаты адаптивной дискретизации функции</param>
         </member>
-        <member name="T:System.FuncExtentions.SamplingResultOneWay">
+        <member name="T:System.FuncExtensions.SamplingResultOneWay">
             <summary>Результаты дискретизации функции адаптивным однопроходным методом</summary>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResultOneWay.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingResultOneWay.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Инициализация нового результата адаптивной дискретизации однопроходным методом</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14176,7 +14176,7 @@
             <param name="eps">Требуемая точность дискретизации</param>
             <param name="dx">Начальный шаг дискретизации</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWay(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_OneWay(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Однопроходный адаптивный метод дискретизации функции</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14185,7 +14185,7 @@
             <param name="dx">Начальный шаг дискретизации</param>
             <returns>Результат дискретизации</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWay(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_OneWay(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
             <summary>Метод однопроходной адаптивной дискретизации функции</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14195,11 +14195,11 @@
             <param name="UpdateAccuracy">Метод обновления значения точности дискретизации в процесс самой дискретизации</param>
             <returns>Перечисление результатов дискретизации</returns>
         </member>
-        <member name="T:System.FuncExtentions.SamplingResultOneWayT`1">
+        <member name="T:System.FuncExtensions.SamplingResultOneWayT`1">
             <summary>Результаты адаптивной однопроходной дискретизации функции значений указанного типа</summary>
             <typeparam name="T">ТИп значений функции</typeparam>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWay``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_OneWay``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Адаптивная дискретизация функции в один проход</summary>
             <typeparam name="T">Тип значений функции</typeparam>
             <param name="f">Дискретизируемая функция</param>
@@ -14210,7 +14210,7 @@
             <param name="dx">Начальный шаг дискретизации</param>
             <returns>Результат дискретизации функции</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_OneWayT``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_OneWayT``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double,System.Action{System.Double})">
             <summary>МЕтод последовательной дискретизации функции с адаптивным шагом</summary>
             <typeparam name="T">Тип значений функции</typeparam>
             <param name="f">Дискретизируемая функция</param>
@@ -14222,21 +14222,21 @@
             <param name="UpdateAccuracy">Метод обновления значения текущего уровня точности дискретизации</param>
             <returns>Перечисление отсчётов функции</returns>
         </member>
-        <member name="T:System.FuncExtentions.SamplingResultHalfDivision">
+        <member name="T:System.FuncExtensions.SamplingResultHalfDivision">
             <summary>Результат дискретизации методом половинного деления</summary>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResultHalfDivision.#ctor(System.Tuple{System.FuncExtentions.SamplingResult{System.Double}.Result[],System.Double})">
+        <member name="M:System.FuncExtensions.SamplingResultHalfDivision.#ctor(System.Tuple{System.FuncExtensions.SamplingResult{System.Double}.Result[],System.Double})">
             <summary>Инициализация нового экземпляра результата дискретизации методом половинного деления</summary>
             <param name="Result">Результаты дискретизации, содержащие массив отсчётов функции и значение точности</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResultHalfDivision.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingResultHalfDivision.#ctor(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Инициализация нового экземпляра результата дискретизации функции методом половинного деления</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
             <param name="x2">Конец интервала дискретизации</param>
             <param name="eps">Требуемая точность</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_HalfDivision(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_HalfDivision(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Дискретизациия функции методом половинного деления</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14244,7 +14244,7 @@
             <param name="eps">Требуемая точность</param>
             <returns>Результат дискретизации функции методом половинного деления</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_HalfDivision_(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_HalfDivision_(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Метод дискретизации функции методом половиноного деления</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
@@ -14252,15 +14252,15 @@
             <param name="eps">Требуемая точность</param>
             <returns>Результаты дискретизации</returns>
         </member>
-        <member name="T:System.FuncExtentions.SamplingResultHalfDivisionT`1">
+        <member name="T:System.FuncExtensions.SamplingResultHalfDivisionT`1">
             <summary>Результат дискретизации методом половинного деления</summary>
             <typeparam name="T">Тип значений функции</typeparam>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResultHalfDivisionT`1.#ctor(System.Tuple{System.FuncExtentions.SamplingResult{`0}.Result[],System.Double})">
+        <member name="M:System.FuncExtensions.SamplingResultHalfDivisionT`1.#ctor(System.Tuple{System.FuncExtensions.SamplingResult{`0}.Result[],System.Double})">
             <summary>Инициализация нового экземпляра результата дискретизации методом половинного деления</summary>
             <param name="Result">Результаты дискретизации, содержащие массив отсчётов функции и значение точности</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingResultHalfDivisionT`1.#ctor(System.Func{System.Double,`0},System.Func{`0,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingResultHalfDivisionT`1.#ctor(System.Func{System.Double,`0},System.Func{`0,System.Double},System.Double,System.Double,System.Double)">
             <summary>Инициализация нового экземпляра результата дискретизации функции методом половинного деления</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="converter">Метод преобразования значений функции в вещественные числа для оценки качества дискретизации</param>
@@ -14268,7 +14268,7 @@
             <param name="x2">Конец интервала дискретизации</param>
             <param name="eps">Требуемая точность</param>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_HalfDivision``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_HalfDivision``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double)">
             <summary>Дискретизациия функции методом половинного деления</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="converter">Метод преобразования значений функции в вещественные числа для оценки качества дискретизации</param>
@@ -14277,7 +14277,7 @@
             <param name="eps">Требуемая точность</param>
             <returns>Результат дискретизации функции методом половинного деления</returns>
         </member>
-        <member name="M:System.FuncExtentions.SamplingAdaptive_HalfDivision_``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double)">
+        <member name="M:System.FuncExtensions.SamplingAdaptive_HalfDivision_``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double)">
             <summary>Метод дискретизации функции методом половиноного деления</summary>
             <param name="f">Дискретизируемая функция</param>
             <param name="converter">Метод преобразования значений функции в вещественные числа для оценки качества дискретизации</param>
@@ -14604,18 +14604,18 @@
             <param name="BufferSize">Размер буфера (по умолчанию 4096 байта)</param>
             <returns>Буферизованный поток данных</returns>
         </member>
-        <member name="T:System.Xml.Serialization.XmlSerializerExtentions">
+        <member name="T:System.Xml.Serialization.XmlSerializerExtensions">
             <summary>Класс методов-расширений для XML-сериализаторов</summary>
         </member>
-        <member name="F:System.Xml.Serialization.XmlSerializerExtentions.__XmlSerializersPool">
+        <member name="F:System.Xml.Serialization.XmlSerializerExtensions.__XmlSerializersPool">
             <summary>Словарь типов - сериализаторов</summary>
         </member>
-        <member name="M:System.Xml.Serialization.XmlSerializerExtentions.GetXmlSerializer(System.Type)">
+        <member name="M:System.Xml.Serialization.XmlSerializerExtensions.GetXmlSerializer(System.Type)">
             <summary>Получить XML-сериализатор по указанному типу</summary>
             <param name="type">Тип XML-сериализатора</param>
             <returns>XML-сериализатор</returns>
         </member>
-        <member name="M:System.Xml.Serialization.XmlSerializerExtentions.GetXmlSerializer``1">
+        <member name="M:System.Xml.Serialization.XmlSerializerExtensions.GetXmlSerializer``1">
             <summary>Получить XML-сериализатор по указанному типу</summary>
             <param name="type">Тип XML-сериализатора</param>
             <returns>XML-сериализатор</returns>
@@ -15051,336 +15051,336 @@
                 </para>
             </devdoc>
         </member>
-        <member name="M:System.ByteExtentions.IsPowerOf2(System.Byte)">
+        <member name="M:System.ByteExtensions.IsPowerOf2(System.Byte)">
             <summary>Является ли число степенью двойки?</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         </member>
-        <member name="M:System.ByteExtentions.BitCount(System.Byte)">
+        <member name="M:System.ByteExtensions.BitCount(System.Byte)">
             <summary>Число бит числа</summary>
             <param name="x">Значащее число</param>
             <returns>Число бит числа</returns>
         </member>
-        <member name="M:System.ByteExtentions.BitReversing(System.Byte,System.Int32)">
+        <member name="M:System.ByteExtensions.BitReversing(System.Byte,System.Int32)">
             <summary>Реверсирование бит числа</summary>
             <param name="x">исходное число</param>
             <param name="N">Число реверсируемых бит [ = 16 ]</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.ByteExtentions.IsOdd(System.Byte)">
+        <member name="M:System.ByteExtensions.IsOdd(System.Byte)">
             <summary>Является ли число нечётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число нечётное</returns>
         </member>
-        <member name="M:System.ByteExtentions.IsEven(System.Byte)">
+        <member name="M:System.ByteExtensions.IsEven(System.Byte)">
             <summary>Является ли число чётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число чётное</returns>
         </member>
-        <member name="T:System.DecimalExtentions">
+        <member name="T:System.DecimalExtensions">
             <summary>Расширения для чисел двойной точности</summary>
         </member>
-        <member name="M:System.DecimalExtentions.Sqrt(System.Decimal,System.Decimal)">
+        <member name="M:System.DecimalExtensions.Sqrt(System.Decimal,System.Decimal)">
             <summary>Вычисление квадратного корня указанной точности последовательными приближениями</summary>
             <param name="x">Число, квадратный корень которого требуется вычислить</param>
             <param name="epsilon">Требуемая точность</param>
             <returns>Квадратный корень числа</returns>
         </member>
-        <member name="M:System.DecimalExtentions.IsInt(System.Decimal)">
+        <member name="M:System.DecimalExtensions.IsInt(System.Decimal)">
             <summary>Является ли число целым?</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число целое</returns>
         </member>
-        <member name="M:System.DecimalExtentions.GetInverse(System.Decimal)">
+        <member name="M:System.DecimalExtensions.GetInverse(System.Decimal)">
             <summary>Получить обратное число</summary>
             <param name="x">Инвертируемое число</param>
             <returns>Число, обратное к исходном</returns>
         </member>
-        <member name="T:System.DoubleExtentions">
+        <member name="T:System.DoubleExtensions">
             <summary>Расширения для чисел двойной точности</summary>
         </member>
-        <member name="M:System.DoubleExtentions.Sqrt(System.Double)">
+        <member name="M:System.DoubleExtensions.Sqrt(System.Double)">
             <summary>Квадратный корень</summary>
             <param name="x">Число из которого извлекается квадратный корень</param>
             <returns>Квадратный корень числа</returns>
         </member>
-        <member name="M:System.DoubleExtentions.IsInt(System.Double)">
+        <member name="M:System.DoubleExtensions.IsInt(System.Double)">
             <summary>Является ли число целым?</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число целое</returns>
         </member>
-        <member name="M:System.DoubleExtentions.IsNaN(System.Double)">
+        <member name="M:System.DoubleExtensions.IsNaN(System.Double)">
             <summary>Является ли значение "не числом"?</summary>
             <param name="x">Проверяемое значение</param>
             <returns>Истина, если значение - не число</returns>
         </member>
-        <member name="M:System.DoubleExtentions.Round(System.Double,System.Int32)">
+        <member name="M:System.DoubleExtensions.Round(System.Double,System.Int32)">
             <summary>Округление числа до указанного количества знаков после запятой </summary>
             <param name="x">Округляемое число</param>
             <param name="n">Количество знаков после запятой при n >= 0 и до запятой при n меньше 0</param>
             <returns>Число, округлённое до указанной точности</returns>
         </member>
-        <member name="M:System.DoubleExtentions.RoundAdaptive(System.Double,System.Int32)">
+        <member name="M:System.DoubleExtensions.RoundAdaptive(System.Double,System.Int32)">
             <summary>Адаптивное округление</summary>
             <param name="x">Округляемая величина</param>
             <param name="n">Количество значащих разрядов</param>
             <returns>Число с указанным количеством значащих разрядов</returns>
         </member>
-        <member name="M:System.DoubleExtentions.GetInverse(System.Double)">
+        <member name="M:System.DoubleExtensions.GetInverse(System.Double)">
             <summary>Получить обратное число</summary>
             <param name="x">Инвертируемое число</param>
             <returns>Число, обратное к исходном</returns>
         </member>
-        <member name="M:System.DoubleExtentions.GetAbsMod(System.Double,System.Double)">
+        <member name="M:System.DoubleExtensions.GetAbsMod(System.Double,System.Double)">
             <summary>Число по модулю</summary>
             <param name="x">Исходное число</param>
             <param name="mod">Модуль</param>
             <returns>Число по модулю</returns>
         </member>
-        <member name="M:System.DoubleExtentions.GetAbs(System.Double)">
+        <member name="M:System.DoubleExtensions.GetAbs(System.Double)">
             <summary>Модуль числа</summary>
             <param name="x">Действительное вещественное число</param>
             <returns>Модуль числа</returns>
         </member>
-        <member name="M:System.DoubleExtentions.Power(System.Double,System.Int32)">
+        <member name="M:System.DoubleExtensions.Power(System.Double,System.Int32)">
             <summary>Возведение в целую степень</summary>
             <param name="x">Действительное число</param>
             <param name="n">Целочисленный показатель степени</param>
             <returns>x^n</returns>
         </member>
-        <member name="M:System.DoubleExtentions.Power(System.Double,System.Double)">
+        <member name="M:System.DoubleExtensions.Power(System.Double,System.Double)">
             <summary>Возведение числа в действительную степень</summary>
             <param name="x">ОСнование</param><param name="y">Действительный показатель степени</param>
             <returns>Действительное число x возведённое в степень y: x^y</returns>
         </member>
-        <member name="M:System.DoubleExtentions.Power(System.Double,MathCore.Complex)">
+        <member name="M:System.DoubleExtensions.Power(System.Double,MathCore.Complex)">
             <summary>Возведение числа в комплексную степень</summary>
             <param name="x">Основание</param><param name="z">Комплексный показатель степень</param>
             <returns>Значение x^z, где x - действительное, z - комплексное</returns>
         </member>
-        <member name="M:System.DoubleExtentions.In_dB(System.Double)">
+        <member name="M:System.DoubleExtensions.In_dB(System.Double)">
             <summary>Преобразование в децебеллы по амплитуде</summary>
             <param name="x">Амплитудное значение 20*lg(x)</param>
             <returns>Значение в децебеллах</returns>
         </member>
-        <member name="M:System.DoubleExtentions.In_dB_byPower(System.Double)">
+        <member name="M:System.DoubleExtensions.In_dB_byPower(System.Double)">
             <summary>Преобразование в децебеллы по мощности</summary>
             <param name="x">Значение мощности 10*lg(x)</param>
             <returns>Значение в децебеллах</returns>
         </member>
-        <member name="M:System.DoubleExtentions.From_dB(System.Double)">
+        <member name="M:System.DoubleExtensions.From_dB(System.Double)">
             <summary>Преобразование из децебеллов в разы по значению (амплитуде)</summary>
             <param name="db">Значение в децебеллах 10^(x/20)</param>
             <returns>Значение в разах по амплитуде</returns>
         </member>
-        <member name="M:System.DoubleExtentions.From_dB_byPower(System.Double)">
+        <member name="M:System.DoubleExtensions.From_dB_byPower(System.Double)">
             <summary>Преобразование из децебеллов в разы по мощности</summary>
             <param name="db">Значение в децебеллах 10^(x/10)</param>
             <returns>Значение в разах по мощности</returns>
         </member>
-        <member name="M:System.DoubleExtentions.ToRad(System.Double)">
+        <member name="M:System.DoubleExtensions.ToRad(System.Double)">
             <summary>Преобразование значения в радианы</summary>
             <param name="deg">Значение в градусах</param>
             <returns>Значение в радианах</returns>
         </member>
-        <member name="M:System.DoubleExtentions.ToDeg(System.Double)">
+        <member name="M:System.DoubleExtensions.ToDeg(System.Double)">
             <summary>Преобразование значения в градусы</summary>
             <param name="rad">Значение в радианах</param>
             <returns>Значение в градусах</returns>
         </member>
-        <member name="T:System.IntExtentions">
+        <member name="T:System.IntExtensions">
             <summary>Класс методов-расширений для класса целых 4-х-байтовых чисел со знаком</summary>
         </member>
-        <member name="M:System.IntExtentions.Power(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.Power(System.Int32,System.Int32)">
             <summary>Возведение целого числа в целую степень</summary>
             <param name="x">Целое основание</param>
             <param name="N">Целый показатель степени</param>
             <returns>Результат возведения целого основания в целую степень</returns>
         </member>
-        <member name="M:System.IntExtentions.Power(System.Int32,System.Double)">
+        <member name="M:System.IntExtensions.Power(System.Int32,System.Double)">
             <summary>Возведение целого числа в вещественную степень</summary>
             <param name="x">Целое основание</param>
             <param name="q">Вещественный показатель степени</param>
             <returns>Результат возведения целого основания в вещественную степень</returns>
         </member>
-        <member name="M:System.IntExtentions.Power(System.Int32,MathCore.Complex)">
+        <member name="M:System.IntExtensions.Power(System.Int32,MathCore.Complex)">
             <summary>Возведение целого числа в комплексную степень</summary>
             <param name="x">Целое основание</param>
             <param name="z">Комплексный показатель степени</param>
             <returns>Результат возведения целого основания в комплексную степень</returns>
         </member>
-        <member name="M:System.IntExtentions.FactorizationEnum(System.Int32)">
+        <member name="M:System.IntExtensions.FactorizationEnum(System.Int32)">
             <summary>Факторизация целого числа</summary>
             <param name="n">Раскладываемое число</param>
             <returns>Последовательность простых чисел составляющих раскладываемое число</returns>
         </member>
-        <member name="M:System.IntExtentions.FactorizationList(System.Int32)">
+        <member name="M:System.IntExtensions.FactorizationList(System.Int32)">
             <summary>Разложение числа на простые множетили</summary>
             <param name="n">Раскладываемое число</param>
             <returns>Массив простых множителей</returns>
         </member>
-        <member name="M:System.IntExtentions.Factorization(System.Int32)">
+        <member name="M:System.IntExtensions.Factorization(System.Int32)">
             <summary>Разложение числа на простые множители</summary>
             <param name="n">Раскладываемое число</param>
             <returns>Словарь с делителями числа - значение элементов словаря - кратность делителя</returns>
         </member>
-        <member name="M:System.IntExtentions.IsPrime(System.Int32)">
+        <member name="M:System.IntExtensions.IsPrime(System.Int32)">
             <summary>Проверка - является ли число простым?</summary>
             <param name="n">Проверяемое число</param>
             <returns>Истина, если число простое</returns>
         </member>
-        <member name="M:System.IntExtentions.IsPowerOf2(System.Int32)">
+        <member name="M:System.IntExtensions.IsPowerOf2(System.Int32)">
             <summary>Является ли число степенью двойки?</summary>
             <param name="n">Проверяемое число</param>
             <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         </member>
-        <member name="M:System.IntExtentions.BitCount(System.Int32)">
+        <member name="M:System.IntExtensions.BitCount(System.Int32)">
             <summary>Число бит числа</summary>
             <param name="n">Значащее число</param>
             <returns>Число бит числа</returns>
         </member>
-        <member name="M:System.IntExtentions.GetNumberOfDigits(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.GetNumberOfDigits(System.Int32,System.Int32)">
             <summary>Получить число разрядов в указаной системе счисления</summary>
             <param name="n">Рассматриваемое число</param>
             <param name="Base">Основание системы счисления. По умолчанию = 10</param>
             <returns>Количество разрядов в указанной системе счисления</returns>
         </member>
-        <member name="M:System.IntExtentions.GetBitArray(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.GetBitArray(System.Int32,System.Int32)">
             <summary>Получить битовый массив из числа</summary>
             <param name="Value">Преобразуемое число</param>
             <param name="Length">Длина результирующего массива бит. По умолчанию = 32 битам</param>
             <returns>Битовый массив числа</returns>
         </member>
-        <member name="M:System.IntExtentions.BitReversing(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.BitReversing(System.Int32,System.Int32)">
             <summary>Реверсирование бит числа</summary>
             <param name="x">исходное число</param>
             <param name="N">Число реверсируемых бит</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.IntExtentions.BitReversing(System.Int32)">
+        <member name="M:System.IntExtensions.BitReversing(System.Int32)">
             <summary>Реверсирование всех 32 бит числа</summary>
             <param name="x">исходное число</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.IntExtentions.IsDevidedTo(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.IsDevidedTo(System.Int32,System.Int32)">
             <summary>Проверка делимости числа на делитель</summary>
             <param name="x">Делимое</param>
             <param name="y">Делитель</param>
             <returns>Истина, если остаток от целочисленного деления равен 0</returns>
         </member>
-        <member name="M:System.IntExtentions.GetAbsMod(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.GetAbsMod(System.Int32,System.Int32)">
             <summary>Положительный остаток от деления</summary>
             <param name="x">Делимое</param>
             <param name="mod">Модуль</param>
             <returns>Остаток от деления</returns>
         </member>
-        <member name="M:System.IntExtentions.GetAbs(System.Int32)">
+        <member name="M:System.IntExtensions.GetAbs(System.Int32)">
             <summary>Получить абсолютное значение числа</summary>
             <param name="x">Вещественное число</param>
             <returns>Модуль числа</returns>
         </member>
-        <member name="M:System.IntExtentions.GetNOD(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.GetNOD(System.Int32,System.Int32)">
             <summary>Наибольший общий делитель</summary>
             <param name="Y">Первое число</param>
             <param name="X">Второе число</param>
             <returns>Наибольший общий делитель</returns>
         </member>
-        <member name="M:System.IntExtentions.IsOdd(System.Int32)">
+        <member name="M:System.IntExtensions.IsOdd(System.Int32)">
             <summary>Является ли число нечётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число нечётное</returns>
         </member>
-        <member name="M:System.IntExtentions.IsEven(System.Int32)">
+        <member name="M:System.IntExtensions.IsEven(System.Int32)">
             <summary>Является ли число чётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число чётное</returns>
         </member>
-        <member name="M:System.IntExtentions.Factorial(System.Int32)">
+        <member name="M:System.IntExtensions.Factorial(System.Int32)">
             <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
             <param name="n">Исходное число</param>
             <returns>Факториал числа</returns>
         </member>
-        <member name="M:System.IntExtentions.FactorialBigInt(System.Int32)">
+        <member name="M:System.IntExtensions.FactorialBigInt(System.Int32)">
             <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
             <param name="n">Исходное число</param>
             <returns>Факториал числа</returns>
         </member>
-        <member name="M:System.IntExtentions.ToOctBase(System.Int32)">
+        <member name="M:System.IntExtensions.ToOctBase(System.Int32)">
             <summary>Приведение целого числа в 10 системе счисления к виду системы счисления по основанию 8</summary>
             <param name="n">Число в 10-ой системе счисления</param>
             <returns>Представление числа в 8-ричной системе счисления</returns>
         </member>
-        <member name="M:System.IntExtentions.FromOctalBase(System.Int32)">
+        <member name="M:System.IntExtensions.FromOctalBase(System.Int32)">
             <summary>Приведение целого числа в 8 системе счисления к виду системы счисления по основанию 10</summary>
             <param name="x">Число в 8-ой системе счисления</param>
             <returns>Представление числа в 10-ричной системе счисления</returns>
         </member>
-        <member name="M:System.LongExtentions.IsPowerOf2(System.Int64)">
+        <member name="M:System.LongExtensions.IsPowerOf2(System.Int64)">
             <summary>Является ли число степенью двойки?</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         </member>
-        <member name="M:System.LongExtentions.BitCount(System.Int64)">
+        <member name="M:System.LongExtensions.BitCount(System.Int64)">
             <summary>Число бит числа</summary>
             <param name="x">Значащее число</param>
             <returns>Число бит числа</returns>
         </member>
-        <member name="M:System.LongExtentions.BitReversing(System.Int64,System.Int32)">
+        <member name="M:System.LongExtensions.BitReversing(System.Int64,System.Int32)">
             <summary>Реверсирование бит числа</summary>
             <param name="x">исходное число</param>
             <param name="N">Число реверсируемых бит</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.LongExtentions.BitReversing(System.Int64)">
+        <member name="M:System.LongExtensions.BitReversing(System.Int64)">
             <summary>Реверсирование всех 64 бит числа</summary>
             <param name="x">исходное число</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.LongExtentions.IsOdd(System.Int64)">
+        <member name="M:System.LongExtensions.IsOdd(System.Int64)">
             <summary>Является ли число нечётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число нечётное</returns>
         </member>
-        <member name="M:System.LongExtentions.IsEven(System.Int64)">
+        <member name="M:System.LongExtensions.IsEven(System.Int64)">
             <summary>Является ли число чётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число чётное</returns>
         </member>
-        <member name="M:System.ShortExtentions.IsPowerOf2(System.Int16)">
+        <member name="M:System.ShortExtensions.IsPowerOf2(System.Int16)">
             <summary>Является ли число степенью двойки?</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         </member>
-        <member name="M:System.ShortExtentions.BitCount(System.Int16)">
+        <member name="M:System.ShortExtensions.BitCount(System.Int16)">
             <summary>Число бит числа</summary>
             <param name="x">Значащее число</param>
             <returns>Число бит числа</returns>
         </member>
-        <member name="M:System.ShortExtentions.BitReversing(System.Int16,System.Int32)">
+        <member name="M:System.ShortExtensions.BitReversing(System.Int16,System.Int32)">
             <summary>Реверсирование бит числа</summary>
             <param name="x">исходное число</param>
             <param name="N">Число реверсируемых бит</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.ShortExtentions.BitReversing(System.Int16)">
+        <member name="M:System.ShortExtensions.BitReversing(System.Int16)">
             <summary>Реверсирование всех 16 бит числа</summary>
             <param name="x">исходное число</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.ShortExtentions.IsOdd(System.Int16)">
+        <member name="M:System.ShortExtensions.IsOdd(System.Int16)">
             <summary>Является ли число нечётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число нечётное</returns>
         </member>
-        <member name="M:System.ShortExtentions.IsEven(System.Int16)">
+        <member name="M:System.ShortExtensions.IsEven(System.Int16)">
             <summary>Является ли число чётным</summary>
             <param name="x">Проверяемое число</param>
             <returns>Истина, если число чётное</returns>
         </member>
-        <member name="T:System.ObjectExtentions">
+        <member name="T:System.ObjectExtensions">
             <summary>Класс методов-расширений для объекта</summary>
         </member>
-        <member name="M:System.ObjectExtentions.AsEnumerable``1(``0,System.Func{``0,``0},System.Boolean)">
+        <member name="M:System.ObjectExtensions.AsEnumerable``1(``0,System.Func{``0,``0},System.Boolean)">
             <summary>Преобразование объекта в бесконечное перечисление</summary>
             <typeparam name="T">Тип элементов генерируемого перечисления</typeparam>
             <param name="obj">Объект, на основе которого создаётся перечисление</param>
@@ -15388,32 +15388,32 @@
             <param name="TakeFirst">Выдать в последовательность исходный элемент</param>
             <returns>Бесконечная последовательность элементов, генерируемая указанным методом</returns>
         </member>
-        <member name="T:System.ObjectExtentions.ObjectSelector`2">
+        <member name="T:System.ObjectExtensions.ObjectSelector`2">
             <summary>Селектор элементов</summary>
             <typeparam name="TSource">Тип объекта-источника</typeparam>
             <typeparam name="TResult">Тип объекта-значения</typeparam>
         </member>
-        <member name="P:System.ObjectExtentions.ObjectSelector`2.Continue">
+        <member name="P:System.ObjectExtensions.ObjectSelector`2.Continue">
             <summary>Продолжать выборку?</summary>
         </member>
-        <member name="P:System.ObjectExtentions.ObjectSelector`2.Object">
+        <member name="P:System.ObjectExtensions.ObjectSelector`2.Object">
             <summary>Объект-источник</summary>
         </member>
-        <member name="P:System.ObjectExtentions.ObjectSelector`2.Result">
+        <member name="P:System.ObjectExtensions.ObjectSelector`2.Result">
             <summary>Объект-значение</summary>
         </member>
-        <member name="P:System.ObjectExtentions.ObjectSelector`2.Iteration">
+        <member name="P:System.ObjectExtensions.ObjectSelector`2.Iteration">
             <summary>Номер итерации</summary>
         </member>
-        <member name="M:System.ObjectExtentions.ObjectSelector`2.#ctor">
-            <summary>Инициализация нового экземпляра <see cref="T:System.ObjectExtentions.ObjectSelector`2"/></summary>
+        <member name="M:System.ObjectExtensions.ObjectSelector`2.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.ObjectExtensions.ObjectSelector`2"/></summary>
         </member>
-        <member name="M:System.ObjectExtentions.ObjectSelector`2.Next(`1,System.Boolean)">
+        <member name="M:System.ObjectExtensions.ObjectSelector`2.Next(`1,System.Boolean)">
             <summary>Переход к следующей итерации</summary>
             <param name="result">Результат итерации</param>
             <param name="CanContinue">Продолжать выборку</param>
         </member>
-        <member name="M:System.ObjectExtentions.SelectObj``2(``0,System.Action{System.ObjectExtentions.ObjectSelector{``0,``1}})">
+        <member name="M:System.ObjectExtensions.SelectObj``2(``0,System.Action{System.ObjectExtensions.ObjectSelector{``0,``1}})">
             <summary>Генерация последовательности значений на основе алгоритма выборки</summary>
             <typeparam name="TSource">Тип объекта-источника</typeparam>
             <typeparam name="TResult">Тип объекта-значения последовательности</typeparam>
@@ -15421,7 +15421,7 @@
             <param name="Selector">Метод выборки элементов из источника</param>
             <returns>Последовательность объектов, генерируемых на основе объекта-источника</returns>
         </member>
-        <member name="M:System.ObjectExtentions.SelectObject``2(``0,System.Func{``0,``1})">
+        <member name="M:System.ObjectExtensions.SelectObject``2(``0,System.Func{``0,``1})">
             <summary>Метод преобразования объекта</summary>
             <typeparam name="TSource">Тип источника объекта</typeparam>
             <typeparam name="TResult">Тип результата</typeparam>
@@ -15429,61 +15429,61 @@
             <param name="Selector">Метод генерации значения</param>
             <returns>Значение, определяемое на основе объекта-источника указанным методом</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToFormattedString(System.Object,System.String)">
+        <member name="M:System.ObjectExtensions.ToFormattedString(System.Object,System.String)">
             <summary>Преобразование объекта в форматированную строку</summary>
             <param name="obj">Преобразуемый объект</param>
             <param name="Format">Строка форматирования</param>
             <returns>Форматированная строка текстового представления объекта</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToFormattedString(System.Object,System.String,System.Object[])">
+        <member name="M:System.ObjectExtensions.ToFormattedString(System.Object,System.String,System.Object[])">
             <summary>Преобразование объекта в форматированную строку</summary>
             <param name="obj">Преобразуемый объект (идущий нулевым аргументом)</param>
             <param name="Format">Строка форматирования</param>
             <param name="args">Массив аргументов, доавбляемых к объекту для создание форматированной строки</param>
             <returns>Форматированная строка текстового представления объекта</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToString``1(``0,System.Func{``0,System.String})">
+        <member name="M:System.ObjectExtensions.ToString``1(``0,System.Func{``0,System.String})">
             <summary>Метод преобразования объекта в строку</summary>
             <typeparam name="T">Тип исходного объекта</typeparam>
             <param name="t">Преобразуемый объект</param>
             <param name="converter">Метод преобразвоания объекта в строку</param>
             <returns>Сгенерированная строка указанным методом на основе указанного объекта</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetHashCode(System.Object[])">
+        <member name="M:System.ObjectExtensions.GetHashCode(System.Object[])">
             <summary>Расчёт хеш-кода массива объектов</summary>
             <param name="Objects">Массив объектов, хеш-код которых надо расчитать</param>
             <returns>Хеш-код массива объектов</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetComplexHashCode(System.Collections.Generic.IEnumerable{System.Object})">
+        <member name="M:System.ObjectExtensions.GetComplexHashCode(System.Collections.Generic.IEnumerable{System.Object})">
             <summary>Расчёт хеш-кода перечисления объектов</summary>
             <param name="Objects">Перечисление объектов, хеш-код которых надо расчитать</param>
             <returns>Хеш-код перечисления объектов</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetObjectAttribute``1(System.Object,System.Boolean)">
+        <member name="M:System.ObjectExtensions.GetObjectAttribute``1(System.Object,System.Boolean)">
             <summary>Извлечение атрибута метаданных объекта</summary>
             <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>
             <param name="o">Объект, атрибут которого требуется получить</param>
             <param name="Inherited">Искать в цепочке наследования</param>
             <returns>Искомый атрибут в случае его наличия, либо null, если атрибут не определён</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetObjectAttributes``1(System.Object,System.Boolean)">
+        <member name="M:System.ObjectExtensions.GetObjectAttributes``1(System.Object,System.Boolean)">
             <summary>Извлечение всех атрибутов указанного типа для объекта</summary>
             <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>
             <param name="o">Объект, атрибуты которого требуется получить</param>
             <param name="Inherited">Искать в цепочке наследования</param>
             <returns>Массив атрибутов указанного типа, определённых для объекта</returns>
         </member>
-        <member name="M:System.ObjectExtentions.IsNotNull(System.Object)">
+        <member name="M:System.ObjectExtensions.IsNotNull(System.Object)">
             <summary>Ссылка на объект не равна null</summary>
             <param name="o">Проверяемый объект</param>
             <returns>Истина, если проверяемый объект не null</returns>
         </member>
-        <member name="M:System.ObjectExtentions.IsNull(System.Object)">
+        <member name="M:System.ObjectExtensions.IsNull(System.Object)">
             <summary>Ссылка на объект равна null</summary>
             <param name="o">Проверяемый объект</param>
             <returns>Истина, если проверяемый объект null</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ParamNotNull``1(``0,System.String,System.String)">
+        <member name="M:System.ObjectExtensions.ParamNotNull``1(``0,System.String,System.String)">
             <summary>Проверка параметра на <see langword="null"/></summary>
             <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
             <param name="obj">Проверяемый на <see langword="null"/> объект</param>
@@ -15492,7 +15492,7 @@
             <returns>Объект, гарантированн не <see langword="null"/></returns>
             <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
         </member>
-        <member name="M:System.ObjectExtentions.GetAttributes``2(``1,System.Boolean)">
+        <member name="M:System.ObjectExtensions.GetAttributes``2(``1,System.Boolean)">
             <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
             <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>
             <typeparam name="TObject">Тип исходного объекта</typeparam>
@@ -15500,14 +15500,14 @@
             <param name="Inherited">Искать в цепочке наследования</param>
             <returns>ассив атрибутов указанного типа, определённых для типа объекта</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``1(``0,System.Action{``0})">
+        <member name="M:System.ObjectExtensions.InitializeObject``1(``0,System.Action{``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <param name="obj">Инициализируемый объект</param>
             <param name="Initializator">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``2(``0,``1,System.Action{``0,``1})">
+        <member name="M:System.ObjectExtensions.InitializeObject``2(``0,``1,System.Action{``0,``1})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <typeparam name="TP">Тип параметра инициализации</typeparam>
@@ -15516,7 +15516,7 @@
             <param name="Initializator">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``3(``0,``1,``2,System.Action{``0,``1,``2})">
+        <member name="M:System.ObjectExtensions.InitializeObject``3(``0,``1,``2,System.Action{``0,``1,``2})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
@@ -15527,7 +15527,7 @@
             <param name="Initializator">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``4(``0,``1,``2,``3,System.Action{``0,``1,``2,``3})">
+        <member name="M:System.ObjectExtensions.InitializeObject``4(``0,``1,``2,``3,System.Action{``0,``1,``2,``3})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
@@ -15540,14 +15540,14 @@
             <param name="Initializator">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``1(``0,System.Func{``0,``0})">
+        <member name="M:System.ObjectExtensions.InitializeObject``1(``0,System.Func{``0,``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <param name="obj">Инициализируемый объект</param>
             <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``2(``0,``1,System.Func{``0,``1,``0})">
+        <member name="M:System.ObjectExtensions.InitializeObject``2(``0,``1,System.Func{``0,``1,``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <typeparam name="TP">Тип параметра инициализации</typeparam>
@@ -15556,7 +15556,7 @@
             <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``4(``0,``1,``2,``3,System.Func{``0,``1,``2,``3,``0})">
+        <member name="M:System.ObjectExtensions.InitializeObject``4(``0,``1,``2,``3,System.Func{``0,``1,``2,``3,``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
@@ -15569,7 +15569,7 @@
             <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
-        <member name="M:System.ObjectExtentions.InitializeObject``3(``0,``1,``2,System.Func{``0,``1,``2,``0})">
+        <member name="M:System.ObjectExtensions.InitializeObject``3(``0,``1,``2,System.Func{``0,``1,``2,``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <typeparam name="TP1">Тип параметра 1 инициализации</typeparam>
@@ -15580,103 +15580,103 @@
             <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToConsole``1(``0)">
+        <member name="M:System.ObjectExtensions.ToConsole``1(``0)">
             <summary>Печать объекта на консоли без переноса строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToConsole``1(``0,System.String,System.Object[])">
+        <member name="M:System.ObjectExtensions.ToConsole``1(``0,System.String,System.Object[])">
             <summary>Печать объекта на консоли в указанному формате без переноса строки в конце</summary>
             <typeparam name="TObject">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
             <param name="Format">Строка форматирования результата</param>
             <param name="args">Дополнительные аргументы строки форматирования</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToConsoleLN``1(``0)">
+        <member name="M:System.ObjectExtensions.ToConsoleLN``1(``0)">
             <summary>Печать объекта на консоли с переносом строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToConsoleLN``1(``0,System.String,System.Object[])">
+        <member name="M:System.ObjectExtensions.ToConsoleLN``1(``0,System.String,System.Object[])">
             <summary>Печать объекта на консоли в указанному формате с переносом строки в конце</summary>
             <typeparam name="TObject">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
             <param name="Format">Строка форматирования результата</param>
             <param name="args">Дополнительные аргументы строки форматирования</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToDubugOut``1(``0)">
+        <member name="M:System.ObjectExtensions.ToDubugOut``1(``0)">
             <summary>Печать объекта в отладочной информации без переноса строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToDubugOut``1(``0,System.Boolean)">
+        <member name="M:System.ObjectExtensions.ToDubugOut``1(``0,System.Boolean)">
             <summary>Печать объекта в отладочной информации без переноса строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
             <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToDubugOutLN``1(``0)">
+        <member name="M:System.ObjectExtensions.ToDubugOutLN``1(``0)">
             <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToDubugOutLN``1(``0,System.Boolean)">
+        <member name="M:System.ObjectExtensions.ToDubugOutLN``1(``0,System.Boolean)">
             <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
             <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToByteArray``1(``0)">
+        <member name="M:System.ObjectExtensions.ToByteArray``1(``0)">
             <summary>Преобразование структуры в массив байт</summary>
             <typeparam name="T">Тип преобразуемой структуры</typeparam>
             <param name="value">Значение преобразуемой структуры</param>
             <returns>Массив байт, представляющий указанную структуру</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToStructure``1(System.Byte[],System.Int32)">
+        <member name="M:System.ObjectExtensions.ToStructure``1(System.Byte[],System.Int32)">
             <summary>Преобразование массива байт в структуру</summary>
             <typeparam name="T">Тип структуры</typeparam>
             <param name="data">Массив байт</param>
             <param name="offset">Смещение в массиве байт</param>
         </member>
-        <member name="M:System.ObjectExtentions.Switch(System.Object,System.Actions,System.Action{System.Object})">
+        <member name="M:System.ObjectExtensions.Switch(System.Object,System.Actions,System.Action{System.Object})">
             <summary>Выбор действия для объекта</summary>
             <param name="obj">ОБъект, на котором выполняется выбор действия</param>
             <param name="actions">Словарь возможных действий над объектом</param>
             <param name="Default">Действие по умолчанию</param>
         </member>
-        <member name="M:System.ObjectExtentions.ToEvulation``1(``0)">
+        <member name="M:System.ObjectExtensions.ToEvulation``1(``0)">
             <summary>Преобразование объекта в вычисление</summary>
             <typeparam name="T">Тип исходного элемента</typeparam>
             <param name="obj">Оборачиваемый объект</param>
             <returns>Вычисление, возвращающее указанный объект</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToEvulation``1(``0,System.String)">
+        <member name="M:System.ObjectExtensions.ToEvulation``1(``0,System.String)">
             <summary>Преобразование объекта в именованное вычисление</summary>
             <typeparam name="T">Тип исходного элемента</typeparam>
             <param name="obj">Оборачиваемый объект</param>
             <param name="Name">Имя вычисления</param>
             <returns>Вычисление, возвращающее указанный объект</returns>
         </member>
-        <member name="M:System.ObjectExtentions.ToExpression(System.Object)">
+        <member name="M:System.ObjectExtensions.ToExpression(System.Object)">
             <summary>Преобразование объекта в выражение-константу</summary>
             <param name="obj">Преобразуемый объект</param>
             <returns>Выражение-константа</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetCallExpression(System.Object,System.Delegate,System.Linq.Expressions.Expression[])">
+        <member name="M:System.ObjectExtensions.GetCallExpression(System.Object,System.Delegate,System.Linq.Expressions.Expression[])">
             <summary>Получить выражение вызова метода объекта</summary>
             <param name="obj">Объект, метод которого надо вызвать</param>
             <param name="d">Делегат метода</param>
             <param name="p">Параметры метода</param>
             <returns>Выражение вызова метода</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetCallExpression(System.Object,System.Reflection.MethodInfo,System.Linq.Expressions.Expression[])">
+        <member name="M:System.ObjectExtensions.GetCallExpression(System.Object,System.Reflection.MethodInfo,System.Linq.Expressions.Expression[])">
             <summary>Получить выражение вызова метода объекта</summary>
             <param name="obj">Объект, метод которого надо вызвать</param>
             <param name="d">Описание методаа</param>
             <param name="p">Параметры метода</param>
             <returns>Выражение вызова метода</returns>
         </member>
-        <member name="M:System.ObjectExtentions.GetCallExpression(System.Object,System.String,System.Linq.Expressions.Expression[])">
+        <member name="M:System.ObjectExtensions.GetCallExpression(System.Object,System.String,System.Linq.Expressions.Expression[])">
             <summary>Получить выражение вызова метода объекта</summary>
             <param name="obj">Объект, метод которого надо вызвать</param>
             <param name="MethodName">Имя метода</param>
@@ -15686,36 +15686,36 @@
         <member name="T:System.Actions">
             <summary>Словарь действий</summary>
         </member>
-        <member name="T:System.Tags.TagExtentions">
+        <member name="T:System.Tags.TagExtensions">
             <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложенны к другим объектам</summary>
         </member>
-        <member name="M:System.Tags.TagExtentions.GetTag``1(System.Object)">
-            <summary>Получить объект-метку у казанного типа из целевого объекта</summary>
+        <member name="M:System.Tags.TagExtensions.GetTag``1(System.Object)">
+            <summary>Получить объект-метку указанного типа из целевого объекта</summary>
             <typeparam name="TTag">Тип объекта-метки</typeparam>
             <param name="o">Целевой объект</param>
             <returns>Объект метка, если он существует в указанном объекте</returns>
         </member>
-        <member name="M:System.Tags.TagExtentions.SetTag``1(System.Object,``0)">
+        <member name="M:System.Tags.TagExtensions.SetTag``1(System.Object,``0)">
             <summary>Установить объект-метку для указанного объекта</summary>
             <typeparam name="TTag">Тип объекта-метки</typeparam>
             <param name="o">Целевой объект</param>
             <param name="Tag">Объект-метка, прикладываемый к целевому объекту</param>
         </member>
-        <member name="T:System.Tags.TagExtentions.TagPool">
+        <member name="T:System.Tags.TagExtensions.TagPool">
             <summary>Пул меток</summary>
         </member>
-        <member name="F:System.Tags.TagExtentions.TagPool.__Lock">
+        <member name="F:System.Tags.TagExtensions.TagPool.__Lock">
             <summary>Объект межпотоковой синхронизации</summary>
         </member>
-        <member name="F:System.Tags.TagExtentions.TagPool.__Tags">
+        <member name="F:System.Tags.TagExtensions.TagPool.__Tags">
             <summary>Словарь меток</summary>
         </member>
-        <member name="M:System.Tags.TagExtentions.TagPool.SetTag(System.Object,System.Object)">
+        <member name="M:System.Tags.TagExtensions.TagPool.SetTag(System.Object,System.Object)">
             <summary>Установить метку указанному объекту</summary>
             <param name="o">Целевой объект</param>
             <param name="Tag">Добавляемая метка</param>
         </member>
-        <member name="M:System.Tags.TagExtentions.TagPool.Tag``1(System.Object)">
+        <member name="M:System.Tags.TagExtensions.TagPool.Tag``1(System.Object)">
             <summary>Получить метку указанного типа для указанного объекта</summary>
             <typeparam name="TTagType">Тип объекта-метки</typeparam>
             <param name="o">Целевой объект</param>
@@ -15854,26 +15854,26 @@
             <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
             <returns>Последовательность случайных вещественных чисел</returns>
         </member>
-        <member name="T:System.StringExtentions">
+        <member name="T:System.StringExtensions">
             <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
         </member>
-        <member name="M:System.StringExtentions.Compress(System.String)">
+        <member name="M:System.StringExtensions.Compress(System.String)">
             <summary>Сжать строку в последовательность байт</summary>
             <param name="str">Сжимаемая строка</param>
             <returns>Сжатая строка в виде последовательности байт</returns>
         </member>
-        <member name="M:System.StringExtentions.DecompressAsString(System.Byte[])">
+        <member name="M:System.StringExtensions.DecompressAsString(System.Byte[])">
             <summary>Разархивировать последовательность байт в строку</summary>
             <param name="bytes">Сжатая последовательность бай, содержащая строку</param>
             <returns>Разжатая последовательность байт в строковом представлении</returns>
         </member>
-        <member name="M:System.StringExtentions.FindBlock(System.String,System.String)">
+        <member name="M:System.StringExtensions.FindBlock(System.String,System.String)">
             <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
             <param name="Str">Разбиваемая строка</param>
             <param name="EndPattern">Строковый шаблон разбиения</param>
             <returns>Перечисление подстрок</returns>
         </member>
-        <member name="M:System.StringExtentions.GetBracketText(System.String,System.Int32@,System.String,System.String)">
+        <member name="M:System.StringExtensions.GetBracketText(System.String,System.Int32@,System.String,System.String)">
             <summary>Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения</summary>
             <param name="Str">Входная строка</param>
             <param name="Offset">Смещеине во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска</param>
@@ -15885,40 +15885,40 @@
             количество шаблонов окончания во входной строке
             </exception>
         </member>
-        <member name="M:System.StringExtentions.IsNullOrEmpty(System.String)">
+        <member name="M:System.StringExtensions.IsNullOrEmpty(System.String)">
             <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
             <param name="Str">Проверяемая строка</param>
             <returns>Истина, если трока пуста, либо если передана нулевая ссылка</returns>
         </member>
-        <member name="M:System.StringExtentions.IsNotNullOrEmpty(System.String)">
+        <member name="M:System.StringExtensions.IsNotNullOrEmpty(System.String)">
             <summary>Строка присутствует и не пуста</summary>
             <param name="Str">Проверяемая строка</param>
             <returns>Истина, если трокане  пуста, и если передана ненулевая ссылка</returns>
         </member>
-        <member name="M:System.StringExtentions.ClerSymbolsAtBegin(System.String,System.Char[])">
+        <member name="M:System.StringExtensions.ClerSymbolsAtBegin(System.String,System.Char[])">
             <summary>Удаление символов в начале строки</summary>
             <param name="str">Обрабатываемая строка</param>
             <param name="symbols">Перечень удаляемых символов</param>
             <returns>Новая строка с удалёнными символами в начале</returns>
         </member>
-        <member name="M:System.StringExtentions.ClerSymbolsAtEnd(System.String,System.Char[])">
+        <member name="M:System.StringExtensions.ClerSymbolsAtEnd(System.String,System.Char[])">
             <summary>Удаление символов в конце строки</summary>
             <param name="str">Обрабатываемая строка</param>
             <param name="symbols">Перечень удаляемых символов</param>
             <returns>Новая строка с удалёнными символами в конце</returns>
         </member>
-        <member name="M:System.StringExtentions.ClearSymbolsAtBeginAndEnd(System.String,System.Char[])">
+        <member name="M:System.StringExtensions.ClearSymbolsAtBeginAndEnd(System.String,System.Char[])">
             <summary>Удаление символов в начале и конце строки</summary>
             <param name="str">Обрабатываемая строка</param>
             <param name="symbols">Перечень удаляемых символов</param>
             <returns>Новая строка с удалёнными символами в начале и конце</returns>
         </member>
-        <member name="M:System.StringExtentions.ClearSystemSymbolsAtBeginAndEnd(System.String)">
+        <member name="M:System.StringExtensions.ClearSystemSymbolsAtBeginAndEnd(System.String)">
             <summary>Удаление служебных символов в начале и конце строки</summary>
             <param name="str">Обрабатываемая строка</param>
             <returns>Новая строка с удалёнными служебными символами в началеи конце</returns>
         </member>
-        <member name="M:System.StringExtentions.NotEmpty(System.String,System.String,System.String)">
+        <member name="M:System.StringExtensions.NotEmpty(System.String,System.String,System.String)">
             <summary>Проверка на пустоту строки</summary>
             <param name="str">Проверяемая строка</param>
             <param name="ParameterName">Имя параметра, добавляемое в исключение в случае его генерации</param>
@@ -15927,33 +15927,33 @@
             <exception cref="T:System.ArgumentException">Если переданная строка <paramref name="str"/> является пустой</exception>
             <returns>Строка, гарантированно не являющаяся пустой</returns>
         </member>
-        <member name="M:System.Text.RegularExpressions.RegExExtentions.OrDefault(System.Text.RegularExpressions.Match,System.String)">
-            <summary>Метод получения значения из результатов совпадения поиска</summary>
-            <param name="match">Результат совпадения поиска</param>
-            <param name="DefaultString">Значение по умолчанию</param>
-            <returns>Результат поска, либо значение по умолчанию</returns>
-        </member>
-        <member name="T:System.StringExtentionsTrim">
+        <member name="T:System.StringExtensionsTrim">
             <summary>Ограничение длины строки с удалением центральной её части</summary>
         </member>
-        <member name="M:System.StringExtentionsTrim.TrimByLength(System.String,System.Int32,System.String)">
+        <member name="M:System.StringExtensionsTrim.TrimByLength(System.String,System.Int32,System.String)">
             <summary>Ограничение длины строки с удалением центральной её части</summary>
             <param name="Str">Обрезаемая строка</param>
             <param name="Length">Требуемая длина</param>
             <param name="ReplacementPattern">Шаблон замены</param>
             <returns>Строка с удалённой внутренней частью</returns>
         </member>
-        <member name="M:System.TypeExtentions.GetTypeConverter(System.Type)">
+        <member name="M:System.Text.RegularExpressions.RegExExtensions.OrDefault(System.Text.RegularExpressions.Match,System.String)">
+            <summary>Метод получения значения из результатов совпадения поиска</summary>
+            <param name="match">Результат совпадения поиска</param>
+            <param name="DefaultString">Значение по умолчанию</param>
+            <returns>Результат поиска, либо значение по умолчанию</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetTypeConverter(System.Type)">
             <summary>Получить конвертер значений для указанного типа данных</summary>
             <param name="type">Тип, для которого требуется получить конвертер</param>
             <returns>Конвертер указанного типа данных</returns>
         </member>
-        <member name="M:System.TypeExtentions.GetType(System.String)">
+        <member name="M:System.TypeExtensions.GetType(System.String)">
             <summary>Получить тип по его имени из всех загруженных сборок</summary>
             <param name="TypeName">Имя типа</param>
             <returns>Тип</returns>
         </member>
-        <member name="M:System.TypeExtentions.GetCustomAttributes``1(System.Type)">
+        <member name="M:System.TypeExtensions.GetCustomAttributes``1(System.Type)">
             <summary>Получить все атрибуты типа указанного типа</summary>
             <typeparam name="TAttribute">Тип требуемых атрибутов</typeparam>
             <param name="T">Тип, атрибуты которого требуется получить</param>

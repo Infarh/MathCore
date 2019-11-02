@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using MathCore.Annotations;
-using MathCore.Extentions.Expressions;
+using MathCore.Extensions.Expressions;
 using static System.Math;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global

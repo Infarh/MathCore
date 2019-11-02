@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
-using MathCore.Extentions.Expressions;
+using MathCore.Extensions.Expressions;
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     public class Method<TResult>

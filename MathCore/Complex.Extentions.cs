@@ -4,7 +4,7 @@ using MathCore.Annotations;
 namespace MathCore
 {
     /// <summary>Методы-расширения комплексных чисел</summary>
-    public static class ComplexExtentions
+    public static class ComplexExtensions
     {
         /* - Массивы ---------------------------------------------------------------------------------- */
 
