@@ -45,7 +45,7 @@ namespace MathCore.Statistic.RandomNumbers
         //    return new[] { (a * result), (b * result) };
         //}
 
-        public override double Distribution(double x) => Distributions.NormalGaus(x, Sigma, Mu);
+        public override double Distribution(double x) => Distributions.NormalGauss(x, Sigma, Mu);
 
         protected override double GetNextValue()
         {

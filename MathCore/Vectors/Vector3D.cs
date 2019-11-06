@@ -73,7 +73,7 @@ namespace MathCore.Vectors
         /// <summary>Угол проекции в плоскости XOY</summary>
         public double AngleXOY => Math.Abs(_X) < double.Epsilon
                     ? Math.Abs(_Y) < double.Epsilon       // X == 0
-                        ? 0                                 //  Y == 0 => 0
+                        ? 0                               //  Y == 0 => 0
                         : Math.Sign(_Y) * Consts.pi05     //  Y != 0 => pi/2 * sign(Y)
                     : Math.Abs(_Y) < double.Epsilon       // X != 0
                         ? Math.Sign(_X) > 0
@@ -84,7 +84,7 @@ namespace MathCore.Vectors
         /// <summary>Угол проекции в плоскости XOZ</summary>
         public double AngleXOZ => Math.Abs(_X) < double.Epsilon
                     ? Math.Abs(_Z) < double.Epsilon       // X == 0
-                        ? 0                                 //  Z == 0 => 0
+                        ? 0                               //  Z == 0 => 0
                         : Math.Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Z)
                     : Math.Abs(_Z) < double.Epsilon       // X != 0
                         ? Math.Sign(_X) > 0
@@ -95,7 +95,7 @@ namespace MathCore.Vectors
         /// <summary>Угол проекции в плоскости YOZ</summary>
         public double AngleYOZ => Math.Abs(_Y) < double.Epsilon
                     ? Math.Abs(_Z) < double.Epsilon       // Y == 0
-                        ? 0                                 //  Z == 0 => 0
+                        ? 0                               //  Z == 0 => 0
                         : Math.Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Y)
                     : Math.Abs(_Z) < double.Epsilon       // Y != 0
                         ? Math.Sign(_Y) > 0
@@ -150,21 +150,21 @@ namespace MathCore.Vectors
 
         public Vector3D(double R, in SpaceAngle Angle)
         {
-            double thetta;
+            double theta;
             double phi;
             if (Angle.AngleType == AngleType.Deg)
             {
-                thetta = Angle.InRad.Thetta;
+                theta = Angle.InRad.Thetta;
                 phi = Angle.InRad.Phi;
             }
             else
             {
-                thetta = Angle.Thetta;
+                theta = Angle.Thetta;
                 phi = Angle.Phi;
             }
 
-            _Z = R * Math.Cos(thetta);
-            var r = R * Math.Sin(thetta);
+            _Z = R * Math.Cos(theta);
+            var r = R * Math.Sin(theta);
             _X = r * Math.Cos(phi);
             _Y = r * Math.Sin(phi);
         }
@@ -242,7 +242,6 @@ namespace MathCore.Vectors
         /// <summary>Точность сравнения (по умолчанию 10^-16)</summary>
         public static double ComparisonsAccuracy { get; set; } = 1e-16;
 
-        //[System.Diagnostics.DST]
         public bool Equals(Vector3D other)
         {
             var eps = ComparisonsAccuracy;

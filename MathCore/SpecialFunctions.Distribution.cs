@@ -250,22 +250,31 @@ namespace MathCore
                     return __MaxRealNumber * z < rk ? rflg * __MaxRealNumber : rflg * Math.Sqrt(rk / z - rk);
                 }
 
-                [DST]
-                public static double QuantileHi2(int n, double alpha = .05)
+                /// <summary>Квантиль Хи-квадрат (Аппроксимация Корниша-Фишера)</summary>
+                /// <remarks>http://ru.wikipedia.org/wiki/Квантили_распределения_хи-квадрат</remarks>
+                /// <remarks>https://projecteuclid.org/download/pdf_1/euclid.aoms/1177730982</remarks>
+                /// <param name="alpha">Квантиль [0..1]</param>
+                /// <param name="n">Число степеней свободы</param>
+                /// <returns>Квантиль</returns>
+                public static double QuantileHi2(double alpha, int n)
                 {
                     if (alpha < .001 || alpha > .999)
-                        throw new NotSupportedException("Значения alpha < 0.001 и > 0.999 не поддерживаются");
+                        throw new ArgumentOutOfRangeException(nameof(alpha), "Значения alpha < 0.001 и > 0.999 не поддерживаются");
+
+                    var d = alpha >= .5
+                        ? 2.0637 * Math.Pow(Math.Log(1 / (1 - alpha)) - .16, .4274) - 1.5774
+                        : -2.0637 * Math.Pow(Math.Log(1 / alpha) - .16, .4274) + 1.5774;
+
+                    var d2 = d * d;
+                    var d4 = d2 * d2;
+
+                    var A = d * Consts.sqrt_2;
+                    var B = 2 * (d2 - 1) / 3;
+                    var C = d * (d2 - 7) / (9 * Consts.sqrt_2);
+                    var D = -(6 * d4 + 14 * d2 - 32) / 405;
+                    var E = d * (9 * d4 + 256 * d2 - 433) / (4860 * Consts.sqrt_2);
 
                     var sqrt_n = Math.Sqrt(n);
-                    var b = (alpha < .5)
-                        ? -2.0637 * Math.Pow(Math.Log(1 / alpha) - .16, .4274) + 1.5774
-                        : 2.0637 * Math.Pow(Math.Log(1 / (1 - alpha)) - .16, .4274) - 1.5774;
-
-                    var A = b / Consts.sqrt_2;
-                    var B = 2 * (b * b - 1) / 3;
-                    var C = b * (b * b - 7) / (9 * Consts.sqrt_2);
-                    var D = ((6 * b * b * b + 14 * b) * b - 32) / 405;
-                    var E = b * ((9 * b * b * b + 256 * b) * b - 433) / (4826 * Consts.sqrt_2);
                     return n + A * sqrt_n + B + C / sqrt_n + D / n + E / n / sqrt_n;
                 }
             }
