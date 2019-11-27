@@ -12,14 +12,18 @@ jobs:
     
     steps:
       - uses: actions/checkout@v1
+      
       - name: Use .NET 3.0.100
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.0.100
-      - name: Run Test process
+          
+      - name: Building
         run: |
           dotnet build MathCore/MathCore.csproj          
           dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj
-          dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj
+          
+      - name: Run Tests
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj
                 
         
