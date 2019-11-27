@@ -17,6 +17,6 @@ jobs:
         with:
           dotnet-version: 2.2.108
       - name: Run Test process
-        run: dotnet test --nologo Tests/MathCore.Tests/MathCore.Tests.csproj
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj
                 
         
