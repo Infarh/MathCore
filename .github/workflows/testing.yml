@@ -17,6 +17,8 @@ jobs:
         with:
           dotnet-version: 3.0.100
       - name: Run Test process
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj
+        run: |
+          dotnet build
+          dotnet test
                 
         
