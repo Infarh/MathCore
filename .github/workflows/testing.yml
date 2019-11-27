@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 2.2.108
-      - name: Build and Test
-        run: dotnet test
+      - name: Run Test process
+        run: dotnet test --nologo Tests/MathCore.Tests/MathCore.Tests.csproj
                 
         
