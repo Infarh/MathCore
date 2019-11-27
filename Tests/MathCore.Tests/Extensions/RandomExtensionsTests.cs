@@ -33,7 +33,7 @@ namespace MathCore.Tests.Extensions
             Assert.That.Value(pirsons_criteria).LessThan(quantile);
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void NextNormal_SingleValue_Sigma3Mu5()
         {
             const double sigma = 3;
