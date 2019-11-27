@@ -1,0 +1,22 @@
+name: Testing
+
+on: [push]
+
+jobs:
+  test:
+    name: Test on .NET Core for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use .NET 2.2.108
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.2.108
+      - name: Build and Test
+        run: dotnet test --nologo
+                
+        
