@@ -17,6 +17,6 @@ jobs:
         with:
           dotnet-version: 2.2.108
       - name: Build and Test
-        run: dotnet test --nologo
+        run: dotnet test
                 
         
