@@ -593,6 +593,29 @@ namespace System.Linq
         /// <summary>Определить минимальное и максимальное значение перечисления</summary>
         /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
+        /// <param name="Min">Минимальный элемент перечисления</param>
+        /// <param name="Max">Максимальный элемент перечисления</param>
+        public static void GetMinMax
+        (
+            [NN] this IEnumerable<double> collection,
+            [CN] out double Min,
+            [CN] out double Max
+        )
+        {
+            var min = new MinValue();
+            var max = new MaxValue();
+            Min = double.NaN;
+            Max = double.NaN;
+            foreach (var value in collection)
+            {
+                if (min.AddValue(value)) Min = value;
+                if (max.AddValue(value)) Max = value;
+            }
+        }
+
+        /// <summary>Определить минимальное и максимальное значение перечисления</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
         /// <param name="selector">Метод преобразования объектов в вещественные числа</param>
         /// <param name="Min">Минимальный элемент перечисления</param>
         /// <param name="MinIndex">Индекс минимального элемента в коллекции</param>
@@ -631,6 +654,44 @@ namespace System.Linq
             }
         }
 
+        /// <summary>Определить минимальное и максимальное значение перечисления</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
+        /// <param name="Min">Минимальный элемент перечисления</param>
+        /// <param name="MinIndex">Индекс минимального элемента в коллекции</param>
+        /// <param name="Max">Максимальный элемент перечисления</param>
+        /// <param name="MaxIndex">Индекс максимального элемента в коллекции</param>
+        public static void GetMinMax
+        (
+            [NN] this IEnumerable<double> collection,
+            [CN] out double Min,
+            out int MinIndex,
+            [CN] out double Max,
+            out int MaxIndex
+        )
+        {
+            var min = new MinValue();
+            var max = new MaxValue();
+            Min = double.NaN;
+            Max = double.NaN;
+            MinIndex = MaxIndex = -1;
+            var i = 0;
+            foreach (var item in collection)
+            {
+                if (min.AddValue(item))
+                {
+                    Min = item;
+                    MinIndex = i;
+                }
+                if (max.AddValue(item))
+                {
+                    Max = item;
+                    MaxIndex = i;
+                }
+                i++;
+            }
+        }
+
         /// <summary>Определение максимального элемента последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов</param>
@@ -644,6 +705,18 @@ namespace System.Linq
             foreach (var v in collection)
                 if (max.AddValue(selector(v)))
                     result = v;
+            return result;
+        }
+
+        /// <summary>Определение максимального элемента последовательности</summary>
+        /// <param name="collection">Последовательность элементов</param>
+        /// <returns>Максимальный элемент последовательности</returns>
+        public static double GetMax([NN] this IEnumerable<double> collection)
+        {
+            var max = new MaxValue();
+            var result = double.NaN;
+            foreach (var v in collection)
+                result = max.Add(v);
             return result;
         }
 
@@ -672,6 +745,29 @@ namespace System.Linq
             return result;
         }
 
+        /// <summary>Определение максимального элемента последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Последовательность элементов</param>
+        /// <param name="index">Индекс максимального элемента в последовательности</param>
+        /// <returns>Максимальный элемент последовательности</returns>
+        public static double GetMax([NN] this IEnumerable<double> collection, out int index)
+        {
+            var max = new MaxValue();
+            var result = double.NaN;
+            var i = 0;
+            index = -1;
+            foreach (var item in collection)
+            {
+                if (max.AddValue(item))
+                {
+                    index = i;
+                    result = item;
+                }
+                i++;
+            }
+            return result;
+        }
+
         /// <summary>Определение минимального элемента последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов</param>
@@ -685,6 +781,18 @@ namespace System.Linq
             foreach (var v in collection)
                 if (min.AddValue(selector(v)))
                     result = v;
+            return result;
+        }  
+
+        /// <summary>Определение минимального элемента последовательности</summary>
+        /// <param name="collection">Последовательность элементов</param>
+        /// <returns>Минимальный элемент последовательности</returns>
+        public static double GetMin([NN] this IEnumerable<double> collection)
+        {
+            var min = new MinValue();
+            var result = double.NaN;
+            foreach (var v in collection)
+                    result = min.Add(v);
             return result;
         }
 
@@ -711,10 +819,32 @@ namespace System.Linq
                 i++;
             }
             return result;
+        } 
+
+        /// <summary>Определение минимального элемента последовательности</summary>
+        /// <param name="collection">Последовательность элементов</param>
+        /// <param name="index">Индекс минимального элемента в последовательности</param>
+        /// <returns>Минимальный элемент последовательности</returns>
+        [CN]
+        public static double GetMin([NN] this IEnumerable<double> collection, out int index)
+        {
+            var min = new MinValue();
+            var result = double.NaN;
+            var i = 0;
+            index = -1;
+            foreach (var item in collection)
+            {
+                if (min.AddValue(item))
+                {
+                    index = i;
+                    result = item;
+                }
+                i++;
+            }
+            return result;
         }
 
-
-        /// <summary>Преобразвоание последовательности элементов в строку с указанной строкой-разделителем</summary>
+        /// <summary>Преобразование последовательности элементов в строку с указанной строкой-разделителем</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов, преобразуемая в строку</param>
         /// <param name="Separator">Строка-разделитель</param>

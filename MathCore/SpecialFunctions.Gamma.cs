@@ -15,16 +15,16 @@ namespace MathCore
                 double z;
                 var sgngam = 1;
                 var q = Math.Abs(x);
-                if(q > 33)
+                if (q > 33)
                 {
-                    if(x >= 0) z = GStir(x);
+                    if (x >= 0) z = GStir(x);
                     else
                     {
                         double p = (int)Math.Floor(q);
                         var i = (int)Math.Round(p);
-                        if(i % 2 == 0) sgngam = -1;
+                        if (i % 2 == 0) sgngam = -1;
                         z = q - p;
-                        if(z > .5) z = q - ++p;
+                        if (z > .5) z = q - ++p;
                         z = q * Math.Sin(Consts.pi * z);
                         z = Math.Abs(z);
                         z = Math.PI / (z * GStir(q));
@@ -33,19 +33,19 @@ namespace MathCore
                 }
                 z = 1;
 
-                while(x >= 3) z *= --x;
+                while (x >= 3) z *= --x;
 
-                while(x < 0)
-                    if(x <= -.000000001) z /= x++;
+                while (x < 0)
+                    if (x <= -.000000001) z /= x++;
                     else
                         return z / ((1 + .5772156649015329 * x) * x);
 
-                while(x < 2)
-                    if(x >= .000000001) z /= x++;
+                while (x < 2)
+                    if (x >= .000000001) z /= x++;
                     else
                         return z / ((1 + .5772156649015329 * x) * x);
 
-                if(Math.Abs(x - 2) < Eps) return z;
+                if (Math.Abs(x - 2) < Eps) return z;
                 x -= 2;
 
                 var pp = 1.60119522476751861407E-4;
@@ -80,7 +80,7 @@ namespace MathCore
                 w = 1 + w * stir;
                 var y = Math.Exp(x);
 
-                if(x <= 143.01608) y = Math.Pow(x, x - .5) / y;
+                if (x <= 143.01608) y = Math.Pow(x, x - .5) / y;
                 else
                 {
                     var v = Math.Pow(x, .5 * x - .25);
@@ -101,7 +101,7 @@ namespace MathCore
                 sign = 1;
                 const double logpi = 1.14472988584940017414;
                 const double lc_Ls2Pi = .91893853320467274178;
-                if(x < -34)
+                if (x < -34)
                 {
                     q = -x;
                     var w = LnG(q, out _);
@@ -109,35 +109,35 @@ namespace MathCore
                     var i = (int)Math.Round(p);
                     sign = i % 2 == 0 ? -1 : 1;
                     z = q - p;
-                    if(z > .5) z = ++p - q;
+                    if (z > .5) z = ++p - q;
                     return logpi - Math.Log(q * Math.Sin(Consts.pi * z)) - w;
                 }
-                if(x < 13)
+                if (x < 13)
                 {
                     z = 1;
                     p = 0;
                     var u = x;
 
-                    while(u >= 3)
+                    while (u >= 3)
                     {
                         u = x + --p;
                         z *= u;
                     }
 
-                    while(u < 2)
+                    while (u < 2)
                     {
                         z /= u;
                         u = x + ++p;
                     }
 
-                    if(z >= 0) sign = 1;
+                    if (z >= 0) sign = 1;
                     else
                     {
                         sign = -1;
                         z = -z;
                     }
 
-                    if(Math.Abs(u - 2) < Eps) return Math.Log(z);
+                    if (Math.Abs(u - 2) < Eps) return Math.Log(z);
 
                     p -= 2;
                     x += p;
@@ -160,10 +160,10 @@ namespace MathCore
                     return Math.Log(z) + x * b / c;
                 }
                 q = (x - .5) * Math.Log(x) - x + lc_Ls2Pi;
-                if(x > 100000000) return q;
+                if (x > 100000000) return q;
 
                 p = 1 / (x * x);
-                if(x >= 1000)
+                if (x >= 1000)
                     q += ((7.9365079365079365079365 * .0001 * p - 2.7777777777777777777778 * .001) * p
                           + .0833333333333333333333) / x;
                 else

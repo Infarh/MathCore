@@ -7,6 +7,7 @@ using MathCore.Annotations;
 
 namespace MathCore.Extensions
 {
+    /// <summary>Методы-расширения для процессов</summary>
     public static class ProcessExtensions
     {
         //public static TaskAwaiter<int> GetAwaiter(this Process process)
@@ -18,6 +19,9 @@ namespace MathCore.Extensions
         //    return tcs.Task.GetAwaiter();
         //}
 
+        /// <summary>Ожидание завершения процесса</summary>
+        /// <param name="process">Процесс, завершение которого требуется дождаться</param>
+        /// <returns>Задача, результат которой является кодом завершения процесса</returns>
         public static Task<int> WaitAsync([NotNull] this Process process)
         {
             var tcs = new TaskCompletionSource<int>();
@@ -47,11 +51,15 @@ namespace MathCore.Extensions
             out int ReturnLength
         );
 
-        public static Process GetMotherProcess(this Process process)
+        /// <summary>Получить родительский процесс</summary>
+        /// <param name="process">Дочерний процесс</param>
+        /// <returns>Родительский процесс</returns>
+        [NotNull]
+        public static Process GetMotherProcess([NotNull] this Process process)
         {
             var info = new PROCESS_BASIC_INFORMATION();
-            if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var writed) != 0 ||
-                writed == 0)
+            if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var writed) != 0 
+                || writed == 0)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             return Process.GetProcessById(info.InheritedFromUniqueProcessId.ToInt32());
         }

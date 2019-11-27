@@ -42,11 +42,10 @@ namespace System
 
         /// <summary>Массив случайных чисел с равномерным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
-        /// <param name="Count">Размер массива</param>
-        /// <param name="Interval">Интервал</param>
+        /// <param name="Intervals">Интервал</param>
         /// <returns>Массив случайных чисел с равномерным распределением</returns>
         [NotNull]
-        public static double[] NextUniform([NotNull] this Random rnd, params Interval[] Intervals)
+        public static double[] NextUniform([NotNull] this Random rnd, [NotNull] params Interval[] Intervals)
         {
             var count = Intervals.Length;
             var result = new double[count];
@@ -133,11 +132,11 @@ namespace System
 
         /// <summary>Случайное число с нормальным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
-        /// <param name="sigma">Среднеквадратическое отклонение</param>
+        /// <param name="sigma">Среднеквадратичное отклонение</param>
         /// <param name="mu">Математическое ожидание</param>
         /// <returns>Случайное число с нормальным распределением</returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
-        public static double NextNormal(this Random rnd, double sigma = 1, double mu = 0)
+        public static double NextNormal([NotNull] this Random rnd, double sigma = 1, double mu = 0)
         {
             var u1 = 1d - rnd.NextDouble(); //uniform(0,1] random doubles
             var u2 = 1d - rnd.NextDouble();
@@ -150,7 +149,7 @@ namespace System
         /// <param name="D">Дисперсия</param>
         /// <param name="M">Математическое ожидание</param>
         /// <returns>Случайное число в равномерным распределением</returns>
-        public static double NextUniform(this Random rnd, double D = 1, double M = 0) => (rnd.NextDouble() - 0.5) * D + M;
+        public static double NextUniform([NotNull] this Random rnd, double D = 1, double M = 0) => (rnd.NextDouble() - 0.5) * D + M;
 
         /// <summary>Случайное число с треугольным распределением</summary>
         /// <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
@@ -158,9 +157,9 @@ namespace System
         /// <param name="min">Минимум</param>
         /// <param name="max">МАксимум</param>
         /// <param name="mode">Медиана</param>
-        /// <returns>Случайное число с треугольным расеределением</returns>
+        /// <returns>Случайное число с треугольным распределением</returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
-        public static double NextTriangular(this Random rnd, double min, double max, double mode)
+        public static double NextTriangular([NotNull] this Random rnd, double min, double max, double mode)
         {
             var u = rnd.NextDouble();
 
@@ -169,39 +168,39 @@ namespace System
                 : max - Math.Sqrt((1 - u) * (max - min) * (max - mode));
         }
 
-        public static void FillUnuform(this Random rnd, double[] Array)
+        public static void FillUniform(this Random rnd, [NotNull] double[] Array)
         {
             for (var i = 0; i < Array.Length; i++)
                 Array[i] = rnd.NextDouble();
         }
 
-        public static void FillUnuform(this Random rnd, double[] Array, double D)
+        public static void FillUniform(this Random rnd, [NotNull] double[] Array, double D)
         {
             for (var i = 0; i < Array.Length; i++)
                 Array[i] = rnd.NextDouble(D);
         }
 
-        public static void FillUnuform(this Random rnd, double[] Array, double D, double M)
+        public static void FillUniform(this Random rnd, [NotNull] double[] Array, double D, double M)
         {
             for (var i = 0; i < Array.Length; i++)
                 Array[i] = rnd.NextDouble(D, M);
         }
 
-        public static void FillNormal(this Random rnd, double[] Array, double sigma = 1, double mu = 0)
+        public static void FillNormal(this Random rnd, [NotNull] double[] Array, double sigma = 1, double mu = 0)
         {
             for (var i = 0; i < Array.Length; i++)
                 Array[i] = rnd.NextNormal(sigma, mu);
         }
 
-        public static bool NextBoolean(this Random rnd) => rnd.Next(2) > 0;
+        public static bool NextBoolean([NotNull] this Random rnd) => rnd.Next(2) > 0;
 
-        public static double NextDouble(this Random rnd, double D) => (rnd.NextDouble() - 0.5) * D;
+        public static double NextDouble([NotNull] this Random rnd, double D) => (rnd.NextDouble() - 0.5) * D;
 
-        public static double NextDouble(this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
+        public static double NextDouble([NotNull] this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
 
-        public static double NextDoubleInterval(this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle); 
+        public static double NextDoubleInterval([NotNull] this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle); 
 
-        public static double NextDoubleInterval(this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min)); 
+        public static double NextDoubleInterval([NotNull] this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min)); 
 
         /// <summary>
         ///   Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
@@ -209,7 +208,7 @@ namespace System
         /// <param name="rnd"></param>
         /// <param name = "list"></param>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
-        public static void Mix(this Random rnd, IList list)
+        public static void Mix(this Random rnd, [NotNull] IList list)
         {
             for (var i = 0; i < list.Count; i++)
             {
@@ -231,6 +230,7 @@ namespace System
         /// <param name="k">How many numbers to return.</param>
         /// <returns></returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
+        [NotNull]
         public static int[] Permutation(this Random rnd, int n, int k)
         {
             var result = new List<int>();

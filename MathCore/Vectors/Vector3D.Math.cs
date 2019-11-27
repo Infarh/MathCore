@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.Vectors
@@ -9,7 +10,7 @@ namespace MathCore.Vectors
         public Vector3D GetInverse() => new Vector3D(1 / _X, 1 / _Y, 1 / _Z);
 
         /// <summary>Скалярное произведение векторов</summary>
-        /// <param name="Vector">Вектор, на который домножается текущий вектор</param>
+        /// <param name="Vector">Вектор, на который умножается текущий вектор</param>
         /// <returns>Число, равное скалярному произведению векторов</returns>
         public double Product_Scalar(Vector3D Vector) => X * Vector.X + Y * Vector.Y + Z * Vector.Z;
 
@@ -24,7 +25,7 @@ namespace MathCore.Vectors
             +1 * A._Z * (B._X * C._Y - B._Y * C._X);
 
         /// <summary>Векторное произведение векторов</summary>
-        /// <param name="Vector">Вектор, на который домножается исходный вектор</param>
+        /// <param name="Vector">Вектор, на который умножается исходный вектор</param>
         /// <returns>Вектор, равный векторному произведению векторов</returns>
         public Vector3D Product_Vector(Vector3D Vector)
         {
@@ -37,30 +38,30 @@ namespace MathCore.Vectors
              * C = {Xc, Yc, Zc}
              */
 
-            var lv_A = this;
-            var lv_B = Vector;
+            var A = this;
+            var B = Vector;
             return new Vector3D
                 (
-                    lv_A._Y * lv_B._Z - lv_A._Z * lv_B._Y, // X
-                    lv_A._Z * lv_B._X - lv_A._X * lv_B._Z, // Y
-                    lv_A._X * lv_B._Y - lv_A._Y * lv_B._X  // Z
+                    A._Y * B._Z - A._Z * B._Y, // X
+                    A._Z * B._X - A._X * B._Z, // Y
+                    A._X * B._Y - A._Y * B._X  // Z
                 );
         }
 
-        /// <summary>Покомпонентное домножение на вектор</summary>
+        /// <summary>Покомпонентное умножение на вектор</summary>
         /// <param name="Vector">Векторный сомножитель</param>
         /// <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
         public Vector3D Product_Component(Vector3D Vector)
             => new Vector3D(_X * Vector._X, _Y * Vector._Y, _Z * Vector._Z);
 
         /// <summary>Угол между векторами</summary>
-        /// <param name="Vector">Вектор, к которорому вычисляется угол</param>
+        /// <param name="Vector">Вектор, к которому вычисляется угол</param>
         /// <returns>Пространственный угол между векторами</returns>
         public SpaceAngle GetAngle(Vector3D Vector)
         {
-            var lv_Angle1 = Angle;
-            var lv_Angle2 = Vector.Angle;
-            return lv_Angle1 - lv_Angle2;
+            var angle1 = Angle;
+            var angle2 = Vector.Angle;
+            return angle1 - angle2;
         }
 
         /// <summary>Проекция на вектор</summary>
@@ -68,12 +69,14 @@ namespace MathCore.Vectors
         /// <returns>Проекция на вектор</returns>
         public double GetProjectionTo(Vector3D Vector) => Product_Scalar(Vector) / Vector.R;
 
+        [NotNull]
         public Func<Vector3D, double> GetProjectorV()
         {
             var t = this;
             return v => t * v / v.R;
         }
 
+        [NotNull]
         public Expression GetProjectorV_Expression(Expression v)
         {
             var t = this;
@@ -88,25 +91,28 @@ namespace MathCore.Vectors
             );
         }
 
-        /// <summary>Проекция на наравление</summary>
+        /// <summary>Проекция на направление</summary>
         /// <param name="Direction">Направление, на которое проектируется вектор</param>
         /// <returns>Проекция вектора на направление</returns>
         public double GetProjectionTo(SpaceAngle Direction)
         {
-            var thetta = Direction.ThettaRad;
+            var theta = Direction.ThetaRad;
             var phi = Direction.PhiRad;
-            return Math.Sin(thetta) * (_X * Math.Cos(phi) + _Y * Math.Sin(phi)) + _Z * Math.Cos(thetta);
+            return Math.Sin(theta) * (_X * Math.Cos(phi) + _Y * Math.Sin(phi)) + _Z * Math.Cos(theta);
         }
 
-        private static MethodCallExpression sin_expr(Expression xx) => Expression.Call(((Func<double, double>)Math.Sin).Method, xx);
-        private static MethodCallExpression cos_expr(Expression xx) => Expression.Call(((Func<double, double>)Math.Cos).Method, xx);
+        [NotNull] private static MethodCallExpression GetSinExpression([NotNull] Expression xx) => 
+            Expression.Call(((Func<double, double>)Math.Sin).Method, xx);
+        [NotNull] private static MethodCallExpression GetCosExpression([NotNull] Expression xx) => 
+            Expression.Call(((Func<double, double>)Math.Cos).Method, xx);
 
+        [NotNull]
         public Func<SpaceAngle, double> GetProjectorA()
         {
             var t = this;
             return d =>
             {
-                var th = d.ThettaRad;
+                var th = d.ThetaRad;
                 var ph = d.PhiRad;
                 return Math.Sin(th) * (t._X * Math.Cos(ph) + t._Y * Math.Sin(ph)) + t._Z * Math.Cos(th);
             };
@@ -116,7 +122,7 @@ namespace MathCore.Vectors
         //(
         //    Expression.Multiply
         //    (
-        //        sin_expr(Expression.Property(d, nameof(SpaceAngle.ThettaRad))),
+        //        sin_expr(Expression.Property(d, nameof(SpaceAngle.ThetaRad))),
         //        Expression.Add
         //        (
         //            Expression.Multiply
@@ -134,15 +140,16 @@ namespace MathCore.Vectors
         //    Expression.Multiply
         //    (
         //        Expression.Constant(_Z),
-        //        cos_expr(Expression.Property(d, nameof(SpaceAngle.ThettaRad)))
+        //        cos_expr(Expression.Property(d, nameof(SpaceAngle.ThetaRad)))
         //    )
         //);
 
-        public Expression GetProjectorA_Expression(Expression d)
+        [NotNull]
+        public Expression GetProjectorA_Expression([NotNull] Expression d)
         {
             var sin = (Func<double, double>)Math.Sin;
             var cos = (Func<double, double>)Math.Cos;
-            return sin.GetCallExpression(d.GetProperty(nameof(SpaceAngle.ThettaRad)))
+            return sin.GetCallExpression(d.GetProperty(nameof(SpaceAngle.ThetaRad)))
                 .Multiply
                 (
                     _X.ToExpression().Multiply(cos.GetCallExpression(d.GetProperty(nameof(SpaceAngle.PhiRad))))
@@ -150,7 +157,7 @@ namespace MathCore.Vectors
                     (
                         _Y.ToExpression().Multiply(sin.GetCallExpression(d.GetProperty(nameof(SpaceAngle.PhiRad))))
                     )
-                ).Add(_Z.ToExpression().Multiply(cos.GetCallExpression(d.GetProperty(nameof(SpaceAngle.ThettaRad)))));
+                ).Add(_Z.ToExpression().Multiply(cos.GetCallExpression(d.GetProperty(nameof(SpaceAngle.ThetaRad)))));
         }
     }
 }

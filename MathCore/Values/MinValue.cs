@@ -18,6 +18,11 @@ namespace MathCore.Values
 
         /// <summary>Добавить новое значение</summary>
         /// <param name="value">Добавляемое значение</param>
+        /// <returns>Минимальный элемент из всех добавленных</returns>
+        public double Add(double value) => AddValue(value) ? value : Value;
+
+        /// <summary>Добавить новое значение</summary>
+        /// <param name="value">Добавляемое значение</param>
         /// <returns>Истина, если добавляемое значение является минимальным</returns>
         public bool AddValue(double value)
         {

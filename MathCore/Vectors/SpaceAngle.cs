@@ -87,7 +87,7 @@ namespace MathCore.Vectors
         /// <summary>Азимутальный угол в плоскости XOY</summary>
         public double Phi => _Phi;
 
-        public double ThettaRad => _AngleType == AngleType.Rad ? _Thetta : _Thetta * Consts.Geometry.ToRad;
+        public double ThetaRad => _AngleType == AngleType.Rad ? _Thetta : _Thetta * Consts.Geometry.ToRad;
         public double ThettaDeg => _AngleType == AngleType.Deg ? _Thetta : _Thetta * Consts.Geometry.ToDeg;
         public double PhiRad => _AngleType == AngleType.Rad ? _Phi : _Phi * Consts.Geometry.ToRad;
         public double PhiDeg => _AngleType == AngleType.Deg ? _Phi : _Phi * Consts.Geometry.ToDeg;
@@ -205,11 +205,11 @@ namespace MathCore.Vectors
         public SpaceAngle Rotate_PhiThetta(in SpaceAngle angle)
         {
             var ph0 = angle.PhiRad;
-            var th0 = angle.ThettaRad;
+            var th0 = angle.ThetaRad;
             if(ph0.Equals(0d) && th0.Equals(0d)) return this;
 
             var ph = PhiRad;
-            var th = ThettaRad;
+            var th = ThetaRad;
 
             var s_ph0 = Sin(ph0);
             var c_ph0 = Cos(ph0);
@@ -252,7 +252,7 @@ namespace MathCore.Vectors
         public static Func<SpaceAngle, SpaceAngle> GetRotator_PhiThetta(in SpaceAngle angle)
         {
             var ph0 = angle.PhiRad;
-            var th0 = angle.ThettaRad;
+            var th0 = angle.ThetaRad;
             if(ph0.Equals(0d) && th0.Equals(0d)) return a => a;
 
             var s_ph0 = Sin(ph0);
@@ -263,7 +263,7 @@ namespace MathCore.Vectors
             return r =>
             {
                 var ph = r.PhiRad;
-                var th = r.ThettaRad;
+                var th = r.ThetaRad;
 
                 var s_ph = Sin(ph);
                 var c_ph = Cos(ph);
@@ -312,7 +312,7 @@ namespace MathCore.Vectors
         {
             var a = this;
             var ph0 = a.PhiRad;
-            var th0 = a.ThettaRad;
+            var th0 = a.ThetaRad;
             if(ph0.Equals(0d) && th0.Equals(0d)) return r;
 
             var th0_ex = th0.ToExpression();
@@ -351,7 +351,7 @@ namespace MathCore.Vectors
                     ph1 = nameof(ph1).ParameterOf(typeof(double)),
                     th1 = nameof(th1).ParameterOf(typeof(double))
                 },
-                th.Assign(r.GetProperty(nameof(ThettaRad))),
+                th.Assign(r.GetProperty(nameof(ThetaRad))),
                 ph.Assign(r.GetProperty(nameof(PhiRad))),
                 s_th.Assign(sin.GetCallExpression(th)),
                 c_th.Assign(cos.GetCallExpression(th)),

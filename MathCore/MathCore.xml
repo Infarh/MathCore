@@ -865,7 +865,7 @@
             <summary>Методы-расширения комплексных чисел</summary>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToRe(MathCore.Complex[])">
-            <summary>Преобразование массива комплексных чисел в масив действительных</summary>
+            <summary>Преобразование массива комплексных чисел в массив действительных</summary>
             <param name="c">Массив комплексных чисел</param>
             <returns>Массив действительных чисел</returns>
         </member>
@@ -1631,6 +1631,19 @@
         <member name="M:MathCore.Extensions.Expressions.ExpressionExtensions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
             <exception cref="T:System.FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутсвуте подставляемый параметр</exception>
         </member>
+        <member name="T:MathCore.Extensions.ProcessExtensions">
+            <summary>Методы-расширения для процессов</summary>
+        </member>
+        <member name="M:MathCore.Extensions.ProcessExtensions.WaitAsync(System.Diagnostics.Process)">
+            <summary>Ожидание завершения процесса</summary>
+            <param name="process">Процесс, завершение которого требуется дождаться</param>
+            <returns>Задача, результат которой является кодом завершения процесса</returns>
+        </member>
+        <member name="M:MathCore.Extensions.ProcessExtensions.GetMotherProcess(System.Diagnostics.Process)">
+            <summary>Получить родительский процесс</summary>
+            <param name="process">Дочерний процесс</param>
+            <returns>Родительский процесс</returns>
+        </member>
         <member name="M:MathCore.Extensions.String.WordWrap.isSogl(System.Char)">
             <summary>Проверяет, является ли символ согласным</summary>
             <param name="c"></param><returns></returns>
@@ -1657,7 +1670,7 @@
         </member>
         <member name="M:MathCore.Extensions.String.WordWrap.SetHyph(System.String,System.Int32)">
             <summary>Фактически, она и проделывает всю работу</summary>
-            <param name="pc">Входной масив символов</param>
+            <param name="pc">Входной массив символов</param>
             <param name="MaxSize">Максимальный размер</param>
             <returns>Строка с расставленными знаками переноса</returns>
         </member>
@@ -12702,7 +12715,7 @@
             <param name="A">Исходный массив</param>
             <param name="B">Присоединяемый массив</param>
             <typeparam name="TArray">Тип элементов массива</typeparam>
-            <returns>Массив из объединёных элементов</returns>
+            <returns>Массив из объединенных элементов</returns>
         </member>
         <member name="M:System.ArrayExtensions.GetSelectedValue``2(``0[],System.Func{``0,``1,``1})">
             <summary>Получить элемент массива</summary>
@@ -12736,7 +12749,7 @@
         <member name="M:System.ArrayExtensions.Foreach``2(``0[],System.Action{``0},System.Func{``1,System.Boolean})">
             <summary>Выполнение действия для всех элементов массива</summary>
             <param name="array">Массив элементов</param>
-            <param name="action">ВЫполняемое действие</param>
+            <param name="action">Выполняемое действие</param>
             <param name="ErrorHandler">Обработчик исключений</param>
             <exception cref="T:System.ApplicationException">Возникает в случае если в методе action возникшее исключение не было обработано</exception>
             <typeparam name="TArray">Тип элементов массива</typeparam>
@@ -12758,13 +12771,13 @@
         </member>
         <member name="M:System.ArrayExtensions.Initialize``1(``0[],System.Func{System.Int32,``0})">
             <summary>Инициализация массива</summary>
-            <typeparam name="TArray">Тип элементов масива</typeparam>
-            <param name="array">Инициализированный масив</param>
-            <param name="Initializer">МЕтод инициализации</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <param name="array">Инициализированный массив</param>
+            <param name="Initializer">Метод инициализации</param>
             <returns>Инициализированный массив</returns>
         </member>
         <member name="M:System.ArrayExtensions.Initialize``1(``0[],``0)">
-            <summary>Инициализация массива одинм значением</summary>
+            <summary>Инициализация массива одним значением</summary>
             <typeparam name="TArray">Тип элементов массива</typeparam>
             <param name="array">Инициализируемый массив</param>
             <param name="value">Значение, размещаемое во всех элементах массива</param>
@@ -12772,19 +12785,19 @@
         </member>
         <member name="M:System.ArrayExtensions.Initialize``2(``0[],``1,System.Func{System.Int32,``1,``0})">
             <summary>Инициализация массива</summary>
-            <typeparam name="TValue">Тип элементов масива</typeparam>
+            <typeparam name="TValue">Тип элементов массива</typeparam>
             <typeparam name="TP">Тип параметра инициализации</typeparam>
-            <param name="array">Инициализированный масив</param>
+            <param name="array">Инициализированный массив</param>
             <param name="p">Параметр инициализации</param>
             <param name="Initializer">Метод инициализации</param>
             <returns>Инициализированный массив</returns>
         </member>
         <member name="M:System.ArrayExtensions.Initialize``3(``0[],``1,``2,System.Func{System.Int32,``1,``2,``0})">
             <summary>Инициализация массива</summary>
-            <typeparam name="TValue">Тип элементов масива</typeparam>
+            <typeparam name="TValue">Тип элементов массива</typeparam>
             <typeparam name="TP1">Тип первого параметра инициализации</typeparam>
             <typeparam name="TP2">Тип второго параметра инициализации</typeparam>
-            <param name="array">Инициализированный масив</param>
+            <param name="array">Инициализированный массив</param>
             <param name="p1">Первый параметр инициализации</param>
             <param name="p2">Второй параметр инициализации</param>
             <param name="Initializer">Метод инициализации</param>
@@ -12807,7 +12820,14 @@
             <summary>Создать копию массива с перемешанным содержимым</summary>
             <param name="array">Исходный массив</param>
             <typeparam name="T">Тип элементов массива</typeparam>
-            <returns>Копия исходного массива с перемешанным созержимым</returns>
+            <returns>Копия исходного массива с перемешанным содержимым</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Mix``1(``0[],System.Random)">
+            <summary>Создать копию массива с перемешанным содержимым</summary>
+            <param name="array">Исходный массив</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <param name="rnd">Генератор случайных чисел</param>
+            <returns>Копия исходного массива с перемешанным содержимым</returns>
         </member>
         <member name="M:System.ArrayExtensions.MixRef``1(``0[],System.Random)">
             <summary>Перемешать массив</summary>
@@ -12823,8 +12843,8 @@
             <returns>Исходный массив с перемешанным содержимым</returns>
         </member>
         <member name="M:System.ArrayExtensions.SetSubArrays``1(``0[],``0[][])">
-            <summary>Последовательно скопировать набор массивов в буффер</summary>
-            <param name="A">Буфферный массив соответствующей длины</param>
+            <summary>Последовательно скопировать набор массивов в буфер</summary>
+            <param name="A">Буферный массив соответствующей длины</param>
             <param name="B">Перечень устанавливаемых значений</param>
             <typeparam name="T">Тип элементов массива</typeparam>
         </member>
@@ -15742,8 +15762,7 @@
         <member name="M:System.RandomExtensions.NextUniform(System.Random,MathCore.Interval[])">
             <summary>Массив случайных чисел с равномерным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
-            <param name="Count">Размер массива</param>
-            <param name="Interval">Интервал</param>
+            <param name="Intervals">Интервал</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextUniformInterval(System.Random,System.Int32,System.Double,System.Double)">
@@ -15786,7 +15805,7 @@
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Double,System.Double)">
             <summary>Случайное число с нормальным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
-            <param name="sigma">Среднеквадратическое отклонение</param>
+            <param name="sigma">Среднеквадратичное отклонение</param>
             <param name="mu">Математическое ожидание</param>
             <returns>Случайное число с нормальным распределением</returns>
         </member>
@@ -15804,7 +15823,7 @@
             <param name="min">Минимум</param>
             <param name="max">МАксимум</param>
             <param name="mode">Медиана</param>
-            <returns>Случайное число с треугольным расеределением</returns>
+            <returns>Случайное число с треугольным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.Mix(System.Random,System.Collections.IList)">
             <summary>
