@@ -5,17 +5,17 @@ namespace MathCore.Evulations
 {
     /// <summary>¬ычисление конкретного значени€</summary>
     /// <typeparam name="T">“ип возвращаемого значени€</typeparam>
-    public class ValueEvulation<T> : Evulation<T>
+    public class ValueEvaluation<T> : Evulation<T>
     {
         /// <summary>¬озвращаемое значение</summary>
         public T Value { get; set; }
 
         /// <summary>»нициализаци€ нового вычислени€ конкретного значени€</summary>
-        public ValueEvulation() { }
+        public ValueEvaluation() { }
 
         /// <summary>»нициализаци€ нового вычислени€ конкретного значени€</summary>
         /// <param name="value">¬озвращаемое значение</param>
-        public ValueEvulation(T value) => Value = value;
+        public ValueEvaluation(T value) => Value = value;
 
         /// <inheritdoc />
         public override T GetValue() => Value;
@@ -28,12 +28,12 @@ namespace MathCore.Evulations
 
         /// <summary>ќѕератор не€вного преобразовани€ типа значени€ в тип вычислени€ этого значени€</summary>
         /// <param name="Value">ќборачиваемое значение</param>
-        public static implicit operator ValueEvulation<T>(T Value) => new ValueEvulation<T>(Value);
+        public static implicit operator ValueEvaluation<T>(T Value) => new ValueEvaluation<T>(Value);
     }
 
     /// <summary>»менованное вычисление конкретного значени€</summary>
     /// <typeparam name="T">“ип возвращаемого значени€</typeparam>
-    public class NamedValueEvulation<T> : ValueEvulation<T>
+    public class NamedValueEvaluation<T> : ValueEvaluation<T>
     {
         /// <summary>»м€ вычислени€</summary>
         public string Name { get; set; }
@@ -42,16 +42,16 @@ namespace MathCore.Evulations
         public bool IsParameter { get; set; }
 
         /// <summary>»нициализаци€ нового именованного вычислени€ конкретного значени€</summary>
-        public NamedValueEvulation() { }
+        public NamedValueEvaluation() { }
 
         /// <summary>»нициализаци€ нового именованного вычислени€ конкретного значени€</summary>
         /// <param name="value">¬озвращаемое значение</param>
-        public NamedValueEvulation(T value) : base(value) { }
+        public NamedValueEvaluation(T value) : base(value) { }
 
         /// <summary>»нициализаци€ нового именованного вычислени€ конкретного значени€</summary>
         /// <param name="value">¬озвращаемое значение</param>
         /// <param name="name">»м€ вычислени€</param>
-        public NamedValueEvulation(T value, string name) : base(value) => Name = name;
+        public NamedValueEvaluation(T value, string name) : base(value) => Name = name;
 
         /// <summary>≈сли вычисление €вл€етс€ параметром, то возвращаетс€ выражение параметра, иначе возвращаетс€ вычисление значени€</summary>
         /// <returns>¬ыражение, соответствующее данному вычислению</returns>
