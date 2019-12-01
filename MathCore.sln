@@ -16,7 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		BuildAndPublish.bat = BuildAndPublish.bat
 		BuildAndTest.bat = BuildAndTest.bat
 		BuildRelease.bat = BuildRelease.bat
-		license.txt = license.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{53DD6C85-07FF-432A-843F-4A2BE7761A9C}"
