@@ -288,7 +288,11 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorAdditionDoubleToComplexTest()
         {
-            Assert.AreEqual(new Complex(5, 7), 5 + new Complex(0, 7), "5 + 7i != (5+7i)");
+            var a = 5;
+            var b = new Complex(0, 7);
+            var c = a + b;
+            var expected_c = new Complex(5, 7);
+            Assert.That.Value(c).IsEqual(expected_c, "5 + 7i != (5+7i)");
             Assert.AreEqual(0, (double)(new Complex(4, -12.33) - (-6.2 + new Complex(10.2, -12.33))),
                             1e-15, "-6.2 + (10.2-12.33i) != (4-12.33i)");
         }
@@ -325,13 +329,11 @@ namespace MathCore.Tests
             } while (Y.Abs == 0);
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
             var (re, im) = X / Y;
-            Assert.AreEqual((X.Re * Y.Re + X.Im * Y.Im) / q, re, 1e-15);
-            Assert.AreEqual((X.Im * Y.Re - X.Re * Y.Im) / q, im, 1e-15);
+            Assert.That.Value(re).IsEqual((X.Re * Y.Re + X.Im * Y.Im) / q, 2e-15);
+            Assert.That.Value(im).IsEqual((X.Im * Y.Re - X.Re * Y.Im) / q, 2e-15);
         }
 
-        /// <summary>
-        ///A test for op_Division
-        ///</summary>
+        /// <summary> test for op_Division</summary>
         [TestMethod]
         public void OperatorDivisionComplexArrayToComplexsTest()
         {

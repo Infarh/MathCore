@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MathCore.Monades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
