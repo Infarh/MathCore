@@ -86,7 +86,7 @@ namespace MathCore.Monades
 
         #region Work -> Work
 
-        [NotNull] public Work Anyway([NotNull] Action action) => new WorkAction(action, this);
+        [NotNull] public Work Do([NotNull] Action action) => new WorkAction(action, this);
         private class WorkAction : Work
         {
             [NotNull] private readonly Action _Action;
@@ -125,7 +125,7 @@ namespace MathCore.Monades
 
         #region Work -> Work<T>
 
-        [NotNull] public Work<T> Anyway<T>([NotNull] Func<T> function) => new WorkFunction<T>(function, this);
+        [NotNull] public Work<T> Do<T>([NotNull] Func<T> function) => new WorkFunction<T>(function, this);
         private class WorkFunction<T> : Work<T>
         {
             [NotNull] private readonly Func<T> _Function;
@@ -136,7 +136,6 @@ namespace MathCore.Monades
         }
 
         [NotNull] public Work<T> IfSuccess<T>([NotNull] Func<T> function) => new WorkSuccessFunction<T>(function, this);
-
         private sealed class WorkSuccessFunction<T> : WorkFunction<T>
         {
             internal WorkSuccessFunction([NotNull] Func<T> function, [CanBeNull] Work BaseWork) : base(function, BaseWork) { }
@@ -145,7 +144,6 @@ namespace MathCore.Monades
         }
 
         [NotNull] public Work<T> IfFailure<T>([NotNull] Func<T> function) => new WorkFailureFunction<T>(function, this);
-
         private sealed class WorkFailureFunction<T> : WorkFunction<T>
         {
             internal WorkFailureFunction([NotNull] Func<T> function, Work BaseWork) : base(function, BaseWork) { }
@@ -174,7 +172,9 @@ namespace MathCore.Monades
 
         protected internal Work([CanBeNull] Work BaseWork) : base(BaseWork) { }
 
-        [NotNull] public Work<TResult> Anyway<TResult>([NotNull] Func<T, TResult> Selector) => new Work<T, TResult>(Selector, this);
+        [NotNull] public Work<TResult> Do<TResult>([NotNull] Func<T, TResult> Selector) => new Work<T, TResult>(Selector, this);
+
+        [NotNull] public Work<T> Do(Action<T> action) => new Work<T, T>(result => { action(result); return result; }, this);
 
         [NotNull] public Work<TResult> IfSuccess<TResult>([NotNull] Func<T, TResult> Selector) => new WorkIfSuccess<TResult>(Selector, this);
         private sealed class WorkIfSuccess<TResult> : Work<T, TResult>

@@ -8,7 +8,7 @@ using Moq;
 namespace MathCore.Tests.Monades
 {
     [TestClass]
-    public class WorkTests
+    public partial class WorkTests
     {
         private static (List<string> Messages, Action<string> AddMethod) CreateMessagesStorage()
         {
@@ -47,7 +47,6 @@ namespace MathCore.Tests.Monades
             Assert.IsTrue(work.Executed);
         }
 
-
         [TestMethod]
         public void SingleActionFailWork()
         {
@@ -80,8 +79,8 @@ namespace MathCore.Tests.Monades
             const string anyway_message2 = "Anyway message2";
 
             var work = Work.Begin(() => add_message(first_message))
-                   .Anyway(() => add_message(anyway_message1))
-                   .Anyway(() => add_message(anyway_message2));
+                   .Do(() => add_message(anyway_message1))
+                   .Do(() => add_message(anyway_message2));
 
             work.Execute();
 
@@ -106,12 +105,13 @@ namespace MathCore.Tests.Monades
 
             var not_executed_1 = true;
             var not_executed_2 = true;
-            var work = Work.Begin(() => add_message(message1))
+            var work = Work
+               .Begin(() => add_message(message1))
                .IfSuccess(() => add_message(message2))
                .IfFailure(() => { add_message(not_exist_message1); not_executed_1 = false; })
                .IfSuccess(() => add_message(null))
                .IfSuccess(() => { add_message(not_exist_message2); not_executed_2 = false; })
-               .Anyway(() => add_message(anyway_message));
+               .Do(() => add_message(anyway_message));
 
             Assert.IsFalse(work.Executed);
             work.Execute();
@@ -122,7 +122,8 @@ namespace MathCore.Tests.Monades
             Assert.IsFalse(work.Success);
             Assert.IsTrue(work.Failure);
             Assert.That.Value(work.CurrentError).IsNull();
-            Assert.That.Value(work.Error).As<ArgumentNullException>().Where(error => error.ParamName).IsEqual("msg");
+            Assert.That.Value(work.Error)
+               .As<ArgumentNullException>().Where(error => error.ParamName).IsEqual("msg");
 
             CollectionAssert.That.Collection(messages).IsEqualTo(new [] { message1, message2, anyway_message });
         }
