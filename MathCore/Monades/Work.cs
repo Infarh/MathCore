@@ -14,6 +14,20 @@ namespace MathCore.Monades
 
         [NotNull] public static Work<T> Begin<T>([NotNull] Func<T> function) => new WorkFunction<T>(function);
 
+        [NotNull] public static Work<T> With<T>(T value) => new WorkValue<T>(value);
+        private class WorkValue<T> : Work<T>
+        {
+            public override bool Success => true;
+
+            public WorkValue(T Value, Work BaseWork = null) : base(BaseWork)
+            {
+                _Result = Value;
+                Executed = true;
+            }
+
+            protected override void ExecuteWork() { }
+        }
+
         #endregion
 
         #region Поля
@@ -46,7 +60,7 @@ namespace MathCore.Monades
 
         public virtual bool Success => CurrentError is null && SubWorks.All(work => work.Success);
 
-        public virtual bool Failure => !Success; 
+        public bool Failure => !Success; 
 
         #endregion
 
