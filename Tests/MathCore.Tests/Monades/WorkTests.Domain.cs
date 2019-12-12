@@ -108,6 +108,43 @@ namespace MathCore.Tests.Monades
             }
         }
 
+        private class AccountController
+        {
+            [NN] private readonly UserManager _UserManager;
+            [NN] private readonly Logger _Logger;
+
+            public AccountController([NN] UserManager UserManager, [NN] Logger Logger)
+            {
+                _UserManager = UserManager ?? throw new ArgumentNullException(nameof(UserManager));
+                _Logger = Logger ?? throw new ArgumentNullException(nameof(Logger));
+            }
+
+            [NN] public Result Register([NN] string UserName, [NN] string Password) => Work
+               .With(_UserManager)
+               .Do(m => m.Create(new User { UserName = UserName }, Password))
+               .IfSuccess(() => _Logger.Add($"{UserName} registered"))
+               .IfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
+               .IfSuccess<Result>(() => new SuccessResult($"User {UserName} registred"))
+               .IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+
+            [NN] public Result Login([NN] string UserName, [NN] string Password) => Work
+               .With(_UserManager)
+               .Do(m => m.Login(UserName, Password))
+               .IfSuccess(() => _Logger.Add($"{UserName} login"))
+               .IfFailure(e => _Logger.Add($"{UserName} error login with reason {e.Message}", e))
+               .IfSuccess<Result>(() => new SuccessResult("Login operation complete"))
+               .IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+        }
+
+        private abstract class Result
+        {
+            public string Message { get; }
+            public Result(string Message) => this.Message = Message;
+        }
+
+        private sealed class SuccessResult : Result { public SuccessResult(string Message) : base(Message) { } }
+        private sealed class FailureResult : Result { public FailureResult(string Message) : base(Message) { } }
+
         [TestMethod]
         public void Work_of_AccountController_RegisterUser()
         {
@@ -123,34 +160,20 @@ namespace MathCore.Tests.Monades
                 },
             };
 
-            #region AccountController
-
             var user_manager = new UserManager(users);
             var logger = new Logger();
 
-            void Register(string UserName, string Password) => Work
-                .With(user_manager)
-                .Do(m => m.Create(new User { UserName = UserName }, Password))
-                .IfSuccess(() => logger.Add($"{UserName} registered"))
-                .IfFailure(e => logger.Add($"{UserName} not registered with reason {e.Message}", e))
-                .Execute();
+            var controller = new AccountController(user_manager, logger);
 
-            void Login(string UserName, string Password) => Work
-               .With(user_manager)
-               .Do(m => m.Login(test_user_name, test_user_password))
-               .IfSuccess(() => logger.Add($"{UserName} login"))
-               .IfFailure(e => logger.Add($"{UserName} error login with reason {e.Message}", e))
-               .Execute();
-
-            #endregion
-           
-            Register(test_user_name, test_user_password);
+            var registration_result = controller.Register(test_user_name, test_user_password);
             Assert.IsTrue(users.Contains(user => user.UserName == test_user_name));
+            Assert.That.Value(registration_result).IsNotNull();
+            Assert.That.Value(registration_result).Is<SuccessResult>();
 
             var test_user = user_manager.GetUserByName(test_user_name);
             Assert.That.Value(test_user).IsNotNull();
 
-            Login(test_user_name, test_user_password);
+            var login_result = controller.Login(test_user_name, test_user_password);
             Assert.IsTrue(test_user.LoggedIn);
         }
     }

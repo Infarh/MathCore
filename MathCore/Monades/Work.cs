@@ -202,6 +202,8 @@ namespace MathCore.Monades
 
             protected override void ExecuteWork() { if(_BaseWork.NotNull().Failure) _Result = _Selector(Error);  }
         }
+
+        public static implicit operator T([NotNull] Work<T> work) => work.Result;
     }
 
     public class Work<T, TResult> : Work<TResult>

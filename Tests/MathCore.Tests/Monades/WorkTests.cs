@@ -129,15 +129,39 @@ namespace MathCore.Tests.Monades
         }
 
         [TestMethod]
-        public void SequenceFunctionWorks()
+        public void SequenceSuccessFunctionWorks()
         {
-            var list_mock = new Mock<IList<string>>();
-            var list = list_mock.Object;
+            var messages = new List<string>();
+            var values = new List<int>();
 
             const string message = "Message";
             var work = Work.Begin(() => message)
-                   //.IfSuccess()
+                   .Do(messages.Add)
+                   .IfSuccess(str => str.Length)
+                   .IfFailure(e => e.Message.Length)
+                   .Do(values.Add)
                 ;
+
+            work.Execute();
+            CollectionAssert.That.Collection(messages).Contains(message);
+            CollectionAssert.That.Collection(values).NotContains(message.Length);
+        }
+
+        [TestMethod]
+        public void SequenceFailureFunctionWorks()
+        {
+            var messages = new List<string>();
+
+            const string message = "Message";
+            var work = Work.Begin(() => message)
+                   .Do(msg => throw new InvalidOperationException(msg))
+                   .IfSuccess(() => messages.Add("Not success"))
+                   .IfFailure(e => messages.Add(e.Message))
+                ;
+
+            work.Execute();
+            CollectionAssert.That.Collection(messages).Contains(message);
+            CollectionAssert.That.Collection(messages).NotContains("Not success");
         }
     }
 }
