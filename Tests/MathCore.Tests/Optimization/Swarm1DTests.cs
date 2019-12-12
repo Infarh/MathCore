@@ -67,7 +67,7 @@ namespace MathCore.Tests.Optimization
                 IterationCount: 1000,
                 out var X,
                 out var Y);
-            Assert.That.Value(X).IsEqual(-__X0, 1.0e-4);
+            Assert.That.Value(X).IsEqual(-__X0, 1.5e-4);
             Assert.That.Value(Y).IsEqual(-__Y0, 7.4e-9);
         }
     }
