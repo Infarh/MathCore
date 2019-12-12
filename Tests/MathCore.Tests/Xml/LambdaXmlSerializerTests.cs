@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Xml.Linq;
 using MathCore.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -57,7 +56,7 @@ namespace MathCore.Tests.Xml
                            .Attribute("SureName", s => s.SureName)
                            .Attribute("Name", s => s.Name)
                            .Attribute("Patronymic", s => s.Patronymic)
-                           .Element("Ratings", s => s.Ratings, rating => rating
+                           .Element("Ratings", s => s.Ratings, s=>s.Average() > 2, rating => rating
                                .Attribute("Min", r => r.Min())
                                .Attribute("Max", r => r.Max())
                                .Attribute("Avg", rr => rr.Average())
@@ -66,6 +65,46 @@ namespace MathCore.Tests.Xml
                 ;
 
             var xml = serializer.Serialize(group);
+
+            Assert.That.Value(xml.Name).IsEqual(typeof(Group).Name);
+            Assert.That.Value((string)xml.Attribute("Name")).IsEqual("04-216");
+            Assert.That.Value(xml.XPathString("@Leader")).IsEqual(group.Students.First().SureName);
+
+            CollectionAssert.That
+               .Collection(xml.Attributes().Where(a => a.Name.LocalName.StartsWith("Student")).Select(a => a.Value).ToArray())
+               .IsEqualTo(group.Students.Select(s => s.SureName).ToArray());
+
+            for (var i = 0; i < group.Students.Count; i++)
+            {
+                Assert.That.Value(xml.XPathString($"Student[{i + 1}]/@SureName")).IsEqual(group.Students[i].SureName);
+                Assert.That.Value(xml.XPathString($"Student[{i + 1}]/@Name")).IsEqual(group.Students[i].Name);
+                Assert.That.Value(xml.XPathString($"Student[{i + 1}]/@Patronymic")).IsEqual(group.Students[i].Patronymic);
+            }
+
+            Assert.That.Value(xml.XPath("Student[1]/Ratings")).IsNotNull();
+            Assert.That.Value(xml.XPathInt32("Student[1]/Ratings/@Min")).IsEqual(3);
+            Assert.That.Value(xml.XPathInt32("Student[1]/Ratings/@Max")).IsEqual(5);
+
+            Assert.That.Value(xml.XPath("Student[2]/Ratings")).IsNotNull();
+            Assert.That.Value(xml.XPathInt32("Student[2]/Ratings/@Min")).IsEqual(2);
+            Assert.That.Value(xml.XPathInt32("Student[2]/Ratings/@Max")).IsEqual(4);
+
+            Assert.That.Value(xml.XPath("Student[3]/Ratings")).IsNull();
+            Assert.That.Value(xml.XPathInt32("Student[3]/Ratings/@Min")).IsEqual(null);
+            Assert.That.Value(xml.XPathInt32("Student[3]/Ratings/@Max")).IsEqual(null);
+
+            Assert.That.Value(xml.XPathDouble("Student[1]/Ratings/@Avg")).IsEqual(group.Students[0].Ratings.Average());
+            Assert.That.Value(xml.XPathDouble("Student[2]/Ratings/@Avg")).IsEqual(group.Students[1].Ratings.Average());
+            Assert.That.Value(xml.XPathDouble("Student[3]/Ratings/@Avg")).IsEqual(null);
+
+            Assert.That.Value(xml.XPath("Student[1]/Ratings"))
+               .As<XElement>()
+               .Where(e => e.Value)
+               .IsEqual(group.Students[0].Ratings.ToSeparatedStr(","));
+            Assert.That.Value(xml.XPath("Student[2]/Ratings"))
+               .As<XElement>()
+               .Where(e => e.Value)
+               .IsEqual(group.Students[1].Ratings.ToSeparatedStr(","));
         }
 
     }
