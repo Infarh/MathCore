@@ -10,7 +10,7 @@ namespace MathCore.Tests.Extensions
     [TestClass]
     public class RandomExtensionsTests
     {
-        [TestMethod]
+        [TestMethod, Ignore]
         public void NextNormal_SingleValue_Sigma1Mu0()
         {
             const double sigma = 1;
