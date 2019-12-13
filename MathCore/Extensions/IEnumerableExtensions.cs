@@ -226,8 +226,20 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [NN]
-        public static TV[] ToArray<T, TV>([NN] this IEnumerable<T> items, [NN] Func<T, TV> converter) => items.Select(converter).ToArray();
+        [NN] public static TV[] ToArray<T, TV>([NN] this IEnumerable<T> items, [NN] Func<T, TV> converter) => items.Select(converter).ToArray();
+
+        /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
+        /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
+        /// <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+        /// <param name="items">Исходное перечисление</param>
+        /// <param name="converter">Метод преобразования элементов и индекса элемента</param>
+        /// <returns>
+        /// Если ссылка на исходное перечисление не пуста, то
+        ///     Результирующий массив, состоящий из элементов исходного перечисления, преобразованных указанным методом
+        /// иначе
+        ///     пустая ссылка на массив
+        /// </returns>
+        [NN] public static TV[] ToArray<T, TV>([NN] this IEnumerable<T> items, [NN] Func<T, int, TV> converter) => items.Select(converter).ToArray();
 
         /// <summary>Преобразование перечисления в список с преобразованием элементов</summary>
         /// <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
