@@ -1572,60 +1572,60 @@
         <member name="M:MathCore.Evulations.UnaryOperatorEvulation`2.GetExpression">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Evulations.ValueEvulation`1">
+        <member name="T:MathCore.Evulations.ValueEvaluation`1">
             <summary>Вычисление конкретного значения</summary>
             <typeparam name="T">Тип возвращаемого значения</typeparam>
         </member>
-        <member name="P:MathCore.Evulations.ValueEvulation`1.Value">
+        <member name="P:MathCore.Evulations.ValueEvaluation`1.Value">
             <summary>Возвращаемое значение</summary>
         </member>
-        <member name="M:MathCore.Evulations.ValueEvulation`1.#ctor">
+        <member name="M:MathCore.Evulations.ValueEvaluation`1.#ctor">
             <summary>Инициализация нового вычисления конкретного значения</summary>
         </member>
-        <member name="M:MathCore.Evulations.ValueEvulation`1.#ctor(`0)">
+        <member name="M:MathCore.Evulations.ValueEvaluation`1.#ctor(`0)">
             <summary>Инициализация нового вычисления конкретного значения</summary>
             <param name="value">Возвращаемое значение</param>
         </member>
-        <member name="M:MathCore.Evulations.ValueEvulation`1.GetValue">
+        <member name="M:MathCore.Evulations.ValueEvaluation`1.GetValue">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Evulations.ValueEvulation`1.GetExpression">
+        <member name="M:MathCore.Evulations.ValueEvaluation`1.GetExpression">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Evulations.ValueEvulation`1.ToString">
+        <member name="M:MathCore.Evulations.ValueEvaluation`1.ToString">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Evulations.ValueEvulation`1.op_Implicit(`0)~MathCore.Evulations.ValueEvulation{`0}">
+        <member name="M:MathCore.Evulations.ValueEvaluation`1.op_Implicit(`0)~MathCore.Evulations.ValueEvaluation{`0}">
             <summary>ОПератор неявного преобразования типа значения в тип вычисления этого значения</summary>
             <param name="Value">Оборачиваемое значение</param>
         </member>
-        <member name="T:MathCore.Evulations.NamedValueEvulation`1">
+        <member name="T:MathCore.Evulations.NamedValueEvaluation`1">
             <summary>Именованное вычисление конкретного значения</summary>
             <typeparam name="T">Тип возвращаемого значения</typeparam>
         </member>
-        <member name="P:MathCore.Evulations.NamedValueEvulation`1.Name">
+        <member name="P:MathCore.Evulations.NamedValueEvaluation`1.Name">
             <summary>Имя вычисления</summary>
         </member>
-        <member name="P:MathCore.Evulations.NamedValueEvulation`1.IsParameter">
+        <member name="P:MathCore.Evulations.NamedValueEvaluation`1.IsParameter">
             <summary>Признак того, что данное вычисление является именованным параметром</summary>
         </member>
-        <member name="M:MathCore.Evulations.NamedValueEvulation`1.#ctor">
+        <member name="M:MathCore.Evulations.NamedValueEvaluation`1.#ctor">
             <summary>Инициализация нового именованного вычисления конкретного значения</summary>
         </member>
-        <member name="M:MathCore.Evulations.NamedValueEvulation`1.#ctor(`0)">
+        <member name="M:MathCore.Evulations.NamedValueEvaluation`1.#ctor(`0)">
             <summary>Инициализация нового именованного вычисления конкретного значения</summary>
             <param name="value">Возвращаемое значение</param>
         </member>
-        <member name="M:MathCore.Evulations.NamedValueEvulation`1.#ctor(`0,System.String)">
+        <member name="M:MathCore.Evulations.NamedValueEvaluation`1.#ctor(`0,System.String)">
             <summary>Инициализация нового именованного вычисления конкретного значения</summary>
             <param name="value">Возвращаемое значение</param>
             <param name="name">Имя вычисления</param>
         </member>
-        <member name="M:MathCore.Evulations.NamedValueEvulation`1.GetExpression">
+        <member name="M:MathCore.Evulations.NamedValueEvaluation`1.GetExpression">
             <summary>Если вычисление является параметром, то возвращается выражение параметра, иначе возвращается вычисление значения</summary>
             <returns>Выражение, соответствующее данному вычислению</returns>
         </member>
-        <member name="M:MathCore.Evulations.NamedValueEvulation`1.ToString">
+        <member name="M:MathCore.Evulations.NamedValueEvaluation`1.ToString">
             <inheritdoc />
         </member>
         <member name="M:MathCore.Extensions.Expressions.ExpressionExtensions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
@@ -1782,6 +1782,90 @@
         </member>
         <member name="M:MathCore.Fraction.GetHashCode">
             <inheritdoc />
+        </member>
+        <member name="T:MathCore.Functions.FunctionsExtensions">
+            <summary>Класс методов-расширений для функций</summary>
+        </member>
+        <member name="T:MathCore.Functions.FunctionsExtensions.FuncValue">
+            <summary>Структура значения функции {Аргумент - значение}</summary>
+        </member>
+        <member name="F:MathCore.Functions.FunctionsExtensions.FuncValue.Argument">
+            <summary>Аргумент функции</summary>
+        </member>
+        <member name="F:MathCore.Functions.FunctionsExtensions.FuncValue.Value">
+            <summary>Значение функции</summary>
+        </member>
+        <member name="M:MathCore.Functions.FunctionsExtensions.FuncValue.#ctor(System.Double,System.Double)">
+            <summary>Инициализация новой пары аргумент-значение функции</summary>
+            <param name="arg">Аргумент функции</param>
+            <param name="value">Значение функции</param>
+        </member>
+        <member name="T:MathCore.Functions.FunctionsExtensions.FuncMinMaxValue">
+            <summary>Структура, содержащая максимальное и минимальное значение функции</summary>
+        </member>
+        <member name="F:MathCore.Functions.FunctionsExtensions.FuncMinMaxValue.Min">
+            <summary>Минимальное значение функции</summary>
+        </member>
+        <member name="F:MathCore.Functions.FunctionsExtensions.FuncMinMaxValue.Max">
+            <summary>Максимальное значение функции</summary>
+        </member>
+        <member name="M:MathCore.Functions.FunctionsExtensions.FuncMinMaxValue.#ctor(MathCore.Functions.FunctionsExtensions.FuncValue,MathCore.Functions.FunctionsExtensions.FuncValue)">
+            <summary>Инициализация нового максимального и минимального значения функции</summary>
+            <param name="min">Минимум функции</param>
+            <param name="max">Максимум функции</param>
+        </member>
+        <member name="M:MathCore.Functions.FunctionsExtensions.GetValues(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+            <summary>Получить массив значений функции в указанном интервале с указанным шагом</summary>
+            <param name="f">Функция, Массив значений которой требуется получить</param>
+            <param name="x1">Начало интервала</param>
+            <param name="x2">Конец интервала</param>
+            <param name="dx">Шаг сетки дискретизации</param>
+            <returns>Массив значений функции</returns>
+        </member>
+        <member name="M:MathCore.Functions.FunctionsExtensions.GetMinMax(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+            <summary>Определить минимум и максимум на интервале</summary>
+            <param name="f">Функция, минимум и максимум которой требуется определить</param>
+            <param name="x1">Начало интервала</param>
+            <param name="x2">Конец интервала</param>
+            <param name="dx">Шаг сетки разбиения</param>
+            <returns>Структура, содержащая минимум и максимум функции</returns>
+        </member>
+        <member name="M:MathCore.Functions.FunctionsExtensions.GetMinValue(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+            <summary>Определить минимум функции</summary>
+            <param name="f">Исследуемая функция</param>
+            <param name="x1">Начало интервала</param>
+            <param name="x2">Конец интервала</param>
+            <param name="dx">Шаг</param>
+            <returns>Минимум функции</returns>
+        </member>
+        <member name="M:MathCore.Functions.FunctionsExtensions.GetMaxValue(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
+            <summary>Определить максимум функции</summary>
+            <param name="f">Исследуемая функция</param>
+            <param name="x1">Начало интервала</param>
+            <param name="x2">Конец интервала</param>
+            <param name="dx">Шаг</param>
+            <returns>Максимум функции</returns>
+        </member>
+        <member name="M:MathCore.Functions.PSO.Swarm1D.Minimize(System.Func{System.Double,System.Double},MathCore.Interval,System.Int32,System.Double@,System.Double@)">
+            <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
+        </member>
+        <member name="T:MathCore.Functions.PSO.Swarm2D">
+            <summary>Рой двумерных частиц</summary>
+        </member>
+        <member name="F:MathCore.Functions.PSO.Swarm2D.w">
+            <summary>Вес инерции</summary>
+        </member>
+        <member name="F:MathCore.Functions.PSO.Swarm2D.c1">
+            <summary>Коэффициент локального веса</summary>
+        </member>
+        <member name="F:MathCore.Functions.PSO.Swarm2D.c2">
+            <summary>Коэффициент глобального веса</summary>
+        </member>
+        <member name="T:MathCore.Functions.PSO.Swarm2D.Particle2D">
+            <summary>Частица</summary>
+        </member>
+        <member name="F:MathCore.Functions.PSO.Swarm2D._ParticleCount">
+            <summary>Размер роя</summary>
         </member>
         <member name="T:MathCore.GCWacher">
             <summary>Наблюдатель за сборщиком мусора</summary>
@@ -2922,7 +3006,7 @@
             <returns>Массив элементов математического выражения</returns>
         </member>
         <member name="M:MathCore.MathParser.BlockTerm.ToString">
-            <summary>Преборазование в строковое представление</summary>
+            <summary>Преобразование в строковое представление</summary>
             <returns>Строковое представление</returns>
         </member>
         <member name="M:MathCore.MathParser.BlockTerm.GetSubTree(MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
@@ -3277,7 +3361,7 @@
             <exception cref="T:System.NotSupportedException">Возникает для неопределённых имён функционалов</exception>
         </member>
         <member name="M:MathCore.MathParser.ExpressionParser.GetRoot(MathCore.MathParser.Term[],MathCore.MathParser.MathExpression)">
-            <summary>Метод излвечения корня дерева из последовательности элементов математического выражения</summary>
+            <summary>Метод извлечения корня дерева из последовательности элементов математического выражения</summary>
             <param name="Group">группа элементов математического выражения</param>
             <param name="MathExpression">Ссылка на математическое выражение</param>
             <returns>Корень дерева мат.выражения</returns>
@@ -4649,7 +4733,7 @@
             <summary>Коллекция констант математического выражения</summary>
         </member>
         <member name="F:MathCore.MathParser.MathExpression._Functions">
-            <summary>Коллекция функций, учавствующих в выражении</summary>
+            <summary>Коллекция функций, участвующих в выражении</summary>
         </member>
         <member name="F:MathCore.MathParser.MathExpression._Functionals">
             <summary>Коллекция функционалов</summary>
@@ -4674,7 +4758,7 @@
             <summary>Константы, входящие в математическое выражение</summary>
         </member>
         <member name="P:MathCore.MathParser.MathExpression.Functions">
-            <summary>Коллекция функций, учавствующих в выражении</summary>
+            <summary>Коллекция функций, участвующих в выражении</summary>
         </member>
         <member name="P:MathCore.MathParser.MathExpression.Functionals">
             <summary>Коллекция функционалов</summary>
@@ -4723,10 +4807,10 @@
         <member name="M:MathCore.MathParser.MathExpression.Compile(System.String[])">
             <summary>Компиляция математического выражения в функцию указанного типа</summary>
             <param name="ArgumentName">Список имён параметров</param>
-            <returns>Делегат скомпелированного выражения</returns>
+            <returns>Делегат скомпилированного выражения</returns>
         </member>
         <member name="M:MathCore.MathParser.MathExpression.CompileMultyParameters(System.String[])">
-            <summary>Многопараметрическая компиляия мат.выражения</summary>
+            <summary>Многопараметрическая компиляция мат.выражения</summary>
             <param name="ArgumentName">Массив имён компилируемых параметров</param>
             <returns>Делегат функции, принимающий на вход массив значений параметров</returns>
             <exception cref="T:System.Exception">A delegate callback throws an exception.</exception>
@@ -4735,7 +4819,7 @@
             <summary>Компиляция математического выражения в функцию указанного типа</summary>
             <typeparam name="TDelegate">Тип делегата функции</typeparam>
             <param name="ArgumentName">Список имён параметров</param>
-            <returns>Делегат скомпелированного выражения</returns>
+            <returns>Делегат скомпилированного выражения</returns>
         </member>
         <member name="M:MathCore.MathParser.MathExpression.GetExpression(System.Linq.Expressions.ParameterExpression[]@,System.String[])">
             <summary>Получить Linq.Expression выражение, построенное на основе дерева выражений</summary>
@@ -4762,15 +4846,6 @@
         <member name="M:MathCore.MathParser.MathExpression.Clone">
             <summary>Клонирование выражения</summary>
             <returns>Копия объектной модели выражения</returns>
-        </member>
-        <member name="M:MathCore.MathParser.MathExpression.System#ICloneable#Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-            <filterpriority>2</filterpriority>
         </member>
         <member name="M:MathCore.MathParser.MathExpression.CombineExpressions(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression,MathCore.MathParser.ExpressionTrees.Nodes.OperatorNode)">
             <summary>Комбинация двух выражений с использованием узла-оператора</summary>
@@ -4935,7 +5010,7 @@
         </member>
         <member name="M:MathCore.MathParser.Term.ToString">
             <summary>Строковое представление элемента мат.выражения</summary>
-            <returns>Строковое содержимое элемета мат.выражения</returns>
+            <returns>Строковое содержимое элемента мат.выражения</returns>
         </member>
         <member name="T:MathCore.MathParser.VariabelsCollection">
             <summary>Коллекция переменных</summary>
@@ -8888,6 +8963,14 @@
             <param name="x">Аргумент функции нормального распределения</param>
             <returns>Значение нормального распределения</returns>
         </member>
+        <member name="M:MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(System.Double,System.Int32)">
+            <summary>Квантиль Хи-квадрат (Аппроксимация Корниша-Фишера)</summary>
+            <remarks>http://ru.wikipedia.org/wiki/Квантили_распределения_хи-квадрат</remarks>
+            <remarks>https://projecteuclid.org/download/pdf_1/euclid.aoms/1177730982</remarks>
+            <param name="alpha">Квантиль [0..1]</param>
+            <param name="n">Число степеней свободы</param>
+            <returns>Квантиль</returns>
+        </member>
         <member name="M:MathCore.SpecialFunctions.EllipticJacobi.FullEllipticIntegral(System.Double)">
             <summary>Полный эллиптический интеграл</summary>
             <param name="k">Параметр интегрирования от 0 до 1</param>
@@ -8895,6 +8978,39 @@
         </member>
         <member name="T:MathCore.SpecialFunctions.Gamma">
             <summary>Гамма-функция</summary>
+        </member>
+        <member name="T:MathCore.Statistic.Distributions">
+            <summary>Распределения</summary>
+        </member>
+        <member name="M:MathCore.Statistic.Distributions.Hi2(System.Int32,System.Double)">
+            <summary>Распределение Хи-квадрат</summary>
+            <param name="k">Число степеней свободы</param>
+            <param name="x">Аргумент</param>
+            <returns>Значение плотности вероятности</returns>
+        </member>
+        <member name="M:MathCore.Statistic.Distributions.Uniform(System.Double,System.Double)">
+            <summary>Равномерное распределение</summary>
+            <param name="a">Минимальное значение</param>
+            <param name="b">Максимальное значение</param>
+            <returns>Функция равномерного распределения в заданном интервале</returns>
+        </member>
+        <member name="M:MathCore.Statistic.Distributions.Uniform(System.Double,System.Double,System.Double)">
+            <summary>Равномерное распределение</summary>
+            <param name="x">Аргумент</param>
+            <param name="a">Минимальное значение</param>
+            <param name="b">Максимальное значение</param>
+            <returns>Значение равномерного распределения в заданной точке</returns>
+        </member>
+        <member name="M:MathCore.Statistic.Distributions.Rayleigh(System.Double)">
+            <summary>Распределение Рэлея http://ru.wikipedia.org/wiki/Распределение_Рэлея</summary>
+            <param name="sigma">Параметр масштаба</param>
+            <returns>Функция распределения для заданного масштаба</returns>
+        </member>
+        <member name="M:MathCore.Statistic.Distributions.Rayleigh(System.Double,System.Double)">
+            <summary>Распределение Рэлея http://ru.wikipedia.org/wiki/Распределение_Рэлея</summary>
+            <param name="x">Аргумент</param>
+            <param name="sigma">Параметр масштаба</param>
+            <returns>Значение распределения</returns>
         </member>
         <member name="T:MathCore.Statistic.Histogram">
             <summary>Гистограмма</summary>
@@ -9690,6 +9806,11 @@
             <summary>Инициализация нового экземпляра <see cref="T:MathCore.Values.MaxValue"/></summary>
             <param name="StartValue">Начальное значение</param>
         </member>
+        <member name="M:MathCore.Values.MaxValue.Add(System.Double)">
+            <summary>Добавить новое значение</summary>
+            <param name="value">Добавляемое значение</param>
+            <returns>Максимальное значение из всех добавленных</returns>
+        </member>
         <member name="M:MathCore.Values.MaxValue.AddValue(System.Double)">
             <summary>Добавить новое значение</summary>
             <param name="value">Добавляемое значение</param>
@@ -9752,6 +9873,11 @@
         <member name="M:MathCore.Values.MinValue.#ctor(System.Double)">
             <summary>Инициализация нового экземпляра <see cref="T:MathCore.Values.MinValue"/></summary>
             <param name="StartValue">Начальное значение</param>
+        </member>
+        <member name="M:MathCore.Values.MinValue.Add(System.Double)">
+            <summary>Добавить новое значение</summary>
+            <param name="value">Добавляемое значение</param>
+            <returns>Минимальный элемент из всех добавленных</returns>
         </member>
         <member name="M:MathCore.Values.MinValue.AddValue(System.Double)">
             <summary>Добавить новое значение</summary>
@@ -10147,10 +10273,10 @@
             <param name="Theta">Угол места [рад]</param>
             <param name="Phi">Азимутальный угол [рад]</param>
         </member>
-        <member name="M:MathCore.Vectors.SpaceAngle.#ctor(MathCore.Vectors.SpaceAngle@,MathCore.Vectors.AngleType@)">
+        <member name="M:MathCore.Vectors.SpaceAngle.#ctor(MathCore.Vectors.SpaceAngle@,MathCore.AngleType@)">
             <exception cref="T:System.NotSupportedException">Если AngleType != Deg || Rad - Неизвестный тип угла</exception>
         </member>
-        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiTheta(System.Double,System.Double,MathCore.Vectors.AngleType@)">
+        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiTheta(System.Double,System.Double,MathCore.AngleType@)">
             <summary>Повернуть угол в сферической системе координат</summary>
             <param name="theta">Угол места поворота локальной системы кординат</param>
             <param name="phi">Угол азимута поворота локальной системы координат</param>
@@ -10293,7 +10419,7 @@
         </member>
         <member name="M:MathCore.Vectors.Vector3D.Product_Scalar(MathCore.Vectors.Vector3D)">
             <summary>Скалярное произведение векторов</summary>
-            <param name="Vector">Вектор, на который домножается текущий вектор</param>
+            <param name="Vector">Вектор, на который умножается текущий вектор</param>
             <returns>Число, равное скалярному произведению векторов</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.Product_Mixed(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
@@ -10305,17 +10431,17 @@
         </member>
         <member name="M:MathCore.Vectors.Vector3D.Product_Vector(MathCore.Vectors.Vector3D)">
             <summary>Векторное произведение векторов</summary>
-            <param name="Vector">Вектор, на который домножается исходный вектор</param>
+            <param name="Vector">Вектор, на который умножается исходный вектор</param>
             <returns>Вектор, равный векторному произведению векторов</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.Product_Component(MathCore.Vectors.Vector3D)">
-            <summary>Покомпонентное домножение на вектор</summary>
+            <summary>Покомпонентное умножение на вектор</summary>
             <param name="Vector">Векторный сомножитель</param>
             <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetAngle(MathCore.Vectors.Vector3D)">
             <summary>Угол между векторами</summary>
-            <param name="Vector">Вектор, к которорому вычисляется угол</param>
+            <param name="Vector">Вектор, к которому вычисляется угол</param>
             <returns>Пространственный угол между векторами</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.Vector3D)">
@@ -10324,7 +10450,7 @@
             <returns>Проекция на вектор</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.SpaceAngle)">
-            <summary>Проекция на наравление</summary>
+            <summary>Проекция на направление</summary>
             <param name="Direction">Направление, на которое проектируется вектор</param>
             <returns>Проекция вектора на направление</returns>
         </member>
@@ -10587,6 +10713,214 @@
             <param name="path">Путь в xml-структуре</param>
             <param name="expr">Выражение, определяющее член объекта</param>
             <param name="conv">Выражение преобразования строки в целевой тип данных</param>
+        </member>
+        <member name="T:MathCore.Xml.LambdaXmlSerializer">
+            <summary>Настраиваемый сериализатор объектов в XML</summary>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer.Create``1(System.String)">
+            <summary>Создать новый сериализатор объектов</summary>
+            <typeparam name="T">Тип сериализуемого класса</typeparam>
+            <param name="RootName">Имя корневого элемента (если не указано, то будет использовано имя класса)</param>
+            <returns>Сериализатор</returns>
+        </member>
+        <member name="T:MathCore.Xml.LambdaXmlSerializer`1">
+            <summary>Настраиваемый сериализатор объектов в XML</summary>
+            <typeparam name="T">Тип сериализуемого класса</typeparam>
+        </member>
+        <member name="F:MathCore.Xml.LambdaXmlSerializer`1.__EmptyName">
+            <summary>Название элемента по умолчанию</summary>
+        </member>
+        <member name="P:MathCore.Xml.LambdaXmlSerializer`1.EmptyName">
+            <summary>Название элемента по умолчанию</summary>
+        </member>
+        <member name="F:MathCore.Xml.LambdaXmlSerializer`1._ElementName">
+            <summary>Название элемента</summary>
+        </member>
+        <member name="F:MathCore.Xml.LambdaXmlSerializer`1._Attributes">
+            <summary>Список методов формирования атрибутов элемента</summary>
+        </member>
+        <member name="F:MathCore.Xml.LambdaXmlSerializer`1._Elements">
+            <summary>Список методов формирования дочерних элементов</summary>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.#ctor(System.String)">
+            <summary>Инициализация нового настраиваемого сериализатора</summary>
+            <param name="ElementName">Название корневого элемента</param>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Serialize(`0)">
+            <summary>Выполнение процесса сериализации</summary>
+            <param name="value">Сериализуемый объект</param>
+            <returns>xml-представление сериализуемого объекта</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Serialize(System.String,`0)">
+            <summary>Выполнение процесса сериализации</summary>
+            <param name="Name">Название корневого элемента</param>
+            <param name="value">Сериализуемый объект</param>
+            <returns>xml-представление сериализуемого объекта</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Content(`0)">
+            <summary>Формирование содержимого элемента</summary>
+            <remarks>Выполнение списков методов вычисления значений атрибутов, затем - дочерних элементов</remarks>
+            <param name="value">Сериализуемый объект</param>
+            <returns>Перечисление атрибутов и дочерних элементов, вкладываемых в корневой элемент</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attribute``1(System.String,System.Func{`0,``0})">
+            <summary>Добавление конфигурации атрибута</summary>
+            <typeparam name="TValue">ТИп значения атрибута</typeparam>
+            <param name="Name">Имя атрибута</param>
+            <param name="Selector">Метод определения значения атрибута</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attributes``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.String},System.Func{``0,``1})">
+            <summary>Добавление конфигурации атрибутов</summary>
+            <typeparam name="TItem">Тип данных сериализуемого элемента</typeparam>
+            <typeparam name="TValue">Тип значения атрибута</typeparam>
+            <param name="Selector">Метод определения набора данных, который должен быть упакован в атрибуты</param>
+            <param name="NameSelector">Метод определения имени каждого конкретного атрибута</param>
+            <param name="ValueSelector">Метод определения значения каждого конкретного атрибута</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attributes``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.String},System.Func{``0,System.Boolean},System.Func{``0,``1})">
+            <summary>Добавление конфигурации атрибутов</summary>
+            <typeparam name="TItem">Тип данных сериализуемого элемента</typeparam>
+            <typeparam name="TValue">Тип значения атрибута</typeparam>
+            <param name="Selector">Метод определения набора данных, который должен быть упакован в атрибуты</param>
+            <param name="NameSelector">Метод определения имени каждого конкретного атрибута</param>
+            <param name="NeedToSerialize">Метод, определяющий - требуется ли выполнять сериализацию конкретного значения в атрибут?</param>
+            <param name="ValueSelector">Метод определения значения каждого конкретного атрибута</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attributes``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.Int32,System.String},System.Func{``0,``1})">
+            <summary>Добавление конфигурации атрибутов</summary>
+            <typeparam name="TItem">Тип данных сериализуемого элемента</typeparam>
+            <typeparam name="TValue">Тип значения атрибута</typeparam>
+            <param name="Selector">Метод определения набора данных, который должен быть упакован в атрибуты</param>
+            <param name="NameSelector">Метод определения имени каждого конкретного атрибута в том числе по порядковому номеру</param>
+            <param name="ValueSelector">Метод определения значения каждого конкретного атрибута</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attributes``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.Int32,System.String},System.Func{``0,System.Boolean},System.Func{``0,``1})">
+            <summary>Добавление конфигурации атрибутов</summary>
+            <typeparam name="TItem">Тип данных сериализуемого элемента</typeparam>
+            <typeparam name="TValue">Тип значения атрибута</typeparam>
+            <param name="Selector">Метод определения набора данных, который должен быть упакован в атрибуты</param>
+            <param name="NameSelector">Метод определения имени каждого конкретного атрибута в том числе по порядковому номеру</param>
+            <param name="NeedToSerialize">Метод, определяющий - требуется ли выполнять сериализацию конкретного значения в атрибут?</param>
+            <param name="ValueSelector">Метод определения значения каждого конкретного атрибута</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attributes``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.String},System.Func{``0,System.Int32,``1})">
+            <summary>Добавление конфигурации атрибутов</summary>
+            <typeparam name="TItem">Тип данных сериализуемого элемента</typeparam>
+            <typeparam name="TValue">Тип значения атрибута</typeparam>
+            <param name="Selector">Метод определения набора данных, который должен быть упакован в атрибуты</param>
+            <param name="NameSelector">Метод определения имени каждого конкретного атрибута в том числе</param>
+            <param name="ValueSelector">Метод определения значения каждого конкретного атрибута по порядковому номеру</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Attributes``2(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.Int32,System.String},System.Func{``0,System.Boolean},System.Func{``0,System.Int32,``1})">
+            <summary>Добавление конфигурации атрибутов</summary>
+            <typeparam name="TItem">Тип данных сериализуемого элемента</typeparam>
+            <typeparam name="TValue">Тип значения атрибута</typeparam>
+            <param name="Selector">Метод определения набора данных, который должен быть упакован в атрибуты</param>
+            <param name="NameSelector">Метод определения имени каждого конкретного атрибута в том числе</param>
+            <param name="NeedToSerialize">Метод, определяющий - требуется ли выполнять сериализацию конкретного значения в атрибут?</param>
+            <param name="ValueSelector">Метод определения значения каждого конкретного атрибута по порядковому номеру</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Element``1(System.String,System.Func{`0,``0})">
+            <summary>Добавление конфигурации элемента</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="Name">Имя элемента</param>
+            <param name="Selector">Метод определения значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Element``1(System.String,System.Func{`0,``0},System.Func{``0,System.Boolean})">
+            <summary>Добавление конфигурации элемента</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="Name">Имя элемента</param>
+            <param name="Selector">Метод определения значения элемента</param>
+            <param name="NeedToSerialize">Метод, определяющий - нужно ли выполнять сериализацию данного элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Element``1(System.String,System.Func{`0,``0},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации элемента</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="Name">Имя элемента</param>
+            <param name="Selector">Метод определения значения элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Element``1(System.String,System.Func{`0,``0},System.Func{``0,System.Boolean},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации элемента</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="Name">Имя элемента</param>
+            <param name="Selector">Метод определения значения элемента</param>
+            <param name="NeedToSerialize">Метод, определяющий - нужно ли выполнять сериализацию данного элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Elements``1(System.String,System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации набора элементов</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="Name">Имя элемента</param>
+            <param name="ElementsSelector">Метод определения набора значений элементов для сериализации</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Elements``1(System.String,System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.Boolean},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации набора элементов</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="Name">Имя элемента</param>
+            <param name="ElementsSelector">Метод определения набора значений элементов для сериализации</param>
+            <param name="NeedToSerialize">Метод, определяющий - нужно ли выполнять сериализацию данного элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Elements``1(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.String},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации набора элементов</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="ElementsSelector">Метод определения набора значений элементов для сериализации</param>
+            <param name="NameSelector">Метод определения имени элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Elements``1(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.String},System.Func{``0,System.Boolean},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации набора элементов</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="ElementsSelector">Метод определения набора значений элементов для сериализации</param>
+            <param name="NameSelector">Метод определения имени элемента</param>
+            <param name="NeedToSerialize">Метод, определяющий - нужно ли выполнять сериализацию данного элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Elements``1(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.Int32,System.String},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации набора элементов</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="ElementsSelector">Метод определения набора значений элементов для сериализации</param>
+            <param name="NameSelector">Метод определения имени элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Elements``1(System.Func{`0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,System.Int32,System.String},System.Func{``0,System.Boolean},System.Action{MathCore.Xml.LambdaXmlSerializer{``0}})">
+            <summary>Добавление конфигурации набора элементов</summary>
+            <typeparam name="TValue">Тип данных значения элемента</typeparam>
+            <param name="ElementsSelector">Метод определения набора значений элементов для сериализации</param>
+            <param name="NameSelector">Метод определения имени элемента</param>
+            <param name="NeedToSerialize">Метод, определяющий - нужно ли выполнять сериализацию данного элемента</param>
+            <param name="Configurator">Конфигурация сериализатора значения элемента</param>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Value">
+            <summary>Добавление конфигурации, устанавливающий необходимость включения значения сериализуемого объекта</summary>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Value``1(``0)">
+            <summary>Добавление конфигурации, устанавливающий необходимость включения указанного значения</summary>
+            <returns>Исходный сериализатор</returns>
+        </member>
+        <member name="M:MathCore.Xml.LambdaXmlSerializer`1.Value``1(System.Func{`0,``0})">
+            <summary>Добавление конфигурации, устанавливающий необходимость включения значения, определяемого на основе сериализуемого объекта</summary>
+            <returns>Исходный сериализатор</returns>
         </member>
         <member name="M:System.ActionsCollectionProcessor.MainAction">
             <summary>Основной метод действия процессора, вызываемое в цикле. Должно быть переопределено в классах-наследниках</summary>
@@ -11711,6 +12045,19 @@
                 пустая ссылка на массив
             </returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Int32,``1})">
+            <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
+            <typeparam name="T">Тип элементов исходного перечисления</typeparam>
+            <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+            <param name="items">Исходное перечисление</param>
+            <param name="converter">Метод преобразования элементов и индекса элемента</param>
+            <returns>
+            Если ссылка на исходное перечисление не пуста, то
+                Результирующий массив, состоящий из элементов исходного перечисления, преобразованных указанным методом
+            иначе
+                пустая ссылка на массив
+            </returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.ToList``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в список с преобразованием элементов</summary>
             <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
@@ -11872,11 +12219,27 @@
             <param name="Min">Минимальный элемент перечисления</param>
             <param name="Max">Максимальный элемент перечисления</param>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetMinMax(System.Collections.Generic.IEnumerable{System.Double},System.Double@,System.Double@)">
+            <summary>Определить минимальное и максимальное значение перечисления</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
+            <param name="Min">Минимальный элемент перечисления</param>
+            <param name="Max">Максимальный элемент перечисления</param>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.GetMinMax``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Double},``0@,System.Int32@,``0@,System.Int32@)">
             <summary>Определить минимальное и максимальное значение перечисления</summary>
             <typeparam name="T">Тип элементов перечисления</typeparam>
             <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
             <param name="selector">Метод преобразования объектов в вещественные числа</param>
+            <param name="Min">Минимальный элемент перечисления</param>
+            <param name="MinIndex">Индекс минимального элемента в коллекции</param>
+            <param name="Max">Максимальный элемент перечисления</param>
+            <param name="MaxIndex">Индекс максимального элемента в коллекции</param>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetMinMax(System.Collections.Generic.IEnumerable{System.Double},System.Double@,System.Int32@,System.Double@,System.Int32@)">
+            <summary>Определить минимальное и максимальное значение перечисления</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
             <param name="Min">Минимальный элемент перечисления</param>
             <param name="MinIndex">Индекс минимального элемента в коллекции</param>
             <param name="Max">Максимальный элемент перечисления</param>
@@ -11889,11 +12252,23 @@
             <param name="selector">Метод преобразования элементов в вещественные числа</param>
             <returns>Максимальный элемент последовательности</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetMax(System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Определение максимального элемента последовательности</summary>
+            <param name="collection">Последовательность элементов</param>
+            <returns>Максимальный элемент последовательности</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.GetMax``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Double},System.Int32@)">
             <summary>Определение максимального элемента последовательности</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
             <param name="collection">Последовательность элементов</param>
             <param name="selector">Метод преобразования элементов в вещественные числа</param>
+            <param name="index">Индекс максимального элемента в последовательности</param>
+            <returns>Максимальный элемент последовательности</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetMax(System.Collections.Generic.IEnumerable{System.Double},System.Int32@)">
+            <summary>Определение максимального элемента последовательности</summary>
+            <typeparam name="T">Тип элементов последовательности</typeparam>
+            <param name="collection">Последовательность элементов</param>
             <param name="index">Индекс максимального элемента в последовательности</param>
             <returns>Максимальный элемент последовательности</returns>
         </member>
@@ -11904,6 +12279,11 @@
             <param name="selector">Метод преобразования элементов в вещественные числа</param>
             <returns>Минимальный элемент последовательности</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetMin(System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Определение минимального элемента последовательности</summary>
+            <param name="collection">Последовательность элементов</param>
+            <returns>Минимальный элемент последовательности</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.GetMin``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Double},System.Int32@)">
             <summary>Определение минимального элемента последовательности</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
@@ -11912,8 +12292,14 @@
             <param name="index">Индекс минимального элемента в последовательности</param>
             <returns>Минимальный элемент последовательности</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetMin(System.Collections.Generic.IEnumerable{System.Double},System.Int32@)">
+            <summary>Определение минимального элемента последовательности</summary>
+            <param name="collection">Последовательность элементов</param>
+            <param name="index">Индекс минимального элемента в последовательности</param>
+            <returns>Минимальный элемент последовательности</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.ToSeparatedString``1(System.Collections.Generic.IEnumerable{``0},System.String)">
-            <summary>Преобразвоание последовательности элементов в строку с указанной строкой-разделителем</summary>
+            <summary>Преобразование последовательности элементов в строку с указанной строкой-разделителем</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
             <param name="collection">Последовательность элементов, преобразуемая в строку</param>
             <param name="Separator">Строка-разделитель</param>
@@ -15459,24 +15845,24 @@
             <summary>Преобразование объекта в форматированную строку</summary>
             <param name="obj">Преобразуемый объект (идущий нулевым аргументом)</param>
             <param name="Format">Строка форматирования</param>
-            <param name="args">Массив аргументов, доавбляемых к объекту для создание форматированной строки</param>
+            <param name="args">Массив аргументов, добавляемых к объекту для создание форматированной строки</param>
             <returns>Форматированная строка текстового представления объекта</returns>
         </member>
         <member name="M:System.ObjectExtensions.ToString``1(``0,System.Func{``0,System.String})">
             <summary>Метод преобразования объекта в строку</summary>
             <typeparam name="T">Тип исходного объекта</typeparam>
             <param name="t">Преобразуемый объект</param>
-            <param name="converter">Метод преобразвоания объекта в строку</param>
+            <param name="converter">Метод преобразования объекта в строку</param>
             <returns>Сгенерированная строка указанным методом на основе указанного объекта</returns>
         </member>
         <member name="M:System.ObjectExtensions.GetHashCode(System.Object[])">
             <summary>Расчёт хеш-кода массива объектов</summary>
-            <param name="Objects">Массив объектов, хеш-код которых надо расчитать</param>
+            <param name="Objects">Массив объектов, хеш-код которых надо рассчитать</param>
             <returns>Хеш-код массива объектов</returns>
         </member>
         <member name="M:System.ObjectExtensions.GetComplexHashCode(System.Collections.Generic.IEnumerable{System.Object})">
             <summary>Расчёт хеш-кода перечисления объектов</summary>
-            <param name="Objects">Перечисление объектов, хеш-код которых надо расчитать</param>
+            <param name="Objects">Перечисление объектов, хеш-код которых надо рассчитать</param>
             <returns>Хеш-код перечисления объектов</returns>
         </member>
         <member name="M:System.ObjectExtensions.GetObjectAttribute``1(System.Object,System.Boolean)">
@@ -15503,13 +15889,21 @@
             <param name="o">Проверяемый объект</param>
             <returns>Истина, если проверяемый объект null</returns>
         </member>
+        <member name="M:System.ObjectExtensions.NotNull``1(``0,System.String)">
+            <summary>Проверка на пустую ссылку</summary>
+            <typeparam name="T">Тип проверяемого объекта</typeparam>
+            <param name="obj">Проверяемое значение</param>
+            <param name="Message">Сообщение ошибки</param>
+            <returns>Значение, точно не являющееся пустой ссылкой</returns>
+            <exception cref="T:System.InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
+        </member>
         <member name="M:System.ObjectExtensions.ParamNotNull``1(``0,System.String,System.String)">
             <summary>Проверка параметра на <see langword="null"/></summary>
             <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
             <param name="obj">Проверяемый на <see langword="null"/> объект</param>
             <param name="ParameterName">Имя параметра для указания его в исключении</param>
-            <param name="Message">Обциональное сообщение</param>
-            <returns>Объект, гарантированн не <see langword="null"/></returns>
+            <param name="Message">Сообщение ошибки</param>
+            <returns>Объект, гарантированно не <see langword="null"/></returns>
             <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
         </member>
         <member name="M:System.ObjectExtensions.GetAttributes``2(``1,System.Boolean)">
@@ -15518,13 +15912,13 @@
             <typeparam name="TObject">Тип исходного объекта</typeparam>
             <param name="o">Объект, атрибуты которого требуется получить</param>
             <param name="Inherited">Искать в цепочке наследования</param>
-            <returns>ассив атрибутов указанного типа, определённых для типа объекта</returns>
+            <returns>Массив атрибутов указанного типа, определённых для типа объекта</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``1(``0,System.Action{``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <param name="obj">Инициализируемый объект</param>
-            <param name="Initializator">Действие инициализации</param>
+            <param name="Initializer">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``2(``0,``1,System.Action{``0,``1})">
@@ -15533,7 +15927,7 @@
             <typeparam name="TP">Тип параметра инициализации</typeparam>
             <param name="obj">Инициализируемый объект</param>
             <param name="parameter">Параметр инициализации</param>
-            <param name="Initializator">Действие инициализации</param>
+            <param name="Initializer">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``3(``0,``1,``2,System.Action{``0,``1,``2})">
@@ -15544,7 +15938,7 @@
             <param name="obj">Инициализируемый объект</param>
             <param name="parameter1">Параметр 1 инициализации</param>
             <param name="parameter2">Параметр 2 инициализации</param>
-            <param name="Initializator">Действие инициализации</param>
+            <param name="Initializer">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``4(``0,``1,``2,``3,System.Action{``0,``1,``2,``3})">
@@ -15557,14 +15951,14 @@
             <param name="parameter1">Параметр инициализации</param>
             <param name="parameter2">Параметр инициализации</param>
             <param name="parameter3">Параметр инициализации</param>
-            <param name="Initializator">Действие инициализации</param>
+            <param name="Initializer">Действие инициализации</param>
             <returns>Инициализированный объект</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``1(``0,System.Func{``0,``0})">
             <summary>Инициализировать объект ссылочного типа</summary>
             <typeparam name="T">Тип объекта</typeparam>
             <param name="obj">Инициализируемый объект</param>
-            <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+            <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``2(``0,``1,System.Func{``0,``1,``0})">
@@ -15573,7 +15967,7 @@
             <typeparam name="TP">Тип параметра инициализации</typeparam>
             <param name="obj">Инициализируемый объект</param>
             <param name="parameter">Параметр инициализации</param>
-            <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+            <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``4(``0,``1,``2,``3,System.Func{``0,``1,``2,``3,``0})">
@@ -15586,7 +15980,7 @@
             <param name="parameter1">Параметр 1 инициализации</param>
             <param name="parameter2">Параметр 2 инициализации</param>
             <param name="parameter3">Параметр 3 инициализации</param>
-            <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+            <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
         <member name="M:System.ObjectExtensions.InitializeObject``3(``0,``1,``2,System.Func{``0,``1,``2,``0})">
@@ -15597,7 +15991,7 @@
             <param name="obj">Инициализируемый объект</param>
             <param name="parameter1">Параметр 1 инициализации</param>
             <param name="parameter2">Параметр 2 инициализации</param>
-            <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+            <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
             <returns>Объект, возвращённый функцией инициализации</returns>
         </member>
         <member name="M:System.ObjectExtensions.ToConsole``1(``0)">
@@ -15635,12 +16029,12 @@
             <param name="Obj">Печатаемый объект</param>
             <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
         </member>
-        <member name="M:System.ObjectExtensions.ToDubugOutLN``1(``0)">
+        <member name="M:System.ObjectExtensions.ToDebugOutLN``1(``0)">
             <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
         </member>
-        <member name="M:System.ObjectExtensions.ToDubugOutLN``1(``0,System.Boolean)">
+        <member name="M:System.ObjectExtensions.ToDebugOutLN``1(``0,System.Boolean)">
             <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
             <typeparam name="T">Тип печатаемого объекта</typeparam>
             <param name="Obj">Печатаемый объект</param>
@@ -15660,17 +16054,17 @@
         </member>
         <member name="M:System.ObjectExtensions.Switch(System.Object,System.Actions,System.Action{System.Object})">
             <summary>Выбор действия для объекта</summary>
-            <param name="obj">ОБъект, на котором выполняется выбор действия</param>
+            <param name="obj">Объект, на котором выполняется выбор действия</param>
             <param name="actions">Словарь возможных действий над объектом</param>
             <param name="Default">Действие по умолчанию</param>
         </member>
-        <member name="M:System.ObjectExtensions.ToEvulation``1(``0)">
+        <member name="M:System.ObjectExtensions.ToEvaluation``1(``0)">
             <summary>Преобразование объекта в вычисление</summary>
             <typeparam name="T">Тип исходного элемента</typeparam>
             <param name="obj">Оборачиваемый объект</param>
             <returns>Вычисление, возвращающее указанный объект</returns>
         </member>
-        <member name="M:System.ObjectExtensions.ToEvulation``1(``0,System.String)">
+        <member name="M:System.ObjectExtensions.ToEvaluation``1(``0,System.String)">
             <summary>Преобразование объекта в именованное вычисление</summary>
             <typeparam name="T">Тип исходного элемента</typeparam>
             <param name="obj">Оборачиваемый объект</param>
@@ -15692,7 +16086,7 @@
         <member name="M:System.ObjectExtensions.GetCallExpression(System.Object,System.Reflection.MethodInfo,System.Linq.Expressions.Expression[])">
             <summary>Получить выражение вызова метода объекта</summary>
             <param name="obj">Объект, метод которого надо вызвать</param>
-            <param name="d">Описание методаа</param>
+            <param name="d">Описание метода</param>
             <param name="p">Параметры метода</param>
             <returns>Выражение вызова метода</returns>
         </member>
@@ -15707,7 +16101,7 @@
             <summary>Словарь действий</summary>
         </member>
         <member name="T:System.Tags.TagExtensions">
-            <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложенны к другим объектам</summary>
+            <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложены к другим объектам</summary>
         </member>
         <member name="M:System.Tags.TagExtensions.GetTag``1(System.Object)">
             <summary>Получить объект-метку указанного типа из целевого объекта</summary>
