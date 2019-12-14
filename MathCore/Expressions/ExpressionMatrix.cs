@@ -431,8 +431,8 @@ namespace System.Linq.Expressions
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слогаемое</param>
-        /// <param name="B">Второе слогаемое</param>
+        /// <param name="A">Первое слагаемое</param>
+        /// <param name="B">Второе слагаемое</param>
         /// <returns>Сумма двух матриц</returns>
         [DST, NotNull]
         public static ExpressionMatrix operator +([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
@@ -500,8 +500,8 @@ namespace System.Linq.Expressions
         }
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слогаемое</param>
-        /// <param name="B">Второе слогаемое</param>
+        /// <param name="A">Первое слагаемое</param>
+        /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
         [NotNull]
         public static ExpressionMatrix operator |([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)

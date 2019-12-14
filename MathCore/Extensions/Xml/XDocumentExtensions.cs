@@ -22,13 +22,13 @@ namespace System.Xml.Linq
         public static void Save([NotNull] this XDocument xml, [NotNull] FileInfo file) => xml.Save(file.FullName);
 
         [CanBeNull]
-        public static XObject XPath([NotNull] this XDocument xml, [NotNull] string path)
+        public static XObject XPath([NotNull] this XContainer xml, [NotNull] string path)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
@@ -43,13 +43,13 @@ namespace System.Xml.Linq
         }
 
         [CanBeNull]
-        public static void XPathSetValue([NotNull] this XDocument xml, [NotNull] string path, [NotNull] object Value)
+        public static void XPathSetValue([NotNull] this XContainer xml, [NotNull] string path, [NotNull] object Value)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             switch (node)
             {
@@ -59,13 +59,13 @@ namespace System.Xml.Linq
             }
         }
 
-        public static string XPathString([NotNull] this XDocument xml, [NotNull] string path)
+        public static string XPathString([NotNull] this XContainer xml, [NotNull] string path)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
@@ -78,13 +78,13 @@ namespace System.Xml.Linq
                 };
         }
 
-        public static int? XPathInt32([NotNull] this XDocument xml, [NotNull] string path)
+        public static int? XPathInt32([NotNull] this XContainer xml, [NotNull] string path)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
@@ -97,13 +97,13 @@ namespace System.Xml.Linq
                 };
         }
 
-        public static double? XPathDouble([NotNull] this XDocument xml, [NotNull] string path)
+        public static double? XPathDouble([NotNull] this XContainer xml, [NotNull] string path)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
@@ -116,13 +116,13 @@ namespace System.Xml.Linq
                 };
         }
 
-        public static DateTime? XPathDateTime([NotNull] this XDocument xml, [NotNull] string path)
+        public static DateTime? XPathDateTime([NotNull] this XContainer xml, [NotNull] string path)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
@@ -135,13 +135,13 @@ namespace System.Xml.Linq
                 };
         }
 
-        public static bool? XPathBool([NotNull] this XDocument xml, [NotNull] string path)
+        public static bool? XPathBool([NotNull] this XContainer xml, [NotNull] string path)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));
             if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Не задан путь");
 
-            var root = xml.Root ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
+            var root = (xml as XDocument)?.Root ?? xml ?? throw new InvalidOperationException("В документе отсутсвтует корневой элемент");
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null

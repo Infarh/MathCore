@@ -26,7 +26,7 @@ namespace MathCore.MathParser
         [NotNull]
         private readonly ConstantsCollection _Constants;
 
-        /// <summary>Коллекция функций, учавствующих в выражении</summary>
+        /// <summary>Коллекция функций, участвующих в выражении</summary>
         [NotNull]
         private readonly FunctionsCollection _Functions;
 
@@ -69,7 +69,7 @@ namespace MathCore.MathParser
         [NotNull]
         public ConstantsCollection Constants => _Constants;
 
-        /// <summary>Коллекция функций, учавствующих в выражении</summary>
+        /// <summary>Коллекция функций, участвующих в выражении</summary>
         [NotNull]
         public FunctionsCollection Functions => _Functions;
 
@@ -82,8 +82,8 @@ namespace MathCore.MathParser
         public MathExpression([NotNull] string Name = "f")
         {
             _Name = Name;
-            _Variables = new VariabelsCollection(this); // Коллекция переменных
-            _Constants = new ConstantsCollection(this); // Коллекция констант
+            _Variables = new VariabelsCollection(this);     // Коллекция переменных
+            _Constants = new ConstantsCollection(this);     // Коллекция констант
             _Functions = new FunctionsCollection(this);     // Коллекция функций
             _Functionals = new FunctionalsCollection(this); // Коллекция функционалов
         }
@@ -101,14 +101,14 @@ namespace MathCore.MathParser
                 switch (tree_node)
                 {
                     case VariableValueNode value_node:
-                        var variabel = value_node.Variable;      // Извлечь переменную
-                        if(variabel.IsConstant)                  // Если переменная - константа
-                            _Constants.Add(variabel);           //   сохранить в коллекции констант
+                        var variable = value_node.Variable;      // Извлечь переменную
+                        if (variable.IsConstant)                 // Если переменная - константа
+                            _Constants.Add(variable);            //   сохранить в коллекции констант
                         else                                     //  иначе...
-                            _Variables.Add(variabel);           //   сохранить в коллекции переменных
+                            _Variables.Add(variable);            //   сохранить в коллекции переменных
                         break;
                     case FunctionNode function_node:
-                        _Functions.Add(function_node.Function); // то сохранить функцию в коллекции
+                        _Functions.Add(function_node.Function);  // то сохранить функцию в коллекции
                         break;
                 }
             }
@@ -163,12 +163,12 @@ namespace MathCore.MathParser
 
         /// <summary>Компиляция математического выражения в функцию указанного типа</summary>
         /// <param name="ArgumentName">Список имён параметров</param>
-        /// <returns>Делегат скомпелированного выражения</returns>
+        /// <returns>Делегат скомпилированного выражения</returns>
         [NotNull]
         public Delegate Compile([NotNull] params string[] ArgumentName) => 
             Expression.Lambda(GetExpression(out var vars, ArgumentName), vars).Compile();
 
-        /// <summary>Многопараметрическая компиляия мат.выражения</summary>
+        /// <summary>Многопараметрическая компиляция мат.выражения</summary>
         /// <param name="ArgumentName">Массив имён компилируемых параметров</param>
         /// <returns>Делегат функции, принимающий на вход массив значений параметров</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
@@ -185,7 +185,7 @@ namespace MathCore.MathParser
             // Если массив имён компилируемых входных переменных не пуст
             if((ArgumentName.Length) > 0)
                 ArgumentName.Foreach(var_dictionary.Add); // то заполняем словарь индексов
-            else // Если массив переменых не указан, то сиздаём функцию по всем переменным
+            else // Если массив переменных не указан, то создаём функцию по всем переменным
                 Variable.Select(v => v.Name).Foreach(var_dictionary.Add);
 
             // Создаём входную переменную выражения с типом "вещественный массив"
@@ -203,7 +203,7 @@ namespace MathCore.MathParser
                 return indexer; // возвращаем новый индексатор
             }
 
-            // Создаём пересборщик дерева выражения Linq.Expression
+            // Создаём пересборщик дерева выражения Linq.Expression 
             var rebuilder = new ExpressionRebuilder();
             // Добавляем обработчик узлов вызова методов
             rebuilder.MethodCallVisited += (s, e) => // Если очередной узел дерева - вызов метода, то...
@@ -222,15 +222,15 @@ namespace MathCore.MathParser
             };
 
             compilation = rebuilder.Visit(compilation); // Пересобираем дерево
-            // Собираем лямда-выражение
-            var lamda = Expression.Lambda<Func<double[], double>>(compilation, array_parameter);
-            return lamda.Compile(); // Компилируем лямда-выражение и возвращаем делегат
+            // Собираем лямбда-выражение
+            var lambda = Expression.Lambda<Func<double[], double>>(compilation, array_parameter);
+            return lambda.Compile(); // Компилируем лямбда-выражение и возвращаем делегат
         }
 
         /// <summary>Компиляция математического выражения в функцию указанного типа</summary>
         /// <typeparam name="TDelegate">Тип делегата функции</typeparam>
         /// <param name="ArgumentName">Список имён параметров</param>
-        /// <returns>Делегат скомпелированного выражения</returns>
+        /// <returns>Делегат скомпилированного выражения</returns>
         [NotNull]
         public TDelegate Compile<TDelegate>([NotNull] params string[] ArgumentName)
         {
@@ -281,7 +281,7 @@ namespace MathCore.MathParser
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление</returns>
-        public override string ToString() => $"{_Name}({_Variables.Select(v => v.Name).ToSeparatedStr(", ")})={_ExpressionTree.Root}";
+        [NotNull] public override string ToString() => $"{_Name}({_Variables.Select(v => v.Name).ToSeparatedStr(", ")})={_ExpressionTree.Root}";
 
         /// <summary>Перенос констант из выражения источника в выражение приёмник</summary>
         /// <param name="Source">Выражение источник</param>
@@ -302,13 +302,6 @@ namespace MathCore.MathParser
             return result;
         }
 
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
         object ICloneable.Clone() => Clone();
 
         /// <summary>Комбинация двух выражений с использованием узла-оператора</summary>
@@ -324,8 +317,8 @@ namespace MathCore.MathParser
 
             if(x_tree.Root is OperatorNode x_operator_node && x_operator_node.Priority < node.Priority)
                 x_tree.Root = new ComputedBracketNode(Bracket.NewRound, x_operator_node);
-            if(y_tree.Root is OperatorNode y_operator_noderoot && y_operator_noderoot.Priority < node.Priority)
-                y_tree.Root = new ComputedBracketNode(Bracket.NewRound, y_operator_noderoot);
+            if(y_tree.Root is OperatorNode y_operator_node_root && y_operator_node_root.Priority < node.Priority)
+                y_tree.Root = new ComputedBracketNode(Bracket.NewRound, y_operator_node_root);
 
             node.Left = x_tree.Root;
             node.Right = y_tree.Root;
@@ -337,9 +330,9 @@ namespace MathCore.MathParser
         }
 
         /// <summary>Оператор сложения двух выражений</summary>
-        /// <param name="x">Первое слогаемое</param>
-        /// <param name="y">Второе слогаемое</param>
-        /// <returns>Выражение-сумма, корень которого - узел суммы. Поддеревья - корни выражений слогаемых</returns>
+        /// <param name="x">Первое слагаемое</param>
+        /// <param name="y">Второе слагаемое</param>
+        /// <returns>Выражение-сумма, корень которого - узел суммы. Поддеревья - корни выражений слагаемых</returns>
         [NotNull]
         public static MathExpression operator +([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new AdditionOperatorNode());
 
@@ -348,7 +341,7 @@ namespace MathCore.MathParser
         /// <param name="y">Вычитаемое</param>
         /// <returns>Выражение-разность, корень которого - узел разности. Поддеревья - корни выражений вычитаемого и уменьшаемого</returns>
         [NotNull]
-        public static MathExpression operator -([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new SubstractionOperatorNode());
+        public static MathExpression operator -([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new subtractionOperatorNode());
 
         /// <summary>Оператор умножения двух выражений</summary>
         /// <param name="x">Первый сомножитель</param>

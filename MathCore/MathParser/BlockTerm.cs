@@ -174,7 +174,7 @@ namespace MathCore.MathParser
             return result.ToArray();
         }
 
-        /// <summary>Преборазование в строковое представление</summary>
+        /// <summary>Преобразование в строковое представление</summary>
         /// <returns>Строковое представление</returns>
         public override string ToString() => $"{OpenBracket ?? ""}{Terms.ToSeparatedStr()}{CloseBracket ?? ""}";
 
@@ -185,8 +185,8 @@ namespace MathCore.MathParser
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
         {
             var separator = Parser.ExpressionSeparator; // фиксируем символ-разделитель выражений
-            // Разбиваем последовательность элементов выражения на группы, разделённые симовлом-разделителем
-            // Излвекаем из каждой группы корень дерева выражений и складываем их в массив
+            // Разбиваем последовательность элементов выражения на группы, разделённые символом-разделителем
+            // Извлекаем из каждой группы корень дерева выражений и складываем их в массив
             var roots = Terms
                 .Split(t => t is CharTerm term && term.Value == separator)
                 .Select(g => Parser.GetRoot(g, Expression)).ToArray();

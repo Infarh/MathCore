@@ -33,8 +33,8 @@ namespace MathCore
         [DST] public static Complex operator !(in Complex z) => z.ComplexConjugate;
 
         /// <summary>Оператор сложения</summary>
-        /// <param name="X">Первое слогаемое</param>
-        /// <param name="Y">Второе слогаемое</param>
+        /// <param name="X">Первое слагаемое</param>
+        /// <param name="Y">Второе слагаемое</param>
         /// <returns>Сумма комплексных чисел</returns>
         [DST] public static Complex operator +(in Complex X, in Complex Y) => new Complex(X.Re + Y.Re, X.Im + Y.Im);
 
@@ -45,8 +45,8 @@ namespace MathCore
         [DST] public static Complex operator -(in Complex X, in Complex Y) => new Complex(X.Re - Y.Re, X.Im - Y.Im);
 
         /// <summary>Оператор сложения</summary>
-        /// <param name="X">Первое слогаемое</param>
-        /// <param name="Y">Второе слогаемое</param>
+        /// <param name="X">Первое слагаемое</param>
+        /// <param name="Y">Второе слагаемое</param>
         /// <returns>Сумма комплексных чисел</returns>
         [DST] public static Complex operator +(double X, in Complex Y) => new Complex(X + Y.Re, Y.Im);
 
@@ -81,8 +81,8 @@ namespace MathCore
         [DST] public static Complex operator -(float X, in Complex Y) => new Complex(X - Y.Re, -Y.Im);
 
         /// <summary>Оператор сложения</summary>
-        /// <param name="X">Первое слогаемое</param>
-        /// <param name="Y">Второе слогаемое</param>
+        /// <param name="X">Первое слагаемое</param>
+        /// <param name="Y">Второе слагаемое</param>
         /// <returns>Сумма комплексных чисел</returns>
         [DST] public static Complex operator +(in Complex X, double Y) => new Complex(X.Re + Y, X.Im);
 

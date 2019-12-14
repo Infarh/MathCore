@@ -461,7 +461,7 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static bEx IsIsRefEqual<T>([NotNull] this Ex left, T right) => ReferenceNotEqual(left, right.ToExpression());
 
         [NotNull] public static Ex Condition([NotNull] this Ex Condition, [NotNull] Ex Then, [NotNull] Ex Else) => Ex.Condition(Condition, Then, Else);
-        [NotNull] public static Ex Condition<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then.ToExpression(), Else.ToExpression());
+        [NotNull] public static Ex ConditionWithResult<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then.ToExpression(), Else.ToExpression());
 
         [NotNull] public static Ex ToNewExpression([NotNull] this Type type) => New(type.GetConstructor(Type.EmptyTypes));
 
@@ -670,7 +670,7 @@ namespace MathCore.Extensions.Expressions
                     //case ExpressionType.RightShift:
                     //    break;
                     case ExpressionType.Subtract:
-                        return SubstractionSimplify(expr);
+                        return subtractionSimplify(expr);
                         //case ExpressionType.SubtractChecked:
                         //    break;
                         //case ExpressionType.TypeIs:
@@ -1643,16 +1643,16 @@ namespace MathCore.Extensions.Expressions
             }
 
             [NotNull]
-            private static Ex SubstractionSimplify([NotNull] bEx expr)
+            private static Ex subtractionSimplify([NotNull] bEx expr)
             {
                 if (IsZero((expr.Left as cEx)?.Value)) return expr.Right.Negate();
                 if (IsZero((expr.Right as cEx)?.Value)) return expr.Left;
 
-                return SubstractValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
+                return subtractValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
             }
 
             [CanBeNull]
-            private static Ex SubstractValues(object left, object right)
+            private static Ex subtractValues(object left, object right)
             {
                 if (!IsNumeric(left) || !IsNumeric(right)) return null;
                 if (left is byte)

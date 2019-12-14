@@ -51,12 +51,12 @@ namespace MathCore
         }
     }
 
-    public class RotationPhiThettaMatrix : Roration3DMatrix
+    public class RotationPhiThetaMatrix : Roration3DMatrix
     {
-        public RotationPhiThettaMatrix(double Phi, double Thetta) : base(Phi, RotationAxe.Z)
+        public RotationPhiThetaMatrix(double Phi, double Theta) : base(Phi, RotationAxe.Z)
         {
-            var s = Math.Sin(Thetta);
-            var c = Math.Cos(Thetta);
+            var s = Math.Sin(Theta);
+            var c = Math.Cos(Theta);
 
             var m = GetData();
             m[0, 2] = m[0, 0] * s;
@@ -68,12 +68,12 @@ namespace MathCore
         }
     }
 
-    public class RotationThettaPhiMatrix : Roration3DMatrix
+    public class RotationThetaPhiMatrix : Roration3DMatrix
     {
-        public RotationThettaPhiMatrix(double Phi, double Thetta) : base(Phi, RotationAxe.Z)
+        public RotationThetaPhiMatrix(double Phi, double Theta) : base(Phi, RotationAxe.Z)
         {
-            var s = Math.Sin(Thetta);
-            var c = Math.Cos(Thetta);
+            var s = Math.Sin(Theta);
+            var c = Math.Cos(Theta);
 
             var m = GetData();
             m[2, 0] = m[0, 0]*-s;

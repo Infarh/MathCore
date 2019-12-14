@@ -348,7 +348,7 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома - первого уменьшаемого</param>
             /// <param name="q">Коэффициенты полинома - первого вычитаемого</param>
             /// <returns>Коэффициенты полинома - разности</returns>
-            public static double[] Substract([NotNull] double[] p, [NotNull] double[] q)
+            public static double[] subtract([NotNull] double[] p, [NotNull] double[] q)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -442,7 +442,7 @@ namespace MathCore
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - разности</returns>
             [NotNull]
-            public static double[] Substract([NotNull] double[] p, double x)
+            public static double[] subtract([NotNull] double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -457,7 +457,7 @@ namespace MathCore
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - разности</returns>
             [NotNull]
-            public static double[] Substract(double x, [NotNull] double[] p)
+            public static double[] subtract(double x, [NotNull] double[] p)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 

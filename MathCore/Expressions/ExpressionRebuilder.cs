@@ -79,7 +79,7 @@ namespace System.Linq.Expressions
         public event EventHandlerReturn<EventArgs<ReadOnlyCollection<Expression>>, ReadOnlyCollection<Expression>> ExpressionListVisited;
         protected override ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original) => InvokeEvent(ExpressionListVisited, original, base.VisitExpressionList);
 
-        /// <summary>Событие возникает при посещении лямда-выражения</summary>
+        /// <summary>Событие возникает при посещении лямбда-выражения</summary>
         public event EventHandlerReturn<EventArgs<LambdaExpression>, Expression> LambdaVisited;
         protected override Expression VisitLambda(LambdaExpression lambda) => InvokeEvent(LambdaVisited, lambda, base.VisitLambda);
 
