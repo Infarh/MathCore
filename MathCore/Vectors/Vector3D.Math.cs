@@ -12,7 +12,7 @@ namespace MathCore.Vectors
         /// <summary>Скалярное произведение векторов</summary>
         /// <param name="Vector">Вектор, на который умножается текущий вектор</param>
         /// <returns>Число, равное скалярному произведению векторов</returns>
-        public double Product_Scalar(Vector3D Vector) => X * Vector.X + Y * Vector.Y + Z * Vector.Z;
+        public double Product_Scalar(Vector3D Vector) => _X * Vector._X + Y * Vector._Y + _Z * Vector._Z;
 
         /// <summary>Смешанное произведение трёх векторов</summary>
         /// <param name="A">Первый вектор произведения</param>

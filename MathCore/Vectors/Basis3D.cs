@@ -52,10 +52,10 @@ namespace MathCore.Vectors
                         -sin_b, cos_b * sin_g, cos_b * cos_g);
         }
 
-        public static Basis3D Rotate(in Vector3D v, double thetta)
+        public static Basis3D Rotate(in Vector3D v, double theta)
         {
-            var sin_t = Math.Sin(thetta);
-            var cos_t = Math.Cos(thetta);
+            var sin_t = Math.Sin(theta);
+            var cos_t = Math.Cos(theta);
             var cos_t1 = 1 - cos_t;
 
             var x = v.X;

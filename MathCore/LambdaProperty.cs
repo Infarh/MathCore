@@ -79,7 +79,7 @@ namespace MathCore
             }
         }
 
-        /// <summary>Новое лямда свойство</summary>
+        /// <summary>Новое лямбда свойство</summary>
         /// <param name="GetMethod">Метод чтения значения</param>
         /// <param name="SetMethod">Метод записи значения</param>
         [DST]

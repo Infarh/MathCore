@@ -122,10 +122,7 @@ namespace MathCore.MathParser
 
         /// <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
         /// <param name="Args">Аргументы события, содержащие имя функции, имена аргументов и делегат метода функции</param>
-        protected virtual void OnFindFunction([NotNull] FindFunctionEventArgs Args)
-        {
-            FindFunction?.Invoke(this, Args);
-        }
+        protected virtual void OnFindFunction([NotNull] FindFunctionEventArgs Args) => FindFunction?.Invoke(this, Args);
 
         /// <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
         /// <param name="Name">Имя функции</param>
@@ -201,7 +198,7 @@ namespace MathCore.MathParser
 
         /// <summary>Предварительная обработка входного строкового выражения</summary>
         /// <param name="Str">Обрабатываемая строка</param>
-        // Удаление из строки всех символов, из множества запрещённых симоволов
+        // Удаление из строки всех символов, из множества запрещённых символов
         protected virtual void StrPreprocessing([NotNull] ref string Str)
         {
             Str = new string(Str.Where(_ExcludeCharsSet.NotContains).ToArray());
@@ -250,73 +247,115 @@ namespace MathCore.MathParser
         internal void ProcessFunctions([NotNull] MathExpression Expression)
         {
             foreach (var function in Expression.Functions)
-                function.Delegate = function.Arguments.Length switch
+            {
+                if (string.IsNullOrEmpty(function.Name))
+                    throw new InvalidOperationException("Пустая строка с именем функции");
+
+                switch (function.Arguments.Length)
                 {
-                    1 => (function.Name switch
-                    {
-                        "Sin" => new Func<double, double>(Math.Sin),
-                        "SIN" => new Func<double, double>(Math.Sin),
-                        "sin" => new Func<double, double>(Math.Sin),
-                        "COS" => new Func<double, double>(Math.Cos),
-                        "Cos" => new Func<double, double>(Math.Cos),
-                        "cos" => new Func<double, double>(Math.Cos),
-                        "TAN" => new Func<double, double>(Math.Tan),
-                        "Tan" => new Func<double, double>(Math.Tan),
-                        "tan" => new Func<double, double>(Math.Tan),
-                        "tn" => new Func<double, double>(Math.Tan),
-                        "ATAN" => new Func<double, double>(Math.Atan),
-                        "ATan" => new Func<double, double>(Math.Atan),
-                        "Atan" => new Func<double, double>(Math.Atan),
-                        "atan" => new Func<double, double>(Math.Atan),
-                        "atn" => new Func<double, double>(Math.Atan),
-                        "Atn" => new Func<double, double>(Math.Atan),
-                        "CTG" => new Func<double, double>(x => 1 / Math.Tan(x)),
-                        "Ctg" => new Func<double, double>(x => 1 / Math.Tan(x)),
-                        "ctg" => new Func<double, double>(x => 1 / Math.Tan(x)),
-                        "Sign" => new Func<double, double>(x => Math.Sign(x)),
-                        "sign" => new Func<double, double>(x => Math.Sign(x)),
-                        "Abs" => new Func<double, double>(Math.Abs),
-                        "abs" => new Func<double, double>(Math.Abs),
-                        "Exp" => new Func<double, double>(Math.Exp),
-                        "EXP" => new Func<double, double>(Math.Exp),
-                        "exp" => new Func<double, double>(Math.Exp),
-                        "Sqrt" => new Func<double, double>(Math.Sqrt),
-                        "SQRT" => new Func<double, double>(Math.Sqrt),
-                        "√" => new Func<double, double>(Math.Sqrt),
-                        "sqrt" => new Func<double, double>(Math.Sqrt),
-                        "log10" => new Func<double, double>(Math.Log10),
-                        "Log10" => new Func<double, double>(Math.Log10),
-                        "LOG10" => new Func<double, double>(Math.Log10),
-                        "lg" => new Func<double, double>(Math.Log10),
-                        "Lg" => new Func<double, double>(Math.Log10),
-                        "LG" => new Func<double, double>(Math.Log10),
-                        "loge" => new Func<double, double>(Math.Log),
-                        "Loge" => new Func<double, double>(Math.Log),
-                        "LOGe" => new Func<double, double>(Math.Log),
-                        "ln" => new Func<double, double>(Math.Log),
-                        "Ln" => new Func<double, double>(Math.Log),
-                        "LN" => new Func<double, double>(Math.Log),
-                        _ => (OnFunctionFind(function.Name, function.Arguments) ??
-                              throw new NotSupportedException($"Обработка функции {function.Name} не поддерживается"))
-                    }),
-                    2 => (function.Name switch
-                    {
-                        "ATAN" => new Func<double, double, double>(Math.Atan2),
-                        "ATan" => new Func<double, double, double>(Math.Atan2),
-                        "Atan" => new Func<double, double, double>(Math.Atan2),
-                        "atan" => new Func<double, double, double>(Math.Atan2),
-                        "atn" => new Func<double, double, double>(Math.Atan2),
-                        "Atn" => new Func<double, double, double>(Math.Atan2),
-                        "Atan2" => new Func<double, double, double>(Math.Atan2),
-                        "atan2" => new Func<double, double, double>(Math.Atan2),
-                        "log" => new Func<double, double, double>(Math.Log),
-                        "Log" => new Func<double, double, double>(Math.Log),
-                        "LOG" => new Func<double, double, double>(Math.Log),
-                        _ => function.Delegate
-                    }),
-                    _ => (OnFunctionFind(function.Name, function.Arguments) ??
-                          throw new NotSupportedException($"Обработка функции {function.Name} не поддерживается"))
-                };
+                    case 1:
+                        switch (function.Name)
+                        {
+                            case "Sin":
+                            case "SIN":
+                            case "sin":
+                                function.Delegate = new Func<double, double>(Math.Sin);
+                                break;
+                            case "COS":
+                            case "Cos":
+                            case "cos":
+                                function.Delegate = new Func<double, double>(Math.Cos);
+                                break;
+                            case "TAN":
+                            case "Tan":
+                            case "tan":
+                            case "tn":
+                                function.Delegate = new Func<double, double>(Math.Tan);
+                                break;
+                            case "ATAN":
+                            case "ATan":
+                            case "Atan":
+                            case "atan":
+                            case "atn":
+                            case "Atn":
+                                function.Delegate = new Func<double, double>(Math.Atan);
+                                break;
+                            case "CTG":
+                                function.Delegate = new Func<double, double>(x => 1 / Math.Tan(x));
+                                break;
+                            case "Ctg":
+                                function.Delegate = new Func<double, double>(x => 1 / Math.Tan(x));
+                                break;
+                            case "ctg":
+                                function.Delegate = new Func<double, double>(x => 1 / Math.Tan(x));
+                                break;
+                            case "Sign":
+                                function.Delegate = new Func<double, double>(x => Math.Sign(x));
+                                break;
+                            case "sign":
+                                function.Delegate = new Func<double, double>(x => Math.Sign(x));
+                                break;
+                            case "Abs":
+                            case "abs":
+                                function.Delegate = new Func<double, double>(Math.Abs);
+                                break;
+                            case "Exp":
+                            case "EXP":
+                            case "exp":
+                                function.Delegate = new Func<double, double>(Math.Exp);
+                                break;
+                            case "Sqrt":
+                            case "SQRT":
+                            case "√":
+                            case "sqrt":
+                                function.Delegate = new Func<double, double>(Math.Sqrt);
+                                break;
+                            case "log10":
+                            case "Log10":
+                            case "LOG10":
+                            case "lg":
+                            case "Lg":
+                            case "LG":
+                                function.Delegate = new Func<double, double>(Math.Log10);
+                                break;
+                            case "loge":
+                            case "Loge":
+                            case "LOGe":
+                            case "ln":
+                            case "Ln":
+                            case "LN":
+                                function.Delegate = new Func<double, double>(Math.Log);
+                                break;
+                        }
+
+                        break;
+                    case 2:
+                        switch (function.Name)
+                        {
+                            case "ATAN":
+                            case "ATan":
+                            case "Atan":
+                            case "atan":
+                            case "atn":
+                            case "Atn":
+                            case "Atan2":
+                            case "atan2":
+                                function.Delegate = new Func<double, double, double>(Math.Atan2);
+                                break;
+                            case "log":
+                            case "Log":
+                            case "LOG":
+                                function.Delegate = new Func<double, double, double>(Math.Log);
+                                break;
+                        }
+                        break;
+                }
+
+                if (function.Delegate is null)
+                    function.Delegate = 
+                        OnFunctionFind(function.Name, function.Arguments) 
+                        ?? throw new InvalidOperationException($"Не удалось определить делегат для функции {function.Name}, либо функция не поддерживается");
+            }
         }
 
         /// <summary>Метод определения узла дерева, реализующего оператор</summary>
@@ -327,7 +366,7 @@ namespace MathCore.MathParser
             Name switch
             {
                 '+' => (ExpressionTreeNode)new AdditionOperatorNode(),
-                '-' => new SubstractionOperatorNode(),
+                '-' => new subtractionOperatorNode(),
                 '*' => new MultiplicationOperatorNode(),
                 '×' => new MultiplicationOperatorNode(),
                 '·' => new MultiplicationOperatorNode(),
@@ -349,7 +388,8 @@ namespace MathCore.MathParser
         /// <param name="Name">Имя функционала</param>
         /// <returns>Функционал</returns>
         /// <exception cref="NotSupportedException">Возникает для неопределённых имён функционалов</exception>
-        [NotNull] public static Functional GetFunctional([NotNull] string Name) =>
+        [NotNull]
+        public static Functional GetFunctional([NotNull] string Name) =>
             Name switch
             {
                 "summ" => (Functional)new SummOperator(Name),
@@ -363,7 +403,7 @@ namespace MathCore.MathParser
                 _ => throw new NotSupportedException($"Функционал {Name} не поддерживается")
             };
 
-        /// <summary>Метод излвечения корня дерева из последовательности элементов математического выражения</summary>
+        /// <summary>Метод извлечения корня дерева из последовательности элементов математического выражения</summary>
         /// <param name="Group">группа элементов математического выражения</param>
         /// <param name="MathExpression">Ссылка на математическое выражение</param>
         /// <returns>Корень дерева мат.выражения</returns>
@@ -374,7 +414,7 @@ namespace MathCore.MathParser
             ExpressionTreeNode last = null;
             for (var i = 0; i < Group.Length; i++) // в цикле по всем элементам группы
             {
-                var node = Group[i].GetSubTree(this, MathExpression); // извлеч поддерево для текущего элемента группы
+                var node = Group[i].GetSubTree(this, MathExpression); // извлечь поддерево для текущего элемента группы
                 // Если очередной элемент группы...
 
                 switch (Group[i])

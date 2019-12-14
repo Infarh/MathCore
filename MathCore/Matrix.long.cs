@@ -565,8 +565,8 @@ namespace MathCore
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слогаемое</param>
-        /// <param name="B">Второе слогаемое</param>
+        /// <param name="A">Первое слагаемое</param>
+        /// <param name="B">Второе слагаемое</param>
         /// <returns>Сумма двух матриц</returns>
         public static MatrixLong operator +(MatrixLong A, MatrixLong B)
         {
@@ -640,8 +640,8 @@ namespace MathCore
         }
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слогаемое</param>
-        /// <param name="B">Второе слогаемое</param>
+        /// <param name="A">Первое слагаемое</param>
+        /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
         public static MatrixLong operator |(MatrixLong A, MatrixLong B)
         {

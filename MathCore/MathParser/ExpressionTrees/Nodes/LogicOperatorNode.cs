@@ -22,12 +22,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         [NotNull]
-        public override Expression Compile() => LogicCompile().Condition(1d.ToExpression(), 0d.ToExpression());
+        public override Expression Compile() => LogicCompile().ConditionWithResult(1d, 0d);
 
         /// <summary>Компиляция узла</summary>
         /// <param name="Parameters">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         [NotNull]
-        public override Expression Compile(ParameterExpression[] Parameters) => LogicCompile(Parameters).Condition(1d.ToExpression(), 0d.ToExpression());
+        public override Expression Compile(ParameterExpression[] Parameters) => LogicCompile(Parameters).ConditionWithResult(1d, 0d);
     }
 }

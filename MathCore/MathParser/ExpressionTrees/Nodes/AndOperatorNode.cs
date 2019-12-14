@@ -16,12 +16,24 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <returns>Скомпилированное логическое выражение, реализующее операцию И</returns>
         public override Expression LogicCompile()
         {
-            var left = Left is LogicOperatorNode left_node
-                        ? left_node.LogicCompile()
-                        : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile()), Expression.Constant(0.0));
-            var right = Right is LogicOperatorNode right_node
-                        ? right_node.LogicCompile()
-                        : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile()), Expression.Constant(0.0));
+            Expression left;
+            if (Left is LogicOperatorNode left_node)
+                left = left_node.LogicCompile();
+            else
+            {
+                var value = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile());
+                left = Expression.GreaterThan(value, Expression.Constant(0.0));
+            }
+
+            Expression right;
+            if (Right is LogicOperatorNode right_node)
+                right = right_node.LogicCompile();
+            else
+            {
+                var value = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile());
+                right = Expression.GreaterThan(value, Expression.Constant(0.0));
+            }
+
             return Expression.AndAlso(left, right);
         }
 
