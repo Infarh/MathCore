@@ -13,7 +13,7 @@ namespace MathCore.Vectors
         /* -------------------------------------------------------------------------------------------- */
 
         [DST]
-        public static Vector3D RThettaPhi(double R, double Thetta, double Phi) => new Vector3D(R, new SpaceAngle(Thetta, Phi));
+        public static Vector3D RThetaPhi(double R, double Theta, double Phi) => new Vector3D(R, new SpaceAngle(Theta, Phi));
 
         [DST]
         public static Vector3D XYZ(double X, double Y, double Z) => new Vector3D(X, Y, Z);
@@ -109,11 +109,11 @@ namespace MathCore.Vectors
 
         /// <summary>Угол места</summary>
         [XmlIgnore]
-        public double Thetta => Math.Atan2(R_XOY, _Z);
+        public double Theta => Math.Atan2(R_XOY, _Z);
 
         /// <summary>Пространственный угол</summary>
         [XmlIgnore]
-        public SpaceAngle Angle => new SpaceAngle(Thetta, Phi);
+        public SpaceAngle Angle => new SpaceAngle(Theta, Phi);
 
         /// <summary>Двумерный вектор - проекция в плоскости XOY</summary>
         public Vector2D VectorXOY => new Vector2D(_X, _Y);
@@ -154,12 +154,12 @@ namespace MathCore.Vectors
             double phi;
             if (Angle.AngleType == AngleType.Deg)
             {
-                theta = Angle.InRad.Thetta;
+                theta = Angle.InRad.Theta;
                 phi = Angle.InRad.Phi;
             }
             else
             {
-                theta = Angle.Thetta;
+                theta = Angle.Theta;
                 phi = Angle.Phi;
             }
 

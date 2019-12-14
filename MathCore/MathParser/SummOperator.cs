@@ -38,19 +38,39 @@ namespace MathCore.MathParser
                         .FirstOrDefault();
 
             Function.Variable.ClearCollection();
-            if (iterator_var != null) Function.Variable.Add(iterator_var);
-            Function.Tree
-                .Where(n => n is VariableValueNode)
-                .Cast<VariableValueNode>()
-                .Where(n => !ReferenceEquals(n.Variable, iterator_var))
-                .Foreach(Expression, Function, (n, i, expr, f) => f.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
+            if (iterator_var != null) 
+                Function.Variable.Add(iterator_var);
+
+            var iterator_variables = Function.Tree
+               .OfType<VariableValueNode>()
+               .Where(n => !ReferenceEquals(n.Variable, iterator_var));
+            foreach (var n in iterator_variables)
+                Function.Variable.Add(n.Variable = Expression.Variable[n.Variable.Name]);
+
+            //Function.Tree
+            //    .Where(n => n is VariableValueNode)
+            //    .Cast<VariableValueNode>()
+            //    .Where(n => !ReferenceEquals(n.Variable, iterator_var))
+            //    .Foreach(Expression, Function, (n, i, expr, f) => f.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
 
             Parameters.Variable.ClearCollection();
-            Parameters.Tree
-                .Where(n => n is VariableValueNode)
-                .Cast<VariableValueNode>()
-                .Where(n => !ReferenceEquals(n.Variable, iterator_var))
-                .Foreach(Expression, Function, (n, i, expr, f) => f.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
+
+            var variable_nodes = Parameters.Tree
+               .OfType<VariableValueNode>()
+               .Where(n => !ReferenceEquals(n.Variable, iterator_var));
+
+            foreach (var variable_node in variable_nodes)
+            {
+                var variable = Expression.Variable[variable_node.Variable.Name];
+                variable_node.Variable = variable;
+                Parameters.Variable.Add(variable);
+            }
+
+            //Parameters.Tree
+            //    .Where(n => n is VariableValueNode)
+            //    .Cast<VariableValueNode>()
+            //    .Where(n => !ReferenceEquals(n.Variable, iterator_var))
+            //    .Foreach(Expression, Function, (n, i, expr, f) => f.Variable.Add(n.Variable = expr.Variable[n.Variable.Name]));
         }
 
         /// <summary>Метод определения значения</summary>

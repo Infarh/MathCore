@@ -1,6 +1,6 @@
 ﻿namespace MathCore
 {
-    /// <summary>Форматтер строки с помощью лямда-выражения</summary>
+    /// <summary>Форматтер строки с помощью лямбда-выражения</summary>
     // ReSharper disable once UnusedMember.Global
     public class LambdaToString : Factory<string>
     {

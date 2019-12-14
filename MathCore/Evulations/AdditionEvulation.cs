@@ -11,8 +11,8 @@ namespace MathCore.Evulations
         public AdditionEvulation() : base(Ex.Add) { }
 
         /// <summary>Инициализация нового вычисления суммы двух вычислений</summary>
-        /// <param name="a">Вычисление первого слогаемого</param>
-        /// <param name="b">Вычисление второго слогаемого</param>
+        /// <param name="a">Вычисление первого слагаемого</param>
+        /// <param name="b">Вычисление второго слагаемого</param>
         public AdditionEvulation(Evulation<T> a, Evulation<T> b) : base(Ex.Add, a, b) { }
     }
 }

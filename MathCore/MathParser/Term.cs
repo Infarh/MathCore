@@ -21,7 +21,7 @@ namespace MathCore.MathParser
         public abstract ExpressionTreeNode GetSubTree([NotNull] ExpressionParser Parser, [NotNull] MathExpression Expression);
 
         /// <summary>Строковое представление элемента мат.выражения</summary>
-        /// <returns>Строковое содержимое элемета мат.выражения</returns>
+        /// <returns>Строковое содержимое элемента мат.выражения</returns>
         public override string ToString() => _Value;
     }
 }

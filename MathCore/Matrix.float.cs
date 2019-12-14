@@ -670,8 +670,8 @@ namespace MathCore
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слогаемое</param>
-        /// <param name="B">Второе слогаемое</param>
+        /// <param name="A">Первое слагаемое</param>
+        /// <param name="B">Второе слагаемое</param>
         /// <returns>Сумма двух матриц</returns>
         [DST]
         [NotNull]
@@ -752,8 +752,8 @@ namespace MathCore
         }
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слогаемое</param>
-        /// <param name="B">Второе слогаемое</param>
+        /// <param name="A">Первое слагаемое</param>
+        /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
         [NotNull]
         public static MatrixFloat operator |([NotNull] MatrixFloat A, [NotNull] MatrixFloat B)

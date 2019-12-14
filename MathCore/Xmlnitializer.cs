@@ -120,7 +120,7 @@ namespace MathCore
                 }
                 //Если выражение содержит не указание конкретного члена класса (поля, или свйоства), то генерируем исключение
                 if(!(expression.Body is MemberExpression)) throw new NotImplementedException();
-                return Lambda<Action<TObject, string>> //Создаём лямда-выражение
+                return Lambda<Action<TObject, string>> //Создаём лямбда-выражение
                     ( //содержащее
                         Assign //выражение присвоения
                             (
@@ -159,7 +159,7 @@ namespace MathCore
                     //Проверяем - возможно ли прямое привоение строкового параметру целевого типа
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
                         //Если присвоение возможно, то заменяем в теле выражения инициализации 
-                        //целевой параметр на строковый параметр и возвращаем лямда-выражение
+                        //целевой параметр на строковый параметр и возвращаем лямбда-выражение
                         return Lambda<Action<TObject, string>>(expr_body.Replace(pArg, pStr), pObj, pStr);
                     //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощю конвертера
                     var c = TypeDescriptor.GetConverter(typeof(TValue));
@@ -179,7 +179,7 @@ namespace MathCore
                             typeof(TValue) //Целевой тип
                         );
                 }
-                //создаём лямда-выражение инициализации объекта
+                //создаём лямбда-выражение инициализации объекта
                 return Lambda<Action<TObject, string>>
                     ( //За основу берём тело исходного выражения инициализации
                         expr_body.Replace(pArg, converter_body),
@@ -208,7 +208,7 @@ namespace MathCore
                     //Проверяем - возможно ли прямое привоение строкового параметру целевого типа
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
                         //Если присвоение возможно, то заменяем в теле выражения инициализации 
-                        //целевой параметр на строковый параметр и возвращаем лямда-выражение
+                        //целевой параметр на строковый параметр и возвращаем лямбда-выражение
                         return Lambda<Action<TObject, string>>(expr_body.Replace(pArg, pStr), pObj, pStr);
                     //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощю конвертера
                     var c = TypeDescriptor.GetConverter(typeof(TValue));
@@ -228,7 +228,7 @@ namespace MathCore
                             typeof(TValue) //Целевой тип
                         );
                 }
-                //создаём лямда-выражение инициализации объекта
+                //создаём лямбда-выражение инициализации объекта
                 return Lambda<Action<TObject, string>>
                     ( //За основу берём тело исходного выражения инициализации
                         expr_body.Replace(pArg, converter_body),

@@ -158,11 +158,11 @@
       <FileName>MathParser\ExpressionTrees\Nodes\SelectorOperatorNode.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode" Collapsed="true">
+  <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode" Collapsed="true">
     <Position X="3.25" Y="4" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFA=</HashCode>
-      <FileName>MathParser\ExpressionTrees\Nodes\SubstractionOperatorNode.cs</FileName>
+      <FileName>MathParser\ExpressionTrees\Nodes\subtractionOperatorNode.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode" Collapsed="true">

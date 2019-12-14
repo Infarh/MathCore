@@ -32,7 +32,7 @@ namespace MathCore.Vectors
             lv_Str = lv_Str.Replace(" ", "");
             var V = lv_Str.Split(',', ';');
 
-            var thetta = 0d;
+            var theta = 0d;
             var phi = 0d;
             bool th_set = false, ph_set = false;
             var type = AngleType.Deg;
@@ -52,7 +52,7 @@ namespace MathCore.Vectors
                     switch(name_str.ToLower()[0])
                     {
                         case 't':
-                            double.TryParse(value_str, out thetta);
+                            double.TryParse(value_str, out theta);
                             th_set = true;
                             continue;
                         case 'p':
@@ -65,7 +65,7 @@ namespace MathCore.Vectors
                 if(vv is null) continue;
                 if(!th_set)
                 {
-                    thetta = vv.Value;
+                    theta = vv.Value;
                     th_set = true;
                 }
                 else if(!ph_set)
@@ -75,8 +75,8 @@ namespace MathCore.Vectors
                 }
             }
             return type == AngleType.Deg
-                    ? new SpaceAngle(thetta, phi, AngleType.Deg)
-                    : new SpaceAngle(thetta, phi, AngleType.Deg).InRad;
+                    ? new SpaceAngle(theta, phi, AngleType.Deg)
+                    : new SpaceAngle(theta, phi, AngleType.Deg).InRad;
         }
     }
 }
