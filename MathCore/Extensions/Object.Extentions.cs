@@ -116,7 +116,7 @@ namespace System
         /// <summary>Преобразование объекта в форматированную строку</summary>
         /// <param name="obj">Преобразуемый объект (идущий нулевым аргументом)</param>
         /// <param name="Format">Строка форматирования</param>
-        /// <param name="args">Массив аргументов, доавбляемых к объекту для создание форматированной строки</param>
+        /// <param name="args">Массив аргументов, добавляемых к объекту для создание форматированной строки</param>
         /// <returns>Форматированная строка текстового представления объекта</returns>
         [DST, StringFormatMethod("Format"), NotNull]
         public static string ToFormattedString(this object obj, [NotNull] string Format, [CanBeNull] params object[] args)
@@ -131,19 +131,19 @@ namespace System
         /// <summary>Метод преобразования объекта в строку</summary>
         /// <typeparam name="T">Тип исходного объекта</typeparam>
         /// <param name="t">Преобразуемый объект</param>
-        /// <param name="converter">Метод преобразвоания объекта в строку</param>
+        /// <param name="converter">Метод преобразования объекта в строку</param>
         /// <returns>Сгенерированная строка указанным методом на основе указанного объекта</returns>
         [DST]
         public static string ToString<T>(this T t, [NotNull] Func<T, string> converter) => converter(t);
 
         /// <summary>Расчёт хеш-кода массива объектов</summary>
-        /// <param name="Objects">Массив объектов, хеш-код которых надо расчитать</param>
+        /// <param name="Objects">Массив объектов, хеш-код которых надо рассчитать</param>
         /// <returns>Хеш-код массива объектов</returns>
         [DST]
         public static int GetHashCode([NotNull] params object[] Objects) => Objects.GetComplexHashCode();
 
         /// <summary>Расчёт хеш-кода перечисления объектов</summary>
-        /// <param name="Objects">Перечисление объектов, хеш-код которых надо расчитать</param>
+        /// <param name="Objects">Перечисление объектов, хеш-код которых надо рассчитать</param>
         /// <returns>Хеш-код перечисления объектов</returns>
         [DST]
         public static int GetComplexHashCode([NotNull] this IEnumerable<object> Objects)
@@ -192,6 +192,12 @@ namespace System
         [DST]
         public static bool IsNull([CanBeNull] this object o) => o is null;
 
+        /// <summary>Проверка на пустую ссылку</summary>
+        /// <typeparam name="T">Тип проверяемого объекта</typeparam>
+        /// <param name="obj">Проверяемое значение</param>
+        /// <param name="Message">Сообщение ошибки</param>
+        /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
+        /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
         [NotNull]
         public static T NotNull<T>([CanBeNull] this T obj, [CanBeNull] string Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
 
@@ -199,8 +205,8 @@ namespace System
         /// <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
         /// <param name="obj">Проверяемый на <see langword="null"/> объект</param>
         /// <param name="ParameterName">Имя параметра для указания его в исключении</param>
-        /// <param name="Message">Обциональное сообщение</param>
-        /// <returns>Объект, гарантированн не <see langword="null"/></returns>
+        /// <param name="Message">Сообщение ошибки</param>
+        /// <returns>Объект, гарантированно не <see langword="null"/></returns>
         /// <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
         [NotNull]
         public static T ParamNotNull<T>([CanBeNull] this T obj, [NotNull] string ParameterName, [CanBeNull] string Message = null) where T : class =>
@@ -211,7 +217,7 @@ namespace System
         /// <typeparam name="TObject">Тип исходного объекта</typeparam>
         /// <param name="o">Объект, атрибуты которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
-        /// <returns>ассив атрибутов указанного типа, определённых для типа объекта</returns>
+        /// <returns>Массив атрибутов указанного типа, определённых для типа объекта</returns>
         [CanBeNull, DST]
         public static TAttribute[] GetAttributes<TAttribute, TObject>(this TObject o, bool Inherited = false)
             where TAttribute : Attribute => typeof(TObject).GetCustomAttributes<TAttribute>(Inherited);
@@ -219,17 +225,17 @@ namespace System
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
         /// <param name="obj">Инициализируемый объект</param>
-        /// <param name="Initializator">Действие инициализации</param>
+        /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T>
         (
             [CanBeNull] this T obj,
-            [CanBeNull]Action<T> Initializator
+            [CanBeNull]Action<T> Initializer
         ) where T : class
         {
             if (obj is { })
-                Initializator?.Invoke(obj);
+                Initializer?.Invoke(obj);
             return obj;
         }
 
@@ -238,18 +244,18 @@ namespace System
         /// <typeparam name="TP">Тип параметра инициализации</typeparam>
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="parameter">Параметр инициализации</param>
-        /// <param name="Initializator">Действие инициализации</param>
+        /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T, TP>
         (
             [CanBeNull] this T obj,
             [CanBeNull] TP parameter,
-            [CanBeNull]Action<T, TP> Initializator
+            [CanBeNull]Action<T, TP> Initializer
         ) where T : class
         {
             if (obj is { })
-                Initializator?.Invoke(obj, parameter);
+                Initializer?.Invoke(obj, parameter);
             return obj;
         }
 
@@ -260,7 +266,7 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="parameter1">Параметр 1 инициализации</param>
         /// <param name="parameter2">Параметр 2 инициализации</param>
-        /// <param name="Initializator">Действие инициализации</param>
+        /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T, TP1, TP2>
@@ -268,11 +274,11 @@ namespace System
             [CanBeNull] this T obj,
             [CanBeNull] TP1 parameter1,
             [CanBeNull] TP2 parameter2,
-            [CanBeNull]Action<T, TP1, TP2> Initializator
+            [CanBeNull]Action<T, TP1, TP2> Initializer
         ) where T : class
         {
             if (obj is { })
-                Initializator?.Invoke(obj, parameter1, parameter2);
+                Initializer?.Invoke(obj, parameter1, parameter2);
             return obj;
         }
 
@@ -285,7 +291,7 @@ namespace System
         /// <param name="parameter1">Параметр инициализации</param>
         /// <param name="parameter2">Параметр инициализации</param>
         /// <param name="parameter3">Параметр инициализации</param>
-        /// <param name="Initializator">Действие инициализации</param>
+        /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T, TP1, TP2, TP3>
@@ -294,42 +300,42 @@ namespace System
             [CanBeNull] TP1 parameter1,
             [CanBeNull] TP2 parameter2,
             [CanBeNull] TP3 parameter3,
-            [CanBeNull]Action<T, TP1, TP2, TP3> Initializator
+            [CanBeNull]Action<T, TP1, TP2, TP3> Initializer
         ) where T : class
         {
             if (obj is { })
-                Initializator?.Invoke(obj, parameter1, parameter2, parameter3);
+                Initializer?.Invoke(obj, parameter1, parameter2, parameter3);
             return obj;
         }
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
         /// <param name="obj">Инициализируемый объект</param>
-        /// <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+        /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T>
         (
             [CanBeNull] this T obj,
-            [CanBeNull]Func<T, T> Initializator
+            [CanBeNull]Func<T, T> Initializer
         ) where T : class =>
-            Initializator != null && obj is { } ? Initializator(obj) : obj;
+            Initializer != null && obj is { } ? Initializer(obj) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
         /// <typeparam name="TP">Тип параметра инициализации</typeparam>
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="parameter">Параметр инициализации</param>
-        /// <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+        /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T, TP>
         (
             [CanBeNull] this T obj,
             [CanBeNull] TP parameter,
-            [CanBeNull]Func<T, TP, T> Initializator
+            [CanBeNull]Func<T, TP, T> Initializer
         ) where T : class =>
-            Initializator != null && obj is { } ? Initializator(obj, parameter) : obj;
+            Initializer != null && obj is { } ? Initializer(obj, parameter) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -340,7 +346,7 @@ namespace System
         /// <param name="parameter1">Параметр 1 инициализации</param>
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="parameter3">Параметр 3 инициализации</param>
-        /// <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+        /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T, TP1, TP2, TP3>
@@ -349,9 +355,9 @@ namespace System
             [CanBeNull] TP1 parameter1,
             [CanBeNull] TP2 parameter2,
             [CanBeNull] TP3 parameter3,
-            [CanBeNull]Func<T, TP1, TP2, TP3, T> Initializator
+            [CanBeNull]Func<T, TP1, TP2, TP3, T> Initializer
         ) where T : class =>
-            Initializator != null && obj is { } ? Initializator(obj, parameter1, parameter2, parameter3) : obj;
+            Initializer != null && obj is { } ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -360,7 +366,7 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="parameter1">Параметр 1 инициализации</param>
         /// <param name="parameter2">Параметр 2 инициализации</param>
-        /// <param name="Initializator">Функция инициализации, определяющая значение конечного объекта</param>
+        /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
         [DST, CanBeNull]
         public static T InitializeObject<T, TP1, TP2>
@@ -368,9 +374,9 @@ namespace System
             [CanBeNull] this T obj,
             [CanBeNull] TP1 parameter1,
             [CanBeNull] TP2 parameter2,
-            [CanBeNull]Func<T, TP1, TP2, T> Initializator
+            [CanBeNull]Func<T, TP1, TP2, T> Initializer
         ) where T : class =>
-            Initializator != null && obj is { } ? Initializator(obj, parameter1, parameter2) : obj;
+            Initializer != null && obj is { } ? Initializer(obj, parameter1, parameter2) : obj;
 
         /// <summary>Печать объекта на консоли без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
@@ -390,7 +396,6 @@ namespace System
         [DST, StringFormatMethod("Format")]
         public static void ToConsole<TObject>([CanBeNull] this TObject Obj, [NotNull] string Format, [NotNull, ItemNotNull] params object[] args)
         {
-            if (Format is null) throw new ArgumentNullException(nameof(Format));
             if (Obj is null) return;
             if (args.Length == 0)
                 Console.Write(Format, Obj);
@@ -416,7 +421,6 @@ namespace System
         [DST, StringFormatMethod("Format")]
         public static void ToConsoleLN<TObject>([CanBeNull] this TObject Obj, [NotNull] string Format, [NotNull, ItemNotNull] params object[] args)
         {
-            if (Format is null) throw new ArgumentNullException(nameof(Format));
             if (Obj is null) return;
             if (args.Length != 0)
                 Console.WriteLine(Format, args.AppendFirst(Obj).ToArray());
@@ -427,7 +431,7 @@ namespace System
         /// <summary>Печать объекта в отладочной информации без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
-        [DST, Conditional("DEBUG")]
+        [DST]
         public static void ToDubugOut<T>([CanBeNull] this T Obj)
         {
             if (Obj is null) return;
@@ -438,7 +442,7 @@ namespace System
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
-        [DST, Conditional("DEBUG")]
+        [DST]
         public static void ToDubugOut<T>([CanBeNull] this T Obj, bool Condition)
         {
             if (Obj is null) return;
@@ -448,8 +452,8 @@ namespace System
         /// <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
-        [DST, Conditional("DEBUG")]
-        public static void ToDubugOutLN<T>([CanBeNull] this T Obj)
+        [DST]
+        public static void ToDebugOutLN<T>([CanBeNull] this T Obj)
         {
             if (Obj is null) return;
             Debug.WriteLine(Obj);
@@ -459,8 +463,8 @@ namespace System
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
-        [DST, Conditional("DEBUG")]
-        public static void ToDubugOutLN<T>([CanBeNull] this T Obj, bool Condition)
+        [DST]
+        public static void ToDebugOutLN<T>([CanBeNull] this T Obj, bool Condition)
         {
             if (Obj is null) return;
             Debug.WriteLineIf(Condition, Obj);
@@ -509,7 +513,7 @@ namespace System
         }
 
         /// <summary>Выбор действия для объекта</summary>
-        /// <param name="obj">ОБъект, на котором выполняется выбор действия</param>
+        /// <param name="obj">Объект, на котором выполняется выбор действия</param>
         /// <param name="actions">Словарь возможных действий над объектом</param>
         /// <param name="Default">Действие по умолчанию</param>
         public static void Switch([NotNull] this object obj, [NotNull] Actions actions, [CanBeNull] Action<object> Default = null)
@@ -631,7 +635,7 @@ namespace System
         /// <param name="obj">Оборачиваемый объект</param>
         /// <returns>Вычисление, возвращающее указанный объект</returns>
         [NotNull, DST]
-        public static ValueEvulation<T> ToEvulation<T>([CanBeNull] this T obj) => new ValueEvulation<T>(obj);
+        public static ValueEvaluation<T> ToEvaluation<T>([CanBeNull] this T obj) => new ValueEvaluation<T>(obj);
 
         /// <summary>Преобразование объекта в именованное вычисление</summary>
         /// <typeparam name="T">Тип исходного элемента</typeparam>
@@ -639,7 +643,7 @@ namespace System
         /// <param name="Name">Имя вычисления</param>
         /// <returns>Вычисление, возвращающее указанный объект</returns>
         [NotNull, DST]
-        public static ValueEvulation<T> ToEvulation<T>([CanBeNull] this T obj, [CanBeNull] string Name) => new NamedValueEvulation<T>(obj, Name);
+        public static ValueEvaluation<T> ToEvaluation<T>([CanBeNull] this T obj, [CanBeNull] string Name) => new NamedValueEvaluation<T>(obj, Name);
 
         /// <summary>Преобразование объекта в выражение-константу</summary>
         /// <param name="obj">Преобразуемый объект</param>
@@ -656,7 +660,7 @@ namespace System
 
         /// <summary>Получить выражение вызова метода объекта</summary>
         /// <param name="obj">Объект, метод которого надо вызвать</param>
-        /// <param name="d">Описание методаа</param>
+        /// <param name="d">Описание метода</param>
         /// <param name="p">Параметры метода</param>
         /// <returns>Выражение вызова метода</returns>
         [NotNull] public static mcEx GetCallExpression([CanBeNull] this object obj, [NotNull] MethodInfo d, [NotNull, ItemNotNull] params Ex[] p) => Ex.Call(obj.ToExpression(), d, p);
@@ -686,7 +690,7 @@ namespace System
 }
 namespace System.Tags
 {
-    /// <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложенны к другим объектам</summary>
+    /// <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложены к другим объектам</summary>
     public static class TagExtensions
     {
         /// <summary>Получить объект-метку указанного типа из целевого объекта</summary>
