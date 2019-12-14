@@ -2221,7 +2221,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
                 /// <exception cref="InvalidOperationException">Размеры векторов не совпадают</exception>
                 [NotNull]
-                public static double[] Substract([NotNull] double[] a, [NotNull] double[] b)
+                public static double[] subtract([NotNull] double[] a, [NotNull] double[] b)
                 {
                     if (a is null)
                         throw new ArgumentNullException(nameof(a));
@@ -2281,7 +2281,7 @@ namespace MathCore
                 /// <returns>Массив разности элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static double[,] Substract([NotNull] double[,] matrix, double x)
+                public static double[,] subtract([NotNull] double[,] matrix, double x)
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
@@ -2300,7 +2300,7 @@ namespace MathCore
                 /// <returns>Массив разности элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static double[,] Substract(double x, [NotNull] double[,] matrix)
+                public static double[,] subtract(double x, [NotNull] double[,] matrix)
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
@@ -2403,7 +2403,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
                 /// <exception cref="ArgumentException">В случае если размерности матрицы не равны</exception>
                 [NotNull]
-                public static double[,] Substract([NotNull] double[,] A, [NotNull] double[,] B)
+                public static double[,] subtract([NotNull] double[,] A, [NotNull] double[,] B)
                 {
                     if (A is null)
                         throw new ArgumentNullException(nameof(A));

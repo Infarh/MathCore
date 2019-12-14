@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using MathCore.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -166,7 +165,7 @@ namespace MathCore.Tests
 
         /// <summary>Тест оператора сложения двух матриц</summary>
         [TestMethod, Priority(1), Description("Тест оператора сложения двух матриц")]
-        public void OperatorSubstract_Matrix_Matrix_Test()
+        public void Operatorsubtract_Matrix_Matrix_Test()
         {
             double[,] a =
             {

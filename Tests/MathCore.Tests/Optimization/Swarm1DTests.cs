@@ -68,7 +68,7 @@ namespace MathCore.Tests.Optimization
                 out var X,
                 out var Y);
             Assert.That.Value(X).IsEqual(-__X0, 2.0e-4);
-            Assert.That.Value(Y).IsEqual(-__Y0, 7.4e-9);
+            Assert.That.Value(Y).IsEqual(-__Y0, 2.0e-8);
         }
     }
 }

@@ -2037,7 +2037,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
                 /// <exception cref="InvalidOperationException">Размеры векторов не совпадают</exception>
                 [NotNull]
-                public static Complex[] Substract([NotNull] Complex[] a, [NotNull] Complex[] b)
+                public static Complex[] subtract([NotNull] Complex[] a, [NotNull] Complex[] b)
                 {
                     if (a is null) throw new ArgumentNullException(nameof(a));
                     if (b is null) throw new ArgumentNullException(nameof(b));
@@ -2088,7 +2088,7 @@ namespace MathCore
                 /// <returns>Массив разности элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static Complex[,] Substract([NotNull] Complex[,] matrix, Complex x)
+                public static Complex[,] subtract([NotNull] Complex[,] matrix, Complex x)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
@@ -2104,7 +2104,7 @@ namespace MathCore
                 /// <returns>Массив разности элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static Complex[,] Substract(Complex x, [NotNull] Complex[,] matrix)
+                public static Complex[,] subtract(Complex x, [NotNull] Complex[,] matrix)
                 {
                     if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
@@ -2190,7 +2190,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
                 /// <exception cref="ArgumentException">В случае если размерности матрицы не равны</exception>
                 [NotNull]
-                public static Complex[,] Substract([NotNull] Complex[,] A, [NotNull] Complex[,] B)
+                public static Complex[,] subtract([NotNull] Complex[,] A, [NotNull] Complex[,] B)
                 {
                     if (A is null) throw new ArgumentNullException(nameof(A));
                     if (B is null) throw new ArgumentNullException(nameof(B));

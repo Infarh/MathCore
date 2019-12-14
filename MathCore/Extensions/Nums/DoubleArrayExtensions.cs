@@ -274,7 +274,7 @@ namespace System
         }
 
         [DST, NotNull]
-        public static double[] GetSubstract([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] - v);
+        public static double[] Getsubtract([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] - v);
 
         [DST, NotNull]
         public static double[] GetSumm([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] + v);
@@ -330,7 +330,7 @@ namespace System
         public static void Normalize([NotNull] this double[] array) => array.Divade(array.Max());
 
         [DST]
-        public static void Substract([NotNull] this double[] array, double value)
+        public static void subtract([NotNull] this double[] array, double value)
         {
             for (var i = 0; i < array.Length; i++)
                 array[i] -= value;

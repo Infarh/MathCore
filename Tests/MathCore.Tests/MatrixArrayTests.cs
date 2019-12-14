@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using MathCore.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -1419,11 +1418,11 @@ namespace MathCore.Tests
                 Assert.AreEqual(U0.GetLength(1), U.GetLength(1));
                 try
                 {
-                    CollectionAssert.AreEqual(U0, U, cmp, "U0 - U = {0}", Matrix.Array.Operator.Substract(U0, U).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                    CollectionAssert.AreEqual(U0, U, cmp, "U0 - U = {0}", Matrix.Array.Operator.subtract(U0, U).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Substract(U0, U).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.subtract(U0, U).EnumerateElements().Select(Math.Abs).Max()}", e);
                 }
 
                 Assert.AreEqual(W0.Length, W.Length);
@@ -1441,12 +1440,12 @@ namespace MathCore.Tests
                 Assert.AreEqual(V0.GetLength(1), V.GetLength(1));
                 try
                 {
-                    CollectionAssert.AreEqual(V0, V, cmp, "V0 - V = {0}", Matrix.Array.Operator.Substract(V0, V).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                    CollectionAssert.AreEqual(V0, V, cmp, "V0 - V = {0}", Matrix.Array.Operator.subtract(V0, V).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
 
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.Substract(V0, V).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.subtract(V0, V).EnumerateElements().Select(Math.Abs).Max()}", e);
                 }
 
                 var M1 = Matrix.Array.Operator.Multiply(U, Matrix.Array.CreateDiagonal(W));
@@ -1454,11 +1453,11 @@ namespace MathCore.Tests
 
                 try
                 {
-                    CollectionAssert.AreEqual(M, M1, cmp, "M - M1 = {0}", Matrix.Array.Operator.Substract(M, M1).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                    CollectionAssert.AreEqual(M, M1, cmp, "M - M1 = {0}", Matrix.Array.Operator.subtract(M, M1).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.Substract(M, M1).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.subtract(M, M1).EnumerateElements().Select(Math.Abs).Max()}", e);
                 }
             }
 

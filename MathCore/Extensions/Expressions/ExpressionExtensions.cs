@@ -670,7 +670,7 @@ namespace MathCore.Extensions.Expressions
                     //case ExpressionType.RightShift:
                     //    break;
                     case ExpressionType.Subtract:
-                        return SubstractionSimplify(expr);
+                        return subtractionSimplify(expr);
                         //case ExpressionType.SubtractChecked:
                         //    break;
                         //case ExpressionType.TypeIs:
@@ -1643,16 +1643,16 @@ namespace MathCore.Extensions.Expressions
             }
 
             [NotNull]
-            private static Ex SubstractionSimplify([NotNull] bEx expr)
+            private static Ex subtractionSimplify([NotNull] bEx expr)
             {
                 if (IsZero((expr.Left as cEx)?.Value)) return expr.Right.Negate();
                 if (IsZero((expr.Right as cEx)?.Value)) return expr.Left;
 
-                return SubstractValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
+                return subtractValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
             }
 
             [CanBeNull]
-            private static Ex SubstractValues(object left, object right)
+            private static Ex subtractValues(object left, object right)
             {
                 if (!IsNumeric(left) || !IsNumeric(right)) return null;
                 if (left is byte)

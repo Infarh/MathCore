@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using MathCore.Extensions.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

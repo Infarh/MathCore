@@ -4251,27 +4251,27 @@
             <param name="node">Строковый узел</param>
             <returns>Значение строкового узла</returns>
         </member>
-        <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode">
+        <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode">
             <summary>Узел дерева выражения, релизующий оператор вычитания</summary>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode.#ctor">
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.#ctor">
             <summary>Инициализация нового оператора вычитания</summary>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode.Compute">
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.Compute">
             <summary>Вычисление значение узла</summary>
             <returns>Значение разности значений правого и левого поддеревьев</returns>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode.Compile">
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.Compile">
             <summary>Компиляция выражения узла</summary>
             <returns>Скомпилированное выражение узла</returns>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция выражения узла</summary>
             <param name="Parameters">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
             <returns></returns>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SubstractionOperatorNode.Clone">
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.Clone">
             <summary>Клонирование узла</summary>
             <returns>Клон узла</returns>
         </member>
@@ -5703,7 +5703,7 @@
             <returns>Матрица, составленная из элементов - сумм элементов исходных матриц</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Substract(System.Double[],System.Double[])">
+        <member name="M:MathCore.Matrix.Array.Operator.subtract(System.Double[],System.Double[])">
             <summary>Оператор вычитания между двумя столбцами</summary>
             <param name="a">Столбец уменьшаемого</param>
             <param name="b">Столбец вычитаемого</param>
@@ -5726,14 +5726,14 @@
             <returns>Вектор, составленный из поэлементного частного элементов векторов делимого и делителя</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Substract(System.Double[0:,0:],System.Double)">
+        <member name="M:MathCore.Matrix.Array.Operator.subtract(System.Double[0:,0:],System.Double)">
             <summary>Оператор вычисления разности двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
             <returns>Массив разности элементов матрицы с числом</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Substract(System.Double,System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Operator.subtract(System.Double,System.Double[0:,0:])">
             <summary>Оператор вычисления разности двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
@@ -5770,7 +5770,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы не равны</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Substract(System.Double[0:,0:],System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Operator.subtract(System.Double[0:,0:],System.Double[0:,0:])">
             <summary>Оператор вычисления разности элементов двух матриц</summary>
             <param name="A">Массив элементов первой матрицы</param>
             <param name="B">Массив элементов второй матрицы</param>
@@ -6307,7 +6307,7 @@
             <returns>Матрица, составленная из элементов - сумм элементов исходных матриц</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Substract(MathCore.Complex[],MathCore.Complex[])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.subtract(MathCore.Complex[],MathCore.Complex[])">
             <summary>Оператор вычитания между двумя столбцами</summary>
             <param name="a">Столбец уменьшаемого</param>
             <param name="b">Столбец вычитаемого</param>
@@ -6330,14 +6330,14 @@
             <returns>Вектор, составленный из поэлементного частного элементов векторов делимого и делителя</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Substract(MathCore.Complex[0:,0:],MathCore.Complex)">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.subtract(MathCore.Complex[0:,0:],MathCore.Complex)">
             <summary>Оператор вычисления разности двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
             <returns>Массив разности элементов матрицы с числом</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Substract(MathCore.Complex,MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.subtract(MathCore.Complex,MathCore.Complex[0:,0:])">
             <summary>Оператор вычисления разности двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
@@ -6374,7 +6374,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы не равны</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Substract(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.subtract(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
             <summary>Оператор вычисления разности элементов двух матриц</summary>
             <param name="A">Массив элементов первой матрицы</param>
             <param name="B">Массив элементов второй матрицы</param>
@@ -8111,7 +8111,7 @@
             <param name="q">Коэффициенты полинома - первого слагаемого</param>
             <returns>Коэффициенты полинома - суммы</returns>
         </member>
-        <member name="M:MathCore.Polynom.Array.Substract(System.Double[],System.Double[])">
+        <member name="M:MathCore.Polynom.Array.subtract(System.Double[],System.Double[])">
             <summary>Разность полиномов</summary>
             <param name="p">Коэффициенты полинома - первого уменьшаемого</param>
             <param name="q">Коэффициенты полинома - первого вычитаемого</param>
@@ -8136,13 +8136,13 @@
             <param name="x">Вещественное число</param>
             <returns>Коэффициенты полинома - суммы</returns>
         </member>
-        <member name="M:MathCore.Polynom.Array.Substract(System.Double[],System.Double)">
+        <member name="M:MathCore.Polynom.Array.subtract(System.Double[],System.Double)">
             <summary>Вычитание вещественного числа из полинома</summary>
             <param name="p">Коэффициенты полинома</param>
             <param name="x">Вещественное число</param>
             <returns>Коэффициенты полинома - разности</returns>
         </member>
-        <member name="M:MathCore.Polynom.Array.Substract(System.Double,System.Double[])">
+        <member name="M:MathCore.Polynom.Array.subtract(System.Double,System.Double[])">
             <summary>Вычитание полинома из вещественного числа</summary>
             <param name="p">Коэффициенты полинома</param>
             <param name="x">Вещественное число</param>
@@ -10113,20 +10113,20 @@
         <member name="F:MathCore.Vectors.SpaceAngle._AngleType">
             <summary>Тип угла</summary>
         </member>
-        <member name="F:MathCore.Vectors.SpaceAngle._Thetta">
+        <member name="F:MathCore.Vectors.SpaceAngle._Theta">
             <summary>Угол места</summary>
         </member>
         <member name="F:MathCore.Vectors.SpaceAngle._Phi">
             <summary>Угол азимута</summary>
         </member>
-        <member name="P:MathCore.Vectors.SpaceAngle.Thetta">
+        <member name="P:MathCore.Vectors.SpaceAngle.Theta">
             <summary>Угол места</summary>
         </member>
         <member name="P:MathCore.Vectors.SpaceAngle.Phi">
             <summary>Азимутальный угол в плоскости XOY</summary>
         </member>
-        <member name="P:MathCore.Vectors.SpaceAngle.ComplexCosThetta">
-            <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="P:MathCore.Vectors.SpaceAngle.Thetta"/>, мнимой частью - направляющий синус</summary>
+        <member name="P:MathCore.Vectors.SpaceAngle.ComplexCosTheta">
+            <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="P:MathCore.Vectors.SpaceAngle.Theta"/>, мнимой частью - направляющий синус</summary>
         </member>
         <member name="P:MathCore.Vectors.SpaceAngle.ComplexCosPhi">
             <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="P:MathCore.Vectors.SpaceAngle.Phi"/>, мнимой частью - направляющий синус</summary>
@@ -10144,20 +10144,20 @@
         </member>
         <member name="M:MathCore.Vectors.SpaceAngle.#ctor(System.Double,System.Double)">
             <summary>Пространственный угол в радианах</summary>
-            <param name="Thetta">Угол места [рад]</param>
+            <param name="Theta">Угол места [рад]</param>
             <param name="Phi">Азимутальный угол [рад]</param>
         </member>
         <member name="M:MathCore.Vectors.SpaceAngle.#ctor(MathCore.Vectors.SpaceAngle@,MathCore.Vectors.AngleType@)">
             <exception cref="T:System.NotSupportedException">Если AngleType != Deg || Rad - Неизвестный тип угла</exception>
         </member>
-        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiThetta(System.Double,System.Double,MathCore.Vectors.AngleType@)">
+        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiTheta(System.Double,System.Double,MathCore.Vectors.AngleType@)">
             <summary>Повернуть угол в сферической системе координат</summary>
-            <param name="thetta">Угол места поворота локальной системы кординат</param>
+            <param name="theta">Угол места поворота локальной системы кординат</param>
             <param name="phi">Угол азимута поворота локальной системы координат</param>
             <param name="type">Тип значений угловых величин</param>
             <returns>Угол в повёрнутой локальной системе координат</returns>
         </member>
-        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiThetta(MathCore.Vectors.SpaceAngle@)">
+        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiTheta(MathCore.Vectors.SpaceAngle@)">
             <summary>Повернуть угол в сферической системе координат</summary>
             <param name="angle">Пространственный угол поворота локаьлной системы координат</param>
             <returns>Угол в повёрнутой локальной системе координат</returns>
@@ -10260,7 +10260,7 @@
         <member name="P:MathCore.Vectors.Vector3D.Phi">
             <summary>Азимутальный угол</summary>
         </member>
-        <member name="P:MathCore.Vectors.Vector3D.Thetta">
+        <member name="P:MathCore.Vectors.Vector3D.Theta">
             <summary>Угол места</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.Angle">
@@ -13984,13 +13984,13 @@
             <param name="IsFirst">Параметром является первый аргумент функции? (по умолчанию - нет)</param>
             <returns>Функция одного переменного, получанная на основе исходной функции двух переменных устновкой одного в значение указанного параметра</returns>
         </member>
-        <member name="M:System.FuncExtensions.Substract(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.subtract(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Вычитание одной функции из другой g(x) = f1(x) - f2(x)</summary>
             <param name="f1">Функция - уменьшаемое</param>
             <param name="f2">Функция - вычитаемое</param>
             <returns>Функция, значения которой численно равны разности значений двух исходных функций</returns>
         </member>
-        <member name="M:System.FuncExtensions.Substract(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.subtract(System.Func{System.Double,System.Double},System.Double)">
             <summary>Вычитание из вункции числа g(x) = f(x) - a</summary>
             <param name="f">Исходная функция</param>
             <param name="a">вычитаемое из функции число</param>

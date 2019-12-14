@@ -70,7 +70,7 @@ namespace System.Xml.Linq
         //            resultNumeric = (int)dictionary["Numeric"] + (int)((DynamicNumber)arg).dictionary["Numeric"];
         //            break;
 
-        //        // Processing mathematical substraction (a - b).
+        //        // Processing mathematical subtraction (a - b).
         //        case ExpressionType.Subtract:
         //            resultNumeric = (int)dictionary["Numeric"] - (int)((DynamicNumber)arg).dictionary["Numeric"];
         //            break;

@@ -187,13 +187,13 @@ namespace MathCore.Tests.MathParser
             var parser = new ExpressionParser();
             var expr = parser.Parse("-2");
             var root = expr.Tree.Root;
-            Assert.IsTrue(root is SubstractionOperatorNode);
+            Assert.IsTrue(root is subtractionOperatorNode);
             Assert.AreEqual(-2, expr.Compute());
 
             expr = parser.Parse("-2+3");
             root = expr.Tree.Root;
             Assert.IsTrue(root is AdditionOperatorNode);
-            Assert.IsTrue(root.Left is SubstractionOperatorNode);
+            Assert.IsTrue(root.Left is subtractionOperatorNode);
             Assert.IsTrue(root["l"].Left == null);
             Assert.IsTrue(root["l"].Right is ConstValueNode);
             Assert.IsTrue(root.Right is ConstValueNode);
@@ -203,7 +203,7 @@ namespace MathCore.Tests.MathParser
             root = expr.Tree.Root;
             Assert.IsTrue(root is MultiplicationOperatorNode);
             Assert.IsTrue(root.Left is ConstValueNode);
-            Assert.IsTrue(root.Right is SubstractionOperatorNode);
+            Assert.IsTrue(root.Right is subtractionOperatorNode);
             Assert.IsTrue(root["r"].Left == null);
             Assert.IsTrue(root["r"].Right is ConstValueNode);
             Assert.AreEqual(-2, expr.Compute());
@@ -393,7 +393,7 @@ namespace MathCore.Tests.MathParser
             Assert.IsInstanceOfType(root["l/l"], typeof(GreaterThenOperatorNode));
             Assert.IsInstanceOfType(root.Right, typeof(VariantOperatorNode));
             Assert.IsInstanceOfType(root["r/l"], typeof(ConstValueNode));
-            Assert.IsInstanceOfType(root["r/r"], typeof(SubstractionOperatorNode));
+            Assert.IsInstanceOfType(root["r/r"], typeof(subtractionOperatorNode));
             Assert.IsInstanceOfType(root["r/r/r"], typeof(ConstValueNode));
             Assert.AreEqual(7, expr.Compute(4));
             Assert.AreEqual(-8, expr.Compute(2));
@@ -617,8 +617,8 @@ namespace MathCore.Tests.MathParser
             Assert.AreEqual(4, var_collection.GetTreeNodesVOf<ExpressionVariabel>(v => v.Name == "x").Count());
             Assert.AreEqual(4, var_collection.GetTreeNodesVOf<LamdaExpressionVariable>(v => v.Name == "x").Count());
             Assert.AreEqual(2, var_collection.GetTreeNodesVOf<ExpressionVariabel>(v => v.Name == "y").Count());
-            Assert.AreEqual(3, var_collection.GetTreeNodesOf<ExpressionVariabel>(vn => vn.Parent?.Parent is SubstractionOperatorNode).Count());
-            Assert.AreEqual(1, var_collection.GetTreeNodesOf<LamdaExpressionVariable>(vn => vn.Parent?.Parent is SubstractionOperatorNode).Count());
+            Assert.AreEqual(3, var_collection.GetTreeNodesOf<ExpressionVariabel>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
+            Assert.AreEqual(1, var_collection.GetTreeNodesOf<LamdaExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
         }
 
         /// <summary>Тестирование коллекции констант</summary>
@@ -703,7 +703,7 @@ namespace MathCore.Tests.MathParser
             Assert.AreEqual("cos", node.Name);
             Assert.AreEqual(1, node.ArgumentsNames.Length);
             root = node.Arguments.First().Value;
-            Assert.IsTrue(root is SubstractionOperatorNode);
+            Assert.IsTrue(root is subtractionOperatorNode);
 
             expr = parser.Parse("2log(3,e)");
             root = expr.Tree.Root;
@@ -858,14 +858,14 @@ namespace MathCore.Tests.MathParser
 
         /// <summary>Тестирование оператора вычитания двух выражений</summary>
         [TestMethod, Description("Тестирование оператора вычитания двух выражений")]
-        public void MathExpression_Operator_Substraction_SimpleTest()
+        public void MathExpression_Operator_subtraction_SimpleTest()
         {
             var parser = new ExpressionParser();
             var A = parser.Parse("5");
             var B = parser.Parse("7");
             var C = A - B;
             var tree = C.Tree;
-            Assert.IsInstanceOfType(tree.Root, typeof(SubstractionOperatorNode));
+            Assert.IsInstanceOfType(tree.Root, typeof(subtractionOperatorNode));
             Assert.IsInstanceOfType(tree.Root.Left, typeof(ConstValueNode));
             Assert.IsInstanceOfType(tree.Root.Right, typeof(ConstValueNode));
             Assert.AreEqual(5, ((ConstValueNode)tree.Root.Left).Value);

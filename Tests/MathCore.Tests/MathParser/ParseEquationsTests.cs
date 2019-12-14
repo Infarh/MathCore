@@ -155,7 +155,7 @@ namespace MathCore.Tests.MathParser
             AreEqual(AdditionOperatorNode.NodeName, ((AdditionOperatorNode)root).Name);
             IsNotNull(root.Left); IsNotNull(root.Right);
             IsInstanceOfType(root.Left, typeof(DivisionOperatorNode));
-            IsInstanceOfType(root.Right, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(root.Right, typeof(subtractionOperatorNode));
 
             var node = root.Left;
             IsFalse(node.IsRoot); AreEqual(1, node.Depth);
@@ -257,7 +257,7 @@ namespace MathCore.Tests.MathParser
 
             node = node.Root.Right;
             IsNotNull(node);
-            IsInstanceOfType(node, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node, typeof(subtractionOperatorNode));
             IsNotNull(node.Left); IsNotNull(node.Right);
             IsInstanceOfType(node.Left, typeof(VariableValueNode));
             IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
@@ -305,7 +305,7 @@ namespace MathCore.Tests.MathParser
             IsFalse(node.IsRoot); AreEqual(5, node.Depth);
             IsNotNull(node.Left); IsNotNull(node.Right);
             IsInstanceOfType(node.Left, typeof(StringNode));
-            IsInstanceOfType(node.Right, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node.Right, typeof(subtractionOperatorNode));
 
             node = node.Left;
             IsFalse(node.IsRoot); AreEqual(6, node.Depth);
@@ -315,9 +315,9 @@ namespace MathCore.Tests.MathParser
             node = node.Parent?.Right;
             IsNotNull(node);
             IsFalse(node.IsRoot); AreEqual(6, node.Depth);
-            IsInstanceOfType(node, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node, typeof(subtractionOperatorNode));
             IsNotNull(node.Left); IsNotNull(node.Right);
-            IsInstanceOfType(node.Left, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node.Left, typeof(subtractionOperatorNode));
             IsInstanceOfType(node.Right, typeof(ConstValueNode));
 
             node = node.Right;
@@ -328,7 +328,7 @@ namespace MathCore.Tests.MathParser
             node = node.Parent?.Left;
             IsNotNull(node);
             IsFalse(node.IsRoot); AreEqual(7, node.Depth);
-            IsInstanceOfType(node, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node, typeof(subtractionOperatorNode));
             IsNull(node.Left); IsNotNull(node.Right);
             IsInstanceOfType(node.Right, typeof(MultiplicationOperatorNode));
 
@@ -378,7 +378,7 @@ namespace MathCore.Tests.MathParser
             node = node.Left;
             IsFalse(node.IsRoot); AreEqual(11, node.Depth);
             IsNotNull(node.Left); IsNotNull(node.Right);
-            IsInstanceOfType(node.Left, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node.Left, typeof(subtractionOperatorNode));
             IsInstanceOfType(node.Right, typeof(ConstValueNode));
 
             node = node.Left;
@@ -470,7 +470,7 @@ namespace MathCore.Tests.MathParser
             IsFalse(node.IsRoot); AreEqual(16, node.Depth);
             IsNotNull(node.Left); IsNotNull(node.Right);
             IsInstanceOfType(node.Left, typeof(VariableValueNode));
-            IsInstanceOfType(node.Right, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node.Right, typeof(subtractionOperatorNode));
 
             node = node.Left;
             IsFalse(node.IsRoot); AreEqual(17, node.Depth);
@@ -480,7 +480,7 @@ namespace MathCore.Tests.MathParser
             node = node["./r"];
             IsNotNull(node);
             IsFalse(node.IsRoot); AreEqual(17, node.Depth);
-            IsInstanceOfType(node, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node, typeof(subtractionOperatorNode));
             IsNull(node.Left); IsNotNull(node.Right);
             IsInstanceOfType(node.Right, typeof(VariableValueNode));
 
@@ -552,7 +552,7 @@ namespace MathCore.Tests.MathParser
             AreEqual("x", ((FunctionArgumentNameNode)node).ArgumentName);
             AreEqual(node.Right, ((FunctionArgumentNameNode)node).ArgumentNode);
             IsInstanceOfType(node.Left, typeof(StringNode));
-            IsInstanceOfType(node.Right, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node.Right, typeof(subtractionOperatorNode));
 
             node = node.Left;
             IsFalse(node.IsRoot); AreEqual(16, node.Depth);
@@ -561,7 +561,7 @@ namespace MathCore.Tests.MathParser
 
             node = node["./r"];
             IsNotNull(node);
-            IsInstanceOfType(node, typeof(SubstractionOperatorNode));
+            IsInstanceOfType(node, typeof(subtractionOperatorNode));
             IsFalse(node.IsRoot); AreEqual(16, node.Depth);
             IsNotNull(node.Left); IsNotNull(node.Right);
             IsInstanceOfType(node.Left, typeof(ConstValueNode));

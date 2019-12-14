@@ -37,7 +37,7 @@ namespace MathCore
         /// <param name="P">Уменьшаемое</param>
         /// <param name="Q">Вычитаемое</param>
         /// <returns>Разность</returns>
-        [NotNull] public static Polynom operator -([NotNull] Polynom P, [NotNull] Polynom Q) => new Polynom(Array.Substract(P._a, Q._a));
+        [NotNull] public static Polynom operator -([NotNull] Polynom P, [NotNull] Polynom Q) => new Polynom(Array.subtract(P._a, Q._a));
 
         [NotNull]
         public static Polynom operator *([NotNull] Polynom P, [NotNull] Polynom Q) => new Polynom(Array.Multiply(P._a, Q._a));

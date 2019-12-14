@@ -378,7 +378,7 @@ namespace MathCore
 
         /// <summary>Оператор разности матрицы и числа</summary>
         /// <returns>Матрица, элементы которой равны разности элементов исходной матрицы и числа</returns>
-        [DST, NotNull] public static Matrix operator -([NotNull] Matrix M, double x) => new Matrix(Substract(M._Data, x));
+        [DST, NotNull] public static Matrix operator -([NotNull] Matrix M, double x) => new Matrix(subtract(M._Data, x));
 
         /// <summary>Оператор отрицания элементов матрицы</summary>
         /// <returns>Матрица, элементы которой являются отрицательными по отношению к элементам исходной матрицы</returns>
@@ -386,7 +386,7 @@ namespace MathCore
 
         /// <summary>Оператор разности числа и матрицы</summary>
         /// <returns>Матрица, элементы которой равны разности числа и элементов исходной матрицы</returns>
-        [DST, NotNull] public static Matrix operator -(double x, [NotNull] Matrix M) => new Matrix(Substract(x, M._Data));
+        [DST, NotNull] public static Matrix operator -(double x, [NotNull] Matrix M) => new Matrix(subtract(x, M._Data));
 
         /// <summary>Оператор произведения матрицы и числа</summary>
         /// <returns>Матрица, элементы которой равны произведения элементов исходной матрицы и числа</returns>
@@ -451,7 +451,7 @@ namespace MathCore
 
         /// <summary>Оператор разности двух матриц</summary>
         /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static Matrix operator -([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Substract(A._Data, B._Data));
+        [DST, NotNull] public static Matrix operator -([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(subtract(A._Data, B._Data));
 
         /// <summary>Оператор произведения двух матриц</summary>
         /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>

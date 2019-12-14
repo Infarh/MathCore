@@ -341,7 +341,7 @@ namespace MathCore.MathParser
         /// <param name="y">Вычитаемое</param>
         /// <returns>Выражение-разность, корень которого - узел разности. Поддеревья - корни выражений вычитаемого и уменьшаемого</returns>
         [NotNull]
-        public static MathExpression operator -([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new SubstractionOperatorNode());
+        public static MathExpression operator -([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new subtractionOperatorNode());
 
         /// <summary>Оператор умножения двух выражений</summary>
         /// <param name="x">Первый сомножитель</param>

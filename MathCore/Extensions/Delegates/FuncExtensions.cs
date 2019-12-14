@@ -1010,14 +1010,14 @@ namespace System
         /// <param name="f2">Функция - вычитаемое</param>
         /// <returns>Функция, значения которой численно равны разности значений двух исходных функций</returns>
         [NotNull]
-        public static Function Substract([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) - f2(x);
+        public static Function subtract([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) - f2(x);
 
         /// <summary>Вычитание из вункции числа g(x) = f(x) - a</summary>
         /// <param name="f">Исходная функция</param>
         /// <param name="a">вычитаемое из функции число</param>
         /// <returns>Функция, значения которой численно равны разности значений исходной функции и указанного числа</returns>
         [NotNull]
-        public static Function Substract([NotNull] this Function f, double a) => a.Equals(0d) ? f : x => f(x) - a;
+        public static Function subtract([NotNull] this Function f, double a) => a.Equals(0d) ? f : x => f(x) - a;
 
         ///<summary>Вычислить значения функции параллельно</summary>
         ///<param name="f">Вычисляемая функция</param>

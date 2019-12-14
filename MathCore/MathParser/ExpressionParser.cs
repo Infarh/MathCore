@@ -366,7 +366,7 @@ namespace MathCore.MathParser
             Name switch
             {
                 '+' => (ExpressionTreeNode)new AdditionOperatorNode(),
-                '-' => new SubstractionOperatorNode(),
+                '-' => new subtractionOperatorNode(),
                 '*' => new MultiplicationOperatorNode(),
                 '×' => new MultiplicationOperatorNode(),
                 '·' => new MultiplicationOperatorNode(),

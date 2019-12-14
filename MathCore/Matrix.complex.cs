@@ -358,11 +358,11 @@ namespace MathCore
 
         [DST, NotNull] public static MatrixComplex operator +(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Add(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Substract(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(subtract(M._Data, x));
 
         [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M) => new MatrixComplex(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
 
-        [DST, NotNull] public static MatrixComplex operator -(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Substract(x, M._Data));
+        [DST, NotNull] public static MatrixComplex operator -(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(subtract(x, M._Data));
 
         [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Multiply(M._Data, x));
 
@@ -407,7 +407,7 @@ namespace MathCore
 
         /// <summary>Оператор разности двух матриц</summary>
         /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Substract(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(subtract(A._Data, B._Data));
 
         /// <summary>Оператор произведения двух матриц</summary>
         /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>
