@@ -2015,7 +2015,7 @@ namespace MathCore
                 }
 
                 /// <summary>Поэлементное сложение двух матриц</summary>
-                /// <param name="a">Матрица - первое слогаемое</param>
+                /// <param name="a">Матрица - первое слагаемое</param>
                 /// <param name="b">Матрица - второе слагаемое</param>
                 /// <returns>Матрица, составленная из элементов - сумм элементов исходных матриц</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>

@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <IsPackable>true</IsPackable>
         <LangVersion>8</LangVersion>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <Version>0.0.12</Version>
         <Authors>Shmachilin P.A.</Authors>
         <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>

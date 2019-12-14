@@ -446,7 +446,7 @@ namespace MathCore
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Сумма двух матриц</returns>
+        /// <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Сумма двух матриц</returns>
         [DST, NotNull] public static Matrix operator +([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Add(A._Data, B._Data));
 
         /// <summary>Оператор разности двух матриц</summary>
@@ -462,7 +462,7 @@ namespace MathCore
         [DST, NotNull] public static Matrix operator /([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Divade(A._Data, B._Data));
 
         /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Объединённая матрица</returns>
+        /// <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
         [DST, NotNull] public static Matrix operator |([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Concatinate(A._Data, B._Data));
 
         /* -------------------------------------------------------------------------------------------- */

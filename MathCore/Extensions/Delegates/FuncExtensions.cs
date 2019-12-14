@@ -328,8 +328,8 @@ namespace System
         public static Function Add([NotNull] this Function f, double a) => a.Equals(0) ? f : x => f(x) + a;
 
         /// <summary>Сложение двух функций g(x) = f1(x) + f2(x)</summary>
-        /// <param name="f1">Функция - первое слогаемое</param>
-        /// <param name="f2">Функция - второе слогаемое</param>
+        /// <param name="f1">Функция - первое слагаемое</param>
+        /// <param name="f2">Функция - второе слагаемое</param>
         /// <returns>Функция, значения которой равны сумме значений двух исходных функций</returns>
         [NotNull]
         public static Function Add([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) + f2(x);
@@ -1083,8 +1083,8 @@ namespace System
 
         /// <summary>Делегат функции сложения двух векторов</summary>
         /// <param name="C">Вектор результата сложения</param>
-        /// <param name="B">Вектор первого слогаемого</param>
-        /// <param name="A">Вектор второго слогаемого</param>
+        /// <param name="B">Вектор первого слагаемого</param>
+        /// <param name="A">Вектор второго слагаемого</param>
         /// <param name="length">Длина векторов</param>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void VectorAddDelegate(float[] C, float[] B, float[] A, int length);

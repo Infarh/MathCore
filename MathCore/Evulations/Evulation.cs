@@ -33,8 +33,8 @@ namespace MathCore.Evulations
         public static implicit operator T(Evulation<T> evulation) => evulation.GetValue();
 
         /// <summary>Оператор сложения двух вычислений</summary>
-        /// <param name="x">Первое слогаемое</param>
-        /// <param name="y">Второе слогаемое</param>
+        /// <param name="x">Первое слагаемое</param>
+        /// <param name="y">Второе слагаемое</param>
         /// <returns>Вычисление суммы двух вычислений</returns>
         public static AdditionEvulation<T> operator +(Evulation<T> x, Evulation<T> y) => new AdditionEvulation<T>(x, y);
 

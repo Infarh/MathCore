@@ -579,8 +579,8 @@
         </member>
         <member name="M:MathCore.Complex.op_Addition(MathCore.Complex@,MathCore.Complex@)">
             <summary>Оператор сложения</summary>
-            <param name="X">Первое слогаемое</param>
-            <param name="Y">Второе слогаемое</param>
+            <param name="X">Первое слагаемое</param>
+            <param name="Y">Второе слагаемое</param>
             <returns>Сумма комплексных чисел</returns>
         </member>
         <member name="M:MathCore.Complex.op_Subtraction(MathCore.Complex@,MathCore.Complex@)">
@@ -591,8 +591,8 @@
         </member>
         <member name="M:MathCore.Complex.op_Addition(System.Double,MathCore.Complex@)">
             <summary>Оператор сложения</summary>
-            <param name="X">Первое слогаемое</param>
-            <param name="Y">Второе слогаемое</param>
+            <param name="X">Первое слагаемое</param>
+            <param name="Y">Второе слагаемое</param>
             <returns>Сумма комплексных чисел</returns>
         </member>
         <member name="M:MathCore.Complex.op_Addition(System.Int32,MathCore.Complex@)">
@@ -627,8 +627,8 @@
         </member>
         <member name="M:MathCore.Complex.op_Addition(MathCore.Complex@,System.Double)">
             <summary>Оператор сложения</summary>
-            <param name="X">Первое слогаемое</param>
-            <param name="Y">Второе слогаемое</param>
+            <param name="X">Первое слагаемое</param>
+            <param name="Y">Второе слагаемое</param>
             <returns>Сумма комплексных чисел</returns>
         </member>
         <member name="M:MathCore.Complex.op_Addition(MathCore.Complex@,System.Int32)">
@@ -1278,8 +1278,8 @@
         </member>
         <member name="M:MathCore.Evulations.AdditionEvulation`1.#ctor(MathCore.Evulations.Evulation{`0},MathCore.Evulations.Evulation{`0})">
             <summary>Инициализация нового вычисления суммы двух вычислений</summary>
-            <param name="a">Вычисление первого слогаемого</param>
-            <param name="b">Вычисление второго слогаемого</param>
+            <param name="a">Вычисление первого слагаемого</param>
+            <param name="b">Вычисление второго слагаемого</param>
         </member>
         <member name="T:MathCore.Evulations.BinaryFunctionOperationEvulation`1">
             <summary>Вычисление бинарной опирации между двумя вычислениями</summary>
@@ -1408,8 +1408,8 @@
         </member>
         <member name="M:MathCore.Evulations.Evulation`1.op_Addition(MathCore.Evulations.Evulation{`0},MathCore.Evulations.Evulation{`0})">
             <summary>Оператор сложения двух вычислений</summary>
-            <param name="x">Первое слогаемое</param>
-            <param name="y">Второе слогаемое</param>
+            <param name="x">Первое слагаемое</param>
+            <param name="y">Второе слагаемое</param>
             <returns>Вычисление суммы двух вычислений</returns>
         </member>
         <member name="M:MathCore.Evulations.Evulation`1.op_Subtraction(MathCore.Evulations.Evulation{`0},MathCore.Evulations.Evulation{`0})">
@@ -2846,7 +2846,7 @@
             <summary>Значение свойства</summary>
         </member>
         <member name="M:MathCore.LambdaProperty`1.#ctor(System.Func{`0},System.Action{`0})">
-            <summary>Новое лямда свойство</summary>
+            <summary>Новое лямбда свойство</summary>
             <param name="GetMethod">Метод чтения значения</param>
             <param name="SetMethod">Метод записи значения</param>
         </member>
@@ -2861,7 +2861,7 @@
             <filterpriority>2</filterpriority>
         </member>
         <member name="T:MathCore.LambdaToString">
-            <summary>Форматтер строки с помощью лямда-выражения</summary>
+            <summary>Форматтер строки с помощью лямбда-выражения</summary>
         </member>
         <member name="M:MathCore.LambdaToString.#ctor(System.Func{System.String})">
             <summary>Новый ламбда-форматтер</summary>
@@ -4610,8 +4610,8 @@
             <returns>Скомпилированное выражение <see cref="N:System.Linq.Expressions"/></returns>
         </member>
         <member name="T:MathCore.MathParser.LamdaExpressionVariable">
-            <summary>Лямда-переменная</summary>
-            <remarks>Значение переменной - результат вычисления лямда-функции</remarks>
+            <summary>лямбда-переменная</summary>
+            <remarks>Значение переменной - результат вычисления лямбда-функции</remarks>
         </member>
         <member name="F:MathCore.MathParser.LamdaExpressionVariable._Value">
             <summary>Функция вычисления значения переменной</summary>
@@ -4620,13 +4620,13 @@
             <summary>Признак отсутствия возможности предвычисления значения</summary>
         </member>
         <member name="M:MathCore.MathParser.LamdaExpressionVariable.#ctor(System.Func{System.Double})">
-            <summary>Инициализация нового экземпляра лямда-переменной</summary>
-            <param name="Source">Лямда-функция получения значения переменной</param>
+            <summary>Инициализация нового экземпляра лямбда-переменной</summary>
+            <param name="Source">лямбда-функция получения значения переменной</param>
         </member>
         <member name="M:MathCore.MathParser.LamdaExpressionVariable.#ctor(System.String,System.Func{System.Double})">
-            <summary>Инициализация нового экземпляра лямда-переменной</summary>
+            <summary>Инициализация нового экземпляра лямбда-переменной</summary>
             <param name="Name">Имя переменной</param>
-            <param name="Source">Лямда-функция получения значения переменной</param>
+            <param name="Source">лямбда-функция получения значения переменной</param>
         </member>
         <member name="M:MathCore.MathParser.LamdaExpressionVariable.GetValue">
             <summary>Получить значение переменной</summary>
@@ -4634,7 +4634,7 @@
         </member>
         <member name="M:MathCore.MathParser.LamdaExpressionVariable.Clone">
             <summary>Клонировать переменную</summary>
-            <returns>Новый экземпляр лямда-переменной с тем же именем и клоном функции</returns>
+            <returns>Новый экземпляр лямбда-переменной с тем же именем и клоном функции</returns>
         </member>
         <member name="T:MathCore.MathParser.MathExpression">
             <summary>Математическое выражение</summary>
@@ -4781,9 +4781,9 @@
         </member>
         <member name="M:MathCore.MathParser.MathExpression.op_Addition(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
             <summary>Оператор сложения двух выражений</summary>
-            <param name="x">Первое слогаемое</param>
-            <param name="y">Второе слогаемое</param>
-            <returns>Выражение-сумма, корень которого - узел суммы. Поддеревья - корни выражений слогаемых</returns>
+            <param name="x">Первое слагаемое</param>
+            <param name="y">Второе слагаемое</param>
+            <returns>Выражение-сумма, корень которого - узел суммы. Поддеревья - корни выражений слагаемых</returns>
         </member>
         <member name="M:MathCore.MathParser.MathExpression.op_Subtraction(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
             <summary>Оператор вычитания двух выражений</summary>
@@ -5698,7 +5698,7 @@
         </member>
         <member name="M:MathCore.Matrix.Array.Operator.Add(System.Double[],System.Double[])">
             <summary>Поэлементное сложение двух матриц</summary>
-            <param name="a">Матрица - первое слогаемое</param>
+            <param name="a">Матрица - первое слагаемое</param>
             <param name="b">Матрица - второе слагаемое</param>
             <returns>Матрица, составленная из элементов - сумм элементов исходных матриц</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
@@ -6179,7 +6179,7 @@
         </member>
         <member name="M:MathCore.Matrix.op_Addition(MathCore.Matrix,MathCore.Matrix)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Сумма двух матриц</returns>
+            <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Сумма двух матриц</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Subtraction(MathCore.Matrix,MathCore.Matrix)">
             <summary>Оператор разности двух матриц</summary>
@@ -6195,7 +6195,7 @@
         </member>
         <member name="M:MathCore.Matrix.op_BitwiseOr(MathCore.Matrix,MathCore.Matrix)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Объединённая матрица</returns>
+            <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Implicit(System.Double)~MathCore.Matrix">
             <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
@@ -6302,7 +6302,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Operator.Add(MathCore.Complex[],MathCore.Complex[])">
             <summary>Поэлементное сложение двух матриц</summary>
-            <param name="a">Матрица - первое слогаемое</param>
+            <param name="a">Матрица - первое слагаемое</param>
             <param name="b">Матрица - второе слагаемое</param>
             <returns>Матрица, составленная из элементов - сумм элементов исходных матриц</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
@@ -7221,7 +7221,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.op_Addition(MathCore.MatrixComplex,MathCore.MatrixComplex)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Сумма двух матриц</returns>
+            <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Сумма двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.op_Subtraction(MathCore.MatrixComplex,MathCore.MatrixComplex)">
             <summary>Оператор разности двух матриц</summary>
@@ -7237,7 +7237,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.op_BitwiseOr(MathCore.MatrixComplex,MathCore.MatrixComplex)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param><param name="B">Второе слогаемое</param><returns>Объединённая матрица</returns>
+            <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.op_Implicit(MathCore.Complex)~MathCore.MatrixComplex">
             <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
@@ -7406,8 +7406,8 @@
         </member>
         <member name="M:MathCore.MatrixDecimal.op_Addition(MathCore.MatrixDecimal,MathCore.MatrixDecimal)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Сумма двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixDecimal.op_Subtraction(MathCore.MatrixDecimal,MathCore.MatrixDecimal)">
@@ -7430,8 +7430,8 @@
         </member>
         <member name="M:MathCore.MatrixDecimal.op_BitwiseOr(MathCore.MatrixDecimal,MathCore.MatrixDecimal)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixDecimal.op_Implicit(System.Decimal)~MathCore.MatrixDecimal">
@@ -7589,8 +7589,8 @@
         </member>
         <member name="M:MathCore.MatrixFloat.op_Addition(MathCore.MatrixFloat,MathCore.MatrixFloat)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Сумма двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixFloat.op_Subtraction(MathCore.MatrixFloat,MathCore.MatrixFloat)">
@@ -7613,8 +7613,8 @@
         </member>
         <member name="M:MathCore.MatrixFloat.op_BitwiseOr(MathCore.MatrixFloat,MathCore.MatrixFloat)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixFloat.op_Implicit(System.Single)~MathCore.MatrixFloat">
@@ -7755,8 +7755,8 @@
         </member>
         <member name="M:MathCore.MatrixInt.op_Addition(MathCore.MatrixInt,MathCore.MatrixInt)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Сумма двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixInt.op_Subtraction(MathCore.MatrixInt,MathCore.MatrixInt)">
@@ -7779,8 +7779,8 @@
         </member>
         <member name="M:MathCore.MatrixInt.op_BitwiseOr(MathCore.MatrixInt,MathCore.MatrixInt)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixInt.op_Implicit(System.Int32)~MathCore.MatrixInt">
@@ -7930,8 +7930,8 @@
         </member>
         <member name="M:MathCore.MatrixLong.op_Addition(MathCore.MatrixLong,MathCore.MatrixLong)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Сумма двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixLong.op_Subtraction(MathCore.MatrixLong,MathCore.MatrixLong)">
@@ -7954,8 +7954,8 @@
         </member>
         <member name="M:MathCore.MatrixLong.op_BitwiseOr(MathCore.MatrixLong,MathCore.MatrixLong)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixLong.op_Implicit(System.Int64)~MathCore.MatrixLong">
@@ -11348,8 +11348,8 @@
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_Addition(System.Linq.Expressions.ExpressionMatrix,System.Linq.Expressions.ExpressionMatrix)">
             <summary>Оператор сложения двух матриц</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Сумма двух матриц</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_Subtraction(System.Linq.Expressions.ExpressionMatrix,System.Linq.Expressions.ExpressionMatrix)">
@@ -11372,8 +11372,8 @@
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_BitwiseOr(System.Linq.Expressions.ExpressionMatrix,System.Linq.Expressions.ExpressionMatrix)">
             <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-            <param name="A">Первое слогаемое</param>
-            <param name="B">Второе слогаемое</param>
+            <param name="A">Первое слагаемое</param>
+            <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_Implicit(System.Linq.Expressions.Expression)~System.Linq.Expressions.ExpressionMatrix">
@@ -11430,7 +11430,7 @@
             <summary>Событие возникает при посещении коллекции выражений</summary>
         </member>
         <member name="E:System.Linq.Expressions.ExpressionRebuilder.LambdaVisited">
-            <summary>Событие возникает при посещении лямда-выражения</summary>
+            <summary>Событие возникает при посещении лямбда-выражения</summary>
         </member>
         <member name="E:System.Linq.Expressions.ExpressionRebuilder.ListInitVisited">
             <summary>Событие возникает при посещении узла инициализатора коллекции</summary>
@@ -12286,7 +12286,7 @@
             <summary>Метод генерации события сброса последовательности</summary>
         </member>
         <member name="T:System.Linq.Reactive.LamdaObservable`1">
-            <summary>НАблюдаемый объект с методами обработки событий, задаваемыми лямда-синтексисом</summary>
+            <summary>НАблюдаемый объект с методами обработки событий, задаваемыми лямбда-синтексисом</summary>
             <typeparam name="T"></typeparam>
         </member>
         <member name="F:System.Linq.Reactive.LamdaObservable`1._Observer">
@@ -13668,8 +13668,8 @@
         </member>
         <member name="M:System.FuncExtensions.Add(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Сложение двух функций g(x) = f1(x) + f2(x)</summary>
-            <param name="f1">Функция - первое слогаемое</param>
-            <param name="f2">Функция - второе слогаемое</param>
+            <param name="f1">Функция - первое слагаемое</param>
+            <param name="f2">Функция - второе слагаемое</param>
             <returns>Функция, значения которой равны сумме значений двух исходных функций</returns>
         </member>
         <member name="M:System.FuncExtensions.ArgumentReverse(System.Func{System.Double,System.Double})">
@@ -14039,8 +14039,8 @@
         <member name="T:System.FuncExtensions.VectorAddDelegate">
             <summary>Делегат функции сложения двух векторов</summary>
             <param name="C">Вектор результата сложения</param>
-            <param name="B">Вектор первого слогаемого</param>
-            <param name="A">Вектор второго слогаемого</param>
+            <param name="B">Вектор первого слагаемого</param>
+            <param name="A">Вектор второго слагаемого</param>
             <param name="length">Длина векторов</param>
         </member>
         <member name="M:System.FuncExtensions.CreateFastFloatSummator">

@@ -461,7 +461,7 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static bEx IsIsRefEqual<T>([NotNull] this Ex left, T right) => ReferenceNotEqual(left, right.ToExpression());
 
         [NotNull] public static Ex Condition([NotNull] this Ex Condition, [NotNull] Ex Then, [NotNull] Ex Else) => Ex.Condition(Condition, Then, Else);
-        [NotNull] public static Ex Condition<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then.ToExpression(), Else.ToExpression());
+        [NotNull] public static Ex ConditionWithResult<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then.ToExpression(), Else.ToExpression());
 
         [NotNull] public static Ex ToNewExpression([NotNull] this Type type) => New(type.GetConstructor(Type.EmptyTypes));
 

@@ -2,7 +2,7 @@ using MathCore.Annotations;
 
 namespace System.Linq.Reactive
 {
-    /// <summary>НАблюдаемый объект с методами обработки событий, задаваемыми лямда-синтексисом</summary>
+    /// <summary>НАблюдаемый объект с методами обработки событий, задаваемыми лямбда-синтексисом</summary>
     /// <typeparam name="T"></typeparam>
     public class LamdaObservable<T> : SimpleObservableEx<T>
     {
