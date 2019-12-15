@@ -140,7 +140,7 @@ namespace MathCore.Monades
         {
             internal WorkSuccessFunction([NotNull] Func<T> function, [CanBeNull] Work BaseWork) : base(function, BaseWork) { }
 
-            protected override void ExecuteWork() { if (_BaseWork?.Failure != false) base.ExecuteWork(); }
+            protected override void ExecuteWork() { if (_BaseWork?.Success ?? true) base.ExecuteWork(); }
         }
 
         [NotNull] public Work<T> IfFailure<T>([NotNull] Func<T> function) => new WorkFailureFunction<T>(function, this);
@@ -148,7 +148,7 @@ namespace MathCore.Monades
         {
             internal WorkFailureFunction([NotNull] Func<T> function, Work BaseWork) : base(function, BaseWork) { }
 
-            protected override void ExecuteWork() { if (_BaseWork?.Success != true) base.ExecuteWork(); }
+            protected override void ExecuteWork() { if (_BaseWork?.Failure ?? true) base.ExecuteWork(); }
         } 
 
         #endregion
