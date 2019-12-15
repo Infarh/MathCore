@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using MathCore.Monades;
+using MathCore.Monades.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
-namespace MathCore.Tests.Monades
+namespace MathCore.Tests.Monades.WorkFlow
 {
     [TestClass]
     public partial class WorkTests

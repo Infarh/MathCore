@@ -3,14 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MathCore.Monades;
-using Microsoft.VisualBasic;
+using MathCore.Monades.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
 
-
-namespace MathCore.Tests.Monades
+namespace MathCore.Tests.Monades.WorkFlow
 {
     public partial class WorkTests
     {
