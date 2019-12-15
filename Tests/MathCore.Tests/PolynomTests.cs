@@ -65,22 +65,16 @@ namespace MathCore.Tests
             p = new Polynom(A);
             var X = GetRNDDoubleArray(GetRNDInt(5, 15));
 
-            double P1(double x)
+            double P(double x)
             {
-                var P = 0.0;
+                var result = 0.0;
                 for (var i = 0; i < N; i++)
-                    P += A[i] * Math.Pow(x, i);
-                return P;
+                    result += A[i] * Math.Pow(x, i);
+                return result;
             }
 
-            foreach (var x in X)
-            {
-                var actual = p.Value(x);
-                var expected = P1(x);
-                Assert.AreEqual(expected, actual, 1e-15,
-                    "Разница между полученным {0} и ожидаемым {1} значениями полинома привысила 1e-15",
-                    actual, expected);
-            }
+            foreach (var x in X) 
+                Assert.That.Value(p.Value(x)).IsEqual(P(x), 2.0e-15);
         }
 
         /// <summary>Тест клонирования</summary>
@@ -138,10 +132,7 @@ namespace MathCore.Tests
             Assert.IsFalse(P.Equals((object)Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
         }
 
-        public Polynom GetRandomPolynom(int Power = -1)
-        {
-            return new Polynom(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
-        }
+        public Polynom GetRandomPolynom(int Power = -1) => new Polynom(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
 
         /// <summary>Тест оператора сложения полиномов</summary>
         [TestMethod]
