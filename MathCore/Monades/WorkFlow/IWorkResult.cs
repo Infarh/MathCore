@@ -13,4 +13,9 @@ namespace MathCore.Monades.WorkFlow
     {
         T Result { get; }
     }
+
+    public interface IWorkResult<out TParameter, out T> : IWorkResult<T>
+    {
+        TParameter Parameter { get; }
+    }
 }
