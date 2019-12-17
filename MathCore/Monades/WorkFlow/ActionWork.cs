@@ -1,4 +1,5 @@
 ﻿using System;
+
 using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
 using INN = MathCore.Annotations.ItemNotNullAttribute;
