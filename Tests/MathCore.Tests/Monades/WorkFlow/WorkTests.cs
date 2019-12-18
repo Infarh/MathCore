@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using MathCore.Monades.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,158 +10,197 @@ namespace MathCore.Tests.Monades.WorkFlow
     [TestClass]
     public partial class WorkTests
     {
-        private static (List<string> Messages, Action<string> AddMethod) CreateMessagesStorage()
+        [TestMethod]
+        public void Work_With_ReturnValue()
         {
-            var messages = new List<string>();
-            void AddMessage(string msg) => messages.Add(msg ?? throw new ArgumentNullException(nameof(msg)));
-            return (messages, AddMessage);
+            const string expected_string = "Hello World!";
+
+            var work_result = Work.With(expected_string).Execute();
+
+            Assert.That.Value(work_result)
+               .Is<WorkResult<string>>()
+               .Where(Result => Result.Result).Check(value => value.IsEqual(expected_string))
+               .Where(Result => Result.Error).Check(value => value.IsNull())
+               .Where(Result => Result.Success).Check(value => value.IsTrue())
+               .Where(Result => Result.Failure).Check(value => value.IsFalse());
         }
 
-        //[TestMethod]
-        //public void SingleActionSuccessWork()
-        //{
-        //    var (messages, add_message) = CreateMessagesStorage();
+        [TestMethod]
+        public void Work_Begin_Action_Success()
+        {
+            var executed = false;
+            void WorkMethod() => executed = true;
 
-        //    const string first_message = "Hello World!";
-        //    var work = Work.Begin(() => add_message(first_message));
+            var work_result = Work.Begin(WorkMethod).Execute();
 
-        //    CollectionAssert.That.Collection(messages).NotContains(first_message);
+            Assert.That.Value(executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Is<WorkResult>()
+               .Where(Result => Result.Error).Check(value => value.IsNull())
+               .Where(Result => Result.Success).Check(value => value.IsTrue())
+               .Where(Result => Result.Failure).Check(value => value.IsFalse());
+        }
 
-        //    Assert.IsFalse(work.Executed);
-        //    work.Execute();
-        //    Assert.IsTrue(work.Executed);
+        [TestMethod]
+        public void Work_Begin_Action_Failure()
+        {
+            var executed = false;
+            const string exception_message = "Test exception message";
+            void WorkMethod()
+            {
+                executed = true;
+                throw new ApplicationException(exception_message);
+            }
 
-        //    CollectionAssert.That.Collection(messages).Contains(first_message);
-        //    Assert.IsTrue(work.Success);
-        //    Assert.IsFalse(work.Failure);
-        //}
+            var work_result = Work.Begin(WorkMethod).Execute();
 
-        //[TestMethod]
-        //public void SingleFunctionSuccessWork()
-        //{
-        //    const string first_message = "Hello World!";
-        //    var work = Work.Begin(() => first_message);
+            Assert.That.Value(executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Is<WorkResult>()
+               .Where(Result => Result.Error).Check(Value => Value.As<ApplicationException>()
+                   .Where(exception => exception.Message).IsEqual(exception_message))
+               .Where(Result => Result.Success).Check(value => value.IsFalse())
+               .Where(Result => Result.Failure).Check(value => value.IsTrue());
+        }
 
-        //    Assert.IsFalse(work.Executed);
-        //    Assert.That.Value(work.Result).IsEqual(first_message);
-        //    Assert.IsTrue(work.Executed);
-        //}
+        [TestMethod]
+        public void Work_Begin_Function_Success()
+        {
+            var executed = false;
+            const string expected_string = "Hello World!";
+            string WorkFunction()
+            {
+                executed = true;
+                return expected_string;
+            }
 
-        //[TestMethod]
-        //public void SingleActionFailWork()
-        //{
-        //    var (messages, add_message) = CreateMessagesStorage();
+            var work_result = Work.Begin(WorkFunction).Execute();
 
-        //    const string first_message = null;
-        //    var work = Work.Begin(() => add_message(first_message));
+            Assert.That.Value(executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(Result => Result.Result).Check(Value => Value.IsEqual(expected_string))
+               .Where(Result => Result.Error).Check(value => value.IsNull())
+               .Where(Result => Result.Success).Check(value => value.IsTrue())
+               .Where(Result => Result.Failure).Check(value => value.IsFalse());
+        }
 
-        //    CollectionAssert.That.Collection(messages).NotContains(first_message);
+        [TestMethod]
+        public void Work_Do_Action_Success()
+        {
+            var first_executed = false;
+            var second_executed = false;
 
-        //    Assert.IsFalse(work.Executed);
-        //    work.Execute();
-        //    Assert.IsTrue(work.Executed);
+            void FirstWorkAction() => first_executed = true;
+            void SecondWorkAction() => second_executed = true;
 
-        //    CollectionAssert.That.Collection(messages).NotContains(first_message);
-        //    Assert.IsFalse(work.Success);
-        //    Assert.IsTrue(work.Failure);
-        //    Assert.That.Value(work.CurrentError)
-        //       .As<ArgumentNullException>()
-        //       .Where(error => error.ParamName)
-        //       .IsEqual("msg");
-        //}
+            var work_result = Work.Begin(FirstWorkAction)
+               .Do(SecondWorkAction)
+               .Execute();
 
-        //[TestMethod]
-        //public void SequenceActionWorks()
-        //{
-        //    var (messages, add_message) = CreateMessagesStorage();
-        //    const string first_message = "First message";
-        //    const string anyway_message1 = "Anyway message1";
-        //    const string anyway_message2 = "Anyway message2";
+            Assert.That.Value(first_executed).IsTrue();
+            Assert.That.Value(second_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Is<WorkResult>()
+               .Where(Result => Result.Error).Check(value => value.IsNull())
+               .Where(Result => Result.Success).Check(value => value.IsTrue())
+               .Where(Result => Result.Failure).Check(value => value.IsFalse());
+        }
 
-        //    var work = Work.Begin(() => add_message(first_message))
-        //           .Do(() => add_message(anyway_message1))
-        //           .Do(() => add_message(anyway_message2));
+        [TestMethod]
+        public void Work_Do_Action_FirstFailure()
+        {
+            var first_executed = false;
+            var second_executed = false;
+            const string exception_message = "Test Exception message";
 
-        //    work.Execute();
+            void FirstWorkAction()
+            {
+                first_executed = true;
+                throw new ApplicationException(exception_message);
+            }
+            void SecondWorkAction() => second_executed = true;
 
-        //    CollectionAssert.That.Collection(messages).Contains(first_message);
-        //    CollectionAssert.That.Collection(messages).Contains(anyway_message1);
-        //    CollectionAssert.That.Collection(messages).Contains(anyway_message2);
+            var work_result = Work.Begin(FirstWorkAction)
+               .Do(SecondWorkAction)
+               .Execute();
 
-        //    Assert.That.Value(work.SubWorks.Count()).IsEqual(2);
-        //    Assert.IsTrue(work.SubWorks.All(w => w.Executed));
-        //    Assert.IsTrue(work.SubWorks.All(w => w.Success));
-        //}
+            Assert.That.Value(first_executed).IsTrue();
+            Assert.That.Value(second_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Is<WorkResult>()
+               .Where(Result => Result.Error).Check(value => value.As<ApplicationException>()
+                   .Where(exception => exception.Message).IsEqual(exception_message))
+               .Where(Result => Result.Success).Check(value => value.IsFalse())
+               .Where(Result => Result.Failure).Check(value => value.IsTrue());
+        }
 
-        //[TestMethod]
-        //public void SequenceActionSuccessAndFailureWorks()
-        //{
-        //    var (messages, add_message) = CreateMessagesStorage();
-        //    const string message1 = "Message1";
-        //    const string message2 = "Message2";
-        //    const string not_exist_message1 = "<not-exist>";
-        //    const string not_exist_message2 = "<null>";
-        //    const string anyway_message = "Anyway";
+        [TestMethod]
+        public void Work_Do_Action_LastFailure()
+        {
+            var first_executed = false;
+            var second_executed = false;
+            const string exception_message = "Test Exception message";
 
-        //    var not_executed_1 = true;
-        //    var not_executed_2 = true;
-        //    var work = Work
-        //       .Begin(() => add_message(message1))
-        //       .IfSuccess(() => add_message(message2))
-        //       .IfFailure(() => { add_message(not_exist_message1); not_executed_1 = false; })
-        //       .IfSuccess(() => add_message(null))
-        //       .IfSuccess(() => { add_message(not_exist_message2); not_executed_2 = false; })
-        //       .Do(() => add_message(anyway_message));
+            void FirstWorkAction() => first_executed = true;
+            void SecondWorkAction()
+            {
+                second_executed = true;
+                throw new ApplicationException(exception_message);
+            }
 
-        //    Assert.IsFalse(work.Executed);
-        //    work.Execute();
-        //    Assert.IsTrue(work.Executed);
-        //    Assert.IsTrue(not_executed_1);
-        //    Assert.IsTrue(not_executed_2);
+            var work_result = Work.Begin(FirstWorkAction)
+               .Do(SecondWorkAction)
+               .Execute();
 
-        //    Assert.IsFalse(work.Success);
-        //    Assert.IsTrue(work.Failure);
-        //    Assert.That.Value(work.CurrentError).IsNull();
-        //    Assert.That.Value(work.Error)
-        //       .As<ArgumentNullException>().Where(error => error.ParamName).IsEqual("msg");
+            Assert.That.Value(first_executed).IsTrue();
+            Assert.That.Value(second_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Is<WorkResult>()
+               .Where(Result => Result.Error).Check(value => value.As<ApplicationException>()
+                   .Where(exception => exception.Message).IsEqual(exception_message))
+               .Where(Result => Result.Success).Check(value => value.IsFalse())
+               .Where(Result => Result.Failure).Check(value => value.IsTrue());
+        }
 
-        //    CollectionAssert.That.Collection(messages).IsEqualTo(new [] { message1, message2, anyway_message });
-        //}
+        [TestMethod]
+        public void Work_Do_Action_AllFailure()
+        {
+            var first_executed = false;
+            var second_executed = false;
+            const string exception_message1 = "Test Exception message 1";
+            const string exception_message2 = "Test Exception message 2";
 
-        //[TestMethod]
-        //public void SequenceSuccessFunctionWorks()
-        //{
-        //    var messages = new List<string>();
-        //    var values = new List<int>();
+            void FirstWorkAction()
+            {
+                first_executed = true;
+                throw new ApplicationException(exception_message1);
+            }
 
-        //    const string message = "Message";
-        //    var work = Work.Begin(() => message)
-        //           .Do(messages.Add)
-        //           .IfSuccess(str => str.Length)
-        //           .IfFailure(e => e.Message.Length)
-        //           .Do(values.Add)
-        //        ;
+            void SecondWorkAction()
+            {
+                second_executed = true;
+                throw new InvalidOperationException(exception_message2);
+            }
 
-        //    work.Execute();
-        //    CollectionAssert.That.Collection(messages).Contains(message);
-        //    CollectionAssert.That.Collection(values).NotContains(message.Length);
-        //}
+            var work_result = Work.Begin(FirstWorkAction)
+               .Do(SecondWorkAction)
+               .Execute();
 
-        //[TestMethod]
-        //public void SequenceFailureFunctionWorks()
-        //{
-        //    var messages = new List<string>();
-
-        //    const string message = "Message";
-        //    var work = Work.Begin(() => message)
-        //           .Do(msg => throw new InvalidOperationException(msg))
-        //           .IfSuccess(() => messages.Add("Not success"))
-        //           .IfFailure(e => messages.Add(e.Message))
-        //        ;
-
-        //    work.Execute();
-        //    CollectionAssert.That.Collection(messages).Contains(message);
-        //    CollectionAssert.That.Collection(messages).NotContains("Not success");
-        //}
+            Assert.That.Value(first_executed).IsTrue();
+            Assert.That.Value(second_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Is<WorkResult>()
+               .Where(Result => Result.Error).Check(Value => Value.As<AggregateException>()
+                   .Where(exception => exception.InnerExceptions).Check(value =>
+                    {
+                        value
+                           .Where(ee => ee.Count).Check(ErrorsCount => ErrorsCount.IsEqual(2))
+                           .Where(ee => ee[0]).Check(e => e.As<InvalidOperationException>().Where(err => err.Message).IsEqual(exception_message2))
+                           .Where(ee => ee[1]).Check(e => e.As<ApplicationException>().Where(err => err.Message).IsEqual(exception_message1));
+                    }))
+               .Where(Result => Result.Success).Check(value => value.IsFalse())
+               .Where(Result => Result.Failure).Check(value => value.IsTrue());
+        }
     }
 }

@@ -91,8 +91,12 @@ namespace MathCore.Monades.WorkFlow
 
         #endregion
 
+        /// <summary>Инициализация новой работы</summary>
+        /// <param name="BaseWork">объект базовой работы</param>
         protected Work([CN] Work BaseWork) : base(BaseWork) { }
 
+        /// <summary>Выполнение работы</summary>
+        /// <returns>Результат работы</returns>
         [NN] public new IWorkResult<T> Execute() => (IWorkResult<T>)base.Execute();
 
         [NN] public Work<T, TResult> Do<TResult>([NN] Func<T, TResult> function) => new Work<T, TResult>(function, this);
@@ -100,6 +104,7 @@ namespace MathCore.Monades.WorkFlow
         [NN] public Work<T, TResult> IsSuccess<TResult>([NN] Func<T, TResult> function) => new FunctionWorkIfSuccess<T, TResult>(function, this);
     }
 
+    /// <summary>Класс-оболочка для выполняемой работы</summary>
     public abstract class Work
     {
         #region Задачи с условием
@@ -161,13 +166,22 @@ namespace MathCore.Monades.WorkFlow
 
         #region Begin actions
 
+        /// <summary>Запуск работы на основе делегата действия</summary>
+        /// <param name="WorkAction">Делегат, на основе которого формируется работа</param>
+        /// <returns>Работа, выполняющая указанный делегат</returns>
         [NN] public static ActionWork Begin([NN] Action WorkAction) => new ActionWork(WorkAction);
 
+        [NN] public static FunctionWork<T> Begin<T>([NN] Func<T> WorkFunction) => new FunctionWork<T>(WorkFunction);
+
+        /// <summary>Фиксированное исходное значение</summary>
+        /// <typeparam name="T">Тип значения</typeparam>
+        /// <param name="value">Исходное, используемое в дальнейшем, значение</param>
+        /// <returns>Работа, результатом которой является указанное значение</returns>
         [NN] public static Work<T> With<T>(T value) => new ConstValueWork<T>(value);
 
         #endregion
 
-        [CN] protected readonly Work _BaseWork;
+        [CN] private readonly Work _BaseWork;
 
         protected Work([CN] Work BaseWork) => _BaseWork = BaseWork;
 
