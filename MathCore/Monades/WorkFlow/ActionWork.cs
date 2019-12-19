@@ -7,10 +7,15 @@ using ICN = MathCore.Annotations.ItemCanBeNullAttribute;
 
 namespace MathCore.Monades.WorkFlow
 {
+    /// <summary>Работа, выполняющая действие</summary>
     public class ActionWork : Work
     {
+        /// <summary>Действие, выполняемое работой</summary>
         private readonly Action _WorkAction;
 
+        /// <summary>Инициализация нового работы на основе действия</summary>
+        /// <param name="WorkAction">Действие, выполняемое в рамках работы</param>
+        /// <param name="BaseWork">Базовая работа</param>
         internal ActionWork([NN] Action WorkAction, Work BaseWork = null) : base(BaseWork) => _WorkAction = WorkAction;
 
         protected override IWorkResult Execute(IWorkResult BaseResult)

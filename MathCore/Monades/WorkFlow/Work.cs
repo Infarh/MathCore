@@ -91,12 +91,10 @@ namespace MathCore.Monades.WorkFlow
 
         #endregion
 
-        /// <summary>Инициализация новой работы</summary>
-        /// <param name="BaseWork">объект базовой работы</param>
+        /// <summary>Инициализация новой работы</summary><param name="BaseWork">объект базовой работы</param>
         protected Work([CN] Work BaseWork) : base(BaseWork) { }
 
-        /// <summary>Выполнение работы</summary>
-        /// <returns>Результат работы</returns>
+        /// <summary>Выполнение работы</summary><returns>Результат работы</returns>
         [NN] public new IWorkResult<T> Execute() => (IWorkResult<T>)base.Execute();
 
         [NN] public Work<T, TResult> Do<TResult>([NN] Func<T, TResult> function) => new Work<T, TResult>(function, this);
@@ -109,15 +107,23 @@ namespace MathCore.Monades.WorkFlow
     {
         #region Задачи с условием
 
+        /// <summary>Работа на основе действия, выполняемая лишь в том случае, если базовая работа выполнилась успешно</summary>
         private class ActionWorkIfSuccess : ActionWork
         {
+            /// <summary>Инициализация новой работы, выполняемой в случае успешного выполнения предыдущей работы</summary>
+            /// <param name="WorkAction">Действие, выполняемое в рамках работы</param>
+            /// <param name="BaseWork">Базовая работа</param>
             internal ActionWorkIfSuccess([NN] Action WorkAction, [NN] Work BaseWork) : base(WorkAction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
 
             protected override IWorkResult Execute(IWorkResult BaseResult) => BaseResult?.Success ?? true ? base.Execute(BaseResult) : BaseResult;
         }
 
+        /// <summary>Работа на основе действия, выполняемая лишь в том случае, если базовая работа выполнилась с ошибкой</summary>
         private class ActionWorkIfFailure : ActionWork
         {
+            /// <summary>Инициализация новой работы, выполняемой в случае ошибочного выполнения предыдущей работы</summary>
+            /// <param name="WorkAction">Действие, выполняемое в рамках работы</param>
+            /// <param name="BaseWork">Базовая работа</param>
             internal ActionWorkIfFailure([NN] Action WorkAction, [NN] Work BaseWork) : base(WorkAction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
 
             protected override IWorkResult Execute(IWorkResult BaseResult) => BaseResult?.Failure ?? false ? base.Execute(BaseResult) : BaseResult ?? new WorkResult();
@@ -181,22 +187,38 @@ namespace MathCore.Monades.WorkFlow
 
         #endregion
 
+        /// <summary>Базовая работа</summary>
         [CN] private readonly Work _BaseWork;
 
+        /// <summary>Инициализация нового работы</summary><param name="BaseWork">Базовая работа</param>
         protected Work([CN] Work BaseWork) => _BaseWork = BaseWork;
 
         #region Execute
 
+        /// <summary>Выполнить действие текущей работы</summary>
+        /// <param name="BaseResult">Результат выполнения предыдущей работы</param>
+        /// <returns>Результат выполнения действия</returns>
         [NN] protected abstract IWorkResult Execute([CN] IWorkResult BaseResult);
 
+        /// <summary>Выполнить работу</summary>
+        /// <returns>Результат выполнения работы</returns>
         [NN] public IWorkResult Execute() => Execute(_BaseWork?.Execute());
 
         #endregion
 
+        /// <summary>Действие, выполняемое в любом случае</summary>
+        /// <param name="action">Выполняемое действие</param>
+        /// <returns>СФормированная работа, выполняемая в любом случае</returns>
         [NN] public Work Do([NN] Action action) => new ActionWork(action, this);
 
+        /// <summary>Действие, выполняемое в случае успеха предыдущего действия</summary>
+        /// <param name="action">Выполняемое действие</param>
+        /// <returns>Сформированная работа, выполняемая в случае успеха предыдущего действия</returns>
         [NN] public Work IfSuccess([NN] Action action) => new ActionWorkIfSuccess(action, this);
 
+        /// <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
+        /// <param name="action"></param>
+        /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
         [NN] public Work IfFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
 
         [NN] public Work<T> Do<T>([NN] Func<T> function) => new FunctionWork<T>(function, this);
