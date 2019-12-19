@@ -542,5 +542,69 @@ namespace MathCore.Tests.Monades.WorkFlow
                .Where(result => result.Failure).Check(state => state.IsTrue())
                .Where(result => result.Error).Check(error => error.IsEqual(fail_action.Exception));
         }
+
+        [TestMethod]
+        public void FunctionWork_ExceptionHandler_Executed_WhenBaseWorkFail()
+        {
+            var begin_action = TestAction.GetSuccess();
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
+            var no_executed_function = TestFunction.Value("No executed function");
+
+            var exception_handler_executed = false;
+            string ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                return error.Message;
+            }
+
+            var work_result = Work.Begin(begin_action)
+               .Do(fail_action)
+               .IfSuccess(no_executed_function.Execute)
+               .IfFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That
+               .Value(begin_action.Executed).IsTrue().And
+               .Value(fail_action.Executed).IsTrue().And
+               .Value(no_executed_function.Executed).IsFalse().And
+               .Value(exception_handler_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(str => str.IsEqual(fail_action.Exception.Message))
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse())
+               .Where(result => result.Error).Check(error => error.IsNull());
+        }
+
+        [TestMethod]
+        public void FunctionWork_ExceptionHandler_NotExecuted_WhenBaseWorkSuccess()
+        {
+            var begin_action = TestAction.GetSuccess();
+            var value_function = TestFunction.Value("No executed function");
+
+            var exception_handler_executed = false;
+            string ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                return error.Message;
+            }
+
+            var work_result = Work.Begin(begin_action)
+               .IfSuccess(value_function.Execute)
+               .IfFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That
+               .Value(begin_action.Executed).IsTrue().And
+               .Value(value_function.Executed).IsTrue().And
+               .Value(exception_handler_executed).IsFalse();
+
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(str => str.IsEqual(value_function.ReturnValue))
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse())
+               .Where(result => result.Error).Check(error => error.IsNull());
+        }
     }
 }
