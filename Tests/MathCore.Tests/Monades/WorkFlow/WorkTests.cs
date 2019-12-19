@@ -15,19 +15,28 @@ namespace MathCore.Tests.Monades.WorkFlow
         {
             [NotNull] public static TestAction GetSuccess() => new TestAction();
 
-            [NotNull] public static TestAction GetFail([NotNull] Exception Error) => new TestAction(Error ?? throw new InvalidOperationException("Не задано исключение для проведения теста с ошибочным действием"));
+            [NotNull]
+            public static TestFailAction<TException> GetFail<TException>([NotNull] TException Error) where TException : Exception =>
+                new TestFailAction<TException>(Error);
 
-            private readonly Exception _Exception;
             public bool Executed { get; private set; }
-            public TestAction([CanBeNull] Exception Error = null) => _Exception = Error;
 
-            private void Execute()
-            {
-                Executed = true;
-                if (_Exception != null) throw _Exception;
-            }
+            protected virtual void Execute() => Executed = true;
 
             [NotNull] public static implicit operator Action([NotNull] TestAction action) => action.Execute;
+        }
+
+        private class TestFailAction<TException> : TestAction where TException : Exception
+        {
+            [NotNull] public TException Exception { get; }
+
+            public TestFailAction([NotNull] TException Error) => Exception = Error ?? throw new ArgumentNullException(nameof(Error));
+
+            protected override void Execute()
+            {
+                base.Execute();
+                throw Exception;
+            }
         }
 
         private abstract class TestFunction
@@ -49,26 +58,24 @@ namespace MathCore.Tests.Monades.WorkFlow
 
         private class ValueFunction<T> : TestFunction
         {
-            private readonly T _ReturnValue;
-            public ValueFunction(T ReturnValue, Exception Error) : base(Error) => _ReturnValue = ReturnValue;
+            public T ReturnValue { get; }
+            public ValueFunction(T ReturnValue, Exception Error) : base(Error) => this.ReturnValue = ReturnValue;
 
             public T Execute()
             {
                 ExecuteFunction();
-                return _ReturnValue;
+                return ReturnValue;
             }
         }
 
         [TestMethod]
         public void With_ReturnValue()
         {
-            const string expected_string = "Hello World!";
-
-            var work_result = Work.With(expected_string).Execute();
+            var work_result = Work.With("Hello World!").Execute();
 
             Assert.That.Value(work_result)
                .Is<WorkResult<string>>()
-               .Where(Result => Result.Result).Check(value => value.IsEqual(expected_string))
+               .Where(Result => Result.Result).Check(value => value.IsEqual(work_result.Result))
                .Where(Result => Result.Error).Check(value => value.IsNull())
                .Where(Result => Result.Success).Check(value => value.IsTrue())
                .Where(Result => Result.Failure).Check(value => value.IsFalse());
@@ -92,16 +99,14 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void Begin_Action_Failure()
         {
-            const string exception_message = "Test exception message";
-            var fail_action = new TestAction(new ApplicationException(exception_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Test exception message"));
 
             var work_result = Work.Begin(fail_action).Execute();
 
             Assert.That.Value(fail_action.Executed).IsTrue();
             Assert.That.Value(work_result)
                .Is<WorkResult>()
-               .Where(Result => Result.Error).Check(Value => Value.As<ApplicationException>()
-                   .Where(exception => exception.Message).IsEqual(exception_message))
+               .Where(Result => Result.Error).Check(Value => Value.IsEqual(fail_action.Exception))
                .Where(Result => Result.Success).Check(value => value.IsFalse())
                .Where(Result => Result.Failure).Check(value => value.IsTrue());
         }
@@ -144,8 +149,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void Do_Action_FirstFailure()
         {
-            const string exception_message = "Test Exception message";
-            var fail_action = TestAction.GetFail(new ApplicationException(exception_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Test Exception message"));
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(fail_action)
@@ -156,8 +160,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsTrue();
             Assert.That.Value(work_result)
                .Is<WorkResult>()
-               .Where(Result => Result.Error).Check(value => value.As<ApplicationException>()
-                   .Where(exception => exception.Message).IsEqual(exception_message))
+               .Where(Result => Result.Error).Check(value => value.IsEqual(fail_action.Exception))
                .Where(Result => Result.Success).Check(value => value.IsFalse())
                .Where(Result => Result.Failure).Check(value => value.IsTrue());
         }
@@ -233,8 +236,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void IfSuccess_NotExecuted_WhenBaseWorkSuccess()
         {
-            const string error_message = "Error message";
-            var fail_action = TestAction.GetFail(new ApplicationException(error_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(fail_action)
@@ -245,8 +247,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsFalse();
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Error).Check(exception => exception.As<ApplicationException>()
-                   .Where(error => error.Message).IsEqual(error_message))
+               .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
         }
@@ -273,8 +274,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void IfFailure_Executed_WhenBaseWorkFailure()
         {
-            const string error_message = "Error message";
-            var fail_action = TestAction.GetFail(new ApplicationException(error_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(fail_action)
@@ -285,8 +285,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsTrue();
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Error).Check(exception => exception.As<ApplicationException>()
-                   .Where(error => error.Message).IsEqual(error_message))
+               .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
         }
@@ -311,14 +310,13 @@ namespace MathCore.Tests.Monades.WorkFlow
                .Where(result => result.Error).Check(exception => exception.IsNull())
                .Where(result => result.Success).Check(state => state.IsTrue())
                .Where(result => result.Failure).Check(state => state.IsFalse());
-        }  
+        }
 
         [TestMethod]
         public void Second_IfSuccess_NotExecute_WhenBaseWorkFailure()
         {
-            const string error_message = "Error message";
             var begin_action = TestAction.GetSuccess();
-            var fail_action = TestAction.GetFail(new ApplicationException(error_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(begin_action)
@@ -331,8 +329,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsFalse();
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Error).Check(exception => exception.As<ApplicationException>()
-                   .Where(error => error.Message).IsEqual(error_message))
+               .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
         }
@@ -362,9 +359,8 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void Second_IfSuccess_AfterDo_NotExecute_WhenBaseWorkFailure()
         {
-            const string error_message = "Error message";
             var begin_action = TestAction.GetSuccess();
-            var fail_action = TestAction.GetFail(new ApplicationException(error_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(begin_action)
@@ -377,8 +373,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsFalse();
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Error).Check(exception => exception.As<ApplicationException>()
-                   .Where(error => error.Message).IsEqual(error_message))
+               .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
         }
@@ -411,9 +406,8 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void IfFail_Execute_WhenBaseWorkFail()
         {
-            const string error_message = "Error message";
             var begin_action = TestAction.GetSuccess();
-            var fail_action = TestAction.GetFail(new ApplicationException(error_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var no_execute_action = TestAction.GetSuccess();
             var test_action = TestAction.GetSuccess();
 
@@ -429,8 +423,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsTrue();
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Error).Check(exception => exception.As<ApplicationException>()
-                   .Where(error => error.Message).IsEqual(error_message))
+               .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
         }
@@ -438,9 +431,8 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void Do_Execute_AfterBaseFailWork()
         {
-            const string error_message = "Error message";
             var begin_action = TestAction.GetSuccess();
-            var fail_action = TestAction.GetFail(new ApplicationException(error_message));
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var no_execute_action = TestAction.GetSuccess();
             var on_fail_action = TestAction.GetSuccess();
             var test_action = TestAction.GetSuccess();
@@ -459,10 +451,96 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(test_action.Executed).IsTrue();
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Error).Check(exception => exception.As<ApplicationException>()
-                   .Where(error => error.Message).IsEqual(error_message))
+               .Where(result => result.Error).Check(exception => exception.IsEqual(fail_action.Exception))
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
+        }
+
+        [TestMethod]
+        public void Begin_FunctionWork_ReturnValue()
+        {
+            var test_function = TestFunction.Value("Hello World");
+
+            var work_result = Work.Begin(test_function.Execute).Execute();
+
+            Assert.That.Value(test_function.Executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(value => value.IsEqual(test_function.ReturnValue))
+               .Where(result => result.Error).Check(error => error.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+        [TestMethod]
+        public void Do_Function_Success()
+        {
+            var begin_action = TestAction.GetSuccess();
+            var test_function = TestFunction.Value("Hello World");
+
+            var work_result = Work.Begin(begin_action)
+               .Do(test_function.Execute)
+               .Execute();
+
+            Assert.That.Value(begin_action.Executed).IsTrue();
+            Assert.That.Value(test_function.Executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(value => value.IsEqual(test_function.ReturnValue))
+               .Where(result => result.Error).Check(error => error.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+        [TestMethod]
+        public void FunctionWork_IfSuccess_NotExecuted_WhenBaseWorkFail()
+        {
+            var begin_action = TestAction.GetSuccess();
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
+            var test_function = TestFunction.Value("Hello World");
+
+            var work_result = Work.Begin(begin_action)
+               .Do(fail_action)
+               .IfSuccess(test_function.Execute)
+               .Execute();
+
+            Assert.That
+               .Value(begin_action.Executed).IsTrue().And
+               .Value(fail_action.Executed).IsTrue().And
+               .Value(test_function.Executed).IsFalse();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(str => str.IsNull())
+               .Where(result => result.Success).Check(state => state.IsFalse())
+               .Where(result => result.Failure).Check(state => state.IsTrue())
+               .Where(result => result.Error).Check(error => error.IsEqual(fail_action.Exception));
+        } 
+
+        [TestMethod]
+        public void FunctionWork_IfFailure_Executed_WhenBaseWorkFail()
+        {
+            var begin_action = TestAction.GetSuccess();
+            var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
+            var no_executed_function = TestFunction.Value("No executed function");
+            var on_fail_function = TestFunction.Value("Hello World");
+
+            var work_result = Work.Begin(begin_action)
+               .Do(fail_action)
+               .IfSuccess(no_executed_function.Execute)
+               .IfFailure(on_fail_function.Execute)
+               .Execute();
+
+            Assert.That
+               .Value(begin_action.Executed).IsTrue().And
+               .Value(fail_action.Executed).IsTrue().And
+               .Value(no_executed_function.Executed).IsFalse().And
+               .Value(on_fail_function.Executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(str => str.IsEqual(on_fail_function.ReturnValue))
+               .Where(result => result.Success).Check(state => state.IsFalse())
+               .Where(result => result.Failure).Check(state => state.IsTrue())
+               .Where(result => result.Error).Check(error => error.IsEqual(fail_action.Exception));
         }
     }
 }
