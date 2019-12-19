@@ -131,6 +131,33 @@ namespace MathCore.Monades.WorkFlow
             protected override IWorkResult Execute(IWorkResult BaseResult) => BaseResult?.Failure ?? false ? base.Execute(BaseResult) : BaseResult ?? new WorkResult();
         }
 
+        /// <summary>Работа по обработке ошибок</summary>
+        protected class ExceptionActionHandler : Work
+        {
+            /// <summary>Действие-обработчик исключения</summary>
+            [NN] private readonly Action<Exception> _ErrorHandler;
+
+            /// <summary>Инициализация новой работы по обработке ошибок</summary>
+            /// <param name="ErrorHandler">Действие-обработчик ошибок</param>
+            /// <param name="BaseWork">Базовая работа</param>
+            internal ExceptionActionHandler([NN] Action<Exception> ErrorHandler, [NN] Work BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
+
+            protected override IWorkResult Execute(IWorkResult BaseResult)
+            {
+                var base_result = BaseResult.NotNull();
+                if (!base_result.Failure) return base_result;
+                try
+                {
+                    _ErrorHandler(base_result.Error);
+                    return new WorkResult();
+                }
+                catch (Exception error)
+                {
+                    return new WorkResult(base_result.Error, error);
+                }
+            }
+        }
+
         private class FunctionWorkIfSuccess<T> : FunctionWork<T>
         {
             internal FunctionWorkIfSuccess([NN] Func<T> WorkFunction, [NN] Work BaseWork) : base(WorkFunction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
@@ -157,11 +184,16 @@ namespace MathCore.Monades.WorkFlow
             }
         }
 
-        protected class ExceptionHandler<T> : Work<T>
+        /// <summary>Работа по обработке ошибок</summary><typeparam name="T">Тип исключительной ситуации</typeparam>
+        private class ExceptionFunctionHandler<T> : Work<T>
         {
+            /// <summary>Функция-обработчик исключения</summary>
             [NN] private readonly Func<Exception, T> _ErrorHandler;
 
-            internal ExceptionHandler([NN] Func<Exception, T> ErrorHandler, [NN] Work BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
+            /// <summary>Инициализация новой работы по обработке ошибок</summary>
+            /// <param name="ErrorHandler">Функция-обработчик ошибок</param>
+            /// <param name="BaseWork">Базовая работа</param>
+            internal ExceptionFunctionHandler([NN] Func<Exception, T> ErrorHandler, [NN] Work BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
 
             protected override IWorkResult Execute(IWorkResult BaseResult)
             {
@@ -235,6 +267,8 @@ namespace MathCore.Monades.WorkFlow
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
         [NN] public Work IfFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
 
+        [NN] public Work IfFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
+
         /// <summary>Выполнение функции в любом случае</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>
         /// <param name="function">Функция, выполняемая в рамках работы</param>
@@ -257,6 +291,6 @@ namespace MathCore.Monades.WorkFlow
         /// <typeparam name="T">Тип значения функции</typeparam>
         /// <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
         /// <returns>Работа по обработке исключений, возникающийх на предыдущих этапах выполнения работы</returns>
-        [NN] public Work<T> IfFailure<T>([NN] Func<Exception, T> ErrorHandler) => new ExceptionHandler<T>(ErrorHandler, this);
+        [NN] public Work<T> IfFailure<T>([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
     }
 }
