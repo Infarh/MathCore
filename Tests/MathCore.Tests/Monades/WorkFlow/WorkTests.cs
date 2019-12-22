@@ -633,5 +633,24 @@ namespace MathCore.Tests.Monades.WorkFlow
                .Where(result => result.Failure).Check(state => state.IsFalse())
                .Where(result => result.Error).Check(error => error.IsNull());
         }
+
+        [TestMethod]
+        public void FunctionWork_ValueConversion_ExecuteSuccessfully()
+        {
+            var data_value = "123456789";
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .Do(x => x.ToBase(10).Average())
+               .Execute();
+
+            Assert.That.Value(work_result)
+               .As<WorkResult<int, double>>()
+               .Where(result => result.Result).Check(value => value.IsEqual(5))
+               .Where(result => result.Parameter).Check(value => value.IsEqual(123456789))
+               .Where(result => result.Error).Check(exception => exception.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
     }
 }

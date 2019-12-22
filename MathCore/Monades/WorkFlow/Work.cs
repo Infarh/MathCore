@@ -99,6 +99,10 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Выполнение работы</summary><returns>Результат работы</returns>
         [NN] public new IWorkResult<T> Execute() => (IWorkResult<T>)base.Execute();
 
+        /// <summary>Работа, в результате которой формируется результат</summary>
+        /// <typeparam name="TResult">Тип результата работы</typeparam>
+        /// <param name="function">Функция, выполняемая в рамках работы над параметром, получаемым от предыдущей работы</param>
+        /// <returns>Работа по получению результата</returns>
         [NN] public Work<T, TResult> Do<TResult>([NN] Func<T, TResult> function) => new Work<T, TResult>(function, this);
 
         [NN] public Work<T, TResult> IsSuccess<TResult>([NN] Func<T, TResult> function) => new FunctionWorkIfSuccess<T, TResult>(function, this);
