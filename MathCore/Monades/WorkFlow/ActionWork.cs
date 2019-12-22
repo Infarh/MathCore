@@ -18,6 +18,7 @@ namespace MathCore.Monades.WorkFlow
         /// <param name="BaseWork">Базовая работа</param>
         internal ActionWork([NN] Action WorkAction, Work BaseWork = null) : base(BaseWork) => _WorkAction = WorkAction;
 
+        /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult BaseResult)
         {
             try

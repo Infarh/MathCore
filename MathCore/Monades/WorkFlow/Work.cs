@@ -290,7 +290,7 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Добавление обработчика исключительных ситуаций</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>
         /// <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
-        /// <returns>Работа по обработке исключений, возникающийх на предыдущих этапах выполнения работы</returns>
+        /// <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
         [NN] public Work<T> IfFailure<T>([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
     }
 }

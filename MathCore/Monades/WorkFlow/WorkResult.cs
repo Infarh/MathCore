@@ -8,8 +8,13 @@ namespace MathCore.Monades.WorkFlow
     /// <summary>Результат выполнения работы</summary>
     public readonly struct WorkResult : IWorkResult, IEquatable<WorkResult>
     {
+        /// <inheritdoc />
         [CanBeNull] public Exception Error { get; }
+
+        /// <inheritdoc />
         public bool Success => Error is null;
+
+        /// <inheritdoc />
         public bool Failure => !Success;
 
         /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -26,8 +31,10 @@ namespace MathCore.Monades.WorkFlow
 
         public bool Equals(WorkResult other) => Equals(Error, other.Error);
 
+        /// <inheritdoc />
         public override bool Equals(object obj) => obj is WorkResult other && Equals(other);
 
+        /// <inheritdoc />
         public override int GetHashCode() => Error != null ? Error.GetHashCode() : 0;
 
         public static bool operator ==(WorkResult left, WorkResult right) => left.Equals(right);
@@ -38,9 +45,16 @@ namespace MathCore.Monades.WorkFlow
     /// <typeparam name="T">Тип результата, доступного после выполнения работы</typeparam>
     public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     {
+        /// <inheritdoc />
         public Exception Error { get; }
+
+        /// <inheritdoc />
         public bool Success => Error is null;
+
+        /// <inheritdoc />
         public bool Failure => !Success;
+
+        /// <inheritdoc />
         public T Result { get; }
 
         /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -67,10 +81,13 @@ namespace MathCore.Monades.WorkFlow
                         : new AggregateException(PrevError, CurrentError);
         }
 
+        /// <inheritdoc />
         public bool Equals(WorkResult<T> other) => Equals(Error, other.Error) && EqualityComparer<T>.Default.Equals(Result, other.Result);
 
+        /// <inheritdoc />
         public override bool Equals(object obj) => obj is WorkResult<T> result && Equals(result);
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked
@@ -89,10 +106,19 @@ namespace MathCore.Monades.WorkFlow
     /// <typeparam name="T">Тип значения, доступного по завершении работы</typeparam>
     public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, IEquatable<WorkResult<TParameter, T>>
     {
+        /// <inheritdoc />
         public Exception Error { get; }
+
+        /// <inheritdoc />
         public bool Success => Error is null;
+
+        /// <inheritdoc />
         public bool Failure => !Success;
+
+        /// <inheritdoc />
         public TParameter Parameter { get; }
+
+        /// <inheritdoc />
         public T Result { get; }
 
         /// <summary>Инициализация нового результата выполнения работы</summary>
@@ -123,10 +149,13 @@ namespace MathCore.Monades.WorkFlow
                         : new AggregateException(PrevError, CurrentError);
         }
 
+        /// <inheritdoc />
         public bool Equals(WorkResult<TParameter, T> other) => Equals(Error, other.Error) && EqualityComparer<TParameter>.Default.Equals(Parameter, other.Parameter) && EqualityComparer<T>.Default.Equals(Result, other.Result);
 
+        /// <inheritdoc />
         public override bool Equals(object obj) => obj is WorkResult<TParameter, T> other && Equals(other);
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked

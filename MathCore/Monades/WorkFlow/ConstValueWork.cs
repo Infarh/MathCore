@@ -12,6 +12,7 @@
         /// <param name="BaseWork">Базовая работа</param>
         internal ConstValueWork(T Value, Work BaseWork = null) : base(BaseWork) => this.Value = Value;
 
+        /// <inheritdoc />
         protected override IWorkResult Execute(IWorkResult BaseResult) => new WorkResult<T>(Value, BaseResult?.Error);
     }
 }
