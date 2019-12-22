@@ -291,6 +291,33 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
+        public void IfFailure_ExceptionHandler_Executed_WhenBaseWorkFailure()
+        {
+            var expected_exception = new ApplicationException("Error message");
+            var fail_action = TestAction.GetFail(expected_exception);
+
+            var exception_handler_executed = false;
+            Exception handled_exception = null;
+            void ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+            }
+
+            var work_result = Work.Begin(fail_action)
+               .IfFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That.Value(fail_action.Executed).IsTrue();
+            Assert.That.Value(exception_handler_executed).IsTrue();
+            Assert.That.Value(handled_exception).IsEqual(expected_exception);
+            Assert.That.Value(work_result)
+               .As<WorkResult>()
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+        [TestMethod]
         public void Second_IfSuccess_Execute_WhenBaseWorkSuccess()
         {
             var begin_action = TestAction.GetSuccess();

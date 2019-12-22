@@ -262,11 +262,14 @@ namespace MathCore.Monades.WorkFlow
         /// <returns>Сформированная работа, выполняемая в случае успеха предыдущего действия</returns>
         [NN] public Work IfSuccess([NN] Action action) => new ActionWorkIfSuccess(action, this);
 
-        /// <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
-        /// <param name="action"></param>
+        /// <summary>Работа, которую надо выполнить в случае, если предыдущая работа завершилась с ошибкой</summary>
+        /// <param name="action">Действие, выполняемое в случае неудачи предыдущего действия</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
         [NN] public Work IfFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
 
+        /// <summary>Действие, Выполняемое в случае неудачи предыдущего действия</summary>
+        /// <param name="ErrorHandler">Обработчик ошибки</param>
+        /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
         [NN] public Work IfFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
 
         /// <summary>Выполнение функции в любом случае</summary>
