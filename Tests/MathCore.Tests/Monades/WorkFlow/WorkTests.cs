@@ -215,6 +215,65 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
+        public void Do_Action_OnBaseWorkResult()
+        {
+            const string expected_value = "Hello World";
+            var first_action = TestFunction.Value(expected_value);
+
+            var test_action_executed = false;
+            string actual_value = null;
+
+            void TestAction(string str)
+            {
+                test_action_executed = true;
+                actual_value = str;
+            }
+
+            var work_result = Work.Begin(first_action.Execute)
+               .Do(TestAction)
+               .Execute();
+
+            Assert.That.Value(test_action_executed).IsTrue();
+            Assert.That.Value(actual_value).IsEqual(expected_value);
+            Assert.That.Value(work_result)
+               .As<WorkResult>()
+               .Where(result => result.Error).Check(exception => exception.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+
+        [TestMethod]
+        public void Do_Action_WithException_OnBaseWorkResult()
+        {
+            const string expected_value = "Hello World";
+            var first_action = TestFunction.Value(expected_value);
+            var expected_exception = new ApplicationException();
+
+            var test_action_executed = false;
+            string actual_value = null;
+
+            void TestAction(string str)
+            {
+                test_action_executed = true;
+                actual_value = str;
+                throw expected_exception;
+            }
+
+            var work_result = Work.Begin(first_action.Execute)
+               .Do(TestAction)
+               .Execute();
+
+            Assert.That.Value(test_action_executed).IsTrue();
+            Assert.That.Value(actual_value).IsEqual(expected_value);
+            Assert.That.Value(work_result)
+               .As<WorkResult>()
+               .Where(result => result.Error).Check(exception => exception.IsEqual(expected_exception))
+               .Where(result => result.Success).Check(state => state.IsFalse())
+               .Where(result => result.Failure).Check(state => state.IsTrue());
+        }
+
+        [TestMethod]
         public void IfSuccess_Executed_WhenBaseWorkSuccess()
         {
             var begin_action = TestAction.GetSuccess();

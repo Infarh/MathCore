@@ -120,13 +120,17 @@ namespace MathCore.Tests.Monades.WorkFlow
             }
 
             //[NN]
-            //public Result Register([NN] string UserName, [NN] string Password) => Work
-            //   .With(_UserManager)
-            //   .Do(m => m.Create(new User { UserName = UserName }, Password))
-            //   .IfSuccess(() => _Logger.Add($"{UserName} registered"))
-            //   .IfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
-            //   .IfSuccess<Result>(() => new SuccessResult($"User {UserName} registred"))
-            //   .IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+            public void Register([NN] string UserName, [NN] string Password)
+            {
+                var user = new User {UserName = UserName};
+                var work = Work.With(_UserManager)
+                   .Do(new Action<UserManager>(m => m.Create(user, "")));
+            }
+            //.Do(m => m.Create(new User {UserName = UserName}, Password));
+            //.IfSuccess(() => _Logger.Add($"{UserName} registered"))
+            //.IfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
+            //.IfSuccess<Result>(() => new SuccessResult($"User {UserName} registred"))
+            //.IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
 
             //[NN]
             //public Result Login([NN] string UserName, [NN] string Password) => Work

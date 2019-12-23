@@ -67,6 +67,34 @@ namespace MathCore.Monades.WorkFlow
                     : new WorkResult<TParameter, TResult>(BaseResult.Error);
         }
 
+        /// <summary>Работа, выполняемая над результатом предыдущей работы</summary>
+        /// <typeparam name="TParameter">Тип результата предыдущей работы</typeparam>
+        private class ActionWork<TParameter> : Work
+        {
+            /// <summary>Действие, выполняемое над результатом предыдущей работы</summary>
+            [NN] private readonly Action<TParameter> _WorkAction;
+
+            /// <summary>Инициализация новой работы, выполняющей действие над результатом выполнения предыдущей работы</summary>
+            /// <param name="WorkAction">Действие, выполняемое над результатом предыдущей работы</param>
+            /// <param name="BaseWork">Предыдущая работа</param>
+            public ActionWork([NN] Action<TParameter> WorkAction, [CN] Work<TParameter> BaseWork) : base(BaseWork) => _WorkAction = WorkAction ?? throw new ArgumentNullException(nameof(WorkAction));
+
+            /// <inheritdoc />
+            protected override IWorkResult Execute(IWorkResult BaseResult)
+            {
+                var base_result = (IWorkResult<TParameter>)BaseResult ?? throw new InvalidOperationException("Отсутствует результат выполнения предыдущей работы");
+                try
+                {
+                    _WorkAction(base_result.Result);
+                    return new WorkResult(base_result.Error);
+                }
+                catch (Exception error)
+                {
+                    return new WorkResult(base_result.Error, error);
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>Инициализация новой работы</summary><param name="BaseWork">объект базовой работы</param>
@@ -74,6 +102,11 @@ namespace MathCore.Monades.WorkFlow
 
         /// <summary>Выполнение работы</summary><returns>Результат работы</returns>
         [NN] public new IWorkResult<T> Execute() => (IWorkResult<T>)base.Execute();
+
+        /// <summary>Действие, выполняемое в любом случае для результата предыдущей работы</summary>
+        /// <param name="action">Выполняемое действие</param>
+        /// <returns>Работа, выполняющая действие для результата выполнения предыдущей работы</returns>
+        [NN] public Work Do([NN] Action<T> action) => new ActionWork<T>(action, this);
 
         /// <summary>Работа, в результате которой формируется результат</summary>
         /// <typeparam name="TResult">Тип результата работы</typeparam>
@@ -176,8 +209,8 @@ namespace MathCore.Monades.WorkFlow
 
             /// <inheritdoc />
             protected override IWorkResult Execute(IWorkResult BaseResult) =>
-                (BaseResult ?? throw new InvalidOperationException("Отсутствует результат выполнения базовой задачи")).Success 
-                    ? new WorkResult<T>(default(T), BaseResult.Error) 
+                (BaseResult ?? throw new InvalidOperationException("Отсутствует результат выполнения базовой задачи")).Success
+                    ? new WorkResult<T>(default(T), BaseResult.Error)
                     : base.Execute(BaseResult);
         }
 
@@ -196,7 +229,7 @@ namespace MathCore.Monades.WorkFlow
             protected override IWorkResult Execute(IWorkResult BaseResult)
             {
                 var base_result = BaseResult.NotNull();
-                if (base_result.Success) 
+                if (base_result.Success)
                     return base_result;
                 try
                 {
