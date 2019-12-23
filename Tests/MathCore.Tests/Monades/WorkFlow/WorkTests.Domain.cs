@@ -119,27 +119,24 @@ namespace MathCore.Tests.Monades.WorkFlow
                 _Logger = Logger ?? throw new ArgumentNullException(nameof(Logger));
             }
 
-            //[NN]
-            public void Register([NN] string UserName, [NN] string Password)
-            {
-                var user = new User {UserName = UserName};
-                var work = Work.With(_UserManager)
-                   .Invoke(new Action<UserManager>(m => m.Create(user, "")));
-            }
-            //.Do(m => m.Create(new User {UserName = UserName}, Password));
-            //.IfSuccess(() => _Logger.Add($"{UserName} registered"))
-            //.IfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
-            //.IfSuccess<Result>(() => new SuccessResult($"User {UserName} registred"))
-            //.IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+            [NN]
+            public Result Register([NN] string UserName, [NN] string Password) =>
+                Work.With(_UserManager)
+                   .Invoke(m => m.Create(new User { UserName = UserName }, Password))
+                   .InvokeIfSuccess(() => _Logger.Add($"{UserName} registered"))
+                   .InvokeIfSuccess(() => _Logger.Add($"{UserName} registered"))
+                   .InvokeIfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
+                   .GetIfSuccess<Result>(() => new SuccessResult($"User {UserName} registered"))
+                   .GetIfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
 
-            //[NN]
-            //public Result Login([NN] string UserName, [NN] string Password) => Work
-            //   .With(_UserManager)
-            //   .Do(m => m.Login(UserName, Password))
-            //   .IfSuccess(() => _Logger.Add($"{UserName} login"))
-            //   .IfFailure(e => _Logger.Add($"{UserName} error login with reason {e.Message}", e))
-            //   .IfSuccess<Result>(() => new SuccessResult("Login operation complete"))
-            //   .IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+            [NN]
+            public Result Login([NN] string UserName, [NN] string Password) => Work
+               .With(_UserManager)
+               .Invoke(m => m.Login(UserName, Password))
+               .InvokeIfSuccess(() => _Logger.Add($"{UserName} login"))
+               .InvokeIfFailure(e => _Logger.Add($"{UserName} error login with reason {e.Message}", e))
+               .GetIfSuccess<Result>(() => new SuccessResult("Login operation complete"))
+               .GetIfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
         }
 
         private abstract class Result
@@ -149,40 +146,41 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         private sealed class SuccessResult : Result { public SuccessResult(string Message) : base(Message) { } }
-        private sealed class FailureResult : Result { public FailureResult(string Message) : base(Message) { } } 
+        private sealed class FailureResult : Result { public FailureResult(string Message) : base(Message) { } }
 
         #endregion
 
-        //[TestMethod]
-        //public void Work_of_AccountController_RegisterUser()
-        //{
-        //    const string test_user_name = "TestUser";
-        //    const string test_user_password = "password";
+        [TestMethod]
+        public void Work_of_AccountController_RegisterUser()
+        {
+            const string test_user_name = "TestUser";
+            const string test_user_password = "password";
 
-        //    var users = new List<User>
-        //    {
-        //        new User
-        //        {
-        //            UserName = "Admin",
-        //            Password = ("Password" + "user:Admin").GetHashCode().ToString()
-        //        },
-        //    };
+            var users = new List<User>
+            {
+                new User
+                {
+                    UserName = "Admin",
+                    Password = ("Password" + "user:Admin").GetHashCode().ToString()
+                },
+            };
 
-        //    var user_manager = new UserManager(users);
-        //    var logger = new Logger();
+            var user_manager = new UserManager(users);
+            var logger = new Logger();
 
-        //    var controller = new AccountController(user_manager, logger);
+            var controller = new AccountController(user_manager, logger);
 
-        //    var registration_result = controller.Register(test_user_name, test_user_password);
-        //    Assert.IsTrue(users.Contains(user => user.UserName == test_user_name));
-        //    Assert.That.Value(registration_result).IsNotNull();
-        //    Assert.That.Value(registration_result).Is<SuccessResult>();
+            var registration_result = controller.Register(test_user_name, test_user_password);
 
-        //    var test_user = user_manager.GetUserByName(test_user_name);
-        //    Assert.That.Value(test_user).IsNotNull();
+            Assert.IsTrue(users.Contains(user => user.UserName == test_user_name));
+            Assert.That.Value(registration_result).IsNotNull();
+            Assert.That.Value(registration_result).Is<SuccessResult>();
 
-        //    var login_result = controller.Login(test_user_name, test_user_password);
-        //    Assert.IsTrue(test_user.LoggedIn);
-        //}
+            var test_user = user_manager.GetUserByName(test_user_name);
+            Assert.That.Value(test_user).IsNotNull();
+
+            var login_result = controller.Login(test_user_name, test_user_password);
+            Assert.IsTrue(test_user.LoggedIn);
+        }
     }
 }

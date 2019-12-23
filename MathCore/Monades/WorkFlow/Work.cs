@@ -101,7 +101,11 @@ namespace MathCore.Monades.WorkFlow
         protected Work([CN] Work BaseWork) : base(BaseWork) { }
 
         /// <summary>Выполнение работы</summary><returns>Результат работы</returns>
-        [NN] public new IWorkResult<T> Execute() => (IWorkResult<T>)base.Execute();
+        [NN] public new IWorkResult<T> Execute()
+        {
+            var work_result = base.Execute();
+            return (IWorkResult<T>)work_result;
+        }
 
         /// <summary>Действие, выполняемое в любом случае для результата предыдущей работы</summary>
         /// <param name="action">Выполняемое действие</param>
@@ -119,6 +123,13 @@ namespace MathCore.Monades.WorkFlow
         /// <param name="function">Метод преобразования значения</param>
         /// <returns>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа выполнена успешно</returns>
         [NN] public Work<T, TResult> GetIfSuccess<TResult>([NN] Func<T, TResult> function) => new FunctionWorkIfSuccess<T, TResult>(function, this);
+
+        /// <summary>Добавление обработчика исключительных ситуаций</summary>
+        /// <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
+        /// <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
+        [NN] public Work<T> GetIfFailure([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
+
+        public static implicit operator T([NN] Work<T> work) => work.Execute().Result;
     }
 
     /// <summary>Класс-оболочка для выполняемой работы</summary>
@@ -215,7 +226,7 @@ namespace MathCore.Monades.WorkFlow
         }
 
         /// <summary>Работа по обработке ошибок</summary><typeparam name="T">Тип исключительной ситуации</typeparam>
-        private class ExceptionFunctionHandler<T> : Work<T>
+        protected class ExceptionFunctionHandler<T> : Work<T>
         {
             /// <summary>Функция-обработчик исключения</summary>
             [NN] private readonly Func<Exception, T> _ErrorHandler;
@@ -223,7 +234,7 @@ namespace MathCore.Monades.WorkFlow
             /// <summary>Инициализация новой работы по обработке ошибок</summary>
             /// <param name="ErrorHandler">Функция-обработчик ошибок</param>
             /// <param name="BaseWork">Базовая работа</param>
-            internal ExceptionFunctionHandler([NN] Func<Exception, T> ErrorHandler, [NN] Work BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
+            internal ExceptionFunctionHandler([NN] Func<Exception, T> ErrorHandler, [NN] Work<T> BaseWork) : base(BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ErrorHandler = ErrorHandler ?? throw new ArgumentNullException(nameof(ErrorHandler));
 
             /// <inheritdoc />
             protected override IWorkResult Execute(IWorkResult BaseResult)
@@ -298,12 +309,12 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Работа, которую надо выполнить в случае, если предыдущая работа завершилась с ошибкой</summary>
         /// <param name="action">Действие, выполняемое в случае неудачи предыдущего действия</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
-        [NN] public Work InvokeOnFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
+        [NN] public Work InvokeIfFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
 
         /// <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
         /// <param name="ErrorHandler">Обработчик ошибки</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
-        [NN] public Work InvokeOnFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
+        [NN] public Work InvokeIfFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
 
         /// <summary>Выполнение функции в любом случае</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>
@@ -322,11 +333,5 @@ namespace MathCore.Monades.WorkFlow
         /// <param name="function">Функция, выполняемая в случае неудачи</param>
         /// <returns>Работа, выполняющая функцию в случае неудачи предыдущей работы</returns>
         [NN] public Work<T> GetIfFailure<T>([NN] Func<T> function) => new FunctionWorkIfFailure<T>(function, this);
-
-        /// <summary>Добавление обработчика исключительных ситуаций</summary>
-        /// <typeparam name="T">Тип значения функции</typeparam>
-        /// <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
-        /// <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
-        [NN] public Work<T> GetIfFailure<T>([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
     }
 }

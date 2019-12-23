@@ -318,7 +318,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.BeginInvoke(success_action)
-               .InvokeOnFailure(test_action)
+               .InvokeIfFailure(test_action)
                .Execute();
 
             Assert.That.Value(success_action.Executed).IsTrue();
@@ -337,7 +337,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.BeginInvoke(fail_action)
-               .InvokeOnFailure(test_action)
+               .InvokeIfFailure(test_action)
                .Execute();
 
             Assert.That.Value(fail_action.Executed).IsTrue();
@@ -364,7 +364,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             }
 
             var work_result = Work.BeginInvoke(fail_action)
-               .InvokeOnFailure(ExceptionHandler)
+               .InvokeIfFailure(ExceptionHandler)
                .Execute();
 
             Assert.That.Value(fail_action.Executed).IsTrue();
@@ -476,7 +476,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var work_result = Work.BeginInvoke(begin_action)
                .Invoke(success_action1)
                .InvokeIfSuccess(success_action2)
-               .InvokeOnFailure(test_action)
+               .InvokeIfFailure(test_action)
                .Execute();
 
             Assert.That.Value(begin_action.Executed).IsTrue();
@@ -501,7 +501,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var work_result = Work.BeginInvoke(begin_action)
                .Invoke(fail_action)
                .InvokeIfSuccess(no_execute_action)
-               .InvokeOnFailure(test_action)
+               .InvokeIfFailure(test_action)
                .Execute();
 
             Assert.That.Value(begin_action.Executed).IsTrue();
@@ -527,7 +527,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var work_result = Work.BeginInvoke(begin_action)
                .Invoke(fail_action)
                .InvokeIfSuccess(no_execute_action)
-               .InvokeOnFailure(on_fail_action)
+               .InvokeIfFailure(on_fail_action)
                .Invoke(test_action)
                .Execute();
 
@@ -940,7 +940,7 @@ namespace MathCore.Tests.Monades.WorkFlow
 
             var work_result = Work.With(data_value)
                .Get(int.Parse)
-               .InvokeOnFailure(ExceptionHandler)
+               .InvokeIfFailure(ExceptionHandler)
                .Execute();
 
             Assert.That.Value(handled_exception).Is<FormatException>();
@@ -966,7 +966,7 @@ namespace MathCore.Tests.Monades.WorkFlow
 
             var work_result = Work.With(data_value)
                .Get(int.Parse)
-               .InvokeOnFailure(ExceptionHandler)
+               .InvokeIfFailure(ExceptionHandler)
                .Execute();
 
             Assert.That.Value(handled_exception).IsNull();
@@ -994,7 +994,7 @@ namespace MathCore.Tests.Monades.WorkFlow
 
             var work_result = Work.With(data_value)
                .Get(int.Parse)
-               .InvokeOnFailure(ExceptionHandler)
+               .InvokeIfFailure(ExceptionHandler)
                .Execute();
 
             Assert.That.Value(handled_exception).Is<FormatException>();
