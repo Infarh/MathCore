@@ -11,59 +11,6 @@ namespace MathCore.Monades.WorkFlow
     /// <typeparam name="TResult">Тип результата преобразования</typeparam>
     public class Work<TParameter, TResult> : Work<TResult>
     {
-        /// <summary>Работа, выполняющая обработку исключительной ситуации указанным методом (выполняется только в случае неудачи предыдущей работы)</summary>
-        private class ExceptionHandlerAlternateResult : Work<TParameter, TResult>
-        {
-            /// <summary>Инициализация нового работы по обработке исключительной ситуации</summary>
-            /// <param name="function">Функция, преобразующая исключительную ситуацию в результат</param>
-            /// <param name="BaseWork">Базовая работа, ошибка в выполнении которой приводит к выполнению текущей работы</param>
-            internal ExceptionHandlerAlternateResult([NN] Func<TParameter, TResult> function, [NN] Work<TParameter, TResult> BaseWork) : base(function, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
-
-            /// <inheritdoc />
-            protected override IWorkResult Execute(IWorkResult BaseResult)
-            {
-                var base_result = (WorkResult<TParameter, TResult>)BaseResult.NotNull();
-                if (!base_result.Failure) return base_result;
-                var parameter = base_result.Parameter;
-                try
-                {
-                    return new WorkResult<TParameter, TResult>(parameter, _WorkFunction(parameter));
-                }
-                catch (Exception error)
-                {
-                    return new WorkResult<TParameter, TResult>(parameter, base_result.Error, error);
-                }
-            }
-        }
-
-        /// <summary>Работа по обработке исключения, выполняемая в случае если предыдущая работа завершилась исключительной ситуацией</summary>
-        private class ExceptionHandlerAlternateResultWithException : Work<TParameter, TResult>
-        {
-            /// <summary>Функция, преобразующая параметр и возникшую исключительную ситуацию в результат</summary>
-            [NN] private readonly Func<TParameter, Exception, TResult> _ExceptionHandler;
-
-            /// <summary>Инициализация новой работы по обработке возникшей на предыдущем этапе исключительной ситуации</summary>
-            /// <param name="function">Функция, позволяющая преобразовать исключение в новое значение</param>
-            /// <param name="BaseWork">Базовая работа</param>
-            internal ExceptionHandlerAlternateResultWithException([NN] Func<TParameter, Exception, TResult> function, [NN] Work<TParameter, TResult> BaseWork) : base(null, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) => _ExceptionHandler = function ?? throw new ArgumentNullException(nameof(function));
-
-            /// <inheritdoc />
-            protected override IWorkResult Execute(IWorkResult BaseResult)
-            {
-                var base_result = (WorkResult<TParameter, TResult>)BaseResult.NotNull();
-                if (!base_result.Failure) return base_result;
-                var parameter = base_result.Parameter;
-                try
-                {
-                    return new WorkResult<TParameter, TResult>(parameter, _ExceptionHandler(parameter, base_result.Error));
-                }
-                catch (Exception error)
-                {
-                    return new WorkResult<TParameter, TResult>(parameter, base_result.Error, error);
-                }
-            }
-        }
-
         /// <summary>Функция преобразования значения, выполняемая в рамках работы</summary>
         private readonly Func<TParameter, TResult> _WorkFunction;
 
@@ -95,10 +42,6 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Выполнение работы</summary>
         /// <returns>Результат выполнения работы, содержавший исходные данные и полученное значение</returns>
         [NN] public new IWorkResult<TParameter, TResult> Execute() => (IWorkResult<TParameter, TResult>)base.Execute();
-
-        [NN] public Work<TParameter, TResult> IfFailure([NN] Func<TParameter, TResult> function) => new ExceptionHandlerAlternateResult(function, this);
-
-        [NN] public Work<TParameter, TResult> IfFailure([NN] Func<TParameter, Exception, TResult> function) => new ExceptionHandlerAlternateResultWithException(function, this);
     }
 
     /// <summary>Работа, возвращающая значение</summary>
@@ -189,11 +132,12 @@ namespace MathCore.Monades.WorkFlow
             protected override IWorkResult Execute(IWorkResult BaseResult)
             {
                 var base_result = BaseResult.NotNull();
-                if (!base_result.Failure) return base_result;
+                if (base_result.Success)
+                    return base_result;
                 try
                 {
                     _ErrorHandler(base_result.Error);
-                    return new WorkResult();
+                    return new WorkResult(base_result.Error);
                 }
                 catch (Exception error)
                 {
@@ -216,7 +160,7 @@ namespace MathCore.Monades.WorkFlow
             {
                 var base_result = BaseResult.NotNull();
                 return base_result.Success
-                    ? base.Execute(BaseResult)
+                    ? base.Execute(base_result)
                     : new WorkResult<T>(default(T), base_result.Error);
             }
         }
@@ -231,13 +175,10 @@ namespace MathCore.Monades.WorkFlow
             internal FunctionWorkIfFailure([NN] Func<T> WorkFunction, [NN] Work BaseWork) : base(WorkFunction, BaseWork ?? throw new ArgumentNullException(nameof(BaseWork))) { }
 
             /// <inheritdoc />
-            protected override IWorkResult Execute(IWorkResult BaseResult)
-            {
-                var base_result = BaseResult.NotNull();
-                return base_result.Failure
-                    ? base.Execute(BaseResult)
-                    : new WorkResult<T>(default(T), base_result.Error);
-            }
+            protected override IWorkResult Execute(IWorkResult BaseResult) =>
+                (BaseResult ?? throw new InvalidOperationException("Отсутствует результат выполнения базовой задачи")).Success 
+                    ? new WorkResult<T>(default(T), BaseResult.Error) 
+                    : base.Execute(BaseResult);
         }
 
         /// <summary>Работа по обработке ошибок</summary><typeparam name="T">Тип исключительной ситуации</typeparam>
@@ -255,7 +196,8 @@ namespace MathCore.Monades.WorkFlow
             protected override IWorkResult Execute(IWorkResult BaseResult)
             {
                 var base_result = BaseResult.NotNull();
-                if (!base_result.Failure) return base_result;
+                if (base_result.Success) 
+                    return base_result;
                 try
                 {
                     return new WorkResult<T>(_ErrorHandler(base_result.Error));
@@ -323,12 +265,12 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Работа, которую надо выполнить в случае, если предыдущая работа завершилась с ошибкой</summary>
         /// <param name="action">Действие, выполняемое в случае неудачи предыдущего действия</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
-        [NN] public Work IfFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
+        [NN] public Work OnFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
 
-        /// <summary>Действие, Выполняемое в случае неудачи предыдущего действия</summary>
+        /// <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
         /// <param name="ErrorHandler">Обработчик ошибки</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
-        [NN] public Work IfFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
+        [NN] public Work OnFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
 
         /// <summary>Выполнение функции в любом случае</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>

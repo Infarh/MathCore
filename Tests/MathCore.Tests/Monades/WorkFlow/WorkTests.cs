@@ -253,13 +253,13 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
-        public void IfFailure_NotExecuted_WhenBaseWorkSuccess()
+        public void OnFailure_NotExecuted_WhenBaseWorkSuccess()
         {
             var success_action = TestAction.GetSuccess();
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(success_action)
-               .IfFailure(test_action)
+               .OnFailure(test_action)
                .Execute();
 
             Assert.That.Value(success_action.Executed).IsTrue();
@@ -272,13 +272,13 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
-        public void IfFailure_Executed_WhenBaseWorkFailure()
+        public void OnFailure_Executed_WhenBaseWorkFailure()
         {
             var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
             var test_action = TestAction.GetSuccess();
 
             var work_result = Work.Begin(fail_action)
-               .IfFailure(test_action)
+               .OnFailure(test_action)
                .Execute();
 
             Assert.That.Value(fail_action.Executed).IsTrue();
@@ -291,7 +291,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
-        public void IfFailure_ExceptionHandler_Executed_WhenBaseWorkFailure()
+        public void OnFailure_ExceptionHandler_Executed_WhenBaseWorkFailure()
         {
             var expected_exception = new ApplicationException("Error message");
             var fail_action = TestAction.GetFail(expected_exception);
@@ -305,7 +305,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             }
 
             var work_result = Work.Begin(fail_action)
-               .IfFailure(ExceptionHandler)
+               .OnFailure(ExceptionHandler)
                .Execute();
 
             Assert.That.Value(fail_action.Executed).IsTrue();
@@ -313,8 +313,9 @@ namespace MathCore.Tests.Monades.WorkFlow
             Assert.That.Value(handled_exception).IsEqual(expected_exception);
             Assert.That.Value(work_result)
                .As<WorkResult>()
-               .Where(result => result.Success).Check(state => state.IsTrue())
-               .Where(result => result.Failure).Check(state => state.IsFalse());
+               .Where(result => result.Error).Check(exception => exception.IsEqual(expected_exception))
+               .Where(result => result.Success).Check(state => state.IsFalse())
+               .Where(result => result.Failure).Check(state => state.IsTrue());
         }
 
         [TestMethod]
@@ -406,7 +407,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
-        public void IfFail_NotExecute_WhenBaseWorkSuccess()
+        public void OnFailure_NotExecute_WhenBaseWorkSuccess()
         {
             var begin_action = TestAction.GetSuccess();
             var success_action1 = TestAction.GetSuccess();
@@ -416,7 +417,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var work_result = Work.Begin(begin_action)
                .Do(success_action1)
                .IfSuccess(success_action2)
-               .IfFailure(test_action)
+               .OnFailure(test_action)
                .Execute();
 
             Assert.That.Value(begin_action.Executed).IsTrue();
@@ -431,7 +432,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
-        public void IfFail_Execute_WhenBaseWorkFail()
+        public void OnFailure_Execute_WhenBaseWorkFail()
         {
             var begin_action = TestAction.GetSuccess();
             var fail_action = TestAction.GetFail(new ApplicationException("Error message"));
@@ -441,7 +442,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var work_result = Work.Begin(begin_action)
                .Do(fail_action)
                .IfSuccess(no_execute_action)
-               .IfFailure(test_action)
+               .OnFailure(test_action)
                .Execute();
 
             Assert.That.Value(begin_action.Executed).IsTrue();
@@ -467,7 +468,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             var work_result = Work.Begin(begin_action)
                .Do(fail_action)
                .IfSuccess(no_execute_action)
-               .IfFailure(on_fail_action)
+               .OnFailure(on_fail_action)
                .Do(test_action)
                .Execute();
 
@@ -571,6 +572,26 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
+        public void FunctionWork_IfFailure_NoExecuted_IfBaseWorkSuccess()
+        {
+            var begin_action = TestAction.GetSuccess();
+            var on_fail_function = TestFunction.Value("Hello World");
+
+            var work_result = Work.Begin(begin_action)
+               .IfFailure(on_fail_function.Execute)
+               .Execute();
+
+            Assert.That.Value(begin_action.Executed).IsTrue();
+            Assert.That.Value(on_fail_function.Executed).IsFalse();
+            Assert.That.Value(work_result)
+               .As<WorkResult<string>>()
+               .Where(result => result.Result).Check(value => value.IsNull())
+               .Where(result => result.Error).Check(exception => exception.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+        [TestMethod]
         public void FunctionWork_ExceptionHandler_Executed_WhenBaseWorkFail()
         {
             var begin_action = TestAction.GetSuccess();
@@ -637,7 +658,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void FunctionWork_ValueConversion_ExecuteSuccessfully()
         {
-            var data_value = "123456789";
+            const string data_value = "123456789";
 
             var work_result = Work.With(data_value)
                .Do(int.Parse)
@@ -654,9 +675,9 @@ namespace MathCore.Tests.Monades.WorkFlow
         }
 
         [TestMethod]
-        public void Functionwork_ValueConversion_Executed_IfBaseWorkSuccess()
+        public void FunctionWork_ValueConversion_Executed_IfBaseWorkSuccess()
         {
-            var data_value = "123456789";
+            const string data_value = "123456789";
 
             var work_result = Work.With(data_value)
                .Do(int.Parse)
@@ -675,7 +696,7 @@ namespace MathCore.Tests.Monades.WorkFlow
         [TestMethod]
         public void FunctionWork_ValueConversion_NoExecuted_IfBaseWorkFailure()
         {
-            var data_value = "1234!56789";
+            const string data_value = "1234!56789";
 
             var work_result = Work.With(data_value)
                .Do(int.Parse)
@@ -689,6 +710,241 @@ namespace MathCore.Tests.Monades.WorkFlow
                .Where(result => result.Error).Check(exception => exception.Is<FormatException>())
                .Where(result => result.Success).Check(state => state.IsFalse())
                .Where(result => result.Failure).Check(state => state.IsTrue());
+        }
+
+        [TestMethod]
+        public void FunctionWork_ValueConversion_ExceptionHandler_NoExecuted_IfBaseWorkSuccess()
+        {
+            const string data_value = "123456789";
+
+            var exception_handler_executed = false;
+            Exception handled_exception = null;
+
+            double ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+                return double.NaN;
+            }
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .IfSuccess(x => x.ToBase(10).Average())
+               .IfFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That.Value(exception_handler_executed).IsFalse();
+            Assert.That.Value(handled_exception).IsNull();
+
+            Assert.That.Value(work_result)
+               .As<WorkResult<int, double>>()
+               .Where(result => result.Result).Check(value => value.IsEqual(5))
+               .Where(result => result.Parameter).Check(value => value.IsEqual(123456789))
+               .Where(result => result.Error).Check(exception => exception.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+        [TestMethod]
+        public void FunctionWork_ValueConversion_ExceptionHandler_Executed_IfBaseWorkFailure()
+        {
+            const string data_value = "1234!56789";
+
+            var exception_handler_executed = false;
+            Exception handled_exception = null;
+            const double failure_value = double.NaN;
+
+            double ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+                return failure_value;
+            }
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .IfSuccess(x => x.ToBase(10).Average())
+               .IfFailure(ExceptionHandler)
+               .Execute();
+
+            Assert
+               .That.Value(exception_handler_executed).IsTrue()
+               .And.Value(handled_exception).Is<FormatException>()
+               .And.Value(work_result)
+               .As<WorkResult<double>>()
+               .Where(result => result.Result).Check(value => value.IsEqual(failure_value))
+               .Where(result => result.Error).Check(exception => exception.IsNull())
+               .Where(result => result.Success).Check(state => state.IsTrue())
+               .Where(result => result.Failure).Check(state => state.IsFalse());
+        }
+
+        [TestMethod]
+        public void FunctionWork_ValueConversion_ExceptionHandler_ExecuteWithFail()
+        {
+            const string data_value = "1234!56789";
+
+            var exception_handler_executed = false;
+            Exception handled_exception = null;
+            var expected_exception_handler_exception = new ApplicationException("Exception of exception handler");
+            double ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+                throw expected_exception_handler_exception;
+            }
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .IfSuccess(x => x.ToBase(10).Average())
+               .IfFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That.Value(exception_handler_executed).IsTrue();
+            Assert.That.Value(handled_exception).Is<FormatException>();
+            Assert.That.Value(work_result)
+               .As<WorkResult<double>>()
+               .Where(result => result.Result).Check(value => value.IsEqual(default))
+               .Where(result => result.Error).Check(exception => exception.As<AggregateException>()
+                   .Where(ex => ex.InnerExceptions[0]).Check(ex0 => ex0.Is<FormatException>())
+                   .Where(ex => ex.InnerExceptions[1]).Check(ex1 => ex1.IsEqual(expected_exception_handler_exception)))
+               .Where(result => result.Success).Check(state => state.IsFalse())
+               .Where(result => result.Failure).Check(state => state.IsTrue());
+        }
+
+        [TestMethod]
+        public void FunctionWork_ReturnFailResult_OnException()
+        {
+            var expected_exception = new ApplicationException("Expected exception");
+            var test_function_executed = false;
+            int TestFunction()
+            {
+                test_function_executed = true;
+                throw expected_exception;
+            }
+
+            var work_result = Work.Begin(TestFunction)
+               .Execute();
+
+            Assert.That.Value(test_function_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<int>>()
+               .Where(result => result.Error).Check(exception => exception.IsEqual(expected_exception))
+               .Where(result => result.Failure).Check(status => status.IsTrue())
+               .Where(result => result.Success).Check(status => status.IsFalse());
+        }
+
+        [TestMethod]
+        public void FunctionWork_ReturnFailResult_AfterFailWork_WithAggregateException()
+        {
+            var expected_base_work_exception = new ApplicationException("Expected base work exception");
+            var expected_function_exception = new ApplicationException("Expected function exception");
+            var start_action_executed = false;
+            var test_function_executed = false;
+            void BaseWorkAction()
+            {
+                start_action_executed = true;
+                throw expected_base_work_exception;
+            }
+            int TestFunction()
+            {
+                test_function_executed = true;
+                throw expected_function_exception;
+            }
+
+            var work_result = Work.Begin(BaseWorkAction)
+               .Do(TestFunction)
+               .Execute();
+
+            Assert.That.Value(test_function_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .As<WorkResult<int>>()
+               .Where(result => result.Error).Check(exception => exception.As<AggregateException>()
+                   .Where(ex => ex.InnerExceptions[0]).Check(error0 => error0.IsEqual(expected_base_work_exception))
+                   .Where(ex => ex.InnerExceptions[1]).Check(error1 => error1.IsEqual(expected_function_exception)))
+               .Where(result => result.Failure).Check(status => status.IsTrue())
+               .Where(result => result.Success).Check(status => status.IsFalse());
+        }
+
+        [TestMethod]
+        public void ExceptionHandler_Action_ExecutedCorrect()
+        {
+            const string data_value = "1234!56789";
+
+            Exception handled_exception = null;
+            var exception_handler_executed = false;
+            void ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+            }
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .OnFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That.Value(handled_exception).Is<FormatException>();
+            Assert.That.Value(exception_handler_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Where(result => result.Error).Check(exception => exception.Is<FormatException>())
+               .Where(result => result.Success).Check(status => status.IsFalse())
+               .Where(result => result.Failure).Check(status => status.IsTrue());
+        }
+
+        [TestMethod]
+        public void ExceptionHandler_NoExecuted_AfterSuccessAction()
+        {
+            const string data_value = "123456789";
+
+            Exception handled_exception = null;
+            var exception_handler_executed = false;
+            void ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+            }
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .OnFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That.Value(handled_exception).IsNull();
+            Assert.That.Value(exception_handler_executed).IsFalse();
+            Assert.That.Value(work_result)
+               .Where(result => result.Error).Check(exception => exception.IsNull())
+               .Where(result => result.Success).Check(status => status.IsTrue())
+               .Where(result => result.Failure).Check(status => status.IsFalse());
+        }
+
+        [TestMethod]
+        public void ExceptionHandler_Action_ExecutedWithException()
+        {
+            const string data_value = "1234!56789";
+            var expected_exception = new ApplicationException("Expected exception");
+
+            Exception handled_exception = null;
+            var exception_handler_executed = false;
+            void ExceptionHandler(Exception error)
+            {
+                exception_handler_executed = true;
+                handled_exception = error;
+                throw expected_exception;
+            }
+
+            var work_result = Work.With(data_value)
+               .Do(int.Parse)
+               .OnFailure(ExceptionHandler)
+               .Execute();
+
+            Assert.That.Value(handled_exception).Is<FormatException>();
+            Assert.That.Value(exception_handler_executed).IsTrue();
+            Assert.That.Value(work_result)
+               .Where(result => result.Error).Check(Exception => Exception.As<AggregateException>()
+                   .Where(ex => ex.InnerExceptions[0]).Check(inner_ex0 => inner_ex0.Is<FormatException>())
+                   .Where(ex => ex.InnerExceptions[1]).Check(inner_ex1 => inner_ex1.IsEqual(expected_exception)))
+               .Where(result => result.Success).Check(status => status.IsFalse())
+               .Where(result => result.Failure).Check(status => status.IsTrue());
         }
     }
 }
