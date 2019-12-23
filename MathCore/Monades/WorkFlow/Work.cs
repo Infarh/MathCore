@@ -106,19 +106,19 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Действие, выполняемое в любом случае для результата предыдущей работы</summary>
         /// <param name="action">Выполняемое действие</param>
         /// <returns>Работа, выполняющая действие для результата выполнения предыдущей работы</returns>
-        [NN] public Work Do([NN] Action<T> action) => new ActionWork<T>(action, this);
+        [NN] public Work Invoke([NN] Action<T> action) => new ActionWork<T>(action, this);
 
         /// <summary>Работа, в результате которой формируется результат</summary>
         /// <typeparam name="TResult">Тип результата работы</typeparam>
         /// <param name="function">Функция, выполняемая в рамках работы над параметром, получаемым от предыдущей работы</param>
         /// <returns>Работа по получению результата</returns>
-        [NN] public Work<T, TResult> Do<TResult>([NN] Func<T, TResult> function) => new Work<T, TResult>(function, this);
+        [NN] public Work<T, TResult> Get<TResult>([NN] Func<T, TResult> function) => new Work<T, TResult>(function, this);
 
         /// <summary>Выполнение преобразования в случае если предыдущая работа выполнена успешно</summary>
         /// <typeparam name="TResult">Результат преобразования</typeparam>
         /// <param name="function">Метод преобразования значения</param>
         /// <returns>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа выполнена успешно</returns>
-        [NN] public Work<T, TResult> IfSuccess<TResult>([NN] Func<T, TResult> function) => new FunctionWorkIfSuccess<T, TResult>(function, this);
+        [NN] public Work<T, TResult> GetIfSuccess<TResult>([NN] Func<T, TResult> function) => new FunctionWorkIfSuccess<T, TResult>(function, this);
     }
 
     /// <summary>Класс-оболочка для выполняемой работы</summary>
@@ -249,13 +249,13 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Начало работы на основе делегата действия</summary>
         /// <param name="WorkAction">Делегат, на основе которого формируется работа</param>
         /// <returns>Работа, выполняющая указанный делегат</returns>
-        [NN] public static ActionWork Begin([NN] Action WorkAction) => new ActionWork(WorkAction);
+        [NN] public static ActionWork BeginInvoke([NN] Action WorkAction) => new ActionWork(WorkAction);
 
         /// <summary>Начало работы с указанной функцией</summary>
         /// <typeparam name="T">Тип значения, возвращаемого функцией</typeparam>
         /// <param name="WorkFunction">Функция, выполняемая работой</param>
         /// <returns>Работа, выполняющая указанную функцию, возвращающую значение</returns>
-        [NN] public static FunctionWork<T> Begin<T>([NN] Func<T> WorkFunction) => new FunctionWork<T>(WorkFunction);
+        [NN] public static FunctionWork<T> BeginGet<T>([NN] Func<T> WorkFunction) => new FunctionWork<T>(WorkFunction);
 
         /// <summary>Фиксированное исходное значение для начала работы</summary>
         /// <typeparam name="T">Тип значения</typeparam>
@@ -288,45 +288,45 @@ namespace MathCore.Monades.WorkFlow
         /// <summary>Действие, выполняемое в любом случае</summary>
         /// <param name="action">Выполняемое действие</param>
         /// <returns>СФормированная работа, выполняемая в любом случае</returns>
-        [NN] public Work Do([NN] Action action) => new ActionWork(action, this);
+        [NN] public Work Invoke([NN] Action action) => new ActionWork(action, this);
 
         /// <summary>Действие, выполняемое в случае успеха предыдущего действия</summary>
         /// <param name="action">Выполняемое действие</param>
         /// <returns>Сформированная работа, выполняемая в случае успеха предыдущего действия</returns>
-        [NN] public Work IfSuccess([NN] Action action) => new ActionWorkIfSuccess(action, this);
+        [NN] public Work InvokeIfSuccess([NN] Action action) => new ActionWorkIfSuccess(action, this);
 
         /// <summary>Работа, которую надо выполнить в случае, если предыдущая работа завершилась с ошибкой</summary>
         /// <param name="action">Действие, выполняемое в случае неудачи предыдущего действия</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
-        [NN] public Work OnFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
+        [NN] public Work InvokeOnFailure([NN] Action action) => new ActionWorkIfFailure(action, this);
 
         /// <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
         /// <param name="ErrorHandler">Обработчик ошибки</param>
         /// <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
-        [NN] public Work OnFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
+        [NN] public Work InvokeOnFailure([NN] Action<Exception> ErrorHandler) => new ExceptionActionHandler(ErrorHandler, this);
 
         /// <summary>Выполнение функции в любом случае</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>
         /// <param name="function">Функция, выполняемая в рамках работы</param>
         /// <returns>Работа, выполняющая функцию, возвращающую значение</returns>
-        [NN] public Work<T> Do<T>([NN] Func<T> function) => new FunctionWork<T>(function, this);
+        [NN] public Work<T> Get<T>([NN] Func<T> function) => new FunctionWork<T>(function, this);
 
         /// <summary>Выполнение функции в случае если предыдущая работа завершилась успешно</summary>
         /// <typeparam name="T">Тип результата функции</typeparam>
         /// <param name="function">Выполняемая функция</param>
         /// <returns>Работа, выполняющая функцию в случае если предыдущая работа завершилась успешно</returns>
-        [NN] public Work<T> IfSuccess<T>([NN] Func<T> function) => new FunctionWorkIfSuccess<T>(function, this);
+        [NN] public Work<T> GetIfSuccess<T>([NN] Func<T> function) => new FunctionWorkIfSuccess<T>(function, this);
 
         /// <summary>Работа, выполняемая в случае если функция завершилась ошибкой</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>
         /// <param name="function">Функция, выполняемая в случае неудачи</param>
         /// <returns>Работа, выполняющая функцию в случае неудачи предыдущей работы</returns>
-        [NN] public Work<T> IfFailure<T>([NN] Func<T> function) => new FunctionWorkIfFailure<T>(function, this);
+        [NN] public Work<T> GetIfFailure<T>([NN] Func<T> function) => new FunctionWorkIfFailure<T>(function, this);
 
         /// <summary>Добавление обработчика исключительных ситуаций</summary>
         /// <typeparam name="T">Тип значения функции</typeparam>
         /// <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
         /// <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
-        [NN] public Work<T> IfFailure<T>([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
+        [NN] public Work<T> GetIfFailure<T>([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
     }
 }

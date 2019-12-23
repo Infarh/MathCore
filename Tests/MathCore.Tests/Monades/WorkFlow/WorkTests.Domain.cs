@@ -124,7 +124,7 @@ namespace MathCore.Tests.Monades.WorkFlow
             {
                 var user = new User {UserName = UserName};
                 var work = Work.With(_UserManager)
-                   .Do(new Action<UserManager>(m => m.Create(user, "")));
+                   .Invoke(new Action<UserManager>(m => m.Create(user, "")));
             }
             //.Do(m => m.Create(new User {UserName = UserName}, Password));
             //.IfSuccess(() => _Logger.Add($"{UserName} registered"))
