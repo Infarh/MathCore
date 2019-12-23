@@ -122,6 +122,15 @@ namespace MathCore.Monades.WorkFlow
         public T Result { get; }
 
         /// <summary>Инициализация нового результата выполнения работы</summary>
+        /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+        public WorkResult(Exception PrevError)
+        {
+            Error = PrevError;
+            Parameter = default;
+            Result = default;
+        }
+
+        /// <summary>Инициализация нового результата выполнения работы</summary>
         /// <param name="Parameter">Параметр текущего процесса выполнения работы</param>
         /// <param name="Result">Результат выполнения работы</param>
         /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
