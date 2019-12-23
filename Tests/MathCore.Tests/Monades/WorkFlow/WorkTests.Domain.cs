@@ -172,15 +172,16 @@ namespace MathCore.Tests.Monades.WorkFlow
 
             var registration_result = controller.Register(test_user_name, test_user_password);
 
-            Assert.IsTrue(users.Contains(user => user.UserName == test_user_name));
+            CollectionAssert.That.Collection(users).Contains(user => user.UserName == test_user_name);
             Assert.That.Value(registration_result).IsNotNull();
             Assert.That.Value(registration_result).Is<SuccessResult>();
 
             var test_user = user_manager.GetUserByName(test_user_name);
-            Assert.That.Value(test_user).IsNotNull();
-
             var login_result = controller.Login(test_user_name, test_user_password);
-            Assert.IsTrue(test_user.LoggedIn);
+            Assert.That.Value(login_result).Is<SuccessResult>();
+            Assert.That.Value(test_user)
+               .AsNotNull()
+               .Where(user => user.LoggedIn).IsTrue();
         }
     }
 }
