@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MathCore.Monades;
-using Microsoft.VisualBasic;
+using MathCore.Monades.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
 
-
-namespace MathCore.Tests.Monades
+namespace MathCore.Tests.Monades.WorkFlow
 {
     public partial class WorkTests
     {
+        #region Domain
+
         private sealed class Logger : IEnumerable<Logger.Item>
         {
             public class Item
@@ -34,7 +34,7 @@ namespace MathCore.Tests.Monades
 
             public IEnumerator<Item> GetEnumerator() { return _Items.GetEnumerator(); }
 
-            IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable) _Items).GetEnumerator(); }
+            IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable)_Items).GetEnumerator(); }
         }
 
         private sealed class User
@@ -92,7 +92,7 @@ namespace MathCore.Tests.Monades
                 if (Password is null) throw new ArgumentNullException(nameof(Password));
 
                 var user = GetUserByName(UserName);
-                if(user is null || user.LoggedIn || !CheckPassword(user, Password)) return false;
+                if (user is null || user.LoggedIn || !CheckPassword(user, Password)) return false;
                 user.LoggedIn = true;
                 user.LoginCount++;
                 return true;
@@ -103,7 +103,7 @@ namespace MathCore.Tests.Monades
                 if (UserName is null) throw new ArgumentNullException(nameof(UserName));
 
                 var user = GetUserByName(UserName);
-                if(user is null) return;
+                if (user is null) return;
                 user.LoggedIn = false;
             }
         }
@@ -119,21 +119,24 @@ namespace MathCore.Tests.Monades
                 _Logger = Logger ?? throw new ArgumentNullException(nameof(Logger));
             }
 
-            [NN] public Result Register([NN] string UserName, [NN] string Password) => Work
-               .With(_UserManager)
-               .Do(m => m.Create(new User { UserName = UserName }, Password))
-               .IfSuccess(() => _Logger.Add($"{UserName} registered"))
-               .IfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
-               .IfSuccess<Result>(() => new SuccessResult($"User {UserName} registred"))
-               .IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+            [NN]
+            public Result Register([NN] string UserName, [NN] string Password) =>
+                Work.With(_UserManager)
+                   .Invoke(m => m.Create(new User { UserName = UserName }, Password))
+                   .InvokeIfSuccess(() => _Logger.Add($"{UserName} registered"))
+                   .InvokeIfSuccess(() => _Logger.Add($"{UserName} registered"))
+                   .InvokeIfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))
+                   .GetIfSuccess<Result>(() => new SuccessResult($"User {UserName} registered"))
+                   .GetIfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
 
-            [NN] public Result Login([NN] string UserName, [NN] string Password) => Work
+            [NN]
+            public Result Login([NN] string UserName, [NN] string Password) => Work
                .With(_UserManager)
-               .Do(m => m.Login(UserName, Password))
-               .IfSuccess(() => _Logger.Add($"{UserName} login"))
-               .IfFailure(e => _Logger.Add($"{UserName} error login with reason {e.Message}", e))
-               .IfSuccess<Result>(() => new SuccessResult("Login operation complete"))
-               .IfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
+               .Invoke(m => m.Login(UserName, Password))
+               .InvokeIfSuccess(() => _Logger.Add($"{UserName} login"))
+               .InvokeIfFailure(e => _Logger.Add($"{UserName} error login with reason {e.Message}", e))
+               .GetIfSuccess<Result>(() => new SuccessResult("Login operation complete"))
+               .GetIfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
         }
 
         private abstract class Result
@@ -144,6 +147,8 @@ namespace MathCore.Tests.Monades
 
         private sealed class SuccessResult : Result { public SuccessResult(string Message) : base(Message) { } }
         private sealed class FailureResult : Result { public FailureResult(string Message) : base(Message) { } }
+
+        #endregion
 
         [TestMethod]
         public void Work_of_AccountController_RegisterUser()
@@ -166,15 +171,17 @@ namespace MathCore.Tests.Monades
             var controller = new AccountController(user_manager, logger);
 
             var registration_result = controller.Register(test_user_name, test_user_password);
-            Assert.IsTrue(users.Contains(user => user.UserName == test_user_name));
+
+            CollectionAssert.That.Collection(users).Contains(user => user.UserName == test_user_name);
             Assert.That.Value(registration_result).IsNotNull();
             Assert.That.Value(registration_result).Is<SuccessResult>();
 
             var test_user = user_manager.GetUserByName(test_user_name);
-            Assert.That.Value(test_user).IsNotNull();
-
             var login_result = controller.Login(test_user_name, test_user_password);
-            Assert.IsTrue(test_user.LoggedIn);
+            Assert.That.Value(login_result).Is<SuccessResult>();
+            Assert.That.Value(test_user)
+               .AsNotNull()
+               .Where(user => user.LoggedIn).IsTrue();
         }
     }
 }
