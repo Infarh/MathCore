@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 namespace MathCore.Threading
 {
+    /// <summary>Контекст синхронизации с максимально допустимой степенью параллелизма</summary>
     public sealed class MaxConcurrencySynchronizationContext : SynchronizationContext
     {
+        /// <summary>Семафор, ограничивающий число выполняемых задач</summary>
         private readonly SemaphoreSlim _Semaphore;
 
-        public MaxConcurrencySynchronizationContext(int maxConcurrencyLevel) => _Semaphore = new SemaphoreSlim(maxConcurrencyLevel);
+        /// <summary>Инициализация нового контекста синхронизации с ограничением числа параллельно выполняемых задач</summary>
+        /// <param name="MaxConcurrencyLevel">Максимальное число выполняемых в контексте задач</param>
+        public MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel) => _Semaphore = new SemaphoreSlim(MaxConcurrencyLevel);
 
+        /// <summary>Метод, вызываемый при освобождении семафора</summary>
+        /// <param name="SemaphoreWaitTask">Задача ожидания освобождения семафора</param>
+        /// <param name="CallState">Массив с параметрами продолжения, хранящий в первом параметре делегат, который надо вызвать, а во втором - параметр вызова делегата</param>
         private void OnSemaphoreReleased(Task SemaphoreWaitTask, object CallState)
         {
             var d = (SendOrPostCallback)((object[])CallState)[0];
@@ -26,6 +33,7 @@ namespace MathCore.Threading
             }
         }
 
+        /// <inheritdoc />
         public override void Post(SendOrPostCallback d, object state) =>
             _Semaphore
                 .WaitAsync()
@@ -36,6 +44,7 @@ namespace MathCore.Threading
                     TaskContinuationOptions.None, 
                     TaskScheduler.Default);
 
+        /// <inheritdoc />
         public override void Send(SendOrPostCallback d, object state)
         {
             _Semaphore.Wait();
