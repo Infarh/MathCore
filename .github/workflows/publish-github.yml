@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     name: Update package
 
     steps:
@@ -29,11 +29,15 @@ jobs:
         
       - name: Packing
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m
+      
+      - name: Install NuGet
+        uses: NuGet/setup-nuget@v1.0.1
+      
+      - name: Add rigistry
+        run: nuget sources add -name "MathCore" -Source https://nuget.pkg.github.com/Infarh/index.json -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
         
       - name: Pushing to GitHub.NuGet
-        run: |
-          sed 's/GITHUB_TOKEN/${{ secrets.GITHUB_TOKEN }}/g' .nuget.config > nuget.config
-          dotnet nuget push MathCore/bin/Release/*.nupkg -s "github" -n -SkipDuplicate
+        run: nuget push .\**\*.nupkg -Source "MathCore" -SkipDuplicate
         
         
         
