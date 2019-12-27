@@ -17,8 +17,8 @@ jobs:
 
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj          
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj
+          dotnet build MathCore/MathCore.csproj --nologo          
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
 
       - name: Run Tests
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
