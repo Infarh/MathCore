@@ -1,0 +1,37 @@
+name: .NET Core
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Update package
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+      
+      - name: User .NET 3.1.100
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+        
+      - name: Building
+        run: |
+          dotnet build MathCore/MathCore.csproj --nologo
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+          
+      - name: Testing
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        
+      - name: Packing
+        run: dotnet publish MathCore/MathCore.csproj -c Release
+        
+      - name: Pushing to GitHub.NuGet
+        run: dotnet nuget push .\**\*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -n -SkipDuplicate -s https://nuget.pkg.github.com/Infarh/index.json
+        
+        
+        
