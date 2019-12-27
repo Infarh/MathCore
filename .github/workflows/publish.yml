@@ -28,10 +28,10 @@ jobs:
         run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
         
       - name: Packing
-        run: dotnet publish MathCore/MathCore.csproj -c Release
+        run: dotnet pack MathCore/MathCore.csproj -c Release -v m
         
       - name: Pushing to GitHub.NuGet
-        run: dotnet nuget push MathCore/bin/Release/netstandard2.0/publish/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -n -SkipDuplicate -s https://nuget.pkg.github.com/Infarh/index.json
+        run: dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -n -SkipDuplicate -s https://nuget.pkg.github.com/Infarh/index.json
         
         
         
