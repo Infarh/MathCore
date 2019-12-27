@@ -259,7 +259,6 @@ namespace MathCore.Tests
                 var p = v.GetProjectionTo(new Vector3D(Direction));
                 var P = v.GetProjectionTo(Direction);
                 Assert.That.Value(P).IsEqual(p, 6.0e-14);
-                Assert.AreEqual(p, P, 2.9e-14, "\r\n|p - P| = {0:E}", Math.Abs(p - P));
             }
 
             Test(new Vector3D());
