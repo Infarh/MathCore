@@ -31,7 +31,9 @@ jobs:
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m
         
       - name: Pushing to GitHub.NuGet
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg --source "github" -n -SkipDuplicate
+        run: |
+          sed 's/GITHUB_TOKEN/${{ secrets.GITHUB_TOKEN }}/g' .nuget.config > nuget.config
+          dotnet nuget push MathCore/bin/Release/*.nupkg -s "github" -n -SkipDuplicate
         
         
         
