@@ -1,0 +1,34 @@
+name: Publish NuGet.org
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Update package
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+      
+      - name: User .NET 3.1.100
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+        
+      - name: Building
+        run: |
+          dotnet build MathCore/MathCore.csproj --nologo
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+          
+      - name: Testing
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        
+      - name: Packing
+        run: dotnet pack MathCore/MathCore.csproj -c Release -v m
+        
+      - name: Publishing
+        run: dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.NuGetApiKey }} -n -SkipDuplicate -s https://api.nuget.org/v3/index.json
