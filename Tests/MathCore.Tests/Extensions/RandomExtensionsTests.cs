@@ -27,7 +27,7 @@ namespace MathCore.Tests.Extensions
 
             var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.95, freedom_degree);
 
-            Assert.That.Value(pirsons_criteria).LessThan(quantile);
+            Assert.That.Value(pirsons_criteria).LessThen(quantile);
         }
 
         [TestMethod, Ignore]
@@ -50,7 +50,7 @@ namespace MathCore.Tests.Extensions
 
             var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.95, freedom_degree);
 
-            Assert.That.Value(pirsons_criteria).LessThan(quantile);
+            Assert.That.Value(pirsons_criteria).LessThen(quantile);
         }
     }
 }

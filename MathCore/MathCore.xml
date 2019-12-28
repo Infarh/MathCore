@@ -8041,6 +8041,412 @@
             <param name="X">Приводимое число</param>
             <returns>Матрица порадка 1х1</returns>
         </member>
+        <member name="T:MathCore.Monades.WorkFlow.ActionWork">
+            <summary>Работа, выполняющая действие</summary>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.ActionWork._WorkAction">
+            <summary>Действие, выполняемое работой</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.ActionWork.#ctor(System.Action,MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация нового работы на основе действия</summary>
+            <param name="WorkAction">Действие, выполняемое в рамках работы</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.ActionWork.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.ConstValueWork`1">
+            <summary>Работа, возвращающая указанное константное значение</summary>
+            <typeparam name="T">Тип возвращаемого работой значения</typeparam>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.ConstValueWork`1.Value">
+            <summary>Значение, возвращаемое работой</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.ConstValueWork`1.#ctor(`0,MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы, возвращающей константное значение</summary>
+            <param name="Value">Значение, которое будет возвращать работа</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.ConstValueWork`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.FunctionWork`1">
+            <summary>Работа, выполняющая указанную функцию</summary>
+            <typeparam name="T">Тип значения функции</typeparam>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.FunctionWork`1._WorkFunction">
+            <summary>Функция, выполняемая в рамках работы</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.FunctionWork`1.#ctor(System.Func{`0},MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы, выполняющей указанную функцию</summary>
+            <param name="WorkFunction">Функция, выполняемая работой</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.FunctionWork`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.IWorkResult">
+            <summary>Результат выполнения работы</summary>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.IWorkResult.Error">
+            <summary>Ошибка, которая произошла в ходе выполнения работы</summary>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.IWorkResult.Success">
+            <summary>Признак того, что работа завершилась успешно</summary>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.IWorkResult.Failure">
+            <summary>Признак того, что работа завершилась провалом</summary>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.IWorkResult`1">
+            <summary>Результат выполнения работы со значением</summary>
+            <typeparam name="T">Тип результата, доступного после выполнения работы</typeparam>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.IWorkResult`1.Result">
+            <summary>Результат выполнения работы</summary>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.IWorkResult`2">
+            <summary>Результат выполнения параметрической работы</summary>
+            <typeparam name="TParameter">Тип параметра работы</typeparam>
+            <typeparam name="T">Тип значения, доступного по завершении работы</typeparam>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.IWorkResult`2.Parameter">
+            <summary>Параметр, с которым работа была выполнена</summary>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work`2">
+            <summary>Работа, выполняющая преобразование данных указанным методом</summary>
+            <typeparam name="TParameter">Тип сходных данных для преобразования</typeparam>
+            <typeparam name="TResult">Тип результата преобразования</typeparam>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.Work`2._WorkFunction">
+            <summary>Функция преобразования значения, выполняемая в рамках работы</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`2.#ctor(System.Func{`0,`1},MathCore.Monades.WorkFlow.Work)">
+            <summary>Внутренняя инициализация новой работы по преобразованию значения на основе указанной функции</summary>
+            <param name="WorkFunction">Функция, преобразующая значение</param>
+            <param name="BaseWork">Базовая работа, являющаяся источником аргумента функции</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`2.#ctor(System.Func{`0,`1},MathCore.Monades.WorkFlow.Work{`0})">
+            <summary>Инициализация новой работы по преобразованию значения на основе указанной функции</summary>
+            <param name="WorkFunction">Функция, преобразующая значение</param>
+            <param name="BaseWork">Базовая работа, являющаяся источником аргумента функции</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`2.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`2.Execute">
+            <summary>Выполнение работы</summary>
+            <returns>Результат выполнения работы, содержавший исходные данные и полученное значение</returns>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work`1">
+            <summary>Работа, возвращающая значение</summary>
+            <typeparam name="T">Тип результата работы</typeparam>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work`1.FunctionWorkIfSuccess`2">
+            <summary>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа была выполнена успешно</summary>
+            <typeparam name="TParameter">Тип исходных данных преобразования</typeparam>
+            <typeparam name="TResult">Тип результата</typeparam>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.FunctionWorkIfSuccess`2.#ctor(System.Func{`1,`2},MathCore.Monades.WorkFlow.Work{`1})">
+            <summary>Инициализация новой работы по преобразованию значения, выполняемой в случае если предыдущая работа была выполнена успешно</summary>
+            <param name="WorkFunction">Метод преобразования значения</param>
+            <param name="BaseWork">Предыдущая работа, формирующая исходные данные для текущей выполняемой работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.FunctionWorkIfSuccess`2.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work`1.ActionWork`1">
+            <summary>Работа, выполняемая над результатом предыдущей работы</summary>
+            <typeparam name="TParameter">Тип результата предыдущей работы</typeparam>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.Work`1.ActionWork`1._WorkAction">
+            <summary>Действие, выполняемое над результатом предыдущей работы</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.ActionWork`1.#ctor(System.Action{`1},MathCore.Monades.WorkFlow.Work{`1})">
+            <summary>Инициализация новой работы, выполняющей действие над результатом выполнения предыдущей работы</summary>
+            <param name="WorkAction">Действие, выполняемое над результатом предыдущей работы</param>
+            <param name="BaseWork">Предыдущая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.ActionWork`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.#ctor(MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы</summary><param name="BaseWork">объект базовой работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.Execute">
+            <summary>Выполнение работы</summary><returns>Результат работы</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.Invoke(System.Action{`0})">
+            <summary>Действие, выполняемое в любом случае для результата предыдущей работы</summary>
+            <param name="action">Выполняемое действие</param>
+            <returns>Работа, выполняющая действие для результата выполнения предыдущей работы</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.Get``1(System.Func{`0,``0})">
+            <summary>Работа, в результате которой формируется результат</summary>
+            <typeparam name="TResult">Тип результата работы</typeparam>
+            <param name="function">Функция, выполняемая в рамках работы над параметром, получаемым от предыдущей работы</param>
+            <returns>Работа по получению результата</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.GetIfSuccess``1(System.Func{`0,``0})">
+            <summary>Выполнение преобразования в случае если предыдущая работа выполнена успешно</summary>
+            <typeparam name="TResult">Результат преобразования</typeparam>
+            <param name="function">Метод преобразования значения</param>
+            <returns>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа выполнена успешно</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work`1.GetIfFailure(System.Func{System.Exception,`0})">
+            <summary>Добавление обработчика исключительных ситуаций</summary>
+            <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
+            <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work">
+            <summary>Класс-оболочка для выполняемой работы</summary>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work.ActionWorkIfSuccess">
+            <summary>Работа на основе действия, выполняемая лишь в том случае, если базовая работа выполнилась успешно</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfSuccess.#ctor(System.Action,MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы, выполняемой в случае успешного выполнения предыдущей работы</summary>
+            <param name="WorkAction">Действие, выполняемое в рамках работы</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfSuccess.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work.ActionWorkIfFailure">
+            <summary>Работа на основе действия, выполняемая лишь в том случае, если базовая работа выполнилась с ошибкой</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfFailure.#ctor(System.Action,MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы, выполняемой в случае ошибочного выполнения предыдущей работы</summary>
+            <param name="WorkAction">Действие, выполняемое в рамках работы</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfFailure.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler">
+            <summary>Работа по обработке ошибок</summary>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler._ErrorHandler">
+            <summary>Действие-обработчик исключения</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler.#ctor(System.Action{System.Exception},MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы по обработке ошибок</summary>
+            <param name="ErrorHandler">Действие-обработчик ошибок</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work.FunctionWorkIfSuccess`1">
+            <summary>Работа, возвращающая результат выполнения функции в случае если предыдущая работа завершилась успешно</summary>
+            <typeparam name="T">Тип значения функции</typeparam>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfSuccess`1.#ctor(System.Func{`0},MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы, возвращающей значение функции в случае если предыдущая работа завершилась успешно</summary>
+            <param name="WorkFunction">Функция, выполняемая в рамках работы</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfSuccess`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work.FunctionWorkIfFailure`1">
+            <summary>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа завершилась исключением</summary>
+            <typeparam name="T">Тип значения</typeparam>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfFailure`1.#ctor(System.Func{`0},MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация новой работы, выполняемой в случае неудачи предыдущей работы</summary>
+            <param name="WorkFunction">Функция - генератор значения</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfFailure`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1">
+            <summary>Работа по обработке ошибок</summary><typeparam name="T">Тип исключительной ситуации</typeparam>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1._ErrorHandler">
+            <summary>Функция-обработчик исключения</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1.#ctor(System.Func{System.Exception,`0},MathCore.Monades.WorkFlow.Work{`0})">
+            <summary>Инициализация новой работы по обработке ошибок</summary>
+            <param name="ErrorHandler">Функция-обработчик ошибок</param>
+            <param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.BeginInvoke(System.Action)">
+            <summary>Начало работы на основе делегата действия</summary>
+            <param name="WorkAction">Делегат, на основе которого формируется работа</param>
+            <returns>Работа, выполняющая указанный делегат</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.BeginGet``1(System.Func{``0})">
+            <summary>Начало работы с указанной функцией</summary>
+            <typeparam name="T">Тип значения, возвращаемого функцией</typeparam>
+            <param name="WorkFunction">Функция, выполняемая работой</param>
+            <returns>Работа, выполняющая указанную функцию, возвращающую значение</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.With``1(``0)">
+            <summary>Фиксированное исходное значение для начала работы</summary>
+            <typeparam name="T">Тип значения</typeparam>
+            <param name="value">Исходное, используемое в дальнейшем, значение</param>
+            <returns>Работа, результатом которой является указанное значение</returns>
+        </member>
+        <member name="F:MathCore.Monades.WorkFlow.Work._BaseWork">
+            <summary>Базовая работа</summary>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.#ctor(MathCore.Monades.WorkFlow.Work)">
+            <summary>Инициализация нового работы</summary><param name="BaseWork">Базовая работа</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+            <summary>Выполнить действие текущей работы</summary>
+            <param name="BaseResult">Результат выполнения предыдущей работы</param>
+            <returns>Результат выполнения действия</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.Execute">
+            <summary>Выполнить работу</summary>
+            <returns>Результат выполнения работы</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.Invoke(System.Action)">
+            <summary>Действие, выполняемое в любом случае</summary>
+            <param name="action">Выполняемое действие</param>
+            <returns>СФормированная работа, выполняемая в любом случае</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.InvokeIfSuccess(System.Action)">
+            <summary>Действие, выполняемое в случае успеха предыдущего действия</summary>
+            <param name="action">Выполняемое действие</param>
+            <returns>Сформированная работа, выполняемая в случае успеха предыдущего действия</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.InvokeIfFailure(System.Action)">
+            <summary>Работа, которую надо выполнить в случае, если предыдущая работа завершилась с ошибкой</summary>
+            <param name="action">Действие, выполняемое в случае неудачи предыдущего действия</param>
+            <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.InvokeIfFailure(System.Action{System.Exception})">
+            <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
+            <param name="ErrorHandler">Обработчик ошибки</param>
+            <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.Get``1(System.Func{``0})">
+            <summary>Выполнение функции в любом случае</summary>
+            <typeparam name="T">Тип значения функции</typeparam>
+            <param name="function">Функция, выполняемая в рамках работы</param>
+            <returns>Работа, выполняющая функцию, возвращающую значение</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.GetIfSuccess``1(System.Func{``0})">
+            <summary>Выполнение функции в случае если предыдущая работа завершилась успешно</summary>
+            <typeparam name="T">Тип результата функции</typeparam>
+            <param name="function">Выполняемая функция</param>
+            <returns>Работа, выполняющая функцию в случае если предыдущая работа завершилась успешно</returns>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.Work.GetIfFailure``1(System.Func{``0})">
+            <summary>Работа, выполняемая в случае если функция завершилась ошибкой</summary>
+            <typeparam name="T">Тип значения функции</typeparam>
+            <param name="function">Функция, выполняемая в случае неудачи</param>
+            <returns>Работа, выполняющая функцию в случае неудачи предыдущей работы</returns>
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.WorkResult">
+            <summary>Результат выполнения работы</summary>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult.Error">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult.Success">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult.Failure">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult.#ctor(System.Exception,System.Exception)">
+            <summary>Инициализация нового результата выполнения работы</summary>
+            <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+            <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.WorkResult`1">
+            <summary>Результат выполнения работы со значением</summary>
+            <typeparam name="T">Тип результата, доступного после выполнения работы</typeparam>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Error">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Success">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Failure">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Result">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.#ctor(`0,System.Exception)">
+            <summary>Инициализация нового результата выполнения работы</summary>
+            <param name="Result">Результат выполнения работы</param>
+            <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.#ctor(System.Exception,System.Exception)">
+            <summary>Инициализация нового результата выполнения работы</summary>
+            <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+            <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.Equals(MathCore.Monades.WorkFlow.WorkResult{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monades.WorkFlow.WorkResult`2">
+            <summary>Результат выполнения параметрической работы</summary>
+            <typeparam name="TParameter">Тип параметра работы</typeparam>
+            <typeparam name="T">Тип значения, доступного по завершении работы</typeparam>
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Error">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Success">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Failure">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Parameter">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Result">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.#ctor(System.Exception)">
+            <summary>Инициализация нового результата выполнения работы</summary>
+            <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.#ctor(`0,`1,System.Exception)">
+            <summary>Инициализация нового результата выполнения работы</summary>
+            <param name="Parameter">Параметр текущего процесса выполнения работы</param>
+            <param name="Result">Результат выполнения работы</param>
+            <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.#ctor(`0,System.Exception,System.Exception)">
+            <summary>Инициализация нового результата выполнения работы</summary>
+            <param name="Parameter">Параметр текущего процесса выполнения работы</param>
+            <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+            <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.Equals(MathCore.Monades.WorkFlow.WorkResult{`0,`1})">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="F:MathCore.Optimization.ParticleSwarm.Swarm._Inertia">
             <summary>Вес инерции</summary>
         </member>

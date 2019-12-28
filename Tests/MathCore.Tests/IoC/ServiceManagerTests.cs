@@ -32,6 +32,20 @@ namespace MathCore.Tests.IoC
             public int GetValue() => GetHashCode();
         }
 
+        private class Service_GetThreadId : IService
+        {
+            private readonly int _ThreadId = Thread.CurrentThread.ManagedThreadId;
+
+            public int GetValue() => _ThreadId;
+        }                                                                 
+        
+        private class Service_GetTaskId : IService
+        {
+            private readonly int _TaskId = Task.CurrentId ?? -1;
+
+            public int GetValue() => _TaskId;
+        }
+
         private class Service_Value : IService
         {
             private readonly int f_Value;
@@ -196,59 +210,54 @@ namespace MathCore.Tests.IoC
             var manager = service_manager.ServiceAccessor<IService>();
 
             var main_instance1 = manager.Service;
-            var main_instance2 = manager.Service;
-
-            Assert.IsTrue(ReferenceEquals(main_instance1, main_instance2));
-            Assert.IsInstanceOfType(main_instance1, typeof(Service_GetHashCode));
-            Assert.IsInstanceOfType(main_instance2, typeof(Service_GetHashCode));
 
             IService thread1_instance1 = null;
             IService thread1_instance2 = null;
 
-            async Task Thread1InstanceMethod()
-            {
-                await Task.Delay(10).ConfigureAwait(false);
-                thread1_instance1 = manager.Service;
-                thread1_instance2 = manager.Service;
-            }
-
-            void Thread1AssertMethod(Task t)
-            {
-                Assert.IsNotNull(thread1_instance1);
-                Assert.IsNotNull(thread1_instance2);
-                Assert.IsTrue(ReferenceEquals(thread1_instance1, thread1_instance2));
-                Assert.IsFalse(ReferenceEquals(main_instance1, thread1_instance1));
-                Assert.IsInstanceOfType(thread1_instance1, typeof(Service_GetHashCode));
-                Assert.IsInstanceOfType(thread1_instance2, typeof(Service_GetHashCode));
-            }
-
-            var task1 = Task.Run(Thread1InstanceMethod).ContinueWith(Thread1AssertMethod);
-
-
             IService thread2_instance1 = null;
             IService thread2_instance2 = null;
 
-            async Task Thread2InstanceMethod()
+            var starter = new ManualResetEvent(false);
+            var waiter1 = new ManualResetEvent(false);
+            var waiter2 = new ManualResetEvent(false);
+            var thread1 = new Thread(() =>
             {
-                await Task.Delay(10).ConfigureAwait(false);
+                thread1_instance1 = manager.Service;
+                waiter1.Set();
+                starter.WaitOne();
+                thread1_instance2 = manager.Service;
+            });
+            var thread2 = new Thread(() =>
+            {
                 thread2_instance1 = manager.Service;
+                waiter2.Set();
+                starter.WaitOne();
                 thread2_instance2 = manager.Service;
-            }
+            });
 
-            void Thread2AssertMethod(Task t)
-            {
-                Assert.IsNotNull(thread2_instance1);
-                Assert.IsNotNull(thread2_instance2);
-                Assert.IsTrue(ReferenceEquals(thread2_instance1, thread2_instance2));
-                Assert.IsFalse(ReferenceEquals(main_instance1, thread2_instance1));
-                Assert.IsFalse(ReferenceEquals(thread1_instance1, thread2_instance1));
-                Assert.IsInstanceOfType(thread2_instance1, typeof(Service_GetHashCode));
-                Assert.IsInstanceOfType(thread2_instance2, typeof(Service_GetHashCode));
-            }
+            thread1.Start();
+            thread2.Start();
 
-            var task2 = Task.Run(Thread2InstanceMethod).ContinueWith(Thread2AssertMethod);
+            waiter2.WaitOne();
+            waiter1.WaitOne();
 
-            Task.WhenAll(task1, task2).Wait();
+            starter.Set();
+
+            thread1.Join();
+            thread2.Join();
+
+            var main_instance2 = manager.Service;
+
+            Assert.That.Value(main_instance1).IsReferenceEquals(main_instance2);
+            Assert.That.Value(thread1_instance1).IsReferenceEquals(thread1_instance2);
+            Assert.That.Value(thread2_instance1).IsReferenceEquals(thread2_instance2);
+
+            Assert.That.Value(main_instance1)
+               .IsNotReferenceEquals(thread1_instance1)
+               .IsNotReferenceEquals(thread2_instance1);
+
+            Assert.That.Value(thread1_instance1)
+               .IsNotReferenceEquals(thread2_instance1);
         }
 
         [TestMethod]
@@ -270,64 +279,59 @@ namespace MathCore.Tests.IoC
         public void ServiceRegistration_SingletonByThread_Factory()
         {
             var service_manager = new ServiceManager();
-            service_manager.RegisterSingleThread<IService>(() => new Service_GetHashCode());
+            service_manager.RegisterSingleThread(() => new Service_GetThreadId());
 
-            var manager = service_manager.ServiceAccessor<IService>();
+            var manager = service_manager.ServiceAccessor<Service_GetThreadId>();
 
             var main_instance1 = manager.Service;
+
+            Service_GetThreadId thread1_instance1 = null;
+            Service_GetThreadId thread1_instance2 = null;
+
+            Service_GetThreadId thread2_instance1 = null;
+            Service_GetThreadId thread2_instance2 = null;
+
+            var starter = new ManualResetEvent(false);
+            var waiter1 = new ManualResetEvent(false);
+            var waiter2 = new ManualResetEvent(false);
+            var thread1 = new Thread(() =>
+            {
+                thread1_instance1 = manager.Service;
+                waiter1.Set();
+                starter.WaitOne();
+                thread1_instance2 = manager.Service;
+            });
+            var thread2 = new Thread(() =>
+            {
+                thread2_instance1 = manager.Service;
+                waiter2.Set();
+                starter.WaitOne();
+                thread2_instance2 = manager.Service;
+            });
+
+            thread1.Start();
+            thread2.Start();
+
+            waiter2.WaitOne();
+            waiter1.WaitOne();
+
+            starter.Set();
+
+            thread1.Join();
+            thread2.Join();
+
             var main_instance2 = manager.Service;
 
-            Assert.IsTrue(ReferenceEquals(main_instance1, main_instance2));
-            Assert.IsInstanceOfType(main_instance1, typeof(Service_GetHashCode));
-            Assert.IsInstanceOfType(main_instance2, typeof(Service_GetHashCode));
+            Assert.That.Value(main_instance1).IsReferenceEquals(main_instance2);
+            Assert.That.Value(thread1_instance1).IsReferenceEquals(thread1_instance2);
+            Assert.That.Value(thread2_instance1).IsReferenceEquals(thread2_instance2);
 
-            IService thread1_instance1 = null;
-            IService thread1_instance2 = null;
+            Assert.That.Value(main_instance1)
+               .IsNotReferenceEquals(thread1_instance1)
+               .IsNotReferenceEquals(thread2_instance1);
 
-            async Task Thread1InstanceMethod()
-            {
-                await Task.Delay(10).ConfigureAwait(false);
-                thread1_instance1 = manager.Service;
-                thread1_instance2 = manager.Service;
-            }
-
-            void Thread1AssertMethod(Task t)
-            {
-                Assert.IsNotNull(thread1_instance1);
-                Assert.IsNotNull(thread1_instance2);
-                Assert.IsTrue(ReferenceEquals(thread1_instance1, thread1_instance2));
-                Assert.IsFalse(ReferenceEquals(main_instance1, thread1_instance1));
-                Assert.IsInstanceOfType(thread1_instance1, typeof(Service_GetHashCode));
-                Assert.IsInstanceOfType(thread1_instance2, typeof(Service_GetHashCode));
-            }
-
-            var task1 = Task.Run(Thread1InstanceMethod).ContinueWith(Thread1AssertMethod);
-
-
-            IService thread2_instance1 = null;
-            IService thread2_instance2 = null;
-
-            async Task Instance2ThreadMethod()
-            {
-                await Task.Delay(10).ConfigureAwait(false);
-                thread2_instance1 = manager.Service;
-                thread2_instance2 = manager.Service;
-            }
-
-            void Thread2AssertMethod(Task t)
-            {
-                Assert.IsNotNull(thread2_instance1);
-                Assert.IsNotNull(thread2_instance2);
-                Assert.IsTrue(ReferenceEquals(thread2_instance1, thread2_instance2));
-                Assert.IsFalse(ReferenceEquals(main_instance1, thread2_instance1));
-                Assert.IsFalse(ReferenceEquals(thread1_instance1, thread2_instance1));
-                Assert.IsInstanceOfType(thread2_instance1, typeof(Service_GetHashCode));
-                Assert.IsInstanceOfType(thread2_instance2, typeof(Service_GetHashCode));
-            }
-
-            var task2 = Task.Run(Instance2ThreadMethod).ContinueWith(Thread2AssertMethod);
-
-            Task.WhenAll(task1, task2).Wait();
+            Assert.That.Value(thread1_instance1)
+               .IsNotReferenceEquals(thread2_instance1);
         }
 
         [TestMethod]
