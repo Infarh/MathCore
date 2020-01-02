@@ -1,30 +1,30 @@
-using System.Linq.Expressions;
+п»їusing System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реализующий оператор деления</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ РґРµР»РµРЅРёСЏ</summary>
     public class DivisionOperatorNode : OperatorNode
     {
         public const string NodeName = "/";
 
-        /// <summary>Инициализация узла оператора деления</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р° РѕРїРµСЂР°С‚РѕСЂР° РґРµР»РµРЅРёСЏ</summary>
         public DivisionOperatorNode() : base(NodeName, 15) { }
 
-        /// <summary>Вычисление значения узла</summary>
-        /// <returns>Значение узла</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</returns>
         public override double Compute() => (((ComputedNode) Left)?.Compute() ?? 1) / ((ComputedNode)Right).Compute();
 
-        /// <summary>Компиляция узла</summary>
-        /// <returns>Скомпилированное выражение узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</returns>
         public override Expression Compile() => Expression.Divide(((ComputedNode) Left)?.Compile() ?? Expression.Constant(1.0), ((ComputedNode)Right).Compile());
 
-        /// <summary>Компиляция узла с параметрами</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
-        /// <returns>Скомпилированное выражение узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё</summary>
+        /// <param name="Parameters">РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</returns>
         public override Expression Compile(params ParameterExpression[] Parameters) => Expression.Divide(((ComputedNode) Left)?.Compile(Parameters) ?? Expression.Constant(1.0), ((ComputedNode)Right).Compile(Parameters));
 
-        /// <summary>Строковое представление узла</summary>
-        /// <returns>Строковое представление</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
         public override ExpressionTreeNode Clone() => CloneOperatorNode<DivisionOperatorNode>();
     }
 }

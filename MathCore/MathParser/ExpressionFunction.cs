@@ -1,39 +1,39 @@
-using System;
+п»їusing System;
 using System.Linq;
 
 namespace MathCore.MathParser
 {
-    /// <summary>функция в структуре математического выражения</summary>
+    /// <summary>С„СѓРЅРєС†РёСЏ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>
     {
         private Delegate _Delegate;
 
-        /// <summary>Делегат функции</summary>
+        /// <summary>Р”РµР»РµРіР°С‚ С„СѓРЅРєС†РёРё</summary>
         public Delegate Delegate { get => _Delegate; set => Set(ref _Delegate, value); }
 
-        /// <summary>Массив имён аргументов</summary>
+        /// <summary>РњР°СЃСЃРёРІ РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ</summary>
         public string[] Arguments { get; }
 
-        /// <summary>Инициализация новой функции структуры математического выражения по сигнатуре</summary>
-        /// <param name="Name">Имя функции</param>
-        /// <param name="Arguments">списко имён аргументов</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ С„СѓРЅРєС†РёРё СЃС‚СЂСѓРєС‚СѓСЂС‹ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ РїРѕ СЃРёРіРЅР°С‚СѓСЂРµ</summary>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
+        /// <param name="Arguments">СЃРїРёСЃРєРѕ РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
         public ExpressionFunction(string Name, string[] Arguments) : base(Name) => this.Arguments = Arguments;
 
-        /// <summary>Метод получения значения функции по массиву значений её аргументов</summary>
-        /// <param name="arguments">Массив аргументов функции</param>
-        /// <returns>Значение функции</returns>
+        /// <summary>РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё РїРѕ РјР°СЃСЃРёРІСѓ Р·РЅР°С‡РµРЅРёР№ РµС‘ Р°СЂРіСѓРјРµРЅС‚РѕРІ</summary>
+        /// <param name="arguments">РњР°СЃСЃРёРІ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё</returns>
         public double GetValue(double[] arguments) => (double)Delegate.DynamicInvoke(arguments.Cast<object>().ToArray());
 
-        /// <summary>Проверка на эквивалентность сигнатуре</summary>
-        /// <param name="sName">Имя функции</param>
-        /// <param name="ArgumentsCount">Количество аргументов</param>
-        /// <returns>Истина, если сигнатура соответствует функции</returns>
+        /// <summary>РџСЂРѕРІРµСЂРєР° РЅР° СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚СЊ СЃРёРіРЅР°С‚СѓСЂРµ</summary>
+        /// <param name="sName">РРјСЏ С„СѓРЅРєС†РёРё</param>
+        /// <param name="ArgumentsCount">РљРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СЃРёРіРЅР°С‚СѓСЂР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С„СѓРЅРєС†РёРё</returns>
         public bool IsEqualSignature(string sName, int ArgumentsCount) => Name == sName && Arguments.Length == ArgumentsCount;
 
-        /// <summary>Проверка на эквивалентность сигнатуре</summary>
-        /// <param name="sName">Имя функции</param>
-        /// <param name="Arguments">Массив имён аргументов</param>
-        /// <returns>Истина, если сигнатура соответствует функции</returns>
+        /// <summary>РџСЂРѕРІРµСЂРєР° РЅР° СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚СЊ СЃРёРіРЅР°С‚СѓСЂРµ</summary>
+        /// <param name="sName">РРјСЏ С„СѓРЅРєС†РёРё</param>
+        /// <param name="Arguments">РњР°СЃСЃРёРІ РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СЃРёРіРЅР°С‚СѓСЂР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С„СѓРЅРєС†РёРё</returns>
         public bool IsEqualSignature(string sName, string[] Arguments)
         {
             if(!string.Equals(Name, sName, StringComparison.CurrentCulture)) return false;
@@ -51,12 +51,12 @@ namespace MathCore.MathParser
             return true;
         }
 
-        /// <summary>Метод получения значения функции. В общем виде не поддерживается.</summary>
-        /// <returns>Значение функции</returns>
+        /// <summary>РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё. Р’ РѕР±С‰РµРј РІРёРґРµ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ.</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё</returns>
         public override double GetValue() => throw new NotSupportedException();
 
-        /// <summary>Клонирование функции</summary>
-        /// <returns>Клон функции</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ С„СѓРЅРєС†РёРё</summary>
+        /// <returns>РљР»РѕРЅ С„СѓРЅРєС†РёРё</returns>
         public ExpressionFunction Clone() => new ExpressionFunction(Name, Arguments) { Delegate = (Delegate)Delegate.Clone() };
 
         object ICloneable.Clone() => Clone();

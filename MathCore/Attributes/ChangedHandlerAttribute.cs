@@ -1,17 +1,17 @@
-namespace System
+п»їnamespace System
 {
-    /// <summary>Указывает процедуру без параметров, определённую в классе, которая должна быть вызвана после изменения значения свойства</summary>
+    /// <summary>РЈРєР°Р·С‹РІР°РµС‚ РїСЂРѕС†РµРґСѓСЂСѓ Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ, РѕРїСЂРµРґРµР»С‘РЅРЅСѓСЋ РІ РєР»Р°СЃСЃРµ, РєРѕС‚РѕСЂР°СЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹Р·РІР°РЅР° РїРѕСЃР»Рµ РёР·РјРµРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public sealed class ChangedHandlerAttribute : Attribute
     {
-        /// <summary>Имя метода-реакции на изменение значения свойства</summary>
+        /// <summary>РРјСЏ РјРµС‚РѕРґР°-СЂРµР°РєС†РёРё РЅР° РёР·РјРµРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</summary>
         public string MethodName { get; set; }
 
-        /// <summary>Инициализация нового экземпляра <see cref="DependencyOnAttribute"/></summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="DependencyOnAttribute"/></summary>
         public ChangedHandlerAttribute() { }
 
-        /// <summary>Инициализация нового экземпляра <see cref="DependencyOnAttribute"/></summary>
-        /// <param name="MethodName">Имя метода-реакции на изменение значения свойства</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="DependencyOnAttribute"/></summary>
+        /// <param name="MethodName">РРјСЏ РјРµС‚РѕРґР°-СЂРµР°РєС†РёРё РЅР° РёР·РјРµРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</param>
         public ChangedHandlerAttribute(string MethodName) => this.MethodName = MethodName;
     }
 }

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -6,57 +6,57 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.Values
 {
-    /// <summary>Измеритель скорости потока данных</summary>
+    /// <summary>РР·РјРµСЂРёС‚РµР»СЊ СЃРєРѕСЂРѕСЃС‚Рё РїРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
     public class StreamDataSpeedValue
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Названия скоростей</summary>
-        private static readonly string[] __DataNames = Consts.DataLength.Bytes.GetDataNames().Initialize((s, i) => s + "/с");
+        /// <summary>РќР°Р·РІР°РЅРёСЏ СЃРєРѕСЂРѕСЃС‚РµР№</summary>
+        private static readonly string[] __DataNames = Consts.DataLength.Bytes.GetDataNames().Initialize((s, i) => s + "/СЃ");
 
-        /// <summary>Текущее время</summary>
+        /// <summary>РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ</summary>
         private static DateTime Now { [DST] get => DateTime.Now; }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Значение, усреднённое во времени</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ, СѓСЃСЂРµРґРЅС‘РЅРЅРѕРµ РІРѕ РІСЂРµРјРµРЅРё</summary>
         private readonly TimeAverageValue _AverageValue = new TimeAverage2Value(30);
 
-        /// <summary>Поток данных</summary>
+        /// <summary>РџРѕС‚РѕРє РґР°РЅРЅС‹С…</summary>
         private readonly Stream _DataStream;
 
-        /// <summary>Последнее положение в потоке денных</summary>
+        /// <summary>РџРѕСЃР»РµРґРЅРµРµ РїРѕР»РѕР¶РµРЅРёРµ РІ РїРѕС‚РѕРєРµ РґРµРЅРЅС‹С…</summary>
         private long _LastPosition;
 
-        /// <summary>Последнее время</summary>
+        /// <summary>РџРѕСЃР»РµРґРЅРµРµ РІСЂРµРјСЏ</summary>
         private DateTime _LastTime;
 
-        /// <summary>Количество знаков после запятой в строковом представлении</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№ РІ СЃС‚СЂРѕРєРѕРІРѕРј РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРё</summary>
         private int _Round = 2;
 
-        /// <summary>Последнее зафиксированное значение скорости</summary>
+        /// <summary>РџРѕСЃР»РµРґРЅРµРµ Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё</summary>
         private double _LastSpeedValue;
 
-        /// <summary>Минимально допустимый интервал времени в секундах для проверки значения скорости</summary>
+        /// <summary>РњРёРЅРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјС‹Р№ РёРЅС‚РµСЂРІР°Р» РІСЂРµРјРµРЅРё РІ СЃРµРєСѓРЅРґР°С… РґР»СЏ РїСЂРѕРІРµСЂРєРё Р·РЅР°С‡РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё</summary>
         private double _SpeedCheckTimeout = 0.25;
 
         /* ------------------------------------------------------------------------------------------ */
 
 
-        /// <summary>Количество знаков после запятой в строковом представлении</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№ РІ СЃС‚СЂРѕРєРѕРІРѕРј РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРё</summary>
         public int Round
         {
             [DST] get => _Round;
             [DST] set => _Round = value;
         }
 
-        /// <summary>Мгновенное значение скорости</summary>
+        /// <summary>РњРіРЅРѕРІРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё</summary>
         public double Value { [DST] get => CheckSpeed(); }
 
-        /// <summary>Усреднённое значение скорости</summary>
+        /// <summary>РЈСЃСЂРµРґРЅС‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё</summary>
         public double AverageValue { [DST] get => _AverageValue.Add(Value); }
 
-        /// <summary>Строковое представление скорости</summary>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё</summary>
         public string SpeedStr
         {
             [DST]
@@ -69,14 +69,14 @@ namespace MathCore.Values
             }
         }
 
-        /// <summary>Постоянная времени усреднения </summary>
+        /// <summary>РџРѕСЃС‚РѕСЏРЅРЅР°СЏ РІСЂРµРјРµРЅРё СѓСЃСЂРµРґРЅРµРЅРёСЏ </summary>
         public double AverageTau
         {
             [DST] get => _AverageValue.Tau;
             [DST] set => _AverageValue.Tau = value;
         }
 
-        /// <summary>Минимально домустимый интервал времени проверки скорости</summary>
+        /// <summary>РњРёРЅРёРјР°Р»СЊРЅРѕ РґРѕРјСѓСЃС‚РёРјС‹Р№ РёРЅС‚РµСЂРІР°Р» РІСЂРµРјРµРЅРё РїСЂРѕРІРµСЂРєРё СЃРєРѕСЂРѕСЃС‚Рё</summary>
         public double SpeedCheckTimeout
         {
             [DST]
@@ -87,9 +87,9 @@ namespace MathCore.Values
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Новый измеритель скорости потока данных</summary>
-        /// <param name="DataStream">Поток данных для измерения</param>
-        /// <exception cref="ArgumentNullException">Исключение возникает при нуливой ссылке на поток данных</exception>
+        /// <summary>РќРѕРІС‹Р№ РёР·РјРµСЂРёС‚РµР»СЊ СЃРєРѕСЂРѕСЃС‚Рё РїРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
+        /// <param name="DataStream">РџРѕС‚РѕРє РґР°РЅРЅС‹С… РґР»СЏ РёР·РјРµСЂРµРЅРёСЏ</param>
+        /// <exception cref="ArgumentNullException">РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РЅСѓР»РёРІРѕР№ СЃСЃС‹Р»РєРµ РЅР° РїРѕС‚РѕРє РґР°РЅРЅС‹С…</exception>
         public StreamDataSpeedValue(Stream DataStream)
         {
             _DataStream = DataStream;
@@ -98,7 +98,7 @@ namespace MathCore.Values
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Сброс измерителя: установка стартового значения положения в потоке, сброс усреднителя</summary>
+        /// <summary>РЎР±СЂРѕСЃ РёР·РјРµСЂРёС‚РµР»СЏ: СѓСЃС‚Р°РЅРѕРІРєР° СЃС‚Р°СЂС‚РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РѕР¶РµРЅРёСЏ РІ РїРѕС‚РѕРєРµ, СЃР±СЂРѕСЃ СѓСЃСЂРµРґРЅРёС‚РµР»СЏ</summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Reset()
         {
@@ -107,8 +107,8 @@ namespace MathCore.Values
             _LastTime = Now;
         }
 
-        /// <summary>Получить измерение скорости</summary>
-        /// <returns>Мгновенная измеренная скорость перемещения в потоке</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РёР·РјРµСЂРµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё</summary>
+        /// <returns>РњРіРЅРѕРІРµРЅРЅР°СЏ РёР·РјРµСЂРµРЅРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїРµСЂРµРјРµС‰РµРЅРёСЏ РІ РїРѕС‚РѕРєРµ</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         private double CheckSpeed()
         {
@@ -133,9 +133,9 @@ namespace MathCore.Values
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Неявное преобразование измерителя скорости к значению скорости (усреднённому)</summary>
-        /// <param name="speed">Измеритель скорости</param>
-        /// <returns>Значение скосроти</returns>
+        /// <summary>РќРµСЏРІРЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёР·РјРµСЂРёС‚РµР»СЏ СЃРєРѕСЂРѕСЃС‚Рё Рє Р·РЅР°С‡РµРЅРёСЋ СЃРєРѕСЂРѕСЃС‚Рё (СѓСЃСЂРµРґРЅС‘РЅРЅРѕРјСѓ)</summary>
+        /// <param name="speed">РР·РјРµСЂРёС‚РµР»СЊ СЃРєРѕСЂРѕСЃС‚Рё</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃРєРѕСЃСЂРѕС‚Рё</returns>
         public static implicit operator double(StreamDataSpeedValue speed) => speed.AverageValue;
 
         /* ------------------------------------------------------------------------------------------ */

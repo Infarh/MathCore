@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using MathCore.Annotations;
@@ -7,44 +7,44 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser.ExpressionTrees
 {
-    /// <summary>Дерево выражения</summary>
+    /// <summary>Р”РµСЂРµРІРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public sealed class ExpressionTree : IDisposable, ICloneable<ExpressionTree>, IEnumerable<ExpressionTreeNode>
     {
         /* --------------------------------------------------------------------------------------------- */
 
-        /// <summary>Метод обхода дерева</summary>
+        /// <summary>РњРµС‚РѕРґ РѕР±С…РѕРґР° РґРµСЂРµРІР°</summary>
         public enum BypassingType
         {
-            /// <summary>Левое поддерево, правое подерево, корень</summary>
+            /// <summary>Р›РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, РїСЂР°РІРѕРµ РїРѕРґРµСЂРµРІРѕ, РєРѕСЂРµРЅСЊ</summary>
             LeftRightRoot,
-            /// <summary>Левое поддерево, корень, правое поддерево</summary>
+            /// <summary>Р›РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, РєРѕСЂРµРЅСЊ, РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
             LeftRootRight,
-            /// <summary>Корень, левое поддерево, правое поддерево</summary>
+            /// <summary>РљРѕСЂРµРЅСЊ, Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
             RootLeftRight,
-            /// <summary>Правое поддерево, левое поддерево, корень</summary>
+            /// <summary>РџСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, РєРѕСЂРµРЅСЊ</summary>
             RightLeftRoot,
-            /// <summary>Правое поддерево, корень, левое поддерево</summary>
+            /// <summary>РџСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, РєРѕСЂРµРЅСЊ, Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
             RightRootLeft,
-            /// <summary>Корень, правое поддерево, левое поддерево</summary>
+            /// <summary>РљРѕСЂРµРЅСЊ, РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ, Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
             RootRightLeft
         }
 
         /* --------------------------------------------------------------------------------------------- */
 
-        /// <summary>Корень</summary>
+        /// <summary>РљРѕСЂРµРЅСЊ</summary>
         public ExpressionTreeNode Root { get; set; }
 
         /* --------------------------------------------------------------------------------------------- */
 
-        /// <summary>Инициализация нового дерева математического выражения</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РґРµСЂРµРІР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         public ExpressionTree() { }
 
-        /// <summary>Инициализация нового дерева математического выражения</summary><param name="Root">Узел - корень дерева</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РґРµСЂРµРІР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary><param name="Root">РЈР·РµР» - РєРѕСЂРµРЅСЊ РґРµСЂРµРІР°</param>
         public ExpressionTree(ExpressionTreeNode Root) => this.Root = Root;
 
         /* --------------------------------------------------------------------------------------------- */
 
-        /// <summary>Очистить дерево</summary>
+        /// <summary>РћС‡РёСЃС‚РёС‚СЊ РґРµСЂРµРІРѕ</summary>
         public void Clear()
         {
             var root = Root;
@@ -52,12 +52,12 @@ namespace MathCore.MathParser.ExpressionTrees
             root?.Dispose();
         }
 
-        /// <summary>Удалить узел</summary><param name="Node">Удаляемый узел</param>
+        /// <summary>РЈРґР°Р»РёС‚СЊ СѓР·РµР»</summary><param name="Node">РЈРґР°Р»СЏРµРјС‹Р№ СѓР·РµР»</param>
         public void Remove([NotNull] ExpressionTreeNode Node)
         {
-            // сохраняем ссылку на предка узла
+            // СЃРѕС…СЂР°РЅСЏРµРј СЃСЃС‹Р»РєСѓ РЅР° РїСЂРµРґРєР° СѓР·Р»Р°
             var parent = Node.Parent;
-            // Сохраняем ссылки на поддеревья
+            // РЎРѕС…СЂР°РЅСЏРµРј СЃСЃС‹Р»РєРё РЅР° РїРѕРґРґРµСЂРµРІСЊСЏ
             var right = Node.Right;
             var left = Node.Left;
 
@@ -65,65 +65,65 @@ namespace MathCore.MathParser.ExpressionTrees
             Node.Left = null;
             Node.Right = null;
 
-            if(parent is null) // Если у узла нет родительского узла
-                if(Node == Root)    // и при этом он является корнем
+            if(parent is null) // Р•СЃР»Рё Сѓ СѓР·Р»Р° РЅРµС‚ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ СѓР·Р»Р°
+                if(Node == Root)    // Рё РїСЂРё СЌС‚РѕРј РѕРЅ СЏРІР»СЏРµС‚СЃСЏ РєРѕСЂРЅРµРј
                 {
                     if(left is null)
                     {
                         if(right is null) return;
-                        right.Parent = null; // обнулить ссылку на корень
+                        right.Parent = null; // РѕР±РЅСѓР»РёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РєРѕСЂРµРЅСЊ
                         Root = right;
                         return;
                     }
-                    if(right is null) // Если нет правого поддерева
+                    if(right is null) // Р•СЃР»Рё РЅРµС‚ РїСЂР°РІРѕРіРѕ РїРѕРґРґРµСЂРµРІР°
                     {
-                        left.Parent = null; // Обнулить ссылку у левого поддерева на корень
+                        left.Parent = null; // РћР±РЅСѓР»РёС‚СЊ СЃСЃС‹Р»РєСѓ Сѓ Р»РµРІРѕРіРѕ РїРѕРґРґРµСЂРµРІР° РЅР° РєРѕСЂРµРЅСЊ
                         Root = left;
                         return;
                     }
 
-                    Root = left;    // корнем дерева нзначается левое поддерево удаляемого узла
-                    //Выбираем в левом поддереве самый правый узел
+                    Root = left;    // РєРѕСЂРЅРµРј РґРµСЂРµРІР° РЅР·РЅР°С‡Р°РµС‚СЃСЏ Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ СѓРґР°Р»СЏРµРјРѕРіРѕ СѓР·Р»Р°
+                    //Р’С‹Р±РёСЂР°РµРј РІ Р»РµРІРѕРј РїРѕРґРґРµСЂРµРІРµ СЃР°РјС‹Р№ РїСЂР°РІС‹Р№ СѓР·РµР»
                     left.LastRightChild
-                        .Right = right; // и в его правое поддерево записываем правое поддерево удаляемого узла
+                        .Right = right; // Рё РІ РµРіРѕ РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ Р·Р°РїРёСЃС‹РІР°РµРј РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ СѓРґР°Р»СЏРµРјРѕРіРѕ СѓР·Р»Р°
                     return;
                 }
-                else //если узел не является корнем и не имеет предка, то это ошибка - узел не принадлежит дереву
-                    throw new ArgumentException("Удаляемый узел не принадлежит дереву");
+                else //РµСЃР»Рё СѓР·РµР» РЅРµ СЏРІР»СЏРµС‚СЃСЏ РєРѕСЂРЅРµРј Рё РЅРµ РёРјРµРµС‚ РїСЂРµРґРєР°, С‚Рѕ СЌС‚Рѕ РѕС€РёР±РєР° - СѓР·РµР» РЅРµ РїСЂРёРЅР°РґР»РµР¶РёС‚ РґРµСЂРµРІСѓ
+                    throw new ArgumentException("РЈРґР°Р»СЏРµРјС‹Р№ СѓР·РµР» РЅРµ РїСЂРёРЅР°РґР»РµР¶РёС‚ РґРµСЂРµРІСѓ");
 
-            // узел не является корневым.
-            if(Node.IsLeftSubtree) // Если узел является левым поддеревом
+            // СѓР·РµР» РЅРµ СЏРІР»СЏРµС‚СЃСЏ РєРѕСЂРЅРµРІС‹Рј.
+            if(Node.IsLeftSubtree) // Р•СЃР»Рё СѓР·РµР» СЏРІР»СЏРµС‚СЃСЏ Р»РµРІС‹Рј РїРѕРґРґРµСЂРµРІРѕРј
             {
-                if(left is null) // Если левого поддерева нет
-                    parent.Left = right; // то левым поддеревом родительского узла будет правое поддерево
+                if(left is null) // Р•СЃР»Рё Р»РµРІРѕРіРѕ РїРѕРґРґРµСЂРµРІР° РЅРµС‚
+                    parent.Left = right; // С‚Рѕ Р»РµРІС‹Рј РїРѕРґРґРµСЂРµРІРѕРј СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ СѓР·Р»Р° Р±СѓРґРµС‚ РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ
                 else
-                {   //иначе - левое поддерево
+                {   //РёРЅР°С‡Рµ - Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ
                     parent.Left = left;
-                    // в самый правый дочерний узел левого поддерева записать правое
+                    // РІ СЃР°РјС‹Р№ РїСЂР°РІС‹Р№ РґРѕС‡РµСЂРЅРёР№ СѓР·РµР» Р»РµРІРѕРіРѕ РїРѕРґРґРµСЂРµРІР° Р·Р°РїРёСЃР°С‚СЊ РїСЂР°РІРѕРµ
                     left.LastRightChild.Right = right;
                 }
             }
-            else // иначе узел является правым поддеревом
+            else // РёРЅР°С‡Рµ СѓР·РµР» СЏРІР»СЏРµС‚СЃСЏ РїСЂР°РІС‹Рј РїРѕРґРґРµСЂРµРІРѕРј
             {
-                if(right is null) // Если правого поддерева нет
-                    parent.Right = left; // то правым поддеревом родительского узла будет левое поддерево
+                if(right is null) // Р•СЃР»Рё РїСЂР°РІРѕРіРѕ РїРѕРґРґРµСЂРµРІР° РЅРµС‚
+                    parent.Right = left; // С‚Рѕ РїСЂР°РІС‹Рј РїРѕРґРґРµСЂРµРІРѕРј СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ СѓР·Р»Р° Р±СѓРґРµС‚ Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ
                 else
-                {   //иначе - правое поддерево
+                {   //РёРЅР°С‡Рµ - РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ
                     parent.Right = right;
-                    // в самый левый дочерний узел правого поддерева записать левое
+                    // РІ СЃР°РјС‹Р№ Р»РµРІС‹Р№ РґРѕС‡РµСЂРЅРёР№ СѓР·РµР» РїСЂР°РІРѕРіРѕ РїРѕРґРґРµСЂРµРІР° Р·Р°РїРёСЃР°С‚СЊ Р»РµРІРѕРµ
                     right.LastLeftChild.Left = left;
                 }
             }
         }
 
-        /// <summary>Заменить узел</summary><param name="OldNode">Исходный узел</param><param name="NewNode">Новый узел</param>
+        /// <summary>Р—Р°РјРµРЅРёС‚СЊ СѓР·РµР»</summary><param name="OldNode">РСЃС…РѕРґРЅС‹Р№ СѓР·РµР»</param><param name="NewNode">РќРѕРІС‹Р№ СѓР·РµР»</param>
         public void Swap([NotNull] ExpressionTreeNode OldNode, [NotNull] ExpressionTreeNode NewNode)
         {
             OldNode.SwapTo(NewNode);
             if(Root == OldNode) Root = NewNode;
         }
 
-        /// <summary>Переместить узел вниз</summary><param name="Node">Перемещаемый узел</param>
+        /// <summary>РџРµСЂРµРјРµСЃС‚РёС‚СЊ СѓР·РµР» РІРЅРёР·</summary><param name="Node">РџРµСЂРµРјРµС‰Р°РµРјС‹Р№ СѓР·РµР»</param>
         public void MoveParentDown([NotNull] ExpressionTreeNode Node)
         {
             var parent = Node.Parent;
@@ -171,31 +171,31 @@ namespace MathCore.MathParser.ExpressionTrees
             if(Root == parent) Root = Node;
         }
 
-        /// <summary>Обойти дерево</summary><param name="type">Способ обхода</param><returns>Перечисление узлов дерева по указанному способу обхода</returns>
+        /// <summary>РћР±РѕР№С‚Рё РґРµСЂРµРІРѕ</summary><param name="type">РЎРїРѕСЃРѕР± РѕР±С…РѕРґР°</param><returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ СЃРїРѕСЃРѕР±Сѓ РѕР±С…РѕРґР°</returns>
         [NotNull]
         public IEnumerable<ExpressionTreeNode> Bypass(BypassingType type = BypassingType.LeftRootRight) => Root.Bypassing(type);
 
         /* --------------------------------------------------------------------------------------------- */
 
-        /// <summary>Уничтожить дерево</summary>
+        /// <summary>РЈРЅРёС‡С‚РѕР¶РёС‚СЊ РґРµСЂРµРІРѕ</summary>
         public void Dispose() => Clear();
 
         /* --------------------------------------------------------------------------------------------- */
 
-        /// <summary>Возвращает объект <see cref="T:System.String"/>, который представляет текущий объект <see cref="T:System.Object"/>.</summary>
-        /// <returns>Объект <see cref="T:System.String"/>, представляющий текущий объект <see cref="T:System.Object"/>.</returns>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ <see cref="T:System.String"/>, РєРѕС‚РѕСЂС‹Р№ РїСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С‚РµРєСѓС‰РёР№ РѕР±СЉРµРєС‚ <see cref="T:System.Object"/>.</summary>
+        /// <returns>РћР±СЉРµРєС‚ <see cref="T:System.String"/>, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёР№ С‚РµРєСѓС‰РёР№ РѕР±СЉРµРєС‚ <see cref="T:System.Object"/>.</returns>
         [NotNull]
         public override string ToString() => Root?.ToString() ?? "ExpressionTree";
 
-        /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°С‚СЊ РґРµСЂРµРІРѕ</summary><returns>РљР»РѕРЅ РґРµСЂРµРІР°</returns>
         [NotNull]
         public ExpressionTree Clone() => new ExpressionTree(Root.Clone());
 
-        /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°С‚СЊ РґРµСЂРµРІРѕ</summary><returns>РљР»РѕРЅ РґРµСЂРµРІР°</returns>
         [NotNull]
         object ICloneable.Clone() => Clone();
 
-        /// <summary>Получить перечислитель узлов дерева по методу ЛКП</summary><returns>Перечислитель узлов дерева по методу ЛКП</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ СѓР·Р»РѕРІ РґРµСЂРµРІР° РїРѕ РјРµС‚РѕРґСѓ Р›РљРџ</summary><returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ СѓР·Р»РѕРІ РґРµСЂРµРІР° РїРѕ РјРµС‚РѕРґСѓ Р›РљРџ</returns>
         [NotNull]
         public IEnumerator<ExpressionTreeNode> GetEnumerator() => Bypass().GetEnumerator();
 

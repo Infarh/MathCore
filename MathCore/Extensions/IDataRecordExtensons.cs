@@ -1,4 +1,4 @@
-namespace System.Data
+﻿namespace System.Data
 {
     public static class IDataRecordExtensons
     {

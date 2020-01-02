@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
 
 namespace MathCore.Values
 {
-    /// <summary>Множество</summary>
-    /// <typeparam name="T">Тип элементов множества</typeparam>
+    /// <summary>РњРЅРѕР¶РµСЃС‚РІРѕ</summary>
+    /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚РѕРІ РјРЅРѕР¶РµСЃС‚РІР°</typeparam>
     public partial class SetOf<T>
     {
         [NotNull]

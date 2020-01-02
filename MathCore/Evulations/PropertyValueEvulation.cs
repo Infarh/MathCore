@@ -1,20 +1,20 @@
-using Ex = System.Linq.Expressions.Expression;
+п»їusing Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление значения свойства объекта</summary>
-    /// <typeparam name="TObject">Тип объекта, свойство которого надо получить</typeparam>
-    /// <typeparam name="TValue">Тип значения свойства</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
+    /// <typeparam name="TObject">РўРёРї РѕР±СЉРµРєС‚Р°, СЃРІРѕР№СЃС‚РІРѕ РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</typeparam>
+    /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</typeparam>
     public class PropertyValueEvulation<TObject, TValue> : UnaryOperatorEvulation<TObject, TValue>
     {
-        /// <summary>Инициализация нового вычисления значения свойства объекта</summary>
-        /// <param name="PropertyName">Имя свойства</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
+        /// <param name="PropertyName">РРјСЏ СЃРІРѕР№СЃС‚РІР°</param>
         public PropertyValueEvulation(string PropertyName) : base(e => Ex.Property(e, PropertyName)) { }
 
-        /// <summary>Инициализация нового вычисления свйоства объекта</summary>
-        /// <param name="obj">Вычисление объекта, свойство которого надо получить</param>
-        /// <param name="PropertyName">Имя свойства объекта</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃРІР№РѕСЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
+        /// <param name="obj">Р’С‹С‡РёСЃР»РµРЅРёРµ РѕР±СЉРµРєС‚Р°, СЃРІРѕР№СЃС‚РІРѕ РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="PropertyName">РРјСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</param>
         public PropertyValueEvulation(Evulation<TObject> obj, string PropertyName) : base(e => Ex.Property(e, PropertyName), obj) { }
     }
 }

@@ -1,4 +1,4 @@
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace

@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,28 +8,28 @@ using MathCore.Annotations;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Коллекция функций</summary>
-    [DebuggerDisplay("Количество зарегистрированных функций = {" + nameof(Count) + "}")]
+    /// <summary>РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёР№</summary>
+    [DebuggerDisplay("РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… С„СѓРЅРєС†РёР№ = {" + nameof(Count) + "}")]
     public class FunctionsCollection : IEnumerable<ExpressionFunction>
     {
-        /// <summary>Ссылка на математическое выражение</summary>
+        /// <summary>РЎСЃС‹Р»РєР° РЅР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
         [NotNull]
         private readonly MathExpression _MathExpression;
 
-        /// <summary>Список функций математического выражения</summary>
+        /// <summary>РЎРїРёСЃРѕРє С„СѓРЅРєС†РёР№ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         [NotNull]
         private readonly List<ExpressionFunction> _Functions = new List<ExpressionFunction>();
 
-        /// <summary>Имена функций</summary>
+        /// <summary>РРјРµРЅР° С„СѓРЅРєС†РёР№</summary>
         public IEnumerable<string> Names => _Functions.Select(v => v.Name);
 
-        /// <summary>Количество используемых функций</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ РёСЃРїРѕР»СЊР·СѓРµРјС‹С… С„СѓРЅРєС†РёР№</summary>
         public int Count => _Functions.Count;
 
-        /// <summary>Индексатор функций по имени и списку параметров</summary>
-        /// <param name="Name">Имя функции</param>
-        /// <param name="ArgumentsCount">Количество аргументов</param>
-        /// <returns>Функция, удовлетворяющаяя заданой сигнатуре</returns>
+        /// <summary>РРЅРґРµРєСЃР°С‚РѕСЂ С„СѓРЅРєС†РёР№ РїРѕ РёРјРµРЅРё Рё СЃРїРёСЃРєСѓ РїР°СЂР°РјРµС‚СЂРѕРІ</summary>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
+        /// <param name="ArgumentsCount">РљРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+        /// <returns>Р¤СѓРЅРєС†РёСЏ, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰Р°СЏСЏ Р·Р°РґР°РЅРѕР№ СЃРёРіРЅР°С‚СѓСЂРµ</returns>
         [NotNull]
         public ExpressionFunction this[[NotNull] string Name, int ArgumentsCount]
         {
@@ -43,10 +43,10 @@ namespace MathCore.MathParser
             }
         }
 
-        /// <summary>Индексатор функций по имени и списку параметров</summary>
-        /// <param name="Name">Имя функции</param>
-        /// <param name="Arguments">Список имён аргументов</param>
-        /// <returns>Функция, удовлетворяющаяя заданой сигнатуре</returns>
+        /// <summary>РРЅРґРµРєСЃР°С‚РѕСЂ С„СѓРЅРєС†РёР№ РїРѕ РёРјРµРЅРё Рё СЃРїРёСЃРєСѓ РїР°СЂР°РјРµС‚СЂРѕРІ</summary>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
+        /// <param name="Arguments">РЎРїРёСЃРѕРє РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+        /// <returns>Р¤СѓРЅРєС†РёСЏ, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰Р°СЏСЏ Р·Р°РґР°РЅРѕР№ СЃРёРіРЅР°С‚СѓСЂРµ</returns>
         [NotNull]
         public ExpressionFunction this[[NotNull] string Name, [NotNull] params string[] Arguments]
         {
@@ -60,14 +60,14 @@ namespace MathCore.MathParser
             }
         }
 
-        /// <summary>Инициализация новой коллекции функций математического выражения</summary>
-        /// <param name="MathExpression">Математическое выражение, на которое ссылается создаваемая коллекция</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё С„СѓРЅРєС†РёР№ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="MathExpression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РЅР° РєРѕС‚РѕСЂРѕРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ СЃРѕР·РґР°РІР°РµРјР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
         public FunctionsCollection([NotNull] MathExpression MathExpression) => _MathExpression = MathExpression;
 
 
-        /// <summary>Добавить функцию в коллекцию</summary>
-        /// <param name="function">Функция</param>
-        /// <returns>Истина, если функция была добавлена</returns>
+        /// <summary>Р”РѕР±Р°РІРёС‚СЊ С„СѓРЅРєС†РёСЋ РІ РєРѕР»Р»РµРєС†РёСЋ</summary>
+        /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё С„СѓРЅРєС†РёСЏ Р±С‹Р»Р° РґРѕР±Р°РІР»РµРЅР°</returns>
         public bool Add([NotNull] ExpressionFunction function)
         {
             var F = _Functions.FirstOrDefault(f => f.IsEqualSignature(function.Name, function.Arguments));
@@ -76,15 +76,15 @@ namespace MathCore.MathParser
             return true;
         }
 
-        /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё</summary>
         /// <returns>
-        /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
+        /// РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.IEnumerator`1"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         IEnumerator<ExpressionFunction> IEnumerable<ExpressionFunction>.GetEnumerator() => _Functions.GetEnumerator();
 
-        /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РєРѕС‚РѕСЂС‹Р№ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё</summary>
         /// <returns>
-        /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
+        /// РћР±СЉРµРєС‚ <see cref="T:System.Collections.IEnumerator"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Functions).GetEnumerator();
     }

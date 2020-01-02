@@ -1,4 +1,4 @@
-namespace MathCore.Expressions.Complex
+﻿namespace MathCore.Expressions.Complex
 {
     public sealed class ComplexSubtractExpression : ComplexLambdaBinaryExpression
     {

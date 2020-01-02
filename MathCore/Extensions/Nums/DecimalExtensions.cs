@@ -1,15 +1,15 @@
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+п»їusing DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    /// <summary>Расширения для чисел двойной точности</summary>
+    /// <summary>Р Р°СЃС€РёСЂРµРЅРёСЏ РґР»СЏ С‡РёСЃРµР» РґРІРѕР№РЅРѕР№ С‚РѕС‡РЅРѕСЃС‚Рё</summary>
     public static class DecimalExtensions
     {
-        /// <summary>Вычисление квадратного корня указанной точности последовательными приближениями</summary>
-        /// <param name="x">Число, квадратный корень которого требуется вычислить</param>
-        /// <param name="epsilon">Требуемая точность</param>
-        /// <returns>Квадратный корень числа</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РєРІР°РґСЂР°С‚РЅРѕРіРѕ РєРѕСЂРЅСЏ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РЅРѕСЃС‚Рё РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹РјРё РїСЂРёР±Р»РёР¶РµРЅРёСЏРјРё</summary>
+        /// <param name="x">Р§РёСЃР»Рѕ, РєРІР°РґСЂР°С‚РЅС‹Р№ РєРѕСЂРµРЅСЊ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹С‡РёСЃР»РёС‚СЊ</param>
+        /// <param name="epsilon">РўСЂРµР±СѓРµРјР°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ</param>
+        /// <returns>РљРІР°РґСЂР°С‚РЅС‹Р№ РєРѕСЂРµРЅСЊ С‡РёСЃР»Р°</returns>
         [DST]
         public static decimal Sqrt(this decimal x, decimal epsilon = 0.0M)
         {
@@ -25,18 +25,18 @@ namespace System
             return current;
         }
 
-        /// <summary>Является ли число целым?</summary>
-        /// <param name="x">Проверяемое число</param>
-        /// <returns>Истина, если число целое</returns>
+        /// <summary>РЇРІР»СЏРµС‚СЃСЏ Р»Рё С‡РёСЃР»Рѕ С†РµР»С‹Рј?</summary>
+        /// <param name="x">РџСЂРѕРІРµСЂСЏРµРјРѕРµ С‡РёСЃР»Рѕ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё С‡РёСЃР»Рѕ С†РµР»РѕРµ</returns>
         [DST]
         public static bool IsInt(this decimal x) => decimal.Round(x) - x == 0;
 
         [DST]
         public static decimal Round(this decimal x, int n = 0) => decimal.Round(x, n);
 
-        /// <summary>Получить обратное число</summary>
-        /// <param name="x">Инвертируемое число</param>
-        /// <returns>Число, обратное к исходном</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РѕР±СЂР°С‚РЅРѕРµ С‡РёСЃР»Рѕ</summary>
+        /// <param name="x">РРЅРІРµСЂС‚РёСЂСѓРµРјРѕРµ С‡РёСЃР»Рѕ</param>
+        /// <returns>Р§РёСЃР»Рѕ, РѕР±СЂР°С‚РЅРѕРµ Рє РёСЃС…РѕРґРЅРѕРј</returns>
         [DST]
         public static decimal GetInverse(this decimal x) => 1 / x;
 

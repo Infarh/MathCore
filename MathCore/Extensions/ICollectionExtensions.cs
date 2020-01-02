@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace

@@ -1,15 +1,15 @@
-using System;
+п»їusing System;
 using Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление операции с одним операндом</summary>
-    /// <typeparam name="TObject">Тип значения операнда</typeparam>
-    /// <typeparam name="TValue">Тип значения вычисления</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РѕРїРµСЂР°С†РёРё СЃ РѕРґРЅРёРј РѕРїРµСЂР°РЅРґРѕРј</summary>
+    /// <typeparam name="TObject">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РѕРїРµСЂР°РЅРґР°</typeparam>
+    /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</typeparam>
     public class UnaryOperatorEvulation<TObject, TValue> : ConvertEvulation<TObject, TValue>
     {
-        /// <summary>Метод, генерирующий функция преобразования значения операнда в значение вычисления</summary>
-        /// <param name="OP">Функция преобразования выражения, вычисляющего значение операнда, в выражение, определяющее значение вычисления</param>
+        /// <summary>РњРµС‚РѕРґ, РіРµРЅРµСЂРёСЂСѓСЋС‰РёР№ С„СѓРЅРєС†РёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РѕРїРµСЂР°РЅРґР° РІ Р·РЅР°С‡РµРЅРёРµ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
+        /// <param name="OP">Р¤СѓРЅРєС†РёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ, РІС‹С‡РёСЃР»СЏСЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёРµ РѕРїРµСЂР°РЅРґР°, РІ РІС‹СЂР°Р¶РµРЅРёРµ, РѕРїСЂРµРґРµР»СЏСЋС‰РµРµ Р·РЅР°С‡РµРЅРёРµ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
         /// <returns></returns>
         protected static Func<TObject, TValue> GetOperation(Func<Ex, Ex> OP)
         {
@@ -17,17 +17,17 @@ namespace MathCore.Evulations
             return Ex.Lambda<Func<TObject, TValue>>(OP(p), p).Compile();
         }
 
-        /// <summary>Функция преобразования выражения операнда в выражение вычисления над этим операндом</summary>
+        /// <summary>Р¤СѓРЅРєС†РёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ РѕРїРµСЂР°РЅРґР° РІ РІС‹СЂР°Р¶РµРЅРёРµ РІС‹С‡РёСЃР»РµРЅРёСЏ РЅР°Рґ СЌС‚РёРј РѕРїРµСЂР°РЅРґРѕРј</summary>
         private readonly Func<Ex, Ex> _Operator;
 
-        /// <summary>Инициализация нового унарного вычисления</summary>
-        /// <param name="Operator">ОПератор преобразования выражения операнда в выражение вычисления</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СѓРЅР°СЂРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
+        /// <param name="Operator">РћРџРµСЂР°С‚РѕСЂ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ РѕРїРµСЂР°РЅРґР° РІ РІС‹СЂР°Р¶РµРЅРёРµ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
         public UnaryOperatorEvulation(Func<Ex, Ex> Operator)
             : base(GetOperation(Operator)) => _Operator = Operator;
 
-        /// <summary>Инициализация нового унарного вычисления</summary>
-        /// <param name="Operator">Оператор преобразования выражения операнда в выражение вычисления</param>
-        /// <param name="value">Вычисление операнда</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СѓРЅР°СЂРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
+        /// <param name="Operator">РћРїРµСЂР°С‚РѕСЂ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ РѕРїРµСЂР°РЅРґР° РІ РІС‹СЂР°Р¶РµРЅРёРµ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
+        /// <param name="value">Р’С‹С‡РёСЃР»РµРЅРёРµ РѕРїРµСЂР°РЅРґР°</param>
         public UnaryOperatorEvulation(Func<Ex, Ex> Operator, Evulation<TObject> value)
             : base(value, GetOperation(Operator)) => _Operator = Operator;
 

@@ -1,22 +1,22 @@
-// ReSharper disable once CheckNamespace
+п»ї// ReSharper disable once CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 namespace System
 {
-    /// <summary>Влияние на</summary>
+    /// <summary>Р’Р»РёСЏРЅРёРµ РЅР°</summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public sealed class AffectsTheAttribute : Attribute
     {
-        /// <summary>Элемент, на который оказывается влияние</summary>
+        /// <summary>Р­Р»РµРјРµРЅС‚, РЅР° РєРѕС‚РѕСЂС‹Р№ РѕРєР°Р·С‹РІР°РµС‚СЃСЏ РІР»РёСЏРЅРёРµ</summary>
         public string Name { get; set; }
 
-        /// <summary>Инициализация нового экземпляра <see cref="AffectsTheAttribute"/></summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="AffectsTheAttribute"/></summary>
         public AffectsTheAttribute() { }
 
-        /// <summary>Инициализация нового экземпляра <see cref="AffectsTheAttribute"/></summary>
-        /// <param name="Name">Имя элемента, на что помеченный элемент оказывает влияние</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="AffectsTheAttribute"/></summary>
+        /// <param name="Name">РРјСЏ СЌР»РµРјРµРЅС‚Р°, РЅР° С‡С‚Рѕ РїРѕРјРµС‡РµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РѕРєР°Р·С‹РІР°РµС‚ РІР»РёСЏРЅРёРµ</param>
         public AffectsTheAttribute(string Name) => this.Name = Name;
     }
 }

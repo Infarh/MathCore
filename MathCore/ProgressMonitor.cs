@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
@@ -177,7 +177,7 @@ namespace MathCore
         public void Connect(ProgressMonitor Monitor)
         {
             if(ReferenceEquals(Monitor, this))
-                throw new ArgumentException("Нельзя подключать монитор к себе по методам изъятия значений");
+                throw new ArgumentException("РќРµР»СЊР·СЏ РїРѕРґРєР»СЋС‡Р°С‚СЊ РјРѕРЅРёС‚РѕСЂ Рє СЃРµР±Рµ РїРѕ РјРµС‚РѕРґР°Рј РёР·СЉСЏС‚РёСЏ Р·РЅР°С‡РµРЅРёР№");
 
             if(_ConnectedMonitor != null) ClearEventHandlers();
             _ConnectedMonitor = Monitor;
@@ -190,7 +190,7 @@ namespace MathCore
         public void ConnectStrong([NotNull] ProgressMonitor Monitor)
         {
             if(ReferenceEquals(Monitor, this))
-                throw new ArgumentException("Нельзя подключать монитор к себе по обработчикам событий");
+                throw new ArgumentException("РќРµР»СЊР·СЏ РїРѕРґРєР»СЋС‡Р°С‚СЊ РјРѕРЅРёС‚РѕСЂ Рє СЃРµР±Рµ РїРѕ РѕР±СЂР°Р±РѕС‚С‡РёРєР°Рј СЃРѕР±С‹С‚РёР№");
 
             Disconnect();
             _ConnectedMonitor = Monitor;

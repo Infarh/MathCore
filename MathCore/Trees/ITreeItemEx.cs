@@ -1,9 +1,9 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 
 namespace MathCore.Trees
 {
-    /// <summary>Методы-расширения интерфейса элемента двусвязного дерева</summary>
+    /// <summary>РњРµС‚РѕРґС‹-СЂР°СЃС€РёСЂРµРЅРёСЏ РёРЅС‚РµСЂС„РµР№СЃР° СЌР»РµРјРµРЅС‚Р° РґРІСѓСЃРІСЏР·РЅРѕРіРѕ РґРµСЂРµРІР°</summary>
     public static class ITreeItemEx
     {
         [Serializable]
@@ -30,19 +30,19 @@ namespace MathCore.Trees
 
         private static void DebugWrite(string str, params object[] obj) => Console.Title = string.Format(str, obj);
 
-        /// <summary>Определение корня дерева</summary>
-        /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
-        /// <param name="Item">Объект с интерфейсом элемента дерева</param>
-        /// <returns>КОрневой объект дерева объектов</returns>
+        /// <summary>РћРїСЂРµРґРµР»РµРЅРёРµ РєРѕСЂРЅСЏ РґРµСЂРµРІР°</summary>
+        /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚Р°, СЏРІР»СЏСЋС‰РµРіРѕСЃСЏ РєР»Р°СЃСЃРѕРј Рё РѕРїСЂРµРґРµР»СЏСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</typeparam>
+        /// <param name="Item">РћР±СЉРµРєС‚ СЃ РёРЅС‚РµСЂС„РµР№СЃРѕРј СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</param>
+        /// <returns>РљРћСЂРЅРµРІРѕР№ РѕР±СЉРµРєС‚ РґРµСЂРµРІР° РѕР±СЉРµРєС‚РѕРІ</returns>
         public static T GetRootItem<T>(this T Item) where T : class, ITreeItem<T>
         {
             while(Item.Parent != null) Item = Item.Parent;
             return Item;
         }
 
-        /// <summary>Обход элементов поддерева начиная с текущего в порядке: текущий, дочерний, следующий по уровню</summary>
-        /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
-        /// <param name="Item">Объект с интерфейсом элемента дерева</param>
+        /// <summary>РћР±С…РѕРґ СЌР»РµРјРµРЅС‚РѕРІ РїРѕРґРґРµСЂРµРІР° РЅР°С‡РёРЅР°СЏ СЃ С‚РµРєСѓС‰РµРіРѕ РІ РїРѕСЂСЏРґРєРµ: С‚РµРєСѓС‰РёР№, РґРѕС‡РµСЂРЅРёР№, СЃР»РµРґСѓСЋС‰РёР№ РїРѕ СѓСЂРѕРІРЅСЋ</summary>
+        /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚Р°, СЏРІР»СЏСЋС‰РµРіРѕСЃСЏ РєР»Р°СЃСЃРѕРј Рё РѕРїСЂРµРґРµР»СЏСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</typeparam>
+        /// <param name="Item">РћР±СЉРµРєС‚ СЃ РёРЅС‚РµСЂС„РµР№СЃРѕРј СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</param>
         /// <param name="level"></param>
         /// <returns></returns>
         public static IEnumerable<TreeLevelItem<T>> OrderWalk<T>
@@ -100,9 +100,9 @@ namespace MathCore.Trees
             }
         }
 
-        /// <summary>Получить все родительские элементы</summary>
-        /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
-        /// <param name="Item">Объект с интерфейсом элемента дерева</param>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ СЂРѕРґРёС‚РµР»СЊСЃРєРёРµ СЌР»РµРјРµРЅС‚С‹</summary>
+        /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚Р°, СЏРІР»СЏСЋС‰РµРіРѕСЃСЏ РєР»Р°СЃСЃРѕРј Рё РѕРїСЂРµРґРµР»СЏСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</typeparam>
+        /// <param name="Item">РћР±СЉРµРєС‚ СЃ РёРЅС‚РµСЂС„РµР№СЃРѕРј СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</param>
         /// <returns></returns>
         public static T[] GetParents<T>(this T Item) where T : class, ITreeItem<T>
         {
@@ -119,9 +119,9 @@ namespace MathCore.Trees
             return stack.ToArray();
         }
 
-        /// <summary>Получить все элементы дочернего уровня поддерева</summary>
-        /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
-        /// <param name="Item">Объект с интерфейсом элемента дерева</param>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РґРѕС‡РµСЂРЅРµРіРѕ СѓСЂРѕРІРЅСЏ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚Р°, СЏРІР»СЏСЋС‰РµРіРѕСЃСЏ РєР»Р°СЃСЃРѕРј Рё РѕРїСЂРµРґРµР»СЏСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</typeparam>
+        /// <param name="Item">РћР±СЉРµРєС‚ СЃ РёРЅС‚РµСЂС„РµР№СЃРѕРј СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</param>
         /// <returns></returns>
         public static T[] GetLevelItems<T>(this T Item) where T : class, ITreeItem<T>
         {
@@ -155,9 +155,9 @@ namespace MathCore.Trees
             return items.ToArray();
         }
 
-        /// <summary>Получить все дочерние элементы поддерева</summary>
-        /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
-        /// <param name="Item">Объект с интерфейсом элемента дерева</param>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РІСЃРµ РґРѕС‡РµСЂРЅРёРµ СЌР»РµРјРµРЅС‚С‹ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚Р°, СЏРІР»СЏСЋС‰РµРіРѕСЃСЏ РєР»Р°СЃСЃРѕРј Рё РѕРїСЂРµРґРµР»СЏСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</typeparam>
+        /// <param name="Item">РћР±СЉРµРєС‚ СЃ РёРЅС‚РµСЂС„РµР№СЃРѕРј СЌР»РµРјРµРЅС‚Р° РґРµСЂРµРІР°</param>
         /// <returns></returns>
         public static T[] GetChilds<T>(this T Item) where T : class, ITreeItem<T>
         {

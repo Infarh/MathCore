@@ -1,52 +1,52 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева, хранящий константное значение</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР°, С…СЂР°РЅСЏС‰РёР№ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
     public class ConstValueNode : ValueNode
     {
-        /// <summary>Значение узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
         private readonly double _Value;
 
-        /// <summary>Флаг возможности получения значения без выччисления. Всегда = true</summary>
+        /// <summary>Р¤Р»Р°Рі РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ Р±РµР· РІС‹С‡С‡РёСЃР»РµРЅРёСЏ. Р’СЃРµРіРґР° = true</summary>
         public override bool IsPrecomputable => true;
 
-        /// <summary>Значение узла. Не поддерживает присвоение</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°. РќРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РїСЂРёСЃРІРѕРµРЅРёРµ</summary>
         public override double Value { [DST] get => _Value; [DST] set => throw new NotSupportedException(); }
 
-        /// <summary>Инициализация константного узла</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРіРѕ СѓР·Р»Р°</summary>
         [DST]
         public ConstValueNode() { }
 
-        /// <summary>Инициализация константного узла</summary>
-        /// <param name="Value">Значение узла</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="Value">Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</param>
         [DST]
         public ConstValueNode(double Value) => _Value = Value;
 
-        /// <summary>Инициализация константного узла</summary>
-        /// <param name="Value">Значение узла</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="Value">Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</param>
         [DST]
         public ConstValueNode(int Value) : this((double)Value) { }
 
-        /// <summary>Вычислить значение поддерева</summary>
-        /// <returns>Численное значение поддерева</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</returns>
         [DST]
         public override double Compute() => _Value;
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         [DST]
         public override Expression Compile() => _Value.ToExpression();
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         public override Expression Compile(params ParameterExpression[] Parameters) => Compile();
 
-        /// <summary>Клонирование поддерева</summary>
-        /// <returns>Клон поддерева</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>РљР»РѕРЅ РїРѕРґРґРµСЂРµРІР°</returns>
         public override ExpressionTreeNode Clone() => new ConstValueNode(Value)
         {
             Left = Left?.Clone(),

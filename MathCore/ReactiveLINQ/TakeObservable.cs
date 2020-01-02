@@ -1,15 +1,15 @@
-namespace System.Linq.Reactive
+п»їnamespace System.Linq.Reactive
 {
-    /// <summary>Наблюдаемый объект с указанным числом генерации событий</summary>
-    /// <typeparam name="T">Тип объектов последовательности</typeparam>
+    /// <summary>РќР°Р±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј С‡РёСЃР»РѕРј РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёР№</summary>
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚РѕРІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё</typeparam>
     internal sealed class TakeObservable<T> : SimpleObservableEx<T>
     {
-        /// <summary>Исходный наблюдатель</summary>
+        /// <summary>РСЃС…РѕРґРЅС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</summary>
         private readonly IObserver<T> _Observer;
 
-        /// <summary>Наблюдаемый объект с указанным числом генерации событий</summary>
-        /// <param name="observable">Исходный наблюдаемый объект</param>
-        /// <param name="Count">Количество извлекаемых событий</param>
+        /// <summary>РќР°Р±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј С‡РёСЃР»РѕРј РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёР№</summary>
+        /// <param name="observable">РСЃС…РѕРґРЅС‹Р№ РЅР°Р±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+        /// <param name="Count">РљРѕР»РёС‡РµСЃС‚РІРѕ РёР·РІР»РµРєР°РµРјС‹С… СЃРѕР±С‹С‚РёР№</param>
         public TakeObservable(IObservable<T> observable, int Count) => _Observer = new TakeObserver<T>(observable, Count);
     }
 }

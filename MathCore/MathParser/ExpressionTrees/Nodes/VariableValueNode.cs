@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,54 +7,54 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева, хранящий переменную</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР°, С…СЂР°РЅСЏС‰РёР№ РїРµСЂРµРјРµРЅРЅСѓСЋ</summary>
     public class VariableValueNode : ValueNode
     {
         private ExpressionVariabel _Variable;
 
-        /// <summary>Признак возможности получения тревиального значения</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїРѕР»СѓС‡РµРЅРёСЏ С‚СЂРµРІРёР°Р»СЊРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
         public override bool IsPrecomputable => _Variable.IsPrecomputable;
 
-        /// <summary>Ссылка на переменную</summary>
+        /// <summary>РЎСЃС‹Р»РєР° РЅР° РїРµСЂРµРјРµРЅРЅСѓСЋ</summary>
         [NotNull]
         public ExpressionVariabel Variable { get => _Variable; set => _Variable = value; }
 
-        /// <summary>Значение узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
         public override double Value { get => _Variable.Value; set => _Variable.Value = value; }
 
-        /// <summary>Имя переменной</summary> 
+        /// <summary>РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</summary> 
         public string Name { [DST] get => _Variable.Name; }
 
-        /// <summary>Новый узел переменной</summary>
-        /// <param name="Variable">Переменная</param>
+        /// <summary>РќРѕРІС‹Р№ СѓР·РµР» РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="Variable">РџРµСЂРµРјРµРЅРЅР°СЏ</param>
         public VariableValueNode([NotNull] ExpressionVariabel Variable) => _Variable = Variable;
 
-        /// <summary>Преобразование в строковую форму</summary>
-        /// <returns>Строковое представление</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєРѕРІСѓСЋ С„РѕСЂРјСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
         public override string ToString() => $"{Left?.ToString() ?? ""}{Name}{Right?.ToString() ?? ""}";
 
-        /// <summary>Вычислить значение поддерева</summary>
-        /// <returns>Численное значение поддерева</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</returns>
         [DST]
         public override double Compute() => _Variable.GetValue();
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         public override Expression Compile() => Expression.Call
         (
             Expression.Constant(_Variable),
-            Variable.GetType().GetMethod("GetValue", new Type[0]) ?? throw new InvalidOperationException("Метод GetValue не найден")
+            Variable.GetType().GetMethod("GetValue", new Type[0]) ?? throw new InvalidOperationException("РњРµС‚РѕРґ GetValue РЅРµ РЅР°Р№РґРµРЅ")
         );
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         public override Expression Compile(params ParameterExpression[] Parameters) => Parameters.Find(p => p.Name == Name) ?? Compile();
 
         public override IEnumerable<ExpressionVariabel> GetVariables() => base.GetVariables().AppendFirst(_Variable);
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new VariableValueNode(_Variable.Clone())
         {
             Left = Left?.Clone(),

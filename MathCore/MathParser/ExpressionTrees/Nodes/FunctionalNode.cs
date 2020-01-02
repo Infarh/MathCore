@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
@@ -8,22 +8,22 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
     public class FunctionalNode : ComputedNode
     {
-        /// <summary>Имя узла</summary>
+        /// <summary>РРјСЏ СѓР·Р»Р°</summary>
         public string Name { get; private set; }
 
-        /// <summary>Выражение параметров</summary>
+        /// <summary>Р’С‹СЂР°Р¶РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ</summary>
         private readonly MathExpression _ParametersExpression = new MathExpression("Param");
 
-        /// <summary>Выражение ядра функции</summary>
+        /// <summary>Р’С‹СЂР°Р¶РµРЅРёРµ СЏРґСЂР° С„СѓРЅРєС†РёРё</summary>
         private readonly MathExpression _CoreExpression = new MathExpression(nameof(Core));
 
-        /// <summary>Выражение параметров</summary>
+        /// <summary>Р’С‹СЂР°Р¶РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ</summary>
         public MathExpression Parameters => _ParametersExpression;
 
-        /// <summary>Выражение ядра функции</summary>
+        /// <summary>Р’С‹СЂР°Р¶РµРЅРёРµ СЏРґСЂР° С„СѓРЅРєС†РёРё</summary>
         public MathExpression Core => _CoreExpression;
 
-        /// <summary>Оператор</summary>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ</summary>
         public Functional Operator { get; set; }
 
         [DST]
@@ -32,9 +32,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         internal FunctionalNode(FunctionalTerm term, ExpressionParser Parser, MathExpression Expression)
             : this(term.Name)
         {
-            // Расшифровка блока ядра функции
+            // Р Р°СЃС€РёС„СЂРѕРІРєР° Р±Р»РѕРєР° СЏРґСЂР° С„СѓРЅРєС†РёРё
             _CoreExpression.Tree = new ExpressionTree(term.Block.GetSubTree(Parser, _CoreExpression));
-            // Расшифровка блока параметров
+            // Р Р°СЃС€РёС„СЂРѕРІРєР° Р±Р»РѕРєР° РїР°СЂР°РјРµС‚СЂРѕРІ
             _ParametersExpression.Tree = new ExpressionTree(term.Parameters.GetSubTree(Parser, _ParametersExpression));
 
             Parser.ProcessVariables(_CoreExpression);
@@ -43,9 +43,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             Parser.ProcessFunctions(_CoreExpression);
             Parser.ProcessFunctions(_ParametersExpression);
 
-            // Добавление переменных в перечень блока параметров
+            // Р”РѕР±Р°РІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С… РІ РїРµСЂРµС‡РµРЅСЊ Р±Р»РѕРєР° РїР°СЂР°РјРµС‚СЂРѕРІ
             _ParametersExpression.Tree
-                .Where(n => n is VariableValueNode) // проходим по всем узлам с переменными
+                .Where(n => n is VariableValueNode) // РїСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СѓР·Р»Р°Рј СЃ РїРµСЂРµРјРµРЅРЅС‹РјРё
                 .Cast<VariableValueNode>()
                 .Where(v => !v.Variable.IsConstant)
                 .Foreach(_ParametersExpression.Variable, _CoreExpression.Variable, 
@@ -55,9 +55,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                         expr_vars.Add(v.Variable = core_vars[v.Variable.Name]);
                     });
 
-            //Запрос к парсеру о операторе
+            //Р—Р°РїСЂРѕСЃ Рє РїР°СЂСЃРµСЂСѓ Рѕ РѕРїРµСЂР°С‚РѕСЂРµ
             Operator = ExpressionParser.GetFunctional(term.Name);
-            //Инициализация оператора
+            //РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕРїРµСЂР°С‚РѕСЂР°
             Operator.Initialize(_ParametersExpression, _CoreExpression, Parser, Expression);
         }
 
@@ -70,28 +70,28 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             return _CoreExpression.Tree.Root.GetVariables().Where(v => v != iterator);
         }
 
-        /// <summary>Вычислить значение поддерева</summary>
-        /// <returns>Численное значение поддерева</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</returns>
         [DST]
         public override double Compute() => Operator.GetValue(_ParametersExpression, _CoreExpression);
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         [DST]
         public override Expression Compile() => Operator.Compile(_ParametersExpression, _CoreExpression);
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         [DST]
         public override Expression Compile(params ParameterExpression[] Parameters) => Operator.Compile(_ParametersExpression, _CoreExpression, Parameters);
 
-        /// <summary>Преобразование узла в строку</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓР·Р»Р° РІ СЃС‚СЂРѕРєСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => $"{Operator.Name}[{_ParametersExpression.Tree.Root}]{{{_CoreExpression.Tree.Root}}}";
 
-        /// <summary>Клонирование поддерева</summary>
-        /// <returns>Клон поддерева</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>РљР»РѕРЅ РїРѕРґРґРµСЂРµРІР°</returns>
         public override ExpressionTreeNode Clone() => throw new NotImplementedException();
     }
 }

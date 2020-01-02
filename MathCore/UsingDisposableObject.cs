@@ -1,29 +1,29 @@
-using System;
+п»їusing System;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
-    /// <summary>Класс-обёртка для inline-доступа к свойствам созданного объекта, наследующего интерфейс IDisposasble</summary>
-    /// <typeparam name="T">Тип используемого объекта, наследующего интерфейс IDIsposable</typeparam>
+    /// <summary>РљР»Р°СЃСЃ-РѕР±С‘СЂС‚РєР° РґР»СЏ inline-РґРѕСЃС‚СѓРїР° Рє СЃРІРѕР№СЃС‚РІР°Рј СЃРѕР·РґР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РЅР°СЃР»РµРґСѓСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ IDisposasble</summary>
+    /// <typeparam name="T">РўРёРї РёСЃРїРѕР»СЊР·СѓРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°, РЅР°СЃР»РµРґСѓСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ IDIsposable</typeparam>
     public class UsingDisposableObject<T> : UsingObject<T> where T : IDisposable
     {
         /* ------------------------------------------------------------------------------------------ */
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Новая обёртка для используемого объекта</summary>
-        /// <param name="Obj">Используемый объект</param>
+        /// <summary>РќРѕРІР°СЏ РѕР±С‘СЂС‚РєР° РґР»СЏ РёСЃРїРѕР»СЊР·СѓРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°</summary>
+        /// <param name="Obj">РСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
         [DST]
         public UsingDisposableObject(T Obj) : base(Obj, o => o.Dispose()) { }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Получить значение от объекта</summary>
-        /// <typeparam name="TValue">Тип значения, получаемого от объекта</typeparam>
-        /// <param name="f">Метод получения значения</param>
-        /// <returns>Значение, полученное от объекта указанным методом</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РѕС‚ РѕР±СЉРµРєС‚Р°</summary>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ, РїРѕР»СѓС‡Р°РµРјРѕРіРѕ РѕС‚ РѕР±СЉРµРєС‚Р°</typeparam>
+        /// <param name="f">РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ, РїРѕР»СѓС‡РµРЅРЅРѕРµ РѕС‚ РѕР±СЉРµРєС‚Р° СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј</returns>
         [DST]
         public TValue GetValue<TValue>([NotNull] Func<T, TValue> f) => f(Object);
 

@@ -1,32 +1,32 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MathCore.Values
 {
-    /// <summary>Абстрактное множество элементов</summary>
-    /// <typeparam name="T">Тип элементов множества</typeparam>
+    /// <summary>РђР±СЃС‚СЂР°РєС‚РЅРѕРµ РјРЅРѕР¶РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ</summary>
+    /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚РѕРІ РјРЅРѕР¶РµСЃС‚РІР°</typeparam>
     public abstract class AbstractSetOf<T> : IEnumerable<T>
     {
-        /// <summary>Мощность множества</summary>
+        /// <summary>РњРѕС‰РЅРѕСЃС‚СЊ РјРЅРѕР¶РµСЃС‚РІР°</summary>
         public abstract int Power { get; }
 
-        /// <summary>Признак вхождения элемента в множество</summary>
-        /// <param name="value">Проверяемый элемент</param>
-        /// <returns>Истина, если элемент принедлежит множеству</returns>
+        /// <summary>РџСЂРёР·РЅР°Рє РІС…РѕР¶РґРµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° РІ РјРЅРѕР¶РµСЃС‚РІРѕ</summary>
+        /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ СЌР»РµРјРµРЅС‚</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СЌР»РµРјРµРЅС‚ РїСЂРёРЅРµРґР»РµР¶РёС‚ РјРЅРѕР¶РµСЃС‚РІСѓ</returns>
         public virtual bool Contains(T value) => ((IEnumerable<T>)this).Contains(value);
 
-        /// <summary>Признак того, что элемент не входит в множество</summary>
-        /// <param name="value">Проверяемый элемент</param>
-        /// <returns>Истина, если элемент не принадлежит множеству</returns>
+        /// <summary>РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ СЌР»РµРјРµРЅС‚ РЅРµ РІС…РѕРґРёС‚ РІ РјРЅРѕР¶РµСЃС‚РІРѕ</summary>
+        /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ СЌР»РµРјРµРЅС‚</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СЌР»РµРјРµРЅС‚ РЅРµ РїСЂРёРЅР°РґР»РµР¶РёС‚ РјРЅРѕР¶РµСЃС‚РІСѓ</returns>
         public virtual bool NotContains(T value) => !Contains(value);
 
-        /// <summary>Получить перечислитель множества</summary>
-        /// <returns>Перечислитель множества</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РјРЅРѕР¶РµСЃС‚РІР°</summary>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РјРЅРѕР¶РµСЃС‚РІР°</returns>
         public abstract IEnumerator<T> GetEnumerator();
 
-        /// <summary>Получить перечислитель множества</summary>
-        /// <returns>Перечислитель множества</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РјРЅРѕР¶РµСЃС‚РІР°</summary>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РјРЅРѕР¶РµСЃС‚РІР°</returns>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

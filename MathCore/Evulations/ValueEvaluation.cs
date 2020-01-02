@@ -1,20 +1,20 @@
-using System;
+п»їusing System;
 using Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление конкретного значения</summary>
-    /// <typeparam name="T">Тип возвращаемого значения</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
+    /// <typeparam name="T">РўРёРї РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</typeparam>
     public class ValueEvaluation<T> : Evulation<T>
     {
-        /// <summary>Возвращаемое значение</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
         public T Value { get; set; }
 
-        /// <summary>Инициализация нового вычисления конкретного значения</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
         public ValueEvaluation() { }
 
-        /// <summary>Инициализация нового вычисления конкретного значения</summary>
-        /// <param name="value">Возвращаемое значение</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
+        /// <param name="value">Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
         public ValueEvaluation(T value) => Value = value;
 
         /// <inheritdoc />
@@ -26,35 +26,35 @@ namespace MathCore.Evulations
         /// <inheritdoc />
         public override string ToString() => Value.ToString();
 
-        /// <summary>ОПератор неявного преобразования типа значения в тип вычисления этого значения</summary>
-        /// <param name="Value">Оборачиваемое значение</param>
+        /// <summary>РћРџРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ С‚РёРїР° Р·РЅР°С‡РµРЅРёСЏ РІ С‚РёРї РІС‹С‡РёСЃР»РµРЅРёСЏ СЌС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
+        /// <param name="Value">РћР±РѕСЂР°С‡РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
         public static implicit operator ValueEvaluation<T>(T Value) => new ValueEvaluation<T>(Value);
     }
 
-    /// <summary>Именованное вычисление конкретного значения</summary>
-    /// <typeparam name="T">Тип возвращаемого значения</typeparam>
+    /// <summary>РРјРµРЅРѕРІР°РЅРЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
+    /// <typeparam name="T">РўРёРї РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</typeparam>
     public class NamedValueEvaluation<T> : ValueEvaluation<T>
     {
-        /// <summary>Имя вычисления</summary>
+        /// <summary>РРјСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
         public string Name { get; set; }
 
-        /// <summary>Признак того, что данное вычисление является именованным параметром</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РґР°РЅРЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ СЏРІР»СЏРµС‚СЃСЏ РёРјРµРЅРѕРІР°РЅРЅС‹Рј РїР°СЂР°РјРµС‚СЂРѕРј</summary>
         public bool IsParameter { get; set; }
 
-        /// <summary>Инициализация нового именованного вычисления конкретного значения</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РёРјРµРЅРѕРІР°РЅРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
         public NamedValueEvaluation() { }
 
-        /// <summary>Инициализация нового именованного вычисления конкретного значения</summary>
-        /// <param name="value">Возвращаемое значение</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РёРјРµРЅРѕРІР°РЅРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
+        /// <param name="value">Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
         public NamedValueEvaluation(T value) : base(value) { }
 
-        /// <summary>Инициализация нового именованного вычисления конкретного значения</summary>
-        /// <param name="value">Возвращаемое значение</param>
-        /// <param name="name">Имя вычисления</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РёРјРµРЅРѕРІР°РЅРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
+        /// <param name="value">Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+        /// <param name="name">РРјСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
         public NamedValueEvaluation(T value, string name) : base(value) => Name = name;
 
-        /// <summary>Если вычисление является параметром, то возвращается выражение параметра, иначе возвращается вычисление значения</summary>
-        /// <returns>Выражение, соответствующее данному вычислению</returns>
+        /// <summary>Р•СЃР»Рё РІС‹С‡РёСЃР»РµРЅРёРµ СЏРІР»СЏРµС‚СЃСЏ РїР°СЂР°РјРµС‚СЂРѕРј, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РІС‹СЂР°Р¶РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР°, РёРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РІС‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ</summary>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ РґР°РЅРЅРѕРјСѓ РІС‹С‡РёСЃР»РµРЅРёСЋ</returns>
         public override Ex GetExpression() => IsParameter
             ? Ex.Parameter(typeof(T), Name)
             : base.GetExpression();

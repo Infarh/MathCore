@@ -1,16 +1,16 @@
-using Ex = System.Linq.Expressions.Expression;
+п»їusing Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление отрицания значения</summary>
-    /// <typeparam name="T">Тип значения параметра</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РѕС‚СЂРёС†Р°РЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ</summary>
+    /// <typeparam name="T">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР°</typeparam>
     public class NegateOperatorEvulation<T> : UnaryOperatorEvulation<T, T>
     {
-        /// <summary>Инициализация нового вычисления отризацания</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕС‚СЂРёР·Р°С†Р°РЅРёСЏ</summary>
         public NegateOperatorEvulation() : base(Ex.Negate) { }
 
-        /// <summary>Инициализация нового вычисления отрицания</summary>
-        /// <param name="value">Вычисление значения операнда</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕС‚СЂРёС†Р°РЅРёСЏ</summary>
+        /// <param name="value">Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РѕРїРµСЂР°РЅРґР°</param>
         public NegateOperatorEvulation(Evulation<T> value) : base(Ex.Negate, value) { }
     }
 }

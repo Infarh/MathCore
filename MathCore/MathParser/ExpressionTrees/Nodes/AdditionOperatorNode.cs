@@ -1,36 +1,36 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражений, реализующий оператор сложения</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёР№, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ СЃР»РѕР¶РµРЅРёСЏ</summary>
     public class AdditionOperatorNode : OperatorNode
     {
         public const string NodeName = "+";
 
-        /// <summary>Новый оператор сложения</summary>
+        /// <summary>РќРѕРІС‹Р№ РѕРїРµСЂР°С‚РѕСЂ СЃР»РѕР¶РµРЅРёСЏ</summary>
         public AdditionOperatorNode() : base(NodeName, 0) { }
 
-        /// <summary>Вычисление узла</summary>
-        /// <returns>Сумма поддеревьев</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎСѓРјРјР° РїРѕРґРґРµСЂРµРІСЊРµРІ</returns>
         public override double Compute() => (((ComputedNode)Left)?.Compute() ?? 0) + ((ComputedNode)Right)?.Compute() ?? 0;
 
-        /// <summary>Компиляция узла</summary>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
         /// <returns>Linq.Expression.Add()</returns>
         public override Expression Compile() =>
             (((ComputedNode)Left)?.Compile() ?? 0d.ToExpression())
                 .Add(((ComputedNode)Right)?.Compile() ?? 0d.ToExpression());
 
-        /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
         /// <returns>Linq.Expression.Add()</returns>
         public override Expression Compile(params ParameterExpression[] Parameters) =>
             (((ComputedNode)Left)?.Compile(Parameters) ?? 0d.ToExpression())
                 .Add(((ComputedNode)Right)?.Compile(Parameters) ?? 0d.ToExpression());
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Полный клон узла с клонами поддеревьев</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РџРѕР»РЅС‹Р№ РєР»РѕРЅ СѓР·Р»Р° СЃ РєР»РѕРЅР°РјРё РїРѕРґРґРµСЂРµРІСЊРµРІ</returns>
         public override ExpressionTreeNode Clone() => CloneOperatorNode<AdditionOperatorNode>();
     }
 }

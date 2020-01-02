@@ -1,74 +1,74 @@
-using System;
+п»їusing System;
 using System.Diagnostics;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser
 {
-    /// <summary>Скобки</summary>
+    /// <summary>РЎРєРѕР±РєРё</summary>
     public class Bracket : IEquatable<Bracket>, ICloneable<Bracket>
     {
-        /// <summary>Круглые скобки</summary>
+        /// <summary>РљСЂСѓРіР»С‹Рµ СЃРєРѕР±РєРё</summary>
         [NotNull]
         public static Bracket NewRound => new Bracket("(", ")");
 
-        /// <summary>Квадратные скобки</summary>
+        /// <summary>РљРІР°РґСЂР°С‚РЅС‹Рµ СЃРєРѕР±РєРё</summary>
         [NotNull]
         public static Bracket NewRect => new Bracket("[", "]");
 
-        /// <summary>Фигурные скобки</summary>
+        /// <summary>Р¤РёРіСѓСЂРЅС‹Рµ СЃРєРѕР±РєРё</summary>
         [NotNull]
         public static Bracket NewFigur => new Bracket("{", "}");
 
-        /// <summary>Открывающая скобка</summary>
+        /// <summary>РћС‚РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР°</summary>
         [NotNull]
         public string Start { get; }
 
-        /// <summary>Закрывающая скобка</summary>
+        /// <summary>Р—Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР°</summary>
         [NotNull]
         public string Stop { get; }
 
-        /// <summary>Скобки</summary>
-        /// <param name="Start">Строка открывающей скобки</param>
-        /// <param name="Stop">Строка закрывающей скобки</param>
+        /// <summary>РЎРєРѕР±РєРё</summary>
+        /// <param name="Start">РЎС‚СЂРѕРєР° РѕС‚РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё</param>
+        /// <param name="Stop">РЎС‚СЂРѕРєР° Р·Р°РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё</param>
         public Bracket([NotNull] string Start, [NotNull] string Stop)
         {
             this.Start = Start;
             this.Stop = Stop;
         }
 
-        /// <summary>Проверка на эквивалентность другим скобкам</summary>
-        /// <param name="other">Проверяемые на эквивалентность скобки</param>
-        /// <returns>Истина, если проверяемые скобки эквивалентны данным</returns>
+        /// <summary>РџСЂРѕРІРµСЂРєР° РЅР° СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚СЊ РґСЂСѓРіРёРј СЃРєРѕР±РєР°Рј</summary>
+        /// <param name="other">РџСЂРѕРІРµСЂСЏРµРјС‹Рµ РЅР° СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚СЊ СЃРєРѕР±РєРё</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РїСЂРѕРІРµСЂСЏРµРјС‹Рµ СЃРєРѕР±РєРё СЌРєРІРёРІР°Р»РµРЅС‚РЅС‹ РґР°РЅРЅС‹Рј</returns>
         public bool Equals(Bracket other) => other is { } && (ReferenceEquals(this, other) || string.Equals(Start, other.Start) && string.Equals(Stop, other.Stop));
 
-        /// <summary>Проверка на эквивалентность</summary>
-        /// <param name="obj">Проверяемый объект</param>
-        /// <returns>Истина, если объект - скобки и вид скобок совпадает</returns>
+        /// <summary>РџСЂРѕРІРµСЂРєР° РЅР° СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚СЊ</summary>
+        /// <param name="obj">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РѕР±СЉРµРєС‚ - СЃРєРѕР±РєРё Рё РІРёРґ СЃРєРѕР±РѕРє СЃРѕРІРїР°РґР°РµС‚</returns>
         public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Bracket)obj));
 
-        /// <summary>Получить хэш-код</summary>
-        /// <returns>Хэш-код</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ С…СЌС€-РєРѕРґ</summary>
+        /// <returns>РҐСЌС€-РєРѕРґ</returns>
         public override int GetHashCode() { unchecked { return ((Start?.GetHashCode() ?? 0) * 397) ^ (Stop?.GetHashCode() ?? 0); } }
 
         object ICloneable.Clone() => Clone();
 
-        /// <summary>Клонирование скобок</summary>
-        /// <returns>Клон скобок</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СЃРєРѕР±РѕРє</summary>
+        /// <returns>РљР»РѕРЅ СЃРєРѕР±РѕРє</returns>
         [NotNull]
         public virtual Bracket Clone() => new Bracket(Start, Stop);
 
-        /// <summary>Строковое представление скобок</summary>
-        /// <returns>Строковое представление</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЃРєРѕР±РѕРє</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
         public override string ToString() => Suround("...");
 
-        /// <summary>Разместить текст в скобках</summary>
-        /// <param name="str">Размещаемый текст</param>
-        /// <returns>Текст в скобках</returns>
+        /// <summary>Р Р°Р·РјРµСЃС‚РёС‚СЊ С‚РµРєСЃС‚ РІ СЃРєРѕР±РєР°С…</summary>
+        /// <param name="str">Р Р°Р·РјРµС‰Р°РµРјС‹Р№ С‚РµРєСЃС‚</param>
+        /// <returns>РўРµРєСЃС‚ РІ СЃРєРѕР±РєР°С…</returns>
         [NotNull]
         public string Suround([CanBeNull] string str)
         {
-            Trace.TraceWarning("В обёртку блока скобок передана пустая строка");
+            Trace.TraceWarning("Р’ РѕР±С‘СЂС‚РєСѓ Р±Р»РѕРєР° СЃРєРѕР±РѕРє РїРµСЂРµРґР°РЅР° РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°");
             return $"{Start}{str}{Stop}";
         }
     }

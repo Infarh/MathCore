@@ -1,4 +1,4 @@
-using MathCore;
+﻿using MathCore;
 using MathCore.Vectors;
 
 // ReSharper disable once CheckNamespace

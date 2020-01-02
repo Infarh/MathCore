@@ -1,29 +1,29 @@
-using System;
+п»їusing System;
 using Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление преобразования типов</summary>
-    /// <typeparam name="TInput">Тип входного значения</typeparam>
-    /// <typeparam name="TOutput">Тип выходного значения</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ С‚РёРїРѕРІ</summary>
+    /// <typeparam name="TInput">РўРёРї РІС…РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</typeparam>
+    /// <typeparam name="TOutput">РўРёРї РІС‹С…РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</typeparam>
     public class ConvertEvulation<TInput, TOutput> : Evulation<TOutput>
     {
-        /// <summary>Вычисление входного значения</summary>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РІС…РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
         public Evulation<TInput> InputEvulation { get; set; }
 
-        /// <summary>Функция-преобразователь типов входного в выходное значение</summary>
+        /// <summary>Р¤СѓРЅРєС†РёСЏ-РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЊ С‚РёРїРѕРІ РІС…РѕРґРЅРѕРіРѕ РІ РІС‹С…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
         public Func<TInput, TOutput> Converter { get; set; }
 
-        /// <summary>Инициализация нового вычисления преобразования типов</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ С‚РёРїРѕРІ</summary>
         public ConvertEvulation() { }
 
-        /// <summary>Инициализация нового вычисления преобразования типов</summary>
-        /// <param name="Converter">Метод преобразования входного значения в выходное</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ С‚РёРїРѕРІ</summary>
+        /// <param name="Converter">РњРµС‚РѕРґ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІС…РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІ РІС‹С…РѕРґРЅРѕРµ</param>
         public ConvertEvulation(Func<TInput, TOutput> Converter) => this.Converter = Converter;
 
-        /// <summary>Инициализация нового вычисления преобразования типов</summary>
-        /// <param name="InputEvulation">Вычисление входного значения</param>
-        /// <param name="Converter">Метод преобразования входного значения в выходное</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ С‚РёРїРѕРІ</summary>
+        /// <param name="InputEvulation">Р’С‹С‡РёСЃР»РµРЅРёРµ РІС…РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</param>
+        /// <param name="Converter">РњРµС‚РѕРґ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІС…РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІ РІС‹С…РѕРґРЅРѕРµ</param>
         public ConvertEvulation(Evulation<TInput> InputEvulation, Func<TInput, TOutput> Converter) : this(Converter) => this.InputEvulation = InputEvulation;
 
         /// <inheritdoc />

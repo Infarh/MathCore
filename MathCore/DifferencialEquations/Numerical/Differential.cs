@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MathCore.Annotations;
 
 namespace MathCore.DifferencialEquations.Numerical

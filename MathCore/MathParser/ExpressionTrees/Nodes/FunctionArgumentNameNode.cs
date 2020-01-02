@@ -1,28 +1,28 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения, содержащий сведенья об аргументе функции</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ, СЃРѕРґРµСЂР¶Р°С‰РёР№ СЃРІРµРґРµРЅСЊСЏ РѕР± Р°СЂРіСѓРјРµРЅС‚Рµ С„СѓРЅРєС†РёРё</summary>
     public class FunctionArgumentNameNode : OperatorNode
     {
-        /// <summary>Узел аргумента</summary>
+        /// <summary>РЈР·РµР» Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public ExpressionTreeNode ArgumentNode => Right;
 
-        /// <summary>Узел имени аргумента</summary>
+        /// <summary>РЈР·РµР» РёРјРµРЅРё Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public string ArgumentName => ((StringNode)Left)?.Value;
 
-        /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р° РґРµСЂРµРІР° РёРЅС„РѕСЂРјР°С†РёРё РѕР± Р°СЂРіСѓРјРµРЅС‚Рµ С„СѓРЅРєС†РёРё</summary>
         public FunctionArgumentNameNode() : base(":", -100) { }
 
-        /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
-        /// <param name="Name">Имя</param>
-        /// <param name="Expression">Узел выражения аргумента</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р° РґРµСЂРµРІР° РёРЅС„РѕСЂРјР°С†РёРё РѕР± Р°СЂРіСѓРјРµРЅС‚Рµ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="Name">РРјСЏ</param>
+        /// <param name="Expression">РЈР·РµР» РІС‹СЂР°Р¶РµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚Р°</param>
         public FunctionArgumentNameNode(string Name, ExpressionTreeNode Expression = null) : this(new StringNode(Name), Expression) { }
 
-        /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
-        /// <param name="Name">Имя</param>
-        /// <param name="Expression">Выражение узла</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р° РґРµСЂРµРІР° РёРЅС„РѕСЂРјР°С†РёРё РѕР± Р°СЂРіСѓРјРµРЅС‚Рµ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="Name">РРјСЏ</param>
+        /// <param name="Expression">Р’С‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</param>
         public FunctionArgumentNameNode(StringNode Name, ExpressionTreeNode Expression)
             : this()
         {
@@ -31,21 +31,21 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             Right = Expression;
         }
 
-        /// <summary>Метод вычисления значения узла</summary>
-        /// <returns>Значение аргумента</returns>
+        /// <summary>РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р°</returns>
         public override double Compute() => ((ComputedNode)ArgumentNode).Compute();
 
-        /// <summary>Компиляция узла аргумента</summary>
-        /// <returns>Скомпилированное выражение</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р° Р°СЂРіСѓРјРµРЅС‚Р°</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
         public override Expression Compile() => ((ComputedNode)ArgumentNode).Compile();
 
-        /// <summary>Компиляция узла аргумента с учётом списка параметров</summary>
-        /// <param name="Parameters">Массив параметров процесса компиляции</param>
-        /// <returns>Скомпилированное значение узла аргумента дерева выражения</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р° Р°СЂРіСѓРјРµРЅС‚Р° СЃ СѓС‡С‘С‚РѕРј СЃРїРёСЃРєР° РїР°СЂР°РјРµС‚СЂРѕРІ</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ РїСЂРѕС†РµСЃСЃР° РєРѕРјРїРёР»СЏС†РёРё</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓР·Р»Р° Р°СЂРіСѓРјРµРЅС‚Р° РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)ArgumentNode).Compile(Parameters);
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new FunctionArgumentNameNode { Right = Right.Clone(), Left = Left.Clone() };
     }
 }

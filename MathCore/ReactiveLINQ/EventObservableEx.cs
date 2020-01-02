@@ -1,4 +1,4 @@
-using System.Reflection;
+ï»¿using System.Reflection;
 
 namespace System.Linq.Reactive
 {
@@ -15,7 +15,7 @@ namespace System.Linq.Reactive
             var lv_EventDescriptor = _Target.GetType().GetEvent(EventName);
             _EventDescriptor = lv_EventDescriptor;
             if(_EventDescriptor is null)
-                throw new ArgumentException($"Ñîáûòèå {EventName} íå íàéäåíî", nameof(EventName));
+                throw new ArgumentException($"Ð¡Ð¾Ð±Ñ‹Ñ‚Ð¸Ðµ {EventName} Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾", nameof(EventName));
             _EventDescriptor.AddEventHandler(_Target, _EventHandler = (s, e) => OnNext(e));
         }
 

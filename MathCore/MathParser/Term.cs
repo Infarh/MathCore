@@ -1,27 +1,27 @@
-using MathCore.Annotations;
+п»їusing MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Элемент математического выражения</summary>
+    /// <summary>Р­Р»РµРјРµРЅС‚ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     internal abstract class Term
     {
-        /// <summary>Строковое содержимое</summary>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ СЃРѕРґРµСЂР¶РёРјРѕРµ</summary>
         protected string _Value;
 
-        /// <summary>Конструктор элемента математического выражения</summary>
-        /// <param name="Value">Строковое содержимое</param>
+        /// <summary>РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ СЌР»РµРјРµРЅС‚Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Value">РЎС‚СЂРѕРєРѕРІРѕРµ СЃРѕРґРµСЂР¶РёРјРѕРµ</param>
         protected Term(string Value) => _Value = Value;
 
-        /// <summary>Метод извлечения поддерева для данного элемента математического выражения</summary>
-        /// <param name="Parser">Парсер математического выражения</param>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Узел дерева мат.выражения, являющийся поддеревом для данного элемента мат.выражения</returns>
+        /// <summary>РњРµС‚РѕРґ РёР·РІР»РµС‡РµРЅРёСЏ РїРѕРґРґРµСЂРµРІР° РґР»СЏ РґР°РЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>РЈР·РµР» РґРµСЂРµРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, СЏРІР»СЏСЋС‰РёР№СЃСЏ РїРѕРґРґРµСЂРµРІРѕРј РґР»СЏ РґР°РЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         [NotNull]
         public abstract ExpressionTreeNode GetSubTree([NotNull] ExpressionParser Parser, [NotNull] MathExpression Expression);
 
-        /// <summary>Строковое представление элемента мат.выражения</summary>
-        /// <returns>Строковое содержимое элемента мат.выражения</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ СЃРѕРґРµСЂР¶РёРјРѕРµ СЌР»РµРјРµРЅС‚Р° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         public override string ToString() => _Value;
     }
 }

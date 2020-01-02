@@ -1,48 +1,48 @@
-using System.Linq.Expressions;
+п»їusing System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реализующий скобки с возможностью вычисления</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ СЃРєРѕР±РєРё СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
     public class ComputedBracketNode : ComputedNode
     {
-        /// <summary>Скобки</summary>
+        /// <summary>РЎРєРѕР±РєРё</summary>
         private readonly Bracket _Bracket;
 
-        /// <summary>Скобки</summary>
+        /// <summary>РЎРєРѕР±РєРё</summary>
         public Bracket Bracket => _Bracket;
 
-        /// <summary>Вычислимыый блочный узел дерева</summary>
-        /// <param name="bracket">Скобки</param>
-        /// <param name="Node">Узел-содержимое</param>
+        /// <summary>Р’С‹С‡РёСЃР»РёРјС‹С‹Р№ Р±Р»РѕС‡РЅС‹Р№ СѓР·РµР» РґРµСЂРµРІР°</summary>
+        /// <param name="bracket">РЎРєРѕР±РєРё</param>
+        /// <param name="Node">РЈР·РµР»-СЃРѕРґРµСЂР¶РёРјРѕРµ</param>
         public ComputedBracketNode(Bracket bracket, ExpressionTreeNode Node = null)
         {
             _Bracket = bracket;
             Left = Node;
         }
 
-        /// <summary>Вычислить значение узла</summary>
-        /// <returns>Значение вложенного узла</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РІР»РѕР¶РµРЅРЅРѕРіРѕ СѓР·Р»Р°</returns>
         public override double Compute() => ((ComputedNode)Left).Compute();
 
-        /// <summary>Компиляция узла</summary>
-        /// <returns>Компиляция содержимого узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <returns>РљРѕРјРїРёР»СЏС†РёСЏ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ СѓР·Р»Р°</returns>
         public override Expression Compile() => ((ComputedNode)Left).Compile();
 
-        /// <summary>Компиляция узла с параметрами</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
-        /// <returns>Компиляция вложенного узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё</summary>
+        /// <param name="Parameters">РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РљРѕРјРїРёР»СЏС†РёСЏ РІР»РѕР¶РµРЅРЅРѕРіРѕ СѓР·Р»Р°</returns>
         public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)Left).Compile(Parameters);
 
-        /// <summary>Клон узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new ComputedBracketNode(_Bracket)
         {
             Left = Left?.Clone(),
             Right = Right?.Clone()
         };
 
-        /// <summary>Строковое представление узла</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => $"{_Bracket.Suround(Left.ToString())}{Right?.ToString() ?? ""}";
     }
 }

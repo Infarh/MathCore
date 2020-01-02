@@ -1,15 +1,15 @@
-namespace System
+п»їnamespace System
 {
-    /// <summary>Класс методов-расширений для сравнимых объектов</summary>
+    /// <summary>РљР»Р°СЃСЃ РјРµС‚РѕРґРѕРІ-СЂР°СЃС€РёСЂРµРЅРёР№ РґР»СЏ СЃСЂР°РІРЅРёРјС‹С… РѕР±СЉРµРєС‚РѕРІ</summary>
     public static class IComparableExtensions
     {
-        /// <summary>Метод поиска элемента в упорядоченной коллекции половинным делением</summary>
-        /// <typeparam name="T">Тип элементов коллекции</typeparam>
-        /// <param name="Collection">Массив элементов, упорядоченный по возростанию</param>
-        /// <param name="From">Начальный индекс поиска</param>
-        /// <param name="To">КОнечный индекс поиска</param>
-        /// <param name="Item">Искомый элемент</param>
-        /// <returns>Индекс элемента в массиве</returns>
+        /// <summary>РњРµС‚РѕРґ РїРѕРёСЃРєР° СЌР»РµРјРµРЅС‚Р° РІ СѓРїРѕСЂСЏРґРѕС‡РµРЅРЅРѕР№ РєРѕР»Р»РµРєС†РёРё РїРѕР»РѕРІРёРЅРЅС‹Рј РґРµР»РµРЅРёРµРј</summary>
+        /// <typeparam name="T">РўРёРї СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё</typeparam>
+        /// <param name="Collection">РњР°СЃСЃРёРІ СЌР»РµРјРµРЅС‚РѕРІ, СѓРїРѕСЂСЏРґРѕС‡РµРЅРЅС‹Р№ РїРѕ РІРѕР·СЂРѕСЃС‚Р°РЅРёСЋ</param>
+        /// <param name="From">РќР°С‡Р°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ РїРѕРёСЃРєР°</param>
+        /// <param name="To">РљРћРЅРµС‡РЅС‹Р№ РёРЅРґРµРєСЃ РїРѕРёСЃРєР°</param>
+        /// <param name="Item">РСЃРєРѕРјС‹Р№ СЌР»РµРјРµРЅС‚</param>
+        /// <returns>РРЅРґРµРєСЃ СЌР»РµРјРµРЅС‚Р° РІ РјР°СЃСЃРёРІРµ</returns>
         public static int? Search<T>(this T[] Collection, int From, int To, T Item) where T : IComparable<T>
         {
             while(To >= From)

@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+Ôªø//------------------------------------------------------------------------------
 // <copyright file="XPathReader.cs" company="Microsoft">
 //     
 //      Copyright (c) 2002 Microsoft Corporation.  All rights reserved.
@@ -151,7 +151,7 @@ namespace System.Xml.XPath
         /// <exception cref="InvalidOperationException">
         ///     An <see cref="T:System.Xml.XmlReader" /> method was called before a
         ///     previous asynchronous operation finished. In this case, <see cref="T:System.InvalidOperationException" /> is thrown
-        ///     with the message ìAn asynchronous operation is already in progress.î
+        ///     with the message ‚ÄúAn asynchronous operation is already in progress.‚Äù
         /// </exception>
         public override string this[string name] => BaseReader[name];
 

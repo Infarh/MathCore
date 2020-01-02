@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Linq;
 
 namespace System
@@ -9,7 +9,7 @@ namespace System
 
         public ActionsCollectionProcessor(IEnumerable<Action> ActionsCollection) => _ActionsCollection = ActionsCollection;
 
-        /// <summary>Основной метод действия процессора, вызываемое в цикле. Должно быть переопределено в классах-наследниках</summary>
+        /// <summary>РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ РґРµР№СЃС‚РІРёСЏ РїСЂРѕС†РµСЃСЃРѕСЂР°, РІС‹Р·С‹РІР°РµРјРѕРµ РІ С†РёРєР»Рµ. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРѕ РІ РєР»Р°СЃСЃР°С…-РЅР°СЃР»РµРґРЅРёРєР°С…</summary>
         protected override void MainAction() => _ActionsCollection.Foreach(a => a());
     }
 }

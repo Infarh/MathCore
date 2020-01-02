@@ -1,4 +1,4 @@
-namespace System.Xml.XPath
+﻿namespace System.Xml.XPath
 {
     /// <devdoc>
     ///     <para>[To be supplied.]</para>

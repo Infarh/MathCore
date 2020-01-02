@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using MathCore.Annotations;
 
@@ -6,27 +6,27 @@ using MathCore.Annotations;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Коллекция функционалов</summary>
+    /// <summary>РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ</summary>
     public class FunctionalsCollection : IEnumerable<Functional>
     {
-        /// <summary>Список функционалов</summary>
+        /// <summary>РЎРїРёСЃРѕРє С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ</summary>
         [NotNull]
         private readonly List<Functional> _Operators = new List<Functional>();
 
-        /// <summary>Ссылка на математическое выражение, с которым связана поллекция</summary>
+        /// <summary>РЎСЃС‹Р»РєР° РЅР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, СЃ РєРѕС‚РѕСЂС‹Рј СЃРІСЏР·Р°РЅР° РїРѕР»Р»РµРєС†РёСЏ</summary>
         [NotNull]
         private readonly MathExpression _Expression;
 
-        /// <summary>Количество функционалов в коллекции</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РІ РєРѕР»Р»РµРєС†РёРё</summary>
         public int Count => _Operators.Count;
 
-        /// <summary>Инициализация новой коллекции функционалов</summary>
-        /// <param name="Expression">Математическое выражение, на которое ссылается коллекция</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ</summary>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РЅР° РєРѕС‚РѕСЂРѕРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ РєРѕР»Р»РµРєС†РёСЏ</param>
         public FunctionalsCollection([NotNull] MathExpression Expression) => _Expression = Expression;
 
-        /// <summary>Добавить функционал в коллекцию</summary>
-        /// <param name="Operator">Добавляемый функционал</param>
-        /// <returns>Истина, если добавление прошло успешно</returns>
+        /// <summary>Р”РѕР±Р°РІРёС‚СЊ С„СѓРЅРєС†РёРѕРЅР°Р» РІ РєРѕР»Р»РµРєС†РёСЋ</summary>
+        /// <param name="Operator">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ С„СѓРЅРєС†РёРѕРЅР°Р»</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РґРѕР±Р°РІР»РµРЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ</returns>
         public bool Add([NotNull] Functional Operator)
         {
             if(_Operators.Exists(o => o.Name == Operator.Name)) return false;

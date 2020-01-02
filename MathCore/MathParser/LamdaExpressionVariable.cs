@@ -1,32 +1,32 @@
-using System;
+п»їusing System;
 
 namespace MathCore.MathParser
 {
-    /// <summary>лямбда-переменная</summary>
-    /// <remarks>Значение переменной - результат вычисления лямбда-функции</remarks>
+    /// <summary>Р»СЏРјР±РґР°-РїРµСЂРµРјРµРЅРЅР°СЏ</summary>
+    /// <remarks>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ - СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ Р»СЏРјР±РґР°-С„СѓРЅРєС†РёРё</remarks>
     public class LamdaExpressionVariable : ExpressionVariabel
     {
-        /// <summary>Функция вычисления значения переменной</summary>
+        /// <summary>Р¤СѓРЅРєС†РёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
         private readonly Func<double> _Value;
 
-        /// <summary>Признак отсутствия возможности предвычисления значения</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє РѕС‚СЃСѓС‚СЃС‚РІРёСЏ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРґРІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ</summary>
         public override bool IsPrecomputable => false;
 
-        /// <summary>Инициализация нового экземпляра лямбда-переменной</summary>
-        /// <param name="Source">лямбда-функция получения значения переменной</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° Р»СЏРјР±РґР°-РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="Source">Р»СЏРјР±РґР°-С„СѓРЅРєС†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
         public LamdaExpressionVariable(Func<double> Source) : this("", Source) { }
 
-        /// <summary>Инициализация нового экземпляра лямбда-переменной</summary>
-        /// <param name="Name">Имя переменной</param>
-        /// <param name="Source">лямбда-функция получения значения переменной</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° Р»СЏРјР±РґР°-РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="Name">РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <param name="Source">Р»СЏРјР±РґР°-С„СѓРЅРєС†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
         public LamdaExpressionVariable(string Name, Func<double> Source) : base(Name) => _Value = Source;
 
-        /// <summary>Получить значение переменной</summary>
-        /// <returns>Численное значение переменной</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</returns>
         public override double GetValue() => Value = _Value();
 
-        /// <summary>Клонировать переменную</summary>
-        /// <returns>Новый экземпляр лямбда-переменной с тем же именем и клоном функции</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°С‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ</summary>
+        /// <returns>РќРѕРІС‹Р№ СЌРєР·РµРјРїР»СЏСЂ Р»СЏРјР±РґР°-РїРµСЂРµРјРµРЅРЅРѕР№ СЃ С‚РµРј Р¶Рµ РёРјРµРЅРµРј Рё РєР»РѕРЅРѕРј С„СѓРЅРєС†РёРё</returns>
         public override ExpressionVariabel Clone() => new LamdaExpressionVariable(Name, (Func<double>)_Value.Clone());
     }
 }

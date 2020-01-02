@@ -1,18 +1,18 @@
-using Ex = System.Linq.Expressions.Expression;
+п»їusing Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление деления двух вычислений</summary>
-    /// <typeparam name="T">Тип значения вычисления</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РґРµР»РµРЅРёСЏ РґРІСѓС… РІС‹С‡РёСЃР»РµРЅРёР№</summary>
+    /// <typeparam name="T">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</typeparam>
     public class DivideEvulation<T> : BinaryFunctionOperatorEvulation<T>
     {
-        /// <summary>Инициализация нового вычисления деления</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РґРµР»РµРЅРёСЏ</summary>
         public DivideEvulation() : base(Ex.Divide) { }
 
-        /// <summary>Инициализация нового вычисления деления</summary>
-        /// <param name="a">Вычисление делимого</param>
-        /// <param name="b">Вычисление делителя</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РґРµР»РµРЅРёСЏ</summary>
+        /// <param name="a">Р’С‹С‡РёСЃР»РµРЅРёРµ РґРµР»РёРјРѕРіРѕ</param>
+        /// <param name="b">Р’С‹С‡РёСЃР»РµРЅРёРµ РґРµР»РёС‚РµР»СЏ</param>
         public DivideEvulation(Evulation<T> a, Evulation<T> b) : base(Ex.Divide, a, b) { }
     }
 }

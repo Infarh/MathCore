@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // <copyright file="XPathCollection.cs" company="Microsoft">
 //     
 //      Copyright (c) 2002 Microsoft Corporation.  All rights reserved.

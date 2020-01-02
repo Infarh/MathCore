@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+п»їusing System.Runtime.CompilerServices;
 
 namespace System.Linq.Expressions
 {
@@ -13,7 +13,7 @@ namespace System.Linq.Expressions
 
         private static void CheckValueType(Type type)
         {
-            if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
+            if(!CheckNumType(type)) throw new NotSupportedException($"РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ С‚РёРї РґР°РЅРЅС‹С… {type}");
         }
 
         protected override Expression VisitConstant(ConstantExpression c)
@@ -180,7 +180,7 @@ namespace System.Linq.Expressions
                         return sAdd(AB, CD);
                     }
                 default:
-                    throw new NotSupportedException("Неподдерживаемый тип операции");
+                    throw new NotSupportedException("РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ С‚РёРї РѕРїРµСЂР°С†РёРё");
             }
         }
 

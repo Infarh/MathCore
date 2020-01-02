@@ -1,23 +1,23 @@
-using MathCore.Annotations;
+п»їusing MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Строковый элемент выражения</summary>
+    /// <summary>РЎС‚СЂРѕРєРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     internal class StringTerm : Term
     {
-        /// <summary>Имя строкового элемента</summary>
+        /// <summary>РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°</summary>
         [NotNull]
         public string Name => _Value;
 
-        /// <summary>Новый строковый элемент</summary>
-        /// <param name="Name">Имя строкового элемента</param>
+        /// <summary>РќРѕРІС‹Р№ СЃС‚СЂРѕРєРѕРІС‹Р№ СЌР»РµРјРµРЅС‚</summary>
+        /// <param name="Name">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
         public StringTerm([NotNull] string Name) : base(Name) { }
 
-        /// <summary>Поддерево элемента, состоящее из узла-переменной</summary>
-        /// <param name="Parser">Парсер</param>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Узел дерева с переменной, полученной из Expression.Variable[Name]</returns>
+        /// <summary>РџРѕРґРґРµСЂРµРІРѕ СЌР»РµРјРµРЅС‚Р°, СЃРѕСЃС‚РѕСЏС‰РµРµ РёР· СѓР·Р»Р°-РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>РЈР·РµР» РґРµСЂРµРІР° СЃ РїРµСЂРµРјРµРЅРЅРѕР№, РїРѕР»СѓС‡РµРЅРЅРѕР№ РёР· Expression.Variable[Name]</returns>
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
             => new VariableValueNode(Expression.Variable[Name]);
     }
