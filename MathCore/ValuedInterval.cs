@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
@@ -7,16 +7,16 @@ using MathCore.Annotations;
 
 namespace MathCore
 {
-    /// <summary>Интервал вещественых значений двойной точности</summary>
+    /// <summary>РРЅС‚РµСЂРІР°Р» РІРµС‰РµСЃС‚РІРµРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РґРІРѕР№РЅРѕР№ С‚РѕС‡РЅРѕСЃС‚Рё</summary>
     [Serializable]
     public struct ValuedInterval<TValue> : IComparable<double>, IFormattable
     {
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Метод сравнения двух интервалов</summary>
-        /// <param name="a">Первый сравниваемый интервал</param>
-        /// <param name="b">Второй сравниваемый интервал</param>
-        /// <returns>1 - если первый интервал больше второго, -1 - если первый интервал меньше второго, 0 - если интервалы равны</returns>
+        /// <summary>РњРµС‚РѕРґ СЃСЂР°РІРЅРµРЅРёСЏ РґРІСѓС… РёРЅС‚РµСЂРІР°Р»РѕРІ</summary>
+        /// <param name="a">РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+        /// <param name="b">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+        /// <returns>1 - РµСЃР»Рё РїРµСЂРІС‹Р№ РёРЅС‚РµСЂРІР°Р» Р±РѕР»СЊС€Рµ РІС‚РѕСЂРѕРіРѕ, -1 - РµСЃР»Рё РїРµСЂРІС‹Р№ РёРЅС‚РµСЂРІР°Р» РјРµРЅСЊС€Рµ РІС‚РѕСЂРѕРіРѕ, 0 - РµСЃР»Рё РёРЅС‚РµСЂРІР°Р»С‹ СЂР°РІРЅС‹</returns>
         public static int Comparer_Length(ValuedInterval<TValue> a, ValuedInterval<TValue> b)
         {
             var l1 = a.Length;
@@ -26,37 +26,37 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Включена ли нижняя граница интервала?</summary>
+        /// <summary>Р’РєР»СЋС‡РµРЅР° Р»Рё РЅРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°?</summary>
         private readonly bool _MinInclude;
-        /// <summary>Включена ли верхняя граница интервала?</summary>
+        /// <summary>Р’РєР»СЋС‡РµРЅР° Р»Рё РІРµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°?</summary>
         private readonly bool _MaxInclude;
-        /// <summary>Нижняя граница интервала</summary>
+        /// <summary>РќРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</summary>
         private readonly double _Min;
-        /// <summary>Верхняя граница интервала</summary>
+        /// <summary>Р’РµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</summary>
         private readonly double _Max;
 
         private readonly TValue _Value;
 
         /* -------------------------------------------------------------------------------------------- */
 
-        #region Свойства
+        #region РЎРІРѕР№СЃС‚РІР°
 
-        /// <summary>Включена ли нижняя граница интервала?</summary>
+        /// <summary>Р’РєР»СЋС‡РµРЅР° Р»Рё РЅРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°?</summary>
         public bool MinInclude => _MinInclude;
 
-        /// <summary>Включена ли верхняя граница интервала?</summary>
+        /// <summary>Р’РєР»СЋС‡РµРЅР° Р»Рё РІРµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°?</summary>
         public bool MaxInclude => _MaxInclude;
 
-        /// <summary>Нижняя граница интервала</summary>
+        /// <summary>РќРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</summary>
         public double Min => _Min;
 
-        /// <summary>Верхняя граница интервала</summary>
+        /// <summary>Р’РµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</summary>
         public double Max => _Max;
 
-        /// <summary>Длина интервала</summary>
+        /// <summary>Р”Р»РёРЅР° РёРЅС‚РµСЂРІР°Р»Р°</summary>
         public double Length => _Max - _Min;
 
-        /// <summary>Середина интервала</summary>
+        /// <summary>РЎРµСЂРµРґРёРЅР° РёРЅС‚РµСЂРІР°Р»Р°</summary>
         public double Middle => (_Min + _Max) / 2;
 
         public TValue Value => _Value;
@@ -65,27 +65,27 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        #region Конструкторы
+        #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
-        /// <summary>Интервал</summary>
-        /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верзняя граница интервала</param>
-        /// <param name="Value">Значение</param>
+        /// <summary>РРЅС‚РµСЂРІР°Р»</summary>
+        /// <param name="Min">РќРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="Max">Р’РµСЂР·РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="Value">Р—РЅР°С‡РµРЅРёРµ</param>
         public ValuedInterval(double Min, double Max, TValue Value) : this(Min, true, Max, true, Value) { }
 
-        /// <summary>Интервал</summary>
-        /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верхняя граница интервала</param>
-        /// <param name="IncludeLimits">Включать пределы?</param>
-        /// <param name="Value">Значение</param>
+        /// <summary>РРЅС‚РµСЂРІР°Р»</summary>
+        /// <param name="Min">РќРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="Max">Р’РµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="IncludeLimits">Р’РєР»СЋС‡Р°С‚СЊ РїСЂРµРґРµР»С‹?</param>
+        /// <param name="Value">Р—РЅР°С‡РµРЅРёРµ</param>
         public ValuedInterval(double Min, double Max, bool IncludeLimits, TValue Value) : this(Min, IncludeLimits, Max, IncludeLimits, Value) { }
 
-        /// <summary>Интервал</summary>
-        /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
-        /// <param name="Max">Верхняя граница интервала</param>
-        /// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
-        /// <param name="Value">Значение</param>
+        /// <summary>РРЅС‚РµСЂРІР°Р»</summary>
+        /// <param name="Min">РќРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="MinInclude">Р’РєР»СЋС‡РµРЅР° Р»Рё РЅРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°?</param>
+        /// <param name="Max">Р’РµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="MaxInclude">Р’РєР»СЋС‡РµРЅР° Р»Рё РІРµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РёРЅС‚РµСЂРІР°Р»Р°</param>
+        /// <param name="Value">Р—РЅР°С‡РµРЅРёРµ</param>
         public ValuedInterval(double Min, bool MinInclude, double Max, bool MaxInclude, TValue Value)
         {
             _Min = Min;
@@ -99,7 +99,7 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        #region Интервальные функции
+        #region РРЅС‚РµСЂРІР°Р»СЊРЅС‹Рµ С„СѓРЅРєС†РёРё
 
         public ValuedInterval<TValue> IncludeMax(bool Include) => new ValuedInterval<TValue>(_Min, _MinInclude, _Max, Include, _Value);
         public ValuedInterval<TValue> IncludeMin(bool Include) => new ValuedInterval<TValue>(_Min, Include, _Max, _MaxInclude, _Value);
@@ -126,8 +126,8 @@ namespace MathCore
             value = _Value;
         }
 
-        ///// <summary>Проверка на входжение в интервал</summary>
-        ///// <param name="X">Проверяемая величина</param>
+        ///// <summary>РџСЂРѕРІРµСЂРєР° РЅР° РІС…РѕРґР¶РµРЅРёРµ РІ РёРЅС‚РµСЂРІР°Р»</summary>
+        ///// <param name="X">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РІРµР»РёС‡РёРЅР°</param>
         ///// <returns></returns>
         //public bool Check(double X)
         //{
@@ -146,9 +146,9 @@ namespace MathCore
                 || (X > min && X < max);
         }
 
-        /// <summary>Проверка на вхождение значения в интервал</summary>
-        /// <param name="value">Проверяемое значение</param>
-        /// <returns>Истина, если значение входит в интервал</returns>
+        /// <summary>РџСЂРѕРІРµСЂРєР° РЅР° РІС…РѕР¶РґРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РІ РёРЅС‚РµСЂРІР°Р»</summary>
+        /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РІС…РѕРґРёС‚ РІ РёРЅС‚РµСЂРІР°Р»</returns>
         [DST]
         public bool Check(double value) =>
             (_MinInclude && _Min.CompareTo(value) == 0)
@@ -182,7 +182,7 @@ namespace MathCore
                 ? 0
                 : (x < _Min ? -1 : 1);
 
-        #region Цыклы
+        #region Р¦С‹РєР»С‹
 
         public void For(int samples, [NotNull] Action<double> Do)
         {
@@ -276,17 +276,17 @@ namespace MathCore
             _Min.ToString(Format),
             _Max.ToString(Format));
 
-        /// <summary>Форматирует значение текущего экземпляра с использованием заданного формата.</summary>
-        /// <returns>Объект <see cref="T:System.String"/> содержит значение текущего экземпляра в заданном формате.</returns>
+        /// <summary>Р¤РѕСЂРјР°С‚РёСЂСѓРµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ СЌРєР·РµРјРїР»СЏСЂР° СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј Р·Р°РґР°РЅРЅРѕРіРѕ С„РѕСЂРјР°С‚Р°.</summary>
+        /// <returns>РћР±СЉРµРєС‚ <see cref="T:System.String"/> СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РІ Р·Р°РґР°РЅРЅРѕРј С„РѕСЂРјР°С‚Рµ.</returns>
         /// <param name="Format">
-        /// Объект <see cref="T:System.String"/>, задающий используемый формат.— или — 
-        /// Значение null для использования формата по умолчанию, определенного для типа реализации 
+        /// РћР±СЉРµРєС‚ <see cref="T:System.String"/>, Р·Р°РґР°СЋС‰РёР№ РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ С„РѕСЂРјР°С‚.вЂ” РёР»Рё вЂ” 
+        /// Р—РЅР°С‡РµРЅРёРµ null РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ С„РѕСЂРјР°С‚Р° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ РґР»СЏ С‚РёРїР° СЂРµР°Р»РёР·Р°С†РёРё 
         /// <see cref="T:System.IFormattable"/>. 
         /// </param>
         /// <param name="FormatProvider">
-        /// Объект <see cref="T:System.IFormatProvider"/>, используемый для форматирования значения.— или — 
-        /// Значение null для получения сведений о форматировании чисел на основе текущего значения параметра языкового 
-        /// стандарта операционной системы. 
+        /// РћР±СЉРµРєС‚ <see cref="T:System.IFormatProvider"/>, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ.вЂ” РёР»Рё вЂ” 
+        /// Р—РЅР°С‡РµРЅРёРµ null РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃРІРµРґРµРЅРёР№ Рѕ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРё С‡РёСЃРµР» РЅР° РѕСЃРЅРѕРІРµ С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР° СЏР·С‹РєРѕРІРѕРіРѕ 
+        /// СЃС‚Р°РЅРґР°СЂС‚Р° РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹. 
         /// </param>
         /// <filterpriority>2</filterpriority>
         public string ToString(string Format, IFormatProvider FormatProvider) => string.Format(

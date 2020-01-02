@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +8,24 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Коллекция констант</summary>
-    [System.Diagnostics.DebuggerDisplay("Колличество зафиксированных констант = {" + nameof(Count) + "}"), DST]
+    /// <summary>РљРѕР»Р»РµРєС†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚</summary>
+    [System.Diagnostics.DebuggerDisplay("РљРѕР»Р»РёС‡РµСЃС‚РІРѕ Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С… РєРѕРЅСЃС‚Р°РЅС‚ = {" + nameof(Count) + "}"), DST]
     public sealed class ConstantsCollection : IEnumerable<ExpressionVariabel>
     {
-        /// <summary>Ссылка на выражение</summary>
+        /// <summary>РЎСЃС‹Р»РєР° РЅР° РІС‹СЂР°Р¶РµРЅРёРµ</summary>
         [NotNull]
         private readonly MathExpression _Expression;
 
-        /// <summary>Элементы коллекци</summary>
+        /// <summary>Р­Р»РµРјРµРЅС‚С‹ РєРѕР»Р»РµРєС†Рё</summary>
         [NotNull]
         private readonly List<ExpressionVariabel> _Items = new List<ExpressionVariabel>();
 
-        /// <summary>Количество элементов коллекции</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё</summary>
         public int Count => _Items.Count;
 
-        /// <summary>Итератор констант по имени</summary>
-        /// <param name="Name">Имя константы</param>
-        /// <returns>Константа с указанным именем</returns>
+        /// <summary>РС‚РµСЂР°С‚РѕСЂ РєРѕРЅСЃС‚Р°РЅС‚ РїРѕ РёРјРµРЅРё</summary>
+        /// <param name="Name">РРјСЏ РєРѕРЅСЃС‚Р°РЅС‚С‹</param>
+        /// <returns>РљРѕРЅСЃС‚Р°РЅС‚Р° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј</returns>
         [NotNull]
         public ExpressionVariabel this[[NotNull] string Name]
         {
@@ -34,17 +34,17 @@ namespace MathCore.MathParser
                 if(Name is null) throw new ArgumentNullException(nameof(Name));
                 if(string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
                 var c = _Items.Find(v => v.Name == Name);
-                if(c is null) throw new ArgumentException($"Константа с именем {Name} не найдена");
+                if(c is null) throw new ArgumentException($"РљРѕРЅСЃС‚Р°РЅС‚Р° СЃ РёРјРµРЅРµРј {Name} РЅРµ РЅР°Р№РґРµРЅР°");
                 return c;
             }
         }
 
-        /// <summary>Инициализация новой коллекции констант</summary>
-        /// <param name="Expression">Математическое выражение, которому принадлежит коллекция</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё РєРѕРЅСЃС‚Р°РЅС‚</summary>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРЅР°РґР»РµР¶РёС‚ РєРѕР»Р»РµРєС†РёСЏ</param>
         public ConstantsCollection([NotNull] MathExpression Expression) => _Expression = Expression;
 
-        /// <summary>Добавить элемент в коллекцию</summary>
-        /// <param name="Constant">Добавляемое значение, как константа</param>
+        /// <summary>Р”РѕР±Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚ РІ РєРѕР»Р»РµРєС†РёСЋ</summary>
+        /// <param name="Constant">Р”РѕР±Р°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ, РєР°Рє РєРѕРЅСЃС‚Р°РЅС‚Р°</param>
         public bool Add([NotNull] ExpressionVariabel Constant)
         {
             if(_Items.Contains(v => v.Name == Constant.Name)) return false;
@@ -53,18 +53,18 @@ namespace MathCore.MathParser
             return true;
         }
 
-        /// <summary>Получить имена констант колеекции</summary>
-        /// <returns>Перечисление имён констант колеекции</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РёРјРµРЅР° РєРѕРЅСЃС‚Р°РЅС‚ РєРѕР»РµРµРєС†РёРё</summary>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ РёРјС‘РЅ РєРѕРЅСЃС‚Р°РЅС‚ РєРѕР»РµРµРєС†РёРё</returns>
         [NotNull]
         public IEnumerable<string> GetNames() => _Items.Select(v => v.Name);
 
-        /// <summary>Получить перечислитеь констант коллекци</summary>
-        /// <returns>Перечислитель констант</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РёС‚РµСЊ РєРѕРЅСЃС‚Р°РЅС‚ РєРѕР»Р»РµРєС†Рё</summary>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РєРѕРЅСЃС‚Р°РЅС‚</returns>
         [NotNull]
         IEnumerator<ExpressionVariabel> IEnumerable<ExpressionVariabel>.GetEnumerator() => _Items.GetEnumerator();
 
-        /// <summary>Получить перечислитеь констант коллекци</summary>
-        /// <returns>Перечислитель констант</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РёС‚РµСЊ РєРѕРЅСЃС‚Р°РЅС‚ РєРѕР»Р»РµРєС†Рё</summary>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РєРѕРЅСЃС‚Р°РЅС‚</returns>
         [NotNull]
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ExpressionVariabel>)this).GetEnumerator();
     }

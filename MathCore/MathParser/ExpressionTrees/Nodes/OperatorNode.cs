@@ -1,9 +1,9 @@
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+п»їnamespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел деерва мат.выражения, реализующий оператор</summary>
+    /// <summary>РЈР·РµР» РґРµРµСЂРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ</summary>
     public abstract class OperatorNode : ComputedNode
     {
-        /// <summary>Оператор является предвычислимым если предвычислимы его правое и левое поддерево</summary>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СЏРІР»СЏРµС‚СЃСЏ РїСЂРµРґРІС‹С‡РёСЃР»РёРјС‹Рј РµСЃР»Рё РїСЂРµРґРІС‹С‡РёСЃР»РёРјС‹ РµРіРѕ РїСЂР°РІРѕРµ Рё Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
         public override bool IsPrecomputable
         {
             get
@@ -14,10 +14,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             }
         }
 
-        /// <summary>Приоритет оператора</summary>
+        /// <summary>РџСЂРёРѕСЂРёС‚РµС‚ РѕРїРµСЂР°С‚РѕСЂР°</summary>
         /// <remarks>
-        /// Чем выше приоритет, тем глубже в дереве должен находиться оператор
-        /// Шакала базовых приоритетов:
+        /// Р§РµРј РІС‹С€Рµ РїСЂРёРѕСЂРёС‚РµС‚, С‚РµРј РіР»СѓР±Р¶Рµ РІ РґРµСЂРµРІРµ РґРѕР»Р¶РµРЅ РЅР°С…РѕРґРёС‚СЊСЃСЏ РѕРїРµСЂР°С‚РѕСЂ
+        /// РЁР°РєР°Р»Р° Р±Р°Р·РѕРІС‹С… РїСЂРёРѕСЂРёС‚РµС‚РѕРІ:
         ///  + - 0
         ///  - - 5
         ///  * - 10
@@ -26,23 +26,23 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// </remarks>
         public int Priority { get; protected set; }
 
-        /// <summary>Ипя оператора</summary>
+        /// <summary>РРїСЏ РѕРїРµСЂР°С‚РѕСЂР°</summary>
         public string Name { get; protected set; }
 
-        /// <summary>Инициализация оператора</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕРїРµСЂР°С‚РѕСЂР°</summary>
         protected OperatorNode() { }
 
-        /// <summary>Инициализация оператора</summary>
-        /// <param name="Name">Имя оператора</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕРїРµСЂР°С‚РѕСЂР°</summary>
+        /// <param name="Name">РРјСЏ РѕРїРµСЂР°С‚РѕСЂР°</param>
         protected OperatorNode(string Name) : this() => this.Name = Name;
 
-        /// <summary>Инициализация оператора</summary>
-        /// <param name="Name">Имя оператора</param>
-        /// <param name="Priority">Приоритет оператора</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕРїРµСЂР°С‚РѕСЂР°</summary>
+        /// <param name="Name">РРјСЏ РѕРїРµСЂР°С‚РѕСЂР°</param>
+        /// <param name="Priority">РџСЂРёРѕСЂРёС‚РµС‚ РѕРїРµСЂР°С‚РѕСЂР°</param>
         protected OperatorNode(string Name, int Priority) : this(Name) => this.Priority = Priority;
 
-        /// <summary>Строковое представление узла</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => string.Format("{1}{0}{2}", Name, Left?.ToString() ?? "", Right?.ToString() ?? "");
 
         protected OperatorNode CloneOperatorNode<TOperatorNode>() where TOperatorNode : OperatorNode, new() => 

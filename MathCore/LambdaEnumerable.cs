@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +16,16 @@ namespace MathCore
 
         #region Implementation of IEnumerable
 
-        /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции.</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё.</summary>
         /// <returns>
-        /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
+        /// РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.IEnumerator`1"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         /// <filterpriority>1</filterpriority>
         public IEnumerator<T> GetEnumerator() => Create();
 
-        /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РєРѕС‚РѕСЂС‹Р№ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.</summary>
         /// <returns>
-        /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
+        /// РћР±СЉРµРєС‚ <see cref="T:System.Collections.IEnumerator"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         /// <filterpriority>2</filterpriority>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

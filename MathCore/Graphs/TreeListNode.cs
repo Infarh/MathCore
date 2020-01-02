@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,12 +57,12 @@ namespace MathCore.Graphs
         public int Length => this[n => n.Next].Count();
 
         /// <summary>
-        /// Определяет индекс заданного элемента коллекции <see cref="T:System.Collections.Generic.IList`1"/>.
+        /// РћРїСЂРµРґРµР»СЏРµС‚ РёРЅРґРµРєСЃ Р·Р°РґР°РЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РєРѕР»Р»РµРєС†РёРё <see cref="T:System.Collections.Generic.IList`1"/>.
         /// </summary>
         /// <returns>
-        /// Индекс <paramref name="item"/> если он найден в списке; в противном случае его значение равно -1.
+        /// РРЅРґРµРєСЃ <paramref name="item"/> РµСЃР»Рё РѕРЅ РЅР°Р№РґРµРЅ РІ СЃРїРёСЃРєРµ; РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ РµРіРѕ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ -1.
         /// </returns>
-        /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.IList`1"/>.</param>
+        /// <param name="item">РћР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ С‚СЂРµР±СѓРµС‚СЃСЏ РЅР°Р№С‚Рё РІ <see cref="T:System.Collections.Generic.IList`1"/>.</param>
         public int IndexOf(TreeListNode<TValue> item)
         {
             var index = 0;
@@ -72,9 +72,9 @@ namespace MathCore.Graphs
             return find ? index : -1;
         }
 
-        /// <summary>Определяет индекс заданного элемента коллекции <see cref="T:System.Collections.Generic.IList`1"/>.</summary>
-        /// <returns>Индекс <paramref name="item"/> если он найден в списке; в противном случае его значение равно -1.</returns>
-        /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.IList`1"/>.</param>
+        /// <summary>РћРїСЂРµРґРµР»СЏРµС‚ РёРЅРґРµРєСЃ Р·Р°РґР°РЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РєРѕР»Р»РµРєС†РёРё <see cref="T:System.Collections.Generic.IList`1"/>.</summary>
+        /// <returns>РРЅРґРµРєСЃ <paramref name="item"/> РµСЃР»Рё РѕРЅ РЅР°Р№РґРµРЅ РІ СЃРїРёСЃРєРµ; РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ РµРіРѕ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ -1.</returns>
+        /// <param name="item">РћР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ С‚СЂРµР±СѓРµС‚СЃСЏ РЅР°Р№С‚Рё РІ <see cref="T:System.Collections.Generic.IList`1"/>.</param>
         public int IndexOf(TValue item)
         {
             var index = 0;
@@ -88,8 +88,8 @@ namespace MathCore.Graphs
             return find ? index : -1;
         }
 
-        /// <summary>Вставляет элемент в список <see cref="T:System.Collections.Generic.IList`1"/> по указанному индексу.</summary>
-        /// <param name="index">Индекс (с нуля), по которому следует вставить параметр <paramref name="item"/>.</param><param name="item">Объект, вставляемый в <see cref="T:System.Collections.Generic.IList`1"/>.</param><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> не является допустимым индексом в <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">Объект <see cref="T:System.Collections.Generic.IList`1"/> доступен только для чтения.</exception>
+        /// <summary>Р’СЃС‚Р°РІР»СЏРµС‚ СЌР»РµРјРµРЅС‚ РІ СЃРїРёСЃРѕРє <see cref="T:System.Collections.Generic.IList`1"/> РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РёРЅРґРµРєСЃСѓ.</summary>
+        /// <param name="index">РРЅРґРµРєСЃ (СЃ РЅСѓР»СЏ), РїРѕ РєРѕС‚РѕСЂРѕРјСѓ СЃР»РµРґСѓРµС‚ РІСЃС‚Р°РІРёС‚СЊ РїР°СЂР°РјРµС‚СЂ <paramref name="item"/>.</param><param name="item">РћР±СЉРµРєС‚, РІСЃС‚Р°РІР»СЏРµРјС‹Р№ РІ <see cref="T:System.Collections.Generic.IList`1"/>.</param><exception cref="T:System.ArgumentOutOfRangeException">Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° <paramref name="index"/> РЅРµ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјС‹Рј РёРЅРґРµРєСЃРѕРј РІ <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">РћР±СЉРµРєС‚ <see cref="T:System.Collections.Generic.IList`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         public void Insert(int index, TreeListNode<TValue> item)
         {
             if (index == 0 || item is null) return;
@@ -99,12 +99,12 @@ namespace MathCore.Graphs
             item.Next = next;
         }
 
-        /// <summary>Вставляет элемент в список <see cref="T:System.Collections.Generic.IList`1"/> по указанному индексу.</summary>
-        /// <param name="index">Индекс (с нуля), по которому следует вставить параметр <paramref name="item"/>.</param><param name="item">Объект, вставляемый в <see cref="T:System.Collections.Generic.IList`1"/>.</param><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> не является допустимым индексом в <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">Объект <see cref="T:System.Collections.Generic.IList`1"/> доступен только для чтения.</exception>
+        /// <summary>Р’СЃС‚Р°РІР»СЏРµС‚ СЌР»РµРјРµРЅС‚ РІ СЃРїРёСЃРѕРє <see cref="T:System.Collections.Generic.IList`1"/> РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РёРЅРґРµРєСЃСѓ.</summary>
+        /// <param name="index">РРЅРґРµРєСЃ (СЃ РЅСѓР»СЏ), РїРѕ РєРѕС‚РѕСЂРѕРјСѓ СЃР»РµРґСѓРµС‚ РІСЃС‚Р°РІРёС‚СЊ РїР°СЂР°РјРµС‚СЂ <paramref name="item"/>.</param><param name="item">РћР±СЉРµРєС‚, РІСЃС‚Р°РІР»СЏРµРјС‹Р№ РІ <see cref="T:System.Collections.Generic.IList`1"/>.</param><exception cref="T:System.ArgumentOutOfRangeException">Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° <paramref name="index"/> РЅРµ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјС‹Рј РёРЅРґРµРєСЃРѕРј РІ <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">РћР±СЉРµРєС‚ <see cref="T:System.Collections.Generic.IList`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         public void Insert(int index, TValue item) => Insert(index, new TreeListNode<TValue>(item));
 
-        /// <summary>Удаляет элемент <see cref="T:System.Collections.Generic.IList`1"/> по указанному индексу.</summary>
-        /// <param name="index">Индекс (с нуля) удаляемого элемента.</param><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> не является допустимым индексом в <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">Объект <see cref="T:System.Collections.Generic.IList`1"/> доступен только для чтения.</exception>
+        /// <summary>РЈРґР°Р»СЏРµС‚ СЌР»РµРјРµРЅС‚ <see cref="T:System.Collections.Generic.IList`1"/> РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РёРЅРґРµРєСЃСѓ.</summary>
+        /// <param name="index">РРЅРґРµРєСЃ (СЃ РЅСѓР»СЏ) СѓРґР°Р»СЏРµРјРѕРіРѕ СЌР»РµРјРµРЅС‚Р°.</param><exception cref="T:System.ArgumentOutOfRangeException">Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° <paramref name="index"/> РЅРµ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјС‹Рј РёРЅРґРµРєСЃРѕРј РІ <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">РћР±СЉРµРєС‚ <see cref="T:System.Collections.Generic.IList`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         public void RemoveAt(int index)
         {
             if (index == 0) return;
@@ -136,9 +136,9 @@ namespace MathCore.Graphs
             }
         }
 
-        /// <summary>Получает или задает элемент по указанному индексу.</summary>
-        /// <returns>Элемент с указанным индексом.</returns>
-        /// <param name="index">Индекс (с нуля) элемента, который необходимо получить или задать.</param><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> не является допустимым индексом в <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">Свойство задано, и объект <see cref="T:System.Collections.Generic.IList`1"/> доступен только для чтения.</exception>
+        /// <summary>РџРѕР»СѓС‡Р°РµС‚ РёР»Рё Р·Р°РґР°РµС‚ СЌР»РµРјРµРЅС‚ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РёРЅРґРµРєСЃСѓ.</summary>
+        /// <returns>Р­Р»РµРјРµРЅС‚ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРЅРґРµРєСЃРѕРј.</returns>
+        /// <param name="index">РРЅРґРµРєСЃ (СЃ РЅСѓР»СЏ) СЌР»РµРјРµРЅС‚Р°, РєРѕС‚РѕСЂС‹Р№ РЅРµРѕР±С…РѕРґРёРјРѕ РїРѕР»СѓС‡РёС‚СЊ РёР»Рё Р·Р°РґР°С‚СЊ.</param><exception cref="T:System.ArgumentOutOfRangeException">Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° <paramref name="index"/> РЅРµ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјС‹Рј РёРЅРґРµРєСЃРѕРј РІ <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, Рё РѕР±СЉРµРєС‚ <see cref="T:System.Collections.Generic.IList`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         TValue IList<TValue>.this[int index]
         {
             get => this[index].Value;
@@ -230,30 +230,30 @@ namespace MathCore.Graphs
             node.Next = Node;
         }
 
-        /// <summary>Добавляет элемент в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
-        /// <param name="item">Объект, добавляемый в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
+        /// <summary>Р”РѕР±Р°РІР»СЏРµС‚ СЌР»РµРјРµРЅС‚ РІ РёРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
+        /// <param name="item">РћР±СЉРµРєС‚, РґРѕР±Р°РІР»СЏРµРјС‹Р№ РІ РёРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         void ICollection<TValue>.Add(TValue item) => Add(new TreeListNode<TValue>(item));
 
-        /// <summary>Удаляет все элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
-        /// <exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
+        /// <summary>РЈРґР°Р»СЏРµС‚ РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
+        /// <exception cref="T:System.NotSupportedException">РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         public void Clear() => Next = null;
 
         public void ClearChild() => Child = null;
 
         public void ClearFull() { Clear(); ClearChild(); }
 
-        /// <summary>Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.</summary>
-        /// <returns>Значение true, если объект <paramref name="item"/> найден в <see cref="T:System.Collections.Generic.ICollection`1"/>; в противном случае — значение false.</returns>
-        /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
+        /// <summary>РћРїСЂРµРґРµР»СЏРµС‚, СЃРѕРґРµСЂР¶РёС‚ Р»Рё РёРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> СѓРєР°Р·Р°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ true, РµСЃР»Рё РѕР±СЉРµРєС‚ <paramref name="item"/> РЅР°Р№РґРµРЅ РІ <see cref="T:System.Collections.Generic.ICollection`1"/>; РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ вЂ” Р·РЅР°С‡РµРЅРёРµ false.</returns>
+        /// <param name="item">РћР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ С‚СЂРµР±СѓРµС‚СЃСЏ РЅР°Р№С‚Рё РІ <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
         public bool Contains(TValue item) => item is null
             ? ((IEnumerable<TreeListNode<TValue>>)this).Any(n => n is null)
             : ((IEnumerable<TreeListNode<TValue>>)this).Any(n => item.Equals(n.Value));
 
         /// <summary>
-        /// Копирует элементы <see cref="T:System.Collections.Generic.ICollection`1"/> в массив <see cref="T:System.Array"/>, начиная с указанного индекса <see cref="T:System.Array"/>.
+        /// РљРѕРїРёСЂСѓРµС‚ СЌР»РµРјРµРЅС‚С‹ <see cref="T:System.Collections.Generic.ICollection`1"/> РІ РјР°СЃСЃРёРІ <see cref="T:System.Array"/>, РЅР°С‡РёРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РёРЅРґРµРєСЃР° <see cref="T:System.Array"/>.
         /// </summary>
-        /// <param name="array">Одномерный массив <see cref="T:System.Array"/>, в который копируются элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>. Индексация в массиве <see cref="T:System.Array"/> должна начинаться с нуля.</param><param name="index">Значение индекса (с нуля) в массиве <paramref name="array"/>, с которого начинается копирование.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="array"/> имеет значение null.</exception><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> меньше 0.</exception><exception cref="T:System.ArgumentException">Массив <paramref name="array"/> является многомерным.-или-
-        ///                 Значение индекса массива <paramref name="index"/> больше или равно длине массива <paramref name="array"/>.-или-Количество элементов в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/> превышает размер доступного места, начиная с индекса <paramref name="index"/> и до конца массива назначения <paramref name="array"/>.-или-Тип <paramref name="TValue"/> не может быть автоматически приведен к типу массива назначения <paramref name="array"/>.</exception>
+        /// <param name="array">РћРґРЅРѕРјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ <see cref="T:System.Array"/>, РІ РєРѕС‚РѕСЂС‹Р№ РєРѕРїРёСЂСѓСЋС‚СЃСЏ СЌР»РµРјРµРЅС‚С‹ РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>. РРЅРґРµРєСЃР°С†РёСЏ РІ РјР°СЃСЃРёРІРµ <see cref="T:System.Array"/> РґРѕР»Р¶РЅР° РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ РЅСѓР»СЏ.</param><param name="index">Р—РЅР°С‡РµРЅРёРµ РёРЅРґРµРєСЃР° (СЃ РЅСѓР»СЏ) РІ РјР°СЃСЃРёРІРµ <paramref name="array"/>, СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ РєРѕРїРёСЂРѕРІР°РЅРёРµ.</param><exception cref="T:System.ArgumentNullException">РџР°СЂР°РјРµС‚СЂ <paramref name="array"/> РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ null.</exception><exception cref="T:System.ArgumentOutOfRangeException">Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° <paramref name="index"/> РјРµРЅСЊС€Рµ 0.</exception><exception cref="T:System.ArgumentException">РњР°СЃСЃРёРІ <paramref name="array"/> СЏРІР»СЏРµС‚СЃСЏ РјРЅРѕРіРѕРјРµСЂРЅС‹Рј.-РёР»Рё-
+        ///                 Р—РЅР°С‡РµРЅРёРµ РёРЅРґРµРєСЃР° РјР°СЃСЃРёРІР° <paramref name="index"/> Р±РѕР»СЊС€Рµ РёР»Рё СЂР°РІРЅРѕ РґР»РёРЅРµ РјР°СЃСЃРёРІР° <paramref name="array"/>.-РёР»Рё-РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РёСЃС…РѕРґРЅРѕРј РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/> РїСЂРµРІС‹С€Р°РµС‚ СЂР°Р·РјРµСЂ РґРѕСЃС‚СѓРїРЅРѕРіРѕ РјРµСЃС‚Р°, РЅР°С‡РёРЅР°СЏ СЃ РёРЅРґРµРєСЃР° <paramref name="index"/> Рё РґРѕ РєРѕРЅС†Р° РјР°СЃСЃРёРІР° РЅР°Р·РЅР°С‡РµРЅРёСЏ <paramref name="array"/>.-РёР»Рё-РўРёРї <paramref name="TValue"/> РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСЂРёРІРµРґРµРЅ Рє С‚РёРїСѓ РјР°СЃСЃРёРІР° РЅР°Р·РЅР°С‡РµРЅРёСЏ <paramref name="array"/>.</exception>
         public void CopyTo(TValue[] array, int index)
         {
             var node = this;
@@ -261,11 +261,11 @@ namespace MathCore.Graphs
                 array[i] = node.Value;
         }
 
-        /// <summary>Удаляет первое вхождение указанного объекта из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
+        /// <summary>РЈРґР°Р»СЏРµС‚ РїРµСЂРІРѕРµ РІС…РѕР¶РґРµРЅРёРµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
         /// <returns>
-        /// Значение true, если объект <paramref name="item"/> успешно удален из <see cref="T:System.Collections.Generic.ICollection`1"/>, в противном случае — значение false. Этот метод также возвращает значение false, если параметр <paramref name="item"/> не найден в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// Р—РЅР°С‡РµРЅРёРµ true, РµСЃР»Рё РѕР±СЉРµРєС‚ <paramref name="item"/> СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅ РёР· <see cref="T:System.Collections.Generic.ICollection`1"/>, РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ вЂ” Р·РЅР°С‡РµРЅРёРµ false. Р­С‚РѕС‚ РјРµС‚РѕРґ С‚Р°РєР¶Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ false, РµСЃР»Рё РїР°СЂР°РјРµС‚СЂ <paramref name="item"/> РЅРµ РЅР°Р№РґРµРЅ РІ РёСЃС…РѕРґРЅРѕРј РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
-        /// <param name="item">Объект, который необходимо удалить из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
+        /// <param name="item">РћР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ РЅРµРѕР±С…РѕРґРёРјРѕ СѓРґР°Р»РёС‚СЊ РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         public bool Remove(TValue item)
         {
             if (ReferenceEquals(item, Value)) return false;
@@ -277,22 +277,22 @@ namespace MathCore.Graphs
             return true;
         }
 
-        /// <summary>Получает число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
-        /// <returns>Число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.</returns>
+        /// <summary>РџРѕР»СѓС‡Р°РµС‚ С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС…СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
+        /// <returns>Р§РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС…СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/>.</returns>
         int ICollection<TValue>.Count => Length;
 
-        /// <summary>Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.</summary>
+        /// <summary>РћРїСЂРµРґРµР»СЏРµС‚, СЃРѕРґРµСЂР¶РёС‚ Р»Рё РёРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> СѓРєР°Р·Р°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.</summary>
         /// <returns>
-        /// Значение true, если объект <paramref name="item"/> найден в <see cref="T:System.Collections.Generic.ICollection`1"/>; в противном случае — значение false.
+        /// Р—РЅР°С‡РµРЅРёРµ true, РµСЃР»Рё РѕР±СЉРµРєС‚ <paramref name="item"/> РЅР°Р№РґРµРЅ РІ <see cref="T:System.Collections.Generic.ICollection`1"/>; РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ вЂ” Р·РЅР°С‡РµРЅРёРµ false.
         /// </returns>
-        /// <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
+        /// <param name="item">РћР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ С‚СЂРµР±СѓРµС‚СЃСЏ РЅР°Р№С‚Рё РІ <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
         public bool Contains(TreeListNode<TValue> item) => ((IEnumerable<TreeListNode<TValue>>)this).Any(n => ReferenceEquals(n, item));
 
         /// <summary>
-        /// Копирует элементы <see cref="T:System.Collections.Generic.ICollection`1"/> в массив <see cref="T:System.Array"/>, начиная с указанного индекса <see cref="T:System.Array"/>.
+        /// РљРѕРїРёСЂСѓРµС‚ СЌР»РµРјРµРЅС‚С‹ <see cref="T:System.Collections.Generic.ICollection`1"/> РІ РјР°СЃСЃРёРІ <see cref="T:System.Array"/>, РЅР°С‡РёРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РёРЅРґРµРєСЃР° <see cref="T:System.Array"/>.
         /// </summary>
-        /// <param name="array">Одномерный массив <see cref="T:System.Array"/>, в который копируются элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>. Индексация в массиве <see cref="T:System.Array"/> должна начинаться с нуля.</param><param name="index">Значение индекса (с нуля) в массиве <paramref name="array"/>, с которого начинается копирование.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="array"/> имеет значение null.</exception><exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="index"/> меньше 0.</exception><exception cref="T:System.ArgumentException">Массив <paramref name="array"/> является многомерным.-или-
-        ///                 Значение индекса массива <paramref name="index"/> больше или равно длине массива <paramref name="array"/>.-или-Количество элементов в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/> превышает размер доступного места, начиная с индекса <paramref name="index"/> и до конца массива назначения <paramref name="array"/>.-или-Тип <paramref name="T"/> не может быть автоматически приведен к типу массива назначения <paramref name="array"/>.</exception>
+        /// <param name="array">РћРґРЅРѕРјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ <see cref="T:System.Array"/>, РІ РєРѕС‚РѕСЂС‹Р№ РєРѕРїРёСЂСѓСЋС‚СЃСЏ СЌР»РµРјРµРЅС‚С‹ РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>. РРЅРґРµРєСЃР°С†РёСЏ РІ РјР°СЃСЃРёРІРµ <see cref="T:System.Array"/> РґРѕР»Р¶РЅР° РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ РЅСѓР»СЏ.</param><param name="index">Р—РЅР°С‡РµРЅРёРµ РёРЅРґРµРєСЃР° (СЃ РЅСѓР»СЏ) РІ РјР°СЃСЃРёРІРµ <paramref name="array"/>, СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ РєРѕРїРёСЂРѕРІР°РЅРёРµ.</param><exception cref="T:System.ArgumentNullException">РџР°СЂР°РјРµС‚СЂ <paramref name="array"/> РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ null.</exception><exception cref="T:System.ArgumentOutOfRangeException">Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° <paramref name="index"/> РјРµРЅСЊС€Рµ 0.</exception><exception cref="T:System.ArgumentException">РњР°СЃСЃРёРІ <paramref name="array"/> СЏРІР»СЏРµС‚СЃСЏ РјРЅРѕРіРѕРјРµСЂРЅС‹Рј.-РёР»Рё-
+        ///                 Р—РЅР°С‡РµРЅРёРµ РёРЅРґРµРєСЃР° РјР°СЃСЃРёРІР° <paramref name="index"/> Р±РѕР»СЊС€Рµ РёР»Рё СЂР°РІРЅРѕ РґР»РёРЅРµ РјР°СЃСЃРёРІР° <paramref name="array"/>.-РёР»Рё-РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РёСЃС…РѕРґРЅРѕРј РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/> РїСЂРµРІС‹С€Р°РµС‚ СЂР°Р·РјРµСЂ РґРѕСЃС‚СѓРїРЅРѕРіРѕ РјРµСЃС‚Р°, РЅР°С‡РёРЅР°СЏ СЃ РёРЅРґРµРєСЃР° <paramref name="index"/> Рё РґРѕ РєРѕРЅС†Р° РјР°СЃСЃРёРІР° РЅР°Р·РЅР°С‡РµРЅРёСЏ <paramref name="array"/>.-РёР»Рё-РўРёРї <paramref name="T"/> РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСЂРёРІРµРґРµРЅ Рє С‚РёРїСѓ РјР°СЃСЃРёРІР° РЅР°Р·РЅР°С‡РµРЅРёСЏ <paramref name="array"/>.</exception>
         public void CopyTo(TreeListNode<TValue>[] array, int index)
         {
             var node = this;
@@ -300,11 +300,11 @@ namespace MathCore.Graphs
                 array[i] = node;
         }
 
-        /// <summary>Удаляет первое вхождение указанного объекта из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
+        /// <summary>РЈРґР°Р»СЏРµС‚ РїРµСЂРІРѕРµ РІС…РѕР¶РґРµРЅРёРµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
         /// <returns>
-        /// Значение true, если объект <paramref name="item"/> успешно удален из <see cref="T:System.Collections.Generic.ICollection`1"/>, в противном случае — значение false. Этот метод также возвращает значение false, если параметр <paramref name="item"/> не найден в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
+        /// Р—РЅР°С‡РµРЅРёРµ true, РµСЃР»Рё РѕР±СЉРµРєС‚ <paramref name="item"/> СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅ РёР· <see cref="T:System.Collections.Generic.ICollection`1"/>, РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ вЂ” Р·РЅР°С‡РµРЅРёРµ false. Р­С‚РѕС‚ РјРµС‚РѕРґ С‚Р°РєР¶Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ false, РµСЃР»Рё РїР°СЂР°РјРµС‚СЂ <paramref name="item"/> РЅРµ РЅР°Р№РґРµРЅ РІ РёСЃС…РѕРґРЅРѕРј РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
-        /// <param name="item">Объект, который необходимо удалить из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
+        /// <param name="item">РћР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ РЅРµРѕР±С…РѕРґРёРјРѕ СѓРґР°Р»РёС‚СЊ РёР· РёРЅС‚РµСЂС„РµР№СЃР° <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</exception>
         public bool Remove(TreeListNode<TValue> item)
         {
             if (ReferenceEquals(item, this)) return false;
@@ -313,12 +313,12 @@ namespace MathCore.Graphs
             if (node.IsChild) node.Prev.Child = node.Next; else node.Prev.Next = node.Next; return true;
         }
 
-        /// <summary>Получает число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
-        /// <returns>Число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.</returns>
+        /// <summary>РџРѕР»СѓС‡Р°РµС‚ С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС…СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
+        /// <returns>Р§РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС…СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ <see cref="T:System.Collections.Generic.ICollection`1"/>.</returns>
         int ICollection<TreeListNode<TValue>>.Count => Length;
 
-        /// <summary>Получает значение, указывающее, доступен ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> только для чтения.</summary>
-        /// <returns>Значение true, если интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения, в противном случае — значение false.</returns>
+        /// <summary>РџРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ, СѓРєР°Р·С‹РІР°СЋС‰РµРµ, РґРѕСЃС‚СѓРїРµРЅ Р»Рё РёРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ.</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ true, РµСЃР»Рё РёРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.ICollection`1"/> РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ, РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ вЂ” Р·РЅР°С‡РµРЅРёРµ false.</returns>
         public bool IsReadOnly => false;
 
         public void Add([NotNull] IEnumerable<TValue> collection) => collection.Aggregate(this, (current, value) => current.Add(value));
@@ -342,8 +342,8 @@ namespace MathCore.Graphs
                 yield return node;
         }
 
-        /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции</summary>
-        /// <returns>Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.</returns>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё</summary>
+        /// <returns>РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.IEnumerator`1"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.</returns>
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => ((IEnumerable<TreeListNode<TValue>>)this).Select(n => n.Value).GetEnumerator();
 
         public override string ToString() => $"{Value}{(_Child is null ? "" : $"{{{_Child}}}")}{(_Next is null ? "" : $",{_Next}")}";

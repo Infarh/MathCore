@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 
 namespace MathCore.Values
 {
@@ -21,7 +21,7 @@ namespace MathCore.Values
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Добавить значение</summary><param name="value">Значение</param>
+        /// <summary>Р”РѕР±Р°РІРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ</summary><param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
         public override double Add(double value)
         {
             //lock(_Locker)

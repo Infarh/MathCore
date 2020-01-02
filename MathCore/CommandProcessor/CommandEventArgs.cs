@@ -1,21 +1,21 @@
-using System;
+п»їusing System;
 
 namespace MathCore.CommandProcessor
 {
-    /// <summary>Аргумент события обработки команды</summary>
+    /// <summary>РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ РѕР±СЂР°Р±РѕС‚РєРё РєРѕРјР°РЅРґС‹</summary>
     public class CommandEventArgs : EventArgs
     {
-        /// <summary>Обрабатываемая команда</summary>
+        /// <summary>РћР±СЂР°Р±Р°С‚С‹РІР°РµРјР°СЏ РєРѕРјР°РЅРґР°</summary>
         public Command Command { get; set; }
-        /// <summary>Перечень команд сессии</summary>
+        /// <summary>РџРµСЂРµС‡РµРЅСЊ РєРѕРјР°РЅРґ СЃРµСЃСЃРёРё</summary>
         public Command[] Commands { get; set; }
-        /// <summary>Индекс команды в перечне команд сессии</summary>
+        /// <summary>РРЅРґРµРєСЃ РєРѕРјР°РЅРґС‹ РІ РїРµСЂРµС‡РЅРµ РєРѕРјР°РЅРґ СЃРµСЃСЃРёРё</summary>
         public int Index { get; set; }
-        /// <summary>Признак того, что команда обработана</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РєРѕРјР°РЅРґР° РѕР±СЂР°Р±РѕС‚Р°РЅР°</summary>
         public bool Handled { get; set; }
 
-        /// <summary>Строковое представление</summary>
-        /// <returns>Строковое представление</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
         public override string ToString() => string.Format("Command({0}/{3}):> {1}{2}", Index + 1, Command, Handled ? "- processed" : "", Commands.Length);
 
         public void SetHandled() => Handled = true;

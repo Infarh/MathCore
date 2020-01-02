@@ -1,23 +1,23 @@
-using System.Linq.Expressions;
+п»їusing System.Linq.Expressions;
 using MathCore.Annotations;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Вычислимый узел дерева математического выражения</summary>
+    /// <summary>Р’С‹С‡РёСЃР»РёРјС‹Р№ СѓР·РµР» РґРµСЂРµРІР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public abstract class ComputedNode : ExpressionTreeNode
     {
-        /// <summary>Вычислить значение поддерева</summary>
-        /// <returns>Численное значение поддерева</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕРґРґРµСЂРµРІР°</returns>
         public abstract double Compute();
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         [NotNull]
         public abstract Expression Compile();
 
-        /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
-        /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
+        /// <summary>РЎРєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РІ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ System.Linq.Expressions</returns>
         [NotNull]
         public abstract Expression Compile([NotNull] params ParameterExpression[] Parameters);
     }

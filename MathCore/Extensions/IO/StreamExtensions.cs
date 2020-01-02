@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+п»їusing System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MathCore.Annotations;
@@ -23,10 +23,10 @@ namespace System.IO
             return md5.ComputeHash(stream);
         }
 
-        /// <summary>Создать буферизованный поток данных</summary>
-        /// <param name="DataStream">Исходный поток данных</param>
-        /// <param name="BufferSize">Размер буфера (по умолчанию 4096 байта)</param>
-        /// <returns>Буферизованный поток данных</returns>
+        /// <summary>РЎРѕР·РґР°С‚СЊ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РїРѕС‚РѕРє РґР°РЅРЅС‹С…</summary>
+        /// <param name="DataStream">РСЃС…РѕРґРЅС‹Р№ РїРѕС‚РѕРє РґР°РЅРЅС‹С…</param>
+        /// <param name="BufferSize">Р Р°Р·РјРµСЂ Р±СѓС„РµСЂР° (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 4096 Р±Р°Р№С‚Р°)</param>
+        /// <returns>Р‘СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РїРѕС‚РѕРє РґР°РЅРЅС‹С…</returns>
         [DST, NotNull]
         public static BufferedStream GetBufferedStream([NotNull] this Stream DataStream, int BufferSize = 4096) => new BufferedStream(DataStream, BufferSize);
 
@@ -53,15 +53,15 @@ namespace System.IO
         public static void WriteStructure<T>([NotNull] this Stream stream, T value) where T : struct
         {
             var size = Marshal.SizeOf(value);
-            var buffer = new byte[size]; // создать массив
-            var g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
+            var buffer = new byte[size]; // СЃРѕР·РґР°С‚СЊ РјР°СЃСЃРёРІ
+            var g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // Р·Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РІ РїР°РјСЏС‚Рё
             try
             {
-                var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
-                Marshal.StructureToPtr(value, p, true); // копировать в массив
+                var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // Рё РІР·СЏС‚СЊ РµРіРѕ Р°РґСЂРµСЃ
+                Marshal.StructureToPtr(value, p, true); // РєРѕРїРёСЂРѕРІР°С‚СЊ РІ РјР°СЃСЃРёРІ
             } finally
             {
-                g_lock.Free(); // снять фиксацию
+                g_lock.Free(); // СЃРЅСЏС‚СЊ С„РёРєСЃР°С†РёСЋ
             }
             stream.Write(buffer, 0, size);
         }

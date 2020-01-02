@@ -1,19 +1,19 @@
-using Ex = System.Linq.Expressions.Expression;
+п»їusing Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление значения поля объекта</summary>
-    /// <typeparam name="TObject">Тип объекта, поле которого надо получить</typeparam>
-    /// <typeparam name="TValue">Тип значения поля</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ РѕР±СЉРµРєС‚Р°</summary>
+    /// <typeparam name="TObject">РўРёРї РѕР±СЉРµРєС‚Р°, РїРѕР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</typeparam>
+    /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ</typeparam>
     public class FieldValueEvulation<TObject, TValue> : UnaryOperatorEvulation<TObject, TValue>
     {
-        /// <summary>Инициализация нового вычисления значения поля объекта</summary>
-        /// <param name="PropertyName">Имя поля</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ РѕР±СЉРµРєС‚Р°</summary>
+        /// <param name="PropertyName">РРјСЏ РїРѕР»СЏ</param>
         public FieldValueEvulation(string PropertyName) : base(e => Ex.Field(e, PropertyName)) { }
 
-        /// <summary>Инициализация нового вычисления поля объекта</summary>
-        /// <param name="obj">Вычисление объекта, поле которого надо получить</param>
-        /// <param name="FieldName">Имя поля объекта</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ РїРѕР»СЏ РѕР±СЉРµРєС‚Р°</summary>
+        /// <param name="obj">Р’С‹С‡РёСЃР»РµРЅРёРµ РѕР±СЉРµРєС‚Р°, РїРѕР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="FieldName">РРјСЏ РїРѕР»СЏ РѕР±СЉРµРєС‚Р°</param>
         public FieldValueEvulation(Evulation<TObject> obj, string FieldName) : base(e => Ex.Field(e, FieldName), obj) { }
     }
 }

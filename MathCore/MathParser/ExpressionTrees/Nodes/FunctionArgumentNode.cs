@@ -1,14 +1,14 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, хранящий данные об аргументе функции</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, С…СЂР°РЅСЏС‰РёР№ РґР°РЅРЅС‹Рµ РѕР± Р°СЂРіСѓРјРµРЅС‚Рµ С„СѓРЅРєС†РёРё</summary>
     public class FunctionArgumentNode : OperatorNode
     {
-        /// <summary>Перечисление аргументов начиная с указанного</summary>
-        /// <param name="Node">Первый узел аргумента</param>
-        /// <returns>Перечисление пар имени-корня дерева аргумента</returns>
+        /// <summary>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ РЅР°С‡РёРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅРѕРіРѕ</summary>
+        /// <param name="Node">РџРµСЂРІС‹Р№ СѓР·РµР» Р°СЂРіСѓРјРµРЅС‚Р°</param>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ РїР°СЂ РёРјРµРЅРё-РєРѕСЂРЅСЏ РґРµСЂРµРІР° Р°СЂРіСѓРјРµРЅС‚Р°</returns>
         public static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> EnumArguments(FunctionArgumentNode Node)
         {
             while(Node != null)
@@ -18,39 +18,39 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             }
         }
 
-        /// <summary>Значение аргумента - правое поддерево</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р° - РїСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
         public ExpressionTreeNode ArgumentSubtree => Left is FunctionArgumentNameNode ? Left.Right : Left;
 
-        /// <summary>Имя аргумента - левое поддерево</summary>
+        /// <summary>РРјСЏ Р°СЂРіСѓРјРµРЅС‚Р° - Р»РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ</summary>
         public string ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : "";
 
-        /// <summary>Инициализация узла-аргумента</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р°-Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public FunctionArgumentNode() : base(",", -20) { }
 
-        /// <summary>Инициализация узла-аргумента</summary>
-        /// <param name="Name">Имя аргумента</param>
-        /// <param name="Node">Узел поддерева аргумента</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р°-Р°СЂРіСѓРјРµРЅС‚Р°</summary>
+        /// <param name="Name">РРјСЏ Р°СЂРіСѓРјРµРЅС‚Р°</param>
+        /// <param name="Node">РЈР·РµР» РїРѕРґРґРµСЂРµРІР° Р°СЂРіСѓРјРµРЅС‚Р°</param>
         public FunctionArgumentNode(string Name, ExpressionTreeNode Node) : this(new FunctionArgumentNameNode(Name, Node)) { }
 
-        /// <summary>Инициализация узла-аргумента</summary>
-        /// <param name="Node">Узел поддерева аргумента</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР·Р»Р°-Р°СЂРіСѓРјРµРЅС‚Р°</summary>
+        /// <param name="Node">РЈР·РµР» РїРѕРґРґРµСЂРµРІР° Р°СЂРіСѓРјРµРЅС‚Р°</param>
         public FunctionArgumentNode(FunctionArgumentNameNode Node) : this() => Left = Node;
 
-        /// <summary>Вычисление значения узла</summary>
-        /// <returns>Значение узла</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</returns>
         public override double Compute() => ((ComputedNode)ArgumentSubtree).Compute();
 
-        /// <summary>Компиляция узла аргумента</summary>
-        /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р° Р°СЂРіСѓРјРµРЅС‚Р°</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РєРѕСЂРЅСЏ РїРѕРґРґРµСЂРµРІР° Р°СЂРіСѓРјРµРЅС‚Р°</returns>
         public override Expression Compile() => ((ComputedNode)ArgumentSubtree).Compile();
 
-        /// <summary>Компиляция узла аргумента</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
-        /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р° Р°СЂРіСѓРјРµРЅС‚Р°</summary>
+        /// <param name="Parameters">РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РєРѕСЂРЅСЏ РїРѕРґРґРµСЂРµРІР° Р°СЂРіСѓРјРµРЅС‚Р°</returns>
         public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)ArgumentSubtree).Compile(Parameters);
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клонирование узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new FunctionArgumentNode { Left = Left.Clone(), Right = Right?.Clone() };
     }
 }

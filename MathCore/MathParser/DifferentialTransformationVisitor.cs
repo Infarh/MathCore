@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -16,7 +16,7 @@ namespace MathCore.MathParser
         {
             var parameter = (from p in expression.Parameters where p.Name == ParameterName select p).FirstOrDefault();
             if(parameter is null)
-                throw new ArgumentException(@"Не задан параметр дифференцирования", nameof(ParameterName));
+                throw new ArgumentException(@"РќРµ Р·Р°РґР°РЅ РїР°СЂР°РјРµС‚СЂ РґРёС„С„РµСЂРµРЅС†РёСЂРѕРІР°РЅРёСЏ", nameof(ParameterName));
 
             lock(_Differentiate_LockObject)
             {

@@ -1,4 +1,4 @@
-// ReSharper disable once CheckNamespace
+п»ї// ReSharper disable once CheckNamespace
 namespace System
 {
     public class LambdaProcessor : Processor
@@ -7,7 +7,7 @@ namespace System
 
         public LambdaProcessor(Action action) => _Action = action;
 
-        /// <summary>Основной метод действия процессора, вызываемое в цикле. Должно быть переопределено в классах-наследниках</summary>
+        /// <summary>РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ РґРµР№СЃС‚РІРёСЏ РїСЂРѕС†РµСЃСЃРѕСЂР°, РІС‹Р·С‹РІР°РµРјРѕРµ РІ С†РёРєР»Рµ. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРѕ РІ РєР»Р°СЃСЃР°С…-РЅР°СЃР»РµРґРЅРёРєР°С…</summary>
         protected override void MainAction() => _Action();
     }
 }

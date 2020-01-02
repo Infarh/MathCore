@@ -1,51 +1,51 @@
-using System;
+п»їusing System;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Переменная математического выражения</summary>
+    /// <summary>РџРµСЂРµРјРµРЅРЅР°СЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public class ExpressionVariabel : ExpressionItem, ICloneable<ExpressionVariabel>
     {
-        /// <summary>Значение переменной</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
         private double _Value;
-        /// <summary>Является ли константой?</summary>
+        /// <summary>РЇРІР»СЏРµС‚СЃСЏ Р»Рё РєРѕРЅСЃС‚Р°РЅС‚РѕР№?</summary>
         private bool _IsConstant;
 
-        /// <summary>Значение переменной</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
         public virtual double Value { get => _Value; set => Set(ref _Value, value); }
 
-        /// <summary>Признак возможности предвычисления значения</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРґРІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ</summary>
         public virtual bool IsPrecomputable => true;
 
-        /// <summary>Является ли константой?</summary>
+        /// <summary>РЇРІР»СЏРµС‚СЃСЏ Р»Рё РєРѕРЅСЃС‚Р°РЅС‚РѕР№?</summary>
         public bool IsConstant { get => _IsConstant; set => Set(ref _IsConstant, value); }
 
-        /// <summary>Метод извлечения значения</summary>
-        /// <returns>Численное значение переменной</returns>
+        /// <summary>РњРµС‚РѕРґ РёР·РІР»РµС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ</summary>
+        /// <returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</returns>
         public override double GetValue() => Value;
 
-        /// <summary>Инициализация нового экземпляра переменной</summary>
-        /// <param name="Name">Имя переменной</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="Name">РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
         public ExpressionVariabel(string Name) : base(Name) { }
 
-        /// <summary>Клонирование переменной</summary>
-        /// <returns>Новый экземпляр переменной с тем же имененм и тем же значением</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <returns>РќРѕРІС‹Р№ СЌРєР·РµРјРїР»СЏСЂ РїРµСЂРµРјРµРЅРЅРѕР№ СЃ С‚РµРј Р¶Рµ РёРјРµРЅРµРЅРј Рё С‚РµРј Р¶Рµ Р·РЅР°С‡РµРЅРёРµРј</returns>
         public virtual ExpressionVariabel Clone() => new ExpressionVariabel(Name) { Value = Value };
 
-        /// <summary>Преобразование в строку</summary>
-        /// <returns>Строковое представление переменной</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</returns>
         public override string ToString() => $"{Name}={_Value}";
 
         object ICloneable.Clone() => Clone();
 
-        /// <summary>Оператор неявного привидения вещественного числа к типу переменной</summary>
-        /// <param name="x">Вещественное число</param>
-        /// <returns>Безымянная переменная, хранящая указанное число</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРёРІРёРґРµРЅРёСЏ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Рє С‚РёРїСѓ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="x">Р’РµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ</param>
+        /// <returns>Р‘РµР·С‹РјСЏРЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ, С…СЂР°РЅСЏС‰Р°СЏ СѓРєР°Р·Р°РЅРЅРѕРµ С‡РёСЃР»Рѕ</returns>
         public static implicit operator ExpressionVariabel(double x) =>
             new ExpressionVariabel("") { _Value = x };
 
-        /// <summary>Оператор неявного привидения к типу вещественного числа</summary>
-        /// <param name="variable">Приводимая переменная</param>
-        /// <returns>Значение переменной</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРёРІРёРґРµРЅРёСЏ Рє С‚РёРїСѓ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р°</summary>
+        /// <param name="variable">РџСЂРёРІРѕРґРёРјР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</returns>
         public static implicit operator double(ExpressionVariabel variable) =>
             variable.GetValue();
     }

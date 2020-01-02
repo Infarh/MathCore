@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MathCore;
@@ -9,22 +9,22 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.ComponentModel
 {
-    /// <summary>Класс методов-расширений интерфейса <see cref="INotifyPropertyChanged"/></summary>
+    /// <summary>РљР»Р°СЃСЃ РјРµС‚РѕРґРѕРІ-СЂР°СЃС€РёСЂРµРЅРёР№ РёРЅС‚РµСЂС„РµР№СЃР° <see cref="INotifyPropertyChanged"/></summary>
     // ReSharper disable once InconsistentNaming
     public static class INotifyPropertyChangedExtensions
     {
-        /// <summary>Подписка на событие изменения указанного свйоства</summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Name">Имя свйоства</param>
+        /// <summary>РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ СЃРІР№РѕСЃС‚РІР°</summary>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> С‚РёРїР° <see cref="PropertyChangedEventHandler"/></param>
+        /// <param name="Name">РРјСЏ СЃРІР№РѕСЃС‚РІР°</param>
         public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
             => obj.PropertyChanged += (s, e) => { if (string.Equals(e.PropertyName, Name)) handler(s, e); };
 
-        /// <summary>Подписка на событие изменения указанного свйоства</summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Name">Имя свйоства</param>
-        /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
+        /// <summary>РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ СЃРІР№РѕСЃС‚РІР°</summary>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> С‚РёРїР° <see cref="PropertyChangedEventHandler"/></param>
+        /// <param name="Name">РРјСЏ СЃРІР№РѕСЃС‚РІР°</param>
+        /// <returns>РћР±СЉРµРєС‚ <see cref="IDisposable"/>, РІС‹Р·С‹РІР°СЋС‰РёР№ РѕС‚РїРёСЃРєСѓ РѕС‚ СЃРѕР±С‹С‚РёСЏ РІ СЃР»СѓС‡Р°Рµ СЃРІРѕРµРіРѕ СѓРЅРёС‡С‚РѕР¶РµРЅРёСЏ</returns>
         [NotNull]
         public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
         {
@@ -37,19 +37,19 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
         }
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
+        /// <summary>РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СѓРєР°Р·Р°РЅРЅС‹С… СЃРІР№РѕСЃС‚РІ</summary>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> С‚РёРїР° <see cref="PropertyChangedEventHandler"/></param>
+        /// <param name="Names">РРјРµРЅР° СЃРІР№РѕСЃС‚РІ</param>
         public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
             => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
 
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
-        /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
+        /// <summary>РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СѓРєР°Р·Р°РЅРЅС‹С… СЃРІР№РѕСЃС‚РІ</summary>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> С‚РёРїР° <see cref="PropertyChangedEventHandler"/></param>
+        /// <param name="Names">РРјРµРЅР° СЃРІР№РѕСЃС‚РІ</param>
+        /// <returns>РћР±СЉРµРєС‚ <see cref="IDisposable"/>, РІС‹Р·С‹РІР°СЋС‰РёР№ РѕС‚РїРёСЃРєСѓ РѕС‚ СЃРѕР±С‹С‚РёСЏ РІ СЃР»СѓС‡Р°Рµ СЃРІРѕРµРіРѕ СѓРЅРёС‡С‚РѕР¶РµРЅРёСЏ</returns>
         [NotNull]
         public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
         {
@@ -62,18 +62,18 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
         }
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
+        /// <summary>РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СѓРєР°Р·Р°РЅРЅС‹С… СЃРІР№РѕСЃС‚РІ</summary>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> С‚РёРїР° <see cref="PropertyChangedEventHandler"/></param>
+        /// <param name="Names">РРјРµРЅР° СЃРІР№РѕСЃС‚РІ</param>
         public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
             => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
-        /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
+        /// <summary>РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СѓРєР°Р·Р°РЅРЅС‹С… СЃРІР№РѕСЃС‚РІ</summary>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> С‚РёРїР° <see cref="PropertyChangedEventHandler"/></param>
+        /// <param name="Names">РРјРµРЅР° СЃРІР№РѕСЃС‚РІ</param>
+        /// <returns>РћР±СЉРµРєС‚ <see cref="IDisposable"/>, РІС‹Р·С‹РІР°СЋС‰РёР№ РѕС‚РїРёСЃРєСѓ РѕС‚ СЃРѕР±С‹С‚РёСЏ РІ СЃР»СѓС‡Р°Рµ СЃРІРѕРµРіРѕ СѓРЅРёС‡С‚РѕР¶РµРЅРёСЏ</returns>
         [NotNull]
         public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
         {
@@ -87,39 +87,39 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
         }
 
-        #region Связи свйоств по атрибутам AffectsTheAttribute и DependencyOnAttribute
+        #region РЎРІСЏР·Рё СЃРІР№РѕСЃС‚РІ РїРѕ Р°С‚СЂРёР±СѓС‚Р°Рј AffectsTheAttribute Рё DependencyOnAttribute
 
-        /// <summary>Аргумент события изменения зависимого свойства</summary>
+        /// <summary>РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ Р·Р°РІРёСЃРёРјРѕРіРѕ СЃРІРѕР№СЃС‚РІР°</summary>
         public sealed class DependentPropertyChangedEventArgs : PropertyChangedEventArgs
         {
-            /// <summary>Перечень свойств, породивших изменение</summary>
+            /// <summary>РџРµСЂРµС‡РµРЅСЊ СЃРІРѕР№СЃС‚РІ, РїРѕСЂРѕРґРёРІС€РёС… РёР·РјРµРЅРµРЅРёРµ</summary>
             public string[] FromProperties { get; }
 
-            /// <summary>Инициализация нового аргумента события изменения зависимого свойства</summary>
-            /// <param name="PropertyName">Имя изменившегося свойства</param>
-            /// <param name="FromProperties">Список свойств, породивших изменение</param>
+            /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ Р°СЂРіСѓРјРµРЅС‚Р° СЃРѕР±С‹С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ Р·Р°РІРёСЃРёРјРѕРіРѕ СЃРІРѕР№СЃС‚РІР°</summary>
+            /// <param name="PropertyName">РРјСЏ РёР·РјРµРЅРёРІС€РµРіРѕСЃСЏ СЃРІРѕР№СЃС‚РІР°</param>
+            /// <param name="FromProperties">РЎРїРёСЃРѕРє СЃРІРѕР№СЃС‚РІ, РїРѕСЂРѕРґРёРІС€РёС… РёР·РјРµРЅРµРЅРёРµ</param>
             public DependentPropertyChangedEventArgs([NotNull] string PropertyName, [NotNull] string[] FromProperties) : base(PropertyName) => this.FromProperties = FromProperties;
         }
 
-        /// <summary>Перечень слабых ссылок на отслеживаемые объекты</summary>
+        /// <summary>РџРµСЂРµС‡РµРЅСЊ СЃР»Р°Р±С‹С… СЃСЃС‹Р»РѕРє РЅР° РѕС‚СЃР»РµР¶РёРІР°РµРјС‹Рµ РѕР±СЉРµРєС‚С‹</summary>
         private static readonly HashSet<WeakReference> __ObjectsSet = new HashSet<WeakReference>();
-        /// <summary>Словарь описаний связей между свойствами типов</summary>
+        /// <summary>РЎР»РѕРІР°СЂСЊ РѕРїРёСЃР°РЅРёР№ СЃРІСЏР·РµР№ РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё С‚РёРїРѕРІ</summary>
         private static readonly Dictionary<Type, RegistratorInfo> __RegistrationPool = new Dictionary<Type, RegistratorInfo>();
-        /// <summary>Информация о связях между свойствами типов</summary>
+        /// <summary>РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРІСЏР·СЏС… РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё С‚РёРїРѕРІ</summary>
         private sealed class RegistratorInfo
         {
-            /// <summary>Словарь связей имён свойств типа</summary>
+            /// <summary>РЎР»РѕРІР°СЂСЊ СЃРІСЏР·РµР№ РёРјС‘РЅ СЃРІРѕР№СЃС‚РІ С‚РёРїР°</summary>
             private readonly Dictionary<string, string[]> _Dependences;
-            /// <summary>Обработчик события изменения свойства объекта</summary>
+            /// <summary>РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
             private PropertyChangedEventHandler _Handler;
 
-            /// <summary>Инициализация нового экземпляра информации и связях между свойствами типа</summary>
-            /// <param name="Dependences">Словарь имён свойст зависимостей</param>
+            /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РёРЅС„РѕСЂРјР°С†РёРё Рё СЃРІСЏР·СЏС… РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё С‚РёРїР°</summary>
+            /// <param name="Dependences">РЎР»РѕРІР°СЂСЊ РёРјС‘РЅ СЃРІРѕР№СЃС‚ Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№</param>
             public RegistratorInfo(Dictionary<string, string[]> Dependences) => _Dependences = Dependences;
 
-            /// <summary>Метод установки обработчика событий обновления свойства объекта, генерирующего вторичные события обновления зависимых свойств</summary>
-            /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-            /// <param name="OnPropertyChanged">Метод генерации события <see cref="INotifyPropertyChanged.PropertyChanged"/> в объекте <paramref name="obj"/></param>
+            /// <summary>РњРµС‚РѕРґ СѓСЃС‚Р°РЅРѕРІРєРё РѕР±СЂР°Р±РѕС‚С‡РёРєР° СЃРѕР±С‹С‚РёР№ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°, РіРµРЅРµСЂРёСЂСѓСЋС‰РµРіРѕ РІС‚РѕСЂРёС‡РЅС‹Рµ СЃРѕР±С‹С‚РёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ Р·Р°РІРёСЃРёРјС‹С… СЃРІРѕР№СЃС‚РІ</summary>
+            /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+            /// <param name="OnPropertyChanged">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ <see cref="INotifyPropertyChanged.PropertyChanged"/> РІ РѕР±СЉРµРєС‚Рµ <paramref name="obj"/></param>
             public void Subscribe(INotifyPropertyChanged obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             {
                 if (_Handler is null)
@@ -145,14 +145,14 @@ namespace System.ComponentModel
                 obj.PropertyChanged += _Handler;
             }
 
-            /// <summary>Отписка от события обновления свойств объекта</summary>
-            /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
+            /// <summary>РћС‚РїРёСЃРєР° РѕС‚ СЃРѕР±С‹С‚РёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРІРѕР№СЃС‚РІ РѕР±СЉРµРєС‚Р°</summary>
+            /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
             public void UnSubscrige(INotifyPropertyChanged obj) => obj.PropertyChanged -= _Handler;
         }
 
-        /// <summary>Обработка событий слорки мусора в системе</summary>
-        /// <param name="Sender">Источник события - не используется</param>
-        /// <param name="e">Аргумент события - не используется</param>
+        /// <summary>РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёР№ СЃР»РѕСЂРєРё РјСѓСЃРѕСЂР° РІ СЃРёСЃС‚РµРјРµ</summary>
+        /// <param name="Sender">РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ - РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
+        /// <param name="e">РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ - РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
         private static void OnGarbageCollected(object Sender, EventArgs e)
         {
             lock (__ObjectsSet)
@@ -163,11 +163,11 @@ namespace System.ComponentModel
         }
 
         /// <summary>
-        /// Создание связей между свойствами объекта на основе атрибутов <see cref="AffectsTheAttribute"/> и <see cref="DependencyOnAttribute"/>
+        /// РЎРѕР·РґР°РЅРёРµ СЃРІСЏР·РµР№ РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё РѕР±СЉРµРєС‚Р° РЅР° РѕСЃРЅРѕРІРµ Р°С‚СЂРёР±СѓС‚РѕРІ <see cref="AffectsTheAttribute"/> Рё <see cref="DependencyOnAttribute"/>
         /// </summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
-        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="OnPropertyChanged">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</param>
+        /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р°</typeparam>
         public static void PropertyDependences_Register<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             where T : class, INotifyPropertyChanged
         {
@@ -182,11 +182,11 @@ namespace System.ComponentModel
         }
 
         /// <summary>
-        /// Создание связей между свойствами объекта на основе атрибутов <see cref="AffectsTheAttribute"/> и <see cref="DependencyOnAttribute"/>
+        /// РЎРѕР·РґР°РЅРёРµ СЃРІСЏР·РµР№ РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё РѕР±СЉРµРєС‚Р° РЅР° РѕСЃРЅРѕРІРµ Р°С‚СЂРёР±СѓС‚РѕРІ <see cref="AffectsTheAttribute"/> Рё <see cref="DependencyOnAttribute"/>
         /// </summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
-        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <param name="OnPropertyChanged">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</param>
+        /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р°</typeparam>
         /// <returns></returns>
         public static IDisposable PropertyDependences_Register_Disposable<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             where T : class, INotifyPropertyChanged
@@ -203,10 +203,10 @@ namespace System.ComponentModel
         }
 
         /// <summary>
-        /// Разрушение связей между свойствами, созданными методом <see cref="PropertyDependences_Register{T}"/>
+        /// Р Р°Р·СЂСѓС€РµРЅРёРµ СЃРІСЏР·РµР№ РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё, СЃРѕР·РґР°РЅРЅС‹РјРё РјРµС‚РѕРґРѕРј <see cref="PropertyDependences_Register{T}"/>
         /// </summary>
-        /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <param name="obj">РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ <see cref="INotifyPropertyChanged"/></param>
+        /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р°</typeparam>
         public static void PropertyDependences_Unregister<T>([NotNull] this T obj) where T : class, INotifyPropertyChanged
         {
             lock (__ObjectsSet)
@@ -223,9 +223,9 @@ namespace System.ComponentModel
             }
         }
 
-        /// <summary>Метод получения информации о связях между свойствами объекта класса</summary>
-        /// <param name="type">Тип рассматриваемого объекта</param>
-        /// <returns>Информация о связях между свойствами объекта</returns>
+        /// <summary>РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё Рѕ СЃРІСЏР·СЏС… РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃР°</summary>
+        /// <param name="type">РўРёРї СЂР°СЃСЃРјР°С‚СЂРёРІР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°</param>
+        /// <returns>РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРІСЏР·СЏС… РјРµР¶РґСѓ СЃРІРѕР№СЃС‚РІР°РјРё РѕР±СЉРµРєС‚Р°</returns>
         private static RegistratorInfo GetRegistrator([NotNull] this Type type)
         {
             lock (__ObjectsSet)
@@ -389,11 +389,11 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.UnsubscribeFromProperty(EventName, Handler));
         }
 
-        /// <summary>Подписаться на событие изменения свойства</summary>
-        /// <typeparam name="T">Тип объекта, генерирующего событие</typeparam>
-        /// <param name="obj">Объект, на событие изменения свойств которого производится подписка</param>
-        /// <param name="PropertyName">Имя отслеживаемого свойства</param>
-        /// <param name="Handler">ОБработчик события</param>
+        /// <summary>РџРѕРґРїРёСЃР°С‚СЊСЃСЏ РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°</summary>
+        /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р°, РіРµРЅРµСЂРёСЂСѓСЋС‰РµРіРѕ СЃРѕР±С‹С‚РёРµ</typeparam>
+        /// <param name="obj">РћР±СЉРµРєС‚, РЅР° СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІ РєРѕС‚РѕСЂРѕРіРѕ РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РїРѕРґРїРёСЃРєР°</param>
+        /// <param name="PropertyName">РРјСЏ РѕС‚СЃР»РµР¶РёРІР°РµРјРѕРіРѕ СЃРІРѕР№СЃС‚РІР°</param>
+        /// <param name="Handler">РћР‘СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ</param>
         public static void SubscribeTo<T>(
             [CanBeNull] this T obj,
             [NotNull] string PropertyName,

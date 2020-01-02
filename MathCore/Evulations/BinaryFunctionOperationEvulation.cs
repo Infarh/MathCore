@@ -1,33 +1,33 @@
-using System;
+п»їusing System;
 using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление бинарной опирации между двумя вычислениями</summary>
-    /// <typeparam name="T">Тип значения вычисления</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р±РёРЅР°СЂРЅРѕР№ РѕРїРёСЂР°С†РёРё РјРµР¶РґСѓ РґРІСѓРјСЏ РІС‹С‡РёСЃР»РµРЅРёСЏРјРё</summary>
+    /// <typeparam name="T">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</typeparam>
     public class BinaryFunctionOperationEvulation<T> : Evulation<T>
     {
-        /// <summary>Первый операнд вычисления</summary>
+        /// <summary>РџРµСЂРІС‹Р№ РѕРїРµСЂР°РЅРґ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
         public Evulation<T> A { get; set; }
 
-        /// <summary>Второй операнд вычисления</summary>
+        /// <summary>Р’С‚РѕСЂРѕР№ РѕРїРµСЂР°РЅРґ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
         public Evulation<T> B { get; set; }
 
-        /// <summary>Метод вычисления значения вычисления</summary>
+        /// <summary>РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
         public Func<T, T, T> Operation { get; set; }
 
-        /// <summary>Инициализация нового бинарного вычисления</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ Р±РёРЅР°СЂРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
         protected BinaryFunctionOperationEvulation() { }
 
-        /// <summary>Инициализация нового бинарного вычисления</summary>
-        /// <param name="Operation">Метод вычисления результата вычисления на основе результатов вычисления значений операндов</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ Р±РёРЅР°СЂРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
+        /// <param name="Operation">РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІС‹С‡РёСЃР»РµРЅРёСЏ РЅР° РѕСЃРЅРѕРІРµ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РѕРїРµСЂР°РЅРґРѕРІ</param>
         protected BinaryFunctionOperationEvulation(Func<T, T, T> Operation) => this.Operation = Operation;
 
-        /// <summary>Инициализация нового бинарного вычисления</summary>
-        /// <param name="Operation">Метод вычисления результата вычисления на основе результатов вычисления значений операндов</param>
-        /// <param name="A">Первый операнд вычисления</param>
-        /// <param name="B">Второй операнд вычисления</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ Р±РёРЅР°СЂРЅРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ</summary>
+        /// <param name="Operation">РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІС‹С‡РёСЃР»РµРЅРёСЏ РЅР° РѕСЃРЅРѕРІРµ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РѕРїРµСЂР°РЅРґРѕРІ</param>
+        /// <param name="A">РџРµСЂРІС‹Р№ РѕРїРµСЂР°РЅРґ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
+        /// <param name="B">Р’С‚РѕСЂРѕР№ РѕРїРµСЂР°РЅРґ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
         protected BinaryFunctionOperationEvulation(Func<T, T, T> Operation, Evulation<T> A, Evulation<T> B)
             : this(Operation)
         {

@@ -1,18 +1,18 @@
-using Ex = System.Linq.Expressions.Expression;
+п»їusing Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление суммы двух вычислений</summary>
-    /// <typeparam name="T">Тип значения вычисления</typeparam>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ СЃСѓРјРјС‹ РґРІСѓС… РІС‹С‡РёСЃР»РµРЅРёР№</summary>
+    /// <typeparam name="T">РўРёРї Р·РЅР°С‡РµРЅРёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ</typeparam>
     public class AdditionEvulation<T> : BinaryFunctionOperatorEvulation<T>
     {
-        /// <summary>Инициализация нового вычисления суммы двух вычислений</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃСѓРјРјС‹ РґРІСѓС… РІС‹С‡РёСЃР»РµРЅРёР№</summary>
         public AdditionEvulation() : base(Ex.Add) { }
 
-        /// <summary>Инициализация нового вычисления суммы двух вычислений</summary>
-        /// <param name="a">Вычисление первого слагаемого</param>
-        /// <param name="b">Вычисление второго слагаемого</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃСѓРјРјС‹ РґРІСѓС… РІС‹С‡РёСЃР»РµРЅРёР№</summary>
+        /// <param name="a">Р’С‹С‡РёСЃР»РµРЅРёРµ РїРµСЂРІРѕРіРѕ СЃР»Р°РіР°РµРјРѕРіРѕ</param>
+        /// <param name="b">Р’С‹С‡РёСЃР»РµРЅРёРµ РІС‚РѕСЂРѕРіРѕ СЃР»Р°РіР°РµРјРѕРіРѕ</param>
         public AdditionEvulation(Evulation<T> a, Evulation<T> b) : base(Ex.Add, a, b) { }
     }
 }

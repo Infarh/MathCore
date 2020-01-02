@@ -1,19 +1,19 @@
-namespace MathCore.Trees
+п»їnamespace MathCore.Trees
 {
-    /// <summary>Элемент двусвязного дерева</summary>
+    /// <summary>Р­Р»РµРјРµРЅС‚ РґРІСѓСЃРІСЏР·РЅРѕРіРѕ РґРµСЂРµРІР°</summary>
     /// <typeparam name="T"></typeparam>
     public interface ITreeItem<T> where T : class, ITreeItem<T>
     {
-        /// <summary>Родительский узел</summary>
+        /// <summary>Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СѓР·РµР»</summary>
         T Parent { get; set; }
 
-        /// <summary>Дочерний узел</summary>
+        /// <summary>Р”РѕС‡РµСЂРЅРёР№ СѓР·РµР»</summary>
         T Child { get; set; }
 
-        /// <summary>Предыдущий узел уровня</summary>
+        /// <summary>РџСЂРµРґС‹РґСѓС‰РёР№ СѓР·РµР» СѓСЂРѕРІРЅСЏ</summary>
         T Prev { get; set; }
 
-        /// <summary>Следующий узел дерева</summary>
+        /// <summary>РЎР»РµРґСѓСЋС‰РёР№ СѓР·РµР» РґРµСЂРµРІР°</summary>
         T Next { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+п»їusing System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using MathCore;
@@ -11,20 +11,20 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    /// <summary>Класс объектов, выполняющих некоторое циклическое действие в отдельном фоновом потоке</summary>
+    /// <summary>РљР»Р°СЃСЃ РѕР±СЉРµРєС‚РѕРІ, РІС‹РїРѕР»РЅСЏСЋС‰РёС… РЅРµРєРѕС‚РѕСЂРѕРµ С†РёРєР»РёС‡РµСЃРєРѕРµ РґРµР№СЃС‚РІРёРµ РІ РѕС‚РґРµР»СЊРЅРѕРј С„РѕРЅРѕРІРѕРј РїРѕС‚РѕРєРµ</summary>
     public abstract class Processor : INotifyPropertyChanged, IDisposable
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Объект-ислюкение, передаваемое в качестве параметра события ошибки при рассинхронизации потока процессора</summary>
-        private static readonly Exception __AcyncException = new ApplicationException("Рассинхронизация обработки");
+        /// <summary>РћР±СЉРµРєС‚-РёСЃР»СЋРєРµРЅРёРµ, РїРµСЂРµРґР°РІР°РµРјРѕРµ РІ РєР°С‡РµСЃС‚РІРµ РїР°СЂР°РјРµС‚СЂР° СЃРѕР±С‹С‚РёСЏ РѕС€РёР±РєРё РїСЂРё СЂР°СЃСЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РїРѕС‚РѕРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
+        private static readonly Exception __AcyncException = new ApplicationException("Р Р°СЃСЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ РѕР±СЂР°Р±РѕС‚РєРё");
 
-        /// <summary>Текущее время системы</summary>
+        /// <summary>РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ СЃРёСЃС‚РµРјС‹</summary>
         protected static DateTime Now { [DST] get => DateTime.Now; }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Событие изменения свойства объекта</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
             [MethodImpl(MethodImplOptions.Synchronized), DST]
@@ -33,107 +33,107 @@ namespace System
             remove => _PropertyChanged -= value;
         }
         private event PropertyChangedEventHandler _PropertyChanged;
-        /// <summary>Вызов события изменения свойства объекта</summary>
-        ///  <param name="e">Параметры события изменения свойства объекта, содержашие имя свойства</param>
+        /// <summary>Р’С‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
+        ///  <param name="e">РџР°СЂР°РјРµС‚СЂС‹ СЃРѕР±С‹С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°, СЃРѕРґРµСЂР¶Р°С€РёРµ РёРјСЏ СЃРІРѕР№СЃС‚РІР°</param>
         [DST]
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => _PropertyChanged?.Invoke(this, e);
 
-        /// <summary>Вызов собйтия изменения свойтсва объекта с указанием имени свойства</summary>
-        /// <param name="PropertyName">Имя изменившегося свойства</param>
+        /// <summary>Р’С‹Р·РѕРІ СЃРѕР±Р№С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№С‚СЃРІР° РѕР±СЉРµРєС‚Р° СЃ СѓРєР°Р·Р°РЅРёРµРј РёРјРµРЅРё СЃРІРѕР№СЃС‚РІР°</summary>
+        /// <param name="PropertyName">РРјСЏ РёР·РјРµРЅРёРІС€РµРіРѕСЃСЏ СЃРІРѕР№СЃС‚РІР°</param>
         [DST, NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
 
-        /// <summary>Событие изменения свойства активности процессора</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° Р°РєС‚РёРІРЅРѕСЃС‚Рё РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public event EventHandler EnableChanged;
-        /// <summary>Источник собйтия изменения свойства активности процессора</summary><param name="e">Параметры события</param>
+        /// <summary>РСЃС‚РѕС‡РЅРёРє СЃРѕР±Р№С‚РёСЏ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° Р°РєС‚РёРІРЅРѕСЃС‚Рё РїСЂРѕС†РµСЃСЃРѕСЂР°</summary><param name="e">РџР°СЂР°РјРµС‚СЂС‹ СЃРѕР±С‹С‚РёСЏ</param>
         [DST]
         protected virtual void OnEnableChanged(EventArgs e) => EnableChanged?.Invoke(this, e);
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Событие запуска процессора</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public event EventHandler ProcessStarted;
-        /// <summary>Источник события запуска процессора</summary><param name="e">Параметры события</param>
+        /// <summary>РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary><param name="e">РџР°СЂР°РјРµС‚СЂС‹ СЃРѕР±С‹С‚РёСЏ</param>
         [DST]
         protected virtual void OnProcessStarted(EventArgs e) => ProcessStarted?.Invoke(this, e);
 
-        /// <summary>Событие завершения работы процессора</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public event EventHandler ProcessComplited;
-        /// <summary>Источник события завершения работы процессора</summary><param name="e">Параметры события</param>
+        /// <summary>РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary><param name="e">РџР°СЂР°РјРµС‚СЂС‹ СЃРѕР±С‹С‚РёСЏ</param>
         [DST]
         protected virtual void OnProcessComplited(EventArgs e) => ProcessComplited.FastStart(this, e);
 
-        /// <summary>Событие, вознакающие при возникновении исключений в процессе работы процессора</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ, РІРѕР·РЅР°РєР°СЋС‰РёРµ РїСЂРё РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРё РёСЃРєР»СЋС‡РµРЅРёР№ РІ РїСЂРѕС†РµСЃСЃРµ СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public event ExceptionEventHandler<Exception> Error;
-        /// <summary>Источник события возникновения исключительной ситуации в процессе работы процессора</summary>
-        /// <param name="e">Аргумент события ошибки, содержащий объект исключения</param>
+        /// <summary>РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ РІРѕР·РЅРёРєРЅРѕРІРµРЅРёСЏ РёСЃРєР»СЋС‡РёС‚РµР»СЊРЅРѕР№ СЃРёС‚СѓР°С†РёРё РІ РїСЂРѕС†РµСЃСЃРµ СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
+        /// <param name="e">РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ РѕС€РёР±РєРё, СЃРѕРґРµСЂР¶Р°С‰РёР№ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ</param>
         [DST]
         protected virtual void OnError(ExceptionEventHandlerArgs<Exception> e) => Error.ThrowIfUnhandled(this, e, true);
 
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>
-        /// Таймаут времени ожидания синхронизации потока обработки при его завершении, 
-        /// после которого поток прерывается методом Abort()
-        /// По умолчанию 100 мс.
+        /// РўР°Р№РјР°СѓС‚ РІСЂРµРјРµРЅРё РѕР¶РёРґР°РЅРёСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РїРѕС‚РѕРєР° РѕР±СЂР°Р±РѕС‚РєРё РїСЂРё РµРіРѕ Р·Р°РІРµСЂС€РµРЅРёРё, 
+        /// РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РїРѕС‚РѕРє РїСЂРµСЂС‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґРѕРј Abort()
+        /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 100 РјСЃ.
         /// </summary>
         protected int _JoinThreadTimeout = 100;
 
-        /// <summary>Флаг активности потока обработки. Пока значение флага "истина" - поток выполняется</summary>
+        /// <summary>Р¤Р»Р°Рі Р°РєС‚РёРІРЅРѕСЃС‚Рё РїРѕС‚РѕРєР° РѕР±СЂР°Р±РѕС‚РєРё. РџРѕРєР° Р·РЅР°С‡РµРЅРёРµ С„Р»Р°РіР° "РёСЃС‚РёРЅР°" - РїРѕС‚РѕРє РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</summary>
         protected volatile bool _Enabled;
 
-        /// <summary>Объект синхронизации запуска/остановки процессора - только для чтения</summary>
+        /// <summary>РћР±СЉРµРєС‚ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё Р·Р°РїСѓСЃРєР°/РѕСЃС‚Р°РЅРѕРІРєРё РїСЂРѕС†РµСЃСЃРѕСЂР° - С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ</summary>
         protected readonly object _StartStopSectionLocker = new object();
 
-        /// <summary>Основной поток работы процессора</summary>
+        /// <summary>РћСЃРЅРѕРІРЅРѕР№ РїРѕС‚РѕРє СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         protected Thread _MainWorkThread;
 
-        /// <summary>Время запуска</summary>
+        /// <summary>Р’СЂРµРјСЏ Р·Р°РїСѓСЃРєР°</summary>
         private DateTime? _StartTime;
 
-        /// <summary>Время остановки</summary>
+        /// <summary>Р’СЂРµРјСЏ РѕСЃС‚Р°РЅРѕРІРєРё</summary>
         private DateTime? _StopTime;
 
-        /// <summary>Объект-наблюдатель за состоянием процессора</summary>
-        private readonly ProgressMonitor _Monitor = new ProgressMonitor("Ожидание");
+        /// <summary>РћР±СЉРµРєС‚-РЅР°Р±Р»СЋРґР°С‚РµР»СЊ Р·Р° СЃРѕСЃС‚РѕСЏРЅРёРµРј РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
+        private readonly ProgressMonitor _Monitor = new ProgressMonitor("РћР¶РёРґР°РЅРёРµ");
 
-        /// <summary>Базовый приоритет потока процессора</summary>
+        /// <summary>Р‘Р°Р·РѕРІС‹Р№ РїСЂРёРѕСЂРёС‚РµС‚ РїРѕС‚РѕРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         private ThreadPriority _Priority = ThreadPriority.Normal;
 
-        /// <summary>Таймаут выполнения между циклами процессора </summary>
+        /// <summary>РўР°Р№РјР°СѓС‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РјРµР¶РґСѓ С†РёРєР»Р°РјРё РїСЂРѕС†РµСЃСЃРѕСЂР° </summary>
         private int _ActionTimeout;
 
-        /// <summary>Метод установки времени таймаута для работающего потока процессора</summary>
+        /// <summary>РњРµС‚РѕРґ СѓСЃС‚Р°РЅРѕРІРєРё РІСЂРµРјРµРЅРё С‚Р°Р№РјР°СѓС‚Р° РґР»СЏ СЂР°Р±РѕС‚Р°СЋС‰РµРіРѕ РїРѕС‚РѕРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         private Action<int> _Set_Timeout;
 
-        /// <summary>Признак синхронной работы</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє СЃРёРЅС…СЂРѕРЅРЅРѕР№ СЂР°Р±РѕС‚С‹</summary>
         private volatile bool _IsSychronus;
 
-        /// <summary>Флаг, разрешающий вызов события ошибки в случае рассинхронизации потока</summary>
+        /// <summary>Р¤Р»Р°Рі, СЂР°Р·СЂРµС€Р°СЋС‰РёР№ РІС‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ РѕС€РёР±РєРё РІ СЃР»СѓС‡Р°Рµ СЂР°СЃСЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РїРѕС‚РѕРєР°</summary>
         private volatile bool _ErrorIfAcync;
 
-        /// <summary>Количество выполненных циклов обработки</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ РІС‹РїРѕР»РЅРµРЅРЅС‹С… С†РёРєР»РѕРІ РѕР±СЂР°Р±РѕС‚РєРё</summary>
         private long _CyclesCount;
 
         // ReSharper disable FieldCanBeMadeReadOnly.Global
-        /// <summary>Имя для генерируемой потока выполнения процессора</summary>
+        /// <summary>РРјСЏ РґР»СЏ РіРµРЅРµСЂРёСЂСѓРµРјРѕР№ РїРѕС‚РѕРєР° РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         protected string _NameForeNewMainThread;
         // ReSharper restore FieldCanBeMadeReadOnly.Global
 
         // ReSharper disable NotAccessedField.Global
-        /// <summary>Метод извлечения времени выполнения одного цикла основного метода процессора</summary>
+        /// <summary>РњРµС‚РѕРґ РёР·РІР»РµС‡РµРЅРёСЏ РІСЂРµРјРµРЅРё РІС‹РїРѕР»РЅРµРЅРёСЏ РѕРґРЅРѕРіРѕ С†РёРєР»Р° РѕСЃРЅРѕРІРЅРѕРіРѕ РјРµС‚РѕРґР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         protected Func<TimeSpan> _Get_LastDeltaTime;
         // ReSharper restore NotAccessedField.Global
 
-        /// <summary>Объект синхрониации потоков по запуску процессора</summary>
+        /// <summary>РћР±СЉРµРєС‚ СЃРёРЅС…СЂРѕРЅРёР°С†РёРё РїРѕС‚РѕРєРѕРІ РїРѕ Р·Р°РїСѓСЃРєСѓ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         protected readonly EventWaitHandle _StartWaitHandle = new ManualResetEvent(false);
 
-        /// <summary>Объект синхрониации потоков по остановке процессора</summary>
+        /// <summary>РћР±СЉРµРєС‚ СЃРёРЅС…СЂРѕРЅРёР°С†РёРё РїРѕС‚РѕРєРѕРІ РїРѕ РѕСЃС‚Р°РЅРѕРІРєРµ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         protected readonly EventWaitHandle _StopWaitHandle = new ManualResetEvent(false);
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Приоритет выполнения метода наблюдения</summary>
+        /// <summary>РџСЂРёРѕСЂРёС‚РµС‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РјРµС‚РѕРґР° РЅР°Р±Р»СЋРґРµРЅРёСЏ</summary>
         public ThreadPriority Priority
         {
             [DST]
@@ -150,13 +150,13 @@ namespace System
             }
         }
 
-        /// <summary>Признак активности процессора</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє Р°РєС‚РёРІРЅРѕСЃС‚Рё РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public bool Enable { [DST] get => _Enabled; [DST] set { if(value) Start(); else Stop(); } }
 
-        /// <summary>Основной поток работы процессора</summary>
+        /// <summary>РћСЃРЅРѕРІРЅРѕР№ РїРѕС‚РѕРє СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public Thread MainThread { [DST] get => _MainWorkThread; }
 
-        /// <summary>ТАймаут времени синхронизации основного потока процессора с потоком, завершившим его работу.</summary>
+        /// <summary>РўРђР№РјР°СѓС‚ РІСЂРµРјРµРЅРё СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕС‚РѕРєР° РїСЂРѕС†РµСЃСЃРѕСЂР° СЃ РїРѕС‚РѕРєРѕРј, Р·Р°РІРµСЂС€РёРІС€РёРј РµРіРѕ СЂР°Р±РѕС‚Сѓ.</summary>
         public int JoinThreadTimeout
         {
             [DST]
@@ -169,19 +169,19 @@ namespace System
             }
         }
 
-        /// <summary>Время запуска</summary>
+        /// <summary>Р’СЂРµРјСЏ Р·Р°РїСѓСЃРєР°</summary>
         public DateTime? StartTime { [DST] get => _StartTime; [DST] protected set { _StartTime = value; OnPropertyChanged(); } }
 
-        /// <summary>Время остановки</summary>
+        /// <summary>Р’СЂРµРјСЏ РѕСЃС‚Р°РЅРѕРІРєРё</summary>
         public DateTime? StopTime { [DST] get => _StopTime; protected set { _StopTime = value; OnPropertyChanged(); } }
 
-        /// <summary>Время, прошедшее после запуска</summary>
+        /// <summary>Р’СЂРµРјСЏ, РїСЂРѕС€РµРґС€РµРµ РїРѕСЃР»Рµ Р·Р°РїСѓСЃРєР°</summary>
         public TimeSpan? ElapsedTime { [DST] get { var start = _StartTime; return start is null ? (TimeSpan?)null : Now - start.Value; } }
 
-        /// <summary>ОБъект-наблюдатель за состоянием процессора</summary>
+        /// <summary>РћР‘СЉРµРєС‚-РЅР°Р±Р»СЋРґР°С‚РµР»СЊ Р·Р° СЃРѕСЃС‚РѕСЏРЅРёРµРј РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         public ProgressMonitor Monitor => _Monitor;
 
-        /// <summary>ТАймаут основной циклической операции в миллисекундах</summary>
+        /// <summary>РўРђР№РјР°СѓС‚ РѕСЃРЅРѕРІРЅРѕР№ С†РёРєР»РёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…</summary>
         public int ActionTimeout
         {
             [DST]
@@ -196,13 +196,13 @@ namespace System
             }
         }
 
-        /// <summary>Признак синхронной работы</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє СЃРёРЅС…СЂРѕРЅРЅРѕР№ СЂР°Р±РѕС‚С‹</summary>
         public bool IsSynchronus { [DST] get => _IsSychronus; }
 
-        /// <summary>ГЕнерировать ошибку в случае рассинхронизации?</summary>
+        /// <summary>Р“Р•РЅРµСЂРёСЂРѕРІР°С‚СЊ РѕС€РёР±РєСѓ РІ СЃР»СѓС‡Р°Рµ СЂР°СЃСЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё?</summary>
         public bool ErrorIfAsync { [DST] get => _ErrorIfAcync; [DST] set { _ErrorIfAcync = value; OnPropertyChanged(); } }
 
-        /// <summary>Количество пройденных циклов</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕР№РґРµРЅРЅС‹С… С†РёРєР»РѕРІ</summary>
         public long CyclesCount { [DST] get => _CyclesCount; }
 
         /* ------------------------------------------------------------------------------------------ */
@@ -219,7 +219,7 @@ namespace System
             Start();
         }
 
-        /// <summary>Запуск обработки</summary>
+        /// <summary>Р—Р°РїСѓСЃРє РѕР±СЂР°Р±РѕС‚РєРё</summary>
         [DST]
         // ReSharper disable VirtualMemberNeverOverriden.Global
         public virtual void Start()
@@ -246,7 +246,7 @@ namespace System
             OnPropertyChanged(nameof(Enable));
         }
 
-        /// <summary>Остановка обработки</summary>
+        /// <summary>РћСЃС‚Р°РЅРѕРІРєР° РѕР±СЂР°Р±РѕС‚РєРё</summary>
         [DST]
         // ReSharper disable VirtualMemberNeverOverriden.Global
         public virtual void Stop()
@@ -270,13 +270,13 @@ namespace System
             OnPropertyChanged(nameof(Enable));
         }
 
-        /// <summary>Блокировать поток до запуска процессора</summary>
+        /// <summary>Р‘Р»РѕРєРёСЂРѕРІР°С‚СЊ РїРѕС‚РѕРє РґРѕ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         [DST]
         public bool WaitToStart(TimeSpan? Timeout = null) => Timeout is null || Timeout.Value.Ticks == 0
             ? _StartWaitHandle.WaitOne()
             : _StartWaitHandle.WaitOne(Timeout.Value);
 
-        /// <summary>Блокировать пото до остановки процессора</summary>
+        /// <summary>Р‘Р»РѕРєРёСЂРѕРІР°С‚СЊ РїРѕС‚Рѕ РґРѕ РѕСЃС‚Р°РЅРѕРІРєРё РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
         [DST]
         public bool WaitToStop(TimeSpan? Timeout = null) => Timeout is null || Timeout.Value.Ticks == 0
             ? _StopWaitHandle.WaitOne()
@@ -284,7 +284,7 @@ namespace System
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Основной метод процессора, выполняемый в отдельном потоке </summary>
+        /// <summary>РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ РїСЂРѕС†РµСЃСЃРѕСЂР°, РІС‹РїРѕР»РЅСЏРµРјС‹Р№ РІ РѕС‚РґРµР»СЊРЅРѕРј РїРѕС‚РѕРєРµ </summary>
         // ReSharper disable VirtualMemberNeverOverriden.Global
         //        [DST]
         protected virtual void ThreadMethod()
@@ -292,7 +292,7 @@ namespace System
         {
             InitializeAction();
 
-            #region Переменные
+            #region РџРµСЂРµРјРµРЅРЅС‹Рµ
 
             var timeout = TimeSpan.FromMilliseconds(_ActionTimeout);
             _Set_Timeout = new_timeout => timeout = TimeSpan.FromMilliseconds(new_timeout);
@@ -312,7 +312,7 @@ namespace System
 
             #endregion
 
-            #region Основное действие
+            #region РћСЃРЅРѕРІРЅРѕРµ РґРµР№СЃС‚РІРёРµ
 
             while(_Enabled)
             {
@@ -341,10 +341,10 @@ namespace System
             FinalizeAction();
         }
 
-        /// <summary>Основной метод действия процессора, вызываемое в цикле. Должно быть переопределено в классах-наследниках</summary>
+        /// <summary>РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ РґРµР№СЃС‚РІРёСЏ РїСЂРѕС†РµСЃСЃРѕСЂР°, РІС‹Р·С‹РІР°РµРјРѕРµ РІ С†РёРєР»Рµ. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРѕ РІ РєР»Р°СЃСЃР°С…-РЅР°СЃР»РµРґРЅРёРєР°С…</summary>
         protected abstract void MainAction();
 
-        /// <summary>Инициализация процесса</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїСЂРѕС†РµСЃСЃР°</summary>
         [DST]
         private void InitializeAction()
         {
@@ -358,8 +358,8 @@ namespace System
         }
 
         /// <summary>
-        /// Метод инициализации. Вызывается после запуска обработки перед началом основного цикла.
-        /// По умолчанию вызывает генерацию события запуска процессора
+        /// РњРµС‚РѕРґ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё. Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ Р·Р°РїСѓСЃРєР° РѕР±СЂР°Р±РѕС‚РєРё РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РѕСЃРЅРѕРІРЅРѕРіРѕ С†РёРєР»Р°.
+        /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹Р·С‹РІР°РµС‚ РіРµРЅРµСЂР°С†РёСЋ СЃРѕР±С‹С‚РёСЏ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµСЃСЃРѕСЂР°
         /// </summary>
         [DST]
         protected virtual void Initializer()
@@ -368,13 +368,13 @@ namespace System
             _StopTime = null;
             _CyclesCount = 0;
             _IsSychronus = true;
-            _Monitor.Status = "Обработка";
+            _Monitor.Status = "РћР±СЂР°Р±РѕС‚РєР°";
             OnProcessStarted(EventArgs.Empty);
         }
 
         /// <summary>
-        /// Метод, завершающий процесс обработки. Вызывается после выхода процессора из основного цикла.
-        /// По умолчанию вызывает генерацию события завершения работы процессора
+        /// РњРµС‚РѕРґ, Р·Р°РІРµСЂС€Р°СЋС‰РёР№ РїСЂРѕС†РµСЃСЃ РѕР±СЂР°Р±РѕС‚РєРё. Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ РІС‹С…РѕРґР° РїСЂРѕС†РµСЃСЃРѕСЂР° РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ С†РёРєР»Р°.
+        /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹Р·С‹РІР°РµС‚ РіРµРЅРµСЂР°С†РёСЋ СЃРѕР±С‹С‚РёСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃРѕСЂР°
         /// </summary>
         // ReSharper disable VirtualMemberNeverOverriden.Global
         [DST]
@@ -382,11 +382,11 @@ namespace System
         // ReSharper restore VirtualMemberNeverOverriden.Global
         {
             _StopTime = Now;
-            _Monitor.Status = "Завершено";
+            _Monitor.Status = "Р—Р°РІРµСЂС€РµРЅРѕ";
             OnProcessComplited(EventArgs.Empty);
         }
 
-        /// <summary>Завершающее действие процесса</summary>
+        /// <summary>Р—Р°РІРµСЂС€Р°СЋС‰РµРµ РґРµР№СЃС‚РІРёРµ РїСЂРѕС†РµСЃСЃР°</summary>
         [DST]
         private void FinalizeAction()
         {

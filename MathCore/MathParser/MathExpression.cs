@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
@@ -12,34 +12,34 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Математическое выражение</summary>
+    /// <summary>РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
     public class MathExpression : IDisposable, ICloneable<MathExpression>
     {
-        /// <summary>Дерево математического выражения</summary>
+        /// <summary>Р”РµСЂРµРІРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         private ExpressionTree _ExpressionTree;
 
-        /// <summary>Коллекция переменных математического выражения</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ РїРµСЂРµРјРµРЅРЅС‹С… РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         [NotNull]
         private readonly VariabelsCollection _Variables;
 
-        /// <summary>Коллекция констант математического выражения</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         [NotNull]
         private readonly ConstantsCollection _Constants;
 
-        /// <summary>Коллекция функций, участвующих в выражении</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёР№, СѓС‡Р°СЃС‚РІСѓСЋС‰РёС… РІ РІС‹СЂР°Р¶РµРЅРёРё</summary>
         [NotNull]
         private readonly FunctionsCollection _Functions;
 
-        /// <summary>Коллекция функционалов</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ</summary>
         [NotNull]
         private readonly FunctionalsCollection _Functionals;
 
-        /// <summary>Имя выражения</summary>
+        /// <summary>РРјСЏ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         [NotNull]
         private string _Name;
 
         /// <exception cref="ArgumentNullException" accessor="set"><paramref name="value"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentException" accessor="set">Указано пустое имя функции</exception>
+        /// <exception cref="ArgumentException" accessor="set">РЈРєР°Р·Р°РЅРѕ РїСѓСЃС‚РѕРµ РёРјСЏ С„СѓРЅРєС†РёРё</exception>
         [NotNull]
         public string Name
         {
@@ -47,93 +47,93 @@ namespace MathCore.MathParser
             set
             {
                 if(value is null)
-                    throw new ArgumentNullException(nameof(value), @"Не указано имя функции");
+                    throw new ArgumentNullException(nameof(value), @"РќРµ СѓРєР°Р·Р°РЅРѕ РёРјСЏ С„СѓРЅРєС†РёРё");
                 if(string.IsNullOrEmpty(value))
-                    throw new ArgumentException(@"Указано пустое имя функции", nameof(value));
+                    throw new ArgumentException(@"РЈРєР°Р·Р°РЅРѕ РїСѓСЃС‚РѕРµ РёРјСЏ С„СѓРЅРєС†РёРё", nameof(value));
                 _Name = value;
             }
         }
 
-        /// <summary>Является ли выражение предвычислимым?</summary>
+        /// <summary>РЇРІР»СЏРµС‚СЃСЏ Р»Рё РІС‹СЂР°Р¶РµРЅРёРµ РїСЂРµРґРІС‹С‡РёСЃР»РёРјС‹Рј?</summary>
         public bool IsPrecomputable => _ExpressionTree.Root.IsPrecomputable;
 
-        /// <summary>Дерево математического выражения</summary>
+        /// <summary>Р”РµСЂРµРІРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         [NotNull]
         public ExpressionTree Tree { [DST] get => _ExpressionTree; [DST] set => _ExpressionTree = value; }
 
-        /// <summary>Переменные, входящие в математическое выражение</summary>
+        /// <summary>РџРµСЂРµРјРµРЅРЅС‹Рµ, РІС…РѕРґСЏС‰РёРµ РІ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
         [NotNull]
         public VariabelsCollection Variable => _Variables;
 
-        /// <summary>Константы, входящие в математическое выражение</summary>
+        /// <summary>РљРѕРЅСЃС‚Р°РЅС‚С‹, РІС…РѕРґСЏС‰РёРµ РІ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
         [NotNull]
         public ConstantsCollection Constants => _Constants;
 
-        /// <summary>Коллекция функций, участвующих в выражении</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёР№, СѓС‡Р°СЃС‚РІСѓСЋС‰РёС… РІ РІС‹СЂР°Р¶РµРЅРёРё</summary>
         [NotNull]
         public FunctionsCollection Functions => _Functions;
 
-        /// <summary>Коллекция функционалов</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ</summary>
         [NotNull]
         public FunctionalsCollection Functionals => _Functionals;
 
-        /// <summary>Инициализация пустого математического выражения</summary>
-        /// <param name="Name">Имя функции</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїСѓСЃС‚РѕРіРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
         public MathExpression([NotNull] string Name = "f")
         {
             _Name = Name;
-            _Variables = new VariabelsCollection(this);     // Коллекция переменных
-            _Constants = new ConstantsCollection(this);     // Коллекция констант
-            _Functions = new FunctionsCollection(this);     // Коллекция функций
-            _Functionals = new FunctionalsCollection(this); // Коллекция функционалов
+            _Variables = new VariabelsCollection(this);     // РљРѕР»Р»РµРєС†РёСЏ РїРµСЂРµРјРµРЅРЅС‹С…
+            _Constants = new ConstantsCollection(this);     // РљРѕР»Р»РµРєС†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚
+            _Functions = new FunctionsCollection(this);     // РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёР№
+            _Functionals = new FunctionalsCollection(this); // РљРѕР»Р»РµРєС†РёСЏ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
         }
 
-        /// <summary>Инициализация нового математического выражения</summary>
-        /// <param name="Tree">Дерево математического выражения</param>
-        /// <param name="Name">Имя функции</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Tree">Р”РµСЂРµРІРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
         private MathExpression([NotNull] ExpressionTree Tree, [NotNull] string Name = "f")
             : this(Name)
         {
-            _ExpressionTree = Tree; //Сохраняем ссылку на корень дерева
+            _ExpressionTree = Tree; //РЎРѕС…СЂР°РЅСЏРµРј СЃСЃС‹Р»РєСѓ РЅР° РєРѕСЂРµРЅСЊ РґРµСЂРµРІР°
 
-            foreach(var tree_node in Tree) // обходим все элементы дерева
+            foreach(var tree_node in Tree) // РѕР±С…РѕРґРёРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РґРµСЂРµРІР°
             {
                 switch (tree_node)
                 {
                     case VariableValueNode value_node:
-                        var variable = value_node.Variable;      // Извлечь переменную
-                        if (variable.IsConstant)                 // Если переменная - константа
-                            _Constants.Add(variable);            //   сохранить в коллекции констант
-                        else                                     //  иначе...
-                            _Variables.Add(variable);            //   сохранить в коллекции переменных
+                        var variable = value_node.Variable;      // РР·РІР»РµС‡СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ
+                        if (variable.IsConstant)                 // Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ - РєРѕРЅСЃС‚Р°РЅС‚Р°
+                            _Constants.Add(variable);            //   СЃРѕС…СЂР°РЅРёС‚СЊ РІ РєРѕР»Р»РµРєС†РёРё РєРѕРЅСЃС‚Р°РЅС‚
+                        else                                     //  РёРЅР°С‡Рµ...
+                            _Variables.Add(variable);            //   СЃРѕС…СЂР°РЅРёС‚СЊ РІ РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅС‹С…
                         break;
                     case FunctionNode function_node:
-                        _Functions.Add(function_node.Function);  // то сохранить функцию в коллекции
+                        _Functions.Add(function_node.Function);  // С‚Рѕ СЃРѕС…СЂР°РЅРёС‚СЊ С„СѓРЅРєС†РёСЋ РІ РєРѕР»Р»РµРєС†РёРё
                         break;
                 }
             }
         }
 
-        /// <summary>Инициализация нового математического выражения</summary>
-        /// <param name="StrExpression">Строковое представление выражения</param>
-        /// <param name="Parser">Ссылка на парсер</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="StrExpression">РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Parser">РЎСЃС‹Р»РєР° РЅР° РїР°СЂСЃРµСЂ</param>
         internal MathExpression([NotNull] string StrExpression, [NotNull] ExpressionParser Parser)
             : this()
         {
-            var terms = new BlockTerm(StrExpression);    // разбить строку на элементы
-            var root = terms.GetSubTree(Parser, this);   // выделить корень дерева из первого элемента
-            _ExpressionTree = new ExpressionTree(root); // Создать дерево выражения из корня
+            var terms = new BlockTerm(StrExpression);    // СЂР°Р·Р±РёС‚СЊ СЃС‚СЂРѕРєСѓ РЅР° СЌР»РµРјРµРЅС‚С‹
+            var root = terms.GetSubTree(Parser, this);   // РІС‹РґРµР»РёС‚СЊ РєРѕСЂРµРЅСЊ РґРµСЂРµРІР° РёР· РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+            _ExpressionTree = new ExpressionTree(root); // РЎРѕР·РґР°С‚СЊ РґРµСЂРµРІРѕ РІС‹СЂР°Р¶РµРЅРёСЏ РёР· РєРѕСЂРЅСЏ
         }
 
-        /// <summary>Уничтожить математическое выражение</summary>
+        /// <summary>РЈРЅРёС‡С‚РѕР¶РёС‚СЊ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
         void IDisposable.Dispose() => _ExpressionTree.Dispose();
 
-        /// <summary>Вычисление математического выражения</summary>
-        /// <returns>Значение выражения</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         public double Compute() => ((ComputedNode)_ExpressionTree.Root).Compute();
 
-        /// <summary>Вычисление математического выражения</summary>
-        /// <returns>Значение выражения</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         public double Compute([NotNull] params double[] arg)
         {
             for(int i = 0, arg_count = arg.Length, var_count = Variable.Count; i < arg_count && i < var_count; i++)
@@ -141,96 +141,96 @@ namespace MathCore.MathParser
             return ((ComputedNode)_ExpressionTree.Root).Compute();
         }
 
-        /// <summary>Компиляция математического выражения в функцию без параметров</summary>
-        /// <returns>Функция типа double func(void) без параметров</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ РІ С„СѓРЅРєС†РёСЋ Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ</summary>
+        /// <returns>Р¤СѓРЅРєС†РёСЏ С‚РёРїР° double func(void) Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ</returns>
         [NotNull]
         public Func<double> Compile() => Compile<Func<double>>();
 
-        /// <summary>Компиляция функции одной переменной</summary>
-        /// <returns>Делегат функции одной переменной</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ С„СѓРЅРєС†РёРё РѕРґРЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <returns>Р”РµР»РµРіР°С‚ С„СѓРЅРєС†РёРё РѕРґРЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№</returns>
         [NotNull]
         public Func<double, double> Compile1() => Compile<Func<double, double>>();
 
-        /// <summary>Компиляция функции двух переменных</summary>
-        /// <returns>Делегат функции двух переменных</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ С„СѓРЅРєС†РёРё РґРІСѓС… РїРµСЂРµРјРµРЅРЅС‹С…</summary>
+        /// <returns>Р”РµР»РµРіР°С‚ С„СѓРЅРєС†РёРё РґРІСѓС… РїРµСЂРµРјРµРЅРЅС‹С…</returns>
         [NotNull]
         public Func<double, double, double> Compile2() => Compile<Func<double, double, double>>();
 
-        /// <summary>Компиляция функции трёх переменных</summary>
-        /// <returns>Делегат функции трёх переменных</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ С„СѓРЅРєС†РёРё С‚СЂС‘С… РїРµСЂРµРјРµРЅРЅС‹С…</summary>
+        /// <returns>Р”РµР»РµРіР°С‚ С„СѓРЅРєС†РёРё С‚СЂС‘С… РїРµСЂРµРјРµРЅРЅС‹С…</returns>
         [NotNull]
         public Func<double, double, double, double> Compile3() => Compile<Func<double, double, double, double>>();
 
-        /// <summary>Компиляция математического выражения в функцию указанного типа</summary>
-        /// <param name="ArgumentName">Список имён параметров</param>
-        /// <returns>Делегат скомпилированного выражения</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ РІ С„СѓРЅРєС†РёСЋ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР°</summary>
+        /// <param name="ArgumentName">РЎРїРёСЃРѕРє РёРјС‘РЅ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>Р”РµР»РµРіР°С‚ СЃРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         [NotNull]
         public Delegate Compile([NotNull] params string[] ArgumentName) => 
             Expression.Lambda(GetExpression(out var vars, ArgumentName), vars).Compile();
 
-        /// <summary>Многопараметрическая компиляция мат.выражения</summary>
-        /// <param name="ArgumentName">Массив имён компилируемых параметров</param>
-        /// <returns>Делегат функции, принимающий на вход массив значений параметров</returns>
+        /// <summary>РњРЅРѕРіРѕРїР°СЂР°РјРµС‚СЂРёС‡РµСЃРєР°СЏ РєРѕРјРїРёР»СЏС†РёСЏ РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="ArgumentName">РњР°СЃСЃРёРІ РёРјС‘РЅ РєРѕРјРїРёР»РёСЂСѓРµРјС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>Р”РµР»РµРіР°С‚ С„СѓРЅРєС†РёРё, РїСЂРёРЅРёРјР°СЋС‰РёР№ РЅР° РІС…РѕРґ РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№ РїР°СЂР°РјРµС‚СЂРѕРІ</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
         public Func<double[], double> CompileMultyParameters([NotNull] params string[] ArgumentName)
         {
-            // Словарь индексов переменных
+            // РЎР»РѕРІР°СЂСЊ РёРЅРґРµРєСЃРѕРІ РїРµСЂРµРјРµРЅРЅС‹С…
             var var_dictionary = new Dictionary<string, int>();
 
-            // Выходной массив параметров выражения, получаемый при сборке дерева
-            // Сборка дерева
+            // Р’С‹С…РѕРґРЅРѕР№ РјР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ, РїРѕР»СѓС‡Р°РµРјС‹Р№ РїСЂРё СЃР±РѕСЂРєРµ РґРµСЂРµРІР°
+            // РЎР±РѕСЂРєР° РґРµСЂРµРІР°
             var compilation = GetExpression(out _, ArgumentName);
 
-            // Если массив имён компилируемых входных переменных не пуст
+            // Р•СЃР»Рё РјР°СЃСЃРёРІ РёРјС‘РЅ РєРѕРјРїРёР»РёСЂСѓРµРјС‹С… РІС…РѕРґРЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С… РЅРµ РїСѓСЃС‚
             if((ArgumentName.Length) > 0)
-                ArgumentName.Foreach(var_dictionary.Add); // то заполняем словарь индексов
-            else // Если массив переменных не указан, то создаём функцию по всем переменным
+                ArgumentName.Foreach(var_dictionary.Add); // С‚Рѕ Р·Р°РїРѕР»РЅСЏРµРј СЃР»РѕРІР°СЂСЊ РёРЅРґРµРєСЃРѕРІ
+            else // Р•СЃР»Рё РјР°СЃСЃРёРІ РїРµСЂРµРјРµРЅРЅС‹С… РЅРµ СѓРєР°Р·Р°РЅ, С‚Рѕ СЃРѕР·РґР°С‘Рј С„СѓРЅРєС†РёСЋ РїРѕ РІСЃРµРј РїРµСЂРµРјРµРЅРЅС‹Рј
                 Variable.Select(v => v.Name).Foreach(var_dictionary.Add);
 
-            // Создаём входную переменную выражения с типом "вещественный массив"
+            // РЎРѕР·РґР°С‘Рј РІС…РѕРґРЅСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ РІС‹СЂР°Р¶РµРЅРёСЏ СЃ С‚РёРїРѕРј "РІРµС‰РµСЃС‚РІРµРЅРЅС‹Р№ РјР°СЃСЃРёРІ"
             var array_parameter = Expression.Parameter(typeof(double[]), "args_array");
-            // Создаём пул выражений - индексаторов входного массива
+            // РЎРѕР·РґР°С‘Рј РїСѓР» РІС‹СЂР°Р¶РµРЅРёР№ - РёРЅРґРµРєСЃР°С‚РѕСЂРѕРІ РІС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°
             var array_indexers = new Dictionary<int, Expression>();
-            // Объявляем метод получения выражения индексатора входного массива по указанному значению индекса
+            // РћР±СЉСЏРІР»СЏРµРј РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ РёРЅРґРµРєСЃР°С‚РѕСЂР° РІС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР° РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ РёРЅРґРµРєСЃР°
             Expression GetIndexedParameter(int index)
             {
-                // Если пул уже содержит указанный индекс, то выдать соответствующий индексатор
+                // Р•СЃР»Рё РїСѓР» СѓР¶Рµ СЃРѕРґРµСЂР¶РёС‚ СѓРєР°Р·Р°РЅРЅС‹Р№ РёРЅРґРµРєСЃ, С‚Рѕ РІС‹РґР°С‚СЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ РёРЅРґРµРєСЃР°С‚РѕСЂ
                 if (array_indexers.ContainsKey(index)) return array_indexers[index];
-                // иначе создаём новый индексатор
+                // РёРЅР°С‡Рµ СЃРѕР·РґР°С‘Рј РЅРѕРІС‹Р№ РёРЅРґРµРєСЃР°С‚РѕСЂ
                 var indexer = Expression.ArrayIndex(array_parameter, Expression.Constant(index));
-                array_indexers.Add(index, indexer); // и сохраняем его в пуле
-                return indexer; // возвращаем новый индексатор
+                array_indexers.Add(index, indexer); // Рё СЃРѕС…СЂР°РЅСЏРµРј РµРіРѕ РІ РїСѓР»Рµ
+                return indexer; // РІРѕР·РІСЂР°С‰Р°РµРј РЅРѕРІС‹Р№ РёРЅРґРµРєСЃР°С‚РѕСЂ
             }
 
-            // Создаём пересборщик дерева выражения Linq.Expression 
+            // РЎРѕР·РґР°С‘Рј РїРµСЂРµСЃР±РѕСЂС‰РёРє РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ Linq.Expression 
             var rebuilder = new ExpressionRebuilder();
-            // Добавляем обработчик узлов вызова методов
-            rebuilder.MethodCallVisited += (s, e) => // Если очередной узел дерева - вызов метода, то...
+            // Р”РѕР±Р°РІР»СЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРє СѓР·Р»РѕРІ РІС‹Р·РѕРІР° РјРµС‚РѕРґРѕРІ
+            rebuilder.MethodCallVisited += (s, e) => // Р•СЃР»Рё РѕС‡РµСЂРµРґРЅРѕР№ СѓР·РµР» РґРµСЂРµРІР° - РІС‹Р·РѕРІ РјРµС‚РѕРґР°, С‚Рѕ...
             {
-                var call = e.Argument; // Извлекаем ссылку на узел
-                //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 
+                var call = e.Argument; // РР·РІР»РµРєР°РµРј СЃСЃС‹Р»РєСѓ РЅР° СѓР·РµР»
+                //Р•СЃР»Рё С†РµР»РµРІРѕР№ РѕР±СЉРµРєС‚ РІС‹Р·РѕРІР° - РЅРµ(!) РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Рё РѕРЅРѕ РЅРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚РёРїСѓ РїРµСЂРµРјРµРЅРЅРѕР№ РґРµСЂРµРІР° MathExpressionTree 
                 if(!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariabel))
-                    return call; // пропускаем узел
-                //Извлекаем из узла переменную дерева
+                    return call; // РїСЂРѕРїСѓСЃРєР°РµРј СѓР·РµР»
+                //РР·РІР»РµРєР°РµРј РёР· СѓР·Р»Р° РїРµСЂРµРјРµРЅРЅСѓСЋ РґРµСЂРµРІР°
                 var v = (ExpressionVariabel)((ConstantExpression)call.Object).Value;
-                //Если переменная дерева - константа, либо если её имя отсутствует в словаре компилируемых переменных
-                if(v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // то пропускаем узел
-                var index = var_dictionary[v.Name]; // Запрашиваем индекс переменной
-                var indexer = GetIndexedParameter(index); // Извлекаем индексатор из пула по указанному индексу
-                return indexer; // заменяем текущий узел индексатором
+                //Р•СЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РґРµСЂРµРІР° - РєРѕРЅСЃС‚Р°РЅС‚Р°, Р»РёР±Рѕ РµСЃР»Рё РµС‘ РёРјСЏ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РІ СЃР»РѕРІР°СЂРµ РєРѕРјРїРёР»РёСЂСѓРµРјС‹С… РїРµСЂРµРјРµРЅРЅС‹С…
+                if(v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // С‚Рѕ РїСЂРѕРїСѓСЃРєР°РµРј СѓР·РµР»
+                var index = var_dictionary[v.Name]; // Р—Р°РїСЂР°С€РёРІР°РµРј РёРЅРґРµРєСЃ РїРµСЂРµРјРµРЅРЅРѕР№
+                var indexer = GetIndexedParameter(index); // РР·РІР»РµРєР°РµРј РёРЅРґРµРєСЃР°С‚РѕСЂ РёР· РїСѓР»Р° РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РёРЅРґРµРєСЃСѓ
+                return indexer; // Р·Р°РјРµРЅСЏРµРј С‚РµРєСѓС‰РёР№ СѓР·РµР» РёРЅРґРµРєСЃР°С‚РѕСЂРѕРј
             };
 
-            compilation = rebuilder.Visit(compilation); // Пересобираем дерево
-            // Собираем лямбда-выражение
+            compilation = rebuilder.Visit(compilation); // РџРµСЂРµСЃРѕР±РёСЂР°РµРј РґРµСЂРµРІРѕ
+            // РЎРѕР±РёСЂР°РµРј Р»СЏРјР±РґР°-РІС‹СЂР°Р¶РµРЅРёРµ
             var lambda = Expression.Lambda<Func<double[], double>>(compilation, array_parameter);
-            return lambda.Compile(); // Компилируем лямбда-выражение и возвращаем делегат
+            return lambda.Compile(); // РљРѕРјРїРёР»РёСЂСѓРµРј Р»СЏРјР±РґР°-РІС‹СЂР°Р¶РµРЅРёРµ Рё РІРѕР·РІСЂР°С‰Р°РµРј РґРµР»РµРіР°С‚
         }
 
-        /// <summary>Компиляция математического выражения в функцию указанного типа</summary>
-        /// <typeparam name="TDelegate">Тип делегата функции</typeparam>
-        /// <param name="ArgumentName">Список имён параметров</param>
-        /// <returns>Делегат скомпилированного выражения</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ РІ С„СѓРЅРєС†РёСЋ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР°</summary>
+        /// <typeparam name="TDelegate">РўРёРї РґРµР»РµРіР°С‚Р° С„СѓРЅРєС†РёРё</typeparam>
+        /// <param name="ArgumentName">РЎРїРёСЃРѕРє РёРјС‘РЅ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <returns>Р”РµР»РµРіР°С‚ СЃРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         [NotNull]
         public TDelegate Compile<TDelegate>([NotNull] params string[] ArgumentName)
         {
@@ -238,10 +238,10 @@ namespace MathCore.MathParser
             return Expression.Lambda<TDelegate>(compilation, vars).Compile();
         }
 
-        /// <summary>Получить Linq.Expression выражение, построенное на основе дерева выражений</summary>
-        /// <param name="vars">Список входных переменных</param>
-        /// <param name="ArgumentName">Список имён аргументов</param>
-        /// <returns>Выражение типа Linq.Expression</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Linq.Expression РІС‹СЂР°Р¶РµРЅРёРµ, РїРѕСЃС‚СЂРѕРµРЅРЅРѕРµ РЅР° РѕСЃРЅРѕРІРµ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёР№</summary>
+        /// <param name="vars">РЎРїРёСЃРѕРє РІС…РѕРґРЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С…</param>
+        /// <param name="ArgumentName">РЎРїРёСЃРѕРє РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ С‚РёРїР° Linq.Expression</returns>
         [NotNull]
         public Expression GetExpression([NotNull] out ParameterExpression[] vars, [NotNull] params string[] ArgumentName)
         {
@@ -249,11 +249,11 @@ namespace MathCore.MathParser
             return ((ComputedNode)_ExpressionTree.Root).Compile(vars);
         }
 
-        /// <summary>Получить Linq.Expression выражение, построенное на основе дерева выражений</summary>
-        /// <typeparam name="TDelegate">Тип делегата выражения</typeparam>
-        /// <param name="vars">Список входных переменных</param>
-        /// <param name="ArgumentName">Список имён аргументов</param>
-        /// <returns>Выражение типа Linq.Expression</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Linq.Expression РІС‹СЂР°Р¶РµРЅРёРµ, РїРѕСЃС‚СЂРѕРµРЅРЅРѕРµ РЅР° РѕСЃРЅРѕРІРµ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёР№</summary>
+        /// <typeparam name="TDelegate">РўРёРї РґРµР»РµРіР°С‚Р° РІС‹СЂР°Р¶РµРЅРёСЏ</typeparam>
+        /// <param name="vars">РЎРїРёСЃРѕРє РІС…РѕРґРЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С…</param>
+        /// <param name="ArgumentName">РЎРїРёСЃРѕРє РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ С‚РёРїР° Linq.Expression</returns>
         [NotNull]
         public Expression GetExpression<TDelegate>(
             [CanBeNull] out ParameterExpression[] vars,
@@ -279,21 +279,21 @@ namespace MathCore.MathParser
             return compilation;
         }
 
-        /// <summary>Преобразование в строку</summary>
-        /// <returns>Строковое представление</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
         [NotNull] public override string ToString() => $"{_Name}({_Variables.Select(v => v.Name).ToSeparatedStr(", ")})={_ExpressionTree.Root}";
 
-        /// <summary>Перенос констант из выражения источника в выражение приёмник</summary>
-        /// <param name="Source">Выражение источник</param>
-        /// <param name="Result">Выражение приёмник</param>
+        /// <summary>РџРµСЂРµРЅРѕСЃ РєРѕРЅСЃС‚Р°РЅС‚ РёР· РІС‹СЂР°Р¶РµРЅРёСЏ РёСЃС‚РѕС‡РЅРёРєР° РІ РІС‹СЂР°Р¶РµРЅРёРµ РїСЂРёС‘РјРЅРёРє</summary>
+        /// <param name="Source">Р’С‹СЂР°Р¶РµРЅРёРµ РёСЃС‚РѕС‡РЅРёРє</param>
+        /// <param name="Result">Р’С‹СЂР°Р¶РµРЅРёРµ РїСЂРёС‘РјРЅРёРє</param>
         private static void CheckConstatnsCollection([NotNull] MathExpression Source, [NotNull] MathExpression Result) =>
             Source.Constants
                .Select(constant => Result.Variable[constant.Name])
                .Where(c => Result.Variable.Remove(c))
                .Foreach(Result.Constants, (c, constants) => constants.Add(c));
 
-        /// <summary>Клонирование выражения</summary>
-        /// <returns>Копия объектной модели выражения</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <returns>РљРѕРїРёСЏ РѕР±СЉРµРєС‚РЅРѕР№ РјРѕРґРµР»Рё РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         [NotNull]
         public MathExpression Clone()
         {
@@ -304,11 +304,11 @@ namespace MathCore.MathParser
 
         object ICloneable.Clone() => Clone();
 
-        /// <summary>Комбинация двух выражений с использованием узла-оператора</summary>
-        /// <param name="x">Первое выражение</param>
-        /// <param name="y">Второе выражение</param>
-        /// <param name="node">Узел операции</param>
-        /// <returns>Математическое выражение, в корне дерева которого лежит узел оператора. Поддеревья - корни первого и второго выражений</returns>
+        /// <summary>РљРѕРјР±РёРЅР°С†РёСЏ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј СѓР·Р»Р°-РѕРїРµСЂР°С‚РѕСЂР°</summary>
+        /// <param name="x">РџРµСЂРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <param name="y">Р’С‚РѕСЂРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <param name="node">РЈР·РµР» РѕРїРµСЂР°С†РёРё</param>
+        /// <returns>РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РІ РєРѕСЂРЅРµ РґРµСЂРµРІР° РєРѕС‚РѕСЂРѕРіРѕ Р»РµР¶РёС‚ СѓР·РµР» РѕРїРµСЂР°С‚РѕСЂР°. РџРѕРґРґРµСЂРµРІСЊСЏ - РєРѕСЂРЅРё РїРµСЂРІРѕРіРѕ Рё РІС‚РѕСЂРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёР№</returns>
         [NotNull]
         protected static MathExpression CombineExpressions([NotNull] MathExpression x, [NotNull] MathExpression y, [NotNull] OperatorNode node)
         {
@@ -329,56 +329,56 @@ namespace MathCore.MathParser
             return z;
         }
 
-        /// <summary>Оператор сложения двух выражений</summary>
-        /// <param name="x">Первое слагаемое</param>
-        /// <param name="y">Второе слагаемое</param>
-        /// <returns>Выражение-сумма, корень которого - узел суммы. Поддеревья - корни выражений слагаемых</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СЃР»РѕР¶РµРЅРёСЏ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№</summary>
+        /// <param name="x">РџРµСЂРІРѕРµ СЃР»Р°РіР°РµРјРѕРµ</param>
+        /// <param name="y">Р’С‚РѕСЂРѕРµ СЃР»Р°РіР°РµРјРѕРµ</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ-СЃСѓРјРјР°, РєРѕСЂРµРЅСЊ РєРѕС‚РѕСЂРѕРіРѕ - СѓР·РµР» СЃСѓРјРјС‹. РџРѕРґРґРµСЂРµРІСЊСЏ - РєРѕСЂРЅРё РІС‹СЂР°Р¶РµРЅРёР№ СЃР»Р°РіР°РµРјС‹С…</returns>
         [NotNull]
         public static MathExpression operator +([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new AdditionOperatorNode());
 
-        /// <summary>Оператор вычитания двух выражений</summary>
-        /// <param name="x">Уменьшаемое</param>
-        /// <param name="y">Вычитаемое</param>
-        /// <returns>Выражение-разность, корень которого - узел разности. Поддеревья - корни выражений вычитаемого и уменьшаемого</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РІС‹С‡РёС‚Р°РЅРёСЏ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№</summary>
+        /// <param name="x">РЈРјРµРЅСЊС€Р°РµРјРѕРµ</param>
+        /// <param name="y">Р’С‹С‡РёС‚Р°РµРјРѕРµ</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ-СЂР°Р·РЅРѕСЃС‚СЊ, РєРѕСЂРµРЅСЊ РєРѕС‚РѕСЂРѕРіРѕ - СѓР·РµР» СЂР°Р·РЅРѕСЃС‚Рё. РџРѕРґРґРµСЂРµРІСЊСЏ - РєРѕСЂРЅРё РІС‹СЂР°Р¶РµРЅРёР№ РІС‹С‡РёС‚Р°РµРјРѕРіРѕ Рё СѓРјРµРЅСЊС€Р°РµРјРѕРіРѕ</returns>
         [NotNull]
         public static MathExpression operator -([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new subtractionOperatorNode());
 
-        /// <summary>Оператор умножения двух выражений</summary>
-        /// <param name="x">Первый сомножитель</param>
-        /// <param name="y">Второй сомножитель</param>
-        /// <returns>Выражение-произведения, корень которого - узел произведения. Поддеревья - корни выражений сомножителей</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СѓРјРЅРѕР¶РµРЅРёСЏ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№</summary>
+        /// <param name="x">РџРµСЂРІС‹Р№ СЃРѕРјРЅРѕР¶РёС‚РµР»СЊ</param>
+        /// <param name="y">Р’С‚РѕСЂРѕР№ СЃРѕРјРЅРѕР¶РёС‚РµР»СЊ</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ-РїСЂРѕРёР·РІРµРґРµРЅРёСЏ, РєРѕСЂРµРЅСЊ РєРѕС‚РѕСЂРѕРіРѕ - СѓР·РµР» РїСЂРѕРёР·РІРµРґРµРЅРёСЏ. РџРѕРґРґРµСЂРµРІСЊСЏ - РєРѕСЂРЅРё РІС‹СЂР°Р¶РµРЅРёР№ СЃРѕРјРЅРѕР¶РёС‚РµР»РµР№</returns>
         [NotNull]
         public static MathExpression operator *([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new MultiplicationOperatorNode());
 
-        /// <summary>Оператор деления двух выражений</summary>
-        /// <param name="x">Делимое</param>
-        /// <param name="y">Делитель</param>
-        /// <returns>Выражение-частное, корень которого - узел деления. Поддеревья - корни выражений делимого и делителя</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РґРµР»РµРЅРёСЏ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№</summary>
+        /// <param name="x">Р”РµР»РёРјРѕРµ</param>
+        /// <param name="y">Р”РµР»РёС‚РµР»СЊ</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ-С‡Р°СЃС‚РЅРѕРµ, РєРѕСЂРµРЅСЊ РєРѕС‚РѕСЂРѕРіРѕ - СѓР·РµР» РґРµР»РµРЅРёСЏ. РџРѕРґРґРµСЂРµРІСЊСЏ - РєРѕСЂРЅРё РІС‹СЂР°Р¶РµРЅРёР№ РґРµР»РёРјРѕРіРѕ Рё РґРµР»РёС‚РµР»СЏ</returns>
         [NotNull]
         public static MathExpression operator /([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new DivisionOperatorNode());
 
-        /// <summary>Оператор возведения в степень</summary>
-        /// <param name="x">Основание</param>
-        /// <param name="y">Показатель степени</param>
-        /// <returns>Выражение-степень, корень которого - узел степени. Поддеревья - корни выражений Основания и показателя степени</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РІРѕР·РІРµРґРµРЅРёСЏ РІ СЃС‚РµРїРµРЅСЊ</summary>
+        /// <param name="x">РћСЃРЅРѕРІР°РЅРёРµ</param>
+        /// <param name="y">РџРѕРєР°Р·Р°С‚РµР»СЊ СЃС‚РµРїРµРЅРё</param>
+        /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ-СЃС‚РµРїРµРЅСЊ, РєРѕСЂРµРЅСЊ РєРѕС‚РѕСЂРѕРіРѕ - СѓР·РµР» СЃС‚РµРїРµРЅРё. РџРѕРґРґРµСЂРµРІСЊСЏ - РєРѕСЂРЅРё РІС‹СЂР°Р¶РµРЅРёР№ РћСЃРЅРѕРІР°РЅРёСЏ Рё РїРѕРєР°Р·Р°С‚РµР»СЏ СЃС‚РµРїРµРЅРё</returns>
         [NotNull]
         public static MathExpression operator ^([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new PowerOperatorNode());
 
-        /// <summary>Оператор неявного приведения типов математического выражения к типу дерева выражения</summary>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Дерево математического выражения</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРёРІРµРґРµРЅРёСЏ С‚РёРїРѕРІ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ Рє С‚РёРїСѓ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>Р”РµСЂРµРІРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         [NotNull]
         public static implicit operator ExpressionTree([NotNull] MathExpression Expression) => Expression.Tree;
 
-        /// <summary>Оператор неявного приведения типов дерева выражения к типу математического выражения</summary>
-        /// <param name="Tree">Дерево математического выражения</param>
-        /// <returns>Математическое выражение, содержащее указанное дерево</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРёРІРµРґРµРЅРёСЏ С‚РёРїРѕРІ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ Рє С‚РёРїСѓ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Tree">Р”РµСЂРµРІРѕ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, СЃРѕРґРµСЂР¶Р°С‰РµРµ СѓРєР°Р·Р°РЅРЅРѕРµ РґРµСЂРµРІРѕ</returns>
         [NotNull]
         public static implicit operator MathExpression([NotNull] ExpressionTree Tree) => new MathExpression(Tree);
 
-        /// <summary>Оператор неявного приведения типов математического выражения к типу делегата функции double Func(void)</summary>
-        /// <param name="expr">Математическое выражения</param>
-        /// <returns>Результат компиляции математического выражения</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРёРІРµРґРµРЅРёСЏ С‚РёРїРѕРІ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ Рє С‚РёРїСѓ РґРµР»РµРіР°С‚Р° С„СѓРЅРєС†РёРё double Func(void)</summary>
+        /// <param name="expr">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РєРѕРјРїРёР»СЏС†РёРё РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         [NotNull]
         public static implicit operator Func<double>([NotNull] MathExpression expr) => expr.Compile();
     }

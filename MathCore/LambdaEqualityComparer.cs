@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using MathCore.Annotations;
 
@@ -17,16 +17,16 @@ namespace MathCore
             _HashFunction = HashFunction ?? (o => o.GetHashCode());
         }
 
-        /// <summary>Определяет, равны ли два указанных объекта.</summary>
-        /// <returns>Значение true, если указанные объекты равны; в противном случае — значение false.</returns>
-        /// <param name="x">Первый сравниваемый объект типа <typeparam name="T"/>.</param>
-        /// <param name="y">Второй сравниваемый объект типа <typeparam name="T"/>.</param>
+        /// <summary>РћРїСЂРµРґРµР»СЏРµС‚, СЂР°РІРЅС‹ Р»Рё РґРІР° СѓРєР°Р·Р°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°.</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ true, РµСЃР»Рё СѓРєР°Р·Р°РЅРЅС‹Рµ РѕР±СЉРµРєС‚С‹ СЂР°РІРЅС‹; РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ вЂ” Р·РЅР°С‡РµРЅРёРµ false.</returns>
+        /// <param name="x">РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚ С‚РёРїР° <typeparam name="T"/>.</param>
+        /// <param name="y">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚ С‚РёРїР° <typeparam name="T"/>.</param>
         public bool Equals(T x, T y) => _Comparer(x, y);
 
-        /// <summary>Возвращает хэш-код указанного объекта.</summary>
-        /// <returns>Хэш-код указанного объекта.</returns>
-        /// <param name="obj">Объект <see cref="T:System.Object"/>, для которого должен быть возвращен хэш-код.</param>
-        /// <exception cref="T:System.ArgumentNullException">Тип <paramref name="obj"/> является ссылочным типом, значением <paramref name="obj"/> является null.</exception>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ С…СЌС€-РєРѕРґ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.</summary>
+        /// <returns>РҐСЌС€-РєРѕРґ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.</returns>
+        /// <param name="obj">РћР±СЉРµРєС‚ <see cref="T:System.Object"/>, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІРѕР·РІСЂР°С‰РµРЅ С…СЌС€-РєРѕРґ.</param>
+        /// <exception cref="T:System.ArgumentNullException">РўРёРї <paramref name="obj"/> СЏРІР»СЏРµС‚СЃСЏ СЃСЃС‹Р»РѕС‡РЅС‹Рј С‚РёРїРѕРј, Р·РЅР°С‡РµРЅРёРµРј <paramref name="obj"/> СЏРІР»СЏРµС‚СЃСЏ null.</exception>
         public int GetHashCode(T obj) => _HashFunction(obj);
     }
 

@@ -1,22 +1,22 @@
-namespace System.Linq.Reactive
+п»їnamespace System.Linq.Reactive
 {
-    /// <summary>Интерфейс наблюдателя</summary>
-    /// <typeparam name="T">Тип объектов последовательности событий</typeparam>
+    /// <summary>РРЅС‚РµСЂС„РµР№СЃ РЅР°Р±Р»СЋРґР°С‚РµР»СЏ</summary>
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚РѕРІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё СЃРѕР±С‹С‚РёР№</typeparam>
     public interface IObserverEx<T> : IObserver<T>, IDisposable
     {
-        /// <summary>Событие появления следующего объекта последовательности</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РїРѕСЏРІР»РµРЅРёСЏ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕР±СЉРµРєС‚Р° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё</summary>
         event Action<T> Next;
 
-        /// <summary>Событие завершения последовательности</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё</summary>
         event Action Complited;
 
-        /// <summary>Событие сброса последовательности</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ СЃР±СЂРѕСЃР° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё</summary>
         event Action Reset;
 
-        /// <summary>Событие появления исключения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РїРѕСЏРІР»РµРЅРёСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ</summary>
         event Action<Exception> Error;
 
-        /// <summary>Метод генерации события сброса последовательности</summary>
+        /// <summary>РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ СЃР±СЂРѕСЃР° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё</summary>
         void OnReset();
     }
 }

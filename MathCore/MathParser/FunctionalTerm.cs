@@ -1,29 +1,29 @@
-using MathCore.Annotations;
+п»їusing MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Блок определения функции</summary>
+    /// <summary>Р‘Р»РѕРє РѕРїСЂРµРґРµР»РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
     internal sealed class FunctionalTerm : FunctionTerm
     {
-        /// <summary>Параметры оператора</summary>
+        /// <summary>РџР°СЂР°РјРµС‚СЂС‹ РѕРїРµСЂР°С‚РѕСЂР°</summary>
         [NotNull]
         public BlockTerm Parameters { get; set; }
 
-        /// <summary>Инициализация блока комплексного оператора</summary>
-        /// <param name="Header">Заголовок блока</param>
-        /// <param name="Body">Тело блока</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р±Р»РѕРєР° РєРѕРјРїР»РµРєСЃРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР°</summary>
+        /// <param name="Header">Р—Р°РіРѕР»РѕРІРѕРє Р±Р»РѕРєР°</param>
+        /// <param name="Body">РўРµР»Рѕ Р±Р»РѕРєР°</param>
         public FunctionalTerm([NotNull] FunctionTerm Header, [NotNull] BlockTerm Body) : base(Header.Name, Body) => Parameters = Header.Block;
 
-        /// <summary>Получить поддерево комплексного оператора</summary>
-        /// <param name="Parser">Парсер</param>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Узел комплексного оператора</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРѕРґРґРµСЂРµРІРѕ РєРѕРјРїР»РµРєСЃРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР°</summary>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>РЈР·РµР» РєРѕРјРїР»РµРєСЃРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР°</returns>
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
             => new FunctionalNode(this, Parser, Expression);
 
-        /// <summary>Преобразование в строковую форму</summary>
-        /// <returns>Строковое представление элемента</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєРѕРІСѓСЋ С„РѕСЂРјСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</returns>
         public override string ToString() => $"{Name}{Parameters}{Block}";
     }
 }

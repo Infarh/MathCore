@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore;
 using MathCore.Annotations;
@@ -8,10 +8,10 @@ using MathCore.Extensions.Expressions;
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
-    /// <summary>Матрица выражений NxM</summary>
+    /// <summary>РњР°С‚СЂРёС†Р° РІС‹СЂР°Р¶РµРЅРёР№ NxM</summary>
     /// <remarks>
-    /// i (первый индекс) - номер строки, 
-    /// j (второй индекс) - номер столбца
+    /// i (РїРµСЂРІС‹Р№ РёРЅРґРµРєСЃ) - РЅРѕРјРµСЂ СЃС‚СЂРѕРєРё, 
+    /// j (РІС‚РѕСЂРѕР№ РёРЅРґРµРєСЃ) - РЅРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°
     /// ------------ j ---------->
     /// | a11 a12 a13 a14 a15 a16 a1M
     /// | a21........................
@@ -30,9 +30,9 @@ namespace System.Linq.Expressions
     {
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Получить единичную матрицу размерности NxN</summary>
-        /// <param name="N">Размерность матрицы</param>
-        /// <returns>Единичная матрица размерности NxN</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РµРґРёРЅРёС‡РЅСѓСЋ РјР°С‚СЂРёС†Сѓ СЂР°Р·РјРµСЂРЅРѕСЃС‚Рё NxN</summary>
+        /// <param name="N">Р Р°Р·РјРµСЂРЅРѕСЃС‚СЊ РјР°С‚СЂРёС†С‹</param>
+        /// <returns>Р•РґРёРЅРёС‡РЅР°СЏ РјР°С‚СЂРёС†Р° СЂР°Р·РјРµСЂРЅРѕСЃС‚Рё NxN</returns>
         [DST, NotNull]
         public static ExpressionMatrix GetUnitaryMatryx(int N)
         {
@@ -43,27 +43,27 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Число строк матрицы</summary>
+        /// <summary>Р§РёСЃР»Рѕ СЃС‚СЂРѕРє РјР°С‚СЂРёС†С‹</summary>
         private readonly int _N;
 
-        /// <summary>Число столбцов матриц</summary>
+        /// <summary>Р§РёСЃР»Рѕ СЃС‚РѕР»Р±С†РѕРІ РјР°С‚СЂРёС†</summary>
         private readonly int _M;
 
-        /// <summary>Элементы матрицы</summary>
+        /// <summary>Р­Р»РµРјРµРЅС‚С‹ РјР°С‚СЂРёС†С‹</summary>
         private readonly Expression[,] _Data;
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Число строк матрицы</summary>
+        /// <summary>Р§РёСЃР»Рѕ СЃС‚СЂРѕРє РјР°С‚СЂРёС†С‹</summary>
         public int N => _N;
 
-        /// <summary>Число столбцов матрицы</summary>
+        /// <summary>Р§РёСЃР»Рѕ СЃС‚РѕР»Р±С†РѕРІ РјР°С‚СЂРёС†С‹</summary>
         public int M => _M;
 
-        /// <summary>Элемент матрицы</summary>
-        /// <param name="i">Номер строки (элемента в столбце) 0..N-1</param>
-        /// <param name="j">Номер столбца (элемента в строке) 0..M-1</param>
-        /// <returns>Элемент матрицы</returns>
+        /// <summary>Р­Р»РµРјРµРЅС‚ РјР°С‚СЂРёС†С‹</summary>
+        /// <param name="i">РќРѕРјРµСЂ СЃС‚СЂРѕРєРё (СЌР»РµРјРµРЅС‚Р° РІ СЃС‚РѕР»Р±С†Рµ) 0..N-1</param>
+        /// <param name="j">РќРѕРјРµСЂ СЃС‚РѕР»Р±С†Р° (СЌР»РµРјРµРЅС‚Р° РІ СЃС‚СЂРѕРєРµ) 0..M-1</param>
+        /// <returns>Р­Р»РµРјРµРЅС‚ РјР°С‚СЂРёС†С‹</returns>
         public Expression this[int i, int j]
         {
             [DST]
@@ -72,31 +72,31 @@ namespace System.Linq.Expressions
             set => _Data[i, j] = value.NodeType == ExpressionType.Lambda ? ((LambdaExpression)value).Body : value;
         }
 
-        /// <summary>Вектор-стольбец</summary>
-        /// <param name="j">Номер столбца</param>
-        /// <returns>Столбец матрицы</returns>
+        /// <summary>Р’РµРєС‚РѕСЂ-СЃС‚РѕР»СЊР±РµС†</summary>
+        /// <param name="j">РќРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°</param>
+        /// <returns>РЎС‚РѕР»Р±РµС† РјР°С‚СЂРёС†С‹</returns>
         public ExpressionMatrix this[int j] => GetCol(j);
 
-        /// <summary>Матрица является квадратной матрицей</summary>
+        /// <summary>РњР°С‚СЂРёС†Р° СЏРІР»СЏРµС‚СЃСЏ РєРІР°РґСЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†РµР№</summary>
         public bool IsSquare => M == N;
 
-        /// <summary>Матрица является столбцом</summary>
+        /// <summary>РњР°С‚СЂРёС†Р° СЏРІР»СЏРµС‚СЃСЏ СЃС‚РѕР»Р±С†РѕРј</summary>
         public bool IsCol => !IsSquare && M == 1;
 
-        /// <summary>Матрица является строкой</summary>
+        /// <summary>РњР°С‚СЂРёС†Р° СЏРІР»СЏРµС‚СЃСЏ СЃС‚СЂРѕРєРѕР№</summary>
         public bool IsRow => !IsSquare && N == 1;
 
-        /// <summary>Матрица является числом</summary>
+        /// <summary>РњР°С‚СЂРёС†Р° СЏРІР»СЏРµС‚СЃСЏ С‡РёСЃР»РѕРј</summary>
         public bool IsDigit => N == 1 && M == 1;
 
-        /// <summary>Транспонированная матрица</summary>
+        /// <summary>РўСЂР°РЅСЃРїРѕРЅРёСЂРѕРІР°РЅРЅР°СЏ РјР°С‚СЂРёС†Р°</summary>
         public ExpressionMatrix T => GetTransponse();
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Матрица</summary>
-        /// <param name="N">Число строк</param>
-        /// <param name="M">Число столбцов</param>
+        /// <summary>РњР°С‚СЂРёС†Р°</summary>
+        /// <param name="N">Р§РёСЃР»Рѕ СЃС‚СЂРѕРє</param>
+        /// <param name="M">Р§РёСЃР»Рѕ СЃС‚РѕР»Р±С†РѕРІ</param>
         [DST]
         public ExpressionMatrix(int N, int M)
         {
@@ -107,27 +107,27 @@ namespace System.Linq.Expressions
                     _Data[i, j] = zerro;
         }
 
-        /// <summary>Квадратная матрица</summary>
-        /// <param name="N">Размерность</param>
+        /// <summary>РљРІР°РґСЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р°</summary>
+        /// <param name="N">Р Р°Р·РјРµСЂРЅРѕСЃС‚СЊ</param>
         [DST]
         public ExpressionMatrix(int N) : this(N, N) { }
 
-        /// <summary>Метод определения значения элемента матрицы</summary>
-        /// <param name="i">Номер строки</param>
-        /// <param name="j">Номер столбца</param>
-        /// <returns>Значение элемента матрицы M[<paramref name="i"/>, <paramref name="j"/>]</returns>
+        /// <summary>РњРµС‚РѕРґ РѕРїСЂРµРґРµР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° РјР°С‚СЂРёС†С‹</summary>
+        /// <param name="i">РќРѕРјРµСЂ СЃС‚СЂРѕРєРё</param>
+        /// <param name="j">РќРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РјР°С‚СЂРёС†С‹ M[<paramref name="i"/>, <paramref name="j"/>]</returns>
         public delegate Expression MatrixItemCreator(int i, int j);
 
-        /// <summary>Квадратная матрица</summary>
-        /// <param name="N">Размерность</param>
-        /// <param name="CreateFunction">Порождающая функция</param>
+        /// <summary>РљРІР°РґСЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р°</summary>
+        /// <param name="N">Р Р°Р·РјРµСЂРЅРѕСЃС‚СЊ</param>
+        /// <param name="CreateFunction">РџРѕСЂРѕР¶РґР°СЋС‰Р°СЏ С„СѓРЅРєС†РёСЏ</param>
         [DST]
         public ExpressionMatrix(int N, MatrixItemCreator CreateFunction) : this(N, N, CreateFunction) { }
 
-        /// <summary>Матрица</summary>
-        /// <param name="N">Число строк</param>
-        /// <param name="M">Число столбцов</param>
-        /// <param name="CreateFunction">Порождающая функция f(i,j) - i-строка, j-столбец</param>
+        /// <summary>РњР°С‚СЂРёС†Р°</summary>
+        /// <param name="N">Р§РёСЃР»Рѕ СЃС‚СЂРѕРє</param>
+        /// <param name="M">Р§РёСЃР»Рѕ СЃС‚РѕР»Р±С†РѕРІ</param>
+        /// <param name="CreateFunction">РџРѕСЂРѕР¶РґР°СЋС‰Р°СЏ С„СѓРЅРєС†РёСЏ f(i,j) - i-СЃС‚СЂРѕРєР°, j-СЃС‚РѕР»Р±РµС†</param>
         [DST]
         public ExpressionMatrix(int N, int M, MatrixItemCreator CreateFunction)
             : this(N, M)
@@ -174,9 +174,9 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Получить столбец матрицы</summary>
-        /// <param name="j">Номер столбца</param>
-        /// <returns>Столбец матрицы номер j</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ СЃС‚РѕР»Р±РµС† РјР°С‚СЂРёС†С‹</summary>
+        /// <param name="j">РќРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°</param>
+        /// <returns>РЎС‚РѕР»Р±РµС† РјР°С‚СЂРёС†С‹ РЅРѕРјРµСЂ j</returns>
         [DST, NotNull]
         public ExpressionMatrix GetCol(int j)
         {
@@ -185,9 +185,9 @@ namespace System.Linq.Expressions
             return a;
         }
 
-        /// <summary>Получить строку матрицы</summary>
-        /// <param name="i">Номер строки</param>
-        /// <returns>Строка матрицы номер i</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂРѕРєСѓ РјР°С‚СЂРёС†С‹</summary>
+        /// <param name="i">РќРѕРјРµСЂ СЃС‚СЂРѕРєРё</param>
+        /// <returns>РЎС‚СЂРѕРєР° РјР°С‚СЂРёС†С‹ РЅРѕРјРµСЂ i</returns>
         [DST, NotNull]
         public ExpressionMatrix GetRow(int i)
         {
@@ -196,8 +196,8 @@ namespace System.Linq.Expressions
             return a;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <returns>Триугольная матрица</returns>
+        /// <summary>РџСЂРёРІРµРґРµРЅРёРµ РјР°С‚СЂРёС†С‹ Рє СЃС‚СѓРїРµРЅС‡Р°С‚РѕРјСѓ РІРёРґСѓ РјРµС‚РѕРґРѕРј РіР°СѓСЃР°</summary>
+        /// <returns>РўСЂРёСѓРіРѕР»СЊРЅР°СЏ РјР°С‚СЂРёС†Р°</returns>
         public ExpressionMatrix GetTriangle()
         {
             var result = Clone();
@@ -206,27 +206,27 @@ namespace System.Linq.Expressions
             var row = new Expression[m];
             for (var i0 = 0; i0 < n - 1; i0++)
             {
-                var a = result[i0, i0]; //Захватываем первый элемент строки
-                for (var j = i0; j < m; j++) //Нормируем строку по первому элементу
+                var a = result[i0, i0]; //Р—Р°С…РІР°С‚С‹РІР°РµРј РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃС‚СЂРѕРєРё
+                for (var j = i0; j < m; j++) //РќРѕСЂРјРёСЂСѓРµРј СЃС‚СЂРѕРєСѓ РїРѕ РїРµСЂРІРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ
                     row[j] = result[i0, j].Divide(a);
 
-                for (var i = i0 + 1; i < n; i++) //Для всех оставшихся строк:
+                for (var i = i0 + 1; i < n; i++) //Р”Р»СЏ РІСЃРµС… РѕСЃС‚Р°РІС€РёС…СЃСЏ СЃС‚СЂРѕРє:
                 {
-                    a = result[i, i0]; //Захватываем первый элемент строки
+                    a = result[i, i0]; //Р—Р°С…РІР°С‚С‹РІР°РµРј РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃС‚СЂРѕРєРё
                     for (var j = i0; j < m; j++)
-                        //Вычитаем рабочую строку, домноженную на первый элемент
+                        //Р’С‹С‡РёС‚Р°РµРј СЂР°Р±РѕС‡СѓСЋ СЃС‚СЂРѕРєСѓ, РґРѕРјРЅРѕР¶РµРЅРЅСѓСЋ РЅР° РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚
                         result[i, j] = result[i, j].Subtract(a.MultiplyWithConversion(row[j]));
                 }
             }
             return result;
         }
 
-        /// <summary>Получить обратную матрицу</summary>
-        /// <returns>Обратная матрица</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РѕР±СЂР°С‚РЅСѓСЋ РјР°С‚СЂРёС†Сѓ</summary>
+        /// <returns>РћР±СЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р°</returns>
         public ExpressionMatrix GetInverse()
         {
             if (!IsSquare)
-                throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
+                throw new InvalidOperationException("РћР±СЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р° СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РґР»СЏ РєРІР°РґСЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹");
 
             var result = GetTransvection(0);
             for (var i = 1; i < N; i++)
@@ -234,14 +234,14 @@ namespace System.Linq.Expressions
             return result;
         }
 
-        /// <summary>Трансвекция матрицы</summary>
-        /// <param name="col">Оборный столбец</param>
-        /// <returns>Трансвекция матрицы А</returns>                    
+        /// <summary>РўСЂР°РЅСЃРІРµРєС†РёСЏ РјР°С‚СЂРёС†С‹</summary>
+        /// <param name="col">РћР±РѕСЂРЅС‹Р№ СЃС‚РѕР»Р±РµС†</param>
+        /// <returns>РўСЂР°РЅСЃРІРµРєС†РёСЏ РјР°С‚СЂРёС†С‹ Рђ</returns>                    
         [NotNull]
         public ExpressionMatrix GetTransvection(int col)
         {
             if (!IsSquare)
-                throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("РўСЂР°РЅСЃРєРІРµРЅС†РёСЏ РЅРµРєРІР°РґСЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹ РЅРµРІРѕР·РјРѕР¶РЅР°");
 
             var u_matrix = GetUnitaryMatryx(_N);
             var a = _Data;
@@ -253,8 +253,8 @@ namespace System.Linq.Expressions
             return u_matrix;
         }
 
-        /// <summary>Транспонирование матрицы</summary>
-        /// <returns>Транспонированная матрица</returns>
+        /// <summary>РўСЂР°РЅСЃРїРѕРЅРёСЂРѕРІР°РЅРёРµ РјР°С‚СЂРёС†С‹</summary>
+        /// <returns>РўСЂР°РЅСЃРїРѕРЅРёСЂРѕРІР°РЅРЅР°СЏ РјР°С‚СЂРёС†Р°</returns>
         [DST, NotNull]
         public ExpressionMatrix GetTransponse()
         {
@@ -267,16 +267,16 @@ namespace System.Linq.Expressions
             return Result;
         }
 
-        /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
-        /// <param name="n">Номер столбца</param>
-        /// <param name="m">Номер строки</param>
-        /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
+        /// <summary>РђР»РіРµР±СЂР°РёС‡РµСЃРєРѕРµ РґРѕРїРѕР»РЅРµРЅРёРµ Рє СЌР»РµРјРµРЅС‚Сѓ [n,m]</summary>
+        /// <param name="n">РќРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°</param>
+        /// <param name="m">РќРѕРјРµСЂ СЃС‚СЂРѕРєРё</param>
+        /// <returns>РђР»РіРµР±СЂР°РёС‡РµСЃРєРѕРµ РґРѕРїРѕР»РЅРµРЅРёРµ Рє СЌР»РµРјРµРЅС‚Сѓ [n,m]</returns>
         public ExpressionMatrix GetAdjunct(int n, int m) => ((n + m) % 2 == 0 ? 1d : -1d).ToExpression().MultiplyWithConversion(GetMinor(n, m).GetDeterminant());
 
-        /// <summary>Минор матрицы по определённому элементу</summary>
-        /// <param name="n">Номер столбца</param>
-        /// <param name="m">Номер строки</param>
-        /// <returns>Минор элемента матрицы [n,m]</returns>
+        /// <summary>РњРёРЅРѕСЂ РјР°С‚СЂРёС†С‹ РїРѕ РѕРїСЂРµРґРµР»С‘РЅРЅРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ</summary>
+        /// <param name="n">РќРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°</param>
+        /// <param name="m">РќРѕРјРµСЂ СЃС‚СЂРѕРєРё</param>
+        /// <returns>РњРёРЅРѕСЂ СЌР»РµРјРµРЅС‚Р° РјР°С‚СЂРёС†С‹ [n,m]</returns>
         [NotNull]
         public ExpressionMatrix GetMinor(int n, int m)
         {
@@ -295,11 +295,11 @@ namespace System.Linq.Expressions
             return minor;
         }
 
-        /// <summary>Определитель матрицы</summary>
+        /// <summary>РћРїСЂРµРґРµР»РёС‚РµР»СЊ РјР°С‚СЂРёС†С‹</summary>
         public Expression GetDeterminant()
         {
             if (_N != _M)
-                throw new InvalidOperationException("Нельзя найти определитель неквадратной матрицы!");
+                throw new InvalidOperationException("РќРµР»СЊР·СЏ РЅР°Р№С‚Рё РѕРїСЂРµРґРµР»РёС‚РµР»СЊ РЅРµРєРІР°РґСЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹!");
 
             var n = _N;
             switch (n)
@@ -314,7 +314,7 @@ namespace System.Linq.Expressions
 
             Expression det = null;
             var negate = false;
-            for (var k = 0; k < n; k++) //Разложение по элементам первой строки
+            for (var k = 0; k < n; k++) //Р Р°Р·Р»РѕР¶РµРЅРёРµ РїРѕ СЌР»РµРјРµРЅС‚Р°Рј РїРµСЂРІРѕР№ СЃС‚СЂРѕРєРё
             {
                 int i;
                 int j;
@@ -337,7 +337,7 @@ namespace System.Linq.Expressions
 
                 var doagonal_item = data[k, k];
 
-                // Определитель- произведение элементов главной диагонали треугольной матрицы
+                // РћРїСЂРµРґРµР»РёС‚РµР»СЊ- РїСЂРѕРёР·РІРµРґРµРЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ РіР»Р°РІРЅРѕР№ РґРёР°РіРѕРЅР°Р»Рё С‚СЂРµСѓРіРѕР»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹
                 det = det is null
                     ? (negate ? doagonal_item.Negate() : doagonal_item)
                     : (negate
@@ -346,7 +346,7 @@ namespace System.Linq.Expressions
 
                 if (k >= n) continue;
 
-                // Приведение к нижне-треугольному виду
+                // РџСЂРёРІРµРґРµРЅРёРµ Рє РЅРёР¶РЅРµ-С‚СЂРµСѓРіРѕР»СЊРЅРѕРјСѓ РІРёРґСѓ
                 var k1 = k + 1;
                 for (i = k1; i < n; i++)
                     for (j = k1; j < n; j++)
@@ -368,8 +368,8 @@ namespace System.Linq.Expressions
 
         #region ICloneable Members
 
-        /// <summary>Клонирование матрицы</summary>
-        /// <returns>Копия текущей матрицы</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ РјР°С‚СЂРёС†С‹</summary>
+        /// <returns>РљРѕРїРёСЏ С‚РµРєСѓС‰РµР№ РјР°С‚СЂРёС†С‹</returns>
         [DST, NotNull]
         public ExpressionMatrix Clone()
         {
@@ -378,8 +378,8 @@ namespace System.Linq.Expressions
             return result;
         }
 
-        /// <summary> Создает новый объект, который является копией текущего экземпляра</summary>
-        /// <returns> Новый объект, являющийся копией этого экземпляра </returns>
+        /// <summary> РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ СЏРІР»СЏРµС‚СЃСЏ РєРѕРїРёРµР№ С‚РµРєСѓС‰РµРіРѕ СЌРєР·РµРјРїР»СЏСЂР°</summary>
+        /// <returns> РќРѕРІС‹Р№ РѕР±СЉРµРєС‚, СЏРІР»СЏСЋС‰РёР№СЃСЏ РєРѕРїРёРµР№ СЌС‚РѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° </returns>
         object ICloneable.Clone() => Clone();
 
         #endregion
@@ -430,41 +430,41 @@ namespace System.Linq.Expressions
             return new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
         }
 
-        /// <summary>Оператор сложения двух матриц</summary>
-        /// <param name="A">Первое слагаемое</param>
-        /// <param name="B">Второе слагаемое</param>
-        /// <returns>Сумма двух матриц</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СЃР»РѕР¶РµРЅРёСЏ РґРІСѓС… РјР°С‚СЂРёС†</summary>
+        /// <param name="A">РџРµСЂРІРѕРµ СЃР»Р°РіР°РµРјРѕРµ</param>
+        /// <param name="B">Р’С‚РѕСЂРѕРµ СЃР»Р°РіР°РµРјРѕРµ</param>
+        /// <returns>РЎСѓРјРјР° РґРІСѓС… РјР°С‚СЂРёС†</returns>
         [DST, NotNull]
         public static ExpressionMatrix operator +([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
             if (A.N != B.N || A.M != B.M)
-                throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
+                throw new ArgumentOutOfRangeException(nameof(B), "Р Р°Р·РјРµСЂС‹ РјР°С‚СЂРёС† РЅРµ СЂР°РІРЅС‹.");
 
             return new ExpressionMatrix(A.N, A.M, (i, j) => A[i, j].AddWithConversion(B[i, j]));
         }
 
-        /// <summary>Оператор разности двух матриц</summary>
-        /// <param name="A">Уменьшаемое</param>
-        /// <param name="B">Вычитаемое</param>
-        /// <returns>Разность двух матриц</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СЂР°Р·РЅРѕСЃС‚Рё РґРІСѓС… РјР°С‚СЂРёС†</summary>
+        /// <param name="A">РЈРјРµРЅСЊС€Р°РµРјРѕРµ</param>
+        /// <param name="B">Р’С‹С‡РёС‚Р°РµРјРѕРµ</param>
+        /// <returns>Р Р°Р·РЅРѕСЃС‚СЊ РґРІСѓС… РјР°С‚СЂРёС†</returns>
         [DST, NotNull]
         public static ExpressionMatrix operator -([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
             if (A.N != B.N || A.M != B.M)
-                throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
+                throw new ArgumentOutOfRangeException(nameof(B), "Р Р°Р·РјРµСЂС‹ РјР°С‚СЂРёС† РЅРµ СЂР°РІРЅС‹.");
 
             return new ExpressionMatrix(A.N, A.M, (i, j) => A[i, j].Subtract(B[i, j]));
         }
 
-        /// <summary>Оператор произведения двух матриц</summary>
-        /// <param name="A">Первый сомножитель</param>
-        /// <param name="B">Второй сомножитель</param>
-        /// <returns>Произведение двух матриц</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РїСЂРѕРёР·РІРµРґРµРЅРёСЏ РґРІСѓС… РјР°С‚СЂРёС†</summary>
+        /// <param name="A">РџРµСЂРІС‹Р№ СЃРѕРјРЅРѕР¶РёС‚РµР»СЊ</param>
+        /// <param name="B">Р’С‚РѕСЂРѕР№ СЃРѕРјРЅРѕР¶РёС‚РµР»СЊ</param>
+        /// <returns>РџСЂРѕРёР·РІРµРґРµРЅРёРµ РґРІСѓС… РјР°С‚СЂРёС†</returns>
         [DST, NotNull]
         public static ExpressionMatrix operator *([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
             if (A.M != B.N)
-                throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
+                throw new ArgumentOutOfRangeException(nameof(B), "РњР°С‚СЂРёС†С‹ РЅРµСЃРѕРіР»Р°СЃРѕРІР°РЅРЅС‹С… РїРѕСЂСЏРґРєРѕРІ.");
 
             var result = new ExpressionMatrix(A.N, B.M);
             var data = result._Data;
@@ -477,16 +477,16 @@ namespace System.Linq.Expressions
             return result;
         }
 
-        /// <summary>Оператор деления двух матриц</summary>
-        /// <param name="A">Делимое</param>
-        /// <param name="B">Делитель</param>
-        /// <returns>Частное двух матриц</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РґРµР»РµРЅРёСЏ РґРІСѓС… РјР°С‚СЂРёС†</summary>
+        /// <param name="A">Р”РµР»РёРјРѕРµ</param>
+        /// <param name="B">Р”РµР»РёС‚РµР»СЊ</param>
+        /// <returns>Р§Р°СЃС‚РЅРѕРµ РґРІСѓС… РјР°С‚СЂРёС†</returns>
         [NotNull]
         public static ExpressionMatrix operator /([NotNull] ExpressionMatrix A, ExpressionMatrix B)
         {
             B = B.GetInverse();
             if (A.M != B.N)
-                throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
+                throw new ArgumentOutOfRangeException(nameof(B), "РњР°С‚СЂРёС†С‹ РЅРµСЃРѕРіР»Р°СЃРѕРІР°РЅРЅС‹С… РїРѕСЂСЏРґРєРѕРІ.");
 
             var result = new ExpressionMatrix(A.N, B.M);
             var data = result._Data;
@@ -499,15 +499,15 @@ namespace System.Linq.Expressions
             return result;
         }
 
-        /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
-        /// <param name="A">Первое слагаемое</param>
-        /// <param name="B">Второе слагаемое</param>
-        /// <returns>Объединённая матрица</returns>
+        /// <summary>РљРѕРЅРєР°С‚РёРЅР°С†РёСЏ РґРІСѓС… РјР°С‚СЂРёС† (Р»РёР±Рѕ РїРѕ СЃС‚СЂРѕРєР°Рј, Р»РёР±Рѕ РїРѕ СЃС‚РѕР»Р±С†Р°Рј)</summary>
+        /// <param name="A">РџРµСЂРІРѕРµ СЃР»Р°РіР°РµРјРѕРµ</param>
+        /// <param name="B">Р’С‚РѕСЂРѕРµ СЃР»Р°РіР°РµРјРѕРµ</param>
+        /// <returns>РћР±СЉРµРґРёРЅС‘РЅРЅР°СЏ РјР°С‚СЂРёС†Р°</returns>
         [NotNull]
         public static ExpressionMatrix operator |([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
             ExpressionMatrix result;
-            if (A.M == B.M) // Конкатинация по строкам
+            if (A.M == B.M) // РљРѕРЅРєР°С‚РёРЅР°С†РёСЏ РїРѕ СЃС‚СЂРѕРєР°Рј
             {
                 result = new ExpressionMatrix(A.N + B.N, A.M);
                 var data = result._Data;
@@ -521,7 +521,7 @@ namespace System.Linq.Expressions
                         data[i + i0, j] = B[i, j];
 
             }
-            else if (A.N == B.N) //Конкатинация по строкам
+            else if (A.N == B.N) //РљРѕРЅРєР°С‚РёРЅР°С†РёСЏ РїРѕ СЃС‚СЂРѕРєР°Рј
             {
                 result = new ExpressionMatrix(A.N, A.M + B.M);
                 var data = result._Data;
@@ -535,7 +535,7 @@ namespace System.Linq.Expressions
                         data[i, j + j0] = B[i, j];
             }
             else
-                throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
+                throw new InvalidOperationException("РљРѕРЅРєР°С‚РёРЅР°С†РёСЏ РІРѕР·РјРѕР¶РЅР° С‚РѕР»СЊРєРѕ РїРѕ СЃС‚СЂРѕРєР°Рј, РёР»Рё РїРѕ СЃС‚РѕР»Р±С†Р°Рј");
 
             return result;
         }
@@ -544,8 +544,8 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-        /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРІРµРґРµРЅРёСЏ С‚РёРїР° РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° РґРІРѕР№РЅРѕР№ С‚РѕС‡РЅРѕР№СЃС‚Рё Рє С‚РёРїСѓ РњР°С‚СЂРёС†Р° РїРѕСЂСЏРґРєР° 1С…1</summary>
+        /// <param name="X">РџСЂРёРІРѕРґРёРјРѕРµ С‡РёСЃР»Рѕ</param><returns>РњР°С‚СЂРёС†Р° РїРѕСЂР°РґРєР° 1С…1</returns>
         [DST, NotNull]
         public static implicit operator ExpressionMatrix(Expression X) => new ExpressionMatrix(1, 1) { [0, 0] = X };
 

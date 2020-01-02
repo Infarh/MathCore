@@ -1,20 +1,20 @@
-using System;
+п»їusing System;
 using System.Linq;
 using System.Linq.Reactive;
 using System.Threading;
 
 namespace MathCore.CommandProcessor
 {
-    /// <summary>Пример использования класса команданого процессора</summary>
+    /// <summary>РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РєР»Р°СЃСЃР° РєРѕРјР°РЅРґР°РЅРѕРіРѕ РїСЂРѕС†РµСЃСЃРѕСЂР°</summary>
     public static class TestCommandLineProcessor
     {
-        /// <summary>Флаг обработки запросов пользователя</summary>
+        /// <summary>Р¤Р»Р°Рі РѕР±СЂР°Р±РѕС‚РєРё Р·Р°РїСЂРѕСЃРѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</summary>
         public static bool Work { get; set; }
 
-        /// <summary>Приглашение командной строки</summary>
+        /// <summary>РџСЂРёРіР»Р°С€РµРЅРёРµ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё</summary>
         public static string Prompt { get; set; }
 
-        /// <summary>Точка входа в пример</summary>
+        /// <summary>РўРѕС‡РєР° РІС…РѕРґР° РІ РїСЂРёРјРµСЂ</summary>
         public static void Test()
         {
             Prompt = "> ";
@@ -63,14 +63,14 @@ namespace MathCore.CommandProcessor
             Thread.Sleep(1500);
         }
 
-        /// <summary>Обработчик необработанных команд</summary>
-        /// <param name="Sender">Источник события</param>
-        /// <param name="e">Аргумент, содержащий информацию о необработанной команде</param>
+        /// <summary>РћР±СЂР°Р±РѕС‚С‡РёРє РЅРµРѕР±СЂР°Р±РѕС‚Р°РЅРЅС‹С… РєРѕРјР°РЅРґ</summary>
+        /// <param name="Sender">РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ</param>
+        /// <param name="e">РђСЂРіСѓРјРµРЅС‚, СЃРѕРґРµСЂР¶Р°С‰РёР№ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РЅРµРѕР±СЂР°Р±РѕС‚Р°РЅРЅРѕР№ РєРѕРјР°РЅРґРµ</param>
         private static void UnknownCommandInformator(object Sender, CommandEventArgs e) => Console.WriteLine(e.Command.ToFormattedString("Unknown command \"{0}\""));
 
-        /// <summary>Обработчик команды</summary>
-        /// <param name="sender">Источник события</param>
-        /// <param name="e">Аргумент, содержащий информацию о команде</param>
+        /// <summary>РћР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹</summary>
+        /// <param name="sender">РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ</param>
+        /// <param name="e">РђСЂРіСѓРјРµРЅС‚, СЃРѕРґРµСЂР¶Р°С‰РёР№ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РєРѕРјР°РЅРґРµ</param>
         private static void ExecuteCommand(object sender, CommandEventArgs e)
         {
             var processor = (CommandLineProcessor)sender;
@@ -90,8 +90,8 @@ namespace MathCore.CommandProcessor
             }
         }
 
-        /// <summary>Метод установки значения команды Set</summary>
-        /// <param name="SetArg">Аргумент команды Set</param>
+        /// <summary>РњРµС‚РѕРґ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёСЏ РєРѕРјР°РЅРґС‹ Set</summary>
+        /// <param name="SetArg">РђСЂРіСѓРјРµРЅС‚ РєРѕРјР°РЅРґС‹ Set</param>
         private static void SetArgument(Argument SetArg)
         {
             switch(SetArg.Name.ToLower())

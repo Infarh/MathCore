@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace MathCore.Graphs
             get
             {
                 if(_Nodes.Length == 0)
-                    throw new Exception("Попытка доступа к первому узлу пустого пути");
+                    throw new Exception("РџРѕРїС‹С‚РєР° РґРѕСЃС‚СѓРїР° Рє РїРµСЂРІРѕРјСѓ СѓР·Р»Сѓ РїСѓСЃС‚РѕРіРѕ РїСѓС‚Рё");
                 return _Nodes[0];
             }
         }
@@ -26,7 +26,7 @@ namespace MathCore.Graphs
             get
             {
                 if(_Nodes.Length == 0)
-                    throw new Exception("Попытка доступа к последнему узлу пустого пути");
+                    throw new Exception("РџРѕРїС‹С‚РєР° РґРѕСЃС‚СѓРїР° Рє РїРѕСЃР»РµРґРЅРµРјСѓ СѓР·Р»Сѓ РїСѓСЃС‚РѕРіРѕ РїСѓС‚Рё");
                 return _Nodes[_Nodes.Length - 1];
             }
         }

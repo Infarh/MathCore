@@ -1,18 +1,18 @@
-using System.Threading.Tasks;
+п»їusing System.Threading.Tasks;
 
 namespace System.Xml.Serialization
 {
-    /// <summary>Асинхронно сериализуемый в XML объект</summary>
+    /// <summary>РђСЃРёРЅС…СЂРѕРЅРЅРѕ СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Р№ РІ XML РѕР±СЉРµРєС‚</summary>
     public interface IXmlSerializableAsync : IXmlSerializable
     {
-        /// <summary>Асинхронное чтение данных из XML</summary>
-        /// <param name="reader">Источник данных XML</param>
-        /// <returns>Задача процесса чтения данных</returns>
+        /// <summary>РђСЃРёРЅС…СЂРѕРЅРЅРѕРµ С‡С‚РµРЅРёРµ РґР°РЅРЅС‹С… РёР· XML</summary>
+        /// <param name="reader">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… XML</param>
+        /// <returns>Р—Р°РґР°С‡Р° РїСЂРѕС†РµСЃСЃР° С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С…</returns>
         Task ReadXmlAsync(XmlReader reader);
 
-        /// <summary>Асинхронная запись данных в XML</summary>
-        /// <param name="writer">Объект записи данных</param>
-        /// <returns>Задача записи данных</returns>
+        /// <summary>РђСЃРёРЅС…СЂРѕРЅРЅР°СЏ Р·Р°РїРёСЃСЊ РґР°РЅРЅС‹С… РІ XML</summary>
+        /// <param name="writer">РћР±СЉРµРєС‚ Р·Р°РїРёСЃРё РґР°РЅРЅС‹С…</param>
+        /// <returns>Р—Р°РґР°С‡Р° Р·Р°РїРёСЃРё РґР°РЅРЅС‹С…</returns>
         Task WriteXmlAsync(XmlWriter writer);
     } 
 }

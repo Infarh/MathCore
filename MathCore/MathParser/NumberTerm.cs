@@ -1,17 +1,17 @@
-using System;
+п»їusing System;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser
 {
-    /// <summary>Числовой элемент математического выражения</summary>
+    /// <summary>Р§РёСЃР»РѕРІРѕР№ СЌР»РµРјРµРЅС‚ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     internal sealed class NumberTerm : Term
     {
-        /// <summary>Численное значение элемента</summary>
+        /// <summary>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</summary>
         private int _IntValue;
 
-        /// <summary>Численное значение элемента</summary>
+        /// <summary>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</summary>
         public int Value
         {
             get => _IntValue;
@@ -22,28 +22,28 @@ namespace MathCore.MathParser
             }
         }
 
-        /// <summary>Новый численный элемент мат.выражения</summary>
-        /// <param name="Str">Строковое значение элемента</param>
+        /// <summary>РќРѕРІС‹Р№ С‡РёСЃР»РµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="Str">РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</param>
         public NumberTerm([NotNull] string Str) : base(Str) => _IntValue = int.Parse(Str);
 
         public NumberTerm(int Value) : base(Value.ToString()) => _IntValue = Value;
 
-        /// <summary>Извлеч поддерево</summary>
-        /// <param name="Parser">Парсер</param>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Узел константного значения</returns>
+        /// <summary>РР·РІР»РµС‡ РїРѕРґРґРµСЂРµРІРѕ</summary>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>РЈР·РµР» РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</returns>
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
             => new ConstValueNode(_IntValue);
 
-        /// <summary>Попытаться добавить дробное значение числа</summary>
-        /// <param name="node">Узел выражения</param>
-        /// <param name="SeparatorTerm">Блок разделитель</param>
-        /// <param name="DecimalSeparator">Блок с целой частью числа</param>
-        /// <param name="FrationPartTerm">Блок с дробной частью числа</param>
-        /// <returns>Истина, если действие совершено успешно. Ложь, если в последующих блоках не содержится нужной информации</returns>
+        /// <summary>РџРѕРїС‹С‚Р°С‚СЊСЃСЏ РґРѕР±Р°РІРёС‚СЊ РґСЂРѕР±РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‡РёСЃР»Р°</summary>
+        /// <param name="node">РЈР·РµР» РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="SeparatorTerm">Р‘Р»РѕРє СЂР°Р·РґРµР»РёС‚РµР»СЊ</param>
+        /// <param name="DecimalSeparator">Р‘Р»РѕРє СЃ С†РµР»РѕР№ С‡Р°СЃС‚СЊСЋ С‡РёСЃР»Р°</param>
+        /// <param name="FrationPartTerm">Р‘Р»РѕРє СЃ РґСЂРѕР±РЅРѕР№ С‡Р°СЃС‚СЊСЋ С‡РёСЃР»Р°</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РґРµР№СЃС‚РІРёРµ СЃРѕРІРµСЂС€РµРЅРѕ СѓСЃРїРµС€РЅРѕ. Р›РѕР¶СЊ, РµСЃР»Рё РІ РїРѕСЃР»РµРґСѓСЋС‰РёС… Р±Р»РѕРєР°С… РЅРµ СЃРѕРґРµСЂР¶РёС‚СЃСЏ РЅСѓР¶РЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё</returns>
         public static bool TryAddFractionPart(ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FrationPartTerm)
         {
-            if(!(node is ConstValueNode value)) throw new ArgumentException("Неверный тип узла дерева");
+            if(!(node is ConstValueNode value)) throw new ArgumentException("РќРµРІРµСЂРЅС‹Р№ С‚РёРї СѓР·Р»Р° РґРµСЂРµРІР°");
             if(!(SeparatorTerm is CharTerm separator) || separator.Value != DecimalSeparator) return false;
             if(!(FrationPartTerm is NumberTerm fraction)) return false;
 

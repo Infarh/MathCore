@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,22 +11,22 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Коллекция переменных</summary>
+    /// <summary>РљРѕР»Р»РµРєС†РёСЏ РїРµСЂРµРјРµРЅРЅС‹С…</summary>
     [DebuggerDisplay("Variabels count = {" + nameof(Count) + "}")]
     public class VariabelsCollection : IEnumerable<ExpressionVariabel>
     {
-        /// <summary>Математическое выражение</summary>
+        /// <summary>РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</summary>
         private readonly MathExpression _Expression;
 
         [NotNull]
         private readonly List<ExpressionVariabel> _Variabels = new List<ExpressionVariabel>();
 
-        /// <summary>Количество переменных в коллекции</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂРµРјРµРЅРЅС‹С… РІ РєРѕР»Р»РµРєС†РёРё</summary>
         public int Count => _Variabels.Count;
 
-        /// <summary>Итератор переменных коллекции</summary>
-        /// <param name="Name">Имя переменной</param>
-        /// <returns>Переменная с указанным именем</returns>
+        /// <summary>РС‚РµСЂР°С‚РѕСЂ РїРµСЂРµРјРµРЅРЅС‹С… РєРѕР»Р»РµРєС†РёРё</summary>
+        /// <param name="Name">РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <returns>РџРµСЂРµРјРµРЅРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј</returns>
         [NotNull]
         public ExpressionVariabel this[[NotNull] string Name]
         {
@@ -50,13 +50,13 @@ namespace MathCore.MathParser
                 if (value is LamdaExpressionVariable || value is EventExpressionVariable)
                 {
                     value.Name = Name;
-                    _Expression.Tree //Обойти все узлы дерева
-                                     // являющиеся узлами переменных
+                    _Expression.Tree //РћР±РѕР№С‚Рё РІСЃРµ СѓР·Р»С‹ РґРµСЂРµРІР°
+                                     // СЏРІР»СЏСЋС‰РёРµСЃСЏ СѓР·Р»Р°РјРё РїРµСЂРµРјРµРЅРЅС‹С…
                                 .Where(node => node is VariableValueNode)
                                 .Cast<VariableValueNode>()
-                                // у которых имя соответствует заданному
+                                // Сѓ РєРѕС‚РѕСЂС‹С… РёРјСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ Р·Р°РґР°РЅРЅРѕРјСѓ
                                 .Where(node => node.Variable.Name == Name)
-                                // и для каждого узла заменить переменную на указанную
+                                // Рё РґР»СЏ РєР°Р¶РґРѕРіРѕ СѓР·Р»Р° Р·Р°РјРµРЅРёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ РЅР° СѓРєР°Р·Р°РЅРЅСѓСЋ
                                 .Foreach(value, (node, v) => node.Variable = v);
                     _Variabels.Remove(old_var);
                     Add(value);
@@ -69,23 +69,23 @@ namespace MathCore.MathParser
 
         }
 
-        /// <summary>Итератор переменных коллекции</summary>
-        /// <param name="i">Индекс переменной</param>
-        /// <returns>Переменная с указанным индексом</returns>
+        /// <summary>РС‚РµСЂР°С‚РѕСЂ РїРµСЂРµРјРµРЅРЅС‹С… РєРѕР»Р»РµРєС†РёРё</summary>
+        /// <param name="i">РРЅРґРµРєСЃ РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <returns>РџРµСЂРµРјРµРЅРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРЅРґРµРєСЃРѕРј</returns>
         [NotNull]
         public ExpressionVariabel this[int i] => _Variabels[i];
 
-        /// <summary>Перечисление всех имён переменных колеекции</summary>
+        /// <summary>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ РІСЃРµС… РёРјС‘РЅ РїРµСЂРµРјРµРЅРЅС‹С… РєРѕР»РµРµРєС†РёРё</summary>
         [NotNull]
         public IEnumerable<string> Names => _Variabels.Select(v => v.Name);
 
-        /// <summary>Инициализация новой коллекции переменных</summary>
-        /// <param name="expression">Математическое выражение, которому принадлежит коллекция</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅС‹С…</summary>
+        /// <param name="expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРЅР°РґР»РµР¶РёС‚ РєРѕР»Р»РµРєС†РёСЏ</param>
         public VariabelsCollection([NotNull] MathExpression expression) => _Expression = expression;
 
-        /// <summary>Добавить переменную в коллекцию</summary>
-        /// <param name="Variable">Переменная</param>
-        /// <returns>Истина, если переменная была добавлена</returns>
+        /// <summary>Р”РѕР±Р°РІРёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ РІ РєРѕР»Р»РµРєС†РёСЋ</summary>
+        /// <param name="Variable">РџРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ Р±С‹Р»Р° РґРѕР±Р°РІР»РµРЅР°</returns>
         public bool Add([NotNull] ExpressionVariabel Variable)
         {
             var variable = _Variabels.Find(v => v.Name == Variable.Name);
@@ -102,13 +102,13 @@ namespace MathCore.MathParser
             if (old_var is null) return false;
 
 
-            _Expression.Tree //Обойти все узлы дерева
-                             // являющиеся узлами переменных
+            _Expression.Tree //РћР±РѕР№С‚Рё РІСЃРµ СѓР·Р»С‹ РґРµСЂРµРІР°
+                             // СЏРІР»СЏСЋС‰РёРµСЃСЏ СѓР·Р»Р°РјРё РїРµСЂРµРјРµРЅРЅС‹С…
                                 .Where(node => node is VariableValueNode)
                                 .Cast<VariableValueNode>()
-                                // у которых имя соответствует заданному
+                                // Сѓ РєРѕС‚РѕСЂС‹С… РёРјСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ Р·Р°РґР°РЅРЅРѕРјСѓ
                                 .Where(node => node.Variable.Name == Name)
-                                // и для каждого узла заменить переменную на указанную
+                                // Рё РґР»СЏ РєР°Р¶РґРѕРіРѕ СѓР·Р»Р° Р·Р°РјРµРЅРёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ РЅР° СѓРєР°Р·Р°РЅРЅСѓСЋ
                                 // ReSharper disable once HeapView.CanAvoidClosure
                                 .Foreach(node =>
                                 {
@@ -122,73 +122,73 @@ namespace MathCore.MathParser
             return replaced;
         }
 
-        /// <summary>Переместить переменную из коллекции переменных в коллекцию констант</summary>
-        /// <param name="Variable">Перемещаемая переменная</param>
-        /// <returns>Истина, если переменная была перемещена из коллекции переменных в коллекцию констант</returns>
+        /// <summary>РџРµСЂРµРјРµСЃС‚РёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ РёР· РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅС‹С… РІ РєРѕР»Р»РµРєС†РёСЋ РєРѕРЅСЃС‚Р°РЅС‚</summary>
+        /// <param name="Variable">РџРµСЂРµРјРµС‰Р°РµРјР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ Р±С‹Р»Р° РїРµСЂРµРјРµС‰РµРЅР° РёР· РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅС‹С… РІ РєРѕР»Р»РµРєС†РёСЋ РєРѕРЅСЃС‚Р°РЅС‚</returns>
         public bool MoveToConstCollection([NotNull] string Variable) => MoveToConstCollection(this[Variable]);
 
-        /// <summary>Переместить переменную из коллекции переменных в коллекцию констант</summary>
-        /// <param name="Variable">Перемещаемая переменная</param>
-        /// <returns>Истина, если переменная была перемещена из коллекции переменных в коллекцию констант</returns>
+        /// <summary>РџРµСЂРµРјРµСЃС‚РёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ РёР· РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅС‹С… РІ РєРѕР»Р»РµРєС†РёСЋ РєРѕРЅСЃС‚Р°РЅС‚</summary>
+        /// <param name="Variable">РџРµСЂРµРјРµС‰Р°РµРјР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ Р±С‹Р»Р° РїРµСЂРµРјРµС‰РµРЅР° РёР· РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅС‹С… РІ РєРѕР»Р»РµРєС†РёСЋ РєРѕРЅСЃС‚Р°РЅС‚</returns>
         public bool MoveToConstCollection([NotNull] ExpressionVariabel Variable) =>
             Exist(v => ReferenceEquals(v, Variable))
             && _Variabels.Remove(Variable) && _Expression.Constants.Add(Variable);
 
-        /// <summary>Удаление переменной из коллекции</summary>
-        /// <param name="Variable">Удаляемая переменная</param>
-        /// <returns>Истина, если удаление прошло успешно</returns>
+        /// <summary>РЈРґР°Р»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ РёР· РєРѕР»Р»РµРєС†РёРё</summary>
+        /// <param name="Variable">РЈРґР°Р»СЏРµРјР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СѓРґР°Р»РµРЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ</returns>
         public bool Remove([NotNull] ExpressionVariabel Variable) =>
             !_Expression.Tree
                .Where(n => n is VariableValueNode)
                .Any(n => ReferenceEquals(((VariableValueNode)n).Variable, Variable))
             && _Variabels.Remove(Variable);
 
-        /// <summary>Удалить переменную из коллекции</summary>
-        /// <param name="Variable">Удаляемая переменная</param>
-        /// <returns>Истина, если переменная удалена успешно</returns>
+        /// <summary>РЈРґР°Р»РёС‚СЊ РїРµСЂРµРјРµРЅРЅСѓСЋ РёР· РєРѕР»Р»РµРєС†РёРё</summary>
+        /// <param name="Variable">РЈРґР°Р»СЏРµРјР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ СѓРґР°Р»РµРЅР° СѓСЃРїРµС€РЅРѕ</returns>
         public bool RemoveFromCollection([NotNull] ExpressionVariabel Variable) => _Variabels.Remove(Variable);
 
-        /// <summary>Очистить коллекцию переменных</summary>
+        /// <summary>РћС‡РёСЃС‚РёС‚СЊ РєРѕР»Р»РµРєС†РёСЋ РїРµСЂРµРјРµРЅРЅС‹С…</summary>
         public void ClearCollection() => _Variabels.Clear();
 
-        /// <summary>Существует ли в коллекции переменная с указанным имененм</summary>
-        /// <param name="Name">Искомое имя переменной</param>
-        /// <returns>Истина, если в коллекции пристутствует переменная с указанным именем</returns>
+        /// <summary>РЎСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РІ РєРѕР»Р»РµРєС†РёРё РїРµСЂРµРјРµРЅРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРЅРј</summary>
+        /// <param name="Name">РСЃРєРѕРјРѕРµ РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РІ РєРѕР»Р»РµРєС†РёРё РїСЂРёСЃС‚СѓС‚СЃС‚РІСѓРµС‚ РїРµСЂРµРјРµРЅРЅР°СЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј</returns>
         public bool Exist([NotNull] string Name) => Exist(v => v.Name == Name);
 
-        /// <summary>Проверка на существование переменной в коллекции</summary>
-        /// <param name="variable">Проверяемая переменная</param>
-        /// <returns>Истина, если указанная переменная входит в коллекцию</returns>
+        /// <summary>РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ РІ РєРѕР»Р»РµРєС†РёРё</summary>
+        /// <param name="variable">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СѓРєР°Р·Р°РЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ РІС…РѕРґРёС‚ РІ РєРѕР»Р»РµРєС†РёСЋ</returns>
         public bool Exist([NotNull] ExpressionVariabel variable) => _Variabels.Contains(variable);
 
-        /// <summary>Существует ли переменная в коллекции с заданным критерием поиска</summary>
-        /// <param name="exist">Критерий поиска переменной</param>
-        /// <returns>Истина, если найдена переменная по указанному критерию</returns>
+        /// <summary>РЎСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РїРµСЂРµРјРµРЅРЅР°СЏ РІ РєРѕР»Р»РµРєС†РёРё СЃ Р·Р°РґР°РЅРЅС‹Рј РєСЂРёС‚РµСЂРёРµРј РїРѕРёСЃРєР°</summary>
+        /// <param name="exist">РљСЂРёС‚РµСЂРёР№ РїРѕРёСЃРєР° РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РЅР°Р№РґРµРЅР° РїРµСЂРµРјРµРЅРЅР°СЏ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєСЂРёС‚РµСЂРёСЋ</returns>
         public bool Exist([NotNull] Predicate<ExpressionVariabel> exist) => _Variabels.Exists(exist);
 
-        /// <summary>Существует ли узел переменной в дереве с указанным именем</summary>
-        /// <param name="Name">Искомое имя переменной</param>
-        /// <returns>Истина, если указанное имя переменной существует в дереве</returns>
+        /// <summary>РЎСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё СѓР·РµР» РїРµСЂРµРјРµРЅРЅРѕР№ РІ РґРµСЂРµРІРµ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј</summary>
+        /// <param name="Name">РСЃРєРѕРјРѕРµ РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё СѓРєР°Р·Р°РЅРЅРѕРµ РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РґРµСЂРµРІРµ</returns>
         public bool ExistInTree([NotNull] string Name) => ExistInTree(v => v.Name == Name);
 
-        /// <summary>Существует ли узел переменной в дереве</summary>
-        /// <param name="exist">Критерий поиска</param>
-        /// <returns>Истина, если найден узел по указанному критерию</returns>
+        /// <summary>РЎСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё СѓР·РµР» РїРµСЂРµРјРµРЅРЅРѕР№ РІ РґРµСЂРµРІРµ</summary>
+        /// <param name="exist">РљСЂРёС‚РµСЂРёР№ РїРѕРёСЃРєР°</param>
+        /// <returns>РСЃС‚РёРЅР°, РµСЃР»Рё РЅР°Р№РґРµРЅ СѓР·РµР» РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєСЂРёС‚РµСЂРёСЋ</returns>
         public bool ExistInTree([NotNull] Func<VariableValueNode, bool> exist) =>
             _Expression.Tree
                .Where(n => n is VariableValueNode)
                .Cast<VariableValueNode>()
                .Any(exist);
 
-        /// <summary>Получить перечисление узлов переменных с указанным именем</summary>
-        /// <param name="VariableName">Искомое имя переменной</param>
-        /// <returns>Перечисление узлов с переменными с указанным именем</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РїРµСЂРµРјРµРЅРЅС‹С… СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј</summary>
+        /// <param name="VariableName">РСЃРєРѕРјРѕРµ РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ СЃ РїРµСЂРµРјРµРЅРЅС‹РјРё СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј</returns>
         [NotNull]
         public IEnumerable<VariableValueNode> GetTreeNodes([NotNull] string VariableName) => GetTreeNodes(v => v.Name == VariableName);
 
-        /// <summary>Получить перечисление узлов дерева с переменными</summary>
-        /// <param name="selector">Метод выборки узлов</param>
-        /// <returns>Перечисление узлов переменных</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° СЃ РїРµСЂРµРјРµРЅРЅС‹РјРё</summary>
+        /// <param name="selector">РњРµС‚РѕРґ РІС‹Р±РѕСЂРєРё СѓР·Р»РѕРІ</param>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РїРµСЂРµРјРµРЅРЅС‹С…</returns>
         [NotNull]
         public IEnumerable<VariableValueNode> GetTreeNodes([NotNull] Func<VariableValueNode, bool> selector) =>
             _Expression.Tree
@@ -196,9 +196,9 @@ namespace MathCore.MathParser
                .Cast<VariableValueNode>()
                .Where(selector);
 
-        /// <summary>Получить перечисление узлов дерева выражения, содержащих указанный тип переменных</summary>
-        /// <typeparam name="TVariable">Тип переменной</typeparam>
-        /// <returns>Перечисление узлов дерева с указанным типом переменных</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ, СЃРѕРґРµСЂР¶Р°С‰РёС… СѓРєР°Р·Р°РЅРЅС‹Р№ С‚РёРї РїРµСЂРµРјРµРЅРЅС‹С…</summary>
+        /// <typeparam name="TVariable">РўРёРї РїРµСЂРµРјРµРЅРЅРѕР№</typeparam>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј С‚РёРїРѕРј РїРµСЂРµРјРµРЅРЅС‹С…</returns>
         [NotNull]
         public IEnumerable<VariableValueNode> GetTreeNodesOf<TVariable>()
             where TVariable : ExpressionVariabel =>
@@ -207,10 +207,10 @@ namespace MathCore.MathParser
                .Cast<VariableValueNode>()
                .Where(n => n.Variable is TVariable);
 
-        /// <summary>Получить перечисление узлов дерева выражения, содержащих указанный тип переменных</summary>
-        /// <typeparam name="TVariable">Тип переменной</typeparam>
-        /// <param name="selector">Метод выбора узлов по содержащимся в них переменным</param>
-        /// <returns>Перечисление узлов дерева с указанным типом переменных</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ, СЃРѕРґРµСЂР¶Р°С‰РёС… СѓРєР°Р·Р°РЅРЅС‹Р№ С‚РёРї РїРµСЂРµРјРµРЅРЅС‹С…</summary>
+        /// <typeparam name="TVariable">РўРёРї РїРµСЂРµРјРµРЅРЅРѕР№</typeparam>
+        /// <param name="selector">РњРµС‚РѕРґ РІС‹Р±РѕСЂР° СѓР·Р»РѕРІ РїРѕ СЃРѕРґРµСЂР¶Р°С‰РёРјСЃСЏ РІ РЅРёС… РїРµСЂРµРјРµРЅРЅС‹Рј</param>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј С‚РёРїРѕРј РїРµСЂРµРјРµРЅРЅС‹С…</returns>
         [NotNull]
         public IEnumerable<VariableValueNode> GetTreeNodesVOf<TVariable>([NotNull] Func<TVariable, bool> selector)
             where TVariable : ExpressionVariabel =>
@@ -220,10 +220,10 @@ namespace MathCore.MathParser
                .Where(n => n.Variable is TVariable)
                .Where(n => selector((TVariable)n.Variable));
 
-        /// <summary>Получить перечисление узлов дерева выражения, содержащих указанный тип переменных</summary>
-        /// <typeparam name="TVariable">Тип переменной</typeparam>
-        /// <param name="selector">Метод выбора узлов</param>
-        /// <returns>Перечисление узлов дерева с указанным типом переменных</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ, СЃРѕРґРµСЂР¶Р°С‰РёС… СѓРєР°Р·Р°РЅРЅС‹Р№ С‚РёРї РїРµСЂРµРјРµРЅРЅС‹С…</summary>
+        /// <typeparam name="TVariable">РўРёРї РїРµСЂРµРјРµРЅРЅРѕР№</typeparam>
+        /// <param name="selector">РњРµС‚РѕРґ РІС‹Р±РѕСЂР° СѓР·Р»РѕРІ</param>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ СѓР·Р»РѕРІ РґРµСЂРµРІР° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј С‚РёРїРѕРј РїРµСЂРµРјРµРЅРЅС‹С…</returns>
         [NotNull]
         public IEnumerable<VariableValueNode> GetTreeNodesOf<TVariable>([NotNull] Func<VariableValueNode, bool> selector)
             where TVariable : ExpressionVariabel =>
@@ -233,15 +233,15 @@ namespace MathCore.MathParser
                .Where(n => n.Variable is TVariable)
                .Where(selector);
 
-        /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё</summary>
         /// <returns>
-        /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
+        /// РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.IEnumerator`1"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         IEnumerator<ExpressionVariabel> IEnumerable<ExpressionVariabel>.GetEnumerator() => _Variabels.GetEnumerator();
 
-        /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РєРѕС‚РѕСЂС‹Р№ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё</summary>
         /// <returns>
-        /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
+        /// РћР±СЉРµРєС‚ <see cref="T:System.Collections.IEnumerator"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Variabels).GetEnumerator();
     }

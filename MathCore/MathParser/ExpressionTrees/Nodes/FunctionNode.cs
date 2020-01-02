@@ -1,40 +1,40 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения, содержащий функцию</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ, СЃРѕРґРµСЂР¶Р°С‰РёР№ С„СѓРЅРєС†РёСЋ</summary>
     public class FunctionNode : ComputedNode
     {
-        /// <summary>Имя функции</summary>
+        /// <summary>РРјСЏ С„СѓРЅРєС†РёРё</summary>
         public string Name { get; }
 
-        /// <summary>Массив имён аргументов функции</summary>
+        /// <summary>РњР°СЃСЃРёРІ РёРјС‘РЅ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё</summary>
         public string[] ArgumentsNames => Arguments.Select(a => a.Key).ToArray();
 
-        /// <summary>Перечисление аргументов функции</summary>
+        /// <summary>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё</summary>
         public IEnumerable<KeyValuePair<string, ExpressionTreeNode>> Arguments => GetFunctionArgumentNodes(this);
 
-        /// <summary>Функция узла</summary>
+        /// <summary>Р¤СѓРЅРєС†РёСЏ СѓР·Р»Р°</summary>
         public ExpressionFunction Function { get; set; }
 
-        /// <summary>Инициализация нового функционального узла</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ С„СѓРЅРєС†РёРѕРЅР°Р»СЊРЅРѕРіРѕ СѓР·Р»Р°</summary>
         internal FunctionNode() { }
 
-        /// <summary>Инициализация нового функционального узла</summary>
-        /// <param name="Name">Имя функции</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ С„СѓРЅРєС†РёРѕРЅР°Р»СЊРЅРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
         internal FunctionNode(string Name) => this.Name = Name;
 
-        /// <summary>Инициализация нового функционального узла</summary>
-        /// <param name="Name">Имя функции</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ С„СѓРЅРєС†РёРѕРЅР°Р»СЊРЅРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
         internal FunctionNode(StringNode Name) : this(Name.Value) { }
 
-        /// <summary>Инициализация нового функционального узла</summary>
-        /// <param name="Term">Выражение функции</param>
-        /// <param name="Parser">Парсер выражения</param>
-        /// <param name="Expression">Математическое выражение</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ С„СѓРЅРєС†РёРѕРЅР°Р»СЊРЅРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="Term">Р’С‹СЂР°Р¶РµРЅРёРµ С„СѓРЅРєС†РёРё</param>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
         internal FunctionNode(FunctionTerm Term, ExpressionParser Parser, MathExpression Expression)
             : this(Term.Name)
         {
@@ -53,35 +53,35 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             Function = Expression.Functions[Name, ArgumentsNames];
         }
 
-        /// <summary>Вычисление значения узла</summary>
-        /// <returns>Значение функции</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё</returns>
         public override double Compute() => Function.GetValue(Arguments.Select(k => ((ComputedNode)k.Value).Compute()).ToArray());
 
-        /// <summary>Получить перечисление аргументов функции</summary>
-        /// <param name="FunctionNode">Узел функции</param>
-        /// <returns>Перечисление аргументов функции</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="FunctionNode">РЈР·РµР» С„СѓРЅРєС†РёРё</param>
+        /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё</returns>
         private static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> GetFunctionArgumentNodes(ExpressionTreeNode FunctionNode) => 
             FunctionNode.Right is FunctionArgumentNode node
                 ? FunctionArgumentNode.EnumArguments(node)
                 : throw new FormatException();
 
-        /// <summary>Компиляция узла</summary>
-        /// <returns>Скомпилированное выражение узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</returns>
         public override Expression Compile() =>
             Expression.Call(Function.Delegate.Target != null ? Expression.Constant(Function.Delegate.Target) : null,
                     Function.Delegate.Method,
                     Arguments.Select(a => ((ComputedNode)a.Value).Compile()));
 
-        /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
-        /// <returns>Скомпилированное выражение узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <param name="Parameters">РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</returns>
         public override Expression Compile(ParameterExpression[] Parameters) =>
             Expression.Call(Function.Delegate.Target != null ? Expression.Constant(Function.Delegate.Target) : null,
                     Function.Delegate.Method,
                     Arguments.Select(a => ((ComputedNode)a.Value).Compile(Parameters)));
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new FunctionNode(Name)
         {
             Left = Left?.Clone(),
@@ -89,8 +89,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             Function = Function.Clone()
         };
 
-        /// <summary>Строковое представление узла</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => $"{Name}({Arguments.Select(v => string.IsNullOrEmpty(v.Key) ? v.Value.ToString() : $"{v.Key}:{v.Value.ToString()}").ToSeparatedStr(", ")})";
     }
 }

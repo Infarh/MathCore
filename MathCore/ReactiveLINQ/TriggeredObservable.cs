@@ -1,18 +1,18 @@
-namespace System.Linq.Reactive
+п»їnamespace System.Linq.Reactive
 {
-    /// <summary>Управляемый наблюдаемый объект</summary>
-    /// <typeparam name="T">Тип объекта последовательности</typeparam>
+    /// <summary>РЈРїСЂР°РІР»СЏРµРјС‹Р№ РЅР°Р±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</summary>
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё</typeparam>
     internal sealed class TriggeredObservable<T> : SimpleObservableEx<T>
     {
-        /// <summary>Наблюдатель</summary>
+        /// <summary>РќР°Р±Р»СЋРґР°С‚РµР»СЊ</summary>
         private readonly IObserver<T> _Observer;
 
-        /// <summary>Признак разрешения генерации событий</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє СЂР°Р·СЂРµС€РµРЅРёСЏ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёР№</summary>
         public bool Open { get; set; }
 
-        /// <summary>Управляемый наблюдаемый объект</summary>
-        /// <param name="observable">Наблюдаемый объект</param>
-        /// <param name="IsOpen">Исходное состояние</param>
+        /// <summary>РЈРїСЂР°РІР»СЏРµРјС‹Р№ РЅР°Р±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</summary>
+        /// <param name="observable">РќР°Р±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+        /// <param name="IsOpen">РСЃС…РѕРґРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ</param>
         public TriggeredObservable(IObservable<T> observable, bool IsOpen = true)
         {
             _Observer = new LinkedObserver<T>(observable, this);

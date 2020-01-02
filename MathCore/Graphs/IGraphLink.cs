@@ -1,13 +1,13 @@
-namespace MathCore.Graphs
+п»їnamespace MathCore.Graphs
 {
-    /// <summary>Связь узла</summary>
-    /// <typeparam name="TValue">Тип значения узла</typeparam>
-    /// <typeparam name="TWeight">Тип нагрузки на связь</typeparam>
+    /// <summary>РЎРІСЏР·СЊ СѓР·Р»Р°</summary>
+    /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</typeparam>
+    /// <typeparam name="TWeight">РўРёРї РЅР°РіСЂСѓР·РєРё РЅР° СЃРІСЏР·СЊ</typeparam>
     public interface IGraphLink<out TValue, out TWeight>
     {
-        /// <summary>Связанный узел</summary>
+        /// <summary>РЎРІСЏР·Р°РЅРЅС‹Р№ СѓР·РµР»</summary>
         IGraphNode<TValue, TWeight> Node { get; }
-        /// <summary>Нагрузка на связь</summary>
+        /// <summary>РќР°РіСЂСѓР·РєР° РЅР° СЃРІСЏР·СЊ</summary>
         TWeight Weight { get; }
     }
 }

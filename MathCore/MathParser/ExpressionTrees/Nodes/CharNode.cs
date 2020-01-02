@@ -1,38 +1,38 @@
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+п»їnamespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Символьный узел дерева математического выражения</summary>
+    /// <summary>РЎРёРјРІРѕР»СЊРЅС‹Р№ СѓР·РµР» РґРµСЂРµРІР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public class CharNode : ParsedNode
     {
-        /// <summary>Значение символа узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СЃРёРјРІРѕР»Р° СѓР·Р»Р°</summary>
         public char Value { get; set; }
 
-        /// <summary>Инициализация нового строкового узла</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</summary>
         public CharNode() { }
 
-        /// <summary>Инициализация нового строкового узла</summary>
-        /// <param name="value">Значение узла</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="value">Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</param>
         public CharNode(char value) => Value = value;
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new CharNode(Value)
         {
             Left = Left?.Clone(),
             Right = Right?.Clone()
         };
 
-        /// <summary>Строковое представление узла</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => $"{(Left is null ? "" : $"{Left}")}{Value}{(Right is null ? "" : $"{Right}")}";
 
-        /// <summary>Оператор неявного преобразования строки к типу строкового узла</summary>
-        /// <param name="value">Строковое значение</param>
-        /// <returns>Символьный узел</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СЃС‚СЂРѕРєРё Рє С‚РёРїСѓ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="value">РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+        /// <returns>РЎРёРјРІРѕР»СЊРЅС‹Р№ СѓР·РµР»</returns>
         public static implicit operator CharNode(char value) => new CharNode(value);
 
-        /// <summary>Оператор неявного преобразования строкового узла к символьному типу</summary>
-        /// <param name="node">Символьный узел</param>
-        /// <returns>Значение Символьного узла</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р° Рє СЃРёРјРІРѕР»СЊРЅРѕРјСѓ С‚РёРїСѓ</summary>
+        /// <param name="node">РЎРёРјРІРѕР»СЊРЅС‹Р№ СѓР·РµР»</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РЎРёРјРІРѕР»СЊРЅРѕРіРѕ СѓР·Р»Р°</returns>
         public static implicit operator char(CharNode node) => node.Value;
     }
 }

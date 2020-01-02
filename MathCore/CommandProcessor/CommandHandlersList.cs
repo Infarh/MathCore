@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using MathCore.Annotations;
 
@@ -6,15 +6,15 @@ namespace MathCore.CommandProcessor
 {
     using CommandHandler = Action<Command, int, Command[]>;
 
-    /// <summary>Список обработчиков команды</summary>
+    /// <summary>РЎРїРёСЃРѕРє РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РєРѕРјР°РЅРґС‹</summary>
     public class CommandHandlersList : List<CommandHandler>
     {
         [NotNull] private readonly Dictionary<int, CommandHandler> _Handlers = new Dictionary<int, CommandHandler>();
 
-        /// <summary>Оператор добалвения команды к списку</summary>
-        /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Добавляемый обработчик команды</param>
-        /// <returns>Список с добавленным обработчиком команды</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РґРѕР±Р°Р»РІРµРЅРёСЏ РєРѕРјР°РЅРґС‹ Рє СЃРїРёСЃРєСѓ</summary>
+        /// <param name="list">РЎРїРёСЃРѕРє РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РєРѕРјР°РЅРґС‹</param>
+        /// <param name="handler">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹</param>
+        /// <returns>РЎРїРёСЃРѕРє СЃ РґРѕР±Р°РІР»РµРЅРЅС‹Рј РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј РєРѕРјР°РЅРґС‹</returns>
         public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] CommandHandler handler)
         {
             list.Add(handler);
@@ -45,10 +45,10 @@ namespace MathCore.CommandProcessor
             return list;
         }
 
-        /// <summary>Оператор удаления команды к списку</summary>
-        /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Удаляемый обработчик команды</param>
-        /// <returns>Список с удалённым обработчиком команды</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СѓРґР°Р»РµРЅРёСЏ РєРѕРјР°РЅРґС‹ Рє СЃРїРёСЃРєСѓ</summary>
+        /// <param name="list">РЎРїРёСЃРѕРє РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РєРѕРјР°РЅРґС‹</param>
+        /// <param name="handler">РЈРґР°Р»СЏРµРјС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹</param>
+        /// <returns>РЎРїРёСЃРѕРє СЃ СѓРґР°Р»С‘РЅРЅС‹Рј РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј РєРѕРјР°РЅРґС‹</returns>
         public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] CommandHandler handler)
         {
             list.Remove(handler);
@@ -112,20 +112,20 @@ namespace MathCore.CommandProcessor
 
     public class CommandArgHandlersList : List<Action<Command, int, Command[], Argument>>
     {
-        /// <summary>Оператор добалвения команды к списку</summary>
-        /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Добавляемый обработчик команды</param>
-        /// <returns>Список с добавленным обработчиком команды</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РґРѕР±Р°Р»РІРµРЅРёСЏ РєРѕРјР°РЅРґС‹ Рє СЃРїРёСЃРєСѓ</summary>
+        /// <param name="list">РЎРїРёСЃРѕРє РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РєРѕРјР°РЅРґС‹</param>
+        /// <param name="handler">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹</param>
+        /// <returns>РЎРїРёСЃРѕРє СЃ РґРѕР±Р°РІР»РµРЅРЅС‹Рј РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј РєРѕРјР°РЅРґС‹</returns>
         public static CommandArgHandlersList operator +([NotNull] CommandArgHandlersList list, [NotNull] Action<Command, int, Command[], Argument> handler)
         {
             list.Add(handler);
             return list;
         }
 
-        /// <summary>Оператор удаления команды к списку</summary>
-        /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Удаляемый обработчик команды</param>
-        /// <returns>Список с удалённым обработчиком команды</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ СѓРґР°Р»РµРЅРёСЏ РєРѕРјР°РЅРґС‹ Рє СЃРїРёСЃРєСѓ</summary>
+        /// <param name="list">РЎРїРёСЃРѕРє РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РєРѕРјР°РЅРґС‹</param>
+        /// <param name="handler">РЈРґР°Р»СЏРµРјС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹</param>
+        /// <returns>РЎРїРёСЃРѕРє СЃ СѓРґР°Р»С‘РЅРЅС‹Рј РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј РєРѕРјР°РЅРґС‹</returns>
         public static CommandArgHandlersList operator -([NotNull] CommandArgHandlersList list, [NotNull] Action<Command, int, Command[], Argument> handler)
         {
             list.Remove(handler);

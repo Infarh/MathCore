@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -18,10 +18,10 @@ namespace System
 {
     public static class RegExExtensions
     {
-        /// <summary>Метод получения значения из результатов совпадения поиска</summary>
-        /// <param name="match">Результат совпадения поиска</param>
-        /// <param name="DefaultString">Значение по умолчанию</param>
-        /// <returns>Результат поиска, либо значение по умолчанию</returns>
+        /// <summary>РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РёР· СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ СЃРѕРІРїР°РґРµРЅРёСЏ РїРѕРёСЃРєР°</summary>
+        /// <param name="match">Р РµР·СѓР»СЊС‚Р°С‚ СЃРѕРІРїР°РґРµРЅРёСЏ РїРѕРёСЃРєР°</param>
+        /// <param name="DefaultString">Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+        /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїРѕРёСЃРєР°, Р»РёР±Рѕ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</returns>
         public static string OrDefault([NotNull] this Match match, string DefaultString = "") => match.Success ? match.Value : DefaultString;
 
         public static int OrDefault([NotNull] this Match match, int DefaultInt) => int.TryParse(match.OrDefault(), out var v) ? v : DefaultInt;

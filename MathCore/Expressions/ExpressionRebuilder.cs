@@ -1,137 +1,137 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
-    /// <summary>Пересборщик дерева выражения Linq.Expression</summary>
+    /// <summary>РџРµСЂРµСЃР±РѕСЂС‰РёРє РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ Linq.Expression</summary>
     //[Diagnostics.DST]
     public class ExpressionRebuilder : ExpressionVisitorEx
     {
-        /// <summary>Метод генерации события посещения узла типа Expression</summary>
-        /// <typeparam name="TExpressionNode">Тип узла дерева</typeparam>
-        /// <param name="Handlers">Событие</param>
-        /// <param name="Node">Узел дерева</param>
-        /// <param name="Base">Базовый метод обработки узла</param>
-        /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
+        /// <summary>РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ РїРѕСЃРµС‰РµРЅРёСЏ СѓР·Р»Р° С‚РёРїР° Expression</summary>
+        /// <typeparam name="TExpressionNode">РўРёРї СѓР·Р»Р° РґРµСЂРµРІР°</typeparam>
+        /// <param name="Handlers">РЎРѕР±С‹С‚РёРµ</param>
+        /// <param name="Node">РЈР·РµР» РґРµСЂРµРІР°</param>
+        /// <param name="Base">Р‘Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ РѕР±СЂР°Р±РѕС‚РєРё СѓР·Р»Р°</param>
+        /// <returns>РЈР·РµР», РєРѕС‚РѕСЂС‹Рј РЅР°РґРѕ Р·Р°РјРµСЃС‚РёС‚СЊ РїРѕСЃРµС‰С‘РЅРЅС‹Р№ СѓР·РµР» РґРµСЂРµРІР°</returns>
         private Expression InvokeEvent<TExpressionNode>(EventHandlerReturn<EventArgs<TExpressionNode>, Expression> Handlers, TExpressionNode Node, Func<TExpressionNode, Expression> Base)
             where TExpressionNode : Expression
         {
-            // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
-            var element = Base(Node); // Вызываем базовый метод для получения замены
+            // Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕР±С‹С‚РёСЏ РЅРµС‚, С‚Рѕ РІС‹Р·С‹РІР°РµРј Р±Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ Рё РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚
+            var element = Base(Node); // Р’С‹Р·С‹РІР°РµРј Р±Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°РјРµРЅС‹
             if(Handlers is null) return element;
             var node = element as TExpressionNode;
             return node != null
                 ? Handlers(this, new EventArgs<TExpressionNode>(node))
-                : element; // иначе возвращаем элемент, от базового метода
+                : element; // РёРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµРј СЌР»РµРјРµРЅС‚, РѕС‚ Р±Р°Р·РѕРІРѕРіРѕ РјРµС‚РѕРґР°
         }
 
-        /// <summary>Метод генерации события посещения узла произвольного типа</summary>
-        /// <typeparam name="TElement">Тип узла дерева</typeparam><typeparam name="TOut">Тип выходного узла</typeparam>
-        /// <param name="Handlers">Событие</param>
-        /// <param name="Node">Посещённый узел дерева</param>
-        /// <param name="Base">Базовый метод обработки узла</param>
-        /// <returns>Узел, которым надо заместить посещённый узел дерева</returns>
+        /// <summary>РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ РїРѕСЃРµС‰РµРЅРёСЏ СѓР·Р»Р° РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ С‚РёРїР°</summary>
+        /// <typeparam name="TElement">РўРёРї СѓР·Р»Р° РґРµСЂРµРІР°</typeparam><typeparam name="TOut">РўРёРї РІС‹С…РѕРґРЅРѕРіРѕ СѓР·Р»Р°</typeparam>
+        /// <param name="Handlers">РЎРѕР±С‹С‚РёРµ</param>
+        /// <param name="Node">РџРѕСЃРµС‰С‘РЅРЅС‹Р№ СѓР·РµР» РґРµСЂРµРІР°</param>
+        /// <param name="Base">Р‘Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ РѕР±СЂР°Р±РѕС‚РєРё СѓР·Р»Р°</param>
+        /// <returns>РЈР·РµР», РєРѕС‚РѕСЂС‹Рј РЅР°РґРѕ Р·Р°РјРµСЃС‚РёС‚СЊ РїРѕСЃРµС‰С‘РЅРЅС‹Р№ СѓР·РµР» РґРµСЂРµРІР°</returns>
         private TOut InvokeEvent<TElement, TOut>(EventHandlerReturn<EventArgs<TOut>, TOut> Handlers, TElement Node, Func<TElement, TOut> Base)
         {
-            // Если обработчиков события нет, то вызываем базовый метод и возвращаем результат
-            var element = Base(Node); // Вызываем базовый метод для получения замены
+            // Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕР±С‹С‚РёСЏ РЅРµС‚, С‚Рѕ РІС‹Р·С‹РІР°РµРј Р±Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ Рё РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚
+            var element = Base(Node); // Р’С‹Р·С‹РІР°РµРј Р±Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р·Р°РјРµРЅС‹
             if(Handlers is null) return element;
-            // Генерируем событие с передачей в него узла, полученного от базового дерева
+            // Р“РµРЅРµСЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ СЃ РїРµСЂРµРґР°С‡РµР№ РІ РЅРµРіРѕ СѓР·Р»Р°, РїРѕР»СѓС‡РµРЅРЅРѕРіРѕ РѕС‚ Р±Р°Р·РѕРІРѕРіРѕ РґРµСЂРµРІР°
             return Handlers(this, new EventArgs<TOut>(element));
         }
 
-        /// <summary>Событие возникает при посещении любого узла дерева</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё Р»СЋР±РѕРіРѕ СѓР·Р»Р° РґРµСЂРµРІР°</summary>
         public event EventHandlerReturn<EventArgs<Expression>, Expression> Visited;
 
-        /// <summary>Посетить узел дерева</summary><param name="Node">Узел дерева</param><returns>Новый узел дерева</returns>
+        /// <summary>РџРѕСЃРµС‚РёС‚СЊ СѓР·РµР» РґРµСЂРµРІР°</summary><param name="Node">РЈР·РµР» РґРµСЂРµРІР°</param><returns>РќРѕРІС‹Р№ СѓР·РµР» РґРµСЂРµРІР°</returns>
         public override Expression Visit(Expression Node) => InvokeEvent(Visited, Node, base.Visit);
 
-        /// <summary>Событие возникает при посещении узла дерева бинарного выражения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РґРµСЂРµРІР° Р±РёРЅР°СЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         public event EventHandlerReturn<EventArgs<BinaryExpression>, Expression> BinaryVisited;
         protected override Expression VisitBinary(BinaryExpression b) => InvokeEvent(BinaryVisited, b, base.VisitBinary);
 
-        /// <summary>Событие возникает при посещении узла привязки</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РїСЂРёРІСЏР·РєРё</summary>
         public event EventHandlerReturn<EventArgs<MemberBinding>, MemberBinding> BindingVisited;
         protected override MemberBinding VisitBinding(MemberBinding binding) => InvokeEvent(BindingVisited, binding, base.VisitBinding);
 
-        /// <summary>Событие возникает при посещении коллекции привязки</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё РєРѕР»Р»РµРєС†РёРё РїСЂРёРІСЏР·РєРё</summary>
         public event EventHandlerReturn<EventArgs<IEnumerable<MemberBinding>>, IEnumerable<MemberBinding>> BindingListVisited;
         protected override IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original) => InvokeEvent(BindingListVisited, original, base.VisitBindingList);
 
-        /// <summary>Событие возникает при посещении узла условного оператора</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° СѓСЃР»РѕРІРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР°</summary>
         public event EventHandlerReturn<EventArgs<ConditionalExpression>, Expression> ConditionalVisited;
         protected override Expression VisitConditional(ConditionalExpression c) => InvokeEvent(ConditionalVisited, c, base.VisitConditional);
 
-        /// <summary>Событие возникает при посещении узла константы</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РєРѕРЅСЃС‚Р°РЅС‚С‹</summary>
         public event EventHandlerReturn<EventArgs<ConstantExpression>, Expression> ConstantlVisited;
         protected override Expression VisitConstant(ConstantExpression c) => InvokeEvent(ConstantlVisited, c, base.VisitConstant);
 
-        /// <summary>Событие возникает при посещении узла инициализатора объекта</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°</summary>
         public event EventHandlerReturn<EventArgs<ElementInit>, ElementInit> ElementInitializerVisited;
         protected override ElementInit VisitElementInitializer(ElementInit initializer) => InvokeEvent(ElementInitializerVisited, initializer, base.VisitElementInitializer);
 
-        /// <summary>Событие возникает при посещении коллекции инициализаторов объекта</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё РєРѕР»Р»РµРєС†РёРё РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂРѕРІ РѕР±СЉРµРєС‚Р°</summary>
         public event EventHandlerReturn<EventArgs<IEnumerable<ElementInit>>, IEnumerable<ElementInit>> ElementInitializerListVisited;
         protected override IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original) => InvokeEvent(ElementInitializerListVisited, original, base.VisitElementInitializerList);
 
-        /// <summary>Событие возникает при посещении коллекции выражений</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё РєРѕР»Р»РµРєС†РёРё РІС‹СЂР°Р¶РµРЅРёР№</summary>
         public event EventHandlerReturn<EventArgs<ReadOnlyCollection<Expression>>, ReadOnlyCollection<Expression>> ExpressionListVisited;
         protected override ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original) => InvokeEvent(ExpressionListVisited, original, base.VisitExpressionList);
 
-        /// <summary>Событие возникает при посещении лямбда-выражения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё Р»СЏРјР±РґР°-РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         public event EventHandlerReturn<EventArgs<LambdaExpression>, Expression> LambdaVisited;
         protected override Expression VisitLambda(LambdaExpression lambda) => InvokeEvent(LambdaVisited, lambda, base.VisitLambda);
 
-        /// <summary>Событие возникает при посещении узла инициализатора коллекции</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂР° РєРѕР»Р»РµРєС†РёРё</summary>
         public event EventHandlerReturn<EventArgs<ListInitExpression>, Expression> ListInitVisited;
         protected override Expression VisitListInit(ListInitExpression init) => InvokeEvent(ListInitVisited, init, base.VisitListInit);
 
-        /// <summary>Событие возникает при посещении узла вызова функции</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РІС‹Р·РѕРІР° С„СѓРЅРєС†РёРё</summary>
         public event EventHandlerReturn<EventArgs<InvocationExpression>, Expression> InvocationVisited;
         protected override Expression VisitInvocation(InvocationExpression iv) => InvokeEvent(InvocationVisited, iv, base.VisitInvocation);
 
-        /// <summary>Событие возникает при посещении узла доступа к члену объекта</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РґРѕСЃС‚СѓРїР° Рє С‡Р»РµРЅСѓ РѕР±СЉРµРєС‚Р°</summary>
         public event EventHandlerReturn<EventArgs<MemberExpression>, Expression> MemberAccessVisited;
         protected override Expression VisitMemberAccess(MemberExpression m) => InvokeEvent(MemberAccessVisited, m, base.VisitMemberAccess);
 
-        /// <summary>Событие возникает при посещении узла присвоения члену объекта значения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РїСЂРёСЃРІРѕРµРЅРёСЏ С‡Р»РµРЅСѓ РѕР±СЉРµРєС‚Р° Р·РЅР°С‡РµРЅРёСЏ</summary>
         public event EventHandlerReturn<EventArgs<MemberAssignment>, MemberAssignment> MemberAssignmentVisited;
         protected override MemberAssignment VisitMemberAssignment(MemberAssignment assignment) => InvokeEvent(MemberAssignmentVisited, assignment, base.VisitMemberAssignment);
 
-        /// <summary>Событие возникает при посещении узла инициализатора свойства объекта</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂР° СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°</summary>
         public event EventHandlerReturn<EventArgs<MemberInitExpression>, Expression> MemberInitVisited;
         protected override Expression VisitMemberInit(MemberInitExpression init) => InvokeEvent(MemberInitVisited, init, base.VisitMemberInit);
 
-        /// <summary>Событие возникает при посещении узла инициализатора коллекции объектов</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂР° РєРѕР»Р»РµРєС†РёРё РѕР±СЉРµРєС‚РѕРІ</summary>
         public event EventHandlerReturn<EventArgs<MemberListBinding>, MemberListBinding> MemberListBindingVisited;
         protected override MemberListBinding VisitMemberListBinding(MemberListBinding binding) => InvokeEvent(MemberListBindingVisited, binding, base.VisitMemberListBinding);
 
-        /// <summary>Событие возникает при посещении узла инициализатора элементов элемента</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ СЌР»РµРјРµРЅС‚Р°</summary>
         public event EventHandlerReturn<EventArgs<MemberMemberBinding>, MemberMemberBinding> MemberMemberBindingVisited;
         protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding) => InvokeEvent(MemberMemberBindingVisited, binding, base.VisitMemberMemberBinding);
 
-        /// <summary>Событие возникает при посещении узла вызова метода</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РІС‹Р·РѕРІР° РјРµС‚РѕРґР°</summary>
         public event EventHandlerReturn<EventArgs<MethodCallExpression>, Expression> MethodCallVisited;
         protected override Expression VisitMethodCall(MethodCallExpression m) => InvokeEvent(MethodCallVisited, m, base.VisitMethodCall);
 
-        /// <summary>Событие возникает при посещении узла конструктора</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°</summary>
         public event EventHandlerReturn<EventArgs<NewExpression>, NewExpression> NewVisited;
         protected override NewExpression VisitNew(NewExpression nex) => InvokeEvent(NewVisited, nex, base.VisitNew);
 
-        /// <summary>Событие возникает при посещении узла конструктора массива</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РјР°СЃСЃРёРІР°</summary>
         public event EventHandlerReturn<EventArgs<NewArrayExpression>, Expression> NewArrayVisited;
         protected override Expression VisitNewArray(NewArrayExpression na) => InvokeEvent(NewArrayVisited, na, base.VisitNewArray);
 
-        /// <summary>Событие возникает при посещении узла параметра выражения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РїР°СЂР°РјРµС‚СЂР° РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         public event EventHandlerReturn<EventArgs<ParameterExpression>, Expression> ParameterVisited;
         protected override Expression VisitParameter(ParameterExpression p) => InvokeEvent(ParameterVisited, p, base.VisitParameter);
 
-        /// <summary>Событие возникает при посещении узла определения типа выражения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° РѕРїСЂРµРґРµР»РµРЅРёСЏ С‚РёРїР° РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         public event EventHandlerReturn<EventArgs<TypeBinaryExpression>, Expression> TypeIsVisited;
         protected override Expression VisitTypeIs(TypeBinaryExpression b) => InvokeEvent(TypeIsVisited, b, base.VisitTypeIs);
 
-        /// <summary>Событие возникает при посещении узла унарного выражения</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РїРѕСЃРµС‰РµРЅРёРё СѓР·Р»Р° СѓРЅР°СЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         public event EventHandlerReturn<EventArgs<UnaryExpression>, Expression> UnaryVisited;
         protected override Expression VisitUnary(UnaryExpression u) => InvokeEvent(UnaryVisited, u, base.VisitUnary);
     }

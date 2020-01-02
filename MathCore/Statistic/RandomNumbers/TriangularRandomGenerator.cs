@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Statistic.RandomNumbers

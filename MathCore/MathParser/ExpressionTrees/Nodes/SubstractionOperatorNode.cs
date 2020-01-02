@@ -1,19 +1,19 @@
-using System.Linq.Expressions;
+п»їusing System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения, релизующий оператор вычитания</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ, СЂРµР»РёР·СѓСЋС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ РІС‹С‡РёС‚Р°РЅРёСЏ</summary>
     public class subtractionOperatorNode : OperatorNode
     {
-        /// <summary>Инициализация нового оператора вычитания</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР° РІС‹С‡РёС‚Р°РЅРёСЏ</summary>
         public subtractionOperatorNode() : base("-", 5) { }
 
-        /// <summary>Вычисление значение узла</summary>
-        /// <returns>Значение разности значений правого и левого поддеревьев</returns>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЂР°Р·РЅРѕСЃС‚Рё Р·РЅР°С‡РµРЅРёР№ РїСЂР°РІРѕРіРѕ Рё Р»РµРІРѕРіРѕ РїРѕРґРґРµСЂРµРІСЊРµРІ</returns>
         public override double Compute() => (((ComputedNode)Left)?.Compute() ?? 0) - (((ComputedNode)Right)?.Compute() ?? 0);
 
-        /// <summary>Компиляция выражения узла</summary>
-        /// <returns>Скомпилированное выражение узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ СѓР·Р»Р°</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</returns>
         public override Expression Compile()
             => Expression.Subtract
             (
@@ -21,16 +21,16 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 ((ComputedNode)Right)?.Compile() ?? Expression.Constant(0.0)
             );
 
-        /// <summary>Компиляция выражения узла</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
-        /// <returns>Скомпилированное выражение узла</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ СѓР·Р»Р°</summary>
+        /// <param name="Parameters">РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СѓР·Р»Р°</returns>
         /// <returns></returns>
         public override Expression Compile(ParameterExpression[] Parameters) => Left is null
                     ? (Expression)Expression.Negate(((ComputedNode)Right).Compile(Parameters))
                     : Expression.Subtract(((ComputedNode)Left).Compile(Parameters), ((ComputedNode)Right).Compile(Parameters));
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => CloneOperatorNode<subtractionOperatorNode>();
     }
 }

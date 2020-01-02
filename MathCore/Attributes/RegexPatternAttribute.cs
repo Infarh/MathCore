@@ -1,11 +1,11 @@
-// ReSharper disable once CheckNamespace
+п»ї// ReSharper disable once CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 namespace System
 {
-    /// <summary>Является регулярным выражением</summary>
+    /// <summary>РЇРІР»СЏРµС‚СЃСЏ СЂРµРіСѓР»СЏСЂРЅС‹Рј РІС‹СЂР°Р¶РµРЅРёРµРј</summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class RegexPatternAttribute : Attribute { }
 }

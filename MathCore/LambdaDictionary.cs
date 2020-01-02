@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,7 +50,7 @@ namespace MathCore
             Func<TKey, bool> Remove = null
         )
         {
-            _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "Не задан метод получения значения");
+            _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "РќРµ Р·Р°РґР°РЅ РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ");
             _ElementSetter = ElementSetter;
             _Clear = Clear;
             _Remove = Remove;
@@ -69,14 +69,14 @@ namespace MathCore
         /// <inheritdoc />
         public void Add(TKey key, TValue value)
         {
-            CheckSupported(_ElementsGetter, "Словарь не поддерживает операции записи");
+            CheckSupported(_ElementsGetter, "РЎР»РѕРІР°СЂСЊ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РѕРїРµСЂР°С†РёРё Р·Р°РїРёСЃРё");
             _ElementSetter(key, value);
         }
 
         /// <inheritdoc />
         public void Clear()
         {
-            CheckSupported(_Clear, "Словарь не поддерживает операцию очистки");
+            CheckSupported(_Clear, "РЎР»РѕРІР°СЂСЊ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РѕРїРµСЂР°С†РёСЋ РѕС‡РёСЃС‚РєРё");
             _Clear();
         }
 
@@ -96,7 +96,7 @@ namespace MathCore
         /// <inheritdoc />
         public bool Remove(TKey key)
         {
-            CheckSupported(_Remove, "Словарь не поддерживает операцию удаления");
+            CheckSupported(_Remove, "РЎР»РѕРІР°СЂСЊ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РѕРїРµСЂР°С†РёСЋ СѓРґР°Р»РµРЅРёСЏ");
             return _Remove(key);
         }
 

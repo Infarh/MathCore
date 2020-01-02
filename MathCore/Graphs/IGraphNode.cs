@@ -1,25 +1,25 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 
 namespace MathCore.Graphs
 {
-    /// <summary>Узел графа</summary>
-    /// <typeparam name="TValue">Тип значения узла</typeparam>
-    /// <typeparam name="TWeight">Тип нагрузки на связь</typeparam>
+    /// <summary>РЈР·РµР» РіСЂР°С„Р°</summary>
+    /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</typeparam>
+    /// <typeparam name="TWeight">РўРёРї РЅР°РіСЂСѓР·РєРё РЅР° СЃРІСЏР·СЊ</typeparam>
     public interface IGraphNode<out TValue, out TWeight> : IEnumerable<IGraphNode<TValue, TWeight>>
     {
-        /// <summary>Связи узла</summary>
+        /// <summary>РЎРІСЏР·Рё СѓР·Р»Р°</summary>
         IEnumerable<IGraphLink<TValue, TWeight>> Links { get; }
 
-        /// <summary>Значение узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
         TValue Value { get; }
     }
 
     public interface IGraphNode<out TValue> : IEnumerable<IGraphNode<TValue>>
     {
-        /// <summary>Связи узла</summary>
+        /// <summary>РЎРІСЏР·Рё СѓР·Р»Р°</summary>
         IEnumerable<IGraphNode<TValue>> Childs { get; }
 
-        /// <summary>Значение узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
         TValue Value { get; }
     }
 }

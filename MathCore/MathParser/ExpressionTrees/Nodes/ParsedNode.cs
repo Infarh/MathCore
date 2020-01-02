@@ -1,5 +1,5 @@
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+п»їnamespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения стадии разбора</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ СЃС‚Р°РґРёРё СЂР°Р·Р±РѕСЂР°</summary>
     public abstract class ParsedNode : ExpressionTreeNode { }
 }
