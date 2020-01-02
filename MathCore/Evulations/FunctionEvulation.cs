@@ -1,20 +1,20 @@
-using System;
+п»їusing System;
 using Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evulations
 {
-    /// <summary>Вычисление функции без переменных</summary>
+    /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ С„СѓРЅРєС†РёРё Р±РµР· РїРµСЂРµРјРµРЅРЅС‹С…</summary>
     /// <typeparam name="T"></typeparam>
     public class FunctionEvulation<T> : Evulation<T>
     {
-        /// <summary>Вычисляемая функция</summary>
+        /// <summary>Р’С‹С‡РёСЃР»СЏРµРјР°СЏ С„СѓРЅРєС†РёСЏ</summary>
         public Func<T> Function { get; set; }
 
-        /// <summary>Инициализация нового вычисления функции</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
         public FunctionEvulation() { }
 
-        /// <summary>Инициализация нового вычисления функции</summary>
-        /// <param name="Function">Вычисляемая функция</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="Function">Р’С‹С‡РёСЃР»СЏРµРјР°СЏ С„СѓРЅРєС†РёСЏ</param>
         public FunctionEvulation(Func<T> Function) => this.Function = Function;
 
         /// <inheritdoc />
@@ -28,28 +28,28 @@ namespace MathCore.Evulations
         /// <inheritdoc />
         public override string ToString() => "f()";
 
-        /// <summary>Оператор неявного преобразования типа функции к типу вычисления функции</summary>
-        /// <param name="Function">Оборачиваемая функция</param>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ С‚РёРїР° С„СѓРЅРєС†РёРё Рє С‚РёРїСѓ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="Function">РћР±РѕСЂР°С‡РёРІР°РµРјР°СЏ С„СѓРЅРєС†РёСЏ</param>
         public static implicit operator FunctionEvulation<T>(Func<T> Function) => new FunctionEvulation<T>(Function);
     }
 
-    /// <summary>Именованное вычисление функции</summary>
-    /// <typeparam name="T">Тип значения функции</typeparam>
+    /// <summary>РРјРµРЅРѕРІР°РЅРЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ С„СѓРЅРєС†РёРё</summary>
+    /// <typeparam name="T">РўРёРї Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё</typeparam>
     public class NamedFunctionEvulation<T> : FunctionEvulation<T>
     {
-        /// <summary>Имя функции</summary>
+        /// <summary>РРјСЏ С„СѓРЅРєС†РёРё</summary>
         public string Name { get; set; }
 
-        /// <summary>Инициализация нового вычисления значения функции</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
         public NamedFunctionEvulation() { }
 
-        /// <summary>Инициализация нового вычисления значения функции</summary>
-        /// <param name="Function">Вычисляемая функция</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="Function">Р’С‹С‡РёСЃР»СЏРµРјР°СЏ С„СѓРЅРєС†РёСЏ</param>
         public NamedFunctionEvulation(Func<T> Function) : base(Function) { }
 
-        /// <summary>Инициализация нового вычисления значения функции</summary>
-        /// <param name="Function">Вычисляемая функция</param>
-        /// <param name="Name">Имя функции</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё</summary>
+        /// <param name="Function">Р’С‹С‡РёСЃР»СЏРµРјР°СЏ С„СѓРЅРєС†РёСЏ</param>
+        /// <param name="Name">РРјСЏ С„СѓРЅРєС†РёРё</param>
         public NamedFunctionEvulation(Func<T> Function, string Name) : base(Function) => this.Name = Name;
 
         /// <inheritdoc />

@@ -1,42 +1,42 @@
-using System;
+п»їusing System;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Событийная переменная</summary>
-    /// <remarks>Переменная математического выражения, значение которой определяется через генерацию события</remarks>
+    /// <summary>РЎРѕР±С‹С‚РёР№РЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</summary>
+    /// <remarks>РџРµСЂРµРјРµРЅРЅР°СЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ, Р·РЅР°С‡РµРЅРёРµ РєРѕС‚РѕСЂРѕР№ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ С‡РµСЂРµР· РіРµРЅРµСЂР°С†РёСЋ СЃРѕР±С‹С‚РёСЏ</remarks>
     public class EventExpressionVariable : ExpressionVariabel
     {
-        /// <summary>Событие запроса значения переменной</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ Р·Р°РїСЂРѕСЃР° Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
         public event EventHandler<EventArgs<double>> Call;
 
-        /// <summary>Метод генерации события</summary>
-        /// <param name="Args">Аргумент события</param>
+        /// <summary>РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё СЃРѕР±С‹С‚РёСЏ</summary>
+        /// <param name="Args">РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ</param>
         protected virtual void OnCall(EventArgs<double> Args) => Call?.Invoke(this, Args);
 
-        /// <summary>Аргумент события</summary>
+        /// <summary>РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ</summary>
         private readonly EventArgs<double> _EventArg = new EventArgs<double>(0);
 
-        /// <summary>Флаг предварительной очистки значения аргумента события</summary>
+        /// <summary>Р¤Р»Р°Рі РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕР№ РѕС‡РёСЃС‚РєРё Р·РЅР°С‡РµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚Р° СЃРѕР±С‹С‚РёСЏ</summary>
         private bool _ClearAtCall;
 
-        /// <summary>Значение переменной</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
         public override double Value { get => _EventArg.Argument; set => _EventArg.Argument = value; }
 
-        /// <summary>Признак предвычислимости всегда = false</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє РїСЂРµРґРІС‹С‡РёСЃР»РёРјРѕСЃС‚Рё РІСЃРµРіРґР° = false</summary>
         public override bool IsPrecomputable => false;
 
-        /// <summary>Флаг предварительной очистки значения аргумента события</summary>
+        /// <summary>Р¤Р»Р°Рі РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕР№ РѕС‡РёСЃС‚РєРё Р·РЅР°С‡РµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚Р° СЃРѕР±С‹С‚РёСЏ</summary>
         public bool ClearAtCall { get => _ClearAtCall; set => _ClearAtCall = value; }
 
-        /// <summary>Инициализация новой событийной переменной</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ СЃРѕР±С‹С‚РёР№РЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
         public EventExpressionVariable() : this("") { }
 
-        /// <summary>Инициализация новой событийной переменной</summary>
-        /// <param name="Name">Имя переменной</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ СЃРѕР±С‹С‚РёР№РЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <param name="Name">РРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№</param>
         public EventExpressionVariable(string Name) : base(Name) { }
 
-        /// <summary>Получение значения переменной</summary>
-        /// <returns>Значение переменой</returns>
+        /// <summary>РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРѕР№</returns>
         public override double GetValue()
         {
             if(_ClearAtCall)
@@ -45,8 +45,8 @@ namespace MathCore.MathParser
             return base.Value = _EventArg.Argument;
         }
 
-        /// <summary>Метод клонирования событийной переменной</summary>
-        /// <returns>Клонированная событийная переменная</returns>
+        /// <summary>РњРµС‚РѕРґ РєР»РѕРЅРёСЂРѕРІР°РЅРёСЏ СЃРѕР±С‹С‚РёР№РЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№</summary>
+        /// <returns>РљР»РѕРЅРёСЂРѕРІР°РЅРЅР°СЏ СЃРѕР±С‹С‚РёР№РЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ</returns>
         public override ExpressionVariabel Clone() => new EventExpressionVariable(Name) { ClearAtCall = ClearAtCall, Value = Value };
     }
 }

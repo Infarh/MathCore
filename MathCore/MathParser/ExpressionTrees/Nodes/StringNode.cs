@@ -1,38 +1,38 @@
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+п»їnamespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Строковый узел дерева математического выражения</summary>
+    /// <summary>РЎС‚СЂРѕРєРѕРІС‹Р№ СѓР·РµР» РґРµСЂРµРІР° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public class StringNode : ParsedNode
     {
-        /// <summary>Значение узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
         public string Value { get; set; }
 
-        /// <summary>Инициализация нового строкового узла</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</summary>
         public StringNode() { }
 
-        /// <summary>Инициализация нового строкового узла</summary>
-        /// <param name="value">Значение узла</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="value">Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</param>
         public StringNode(string value) => Value = value;
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => new StringNode(Value)
         {
             Left = Left?.Clone(),
             Right = Right?.Clone()
         };
 
-        /// <summary>Строковое представление узла</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => $"{(Left is null ? "" : $"{Left}")}{Value}{(Right is null ? "" : $"{Right}")}";
 
-        /// <summary>Оператор неявного преобразования строки к типу строкового узла</summary>
-        /// <param name="value">Строковое значение</param>
-        /// <returns>Строковый узел</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СЃС‚СЂРѕРєРё Рє С‚РёРїСѓ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</summary>
+        /// <param name="value">РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+        /// <returns>РЎС‚СЂРѕРєРѕРІС‹Р№ СѓР·РµР»</returns>
         public static implicit operator StringNode(string value) => new StringNode(value);
 
-        /// <summary>Оператор неявного преобразования строкового узла к строковому типу</summary>
-        /// <param name="node">Строковый узел</param>
-        /// <returns>Значение строкового узла</returns>
+        /// <summary>РћРїРµСЂР°С‚РѕСЂ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р° Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ С‚РёРїСѓ</summary>
+        /// <param name="node">РЎС‚СЂРѕРєРѕРІС‹Р№ СѓР·РµР»</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃС‚СЂРѕРєРѕРІРѕРіРѕ СѓР·Р»Р°</returns>
         public static implicit operator string(StringNode node) => node.Value;
     }
 }

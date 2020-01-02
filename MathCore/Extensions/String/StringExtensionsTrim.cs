@@ -1,16 +1,16 @@
-using MathCore.Annotations;
+п»їusing MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    /// <summary>Ограничение длины строки с удалением центральной её части</summary>
+    /// <summary>РћРіСЂР°РЅРёС‡РµРЅРёРµ РґР»РёРЅС‹ СЃС‚СЂРѕРєРё СЃ СѓРґР°Р»РµРЅРёРµРј С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ РµС‘ С‡Р°СЃС‚Рё</summary>
     public static class StringExtensionsTrim
     {
-        /// <summary>Ограничение длины строки с удалением центральной её части</summary>
-        /// <param name="Str">Обрезаемая строка</param>
-        /// <param name="Length">Требуемая длина</param>
-        /// <param name="ReplacementPattern">Шаблон замены</param>
-        /// <returns>Строка с удалённой внутренней частью</returns>
+        /// <summary>РћРіСЂР°РЅРёС‡РµРЅРёРµ РґР»РёРЅС‹ СЃС‚СЂРѕРєРё СЃ СѓРґР°Р»РµРЅРёРµРј С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ РµС‘ С‡Р°СЃС‚Рё</summary>
+        /// <param name="Str">РћР±СЂРµР·Р°РµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+        /// <param name="Length">РўСЂРµР±СѓРµРјР°СЏ РґР»РёРЅР°</param>
+        /// <param name="ReplacementPattern">РЁР°Р±Р»РѕРЅ Р·Р°РјРµРЅС‹</param>
+        /// <returns>РЎС‚СЂРѕРєР° СЃ СѓРґР°Р»С‘РЅРЅРѕР№ РІРЅСѓС‚СЂРµРЅРЅРµР№ С‡Р°СЃС‚СЊСЋ</returns>
         [NotNull]
         public static string TrimByLength([NotNull] this string Str, int Length, [NotNull] string ReplacementPattern = "..")
         {

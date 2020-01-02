@@ -1,25 +1,25 @@
-using System.IO;
+п»їusing System.IO;
 using System.Linq.Reactive;
 using System.Runtime.CompilerServices;
 using MathCore.Values;
 
 namespace System
 {
-    /// <summary>Класс поточного чтения объектов из потока данных</summary>
-    /// <typeparam name="T">Тип читаемых объектов</typeparam>
+    /// <summary>РљР»Р°СЃСЃ РїРѕС‚РѕС‡РЅРѕРіРѕ С‡С‚РµРЅРёСЏ РѕР±СЉРµРєС‚РѕРІ РёР· РїРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
+    /// <typeparam name="T">РўРёРї С‡РёС‚Р°РµРјС‹С… РѕР±СЉРµРєС‚РѕРІ</typeparam>
     public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     // http://www.rsdn.ru/article/dotnet/ReactiveExtensions.xml
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Событие чтения нового объекта из потока данных</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ С‡С‚РµРЅРёСЏ РЅРѕРІРѕРіРѕ РѕР±СЉРµРєС‚Р° РёР· РїРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
         public event EventHandler<EventArgs<T>> Readed;
-        /// <summary>Источник события чтения объекта из потока данных</summary>
-        /// <param name="e">Аргумент события, содержащий прочитанный объект</param>
+        /// <summary>РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ С‡С‚РµРЅРёСЏ РѕР±СЉРµРєС‚Р° РёР· РїРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
+        /// <param name="e">РђСЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ, СЃРѕРґРµСЂР¶Р°С‰РёР№ РїСЂРѕС‡РёС‚Р°РЅРЅС‹Р№ РѕР±СЉРµРєС‚</param>
         protected virtual void OnReaded(EventArgs<T> e) => Readed?.Invoke(this, e);
 
-        /// <summary>Источник события чтения объекта из потока данных</summary>
-        /// <param name="obj">Прочитанный объект</param>
+        /// <summary>РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёСЏ С‡С‚РµРЅРёСЏ РѕР±СЉРµРєС‚Р° РёР· РїРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
+        /// <param name="obj">РџСЂРѕС‡РёС‚Р°РЅРЅС‹Р№ РѕР±СЉРµРєС‚</param>
         protected virtual void OnReaded(T obj)
         {
             OnReaded(new EventArgs<T>(obj));
@@ -28,7 +28,7 @@ namespace System
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Потока данных</summary>
+        /// <summary>РџРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
         private readonly Stream _DataStream;
 
         private long _StartStreamPosition;
@@ -39,16 +39,16 @@ namespace System
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Потока данных</summary>
+        /// <summary>РџРѕС‚РѕРєР° РґР°РЅРЅС‹С…</summary>
         public Stream DataStream => _DataStream;
 
-        /// <summary>Процент готовности</summary>
+        /// <summary>РџСЂРѕС†РµРЅС‚ РіРѕС‚РѕРІРЅРѕСЃС‚Рё</summary>
         public double Complited => _DataStream.Position / (double)_DataStream.Length;
 
-        /// <summary>Скорость обработки данных</summary>
+        /// <summary>РЎРєРѕСЂРѕСЃС‚СЊ РѕР±СЂР°Р±РѕС‚РєРё РґР°РЅРЅС‹С…</summary>
         public StreamDataSpeedValue Speed => _Speed;
 
-        /// <summary>Оставшееся время до окончания обработки</summary>
+        /// <summary>РћСЃС‚Р°РІС€РµРµСЃСЏ РІСЂРµРјСЏ РґРѕ РѕРєРѕРЅС‡Р°РЅРёСЏ РѕР±СЂР°Р±РѕС‚РєРё</summary>
         public TimeSpan? RemainingTime
         {
             get

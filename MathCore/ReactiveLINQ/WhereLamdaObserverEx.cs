@@ -1,4 +1,4 @@
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 namespace System.Linq.Reactive
 {

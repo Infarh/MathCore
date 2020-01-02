@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 
 namespace MathCore.Vectors
 {
@@ -18,7 +18,7 @@ namespace MathCore.Vectors
         {
             if(Dementions is null) throw new ArgumentNullException(nameof(Dementions));
             if(i + 1 > Dementions.Length) 
-                throw new ArgumentOutOfRangeException(nameof(i), "Запрашиваемый индекс оси превышает указанную размерность");
+                throw new ArgumentOutOfRangeException(nameof(i), "Р—Р°РїСЂР°С€РёРІР°РµРјС‹Р№ РёРЅРґРµРєСЃ РѕСЃРё РїСЂРµРІС‹С€Р°РµС‚ СѓРєР°Р·Р°РЅРЅСѓСЋ СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ");
 
             if(i + 1 == Dementions.Length)
             {
@@ -29,7 +29,7 @@ namespace MathCore.Vectors
 
             var lenght = Dementions[i];
             if(lenght < 1)
-                throw new ArgumentOutOfRangeException(nameof(Dementions), $"Размер по оси {i} не может быть меньше 1"); 
+                throw new ArgumentOutOfRangeException(nameof(Dementions), $"Р Р°Р·РјРµСЂ РїРѕ РѕСЃРё {i} РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ 1"); 
 
             _Demention = new VectorND<T>[lenght];
             for(var j = 0; j < lenght; j++)

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.ComponentModel;
 using System.Text;
 using MathCore.Annotations;

@@ -1,28 +1,28 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 
 namespace System.Linq.Expressions
 {
-    /// <summary>Класс "посетителя" для "подстановки" актуальных значний в дерево выражения</summary>
+    /// <summary>РљР»Р°СЃСЃ "РїРѕСЃРµС‚РёС‚РµР»СЏ" РґР»СЏ "РїРѕРґСЃС‚Р°РЅРѕРІРєРё" Р°РєС‚СѓР°Р»СЊРЅС‹С… Р·РЅР°С‡РЅРёР№ РІ РґРµСЂРµРІРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public class TeXEvaluationExpressionVisitor : ExpressionVisitor
     {
-        // Вспомогательный класс для хранения значения и типа свойств
+        // Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РєР»Р°СЃСЃ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ Рё С‚РёРїР° СЃРІРѕР№СЃС‚РІ
         private sealed class TypeValuePair
         {
             public object Value { get; set; }
             public Type Type { get; set; }
         }
 
-        // Мапа для хранения значения и типа свойств по имени свойства
+        // РњР°РїР° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ Рё С‚РёРїР° СЃРІРѕР№СЃС‚РІ РїРѕ РёРјРµРЅРё СЃРІРѕР№СЃС‚РІР°
         private readonly Dictionary<string, TypeValuePair> _MemberProperties;
 
-        // Конструктор принимает выражение и объект, значения свойств которого будут подставлены
-        // в заданное выражение
+        // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїСЂРёРЅРёРјР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ Рё РѕР±СЉРµРєС‚, Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІ РєРѕС‚РѕСЂРѕРіРѕ Р±СѓРґСѓС‚ РїРѕРґСЃС‚Р°РІР»РµРЅС‹
+        // РІ Р·Р°РґР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
         public TeXEvaluationExpressionVisitor(Expression expression, object memberObject)
         {
-            // Получаю все свойства переданного объекта
+            // РџРѕР»СѓС‡Р°СЋ РІСЃРµ СЃРІРѕР№СЃС‚РІР° РїРµСЂРµРґР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
             var member_props = memberObject.GetType().GetProperties();
 
-            // И получаю ассоциативный массив типа свойства и значения по имени свойства
+            // Р РїРѕР»СѓС‡Р°СЋ Р°СЃСЃРѕС†РёР°С‚РёРІРЅС‹Р№ РјР°СЃСЃРёРІ С‚РёРїР° СЃРІРѕР№СЃС‚РІР° Рё Р·РЅР°С‡РµРЅРёСЏ РїРѕ РёРјРµРЅРё СЃРІРѕР№СЃС‚РІР°
             _MemberProperties = member_props.ToDictionary(pi => pi.Name,
                 pi => new TypeValuePair
                 {
@@ -33,15 +33,15 @@ namespace System.Linq.Expressions
             ConvertedExpression = Visit(expression);
         }
 
-        // "Обновленное" выражение с "подставленными" значениями свойств
+        // "РћР±РЅРѕРІР»РµРЅРЅРѕРµ" РІС‹СЂР°Р¶РµРЅРёРµ СЃ "РїРѕРґСЃС‚Р°РІР»РµРЅРЅС‹РјРё" Р·РЅР°С‡РµРЅРёСЏРјРё СЃРІРѕР№СЃС‚РІ
         public Expression ConvertedExpression { get; private set; }
 
-        // Заменяем обращение к члену на соответствующее значение
+        // Р—Р°РјРµРЅСЏРµРј РѕР±СЂР°С‰РµРЅРёРµ Рє С‡Р»РµРЅСѓ РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ Р·РЅР°С‡РµРЅРёРµ
         protected override Expression VisitMember(MemberExpression memberExpression)
         {
-            // Пробуем найти значение члена с указанным именем
+            // РџСЂРѕР±СѓРµРј РЅР°Р№С‚Рё Р·РЅР°С‡РµРЅРёРµ С‡Р»РµРЅР° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРјРµРЅРµРј
             if(_MemberProperties.TryGetValue(memberExpression.Member.Name, out var type_value_pair))
-                // И заменяем его на соответствующее константное выражение
+                // Р Р·Р°РјРµРЅСЏРµРј РµРіРѕ РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
                 return Expression.Constant(value: type_value_pair.Value, type: type_value_pair.Type);
             return memberExpression;
         }

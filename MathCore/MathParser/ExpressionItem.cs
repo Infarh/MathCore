@@ -1,10 +1,10 @@
-using System.ComponentModel;
+п»їusing System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Элемент математического выражения</summary>
+    /// <summary>Р­Р»РµРјРµРЅС‚ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     public abstract class ExpressionItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,16 +23,16 @@ namespace MathCore.MathParser
 
         private string _Name;
 
-        /// <summary>Имя</summary>
+        /// <summary>РРјСЏ</summary>
         public string Name { get => _Name; set => Set(ref _Name, value); }
 
-        /// <summary>Инициализация нового элемента математического выражения</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
         protected ExpressionItem() { }
 
-        /// <summary>Инициализация нового элемента математического выражения</summary><param name="Name">Имя элемента</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary><param name="Name">РРјСЏ СЌР»РµРјРµРЅС‚Р°</param>
         protected ExpressionItem(string Name) => this.Name = Name;
 
-        /// <summary>Метод определения значения</summary><returns>Численное значение элемента выражения</returns>
+        /// <summary>РњРµС‚РѕРґ РѕРїСЂРµРґРµР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ</summary><returns>Р§РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
         public abstract double GetValue();
     }
 }

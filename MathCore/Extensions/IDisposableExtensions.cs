@@ -1,4 +1,4 @@
-using NN = MathCore.Annotations.NotNullAttribute;
+﻿using NN = MathCore.Annotations.NotNullAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System

@@ -1,9 +1,9 @@
-namespace MathCore
+п»їnamespace MathCore
 {
-    /// <summary>Объект позволяет определять количество вложенных объектов</summary>
+    /// <summary>РћР±СЉРµРєС‚ РїРѕР·РІРѕР»СЏРµС‚ РѕРїСЂРµРґРµР»СЏС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РІР»РѕР¶РµРЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ</summary>
     public interface ICountable
     {
-        /// <summary>Число элементов</summary>
+        /// <summary>Р§РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ</summary>
         int Count { get; }
     }
 }

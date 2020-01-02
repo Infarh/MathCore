@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+п»їusing System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
@@ -7,7 +7,7 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.Collections.Generic
 {
-    /// <summary>Класс методов-расширений для интерфейса <see cref="IDictionary{T,V}"/></summary>
+    /// <summary>РљР»Р°СЃСЃ РјРµС‚РѕРґРѕРІ-СЂР°СЃС€РёСЂРµРЅРёР№ РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° <see cref="IDictionary{T,V}"/></summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class IDictionaryExtensions
     {
@@ -17,12 +17,12 @@ namespace System.Collections.Generic
             value = item.Value;
         }
 
-        /// <summary>Метод добавления значения в словарь списков значений</summary>
-        /// <param name="dictionary">Словарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
-        /// <param name="key">Ключ словаря типа <typeparamref name="TKey"/></param>
-        /// <param name="value">Значение списка типа <typeparamref name="TValue"/></param>
-        /// <typeparam name="TKey">Тип ключа словаря <paramref name="key"/></typeparam>
-        /// <typeparam name="TValue">Тип значения списка значений <paramref name="value"/></typeparam>
+        /// <summary>РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РІ СЃР»РѕРІР°СЂСЊ СЃРїРёСЃРєРѕРІ Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РЎР»РѕРІР°СЂСЊ СЃРїРёСЃРєРѕРІ <see cref="IList{TValue}"/> Р·РЅР°С‡РµРЅРёР№ С‚РёРїР° <typeparamref name="TValue"/></param>
+        /// <param name="key">РљР»СЋС‡ СЃР»РѕРІР°СЂСЏ С‚РёРїР° <typeparamref name="TKey"/></param>
+        /// <param name="value">Р—РЅР°С‡РµРЅРёРµ СЃРїРёСЃРєР° С‚РёРїР° <typeparamref name="TValue"/></param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ <paramref name="key"/></typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃРїРёСЃРєР° Р·РЅР°С‡РµРЅРёР№ <paramref name="value"/></typeparam>
         public static void AddValue<TKey, TValue>
         (
             [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
@@ -30,14 +30,14 @@ namespace System.Collections.Generic
             TValue value
         ) => dictionary.GetValueOrAddNew(key, () => new List<TValue>()).Add(value);
 
-        /// <summary>Метод добавления значения в словарь списков значений</summary>
-        /// <param name="dictionary">Словарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
-        /// <param name="obj">Объект-ключ словаря типа <typeparamref name="TObject"/></param>
-        /// <param name="KeySelector">Метод образования ключа типа <typeparamref name="TKey"/> словаря из объекта типа <typeparamref name="TObject"/></param>
-        /// <param name="ValueSelector">Метод образования значения типа <typeparamref name="TValue"/> из объекта типа <typeparamref name="TObject"/></param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TObject">Тип входного объекта</typeparam>
-        /// <typeparam name="TValue">Тип значения списка</typeparam>
+        /// <summary>РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РІ СЃР»РѕРІР°СЂСЊ СЃРїРёСЃРєРѕРІ Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РЎР»РѕРІР°СЂСЊ СЃРїРёСЃРєРѕРІ <see cref="IList{TValue}"/> Р·РЅР°С‡РµРЅРёР№ С‚РёРїР° <typeparamref name="TValue"/></param>
+        /// <param name="obj">РћР±СЉРµРєС‚-РєР»СЋС‡ СЃР»РѕРІР°СЂСЏ С‚РёРїР° <typeparamref name="TObject"/></param>
+        /// <param name="KeySelector">РњРµС‚РѕРґ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ РєР»СЋС‡Р° С‚РёРїР° <typeparamref name="TKey"/> СЃР»РѕРІР°СЂСЏ РёР· РѕР±СЉРµРєС‚Р° С‚РёРїР° <typeparamref name="TObject"/></param>
+        /// <param name="ValueSelector">РњРµС‚РѕРґ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° <typeparamref name="TValue"/> РёР· РѕР±СЉРµРєС‚Р° С‚РёРїР° <typeparamref name="TObject"/></param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TObject">РўРёРї РІС…РѕРґРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃРїРёСЃРєР°</typeparam>
         public static void AddValue<TKey, TObject, TValue>
         (
             [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
@@ -47,12 +47,12 @@ namespace System.Collections.Generic
         ) =>
             dictionary.AddValue(KeySelector(obj), ValueSelector(obj));
 
-        /// <summary>Метод добавления значения в словарь списков значений</summary>
-        /// <param name="dictionary">Словарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
-        /// <param name="value">Значение, записываемое в словарь</param>
-        /// <param name="KeySelector">Метод извлечения ключа из указанного значения</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения списка</typeparam>
+        /// <summary>РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РІ СЃР»РѕРІР°СЂСЊ СЃРїРёСЃРєРѕРІ Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РЎР»РѕРІР°СЂСЊ СЃРїРёСЃРєРѕРІ <see cref="IList{TValue}"/> Р·РЅР°С‡РµРЅРёР№ С‚РёРїР° <typeparamref name="TValue"/></param>
+        /// <param name="value">Р—РЅР°С‡РµРЅРёРµ, Р·Р°РїРёСЃС‹РІР°РµРјРѕРµ РІ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="KeySelector">РњРµС‚РѕРґ РёР·РІР»РµС‡РµРЅРёСЏ РєР»СЋС‡Р° РёР· СѓРєР°Р·Р°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃРїРёСЃРєР°</typeparam>
         public static void AddValue<TKey, TValue>
         (
             [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
@@ -61,12 +61,12 @@ namespace System.Collections.Generic
         ) =>
             dictionary.AddValue(KeySelector(value), value);
 
-        /// <summary>Добавление значений в словарь</summary>
-        /// <param name="dictionary">Словарь в который надо добавить значения</param>
-        /// <param name="collection">Коллекция добавляемух значений</param>
-        /// <param name="converter">Метод определения ключа словаря для каждого из элементов коллекции</param>
-        /// <typeparam name="TKey">ТИп ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
+        /// <summary>Р”РѕР±Р°РІР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ РІ СЃР»РѕРІР°СЂСЊ</summary>
+        /// <param name="dictionary">РЎР»РѕРІР°СЂСЊ РІ РєРѕС‚РѕСЂС‹Р№ РЅР°РґРѕ РґРѕР±Р°РІРёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ</param>
+        /// <param name="collection">РљРѕР»Р»РµРєС†РёСЏ РґРѕР±Р°РІР»СЏРµРјСѓС… Р·РЅР°С‡РµРЅРёР№</param>
+        /// <param name="converter">РњРµС‚РѕРґ РѕРїСЂРµРґРµР»РµРЅРёСЏ РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ РґР»СЏ РєР°Р¶РґРѕРіРѕ РёР· СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё</param>
+        /// <typeparam name="TKey">РўРРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
         public static void AddValues<TKey, TValue>
         (
             [NotNull] this IDictionary<TKey, TValue> dictionary,
@@ -75,13 +75,13 @@ namespace System.Collections.Generic
         ) =>
             collection.AddToDictionary(dictionary, converter);
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="key">Ключ значения, которое надо получить</param>
-        /// <param name="creator">Метод получения нового значения, заносимого в словарь при отсутствии в нём указанного ключа</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="key">РљР»СЋС‡ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="creator">РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РЅРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, Р·Р°РЅРѕСЃРёРјРѕРіРѕ РІ СЃР»РѕРІР°СЂСЊ РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РІ РЅС‘Рј СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РџРѕР»СѓС‡РµРЅРЅРѕРµ РёР· СЃР»РѕРІР°СЂСЏ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєР»СЋС‡Сѓ Р·РЅР°С‡РµРЅРёРµ, Р»РёР±Рѕ СЃРѕР·РґР°РЅРЅРѕРµ РІРЅРѕРІСЊ Рё РїРѕРјРµС‰С‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
             [NotNull] this Dictionary<TKey, TValue> dictionary,
@@ -94,13 +94,13 @@ namespace System.Collections.Generic
             return value;
         }
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="key">Ключ значения, которое надо получить</param>
-        /// <param name="creator">Метод получения нового значения по указанному ключу, заносимого в словарь при отсутствии в нём указанного ключа</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="key">РљР»СЋС‡ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="creator">РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РЅРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєР»СЋС‡Сѓ, Р·Р°РЅРѕСЃРёРјРѕРіРѕ РІ СЃР»РѕРІР°СЂСЊ РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РІ РЅС‘Рј СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РџРѕР»СѓС‡РµРЅРЅРѕРµ РёР· СЃР»РѕРІР°СЂСЏ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєР»СЋС‡Сѓ Р·РЅР°С‡РµРЅРёРµ, Р»РёР±Рѕ СЃРѕР·РґР°РЅРЅРѕРµ РІРЅРѕРІСЊ Рё РїРѕРјРµС‰С‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
             [NotNull] this Dictionary<TKey, TValue> dictionary,
@@ -113,13 +113,13 @@ namespace System.Collections.Generic
             return value;
         }
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="key">Ключ значения, которое надо получить</param>
-        /// <param name="creator">Метод получения нового значения, заносимого в словарь при отсутствии в нём указанного ключа</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="key">РљР»СЋС‡ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="creator">РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РЅРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, Р·Р°РЅРѕСЃРёРјРѕРіРѕ РІ СЃР»РѕРІР°СЂСЊ РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РІ РЅС‘Рј СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РџРѕР»СѓС‡РµРЅРЅРѕРµ РёР· СЃР»РѕРІР°СЂСЏ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєР»СЋС‡Сѓ Р·РЅР°С‡РµРЅРёРµ, Р»РёР±Рѕ СЃРѕР·РґР°РЅРЅРѕРµ РІРЅРѕРІСЊ Рё РїРѕРјРµС‰С‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
             [NotNull] this IDictionary<TKey, TValue> dictionary,
@@ -132,13 +132,13 @@ namespace System.Collections.Generic
             return value;
         }
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="key">Ключ значения, которое надо получить</param>
-        /// <param name="creator">Метод получения нового значения, заносимого в словарь при отсутствии в нём указанного ключа</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="key">РљР»СЋС‡ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="creator">РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РЅРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, Р·Р°РЅРѕСЃРёРјРѕРіРѕ РІ СЃР»РѕРІР°СЂСЊ РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РІ РЅС‘Рј СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РџРѕР»СѓС‡РµРЅРЅРѕРµ РёР· СЃР»РѕРІР°СЂСЏ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РєР»СЋС‡Сѓ Р·РЅР°С‡РµРЅРёРµ, Р»РёР±Рѕ СЃРѕР·РґР°РЅРЅРѕРµ РІРЅРѕРІСЊ Рё РїРѕРјРµС‰С‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
             [NotNull] this IDictionary<TKey, TValue> dictionary,
@@ -151,13 +151,13 @@ namespace System.Collections.Generic
             return value;
         }
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="key">Ключ, значение для которого требуется получить</param>
-        /// <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключём, если он отсутствует</param>
-        /// <typeparam name="TKey">Тип ключа</typeparam>
-        /// <typeparam name="TValue">Тип значения</typeparam>
-        /// <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="key">РљР»СЋС‡, Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="DefaultValue">Р—РЅР°С‡РµРЅРёРµ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅРѕ РІ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡С‘Рј, РµСЃР»Рё РѕРЅ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р°</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ</typeparam>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃР»РѕРІР°СЂСЏ РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°, Р»РёР±Рѕ СѓРєР°Р·Р°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</returns>
         public static TValue GetValue<TKey, TValue>
         (
             [NotNull] this Dictionary<TKey, TValue> dictionary,
@@ -166,13 +166,13 @@ namespace System.Collections.Generic
         ) =>
             dictionary.TryGetValue(key, out var v) ? v : DefaultValue;
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="key">Ключ, значение для которого требуется получить</param>
-        /// <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключём, если он отсутствует</param>
-        /// <typeparam name="TKey">Тип ключа</typeparam>
-        /// <typeparam name="TValue">Тип значения</typeparam>
-        /// <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="key">РљР»СЋС‡, Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <param name="DefaultValue">Р—РЅР°С‡РµРЅРёРµ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅРѕ РІ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡С‘Рј, РµСЃР»Рё РѕРЅ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р°</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ</typeparam>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃР»РѕРІР°СЂСЏ РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°, Р»РёР±Рѕ СѓРєР°Р·Р°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</returns>
         public static TValue GetValue<TKey, TValue>
         (
             [NotNull] this IDictionary<TKey, TValue> dictionary,
@@ -181,20 +181,20 @@ namespace System.Collections.Generic
         ) =>
             dictionary.TryGetValue(key, out var value) ? value : DefaultValue;
 
-        /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="name">Название объекта, значение для которого требуется получить</param>
-        /// <typeparam name="TValue">Тип значения</typeparam>
-        /// <returns>Значение словаря для указанного ключа</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ РІ СЃР»СѓС‡Р°Рµ РµРіРѕ РЅР°Р»РёС‡РёСЏ, РёР»Рё РґРѕР±Р°РІРёС‚СЊ РЅРѕРІРѕРµ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="name">РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р°, Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ</param>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ</typeparam>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃР»РѕРІР°СЂСЏ РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєР»СЋС‡Р°</returns>
         public static TValue GetValue<TValue>([NotNull] this Dictionary<string, object> dictionary, [NotNull] string name) => dictionary.TryGetValue(name, out var value) ? (TValue)value : default;
 
-        /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
-        /// <param name="dictionary">Инициализируемый словарь</param>
-        /// <param name="count">Количество добавляемых элементов</param>
-        /// <param name="initializer">Метод генерации новых элементов</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Инициализированный словарь</returns>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="count">РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР±Р°РІР»СЏРµРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <param name="initializer">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃР»РѕРІР°СЂСЊ</returns>
         [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue>
         (
@@ -209,15 +209,15 @@ namespace System.Collections.Generic
             return dictionary;
         }
 
-        /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
-        /// <param name="dictionary">Инициализируемый словарь</param>
-        /// <param name="count">Количество добавляемых элементов</param>
-        /// <param name="parameter">Параметр инициализации</param>
-        /// <param name="initializer">Метод генерации новых элементов</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <typeparam name="TParameter">Тип параметра</typeparam>
-        /// <returns>Инициализированный словарь</returns>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="count">РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР±Р°РІР»СЏРµРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <param name="parameter">РџР°СЂР°РјРµС‚СЂ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё</param>
+        /// <param name="initializer">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TParameter">РўРёРї РїР°СЂР°РјРµС‚СЂР°</typeparam>
+        /// <returns>РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃР»РѕРІР°СЂСЊ</returns>
         [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue, TParameter>
         (
@@ -233,13 +233,13 @@ namespace System.Collections.Generic
             return dictionary;
         }
 
-        /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
-        /// <param name="dictionary">Инициализируемый словарь</param>
-        /// <param name="count">Количество добавляемых элементов</param>
-        /// <param name="initializer">Метод генерации новых элементов</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Инициализированный словарь</returns>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="count">РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР±Р°РІР»СЏРµРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <param name="initializer">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃР»РѕРІР°СЂСЊ</returns>
         [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue>
         (
@@ -254,15 +254,15 @@ namespace System.Collections.Generic
             return dictionary;
         }
 
-        /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
-        /// <param name="dictionary">Инициализируемый словарь</param>
-        /// <param name="count">Количество добавляемых элементов</param>
-        /// <param name="parameter">Параметр инициалализации</param>
-        /// <param name="initializer">Метод генерации новых элементов</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <typeparam name="TParameter">Тип параметра инициализации</typeparam>
-        /// <returns>Инициализированный словарь</returns>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="count">РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР±Р°РІР»СЏРµРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <param name="parameter">РџР°СЂР°РјРµС‚СЂ РёРЅРёС†РёР°Р»Р°Р»РёР·Р°С†РёРё</param>
+        /// <param name="initializer">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TParameter">РўРёРї РїР°СЂР°РјРµС‚СЂР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё</typeparam>
+        /// <returns>РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃР»РѕРІР°СЂСЊ</returns>
         [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue, TParameter>
         (
@@ -278,13 +278,13 @@ namespace System.Collections.Generic
             return dictionary;
         }
 
-        /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
-        /// <param name="dictionary">Инициализируемый словарь</param>
-        /// <param name="keys">Коллекция ключей</param>
-        /// <param name="initializer">Метод генерации новых элементов</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <returns>Инициализированный словарь</returns>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="keys">РљРѕР»Р»РµРєС†РёСЏ РєР»СЋС‡РµР№</param>
+        /// <param name="initializer">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <returns>РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃР»РѕРІР°СЂСЊ</returns>
         [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue>
         (
@@ -299,15 +299,15 @@ namespace System.Collections.Generic
             return dictionary;
         }
 
-        /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
-        /// <param name="dictionary">Инициализируемый словарь</param>
-        /// <param name="keys">Коллекция ключей</param>
-        /// <param name="parameter">Параметр инициалализации</param>
-        /// <param name="initializer">Метод генерации новых элементов</param>
-        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
-        /// <typeparam name="TValue">Тип значения словаря</typeparam>
-        /// <typeparam name="TParameter">Тип параметра инициализации</typeparam>
-        /// <returns>Инициализированный словарь</returns>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ СѓРєР°Р·Р°РЅРЅС‹Рј РјРµС‚РѕРґРѕРј РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°С‡РµРЅРёР№</summary>
+        /// <param name="dictionary">РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="keys">РљРѕР»Р»РµРєС†РёСЏ РєР»СЋС‡РµР№</param>
+        /// <param name="parameter">РџР°СЂР°РјРµС‚СЂ РёРЅРёС†РёР°Р»Р°Р»РёР·Р°С†РёРё</param>
+        /// <param name="initializer">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р° СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ СЃР»РѕРІР°СЂСЏ</typeparam>
+        /// <typeparam name="TParameter">РўРёРї РїР°СЂР°РјРµС‚СЂР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё</typeparam>
+        /// <returns>РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃР»РѕРІР°СЂСЊ</returns>
         [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue, TParameter>
         (
@@ -323,12 +323,12 @@ namespace System.Collections.Generic
             return dictionary;
         }
 
-        /// <summary>Удаление из словаря элементов, удовлетворяющих предикату</summary>
-        /// <param name="dictionary">Рассматриваемый словарь</param>
-        /// <param name="selector">Метод отбора элементов</param>
-        /// <typeparam name="TKey">Тип ключа</typeparam>
-        /// <typeparam name="TValue">Тип значения</typeparam>
-        /// <returns>Массив удалённых пар ключ-значение</returns>
+        /// <summary>РЈРґР°Р»РµРЅРёРµ РёР· СЃР»РѕРІР°СЂСЏ СЌР»РµРјРµРЅС‚РѕРІ, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РёС… РїСЂРµРґРёРєР°С‚Сѓ</summary>
+        /// <param name="dictionary">Р Р°СЃСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ СЃР»РѕРІР°СЂСЊ</param>
+        /// <param name="selector">РњРµС‚РѕРґ РѕС‚Р±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ</param>
+        /// <typeparam name="TKey">РўРёРї РєР»СЋС‡Р°</typeparam>
+        /// <typeparam name="TValue">РўРёРї Р·РЅР°С‡РµРЅРёСЏ</typeparam>
+        /// <returns>РњР°СЃСЃРёРІ СѓРґР°Р»С‘РЅРЅС‹С… РїР°СЂ РєР»СЋС‡-Р·РЅР°С‡РµРЅРёРµ</returns>
         [NotNull]
         public static KeyValuePair<TKey, TValue>[] RemoveWhere<TKey, TValue>
         (

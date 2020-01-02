@@ -1,18 +1,18 @@
-using MathCore.Annotations;
+п»їusing MathCore.Annotations;
 
 namespace System.Linq.Reactive
 {
-    /// <summary>НАблюдаемый объект с методами обработки событий, задаваемыми лямбда-синтексисом</summary>
+    /// <summary>РќРђР±Р»СЋРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚ СЃ РјРµС‚РѕРґР°РјРё РѕР±СЂР°Р±РѕС‚РєРё СЃРѕР±С‹С‚РёР№, Р·Р°РґР°РІР°РµРјС‹РјРё Р»СЏРјР±РґР°-СЃРёРЅС‚РµРєСЃРёСЃРѕРј</summary>
     /// <typeparam name="T"></typeparam>
     public class LamdaObservable<T> : SimpleObservableEx<T>
     {
-        /// <summary>Присоединённый наблюдатель</summary>
+        /// <summary>РџСЂРёСЃРѕРµРґРёРЅС‘РЅРЅС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</summary>
         private readonly LinkedObserver<T> _Observer;
-        /// <summary>Действие обработки следующего объекта наблюдения</summary>
+        /// <summary>Р”РµР№СЃС‚РІРёРµ РѕР±СЂР°Р±РѕС‚РєРё СЃР»РµРґСѓСЋС‰РµРіРѕ РѕР±СЉРµРєС‚Р° РЅР°Р±Р»СЋРґРµРЅРёСЏ</summary>
         private readonly Action<IObserver<T>, T> _OnNext;
-        /// <summary>Действие обработки завершения процесса наблюдения</summary>
+        /// <summary>Р”РµР№СЃС‚РІРёРµ РѕР±СЂР°Р±РѕС‚РєРё Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµСЃСЃР° РЅР°Р±Р»СЋРґРµРЅРёСЏ</summary>
         private readonly Action<IObserver<T>> _OnCompleted;
-        /// <summary>Действие обработки сброса состояния наблюдаемого объекта</summary>
+        /// <summary>Р”РµР№СЃС‚РІРёРµ РѕР±СЂР°Р±РѕС‚РєРё СЃР±СЂРѕСЃР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РЅР°Р±Р»СЋРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°</summary>
         private readonly Action<IObserverEx<T>> _OnReset;
         private readonly Action<IObserver<T>, Exception> _OnError;
 

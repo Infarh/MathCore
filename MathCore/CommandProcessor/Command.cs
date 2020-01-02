@@ -1,23 +1,23 @@
-using System;
+п»їusing System;
 using System.Linq;
 
 namespace MathCore.CommandProcessor
 {
-    /// <summary>Команда</summary>
+    /// <summary>РљРѕРјР°РЅРґР°</summary>
     public struct Command
     {
-        /// <summary>Имя команды</summary>
+        /// <summary>РРјСЏ РєРѕРјР°РЅРґС‹</summary>
         public string Name { get; set; }
-        /// <summary>Параметр команды</summary>
+        /// <summary>РџР°СЂР°РјРµС‚СЂ РєРѕРјР°РЅРґС‹</summary>
         public string Parameter { get; set; }
-        /// <summary>Массив аргументов команды</summary>
+        /// <summary>РњР°СЃСЃРёРІ Р°СЂРіСѓРјРµРЅС‚РѕРІ РєРѕРјР°РЅРґС‹</summary>
         public Argument[] Argument { get; set; }
 
-        /// <summary>Команда</summary>
-        /// <param name="CommandStr">Строковое представление команды</param>
-        /// <param name="ParameterSplitter">Разделитель имени и параметра команды</param>
-        /// <param name="ArgSplitter">Разделитель аргументов команды</param>
-        /// <param name="ValueSplitter">Разделитель имени аргумента и его значения</param>
+        /// <summary>РљРѕРјР°РЅРґР°</summary>
+        /// <param name="CommandStr">РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґС‹</param>
+        /// <param name="ParameterSplitter">Р Р°Р·РґРµР»РёС‚РµР»СЊ РёРјРµРЅРё Рё РїР°СЂР°РјРµС‚СЂР° РєРѕРјР°РЅРґС‹</param>
+        /// <param name="ArgSplitter">Р Р°Р·РґРµР»РёС‚РµР»СЊ Р°СЂРіСѓРјРµРЅС‚РѕРІ РєРѕРјР°РЅРґС‹</param>
+        /// <param name="ValueSplitter">Р Р°Р·РґРµР»РёС‚РµР»СЊ РёРјРµРЅРё Р°СЂРіСѓРјРµРЅС‚Р° Рё РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ</param>
         public Command(string CommandStr, char ParameterSplitter = ':', char ArgSplitter = ' ', char ValueSplitter = '=')
             : this()
         {
@@ -33,8 +33,8 @@ namespace MathCore.CommandProcessor
                         .ToArray();
         }
 
-        /// <summary>Преобразование в строку</summary>
-        /// <returns>Строковое представление команды</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґС‹</returns>
         public override string ToString() => $"{Name}{(Parameter is null ? "" : Parameter.ToFormattedString("({0})"))}{(Argument is null || Argument.Length == 0 ? "" : Argument.ToSeparatedStr(" ").ToFormattedString(" {0}"))}";
     }
 }

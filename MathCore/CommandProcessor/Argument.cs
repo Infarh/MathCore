@@ -1,29 +1,29 @@
-using System;
+п»їusing System;
 using System.Linq;
 
 namespace MathCore.CommandProcessor
 {
-    /// <summary>Аргумент команды</summary>
+    /// <summary>РђСЂРіСѓРјРµРЅС‚ РєРѕРјР°РЅРґС‹</summary>
     public struct Argument
     {
-        /// <summary>Имя аргумента</summary>
+        /// <summary>РРјСЏ Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public string Name { get; set; }
-        /// <summary>Массив значений аргумента</summary>
+        /// <summary>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№ Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public string[] Values { get; set; }
-        /// <summary>Значение аргумента</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public string Value => Values?.Length > 0 ? Values[0] : string.Empty;
 
-        /// <summary>Количество значений аргумента</summary>
+        /// <summary>РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°С‡РµРЅРёР№ Р°СЂРіСѓРјРµРЅС‚Р°</summary>
         public int Count => Values?.Length ?? 0;
 
-        /// <summary>Доступ к значениям аргумента по номеру</summary>
-        /// <param name="i">Номер значения</param>
-        /// <returns>Значение аргумента с указанным номером</returns>
+        /// <summary>Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј Р°СЂРіСѓРјРµРЅС‚Р° РїРѕ РЅРѕРјРµСЂСѓ</summary>
+        /// <param name="i">РќРѕРјРµСЂ Р·РЅР°С‡РµРЅРёСЏ</param>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РЅРѕРјРµСЂРѕРј</returns>
         public string this[int i] => Values[i];
 
-        /// <summary>Аргумент команды</summary>
-        /// <param name="ArgStr">Строковое описание аргумента</param>
-        /// <param name="ValueSplitter">Разделитель имени аргумента и значения</param>
+        /// <summary>РђСЂРіСѓРјРµРЅС‚ РєРѕРјР°РЅРґС‹</summary>
+        /// <param name="ArgStr">РЎС‚СЂРѕРєРѕРІРѕРµ РѕРїРёСЃР°РЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р°</param>
+        /// <param name="ValueSplitter">Р Р°Р·РґРµР»РёС‚РµР»СЊ РёРјРµРЅРё Р°СЂРіСѓРјРµРЅС‚Р° Рё Р·РЅР°С‡РµРЅРёСЏ</param>
         public Argument(string ArgStr, char ValueSplitter = '=')
             : this()
         {
@@ -35,8 +35,8 @@ namespace MathCore.CommandProcessor
                         .ToArray();
         }
 
-        /// <summary>Преобразование в строку</summary>
-        /// <returns>Строковое представление аргумента</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р°</returns>
         public override string ToString() => $"{Name}{(Values is null || Values.Length == 0 ? "" : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
     }
 }

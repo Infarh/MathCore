@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.ComponentModel;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable VirtualMemberNeverOverridden.Global
@@ -8,20 +8,20 @@ namespace MathCore
 {
     public interface IFactory<out T>
     {
-        /// <summary>Создать новый объект</summary>
-        /// <returns>Новый объект типа <typeparamref name="T"/></returns>
+        /// <summary>РЎРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚</summary>
+        /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ С‚РёРїР° <typeparamref name="T"/></returns>
         [DST] T Create();
     }
 
-    /// <summary>Генератор объектов типа <typeparamref name="T"/></summary>
-    /// <typeparam name="T">Тип генерируемых объектов</typeparam>
+    /// <summary>Р“РµРЅРµСЂР°С‚РѕСЂ РѕР±СЉРµРєС‚РѕРІ С‚РёРїР° <typeparamref name="T"/></summary>
+    /// <typeparam name="T">РўРёРї РіРµРЅРµСЂРёСЂСѓРµРјС‹С… РѕР±СЉРµРєС‚РѕРІ</typeparam>
     public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     {
         /* ------------------------------------------------------------------------------------------ */
 
         private event PropertyChangedEventHandler _PropertyChanged;
 
-        /// <summary>Событие возникает при генерации новой строки</summary>
+        /// <summary>РЎРѕР±С‹С‚РёРµ РІРѕР·РЅРёРєР°РµС‚ РїСЂРё РіРµРЅРµСЂР°С†РёРё РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё</summary>
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
             [DST] add => _PropertyChanged += value;
@@ -32,7 +32,7 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Метод генерации объектов</summary>
+        /// <summary>РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РѕР±СЉРµРєС‚РѕРІ</summary>
         private Func<T> _FactoryMethod;
 
         private T _Last;
@@ -42,7 +42,7 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Последний сгенерированный объект</summary>
+        /// <summary>РџРѕСЃР»РµРґРЅРёР№ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚</summary>
         public T Last
         {
             [DST]
@@ -55,7 +55,7 @@ namespace MathCore
             }
         }
 
-        /// <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
+        /// <summary>РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РѕР±СЉРµРєС‚РѕРІ С‚РёРїР° <typeparamref name="T"/></summary>
         public Func<T> FactoryMethod
         {
             [DST]
@@ -68,15 +68,15 @@ namespace MathCore
 
         protected Factory() { }
 
-        /// <summary>Новый генератор объектов типа <typeparamref name="T"/></summary>
-        /// <param name="CreateMethod">Метод генерации объектов типа <typeparamref name="T"/></param>
+        /// <summary>РќРѕРІС‹Р№ РіРµРЅРµСЂР°С‚РѕСЂ РѕР±СЉРµРєС‚РѕРІ С‚РёРїР° <typeparamref name="T"/></summary>
+        /// <param name="CreateMethod">РњРµС‚РѕРґ РіРµРЅРµСЂР°С†РёРё РѕР±СЉРµРєС‚РѕРІ С‚РёРїР° <typeparamref name="T"/></param>
         [DST]
         public Factory(Func<T> CreateMethod) => _FactoryMethod = CreateMethod;
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Создать новый объект</summary>
-        /// <returns>Новый объект типа <typeparamref name="T"/></returns>
+        /// <summary>РЎРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚</summary>
+        /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ С‚РёРїР° <typeparamref name="T"/></returns>
         [DST]
         public virtual T Create() => _FactoryMethod is null ? default : Last = _FactoryMethod();
 

@@ -1,31 +1,31 @@
-using MathCore.Annotations;
+п»їusing MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Функциональный элемент выражения</summary>
+    /// <summary>Р¤СѓРЅРєС†РёРѕРЅР°Р»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     internal class FunctionTerm : StringTerm
     {
-        /// <summary>Блок со скобками</summary>
+        /// <summary>Р‘Р»РѕРє СЃРѕ СЃРєРѕР±РєР°РјРё</summary>
         [NotNull]
         public BlockTerm Block { get; set; }
 
-        /// <summary>Новый функциональный элемент выражения</summary>
-        /// <param name="StrTerm">Строковый элемент выражения</param>
-        /// <param name="Block">Блок выражения</param>
+        /// <summary>РќРѕРІС‹Р№ С„СѓРЅРєС†РёРѕРЅР°Р»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
+        /// <param name="StrTerm">РЎС‚СЂРѕРєРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Block">Р‘Р»РѕРє РІС‹СЂР°Р¶РµРЅРёСЏ</param>
         public FunctionTerm([NotNull] StringTerm StrTerm, [NotNull] BlockTerm Block) : this(StrTerm.Name, Block) { }
 
         public FunctionTerm([NotNull] string Name, [NotNull] BlockTerm Block) : base(Name) => this.Block = Block;
 
-        /// <summary>Получить поддерево</summary>
-        /// <param name="Parser">Парсер</param>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Узел функции</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРѕРґРґРµСЂРµРІРѕ</summary>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>РЈР·РµР» С„СѓРЅРєС†РёРё</returns>
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression)
             => new FunctionNode(this, Parser, Expression);
 
-        /// <summary>Преобразование в строковую форму</summary>
-        /// <returns>Строковое представление элемента</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєРѕРІСѓСЋ С„РѕСЂРјСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</returns>
         public override string ToString() => $"{Name}{Block.ToString() ?? ""}";
     }
 }

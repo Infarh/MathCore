@@ -1,4 +1,4 @@
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions

@@ -1,4 +1,4 @@
-namespace MathCore.Expressions.Complex
+﻿namespace MathCore.Expressions.Complex
 {
     public abstract class ComplexBinaryExpression : ComplexExpression
     {

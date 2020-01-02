@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -35,7 +35,7 @@ namespace System.Linq.Expressions
 
         private static void CheckValueType(Type type)
         {
-            if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
+            if(!CheckNumType(type)) throw new NotSupportedException($"РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ С‚РёРї РґР°РЅРЅС‹С… {type}");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -215,7 +215,7 @@ namespace System.Linq.Expressions
                         throw new NotImplementedException();
                     }
                 default:
-                    throw new NotSupportedException("Неподдерживаемый тип операции");
+                    throw new NotSupportedException("РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ С‚РёРї РѕРїРµСЂР°С†РёРё");
             }
         }
 

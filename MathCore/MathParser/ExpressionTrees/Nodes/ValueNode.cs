@@ -1,13 +1,13 @@
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+п»їnamespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, хранящий значение</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, С…СЂР°РЅСЏС‰РёР№ Р·РЅР°С‡РµРЅРёРµ</summary>
     public abstract class ValueNode : ComputedNode
     {
-        /// <summary>Значение узла</summary>
+        /// <summary>Р—РЅР°С‡РµРЅРёРµ СѓР·Р»Р°</summary>
         public abstract double Value { get; set; }
 
-        /// <summary>Преобразование в строковую форму</summary>
-        /// <returns>Строковое представление</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєРѕРІСѓСЋ С„РѕСЂРјСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
         public override string ToString()
         {
             const string format = "{1}{0}{2}";

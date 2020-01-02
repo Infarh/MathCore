@@ -1,18 +1,18 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор выбора</summary>
+    /// <summary>РЈР·РµР» РґРµСЂРµРІР° РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ, СЂРµР°Р·Р»РёСѓСЋС‰РёР№ РѕРїРµСЂР°С‚РѕСЂ РІС‹Р±РѕСЂР°</summary>
     public class SelectorOperatorNode : OperatorNode
     {
-        /// <summary>Инициализация нового узла оператора выбора</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СѓР·Р»Р° РѕРїРµСЂР°С‚РѕСЂР° РІС‹Р±РѕСЂР°</summary>
         public SelectorOperatorNode() : base("?", -17) { }
 
-        /// <summary>Инициализация нового узла оператора выбора</summary>
-        /// <param name="Left">Левое поддерево выражения</param>
-        /// <param name="Right">Правое поддерево выражения</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СѓР·Р»Р° РѕРїРµСЂР°С‚РѕСЂР° РІС‹Р±РѕСЂР°</summary>
+        /// <param name="Left">Р›РµРІРѕРµ РїРѕРґРґРµСЂРµРІРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Right">РџСЂР°РІРѕРµ РїРѕРґРґРµСЂРµРІРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
         public SelectorOperatorNode(ExpressionTreeNode Left, ExpressionTreeNode Right)
             : this()
         {
@@ -20,7 +20,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             this.Right = Right;
         }
 
-        /// <summary>Вычисление значения узла</summary>
+        /// <summary>Р’С‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СѓР·Р»Р°</summary>
         /// <returns></returns>
         public override double Compute()
         {
@@ -30,8 +30,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                         : ((ComputedNode)variants.Right).Compute();
         }
 
-        /// <summary>Компиляция узла</summary>
-        /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РїСЂРѕРёР·РІРµРґРµРЅРёСЏ СѓР·Р»РѕРІ РїРѕРґРґРµСЂРµРІСЊРµРІ</returns>
         public override Expression Compile()
         {
             var variants = (VariantOperatorNode)Right;
@@ -46,9 +46,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             return Expression.Condition(condition, ((ComputedNode)variants.Left).Compile(), ((ComputedNode)variants.Right).Compile());
         }
 
-        /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
-        /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
+        /// <summary>РљРѕРјРїРёР»СЏС†РёСЏ СѓР·Р»Р°</summary>
+        /// <param name="Parameters">РњР°СЃСЃРёРІ РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <returns>РЎРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РїСЂРѕРёР·РІРµРґРµРЅРёСЏ СѓР·Р»РѕРІ РїРѕРґРґРµСЂРµРІСЊРµРІ</returns>
         public override Expression Compile(ParameterExpression[] Parameters)
         {
             var variants = (VariantOperatorNode)Right;
@@ -63,8 +63,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             return Expression.Condition(condition, ((ComputedNode)variants.Left).Compile(Parameters), ((ComputedNode)variants.Right).Compile(Parameters));
         }
 
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клон узла</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ СѓР·Р»Р°</summary>
+        /// <returns>РљР»РѕРЅ СѓР·Р»Р°</returns>
         public override ExpressionTreeNode Clone() => CloneOperatorNode<SelectorOperatorNode>();
     }
 }

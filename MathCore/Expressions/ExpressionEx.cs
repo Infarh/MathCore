@@ -1,4 +1,4 @@
-using ExF = System.Linq.Expressions.Expression<System.Func<double, double>>;
+﻿using ExF = System.Linq.Expressions.Expression<System.Func<double, double>>;
 using ExAF = System.Linq.Expressions.Expression<System.Func<double[], double>>;
 // ReSharper disable UnusedMember.Global
 

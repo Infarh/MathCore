@@ -1,24 +1,24 @@
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+п»їnamespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел интервального значения</summary>
+    /// <summary>РЈР·РµР» РёРЅС‚РµСЂРІР°Р»СЊРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</summary>
     public class IntervalNode : ParsedNode
     {
-        /// <summary>Минимальное значение</summary>
+        /// <summary>РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
         public ExpressionTreeNode Min { get => Left; set => Left = value; }
 
-        /// <summary>Максимальное значение</summary>
+        /// <summary>РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
         public ExpressionTreeNode Max { get => Right; set => Right = value; }
 
         public IntervalNode(double Min, double Max) : this(new ConstValueNode(Min), new ConstValueNode(Max)) { }
 
         public IntervalNode(ExpressionTreeNode Min, ExpressionTreeNode Max = null) { Left = Min; Right = Max; }
 
-        /// <summary>Клонирование поддерева</summary>
-        /// <returns>Клон поддерева</returns>
+        /// <summary>РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ РїРѕРґРґРµСЂРµРІР°</summary>
+        /// <returns>РљР»РѕРЅ РїРѕРґРґРµСЂРµРІР°</returns>
         public override ExpressionTreeNode Clone() => new IntervalNode(Min, Max);
 
-        /// <summary>Преобразование узла в строку</summary>
-        /// <returns>Строковое представление узла</returns>
+        /// <summary>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓР·Р»Р° РІ СЃС‚СЂРѕРєСѓ</summary>
+        /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ СѓР·Р»Р°</returns>
         public override string ToString() => $"{Left}..{Right}";
     }
 }

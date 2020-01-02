@@ -1,21 +1,21 @@
-using MathCore.MathParser.ExpressionTrees.Nodes;
+п»їusing MathCore.MathParser.ExpressionTrees.Nodes;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Символьный элемент математического выражения</summary>
+    /// <summary>РЎРёРјРІРѕР»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</summary>
     internal sealed class CharTerm : Term
     {
-        /// <summary>Символьное значение элемента</summary>
+        /// <summary>РЎРёРјРІРѕР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</summary>
         public char Value => _Value[0];
 
-        /// <summary>Новый символьный элемент</summary>
-        /// <param name="c">Символьное значение элемента</param>
+        /// <summary>РќРѕРІС‹Р№ СЃРёРјРІРѕР»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚</summary>
+        /// <param name="c">РЎРёРјРІРѕР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°</param>
         public CharTerm(char c) : base(new string(c, 1)) { }
 
-        /// <summary>Получить поддерево</summary>
-        /// <param name="Parser">Парсер мат.выражения</param>
-        /// <param name="Expression">Математическое выражение</param>
-        /// <returns>Результат вызова метода Parser.GetOperatorNode(Value)</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ РїРѕРґРґРµСЂРµРІРѕ</summary>
+        /// <param name="Parser">РџР°СЂСЃРµСЂ РјР°С‚.РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+        /// <param name="Expression">РњР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+        /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° Parser.GetOperatorNode(Value)</returns>
         public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression) => Parser.GetOperatorNode(Value);
     }
 }

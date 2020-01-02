@@ -1,22 +1,22 @@
-// ReSharper disable once CheckNamespace
+п»ї// ReSharper disable once CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 namespace System
 {
-    /// <summary>Зависимость от</summary>
+    /// <summary>Р—Р°РІРёСЃРёРјРѕСЃС‚СЊ РѕС‚</summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public sealed class DependencyOnAttribute : Attribute
     {
-        /// <summary>Элемент, от которого существует зависимость</summary>
+        /// <summary>Р­Р»РµРјРµРЅС‚, РѕС‚ РєРѕС‚РѕСЂРѕРіРѕ СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊ</summary>
         public string Name { get; set; }
 
-        /// <summary>Инициализация нового экземпляра <see cref="DependencyOnAttribute"/></summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="DependencyOnAttribute"/></summary>
         public DependencyOnAttribute() { }
 
-        /// <summary>Инициализация нового экземпляра <see cref="DependencyOnAttribute"/></summary>
-        /// <param name="Name">Имя элемента, от которого зависит помеченный элемент</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="DependencyOnAttribute"/></summary>
+        /// <param name="Name">РРјСЏ СЌР»РµРјРµРЅС‚Р°, РѕС‚ РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РІРёСЃРёС‚ РїРѕРјРµС‡РµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚</param>
         public DependencyOnAttribute(string Name) => this.Name = Name;
     }
 }

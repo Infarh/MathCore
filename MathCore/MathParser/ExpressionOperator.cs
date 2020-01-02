@@ -1,12 +1,12 @@
-using System;
+п»їusing System;
 
 namespace MathCore.MathParser
 {
-    /// <summary>Оператор</summary>
+    /// <summary>РћРїРµСЂР°С‚РѕСЂ</summary>
     public class ExpressionOperator : ExpressionItem
     {
-        /// <summary>Получить значение</summary>
-        /// <returns>Значение оператора</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ</summary>
+        /// <returns>Р—РЅР°С‡РµРЅРёРµ РѕРїРµСЂР°С‚РѕСЂР°</returns>
         public override double GetValue() => throw new NotImplementedException();
     }
 }

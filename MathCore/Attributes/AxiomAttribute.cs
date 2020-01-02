@@ -1,22 +1,22 @@
-// ReSharper disable once CheckNamespace
+п»ї// ReSharper disable once CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 namespace System
 {
-    /// <summary>Помеенное данным атрибутом не требует доказательств, или проверок</summary>
+    /// <summary>РџРѕРјРµРµРЅРЅРѕРµ РґР°РЅРЅС‹Рј Р°С‚СЂРёР±СѓС‚РѕРј РЅРµ С‚СЂРµР±СѓРµС‚ РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІ, РёР»Рё РїСЂРѕРІРµСЂРѕРє</summary>
     [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
     public sealed class AxiomAttribute : Attribute
     {
-        /// <summary>Дополнительный комментарий</summary>
+        /// <summary>Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ РєРѕРјРјРµРЅС‚Р°СЂРёР№</summary>
         public string Comment { get; set; }
 
-        /// <summary>Инициализация нового экземпляра <see cref="AxiomAttribute"/></summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="AxiomAttribute"/></summary>
         public AxiomAttribute() { }
 
-        /// <summary>Инициализация нового экземпляра <see cref="AxiomAttribute"/></summary>
-        /// <param name="Comment">Дополнительный комментарий</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="AxiomAttribute"/></summary>
+        /// <param name="Comment">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ РєРѕРјРјРµРЅС‚Р°СЂРёР№</param>
         public AxiomAttribute(string Comment) => this.Comment = Comment;
 
         /// <inheritdoc />

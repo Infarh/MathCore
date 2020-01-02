@@ -1,4 +1,4 @@
-namespace System.Linq.Reactive
+﻿namespace System.Linq.Reactive
 {
     internal sealed class TakeObserver<T> : SimpleObserverEx<T>
     {

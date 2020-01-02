@@ -1,36 +1,36 @@
-// ReSharper disable once CheckNamespace
+п»ї// ReSharper disable once CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 namespace System
 {
-    /// <summary>Значение должно быть больше, либо равно</summary>
+    /// <summary>Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ, Р»РёР±Рѕ СЂР°РІРЅРѕ</summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
     public sealed class LessOrEqualAttribute : Attribute
     {
-        /// <summary>Пороговое значение</summary>
+        /// <summary>РџРѕСЂРѕРіРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
         private object _Value;
 
-        /// <summary>Пороговое значение</summary>
+        /// <summary>РџРѕСЂРѕРіРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</summary>
         public object Value
         {
             get => _Value;
             set
             {
-                if(!(value is IComparable)) throw new ArgumentException("Значение должно поддерживать интерфейс IComparable", nameof(value));
+                if(!(value is IComparable)) throw new ArgumentException("Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ РёРЅС‚РµСЂС„РµР№СЃ IComparable", nameof(value));
                 _Value = value;
             }
         }
 
-        /// <summary>Инициализация нового экземпляра <see cref="LessOrEqualAttribute"/></summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="LessOrEqualAttribute"/></summary>
         public LessOrEqualAttribute() { }
 
-        /// <summary>Инициализация нового экземпляра <see cref="LessOrEqualAttribute"/></summary>
-        /// <param name="Value">Пороговое значение</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° <see cref="LessOrEqualAttribute"/></summary>
+        /// <param name="Value">РџРѕСЂРѕРіРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
         public LessOrEqualAttribute(object Value)
         {
-            if(!(Value is IComparable)) throw new ArgumentException("Значение должно поддерживать интерфейс IComparable", nameof(Value));
+            if(!(Value is IComparable)) throw new ArgumentException("Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ РёРЅС‚РµСЂС„РµР№СЃ IComparable", nameof(Value));
             this.Value = Value;
         }
 

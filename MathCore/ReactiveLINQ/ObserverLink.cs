@@ -1,42 +1,42 @@
-using System.Collections.Concurrent;
+п»їusing System.Collections.Concurrent;
 using System.Collections.Generic;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
-    /// <summary>Класс объектов-связей между наблюдателем и списком наблюдателей, позволяющих удалять наблюдатель из писка наблюдателей в случае если объект удаляется из памяти</summary>
-    /// <typeparam name="T">Тип значений наблюдаемого объекта</typeparam>
+    /// <summary>РљР»Р°СЃСЃ РѕР±СЉРµРєС‚РѕРІ-СЃРІСЏР·РµР№ РјРµР¶РґСѓ РЅР°Р±Р»СЋРґР°С‚РµР»РµРј Рё СЃРїРёСЃРєРѕРј РЅР°Р±Р»СЋРґР°С‚РµР»РµР№, РїРѕР·РІРѕР»СЏСЋС‰РёС… СѓРґР°Р»СЏС‚СЊ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ РёР· РїРёСЃРєР° РЅР°Р±Р»СЋРґР°С‚РµР»РµР№ РІ СЃР»СѓС‡Р°Рµ РµСЃР»Рё РѕР±СЉРµРєС‚ СѓРґР°Р»СЏРµС‚СЃСЏ РёР· РїР°РјСЏС‚Рё</summary>
+    /// <typeparam name="T">РўРёРї Р·РЅР°С‡РµРЅРёР№ РЅР°Р±Р»СЋРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°</typeparam>
     internal sealed class ObserverLink<T> : IDisposable
     {
-        /// <summary>Получить хэш-код связи</summary>
-        /// <param name="Observers">Коллекция наблюдателей</param>
-        /// <param name="Observer">Добавляемый наблюдатель</param>
-        /// <returns>Хэш-код связи</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ С…СЌС€-РєРѕРґ СЃРІСЏР·Рё</summary>
+        /// <param name="Observers">РљРѕР»Р»РµРєС†РёСЏ РЅР°Р±Р»СЋРґР°С‚РµР»РµР№</param>
+        /// <param name="Observer">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</param>
+        /// <returns>РҐСЌС€-РєРѕРґ СЃРІСЏР·Рё</returns>
         private static int GetHash([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) { unchecked { return Observer.GetHashCode() * 397 ^ Observers.GetHashCode(); } }
 
-        /// <summary>Словарь связей</summary>
+        /// <summary>РЎР»РѕРІР°СЂСЊ СЃРІСЏР·РµР№</summary>
         [NotNull]
         private static readonly ConcurrentDictionary<int, ObserverLink<T>> __Links = new ConcurrentDictionary<int, ObserverLink<T>>();
 
-        /// <summary>Получить связь между наблюдателем и списком наблюдателей</summary>
-        /// <param name="Observers">Коллекция наблюдателей</param>
-        /// <param name="Observer">Добавляемый наблюдатель</param>
-        /// <returns>Связь между наблюдателем и списком наблюдателей</returns>
+        /// <summary>РџРѕР»СѓС‡РёС‚СЊ СЃРІСЏР·СЊ РјРµР¶РґСѓ РЅР°Р±Р»СЋРґР°С‚РµР»РµРј Рё СЃРїРёСЃРєРѕРј РЅР°Р±Р»СЋРґР°С‚РµР»РµР№</summary>
+        /// <param name="Observers">РљРѕР»Р»РµРєС†РёСЏ РЅР°Р±Р»СЋРґР°С‚РµР»РµР№</param>
+        /// <param name="Observer">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</param>
+        /// <returns>РЎРІСЏР·СЊ РјРµР¶РґСѓ РЅР°Р±Р»СЋРґР°С‚РµР»РµРј Рё СЃРїРёСЃРєРѕРј РЅР°Р±Р»СЋРґР°С‚РµР»РµР№</returns>
         [NotNull]
         public static ObserverLink<T> GetLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), h => new ObserverLink<T>(Observers, Observer));
 
-        /// <summary>Удаляемый наблюдатель</summary>
+        /// <summary>РЈРґР°Р»СЏРµРјС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</summary>
         private IObserver<T> _Observer;
-        /// <summary>Коллекция наблюдателей, из которой требуется удалить отслеживаемый наблюдатель</summary>
+        /// <summary>РљРѕР»Р»РµРєС†РёСЏ РЅР°Р±Р»СЋРґР°С‚РµР»РµР№, РёР· РєРѕС‚РѕСЂРѕР№ С‚СЂРµР±СѓРµС‚СЃСЏ СѓРґР°Р»РёС‚СЊ РѕС‚СЃР»РµР¶РёРІР°РµРјС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</summary>
         private ICollection<IObserver<T>> _Observers;
-        /// <summary>Объект межпотоковой синхроницации</summary>
+        /// <summary>РћР±СЉРµРєС‚ РјРµР¶РїРѕС‚РѕРєРѕРІРѕР№ СЃРёРЅС…СЂРѕРЅРёС†Р°С†РёРё</summary>
         [NotNull]
         private readonly object _SyncRoot = new object();
 
-        /// <summary>Инициализация новой связи между списком наблюдателей и отслеживаемым наблюдателем</summary>
-        /// <param name="Observers">Список наблюдателей</param>
-        /// <param name="Observer">Отслеживаемый наблюдатель</param>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅРѕРІРѕР№ СЃРІСЏР·Рё РјРµР¶РґСѓ СЃРїРёСЃРєРѕРј РЅР°Р±Р»СЋРґР°С‚РµР»РµР№ Рё РѕС‚СЃР»РµР¶РёРІР°РµРјС‹Рј РЅР°Р±Р»СЋРґР°С‚РµР»РµРј</summary>
+        /// <param name="Observers">РЎРїРёСЃРѕРє РЅР°Р±Р»СЋРґР°С‚РµР»РµР№</param>
+        /// <param name="Observer">РћС‚СЃР»РµР¶РёРІР°РµРјС‹Р№ РЅР°Р±Р»СЋРґР°С‚РµР»СЊ</param>
         private ObserverLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull]IObserver<T> Observer)
         {
             _Observers = Observers;

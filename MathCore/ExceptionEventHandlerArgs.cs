@@ -1,43 +1,43 @@
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+п»їusing DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System
 {
-    /// <summary>Аргументы события исключения</summary>
-    /// <typeparam name="TException">Тип исключения</typeparam>
+    /// <summary>РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ</summary>
+    /// <typeparam name="TException">РўРёРї РёСЃРєР»СЋС‡РµРЅРёСЏ</typeparam>
     public class ExceptionEventHandlerArgs<TException> : EventArgs<TException> where TException : Exception
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Флаг необходимости генерации исключения</summary>
+        /// <summary>Р¤Р»Р°Рі РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РіРµРЅРµСЂР°С†РёРё РёСЃРєР»СЋС‡РµРЅРёСЏ</summary>
         private bool _Unhandled;
 
-        /// <summary>Флаг признака обработки исключения обработчиками</summary>
+        /// <summary>Р¤Р»Р°Рі РїСЂРёР·РЅР°РєР° РѕР±СЂР°Р±РѕС‚РєРё РёСЃРєР»СЋС‡РµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєР°РјРё</summary>
         private bool _IsHandled;
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Исключение обработано</summary>
+        /// <summary>РСЃРєР»СЋС‡РµРЅРёРµ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ</summary>
         public bool IsHandled { [DST] get => !_Unhandled && _IsHandled; [DST] set => _IsHandled = value; }
 
-        /// <summary>Признак необходимости генерации исключения</summary>
+        /// <summary>РџСЂРёР·РЅР°Рє РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РіРµРЅРµСЂР°С†РёРё РёСЃРєР»СЋС‡РµРЅРёСЏ</summary>
         public bool NeedToThrow => _Unhandled || !IsHandled;
 
         /* ------------------------------------------------------------------------------------------ */
 
 
-        /// <summary>Новый аргумент события генерации исключения</summary>
-        /// <param name="Error">Исключение</param>
+        /// <summary>РќРѕРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚ СЃРѕР±С‹С‚РёСЏ РіРµРЅРµСЂР°С†РёРё РёСЃРєР»СЋС‡РµРЅРёСЏ</summary>
+        /// <param name="Error">РСЃРєР»СЋС‡РµРЅРёРµ</param>
         [DST]
         public ExceptionEventHandlerArgs(TException Error) : base(Error) { }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Исключение обработано</summary>
+        /// <summary>РСЃРєР»СЋС‡РµРЅРёРµ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ</summary>
         [DST]
         public void Handled() => IsHandled = true;
 
-        /// <summary>Исключение должно быть сгенерировано в любом случае</summary>
+        /// <summary>РСЃРєР»СЋС‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРѕ РІ Р»СЋР±РѕРј СЃР»СѓС‡Р°Рµ</summary>
         [DST]
         public void Unhandled() => _Unhandled = true;
 

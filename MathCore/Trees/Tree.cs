@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +15,10 @@ namespace MathCore.Trees
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Число элементов</summary>
+        /// <summary>Р§РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ</summary>
         public int Count => _SubTreeList.Initialized ? _SubTreeList.Value.Count : 0;
 
-        /// <summary>Индексатор объекта</summary><param name="index">Индекс</param>
+        /// <summary>РРЅРґРµРєСЃР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°</summary><param name="index">РРЅРґРµРєСЃ</param>
         public Tree<T> this[int index]
         {
             get => _SubTreeList.Initialized ? _SubTreeList.Value[index] : null;
@@ -31,14 +31,14 @@ namespace MathCore.Trees
             }
         }
 
-        /// <summary>Индексатор объекта</summary><param name="index">Индекс</param>
+        /// <summary>РРЅРґРµРєСЃР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°</summary><param name="index">РРЅРґРµРєСЃ</param>
         ITree<T> IIndexable<int, ITree<T>>.this[int index] { get => this[index]; set => this[index] = value as Tree<T>; }
 
-        /// <summary>Индексатор объекта только для записи</summary><param name="index">Индекс</param>
+        /// <summary>РРЅРґРµРєСЃР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° С‚РѕР»СЊРєРѕ РґР»СЏ Р·Р°РїРёСЃРё</summary><param name="index">РРЅРґРµРєСЃ</param>
         ITree<T> IIndexableWrite<int, ITree<T>>.this[int index] { set => this[index] = value as Tree<T>; }
 
-        /// <summary>Индексатор объекта только для чтения</summary>
-        /// <param name="index">Индекс</param>
+        /// <summary>РРЅРґРµРєСЃР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ</summary>
+        /// <param name="index">РРЅРґРµРєСЃ</param>
         ITree<T> IIndexableRead<int, ITree<T>>.this[int index] => this[index];
 
         public T Value { get; set; }
@@ -75,9 +75,9 @@ namespace MathCore.Trees
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции.</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё.</summary>
         /// <returns>
-        /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
+        /// РРЅС‚РµСЂС„РµР№СЃ <see cref="T:System.Collections.Generic.IEnumerator`1"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         /// <filterpriority>1</filterpriority>
         IEnumerator<ITree<T>> IEnumerable<ITree<T>>.GetEnumerator()
@@ -87,9 +87,9 @@ namespace MathCore.Trees
                 : new List<ITree<T>>().GetEnumerator();
         }
 
-        /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>
+        /// <summary>Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ, РєРѕС‚РѕСЂС‹Р№ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµР±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.</summary>
         /// <returns>
-        /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
+        /// РћР±СЉРµРєС‚ <see cref="T:System.Collections.IEnumerator"/>, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё.
         /// </returns>
         /// <filterpriority>2</filterpriority>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ITree<T>>)this).GetEnumerator();
