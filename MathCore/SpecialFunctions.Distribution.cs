@@ -226,7 +226,7 @@ namespace MathCore
                 }
 
                 [DST]
-                public static double StudenttDistributionInversed(int k, double p)
+                public static double StudentDistributionInversed(int k, double p)
                 {
                     double z;
 
@@ -259,7 +259,7 @@ namespace MathCore
                 public static double QuantileHi2(double alpha, int n)
                 {
                     if (alpha < .001 || alpha > .999)
-                        throw new ArgumentOutOfRangeException(nameof(alpha), "Значения alpha < 0.001 и > 0.999 не поддерживаются");
+                        throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "Значения alpha < 0.001 и > 0.999 не поддерживаются");
 
                     var d = alpha >= .5
                         ? 2.0637 * Math.Pow(Math.Log(1 / (1 - alpha)) - .16, .4274) - 1.5774

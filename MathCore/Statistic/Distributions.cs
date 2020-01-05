@@ -77,6 +77,10 @@ namespace MathCore.Statistic
             return s * Math.Exp(-s * x / 2);
         }
 
+        [NotNull]
+        private static Func<double, double> HistogramKey(double Max, double Min, double dx) =>
+            x => (Math.Floor((Math.Min(x, Max - dx / 2) - Min) / dx) + 0.5) * dx + Min;
+
         public static double GetPirsonsCriteria([NotNull] double[] Samples, [NotNull] Func<double, double> f, out int FreedomDegree)
         {
             if (Samples is null) throw new ArgumentNullException(nameof(Samples));
@@ -90,10 +94,8 @@ namespace MathCore.Statistic
             var segments_count = Math.Floor(interval / dx);
             var histogram_dx = interval / segments_count;
 
-            double Key(double x) => (Math.Floor((Math.Min(x, max - histogram_dx / 2) - min) / histogram_dx) + 0.5) * histogram_dx + min;
-
             var histogram = Samples
-               .GroupBy(Key)
+               .GroupBy(HistogramKey(max, min, histogram_dx))
                .ToDictionary(g => g.Key, g => g.Count())
                .OrderBy(x => x.Key)
                .ToArray();
@@ -105,19 +107,21 @@ namespace MathCore.Statistic
             // Скорректированное среднее
             var restored_variance = histogram.Sum(v =>
             {
-                var x = sample_average - v.Key;
-                return x * x * v.Value;
+                var (key, value) = v;
+                var x = sample_average - key;
+                return x * x * value;
             }) / (count - 1);
 
             // Восстановленное СКО
-            var restored_SKO = Math.Sqrt(restored_variance);
+            var restored_sko = Math.Sqrt(restored_variance);
 
             FreedomDegree = histogram.Length - 3;
             return histogram.Sum(h =>
             {
-                var u = (h.Key - sample_average) / restored_SKO;
-                var n0 = count * histogram_dx * f(u) / restored_SKO;
-                var d = h.Value - n0;
+                var (key, value) = h;
+                var u = (key - sample_average) / restored_sko;
+                var n0 = count * histogram_dx * f(u) / restored_sko;
+                var d = value - n0;
                 return d * d / n0;
             });
         }

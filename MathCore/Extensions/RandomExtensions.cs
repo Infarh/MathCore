@@ -24,6 +24,19 @@ namespace System
             return result;
         }
 
+        /// <summary>Перечисление случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+        /// <param name="D">Дисперсия</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static IEnumerable<double> NextUniformEnum([NotNull] this Random rnd, int Count, double D = 1, double M = 0)
+        {
+            for (var i = 0; Count < 0 || i < Count; i++)
+                yield return rnd.NextUniform(D, M);
+        }
+
         /// <summary>Массив случайных чисел с равномерным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="Count">Размер массива</param>
@@ -38,6 +51,20 @@ namespace System
             for (var i = 0; i < Count; i++)
                 result[i] = rnd.NextUniform(D, M);
             return result;
+        }
+
+        /// <summary>Перечисление случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+        /// <param name="Interval">Интервал</param>
+        /// <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static IEnumerable<double> NextUniformEnum([NotNull] this Random rnd, int Count, Interval Interval)
+        {
+            var D = Interval.Length;
+            var M = Interval.Middle;
+            for (var i = 0; Count < 0 || i < Count; i++)
+                yield return rnd.NextUniform(D, M);
         }
 
         /// <summary>Массив случайных чисел с равномерным распределением</summary>
@@ -71,6 +98,21 @@ namespace System
             return result;
         }
 
+        /// <summary>Перечисление случайных чисел с равномерным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+        /// <param name="Min">Минимум</param>
+        /// <param name="Max">Максимум</param>
+        /// <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        [NotNull]
+        public static IEnumerable<double> NextUniformIntervalEnum([NotNull] this Random rnd, int Count, double Min, double Max)
+        {
+            var D = Math.Abs(Max - Min);
+            var M = (Max + Min) / 2;
+            for (var i = 0; Count < 0 || i < Count; i++)
+                yield return rnd.NextUniform(D, M);
+        }
+
         /// <summary>Массив целых неотрицательных случайных чисел</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="Count">Размер массива</param>
@@ -82,6 +124,17 @@ namespace System
             for (var i = 0; i < Count; i++)
                 result[i] = rnd.Next();
             return result;
+        }
+
+        /// <summary>Перечисление целых неотрицательных случайных чисел</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+        /// <returns>перечисление целых неотрицательных случайных чисел</returns>
+        [NotNull]
+        public static IEnumerable<int> NextValuesEnum([NotNull] this Random rnd, int Count)
+        {
+            for (var i = 0; i < Count; i++)
+                yield return rnd.Next();
         }
 
         /// <summary>Массив целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
@@ -96,6 +149,18 @@ namespace System
             for (var i = 0; i < Count; i++)
                 result[i] = rnd.Next(Max);
             return result;
+        }
+
+        /// <summary>Перечисление целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+        /// <param name="Max">Максимум (не входит)</param>
+        /// <returns>Перечисление целых неотрицательных случайных чисел (верхний предел не входит)</returns>
+        [NotNull]
+        public static IEnumerable<int> NextValuesEnum([NotNull] this Random rnd, int Count, int Max)
+        {
+            for (var i = 0; i < Count; i++)
+                yield return rnd.Next(Max);
         }
 
         /// <summary>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
@@ -113,6 +178,19 @@ namespace System
             return result;
         }
 
+        /// <summary>Перечисление целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+        /// <param name="Min">Минимум</param>
+        /// <param name="Max">Максимум (не входит)</param>
+        /// <returns>Перечисление целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
+        [NotNull]
+        public static IEnumerable<int> NextValuesEnum([NotNull] this Random rnd, int Count, int Min, int Max)
+        {
+            for (var i = 0; Count < 0 || i < Count; i++)
+                yield return rnd.Next(Min, Max);
+        }
+
         /// <summary>Массив случайных чисел с нормальным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="Count">Размер массива</param>
@@ -126,6 +204,19 @@ namespace System
             for (var i = 0; i < Count; i++)
                 result[i] = rnd.NextNormal(D, M);
             return result;
+        }
+
+        /// <summary>Перечисление случайных чисел с нормальным распределением</summary>
+        /// <param name="rnd">Датчик случайных чисел</param>
+        /// <param name="Count">Размер массива</param>
+        /// <param name="D">Дисперсия</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <returns>Перечисление случайных чисел с нормальным распределением</returns>
+        [NotNull]
+        public static IEnumerable<double> NextNormalEnum([NotNull] this Random rnd, int Count, double D = 1, double M = 0)
+        {
+            for (var i = 0; i < Count; i++)
+                yield return rnd.NextNormal(D, M);
         }
 
         //public static double NextNormal(this Random rnd, double D = 1, double M = 0) => Math.Tan(Math.PI * (rnd.NextDouble() - 0.5)) * D + M;
@@ -198,9 +289,9 @@ namespace System
 
         public static double NextDouble([NotNull] this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
 
-        public static double NextDoubleInterval([NotNull] this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle); 
+        public static double NextDoubleInterval([NotNull] this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle);
 
-        public static double NextDoubleInterval([NotNull] this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min)); 
+        public static double NextDoubleInterval([NotNull] this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min));
 
         /// <summary>
         ///   Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
@@ -275,7 +366,7 @@ namespace System
         /// <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
         /// <returns>Последовательность случайных целых чисел в указанном интервале</returns>
         [NotNull]
-        public static IEnumerable<int> Sequence([NotNull] this Random rnd, int min, int max, int count = -1)
+        public static IEnumerable<int> SequenceInt([NotNull] this Random rnd, int min, int max, int count = -1)
         {
             if (rnd is null) throw new ArgumentNullException(nameof(rnd));
 
@@ -290,7 +381,7 @@ namespace System
         /// <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
         /// <returns>Последовательность случайных вещественных чисел в интервале (0,1)</returns>
         [NotNull]
-        public static IEnumerable<double> Sequence([NotNull] this Random rnd, int count = -1)
+        public static IEnumerable<double> SequenceDouble([NotNull] this Random rnd, int count = -1)
         {
             if (rnd is null) throw new ArgumentNullException(nameof(rnd));
 
