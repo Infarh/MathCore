@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <doc>
     <assembly>
         <name>MathCore</name>
@@ -9460,6 +9460,27 @@
         <member name="T:MathCore.Statistic.RandomNumbers.UniformRandomGenerator">
             <summary>Генератор случайных чисел с равномерным распределением</summary>
         </member>
+        <member name="T:MathCore.Threading.MaxConcurrencySynchronizationContext">
+            <summary>Контекст синхронизации с максимально допустимой степенью параллелизма</summary>
+        </member>
+        <member name="F:MathCore.Threading.MaxConcurrencySynchronizationContext._Semaphore">
+            <summary>Семафор, ограничивающий число выполняемых задач</summary>
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.#ctor(System.Int32)">
+            <summary>Инициализация нового контекста синхронизации с ограничением числа параллельно выполняемых задач</summary>
+            <param name="MaxConcurrencyLevel">Максимальное число выполняемых в контексте задач</param>
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.OnSemaphoreReleased(System.Threading.Tasks.Task,System.Object)">
+            <summary>Метод, вызываемый при освобождении семафора</summary>
+            <param name="SemaphoreWaitTask">Задача ожидания освобождения семафора</param>
+            <param name="CallState">Массив с параметрами продолжения, хранящий в первом параметре делегат, который надо вызвать, а во втором - параметр вызова делегата</param>
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.Post(System.Threading.SendOrPostCallback,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.Send(System.Threading.SendOrPostCallback,System.Object)">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.TimeInterval">
             <summary>Интервальный предикат</summary>
         </member>
@@ -13049,6 +13070,12 @@
             <param name="k">Положение в выборке (от 0 до N-1)</param>
             <returns>Последовательность из N-ых элементов выборки, стоящих на k-ом месте</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.TakeFirstAndLast``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>Получить первый и последний элементы перечисления</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="enumerable">Перечисление</param>
+            <returns>Перечисление, состоящее из первого и последнего элементов исходного перечисления</returns>
+        </member>
         <member name="T:System.Linq.Reactive.IObservableEx`1">
             <summary>Обозреваемый объект</summary>
             <typeparam name="T">Тип объектов последовательности событий</typeparam>
@@ -16552,12 +16579,27 @@
             <param name="M">Математическое ожидание</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextUniformEnum(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Перечисление случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextUniform(System.Random,System.Int32,MathCore.Interval)">
             <summary>Массив случайных чисел с равномерным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="Count">Размер массива</param>
             <param name="Interval">Интервал</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextUniformEnum(System.Random,System.Int32,MathCore.Interval)">
+            <summary>Перечисление случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Interval">Интервал</param>
+            <returns>Перечисление случайных чисел с равномерным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextUniform(System.Random,MathCore.Interval[])">
             <summary>Массив случайных чисел с равномерным распределением</summary>
@@ -16573,11 +16615,25 @@
             <param name="Max">Максимум</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextUniformIntervalEnum(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Перечисление случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Min">Минимум</param>
+            <param name="Max">Максимум</param>
+            <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32)">
             <summary>Массив целых неотрицательных случайных чисел</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="Count">Размер массива</param>
             <returns>Массив целых неотрицательных случайных чисел</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValuesEnum(System.Random,System.Int32)">
+            <summary>Перечисление целых неотрицательных случайных чисел</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <returns>перечисление целых неотрицательных случайных чисел</returns>
         </member>
         <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32,System.Int32)">
             <summary>Массив целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
@@ -16585,6 +16641,13 @@
             <param name="Count">Размер массива</param>
             <param name="Max">Максимум (не входит)</param>
             <returns>Массив целых неотрицательных случайных чисел (верхний предел не входит)</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValuesEnum(System.Random,System.Int32,System.Int32)">
+            <summary>Перечисление целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Max">Максимум (не входит)</param>
+            <returns>Перечисление целых неотрицательных случайных чисел (верхний предел не входит)</returns>
         </member>
         <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32,System.Int32,System.Int32)">
             <summary>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
@@ -16594,6 +16657,14 @@
             <param name="Max">Максимум (не входит)</param>
             <returns>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextValuesEnum(System.Random,System.Int32,System.Int32,System.Int32)">
+            <summary>Перечисление целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Min">Минимум</param>
+            <param name="Max">Максимум (не входит)</param>
+            <returns>Перечисление целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Int32,System.Double,System.Double)">
             <summary>Массив случайных чисел с нормальным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
@@ -16601,6 +16672,14 @@
             <param name="D">Дисперсия</param>
             <param name="M">Математическое ожидание</param>
             <returns>Массив случайных чисел с нормальным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextNormalEnum(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Перечисление случайных чисел с нормальным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Перечисление случайных чисел с нормальным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Double,System.Double)">
             <summary>Случайное число с нормальным распределением</summary>
@@ -16651,7 +16730,7 @@
             <param name="variants">Перечисление вариантов выбора</param>
             <returns>Последовательность случайных вариантов</returns>
         </member>
-        <member name="M:System.RandomExtensions.Sequence(System.Random,System.Int32,System.Int32,System.Int32)">
+        <member name="M:System.RandomExtensions.SequenceInt(System.Random,System.Int32,System.Int32,System.Int32)">
             <summary>Последовательность случайных целых чисел в указанном интервале</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="min">Нижняя граница интервала (входит)</param>
@@ -16659,7 +16738,7 @@
             <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
             <returns>Последовательность случайных целых чисел в указанном интервале</returns>
         </member>
-        <member name="M:System.RandomExtensions.Sequence(System.Random,System.Int32)">
+        <member name="M:System.RandomExtensions.SequenceDouble(System.Random,System.Int32)">
             <summary>Последовательность случайных вещественных чисел с равномерным распределением в интервале (0,1)</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
