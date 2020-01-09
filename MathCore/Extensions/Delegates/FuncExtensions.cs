@@ -584,7 +584,7 @@ namespace System
             return ((v + (v = Core(f(x2), x2))) * (x2 - x1) + (2 * f0 + v) * dx) * .5;
         }
 
-        /// <summary>Расчитать интеграл функции асинхронно</summary>
+        /// <summary>Рассчитать интеграл функции асинхронно</summary>
         /// <param name="f">Интегрируемая функция</param>
         /// <param name="Core">Ядро интегрирования</param>
         /// <param name="x1">Начало интервала интегрирования</param>

@@ -9,6 +9,15 @@ namespace System
     /// <summary>Расширения для чисел двойной точности</summary>
     public static class DoubleExtensions
     {
+        public static bool EqualWithAccuracy(this double x, double y, double Accuracy = 1.1102230246251565E-15) => x.Check(y, x - y, Accuracy);
+
+        private static bool Check(this double x, double y, double delta, double Accuracy = 1.1102230246251565E-15)
+        {
+            if (double.IsInfinity(x) || double.IsInfinity(y)) return x.Equals(y);
+            if (double.IsNaN(x) || double.IsNaN(y)) return false;
+            return Math.Abs(delta) < Math.Abs(Accuracy);
+        }
+
         [DST]
         public static double Abs(this double value) => double.IsNaN(value) ? double.NaN : Math.Abs(value);
 

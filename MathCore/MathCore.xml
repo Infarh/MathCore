@@ -8513,31 +8513,31 @@
             <summary>Операции над коэффициентами полинома, в представлении массива значений</summary>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Double[],System.Double)">
-            <summary>Расчитать значение полинома</summary>
+            <summary>Рассчитать значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="x">Аргумент полинома</param>
             <returns>Значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Double[],MathCore.Complex)">
-            <summary>Расчитать комплексное значение полинома</summary>
+            <summary>Рассчитать комплексное значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="z">Аргумент полинома</param>
             <returns>Комплексное значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(MathCore.Complex[],MathCore.Complex)">
-            <summary>Расчитать комплексное значение полинома с комплексными коэффициентами</summary>
+            <summary>Рассчитать комплексное значение полинома с комплексными коэффициентами</summary>
             <param name="Z">Массив комплексных коэффициентов полинома</param>
             <param name="z">Комплексный аргумент полинома</param>
             <returns>Комплексное значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Collections.Generic.IEnumerable{System.Double},System.Double)">
-            <summary>Расчитать значение полинома</summary>
+            <summary>Рассчитать значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="x">Аргумент полинома</param>
             <returns>Значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Collections.Generic.IEnumerable{System.Double},MathCore.Complex)">
-            <summary>Расчитать комплексное значение полинома</summary>
+            <summary>Рассчитать комплексное значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="z">Аргумент полинома</param>
             <returns>Комплексное значение полинома</returns>
@@ -14624,7 +14624,7 @@
             <returns>Значение определённого интеграла от ядра интегрирования методом тропеций</returns>
         </member>
         <member name="M:System.FuncExtensions.GetIntegralValueAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
-            <summary>Расчитать интеграл функции асинхронно</summary>
+            <summary>Рассчитать интеграл функции асинхронно</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="Core">Ядро интегрирования</param>
             <param name="x1">Начало интервала интегрирования</param>

@@ -96,13 +96,13 @@ namespace MathCore
         /// <param name="x">Аргумент</param>
         /// <returns>Значение полинома в точке x</returns>
         [DST]
-        public double Value(double x) => Array.GetValue(_a, x);
+        public double Value(double x) => Array.GetValue(x, _a);
 
         /// <summary>Вычислить комплексное значение полинома</summary>
         /// <param name="z">Комплексный аргумент</param>
         /// <returns>Комплексное значение полинома в точке</returns>
         [DST]
-        public Complex Value(Complex z) => Array.GetValue(_a, z);
+        public Complex Value(Complex z) => Array.GetValue(z, _a);
 
         /// <summary>Получить функцию полинома</summary>
         /// <returns>Функция полинома</returns>

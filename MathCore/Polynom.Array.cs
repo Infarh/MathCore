@@ -12,27 +12,26 @@ namespace MathCore
         /// <summary>Операции над коэффициентами полинома, в представлении массива значений</summary>
         public static class Array
         {
-            /// <summary>Расчитать значение полинома</summary>
-            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <summary>Рассчитать значение полинома</summary>
             /// <param name="x">Аргумент полинома</param>
+            /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Значение полинома</returns>
-            public static double GetValue([NotNull] double[] A, double x)
+            public static double GetValue(double x, [NotNull] params double[] A)
             {
                 var length = A.Length;
-                if (length == 0)
-                    return double.NaN;
+                if (length == 0) return double.NaN;
                 var y = A[length - 1];
                 for (var n = length - 2; n >= 0; n--)
                     y = y * x + A[n];
                 return y;
             }
 
-            /// <summary>Расчитать комплексное значение полинома</summary>
-            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <summary>Рассчитать комплексное значение полинома</summary>
             /// <param name="z">Аргумент полинома</param>
+            /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Комплексное значение полинома</returns>
             [DST]
-            public static Complex GetValue([NotNull] double[] A, Complex z)
+            public static Complex GetValue(Complex z, [NotNull] params double[] A)
             {
                 var length = A.Length;
                 if (length == 0)
@@ -43,12 +42,12 @@ namespace MathCore
                 return y;
             }
 
-            /// <summary>Расчитать комплексное значение полинома с комплексными коэффициентами</summary>
-            /// <param name="Z">Массив комплексных коэффициентов полинома</param>
+            /// <summary>Рассчитать комплексное значение полинома с комплексными коэффициентами</summary>
             /// <param name="z">Комплексный аргумент полинома</param>
+            /// <param name="Z">Массив комплексных коэффициентов полинома</param>
             /// <returns>Комплексное значение полинома</returns>
             [DST]
-            public static Complex GetValue([NotNull] Complex[] Z, Complex z)
+            public static Complex GetValue(Complex z, [NotNull] params Complex[] Z)
             {
                 var length = Z.Length;
                 if (length == 0) return 0;
@@ -58,11 +57,11 @@ namespace MathCore
                 return y;
             }
 
-            /// <summary>Расчитать значение полинома</summary>
-            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <summary>Рассчитать значение полинома</summary>
             /// <param name="x">Аргумент полинома</param>
+            /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Значение полинома</returns>
-            public static double GetValue([NotNull] IEnumerable<double> A, double x)
+            public static double GetValue(double x, [NotNull] IEnumerable<double> A)
             {
                 if (A is null)
                     throw new ArgumentNullException(nameof(A));
@@ -82,11 +81,11 @@ namespace MathCore
                 return v;
             }
 
-            /// <summary>Расчитать комплексное значение полинома</summary>
-            /// <param name="A">Массив коэффициентов полинома</param>
+            /// <summary>Рассчитать комплексное значение полинома</summary>
             /// <param name="z">Аргумент полинома</param>
+            /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Комплексное значение полинома</returns>
-            public static Complex GetValue([NotNull] IEnumerable<double> A, Complex z)
+            public static Complex GetValue(Complex z, [NotNull] IEnumerable<double> A)
             {
                 if (A is null)
                     throw new ArgumentNullException(nameof(A));

@@ -35,12 +35,12 @@ namespace MathCore.Tests
         {
             double[] a = { 3, 5, 7 };
 
-            Assert.AreEqual(3, Polynom.Array.GetValue(a, 0));
-            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(a, 1));
-            Assert.AreEqual(41, Polynom.Array.GetValue(a, 2));
-            Assert.AreEqual(81, Polynom.Array.GetValue(a, 3));
+            Assert.AreEqual(3, Polynom.Array.GetValue(0, a));
+            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(1, a));
+            Assert.AreEqual(41, Polynom.Array.GetValue(2, a));
+            Assert.AreEqual(81, Polynom.Array.GetValue(3, a));
 
-            Assert.AreEqual(double.NaN, Polynom.Array.GetValue(new double[0], 10));
+            Assert.AreEqual(double.NaN, Polynom.Array.GetValue(10, new double[0]));
         }
 
         [TestMethod]
@@ -48,14 +48,14 @@ namespace MathCore.Tests
         {
             var a = Enumerable.Range(0, 3).Select(x => x * 2 + 3d);
 
-            Assert.AreEqual(3, Polynom.Array.GetValue(a, 0));
-            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(a, 1));
-            Assert.AreEqual(41, Polynom.Array.GetValue(a, 2));
-            Assert.AreEqual(81, Polynom.Array.GetValue(a, 3));
+            Assert.AreEqual(3, Polynom.Array.GetValue(0, a));
+            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(1, a));
+            Assert.AreEqual(41, Polynom.Array.GetValue(2, a));
+            Assert.AreEqual(81, Polynom.Array.GetValue(3, a));
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void GetValue_Enumerable_Exceptions_Test() => Polynom.Array.GetValue((IEnumerable<double>)null, 0);
+        public void GetValue_Enumerable_Exceptions_Test() => Polynom.Array.GetValue(0, (IEnumerable<double>)null);
 
 
         [TestMethod]
@@ -63,12 +63,12 @@ namespace MathCore.Tests
         {
             double[] a = { 3, 5, 7 };
 
-            Assert.AreEqual(3, Polynom.Array.GetValue(a, new Complex()));
-            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(a, new Complex(1)));
-            Assert.AreEqual(41, Polynom.Array.GetValue(a, new Complex(2)));
-            Assert.AreEqual(81, Polynom.Array.GetValue(a, new Complex(3)));
+            Assert.AreEqual(3, Polynom.Array.GetValue(new Complex(), a));
+            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(new Complex(1), a));
+            Assert.AreEqual(41, Polynom.Array.GetValue(new Complex(2), a));
+            Assert.AreEqual(81, Polynom.Array.GetValue(new Complex(3), a));
 
-            Assert.AreEqual(Complex.NaN, Polynom.Array.GetValue(new double[0], new Complex()));
+            Assert.AreEqual(Complex.NaN, Polynom.Array.GetValue(new Complex(), new double[0]));
         }
 
         [TestMethod]
@@ -76,14 +76,14 @@ namespace MathCore.Tests
         {
             var a = Enumerable.Range(0, 3).Select(x => x * 2 + 3d);
 
-            Assert.AreEqual(3, Polynom.Array.GetValue(a, new Complex()));
-            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(a, new Complex(1)));
-            Assert.AreEqual(41, Polynom.Array.GetValue(a, new Complex(2)));
-            Assert.AreEqual(81, Polynom.Array.GetValue(a, new Complex(3)));
+            Assert.AreEqual(3, Polynom.Array.GetValue(new Complex(), a));
+            Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(new Complex(1), a));
+            Assert.AreEqual(41, Polynom.Array.GetValue(new Complex(2), a));
+            Assert.AreEqual(81, Polynom.Array.GetValue(new Complex(3), a));
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void GetValue_Complex_Enumerable_Exceptions_Test() => Polynom.Array.GetValue((IEnumerable<double>)null, new Complex());
+        public void GetValue_Complex_Enumerable_Exceptions_Test() => Polynom.Array.GetValue(new Complex(), (IEnumerable<double>)null);
 
         [TestMethod]
         public void GetCoefficients_Test()
@@ -93,7 +93,7 @@ namespace MathCore.Tests
             var coefficients = Polynom.Array.GetCoefficients(roots);
 
             double GetValue(double[] X0, double x) => X0.Select(x0 => x - x0).Aggregate(1d, (P, p) => P * p);
-            void Check(double x) => Assert.AreEqual(GetValue(roots, x), Polynom.Array.GetValue(coefficients, x));
+            void Check(double x) => Assert.AreEqual(GetValue(roots, x), Polynom.Array.GetValue(x, coefficients));
             Check(23);
             Check(17);
             Check(0);
@@ -190,7 +190,7 @@ namespace MathCore.Tests
             var coefficients = Polynom.Array.GetCoefficients(roots);
 
             Complex GetValue(Complex[] X0, Complex x) => X0.Select(x0 => x - x0).Aggregate(new Complex(1), (P, p) => P * p);
-            void Check(Complex x) => Assert.AreEqual(GetValue(roots, x), Polynom.Array.GetValue(coefficients, x));
+            void Check(Complex x) => Assert.AreEqual(GetValue(roots, x), Polynom.Array.GetValue(x, coefficients));
             Check(23);
             Check(17);
             Check(0);
