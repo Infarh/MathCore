@@ -83,7 +83,7 @@ namespace MathCore.Tests.SpecialFunctions.Distribution
 
         private const double __QuantileHi2ValuesTestAccuracy = 2.14e-14;
         [DataTestMethod]
-        [DataRow(0.95, 14, 23.682709800618273, 2.09e-13, DisplayName = "p:0.95, k:14")]
+        [DataRow(0.95, 14, 23.682709800618273, 2.09e-3, DisplayName = "p:0.95, k:14")]
         [DataRow(0.95, 8, 15.507313055865437, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.95, k:8 - p > 0.5")]
         [DataRow(0.05, 8, 2.732636793499664, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.05, k:8 - p < 0.5")]
         [DataRow(0.01, 10, 2.5582, 1.23e-5, DisplayName = "p:0.01, k:10")]
