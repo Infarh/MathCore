@@ -28,9 +28,9 @@ namespace MathCore.Tests.Extensions
                 Distributions.NormalGauss(sigma, mu), 
                 out var freedom_degree);
 
-            var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.80, freedom_degree);
+            var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2Approximation(0.80, freedom_degree);
 
-            Assert.That.Value(pirsons_criteria).LessThen(quantile, $"seed:{seed}");
+            Assert.That.Value(pirsons_criteria).LessThan(quantile, $"seed:{seed}");
         }
 
         [TestMethod, Ignore]
@@ -51,9 +51,9 @@ namespace MathCore.Tests.Extensions
                 Distributions.NormalGauss(sigma, mu),
                 out var freedom_degree);
 
-            var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.95, freedom_degree);
+            var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2Approximation(0.95, freedom_degree);
 
-            Assert.That.Value(pirsons_criteria).LessThen(quantile);
+            Assert.That.Value(pirsons_criteria).LessThan(quantile);
         }
     }
 }

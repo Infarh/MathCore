@@ -30,7 +30,7 @@ namespace MathCore
         }
 
         // ReSharper disable once UnusedMember.Global
-        public double Approximate(double x) => Polynom.Array.GetValue(_A, x); //F(_A, x);
+        public double Approximate(double x) => Polynom.Array.GetValue(x, _A); //F(_A, x);
 
         private static double F([NotNull] IReadOnlyList<double> A, double x)
         {

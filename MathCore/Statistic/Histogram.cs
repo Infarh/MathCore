@@ -62,7 +62,7 @@ namespace MathCore.Statistic
                 .Select((t, i) => p_theor[i] - t)
                 .Select((delta, i) => delta * delta / p_theor[i])
                 .Sum();
-            var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(alpha, 2);
+            var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, 2);
             Console.WriteLine(stat < quantile);
             Console.ReadLine();
             return stat < quantile;
