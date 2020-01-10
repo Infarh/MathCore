@@ -4,7 +4,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.DifferencialEquations.Numerical
 {
-    public static partial class Solover
+    public static partial class Solver
     {
         public delegate double NextValueMethod(double x0, double dx, double y0, DU f);
 

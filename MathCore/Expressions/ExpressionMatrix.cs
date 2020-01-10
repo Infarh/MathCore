@@ -34,7 +34,7 @@ namespace System.Linq.Expressions
         /// <param name="N">Размерность матрицы</param>
         /// <returns>Единичная матрица размерности NxN</returns>
         [DST, NotNull]
-        public static ExpressionMatrix GetUnitaryMatryx(int N)
+        public static ExpressionMatrix GetUnitaryMatrix(int N)
         {
             var v0 = 0d.ToExpression();
             var v1 = 1d.ToExpression();
@@ -72,7 +72,7 @@ namespace System.Linq.Expressions
             set => _Data[i, j] = value.NodeType == ExpressionType.Lambda ? ((LambdaExpression)value).Body : value;
         }
 
-        /// <summary>Вектор-стольбец</summary>
+        /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы</returns>
         public ExpressionMatrix this[int j] => GetCol(j);
@@ -90,7 +90,7 @@ namespace System.Linq.Expressions
         public bool IsDigit => N == 1 && M == 1;
 
         /// <summary>Транспонированная матрица</summary>
-        public ExpressionMatrix T => GetTransponse();
+        public ExpressionMatrix T => GetTranspose();
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -196,8 +196,8 @@ namespace System.Linq.Expressions
             return a;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-        /// <returns>Триугольная матрица</returns>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
+        /// <returns>Треугольная матрица</returns>
         public ExpressionMatrix GetTriangle()
         {
             var result = Clone();
@@ -235,15 +235,15 @@ namespace System.Linq.Expressions
         }
 
         /// <summary>Трансвекция матрицы</summary>
-        /// <param name="col">Оборный столбец</param>
+        /// <param name="col">Опорный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
         [NotNull]
         public ExpressionMatrix GetTransvection(int col)
         {
             if (!IsSquare)
-                throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("Трансвенция неквадратной матрицы невозможна");
 
-            var u_matrix = GetUnitaryMatryx(_N);
+            var u_matrix = GetUnitaryMatrix(_N);
             var a = _Data;
             var result = u_matrix._Data;
             for (var row = 0; row < _N; row++)
@@ -256,7 +256,7 @@ namespace System.Linq.Expressions
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
         [DST, NotNull]
-        public ExpressionMatrix GetTransponse()
+        public ExpressionMatrix GetTranspose()
         {
             var Result = new ExpressionMatrix(M, N);
 
@@ -335,14 +335,14 @@ namespace System.Linq.Expressions
                     negate = !negate;
                 }
 
-                var doagonal_item = data[k, k];
+                var diagonal_item = data[k, k];
 
                 // Определитель- произведение элементов главной диагонали треугольной матрицы
                 det = det is null
-                    ? (negate ? doagonal_item.Negate() : doagonal_item)
+                    ? (negate ? diagonal_item.Negate() : diagonal_item)
                     : (negate
-                        ? (Expression)det.MultiplyWithConversion(doagonal_item).Negate()
-                        : det.MultiplyWithConversion(doagonal_item));
+                        ? (Expression)det.MultiplyWithConversion(diagonal_item).Negate()
+                        : det.MultiplyWithConversion(diagonal_item));
 
                 if (k >= n) continue;
 
@@ -353,7 +353,7 @@ namespace System.Linq.Expressions
                         data[i, j] = data[i, j].SubtractWithConversion(
                             data[i, k].MultiplyWithConversion(
                                 data[k, j].DivideWithConversion(
-                                    doagonal_item)));
+                                    diagonal_item)));
             }
 
             return det.Simplify();
@@ -499,7 +499,7 @@ namespace System.Linq.Expressions
             return result;
         }
 
-        /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+        /// <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
         /// <param name="A">Первое слагаемое</param>
         /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
@@ -507,7 +507,7 @@ namespace System.Linq.Expressions
         public static ExpressionMatrix operator |([NotNull] ExpressionMatrix A, [NotNull] ExpressionMatrix B)
         {
             ExpressionMatrix result;
-            if (A.M == B.M) // Конкатинация по строкам
+            if (A.M == B.M) // Конкатенация по строкам
             {
                 result = new ExpressionMatrix(A.N + B.N, A.M);
                 var data = result._Data;
@@ -521,7 +521,7 @@ namespace System.Linq.Expressions
                         data[i + i0, j] = B[i, j];
 
             }
-            else if (A.N == B.N) //Конкатинация по строкам
+            else if (A.N == B.N) //Конкатенация по строкам
             {
                 result = new ExpressionMatrix(A.N, A.M + B.M);
                 var data = result._Data;
@@ -535,7 +535,7 @@ namespace System.Linq.Expressions
                         data[i, j + j0] = B[i, j];
             }
             else
-                throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
+                throw new InvalidOperationException("Конкатенация возможна только по строкам, или по столбцам");
 
             return result;
         }
@@ -544,8 +544,8 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-        /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+        /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+        /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull]
         public static implicit operator ExpressionMatrix(Expression X) => new ExpressionMatrix(1, 1) { [0, 0] = X };
 

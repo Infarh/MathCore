@@ -371,14 +371,14 @@ namespace System
         /// аргумент больше нуля, -бесконечности, если аргумент меньше нуля и NaN, если аргумент равен нулю.
         /// </returns>
         [NotNull]
-        public static Function Divade([NotNull] this Function f, double a) => a.Equals(1) ? f : (a.Equals(0) ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN)) : x => f(x) / a);
+        public static Function Divide([NotNull] this Function f, double a) => a.Equals(1) ? f : (a.Equals(0) ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN)) : x => f(x) / a);
 
         /// <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
         /// <param name="f1">Функция - делимое</param>
         /// <param name="f2">Функция - делитель</param>
         /// <returns>Функция, значения которой равны отношению значений исходных функций</returns>
         [NotNull]
-        public static Function Divade([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) / f2(x);
+        public static Function Divide([NotNull] this Function f1, [NotNull] Function f2) => x => f1(x) / f2(x);
 
         /// <summary>Функция от функци q(f(x))</summary>
         /// <param name="f">Внутренняя функция</param>
@@ -466,8 +466,8 @@ namespace System
             n--;
             var result = 0d;
 
-            for (var i = 0; i < 6; i++) result += Solover.Differential.diff_a[n, i] * f(x + (i * dx));
-            return result / Solover.Differential.diff_b[n] / dx;
+            for (var i = 0; i < 6; i++) result += Solver.Differential.diff_a[n, i] * f(x + (i * dx));
+            return result / Solver.Differential.diff_b[n] / dx;
         }
 
         #endregion

@@ -70,7 +70,7 @@ namespace MathCore.Vectors
         [XmlIgnore]
         public double R => Math.Sqrt(_X * _X + _Y * _Y + _Z * _Z);
 
-        /// <summary>Угол проекции в плоскости XOY</summary>
+        /// <summary>Угол проекциии в плоскости XOY</summary>
         public double AngleXOY => Math.Abs(_X) < double.Epsilon
                     ? Math.Abs(_Y) < double.Epsilon       // X == 0
                         ? 0                               //  Y == 0 => 0
@@ -81,7 +81,7 @@ namespace MathCore.Vectors
                             : Consts.pi
                         : Math.Atan2(_Y, _X);
 
-        /// <summary>Угол проекции в плоскости XOZ</summary>
+        /// <summary>Угол проекциии в плоскости XOZ</summary>
         public double AngleXOZ => Math.Abs(_X) < double.Epsilon
                     ? Math.Abs(_Z) < double.Epsilon       // X == 0
                         ? 0                               //  Z == 0 => 0
@@ -92,7 +92,7 @@ namespace MathCore.Vectors
                             : Consts.pi
                         : Math.Atan2(_Z, _X);
 
-        /// <summary>Угол проекции в плоскости YOZ</summary>
+        /// <summary>Угол проекциии в плоскости YOZ</summary>
         public double AngleYOZ => Math.Abs(_Y) < double.Epsilon
                     ? Math.Abs(_Z) < double.Epsilon       // Y == 0
                         ? 0                               //  Z == 0 => 0
@@ -115,13 +115,13 @@ namespace MathCore.Vectors
         [XmlIgnore]
         public SpaceAngle Angle => new SpaceAngle(Theta, Phi);
 
-        /// <summary>Двумерный вектор - проекция в плоскости XOY</summary>
+        /// <summary>Двумерный вектор - проекциия в плоскости XOY</summary>
         public Vector2D VectorXOY => new Vector2D(_X, _Y);
 
-        /// <summary>Двумерный вектор - проекция в плоскости XOZ (X->X; Z->Y)</summary>
+        /// <summary>Двумерный вектор - проекциия в плоскости XOZ (X->X; Z->Y)</summary>
         public Vector2D VectorXOZ => new Vector2D(_X, _Z);
 
-        /// <summary>Двумерный вектор - проекция в плоскости YOZ (Y->X; Z->Y)</summary>
+        /// <summary>Двумерный вектор - проекциия в плоскости YOZ (Y->X; Z->Y)</summary>
         public Vector2D VectorYOZ => new Vector2D(_Y, _Z);
 
         /// <summary>Длина в плоскости XOY</summary>

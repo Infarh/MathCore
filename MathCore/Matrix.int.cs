@@ -30,7 +30,7 @@ namespace MathCore
         /// <param name="N">Размерность матрицы</param>
         /// <returns>Единичная матрица размерности NxN</returns>
         [DST]
-        public static MatrixInt GetUnitaryMatryx(int N)
+        public static MatrixInt GetUnitaryMatrix(int N)
         {
             var Result = new MatrixInt(N);
             for (var i = 0; i < N; i++) Result[i, i] = 1;
@@ -39,17 +39,17 @@ namespace MathCore
 
         /// <summary>Трансвекция матрицы</summary>
         /// <param name="A">Трансвецируемая матрица</param>
-        /// <param name="j">Оборный столбец</param>
-        /// <returns>Трансвекция матрицы А</returns>                    
+        /// <param name="j">Опорный столбец</param>
+        /// <returns>Трансвекция матрицы А</returns>
         public static MatrixInt GetTransvection(MatrixInt A, int j)
         {
             if (!A.IsSquare)
-                throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("Трансвенция неквадратной матрицы невозможна");
 
-            var lv_Result = GetUnitaryMatryx(A.N);
+            var result = GetUnitaryMatrix(A.N);
             for (var i = 0; i < A.N; i++)
-                lv_Result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
-            return lv_Result;
+                result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
+            return result;
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -75,11 +75,15 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public int this[int i, int j] { [DST] get => _Data[i, j];
-            [DST] set => _Data[i, j] = value;
+        public int this[int i, int j]
+        {
+            [DST]
+            get => _Data[i, j];
+            [DST]
+            set => _Data[i, j] = value;
         }
 
-        /// <summary>Вектор-стольбец</summary>
+        /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы</returns>
         public MatrixInt this[int j] => GetCol(j);
@@ -96,7 +100,7 @@ namespace MathCore
         /// <summary>Матрица является числом</summary>
         public bool IsDigit => N == 1 && M == 1;
 
-        public MatrixInt T => GetTransponse();
+        public MatrixInt T => GetTranspose();
 
         public int Norm_m
         {
@@ -214,9 +218,9 @@ namespace MathCore
         [DST]
         public MatrixInt GetCol(int j)
         {
-            var lv_A = new MatrixInt(N, 1);
-            for (var i = 0; i < N; i++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new MatrixInt(N, 1);
+            for (var i = 0; i < N; i++) a[i, j] = this[i, j];
+            return a;
         }
 
         /// <summary>Получить строку матрицы</summary>
@@ -225,33 +229,33 @@ namespace MathCore
         [DST]
         public MatrixInt GetRow(int i)
         {
-            var lv_A = new MatrixInt(1, M);
-            for (var j = 0; j < M; j++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new MatrixInt(1, M);
+            for (var j = 0; j < M; j++) a[i, j] = this[i, j];
+            return a;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <returns></returns>
         public MatrixInt GetTriangle()
         {
-            var lv_Result = (MatrixInt)Clone();
-            var lv_RowCount = N;
-            var lv_ColCount = M;
-            var row = new int[lv_ColCount];
-            for (var lv_FirstRowIndex = 0; lv_FirstRowIndex < lv_RowCount - 1; lv_FirstRowIndex++)
+            var result = (MatrixInt)Clone();
+            var row_count = N;
+            var col_count = M;
+            var row = new int[col_count];
+            for (var first_row_index = 0; first_row_index < row_count - 1; first_row_index++)
             {
-                var lv_A = lv_Result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < lv_Result.M; lv_RowElementI++) //Нормируем строку по первому элементу
-                    row[lv_RowElementI] = lv_Result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
+                var a = result[first_row_index, first_row_index]; //Захватываем первый элемент строки
+                for (var row_element_i = first_row_index; row_element_i < result.M; row_element_i++) //Нормируем строку по первому элементу
+                    row[row_element_i] = result[first_row_index, row_element_i] / a;
 
-                for (var i = lv_FirstRowIndex + 1; i < lv_RowCount; i++) //Для всех оставшихся строк:
+                for (var i = first_row_index + 1; i < row_count; i++) //Для всех оставшихся строк:
                 {
-                    lv_A = lv_Result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                    for (var j = lv_FirstRowIndex; j < lv_ColCount; j++)
-                        lv_Result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
+                    a = result[i, first_row_index]; //Захватываем первый элемент строки
+                    for (var j = first_row_index; j < col_count; j++)
+                        result[i, j] -= a * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
                 }
             }
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Получить обратную матрицу</summary>
@@ -261,16 +265,16 @@ namespace MathCore
             if (!IsSquare)
                 throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
 
-            var lv_Result = GetTransvection(this, 0);
+            var result = GetTransvection(this, 0);
             for (var i = 1; i < N; i++)
-                lv_Result *= GetTransvection(this, i);
-            return lv_Result;
+                result *= GetTransvection(this, i);
+            return result;
         }
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
         [DST]
-        public MatrixInt GetTransponse()
+        public MatrixInt GetTranspose()
         {
             var Result = new MatrixInt(M, N);
 
@@ -293,7 +297,7 @@ namespace MathCore
         /// <returns>Минор элемента матрицы [n,m]</returns>
         public MatrixInt GetMinor(int n, int m)
         {
-            var lv_Result = new MatrixInt(N - 1, M - 1);
+            var result = new MatrixInt(N - 1, M - 1);
 
             var i0 = 0;
             for (var i = 0; i < N; i++)
@@ -301,10 +305,10 @@ namespace MathCore
                 {
                     var j0 = 0;
                     for (var j = 0; j < _M; j++)
-                        if (j != m) lv_Result[i0, j0++] = this[i, j];
+                        if (j != m) result[i0, j0++] = this[i, j];
                     i0++;
                 }
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Определитель матрицы</summary>
@@ -384,8 +388,8 @@ namespace MathCore
         ///// University of Cambridge Press 1992.  
         ///// </summary>
         ///// <param name="Mat">Array which will be LU Decomposed</param>
-        ///// <param name="L">An array where the lower traingular matrix is returned</param>
-        ///// <param name="U">An array where the upper traingular matrix is returned</param>
+        ///// <param name="L">An array where the lower triangular matrix is returned</param>
+        ///// <param name="U">An array where the upper triangular matrix is returned</param>
         ///// <param name="P">An array where the permutation matrix is returned</param>
         //private static void LUDecomposition(int[,] Mat, out int[,] L, out int[,] U, out int[,] P)
         //{
@@ -397,7 +401,7 @@ namespace MathCore
 
 
         //    var N = Rows;
-        //    var lv_Indexex = new int[N + 1];
+        //    var lv_Indexes = new int[N + 1];
         //    var V = new int[N * 10];
 
         //    int i, j;
@@ -457,7 +461,7 @@ namespace MathCore
         //            V[lv_IMax] = V[j];
         //        }
 
-        //        lv_Indexex[j] = lv_IMax;
+        //        lv_Indexes[j] = lv_IMax;
 
         //        if(j == N) continue;
 
@@ -494,7 +498,7 @@ namespace MathCore
 
         //    P = Identity(N + 1);
         //    for(i = 0; i <= N; i++)
-        //        P.SwapRows(i, lv_Indexex[i]);
+        //        P.SwapRows(i, lv_Indexes[i]);
         //}
 
         private static int[,] Identity(int n)
@@ -517,16 +521,16 @@ namespace MathCore
 
         public string ToStringFormat(char Splitter = '\t', string Format = "r")
         {
-            var lv_Result = new StringBuilder();
+            var result = new StringBuilder();
 
             for (var i = 0; i < _N; i++)
             {
-                var lv_Str = _Data[i, 0].ToString(Format);
+                var str = _Data[i, 0].ToString(Format);
                 for (var j = 1; j < _M; j++)
-                    lv_Str += Splitter + _Data[i, j].ToString(Format);
-                lv_Result.AppendLine(lv_Str);
+                    str += Splitter + _Data[i, j].ToString(Format);
+                result.AppendLine(str);
             }
-            return lv_Result.ToString();
+            return result.ToString();
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -538,113 +542,109 @@ namespace MathCore
         [DST]
         public object Clone()
         {
-            var lv_Result = new MatrixInt(N, M);
-            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) lv_Result[i, j] = this[i, j];
-            return lv_Result;
+            var result = new MatrixInt(N, M);
+            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) result[i, j] = this[i, j];
+            return result;
         }
 
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==(MatrixInt A, MatrixInt B)
-        {
-            return A is null && (B is null)
-                   || A is { } && B is { } && A.Equals(B);
-        }
+        public static bool operator ==(MatrixInt A, MatrixInt B) => A is null && (B is null) || A is { } && B is { } && A.Equals(B);
 
-        public static bool operator !=(MatrixInt A, MatrixInt B) { return !(A == B); }
+        public static bool operator !=(MatrixInt A, MatrixInt B) => !(A == B);
 
         [DST]
         public static MatrixInt operator +(MatrixInt M, int x)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] + x;
-            return lv_Result;
+                    result[i, j] = M[i, j] + x;
+            return result;
         }
 
         [DST]
         public static MatrixInt operator +(int x, MatrixInt M)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] + x;
-            return lv_Result;
+                    result[i, j] = M[i, j] + x;
+            return result;
         }
 
         [DST]
         public static MatrixInt operator -(MatrixInt M, int x)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] - x;
-            return lv_Result;
+                    result[i, j] = M[i, j] - x;
+            return result;
         }
 
         [DST]
         public static MatrixInt operator -(int x, MatrixInt M)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = x - M[i, j];
-            return lv_Result;
+                    result[i, j] = x - M[i, j];
+            return result;
         }
 
         [DST]
         public static MatrixInt operator *(MatrixInt M, int x)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] * x;
-            return lv_Result;
+                    result[i, j] = M[i, j] * x;
+            return result;
         }
 
         [DST]
         public static MatrixInt operator *(int x, MatrixInt M)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] * x;
-            return lv_Result;
+                    result[i, j] = M[i, j] * x;
+            return result;
         }
 
         [DST]
-        public static MatrixInt operator *(int[,] A, MatrixInt B) { return (MatrixInt)A * B; }
+        public static MatrixInt operator *(int[,] A, MatrixInt B) => (MatrixInt)A * B;
 
         [DST]
-        public static MatrixInt operator *(int[] A, MatrixInt B) { return (MatrixInt)A * B; }
+        public static MatrixInt operator *(int[] A, MatrixInt B) => (MatrixInt)A * B;
 
         [DST]
-        public static MatrixInt operator *(MatrixInt A, int[] B) { return A * (MatrixInt)B; }
+        public static MatrixInt operator *(MatrixInt A, int[] B) => A * (MatrixInt)B;
 
         [DST]
-        public static MatrixInt operator *(MatrixInt A, int[,] B) { return A * (MatrixInt)B; }
+        public static MatrixInt operator *(MatrixInt A, int[,] B) => A * (MatrixInt)B;
 
         [DST]
         public static MatrixInt operator /(MatrixInt M, int x)
         {
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] / x;
-            return lv_Result;
+                    result[i, j] = M[i, j] / x;
+            return result;
         }
 
         public static MatrixInt operator /(int x, MatrixInt M)
         {
             M = M.GetInverse();
-            var lv_Result = new MatrixInt(M.N, M.M);
+            var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
-                    lv_Result[i, j] = M[i, j] * x;
-            return lv_Result;
+                    result[i, j] = M[i, j] * x;
+            return result;
         }
 
         /// <summary>Оператор сложения двух матриц</summary>
@@ -657,13 +657,13 @@ namespace MathCore
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
-            var lv_Result = new MatrixInt(A.N, A.M);
+            var result = new MatrixInt(A.N, A.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
-                    lv_Result[i, j] = A[i, j] + B[i, j];
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
+                    result[i, j] = A[i, j] + B[i, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Оператор разности двух матриц</summary>
@@ -676,13 +676,13 @@ namespace MathCore
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
-            var lv_Result = new MatrixInt(A.N, A.M);
+            var result = new MatrixInt(A.N, A.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
-                    lv_Result[i, j] = A[i, j] - B[i, j];
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
+                    result[i, j] = A[i, j] - B[i, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Оператор произведения двух матриц</summary>
@@ -695,14 +695,14 @@ namespace MathCore
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
-            var lv_Result = new MatrixInt(A.N, B.M);
+            var result = new MatrixInt(A.N, B.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
                     for (var k = 0; k < A.M; k++)
-                        lv_Result[i, j] += A[i, k] * B[k, j];
+                        result[i, j] += A[i, k] * B[k, j];
 
-            return lv_Result;
+            return result;
         }
 
         /// <summary>Оператор деления двух матриц</summary>
@@ -715,58 +715,58 @@ namespace MathCore
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
-            var lv_Result = new MatrixInt(A.N, B.M);
+            var result = new MatrixInt(A.N, B.M);
 
-            for (var i = 0; i < lv_Result.N; i++)
-                for (var j = 0; j < lv_Result.M; j++)
+            for (var i = 0; i < result.N; i++)
+                for (var j = 0; j < result.M; j++)
                     for (var k = 0; k < A.M; k++)
-                        lv_Result[i, j] += A[i, k] * B[k, j];
+                        result[i, j] += A[i, k] * B[k, j];
 
-            return lv_Result;
+            return result;
         }
 
-        /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+        /// <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
         /// <param name="A">Первое слагаемое</param>
         /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
         public static MatrixInt operator |(MatrixInt A, MatrixInt B)
         {
-            MatrixInt lv_Result;
-            if (A.M == B.M) // Конкатинация по строкам
+            MatrixInt result;
+            if (A.M == B.M) // Конкатенация по строкам
             {
-                lv_Result = new MatrixInt(A.N + B.N, A.M);
+                result = new MatrixInt(A.N + B.N, A.M);
                 for (var i = 0; i < A.N; i++)
                     for (var j = 0; j < A.M; j++)
-                        lv_Result[i, j] = A[i, j];
+                        result[i, j] = A[i, j];
                 var i0 = A.N;
                 for (var i = 0; i < B.N; i++)
                     for (var j = 0; j < B.M; j++)
-                        lv_Result[i + i0, j] = B[i, j];
+                        result[i + i0, j] = B[i, j];
 
             }
-            else if (A.N == B.N) //Конкатинация по строкам
+            else if (A.N == B.N) //Конкатенация по строкам
             {
-                lv_Result = new MatrixInt(A.N, A.M + B.M);
+                result = new MatrixInt(A.N, A.M + B.M);
                 for (var i = 0; i < A.N; i++)
                     for (var j = 0; j < A.M; j++)
-                        lv_Result[i, j] = A[i, j];
+                        result[i, j] = A[i, j];
                 var j0 = A.M;
                 for (var i = 0; i < B.N; i++)
                     for (var j = 0; j < B.M; j++)
-                        lv_Result[i, j + j0] = B[i, j];
+                        result[i, j + j0] = B[i, j];
             }
             else
-                throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
+                throw new InvalidOperationException("Конкатенация возможна только по строкам, или по столбцам");
 
-            return lv_Result;
+            return result;
         }
 
 
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-        /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+        /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+        /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST]
         public static implicit operator MatrixInt(int X) => new MatrixInt(1, 1) { [0, 0] = X };
 
@@ -783,27 +783,23 @@ namespace MathCore
 
         #region IEquatable<MatrixInt> Members
 
-        public bool Equals(MatrixInt other)
-        {
-            return other is { }
-                   && (ReferenceEquals(this, other)
-                        || other._N == _N
-                            && other._M == _M
-                            && Equals(other._Data, _Data));
-        }
+        public bool Equals(MatrixInt other) =>
+            other is { }
+            && (ReferenceEquals(this, other)
+                || other._N == _N
+                && other._M == _M
+                && Equals(other._Data, _Data));
 
         [DST]
         bool IEquatable<MatrixInt>.Equals(MatrixInt other) => Equals(other);
 
         #endregion
 
-        public override bool Equals(object obj)
-        {
-            return obj is { }
-                   && (ReferenceEquals(this, obj)
-                        || obj.GetType() == typeof(MatrixInt)
-                                && Equals((MatrixInt)obj));
-        }
+        public override bool Equals(object obj) =>
+            obj is { }
+            && (ReferenceEquals(this, obj)
+                || obj.GetType() == typeof(MatrixInt)
+                && Equals((MatrixInt)obj));
 
         [DST]
         public override int GetHashCode()

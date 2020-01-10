@@ -3,7 +3,7 @@ using DU = System.Func<double, double, double>;
 
 namespace MathCore.DifferencialEquations.Numerical
 {
-    public static partial class Solover
+    public static partial class Solver
     {
         public static class Eyler
         {

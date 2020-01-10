@@ -46,7 +46,7 @@ namespace MathCore.Statistic
 
             x_values.Foreach(AddValue);
             Percent = new double[Values.Length].Initialize(Values, N, (i, values, n) => values[i] / n);
-            Values.Divade(_Normalizator = Values.GetIntegral(Argument));
+            Values.Divide(_Normalizator = Values.GetIntegral(Argument));
         }
 
         public bool CheckDestribution(Func<double, double> F, double p, double alpha = 0.05)

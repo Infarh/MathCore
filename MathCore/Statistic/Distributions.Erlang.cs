@@ -40,7 +40,7 @@ namespace MathCore.Statistic
                     if(i <= N) Q += p[i];
                 }
 
-                return p.Divade(Q);
+                return p.Divide(Q);
             }
 
 

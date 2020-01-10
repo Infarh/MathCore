@@ -65,7 +65,7 @@ namespace MathCore.Geolocation
 
         public static double LengthBetween(Vector2D begin, Vector2D end) => LengthBetween(begin.Y, begin.X, end.Y, end.X);
 
-        /// <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекции), заданными своими координатами</summary>
+        /// <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекциии), заданными своими координатами</summary>
         /// <param name="latitude1">Широта первой точки в градусах</param>
         /// <param name="longitude1">Долгота первой точки в градусах</param>
         /// <param name="latitude2">Широта второй точки в градусах</param>

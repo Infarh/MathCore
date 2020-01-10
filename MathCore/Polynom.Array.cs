@@ -500,7 +500,7 @@ namespace MathCore
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - частного</returns>
             [NotNull]
-            public static double[] Divade([NotNull] double[] p, double x)
+            public static double[] Divide([NotNull] double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -515,7 +515,7 @@ namespace MathCore
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - частного</returns>
             [NotNull]
-            public static double[] DivadeScalar(double x, [NotNull] double[] p)
+            public static double[] DivideScalar(double x, [NotNull] double[] p)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 

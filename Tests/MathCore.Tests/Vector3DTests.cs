@@ -247,8 +247,8 @@ namespace MathCore.Tests
             Assert.AreEqual(inv, 1 / V);
         }
 
-        /// <summary>Тестирование метода определения проекции вектора на угловое направление</summary>
-        [TestMethod, Priority(3), Description("Тестирование метода определения проекции вектора на угловое направление")]
+        /// <summary>Тестирование метода определения проекциии вектора на угловое направление</summary>
+        [TestMethod, Priority(3), Description("Тестирование метода определения проекциии вектора на угловое направление")]
         public void GetProjectionToAngleDirection_Test()
         {
             GetProjectionToVector3D_Test();
@@ -274,8 +274,8 @@ namespace MathCore.Tests
             }
         }
 
-        /// <summary>Тестирование метода определения проекции вектора на вектор</summary>
-        [TestMethod, Priority(3), Description("Тестирование метода определения проекции вектора на вектор")]
+        /// <summary>Тестирование метода определения проекциии вектора на вектор</summary>
+        [TestMethod, Priority(3), Description("Тестирование метода определения проекциии вектора на вектор")]
         public void GetProjectionToVector3D_Test()
         {
             Assert.AreEqual(0, Vector3D.i.GetProjectionTo(Vector3D.j));
@@ -801,7 +801,7 @@ namespace MathCore.Tests
 
         #endregion
 
-        #region Операторы проекции и т.п. (!)
+        #region Операторы проекциии и т.п. (!)
 
         //[TestMethod, Ignore]
         //public void op_Modulus_VectorToVector_Test()
@@ -854,7 +854,7 @@ namespace MathCore.Tests
         //    throw new NotImplementedException("Тестовый метод не реализован");     
         //}
 
-        #region Углы проекций в плоскостях (!)
+        #region Углы проекциий в плоскостях (!)
 
         //[TestMethod, Ignore]
         //public void AngleXOY_Test()
@@ -985,8 +985,8 @@ namespace MathCore.Tests
 
         #region Длины векторов в плоскостях
 
-        /// <summary>Тестирование свойства - длина проекции вектора в плоскости XOY</summary>
-        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекции вектора в плоскости XOY")]
+        /// <summary>Тестирование свойства - длина проекциии вектора в плоскости XOY</summary>
+        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекциии вектора в плоскости XOY")]
         public void R_XOY_Test()
         {
             var x = 0.0;
@@ -1011,8 +1011,8 @@ namespace MathCore.Tests
             Test();
         }
 
-        /// <summary>Тестирование свойства - длина проекции вектора в плоскости XOZ</summary>
-        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекции вектора в плоскости XOZ")]
+        /// <summary>Тестирование свойства - длина проекциии вектора в плоскости XOZ</summary>
+        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекциии вектора в плоскости XOZ")]
         public void R_XOZ_Test()
         {
             var x = 0.0;
@@ -1037,8 +1037,8 @@ namespace MathCore.Tests
             Test();
         }
 
-        /// <summary>Тестирование свойства - длина проекции вектора в плоскости YOZ</summary>
-        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекции вектора в плоскости YOZ")]
+        /// <summary>Тестирование свойства - длина проекциии вектора в плоскости YOZ</summary>
+        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекциии вектора в плоскости YOZ")]
         public void R_YOZ_Test()
         {
             var x = 0.0;

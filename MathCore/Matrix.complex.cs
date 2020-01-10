@@ -58,9 +58,9 @@ namespace MathCore
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         [DST]
-        public static MatrixComplex GetUnitaryMatryx(int N) => new MatrixComplex(Array.GetUnitaryArrayMatrix(N));
+        public static MatrixComplex GetUnitaryMatrix(int N) => new MatrixComplex(Array.GetUnitaryArrayMatrix(N));
 
-        /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Оборный столбец</param>
+        /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
         public static MatrixComplex GetTransvection(MatrixComplex A, int j) => new MatrixComplex(Array.GetTransvection(A._Data, j));
 
@@ -89,7 +89,7 @@ namespace MathCore
         /// <returns>Элемент матрицы</returns>
         public Complex this[int i, int j] { [DST] get => _Data[i, j]; [DST] set => _Data[i, j] = value; }
 
-        /// <summary>Вектор-стольбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
+        /// <summary>Вектор-столбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
         [NotNull] public MatrixComplex this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
@@ -105,7 +105,7 @@ namespace MathCore
         public bool IsScalar => _N == 1 && _M == 1;
 
         /// <summary>Транспонированная матрица</summary>
-        public MatrixComplex T => GetTransponse();
+        public MatrixComplex T => GetTranspose();
 
         /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
         public Complex Norm_m => Array.GetMaxRowAbsSumm(_Data);
@@ -113,7 +113,7 @@ namespace MathCore
         /// <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
         public Complex Norm_l => Array.GetMaxColAbsSumm(_Data);
 
-        /// <summary>Среднеквадратическое значение элементов матрицы</summary>
+        /// <summary>Среднеквадратичное значение элементов матрицы</summary>
         public Complex Norm_k => Array.GetRMS(_Data);
 
         /* -------------------------------------------------------------------------------------------- */
@@ -175,7 +175,7 @@ namespace MathCore
         }
 
         /// <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
-        /// <param name="Items">Перечисление строк, состоящих из перечисления эламентов строк</param>
+        /// <param name="Items">Перечисление строк, состоящих из перечисления элементов строк</param>
         public MatrixComplex([NotNull] IEnumerable<IEnumerable<Complex>> Items) : this(GetElements(Items)) { }
 
         /// <summary>Получить двумерный массив элементов матрицы</summary>
@@ -208,11 +208,11 @@ namespace MathCore
         /// <returns>Строка матрицы номер i</returns>
         [DST, NotNull] public MatrixComplex GetRow(int i) => new MatrixComplex(Array.GetRow(_Data, i));
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="P">Матрица перестановок</param>
         /// <param name="rank">Ранг матрицы</param>
         /// <param name="D">Определитель</param>
-        /// <returns>Триугольная матрица</returns>
+        /// <returns>Треугольная матрица</returns>
         [NotNull]
         public MatrixComplex GetTriangle([NotNull] out MatrixComplex P, out int rank, out Complex D)
         {
@@ -221,10 +221,10 @@ namespace MathCore
             return result;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="B">Присоединённая матрица правой части СЛАУ</param>
         /// <param name="CloneB">Работать с клоном матрицы <paramref name="B"/></param>
-        /// <returns>Триугольная матрица</returns>
+        /// <returns>Треугольная матрица</returns>
         /// <exception cref="ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
         [NotNull]
         public MatrixComplex GetTriangle([NotNull] ref MatrixComplex B, bool CloneB = true)
@@ -235,7 +235,7 @@ namespace MathCore
             return result;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="B">Матрица правой части СЛАУ</param>
         /// <param name="P">Матрица перестановок</param>
         /// <param name="rank">Ранг матрицы</param>
@@ -265,7 +265,7 @@ namespace MathCore
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST, NotNull] public MatrixComplex GetTransponse() => new MatrixComplex(Array.Transponse(_Data));
+        [DST, NotNull] public MatrixComplex GetTranspose() => new MatrixComplex(Array.Transpose(_Data));
 
         /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
         /// <param name="n">Номер столбца</param>
@@ -284,13 +284,13 @@ namespace MathCore
 
         /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
         /// <param name="L">Нижне-треугольная матрица</param>
-        /// <param name="U">Верхнетреугольная матрица</param>
+        /// <param name="U">Верхне-треугольная матрица</param>
         /// <param name="P">Матрица преобразований P*X = L*U</param>
         /// <param name="D">Знак определителя</param>
         /// <returns>Истина, если разложение выполнено успешно, ложь - если матрица вырожденная</returns>
         public bool GetLUDecomposition([CanBeNull] out MatrixComplex L, [CanBeNull] out MatrixComplex U, [CanBeNull] out MatrixComplex P, out Complex D)
         {
-            if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной метрицы");
+            if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной матрицы");
 
             var decomposition_success = Array.GetLUPDecomposition(_Data, out var l, out var u, out var p, out var d);
             L = decomposition_success ? new MatrixComplex(l) : null;
@@ -358,11 +358,11 @@ namespace MathCore
 
         [DST, NotNull] public static MatrixComplex operator +(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Add(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(subtract(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Subtract(M._Data, x));
 
         [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M) => new MatrixComplex(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
 
-        [DST, NotNull] public static MatrixComplex operator -(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(subtract(x, M._Data));
+        [DST, NotNull] public static MatrixComplex operator -(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Subtract(x, M._Data));
 
         [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Multiply(M._Data, x));
 
@@ -376,9 +376,9 @@ namespace MathCore
 
         [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] Complex[,] B) => new MatrixComplex(Multiply(A._Data, B));
 
-        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Divade(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Divide(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator /(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Divade(x, M._Data));
+        [DST, NotNull] public static MatrixComplex operator /(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Divide(x, M._Data));
 
         [DST, NotNull]
         public static MatrixComplex operator ^([NotNull] MatrixComplex M, int n)
@@ -407,7 +407,7 @@ namespace MathCore
 
         /// <summary>Оператор разности двух матриц</summary>
         /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(subtract(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Subtract(A._Data, B._Data));
 
         /// <summary>Оператор произведения двух матриц</summary>
         /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>
@@ -415,16 +415,16 @@ namespace MathCore
 
         /// <summary>Оператор деления двух матриц</summary>
         /// <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Divade(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Divide(A._Data, B._Data));
 
-        /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+        /// <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
         /// <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
-        [DST, NotNull] public static MatrixComplex operator |([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Concatinate(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator |([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Concatenate(A._Data, B._Data));
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-        /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+        /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+        /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull] public static implicit operator MatrixComplex(Complex X) => new MatrixComplex(1, 1) { [0, 0] = X };
 
         [DST, NotNull] public static explicit operator Complex[,] ([NotNull] MatrixComplex M) => M._Data;

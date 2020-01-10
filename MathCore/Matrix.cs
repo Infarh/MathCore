@@ -58,9 +58,9 @@ namespace MathCore
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         [DST, NotNull]
-        public static Matrix GetUnitaryMatryx(int N) => new Matrix(Array.GetUnitaryArrayMatrix(N));
+        public static Matrix GetUnitaryMatrix(int N) => new Matrix(Array.GetUnitaryArrayMatrix(N));
 
-        /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Оборный столбец</param>
+        /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>                    
         [NotNull]
         public static Matrix GetTransvection([NotNull] Matrix A, int j) => new Matrix(Array.GetTransvection(A._Data, j));
@@ -90,7 +90,7 @@ namespace MathCore
         /// <returns>Элемент матрицы</returns>
         public double this[int i, int j] { [DST] get => _Data[i, j]; [DST] set => _Data[i, j] = value; }
 
-        /// <summary>Вектор-стольбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
+        /// <summary>Вектор-столбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
         [NotNull] public Matrix this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
@@ -107,15 +107,15 @@ namespace MathCore
 
         /// <summary>Транспонированная матрица</summary>
         [NotNull]
-        public Matrix T => GetTransponse();
+        public Matrix T => GetTranspose();
 
         /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
         public double Norm_m => Array.GetMaxRowAbsSumm(_Data);
 
         /// <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
-        public double Norm_l => Array.GetMaxColAbsSumm(_Data);
+        public double Norm_l => Array.GetMaxColAbsSum(_Data);
 
-        /// <summary>Среднеквадратическое значение элементов матрицы</summary>
+        /// <summary>Среднеквадратичное значение элементов матрицы</summary>
         public double Norm_k => Array.GetRMS(_Data);
 
         /* -------------------------------------------------------------------------------------------- */
@@ -177,7 +177,7 @@ namespace MathCore
         }
 
         /// <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
-        /// <param name="Items">Перечисление строк, состоящих из перечисления эламентов строк</param>
+        /// <param name="Items">Перечисление строк, состоящих из перечисления элементов строк</param>
         public Matrix([NotNull] IEnumerable<IEnumerable<double>> Items) : this(GetElements(Items)) { }
 
         /// <summary>Получить двумерный массив элементов матрицы</summary>
@@ -210,11 +210,11 @@ namespace MathCore
         /// <returns>Строка матрицы номер i</returns>
         [DST, NotNull] public Matrix GetRow(int i) => new Matrix(Array.GetRow(_Data, i));
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="P">Матрица перестановок</param>
         /// <param name="rank">Ранг матрицы</param>
         /// <param name="D">Определитель</param>
-        /// <returns>Триугольная матрица</returns>
+        /// <returns>Треугольная матрица</returns>
         [NotNull]
         public Matrix GetTriangle([NotNull] out Matrix P, out int rank, out double D)
         {
@@ -223,10 +223,10 @@ namespace MathCore
             return result;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="B">Присоединённая матрица правой части СЛАУ</param>
         /// <param name="CloneB">Работать с клоном матрицы <paramref name="B"/></param>
-        /// <returns>Триугольная матрица</returns>
+        /// <returns>Треугольная матрица</returns>
         /// <exception cref="ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
         [NotNull]
         public Matrix GetTriangle([NotNull] ref Matrix B, bool CloneB = true)
@@ -237,7 +237,7 @@ namespace MathCore
             return result;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="B">Матрица правой части СЛАУ</param>
         /// <param name="P">Матрица перестановок</param>
         /// <param name="rank">Ранг матрицы</param>
@@ -267,7 +267,7 @@ namespace MathCore
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST, NotNull] public Matrix GetTransponse() => new Matrix(Array.Transponse(_Data));
+        [DST, NotNull] public Matrix GetTranspose() => new Matrix(Array.Transpose(_Data));
 
         /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
         /// <param name="n">Номер столбца</param>
@@ -286,18 +286,18 @@ namespace MathCore
 
         /// <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
         /// <param name="L">Нижне-треугольная матрица</param>
-        /// <param name="U">Верхнетреугольная матрица</param>
+        /// <param name="U">Верхне-треугольная матрица</param>
         /// <param name="P">Матрица преобразований P*X = L*U</param>
         /// <param name="D">Знак определителя</param>
         /// <returns>Истина, если разложение выполнено успешно, ложь - если матрица вырожденная</returns>
         public bool GetLUDecomposition([CanBeNull] out Matrix L, [CanBeNull] out Matrix U, [CanBeNull] out Matrix P, out double D)
         {
-            if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной метрицы");
+            if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной матрицы");
 
             var decomposition_success = Array.GetLUPDecomposition(_Data, out var l, out var u, out var p, out var d);
-            L = decomposition_success ? new Matrix(l) : null;
-            U = decomposition_success ? new Matrix(u) : null;
-            P = decomposition_success ? new Matrix(p) : null;
+            L = decomposition_success ? new Matrix(l ?? throw new InvalidOperationException("l is null")) : null;
+            U = decomposition_success ? new Matrix(u ?? throw new InvalidOperationException("u is null")) : null;
+            P = decomposition_success ? new Matrix(p ?? throw new InvalidOperationException("p is null")) : null;
             D = decomposition_success ? d : 0;
             return decomposition_success;
         }
@@ -349,7 +349,7 @@ namespace MathCore
         [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] Matrix B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         /// <summary>Оператор неравенства двух матриц</summary>
-        /// <returns>Истина, если матрицы несовпадают по размеру или поэлементно</returns>
+        /// <returns>Истина, если матрицы не совпадают по размеру или поэлементно</returns>
         [DST] public static bool operator !=([CanBeNull] Matrix A, [CanBeNull] Matrix B) => !(A == B);
 
         /// <summary>Оператор равенства матрицы и двумерного массива</summary>
@@ -361,11 +361,11 @@ namespace MathCore
         [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] double[,] B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
 
         /// <summary>Оператор неравенства матрицы и двумерного массива</summary>
-        /// <returns>Истина, если матрица и двумерный массив несовпадают по размеру или поэлементно</returns>
+        /// <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
         [DST] public static bool operator !=([CanBeNull] double[,] A, [CanBeNull] Matrix B) => !(A == B);
 
         /// <summary>Оператор неравенства матрицы и двумерного массива</summary>
-        /// <returns>Истина, если матрица и двумерный массив несовпадают по размеру или поэлементно</returns>
+        /// <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
         [DST] public static bool operator !=([CanBeNull] Matrix A, [CanBeNull] double[,] B) => !(A == B);
 
         /// <summary>Оператор суммы матрицы и числа</summary>
@@ -378,7 +378,7 @@ namespace MathCore
 
         /// <summary>Оператор разности матрицы и числа</summary>
         /// <returns>Матрица, элементы которой равны разности элементов исходной матрицы и числа</returns>
-        [DST, NotNull] public static Matrix operator -([NotNull] Matrix M, double x) => new Matrix(subtract(M._Data, x));
+        [DST, NotNull] public static Matrix operator -([NotNull] Matrix M, double x) => new Matrix(Subtract(M._Data, x));
 
         /// <summary>Оператор отрицания элементов матрицы</summary>
         /// <returns>Матрица, элементы которой являются отрицательными по отношению к элементам исходной матрицы</returns>
@@ -386,7 +386,7 @@ namespace MathCore
 
         /// <summary>Оператор разности числа и матрицы</summary>
         /// <returns>Матрица, элементы которой равны разности числа и элементов исходной матрицы</returns>
-        [DST, NotNull] public static Matrix operator -(double x, [NotNull] Matrix M) => new Matrix(subtract(x, M._Data));
+        [DST, NotNull] public static Matrix operator -(double x, [NotNull] Matrix M) => new Matrix(Subtract(x, M._Data));
 
         /// <summary>Оператор произведения матрицы и числа</summary>
         /// <returns>Матрица, элементы которой равны произведения элементов исходной матрицы и числа</returns>
@@ -397,14 +397,14 @@ namespace MathCore
         [DST, NotNull] public static Matrix operator *(double x, [NotNull] Matrix M) => new Matrix(Multiply(M._Data, x));
 
         /// <summary>Оператор матричного произведения двумерного массива и матрицы</summary>
-        /// <returns>Матрица - результат матричного умножения двумергного массива и матрицы</returns>
+        /// <returns>Матрица - результат матричного умножения двухмергного массива и матрицы</returns>
         [DST, NotNull] public static Matrix operator *([NotNull] double[,] A, [NotNull] Matrix B) => new Matrix(Multiply(A, B._Data));
 
         /// <summary>Оператор матричного произведения одномерного массива (строки) и матрицы</summary>
         /// <returns>Матрица - результат матричного умножения одномерного массива (строки) и матрицы</returns>
         [DST, NotNull] public static Matrix operator *([NotNull] double[] A, [NotNull] Matrix B) => new Matrix(Multiply(Array.CreateColArray(A), B._Data));
 
-        /// <summary>Оператор матричного произведения матрицы и одномерного массива (стобца)</summary>
+        /// <summary>Оператор матричного произведения матрицы и одномерного массива (столбца)</summary>
         /// <returns>Матрица - результат матричного умножения матрицы и одномерного массива (столбца)</returns>
         [DST, NotNull] public static Matrix operator *([NotNull] Matrix A, [NotNull] double[] B) => new Matrix(Multiply(A._Data, Array.CreateColArray(B)));
 
@@ -414,11 +414,11 @@ namespace MathCore
 
         /// <summary>Оператор деления матрицы и числа</summary>
         /// <returns>Матрица, элементы которой равны результату деления элементов исходной матрицы и числа</returns>
-        [DST, NotNull] public static Matrix operator /([NotNull] Matrix M, double x) => new Matrix(Divade(M._Data, x));
+        [DST, NotNull] public static Matrix operator /([NotNull] Matrix M, double x) => new Matrix(Divide(M._Data, x));
 
         /// <summary>Оператор деления числа и матрицы</summary>
         /// <returns>Матрица, элементы которой равны результату деления числа и элементов исходной матрицы</returns>
-        [DST, NotNull] public static Matrix operator /(double x, [NotNull] Matrix M) => new Matrix(Divade(x, M._Data));
+        [DST, NotNull] public static Matrix operator /(double x, [NotNull] Matrix M) => new Matrix(Divide(x, M._Data));
 
         /// <summary>Оператор возведения матрицы в степень</summary>
         /// <param name="M">Матрица - основание</param>
@@ -451,7 +451,7 @@ namespace MathCore
 
         /// <summary>Оператор разности двух матриц</summary>
         /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static Matrix operator -([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(subtract(A._Data, B._Data));
+        [DST, NotNull] public static Matrix operator -([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Subtract(A._Data, B._Data));
 
         /// <summary>Оператор произведения двух матриц</summary>
         /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>
@@ -459,16 +459,16 @@ namespace MathCore
 
         /// <summary>Оператор деления двух матриц</summary>
         /// <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
-        [DST, NotNull] public static Matrix operator /([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Divade(A._Data, B._Data));
+        [DST, NotNull] public static Matrix operator /([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Divide(A._Data, B._Data));
 
-        /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+        /// <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
         /// <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
-        [DST, NotNull] public static Matrix operator |([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Concatinate(A._Data, B._Data));
+        [DST, NotNull] public static Matrix operator |([NotNull] Matrix A, [NotNull] Matrix B) => new Matrix(Concatenate(A._Data, B._Data));
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-        /// <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+        /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+        /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull] public static implicit operator Matrix(double X) => new Matrix(1, 1) { [0, 0] = X };
 
         /// <summary>Оператор явного приведения матрицы к двумерному массиву</summary>
