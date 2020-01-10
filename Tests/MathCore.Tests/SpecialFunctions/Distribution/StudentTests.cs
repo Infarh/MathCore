@@ -16,13 +16,13 @@ namespace MathCore.Tests.SpecialFunctions.Distribution
         //}
 
         [TestMethod, TestCategory("Random numbers")]
-        public void QuantileHi2Test()
+        public void QuantileHi2ApproximationTest()
         {
             var P = Enumerable.Range(1, 19).Select(i => i * 5 / 100d).ToArray();
             var K = Enumerable.Range(1, 10).ToArray();
 
-            var hi_with_p_greater_than_05 = QuantileHi2(0.95, 8);
-            var hi_with_p_less_than_05 = QuantileHi2(0.05, 8);
+            var hi_with_p_greater_than_05 = QuantileHi2Approximation(0.95, 8);
+            var hi_with_p_less_than_05 = QuantileHi2Approximation(0.05, 8);
 
             Assert.That.Value(hi_with_p_greater_than_05).IsEqual(15.506278896843497);
             Assert.That.Value(hi_with_p_greater_than_05).IsEqual(15.507313055865437, 1.035e-3);
@@ -34,7 +34,7 @@ namespace MathCore.Tests.SpecialFunctions.Distribution
             //var M = new double[P.Length, K.Length];
             //for (var p = 0; p < P.Length; p++)
             //    for (var k = 0; k < K.Length; k++)
-            //        M[p, k] = QuantileHi2(P[p], K[k]);
+            //        M[p, k] = QuantileHi2ApproximationApproximation(P[p], K[k]);
 
             //double[,] M0 =
             //{
@@ -60,39 +60,60 @@ namespace MathCore.Tests.SpecialFunctions.Distribution
             //};
         }
 
-        private const double __QuantileHi2ValuesTestAccuracy = 4.7e-3;
+        private const double __QuantileHi2ApproximationValuesTestAccuracy = 4.7e-3;
         [DataTestMethod]
         [DataRow(0.95, 14, 23.682709800618273, 1.0e-24, DisplayName = "p:0.95, k:14")]
         [DataRow(0.95, 8, 15.507313055865437, 1.035e-3, DisplayName = "p:0.95, k:8 - p > 0.5")]
         [DataRow(0.05, 8, 2.732636793499664, 3.01e-3, DisplayName = "p:0.05, k:8 - p < 0.5")]
-        [DataRow(0.01, 10, 2.5582, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.01, k:10")]
-        [DataRow(0.025, 10, 3.2470, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.025, k:10")]
-        [DataRow(0.05, 10, 3.9403, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.05, k:10")]
-        [DataRow(0.1, 10, 4.8652, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.1, k:10")]
-        [DataRow(0.2, 10, 6.1791, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.2, k:10")]
-        [DataRow(0.3, 10, 7.2672, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.3, k:10")]
-        [DataRow(0.4, 10, 8.2955, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.4, k:10")]
-        [DataRow(0.5, 10, 9.3418, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.5, k:10")]
-        [DataRow(0.6, 10, 10.4732, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.6, k:10")]
-        [DataRow(0.7, 10, 11.7807, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.7, k:10")]
-        [DataRow(0.8, 10, 13.4420, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.8, k:10")]
-        [DataRow(0.9, 10, 15.9872, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.9, k:10")]
-        [DataRow(0.95, 10, 18.3070, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.95, k:10")]
+        [DataRow(0.01, 10, 2.5582, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.01, k:10")]
+        [DataRow(0.025, 10, 3.2470, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.025, k:10")]
+        [DataRow(0.05, 10, 3.9403, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.05, k:10")]
+        [DataRow(0.1, 10, 4.8652, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.1, k:10")]
+        [DataRow(0.2, 10, 6.1791, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.2, k:10")]
+        [DataRow(0.3, 10, 7.2672, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.3, k:10")]
+        [DataRow(0.4, 10, 8.2955, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.4, k:10")]
+        [DataRow(0.5, 10, 9.3418, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.5, k:10")]
+        [DataRow(0.6, 10, 10.4732, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.6, k:10")]
+        [DataRow(0.7, 10, 11.7807, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.7, k:10")]
+        [DataRow(0.8, 10, 13.4420, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.8, k:10")]
+        [DataRow(0.9, 10, 15.9872, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.9, k:10")]
+        [DataRow(0.95, 10, 18.3070, __QuantileHi2ApproximationValuesTestAccuracy, DisplayName = "p:0.95, k:10")]
+        public void QuantileHi2ApproximationValuesTest(double p, int k, double ExpectedValue, double Accuracy = 1e-16) =>
+            Assert.That.Value(QuantileHi2Approximation(p, k)).IsEqual(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
+
+        private const double __QuantileHi2ValuesTestAccuracy = 2.14e-14;
+        [DataTestMethod]
+        [DataRow(0.95, 14, 23.682709800618273, 2.09e-13, DisplayName = "p:0.95, k:14")]
+        [DataRow(0.95, 8, 15.507313055865437, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.95, k:8 - p > 0.5")]
+        [DataRow(0.05, 8, 2.732636793499664, __QuantileHi2ValuesTestAccuracy, DisplayName = "p:0.05, k:8 - p < 0.5")]
+        [DataRow(0.01, 10, 2.5582, 1.23e-5, DisplayName = "p:0.01, k:10")]
+        [DataRow(0.025, 10, 3.2470, 2.73e-5, DisplayName = "p:0.025, k:10")]
+        [DataRow(0.05, 10, 3.9403, 8.65e-7, DisplayName = "p:0.05, k:10")]
+        [DataRow(0.1, 10, 4.8652, 1.8e-5, DisplayName = "p:0.1, k:10")]
+        [DataRow(0.2, 10, 6.1791, 2.08e-5, DisplayName = "p:0.2, k:10")]
+        [DataRow(0.3, 10, 7.2672, 1.83e-5, DisplayName = "p:0.3, k:10")]
+        [DataRow(0.4, 10, 8.2955, 2.83e-5, DisplayName = "p:0.4, k:10")]
+        [DataRow(0.5, 10, 9.3418, 1.79e-5, DisplayName = "p:0.5, k:10")]
+        [DataRow(0.6, 10, 10.4732, 3.63e-5, DisplayName = "p:0.6, k:10")]
+        [DataRow(0.7, 10, 11.7807, 2.27e-5, DisplayName = "p:0.7, k:10")]
+        [DataRow(0.8, 10, 13.4420, 4.25e-5, DisplayName = "p:0.8, k:10")]
+        [DataRow(0.9, 10, 15.9872, 2.09e-5, DisplayName = "p:0.9, k:10")]
+        [DataRow(0.95, 10, 18.3070, 3.82e-5, DisplayName = "p:0.95, k:10")]
         public void QuantileHi2ValuesTest(double p, int k, double ExpectedValue, double Accuracy = 1e-16) =>
             Assert.That.Value(QuantileHi2(p, k)).IsEqual(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
 
         [TestMethod, Ignore]
-        public void QuantileHi2_n1_p001_v000015()
+        public void QuantileHi2Approximation_n1_p001_v000015()
         {
             const int n = 1;
             const double p = 0.01;
             const double expected_value = 0.0001570878579097;
-            var actual_value = QuantileHi2(p, n);
+            var actual_value = QuantileHi2Approximation(p, n);
             Assert.That.Value(actual_value).IsEqual(expected_value);
         }
 
         [TestMethod, Ignore]
-        public void QuantileHi2MatrixTest()
+        public void QuantileHi2ApproximationMatrixTest()
         {
             var nn = Enumerable.Range(1, 50).ToArray();
             double[] pp =
@@ -162,7 +183,7 @@ namespace MathCore.Tests.SpecialFunctions.Distribution
                     var n = nn[i];
                     var p = pp[j];
                     var expected_value = qchisq[i, j];
-                    var actual_value = QuantileHi2(p, n);
+                    var actual_value = QuantileHi2Approximation(p, n);
                     const double accuracy = 1e-20;
                     Assert.That.Value(actual_value).IsEqual(expected_value, accuracy, $"p:{p};k:{n}");
                 }
