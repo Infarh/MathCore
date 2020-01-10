@@ -10,35 +10,43 @@ namespace MathCore
         public const double Percent = 0.01;
 
         /// <summary>e = 2.7182818284590452353602874713527</summary>
-        public const double e = 2.7182818284590452353602874713527;
+        public const double e = 2.7182818284590452353602874713526624977572470937000d;
 
         /// <summary>π/16 (90°/8 = 11.25°)</summary>
         public const double pi00625 = .5 * pi0125;
         /// <summary>π/8 (90/4° = 22.5°)</summary>
         public const double pi0125 = .5 * pi025;
         /// <summary>π/4 (90°/2 = 45°)</summary>
-        public const double pi025 = .5 * pi05;
+        public const double pi025 = 0.78539816339744830961566084581987572104929234984378d;
 
         /// <summary>π/2 (90°)</summary>
-        public const double pi05 = .5 * pi;
+        public const double pi05 = 1.5707963267948966192313216916397514420985846996876d;
         /// <summary>-π/2 (-90°)</summary>
-        public const double pi05neg = -.5 * pi;
+        public const double pi05neg = -1.5707963267948966192313216916397514420985846996876d;
 
-        /// <summary>π = 3.1415926535897932384626433832795</summary>
-        public const double pi = 3.1415926535897932384626433832795;
-        /// <summary>-π = -3.1415926535897932384626433832795</summary>
-        public const double pi_neg = -3.1415926535897932384626433832795;
+        /// <summary>π = 3.1415926535897932384626433832795028841971693993751</summary>
+        public const double pi = 3.1415926535897932384626433832795028841971693993751d;
+        /// <summary>-π = -3.1415926535897932384626433832795028841971693993751</summary>
+        public const double pi_neg = -3.1415926535897932384626433832795028841971693993751d;
         /// <summary>2·π (360°)</summary>
-        public const double pi2 = 2 * pi;
+        public const double pi2 = 6.2831853071795864769252867665590057683943387987502d;
         /// <summary>-2·π (-360°)</summary>
-        public const double pi2neg = -2 * pi;
-        /// <summary>3·π/</summary>
-        public const double pi3_2 = 3 * pi05;
+        public const double pi2neg = -6.2831853071795864769252867665590057683943387987502d;
+        /// <summary>3·π/2</summary>
+        public const double pi3_2 = 4.71238898038468985769396507491925432629575409906266d;
+
+        /// <summary>Ln_e(pi)</summary>
+        public const double LnPi = 1.1447298858494001741434273513530587116472948129153d;
+        /// <summary>Ln_e(2pi)</summary>
+        public const double Ln2Pi = 0.91893853320467274178032973640561763986139747363780d;
+
+        /// <summary>ln(2√(e/π))</summary>
+        public const double Ln2Sqrt_e_div_pi = 0.6207822376352452223455184457816472122518527279025978;
 
         /// <summary>π/180</summary>
-        public const double ToRad = pi / 180;
+        public const double ToRad = pi / 180d;
         /// <summary>180/π</summary>
-        public const double ToDeg = 180 / pi;
+        public const double ToDeg = 180d / pi;
 
         /// <summary>'π'</summary>
         public const string pi_name = "π";
@@ -46,19 +54,21 @@ namespace MathCore
         public const string deg_name = "°";
 
         /// <summary>√e</summary>
-        public const double sqrt_e = 1.6487212707001281468486507878142;
+        public const double sqrt_e = 1.6487212707001281468486507878141635716537761007101d;
         /// <summary>√π</summary>
-        public const double sqrt_pi = 1.7724538509055160272981674833411;
-        /// <summary>√2·π</summary>
-        public const double sqrt_pi2 = 2.506628274631000502415765284811;
+        public const double sqrt_pi = 2.5066282746310005024157652848110452530069867406099d;
+        /// <summary>√(2·π)</summary>
+        public const double sqrt_pi2 = 2.5066282746310005024157652848110452530069867406099d;
+        /// <summary>√(π/2)</summary>
+        public const double sqrt_pi05 = 1.2533141373155002512078826424055226265034933703050d;
 
-        /// <summary>√2 = 1.4142135623730950488016887242097</summary>
-        public const double sqrt_2 = 1.4142135623730950488016887242097;
+        /// <summary>√2 = 1.4142135623730950488016887242096980785696718753769</summary>
+        public const double sqrt_2 = 1.4142135623730950488016887242096980785696718753769d;
         /// <summary>1 / √2 = 0.707...</summary>
         public const double sqrt_2_inv = 1 / sqrt_2;
 
-        /// <summary>√3 = 1.732050807...</summary>
-        public const double sqrt_3 = 1.7320508075688772935274463415059;
+        /// <summary>√3 = 1.7320508075688772935274463415058723669428052538104</summary>
+        public const double sqrt_3 = 1.7320508075688772935274463415058723669428052538104d;
 
         /// <summary>√5 = 2.236067...</summary>
         public const double sqrt_5 = 2.2360679774997896964091736687313;
@@ -76,10 +86,10 @@ namespace MathCore
         public static class Geometry
         {
             /// <summary>Константа преобразования радиан в градусы = 180/π</summary>
-            public const double ToDeg = 180 / pi;
+            public const double ToDeg = 180d / pi;
             /// <summary>Константа преобразования градусов в радианы = π/180</summary>
-            public const double ToRad = pi / 180;
-            /// <summary>Константа π = 3.1415926535897932384626433832</summary>
+            public const double ToRad = 0.017453292519943295769236907684886127134428718885417d;
+            /// <summary>Системная константа π = 3.1415926535897932384626433832</summary>
             public const double Pi = Math.PI;
 
             public static double ConvertToDeg(double RadValue) => RadValue * ToDeg;
@@ -88,9 +98,9 @@ namespace MathCore
         }
 
         /// <summary>Скорость света 300`000`000 м/с = 3e8 м/с</summary>
-        public const double SpeedOfLigth = 3e8;
+        public const double SpeedOfLight = 3e8;
         /// <summary>Скорость света в вакууме 299`792`458 м/с</summary>
-        public const double SpeedOfLightInVacuum = 299792458;
+        public const double SpeedOfLightInVacuum = 2.99792458e8;
 
         /// <summary>Гравитационная постоянная 6.67384(80)×10^−11 m^3·кг^−1·с^−2</summary>
         public const double GravitationConstant = 6.673848080808080808080808080E-11;
@@ -101,33 +111,42 @@ namespace MathCore
         /// <summary>Приведённая постоянная Планка 1.054 571 628(53) ×10^−34 Жд·с</summary>
         public const double PlanckConstant_Reduced = PlanckConstant / (2 * pi);
 
+        /// <summary>Температура Планка √(h_bar * c^5/G)/k K</summary>
+        public const double Planck_Temperature = 1.416786e32;
+
+        /// <summary>Длина Планка h_bar/(m_p*c) м</summary>
+        public const double Planck_Length = 1.616253e-35;
+
+        /// <summary>Время Планка lp/c с</summary>
+        public const double Planck_Time = 5.39124e-44;
+
         /// <summary>Электродинамические константы</summary>
         public static class ElectroDynamic
         {
 
             /// <summary>Электрическая постоянная 1/(Mu0 · c^2) = 8,854187817620… ×10^−12 Ф·м^−1</summary>
-            public const double Epsilon0 = 1 / (Mu0 * SpeedOfLightInVacuum * SpeedOfLightInVacuum);
+            public const double Epsilon0 = 8.8541878171937079244693661186959426889222899381429e-12;//1 / (Mu0 * SpeedOfLightInVacuum * SpeedOfLightInVacuum);
 
             /// <summary>Магнитная постоянная 4·π ×10^-7 = 1.2566370614E-6 Гн/м</summary>
-            public const double Mu0 = pi * 4E-7;
+            public const double Mu0 = 1.2566370614359172953850573533118011536788677597500e-6;
 
             /// <summary>Упрощённое сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 377 Ом</summary>
             public const double Impedance = 377;
 
             /// <summary>Сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 376.730313461771 Ом</summary>
-            public const double Impedance0 = 376.730313461771;
+            public const double Impedance0 = 376.73031346177065546819840042031930826862350835242;
 
-            public static double ToWaveLength(double Frequancy) => SpeedOfLigth / Frequancy;
+            public static double ToWaveLength(double Frequancy) => SpeedOfLight / Frequancy;
 
-            public static double ToWaveLength(double Frequance, double Epsilon) => SpeedOfLigth / Frequance / Math.Sqrt(Epsilon);
+            public static double ToWaveLength(double Frequance, double Epsilon) => SpeedOfLight / Frequance / Math.Sqrt(Epsilon);
 
-            public static double ToWaveLength(double Frequance, double Epsilon, double Mu) => SpeedOfLigth / Frequance / Math.Sqrt(Epsilon / Mu);
+            public static double ToWaveLength(double Frequance, double Epsilon, double Mu) => SpeedOfLight / Frequance / Math.Sqrt(Epsilon / Mu);
 
-            public static double ToFrequance(double WaveLength) => SpeedOfLigth / WaveLength;
+            public static double ToFrequance(double WaveLength) => SpeedOfLight / WaveLength;
 
-            public static double ToFrequance(double WaveLength, double Epsilon) => SpeedOfLigth / WaveLength / Math.Sqrt(Epsilon);
+            public static double ToFrequance(double WaveLength, double Epsilon) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon);
 
-            public static double ToFrequance(double WaveLength, double Epsilon, double Mu) => SpeedOfLigth / WaveLength / Math.Sqrt(Epsilon / Mu);
+            public static double ToFrequance(double WaveLength, double Epsilon, double Mu) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon / Mu);
         }
 
         /// <summary>0x3ffeffff = 1073676287</summary>

@@ -172,7 +172,7 @@ namespace System
         }
 
         [DST, NotNull]
-        public static double[] Divade([NotNull] this double[] array, double value)
+        public static double[] Divide([NotNull] this double[] array, double value)
         {
             for (var i = 0; i < array.Length; i++)
                 array[i] /= value;
@@ -199,7 +199,7 @@ namespace System
         public static CubicSpline GetCubicSpline([NotNull] this double[] Y, double dx, double x0 = 0.0) => new double[Y.Length].Initialize(dx, x0, (i, Dx, X0) => i * Dx + X0).GetCubicSpline(Y);
 
         [DST, NotNull]
-        public static double[] GetDivaded([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] / v);
+        public static double[] GetDivided([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] / v);
 
         [DST, NotNull]
         public static Histogram GetHistogram([NotNull] this double[] X, int IntervalsCount) => new Histogram(X, IntervalsCount);
@@ -327,7 +327,7 @@ namespace System
         }
 
         [DST]
-        public static void Normalize([NotNull] this double[] array) => array.Divade(array.Max());
+        public static void Normalize([NotNull] this double[] array) => array.Divide(array.Max());
 
         [DST]
         public static void subtract([NotNull] this double[] array, double value)

@@ -794,7 +794,7 @@ namespace System.Linq
                 if (min.AddValue(selector(v)))
                     result = v;
             return result;
-        }  
+        }
 
         /// <summary>Определение минимального элемента последовательности</summary>
         /// <param name="collection">Последовательность элементов</param>
@@ -804,7 +804,7 @@ namespace System.Linq
             var min = new MinValue();
             var result = double.NaN;
             foreach (var v in collection)
-                    result = min.Add(v);
+                result = min.Add(v);
             return result;
         }
 
@@ -831,7 +831,7 @@ namespace System.Linq
                 i++;
             }
             return result;
-        } 
+        }
 
         /// <summary>Определение минимального элемента последовательности</summary>
         /// <param name="collection">Последовательность элементов</param>
@@ -1645,6 +1645,28 @@ namespace System.Linq
             foreach (var v in collection)
                 if (i++ % N == k)
                     yield return v;
+        }
+
+        /// <summary>Получить первый и последний элементы перечисления</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="enumerable">Перечисление</param>
+        /// <returns>Перечисление, состоящее из первого и последнего элементов исходного перечисления</returns>
+        [NN]
+        public static IEnumerable<T> TakeFirstAndLast<T>([NN] this IEnumerable<T> enumerable)
+        {
+            var last = default(T);
+            var first_taken = false;
+            foreach (var item in enumerable)
+                if (!first_taken)
+                {
+                    yield return item;
+                    first_taken = true;
+                }
+                else
+                    last = item;
+
+            if (first_taken)
+                yield return last;
         }
     }
 }

@@ -93,12 +93,12 @@ namespace System.Linq.Expressions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sDivade(Expression a, Expression b) => sDivade(Expression.Divide(a, b));
+        private static Expression sDivide(Expression a, Expression b) => sDivide(Expression.Divide(a, b));
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sDivade(double a, Expression b) => sDivade(Expression.Divide(Expression.Constant(a), b));
+        private static Expression sDivide(double a, Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sDivade(Expression a, double b) => sDivade(Expression.Divide(a, Expression.Constant(b)));
-        private static Expression sDivade(BinaryExpression b)
+        private static Expression sDivide(Expression a, double b) => sDivide(Expression.Divide(a, Expression.Constant(b)));
+        private static Expression sDivide(BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
@@ -193,7 +193,7 @@ namespace System.Linq.Expressions
                         var y = b.Right;
                         if(x is ConstantExpression constant && y is ParameterExpression)
                         {
-                            var I = sDivade(1, MathMethod("Log", MathMethod("Abs", y)));
+                            var I = sDivide(1, MathMethod("Log", MathMethod("Abs", y)));
                             if((double)constant.Value != 1.0)
                                 I = sMultiply(constant, I);
                             return I;
@@ -208,10 +208,10 @@ namespace System.Linq.Expressions
                         if(x is ParameterExpression && y is ConstantExpression)
                         {
                             y = sInc(y);
-                            return sDivade(sPower(x, y), y);
+                            return sDivide(sPower(x, y), y);
                         }
                         if(x is ConstantExpression && y is ParameterExpression)
-                            return sDivade(b, MathMethod("Log", x));
+                            return sDivide(b, MathMethod("Log", x));
                         throw new NotImplementedException();
                     }
                 default:
@@ -232,22 +232,22 @@ namespace System.Linq.Expressions
                 //case "Tan":
                 //    {
                 //        var x = m.Arguments[0];
-                //        return sMultiply(Visit(x), sDivade(1, sPower(MathMethod("Cos", x), 2)));
+                //        return sMultiply(Visit(x), sDivide(1, sPower(MathMethod("Cos", x), 2)));
                 //    }
                 //case "Asin":
                 //    {
                 //        var x = m.Arguments[0];
-                //        return sMultiply(Visit(x), sDivade(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2)))));
+                //        return sMultiply(Visit(x), sDivide(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2)))));
                 //    }
                 //case "Acos":
                 //    {
                 //        var x = m.Arguments[0];
-                //        return Expression.Negate(sMultiply(Visit(x), sDivade(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2))))));
+                //        return Expression.Negate(sMultiply(Visit(x), sDivide(1, MathMethod("Sqrt", sSubtract(1, sPower(x, 2))))));
                 //    }
                 //case "Atan":
                 //    {
                 //        var x = m.Arguments[0];
-                //        return sMultiply(Visit(x), sDivade(1, sAdd(1, sPower(x, 2))));
+                //        return sMultiply(Visit(x), sDivide(1, sAdd(1, sPower(x, 2))));
                 //    }
                 //case "Sinh":
                 //    {
@@ -263,7 +263,7 @@ namespace System.Linq.Expressions
                 //case "Tanh":
                 //    {
                 //        var x = m.Arguments[0];
-                //        return sMultiply(Visit(x), sDivade(1, sPower(sDivade(1, MathMethod("Tanh", x)), 2)));
+                //        return sMultiply(Visit(x), sDivide(1, sPower(sDivide(1, MathMethod("Tanh", x)), 2)));
                 //    }
                 //case "Abs":
                 //    {
@@ -301,11 +301,11 @@ namespace System.Linq.Expressions
                 //        if(m.Arguments.Count > 1)
                 //        {
                 //            var a = m.Arguments[1];
-                //            var expr = sDivade(MathMethod("Log", x), MathMethod("Log", a));
+                //            var expr = sDivide(MathMethod("Log", x), MathMethod("Log", a));
                 //            return Visit(expr);
                 //        }
                 //        var dx = Visit(x);
-                //        return sDivade(dx, x);
+                //        return sDivide(dx, x);
                 //    }
                 //case "Log10":
                 //    {

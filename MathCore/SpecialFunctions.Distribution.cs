@@ -250,13 +250,19 @@ namespace MathCore
                     return __MaxRealNumber * z < rk ? rflg * __MaxRealNumber : rflg * Math.Sqrt(rk / z - rk);
                 }
 
+                /// <summary>Квантиль Хи-квадрат</summary>
+                ///  /// <param name="alpha">Квантиль [0..1]</param>
+                /// <param name="n">Число степеней свободы</param>
+                /// <returns>Квантиль</returns>
+                public static double QuantileHi2(double alpha, int n) => Gamma.LowerRegularizedInv(n / 2d, alpha) / 0.5;
+
                 /// <summary>Квантиль Хи-квадрат (Аппроксимация Корниша-Фишера)</summary>
                 /// <remarks>http://ru.wikipedia.org/wiki/Квантили_распределения_хи-квадрат</remarks>
                 /// <remarks>https://projecteuclid.org/download/pdf_1/euclid.aoms/1177730982</remarks>
                 /// <param name="alpha">Квантиль [0..1]</param>
                 /// <param name="n">Число степеней свободы</param>
                 /// <returns>Квантиль</returns>
-                public static double QuantileHi2(double alpha, int n)
+                public static double QuantileHi2Approximation(double alpha, int n)
                 {
                     if (alpha < .001 || alpha > .999)
                         throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "Значения alpha < 0.001 и > 0.999 не поддерживаются");

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <doc>
     <assembly>
         <name>MathCore</name>
@@ -1957,7 +1957,7 @@
             <returns>Длина дуги на поверхности Земли, начинающейся в первой точке и заканчивающейся во второй точке</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.EquirectangularApproximation_LengthBetween(System.Double,System.Double,System.Double,System.Double)">
-            <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекции), заданными своими координатами</summary>
+            <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекциии), заданными своими координатами</summary>
             <param name="latitude1">Широта первой точки в градусах</param>
             <param name="longitude1">Долгота первой точки в градусах</param>
             <param name="latitude2">Широта второй точки в градусах</param>
@@ -5173,12 +5173,12 @@
             <returns>Двумерный массив элементов матрицы</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="rows"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.IsMatrixSungular(System.Double[0:,0:])">
-            <summary>Проверка - является ли матрица вырожденой</summary>
+        <member name="M:MathCore.Matrix.Array.IsMatrixSingular(System.Double[0:,0:])">
+            <summary>Проверка - является ли матрица вырожденной</summary>
             <param name="matrix">Проверяемая матрица</param>
             <returns>Истина, если определитель матрицы равен нулю</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">Матрица не содержит элементов, или если матрица не квазратная</exception>
+            <exception cref="T:System.ArgumentException">Матрица не содержит элементов, или если матрица не квадратная</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Rank(System.Double[0:,0:])">
             <summary>Определение ранга матрицы</summary>
@@ -5190,12 +5190,12 @@
         <member name="M:MathCore.Matrix.Array.CreateDiagonal(System.Double[])">
             <summary>Создать диагональную матрицу</summary>
             <param name="elements">Элементы диагонали матрицы</param>
-            <returns>Двумерный массив, содержащий на главной диагонали элементы диагонильрной матрицы</returns>
+            <returns>Двумерный массив, содержащий на главной диагонали элементы диагональной матрицы</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="elements"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Массив не содержит элементов</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetMatrixShadow(System.Double[0:,0:])">
-            <summary>Получить массив элементов тени (главной диагонали) матирцы</summary>
+            <summary>Получить массив элементов тени (главной диагонали) матрицы</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Массив элементов тени матрицы</returns>
             <exception cref="T:System.ArgumentException">Массив не содержит элементов</exception>
@@ -5257,14 +5257,14 @@
         <member name="M:MathCore.Matrix.Array.GetLength(System.Double[0:,0:],System.Int32@,System.Int32@)">
             <summary>Получить размерность массива матрицы</summary>
             <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
-            <param name="N">Число строк матриы</param>
+            <param name="N">Число строк матрицы</param>
             <param name="M">Число столбцов (элементов строки) матрицы</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetRowsCount(System.Double[0:,0:],System.Int32@)">
             <summary>Получить число строк массива матрицы</summary>
             <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
-            <param name="N">Число строк матриы</param>
+            <param name="N">Число строк матрицы</param>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetColsCount(System.Double[0:,0:],System.Int32@)">
@@ -5315,7 +5315,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetCol_Array(System.Double[0:,0:],System.Int32)">
-            <summary>Получить столбец матрицы в виде маиива</summary>
+            <summary>Получить столбец матрицы в виде массива</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="j">Номер столбца</param>
             <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
@@ -5323,7 +5323,7 @@
             <exception cref="T:System.ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetCol_Array(System.Double[0:,0:],System.Int32,System.Double[])">
-            <summary>Получить столбец матрицы в виде маиива</summary>
+            <summary>Получить столбец матрицы в виде массива</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="j">Номер столбца</param>
             <param name="result">Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></param>
@@ -5360,7 +5360,7 @@
         </member>
         <member name="M:MathCore.Matrix.Array.Inverse(System.Double[0:,0:])">
             <summary>Получить обратную матрицу</summary>
-            <param name="matrix">Обращаеемая матрица</param>
+            <param name="matrix">Обращаемая матрица</param>
             <returns>Обратная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
@@ -5368,7 +5368,7 @@
         </member>
         <member name="M:MathCore.Matrix.Array.Inverse(System.Double[0:,0:],System.Double[0:,0:]@)">
             <summary>Получить обратную матрицу</summary>
-            <param name="matrix">Обращаеемая матрица</param>
+            <param name="matrix">Обращаемая матрица</param>
             <param name="p">Матрица перестановок</param>
             <returns>Обратная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
@@ -5392,8 +5392,8 @@
             <returns>Матрица решения уравнения A*X=B -&gt; X</returns>
             <exception cref="T:System.InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Solve(System.Double[0:,0:],System.Double[0:,0:]@,System.Double[0:,0:]@,System.Boolean)">
             <summary>Метод решения СЛАУ</summary>
@@ -5403,8 +5403,8 @@
             <param name="clone_b">Работать с копией <paramref name="b"/></param>
             <exception cref="T:System.InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.TrySolve(System.Double[0:,0:],System.Double[0:,0:]@,System.Double[0:,0:]@,System.Boolean)">
             <summary>Попытаться решить СЛАУ</summary>
@@ -5412,18 +5412,18 @@
             <param name="b">Правая часть СЛАУ</param>
             <param name="p">Матрица перестановок</param>
             <param name="clone_b">Работать с копией <paramref name="b"/></param>
-            <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> варождена</returns>
+            <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> вырождена</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="b"/> == <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Transponse(System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Transpose(System.Double[0:,0:])">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Transponse(System.Double[0:,0:],System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Transpose(System.Double[0:,0:],System.Double[0:,0:])">
             <summary>Транспонирование матрицы</summary>
             <param name="matrix">Исходная матрица</param>
             <param name="result">Транспонированная матрица</param>
@@ -5491,7 +5491,7 @@
             </remarks>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="l">Нижне-треугольная матрица</param>
-            <param name="u">Верхнетреугольная матрица</param>
+            <param name="u">Верхне-треугольная матрица</param>
             <param name="p">Матрица преобразований P*X = L*U</param>
             <param name="d">Определитель матрицы</param>
             <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
@@ -5507,8 +5507,8 @@
             </remarks>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="l">Нижне-треугольная матрица</param>
-            <param name="u">Верхнетреугольная матрица</param>
-            <param name="d">Определитль матрицы</param>
+            <param name="u">Верхне-треугольная матрица</param>
+            <param name="d">Определитель матрицы</param>
             <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">В случае если размерность матрицы N меньше 1</exception>
@@ -5523,14 +5523,14 @@
             <param name="matrix">Массив элементов матрицы</param>
             <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             <param name="p">Массив матрицы перестановок</param>
-            <param name="d">Определитль матрицы</param>
+            <param name="d">Определитель матрицы</param>
             <returns>Истина, если операция выполнена успешно</returns>
             <exception cref="T:System.ArgumentException">Матрица не квадратная</exception>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetLUPDecomposition(System.Double[0:,0:],System.Double[0:,0:]@,System.Double@)">
             <summary>LU-разложение матрицы</summary>
-            <param name="matrix">Разлогаемая матрица</param>
+            <param name="matrix">Разлагаемая матрица</param>
             <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             <param name="d">Определитель матрицы</param>
             <returns>Истина, если процедура выполнена успешно</returns>
@@ -5539,7 +5539,7 @@
         </member>
         <member name="M:MathCore.Matrix.Array.GetLUDecomposition(System.Double[0:,0:],System.Double[0:,0:]@)">
             <summary>LU-разложение матрицы</summary>
-            <param name="matrix">Разлогаемая матрица</param>
+            <param name="matrix">Разлагаемая матрица</param>
             <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             <returns>Истина, если разложение выполнено успешно</returns>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
@@ -5547,104 +5547,104 @@
         </member>
         <member name="M:MathCore.Matrix.Array.CreatePermutationMatrix(System.Int32[])">
             <summary>Создать матрицу перестановок из массива индексов</summary>
-            <param name="indexes">Массив индексов элементов стольцов</param>
+            <param name="indexes">Массив индексов элементов столбцов</param>
             <returns>Матрица перестановок</returns>
         </member>
         <member name="M:MathCore.Matrix.Array.GetTriangle(System.Double[0:,0:],System.Double[0:,0:]@,System.Int32@,System.Double@)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="p">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetTriangle(System.Double[0:,0:],System.Int32@,System.Double@)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetTriangle(System.Double[0:,0:],System.Double[0:,0:],System.Int32@,System.Double@)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="b">Матрица правой части</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetTriangle(System.Double[0:,0:],System.Double[0:,0:]@,System.Double[0:,0:]@,System.Int32@,System.Double@,System.Boolean)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="b">Матрица правой части</param>
             <param name="p">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
             <param name="clone_b">Клонировать матрицу правых частей</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Triangulate(System.Double[0:,0:],System.Double[0:,0:]@,System.Double@)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="p">Матрица перестановок</param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Triangulate(System.Double[0:,0:],System.Double@)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Triangulate(System.Double[0:,0:],System.Double[0:,0:],System.Double@)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Triangulate(System.Double[0:,0:]@,System.Double[0:,0:],System.Double@,System.Boolean)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <param name="clone">Клонировать исходную матрицу</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Triangulate(System.Double[0:,0:]@,System.Double[0:,0:]@,System.Double[0:,0:]@,System.Double@,System.Boolean,System.Boolean)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
             <param name="p">Матрица перестановок</param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <param name="clone_matrix">Клонировать исходную матрицу</param>
             <param name="clone_b">Клонировать присоединённую матрицу</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.AreEquals(System.Double[0:,0:],System.Double[0:,0:])">
             <summary>Сравнение двух двумерных массивов элементов матриц</summary>
             <param name="A">Первый массив</param>
             <param name="B">Второй массив</param>
-            <returns>Истина, если оба массивы неопределены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
+            <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.AreEquals(System.Double[0:,0:],System.Double[0:,0:],System.Double)">
@@ -5652,25 +5652,25 @@
             <param name="A">Первый массив</param>
             <param name="B">Второй массив</param>
             <param name="eps">Точность сравнения</param>
-            <returns>Истина, если оба массивы неопределены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
+            <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetMaxRowAbsSumm(System.Double[0:,0:])">
-            <summary>Вычисление максимуа от сумм абсолютных значений по элементам строк</summary>
+            <summary>Вычисление максимума от сумм абсолютных значений по элементам строк</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetMaxColAbsSumm(System.Double[0:,0:])">
-            <summary>Вычисление максимуа от сумм абсолютных значений по элементам столбцов</summary>
+            <summary>Вычисление максимума от сумм абсолютных значений по элементам столбцов</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.GetRMS(System.Double[0:,0:])">
-            <summary>Вычисление среднеквадратического значения элементов матрицы</summary>
+            <summary>Вычисление среднеквадратичного значения элементов матрицы</summary>
             <param name="matrix">Массив элементов матрицы</param>
-            <returns>Среднеквадратическое значение элементов матрицы</returns>
+            <returns>Среднеквадратичное значение элементов матрицы</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.Array.Sqr(System.Double)">
@@ -5680,7 +5680,7 @@
         </member>
         <member name="M:MathCore.Matrix.Array.GausSeidelConverge(System.Double[0:,0:]@,System.Double[0:,0:]@,System.Double,System.Int32,System.Int32)">
             <summary>Метод проверки сходимости метода Метод Гаусса — Зейделя</summary>
-            <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сашёлся на текущем шаге</remarks>
+            <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сошёлся на текущем шаге</remarks>
             <param name="new_x">Новое полученное решение</param>
             <param name="last_x">Решение, полученное на прошлом шаге метода</param>
             <param name="eps">Требуемая точность решения</param>
@@ -5688,7 +5688,7 @@
             <param name="M">Число столбцов матрицы решения</param>
             <returns>Истина, если метод сошёлся Метод Гаусса — Зейделя</returns>
         </member>
-        <member name="M:MathCore.Matrix.Array.GausSeidelSolove(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:],System.Double)">
+        <member name="M:MathCore.Matrix.Array.GausSeidelSolve(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:],System.Double)">
             <summary>Метод Гаусса — Зейделя решения системы линейных уравнений</summary>
             <param name="matrix">Матрица коэффициентов</param>
             <param name="x">Матрица неизвестных</param>
@@ -5707,16 +5707,16 @@
         <member name="M:MathCore.Matrix.Array.QRDecomposition(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:])">
             <summary>QR-разложение матрицы</summary>
             <param name="matrix">Разлагаемая матрица</param>
-            <param name="q">Унитарная матрица (ортогональная) - должна быть передана квадратная матирца nxn != null</param>
-            <param name="r">Верхнетреугольная матрица - должна быть передана квадратная матирца nxn != null</param>
+            <param name="q">Унитарная матрица (ортогональная) - должна быть передана квадратная матрица nxn != null</param>
+            <param name="r">Верхне-треугольная матрица - должна быть передана квадратная матрица nxn != null</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Матрица не содержит элементов</exception>
         </member>
         <member name="M:MathCore.Matrix.Array.QRDecomposition(System.Double[0:,0:],System.Double[0:,0:]@,System.Double[0:,0:]@)">
             <summary>QR-разложение матрицы</summary>
             <param name="matrix">Разлагаемая матрица</param>
-            <param name="q">Унитарная матрица (ортогональная) - создаётся квадратная матирца nxn != null</param>
-            <param name="r">Верхнетреугольная матрица - создаётся квадратная матирца nxn != null</param>
+            <param name="q">Унитарная матрица (ортогональная) - создаётся квадратная матрица nxn != null</param>
+            <param name="r">Верхне-треугольная матрица - создаётся квадратная матрица nxn != null</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Матрица не содержит элементов</exception>
         </member>
@@ -5746,12 +5746,12 @@
         </member>
         <member name="M:MathCore.Matrix.Array.Operator.Multiply(System.Double[],System.Double)">
             <summary>Умножение вектора на число</summary>
-            <param name="v1">Первый сомножитель - вектор элэементов</param>
+            <param name="v1">Первый сомножитель - вектор элементов</param>
             <param name="v2">Второй сомножитель - число, на которое должны быть умножены все элементы вектора</param>
             <returns>Вектор произведений элементов входного вектора и числа</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Divade(System.Double[],System.Double)">
+        <member name="M:MathCore.Matrix.Array.Operator.Divide(System.Double[],System.Double)">
             <summary>Деление вектора элементов на число</summary>
             <param name="v1">Вектор-делимое</param>
             <param name="v2">Число-делитель</param>
@@ -5794,7 +5794,7 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
             <exception cref="T:System.InvalidOperationException">Размеры векторов не совпадают</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.DivadeComponent(System.Double[],System.Double[])">
+        <member name="M:MathCore.Matrix.Array.Operator.DivideComponent(System.Double[],System.Double[])">
             <summary>Оператор вычисления поэлементного деления двух векторов</summary>
             <param name="a">Вектор - делимое</param>
             <param name="b">Вектор - делитель</param>
@@ -5822,14 +5822,14 @@
             <returns>Массив произведения элементов матрицы с числом</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Divade(System.Double[0:,0:],System.Double)">
+        <member name="M:MathCore.Matrix.Array.Operator.Divide(System.Double[0:,0:],System.Double)">
             <summary>Оператор вычисления произведения двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
             <returns>Массив произведения элементов матрицы с числом</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Divade(System.Double,System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Operator.Divide(System.Double,System.Double[0:,0:])">
             <summary>Оператор вычисления частного двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
@@ -5854,7 +5854,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы не равны</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.MultylyCol(System.Double[0:,0:],System.Double[])">
+        <member name="M:MathCore.Matrix.Array.Operator.MultiplyCol(System.Double[0:,0:],System.Double[])">
             <summary>Оператор вычисления произведения элементов матрицы на столбец</summary>
             <param name="A">Массив элементов первой матрицы</param>
             <param name="col">Массив элементов столбца</param>
@@ -5863,7 +5863,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="col"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы и столбца не равны</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.MultylyRow(System.Double[],System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Operator.MultiplyRow(System.Double[],System.Double[0:,0:])">
             <summary>Оператор вычисления произведения элементов строки и матрицы</summary>
             <param name="B">Массив элементов первой матрицы</param>
             <param name="row">Массив элементов строки</param>
@@ -5872,7 +5872,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="row"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы и строки не равны</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.MultylyRowToCol(System.Double[],System.Double[])">
+        <member name="M:MathCore.Matrix.Array.Operator.MultiplyRowToCol(System.Double[],System.Double[])">
             <summary>Оператор вычисления произведения элементов строки и элементов столбца</summary>
             <param name="col">Массив элементов столбца</param>
             <param name="row">Массив элементов строки</param>
@@ -5897,21 +5897,21 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="A"/> не определена</exception>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="result"/> не определена</exception>
-            <exception cref="T:System.ArgumentException">В случае если размерности матриц несогласованы</exception>
+            <exception cref="T:System.ArgumentException">В случае если размерности матриц не согласованы</exception>
             <exception cref="T:System.ArgumentException">В случае если число строк <paramref name="result"/> не равно числу строк <paramref name="A"/></exception>
             <exception cref="T:System.ArgumentException">В случае если число столбцов <paramref name="result"/> не равно числу строк <paramref name="B"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Divade(System.Double[0:,0:],System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.Operator.Divide(System.Double[0:,0:],System.Double[0:,0:])">
             <summary>Оператор деления двух матриц</summary>
             <param name="A">Делимое</param>
             <param name="B">Делитель</param>
             <returns>Частное двух матриц</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="A"/> не определена</exception>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
-            <exception cref="T:System.ArgumentException">В случае если размерности матриц несогласованы</exception>
+            <exception cref="T:System.ArgumentException">В случае если размерности матриц не согласованы</exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.Operator.Concatinate(System.Double[0:,0:],System.Double[0:,0:])">
-            <summary>Объединение метриц по строкам, либо столбцам</summary>
+        <member name="M:MathCore.Matrix.Array.Operator.Concatenate(System.Double[0:,0:],System.Double[0:,0:])">
+            <summary>Объединение матриц по строкам, либо столбцам</summary>
             <returns>Двумерный массив, содержащий объединение элементов исходных массивов по строкам, либо столбцам</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="A"/> or <paramref name="B"/> is <see langword="null"/></exception>
         </member>
@@ -5930,7 +5930,7 @@
         <member name="M:MathCore.Matrix.Array.Operator.BiliniarMultiply(System.Double[0:,0:],System.Double[0:,0:],System.Double[0:,0:])">
             <summary>Оператор вычисления билинейной формы с векторными операндами b = <paramref name="x"/>*<paramref name="a"/>*<paramref name="y"/></summary>
             <param name="x">Двумерный массив компонент матрицы первого операнда билинейной формы</param>
-            <param name="a">Двумерный массив компонент матрицы оператора билинейной мормы</param>
+            <param name="a">Двумерный массив компонент матрицы оператора билинейной нормы</param>
             <param name="y">Двумерный массив компонент матрицы второго операнда билинейной формы</param>
             <returns>
             Двумерный массив компонент матрицы результата вычисления билинейной формы, 
@@ -5982,12 +5982,12 @@
             <summary>Создать диагональную матрицу</summary><param name="elements">Элементы диагональной матрицы</param>
             <returns>Диагональная матрица</returns>
         </member>
-        <member name="M:MathCore.Matrix.GetUnitaryMatryx(System.Int32)">
+        <member name="M:MathCore.Matrix.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         </member>
         <member name="M:MathCore.Matrix.GetTransvection(MathCore.Matrix,System.Int32)">
-            <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Оборный столбец</param>
+            <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
         <member name="F:MathCore.Matrix._N">
@@ -6012,7 +6012,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:MathCore.Matrix.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
+            <summary>Вектор-столбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
         </member>
         <member name="P:MathCore.Matrix.IsSquare">
             <summary>Матрица является квадратной матрицей</summary>
@@ -6036,7 +6036,7 @@
             <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
         </member>
         <member name="P:MathCore.Matrix.Norm_k">
-            <summary>Среднеквадратическое значение элементов матрицы</summary>
+            <summary>Среднеквадратичное значение элементов матрицы</summary>
         </member>
         <member name="M:MathCore.Matrix.#ctor(System.Int32,System.Int32)">
             <summary>Матрица</summary><param name="N">Число строк</param><param name="M">Число столбцов</param>
@@ -6072,7 +6072,7 @@
         </member>
         <member name="M:MathCore.Matrix.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{System.Double}})">
             <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
-            <param name="Items">Перечисление строк, состоящих из перечисления эламентов строк</param>
+            <param name="Items">Перечисление строк, состоящих из перечисления элементов строк</param>
         </member>
         <member name="M:MathCore.Matrix.GetElements(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{System.Double}})">
             <summary>Получить двумерный массив элементов матрицы</summary>
@@ -6090,21 +6090,21 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:MathCore.Matrix.GetTriangle(MathCore.Matrix@,System.Int32@,System.Double@)">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="P">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
             <param name="D">Определитель</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
         </member>
         <member name="M:MathCore.Matrix.GetTriangle(MathCore.Matrix@,System.Boolean)">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="B">Присоединённая матрица правой части СЛАУ</param>
             <param name="CloneB">Работать с клоном матрицы <paramref name="B"/></param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.Matrix.GetTriangle(MathCore.Matrix@,MathCore.Matrix@,System.Int32@,System.Double@,System.Boolean)">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="B">Матрица правой части СЛАУ</param>
             <param name="P">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
@@ -6117,7 +6117,7 @@
             <param name="P">Матрица перестановок</param>
             <returns>Обратная матрица</returns>
         </member>
-        <member name="M:MathCore.Matrix.GetTransponse">
+        <member name="M:MathCore.Matrix.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -6139,7 +6139,7 @@
         <member name="M:MathCore.Matrix.GetLUDecomposition(MathCore.Matrix@,MathCore.Matrix@,MathCore.Matrix@,System.Double@)">
             <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
             <param name="L">Нижне-треугольная матрица</param>
-            <param name="U">Верхнетреугольная матрица</param>
+            <param name="U">Верхне-треугольная матрица</param>
             <param name="P">Матрица преобразований P*X = L*U</param>
             <param name="D">Знак определителя</param>
             <returns>Истина, если разложение выполнено успешно, ложь - если матрица вырожденная</returns>
@@ -6176,7 +6176,7 @@
         </member>
         <member name="M:MathCore.Matrix.op_Inequality(MathCore.Matrix,MathCore.Matrix)">
             <summary>Оператор неравенства двух матриц</summary>
-            <returns>Истина, если матрицы несовпадают по размеру или поэлементно</returns>
+            <returns>Истина, если матрицы не совпадают по размеру или поэлементно</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Equality(System.Double[0:,0:],MathCore.Matrix)">
             <summary>Оператор равенства матрицы и двумерного массива</summary>
@@ -6188,11 +6188,11 @@
         </member>
         <member name="M:MathCore.Matrix.op_Inequality(System.Double[0:,0:],MathCore.Matrix)">
             <summary>Оператор неравенства матрицы и двумерного массива</summary>
-            <returns>Истина, если матрица и двумерный массив несовпадают по размеру или поэлементно</returns>
+            <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Inequality(MathCore.Matrix,System.Double[0:,0:])">
             <summary>Оператор неравенства матрицы и двумерного массива</summary>
-            <returns>Истина, если матрица и двумерный массив несовпадают по размеру или поэлементно</returns>
+            <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Addition(MathCore.Matrix,System.Double)">
             <summary>Оператор суммы матрицы и числа</summary>
@@ -6224,14 +6224,14 @@
         </member>
         <member name="M:MathCore.Matrix.op_Multiply(System.Double[0:,0:],MathCore.Matrix)">
             <summary>Оператор матричного произведения двумерного массива и матрицы</summary>
-            <returns>Матрица - результат матричного умножения двумергного массива и матрицы</returns>
+            <returns>Матрица - результат матричного умножения двухмерного массива и матрицы</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Multiply(System.Double[],MathCore.Matrix)">
             <summary>Оператор матричного произведения одномерного массива (строки) и матрицы</summary>
             <returns>Матрица - результат матричного умножения одномерного массива (строки) и матрицы</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Multiply(MathCore.Matrix,System.Double[])">
-            <summary>Оператор матричного произведения матрицы и одномерного массива (стобца)</summary>
+            <summary>Оператор матричного произведения матрицы и одномерного массива (столбца)</summary>
             <returns>Матрица - результат матричного умножения матрицы и одномерного массива (столбца)</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Multiply(MathCore.Matrix,System.Double[0:,0:])">
@@ -6269,12 +6269,12 @@
             <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
         </member>
         <member name="M:MathCore.Matrix.op_BitwiseOr(MathCore.Matrix,MathCore.Matrix)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Implicit(System.Double)~MathCore.Matrix">
-            <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-            <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+            <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+            <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Explicit(MathCore.Matrix)~System.Double[0:,0:]">
             <summary>Оператор явного приведения матрицы к двумерному массиву</summary>
@@ -6350,12 +6350,12 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Operator.Multiply(MathCore.Complex[],MathCore.Complex)">
             <summary>Умножение вектора на число</summary>
-            <param name="v1">Первый сомножитель - вектор элэементов</param>
+            <param name="v1">Первый сомножитель - вектор элементов</param>
             <param name="v2">Второй сомножитель - число, на которое должны быть умножены все элементы вектора</param>
             <returns>Вектор произведений элементов входного вектора и числа</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Divade(MathCore.Complex[],MathCore.Complex)">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.Divide(MathCore.Complex[],MathCore.Complex)">
             <summary>Деление вектора элементов на число</summary>
             <param name="v1">Вектор-делимое</param>
             <param name="v2">Число-делитель</param>
@@ -6398,7 +6398,7 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
             <exception cref="T:System.InvalidOperationException">Размеры векторов не совпадают</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.DivadeComponent(MathCore.Complex[],MathCore.Complex[])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.DivideComponent(MathCore.Complex[],MathCore.Complex[])">
             <summary>Оператор вычисления поэлементного деления двух векторов</summary>
             <param name="a">Вектор - делимое</param>
             <param name="b">Вектор - делитель</param>
@@ -6426,14 +6426,14 @@
             <returns>Массив произведения элементов матрицы с числом</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Divade(MathCore.Complex[0:,0:],MathCore.Complex)">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.Divide(MathCore.Complex[0:,0:],MathCore.Complex)">
             <summary>Оператор вычисления произведения двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
             <returns>Массив произведения элементов матрицы с числом</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Divade(MathCore.Complex,MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.Divide(MathCore.Complex,MathCore.Complex[0:,0:])">
             <summary>Оператор вычисления частного двумерного массива элементов матрицы с числом</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="x">Число</param>
@@ -6458,7 +6458,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы не равны</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.MultylyCol(MathCore.Complex[0:,0:],MathCore.Complex[])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.MultiplyCol(MathCore.Complex[0:,0:],MathCore.Complex[])">
             <summary>Оператор вычисления произведения элементов матрицы на столбец</summary>
             <param name="A">Массив элементов первой матрицы</param>
             <param name="col">Массив элементов столбца</param>
@@ -6467,7 +6467,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="col"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы и столбца не равны</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.MultylyRow(MathCore.Complex[],MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.MultiplyRow(MathCore.Complex[],MathCore.Complex[0:,0:])">
             <summary>Оператор вычисления произведения элементов строки и матрицы</summary>
             <param name="B">Массив элементов первой матрицы</param>
             <param name="row">Массив элементов строки</param>
@@ -6476,7 +6476,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="row"/> не определена</exception>
             <exception cref="T:System.ArgumentException">В случае если размерности матрицы и строки не равны</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.MultylyRowToCol(MathCore.Complex[],MathCore.Complex[])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.MultiplyRowToCol(MathCore.Complex[],MathCore.Complex[])">
             <summary>Оператор вычисления произведения элементов строки и элементов столбца</summary>
             <param name="col">Массив элементов столбца</param>
             <param name="row">Массив элементов строки</param>
@@ -6501,21 +6501,21 @@
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="A"/> не определена</exception>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="result"/> не определена</exception>
-            <exception cref="T:System.ArgumentException">В случае если размерности матриц несогласованы</exception>
+            <exception cref="T:System.ArgumentException">В случае если размерности матриц не согласованы</exception>
             <exception cref="T:System.ArgumentException">В случае если число строк <paramref name="result"/> не равно числу строк <paramref name="A"/></exception>
             <exception cref="T:System.ArgumentException">В случае если число столбцов <paramref name="result"/> не равно числу строк <paramref name="B"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Divade(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Operator.Divide(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
             <summary>Оператор деления двух матриц</summary>
             <param name="A">Делимое</param>
             <param name="B">Делитель</param>
             <returns>Частное двух матриц</returns>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="A"/> не определена</exception>
             <exception cref="T:System.ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
-            <exception cref="T:System.ArgumentException">В случае если размерности матриц несогласованы</exception>
+            <exception cref="T:System.ArgumentException">В случае если размерности матриц не согласованы</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Operator.Concatinate(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
-            <summary>Объединение метриц по строкам, либо столбцам</summary>
+        <member name="M:MathCore.MatrixComplex.Array.Operator.Concatenate(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
+            <summary>Объединение матриц по строкам, либо столбцам</summary>
             <returns>Двумерный массив, содержащий объединение элементов исходных массивов по строкам, либо столбцам</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="A"/> or <paramref name="B"/> is <see langword="null"/></exception>
         </member>
@@ -6543,16 +6543,16 @@
             <returns>Двумерный массив элементов матрицы</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="rows"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.IsMatrixSungular(MathCore.Complex[0:,0:])">
-            <summary>Проверка - является ли матрица вырожденой</summary>
+        <member name="M:MathCore.MatrixComplex.Array.IsMatrixSingular(MathCore.Complex[0:,0:])">
+            <summary>Проверка - является ли матрица вырожденной</summary>
             <param name="matrix">Проверяемая матрица</param>
             <returns>Истина, если определитель матрицы равен нулю</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">Матрица не содержит элементов, или если матрица не квазратная</exception>
+            <exception cref="T:System.ArgumentException">Матрица не содержит элементов, или если матрица не квадратная</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Determinant(MathCore.Complex[0:,0:])">
             <summary>Вычисление определителя матрицы</summary>
-            <param name="matrix">Массви элементов матрицы</param>
+            <param name="matrix">Массив элементов матрицы</param>
             <returns>Значение определителя матрицы</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Матрица не квадратная</exception>
@@ -6567,12 +6567,12 @@
         <member name="M:MathCore.MatrixComplex.Array.CreateDiagonal(MathCore.Complex[])">
             <summary>Создать диагональную матрицу</summary>
             <param name="elements">Элементы диагонали матрицы</param>
-            <returns>Двумерный массив, содержащий на главной диагонали элементы диагонильрной матрицы</returns>
+            <returns>Двумерный массив, содержащий на главной диагонали элементы диагональной матрицы</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="elements"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Массив не содержит элементов</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetMatrixShadow(MathCore.Complex[0:,0:])">
-            <summary>Получить массив элементов тени (главной диагонали) матирцы</summary>
+            <summary>Получить массив элементов тени (главной диагонали) матрицы</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Массив элементов тени матрицы</returns>
             <exception cref="T:System.ArgumentException">Массив не содержит элементов</exception>
@@ -6634,14 +6634,14 @@
         <member name="M:MathCore.MatrixComplex.Array.GetLength(MathCore.Complex[0:,0:],System.Int32@,System.Int32@)">
             <summary>Получить размерность массива матрицы</summary>
             <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
-            <param name="N">Число строк матриы</param>
+            <param name="N">Число строк матрицы</param>
             <param name="M">Число столбцов (элементов строки) матрицы</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetRowsCount(MathCore.Complex[0:,0:],System.Int32@)">
             <summary>Получить число строк массива матрицы</summary>
             <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
-            <param name="N">Число строк матриы</param>
+            <param name="N">Число строк матрицы</param>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetColsCount(MathCore.Complex[0:,0:],System.Int32@)">
@@ -6692,7 +6692,7 @@
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetCol_Array(MathCore.Complex[0:,0:],System.Int32)">
-            <summary>Получить столбец матрицы в виде маиива</summary>
+            <summary>Получить столбец матрицы в виде массива</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="j">Номер столбца</param>
             <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
@@ -6700,7 +6700,7 @@
             <exception cref="T:System.ArgumentOutOfRangeException">В случае если указанный номер столбца <paramref name="j"/> матрицы <paramref name="matrix"/> меньше 0, либо больше числа столбцов матрицы</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetCol_Array(MathCore.Complex[0:,0:],System.Int32,MathCore.Complex[])">
-            <summary>Получить столбец матрицы в виде маиива</summary>
+            <summary>Получить столбец матрицы в виде массива</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="j">Номер столбца</param>
             <param name="result">Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></param>
@@ -6737,7 +6737,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Inverse(MathCore.Complex[0:,0:])">
             <summary>Получить обратную матрицу</summary>
-            <param name="matrix">Обращаеемая матрица</param>
+            <param name="matrix">Обращаемая матрица</param>
             <returns>Обратная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
@@ -6745,7 +6745,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Inverse(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@)">
             <summary>Получить обратную матрицу</summary>
-            <param name="matrix">Обращаеемая матрица</param>
+            <param name="matrix">Обращаемая матрица</param>
             <param name="p">Матрица перестановок</param>
             <returns>Обратная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
@@ -6761,8 +6761,8 @@
             <returns>Матрица решения уравнения A*X=B -&gt; X</returns>
             <exception cref="T:System.InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Solve(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,System.Boolean)">
             <summary>Метод решения СЛАУ</summary>
@@ -6772,8 +6772,8 @@
             <param name="clone_b">Работать с копией <paramref name="b"/></param>
             <exception cref="T:System.InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.TrySolve(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,System.Boolean)">
             <summary>Попытаться решить СЛАУ</summary>
@@ -6781,11 +6781,11 @@
             <param name="b">Правая часть СЛАУ</param>
             <param name="p">Матрица перестановок</param>
             <param name="clone_b">Работать с копией <paramref name="b"/></param>
-            <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> варождена</returns>
+            <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> вырождена</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="b"/> == <see langword="null"/></exception>
-            <exception cref="T:System.ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Inverse(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
             <summary>Получить обратную матрицу</summary>
@@ -6795,12 +6795,12 @@
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="result"/> не задана</exception>
             <exception cref="T:System.ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Transponse(MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Transpose(MathCore.Complex[0:,0:])">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.Transponse(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.Transpose(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
             <summary>Транспонирование матрицы</summary>
             <param name="matrix">Исходная матрица</param>
             <param name="result">Транспонированная матрица</param>
@@ -6868,7 +6868,7 @@
             </remarks>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="l">Нижне-треугольная матрица</param>
-            <param name="u">Верхнетреугольная матрица</param>
+            <param name="u">Верхне-треугольная матрица</param>
             <param name="p">Матрица преобразований P*X = L*U</param>
             <param name="d">Определитель матрицы</param>
             <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
@@ -6884,8 +6884,8 @@
             </remarks>
             <param name="matrix">Массив элементов матрицы</param>
             <param name="l">Нижне-треугольная матрица</param>
-            <param name="u">Верхнетреугольная матрица</param>
-            <param name="d">Определитль матрицы</param>
+            <param name="u">Верхне-треугольная матрица</param>
+            <param name="d">Определитель матрицы</param>
             <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">В случае если размерность матрицы N меньше 1</exception>
@@ -6900,14 +6900,14 @@
             <param name="matrix">Массив элементов матрицы</param>
             <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             <param name="p">Массив матрицы перестановок</param>
-            <param name="d">Определитль матрицы</param>
+            <param name="d">Определитель матрицы</param>
             <returns>Истина, если операция выполнена успешно</returns>
             <exception cref="T:System.ArgumentException">Матрица не квадратная</exception>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetLUPDecomposition(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,MathCore.Complex@)">
             <summary>LU-разложение матрицы</summary>
-            <param name="matrix">Разлогаемая матрица</param>
+            <param name="matrix">Разлагаемая матрица</param>
             <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             <param name="d">Определитель матрицы</param>
             <returns>Истина, если процедура выполнена успешно</returns>
@@ -6916,7 +6916,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetLUDecomposition(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@)">
             <summary>LU-разложение матрицы</summary>
-            <param name="matrix">Разлогаемая матрица</param>
+            <param name="matrix">Разлагаемая матрица</param>
             <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             <returns>Истина, если разложение выполнено успешно</returns>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
@@ -6924,104 +6924,104 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.CreatePermutationMatrix(System.Int32[])">
             <summary>Создать матрицу перестановок из массива индексов</summary>
-            <param name="indexes">Массив индексов элементов стольцов</param>
+            <param name="indexes">Массив индексов элементов столбцов</param>
             <returns>Матрица перестановок</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetTriangle(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,System.Int32@,MathCore.Complex@)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="p">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetTriangle(MathCore.Complex[0:,0:],System.Int32@,MathCore.Complex@)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetTriangle(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],System.Int32@,MathCore.Complex@)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="b">Матрица правой части</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetTriangle(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,System.Int32@,MathCore.Complex@,System.Boolean)">
-            <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="matrix">Двумерный массив элементов матрицы</param>
             <param name="b">Матрица правой части</param>
             <param name="p">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
             <param name="d">Определитель матрицы</param>
             <param name="clone_b">Клонировать матрицу правых частей</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Triangulate(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,MathCore.Complex@)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="p">Матрица перестановок</param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Triangulate(MathCore.Complex[0:,0:],MathCore.Complex@)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Triangulate(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],MathCore.Complex@)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Triangulate(MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:],MathCore.Complex@,System.Boolean)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <param name="clone">Клонировать исходную матрицу</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Triangulate(MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,MathCore.Complex@,System.Boolean,System.Boolean)">
             <summary>Приведение матрицы к треугольному виду</summary>
-            <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            <param name="matrix">Матрица, приводимая к треугольному виду</param>
             <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
             <param name="p">Матрица перестановок</param>
-            <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             <param name="clone_matrix">Клонировать исходную матрицу</param>
             <param name="clone_b">Клонировать присоединённую матрицу</param>
             <returns>Ранг матрицы (число ненулевых строк)</returns>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             <exception cref="T:System.ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            <exception cref="T:System.ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            <exception cref="T:System.ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.AreEquals(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
             <summary>Сравнение двух двумерных массивов элементов матриц</summary>
             <param name="A">Первый массив</param>
             <param name="B">Второй массив</param>
-            <returns>Истина, если оба массивы неопределены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
+            <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.AreEquals(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],System.Double)">
@@ -7029,25 +7029,25 @@
             <param name="A">Первый массив</param>
             <param name="B">Второй массив</param>
             <param name="eps">Точность сравнения</param>
-            <returns>Истина, если оба массивы неопределены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
+            <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetMaxRowAbsSumm(MathCore.Complex[0:,0:])">
-            <summary>Вычисление максимуа от сумм абсолютных значений по элементам строк</summary>
+            <summary>Вычисление максимума от сумм абсолютных значений по элементам строк</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetMaxColAbsSumm(MathCore.Complex[0:,0:])">
-            <summary>Вычисление максимуа от сумм абсолютных значений по элементам столбцов</summary>
+            <summary>Вычисление максимума от сумм абсолютных значений по элементам столбцов</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GetRMS(MathCore.Complex[0:,0:])">
-            <summary>Вычисление среднеквадратического значения элементов матрицы</summary>
+            <summary>Вычисление среднеквадратичного значения элементов матрицы</summary>
             <param name="matrix">Массив элементов матрицы</param>
-            <returns>Среднеквадратическое значение элементов матрицы</returns>
+            <returns>Среднеквадратичное значение элементов матрицы</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.Sqr(MathCore.Complex)">
@@ -7057,7 +7057,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.Array.GausSeidelConverge(MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,System.Double,System.Int32,System.Int32)">
             <summary>Метод проверки сходимости метода Метод Гаусса — Зейделя</summary>
-            <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сашёлся на текущем шаге</remarks>
+            <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сошёлся на текущем шаге</remarks>
             <param name="new_x">Новое полученное решение</param>
             <param name="last_x">Решение, полученное на прошлом шаге метода</param>
             <param name="eps">Требуемая точность решения</param>
@@ -7065,7 +7065,7 @@
             <param name="M">Число столбцов матрицы решения</param>
             <returns>Истина, если метод сошёлся Метод Гаусса — Зейделя</returns>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.GausSeidelSolove(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],System.Double)">
+        <member name="M:MathCore.MatrixComplex.Array.GausSeidelSolve(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],System.Double)">
             <summary>Метод Гаусса — Зейделя решения системы линейных уравнений</summary>
             <param name="matrix">Матрица коэффициентов</param>
             <param name="x">Матрица неизвестных</param>
@@ -7084,16 +7084,16 @@
         <member name="M:MathCore.MatrixComplex.Array.QRDecomposition(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:],MathCore.Complex[0:,0:])">
             <summary>QR-разложение матрицы</summary>
             <param name="matrix">Разлагаемая матрица</param>
-            <param name="q">Унитарная матрица (ортогональная) - должна быть передана квадратная матирца nxn != null</param>
-            <param name="r">Верхнетреугольная матрица - должна быть передана квадратная матирца nxn != null</param>
+            <param name="q">Унитарная матрица (ортогональная) - должна быть передана квадратная матрица nxn != null</param>
+            <param name="r">Верхне-треугольная матрица - должна быть передана квадратная матрица nxn != null</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Матрица не содержит элементов</exception>
         </member>
         <member name="M:MathCore.MatrixComplex.Array.QRDecomposition(MathCore.Complex[0:,0:],MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@)">
             <summary>QR-разложение матрицы</summary>
             <param name="matrix">Разлагаемая матрица</param>
-            <param name="q">Унитарная матрица (ортогональная) - создаётся квадратная матирца nxn != null</param>
-            <param name="r">Верхнетреугольная матрица - создаётся квадратная матирца nxn != null</param>
+            <param name="q">Унитарная матрица (ортогональная) - создаётся квадратная матрица nxn != null</param>
+            <param name="r">Верхне-треугольная матрица - создаётся квадратная матрица nxn != null</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Матрица не содержит элементов</exception>
         </member>
@@ -7106,12 +7106,12 @@
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
             <exception cref="T:System.InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.GetUnitaryMatryx(System.Int32)">
+        <member name="M:MathCore.MatrixComplex.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.GetTransvection(MathCore.MatrixComplex,System.Int32)">
-            <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Оборный столбец</param>
+            <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
         <member name="F:MathCore.MatrixComplex._N">
@@ -7136,7 +7136,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:MathCore.MatrixComplex.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
+            <summary>Вектор-столбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
         </member>
         <member name="P:MathCore.MatrixComplex.IsSquare">
             <summary>Матрица является квадратной матрицей</summary>
@@ -7160,7 +7160,7 @@
             <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
         </member>
         <member name="P:MathCore.MatrixComplex.Norm_k">
-            <summary>Среднеквадратическое значение элементов матрицы</summary>
+            <summary>Среднеквадратичное значение элементов матрицы</summary>
         </member>
         <member name="M:MathCore.MatrixComplex.#ctor(System.Int32,System.Int32)">
             <summary>Матрица</summary><param name="N">Число строк</param><param name="M">Число столбцов</param>
@@ -7196,7 +7196,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{MathCore.Complex}})">
             <summary>Инициализация новой матрицы на основе перечисления строк (перечисления элементов строк) </summary>
-            <param name="Items">Перечисление строк, состоящих из перечисления эламентов строк</param>
+            <param name="Items">Перечисление строк, состоящих из перечисления элементов строк</param>
         </member>
         <member name="M:MathCore.MatrixComplex.GetElements(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{MathCore.Complex}})">
             <summary>Получить двумерный массив элементов матрицы</summary>
@@ -7214,21 +7214,21 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.GetTriangle(MathCore.MatrixComplex@,System.Int32@,MathCore.Complex@)">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="P">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
             <param name="D">Определитель</param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.GetTriangle(MathCore.MatrixComplex@,System.Boolean)">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="B">Присоединённая матрица правой части СЛАУ</param>
             <param name="CloneB">Работать с клоном матрицы <paramref name="B"/></param>
-            <returns>Триугольная матрица</returns>
+            <returns>Треугольная матрица</returns>
             <exception cref="T:System.ArgumentNullException">Если <paramref name="B"/> <see langword="null"/></exception>
         </member>
         <member name="M:MathCore.MatrixComplex.GetTriangle(MathCore.MatrixComplex@,MathCore.MatrixComplex@,System.Int32@,MathCore.Complex@,System.Boolean)">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <param name="B">Матрица правой части СЛАУ</param>
             <param name="P">Матрица перестановок</param>
             <param name="rank">Ранг матрицы</param>
@@ -7241,7 +7241,7 @@
             <param name="P">Матрица перестановок</param>
             <returns>Обратная матрица</returns>
         </member>
-        <member name="M:MathCore.MatrixComplex.GetTransponse">
+        <member name="M:MathCore.MatrixComplex.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -7263,7 +7263,7 @@
         <member name="M:MathCore.MatrixComplex.GetLUDecomposition(MathCore.MatrixComplex@,MathCore.MatrixComplex@,MathCore.MatrixComplex@,MathCore.Complex@)">
             <summary>Разложение матрицы на верхне-треугольную и нижне-треугольную</summary>
             <param name="L">Нижне-треугольная матрица</param>
-            <param name="U">Верхнетреугольная матрица</param>
+            <param name="U">Верхне-треугольная матрица</param>
             <param name="P">Матрица преобразований P*X = L*U</param>
             <param name="D">Знак определителя</param>
             <returns>Истина, если разложение выполнено успешно, ложь - если матрица вырожденная</returns>
@@ -7311,12 +7311,12 @@
             <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.op_BitwiseOr(MathCore.MatrixComplex,MathCore.MatrixComplex)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.op_Implicit(MathCore.Complex)~MathCore.MatrixComplex">
-            <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-            <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+            <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+            <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         </member>
         <member name="M:MathCore.MatrixComplex.Equals(MathCore.Complex[0:,0:])">
             <inheritdoc/>
@@ -7346,7 +7346,7 @@
             \/
             </remarks>
         </member>
-        <member name="M:MathCore.MatrixDecimal.GetUnitaryMatryx(System.Int32)">
+        <member name="M:MathCore.MatrixDecimal.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param>
             <returns>Единичная матрица размерности NxN</returns>
@@ -7354,7 +7354,7 @@
         <member name="M:MathCore.MatrixDecimal.GetTransvection(MathCore.MatrixDecimal,System.Int32)">
             <summary>Трансвекция матрицы</summary>
             <param name="A">Трансвецируемая матрица</param>
-            <param name="j">Оборный столбец</param>
+            <param name="j">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
         <member name="F:MathCore.MatrixDecimal._N">
@@ -7379,7 +7379,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:MathCore.MatrixDecimal.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary>
+            <summary>Вектор-столбец</summary>
             <param name="j">Номер столбца</param>
             <returns>Столбец матрицы</returns>
         </member>
@@ -7432,14 +7432,14 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:MathCore.MatrixDecimal.GetTriangle">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <returns></returns>
         </member>
         <member name="M:MathCore.MatrixDecimal.GetInverse">
             <summary>Получить обратную матрицу</summary>
             <returns>Обратная матрица</returns>
         </member>
-        <member name="M:MathCore.MatrixDecimal.GetTransponse">
+        <member name="M:MathCore.MatrixDecimal.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -7471,8 +7471,8 @@
             University of Cambridge Press 1992.  
             </summary>
             <param name="Mat">Array which will be LU Decomposed</param>
-            <param name="L">An array where the lower traingular matrix is returned</param>
-            <param name="U">An array where the upper traingular matrix is returned</param>
+            <param name="L">An array where the lower triangular matrix is returned</param>
+            <param name="U">An array where the upper triangular matrix is returned</param>
             <param name="P">An array where the permutation matrix is returned</param>
         </member>
         <member name="M:MathCore.MatrixDecimal.Clone">
@@ -7504,14 +7504,14 @@
             <returns>Частное двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixDecimal.op_BitwiseOr(MathCore.MatrixDecimal,MathCore.MatrixDecimal)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param>
             <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixDecimal.op_Implicit(System.Decimal)~MathCore.MatrixDecimal">
-            <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-            <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+            <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+            <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         </member>
         <member name="T:MathCore.MatrixFloat">
             <summary>Матрица NxM</summary>
@@ -7529,7 +7529,7 @@
             \/
             </remarks>
         </member>
-        <member name="M:MathCore.MatrixFloat.GetUnitaryMatryx(System.Int32)">
+        <member name="M:MathCore.MatrixFloat.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param>
             <returns>Единичная матрица размерности NxN</returns>
@@ -7537,7 +7537,7 @@
         <member name="M:MathCore.MatrixFloat.GetTransvection(MathCore.MatrixFloat,System.Int32)">
             <summary>Трансвекция матрицы</summary>
             <param name="A">Трансвецируемая матрица</param>
-            <param name="j">Оборный столбец</param>
+            <param name="j">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
         <member name="F:MathCore.MatrixFloat._N">
@@ -7562,7 +7562,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:MathCore.MatrixFloat.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary>
+            <summary>Вектор-столбец</summary>
             <param name="j">Номер столбца</param>
             <returns>Столбец матрицы</returns>
         </member>
@@ -7615,14 +7615,14 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:MathCore.MatrixFloat.GetTriangle">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <returns></returns>
         </member>
         <member name="M:MathCore.MatrixFloat.GetInverse">
             <summary>Получить обратную матрицу</summary>
             <returns>Обратная матрица</returns>
         </member>
-        <member name="M:MathCore.MatrixFloat.GetTransponse">
+        <member name="M:MathCore.MatrixFloat.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -7654,8 +7654,8 @@
             University of Cambridge Press 1992.  
             </summary>
             <param name="Mat">Array which will be LU Decomposed</param>
-            <param name="L">An array where the lower traingular matrix is returned</param>
-            <param name="U">An array where the upper traingular matrix is returned</param>
+            <param name="L">An array where the lower triangular matrix is returned</param>
+            <param name="U">An array where the upper triangular matrix is returned</param>
             <param name="P">An array where the permutation matrix is returned</param>
         </member>
         <member name="M:MathCore.MatrixFloat.Clone">
@@ -7687,14 +7687,14 @@
             <returns>Частное двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixFloat.op_BitwiseOr(MathCore.MatrixFloat,MathCore.MatrixFloat)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param>
             <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixFloat.op_Implicit(System.Single)~MathCore.MatrixFloat">
-            <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-            <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+            <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+            <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         </member>
         <member name="T:MathCore.MatrixInt">
             <summary>Матрица NxM</summary>
@@ -7712,7 +7712,7 @@
             \/
             </remarks>
         </member>
-        <member name="M:MathCore.MatrixInt.GetUnitaryMatryx(System.Int32)">
+        <member name="M:MathCore.MatrixInt.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param>
             <returns>Единичная матрица размерности NxN</returns>
@@ -7720,7 +7720,7 @@
         <member name="M:MathCore.MatrixInt.GetTransvection(MathCore.MatrixInt,System.Int32)">
             <summary>Трансвекция матрицы</summary>
             <param name="A">Трансвецируемая матрица</param>
-            <param name="j">Оборный столбец</param>
+            <param name="j">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
         <member name="F:MathCore.MatrixInt._N">
@@ -7745,7 +7745,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:MathCore.MatrixInt.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary>
+            <summary>Вектор-столбец</summary>
             <param name="j">Номер столбца</param>
             <returns>Столбец матрицы</returns>
         </member>
@@ -7798,14 +7798,14 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:MathCore.MatrixInt.GetTriangle">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <returns></returns>
         </member>
         <member name="M:MathCore.MatrixInt.GetInverse">
             <summary>Получить обратную матрицу</summary>
             <returns>Обратная матрица</returns>
         </member>
-        <member name="M:MathCore.MatrixInt.GetTransponse">
+        <member name="M:MathCore.MatrixInt.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -7853,14 +7853,14 @@
             <returns>Частное двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixInt.op_BitwiseOr(MathCore.MatrixInt,MathCore.MatrixInt)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param>
             <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixInt.op_Implicit(System.Int32)~MathCore.MatrixInt">
-            <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-            <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+            <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+            <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         </member>
         <member name="T:MathCore.MatrixLong">
             <summary>Матрица NxM</summary>
@@ -7876,7 +7876,7 @@
             \/
             </remarks>
         </member>
-        <member name="M:MathCore.MatrixLong.GetUnitaryMatryx(System.Int32)">
+        <member name="M:MathCore.MatrixLong.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param>
             <returns>Единичная матрица размерности NxN</returns>
@@ -7884,7 +7884,7 @@
         <member name="M:MathCore.MatrixLong.GetTransvection(MathCore.MatrixLong,System.Int32)">
             <summary>Трансвекция матрицы</summary>
             <param name="A">Трансвецируемая матрица</param>
-            <param name="j">Оборный столбец</param>
+            <param name="j">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
         <member name="F:MathCore.MatrixLong._N">
@@ -7909,7 +7909,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:MathCore.MatrixLong.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary>
+            <summary>Вектор-столбец</summary>
             <param name="j">Номер столбца</param>
             <returns>Столбец матрицы</returns>
         </member>
@@ -7956,14 +7956,14 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:MathCore.MatrixLong.GetTriangle">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             <returns></returns>
         </member>
         <member name="M:MathCore.MatrixLong.GetImverse">
             <summary>Получить обратную матрицу</summary>
             <returns>Обратная матрица</returns>
         </member>
-        <member name="M:MathCore.MatrixLong.GetTransponse">
+        <member name="M:MathCore.MatrixLong.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -7995,8 +7995,8 @@
             University of Cambridge Press 1992.  
             </summary>
             <param name="Mat">Array which will be LU Decomposed</param>
-            <param name="L">An array where the lower traingular matrix is returned</param>
-            <param name="U">An array where the upper traingular matrix is returned</param>
+            <param name="L">An array where the lower triangular matrix is returned</param>
+            <param name="U">An array where the upper triangular matrix is returned</param>
             <param name="P">An array where the permutation matrix is returned</param>
         </member>
         <member name="M:MathCore.MatrixLong.Clone">
@@ -8028,18 +8028,18 @@
             <returns>Частное двух матриц</returns>
         </member>
         <member name="M:MathCore.MatrixLong.op_BitwiseOr(MathCore.MatrixLong,MathCore.MatrixLong)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param>
             <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:MathCore.MatrixLong.op_Implicit(System.Int64)~MathCore.MatrixLong">
             <summary>
-            Оператор неявного преведения типа вещественного числа двойной точнойсти к типу 
+            Оператор неявного приведения типа вещественного числа двойной точности к типу 
             Матрица порядка 1х1
             </summary>
             <param name="X">Приводимое число</param>
-            <returns>Матрица порадка 1х1</returns>
+            <returns>Матрица порядка 1х1</returns>
         </member>
         <member name="T:MathCore.Monades.WorkFlow.ActionWork">
             <summary>Работа, выполняющая действие</summary>
@@ -8513,31 +8513,31 @@
             <summary>Операции над коэффициентами полинома, в представлении массива значений</summary>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Double[],System.Double)">
-            <summary>Расчитать значение полинома</summary>
+            <summary>Рассчитать значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="x">Аргумент полинома</param>
             <returns>Значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Double[],MathCore.Complex)">
-            <summary>Расчитать комплексное значение полинома</summary>
+            <summary>Рассчитать комплексное значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="z">Аргумент полинома</param>
             <returns>Комплексное значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(MathCore.Complex[],MathCore.Complex)">
-            <summary>Расчитать комплексное значение полинома с комплексными коэффициентами</summary>
+            <summary>Рассчитать комплексное значение полинома с комплексными коэффициентами</summary>
             <param name="Z">Массив комплексных коэффициентов полинома</param>
             <param name="z">Комплексный аргумент полинома</param>
             <returns>Комплексное значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Collections.Generic.IEnumerable{System.Double},System.Double)">
-            <summary>Расчитать значение полинома</summary>
+            <summary>Рассчитать значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="x">Аргумент полинома</param>
             <returns>Значение полинома</returns>
         </member>
         <member name="M:MathCore.Polynom.Array.GetValue(System.Collections.Generic.IEnumerable{System.Double},MathCore.Complex)">
-            <summary>Расчитать комплексное значение полинома</summary>
+            <summary>Рассчитать комплексное значение полинома</summary>
             <param name="A">Массив коэффициентов полинома</param>
             <param name="z">Аргумент полинома</param>
             <returns>Комплексное значение полинома</returns>
@@ -8640,13 +8640,13 @@
             <param name="x">Вещественное число</param>
             <returns>Коэффициенты полинома - произведения</returns>
         </member>
-        <member name="M:MathCore.Polynom.Array.Divade(System.Double[],System.Double)">
+        <member name="M:MathCore.Polynom.Array.Divide(System.Double[],System.Double)">
             <summary>Деление полинома на вещественное число</summary>
             <param name="p">Коэффициенты полинома</param>
             <param name="x">Вещественное число</param>
             <returns>Коэффициенты полинома - частного</returns>
         </member>
-        <member name="M:MathCore.Polynom.Array.DivadeScalar(System.Double,System.Double[])">
+        <member name="M:MathCore.Polynom.Array.DivideScalar(System.Double,System.Double[])">
             <summary>Скалярное деление полинома на вещественное число</summary>
             <param name="p">Коэффициенты полинома</param>
             <param name="x">Вещественное число</param>
@@ -8882,7 +8882,7 @@
             <returns>Полином - результат деления исходного полинома на вещественное число</returns>
         </member>
         <member name="M:MathCore.Polynom.op_Explicit(MathCore.Polynom)~System.Double[]">
-            <summary>Оператор неявного преведения типа полинома в массив вещественных значений коэффициентов</summary>
+            <summary>Оператор неявного приведения типа полинома в массив вещественных значений коэффициентов</summary>
             <param name="p">Полином</param>
             <returns>Массив значений коэффициентов</returns>
         </member>
@@ -9459,6 +9459,27 @@
         </member>
         <member name="T:MathCore.Statistic.RandomNumbers.UniformRandomGenerator">
             <summary>Генератор случайных чисел с равномерным распределением</summary>
+        </member>
+        <member name="T:MathCore.Threading.MaxConcurrencySynchronizationContext">
+            <summary>Контекст синхронизации с максимально допустимой степенью параллелизма</summary>
+        </member>
+        <member name="F:MathCore.Threading.MaxConcurrencySynchronizationContext._Semaphore">
+            <summary>Семафор, ограничивающий число выполняемых задач</summary>
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.#ctor(System.Int32)">
+            <summary>Инициализация нового контекста синхронизации с ограничением числа параллельно выполняемых задач</summary>
+            <param name="MaxConcurrencyLevel">Максимальное число выполняемых в контексте задач</param>
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.OnSemaphoreReleased(System.Threading.Tasks.Task,System.Object)">
+            <summary>Метод, вызываемый при освобождении семафора</summary>
+            <param name="SemaphoreWaitTask">Задача ожидания освобождения семафора</param>
+            <param name="CallState">Массив с параметрами продолжения, хранящий в первом параметре делегат, который надо вызвать, а во втором - параметр вызова делегата</param>
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.Post(System.Threading.SendOrPostCallback,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Threading.MaxConcurrencySynchronizationContext.Send(System.Threading.SendOrPostCallback,System.Object)">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.TimeInterval">
             <summary>Интервальный предикат</summary>
@@ -10781,13 +10802,13 @@
             <summary>Длина вектора</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleXOY">
-            <summary>Угол проекции в плоскости XOY</summary>
+            <summary>Угол проекциии в плоскости XOY</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleXOZ">
-            <summary>Угол проекции в плоскости XOZ</summary>
+            <summary>Угол проекциии в плоскости XOZ</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleYOZ">
-            <summary>Угол проекции в плоскости YOZ</summary>
+            <summary>Угол проекциии в плоскости YOZ</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.Phi">
             <summary>Азимутальный угол</summary>
@@ -10799,13 +10820,13 @@
             <summary>Пространственный угол</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorXOY">
-            <summary>Двумерный вектор - проекция в плоскости XOY</summary>
+            <summary>Двумерный вектор - проекциия в плоскости XOY</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorXOZ">
-            <summary>Двумерный вектор - проекция в плоскости XOZ (X->X; Z->Y)</summary>
+            <summary>Двумерный вектор - проекциия в плоскости XOZ (X->X; Z->Y)</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorYOZ">
-            <summary>Двумерный вектор - проекция в плоскости YOZ (Y->X; Z->Y)</summary>
+            <summary>Двумерный вектор - проекциия в плоскости YOZ (Y->X; Z->Y)</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.R_XOY">
             <summary>Длина в плоскости XOY</summary>
@@ -10852,7 +10873,7 @@
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.Vector3D)">
             <summary>Проекция на вектор</summary>
-            <param name="Vector">Вектор, НА который производится проекция</param>
+            <param name="Vector">Вектор, НА который производится проекциия</param>
             <returns>Проекция на вектор</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.SpaceAngle)">
@@ -10885,14 +10906,14 @@
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
             <summary>Проекция вектора A на вектор B</summary>
             <param name="A">Проецируемый вектор</param>
-            <param name="B">Вектор, на который производится проекция</param>
+            <param name="B">Вектор, на который производится проекциия</param>
             <returns>Проекция вектора А на вектор В</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.SpaceAngle)">
             <summary>Проекция вектора на направление</summary>
             <param name="Vector">Проецируемый вектор</param>
-            <param name="Direction">Пространственный угол направления проекции</param>
-            <returns>Вещественное значение проекции</returns>
+            <param name="Direction">Пространственный угол направления проекциии</param>
+            <returns>Вещественное значение проекциии</returns>
         </member>
         <member name="T:MathCore.ViewModels.ViewModel">
             <summary>Наблюдаемая модель</summary>
@@ -11964,7 +11985,7 @@
             \/
             </remarks>
         </member>
-        <member name="M:System.Linq.Expressions.ExpressionMatrix.GetUnitaryMatryx(System.Int32)">
+        <member name="M:System.Linq.Expressions.ExpressionMatrix.GetUnitaryMatrix(System.Int32)">
             <summary>Получить единичную матрицу размерности NxN</summary>
             <param name="N">Размерность матрицы</param>
             <returns>Единичная матрица размерности NxN</returns>
@@ -11991,7 +12012,7 @@
             <returns>Элемент матрицы</returns>
         </member>
         <member name="P:System.Linq.Expressions.ExpressionMatrix.Item(System.Int32)">
-            <summary>Вектор-стольбец</summary>
+            <summary>Вектор-столбец</summary>
             <param name="j">Номер столбца</param>
             <returns>Столбец матрицы</returns>
         </member>
@@ -12047,8 +12068,8 @@
             <returns>Строка матрицы номер i</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.GetTriangle">
-            <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
-            <returns>Триугольная матрица</returns>
+            <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
+            <returns>Треугольная матрица</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.GetInverse">
             <summary>Получить обратную матрицу</summary>
@@ -12056,10 +12077,10 @@
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.GetTransvection(System.Int32)">
             <summary>Трансвекция матрицы</summary>
-            <param name="col">Оборный столбец</param>
+            <param name="col">Опорный столбец</param>
             <returns>Трансвекция матрицы А</returns>                    
         </member>
-        <member name="M:System.Linq.Expressions.ExpressionMatrix.GetTransponse">
+        <member name="M:System.Linq.Expressions.ExpressionMatrix.GetTranspose">
             <summary>Транспонирование матрицы</summary>
             <returns>Транспонированная матрица</returns>
         </member>
@@ -12111,14 +12132,14 @@
             <returns>Частное двух матриц</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_BitwiseOr(System.Linq.Expressions.ExpressionMatrix,System.Linq.Expressions.ExpressionMatrix)">
-            <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+            <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
             <param name="A">Первое слагаемое</param>
             <param name="B">Второе слагаемое</param>
             <returns>Объединённая матрица</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_Implicit(System.Linq.Expressions.Expression)~System.Linq.Expressions.ExpressionMatrix">
-            <summary>Оператор неявного преведения типа вещественного числа двойной точнойсти к типу Матрица порядка 1х1</summary>
-            <param name="X">Приводимое число</param><returns>Матрица порадка 1х1</returns>
+            <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
+            <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         </member>
         <member name="T:System.Linq.Expressions.ExpressionRebuilder">
             <summary>Пересборщик дерева выражения Linq.Expression</summary>
@@ -13049,6 +13070,12 @@
             <param name="k">Положение в выборке (от 0 до N-1)</param>
             <returns>Последовательность из N-ых элементов выборки, стоящих на k-ом месте</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.TakeFirstAndLast``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>Получить первый и последний элементы перечисления</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="enumerable">Перечисление</param>
+            <returns>Перечисление, состоящее из первого и последнего элементов исходного перечисления</returns>
+        </member>
         <member name="T:System.Linq.Reactive.IObservableEx`1">
             <summary>Обозреваемый объект</summary>
             <typeparam name="T">Тип объектов последовательности событий</typeparam>
@@ -13502,7 +13529,7 @@
             <param name="Objects">Массив элементов</param>
             <returns>Хеш-сумма элементов массива</returns>
         </member>
-        <member name="M:System.ArrayExtensions.Concatinate``1(``0[],``0[])">
+        <member name="M:System.ArrayExtensions.Concatenate``1(``0[],``0[])">
             <summary>Объединение с массивом элементов</summary>
             <param name="A">Исходный массив</param>
             <param name="B">Присоединяемый массив</param>
@@ -14482,7 +14509,7 @@
             <param name="b">Коэффициент смещения аргумента</param>
             <returns>Новая функция со сжатым и смещённым аргументом</returns>
         </member>
-        <member name="M:System.FuncExtensions.Divade(System.Func{System.Double,System.Double},System.Double)">
+        <member name="M:System.FuncExtensions.Divide(System.Func{System.Double,System.Double},System.Double)">
             <summary>Деление функции на число g(x) = f(x) / a</summary>
             <param name="f">Делимая функция</param>
             <param name="a">Вещественный делитель</param>
@@ -14492,7 +14519,7 @@
             аргумент больше нуля, -бесконечности, если аргумент меньше нуля и NaN, если аргумент равен нулю.
             </returns>
         </member>
-        <member name="M:System.FuncExtensions.Divade(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
+        <member name="M:System.FuncExtensions.Divide(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double})">
             <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
             <param name="f1">Функция - делимое</param>
             <param name="f2">Функция - делитель</param>
@@ -14597,7 +14624,7 @@
             <returns>Значение определённого интеграла от ядра интегрирования методом тропеций</returns>
         </member>
         <member name="M:System.FuncExtensions.GetIntegralValueAsync(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double)">
-            <summary>Расчитать интеграл функции асинхронно</summary>
+            <summary>Рассчитать интеграл функции асинхронно</summary>
             <param name="f">Интегрируемая функция</param>
             <param name="Core">Ядро интегрирования</param>
             <param name="x1">Начало интервала интегрирования</param>
@@ -16552,12 +16579,27 @@
             <param name="M">Математическое ожидание</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextUniformEnum(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Перечисление случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextUniform(System.Random,System.Int32,MathCore.Interval)">
             <summary>Массив случайных чисел с равномерным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="Count">Размер массива</param>
             <param name="Interval">Интервал</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextUniformEnum(System.Random,System.Int32,MathCore.Interval)">
+            <summary>Перечисление случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Interval">Интервал</param>
+            <returns>Перечисление случайных чисел с равномерным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextUniform(System.Random,MathCore.Interval[])">
             <summary>Массив случайных чисел с равномерным распределением</summary>
@@ -16573,11 +16615,25 @@
             <param name="Max">Максимум</param>
             <returns>Массив случайных чисел с равномерным распределением</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextUniformIntervalEnum(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Перечисление случайных чисел с равномерным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Min">Минимум</param>
+            <param name="Max">Максимум</param>
+            <returns>Перечисление случайных чисел с равномерным распределением</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32)">
             <summary>Массив целых неотрицательных случайных чисел</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="Count">Размер массива</param>
             <returns>Массив целых неотрицательных случайных чисел</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValuesEnum(System.Random,System.Int32)">
+            <summary>Перечисление целых неотрицательных случайных чисел</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <returns>перечисление целых неотрицательных случайных чисел</returns>
         </member>
         <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32,System.Int32)">
             <summary>Массив целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
@@ -16585,6 +16641,13 @@
             <param name="Count">Размер массива</param>
             <param name="Max">Максимум (не входит)</param>
             <returns>Массив целых неотрицательных случайных чисел (верхний предел не входит)</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextValuesEnum(System.Random,System.Int32,System.Int32)">
+            <summary>Перечисление целых неотрицательных случайных чисел ограниченный сверху (верхний предел не входит)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Max">Максимум (не входит)</param>
+            <returns>Перечисление целых неотрицательных случайных чисел (верхний предел не входит)</returns>
         </member>
         <member name="M:System.RandomExtensions.NextValues(System.Random,System.Int32,System.Int32,System.Int32)">
             <summary>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
@@ -16594,6 +16657,14 @@
             <param name="Max">Максимум (не входит)</param>
             <returns>Массив целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
         </member>
+        <member name="M:System.RandomExtensions.NextValuesEnum(System.Random,System.Int32,System.Int32,System.Int32)">
+            <summary>Перечисление целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер перечисления (если меньше 0, то бесконечное)</param>
+            <param name="Min">Минимум</param>
+            <param name="Max">Максимум (не входит)</param>
+            <returns>Перечисление целых неотрицательных случайных чисел в заданном интервале (верхний предел не входит)</returns>
+        </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Int32,System.Double,System.Double)">
             <summary>Массив случайных чисел с нормальным распределением</summary>
             <param name="rnd">Датчик случайных чисел</param>
@@ -16601,6 +16672,14 @@
             <param name="D">Дисперсия</param>
             <param name="M">Математическое ожидание</param>
             <returns>Массив случайных чисел с нормальным распределением</returns>
+        </member>
+        <member name="M:System.RandomExtensions.NextNormalEnum(System.Random,System.Int32,System.Double,System.Double)">
+            <summary>Перечисление случайных чисел с нормальным распределением</summary>
+            <param name="rnd">Датчик случайных чисел</param>
+            <param name="Count">Размер массива</param>
+            <param name="D">Дисперсия</param>
+            <param name="M">Математическое ожидание</param>
+            <returns>Перечисление случайных чисел с нормальным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.NextNormal(System.Random,System.Double,System.Double)">
             <summary>Случайное число с нормальным распределением</summary>
@@ -16651,7 +16730,7 @@
             <param name="variants">Перечисление вариантов выбора</param>
             <returns>Последовательность случайных вариантов</returns>
         </member>
-        <member name="M:System.RandomExtensions.Sequence(System.Random,System.Int32,System.Int32,System.Int32)">
+        <member name="M:System.RandomExtensions.SequenceInt(System.Random,System.Int32,System.Int32,System.Int32)">
             <summary>Последовательность случайных целых чисел в указанном интервале</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="min">Нижняя граница интервала (входит)</param>
@@ -16659,7 +16738,7 @@
             <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
             <returns>Последовательность случайных целых чисел в указанном интервале</returns>
         </member>
-        <member name="M:System.RandomExtensions.Sequence(System.Random,System.Int32)">
+        <member name="M:System.RandomExtensions.SequenceDouble(System.Random,System.Int32)">
             <summary>Последовательность случайных вещественных чисел с равномерным распределением в интервале (0,1)</summary>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>

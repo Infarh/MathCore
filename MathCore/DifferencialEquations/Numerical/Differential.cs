@@ -3,7 +3,7 @@ using MathCore.Annotations;
 
 namespace MathCore.DifferencialEquations.Numerical
 {
-    public static partial class Solover
+    public static partial class Solver
     {
         public static class Differential
         {

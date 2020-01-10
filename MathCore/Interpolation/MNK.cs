@@ -30,7 +30,7 @@ namespace MathCore
         }
 
         // ReSharper disable once UnusedMember.Global
-        public double Approximate(double x) => Polynom.Array.GetValue(_A, x); //F(_A, x);
+        public double Approximate(double x) => Polynom.Array.GetValue(x, _A); //F(_A, x);
 
         private static double F([NotNull] IReadOnlyList<double> A, double x)
         {
@@ -55,7 +55,7 @@ namespace MathCore
         {
             // Создаём матрицу из степеней области определения
             var matrix = new Matrix(_XData.Length, _M, (i, j) => Math.Pow(_XData[i], j));
-            var transponse = matrix.GetTransponse(); // Транспонируем матрицу
+            var transponse = matrix.GetTranspose(); // Транспонируем матрицу
             // Y = (M^T * M)^-1 * M^T * Y
             var matrix3 = (transponse * matrix).GetInverse(out _) * transponse * _YData;
             _A = new double[matrix3.N];

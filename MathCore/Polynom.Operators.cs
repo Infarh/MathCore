@@ -68,9 +68,9 @@ namespace MathCore
         /// <param name="q">Вещественное число</param>
         /// <returns>Полином - результат деления исходного полинома на вещественное число</returns>
         [NotNull]
-        public static Polynom operator /([NotNull] Polynom P, double q) => new Polynom(Array.Divade(P._a, q));
+        public static Polynom operator /([NotNull] Polynom P, double q) => new Polynom(Array.Divide(P._a, q));
 
-        /// <summary>Оператор неявного преведения типа полинома в массив вещественных значений коэффициентов</summary>
+        /// <summary>Оператор неявного приведения типа полинома в массив вещественных значений коэффициентов</summary>
         /// <param name="p">Полином</param>
         /// <returns>Массив значений коэффициентов</returns>
         [DST, NotNull]

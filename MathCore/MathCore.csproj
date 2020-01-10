@@ -1,114 +1,116 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <IsPackable>true</IsPackable>
-        <LangVersion>8</LangVersion>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Version>0.0.15</Version>
-        <Authors>Shmachilin P.A.</Authors>
-        <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
-        <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
-        <PackageTags>Mathematic, Logiс</PackageTags>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageLicenseFile></PackageLicenseFile>
-        <Description>Библиотека прикладных алгоритмов</Description>
-        <PackageReleaseNotes>Методы-расширения к Random для получения последовательностей</PackageReleaseNotes>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
-        <Copyright>shmachilin@gmail.com</Copyright>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <LangVersion>8</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>0.0.16</Version>
+    <Authors>Shmachilin P.A.</Authors>
+    <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
+    <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
+    <PackageTags>Mathematic, Logiс</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile></PackageLicenseFile>
+    <Description>Библиотека прикладных алгоритмов</Description>
+    <PackageReleaseNotes>Орфография + квантили Хи-квадрат</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
+    <Copyright>shmachilin@gmail.com</Copyright>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>MathCore.xml</DocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>MathCore.xml</DocumentationFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Compile Remove="MathParser\OperationsRegistry.cs" />
-        <Compile Remove="MathParser\ToolsHelper.cs" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MathParser\OperationsRegistry.cs" />
+    <Compile Remove="MathParser\ToolsHelper.cs" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Remove="MathParser\MathParserDiagram.dgml" />
-        <None Remove="MathParser\Operations.xml" />
-        <None Remove="MathParser\Operations.xsd" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="MathParser\MathParserDiagram.dgml" />
+    <None Remove="MathParser\Operations.xml" />
+    <None Remove="MathParser\Operations.xsd" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="System.Runtime" Version="4.3.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Update="ActionList.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>ActionList.cs</LastGenOutput>
-        </None>
-        <None Update="Complex.Decimal.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>Complex.Decimal.cs</LastGenOutput>
-        </None>
-        <None Update="Matrix.complex.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>Matrix.complex.cs</LastGenOutput>
-        </None>
-        <None Update="Matrix.decimal.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>Matrix.decimal.cs</LastGenOutput>
-        </None>
-        <None Update="Matrix.float.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>Matrix.float.cs</LastGenOutput>
-        </None>
-        <None Update="Matrix.int.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>Matrix.int.cs</LastGenOutput>
-        </None>
-        <None Update="Matrix.long.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>Matrix.long.cs</LastGenOutput>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="ActionList.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ActionList.cs</LastGenOutput>
+    </None>
+    <None Update="Complex.Decimal.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Complex.Decimal.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.complex.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.complex.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.decimal.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.decimal.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.float.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.float.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.int.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.int.cs</LastGenOutput>
+    </None>
+    <None Update="Matrix.long.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matrix.long.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 
-    <ItemGroup>
-        <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-    </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Compile Update="ActionList.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>ActionList.tt</DependentUpon>
-        </Compile>
-        <Compile Update="Complex.Decimal.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Complex.Decimal.tt</DependentUpon>
-        </Compile>
-        <Compile Update="Matrix.complex.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Matrix.complex.tt</DependentUpon>
-        </Compile>
-        <Compile Update="Matrix.decimal.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Matrix.decimal.tt</DependentUpon>
-        </Compile>
-        <Compile Update="Matrix.float.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Matrix.float.tt</DependentUpon>
-        </Compile>
-        <Compile Update="Matrix.int.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Matrix.int.tt</DependentUpon>
-        </Compile>
-        <Compile Update="Matrix.long.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Matrix.long.tt</DependentUpon>
-        </Compile>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Update="ActionList.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActionList.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Complex.Decimal.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Complex.Decimal.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.complex.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.complex.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.decimal.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.decimal.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.float.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.float.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.int.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.int.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Matrix.long.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Matrix.long.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 </Project>

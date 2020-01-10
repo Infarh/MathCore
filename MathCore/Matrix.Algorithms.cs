@@ -86,13 +86,13 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Проверка - является ли матрица вырожденой</summary>
+            /// <summary>Проверка - является ли матрица вырожденной</summary>
             /// <param name="matrix">Проверяемая матрица</param>
             /// <returns>Истина, если определитель матрицы равен нулю</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            /// <exception cref="ArgumentException">Матрица не содержит элементов, или если матрица не квазратная</exception>
+            /// <exception cref="ArgumentException">Матрица не содержит элементов, или если матрица не квадратная</exception>
             [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
-            public static bool IsMatrixSungular([NotNull] double[,] matrix)
+            public static bool IsMatrixSingular([NotNull] double[,] matrix)
             {
                 if (matrix is null) throw new ArgumentNullException(nameof(matrix));
                 if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
@@ -118,7 +118,7 @@ namespace MathCore
 
             /// <summary>Создать диагональную матрицу</summary>
             /// <param name="elements">Элементы диагонали матрицы</param>
-            /// <returns>Двумерный массив, содержащий на главной диагонали элементы диагонильрной матрицы</returns>
+            /// <returns>Двумерный массив, содержащий на главной диагонали элементы диагональной матрицы</returns>
             /// <exception cref="ArgumentNullException"><paramref name="elements"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
             [NotNull]
@@ -136,11 +136,12 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Получить массив элементов тени (главной диагонали) матирцы</summary>
+            /// <summary>Получить массив элементов тени (главной диагонали) матрицы</summary>
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Массив элементов тени матрицы</returns>
             /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
+            [NotNull]
             public static double[] GetMatrixShadow([NotNull] double[,] matrix)
             {
                 if (matrix is null)
@@ -316,7 +317,7 @@ namespace MathCore
 
             /// <summary>Получить размерность массива матрицы</summary>
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
-            /// <param name="N">Число строк матриы</param>
+            /// <param name="N">Число строк матрицы</param>
             /// <param name="M">Число столбцов (элементов строки) матрицы</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             [DST]
@@ -331,7 +332,7 @@ namespace MathCore
 
             /// <summary>Получить число строк массива матрицы</summary>
             /// <param name="matrix">Массив элементов матрицы, размеры которого требуется получить</param>
-            /// <param name="N">Число строк матриы</param>
+            /// <param name="N">Число строк матрицы</param>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
             [DST]
             public static void GetRowsCount([NotNull] double[,] matrix, out int N)
@@ -397,7 +398,7 @@ namespace MathCore
             {
                 GetRowsCount(A, out var N);
                 if (N != A.GetLength(1))
-                    throw new ArgumentException(@"Трансквенция неквадратной матрицы невозможна", nameof(A));
+                    throw new ArgumentException(@"Трансвенция неквадратной матрицы невозможна", nameof(A));
                 if (i0 < 0 || i0 >= N)
                     throw new ArgumentException(@"Номер опорной строки выходит за пределы индексов строк матрицы", nameof(i0));
 
@@ -414,7 +415,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрицы <paramref name="A"/> и <paramref name="result"/> не заданы</exception>  
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="A"/> не квадратная</exception>
             /// <exception cref="ArgumentException">В случае если опорный столбец <paramref name="j0"/> матрицы <paramref name="A"/> меньше 0 или больше числа столбцов матрицы</exception>
-            /// <exception cref="ArgumentException">В случае если размер матрицы <paramref name="result"/> не совпадает с размером матрицы <paramref name="A"/></exception>                  
+            /// <exception cref="ArgumentException">В случае если размер матрицы <paramref name="result"/> не совпадает с размером матрицы <paramref name="A"/></exception>
             public static void Transvection([NotNull] double[,] A, int j0, [NotNull] double[,] result)
             {
                 if (result is null)
@@ -422,7 +423,7 @@ namespace MathCore
 
                 GetRowsCount(A, out var N);
                 if (N != A.GetLength(1))
-                    throw new ArgumentException(@"Трансквенция неквадратной матрицы невозможна", nameof(A));
+                    throw new ArgumentException(@"Трансвенция неквадратной матрицы невозможна", nameof(A));
                 if (N != result.GetLength(0) || A.GetLength(1) != result.GetLength(1))
                     throw new ArgumentException(@"Размер матрицы результата не соответствует размеру исходной матрицы", nameof(result));
                 if (j0 < 0 || j0 >= N)
@@ -450,7 +451,7 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Получить столбец матрицы в виде маиива</summary>
+            /// <summary>Получить столбец матрицы в виде массива</summary>
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <param name="j">Номер столбца</param>
             /// <returns>Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></returns>
@@ -468,7 +469,7 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Получить столбец матрицы в виде маиива</summary>
+            /// <summary>Получить столбец матрицы в виде массива</summary>
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <param name="j">Номер столбца</param>
             /// <param name="result">Массив, составленная из элементов столбца матрицы c индексом <paramref name="j"/></param>
@@ -556,7 +557,7 @@ namespace MathCore
             }
 
             /// <summary>Получить обратную матрицу</summary>
-            /// <param name="matrix">Обращаеемая матрица</param>
+            /// <param name="matrix">Обращаемая матрица</param>
             /// <returns>Обратная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
@@ -570,7 +571,7 @@ namespace MathCore
             }
 
             /// <summary>Получить обратную матрицу</summary>
-            /// <param name="matrix">Обращаеемая матрица</param>
+            /// <param name="matrix">Обращаемая матрица</param>
             /// <param name="p">Матрица перестановок</param>
             /// <returns>Обратная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
@@ -623,8 +624,9 @@ namespace MathCore
             /// <returns>Матрица решения уравнения A*X=B -&gt; X</returns>
             /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
-            /// <exception cref="ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            [NotNull]
             public static double[,] GetSolve([NotNull] double[,] matrix, [NotNull] double[,] b, [NotNull] out double[,] p)
             {
 
@@ -641,8 +643,8 @@ namespace MathCore
             /// <param name="clone_b">Работать с копией <paramref name="b"/></param>
             /// <exception cref="InvalidOperationException">Невозможно найти обратную матрицу для вырожденной матрицы</exception>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
-            /// <exception cref="ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static void Solve([NotNull] double[,] matrix, [NotNull] ref double[,] b, [NotNull] out double[,] p, bool clone_b = false)
             {
 
@@ -655,11 +657,11 @@ namespace MathCore
             /// <param name="b">Правая часть СЛАУ</param>
             /// <param name="p">Матрица перестановок</param>
             /// <param name="clone_b">Работать с копией <paramref name="b"/></param>
-            /// <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> варождена</returns>
+            /// <returns>Истина, если решение СЛАУ получено; ложь - если матрица СЛАУ <paramref name="matrix"/> вырождена</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> == <see langword="null"/></exception>
             /// <exception cref="ArgumentNullException"><paramref name="b"/> == <see langword="null"/></exception>
-            /// <exception cref="ArgumentException">В случае если матица системы <paramref name="matrix"/> не квадратная</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если матрица системы <paramref name="matrix"/> не квадратная</exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static bool TrySolve([NotNull] double[,] matrix, [NotNull] ref double[,] b, [NotNull] out double[,] p, bool clone_b = false)
             {
                 if (matrix is null)
@@ -700,7 +702,7 @@ namespace MathCore
             /// <returns>Транспонированная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             [DST, NotNull]
-            public static double[,] Transponse([NotNull] double[,] matrix)
+            public static double[,] Transpose([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var result = new double[M, N];
@@ -716,7 +718,7 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="result"/> не задана</exception>
             [DST]
-            public static void Transponse([NotNull] double[,] matrix, [NotNull] double[,] result)
+            public static void Transpose([NotNull] double[,] matrix, [NotNull] double[,] result)
             {
                 GetLength(matrix, out var N, out var M);
                 if (result is null)
@@ -869,7 +871,7 @@ namespace MathCore
             /// </remarks>
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <param name="l">Нижне-треугольная матрица</param>
-            /// <param name="u">Верхнетреугольная матрица</param>
+            /// <param name="u">Верхне-треугольная матрица</param>
             /// <param name="p">Матрица преобразований P*X = L*U</param>
             /// <param name="d">Определитель матрицы</param>
             /// <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
@@ -910,22 +912,22 @@ namespace MathCore
                         u = null;
                         p = null;
                         d = 0d;                      // Приравниваем определитель к нулю
-                        return false;               // Возвращаем ложь - операция не может быть выполнеа
+                        return false;               // Возвращаем ложь - операция не может быть выполнена
                     }
 
                     if (max_index != j)              // Если ведущий элемент был найден
                     {
-                        Swap(ref p_index[j], ref p_index[max_index]); // Переставляем строки для ведущего элеента в векторе коммутации
+                        Swap(ref p_index[j], ref p_index[max_index]); // Переставляем строки для ведущего элемента в векторе коммутации
                         u.SwapRows(max_index, j);
                         d = -d;
                     }
 
                     var main = u[j, j];             // Определяем ведущий элемент строки
-                    d *= main;                      // Домножаем определитель на ведущий элемент
+                    d *= main;                      // Умножаем определитель на ведущий элемент
                     for (var i = j + 1; i < N; i++)  // Для всех строк ниже текущей
                     {
                         l[i, j] = u[i, j] / main; // Проводим операции над присоединённой матрицей
-                        for (var k = 0; k <= j; k++) u[i, k] = 0d; // Очищаем начало чередной строки
+                        for (var k = 0; k <= j; k++) u[i, k] = 0d; // Очищаем начало очередной строки
                         if (l[i, j].Equals(0d)) continue; // Если очередной ведущий элемент строки уже ноль, то пропускаем её
                         for (var k = j + 1; k < N; k++) // Вычитаем из элементов строки ...
                             u[i, k] -= l[i, j] * u[j, k];
@@ -943,8 +945,8 @@ namespace MathCore
             /// </remarks>
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <param name="l">Нижне-треугольная матрица</param>
-            /// <param name="u">Верхнетреугольная матрица</param>
-            /// <param name="d">Определитль матрицы</param>
+            /// <param name="u">Верхне-треугольная матрица</param>
+            /// <param name="d">Определитель матрицы</param>
             /// <returns>Истина, если процедура декомпозиции прошла успешно. Ложь, если матрица вырождена</returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
             /// <exception cref="ArgumentOutOfRangeException">В случае если размерность матрицы N меньше 1</exception>
@@ -988,7 +990,7 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             /// <param name="p">Массив матрицы перестановок</param>
-            /// <param name="d">Определитль матрицы</param>
+            /// <param name="d">Определитель матрицы</param>
             /// <returns>Истина, если операция выполнена успешно</returns>
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
@@ -1043,13 +1045,13 @@ namespace MathCore
             }
 
             /// <summary>LU-разложение матрицы</summary>
-            /// <param name="matrix">Разлогаемая матрица</param>
+            /// <param name="matrix">Разлагаемая матрица</param>
             /// <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             /// <param name="d">Определитель матрицы</param>
             /// <returns>Истина, если процедура выполнена успешно</returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
-            public static bool GetLUPDecomposition(double[,] matrix, out double[,] c, out double d)
+            public static bool GetLUPDecomposition([NotNull] double[,] matrix, out double[,] c, out double d)
             {
                 GetRowsCount(matrix, out var N);
                 if (N != matrix.GetLength(1))
@@ -1086,7 +1088,7 @@ namespace MathCore
             }
 
             /// <summary>LU-разложение матрицы</summary>
-            /// <param name="matrix">Разлогаемая матрица</param>
+            /// <param name="matrix">Разлагаемая матрица</param>
             /// <param name="c">Матрица с результатами разложения: элементы ниже главной диагонали - матрица L, элементы выше - матрица U</param>
             /// <returns>Истина, если разложение выполнено успешно</returns>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
@@ -1114,10 +1116,11 @@ namespace MathCore
             }
 
             /// <summary>Создать матрицу перестановок из массива индексов</summary>
-            /// <param name="indexes">Массив индексов элементов стольцов</param>
+            /// <param name="indexes">Массив индексов элементов столбцов</param>
             /// <returns>Матрица перестановок</returns>
             // ReSharper disable once SuggestBaseTypeForParameter
-            private static double[,] CreatePermutationMatrix(int[] indexes)
+            [NotNull]
+            private static double[,] CreatePermutationMatrix([NotNull] int[] indexes)
             {
                 var N = indexes.Length;
                 var P = new double[N, N];
@@ -1126,15 +1129,15 @@ namespace MathCore
                 return P;
             }
 
-            /// <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <param name="p">Матрица перестановок</param>
             /// <param name="rank">Ранг матрицы</param>
             /// <param name="d">Определитель матрицы</param>
-            /// <returns>Триугольная матрица</returns>
+            /// <returns>Треугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             [NotNull]
-            public static double[,] GetTriangle(double[,] matrix, out double[,] p, out int rank, out double d)
+            public static double[,] GetTriangle([NotNull] double[,] matrix, out double[,] p, out int rank, out double d)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
 
@@ -1145,11 +1148,11 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <param name="rank">Ранг матрицы</param>
             /// <param name="d">Определитель матрицы</param>
-            /// <returns>Триугольная матрица</returns>
+            /// <returns>Треугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             [NotNull]
             public static double[,] GetTriangle([NotNull] double[,] matrix, out int rank, out double d)
@@ -1163,17 +1166,17 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <param name="b">Матрица правой части</param>
             /// <param name="rank">Ранг матрицы</param>
             /// <param name="d">Определитель матрицы</param>
-            /// <returns>Триугольная матрица</returns>
+            /// <returns>Треугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             [NotNull]
-            public static double[,] GetTriangle([NotNull] double[,] matrix, double[,] b, out int rank, out double d)
+            public static double[,] GetTriangle([NotNull] double[,] matrix, [NotNull] double[,] b, out int rank, out double d)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
 
@@ -1186,17 +1189,17 @@ namespace MathCore
                 return result;
             }
 
-            /// <summary>Приведение матрицы к ступенчатому виду методом Гауса</summary>
+            /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
             /// <param name="matrix">Двумерный массив элементов матрицы</param>
             /// <param name="b">Матрица правой части</param>
             /// <param name="p">Матрица перестановок</param>
             /// <param name="rank">Ранг матрицы</param>
             /// <param name="d">Определитель матрицы</param>
             /// <param name="clone_b">Клонировать матрицу правых частей</param>
-            /// <returns>Триугольная матрица</returns>
+            /// <returns>Треугольная матрица</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             [NotNull]
             public static double[,] GetTriangle
             (
@@ -1215,12 +1218,12 @@ namespace MathCore
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
-            /// <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            /// <param name="matrix">Матрица, приводимая к треугольному виду</param>
             /// <param name="p">Матрица перестановок</param>
-            /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            public static int Triangulate([NotNull] double[,] matrix, out double[,] p, out double d)
+            public static int Triangulate([NotNull] double[,] matrix, [NotNull] out double[,] p, out double d)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
 
@@ -1264,11 +1267,11 @@ namespace MathCore
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
-            /// <param name="matrix">Матрица, приводимая к триугольному виду</param>
-            /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            /// <param name="matrix">Матрица, приводимая к треугольному виду</param>
+            /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
-            public static int Triangulate(double[,] matrix, out double d)
+            public static int Triangulate([NotNull] double[,] matrix, out double d)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
 
@@ -1313,21 +1316,21 @@ namespace MathCore
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
-            /// <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            /// <param name="matrix">Матрица, приводимая к треугольному виду</param>
             /// <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
-            /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
-            public static int Triangulate(double[,] matrix, double[,] b, out double d)
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            public static int Triangulate([NotNull] double[,] matrix, [NotNull] double[,] b, out double d)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
 
                 GetLength(matrix, out var N, out var M);
                 if (b is null) throw new ArgumentNullException(nameof(b));
                 GetLength(b, out var B_N, out var B_M);
-                if (B_N != N) throw new ArgumentException(@"Число строк присоединнённой матрицы не равно числу строк исходной матрицы");
+                if (B_N != N) throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
                 d = 1d;
                 var N1 = Math.Min(N, M);
                 for (var i0 = 0; i0 < N1; i0++)
@@ -1376,14 +1379,14 @@ namespace MathCore
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
-            /// <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            /// <param name="matrix">Матрица, приводимая к треугольному виду</param>
             /// <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
-            /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             /// <param name="clone">Клонировать исходную матрицу</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static int Triangulate([NotNull] ref double[,] matrix, [NotNull] double[,] b, out double d, bool clone = true)
             {
 
@@ -1392,23 +1395,23 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(b));
                 GetRowsCount(b, out var B_N);
                 if (B_N != N)
-                    throw new ArgumentException(@"Число строк присоединнённой матрицы не равно числу строк исходной матрицы");
+                    throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
                 if (clone)
                     matrix = matrix.CloneObject();
                 return Triangulate(matrix, b, out d);
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
-            /// <param name="matrix">Матрица, приводимая к триугольному виду</param>
+            /// <param name="matrix">Матрица, приводимая к треугольному виду</param>
             /// <param name="b">Присоединённая матрица, над которой выполняются те же операции, что и над <paramref name="matrix"/></param>
             /// <param name="p">Матрица перестановок</param>
-            /// <param name="d">Определитель матрицы (проидведение диогональных элементов)</param>
+            /// <param name="d">Определитель матрицы (произведение диагональных элементов)</param>
             /// <param name="clone_matrix">Клонировать исходную матрицу</param>
             /// <param name="clone_b">Клонировать присоединённую матрицу</param>
             /// <returns>Ранг матрицы (число ненулевых строк)</returns>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="b"/> не задана</exception>
-            /// <exception cref="ArgumentException">В случае если число строк присоединнённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
+            /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static int Triangulate
             (
                 [NotNull] ref double[,] matrix,
@@ -1425,7 +1428,7 @@ namespace MathCore
                     throw new ArgumentNullException(nameof(b));
                 GetLength(b, out var B_N, out var B_M);
                 if (B_N != N)
-                    throw new ArgumentException(@"Число строк присоединнённой матрицы не равно числу строк исходной матрицы");
+                    throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
                 if (clone_matrix)
                     matrix = matrix.CloneObject();
                 if (clone_b)
@@ -1494,7 +1497,7 @@ namespace MathCore
             /// <summary>Сравнение двух двумерных массивов элементов матриц</summary>
             /// <param name="A">Первый массив</param>
             /// <param name="B">Второй массив</param>
-            /// <returns>Истина, если оба массивы неопределены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
+            /// <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
             public static bool AreEquals([CanBeNull] double[,] A, [CanBeNull] double[,] B)
             {
@@ -1516,7 +1519,7 @@ namespace MathCore
             /// <param name="A">Первый массив</param>
             /// <param name="B">Второй массив</param>
             /// <param name="eps">Точность сравнения</param>
-            /// <returns>Истина, если оба массивы неопределены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
+            /// <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
             public static bool AreEquals([CanBeNull] double[,] A, [CanBeNull] double[,] B, double eps)
             {
@@ -1533,11 +1536,11 @@ namespace MathCore
                 return true;
             }
 
-            /// <summary>Вычисление максимуа от сумм абсолютных значений по элементам строк</summary>
+            /// <summary>Вычисление максимума от сумм абсолютных значений по элементам строк</summary>
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static double GetMaxRowAbsSumm(double[,] matrix)
+            public static double GetMaxRowAbsSumm([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = 0d;
@@ -1552,11 +1555,11 @@ namespace MathCore
                 return max;
             }
 
-            /// <summary>Вычисление максимуа от сумм абсолютных значений по элементам столбцов</summary>
+            /// <summary>Вычисление максимума от сумм абсолютных значений по элементам столбцов</summary>
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static double GetMaxColAbsSumm(double[,] matrix)
+            public static double GetMaxColAbsSum([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = 0d;
@@ -1571,11 +1574,11 @@ namespace MathCore
                 return max;
             }
 
-            /// <summary>Вычисление среднеквадратического значения элементов матрицы</summary>
+            /// <summary>Вычисление среднеквадратичного значения элементов матрицы</summary>
             /// <param name="matrix">Массив элементов матрицы</param>
-            /// <returns>Среднеквадратическое значение элементов матрицы</returns>
+            /// <returns>Среднеквадратичное значение элементов матрицы</returns>
             /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
-            public static double GetRMS(double[,] matrix)
+            public static double GetRMS([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var s = 0d;
@@ -1591,14 +1594,14 @@ namespace MathCore
             private static double Sqr(double x) => x * x;
 
             /// <summary>Метод проверки сходимости метода Метод Гаусса — Зейделя</summary>
-            /// <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сашёлся на текущем шаге</remarks>
+            /// <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сошёлся на текущем шаге</remarks>
             /// <param name="new_x">Новое полученное решение</param>
             /// <param name="last_x">Решение, полученное на прошлом шаге метода</param>
             /// <param name="eps">Требуемая точность решения</param>
             /// <param name="N">Число строк матрицы решения</param>
             /// <param name="M">Число столбцов матрицы решения</param>
             /// <returns>Истина, если метод сошёлся Метод Гаусса — Зейделя</returns>
-            private static bool GausSeidelConverge
+            private static bool GaussSeidelConverge
             (
                 [NotNull] ref double[,] new_x,
                 [NotNull] ref double[,] last_x,
@@ -1630,8 +1633,8 @@ namespace MathCore
             /// <exception cref="ArgumentException">Число строк массива неизвестных не совпадает с числом строк матрицы системы</exception>
             /// <exception cref="ArgumentException">Число строк массива правой части СЛАУ не совпадает с числом строк матрицы системы</exception>
             /// <exception cref="ArgumentException">Число столбцов массива правых частей не совпадает с числом столбцов массива неизвестных</exception>
-            /// <exception cref="ArgumentOutOfRangeException"><paramref name="eps"/> &lt;= <see cref="double"/>.<see cref="double.Epsilon"/></exception>
-            public static void GausSeidelSolove
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="eps"/> &lt;= <see cref="double"/>.<see cref="double.Epsilon"/></exception> Solve
+            public static void GaussSeidelSolve
             (
                 [NotNull] double[,] matrix,
                 [NotNull] double[,] x,
@@ -1664,7 +1667,6 @@ namespace MathCore
                 GetLength(x1, out var x_N, out var x_M);
 
                 do
-                {
                     for (var j_x = 0; j_x < x_M; j_x++)
                         for (var i = 0; i < N; i++)
                         {
@@ -1675,8 +1677,7 @@ namespace MathCore
                                 d += matrix[i, j] * x0[j, j_x];
                             x1[i, j_x] = (b[i, j_x] - d) / matrix[i, i];
                         }
-
-                } while (!GausSeidelConverge(ref x1, ref x0, eps, x_N, x_M));
+                while (!GaussSeidelConverge(ref x1, ref x0, eps, x_N, x_M));
                 if (ReferenceEquals(x1, x))
                     return;
                 System.Array.Copy(x1, x, x.Length);
@@ -1684,8 +1685,8 @@ namespace MathCore
 
             /// <summary>QR-разложение матрицы</summary>
             /// <param name="matrix">Разлагаемая матрица</param>
-            /// <param name="q">Унитарная матрица (ортогональная) - должна быть передана квадратная матирца nxn != null</param>
-            /// <param name="r">Верхнетреугольная матрица - должна быть передана квадратная матирца nxn != null</param>
+            /// <param name="q">Унитарная матрица (ортогональная) - должна быть передана квадратная матрица nxn != null</param>
+            /// <param name="r">Верхне-треугольная матрица - должна быть передана квадратная матрица nxn != null</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
             public static void QRDecomposition([NotNull] double[,] matrix, [NotNull] double[,] q, [NotNull] double[,] r)
@@ -1699,11 +1700,11 @@ namespace MathCore
 
                 var u = matrix.CloneObject();
 
-                // По столбцам матирцы matrix (j - номер обрабатываемого столбца)
+                // По столбцам матрицы matrix (j - номер обрабатываемого столбца)
                 for (var j = 0; j < M; j++)
                 {
                     double n;
-                    // По предыдущим столбцам матирцы u (j - номер обрабатываемого столбца)
+                    // По предыдущим столбцам матрицы u (j - номер обрабатываемого столбца)
                     for (var k = 0; k < j; k++)
                     {
                         var s = default(double);
@@ -1716,7 +1717,7 @@ namespace MathCore
                             n += v * v;
                         }
                         s /= n;
-                        // Вычитание проекци
+                        // Вычитание проекции
                         for (var i = 0; i < N; i++)
                             u[i, j] -= u[i, k] * s;
                     }
@@ -1741,8 +1742,8 @@ namespace MathCore
 
             /// <summary>QR-разложение матрицы</summary>
             /// <param name="matrix">Разлагаемая матрица</param>
-            /// <param name="q">Унитарная матрица (ортогональная) - создаётся квадратная матирца nxn != null</param>
-            /// <param name="r">Верхнетреугольная матрица - создаётся квадратная матирца nxn != null</param>
+            /// <param name="q">Унитарная матрица (ортогональная) - создаётся квадратная матрица nxn != null</param>
+            /// <param name="r">Верхне-треугольная матрица - создаётся квадратная матрица nxn != null</param>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
             /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
             public static void QRDecomposition([NotNull] double[,] matrix, [NotNull] out double[,] q, [NotNull] out double[,] r)
@@ -1777,13 +1778,13 @@ namespace MathCore
             /// <exception cref="InvalidOperationException">Метод не сошёлся за 30 итераций</exception>
             // ReSharper disable once FunctionComplexityOverflow
             // ReSharper disable once CyclomaticComplexity
-            public static void SVD(double[,] matrix, out double[,] u, out double[] w, out double[,] v)
+            public static void SVD([NotNull] double[,] matrix, out double[,] u, out double[] w, out double[,] v)
             {
                 GetLength(matrix, out var N, out var M);
 
                 if (M > N)
                 {
-                    SVD(Transponse(matrix), out v, out w, out u);
+                    SVD(Transpose(matrix), out v, out w, out u);
                     return;
                 }
 
@@ -2113,7 +2114,7 @@ namespace MathCore
                 }
 
                 /// <summary>Умножение вектора на число</summary>
-                /// <param name="v1">Первый сомножитель - вектор элэементов</param>
+                /// <param name="v1">Первый сомножитель - вектор элементов</param>
                 /// <param name="v2">Второй сомножитель - число, на которое должны быть умножены все элементы вектора</param>
                 /// <returns>Вектор произведений элементов входного вектора и числа</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
@@ -2136,7 +2137,7 @@ namespace MathCore
                 /// <returns>Вектор, составленный из частного элементов вектора-делимого и числового делителя</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
                 [NotNull]
-                public static double[] Divade([NotNull] double[] v1, double v2)
+                public static double[] Divide([NotNull] double[] v1, double v2)
                 {
                     if (v1 is null)
                         throw new ArgumentNullException(nameof(v1));
@@ -2221,7 +2222,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
                 /// <exception cref="InvalidOperationException">Размеры векторов не совпадают</exception>
                 [NotNull]
-                public static double[] subtract([NotNull] double[] a, [NotNull] double[] b)
+                public static double[] Subtract([NotNull] double[] a, [NotNull] double[] b)
                 {
                     if (a is null)
                         throw new ArgumentNullException(nameof(a));
@@ -2242,6 +2243,7 @@ namespace MathCore
                 /// <returns>Вектор элементов произведения</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
                 /// <exception cref="InvalidOperationException">Размеры векторов не совпадают</exception>
+                [NotNull]
                 public static double[] MultiplyComponent([NotNull] double[] a, [NotNull] double[] b)
                 {
                     if (a is null)
@@ -2262,7 +2264,8 @@ namespace MathCore
                 /// <param name="b">Вектор - делитель</param>
                 /// <returns>Вектор, составленный из поэлементного частного элементов векторов делимого и делителя</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
-                public static double[] DivadeComponent([NotNull] double[] a, [NotNull] double[] b)
+                [NotNull]
+                public static double[] DivideComponent([NotNull] double[] a, [NotNull] double[] b)
                 {
                     if (a is null)
                         throw new ArgumentNullException(nameof(a));
@@ -2281,7 +2284,7 @@ namespace MathCore
                 /// <returns>Массив разности элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static double[,] subtract([NotNull] double[,] matrix, double x)
+                public static double[,] Subtract([NotNull] double[,] matrix, double x)
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
@@ -2300,7 +2303,7 @@ namespace MathCore
                 /// <returns>Массив разности элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static double[,] subtract(double x, [NotNull] double[,] matrix)
+                public static double[,] Subtract(double x, [NotNull] double[,] matrix)
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
@@ -2338,7 +2341,7 @@ namespace MathCore
                 /// <returns>Массив произведения элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static double[,] Divade([NotNull] double[,] matrix, double x)
+                public static double[,] Divide([NotNull] double[,] matrix, double x)
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
@@ -2357,7 +2360,7 @@ namespace MathCore
                 /// <returns>Массив частного элементов матрицы с числом</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="matrix"/> не определена</exception>
                 [NotNull]
-                public static double[,] Divade(double x, [NotNull] double[,] matrix)
+                public static double[,] Divide(double x, [NotNull] double[,] matrix)
                 {
                     if (matrix is null)
                         throw new ArgumentNullException(nameof(matrix));
@@ -2403,7 +2406,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
                 /// <exception cref="ArgumentException">В случае если размерности матрицы не равны</exception>
                 [NotNull]
-                public static double[,] subtract([NotNull] double[,] A, [NotNull] double[,] B)
+                public static double[,] Subtract([NotNull] double[,] A, [NotNull] double[,] B)
                 {
                     if (A is null)
                         throw new ArgumentNullException(nameof(A));
@@ -2428,7 +2431,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="col"/> не определена</exception>
                 /// <exception cref="ArgumentException">В случае если размерности матрицы и столбца не равны</exception>
                 [NotNull]
-                public static double[] MultylyCol([NotNull] double[,] A, [NotNull] double[] col)
+                public static double[] MultiplyCol([NotNull] double[,] A, [NotNull] double[] col)
                 {
                     if (A is null)
                         throw new ArgumentNullException(nameof(A));
@@ -2453,7 +2456,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="row"/> не определена</exception>
                 /// <exception cref="ArgumentException">В случае если размерности матрицы и строки не равны</exception>
                 [NotNull]
-                public static double[] MultylyRow([NotNull] double[] row, [NotNull] double[,] B)
+                public static double[] MultiplyRow([NotNull] double[] row, [NotNull] double[,] B)
                 {
                     if (B is null)
                         throw new ArgumentNullException(nameof(B));
@@ -2477,7 +2480,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="col"/> не определена</exception>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="row"/> не определена</exception>
                 /// <exception cref="ArgumentException">В случае если размерности строки и столбца не равны</exception>
-                public static double MultylyRowToCol([NotNull] double[] row, [NotNull] double[] col)
+                public static double MultiplyRowToCol([NotNull] double[] row, [NotNull] double[] col)
                 {
                     if (row is null)
                         throw new ArgumentNullException(nameof(row));
@@ -2561,7 +2564,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="A"/> не определена</exception>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="result"/> не определена</exception>
-                /// <exception cref="ArgumentException">В случае если размерности матриц несогласованы</exception>
+                /// <exception cref="ArgumentException">В случае если размерности матриц не согласованы</exception>
                 /// <exception cref="ArgumentException">В случае если число строк <paramref name="result"/> не равно числу строк <paramref name="A"/></exception>
                 /// <exception cref="ArgumentException">В случае если число столбцов <paramref name="result"/> не равно числу строк <paramref name="B"/></exception>
                 public static void Multiply([NotNull] double[,] A, [NotNull] double[,] B, [NotNull] double[,] result)
@@ -2596,15 +2599,15 @@ namespace MathCore
                 /// <returns>Частное двух матриц</returns>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="A"/> не определена</exception>
                 /// <exception cref="ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
-                /// <exception cref="ArgumentException">В случае если размерности матриц несогласованы</exception>
+                /// <exception cref="ArgumentException">В случае если размерности матриц не согласованы</exception>
                 [NotNull]
-                public static double[,] Divade([NotNull] double[,] A, [NotNull] double[,] B) => Multiply(A, Inverse(B, out var _));
+                public static double[,] Divide([NotNull] double[,] A, [NotNull] double[,] B) => Multiply(A, Inverse(B, out var _));
 
-                /// <summary>Объединение метриц по строкам, либо столбцам</summary>
+                /// <summary>Объединение матриц по строкам, либо столбцам</summary>
                 /// <returns>Двумерный массив, содержащий объединение элементов исходных массивов по строкам, либо столбцам</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="A"/> or <paramref name="B"/> is <see langword="null"/></exception>
                 [NotNull]
-                public static double[,] Concatinate([NotNull] double[,] A, [NotNull] double[,] B)
+                public static double[,] Concatenate([NotNull] double[,] A, [NotNull] double[,] B)
                 {
                     if (A is null)
                         throw new ArgumentNullException(nameof(A));
@@ -2615,7 +2618,7 @@ namespace MathCore
                     GetLength(B, out var B_N, out var B_M);
 
                     double[,] result;
-                    if (A_M == B_M) // Конкатинация по строкам
+                    if (A_M == B_M) // Конкатенация по строкам
                     {
                         result = new double[A_N + B_N, A_M];
                         for (var i = 0; i < A_N; i++)
@@ -2626,7 +2629,7 @@ namespace MathCore
                             for (var j = 0; j < B_M; j++)
                                 result[i + i0, j] = B[i, j];
                     }
-                    else if (A_N == B_N) //Конкатинация по строкам
+                    else if (A_N == B_N) //Конкатенация по строкам
                     {
                         result = new double[A_N, A_M + B_M];
                         for (var i = 0; i < A_N; i++)
@@ -2638,7 +2641,7 @@ namespace MathCore
                                 result[i, j + j0] = B[i, j];
                     }
                     else
-                        throw new InvalidOperationException(@"Конкатинация возможна только по строкам, или по столбцам");
+                        throw new InvalidOperationException(@"Конкатенация возможна только по строкам, или по столбцам");
 
                     return result;
                 }
@@ -2686,7 +2689,7 @@ namespace MathCore
 
                 /// <summary>Оператор вычисления билинейной формы с векторными операндами b = <paramref name="x"/>*<paramref name="a"/>*<paramref name="y"/></summary>
                 /// <param name="x">Двумерный массив компонент матрицы первого операнда билинейной формы</param>
-                /// <param name="a">Двумерный массив компонент матрицы оператора билинейной мормы</param>
+                /// <param name="a">Двумерный массив компонент матрицы оператора билинейной нормы</param>
                 /// <param name="y">Двумерный массив компонент матрицы второго операнда билинейной формы</param>
                 /// <returns>
                 /// Двумерный массив компонент матрицы результата вычисления билинейной формы, 
@@ -2697,6 +2700,7 @@ namespace MathCore
                 /// <exception cref="ArgumentNullException"><paramref name="y"/> is <see langword="null"/></exception>
                 /// <exception cref="ArgumentException">Число столбцов <paramref name="x"/> не равно числу строк <paramref name="a"/></exception>
                 /// <exception cref="ArgumentException">Число строк <paramref name="y"/> не равно числу столбцов <paramref name="a"/></exception>
+                [NotNull]
                 public static double[,] BiliniarMultiply([NotNull] double[,] x, [NotNull] double[,] a, [NotNull] double[,] y)
                 {
                     if (x is null)
@@ -2773,6 +2777,7 @@ namespace MathCore
                     return result;
                 }
 
+                [NotNull]
                 public static double[,] BiliniarMultiplyAuto([NotNull] double[,] x, [NotNull] double[,] a)
                 {
                     if (x is null)

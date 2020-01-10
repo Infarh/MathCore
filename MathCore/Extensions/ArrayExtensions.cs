@@ -207,7 +207,7 @@ namespace System
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         ///<returns>Массив из объединенных элементов</returns>
         [DST, NotNull]
-        public static TArray[] Concatinate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[] B)
+        public static TArray[] Concatenate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[] B)
         {
             var Result = new TArray[A.Length + B.Length];
             A.CopyTo(Result, 0);
@@ -216,7 +216,7 @@ namespace System
         }
 
         [NotNull]
-        public static TArray[] Concatinate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[][] B)
+        public static TArray[] Concatenate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[][] B)
         {
             var result = new TArray[A.Length + B.Sum(l => l.Length)];
             A.CopyTo(result, 0);

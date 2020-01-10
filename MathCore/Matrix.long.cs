@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -24,7 +25,7 @@ namespace MathCore
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param>
         /// <returns>Единичная матрица размерности NxN</returns>
-        public static MatrixLong GetUnitaryMatryx(int N)
+        public static MatrixLong GetUnitaryMatrix(int N)
         {
             var Result = new MatrixLong(N);
             for (var i = 0; i < N; i++) Result[i, i] = 1;
@@ -33,14 +34,14 @@ namespace MathCore
 
         /// <summary>Трансвекция матрицы</summary>
         /// <param name="A">Трансвецируемая матрица</param>
-        /// <param name="j">Оборный столбец</param>
-        /// <returns>Трансвекция матрицы А</returns>                    
+        /// <param name="j">Опорный столбец</param>
+        /// <returns>Трансвекция матрицы А</returns>
         public static MatrixLong GetTransvection(MatrixLong A, int j)
         {
             if (!A.IsSquare)
-                throw new InvalidOperationException("Трансквенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("Трансвекция неквадратной матрицы невозможна");
 
-            var result = GetUnitaryMatryx(A.N);
+            var result = GetUnitaryMatrix(A.N);
             for (var i = 0; i < A.N; i++)
                 result[i, j] = i == j ? 1 / A[j, j] : -A[i, j] / A[j, j];
             return result;
@@ -71,7 +72,7 @@ namespace MathCore
         /// <returns>Элемент матрицы</returns>
         public long this[int i, int j] { get => _Data[i, j]; set => _Data[i, j] = value; }
 
-        /// <summary>Вектор-стольбец</summary>
+        /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы</returns>
         public MatrixLong this[int j] => GetCol(j);
@@ -88,7 +89,7 @@ namespace MathCore
         /// <summary>Матрица является числом</summary>
         public bool IsDigit => N == 1 && M == 1;
 
-        public MatrixLong T => GetTransponse();
+        public MatrixLong T => GetTranspose();
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -146,9 +147,9 @@ namespace MathCore
         /// <returns>Столбец матрицы номер j</returns>
         public MatrixLong GetCol(int j)
         {
-            var lv_A = new MatrixLong(N, 1);
-            for (var i = 0; i < N; i++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new MatrixLong(N, 1);
+            for (var i = 0; i < N; i++) a[i, j] = this[i, j];
+            return a;
         }
 
         /// <summary>Получить строку матрицы</summary>
@@ -156,30 +157,30 @@ namespace MathCore
         /// <returns>Строка матрицы номер i</returns>
         public MatrixLong GetRow(int i)
         {
-            var lv_A = new MatrixLong(1, M);
-            for (var j = 0; j < M; j++) lv_A[i, j] = this[i, j];
-            return lv_A;
+            var a = new MatrixLong(1, M);
+            for (var j = 0; j < M; j++) a[i, j] = this[i, j];
+            return a;
         }
 
-        /// <summary>Приведение матрицы к ступенчатому виду методом гауса</summary>
+        /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <returns></returns>
         public MatrixLong GetTriangle()
         {
             var result = (MatrixLong)Clone();
-            var lv_RowCount = N;
-            var lv_ColCount = M;
-            var row = new long[lv_ColCount];
-            for (var lv_FirstRowIndex = 0; lv_FirstRowIndex < lv_RowCount - 1; lv_FirstRowIndex++)
+            var row_count = N;
+            var col_count = M;
+            var row = new long[col_count];
+            for (var first_row_index = 0; first_row_index < row_count - 1; first_row_index++)
             {
-                var lv_A = result[lv_FirstRowIndex, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                for (var lv_RowElementI = lv_FirstRowIndex; lv_RowElementI < result.M; lv_RowElementI++) //Нормируем строку по первому элементу
-                    row[lv_RowElementI] = result[lv_FirstRowIndex, lv_RowElementI] / lv_A;
+                var a = result[first_row_index, first_row_index]; //Захватываем первый элемент строки
+                for (var row_element_i = first_row_index; row_element_i < result.M; row_element_i++) //Нормируем строку по первому элементу
+                    row[row_element_i] = result[first_row_index, row_element_i] / a;
 
-                for (var i = lv_FirstRowIndex + 1; i < lv_RowCount; i++) //Для всех оставшихся строк:
+                for (var i = first_row_index + 1; i < row_count; i++) //Для всех оставшихся строк:
                 {
-                    lv_A = result[i, lv_FirstRowIndex]; //Захватываем первый элемент строки
-                    for (var j = lv_FirstRowIndex; j < lv_ColCount; j++)
-                        result[i, j] -= lv_A * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
+                    a = result[i, first_row_index]; //Захватываем первый элемент строки
+                    for (var j = first_row_index; j < col_count; j++)
+                        result[i, j] -= a * row[j]; //Вычитаем рабочую строку, домноженную на первый элемент
                 }
             }
             return result;
@@ -187,7 +188,7 @@ namespace MathCore
 
         /// <summary>Получить обратную матрицу</summary>
         /// <returns>Обратная матрица</returns>
-        public MatrixLong GetImverse()
+        public MatrixLong GetInverse()
         {
             if (!IsSquare)
                 throw new InvalidOperationException("Обратная матрица существует только для квадратной матрицы");
@@ -200,7 +201,7 @@ namespace MathCore
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        public MatrixLong GetTransponse()
+        public MatrixLong GetTranspose()
         {
             var Result = new MatrixLong(M, N);
 
@@ -314,8 +315,8 @@ namespace MathCore
         /// University of Cambridge Press 1992.  
         /// </summary>
         /// <param name="Mat">Array which will be LU Decomposed</param>
-        /// <param name="L">An array where the lower traingular matrix is returned</param>
-        /// <param name="U">An array where the upper traingular matrix is returned</param>
+        /// <param name="L">An array where the lower triangular matrix is returned</param>
+        /// <param name="U">An array where the upper triangular matrix is returned</param>
         /// <param name="P">An array where the permutation matrix is returned</param>
         private static void LUDecomposition(long[,] Mat, out long[,] L, out long[,] U, out long[,] P)
         {
@@ -444,16 +445,16 @@ namespace MathCore
 
         public string ToStringFormat(char Splitter) => ToStringFormat(Splitter, "r");
 
-        public string ToStringFormat(char Splitter = '\t', string Format = "r")
+        public string ToStringFormat(char Splitter, string Format)
         {
             var result = new StringBuilder();
 
             for (var i = 0; i < _N; i++)
             {
-                var lv_Str = _Data[i, 0].ToString(Format);
+                var str = _Data[i, 0].ToString(Format);
                 for (var j = 1; j < _M; j++)
-                    lv_Str += Splitter + _Data[i, j].ToString(Format);
-                result.AppendLine(lv_Str);
+                    str += Splitter + _Data[i, j].ToString(Format);
+                result.AppendLine(str);
             }
             return result.ToString();
         }
@@ -556,7 +557,7 @@ namespace MathCore
 
         public static MatrixLong operator /(long x, MatrixLong M)
         {
-            M = M.GetImverse();
+            M = M.GetInverse();
             var result = new MatrixLong(M.N, M.M);
             for (var i = 0; i < M.N; i++)
                 for (var j = 0; j < M.M; j++)
@@ -625,7 +626,7 @@ namespace MathCore
         /// <returns>Частное двух матриц</returns>
         public static MatrixLong operator /(MatrixLong A, MatrixLong B)
         {
-            B = B.GetImverse();
+            B = B.GetInverse();
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
 
@@ -639,14 +640,14 @@ namespace MathCore
             return result;
         }
 
-        /// <summary>Конкатинация двух матриц (либо по строкам, либо по столбцам)</summary>
+        /// <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
         /// <param name="A">Первое слагаемое</param>
         /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
         public static MatrixLong operator |(MatrixLong A, MatrixLong B)
         {
             MatrixLong result;
-            if (A.M == B.M) // Конкатинация по строкам
+            if (A.M == B.M) // Конкатенация по строкам
             {
                 result = new MatrixLong(A.N + B.N, A.M);
                 for (var i = 0; i < A.N; i++)
@@ -658,7 +659,7 @@ namespace MathCore
                         result[i + i0, j] = B[i, j];
 
             }
-            else if (A.N == B.N) //Конкатинация по строкам
+            else if (A.N == B.N) //Конкатенация по строкам
             {
                 result = new MatrixLong(A.N, A.M + B.M);
                 for (var i = 0; i < A.N; i++)
@@ -670,7 +671,7 @@ namespace MathCore
                         result[i, j + j0] = B[i, j];
             }
             else
-                throw new InvalidOperationException("Конкатинация возможна только по строкам, или по столбцам");
+                throw new InvalidOperationException("Конкатенация возможна только по строкам, или по столбцам");
 
             return result;
         }
@@ -680,11 +681,11 @@ namespace MathCore
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>
-        /// Оператор неявного преведения типа вещественного числа двойной точнойсти к типу 
+        /// Оператор неявного приведения типа вещественного числа двойной точности к типу 
         /// Матрица порядка 1х1
         /// </summary>
         /// <param name="X">Приводимое число</param>
-        /// <returns>Матрица порадка 1х1</returns>
+        /// <returns>Матрица порядка 1х1</returns>
         public static implicit operator MatrixLong(long X) => new MatrixLong(1, 1) { [0, 0] = X };
 
         public static explicit operator long[,](MatrixLong M) => (long[,])M._Data.Clone();

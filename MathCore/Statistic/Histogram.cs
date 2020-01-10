@@ -46,7 +46,7 @@ namespace MathCore.Statistic
 
             x_values.Foreach(AddValue);
             Percent = new double[Values.Length].Initialize(Values, N, (i, values, n) => values[i] / n);
-            Values.Divade(_Normalizator = Values.GetIntegral(Argument));
+            Values.Divide(_Normalizator = Values.GetIntegral(Argument));
         }
 
         public bool CheckDestribution(Func<double, double> F, double p, double alpha = 0.05)
@@ -62,7 +62,7 @@ namespace MathCore.Statistic
                 .Select((t, i) => p_theor[i] - t)
                 .Select((delta, i) => delta * delta / p_theor[i])
                 .Sum();
-            var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(alpha, 2);
+            var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, 2);
             Console.WriteLine(stat < quantile);
             Console.ReadLine();
             return stat < quantile;

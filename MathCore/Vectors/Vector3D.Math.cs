@@ -65,7 +65,7 @@ namespace MathCore.Vectors
         }
 
         /// <summary>Проекция на вектор</summary>
-        /// <param name="Vector">Вектор, НА который производится проекция</param>
+        /// <param name="Vector">Вектор, НА который производится проекциия</param>
         /// <returns>Проекция на вектор</returns>
         public double GetProjectionTo(Vector3D Vector) => Product_Scalar(Vector) / Vector.R;
 

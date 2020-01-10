@@ -129,7 +129,7 @@ namespace MathCore.Statistic
         public static bool CheckDistribution([NotNull] this double[] Samples, [NotNull] Func<double, double> f, double TrustLevel = 0.95)
         {
             var pirsons_criteria = GetPirsonsCriteria(Samples, f, out var number_of_degrees_of_freedom);
-             var hi_theoretical = SpecialFunctions.Distribution.Student.QuantileHi2(TrustLevel, number_of_degrees_of_freedom);
+             var hi_theoretical = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(TrustLevel, number_of_degrees_of_freedom);
 
             return pirsons_criteria < hi_theoretical;
         }

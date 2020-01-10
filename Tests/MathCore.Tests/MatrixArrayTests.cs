@@ -83,7 +83,7 @@ namespace MathCore.Tests
         {
             var matrix = GetRandom(N, d, m);
 
-            while (Matrix.Array.IsMatrixSungular(matrix))
+            while (Matrix.Array.IsMatrixSingular(matrix))
                 matrix[RndGenerator.Next(0, N - 1), RndGenerator.Next(0, N - 1)] = m + d * RndGenerator.NextDouble();
 
             return matrix;
@@ -931,8 +931,8 @@ namespace MathCore.Tests
             Assert.AreEqual("b", ((ArgumentException)error).ParamName);
         }
 
-        /// <summary>Тест вычисления СЛАУ методом Гауса</summary>
-        [TestMethod, Priority(2), Description("Тест вычисления СЛАУ методом Гауса")]
+        /// <summary>Тест вычисления СЛАУ методом Гаусса</summary>
+        [TestMethod, Priority(2), Description("Тест вычисления СЛАУ методом Гаусса")]
         public void TrySolve_Test()
         {
             // Единичная матрица 2х2
@@ -1038,8 +1038,8 @@ namespace MathCore.Tests
 
         }
 
-        /// <summary>Тест вычисления СЛАУ методом Гауса с генерацией исключения в случае если матрица системы вырождена</summary>
-        [TestMethod, Priority(2), Description("Тест вычисления СЛАУ методом Гауса с генерацией исключения в случае если матрица системы вырождена")]
+        /// <summary>Тест вычисления СЛАУ методом Гаусса с генерацией исключения в случае если матрица системы вырождена</summary>
+        [TestMethod, Priority(2), Description("Тест вычисления СЛАУ методом Гаусса с генерацией исключения в случае если матрица системы вырождена")]
         public void Solve_Test()
         {
             var I = GetUnitaryArrayMatrix(2);
@@ -1107,8 +1107,8 @@ namespace MathCore.Tests
             CollectionAssert.AreEqual(b, b2);
         }
 
-        /// <summary>Тест вычисления СЛАУ методом Гауса</summary>
-        [TestMethod, Priority(2), Description("Тест вычисления СЛАУ методом Гауса")]
+        /// <summary>Тест вычисления СЛАУ методом Гаусса</summary>
+        [TestMethod, Priority(2), Description("Тест вычисления СЛАУ методом Гаусса")]
         public void GetSolve_Test()
         {
             var m = new[,]
@@ -1418,11 +1418,11 @@ namespace MathCore.Tests
                 Assert.AreEqual(U0.GetLength(1), U.GetLength(1));
                 try
                 {
-                    CollectionAssert.AreEqual(U0, U, cmp, "U0 - U = {0}", Matrix.Array.Operator.subtract(U0, U).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                    CollectionAssert.AreEqual(U0, U, cmp, "U0 - U = {0}", Matrix.Array.Operator.Subtract(U0, U).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.subtract(U0, U).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Subtract(U0, U).EnumerateElements().Select(Math.Abs).Max()}", e);
                 }
 
                 Assert.AreEqual(W0.Length, W.Length);
@@ -1440,24 +1440,24 @@ namespace MathCore.Tests
                 Assert.AreEqual(V0.GetLength(1), V.GetLength(1));
                 try
                 {
-                    CollectionAssert.AreEqual(V0, V, cmp, "V0 - V = {0}", Matrix.Array.Operator.subtract(V0, V).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                    CollectionAssert.AreEqual(V0, V, cmp, "V0 - V = {0}", Matrix.Array.Operator.Subtract(V0, V).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
 
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.subtract(V0, V).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.Subtract(V0, V).EnumerateElements().Select(Math.Abs).Max()}", e);
                 }
 
                 var M1 = Matrix.Array.Operator.Multiply(U, Matrix.Array.CreateDiagonal(W));
-                M1 = Matrix.Array.Operator.Multiply(M1, Matrix.Array.Transponse(V));
+                M1 = Matrix.Array.Operator.Multiply(M1, Matrix.Array.Transpose(V));
 
                 try
                 {
-                    CollectionAssert.AreEqual(M, M1, cmp, "M - M1 = {0}", Matrix.Array.Operator.subtract(M, M1).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
+                    CollectionAssert.AreEqual(M, M1, cmp, "M - M1 = {0}", Matrix.Array.Operator.Subtract(M, M1).ToStringFormatView("g", ", ", CultureInfo.InvariantCulture));
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.subtract(M, M1).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.Subtract(M, M1).EnumerateElements().Select(Math.Abs).Max()}", e);
                 }
             }
 
@@ -1485,7 +1485,7 @@ namespace MathCore.Tests
             };
 
             Check(m, u0, w0, v0, 4.8e-14);
-            Check(Matrix.Array.Transponse(m), u0, w0, v0, 4.8e-14);
+            Check(Matrix.Array.Transpose(m), u0, w0, v0, 4.8e-14);
 
             m = new double[,]
             {
@@ -1513,7 +1513,7 @@ namespace MathCore.Tests
             };
 
             Check(m, u0, w0, v0, 4.62e-14);
-            Check(Matrix.Array.Transponse(m), v0, w0, u0, 4.62e-14);
+            Check(Matrix.Array.Transpose(m), v0, w0, u0, 4.62e-14);
 
             m = new double[,]
             {
@@ -1657,7 +1657,7 @@ namespace MathCore.Tests
         public void RowsToMatrix_ArgumentNullException_Test() => Matrix.Array.RowsArrayToMatrix(null);
 
         [TestMethod]
-        public void IsMatrixSungular_Test()
+        public void IsMatrixSingular_Test()
         {
             double[,] sungular =
             {
@@ -1672,21 +1672,21 @@ namespace MathCore.Tests
                 {7, 8, 0}
             };
 
-            var is_singular_matrix_sungular = Matrix.Array.IsMatrixSungular(sungular);
-            var is_not_singular_matrix_singular = Matrix.Array.IsMatrixSungular(not_sungular);
+            var is_singular_matrix_sungular = Matrix.Array.IsMatrixSingular(sungular);
+            var is_not_singular_matrix_singular = Matrix.Array.IsMatrixSingular(not_sungular);
 
             Assert.IsTrue(is_singular_matrix_sungular);
             Assert.IsFalse(is_not_singular_matrix_singular);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void IsMatrixSungular_ArgumentNullException_Test() => Matrix.Array.IsMatrixSungular(null);
+        public void IsMatrixSingular_ArgumentNullException_Test() => Matrix.Array.IsMatrixSingular(null);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void IsMatrixSungular_EmptyMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSungular(new double[0, 0]);
+        public void IsMatrixSingular_EmptyMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSingular(new double[0, 0]);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void IsMatrixSungular_NotrectangularMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSungular(new double[3, 5]);
+        public void IsMatrixSingular_NotrectangularMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSingular(new double[3, 5]);
 
         [TestMethod]
         public void Rank_Test()
@@ -2253,7 +2253,7 @@ namespace MathCore.Tests
         public void GetColsCount_ArgumentNullException_Test() => Matrix.Array.GetColsCount(null, out _);
 
         [TestMethod]
-        public void Transponse_Test()
+        public void Transpose_Test()
         {
             double[,] a =
             {
@@ -2270,16 +2270,16 @@ namespace MathCore.Tests
                 { 3, 6, 9, 12 }
             };
 
-            var actual = Matrix.Array.Transponse(a);
+            var actual = Matrix.Array.Transpose(a);
 
             CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void Transponse_ArgumentNullException_Test() => Matrix.Array.Transponse(null);
+        public void Transpose_ArgumentNullException_Test() => Matrix.Array.Transpose(null);
 
         [TestMethod]
-        public void TransponseOut_Test()
+        public void TransposeOut_Test()
         {
             double[,] a =
             {
@@ -2297,21 +2297,21 @@ namespace MathCore.Tests
             };
 
             var actual = new double[a.GetLength(1), a.GetLength(0)];
-            Matrix.Array.Transponse(a, actual);
+            Matrix.Array.Transpose(a, actual);
 
             CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void TransponseOut_Input_ArgumentNullException_Test()
+        public void TransposeOut_Input_ArgumentNullException_Test()
         {
             double[,] a = null;
             var actual = new double[3, 4];
-            Matrix.Array.Transponse(a, actual);
+            Matrix.Array.Transpose(a, actual);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void TransponseOut_Output_ArgumentNullException_Test()
+        public void TransposeOut_Output_ArgumentNullException_Test()
         {
             double[,] a =
             {
@@ -2321,11 +2321,11 @@ namespace MathCore.Tests
                 { 10,11,12 }
             };
             double[,] actual = null;
-            Matrix.Array.Transponse(a, actual);
+            Matrix.Array.Transpose(a, actual);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void TransponseOut_Incorrect_N_Output_ArgumentException_Test()
+        public void TransposeOut_Incorrect_N_Output_ArgumentException_Test()
         {
             double[,] a =
             {
@@ -2335,11 +2335,11 @@ namespace MathCore.Tests
                 { 10,11,12 }
             };
             double[,] actual = new double[a.GetLength(1), 1];
-            Matrix.Array.Transponse(a, actual);
+            Matrix.Array.Transpose(a, actual);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void TransponseOut_Incorrect_M_Output_ArgumentException_Test()
+        public void TransposeOut_Incorrect_M_Output_ArgumentException_Test()
         {
             double[,] a =
             {
@@ -2349,7 +2349,7 @@ namespace MathCore.Tests
                 { 10,11,12 }
             };
             double[,] actual = new double[1, a.GetLength(0)];
-            Matrix.Array.Transponse(a, actual);
+            Matrix.Array.Transpose(a, actual);
         }
 
         [TestMethod]

@@ -964,11 +964,11 @@ namespace MathCore.Extensions.Expressions
                 if (IsZero((expr.Left as cEx)?.Value)) return expr.Left;
                 if (IsUnit((expr.Right as cEx)?.Value)) return expr.Left;
 
-                return DivadeValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
+                return DivideValues((expr.Left as cEx)?.Value, (expr.Right as cEx)?.Value) ?? expr;
             }
 
             [CanBeNull]
-            private static Ex DivadeValues(object left, object right)
+            private static Ex DivideValues(object left, object right)
             {
                 if (!IsNumeric(left) || !IsNumeric(right)) return null;
                 if (left is byte)
