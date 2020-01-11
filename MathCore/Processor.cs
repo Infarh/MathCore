@@ -58,10 +58,10 @@ namespace System
         protected virtual void OnProcessStarted(EventArgs e) => ProcessStarted?.Invoke(this, e);
 
         /// <summary>Событие завершения работы процессора</summary>
-        public event EventHandler ProcessComplited;
+        public event EventHandler ProcessCompleted;
         /// <summary>Источник события завершения работы процессора</summary><param name="e">Параметры события</param>
         [DST]
-        protected virtual void OnProcessComplited(EventArgs e) => ProcessComplited.FastStart(this, e);
+        protected virtual void OnProcessCompleted(EventArgs e) => ProcessCompleted.FastStart(this, e);
 
         /// <summary>Событие, вознакающие при возникновении исключений в процессе работы процессора</summary>
         public event ExceptionEventHandler<Exception> Error;
@@ -383,7 +383,7 @@ namespace System
         {
             _StopTime = Now;
             _Monitor.Status = "Завершено";
-            OnProcessComplited(EventArgs.Empty);
+            OnProcessCompleted(EventArgs.Empty);
         }
 
         /// <summary>Завершающее действие процесса</summary>

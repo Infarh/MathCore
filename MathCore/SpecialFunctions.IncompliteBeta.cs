@@ -1,12 +1,15 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable IdentifierTypo
+// ReSharper disable CommentTypo
 
 namespace MathCore
 {
     public static partial class SpecialFunctions
     {
-        public static class IncompliteBeta
+        public static class IncompleteBeta
         {
+            // ReSharper disable CommentTypo
             /*************************************************************************
             Incomplete beta integral
 
@@ -48,25 +51,26 @@ namespace MathCore
             Cephes Math Library, Release 2.8:  June, 2000
             Copyright 1984, 1995, 2000 by Stephen L. Moshier
             *************************************************************************/
+            // ReSharper restore CommentTypo
             [DST]
-            public static double IncompleteBeta(double a, double b, double x)
+            public static double IncompleteBetaValue(double a, double b, double x)
             {
                 if(a <= 0) throw new ArgumentOutOfRangeException(nameof(a), "a должна быть > 0");
                 if(b <= 0) throw new ArgumentOutOfRangeException(nameof(b), "b должна быть > 0");
                 if(x < 0 || x > 1) throw new ArgumentOutOfRangeException(nameof(x), "a должна быть в пределах [0;1]");
 
                 const double big = 4.503599627370496e15;
-                const double biginv = 2.22044604925031308085e-16;
-                const double maxgam = 171.624376956302725;
-                const double minlog = __LogMinRealNumber;
-                const double maxlog = __LogMaxRealNumber;
+                const double big_inv = 2.22044604925031308085e-16;
+                const double max_gam = 171.624376956302725;
+                const double min_log = __LogMinRealNumber;
+                const double max_log = __LogMaxRealNumber;
 
                 if(Math.Abs(x - 0) < Eps) return 0;
                 if(Math.Abs(x - 1) < Eps) return 1;
                 var flag = 0;
 
                 if(b * x <= 1 && x <= .95)
-                    return IncompleteBetaPowerSeries(a, b, x, maxgam);
+                    return IncompleteBetaPowerSeries(a, b, x, max_gam);
 
                 var w = 1 - x;
 
@@ -85,17 +89,17 @@ namespace MathCore
 
                 if(flag == 1 && b * x <= 1 && x <= .95)
                 {
-                    t = IncompleteBetaPowerSeries(a, b, x, maxgam);
+                    t = IncompleteBetaPowerSeries(a, b, x, max_gam);
                     return 1 - (t <= Eps ? Eps : t);
                 }
 
                 var y = x * (a + b - 2) - (a - 1);
-                w = y < 0 ? IncompleteBetaFractionExpansion(a, b, x, big, biginv) : IncompleteBetaFractionExpansion2(a, b, x, big, biginv) / xc;
+                w = y < 0 ? IncompleteBetaFractionExpansion(a, b, x, big, big_inv) : IncompleteBetaFractionExpansion2(a, b, x, big, big_inv) / xc;
 
                 y = a * Math.Log(x);
                 t = b * Math.Log(xc);
 
-                if(a + b < maxgam && Math.Abs(y) < maxlog && Math.Abs(t) < maxlog)
+                if(a + b < max_gam && Math.Abs(y) < max_log && Math.Abs(t) < max_log)
                 {
                     t = Math.Pow(xc, b) * Math.Pow(x, a) / a * w * Gamma.G(a + b) / (Gamma.G(a) * Gamma.G(b));
                     return flag == 1 ? 1 - (t <= Eps ? Eps : t) : t;
@@ -103,15 +107,16 @@ namespace MathCore
 
                 y += t + Gamma.LnG(a + b, out _) - Gamma.LnG(a, out _) - Gamma.LnG(b, out _);
                 y += Math.Log(w / a);
-                t = y < minlog ? 0 : Math.Exp(y);
+                t = y < min_log ? 0 : Math.Exp(y);
                 if(flag == 1)
                     t = 1 - (t <= Eps ? Eps : t);
                 return t;
             }
 
 
+            // ReSharper disable CommentTypo
             /*************************************************************************
-            Inverse of imcomplete beta integral
+            Inverse of incomplete beta integral
 
             Given y, the function finds x such that
 
@@ -138,6 +143,7 @@ namespace MathCore
             Cephes Math Library Release 2.8:  June, 2000
             Copyright 1984, 1996, 2000 by Stephen L. Moshier
             *************************************************************************/
+            // ReSharper restore CommentTypo
 
             [DST]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0059:Ненужное присваивание значения", Justification = "<Ожидание>")]
@@ -200,7 +206,7 @@ namespace MathCore
                             bbb = b;
                             y0 = y;
                             x = aaa / (aaa + bbb);
-                            yyy = IncompleteBeta(aaa, bbb, x);
+                            yyy = IncompleteBetaValue(aaa, bbb, x);
                             mainlooppos = ihalve;
                             continue;
                         }
@@ -238,7 +244,7 @@ namespace MathCore
                         }
 
                         x = aaa / (aaa + bbb * Math.Exp(d));
-                        yyy = IncompleteBeta(aaa, bbb, x);
+                        yyy = IncompleteBetaValue(aaa, bbb, x);
                         yp = (yyy - y0) / y0;
 
                         if(Math.Abs(yp) < .2)
@@ -284,7 +290,7 @@ namespace MathCore
                                     if(Math.Abs(x) < Eps) break;
                                 }
 
-                                yyy = IncompleteBeta(aaa, bbb, x);
+                                yyy = IncompleteBetaValue(aaa, bbb, x);
                                 yp = (x1 - x0) / (x1 + x0);
 
                                 if(Math.Abs(yp) < dithresh)
@@ -333,7 +339,7 @@ namespace MathCore
                                         y0 = 1 - y;
                                     }
                                     x = 1 - x;
-                                    yyy = IncompleteBeta(aaa, bbb, x);
+                                    yyy = IncompleteBetaValue(aaa, bbb, x);
                                     x0 = 0;
                                     yl = 0;
                                     x1 = 1;
@@ -402,7 +408,7 @@ namespace MathCore
                     {
                         if(i <= 7)
                         {
-                            if(i != 0) yyy = IncompleteBeta(aaa, bbb, x);
+                            if(i != 0) yyy = IncompleteBetaValue(aaa, bbb, x);
 
                             if(yyy < yl)
                             {

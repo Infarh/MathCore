@@ -165,20 +165,20 @@ namespace System.IO
         /// <param name="DataStream">Поток - источник данных</param>
         /// <param name="BufferSize">Размер буфера чтения по умолчанию 1024 байта</param>
         /// <param name="Append">Флаг добавления данных в конец файла</param>
-        /// <param name="CompliteHandler">
+        /// <param name="CompleteHandler">
         /// Обработчик текущего положения коретки чтения данных из потока. 
         /// Вызывается после чтения данных в буфер и до помещения их в файл.
         /// Должен вернуть истину, что бы данные были переданы в файл и процесс был продолжен.
         /// </param>
-        /// <param name="OnComplite">Обработчик события завершения процесса записи данных</param>
+        /// <param name="OnComplete">Обработчик события завершения процесса записи данных</param>
         [DST]
         public static void WriteAllBytes(
             [NotNull] this FileInfo file,
             [NotNull] Stream DataStream,
             int BufferSize = 1024,
             bool Append = false,
-            [CanBeNull] Func<long, byte[], bool> CompliteHandler = null,
-            [CanBeNull] EventHandler<EventArgs<FileInfo, Stream>> OnComplite = null)
+            [CanBeNull] Func<long, byte[], bool> CompleteHandler = null,
+            [CanBeNull] EventHandler<EventArgs<FileInfo, Stream>> OnComplete = null)
         {
             var buffer = new byte[BufferSize];
             var write = true;
@@ -186,11 +186,11 @@ namespace System.IO
                 do
                 {
                     var read_count = DataStream.Read(buffer, 0, BufferSize);
-                    if (CompliteHandler != null) write = CompliteHandler(DataStream.Position, buffer);
+                    if (CompleteHandler != null) write = CompleteHandler(DataStream.Position, buffer);
                     if (write && read_count != 0) data.Write(buffer, 0, read_count);
                     else write = false;
                 } while (write);
-            OnComplite.Start(file, new EventArgs<FileInfo, Stream>(file, DataStream));
+            OnComplete.Start(file, new EventArgs<FileInfo, Stream>(file, DataStream));
         }
 
         /// <summary>Получить объект наблюдения за файлом</summary>

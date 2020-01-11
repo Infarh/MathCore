@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Linq.Reactive;
 using System.Threading;
+using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.CommandProcessor
 {
-    /// <summary>Пример использования класса команданого процессора</summary>
+    /// <summary>Пример использования класса командного процессора</summary>
     public static class TestCommandLineProcessor
     {
         /// <summary>Флаг обработки запросов пользователя</summary>
@@ -21,27 +24,29 @@ namespace MathCore.CommandProcessor
             Work = true;
             var processor = new CommandLineProcessor();
 
-            var start = processor
-                        .Where(c => c.Command.Name == "start")
-                        .ForeachAction(c => c.SetHandled())
-                        .ForeachAction(c => Console.Title = "Whait 5c...")
-                        .ForeachAction(c => Console.WriteLine("Started..."));
+            var start = ((processor
+                             .Where(c => c.Command.Name == "start")
+                             .ForeachAction(c => c.SetHandled()) ?? throw new InvalidOperationException())
+                        .ForeachAction(c => Console.Title = "Wait 5c...") ?? throw new InvalidOperationException())
+                        .ForeachAction(c => Console.WriteLine("Started..."))
+                        ?? throw new InvalidOperationException();
 
-            var stop = start.WhaitAsync(TimeSpan.FromSeconds(5))
-                        .ForeachAction(c => Console.Title = "Stoped.")
-                        .ForeachAction(c => Console.WriteLine("Stoped!"));
+            var stop = (start.WhitAsync(TimeSpan.FromSeconds(5))
+                           .ForeachAction(c => Console.Title = "Stopped.") ?? throw new InvalidOperationException())
+                        .ForeachAction(c => Console.WriteLine("Stopped!"))
+                       ?? throw new InvalidOperationException();
 
 
-            var action = processor
-                        .Where(c => c.Command.Name == "action")
-                        .Take(start, stop, false)
-                        .ForeachAction(c => c.SetHandled())
+            var action = (processor
+                             .Where(c => c.Command.Name == "action")
+                             .Take(start, stop, false)
+                             .ForeachAction(c => c.SetHandled()) ?? throw new InvalidOperationException())
                         .ForeachAction(c => c.Command.Argument.ToSeparatedStr(", ").ToConsoleLN());
 
             var t = processor.FromEvent<CommandEventArgs>("CommandProcess");
 
             processor["exit"] += (c, i, cc) => Work = false;
-            processor["help"] += (c, i, cc) => processor.GetRegistredCommands().Foreach(Console.WriteLine);
+            processor["help"] += (c, i, cc) => processor.GetRegisteredCommands().Foreach(Console.WriteLine);
 
             processor.CommandProcess += ExecuteCommand;
             processor.UnhandledCommand += UnknownCommandInformator;
@@ -52,26 +57,27 @@ namespace MathCore.CommandProcessor
                 processor.Process(Console.ReadLine());
             }
 
-            Console.WriteLine("Programm complited.");
+            Console.WriteLine("Program completed.");
             Thread.Sleep(1500);
         }
 
-        public static void Test1()
-        {
-            var commands = CommandLineProcessor.ParseConsole().ToArray();
-            Console.WriteLine("Programm complited.");
-            Thread.Sleep(1500);
-        }
+        //public static void Test1()
+        //{
+        //    var commands = CommandLineProcessor.ParseConsole().ToArray();
+        //    Console.WriteLine("Program completed.");
+        //    Thread.Sleep(1500);
+        //}
 
         /// <summary>Обработчик необработанных команд</summary>
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент, содержащий информацию о необработанной команде</param>
-        private static void UnknownCommandInformator(object Sender, CommandEventArgs e) => Console.WriteLine(e.Command.ToFormattedString("Unknown command \"{0}\""));
+        private static void UnknownCommandInformator(object Sender, [NotNull] CommandEventArgs e) => 
+            Console.WriteLine(e.Command.ToFormattedString("Unknown command \"{0}\""));
 
         /// <summary>Обработчик команды</summary>
         /// <param name="sender">Источник события</param>
         /// <param name="e">Аргумент, содержащий информацию о команде</param>
-        private static void ExecuteCommand(object sender, CommandEventArgs e)
+        private static void ExecuteCommand(object sender, [NotNull] CommandEventArgs e)
         {
             var processor = (CommandLineProcessor)sender;
             switch(e.Command.Name.ToLower())
@@ -85,7 +91,7 @@ namespace MathCore.CommandProcessor
                     e.Handled = true;
                     break;
                 case "help":
-                    processor.GetRegistredCommands().ToSeparatedStr("\r\n").ToConsole();
+                    processor.GetRegisteredCommands().ToSeparatedStr("\r\n").ToConsole();
                     break;
             }
         }
@@ -97,7 +103,7 @@ namespace MathCore.CommandProcessor
             switch(SetArg.Name.ToLower())
             {
                 case "prompt":
-                    Prompt = SetArg.Values is null || SetArg.Values.Length == 0 ? "" : SetArg.Values[0];
+                    Prompt = SetArg.Values is null || SetArg.Values.Length == 0 ? string.Empty : SetArg.Values[0];
                     break;
                 case "work":
                     if(bool.TryParse(SetArg.Value, out var work))

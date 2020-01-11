@@ -1,6 +1,6 @@
 ﻿using MathCore;
 using MathCore.Annotations;
-using MathCore.Evulations;
+using MathCore.Evaluations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -110,7 +110,7 @@ namespace System
         /// <param name="obj">Преобразуемый объект</param>
         /// <param name="Format">Строка форматирования</param>
         /// <returns>Форматированная строка текстового представления объекта</returns>
-        [DST, StringFormatMethod("Format"), NotNull]
+        [DST/*, StringFormatMethod("Format")*/, NotNull]
         public static string ToFormattedString(this object obj, [NotNull] string Format = "{0}") => string.Format(Format, obj);
 
         /// <summary>Преобразование объекта в форматированную строку</summary>

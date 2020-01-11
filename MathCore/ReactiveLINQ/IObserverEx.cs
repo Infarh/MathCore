@@ -8,7 +8,7 @@
         event Action<T> Next;
 
         /// <summary>Событие завершения последовательности</summary>
-        event Action Complited;
+        event Action Completed;
 
         /// <summary>Событие сброса последовательности</summary>
         event Action Reset;

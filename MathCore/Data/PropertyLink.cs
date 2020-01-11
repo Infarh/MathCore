@@ -196,7 +196,7 @@ namespace MathCore.Data
             string.Format("{0} {1}:({2}).{3} -{8}-> {4} {5}:({6}).{7}",
                 SourcePropertyType.Name, SourceType.Name, Source, _SourcePropertyDescriptor.Name,
                 DestinationPropertyType.Name, DestinationType.Name, Destination, _DestinationPropertyDescriptor.Name,
-                _Enable ? "" : "x");
+                _Enable ? string.Empty : "x");
 
         /* -------------------------------------------------------------------------------- */
     }

@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Linq;
+using MathCore.Annotations;
+
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.CommandProcessor
 {
@@ -24,7 +29,7 @@ namespace MathCore.CommandProcessor
         /// <summary>Аргумент команды</summary>
         /// <param name="ArgStr">Строковое описание аргумента</param>
         /// <param name="ValueSplitter">Разделитель имени аргумента и значения</param>
-        public Argument(string ArgStr, char ValueSplitter = '=')
+        public Argument([NotNull] string ArgStr, char ValueSplitter = '=')
             : this()
         {
             var ArgItems = ArgStr.Split(ValueSplitter);
@@ -37,6 +42,7 @@ namespace MathCore.CommandProcessor
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление аргумента</returns>
-        public override string ToString() => $"{Name}{(Values is null || Values.Length == 0 ? "" : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
+        [NotNull]
+        public override string ToString() => $"{Name}{(Values is null || Values.Length == 0 ? string.Empty : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
     }
 }

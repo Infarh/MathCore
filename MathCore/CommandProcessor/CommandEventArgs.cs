@@ -1,4 +1,5 @@
 ﻿using System;
+using MathCore.Annotations;
 
 namespace MathCore.CommandProcessor
 {
@@ -16,7 +17,8 @@ namespace MathCore.CommandProcessor
 
         /// <summary>Строковое представление</summary>
         /// <returns>Строковое представление</returns>
-        public override string ToString() => string.Format("Command({0}/{3}):> {1}{2}", Index + 1, Command, Handled ? "- processed" : "", Commands.Length);
+        [NotNull]
+        public override string ToString() => string.Format("Command({0}/{3}):> {1}{2}", Index + 1, Command, Handled ? "- processed" : string.Empty, Commands.Length);
 
         public void SetHandled() => Handled = true;
     }

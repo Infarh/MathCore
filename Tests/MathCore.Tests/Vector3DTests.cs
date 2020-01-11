@@ -23,9 +23,10 @@ namespace MathCore.Tests
 
         private static void TestVectorsComponents(double x, double y, double z, Vector3D r, double delta = double.Epsilon)
         {
-            Assert.AreEqual(x, r.X, delta, "\r\nКомпонента вектора r.X = {0} не соответствует требуемому значению {1}", r.X, x);
-            Assert.AreEqual(y, r.Y, delta, "\r\nКомпонента вектора r.Y = {0} не соответствует требуемому значению {1}", r.Y, y);
-            Assert.AreEqual(z, r.Z, delta, "\r\nКомпонента вектора r.Z = {0} не соответствует требуемому значению {1}", r.Z, z);
+            var (rx, ry, rz) = r;
+            Assert.AreEqual(x, rx, delta, "\r\nКомпонента вектора r.X = {0} не соответствует требуемому значению {1}", rx, x);
+            Assert.AreEqual(y, ry, delta, "\r\nКомпонента вектора r.Y = {0} не соответствует требуемому значению {1}", ry, y);
+            Assert.AreEqual(z, rz, delta, "\r\nКомпонента вектора r.Z = {0} не соответствует требуемому значению {1}", rz, z);
         }
 
         /// <summary>Тест общего конструктора 3-х-мерного вектора</summary>

@@ -13,7 +13,7 @@ namespace System.Linq.Reactive
             (observer as IObserverEx<T>)?.OnReset();
             try
             {
-                _Collection.OnComplite(observer.OnCompleted).Foreach(observer.OnNext);
+                _Collection.OnComplete(observer.OnCompleted).Foreach(observer.OnNext);
             } catch(Exception e)
             {
                 observer.OnError(e);

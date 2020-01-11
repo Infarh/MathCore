@@ -1,12 +1,14 @@
 ﻿using System;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 namespace MathCore.Vectors
 {
     public readonly struct Basis3D
     {
-        public static readonly Basis3D Evclid = new Basis3D(
+        public static readonly Basis3D Euclid = new Basis3D(
             1, 0, 0,
             0, 1, 0,
             0, 0, 1);
@@ -35,13 +37,13 @@ namespace MathCore.Vectors
                 (Positive ? 1 : -1) * Math.Sin(Angle), Math.Cos(Angle), 0,
                 0, 0, 1);
 
-        public static Basis3D Rotate(double alpha, double betta, double gamma)
+        public static Basis3D Rotate(double alpha, double beta, double gamma)
         {
             var sin_a = Math.Sin(alpha);
             var cos_a = Math.Cos(alpha);
 
-            var sin_b = Math.Sin(betta);
-            var cos_b = Math.Cos(betta);
+            var sin_b = Math.Sin(beta);
+            var cos_b = Math.Cos(beta);
 
             var sin_g = Math.Sin(gamma);
             var cos_g = Math.Cos(gamma);
@@ -58,9 +60,7 @@ namespace MathCore.Vectors
             var cos_t = Math.Cos(theta);
             var cos_t1 = 1 - cos_t;
 
-            var x = v.X;
-            var y = v.Y;
-            var z = v.Z;
+            var (x, y, z) = v;
 
             var xy = x * y;
             var xz = x * z;

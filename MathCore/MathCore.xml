@@ -1876,16 +1876,16 @@
         <member name="E:MathCore.GCWacher.Approaches">
             <summary>Событие запуска процесса сборки мусора</summary>
         </member>
-        <member name="E:MathCore.GCWacher.__Complite">
+        <member name="E:MathCore.GCWacher.__Complete">
             <summary>Событие завершения процесса сборки мусора</summary>
         </member>
-        <member name="E:MathCore.GCWacher.Complite">
+        <member name="E:MathCore.GCWacher.Complete">
             <summary>Событие завершения процесса сборки мусора</summary>
         </member>
         <member name="M:MathCore.GCWacher.OnApproaches">
             <summary>Генерация осбытия начала сборки мусора</summary>
         </member>
-        <member name="M:MathCore.GCWacher.OnComplite">
+        <member name="M:MathCore.GCWacher.OnComplete">
             <summary>Генерация осбытия окончания сборки мусора</summary>
         </member>
         <member name="F:MathCore.GCWacher.__GCWacher">
@@ -3107,8 +3107,8 @@
             <param name="Constant">Добавляемое значение, как константа</param>
         </member>
         <member name="M:MathCore.MathParser.ConstantsCollection.GetNames">
-            <summary>Получить имена констант колеекции</summary>
-            <returns>Перечисление имён констант колеекции</returns>
+            <summary>Получить имена констант коллекции</summary>
+            <returns>Перечисление имён констант коллекции</returns>
         </member>
         <member name="M:MathCore.MathParser.ConstantsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#ExpressionVariabel}#GetEnumerator">
             <summary>Получить перечислитеь констант коллекци</summary>
@@ -5032,7 +5032,7 @@
             <returns>Переменная с указанным индексом</returns>
         </member>
         <member name="P:MathCore.MathParser.VariabelsCollection.Names">
-            <summary>Перечисление всех имён переменных колеекции</summary>
+            <summary>Перечисление всех имён переменных коллекции</summary>
         </member>
         <member name="M:MathCore.MathParser.VariabelsCollection.#ctor(MathCore.MathParser.MathExpression)">
             <summary>Инициализация новой коллекции переменных</summary>
@@ -12562,69 +12562,69 @@
             <param name="ActionBefore">Действие, выполняемое до начала перечисления элементов последовательности</param>
             <returns>Исходная последовательность элементов</returns>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.OnComplite``1(System.Collections.Generic.IEnumerable{``0},System.Action)">
+        <member name="M:System.Linq.IEnumerableExtensions.OnComplete``1(System.Collections.Generic.IEnumerable{``0},System.Action)">
             <summary>Выполнение действия по завершению перечисления коллекции</summary>
             <typeparam name="T">Тип элементов коллекции</typeparam>
             <param name="collection">Коллекция элементов</param>
-            <param name="CompliteAction">ДЕйствие, выполняемое по завершению перечисления коллекции</param>
+            <param name="CompleteAction">ДЕйствие, выполняемое по завершению перечисления коллекции</param>
             <returns>Исходная последовательность элементов</returns>
         </member>
-        <member name="T:System.Linq.IEnumerableExtensions.EnumerableHystory`1">
+        <member name="T:System.Linq.IEnumerableExtensions.EnumerableHistory`1">
             <summary>История перечисления последовательности элементов</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
         </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumerableHystory`1._HystoryLength">
+        <member name="F:System.Linq.IEnumerableExtensions.EnumerableHistory`1._HistoryLength">
             <summary>Длина истории</summary>
         </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumerableHystory`1._Queue">
+        <member name="F:System.Linq.IEnumerableExtensions.EnumerableHistory`1._Queue">
             <summary>Список элементов в истории</summary>
         </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumerableHystory`1._ObservableObject">
+        <member name="F:System.Linq.IEnumerableExtensions.EnumerableHistory`1._ObservableObject">
             <summary>Объект-наблюдения за историей</summary>
         </member>
-        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Current">
+        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Current">
             <summary>Текущий элемент перечисления</summary>
         </member>
-        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Length">
+        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Length">
             <summary>Длина истории</summary>
         </member>
-        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Count">
+        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Count">
             <summary>Количество элементов в истории</summary>
         </member>
-        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Item(System.Int32)">
+        <member name="P:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Item(System.Int32)">
             <summary>Доступ к элементам истории начиная с текущего</summary>
             <param name="i">Индекс элемента в истории, где 0 - текущий элемент</param>
             <returns>Элемент истории перечисления</returns>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHystory`1.#ctor(System.Int32)">
-            <summary>Инициализация нового экземпляра <see cref="T:System.Linq.IEnumerableExtensions.EnumerableHystory`1"/></summary>
-            <param name="HystoryLength">Длина истории</param>
+        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHistory`1.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Linq.IEnumerableExtensions.EnumerableHistory`1"/></summary>
+            <param name="HistoryLength">Длина истории</param>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Check">
+        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Check">
             <summary>Удаление лишних элементов из истории</summary>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Add(`0)">
+        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Add(`0)">
             <summary>Добавить элемент в историю перечисления</summary>
             <param name="item">Добавляемый элемент</param>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHystory`1.GetEnumerator">
+        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHistory`1.GetEnumerator">
             <summary>Получить перечислитель истории элементов</summary><returns>Перечислитель истории элементов</returns>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHystory`1.System#Collections#IEnumerable#GetEnumerator">
+        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHistory`1.System#Collections#IEnumerable#GetEnumerator">
             <summary>Получить перечислитель истории элементов</summary><returns>Перечислитель истории элементов</returns>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHystory`1.Subscribe(System.IObserver{`0})">
+        <member name="M:System.Linq.IEnumerableExtensions.EnumerableHistory`1.Subscribe(System.IObserver{`0})">
             <summary>Подписка на изменения истории перечисления</summary>
             <param name="observer">Объект-подписчик, уведомляемый об изменениях в истории перечисления</param>
             <returns>ОБъект, осуществляющий возможность отписаться от уведомлений изменения истории перечисления</returns>
         </member>
-        <member name="M:System.Linq.IEnumerableExtensions.SelectWithHystory``2(System.Collections.Generic.IEnumerable{``0},System.Func{System.Linq.IEnumerableExtensions.EnumerableHystory{``0},``1},System.Int32)">
+        <member name="M:System.Linq.IEnumerableExtensions.SelectWithHistory``2(System.Collections.Generic.IEnumerable{``0},System.Func{System.Linq.IEnumerableExtensions.EnumerableHistory{``0},``1},System.Int32)">
             <summary>Преобразование исходной последовательности элементов с учётом указанного размера истории перечисления</summary>
             <typeparam name="TIn">Тип элементов исходной коллекции</typeparam>
             <typeparam name="TOut">Тип элементов результирующей коллекции</typeparam>
             <param name="collection">Исходная коллекция элементов</param>
             <param name="Selector">Метод преобразования элементов коллекции на основе истории их перечисления</param>
-            <param name="HystoryLength">Максимальная длина истории перечисления</param>
+            <param name="HistoryLength">Максимальная длина истории перечисления</param>
             <returns>Коллекция элементов, сформированная на основе исходной с учётом истории процесса перчисления исходной коллекции</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.GetStatistic(System.Collections.Generic.IEnumerable{System.Double},System.Int32)">
@@ -12807,16 +12807,16 @@
             <summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
             <param name="collection">Коллекция элементов</param>
             <param name="Action">Действие над элементом</param>
-            <param name="index">Смещение индекса элемента колеекции</param>
-            <typeparam name="T">Тип элемента колекции</typeparam>
+            <param name="index">Смещение индекса элемента коллекции</param>
+            <typeparam name="T">Тип элемента коллекции</typeparam>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Foreach``2(System.Collections.Generic.IEnumerable{``0},``1,System.Action{``0,System.Int32,``1},System.Int32)">
             <summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
             <param name="collection">Коллекция элементов</param>
             <param name="p">Параметр действия</param>
             <param name="Action">Действие над элементом</param>
-            <param name="index">Смещение индекса элемента колеекции</param>
-            <typeparam name="T">Тип элемента колекции</typeparam>
+            <param name="index">Смещение индекса элемента коллекции</param>
+            <typeparam name="T">Тип элемента коллекции</typeparam>
             <typeparam name="TP">Тип параметра процесса перебора</typeparam>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Foreach``3(System.Collections.Generic.IEnumerable{``0},``1,``2,System.Action{``0,System.Int32,``1,``2},System.Int32)">
@@ -12825,8 +12825,8 @@
             <param name="p1">Параметр действия 1</param>
             <param name="p2">Параметр действия 2</param>
             <param name="Action">Действие над элементом</param>
-            <param name="index">Смещение индекса элемента колеекции</param>
-            <typeparam name="T">Тип элемента колекции</typeparam>
+            <param name="index">Смещение индекса элемента коллекции</param>
+            <typeparam name="T">Тип элемента коллекции</typeparam>
             <typeparam name="TP1">Тип параметра процесса перебора 1</typeparam>
             <typeparam name="TP2">Тип параметра процесса перебора 2</typeparam>
         </member>
@@ -12837,8 +12837,8 @@
             <param name="p2">Параметр действия 2</param>
             <param name="p3">Параметр действия 3</param>
             <param name="Action">Действие над элементом</param>
-            <param name="index">Смещение индекса элемента колеекции</param>
-            <typeparam name="T">Тип элемента колекции</typeparam>
+            <param name="index">Смещение индекса элемента коллекции</param>
+            <typeparam name="T">Тип элемента коллекции</typeparam>
             <typeparam name="TP1">Тип параметра процесса перебора 1</typeparam>
             <typeparam name="TP2">Тип параметра процесса перебора 2</typeparam>
             <typeparam name="TP3">Тип параметра процесса перебора 3</typeparam>
@@ -12904,7 +12904,7 @@
             <summary>Текцущий элемент коллекции значений функции</summary>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.EnumirableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumirator.#ctor(System.Collections.Generic.IEnumerator{`0},System.Func{`0,`1})">
-            <summary>Инициализация нового перечислителя колеекции рассчитанных значений функции</summary>
+            <summary>Инициализация нового перечислителя коллекции рассчитанных значений функции</summary>
             <param name="Enumerator">Перечислитель коллекции аргументов области определения</param>
             <param name="f">Вычисляемая функция</param>
         </member>
@@ -13092,7 +13092,7 @@
         <member name="E:System.Linq.Reactive.IObserverEx`1.Next">
             <summary>Событие появления следующего объекта последовательности</summary>
         </member>
-        <member name="E:System.Linq.Reactive.IObserverEx`1.Complited">
+        <member name="E:System.Linq.Reactive.IObserverEx`1.Completed">
             <summary>Событие завершения последовательности</summary>
         </member>
         <member name="E:System.Linq.Reactive.IObserverEx`1.Reset">
@@ -13211,7 +13211,7 @@
             <typeparam name="T">Тип исходных объектов события</typeparam>
             <typeparam name="Q">Тип события управляющей последовательности</typeparam>
             <param name="source">Исходный объект-наблюдатель</param>
-            <param name="Selector">Обект-наблюдатель управляющей последовательности</param>
+            <param name="Selector">Объект-наблюдатель управляющей последовательности</param>
             <param name="IsOpen">Исходное состояние выходной последовательности</param>
             <returns>Объект-наблюдатель управляемый управляющей последовательностью</returns>
         </member>
@@ -13220,21 +13220,21 @@
             <typeparam name="T">Тип исходных объектов события</typeparam>
             <typeparam name="Q">Тип события управляющей последовательности</typeparam>
             <param name="source">Исходный объект-наблюдатель</param>
-            <param name="Selector">Обект-наблюдатель управляющей последовательности</param>
+            <param name="Selector">Объект-наблюдатель управляющей последовательности</param>
             <param name="IsOpen">Исходное состояние выходной последовательности</param>
             <returns>Объект-наблюдатель управляемый управляющей последовательностью</returns>
         </member>
         <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="observable">Исходный объект-наблюдатель</param>
             <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
         <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0},System.Func{``0,System.Boolean})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="observable">Исходный объект-наблюдатель</param>
             <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <param name="where">Метод выборки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
@@ -13242,14 +13242,14 @@
         <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0,System.Int32})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="observable">Исходный объект-наблюдатель</param>
             <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
         <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0,System.Int32},System.Func{``0,System.Int32,System.Boolean})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="observable">Исходный объект-наблюдатель</param>
             <param name="action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <param name="where">Метод выборки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
@@ -13257,21 +13257,21 @@
         <member name="M:System.Linq.Reactive.ObservableExtensions.OnError``1(System.IObservable{``0},System.Action{System.Exception})">
             <summary>Метод обработки события <see cref="T:System.Exception"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="observable">Исходный объект-наблюдатель</param>
             <param name="OnError">Метод обработки события <see cref="T:System.Exception"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
-        <member name="M:System.Linq.Reactive.ObservableExtensions.OnComplited``1(System.IObservable{``0},System.Action)">
-            <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Complited"/></summary>
+        <member name="M:System.Linq.Reactive.ObservableExtensions.OnCompleted``1(System.IObservable{``0},System.Action)">
+            <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Completed"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
-            <param name="OnComplited">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Complited"/></param>
+            <param name="observable">Исходный объект-наблюдатель</param>
+            <param name="OnCompleted">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Completed"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
         <member name="M:System.Linq.Reactive.ObservableExtensions.OnReset``1(System.IObservable{``0},System.Action)">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Reset"/></summary>
             <typeparam name="T">Тип объектов наблюдения</typeparam>
-            <param name="observable">Исходный обект-наблюдатель</param>
+            <param name="observable">Исходный объект-наблюдатель</param>
             <param name="OnReset">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Reset"/></param>
             <returns>Исходный объект-наблюдатель</returns>
         </member>
@@ -13368,7 +13368,7 @@
         <member name="E:System.Linq.Reactive.SimpleObserverEx`1.Next">
             <summary>События появления следующего объекта в последовательности</summary>
         </member>
-        <member name="E:System.Linq.Reactive.SimpleObserverEx`1.Complited">
+        <member name="E:System.Linq.Reactive.SimpleObserverEx`1.Completed">
             <summary>Событие завершения последовательности</summary>
         </member>
         <member name="E:System.Linq.Reactive.SimpleObserverEx`1.Reset">
@@ -15425,12 +15425,12 @@
             <param name="DataStream">Поток - источник данных</param>
             <param name="BufferSize">Размер буфера чтения по умолчанию 1024 байта</param>
             <param name="Append">Флаг добавления данных в конец файла</param>
-            <param name="CompliteHandler">
+            <param name="CompleteHandler">
             Обработчик текущего положения коретки чтения данных из потока. 
             Вызывается после чтения данных в буфер и до помещения их в файл.
             Должен вернуть истину, что бы данные были переданы в файл и процесс был продолжен.
             </param>
-            <param name="OnComplite">Обработчик события завершения процесса записи данных</param>
+            <param name="OnComplete">Обработчик события завершения процесса записи данных</param>
         </member>
         <member name="M:System.IO.FileInfoExtensions.GetWatcher(System.IO.FileInfo)">
             <summary>Получить объект наблюдения за файлом</summary>
@@ -16971,10 +16971,10 @@
         <member name="M:System.Processor.OnProcessStarted(System.EventArgs)">
             <summary>Источник события запуска процессора</summary><param name="e">Параметры события</param>
         </member>
-        <member name="E:System.Processor.ProcessComplited">
+        <member name="E:System.Processor.ProcessCompleted">
             <summary>Событие завершения работы процессора</summary>
         </member>
-        <member name="M:System.Processor.OnProcessComplited(System.EventArgs)">
+        <member name="M:System.Processor.OnProcessCompleted(System.EventArgs)">
             <summary>Источник события завершения работы процессора</summary><param name="e">Параметры события</param>
         </member>
         <member name="E:System.Processor.Error">
@@ -17220,7 +17220,7 @@
         <member name="P:System.StreamingObjectReader`1.DataStream">
             <summary>Потока данных</summary>
         </member>
-        <member name="P:System.StreamingObjectReader`1.Complited">
+        <member name="P:System.StreamingObjectReader`1.Completed">
             <summary>Процент готовности</summary>
         </member>
         <member name="P:System.StreamingObjectReader`1.Speed">

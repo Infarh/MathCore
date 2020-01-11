@@ -180,7 +180,7 @@ namespace MathCore
                 {
                     if (Math.Abs(t - 0) < Eps) return .5;
                     if (t < -2)
-                        return .5 * IncompliteBeta.IncompleteBeta(.5 * k, .5, k / (k + t * t));
+                        return .5 * IncompleteBeta.IncompleteBetaValue(.5 * k, .5, k / (k + t * t));
 
                     var x = t < 0 ? -t : t;
 
@@ -234,7 +234,7 @@ namespace MathCore
                     if (p > .25 && p < .75)
                     {
                         if (Math.Abs(p - .5) < Eps) return 0;
-                        z = IncompliteBeta.IncompleteBetaInversed(.5, .5 * rk, Math.Abs(1 - 2 * p));
+                        z = IncompleteBeta.IncompleteBetaInversed(.5, .5 * rk, Math.Abs(1 - 2 * p));
                         var t = Math.Sqrt(rk * z / (1 - z));
                         return p < 0 ? -t : t;
                     }
@@ -246,7 +246,7 @@ namespace MathCore
                         rflg = 1;
                     }
 
-                    z = IncompliteBeta.IncompleteBetaInversed(.5 * rk, .5, 2 * p);
+                    z = IncompleteBeta.IncompleteBetaInversed(.5 * rk, .5, 2 * p);
                     return __MaxRealNumber * z < rk ? rflg * __MaxRealNumber : rflg * Math.Sqrt(rk / z - rk);
                 }
 

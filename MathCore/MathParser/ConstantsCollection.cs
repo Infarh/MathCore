@@ -53,8 +53,8 @@ namespace MathCore.MathParser
             return true;
         }
 
-        /// <summary>Получить имена констант колеекции</summary>
-        /// <returns>Перечисление имён констант колеекции</returns>
+        /// <summary>Получить имена констант коллекции</summary>
+        /// <returns>Перечисление имён констант коллекции</returns>
         [NotNull]
         public IEnumerable<string> GetNames() => _Items.Select(v => v.Name);
 

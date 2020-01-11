@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Reactive;
+using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedMember.Global
+
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace MathCore.CommandProcessor
 {
@@ -11,14 +17,14 @@ namespace MathCore.CommandProcessor
     /// <summary>Командный процессор</summary>
     public class CommandLineProcessor : IObservable<CommandEventArgs>
     {
-        public static IEnumerable<Command> ParseConsole(string Prompt = ">", Action<CommandLineProcessor> Initializer = null)
+        public static IEnumerable<Command> ParseConsole(string Prompt = ">", [CanBeNull] Action<CommandLineProcessor> Initializer = null)
         {
             var work = true;
             var processor = new CommandLineProcessor();
             processor["exit"] += (command, index, commands) => work = false;
-            processor["help"] += (command, index, commands) => processor.GetRegistredCommands().Foreach(Console.WriteLine);
+            processor["help"] += (command, index, commands) => processor.GetRegisteredCommands().Foreach(Console.WriteLine);
             var set = processor["set"];
-            set["prompt"] += (command, index, commands, arg) => Prompt = arg.Values is null || arg.Values.Length == 0 ? "" : arg.Values[0];
+            set["prompt"] += (command, index, commands, arg) => Prompt = arg.Values is null || arg.Values.Length == 0 ? string.Empty : arg.Values[0];
             set["work"] += (command, index, commands, arg) => {
                 if(bool.TryParse(arg.Value, out var can_work)) work = can_work; };
 
@@ -35,10 +41,10 @@ namespace MathCore.CommandProcessor
         public event EventHandler<CommandEventArgs> CommandProcess;
 
         /// <summary>Обработка команды</summary>
-        /// <param name="Arg">Аргумент, содержащий сведенья о команде</param>
-        protected virtual void OnCommandProcess(CommandEventArgs Arg)
+        /// <param name="Arg">Аргумент, содержащий сведения о команде</param>
+        protected virtual void OnCommandProcess([NotNull] CommandEventArgs Arg)
         {
-            if(IsRegistredCommand(Arg.Command.Name))
+            if(IsRegisteredCommand(Arg.Command.Name))
             {
                 this[Arg.Command.Name].Foreach(Arg, (action, i, arg) => action.Invoke(arg.Command, arg.Index, arg.Commands));
                 Arg.Handled = true;
@@ -73,7 +79,7 @@ namespace MathCore.CommandProcessor
         public event EventHandler<CommandEventArgs> UnhandledCommand;
 
         /// <summary>Генерация события обнаружения необработанной команды</summary>
-        /// <param name="Arg">Аргумент события, содержащий сведенья о команде</param>
+        /// <param name="Arg">Аргумент события, содержащий сведения о команде</param>
         protected virtual void OnUnhandledCommand(CommandEventArgs Arg)
         {
             var handlers = UnhandledCommand;
@@ -107,7 +113,7 @@ namespace MathCore.CommandProcessor
         /// <summary>Доступ к списку обработчиков команды по её имени</summary>
         /// <param name="CommandName">Имя команды</param>
         /// <returns>Список обработчиков команды</returns>
-        public CommandHandlersList this[string CommandName]
+        public CommandHandlersList this[[NotNull] string CommandName]
         {
             get
             {
@@ -117,12 +123,12 @@ namespace MathCore.CommandProcessor
             }
             set
             {
-                if(IsRegistredCommand(CommandName))
+                if(IsRegisteredCommand(CommandName))
                 {
                     if(value != null)
                         _CommandHandlers[CommandName] = value;
                     else
-                        ClaerCommandHandlers(CommandName);
+                        ClearCommandHandlers(CommandName);
                 }
                 else if(value != null)
                     _CommandHandlers.Add(CommandName, value);
@@ -145,7 +151,8 @@ namespace MathCore.CommandProcessor
 
         /// <summary>Обработать команду</summary>
         /// <param name="CommandLine">Командная строка</param>
-        public IEnumerable<Command> Process(params string[] CommandLine)
+        [NotNull]
+        public IEnumerable<Command> Process([NotNull] params string[] CommandLine)
         {
             var commands = CommandLine.SelectMany(str => str.Split(CommandSplitter))
                 .Select(s => s.ClearSystemSymbolsAtBeginAndEnd())
@@ -153,38 +160,41 @@ namespace MathCore.CommandProcessor
                 .Select(CommandStr => new Command(CommandStr, CommandParameterSplitter, ArgSplitter, ValueSplitter))
                 .ToArray();
 
+            // ReSharper disable once IdentifierTypo
             commands.Foreach(this, commands, (command, i, processor, cmds) => processor.OnCommandProcess(command, i, cmds));
             return commands;
         }
 
         /// <summary>Добавить обработчик команды</summary>
         /// <param name="CommandName">Имя команды</param>
-        /// <param name="CommandHandler">ДОбавляемый обработчик команды</param>
-        public void AddCommandHandler(string CommandName, CommandHandler CommandHandler) => this[CommandName].Add(CommandHandler);
+        /// <param name="CommandHandler">Добавляемый обработчик команды</param>
+        public void AddCommandHandler([NotNull] string CommandName, CommandHandler CommandHandler) => this[CommandName].Add(CommandHandler);
 
         /// <summary>Удалить обработчик команды</summary>
         /// <param name="CommandName">Имя команды</param>
         /// <param name="CommandHandler">Удаляемый обработчик команды</param>
         /// <returns>Истина, если удалось обработчик команды удалить</returns>
-        public bool RemoveCommandHandler(string CommandName, CommandHandler CommandHandler) => this[CommandName].Remove(CommandHandler);
+        public bool RemoveCommandHandler([NotNull] string CommandName, CommandHandler CommandHandler) => this[CommandName].Remove(CommandHandler);
 
         /// <summary>Очистить список обработчиков команды</summary>
         /// <param name="CommandName">Имя команды</param>
-        public void ClaerCommandHandlers(string CommandName) => this[CommandName].Clear();
+        public void ClearCommandHandlers([NotNull] string CommandName) => this[CommandName].Clear();
 
         /// <summary>Очистить все обработчики команд</summary>
-        public void ClaerCommandHandlers() => _CommandHandlers.Clear();
+        public void ClearCommandHandlers() => _CommandHandlers.Clear();
 
         /// <summary>Получить перечисление имён команд с зарегистрированными обработчиками</summary>
         /// <returns>Перечисление имён команд, имеющих свои обработчики</returns>
-        public IEnumerable<string> GetRegistredCommands() => _CommandHandlers.Keys.ToArray();
+        [NotNull]
+        public IEnumerable<string> GetRegisteredCommands() => _CommandHandlers.Keys.ToArray();
 
         /// <summary>Проверка - имеет ли команда обработчики</summary>
         /// <param name="CommandName">Проверяемая команда</param>
         /// <returns>Истина, если указаны обработчики команды</returns>
-        public bool IsRegistredCommand(string CommandName) => _CommandHandlers.ContainsKey(CommandName)
-                                                              && this[CommandName].IsRegistredCommand(CommandName);
+        public bool IsRegisteredCommand([NotNull] string CommandName) => 
+            _CommandHandlers.ContainsKey(CommandName) && this[CommandName].IsRegistredCommand(CommandName);
 
+        /// <inheritdoc />
         public IDisposable Subscribe(IObserver<CommandEventArgs> observer) => _ObservableObject.Subscribe(observer);
     }
 }

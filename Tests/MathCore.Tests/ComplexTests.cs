@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests
 {
@@ -12,24 +14,25 @@ namespace MathCore.Tests
     {
         /* ------------------------------------------------------------------------------------------ */
 
+        // ReSharper disable once InconsistentNaming
         private const double pi = Math.PI;
 
-        private static Random RndGenerator;
+        private static Random __RndGenerator;
 
-        private static double Random => RndGenerator.NextDouble() * 20 - 10;
+        private static double Random => __RndGenerator.NextDouble() * 20 - 10;
 
-        private static double RandomPositive => RndGenerator.NextDouble() * 10;
+        private static double RandomPositive => __RndGenerator.NextDouble() * 10;
 
-        private static double RandomRad => 2 * Math.PI * RndGenerator.NextDouble();
+        private static double RandomRad => 2 * Math.PI * __RndGenerator.NextDouble();
 
         private static Complex Rnd => new Complex(Random, Random);
 
-        private static int GetRNDInt(int Min = 5, int Max = 15) => RndGenerator.Next(Min, Max);
+        private static int GetRNDInt(int Min = 5, int Max = 15) => __RndGenerator.Next(Min, Max);
 
         private static double GetRNDDouble(double Min = -20, double Max = 20)
         {
             var delta = Max - Min;
-            return delta * RndGenerator.NextDouble() - Min;
+            return delta * __RndGenerator.NextDouble() - Min;
         }
 
         [NotNull]
@@ -59,11 +62,11 @@ namespace MathCore.Tests
 
         //Use TestInitialize to run code before running each test
         [TestInitialize]
-        public void MyTestInitialize() => RndGenerator = new Random();
+        public void MyTestInitialize() => __RndGenerator = new Random();
 
         //Use TestCleanup to run code after each test has run
         [TestCleanup]
-        public void MyTestCleanup() => RndGenerator = null;
+        public void MyTestCleanup() => __RndGenerator = null;
 
         #endregion
 
@@ -131,7 +134,7 @@ namespace MathCore.Tests
         [TestMethod, Priority(8), Timeout(1000), Description("Тест метода создания массива комплексных чисел")]
         public void CreateArrayTest()
         {
-            var N = RndGenerator.Next(100, 500);
+            var N = __RndGenerator.Next(100, 500);
             var Re = new double[N];
             var Im = new double[N];
             var expected = new Complex[N];
@@ -186,7 +189,7 @@ namespace MathCore.Tests
         [TestMethod]
         public void Exp_RandomCount_Test()
         {
-            var N = RndGenerator.Next(100, 500);
+            var N = __RndGenerator.Next(100, 500);
             for (var i = 0; i < N; i++)
             {
                 var arg = RandomRad;
@@ -241,7 +244,7 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorAdditionComplexArrayToComplexTest()
         {
-            var N = RndGenerator.Next(10) + 5;
+            var N = __RndGenerator.Next(10) + 5;
             var X = new Complex[N].Initialize(i => Rnd);
             var Y = Rnd;
             var expected = new Complex[N].Initialize(i => new Complex(X[i].Re + Y.Re, X[i].Im + Y.Im));
@@ -264,7 +267,7 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorAdditionDoubleArrayToComplexTest()
         {
-            var N = RndGenerator.Next(10) + 5;
+            var N = __RndGenerator.Next(10) + 5;
             var X = new double[N].Initialize(i => Random);
             var Y = Rnd;
             var expected = new Complex[N].Initialize(i => new Complex(X[i] + Y.Re, Y.Im));
@@ -306,9 +309,8 @@ namespace MathCore.Tests
             var X = Random;
             Complex Y;
             do
-            {
                 Y = Rnd;
-            } while (Y.Abs == 0);
+            while (Y.Abs.Equals(0));
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
             var (re, im) = X / Y;
             Assert.AreEqual(X * Y.Re / q, re, 1e-15);
@@ -324,9 +326,8 @@ namespace MathCore.Tests
             var X = Rnd;
             Complex Y;
             do
-            {
                 Y = Rnd;
-            } while (Y.Abs == 0);
+            while (Y.Abs.Equals(0));
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
             var (re, im) = X / Y;
             Assert.That.Value(re).IsEqual((X.Re * Y.Re + X.Im * Y.Im) / q, 2e-15);
@@ -335,15 +336,14 @@ namespace MathCore.Tests
 
         /// <summary> test for op_Division</summary>
         [TestMethod]
-        public void OperatorDivisionComplexArrayToComplexsTest()
+        public void OperatorDivisionComplexArrayToComplexesTest()
         {
-            var N = RndGenerator.Next(10) + 5;
+            var N = __RndGenerator.Next(10) + 5;
             var X = new Complex[N].Initialize(i => Rnd);
             Complex Y;
             do
-            {
                 Y = Rnd;
-            } while (Y.Abs.Equals(0));
+            while (Y.Abs.Equals(0));
             var expected = new Complex[N].Initialize(i =>
             {
                 var q = Y.Re * Y.Re + Y.Im * Y.Im;
@@ -351,8 +351,9 @@ namespace MathCore.Tests
             });
             (X / Y).Foreach((z, i) =>
             {
-                Assert.AreEqual(expected[i].Re, z.Re, 1e-14);
-                Assert.AreEqual(expected[i].Im, z.Im, 1e-14);
+                var (re, im) = z;
+                Assert.AreEqual(expected[i].Re, re, 1e-14);
+                Assert.AreEqual(expected[i].Im, im, 1e-14);
             });
         }
 
@@ -362,13 +363,12 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorDivisionDoubleArrayToComplexTest()
         {
-            var N = RndGenerator.Next(10) + 5;
+            var N = __RndGenerator.Next(10) + 5;
             var X = new double[N].Initialize(i => Random);
             Complex Y;
             do
-            {
                 Y = Rnd;
-            } while (Y.Abs == 0);
+            while (Y.Abs.Equals(0));
             var expected = new Complex[N].Initialize(i =>
             {
                 var q = Y.Re * Y.Re + Y.Im * Y.Im;
@@ -376,8 +376,9 @@ namespace MathCore.Tests
             });
             (X / Y).Foreach((z, i) =>
             {
-                Assert.AreEqual(expected[i].Re, z.Re, 5e-15);
-                Assert.AreEqual(expected[i].Im, z.Im, 5e-15);
+                var (re, im) = z;
+                Assert.AreEqual(expected[i].Re, re, 5e-15);
+                Assert.AreEqual(expected[i].Im, im, 5e-15);
             });
         }
 
@@ -390,9 +391,8 @@ namespace MathCore.Tests
             var X = Rnd;
             double Y;
             do
-            {
                 Y = Random;
-            } while (Y == 0);
+            while (Y.Equals(0));
             var (re, im) = X / Y;
             Assert.AreEqual(X.Re / Y, re, 1e-15);
             Assert.AreEqual(X.Im / Y, im, 1e-15);
@@ -422,8 +422,8 @@ namespace MathCore.Tests
             var arg = X.Arg;
             var R = Math.Pow(r, Y.Re) * Math.Pow(Math.E, -Y.Im * arg);
             var Arg = Y.Re * arg + Y.Im * Math.Log(r);
-            var (expected_re, expected_im) = Complex.Exp(R, Arg);
-            var (actual_re, actual_im) = X ^ Y;
+            var (expected_re, _) = Complex.Exp(R, Arg);
+            var (actual_re, _) = X ^ Y;
             Assert.AreEqual(expected_re, actual_re, 1e-15);
             Assert.AreEqual(expected_re, actual_re, 1e-15);
         }
@@ -452,9 +452,8 @@ namespace MathCore.Tests
             {
                 double X;
                 do
-                {
                     X = Random;
-                } while (X.Equals(0d));
+                while (X.Equals(0d));
                 var Z = Rnd;
                 Complex expected;
                 if (X >= 0)
@@ -462,7 +461,6 @@ namespace MathCore.Tests
                 else
                 {
                     var ln_x = Math.Log(Math.Abs(X));
-                    const double pi = Consts.pi;
                     expected = Complex.Exp(Z.Re * ln_x - pi * Z.Im, pi * Z.Re + ln_x * Z.Im);
                 }
                 var actual = X ^ Z;
@@ -513,14 +511,15 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorMultiplyComplexArrayToComplexTest()
         {
-            var N = RndGenerator.Next(5, 15);
+            var N = __RndGenerator.Next(5, 15);
             var X = new Complex[N].Initialize(i => Rnd);
             var Y = Rnd;
             var expected = X.Select(x => x * Y).ToArray();
             (X * Y).Foreach((z, i) =>
             {
-                Assert.AreEqual(expected[i].Re, z.Re, 1e-15);
-                Assert.AreEqual(expected[i].Im, z.Im, 1e-15);
+                var (re, im) = z;
+                Assert.AreEqual(expected[i].Re, re, 1e-15);
+                Assert.AreEqual(expected[i].Im, im, 1e-15);
             });
         }
 
@@ -556,14 +555,15 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorMultiplyDoubleArrayToComplexTest()
         {
-            var N = RndGenerator.Next(5, 15);
+            var N = __RndGenerator.Next(5, 15);
             var X = new double[N].Initialize(i => Random);
             var Y = Rnd;
             var expected = X.Select(x => x * Y).ToArray();
             (X * Y).Foreach((z, i) =>
             {
-                Assert.AreEqual(expected[i].Re, z.Re, 1e-15);
-                Assert.AreEqual(expected[i].Im, z.Im, 1e-15);
+                var (re, im) = z;
+                Assert.AreEqual(expected[i].Re, re, 1e-15);
+                Assert.AreEqual(expected[i].Im, im, 1e-15);
             });
         }
 
@@ -600,14 +600,15 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorSubtractionDoubleArrayToComplexTest()
         {
-            var N = RndGenerator.Next(10) + 5;
+            var N = __RndGenerator.Next(10) + 5;
             var X = new double[N].Initialize(i => Random);
             var Y = Rnd;
             var expected = new Complex[N].Initialize(i => X[i] - Y);
             (X - Y).Foreach((z, i) =>
             {
-                Assert.AreEqual(expected[i].Re, z.Re, 1e-15);
-                Assert.AreEqual(expected[i].Im, z.Im, 1e-15);
+                var (re, im) = z;
+                Assert.AreEqual(expected[i].Re, re, 1e-15);
+                Assert.AreEqual(expected[i].Im, im, 1e-15);
             });
         }
 
@@ -617,14 +618,15 @@ namespace MathCore.Tests
         [TestMethod]
         public void OperatorSubtractionComplexArrayToComplexTest()
         {
-            var N = RndGenerator.Next(10) + 5;
+            var N = __RndGenerator.Next(10) + 5;
             var X = new Complex[N].Initialize(i => Rnd);
             var Y = Rnd;
             var expected = X.Select(x => x - Y).ToArray();
             (X - Y).Foreach((z, i) =>
             {
-                Assert.AreEqual(expected[i].Re, z.Re, 1e-15);
-                Assert.AreEqual(expected[i].Im, z.Im, 1e-15);
+                var (re, im) = z;
+                Assert.AreEqual(expected[i].Re, re, 1e-15);
+                Assert.AreEqual(expected[i].Im, im, 1e-15);
             });
         }
 
@@ -722,7 +724,7 @@ namespace MathCore.Tests
             Assert.AreEqual(Re, target.Re);
         }
 
-        /// <summary>Тестирование статического свойства класса комплексных чисел "Мнимая иденица"</summary>
+        /// <summary>Тестирование статического свойства класса комплексных чисел "Мнимая единица"</summary>
         [TestMethod, Priority(1), Description("Тестирование статического свойства класса комплексных чисел \"Мнимая иденица\"")]
         public void iTest()
         {

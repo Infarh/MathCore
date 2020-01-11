@@ -1,7 +1,7 @@
 ﻿using System;
 using Ex = System.Linq.Expressions.Expression;
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление операции с одним операндом</summary>
     /// <typeparam name="TObject">Тип значения операнда</typeparam>

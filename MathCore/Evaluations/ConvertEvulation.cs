@@ -1,7 +1,7 @@
 ﻿using System;
 using Ex = System.Linq.Expressions.Expression;
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление преобразования типов</summary>
     /// <typeparam name="TInput">Тип входного значения</typeparam>

@@ -1,7 +1,7 @@
 ﻿using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление значения свойства объекта</summary>
     /// <typeparam name="TObject">Тип объекта, свойство которого надо получить</typeparam>

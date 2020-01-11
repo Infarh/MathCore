@@ -75,7 +75,7 @@ namespace MathCore.MathParser
         [NotNull]
         public ExpressionVariabel this[int i] => _Variabels[i];
 
-        /// <summary>Перечисление всех имён переменных колеекции</summary>
+        /// <summary>Перечисление всех имён переменных коллекции</summary>
         [NotNull]
         public IEnumerable<string> Names => _Variabels.Select(v => v.Name);
 

@@ -42,7 +42,7 @@
 // Features
 // --------
 // 1) Arithmetic operations involving large signed integers (2's complement).
-// 2) Primality test using Fermat little theorm, Rabin Miller's method,
+// 2) Primality test using Fermat little theorem, Rabin Miller's method,
 //    Solovay Strassen's method and Lucas strong pseudoprime.
 // 3) Modulo exponential with Barrett's reduction.
 // 4) Inverse modulo.
@@ -53,7 +53,7 @@
 // Known Problem
 // -------------
 // This pseudoprime passes my implementation of
-// primality test but failed in JDK's IsProbablePrime test.
+// primality test but failed in SDK IsProbablePrime test.
 //
 //       byte[] pseudoPrime1 = { (byte)0x00,
 //             (byte)0x85, (byte)0x84, (byte)0x64, (byte)0xFD, (byte)0x70, (byte)0x6A,
@@ -100,6 +100,7 @@
 //    - Initial Release.
 //
 //
+// ReSharper disable CommentTypo
 // References
 // [1] D. E. Knuth, "Seminumerical Algorithms", The Art of Computer Programming Vol. 2,
 //     3rd Edition, Addison-Wesley, 1998.
@@ -127,12 +128,14 @@
 //
 // [9] M. Joye and J.-J. Quisquater, "Efficient computation of full Lucas sequences",
 //     Electronics Letters, 32(6), 1996, pp 537-538.
+// ReSharper restore CommentTypo
 //
 //************************************************************************************
 
 using System;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore
 {
@@ -1311,8 +1314,9 @@ namespace MathCore
             if (radix < 2 || radix > 36)
                 throw new ArgumentException("Radix must be >= 2 and <= 36");
 
+            // ReSharper disable once StringLiteralTypo
             const string char_set = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var result = "";
+            var result = string.Empty;
 
             var a = this;
 

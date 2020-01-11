@@ -2,7 +2,7 @@
 using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление бинарной опирации между двумя вычислениями</summary>
     /// <typeparam name="T">Тип значения вычисления</typeparam>

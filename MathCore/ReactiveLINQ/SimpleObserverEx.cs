@@ -7,7 +7,7 @@
         /// <summary>События появления следующего объекта в последовательности</summary>
         public event Action<T> Next;
         /// <summary>Событие завершения последовательности</summary>
-        public event Action Complited;
+        public event Action Completed;
         /// <summary>Событие сброса последовательности</summary>
         public event Action Reset;
         /// <summary>Событие появления исключения</summary>
@@ -30,7 +30,7 @@
         public virtual void OnError(Exception error) => Error?.Invoke(error);
 
         /// <summary>Метод генерации события завершения последовательности</summary>
-        public virtual void OnCompleted() => Complited?.Invoke();
+        public virtual void OnCompleted() => Completed?.Invoke();
 
         /// <summary>Метод генерации события сброса последовательности</summary>
         public virtual void OnReset() => Reset?.Invoke();

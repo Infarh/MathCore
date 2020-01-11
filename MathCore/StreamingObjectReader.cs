@@ -43,7 +43,7 @@ namespace System
         public Stream DataStream => _DataStream;
 
         /// <summary>Процент готовности</summary>
-        public double Complited => _DataStream.Position / (double)_DataStream.Length;
+        public double Completed => _DataStream.Position / (double)_DataStream.Length;
 
         /// <summary>Скорость обработки данных</summary>
         public StreamDataSpeedValue Speed => _Speed;
@@ -71,7 +71,7 @@ namespace System
         protected StreamingObjectReader(Stream DataStream)
         {
             _Speed = new StreamDataSpeedValue(_DataStream = DataStream);
-            Monitor.ProgressChecker = () => Complited;
+            Monitor.ProgressChecker = () => Completed;
         }
 
         /* ------------------------------------------------------------------------------------------ */

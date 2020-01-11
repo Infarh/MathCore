@@ -1,7 +1,7 @@
 ﻿using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление суммы двух вычислений</summary>
     /// <typeparam name="T">Тип значения вычисления</typeparam>

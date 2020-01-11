@@ -5,7 +5,7 @@ namespace System.Linq.Reactive
     public class LamdaObserver<T> : SimpleObserverEx<T>
     {
         private readonly Action<T> _OnNext;
-        private readonly Action _OnComplited;
+        private readonly Action _OnCompleted;
         private readonly Action _OnReset;
         private readonly Action<Exception> _OnError;
 
@@ -13,13 +13,13 @@ namespace System.Linq.Reactive
         (
             [NotNull]IObservable<T> Observable,
             [CanBeNull]Action<T> OnNext = null,
-            [CanBeNull]Action OnComplited = null,
+            [CanBeNull]Action OnCompleted = null,
             [CanBeNull]Action OnReset = null,
             [CanBeNull]Action<Exception> OnError = null
         ) : base(Observable)
         {
             _OnNext = OnNext;
-            _OnComplited = OnComplited;
+            _OnCompleted = OnCompleted;
             _OnReset = OnReset;
             _OnError = OnError;
         }
@@ -33,7 +33,7 @@ namespace System.Linq.Reactive
         public override void OnCompleted()
         {
             base.OnCompleted();
-            _OnComplited?.Invoke();
+            _OnCompleted?.Invoke();
         }
 
         public override void OnReset()
