@@ -127,20 +127,20 @@ namespace System
             if(Stop == -1 || Stop < Start) throw new FormatException();
             TextBefore = Str.Substring(Offset, Start - Offset);
             Offset = Stop + Close.Length;
-            TextAfter = Str.Length - Offset > 0 ? Str.Substring(Offset, Str.Length - Offset) : "";
+            TextAfter = Str.Length - Offset > 0 ? Str.Substring(Offset, Str.Length - Offset) : string.Empty;
             Start += Open.Length;
             return Str.Substring(Start, Stop - Start);
         }
 
         /// <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
         /// <param name="Str">Проверяемая строка</param>
-        /// <returns>Истина, если трока пуста, либо если передана нулевая ссылка</returns>
+        /// <returns>Истина, если строка пуста, либо если передана нулевая ссылка</returns>
         [DST]
         public static bool IsNullOrEmpty([CanBeNull] this string Str) => string.IsNullOrEmpty(Str);
 
         /// <summary>Строка присутствует и не пуста</summary>
         /// <param name="Str">Проверяемая строка</param>
-        /// <returns>Истина, если трокане  пуста, и если передана ненулевая ссылка</returns>
+        /// <returns>Истина, если строка не  пуста, и если передана ненулевая ссылка</returns>
         [DST]
         public static bool IsNotNullOrEmpty([CanBeNull] this string Str) => !string.IsNullOrEmpty(Str);
 
@@ -155,7 +155,7 @@ namespace System
         /// <param name="symbols">Перечень удаляемых символов</param>
         /// <returns>Новая строка с удалёнными символами в начале</returns>
         [NotNull]
-        public static string ClerSymbolsAtBegin([NotNull] this string str, params char[] symbols)
+        public static string ClearSymbolsAtBegin([NotNull] this string str, params char[] symbols)
         {
             var i = 0;
             var len = str.Length;
@@ -169,7 +169,7 @@ namespace System
         /// <param name="symbols">Перечень удаляемых символов</param>
         /// <returns>Новая строка с удалёнными символами в конце</returns>
         [NotNull]
-        public static string ClerSymbolsAtEnd([NotNull] this string str, params char[] symbols)
+        public static string ClearSymbolsAtEnd([NotNull] this string str, params char[] symbols)
         {
             var len = str.Length;
             var i = 0;
@@ -183,11 +183,11 @@ namespace System
         /// <param name="symbols">Перечень удаляемых символов</param>
         /// <returns>Новая строка с удалёнными символами в начале и конце</returns>
         [NotNull]
-        public static string ClearSymbolsAtBeginAndEnd([NotNull] this string str, params char[] symbols) => str.ClerSymbolsAtBegin(symbols).ClerSymbolsAtEnd(symbols);
+        public static string ClearSymbolsAtBeginAndEnd([NotNull] this string str, params char[] symbols) => str.ClearSymbolsAtBegin(symbols).ClearSymbolsAtEnd(symbols);
 
         /// <summary>Удаление служебных символов в начале и конце строки</summary>
         /// <param name="str">Обрабатываемая строка</param>
-        /// <returns>Новая строка с удалёнными служебными символами в началеи конце</returns>
+        /// <returns>Новая строка с удалёнными служебными символами в начали и конце</returns>
         [NotNull]
         public static string ClearSystemSymbolsAtBeginAndEnd([NotNull] this string str) => str.ClearSymbolsAtBeginAndEnd(' ', '\n', '\r');
 
@@ -195,7 +195,7 @@ namespace System
         /// <param name="str">Проверяемая строка</param>
         /// <param name="ParameterName">Имя параметра, добавляемое в исключение в случае его генерации</param>
         /// <param name="Message">Сообщение, добавляемое в исключение в случае его генерации</param>
-        /// <exception cref="ArgumentNullException">Если переданна пустая ссылка на строку <paramref name="str"/></exception>
+        /// <exception cref="ArgumentNullException">Если переданная пустая ссылка на строку <paramref name="str"/></exception>
         /// <exception cref="ArgumentException">Если переданная строка <paramref name="str"/> является пустой</exception>
         /// <returns>Строка, гарантированно не являющаяся пустой</returns>
         [NotNull]

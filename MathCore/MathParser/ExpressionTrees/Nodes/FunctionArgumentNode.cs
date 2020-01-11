@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
+using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -19,10 +21,11 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         }
 
         /// <summary>Значение аргумента - правое поддерево</summary>
+        [CanBeNull]
         public ExpressionTreeNode ArgumentSubtree => Left is FunctionArgumentNameNode ? Left.Right : Left;
 
         /// <summary>Имя аргумента - левое поддерево</summary>
-        public string ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : "";
+        public string ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : string.Empty;
 
         /// <summary>Инициализация узла-аргумента</summary>
         public FunctionArgumentNode() : base(",", -20) { }
@@ -34,6 +37,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Инициализация узла-аргумента</summary>
         /// <param name="Node">Узел поддерева аргумента</param>
+        // ReSharper disable once SuggestBaseTypeForParameter
         public FunctionArgumentNode(FunctionArgumentNameNode Node) : this() => Left = Node;
 
         /// <summary>Вычисление значения узла</summary>

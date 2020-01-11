@@ -10,7 +10,7 @@ namespace MathCore.MathParser
 {
     /// <summary>Коллекция констант</summary>
     [System.Diagnostics.DebuggerDisplay("Колличество зафиксированных констант = {" + nameof(Count) + "}"), DST]
-    public sealed class ConstantsCollection : IEnumerable<ExpressionVariabel>
+    public sealed class ConstantsCollection : IEnumerable<ExpressionVariable>
     {
         /// <summary>Ссылка на выражение</summary>
         [NotNull]
@@ -18,7 +18,7 @@ namespace MathCore.MathParser
 
         /// <summary>Элементы коллекци</summary>
         [NotNull]
-        private readonly List<ExpressionVariabel> _Items = new List<ExpressionVariabel>();
+        private readonly List<ExpressionVariable> _Items = new List<ExpressionVariable>();
 
         /// <summary>Количество элементов коллекции</summary>
         public int Count => _Items.Count;
@@ -27,7 +27,7 @@ namespace MathCore.MathParser
         /// <param name="Name">Имя константы</param>
         /// <returns>Константа с указанным именем</returns>
         [NotNull]
-        public ExpressionVariabel this[[NotNull] string Name]
+        public ExpressionVariable this[[NotNull] string Name]
         {
             get
             {
@@ -45,7 +45,7 @@ namespace MathCore.MathParser
 
         /// <summary>Добавить элемент в коллекцию</summary>
         /// <param name="Constant">Добавляемое значение, как константа</param>
-        public bool Add([NotNull] ExpressionVariabel Constant)
+        public bool Add([NotNull] ExpressionVariable Constant)
         {
             if(_Items.Contains(v => v.Name == Constant.Name)) return false;
             Constant.IsConstant = true;
@@ -61,11 +61,11 @@ namespace MathCore.MathParser
         /// <summary>Получить перечислитеь констант коллекци</summary>
         /// <returns>Перечислитель констант</returns>
         [NotNull]
-        IEnumerator<ExpressionVariabel> IEnumerable<ExpressionVariabel>.GetEnumerator() => _Items.GetEnumerator();
+        IEnumerator<ExpressionVariable> IEnumerable<ExpressionVariable>.GetEnumerator() => _Items.GetEnumerator();
 
         /// <summary>Получить перечислитеь констант коллекци</summary>
         /// <returns>Перечислитель констант</returns>
         [NotNull]
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ExpressionVariabel>)this).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ExpressionVariable>)this).GetEnumerator();
     }
 }

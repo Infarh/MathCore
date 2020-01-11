@@ -1496,7 +1496,8 @@ namespace System.Linq
         /// <param name="Separator">Разделитель элементов в строке</param>
         /// <returns>Строка, составленная из строковых представлений объектов последовательности, разделённых указанной строкой-разделителем</returns>
         [NN]
-        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") => string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
+        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") => 
+            string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
 
         /// <summary>Найти минимум и максимум последовательности вещественных чисел</summary>
         /// <param name="values">Последовательность вещественных чисел</param>

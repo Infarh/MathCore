@@ -1,6 +1,10 @@
 ﻿using System;
 using MathCore.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable ArgumentsStyleOther
+// ReSharper disable ArgumentsStyleLiteral
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMember.Local
 
 namespace MathCore.Tests
 {
@@ -17,9 +21,6 @@ namespace MathCore.Tests
         //[TestCleanup] public void MyTestCleanup() { }
 
         #endregion
-
-        private static readonly Func<double, double> sin = Math.Sin;
-        private static readonly Func<double, double> cos = Math.Cos;
 
         private SpaceAngle RandomAngle =>
             new SpaceAngle
@@ -93,7 +94,7 @@ namespace MathCore.Tests
         [TestMethod, Priority(2), Description("")]
         public void SimpleRotate_Theta_Test()
         {
-            static double Func(double a) => cos(a);
+            static double Func(double a) => Math.Cos(a);
             static double Function(SpaceAngle a) => Func(a.ThetaRad);
             const double delta = 3d;
 
@@ -112,7 +113,7 @@ namespace MathCore.Tests
         [TestMethod, Priority(2), Description("")]
         public void SimpleRotate_ThetaToPhi_Test()
         {
-            static double Func(double a) => cos(a);
+            static double Func(double a) => Math.Cos(a);
             static double Func1(SpaceAngle a) => Func(a.ThetaRad);
             static double Func2(SpaceAngle a) => Func1(a.Rotate_PhiTheta(90, 0, AngleType.Deg));
 

@@ -60,9 +60,9 @@ namespace MathCore.Tests
         {
             Debug.WriteLine("u0 = new[,]");
             Debug.WriteLine($"{ToArrayFormat(u)};");
-            Debug.WriteLine("");
+            Debug.WriteLine(string.Empty);
             Debug.WriteLine($"w0 = new[] {ToArrayFormat(w)};");
-            Debug.WriteLine("");
+            Debug.WriteLine(string.Empty);
             Debug.WriteLine("v0 = new[,]");
             Debug.WriteLine($"{ToArrayFormat(v)};");
         }

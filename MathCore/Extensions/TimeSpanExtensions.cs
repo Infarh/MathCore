@@ -9,7 +9,7 @@ namespace System
         [DST, NotNull]
         public static string ToShortString(this TimeSpan time)
         {
-            var result = "";
+            var result = string.Empty;
             var empty = true;
             var days = time.Days;
             if(days != 0)
@@ -37,14 +37,14 @@ namespace System
             }
 
             var seconds = time.Seconds;
-            var miliseconds = time.Milliseconds;
+            var milliseconds = time.Milliseconds;
 
             return empty
-                    ? seconds == 0 && miliseconds == 0
+                    ? seconds == 0 && milliseconds == 0
                         ? "0"
-                        : $"{seconds + (double)miliseconds / 1000}"
+                        : $"{seconds + (double)milliseconds / 1000}"
                     : seconds >= 10 
-                        ? $"{result}:{seconds + (double)miliseconds/1000}" : $"{result}:0{seconds + (double)miliseconds/1000}";
+                        ? $"{result}:{seconds + (double)milliseconds/1000}" : $"{result}:0{seconds + (double)milliseconds/1000}";
         }
     }
 }

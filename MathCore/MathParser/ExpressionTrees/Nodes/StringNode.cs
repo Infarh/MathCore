@@ -1,4 +1,10 @@
-﻿namespace MathCore.MathParser.ExpressionTrees.Nodes
+﻿// ReSharper disable UnusedMember.Global
+
+using MathCore.Annotations;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
     /// <summary>Строковый узел дерева математического выражения</summary>
     public class StringNode : ParsedNode
@@ -23,16 +29,17 @@
 
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>
-        public override string ToString() => $"{(Left is null ? "" : $"{Left}")}{Value}{(Right is null ? "" : $"{Right}")}";
+        public override string ToString() => $"{(Left is null ? string.Empty : $"{Left}")}{Value}{(Right is null ? string.Empty : $"{Right}")}";
 
         /// <summary>Оператор неявного преобразования строки к типу строкового узла</summary>
         /// <param name="value">Строковое значение</param>
         /// <returns>Строковый узел</returns>
+        [NotNull]
         public static implicit operator StringNode(string value) => new StringNode(value);
 
         /// <summary>Оператор неявного преобразования строкового узла к строковому типу</summary>
         /// <param name="node">Строковый узел</param>
         /// <returns>Значение строкового узла</returns>
-        public static implicit operator string(StringNode node) => node.Value;
+        public static implicit operator string([NotNull] StringNode node) => node.Value;
     }
 }

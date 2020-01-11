@@ -8598,7 +8598,7 @@
             <param name="q">Коэффициенты полинома - первого вычитаемого</param>
             <returns>Коэффициенты полинома - разности</returns>
         </member>
-        <member name="M:MathCore.Polynom.Array.Devide(System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+        <member name="M:MathCore.Polynom.Array.Divide(System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
             <summary>Деление полиномов</summary>
             <param name="dividend">Коэффициенты полинома - делимое</param>
             <param name="divisor">Коэффициенты полинома - делитель</param>
@@ -8652,34 +8652,34 @@
             <param name="x">Вещественное число</param>
             <returns>Коэффициенты полинома - частного</returns>
         </member>
-        <member name="T:MathCore.Polynom.PolynomDevisionResult">
+        <member name="T:MathCore.Polynom.PolynomDivisionResult">
             <summary>Результат деления полиномов</summary>
         </member>
-        <member name="F:MathCore.Polynom.PolynomDevisionResult.Result">
+        <member name="F:MathCore.Polynom.PolynomDivisionResult.Result">
             <summary>Частное полиномов</summary>
         </member>
-        <member name="F:MathCore.Polynom.PolynomDevisionResult.Remainder">
+        <member name="F:MathCore.Polynom.PolynomDivisionResult.Remainder">
             <summary>Остаток деления полиновов</summary>
         </member>
-        <member name="F:MathCore.Polynom.PolynomDevisionResult.Divisor">
+        <member name="F:MathCore.Polynom.PolynomDivisionResult.Divisor">
             <summary>Полином - делитель</summary>
         </member>
-        <member name="M:MathCore.Polynom.PolynomDevisionResult.#ctor(MathCore.Polynom,MathCore.Polynom,MathCore.Polynom)">
+        <member name="M:MathCore.Polynom.PolynomDivisionResult.#ctor(MathCore.Polynom,MathCore.Polynom,MathCore.Polynom)">
             <summary>Инициализация результата деления полиномов</summary>
             <param name="Divisor"></param>
             <param name="Result">Частоное</param>
             <param name="Remainder">Остаток от деления</param>
         </member>
-        <member name="M:MathCore.Polynom.PolynomDevisionResult.Value(System.Double)">
+        <member name="M:MathCore.Polynom.PolynomDivisionResult.Value(System.Double)">
             <summary>Значение результата деления полиномов</summary>
             <param name="x">Аргумент</param>
             <returns>Результат вычисления значения результата деления полиномов</returns>
         </member>
-        <member name="M:MathCore.Polynom.PolynomDevisionResult.GetFunction">
+        <member name="M:MathCore.Polynom.PolynomDivisionResult.GetFunction">
             <summary>Получить функцию</summary>
             <returns>Функция вычисления значения результата деления полиномов</returns>
         </member>
-        <member name="M:MathCore.Polynom.PolynomDevisionResult.op_Implicit(MathCore.Polynom.PolynomDevisionResult)~MathCore.Polynom">
+        <member name="M:MathCore.Polynom.PolynomDivisionResult.op_Implicit(MathCore.Polynom.PolynomDivisionResult)~MathCore.Polynom">
             <summary>Оператор неявного преобразования результата деления полиномов в полином результата</summary>
             <param name="Result">Результат деления полиномов</param>
             <returns>Частное</returns>

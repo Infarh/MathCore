@@ -1,9 +1,10 @@
 ﻿using System;
+using MathCore.Annotations;
 
 namespace MathCore.MathParser
 {
     /// <summary>Переменная математического выражения</summary>
-    public class ExpressionVariabel : ExpressionItem, ICloneable<ExpressionVariabel>
+    public class ExpressionVariable : ExpressionItem, ICloneable<ExpressionVariable>
     {
         /// <summary>Значение переменной</summary>
         private double _Value;
@@ -25,14 +26,16 @@ namespace MathCore.MathParser
 
         /// <summary>Инициализация нового экземпляра переменной</summary>
         /// <param name="Name">Имя переменной</param>
-        public ExpressionVariabel(string Name) : base(Name) { }
+        public ExpressionVariable(string Name) : base(Name) { }
 
         /// <summary>Клонирование переменной</summary>
-        /// <returns>Новый экземпляр переменной с тем же имененм и тем же значением</returns>
-        public virtual ExpressionVariabel Clone() => new ExpressionVariabel(Name) { Value = Value };
+        /// <returns>Новый экземпляр переменной с тем же именем и тем же значением</returns>
+        [NotNull]
+        public virtual ExpressionVariable Clone() => new ExpressionVariable(Name) { Value = Value };
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление переменной</returns>
+        [NotNull]
         public override string ToString() => $"{Name}={_Value}";
 
         object ICloneable.Clone() => Clone();
@@ -40,13 +43,14 @@ namespace MathCore.MathParser
         /// <summary>Оператор неявного привидения вещественного числа к типу переменной</summary>
         /// <param name="x">Вещественное число</param>
         /// <returns>Безымянная переменная, хранящая указанное число</returns>
-        public static implicit operator ExpressionVariabel(double x) =>
-            new ExpressionVariabel("") { _Value = x };
+        [NotNull]
+        public static implicit operator ExpressionVariable(double x) =>
+            new ExpressionVariable(string.Empty) { _Value = x };
 
         /// <summary>Оператор неявного привидения к типу вещественного числа</summary>
         /// <param name="variable">Приводимая переменная</param>
         /// <returns>Значение переменной</returns>
-        public static implicit operator double(ExpressionVariabel variable) =>
+        public static implicit operator double([NotNull] ExpressionVariable variable) =>
             variable.GetValue();
     }
 }

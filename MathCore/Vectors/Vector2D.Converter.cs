@@ -12,26 +12,26 @@ namespace MathCore.Vectors
             if(value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            //Оргумент не является трокой, либо строка пуста
-            var strs = value as string;
-            if(string.IsNullOrEmpty(strs) || strs.Length < 1)
+            //Аргумент не является строкой, либо строка пуста
+            var ss = value as string;
+            if(string.IsNullOrEmpty(ss) || ss.Length < 1)
                 return base.ConvertFrom(Context, Info, value);
 
             //Убираем все начальные и конечные скобки, ковычки и апострофы
-            while(strs[0] == '{' && strs[strs.Length - 1] == '}')
-                strs = strs.Substring(1, strs.Length - 2);
-            while(strs[0] == '[' && strs[strs.Length - 1] == ']')
-                strs = strs.Substring(1, strs.Length - 2);
-            while(strs[0] == '(' && strs[strs.Length - 1] == ')')
-                strs = strs.Substring(1, strs.Length - 2);
-            while(strs[0] == '\'' && strs[strs.Length - 1] == '\'')
-                strs = strs.Substring(1, strs.Length - 2);
-            while(strs[0] == '"' && strs[strs.Length - 1] == '"')
-                strs = strs.Substring(1, strs.Length - 2);
+            while(ss[0] == '{' && ss[ss.Length - 1] == '}')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '[' && ss[ss.Length - 1] == ']')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '(' && ss[ss.Length - 1] == ')')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '\'' && ss[ss.Length - 1] == '\'')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '"' && ss[ss.Length - 1] == '"')
+                ss = ss.Substring(1, ss.Length - 2);
 
-            strs = strs.Replace(" ", "");
+            ss = ss.Replace(" ", string.Empty);
 
-            var val = strs.Split(';', ':', '|').ConvertTo(s => double.Parse(s));
+            var val = ss.Split(';', ':', '|').ConvertTo(s => double.Parse(s));
 
             if(val.Length != 2)
                 throw new ArgumentNullException(nameof(value));

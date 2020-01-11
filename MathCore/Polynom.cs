@@ -122,7 +122,7 @@ namespace MathCore
         {
             if (Divisor is null) throw new ArgumentNullException(nameof(Divisor));
 
-            Array.Devide(_a, Divisor._a, out var result, out var remainder);
+            Array.Divide(_a, Divisor._a, out var result, out var remainder);
             var n = remainder.Length;
             while (n >= 1 && remainder[n - 1].Equals(0)) n--;
             System.Array.Resize(ref remainder, n);
@@ -173,7 +173,7 @@ namespace MathCore
         [NotNull]
         public Polynom GetInversed()
         {
-            Array.Devide(new[] { 1d }, _a, out var result, out _);
+            Array.Divide(new[] { 1d }, _a, out var result, out _);
             return new Polynom(result);
         }
 

@@ -51,7 +51,7 @@ namespace System.IO
             return md5.ComputeHash(stream);
         }
 
-        public static IEnumerable<byte> ReadByteses([NotNull] this FileInfo file)
+        public static IEnumerable<byte> ReadBytes([NotNull] this FileInfo file)
         {
             using var stream = file.ThrowIfNotFound().OpenRead();
             using var reader = new BinaryReader(stream);
@@ -60,7 +60,7 @@ namespace System.IO
         }
 
         [ItemNotNull]
-        public static IEnumerable<byte[]> ReadByteses([NotNull] this FileInfo file, int Length)
+        public static IEnumerable<byte[]> ReadBytes([NotNull] this FileInfo file, int Length)
         {
             using var stream = file.ThrowIfNotFound().OpenRead();
             using var reader = new BinaryReader(stream);
@@ -93,39 +93,41 @@ namespace System.IO
             return reader.ReadToEnd();
         }
 
-        /// <summary>Скопировать файл в дирректорию</summary>
+        /// <summary>Скопировать файл в директорию</summary>
         /// <param name="SourceFile">Файл источник</param>
-        /// <param name="DestinationDirectory">Дирректория назначения</param>
+        /// <param name="DestinationDirectory">Директория назначения</param>
         /// <returns>Файл копия</returns>
         [DST]
         [NotNull]
         public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory) => SourceFile.CopyTo($@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}");
 
-        /// <summary>Скопировать файл в дирректорию</summary>
+        /// <summary>Скопировать файл в директорию</summary>
         /// <param name="SourceFile">Файл источник</param>
-        /// <param name="DestinationDirectory">Дирректория назначения</param>
-        /// <param name="Owerride">Перезаписать в случае наличия файла</param>
+        /// <param name="DestinationDirectory">Директория назначения</param>
+        /// <param name="Overwrite">Перезаписать в случае наличия файла</param>
         /// <returns>Файл копия</returns>
         [DST]
         [NotNull]
-        public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory, bool Owerride)
+        public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory, bool Overwrite)
         {
             var new_file = $@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}";
-            return !Owerride && File.Exists(new_file) ? new FileInfo(new_file) : SourceFile.CopyTo(new_file, true);
+            return !Overwrite && File.Exists(new_file) ? new FileInfo(new_file) : SourceFile.CopyTo(new_file, true);
         }
 
         /// <summary>Скопировать файл</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationFile">Файл копия</param>
         [DST]
-        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile) => SourceFile.CopyTo(DestinationFile.FullName);
+        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile) => 
+            SourceFile.CopyTo(DestinationFile.FullName);
 
         /// <summary>Скопировать файл</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationFile">Файл копия</param>
-        /// <param name="Owerride">Перезаписать в случае наличия файла</param>
+        /// <param name="Overwrite">Перезаписать в случае наличия файла</param>
         [DST]
-        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile, bool Owerride) => SourceFile.CopyTo(DestinationFile.FullName, Owerride);
+        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile, bool Overwrite) => 
+            SourceFile.CopyTo(DestinationFile.FullName, Overwrite);
 
         /// <summary>Получить имя файла без расширения</summary>
         /// <param name="file">Файл</param>
@@ -139,7 +141,8 @@ namespace System.IO
         /// <returns>Имя файла без расширения</returns>
         [DST]
         [NotNull]
-        public static string GetFullFileNameWithoutExtension([NotNull] this FileInfo file) => $"{Path.GetDirectoryName(file.FullName)}\\{Path.GetFileNameWithoutExtension(file.Name)}";
+        public static string GetFullFileNameWithoutExtension([NotNull] this FileInfo file) => 
+            $"{Path.GetDirectoryName(file.FullName)}\\{Path.GetFileNameWithoutExtension(file.Name)}";
 
         /// <summary>Получить имя файла c новым расширением</summary>
         /// <param name="file">Файл</param>
@@ -147,7 +150,8 @@ namespace System.IO
         /// <returns>Имя файла без расширения</returns>
         [DST]
         [NotNull]
-        public static string GetFullFileNameWithNewExtension([NotNull] this FileInfo file, string NewExt) => Path.Combine(Path.GetDirectoryName(file.FullName).NotNull(), $"{Path.GetFileNameWithoutExtension(file.Name)}{NewExt}");
+        public static string GetFullFileNameWithNewExtension([NotNull] this FileInfo file, string NewExt) => 
+            Path.Combine(Path.GetDirectoryName(file.FullName).NotNull(), $"{Path.GetFileNameWithoutExtension(file.Name)}{NewExt}");
 
         /// <summary>Записать массив байт в файл</summary>
         /// <param name="file">Файл данных</param>
@@ -166,7 +170,7 @@ namespace System.IO
         /// <param name="BufferSize">Размер буфера чтения по умолчанию 1024 байта</param>
         /// <param name="Append">Флаг добавления данных в конец файла</param>
         /// <param name="CompleteHandler">
-        /// Обработчик текущего положения коретки чтения данных из потока. 
+        /// Обработчик текущего положения каретки чтения данных из потока. 
         /// Вызывается после чтения данных в буфер и до помещения их в файл.
         /// Должен вернуть истину, что бы данные были переданы в файл и процесс был продолжен.
         /// </param>
@@ -274,7 +278,7 @@ namespace System.IO
 
             if (ArchiveFileName is null) ArchiveFileName = File.FullName + ".zip";
             else if (!Path.IsPathRooted(ArchiveFileName))
-                ArchiveFileName = File.Directory.CreateFileInfo(ArchiveFileName).FullName;
+                ArchiveFileName = (File.Directory ?? throw new InvalidOperationException($"Не удалось получить директорию файла {File}")).CreateFileInfo(ArchiveFileName).FullName;
             using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
             using var zip = new ZipArchive(zip_stream);
             var file_entry = zip.GetEntry(File.Name);

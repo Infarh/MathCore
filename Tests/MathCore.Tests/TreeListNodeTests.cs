@@ -1,5 +1,6 @@
 ﻿using MathCore.Graphs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Tests
 {
@@ -37,13 +38,13 @@ namespace MathCore.Tests
         [TestMethod, Priority(1), Description("")]
         public void NextTest()
         {
-            const int RootValue = 0;
-            var root = new TreeListNode<int>(RootValue);
-            Assert.AreEqual(root.Value, RootValue);
+            const int root_value = 0;
+            var root = new TreeListNode<int>(root_value);
+            Assert.AreEqual(root.Value, root_value);
 
-            const int NextValue = 1;
-            var next = new TreeListNode<int>(NextValue);
-            Assert.AreEqual(next.Value, NextValue);
+            const int next_value = 1;
+            var next = new TreeListNode<int>(next_value);
+            Assert.AreEqual(next.Value, next_value);
 
             root.Next = next;
 
@@ -55,15 +56,15 @@ namespace MathCore.Tests
             Assert.IsTrue(next.Next is null);
             Assert.IsTrue(next.Child is null);
 
-            const int NewNextValue = 2;
-            var newnext = new TreeListNode<int>(NewNextValue);
-            Assert.AreEqual(newnext.Value, NewNextValue);
-            root.Next = newnext;
+            const int new_next_value = 2;
+            var new_next = new TreeListNode<int>(new_next_value);
+            Assert.AreEqual(new_next.Value, new_next_value);
+            root.Next = new_next;
 
-            Assert.IsTrue(ReferenceEquals(root.Next, newnext));
-            Assert.IsTrue(ReferenceEquals(newnext.Prev, root));
-            Assert.IsTrue(newnext.Next is null);
-            Assert.IsTrue(newnext.Child is null);
+            Assert.IsTrue(ReferenceEquals(root.Next, new_next));
+            Assert.IsTrue(ReferenceEquals(new_next.Prev, root));
+            Assert.IsTrue(new_next.Next is null);
+            Assert.IsTrue(new_next.Child is null);
 
             Assert.IsTrue(next.Prev is null);
             Assert.IsTrue(next.Next is null);
@@ -73,13 +74,13 @@ namespace MathCore.Tests
         [TestMethod, Priority(1), Description("")]
         public void ChildTest()
         {
-            const int RootValue = 0;
-            var root = new TreeListNode<int>(RootValue);
-            Assert.AreEqual(root.Value, RootValue);
+            const int root_value = 0;
+            var root = new TreeListNode<int>(root_value);
+            Assert.AreEqual(root.Value, root_value);
 
-            const int ChildValue = 1;
-            var child = new TreeListNode<int>(ChildValue);
-            Assert.AreEqual(child.Value, ChildValue);
+            const int child_value = 1;
+            var child = new TreeListNode<int>(child_value);
+            Assert.AreEqual(child.Value, child_value);
 
             root.Child = child;
 
@@ -91,15 +92,15 @@ namespace MathCore.Tests
             Assert.IsTrue(child.Next is null);
             Assert.IsTrue(child.Child is null);
 
-            const int NewChildValue = 2;
-            var newchild = new TreeListNode<int>(NewChildValue);
-            Assert.AreEqual(newchild.Value, NewChildValue);
-            root.Child = newchild;
+            const int new_child_value = 2;
+            var new_child = new TreeListNode<int>(new_child_value);
+            Assert.AreEqual(new_child.Value, new_child_value);
+            root.Child = new_child;
 
-            Assert.IsTrue(ReferenceEquals(root.Child, newchild));
-            Assert.IsTrue(ReferenceEquals(newchild.Prev, root));
-            Assert.IsTrue(newchild.Next is null);
-            Assert.IsTrue(newchild.Child is null);
+            Assert.IsTrue(ReferenceEquals(root.Child, new_child));
+            Assert.IsTrue(ReferenceEquals(new_child.Prev, root));
+            Assert.IsTrue(new_child.Next is null);
+            Assert.IsTrue(new_child.Child is null);
 
             Assert.IsTrue(child.Prev is null);
             Assert.IsTrue(child.Next is null);

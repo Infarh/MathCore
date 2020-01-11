@@ -1,5 +1,7 @@
 ﻿using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.MathParser
 {
@@ -26,6 +28,7 @@ namespace MathCore.MathParser
 
         /// <summary>Преобразование в строковую форму</summary>
         /// <returns>Строковое представление элемента</returns>
-        public override string ToString() => $"{Name}{Block.ToString() ?? ""}";
+        [NotNull]
+        public override string ToString() => $"{Name}{Block.ToString() ?? string.Empty}";
     }
 }

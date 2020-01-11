@@ -15,6 +15,7 @@
 
 using System.Collections;
 using System.Diagnostics;
+using MathCore.Annotations;
 
 namespace System.Xml.XPath
 {
@@ -257,12 +258,12 @@ namespace System.Xml.XPath
             } while(true);
         }
 
-        private static bool IsNodeType(XPathScanner scaner) => scaner.Prefix.Length == 0 && (
-            scaner.Name == "node" ||
-            scaner.Name == "text" ||
-            scaner.Name == "processing-instruction" ||
-            scaner.Name == "comment"
-            );
+        private static bool IsNodeType([NotNull] XPathScanner scaner) => scaner.Prefix.Length == 0 && (
+                                                                             scaner.Name == "node" ||
+                                                                             scaner.Name == "text" ||
+                                                                             scaner.Name == "processing-instruction" ||
+                                                                             scaner.Name == "comment"
+                                                                         );
 
         //>> PathOp   ::= '/' | '//'
         //>> PathExpr ::= LocationPath | 
@@ -301,7 +302,7 @@ namespace System.Xml.XPath
         }
 
         //>> Predicate ::= '[' Expr ']'
-        private AstNode ParsePredicate(AstNode QyInput)
+        private AstNode ParsePredicate([NotNull] AstNode QyInput)
         {
             // we have predicates. Check that input type is NodeSet
             CheckNodeSet(QyInput.ReturnType);
@@ -400,6 +401,7 @@ namespace System.Xml.XPath
         }
 
         //>> NodeTest ::= NameTest | 'comment ()' | 'text ()' | 'node ()' | 'processing-instruction ('  Literal ? ')'
+        [NotNull]
         private AstNode ParseNodeTest(AstNode QyInput, Axis.AxisType AxisType, XPathNodeType NodeType)
         {
             string node_name, node_prefix;
@@ -455,14 +457,15 @@ namespace System.Xml.XPath
             return new Axis(AxisType, QyInput, node_prefix, node_name, NodeType);
         }
 
-        private static bool IsPrimaryExpr(XPathScanner scanner) => scanner.Kind == XPathScanner.LexKind.String ||
-                                                                   scanner.Kind == XPathScanner.LexKind.Number ||
-                                                                   scanner.Kind == XPathScanner.LexKind.Dollar ||
-                                                                   scanner.Kind == XPathScanner.LexKind.LParens ||
-                                                                   scanner.Kind == XPathScanner.LexKind.Name &&
-                                                                   scanner.CanBeFunction && !IsNodeType(scanner);
+        private static bool IsPrimaryExpr([NotNull] XPathScanner scanner) => scanner.Kind == XPathScanner.LexKind.String ||
+                                                                             scanner.Kind == XPathScanner.LexKind.Number ||
+                                                                             scanner.Kind == XPathScanner.LexKind.Dollar ||
+                                                                             scanner.Kind == XPathScanner.LexKind.LParens ||
+                                                                             scanner.Kind == XPathScanner.LexKind.Name &&
+                                                                             scanner.CanBeFunction && !IsNodeType(scanner);
 
         //>> PrimaryExpr ::= Literal | Number | VariableReference | '(' Expr ')' | FunctionCall
+        [NotNull]
         private AstNode ParsePrimaryExpr(AstNode QyInput)
         {
             Debug.Assert(IsPrimaryExpr(_Scanner));
@@ -497,6 +500,7 @@ namespace System.Xml.XPath
             return opnd;
         }
 
+        [NotNull]
         private AstNode ParseMethod(AstNode QyInput)
         {
             var arg_list = new ArrayList();
@@ -617,6 +621,7 @@ namespace System.Xml.XPath
         }
 
         //>> IdKeyPattern ::= 'id' '(' Literal ')' | 'key' '(' Literal ',' Literal ')'  
+        [CanBeNull]
         private AstNode ParseIdKeyPattern(AstNode QyInput)
         {
             Debug.Assert(_Scanner.CanBeFunction);
@@ -644,7 +649,7 @@ namespace System.Xml.XPath
                     arg_list.Add(new Operand(_Scanner.StringValue));
                     NextLex();
                     PassToken(XPathScanner.LexKind.RParens);
-                    return new Function("", "key", arg_list);
+                    return new Function(string.Empty, "key", arg_list);
             }
             return null;
         }
@@ -670,6 +675,7 @@ namespace System.Xml.XPath
 
         //>> StepPattern    ::=    ChildOrAttributeAxisSpecifier NodeTest Predicate*   
         //>> ChildOrAttributeAxisSpecifier    ::=    @ ? | ('child' | 'attribute') '::' 
+        [NotNull]
         private AstNode ParseStepPattern(AstNode QyInput)
         {
             var axis_type = Axis.AxisType.Child;
@@ -731,6 +737,7 @@ namespace System.Xml.XPath
                 throw new XPathException($"Expression {_Scanner.SourceText} must evaluate to a node-set");
         }
 
+        [NotNull]
         private static Hashtable CreateFunctionTable()
         {
             var table = new Hashtable(36)
@@ -766,6 +773,7 @@ namespace System.Xml.XPath
             return table;
         }
 
+        [NotNull]
         private static Hashtable CreateAxesTable()
         {
             var table = new Hashtable(13)
@@ -787,7 +795,7 @@ namespace System.Xml.XPath
             return table;
         }
 
-        private Axis.AxisType GetAxis(XPathScanner scaner)
+        private Axis.AxisType GetAxis([NotNull] XPathScanner scaner)
         {
             Debug.Assert(scaner.Kind == XPathScanner.LexKind.Axe);
             var axis = _AxesTable[scaner.Name];

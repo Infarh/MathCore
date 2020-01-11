@@ -351,20 +351,20 @@ namespace MathCore.Tests
             double[] q = { 1, 2, 3, 4, 5 };
             double[] expected_subtract = { 2, 3, 4, -4, -5 };
 
-            var actual_subtract = Polynom.Array.subtract(p, q);
+            var actual_subtract = Polynom.Array.Subtract(p, q);
             CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
 
             expected_subtract = new double[] { -2, -3, -4, 4, 5 };
-            actual_subtract = Polynom.Array.subtract(q, p);
+            actual_subtract = Polynom.Array.Subtract(q, p);
             CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void subtract_ArgumentNullException_p_Test() => Polynom.Array.subtract(null, new double[5]);
+        public void subtract_ArgumentNullException_p_Test() => Polynom.Array.Subtract(null, new double[5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void subtract_ArgumentNullException_q_Test() => Polynom.Array.subtract(new double[5], null);
+        public void subtract_ArgumentNullException_q_Test() => Polynom.Array.Subtract(new double[5], null);
     }
 }

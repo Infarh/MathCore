@@ -346,7 +346,7 @@ namespace MathCore.Graphs
         /// <returns>Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.</returns>
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => ((IEnumerable<TreeListNode<TValue>>)this).Select(n => n.Value).GetEnumerator();
 
-        public override string ToString() => $"{Value}{(_Child is null ? "" : $"{{{_Child}}}")}{(_Next is null ? "" : $",{_Next}")}";
+        public override string ToString() => $"{Value}{(_Child is null ? string.Empty : $"{{{_Child}}}")}{(_Next is null ? string.Empty : $",{_Next}")}";
 
         public static implicit operator TValue([NotNull] TreeListNode<TValue> Node) => Node.Value;
         [NotNull]

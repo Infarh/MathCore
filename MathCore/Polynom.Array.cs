@@ -4,6 +4,8 @@ using System.Linq;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore
 {
@@ -318,6 +320,7 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома - первого слагаемого</param>
             /// <param name="q">Коэффициенты полинома - первого слагаемого</param>
             /// <returns>Коэффициенты полинома - суммы</returns>
+            [NotNull]
             public static double[] Sum([NotNull] double[] p, [NotNull] double[] q)
             {
                 if (p is null)
@@ -347,7 +350,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома - первого уменьшаемого</param>
             /// <param name="q">Коэффициенты полинома - первого вычитаемого</param>
             /// <returns>Коэффициенты полинома - разности</returns>
-            public static double[] subtract([NotNull] double[] p, [NotNull] double[] q)
+            [NotNull]
+            public static double[] Subtract([NotNull] double[] p, [NotNull] double[] q)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -378,10 +382,11 @@ namespace MathCore
             /// <summary>Деление полиномов</summary>
             /// <param name="dividend">Коэффициенты полинома - делимое</param>
             /// <param name="divisor">Коэффициенты полинома - делитель</param>
-            /// <param name="quotient">Коэффициенты полинома - остаток от деления</param>
+            /// <param name="quotient">Коэффициенты полинома - частного</param>
+            /// <param name="remainder">Коэффициенты полинома - остаток от деления</param>
             /// <returns>Коэффициенты полинома - частное</returns>
             [Copyright("", url = "http://losev-al.blogspot.ru/2012/09/blog-post_14.htm")]
-            public static void Devide([NotNull] double[] dividend, [NotNull] double[] divisor, [NotNull] out double[] quotient, [NotNull] out double[] remainder)
+            public static void Divide([NotNull] double[] dividend, [NotNull] double[] divisor, [NotNull] out double[] quotient, [NotNull] out double[] remainder)
             {
                 if (dividend[dividend.Length - 1].Equals(0)) throw new ArithmeticException("Старший член многочлена делимого не может быть 0");
                 if (divisor[divisor.Length - 1].Equals(0)) throw new ArithmeticException("Старший член многочлена делителя не может быть 0");
@@ -409,15 +414,15 @@ namespace MathCore
                     for (var j = 0; j < q.Length; j++)
                         a[i + j] += p[i] * q[j];
 
-                var zerros_count = 0;
+                var zeros_count = 0;
                 for (var i = a.Length - 1; i >= 0; i--)
                     if (a[i].Equals(0d))
-                        zerros_count++;
+                        zeros_count++;
                     else
                         break;
-                if (zerros_count == 0) return a;
-                if (zerros_count == a.Length) return new double[0];
-                System.Array.Resize(ref a, a.Length - zerros_count);
+                if (zeros_count == 0) return a;
+                if (zeros_count == a.Length) return System.Array.Empty<double>();
+                System.Array.Resize(ref a, a.Length - zeros_count);
                 return a;
             }
 
@@ -441,7 +446,7 @@ namespace MathCore
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - разности</returns>
             [NotNull]
-            public static double[] subtract([NotNull] double[] p, double x)
+            public static double[] Subtract([NotNull] double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -456,7 +461,7 @@ namespace MathCore
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - разности</returns>
             [NotNull]
-            public static double[] subtract(double x, [NotNull] double[] p)
+            public static double[] Subtract(double x, [NotNull] double[] p)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -529,12 +534,12 @@ namespace MathCore
         }
 
         /// <summary>Результат деления полиномов</summary>
-        public readonly struct PolynomDevisionResult
+        public readonly struct PolynomDivisionResult
         {
             /// <summary>Частное полиномов</summary>
             public readonly Polynom Result;
 
-            /// <summary>Остаток деления полиновов</summary>
+            /// <summary>Остаток деления полиномов</summary>
             public readonly Polynom Remainder;
 
             /// <summary>Полином - делитель</summary>
@@ -542,9 +547,9 @@ namespace MathCore
 
             /// <summary>Инициализация результата деления полиномов</summary>
             /// <param name="Divisor"></param>
-            /// <param name="Result">Частоное</param>
+            /// <param name="Result">Частное</param>
             /// <param name="Remainder">Остаток от деления</param>
-            public PolynomDevisionResult(Polynom Result, Polynom Remainder, Polynom Divisor)
+            public PolynomDivisionResult(Polynom Result, Polynom Remainder, Polynom Divisor)
             {
                 this.Result = Result;
                 this.Remainder = Remainder;
@@ -558,14 +563,15 @@ namespace MathCore
 
             /// <summary>Получить функцию</summary>
             /// <returns>Функция вычисления значения результата деления полиномов</returns>
+            [NotNull]
             public Func<double, double> GetFunction() => Value;
 
-            public override string ToString() => $"({Result.ToMathString()}) + ({Remainder.ToMathString()}) / ({Divisor.ToMathString()})";
+            [NotNull] public override string ToString() => $"({Result.ToMathString()}) + ({Remainder.ToMathString()}) / ({Divisor.ToMathString()})";
 
             /// <summary>Оператор неявного преобразования результата деления полиномов в полином результата</summary>
             /// <param name="Result">Результат деления полиномов</param>
             /// <returns>Частное</returns>
-            public static implicit operator Polynom(PolynomDevisionResult Result) => Result.Result;
+            public static implicit operator Polynom(PolynomDivisionResult Result) => Result.Result;
         }
 
         /// <summary>Случайный полином</summary>
