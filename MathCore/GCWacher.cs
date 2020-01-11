@@ -31,16 +31,16 @@ namespace MathCore
         }
 
         /// <summary>Событие завершения процесса сборки мусора</summary>
-        private static event EventHandler __Complite;
+        private static event EventHandler __Complete;
         /// <summary>Событие завершения процесса сборки мусора</summary>
-        public static event EventHandler Complite
+        public static event EventHandler Complete
         {
             add
             {
                 lock (__SyncRoot)
                 {
-                    var old_handlers = __Complite;
-                    __Complite += value;
+                    var old_handlers = __Complete;
+                    __Complete += value;
                     if(old_handlers is null) Start();
                 }
             }
@@ -48,8 +48,8 @@ namespace MathCore
             {
                 lock (__SyncRoot)
                 {
-                    __Complite -= value;
-                    if(__Complite is null) Stop();
+                    __Complete -= value;
+                    if(__Complete is null) Stop();
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace MathCore
         /// <summary>Генерация осбытия начала сборки мусора</summary>
         private static void OnApproaches() => __Approaches.BeginInvoke(__GCWacher, EventArgs.Empty, null, null);
         /// <summary>Генерация осбытия окончания сборки мусора</summary>
-        private static void OnComplite() => __Complite.BeginInvoke(__GCWacher, EventArgs.Empty, null, null);
+        private static void OnComplete() => __Complete.BeginInvoke(__GCWacher, EventArgs.Empty, null, null);
 
         /// <summary>Объект-наблюдатель за сборщиком мусора</summary>
         private static readonly GCWacher __GCWacher = new GCWacher();
@@ -108,7 +108,7 @@ namespace MathCore
                 OnApproaches();
                 GC.WaitForFullGCComplete();
                 if(!__Enabled) return;
-                OnComplite();
+                OnComplete();
             }
         }
     }

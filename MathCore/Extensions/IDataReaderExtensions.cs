@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System.Data
 {
     public static class IDataReaderExtensions
     {
-        public static IEnumerable<T> ReadToEnd<T>(this IDataReader Reader, Func<IDataRecord, T> Read)
+        [NotNull]
+        public static IEnumerable<T> ReadToEnd<T>([NotNull] this IDataReader Reader, Func<IDataRecord, T> Read)
         {
             var items = new List<T>();
 
@@ -14,7 +18,7 @@ namespace System.Data
             return items;
         }
 
-        public static IEnumerable<T> Enumerable<T>(this IDataReader Reader, Func<IDataRecord, T> Read)
+        public static IEnumerable<T> Enumerable<T>([NotNull] this IDataReader Reader, Func<IDataRecord, T> Read)
         {
             while(Reader.Read()) yield return Read(Reader);
         }

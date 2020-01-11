@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
 
 namespace System
 {
@@ -38,7 +40,7 @@ namespace System
 
         public static string FindRegEx([NotNull] this string Str, [RegexPattern] [NotNull] string Pattern, string Default) => Regex.Match(Str, Pattern).OrDefault(Default);
 
-        public static int FindRegEx([NotNull] this string Str, [RegexPattern] [NotNull] string Pattern, int DefaultValue) => int.TryParse(Str.FindRegEx(Pattern, ""), out var v) ? v : DefaultValue;
+        public static int FindRegEx([NotNull] this string Str, [RegexPattern] [NotNull] string Pattern, int DefaultValue) => int.TryParse(Str.FindRegEx(Pattern, string.Empty), out var v) ? v : DefaultValue;
 
         [CanBeNull] public static string ValueOrDefault([CanBeNull] this Group g, [CanBeNull] string Default = null) => g is null || !g.Success ? Default : g.Value;
 
@@ -46,7 +48,7 @@ namespace System
 
         public static double ValuedDoubleOrDefault([CanBeNull] this Group g, double Default = double.NaN) => g is null || !g.Success || !double.TryParse(g.Value, out var v) ? Default : v;
 
-        public static double ValuedDoubleOrDefault([CanBeNull] this Group g, IFormatProvider format, NumberStyles style = NumberStyles.Float, double Default = double.NaN) => g is null || !g.Success || !double.TryParse(g.Value, NumberStyles.Float, format, out var v) ? Default : v;
+        public static double ValuedDoubleOrDefault([CanBeNull] this Group g, IFormatProvider format, NumberStyles style = NumberStyles.Float, double Default = double.NaN) => g is null || !g.Success || !double.TryParse(g.Value, style, format, out var v) ? Default : v;
 
         public static bool ValueBoolOrDefault([CanBeNull] this Group g, bool Default = false) => g is null || !g.Success || !bool.TryParse(g.Value, out var v) ? Default : v;
     }

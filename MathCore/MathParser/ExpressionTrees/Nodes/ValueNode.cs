@@ -1,4 +1,5 @@
-﻿namespace MathCore.MathParser.ExpressionTrees.Nodes
+﻿// ReSharper disable UnusedMember.Global
+namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
     /// <summary>Узел дерева мат.выражения, хранящий значение</summary>
     public abstract class ValueNode : ComputedNode
@@ -11,7 +12,7 @@
         public override string ToString()
         {
             const string format = "{1}{0}{2}";
-            string Convert(ExpressionTreeNode n) => n?.ToString() ?? "";
+            static string Convert(ExpressionTreeNode n) => n?.ToString() ?? string.Empty;
             return string.Format(format, Value, Convert(Left), Convert(Right));
         }
     }

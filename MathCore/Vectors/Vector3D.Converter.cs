@@ -28,7 +28,7 @@ namespace MathCore.Vectors
             while(s[0] == '"' && s[s.Length - 1] == '"')
                 s = s.Substring(1, s.Length - 2);
 
-            s = s.Replace(" ", "");
+            s = s.Replace(" ", string.Empty);
 
             var val = s.Split(';', ':', '|').ConvertTo(double.Parse);
 

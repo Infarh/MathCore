@@ -40,7 +40,7 @@ namespace MathCore.Tests
             Assert.AreEqual(41, Polynom.Array.GetValue(2, a));
             Assert.AreEqual(81, Polynom.Array.GetValue(3, a));
 
-            Assert.AreEqual(double.NaN, Polynom.Array.GetValue(10, new double[0]));
+            Assert.AreEqual(double.NaN, Polynom.Array.GetValue(10, Array.Empty<double>()));
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace MathCore.Tests
             Assert.AreEqual(41, Polynom.Array.GetValue(new Complex(2), a));
             Assert.AreEqual(81, Polynom.Array.GetValue(new Complex(3), a));
 
-            Assert.AreEqual(Complex.NaN, Polynom.Array.GetValue(new Complex(), new double[0]));
+            Assert.AreEqual(Complex.NaN, Polynom.Array.GetValue(new Complex(), Array.Empty<double>()));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace MathCore.Tests
             exception = null;
             try
             {
-                var roots = new double[0];
+                var roots = Array.Empty<double>();
                 Polynom.Array.GetCoefficients(roots);
             }
             catch (Exception e)
@@ -170,7 +170,7 @@ namespace MathCore.Tests
             exception = null;
             try
             {
-                var roots = new double[0];
+                var roots = Array.Empty<double>();
                 Polynom.Array.GetCoefficientsInverted(roots);
             }
             catch (Exception e)
@@ -208,7 +208,7 @@ namespace MathCore.Tests
                .Throw<ArgumentNullException>()
                .Where(e => e.ParamName).IsEqual("Root");
            
-            Assert.That.Method(Polynom.Array.GetCoefficients, new Complex[0])
+            Assert.That.Method(Polynom.Array.GetCoefficients, Array.Empty<Complex>())
                .Throw<ArgumentException>()
                .Where(e => e.ParamName).IsEqual("Root");
         }
@@ -232,7 +232,7 @@ namespace MathCore.Tests
         public void GetCoefficientsInverted_Complex_Exceptions_Test()
         {
             Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetCoefficientsInverted((Complex[])null));
-            Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetCoefficientsInverted(new Complex[0]));
+            Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetCoefficientsInverted(Array.Empty<Complex>()));
         }
 
         [TestMethod]
@@ -351,20 +351,20 @@ namespace MathCore.Tests
             double[] q = { 1, 2, 3, 4, 5 };
             double[] expected_subtract = { 2, 3, 4, -4, -5 };
 
-            var actual_subtract = Polynom.Array.subtract(p, q);
+            var actual_subtract = Polynom.Array.Subtract(p, q);
             CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
 
             expected_subtract = new double[] { -2, -3, -4, 4, 5 };
-            actual_subtract = Polynom.Array.subtract(q, p);
+            actual_subtract = Polynom.Array.Subtract(q, p);
             CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void subtract_ArgumentNullException_p_Test() => Polynom.Array.subtract(null, new double[5]);
+        public void subtract_ArgumentNullException_p_Test() => Polynom.Array.Subtract(null, new double[5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void subtract_ArgumentNullException_q_Test() => Polynom.Array.subtract(new double[5], null);
+        public void subtract_ArgumentNullException_q_Test() => Polynom.Array.Subtract(new double[5], null);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Ex = System.Linq.Expressions.Expression;
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление отрицания значения</summary>
     /// <typeparam name="T">Тип значения параметра</typeparam>

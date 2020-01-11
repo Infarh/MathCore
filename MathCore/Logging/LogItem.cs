@@ -6,6 +6,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Logging
 {
@@ -38,15 +41,16 @@ namespace MathCore.Logging
             get
             {
                 this.GetMinMax(i => i.Time.Ticks, out var begin, out var end);
+                if(begin is null || end is null) throw new InvalidOperationException();
                 return end.Time - begin.Time;
             }
         }
 
-        public LogItem this[int Index] => Index == _Items.Count ? this : _Items[Index];
+        [NotNull] public LogItem this[int Index] => Index == _Items.Count ? this : _Items[Index];
 
         public LogItem this[DateTime time] => this.Select(item => (item, delta: (item.Time - time).TotalSeconds.Abs())).GetMin(i => i.delta).item;
 
-        public LogItem this[string value] => this.FirstOrDefault(i => i.Value == value);
+        [CanBeNull] public LogItem this[string value] => this.FirstOrDefault(i => i.Value == value);
 
         public DateTime Time
         {
@@ -141,7 +145,7 @@ namespace MathCore.Logging
             return item;
         }
 
-        public override string ToString() => $"{_Time}:{_Value}{(ItemsCount > 0 ? $"[{ItemsCount}]" : "")}";
+        [NotNull] public override string ToString() => $"{_Time}:{_Value}{(ItemsCount > 0 ? $"[{ItemsCount}]" : string.Empty)}";
 
         public IEnumerator<LogItem> GetEnumerator() => _Items.AppendLast(new LogItem(_Time, _Value, _Type)).GetEnumerator();
 

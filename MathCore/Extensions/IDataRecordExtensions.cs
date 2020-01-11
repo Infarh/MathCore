@@ -1,8 +1,13 @@
-﻿namespace System.Data
+﻿using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
+
+// ReSharper disable once CheckNamespace
+namespace System.Data
 {
-    public static class IDataRecordExtensons
+    public static class IDataRecordExtensions
     {
-        public static T Field<T>(this IDataRecord record, int i)
+        public static T Field<T>([NotNull] this IDataRecord record, int i)
         {
             if(!record.IsDBNull(i))
                 return (T)record.GetValue(i);
@@ -12,7 +17,7 @@
             throw new NullReferenceException();
         }
 
-        public static T Field<T>(this IDataRecord record, string ColumnName)
+        public static T Field<T>([NotNull] this IDataRecord record, [NotNull] string ColumnName)
         {
             var ordinal = record.GetOrdinal(ColumnName);
 

@@ -1,6 +1,15 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Local
+// ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable AnnotateNotNullTypeMember
+
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     public class Field<T> : ItemBase
@@ -21,18 +30,17 @@ namespace System.Linq.Expressions
             get => _Reader();
             set
             {
-                if(IsReadOnly) throw new NotSupportedException();
+                if (IsReadOnly) throw new NotSupportedException();
                 _Writer(value);
             }
         }
 
         public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
 
-
         // ReSharper disable once RedundantAssignment
         private static void Set(ref T field, T value) => field = value;
 
-        public Field(Type type, string Name, bool IsPublicOnly = true)
+        public Field(Type type, [NotNull] string Name, bool IsPublicOnly = true)
             : base(type, Name)
         {
             var value_type = typeof(T);
@@ -43,18 +51,20 @@ namespace System.Linq.Expressions
             var field = Expression.Field(null, _FieldInfo);
             var ReaderExpr = Expression.Lambda<Func<T>>(field);
             _Reader = ReaderExpr.Compile();
-            if(IsReadOnly) return;
+            if (IsReadOnly) return;
             var value = Expression.Parameter(value_type, "value");
+            var method_info = typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic)
+                                ?? throw new InvalidOperationException("Не найден метод Set");
             var call = Expression.Call(null,
-                typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
+                method_info, field, value);
             var expr = Expression.Lambda<Action<T>>(call, value);
             _Writer = expr.Compile();
         }
 
-        public Field(object Obj, string Name, bool IsPublicOnly = true)
-            : this(Obj, Obj.GetType().GetField(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic))) { }
+        public Field([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+            : this(Obj, Obj.GetType().GetField(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Не найдена информация о поле {Name}")) { }
 
-        public Field(object Obj, FieldInfo info)
+        public Field(object Obj, [NotNull] FieldInfo info)
             : base(Obj, info.Name)
         {
             _FieldInfo = info;
@@ -64,9 +74,11 @@ namespace System.Linq.Expressions
             var field = Expression.Field(ObjConstant, Name);
             var ReaderExpr = Expression.Lambda<Func<T>>(field);
             _Reader = ReaderExpr.Compile();
-            if(IsReadOnly) return;
+            if (IsReadOnly) return;
             var value = Expression.Parameter(value_type, "value");
-            var call = Expression.Call(null, typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
+            var method_info = typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic)
+                                ?? throw new InvalidOperationException("Не найден метод Set");
+            var call = Expression.Call(null, method_info, field, value);
             var expr = Expression.Lambda<Action<T>>(call, value);
             _Writer = expr.Compile();
         }
@@ -90,7 +102,7 @@ namespace System.Linq.Expressions
             get => _Reader();
             set
             {
-                if(IsReadOnly) throw new NotSupportedException();
+                if (IsReadOnly) throw new NotSupportedException();
                 _Writer(value);
             }
         }
@@ -100,7 +112,7 @@ namespace System.Linq.Expressions
         // ReSharper disable once RedundantAssignment
         private static void Set(ref object field, object value) => field = value;
 
-        public Field(Type type, string Name, bool IsPublicOnly = true)
+        public Field(Type type, [NotNull] string Name, bool IsPublicOnly = true)
             : base(type, Name)
         {
             _FieldInfo = _ObjectType.GetField(Name, BindingFlags.Static | (IsPublicOnly
@@ -114,17 +126,19 @@ namespace System.Linq.Expressions
             var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
             _Reader = ReaderExpr.Compile();
 
-            if(IsReadOnly) return;
+            if (IsReadOnly) return;
             var value = Expression.Parameter(value_type, "value");
-            var call = Expression.Call(null, typeof(Field).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
+            var method_info = typeof(Field).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic)
+                              ?? throw new InvalidOperationException("Не найден метод Set");
+            var call = Expression.Call(null, method_info, field, value);
             var expr = Expression.Lambda<Action<object>>(call, value);
             _Writer = expr.Compile();
         }
 
-        public Field(object Obj, string Name, bool IsPublicOnly = true)
-            : this(Obj, Obj.GetType().GetField(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic))) { }
+        public Field([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+            : this(Obj, Obj.GetType().GetField(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Не найдена информация о поле {Name}")) { }
 
-        public Field(object Obj, FieldInfo info)
+        public Field(object Obj, [NotNull] FieldInfo info)
             : base(Obj, info.Name)
         {
             _FieldInfo = info;
@@ -136,9 +150,11 @@ namespace System.Linq.Expressions
             var field = Expression.Field(ObjConstant, Name);
             var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(field, typeof(object)));
             _Reader = ReaderExpr.Compile();
-            if(IsReadOnly) return;
+            if (IsReadOnly) return;
             var value = Expression.Parameter(value_type, "value");
-            var call = Expression.Call(null, typeof(Field).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic), field, value);
+            var method_info = typeof(Field).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic)
+                              ?? throw new InvalidOperationException("Не найден метод Set");
+            var call = Expression.Call(null, method_info, field, value);
             var expr = Expression.Lambda<Action<object>>(call, value);
             _Writer = expr.Compile();
         }

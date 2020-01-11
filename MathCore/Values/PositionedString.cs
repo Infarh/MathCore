@@ -1,4 +1,8 @@
 ﻿using System;
+using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
+
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.Values
 {
@@ -14,8 +18,9 @@ namespace MathCore.Values
             this.Position = Position;
         }
 
-        public string GetSubstringForward(int Length) => String.Substring(Position, Length);
+        [NotNull] public string GetSubstringForward(int Length) => String.Substring(Position, Length);
 
+        [NotNull]
         public string GetSubstringBackward(int Length)
         {
             var pos = Position - Length + 1;
@@ -25,6 +30,7 @@ namespace MathCore.Values
             return String.Substring(pos, Length);
         }
 
+        [NotNull]
         public string MoveForward(int Length)
         {
             var str = GetSubstringForward(Length); 
@@ -32,6 +38,7 @@ namespace MathCore.Values
             return str;
         }
 
+        [NotNull]
         public string MoveBackward(int Length)
         {
             var str = GetSubstringBackward(Length); 
@@ -42,7 +49,7 @@ namespace MathCore.Values
         public void ShowCursor() => ShowCursor(Position);
         public void ShowCursor(int position)
         {
-            var sub_str = "";
+            var sub_str = string.Empty;
             var visual_pos = position;
             if(position < 0)
             {

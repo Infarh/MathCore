@@ -2,6 +2,11 @@
 using MathCore.Annotations;
 using MathCore.Values;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMember.Local
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Reflection
@@ -21,11 +26,11 @@ namespace System.Reflection
 
         /// <summary>Информация о свойстве</summary>
         private PropertyInfo _PropertyInfo;
-        /// <summary>Имя свйоства</summary>
+        /// <summary>Имя свойства</summary>
         private string _Name;
-        /// <summary>Объект, которому принадлежит свйоство</summary>
+        /// <summary>Объект, которому принадлежит свойство</summary>
         private TObject _Object;
-        /// <summary>Флаг приватности свйоства</summary>
+        /// <summary>Флаг приватности свойства</summary>
         private bool _Private;
 
         private Action<TValue> _SetMethod;
@@ -35,9 +40,7 @@ namespace System.Reflection
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>
-        /// Тип значения свойства
-        /// </summary>
+        /// <summary>Тип значения свойства</summary>
         [NotNull]
         public Type PropertyType => _PropertyInfo.PropertyType;
 
@@ -48,14 +51,14 @@ namespace System.Reflection
             set => Initialize(_Object, value, _Private);
         }
 
-        ///<summary>Объект, определяющий свойтсво</summary>
+        ///<summary>Объект, определяющий свойство</summary>
         public TObject Object
         {
             get => _Object;
             set => Initialize(value, _Name, _Private);
         }
 
-        ///<summary>Признак - является ли свойство пиватным</summary>
+        ///<summary>Признак - является ли свойство приватным</summary>
         public bool Private
         {
             get => _Private;
@@ -65,7 +68,7 @@ namespace System.Reflection
         ///<summary>Признак </summary>
         public bool IsExist => _PropertyInfo != null;
 
-        ///<summary>Значение свйоства</summary>
+        ///<summary>Значение свойства</summary>
         public TValue Value { get => _GetMethod(); set => _SetMethod(value); }
 
         ///<summary>Признак возможности читать значение</summary>
@@ -82,7 +85,7 @@ namespace System.Reflection
         ///<summary>Атрибуты свойства</summary>
         public PropertyAttributes Attributes => _PropertyInfo.Attributes;
 
-        /// <summary>Дескриптор свйоства объекта</summary>
+        /// <summary>Дескриптор свойства объекта</summary>
         public PropertyDescriptor Descriptor => _Descriptor;
 
         public string DisplayName { get; private set; }
@@ -92,15 +95,15 @@ namespace System.Reflection
         /* ------------------------------------------------------------------------------------------ */
 
         ///<summary>Новый объект "Свойство" для позднего связывания</summary>
-        ///<param name="Name">Имя свйосвта</param>
+        ///<param name="Name">Имя свойства</param>
         ///<param name="Private">Является ли свойство скрытым</param>
-        public Property(string Name, bool Private = false) : this(default, Name, Private) { }
+        public Property([NotNull] string Name, bool Private = false) : this(default, Name, Private) { }
 
         ///<summary>Новый объект "Свойство" для позднего связывания</summary>
         ///<param name="o">Объект, для которого определяется свойство</param>
-        ///<param name="Name">Имя свйосвта</param>
+        ///<param name="Name">Имя свойства</param>
         ///<param name="Private">Является ли свойство скрытым</param>
-        public Property(TObject o, string Name, bool Private = false) => Initialize(o, Name, Private);
+        public Property(TObject o, [NotNull] string Name, bool Private = false) => Initialize(o, Name, Private);
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -171,6 +174,7 @@ namespace System.Reflection
 
         /* ------------------------------------------------------------------------------------------ */
 
+        [NotNull]
         public override string ToString()
         {
             var property_type = _Object is null ? "Static property" : "Property";
@@ -178,10 +182,10 @@ namespace System.Reflection
             if(_PropertyInfo is null)
                 return $"Incorrect {property_type.ToLower()} of {typeof(TObject)} name {_Name}";
 
-            var value = CanRead ? $" = {Value}" : "";
+            var value = CanRead ? $" = {Value}" : string.Empty;
             var host = typeof(TObject).Name;
             return string.Format("{0}({4}{5}{6}): {1}.{2}{3}", property_type, host, _Name, value,
-                CanRead ? "R" : "", CanWrite ? "W" : "", SupportsChangeEvents ? "E" : "");
+                CanRead ? "R" : string.Empty, CanWrite ? "W" : string.Empty, SupportsChangeEvents ? "E" : string.Empty);
         }
 
         /* ------------------------------------------------------------------------------------------ */

@@ -128,7 +128,7 @@ namespace System.ComponentModel
                         if (!_Dependences.ContainsKey(e.PropertyName)) return;
                         if (e is DependentPropertyChangedEventArgs args)
                         {
-                            var p_stack = args.FromProperties ?? new string[0];
+                            var p_stack = args.FromProperties ?? Array.Empty<string>();
                             if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
                             foreach (var property in _Dependences[args.PropertyName])
                             {
@@ -177,7 +177,7 @@ namespace System.ComponentModel
                 __ObjectsSet.Add(new WeakReference(obj));
                 typeof(T).GetRegistrator().Subscribe(obj, OnPropertyChanged);
                 if (__ObjectsSet.Count == 1)
-                    GCWacher.Complite += OnGarbageCollected;
+                    GCWacher.Complete += OnGarbageCollected;
             }
         }
 
@@ -197,7 +197,7 @@ namespace System.ComponentModel
                 __ObjectsSet.Add(new WeakReference(obj));
                 typeof(T).GetRegistrator().Subscribe(obj, OnPropertyChanged);
                 if (__ObjectsSet.Count == 1)
-                    GCWacher.Complite += OnGarbageCollected;
+                    GCWacher.Complete += OnGarbageCollected;
             }
             return new LambdaDisposable(obj.PropertyDependences_Unregister);
         }
@@ -219,7 +219,7 @@ namespace System.ComponentModel
                 if (!__ObjectsSet.Any(w => w.Target is T))
                     __RegistrationPool.Remove(type);
                 if (__ObjectsSet.Count == 0)
-                    GCWacher.Complite -= OnGarbageCollected;
+                    GCWacher.Complete -= OnGarbageCollected;
             }
         }
 

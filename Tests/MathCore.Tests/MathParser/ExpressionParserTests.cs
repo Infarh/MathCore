@@ -532,7 +532,7 @@ namespace MathCore.Tests.MathParser
             var_y = var_collection[1];
             Assert.AreEqual("x", var_x.Name);
             Assert.AreEqual("y", var_y.Name);
-            var l_var = new LamdaExpressionVariable(() => 10);
+            var l_var = new LambdaExpressionVariable(() => 10);
             var_collection["x"] = l_var;
             var vars = expr.Tree
                         .Where(node => node is VariableValueNode)
@@ -545,8 +545,8 @@ namespace MathCore.Tests.MathParser
 
 
             expr = parser.Parse("2x-y");
-            expr.Variable["x"] = new LamdaExpressionVariable(() => 20);
-            Assert.IsInstanceOfType(expr.Variable["x"], typeof(LamdaExpressionVariable));
+            expr.Variable["x"] = new LambdaExpressionVariable(() => 20);
+            Assert.IsInstanceOfType(expr.Variable["x"], typeof(LambdaExpressionVariable));
             Assert.AreEqual(0, expr.Variable["x"].Value);
             Assert.AreEqual(20, expr.Variable["x"].GetValue());
             Assert.AreEqual(20, expr.Variable["x"].Value);
@@ -555,7 +555,7 @@ namespace MathCore.Tests.MathParser
             expr = parser.Parse("(2x-3.27y)^(sin(x)/x)-2z+3q/2x+y");
             var_collection = expr.Variable;
             var x_var_call_counter = 0;
-            var_collection["x"] = new LamdaExpressionVariable(() =>
+            var_collection["x"] = new LambdaExpressionVariable(() =>
             {
                 // ReSharper disable once AccessToModifiedClosure
                 x_var_call_counter++;
@@ -567,12 +567,12 @@ namespace MathCore.Tests.MathParser
             expr.Compile()();
             Assert.AreEqual(4, x_var_call_counter);
 
-            Assert.IsTrue(var_collection.Add(new ExpressionVariabel("test1")));
-            var var_test2 = new ExpressionVariabel("test2");
+            Assert.IsTrue(var_collection.Add(new ExpressionVariable("test1")));
+            var var_test2 = new ExpressionVariable("test2");
             Assert.IsTrue(var_collection.Add(var_test2));
-            Assert.IsTrue(var_collection.Add(new ExpressionVariabel("test3")));
-            Assert.IsFalse(var_collection.Add(new ExpressionVariabel("test1")));
-            Assert.IsFalse(var_collection.Add(new ExpressionVariabel("x")));
+            Assert.IsTrue(var_collection.Add(new ExpressionVariable("test3")));
+            Assert.IsFalse(var_collection.Add(new ExpressionVariable("test1")));
+            Assert.IsFalse(var_collection.Add(new ExpressionVariable("x")));
             Assert.IsTrue(var_collection.Remove(var_test2));
             Assert.IsFalse(var_collection.Remove(var_test2));
             Assert.IsFalse(var_collection.Remove(var_collection["x"]));
@@ -585,7 +585,7 @@ namespace MathCore.Tests.MathParser
             Assert.IsTrue(var_collection.Exist("x"));
             Assert.IsTrue(var_collection.Exist("test1"));
             Assert.IsFalse(var_collection.Exist("test2"));
-            Assert.IsTrue(var_collection.Exist(v => v is LamdaExpressionVariable));
+            Assert.IsTrue(var_collection.Exist(v => v is LambdaExpressionVariable));
             Assert.IsFalse(var_collection.Exist(v => v is EventExpressionVariable));
 
             Assert.IsTrue(var_collection.ExistInTree("x"));
@@ -595,10 +595,10 @@ namespace MathCore.Tests.MathParser
             Assert.IsFalse(var_collection.ExistInTree("test1"));
 #pragma warning disable 183
             // ReSharper disable IsExpressionAlwaysTrue
-            Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is ExpressionVariabel));
+            Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is ExpressionVariable));
             // ReSharper restore IsExpressionAlwaysTrue
 #pragma warning restore 183
-            Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is LamdaExpressionVariable));
+            Assert.IsTrue(var_collection.ExistInTree(v => v.Variable is LambdaExpressionVariable));
             Assert.IsFalse(var_collection.ExistInTree(v => v.Variable is EventExpressionVariable));
 
             Assert.AreEqual(4, var_collection.GetTreeNodes("x").Count());
@@ -607,18 +607,18 @@ namespace MathCore.Tests.MathParser
             Assert.AreEqual(1, var_collection.GetTreeNodes("q").Count());
             Assert.AreEqual(0, var_collection.GetTreeNodes("test1").Count());
 
-            Assert.AreEqual(4, var_collection.GetTreeNodes(vn => vn.Variable is LamdaExpressionVariable).Count());
+            Assert.AreEqual(4, var_collection.GetTreeNodes(vn => vn.Variable is LambdaExpressionVariable).Count());
             Assert.AreEqual(0, var_collection.GetTreeNodes(vn => vn.Variable is EventExpressionVariable).Count());
 
-            Assert.AreEqual(8, var_collection.GetTreeNodesOf<ExpressionVariabel>().Count());
-            Assert.AreEqual(4, var_collection.GetTreeNodesOf<LamdaExpressionVariable>().Count());
+            Assert.AreEqual(8, var_collection.GetTreeNodesOf<ExpressionVariable>().Count());
+            Assert.AreEqual(4, var_collection.GetTreeNodesOf<LambdaExpressionVariable>().Count());
             Assert.AreEqual(0, var_collection.GetTreeNodesOf<EventExpressionVariable>().Count());
 
-            Assert.AreEqual(4, var_collection.GetTreeNodesVOf<ExpressionVariabel>(v => v.Name == "x").Count());
-            Assert.AreEqual(4, var_collection.GetTreeNodesVOf<LamdaExpressionVariable>(v => v.Name == "x").Count());
-            Assert.AreEqual(2, var_collection.GetTreeNodesVOf<ExpressionVariabel>(v => v.Name == "y").Count());
-            Assert.AreEqual(3, var_collection.GetTreeNodesOf<ExpressionVariabel>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
-            Assert.AreEqual(1, var_collection.GetTreeNodesOf<LamdaExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
+            Assert.AreEqual(4, var_collection.GetTreeNodesVOf<ExpressionVariable>(v => v.Name == "x").Count());
+            Assert.AreEqual(4, var_collection.GetTreeNodesVOf<LambdaExpressionVariable>(v => v.Name == "x").Count());
+            Assert.AreEqual(2, var_collection.GetTreeNodesVOf<ExpressionVariable>(v => v.Name == "y").Count());
+            Assert.AreEqual(3, var_collection.GetTreeNodesOf<ExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
+            Assert.AreEqual(1, var_collection.GetTreeNodesOf<LambdaExpressionVariable>(vn => vn.Parent?.Parent is subtractionOperatorNode).Count());
         }
 
         /// <summary>Тестирование коллекции констант</summary>

@@ -1,4 +1,9 @@
 ﻿using System;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Local
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
 
@@ -7,8 +12,8 @@ namespace MathCore.Data
     public struct DataLength : IFormattable
     {
         private const double __Base = 1024;
-        private const double __Treshold = 0.948964729348844D; // Log(1024 * 0.7, __Base) - 70%
-        private static readonly string[] __Units = { "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
+        private const double __Threshold = 0.948964729348844D; // Log(1024 * 0.7, __Base) - 70%
+        private static readonly string[] __Units = {string.Empty, "k", "M", "G", "T", "P", "E", "Z", "Y" };
 
         public static double Value(ulong value, double Base, out string unit)
         {
@@ -21,7 +26,7 @@ namespace MathCore.Data
             var v_base = Math.Log(value, Base);
             var u = (int)Math.Truncate(v_base);
             var d = v_base - u;
-            if(d > __Treshold)
+            if(d > __Threshold)
             {
                 u++;
                 d--;
@@ -42,7 +47,7 @@ namespace MathCore.Data
             var v_base = Math.Log(value, Base);
             var u = (int)Math.Truncate(v_base);
             var d = v_base - u;
-            if(d > __Treshold)
+            if(d > __Threshold)
             {
                 u++;
                 d--;
@@ -64,11 +69,12 @@ namespace MathCore.Data
         public DataLength(double Length, double Base) => _FormattedLength = Value(_Length = Length, _Base = Base, out _Unit);
 
         /// <inheritdoc />
+        [NotNull]
         public override string ToString() => $"{_FormattedLength}{_Unit}";
 
-        public string ToString(string format) => $"{_FormattedLength.ToString(format)}{_Unit}";
+        [NotNull] public string ToString(string format) => $"{_FormattedLength.ToString(format)}{_Unit}";
 
         /// <inheritdoc />
-        public string ToString(string format, IFormatProvider formatProvider) => $"{_FormattedLength.ToString(format, formatProvider)}{_Unit}";
+        public string ToString(string format, IFormatProvider FormatProvider) => $"{_FormattedLength.ToString(format, FormatProvider)}{_Unit}";
     }
 }

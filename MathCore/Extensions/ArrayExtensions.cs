@@ -5,6 +5,7 @@ using System.Text;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -183,7 +184,7 @@ namespace System
             if (i < high) QuickSortT(A, i, high);
         }
 
-        /// <summary>Рассчёт хеш-суммы всех элементов массива</summary>
+        /// <summary>Расчёт хеш-суммы всех элементов массива</summary>
         /// <typeparam name="T">Тип элементов</typeparam>
         /// <param name="Objects">Массив элементов</param>
         /// <returns>Хеш-сумма элементов массива</returns>
@@ -332,8 +333,8 @@ namespace System
         {
             var result = new TArray[Length];
 
-            var j_Length = Start + Length;
-            for (int i = 0, j = Start; i < Length && j < j_Length; i++, j++)
+            var j_length = Start + Length;
+            for (int i = 0, j = Start; i < Length && j < j_length; i++, j++)
                 result[i] = array[j];
 
             return result;
@@ -392,8 +393,6 @@ namespace System
                 array[i] = Initializer(i, p);
             return array;
         }
-
-
 
         /// <summary>Инициализация массива</summary>
         /// <typeparam name="TValue">Тип элементов массива</typeparam>
@@ -879,7 +878,7 @@ namespace System
         public static T[] Liniarize<T>([NotNull] this T[][] array)
         {
             var result_length = array.Sum(a => a.Length);
-            if (result_length == 0) return new T[0];
+            if (result_length == 0) return Array.Empty<T>();
             var result = new T[result_length];
             for (int i = 0, k = 0; i < array.Length; i++)
             {
@@ -936,7 +935,7 @@ namespace System
             if (matrix is null) return null;
             var N = matrix.GetLength(0);
             var M = matrix.GetLength(1);
-            if (N == 0 || M == 0) return "";
+            if (N == 0 || M == 0) return string.Empty;
             var result = new StringBuilder();
             var line = new StringBuilder();
 
@@ -966,7 +965,7 @@ namespace System
             if (matrix is null) return null;
             var N = matrix.GetLength(0);
             var M = matrix.GetLength(1);
-            if (N == 0 || M == 0) return "";
+            if (N == 0 || M == 0) return string.Empty;
             if (provider is null) provider = CultureInfo.InvariantCulture;
             var result = new StringBuilder();
             var line = new StringBuilder();

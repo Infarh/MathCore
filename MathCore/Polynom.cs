@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml.Serialization;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable InconsistentNaming
 
 // ReSharper disable UnusedMember.Global
 
@@ -121,7 +122,7 @@ namespace MathCore
         {
             if (Divisor is null) throw new ArgumentNullException(nameof(Divisor));
 
-            Array.Devide(_a, Divisor._a, out var result, out var remainder);
+            Array.Divide(_a, Divisor._a, out var result, out var remainder);
             var n = remainder.Length;
             while (n >= 1 && remainder[n - 1].Equals(0)) n--;
             System.Array.Resize(ref remainder, n);
@@ -141,15 +142,15 @@ namespace MathCore
                 var a = _a[n];
                 if (a.Equals(0)) continue;
                 result.AppendFormat("{0}{1}{2}{3}{4}",
-                    result.Length > 0 && a > 0 ? "+" : "",
-                    a.Equals(1) ? "" : (a.Equals(-1) ? "-" : a.ToString(CultureInfo.CurrentCulture)),
-                    n > 0 ? "x" : "",
-                    n > 1 ? "^" : "",
-                    n > 1 ? n.ToString() : "");
+                    result.Length > 0 && a > 0 ? "+" : string.Empty,
+                    a.Equals(1) ? string.Empty : (a.Equals(-1) ? "-" : a.ToString(CultureInfo.CurrentCulture)),
+                    n > 0 ? "x" : string.Empty,
+                    n > 1 ? "^" : string.Empty,
+                    n > 1 ? n.ToString() : string.Empty);
             }
             if (length > 0 && !_a[0].Equals(0))
                 result.AppendFormat("{0}{1}",
-                    _a[0] < 0 ? "" : "+",
+                    _a[0] < 0 ? string.Empty : "+",
                     _a[0]);
 
 
@@ -172,7 +173,7 @@ namespace MathCore
         [NotNull]
         public Polynom GetInversed()
         {
-            Array.Devide(new[] { 1d }, _a, out var result, out _);
+            Array.Divide(new[] { 1d }, _a, out var result, out _);
             return new Polynom(result);
         }
 
@@ -194,7 +195,7 @@ namespace MathCore
         /// <param name="P">Полином - подстановка</param>
         /// <returns>Полином - результат подстановки</returns>
         [NotNull]
-        public Polynom Substite([NotNull] Polynom P)
+        public Polynom Substitute([NotNull] Polynom P)
         {
             var p = P.Clone();
             var result = new Polynom(_a[0]);
@@ -245,31 +246,34 @@ namespace MathCore
         IEnumerator<double> IEnumerable<double>.GetEnumerator() => ((IEnumerable<double>)_a).GetEnumerator();
 
         /// <inheritdoc />
+        [NotNull]
         public override string ToString() =>
             _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-                    a < 0 || i == 0 ? "" : "+",
+                    a < 0 || i == 0 ? string.Empty : "+",
                     a,
-                    i == 0 ? "" : $"*x{(i == 1 ? "" : "^" + i)}")).ToString();
+                    i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
 
         /// <summary>Строковое представление полинома с форматированием</summary>
         /// <param name="Format">Строка форматирования</param>
         /// <returns>Форматированное представление полинома</returns>
+        [NotNull]
         public string ToString(string Format) =>
             _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-                a < 0 || i == 0 ? "" : "+",
+                a < 0 || i == 0 ? string.Empty : "+",
                 a.ToString(Format),
-                i == 0 ? "" : $"*x{(i == 1 ? "" : "^" + i)}")).ToString();
+                i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
 
+        [NotNull]
         public string ToString(IFormatProvider provider) =>
             _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-                a < 0 || i == 0 ? "" : "+",
+                a < 0 || i == 0 ? string.Empty : "+",
                 a.ToString(provider),
-                i == 0 ? "" : $"*x{(i == 1 ? "" : "^" + i)}")).ToString();
+                i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
 
         public string ToString(string Format, IFormatProvider provider) =>
             _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-                a < 0 || i == 0 ? "" : "+",
+                a < 0 || i == 0 ? string.Empty : "+",
                 a.ToString(Format, provider),
-                i == 0 ? "" : $"*x{(i == 1 ? "" : "^" + i)}")).ToString();
+                i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
     }
 }

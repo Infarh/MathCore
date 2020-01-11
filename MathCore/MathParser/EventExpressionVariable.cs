@@ -1,10 +1,16 @@
 ﻿using System;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AnnotateNotNullTypeMember
 
 namespace MathCore.MathParser
 {
     /// <summary>Событийная переменная</summary>
     /// <remarks>Переменная математического выражения, значение которой определяется через генерацию события</remarks>
-    public class EventExpressionVariable : ExpressionVariabel
+    public class EventExpressionVariable : ExpressionVariable
     {
         /// <summary>Событие запроса значения переменной</summary>
         public event EventHandler<EventArgs<double>> Call;
@@ -29,7 +35,7 @@ namespace MathCore.MathParser
         public bool ClearAtCall { get => _ClearAtCall; set => _ClearAtCall = value; }
 
         /// <summary>Инициализация новой событийной переменной</summary>
-        public EventExpressionVariable() : this("") { }
+        public EventExpressionVariable() : this(string.Empty) { }
 
         /// <summary>Инициализация новой событийной переменной</summary>
         /// <param name="Name">Имя переменной</param>
@@ -47,6 +53,6 @@ namespace MathCore.MathParser
 
         /// <summary>Метод клонирования событийной переменной</summary>
         /// <returns>Клонированная событийная переменная</returns>
-        public override ExpressionVariabel Clone() => new EventExpressionVariable(Name) { ClearAtCall = ClearAtCall, Value = Value };
+        public override ExpressionVariable Clone() => new EventExpressionVariable(Name) { ClearAtCall = ClearAtCall, Value = Value };
     }
 }

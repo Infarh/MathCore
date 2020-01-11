@@ -1,6 +1,6 @@
 ﻿using Ex = System.Linq.Expressions.Expression;
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление разности двух вычислений</summary>
     /// <typeparam name="T">Тип значения вычисления</typeparam>

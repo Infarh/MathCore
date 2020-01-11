@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.IO
 {
     /// <summary>Класс методов-расширений для объектов класса System.IO.DirectoryInfo</summary>
-    public static class DirectoryInfoExsentions
+    public static class DirectoryInfoExtensions
     {  
         [NotNull]
         public static Process ShowInFileExplorer([NotNull] this FileSystemInfo dir) => Process.Start("explorer", $"/select,\"{dir.FullName}\"") ?? throw new InvalidOperationException();
@@ -40,16 +41,18 @@ namespace System.IO
                         : null;
         }
 
-        public static bool IsSubDirectoryOf([CanBeNull] this DirectoryInfo target, [CanBeNull] DirectoryInfo parent) => !(target is null || parent is null) && target.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
+        public static bool IsSubDirectoryOf([CanBeNull] this DirectoryInfo target, [CanBeNull] DirectoryInfo parent) => 
+            !(target is null || parent is null) && target.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
 
-        public static FileInfo CreateFileInfo(this DirectoryInfo directory, string FileName)
+        [NotNull]
+        public static FileInfo CreateFileInfo([NotNull] this DirectoryInfo directory, string FileName)
         {
             FileName = FileName.Replace(':', '.');
             return new FileInfo(Path.Combine(directory.FullName, FileName));
         }
 
         /// <summary>Определить число всех вложенных файлов</summary>
-        /// <param name="Directory">Исследуемая дирректория</param>
+        /// <param name="Directory">Исследуемая директория</param>
         /// <returns>Число файлов во всех вложенных поддиректориях</returns>
         [DST]
         public static long GetFilesCount(this DirectoryInfo Directory)
@@ -67,7 +70,7 @@ namespace System.IO
         }
 
         /// <summary>Определить объём всех вложенных файлов включая поддиректории</summary>
-        /// <param name="Directory">Исследуемая дирректория</param>
+        /// <param name="Directory">Исследуемая директория</param>
         /// <returns>Число байт всех вложенных файлов</returns>
         [DST]
         public static long GetSize(this DirectoryInfo Directory)
@@ -84,9 +87,9 @@ namespace System.IO
             return result;
         }
 
-        /// <summary>Определить число поддерикторий</summary>
-        /// <param name="Directory">Исследуемая дирректория</param>
-        /// <returns>Число элементов в дереве поддерикторий</returns>
+        /// <summary>Определить число поддиректорий</summary>
+        /// <param name="Directory">Исследуемая директория</param>
+        /// <returns>Число элементов в дереве поддиректорий</returns>
         [DST]
         public static long GetSubdirectoriesCount(this DirectoryInfo Directory)
         {
@@ -102,24 +105,25 @@ namespace System.IO
             return num;
         }
 
-        /// <summary>Проверить - является ли дирректория пустой</summary>
-        /// <param name="Directory">Проверяемая дирректория</param>
-        /// <returns>Истина, если дирректория пуста</returns>
+        /// <summary>Проверить - является ли директория пустой</summary>
+        /// <param name="Directory">Проверяемая директория</param>
+        /// <returns>Истина, если директория пуста</returns>
         [DST]
-        public static bool IsEmpty(this DirectoryInfo Directory) => Directory.GetDirectories().Length == 0 && (Directory.GetFiles().Length == 0);
+        public static bool IsEmpty([NotNull] this DirectoryInfo Directory) => Directory.GetDirectories().Length == 0 && (Directory.GetFiles().Length == 0);
 
-        /// <summary>Получить объект наблюдения за дирректорией</summary>
-        /// <param name="directory">Наблюдаемая дирректория</param>
+        /// <summary>Получить объект наблюдения за директорией</summary>
+        /// <param name="directory">Наблюдаемая директория</param>
         /// <param name="filter">Фильтр файлов</param>
         /// <returns>Объект наблюдатель</returns>
         [DST]
-        public static FileSystemWatcher GetWacher(this DirectoryInfo directory, string filter = null) =>
+        [NotNull]
+        public static FileSystemWatcher GetWatcher([NotNull] this DirectoryInfo directory, [CanBeNull] string filter = null) =>
             string.IsNullOrEmpty(filter)
                 ? new FileSystemWatcher(directory.FullName)
                 : new FileSystemWatcher(directory.FullName, filter);
 
         [NotNull]
-        public static FileSystemWatcher GetWatcher([NotNull] this DirectoryInfo directory, [CanBeNull] string filter, [CanBeNull] Action<FileSystemWatcher> initializer = null)
+        public static FileSystemWatcher GetWatcher([NotNull] this DirectoryInfo directory, [CanBeNull] string filter, [CanBeNull] Action<FileSystemWatcher> initializer)
         {
             var watcher = string.IsNullOrWhiteSpace(filter)
                         ? new FileSystemWatcher(directory.FullName)
@@ -135,8 +139,9 @@ namespace System.IO
 
         public static bool ContainsFileMask([NotNull] this DirectoryInfo directory, [NotNull] string mask) => directory.EnumerateFiles(mask).Any();
 
-        public static bool IsSubdirectoryOf([NotNull] this DirectoryInfo directory, [NotNull] DirectoryInfo parent) => directory.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
-        public static bool IsParentOf([NotNull] this DirectoryInfo parent, [NotNull] DirectoryInfo directory) => directory.IsSubdirectoryOf(parent);
+        public static bool IsSubdirectoriesOf([NotNull] this DirectoryInfo directory, [NotNull] DirectoryInfo parent) => directory.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
+
+        public static bool IsParentOf([NotNull] this DirectoryInfo parent, [NotNull] DirectoryInfo directory) => directory.IsSubdirectoriesOf(parent);
 
         [NotNull, ItemNotNull] public static IEnumerable<FileInfo> FindFiles([NotNull] this DirectoryInfo dir, [NotNull] string mask) => dir.EnumerateDirectories().SelectMany(d => d.FindFiles(mask)).InsertBefore(dir.EnumerateFiles(mask));
 
@@ -160,7 +165,7 @@ namespace System.IO
         }
 
         /// <summary>Формирование информации о поддиректории, заданной своим именем, либо относительным путём</summary>
-        /// <param name="Directory">Корнневая директория</param><param name="SubDirectoryPath">Путь к поддиректории</param>
+        /// <param name="Directory">Корневая директория</param><param name="SubDirectoryPath">Путь к поддиректории</param>
         /// <exception cref="ArgumentNullException">Если указана пустая ссылка на <paramref name="Directory"/></exception>
         /// <exception cref="ArgumentNullException">Если указана пустая ссылка на <paramref name="SubDirectoryPath"/></exception>
         /// <returns>Информация о поддиректории</returns>

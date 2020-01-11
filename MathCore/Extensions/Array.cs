@@ -1,5 +1,9 @@
 ﻿using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public static class Array<T>
@@ -30,6 +34,7 @@ namespace System
                 _Initializer = Initializer;
             }
 
+            [NotNull]
             public Creator Default(T DefaultValue)
             {
                 _SetDefaultValue = true;
@@ -37,6 +42,7 @@ namespace System
                 return this;
             }
 
+            [NotNull]
             public Creator ResetDefault()
             {
                 _DefaultValue = default;
@@ -44,12 +50,14 @@ namespace System
                 return this;
             }
 
+            [NotNull]
             public Creator Init([CanBeNull] Func<int, T> Initializer)
             {
                 _Initializer = Initializer;
                 return this;
             }
 
+            [NotNull]
             public Creator Update([CanBeNull] Func<int, T, T> Updater)
             {
                 _Updater = Updater;

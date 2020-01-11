@@ -37,7 +37,7 @@ namespace MathCore.Interpolation
                         i2 = i;
                 } while(i2 - i1 > 1);
 
-            return Maping.GetValue(x, _X[i1], _X[i2], _Y[i1], _Y[i2]);
+            return Mapping.GetValue(x, _X[i1], _X[i2], _Y[i1], _Y[i2]);
         }
 
         public Func<double, double> GetFunction() => Value;

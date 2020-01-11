@@ -12,25 +12,25 @@ namespace MathCore.Vectors
             if(value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            //Оргумент не является трокой, либо строка пуста
-            var lv_Str = value as string;
-            if(string.IsNullOrEmpty(lv_Str) || lv_Str.Length < 1)
+            //Аргумент не является строкой, либо строка пуста
+            var ss = value as string;
+            if(string.IsNullOrEmpty(ss) || ss.Length < 1)
                 return base.ConvertFrom(Context, Info, value);
 
             //Убираем все начальные и конечные скобки, ковычки и апострофы
-            while(lv_Str[0] == '{' && lv_Str[lv_Str.Length - 1] == '}')
-                lv_Str = lv_Str.Substring(1, lv_Str.Length - 2);
-            while(lv_Str[0] == '[' && lv_Str[lv_Str.Length - 1] == ']')
-                lv_Str = lv_Str.Substring(1, lv_Str.Length - 2);
-            while(lv_Str[0] == '(' && lv_Str[lv_Str.Length - 1] == ')')
-                lv_Str = lv_Str.Substring(1, lv_Str.Length - 2);
-            while(lv_Str[0] == '\'' && lv_Str[lv_Str.Length - 1] == '\'')
-                lv_Str = lv_Str.Substring(1, lv_Str.Length - 2);
-            while(lv_Str[0] == '"' && lv_Str[lv_Str.Length - 1] == '"')
-                lv_Str = lv_Str.Substring(1, lv_Str.Length - 2);
+            while(ss[0] == '{' && ss[ss.Length - 1] == '}')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '[' && ss[ss.Length - 1] == ']')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '(' && ss[ss.Length - 1] == ')')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '\'' && ss[ss.Length - 1] == '\'')
+                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '"' && ss[ss.Length - 1] == '"')
+                ss = ss.Substring(1, ss.Length - 2);
 
-            lv_Str = lv_Str.Replace(" ", "");
-            var V = lv_Str.Split(',', ';');
+            ss = ss.Replace(" ", string.Empty);
+            var V = ss.Split(',', ';');
 
             var theta = 0d;
             var phi = 0d;

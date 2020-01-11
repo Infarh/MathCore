@@ -3,7 +3,7 @@ using Ex = System.Linq.Expressions.Expression;
 using bEx = System.Linq.Expressions.BinaryExpression;
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление функционального бинарного оператора между двумя вычислениями</summary>
     /// <typeparam name="T">Тип значения вычисления</typeparam>

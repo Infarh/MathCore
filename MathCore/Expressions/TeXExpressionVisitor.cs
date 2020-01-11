@@ -1,28 +1,14 @@
 ﻿using System.Text;
+using MathCore.Annotations;
 
+// ReSharper disable UnusedType.Global
+// ReSharper disable VirtualMemberCallInConstructor
+
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     /// <summary>
-    /// TeX supports several styles for multiplication sign
-    /// </summary>
-    public enum MultiplicationSign
-    {
-        /// <summary>
-        /// Without any sign
-        /// </summary>
-        None,
-        /// <summary>
-        /// * sign
-        /// </summary>
-        Asterisk,
-        /// <summary>
-        /// x sign
-        /// </summary>
-        Times
-    }
-
-    /// <summary>
-    /// Класс "посетилителя", который "изучает" дерево выражения путем переопределения соответствующих
+    /// Класс "посетителя", который "изучает" дерево выражения путем переопределения соответствующих
     /// виртуальных методов базового класса System.Linq.Expressions.ExpressionVisitor
     /// </summary>
     public class TeXExpressionVisitor : ExpressionVisitor
@@ -42,20 +28,18 @@ namespace System.Linq.Expressions
 
         // Лямбда-выражение анализируется несколько по-иному, поскольку нам нужно только тело
         // выражения, без первого параметра
-        public TeXExpressionVisitor(LambdaExpression expression) => Visit(expression.Body);
+        public TeXExpressionVisitor([NotNull] LambdaExpression expression) => Visit(expression.Body);
 
 
         //----------------------------------------------------------------------------------------//
         // Открытые интерфейс
         //----------------------------------------------------------------------------------------//
-        public string GenerateTeXExpression(string expressionName, MultiplicationSign multiplicationSign =
-            MultiplicationSign.Asterisk)
-        {
-            // Изменяем сгенерированную строку в зависимости от типа знака "умножения"
-            return GenerateTeXExpressionImpl(expressionName, multiplicationSign);
-        }
-        public string GenerateTeXExpression(MultiplicationSign multiplicationSign =
-            MultiplicationSign.Asterisk) => GenerateTeXExpressionImpl(null, multiplicationSign);
+        // Изменяем сгенерированную строку в зависимости от типа знака "умножения"
+        public string GenerateTeXExpression(string ExpressionName, MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) => 
+            GenerateTeXExpressionImpl(ExpressionName, MultiplicationSign);
+
+        public string GenerateTeXExpression(MultiplicationSign MultiplicationSign = MultiplicationSign.Asterisk) =>
+            GenerateTeXExpressionImpl(null, MultiplicationSign);
 
 
         //----------------------------------------------------------------------------------------//
@@ -64,7 +48,7 @@ namespace System.Linq.Expressions
         // Методы, переопределенные от класса ExpressionVisitor
         protected override Expression VisitUnary(UnaryExpression node)
         {
-            if(node.NodeType == ExpressionType.Negate)
+            if (node.NodeType == ExpressionType.Negate)
                 _Result.Append("-");
             return base.VisitUnary(node);
         }
@@ -80,12 +64,9 @@ namespace System.Linq.Expressions
 
         public override Expression Visit(Expression node)
         {
-            if(node is ConstantExpression constant)
-            {
-                _Result.Append(constant.Value);
-                return Expression.Constant(constant.Value, constant.Type);
-            }
-            return base.Visit(node);
+            if (!(node is ConstantExpression constant)) return base.Visit(node);
+            _Result.Append(constant.Value);
+            return Expression.Constant(constant.Value, constant.Type);
         }
 
         protected override Expression VisitParameter(ParameterExpression node)
@@ -97,26 +78,25 @@ namespace System.Linq.Expressions
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             // Это очень простая реализация поиска определенных методов.
-            // Для промышленного кода мы можем добавить кэширование или что-то
-            // подобное, здесь же этого соверешнно достаточно
+            // Для промышленного кода мы можем добавить кеширование или что-то
+            // подобное, здесь же этого совершенно достаточно
             var pow_method = typeof(Math).GetMethod("Pow");
 
-            if(node.Method == pow_method)
-            {
-                Visit(node.Arguments[0]);
-                _Result.AppendFormat("^{{{0}}}", node.Arguments[1]);
-                return node;
-            }
-            return base.Visit(node);
+            if (node.Method != pow_method) 
+                return base.Visit(node) ?? throw new InvalidOperationException();
+
+            Visit(node.Arguments[0]);
+            _Result.AppendFormat("^{{{0}}}", node.Arguments[1]);
+            return node;
         }
 
         //----------------------------------------------------------------------------------------//
         // Вспомогательные закрытые методы
         //----------------------------------------------------------------------------------------//
 
-        // Методв возвращает true, если выражение нужно оборачивать в скобки: ()
-        private static bool RequiresPrecedence(ExpressionType nodeType) =>
-            nodeType switch
+        // Метод возвращает true, если выражение нужно оборачивать в скобки: ()
+        private static bool RequiresPrecedence(ExpressionType NodeType) =>
+            NodeType switch
             {
                 ExpressionType.Add => true,
                 ExpressionType.Subtract => true,
@@ -125,18 +105,19 @@ namespace System.Linq.Expressions
 
         // Оператор деления несколько отличается от всех остальных операторов с двумя аргументами,
         // поскольку он требует другого порядка аргументов
-        private static bool IsInfix(ExpressionType nodeType) => nodeType != ExpressionType.Divide;
+        private static bool IsInfix(ExpressionType NodeType) => NodeType != ExpressionType.Divide;
 
         // Большинство операторов требуют аргументы в следующем порядке:
         // {arg1} op {arg2}
-        private Expression VisitInfixBinary(BinaryExpression node)
+        [NotNull]
+        private Expression VisitInfixBinary([NotNull] BinaryExpression node)
         {
             var requires_precedence = RequiresPrecedence(node.NodeType);
-            if(requires_precedence) _Result.Append("(");
+            if (requires_precedence) _Result.Append("(");
 
             Visit(node.Left);
 
-            switch(node.NodeType)
+            switch (node.NodeType)
             {
                 case ExpressionType.Multiply:
                     _Result.Append("*");
@@ -153,7 +134,7 @@ namespace System.Linq.Expressions
 
             Visit(node.Right);
 
-            if(requires_precedence) _Result.Append(")");
+            if (requires_precedence) _Result.Append(")");
             return node;
         }
 
@@ -164,11 +145,12 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private Expression VisitPrefixBinary(BinaryExpression node)
+        [NotNull]
+        private Expression VisitPrefixBinary([NotNull] BinaryExpression node)
         {
             // Для деления (x + 2) на 3, мы должны получить следующее выражение
             // \frac{x + 2}{3}
-            switch(node.NodeType)
+            switch (node.NodeType)
             {
                 case ExpressionType.Divide:
                     _Result.Append(@"\frac");
@@ -188,29 +170,31 @@ namespace System.Linq.Expressions
         }
 
         // Метод, реализующий получение строкового представления полученного выражения
-        private string GenerateTeXExpressionImpl(string expressionName, MultiplicationSign multiplicationSign)
+        [NotNull]
+        private string GenerateTeXExpressionImpl([CanBeNull] string ExpressionName, MultiplicationSign multiplicationSign)
         {
-            switch(multiplicationSign)
+            switch (multiplicationSign)
             {
                 case MultiplicationSign.Times:
+                    // ReSharper disable once StringLiteralTypo
                     _Result.Replace("*", @" \times ");
                     break;
                 case MultiplicationSign.None:
-                    _Result.Replace("*", "");
+                    _Result.Replace("*", string.Empty);
                     break;
             }
 
-            var texExpression = _Result.ToString();
+            var tex_expression = _Result.ToString();
 
             // Полученное выражение содержит избыточные круглые скобки, которые следует убрать
-            if(texExpression.Length > 0)
-                if(texExpression[0] == '(' && texExpression[texExpression.Length - 1] == ')')
-                    texExpression = texExpression.Substring(1, texExpression.Length - 2);
+            if (tex_expression.Length > 0)
+                if (tex_expression[0] == '(' && tex_expression[tex_expression.Length - 1] == ')')
+                    tex_expression = tex_expression.Substring(1, tex_expression.Length - 2);
 
             // Добавляем "имя выражения" если оно указано
-            return !string.IsNullOrEmpty(expressionName)
-                ? $"{{{expressionName}}}{{=}}{texExpression}"
-                : texExpression;
+            return !string.IsNullOrEmpty(ExpressionName)
+                ? $"{{{ExpressionName}}}{{=}}{tex_expression}"
+                : tex_expression;
         }
     }
 }

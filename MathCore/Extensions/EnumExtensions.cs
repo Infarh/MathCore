@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Text;
 using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -11,7 +13,7 @@ namespace System
         /// <exception cref="TypeLoadException">A custom attribute type cannot be loaded. </exception>
         /// <exception cref="InvalidOperationException">This member belongs to a type that is loaded into the reflection-only context. See How to: Load Assemblies into the Reflection-Only Context.</exception>
         [CanBeNull]
-        public static TAttribute[] GetValueAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
+        public static TAttribute[] GetValueAttribute<TAttribute>([NotNull] this Enum value) where TAttribute : Attribute
         {
             var attribute_type = typeof(TAttribute);
             var value_type = value.GetType();
@@ -21,10 +23,10 @@ namespace System
 
         /// <exception cref="TypeLoadException">A custom attribute type cannot be loaded. </exception>
         [CanBeNull]
-        public static string GetValueDescription(this Enum value)
+        public static string GetValueDescription([NotNull] this Enum value)
         {
             var attributes = value.GetValueAttribute<DescriptionAttribute>();
-            return attributes?.Length == 0 ? "" : attributes?.Aggregate(new StringBuilder(), (S, a) => S.AppendLine(a.Description), S => S.ToString());
+            return attributes?.Length == 0 ? string.Empty : attributes?.Aggregate(new StringBuilder(), (S, a) => S.AppendLine(a.Description), S => S.ToString());
         }
     }
 }

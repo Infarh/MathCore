@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore
 {
@@ -27,7 +29,7 @@ namespace MathCore
         /* ------------------------------------------------------------------------------------------ */
 
         private double _Progress;
-        private string _Informaion;
+        private string _Information;
         private string _Status;
 
         private Func<string> _StatusStrFunc;
@@ -87,9 +89,8 @@ namespace MathCore
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                var statusF = _StatusStrFunc;
-                if(statusF is null) return _Status;
-                return Status = statusF();
+                var status_f = _StatusStrFunc;
+                return status_f is null ? _Status : Status = status_f();
             }
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
@@ -106,15 +107,14 @@ namespace MathCore
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                var informationF = _InformationStrFunc;
-                if(informationF is null) return _Informaion;
-                return Information = informationF();
+                var information_f = _InformationStrFunc;
+                return information_f is null ? _Information : Information = information_f();
             }
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                if(_Informaion == value) return;
-                _Informaion = value;
+                if(_Information == value) return;
+                _Information = value;
                 InformationChanged.FastStart(this);
                 OnPropertyChanged();
             }
@@ -125,9 +125,8 @@ namespace MathCore
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                var progressF = _ProgressFunc;
-                if(progressF is null) return _Progress;
-                return Progress = progressF();
+                var progress_f = _ProgressFunc;
+                return progress_f is null ? _Progress : Progress = progress_f();
             }
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
@@ -167,7 +166,7 @@ namespace MathCore
         public ProgressMonitor(string Status, string Information = "", double Progress = 0)
         {
             _Status = Status;
-            _Informaion = Information;
+            _Information = Information;
             _Progress = Progress;
         }
 

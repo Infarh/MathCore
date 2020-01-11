@@ -1,6 +1,10 @@
-﻿namespace MathCore.MathParser.ExpressionTrees.Nodes
+﻿using MathCore.Annotations;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел деерва мат.выражения, реализующий оператор</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор</summary>
     public abstract class OperatorNode : ComputedNode
     {
         /// <summary>Оператор является предвычислимым если предвычислимы его правое и левое поддерево</summary>
@@ -43,8 +47,9 @@
 
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>
-        public override string ToString() => string.Format("{1}{0}{2}", Name, Left?.ToString() ?? "", Right?.ToString() ?? "");
+        public override string ToString() => string.Format("{1}{0}{2}", Name, Left?.ToString() ?? string.Empty, Right?.ToString() ?? string.Empty);
 
+        [NotNull]
         protected OperatorNode CloneOperatorNode<TOperatorNode>() where TOperatorNode : OperatorNode, new() => 
             new TOperatorNode { Left = Left?.Clone(), Right = Right?.Clone() };
     }

@@ -1,23 +1,28 @@
 ﻿using System;
+using MathCore.Annotations;
 using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore
 {
     public abstract class TransformationMatrix : Matrix
     {
-        protected TransformationMatrix(double[,] Data) : base(Data) { }
+        protected TransformationMatrix([NotNull] double[,] Data) : base(Data) { }
     }
 
     public abstract class Transformation3DMatrix : TransformationMatrix
     {
-        protected Transformation3DMatrix(double[,] Data) : base(Data) { }
+        protected Transformation3DMatrix([NotNull] double[,] Data) : base(Data) { }
     }
 
-    public class Roration3DMatrix : Transformation3DMatrix
+    public class Rotation3DMatrix : Transformation3DMatrix
     {
         public enum RotationAxe { X, Y, Z }
 
+        [NotNull]
         private static double[,] GetData(double Angle, RotationAxe Axe)
         {
             var s = Math.Sin(Angle);
@@ -34,14 +39,12 @@ namespace MathCore
 
         public RotationAxe Axe { get; }
 
-        public Roration3DMatrix(double Angle, RotationAxe Axe) : base(GetData(Angle, Axe)) => this.Axe = Axe;
+        public Rotation3DMatrix(double Angle, RotationAxe Axe) : base(GetData(Angle, Axe)) => this.Axe = Axe;
 
-        public static Vector3D operator ^(Roration3DMatrix M, Vector3D v)
+        public static Vector3D operator ^([NotNull] Rotation3DMatrix M, Vector3D v)
         {
             var m = M.GetData();
-            var x = v.X;
-            var y = v.Y;
-            var z = v.Z;
+            var (x, y, z) = v;
             return new Vector3D
             (
                 m[0, 0] * x + m[0, 1] * y + m[0, 2] * z,
@@ -51,7 +54,7 @@ namespace MathCore
         }
     }
 
-    public class RotationPhiThetaMatrix : Roration3DMatrix
+    public class RotationPhiThetaMatrix : Rotation3DMatrix
     {
         public RotationPhiThetaMatrix(double Phi, double Theta) : base(Phi, RotationAxe.Z)
         {
@@ -68,7 +71,7 @@ namespace MathCore
         }
     }
 
-    public class RotationThetaPhiMatrix : Roration3DMatrix
+    public class RotationThetaPhiMatrix : Rotation3DMatrix
     {
         public RotationThetaPhiMatrix(double Phi, double Theta) : base(Phi, RotationAxe.Z)
         {

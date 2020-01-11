@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable UnusedMember.Global
@@ -9,22 +10,22 @@ namespace System
     public static class StringExtensionsParse
     {
         [DST]
-        public static bool IsInt8(this string s) => byte.TryParse(s, out var i);
+        public static bool IsInt8(this string s) => byte.TryParse(s, out _);
 
         [DST]
-        public static bool IsInt16(this string s) => short.TryParse(s, out var i);
+        public static bool IsInt16(this string s) => short.TryParse(s, out _);
 
         [DST]
-        public static bool IsInt32(this string s) => int.TryParse(s, out var i);
+        public static bool IsInt32(this string s) => int.TryParse(s, out _);
 
         [DST]
-        public static bool IsInt64(this string s) => long.TryParse(s, out var i);
+        public static bool IsInt64(this string s) => long.TryParse(s, out _);
 
         [DST]
-        public static bool IsShort(this string s) => short.TryParse(s, out var i);
+        public static bool IsShort(this string s) => short.TryParse(s, out _);
 
         [DST]
-        public static bool IsDouble(this string s) => double.TryParse(s, out var i);
+        public static bool IsDouble(this string s) => double.TryParse(s, out _);
 
         [DST]
         public static byte? AsInt8(this string s, byte? Default = null) => byte.TryParse(s, out var i) ? i : Default;
@@ -54,12 +55,10 @@ namespace System
         }
 
         [DST]
-        public static string RemoveFromBeginEnd(this string S, int BeginCount, int EndCount) => S.Remove(0, BeginCount).RemoveFromEnd(EndCount);
+        public static string RemoveFromBeginEnd([NotNull] this string S, int BeginCount, int EndCount) => S.Remove(0, BeginCount).RemoveFromEnd(EndCount);
 
-        [DST]
-        public static string RemoveFromEnd(this string S, int count) => S.Length <= count ? "" : S.Remove(S.Length - count, count);
+        [DST, NotNull]  public static string RemoveFromEnd([NotNull] this string S, int count) => S.Length <= count ? string.Empty : S.Remove(S.Length - count, count);
 
-        [DST]
-        public static string RemoveFromEnd(this string S, int StartPos, int count) => S.Remove(S.Length - StartPos, count);
+        [DST, NotNull]  public static string RemoveFromEnd([NotNull] this string S, int StartPos, int count) => S.Remove(S.Length - StartPos, count);
     }
 }

@@ -9,6 +9,8 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable ClassCanBeSealed.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable ConvertToAutoProperty
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.MathParser
 {
@@ -20,7 +22,7 @@ namespace MathCore.MathParser
 
         /// <summary>Коллекция переменных математического выражения</summary>
         [NotNull]
-        private readonly VariabelsCollection _Variables;
+        private readonly VariablesCollection _Variables;
 
         /// <summary>Коллекция констант математического выражения</summary>
         [NotNull]
@@ -63,7 +65,7 @@ namespace MathCore.MathParser
 
         /// <summary>Переменные, входящие в математическое выражение</summary>
         [NotNull]
-        public VariabelsCollection Variable => _Variables;
+        public VariablesCollection Variable => _Variables;
 
         /// <summary>Константы, входящие в математическое выражение</summary>
         [NotNull]
@@ -82,7 +84,7 @@ namespace MathCore.MathParser
         public MathExpression([NotNull] string Name = "f")
         {
             _Name = Name;
-            _Variables = new VariabelsCollection(this);     // Коллекция переменных
+            _Variables = new VariablesCollection(this);     // Коллекция переменных
             _Constants = new ConstantsCollection(this);     // Коллекция констант
             _Functions = new FunctionsCollection(this);     // Коллекция функций
             _Functionals = new FunctionalsCollection(this); // Коллекция функционалов
@@ -97,7 +99,6 @@ namespace MathCore.MathParser
             _ExpressionTree = Tree; //Сохраняем ссылку на корень дерева
 
             foreach(var tree_node in Tree) // обходим все элементы дерева
-            {
                 switch (tree_node)
                 {
                     case VariableValueNode value_node:
@@ -111,7 +112,6 @@ namespace MathCore.MathParser
                         _Functions.Add(function_node.Function);  // то сохранить функцию в коллекции
                         break;
                 }
-            }
         }
 
         /// <summary>Инициализация нового математического выражения</summary>
@@ -173,7 +173,7 @@ namespace MathCore.MathParser
         /// <returns>Делегат функции, принимающий на вход массив значений параметров</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
-        public Func<double[], double> CompileMultyParameters([NotNull] params string[] ArgumentName)
+        public Func<double[], double> CompileMultiParameters([NotNull] params string[] ArgumentName)
         {
             // Словарь индексов переменных
             var var_dictionary = new Dictionary<string, int>();
@@ -210,10 +210,10 @@ namespace MathCore.MathParser
             {
                 var call = e.Argument; // Извлекаем ссылку на узел
                 //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 
-                if(!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariabel))
+                if(!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariable))
                     return call; // пропускаем узел
                 //Извлекаем из узла переменную дерева
-                var v = (ExpressionVariabel)((ConstantExpression)call.Object).Value;
+                var v = (ExpressionVariable)((ConstantExpression)call.Object).Value;
                 //Если переменная дерева - константа, либо если её имя отсутствует в словаре компилируемых переменных
                 if(v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // то пропускаем узел
                 var index = var_dictionary[v.Name]; // Запрашиваем индекс переменной
@@ -286,7 +286,7 @@ namespace MathCore.MathParser
         /// <summary>Перенос констант из выражения источника в выражение приёмник</summary>
         /// <param name="Source">Выражение источник</param>
         /// <param name="Result">Выражение приёмник</param>
-        private static void CheckConstatnsCollection([NotNull] MathExpression Source, [NotNull] MathExpression Result) =>
+        private static void CheckConstantsCollection([NotNull] MathExpression Source, [NotNull] MathExpression Result) =>
             Source.Constants
                .Select(constant => Result.Variable[constant.Name])
                .Where(c => Result.Variable.Remove(c))
@@ -298,7 +298,7 @@ namespace MathCore.MathParser
         public MathExpression Clone()
         {
             var result = new MathExpression(_ExpressionTree.Clone());
-            CheckConstatnsCollection(this, result);
+            CheckConstantsCollection(this, result);
             return result;
         }
 
@@ -324,8 +324,8 @@ namespace MathCore.MathParser
             node.Right = y_tree.Root;
 
             var z = new MathExpression(new ExpressionTree(node));
-            CheckConstatnsCollection(x, z);
-            CheckConstatnsCollection(y, z);
+            CheckConstantsCollection(x, z);
+            CheckConstantsCollection(y, z);
             return z;
         }
 

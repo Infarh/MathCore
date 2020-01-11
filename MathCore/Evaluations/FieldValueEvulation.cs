@@ -1,6 +1,6 @@
 ﻿using Ex = System.Linq.Expressions.Expression;
 
-namespace MathCore.Evulations
+namespace MathCore.Evaluations
 {
     /// <summary>Вычисление значения поля объекта</summary>
     /// <typeparam name="TObject">Тип объекта, поле которого надо получить</typeparam>

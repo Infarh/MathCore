@@ -71,7 +71,7 @@ namespace System
         public static int[] FactorizationList(this int n)
         {
             if(n < 0) n = -n;
-            if(n <= 1) return new int[0];
+            if(n <= 1) return Array.Empty<int>();
 
             var result = new List<int>();
             // пока число четное

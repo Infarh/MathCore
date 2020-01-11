@@ -15,6 +15,9 @@ using mcEx = System.Linq.Expressions.MethodCallExpression;
 using mEx = System.Linq.Expressions.MemberExpression;
 using pEx = System.Linq.Expressions.ParameterExpression;
 using uEx = System.Linq.Expressions.UnaryExpression;
+// ReSharper disable MergeCastWithTypeCheck
+// ReSharper disable ConvertIfStatementToReturnStatement
+// ReSharper disable ConvertIfStatementToSwitchStatement
 
 // ReSharper disable UnusedMember.Global
 
@@ -90,7 +93,7 @@ namespace MathCore.Extensions.Expressions
 
         #region Methods
 
-        /// <exception cref="FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутсвуте подставляемый параметр</exception>
+        /// <exception cref="FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутствие подставляемый параметр</exception>
         [CanBeNull]
         public static lEx Substitute([NotNull] this lEx Expr, [NotNull] lEx Substitution)
         {
@@ -416,8 +419,9 @@ namespace MathCore.Extensions.Expressions
             var i = 0;
             Ex l;
             if (left != null) l = left;
-            else if (right is null || right.Length == i) return null;
-            else l = right[i++];
+            if (right is null) return null;
+            if (right.Length == i) return null;
+            l = right[i++];
             while (i < right.Length)
                 l = l.XOR(right[i++]);
             return (bEx)l;
@@ -428,9 +432,10 @@ namespace MathCore.Extensions.Expressions
         {
             var i = 0;
             Ex l;
-            if (left != null) l = left;
-            else if (right is null || right.Length == i) return null;
-            else l = right[i++].ToExpression();
+            if (left != null) l = left; 
+            if (right is null) return null;
+            if (right.Length == i) return null;
+            l = right[i++].ToExpression();
             while (i < right.Length)
                 l = l.XOR(right[i++]);
             return (bEx)l;
@@ -463,10 +468,10 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static Ex Condition([NotNull] this Ex Condition, [NotNull] Ex Then, [NotNull] Ex Else) => Ex.Condition(Condition, Then, Else);
         [NotNull] public static Ex ConditionWithResult<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then.ToExpression(), Else.ToExpression());
 
-        [NotNull] public static Ex ToNewExpression([NotNull] this Type type) => New(type.GetConstructor(Type.EmptyTypes));
+        [NotNull] public static Ex ToNewExpression([NotNull] this Type type) => New(type.GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException());
 
-        [NotNull] public static Ex ToNewExpression([NotNull] this Type type, [NotNull] params Ex[] p) => New(type.GetConstructor(p.Select(pp => pp.Type).ToArray()));
-        [NotNull] public static Ex ToNewExpression<T>([NotNull] this Type type, [NotNull] params T[] p) => New(type.GetConstructor(p.Select(pp => pp.GetType()).ToArray()));
+        [NotNull] public static Ex ToNewExpression([NotNull] this Type type, [NotNull] params Ex[] p) => New(type.GetConstructor(p.Select(pp => pp.Type).ToArray()) ?? throw new InvalidOperationException("Конструктор не найден"));
+        [NotNull] public static Ex ToNewExpression<T>([NotNull] this Type type, [NotNull] params T[] p) => New(type.GetConstructor(p.Select(pp => pp.GetType()).ToArray()) ?? throw new InvalidOperationException("Конструктор не найден"));
 
         [NotNull] public static pEx ParameterOf(this string ParameterName, [NotNull] Type type) => Parameter(type, ParameterName);
 
@@ -524,8 +529,8 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static TypeBinaryExpression TypeIs([NotNull] this Ex d, [NotNull] Type type) => Ex.TypeIs(d, type);
         [NotNull] public static uEx Unbox([NotNull] this Ex d, [NotNull] Type type) => Ex.Unbox(d, type);
         [NotNull] public static uEx UnaryPlus([NotNull] this Ex d) => Ex.UnaryPlus(d);
-        [NotNull] public static uEx MakeUnary([NotNull] this Ex d, ExpressionType uType, Type type) => Ex.MakeUnary(uType, d, type);
-        [NotNull] public static bEx MakeUnary([NotNull] this Ex left, [NotNull] Ex right, ExpressionType uType) => MakeBinary(uType, left, right);
+        [NotNull] public static uEx MakeUnary([NotNull] this Ex d, ExpressionType UType, Type type) => Ex.MakeUnary(UType, d, type);
+        [NotNull] public static bEx MakeUnary([NotNull] this Ex left, [NotNull] Ex right, ExpressionType UType) => MakeBinary(UType, left, right);
 
         [NotNull] public static Expression<TDelegate> CreateLambda<TDelegate>([NotNull] this Ex body, params pEx[] p) => Lambda<TDelegate>(body, p);
         [NotNull] public static lEx CreateLambda([NotNull] this Ex body, params pEx[] p) => Lambda(body, p);
@@ -1003,23 +1008,19 @@ namespace MathCore.Extensions.Expressions
                     if (IsZero(right))
                     {
                         if (right is double)
-                        {
                             return double.IsNaN((double)right)
                                 ? double.NaN.ToExpression()
                                 : ((double)right > 0
                                     ? ((sbyte)left > 0 ? double.PositiveInfinity : double.NegativeInfinity)
                                     : ((sbyte)left > 0 ? double.NegativeInfinity : double.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         if (right is float)
-                        {
                             return float.IsNaN((float)right)
                                 ? float.NaN.ToExpression()
                                 : ((float)right > 0
                                     ? ((sbyte)left > 0 ? float.PositiveInfinity : float.NegativeInfinity)
                                     : ((sbyte)left > 0 ? float.NegativeInfinity : float.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
                     if (right is byte) return ((sbyte)left / (byte)right).ToExpression();
@@ -1041,23 +1042,19 @@ namespace MathCore.Extensions.Expressions
                     if (IsZero(right))
                     {
                         if (right is double)
-                        {
                             return double.IsNaN((double)right)
                                 ? double.NaN.ToExpression()
                                 : ((double)right > 0
                                     ? ((short)left > 0 ? double.PositiveInfinity : double.NegativeInfinity)
                                     : ((short)left > 0 ? double.NegativeInfinity : double.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         if (right is float)
-                        {
                             return float.IsNaN((float)right)
                                 ? float.NaN.ToExpression()
                                 : ((float)right > 0
                                     ? ((short)left > 0 ? float.PositiveInfinity : float.NegativeInfinity)
                                     : ((short)left > 0 ? float.NegativeInfinity : float.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
                     if (right is byte) return ((short)left / (byte)right).ToExpression();
@@ -1242,23 +1239,19 @@ namespace MathCore.Extensions.Expressions
                     if (IsZero(right))
                     {
                         if (right is double)
-                        {
                             return double.IsNaN((double)right)
                                 ? double.NaN.ToExpression()
                                 : ((double)right > 0
                                     ? ((float)left > 0 ? double.PositiveInfinity : double.NegativeInfinity)
                                     : ((float)left > 0 ? double.NegativeInfinity : double.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         if (right is float)
-                        {
                             return float.IsNaN((float)right)
                                 ? float.NaN.ToExpression()
                                 : ((float)right > 0
                                     ? ((float)left > 0 ? float.PositiveInfinity : float.NegativeInfinity)
                                     : ((float)left > 0 ? float.NegativeInfinity : float.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
                     if (right is byte) return ((float)left / (byte)right).ToExpression();
@@ -1280,23 +1273,19 @@ namespace MathCore.Extensions.Expressions
                     if (IsZero(right))
                     {
                         if (right is double)
-                        {
                             return double.IsNaN((double)right)
                                 ? double.NaN.ToExpression()
                                 : ((double)right > 0
                                     ? ((double)left > 0 ? double.PositiveInfinity : double.NegativeInfinity)
                                     : ((double)left > 0 ? double.NegativeInfinity : double.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         if (right is float)
-                        {
                             return float.IsNaN((float)right)
                                 ? float.NaN.ToExpression()
                                 : ((float)right > 0
                                     ? ((double)left > 0 ? float.PositiveInfinity : float.NegativeInfinity)
                                     : ((double)left > 0 ? float.NegativeInfinity : float.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
                     if (right is byte) return ((double)left / (byte)right).ToExpression();

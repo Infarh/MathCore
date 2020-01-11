@@ -136,20 +136,20 @@ namespace MathCore.MathParser
         }
 
         /// <summary>Событие обработки переменных при разборе мат.выражений</summary>
-        public event EventHandler<EventArgs<ExpressionVariabel>> VariableProcessing;
+        public event EventHandler<EventArgs<ExpressionVariable>> VariableProcessing;
 
         /// <summary> Обработка обнаруженной переменной</summary>
         /// <param name="e">Обнаруженная переменная</param>
-        protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariabel> e)
+        protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariable> e)
         {
             VariableProcessing?.Invoke(this, e);
         }
 
         /// <summary> Обработка обнаруженной переменной</summary>
         /// <param name="Variable">Обнаруженная переменная</param>
-        private void OnVariableProcessing([NotNull] ExpressionVariabel Variable)
+        private void OnVariableProcessing([NotNull] ExpressionVariable Variable)
         {
-            OnVariableProcessing(new EventArgs<ExpressionVariabel>(Variable));
+            OnVariableProcessing(new EventArgs<ExpressionVariable>(Variable));
         }
 
         /// <summary>Множество запрещённых символов</summary>

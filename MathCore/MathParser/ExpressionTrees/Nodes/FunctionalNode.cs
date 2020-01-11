@@ -61,9 +61,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             Operator.Initialize(_ParametersExpression, _CoreExpression, Parser, Expression);
         }
 
-        public override IEnumerable<ExpressionVariabel> GetVariables()
+        public override IEnumerable<ExpressionVariable> GetVariables()
         {
-            ExpressionVariabel iterator = null;
+            ExpressionVariable iterator = null;
             var params_node = _ParametersExpression.Tree.Root;
             if(params_node is EqualityOperatorNode && params_node.Left is VariableValueNode node)
                 iterator = node.Variable;

@@ -210,7 +210,7 @@ namespace System
         [DST, NotNull]
         public static TResult[] Start<TResult, TSender, TArgs>([CanBeNull] this EventHandler<TResult, TSender, TArgs> Handler, TSender Sender, TArgs Args) =>
             Handler is null
-                ? new TResult[0]
+                ? Array.Empty<TResult>()
                 : Handler
                    .GetInvocationList()
                    .Select(d => (TResult)(d.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired

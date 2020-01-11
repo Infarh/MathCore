@@ -2,8 +2,10 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Serialization;
+
 using MathCore.Annotations;
 using MathCore.Expressions.Complex;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable MissingAnnotation
 
@@ -30,7 +32,7 @@ namespace MathCore
             while (str[0] == '(' && str[str.Length - 1] == ')') str = str.Substring(1, str.Length - 2);
             while (str[0] == '\'' && str[str.Length - 1] == '\'') str = str.Substring(1, str.Length - 2);
             while (str[0] == '"' && str[str.Length - 1] == '"') str = str.Substring(1, str.Length - 2);
-            if(str.IndexOf(' ') != -1) str = str.Replace(" ", "");
+            if (str.IndexOf(' ') != -1) str = str.Replace(" ", string.Empty);
         }
 
         /// <summary>Разобрать строку в комплексное число</summary>
@@ -40,7 +42,7 @@ namespace MathCore
         /// <exception cref="FormatException">В случае ошибочной строки</exception>
         public static Complex Parse([NotNull] string str)
         {
-            if(str is null) throw new ArgumentNullException(nameof(str));
+            if (str is null) throw new ArgumentNullException(nameof(str));
             // Если получили пустую строку, то это ошибка преобразования
             if (string.IsNullOrWhiteSpace(str) || str.Length == 0)
                 throw new FormatException("Строка имела неверный формат", new ArgumentException(str, nameof(str)));
@@ -49,23 +51,23 @@ namespace MathCore
             var old_style = str.StartsWith("(");
             ClearString(ref str);
 
-            var values = old_style ? str.Split(';') :str.Split('+', '-'); // Делим строку по знаку + и -
+            var values = old_style ? str.Split(';') : str.Split('+', '-'); // Делим строку по знаку + и -
 
             var Re = 0d; // Аккумулятор действительной части
             var Im = 0d; // Аккумулятор мнимой части
 
             var index = 0;
-            for (var i = 0; i < values.Length; i++)
+            for (var j = 0; j < values.Length; j++)
             {
-                var v = values[i]; // Берём очередной элемент из массива элементов
-                var v_index = str.IndexOf(values[i], index, StringComparison.Ordinal); // Ищем индекс включения текущего элемента в исходной строке
+                var v = values[j]; // Берём очередной элемент из массива элементов
+                var v_index = str.IndexOf(values[j], index, StringComparison.Ordinal); // Ищем индекс включения текущего элемента в исходной строке
                 index = v_index + v.Length; // Устанавливаем индекс на последний символ текущего элемента в основной строке для того, что бы на следующем цикле искать уже с этого места
                 var sign = v_index > 1 && str[v_index - 1] == '-'; // Если мы рассматриваем не первый элемент и символ в основной строке, предшествующий текущему элементу - '-' (минус), то этот элемент носит отрицательное значение
                 var is_im = false;
                 if (v.IndexOf('i') != -1 || v.IndexOf('j') != -1) // Если в текущем элементе найден символ мнимой единицы
                 {                                                 // то...
                     is_im = true;                                 // определяем текущий элемент, как мнимое число
-                    v = v.Replace("i", "").Replace("j", "");      // удаляем символ мнимой единицы
+                    v = v.Replace("i", string.Empty).Replace("j", string.Empty);      // удаляем символ мнимой единицы
                 }
                 //var val = double.Parse(v);
                 if (!double.TryParse(v, out var val)) // Пытаемся преобразовать текущий элемент в число...
@@ -102,17 +104,17 @@ namespace MathCore
             var Im = 0d; // Аккумулятор мнимой части
 
             var index = 0;
-            for (var i = 0; i < values.Length; i++)
+            for (var j = 0; j < values.Length; j++)
             {
-                var v = values[i]; // Берём очередной элемент из массива элементов
-                var v_index = str.IndexOf(values[i], index, StringComparison.Ordinal); // Ищем индекс включения текущего элемента в исходной строке
+                var v = values[j]; // Берём очередной элемент из массива элементов
+                var v_index = str.IndexOf(values[j], index, StringComparison.Ordinal); // Ищем индекс включения текущего элемента в исходной строке
                 index = v_index + v.Length; // Устанавливаем индекс на последний символ текущего элемента в основной строке для того, что бы на следующем цикле искать уже с этого места
                 var sign = v_index > 1 && str[v_index - 1] == '-'; // Если мы рассматриваем не первый элемент и символ в основной строке, предшествующий текущему элементу - '-' (минус), то этот элемент носит отрицательное значение
                 var is_im = false;
                 if (v.IndexOf('i') != -1 || v.IndexOf('j') != -1) // Если в текущем элементе найден символ мнимой единицы
                 {                                                 // то...
                     is_im = true;                                 // определяем текущий элемент, как мнимое число
-                    v = v.Replace("i", "").Replace("j", "");      // удаляем символ мнимой единицы
+                    v = v.Replace("i", string.Empty).Replace("j", string.Empty);      // удаляем символ мнимой единицы
                 }
                 //var val = double.Parse(v);
                 if (!double.TryParse(v, out var val)) // Пытаемся преобразовать текущий элемент в число...
@@ -143,15 +145,15 @@ namespace MathCore
         public static Complex Ln(double Im)
             => new Complex(Math.Log(Im), Math.Abs(Im).Equals(0d) ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
 
-        ///<summary>НАтуральный логорифм комплексного числа</summary>
+        ///<summary>Натуральный логогриф комплексного числа</summary>
         ///<param name="z">Комплексное число</param>
-        ///<returns>Натуральный логорифм</returns>
+        ///<returns>Натуральный логарифм</returns>
         public static Complex Ln(in Complex z) => new Complex(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im), z.Arg);
 
-        ///<summary>Логорифм мномого числа по действительному основанию</summary>
+        ///<summary>Логогриф мнимого числа по действительному основанию</summary>
         ///<param name="Im">Мнимое число</param>
-        ///<param name="b">Действительное основание логорифма</param>
-        ///<returns>Логорифм мнимого числа по действительному основанию</returns>
+        ///<param name="b">Действительное основание логарифма</param>
+        ///<returns>Логарифм мнимого числа по действительному основанию</returns>
         public static Complex Log(double Im, double b) => new Complex(
             Math.Log(Im, b),
             Math.Abs(Im) < double.Epsilon
@@ -162,8 +164,8 @@ namespace MathCore
 
         /// <summary>Логарифм комплексного числа по действительному аргументу</summary>
         /// <param name="z">Комплексное число</param>
-        /// <param name="b">Действительное основание логорифма</param>
-        /// <returns>Логорифм комплексного числа по действительному основанию</returns>
+        /// <param name="b">Действительное основание логарифма</param>
+        /// <returns>Логарифм комплексного числа по действительному основанию</returns>
         public static Complex Log(in Complex z, double b)
             => new Complex(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(Math.E, b));
 
@@ -183,8 +185,9 @@ namespace MathCore
         /// <returns>Результат вычисления комплексной экспоненты</returns>
         public static Complex Exp(in Complex z)
         {
-            var e = Math.Exp(z.Re);
-            return new Complex(e * Math.Cos(z.Im), e * Math.Sin(z.Im));
+            var (re, im) = z;
+            var e = Math.Exp(re);
+            return new Complex(e * Math.Cos(im), e * Math.Sin(im));
         }
 
         ///// <summary>Алгебраическая форма записи комплексного числа</summary>
@@ -376,9 +379,9 @@ namespace MathCore
         {
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
             var re = Re.ToString(CultureInfo.CurrentCulture);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(CultureInfo.CurrentCulture) : "")}i";
+            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
             if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : "")}" : "")}{(Math.Abs(Im) > double.Epsilon ? im : "")}";
+            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
         }
 
         /// <summary>Преобразование в строковый формат</summary>
@@ -389,9 +392,9 @@ namespace MathCore
         {
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
             var re = Re.ToString(Format);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(Format) : "")}i";
+            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(Format) : string.Empty)}i";
             if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : "")}" : "")}{(Math.Abs(Im) > double.Epsilon ? im : "")}";
+            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
         }
 
         /// <inheritdoc />
@@ -400,9 +403,9 @@ namespace MathCore
         {
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
             var re = Re.ToString(format, formatProvider);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(format, formatProvider) : "")}i";
+            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(format, formatProvider) : string.Empty)}i";
             if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : "")}" : "")}{(Math.Abs(Im) > double.Epsilon ? im : "")}";
+            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
         }
 
         /// <inheritdoc />

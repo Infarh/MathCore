@@ -50,11 +50,11 @@ namespace MathCore.Tests
         [TestMethod]
         public void ClearSystemSymbolsAtBeginAndEndTest()
         {
-            Assert.AreEqual("", "".ClearSystemSymbolsAtBeginAndEnd());
-            Assert.AreEqual("", " ".ClearSystemSymbolsAtBeginAndEnd());
-            Assert.AreEqual("", "\r ".ClearSystemSymbolsAtBeginAndEnd());
-            Assert.AreEqual("", "\r".ClearSystemSymbolsAtBeginAndEnd());
-            Assert.AreEqual("", "\r\n".ClearSystemSymbolsAtBeginAndEnd());
+            Assert.AreEqual(string.Empty, string.Empty.ClearSystemSymbolsAtBeginAndEnd());
+            Assert.AreEqual(string.Empty, " ".ClearSystemSymbolsAtBeginAndEnd());
+            Assert.AreEqual(string.Empty, "\r ".ClearSystemSymbolsAtBeginAndEnd());
+            Assert.AreEqual(string.Empty, "\r".ClearSystemSymbolsAtBeginAndEnd());
+            Assert.AreEqual(string.Empty, "\r\n".ClearSystemSymbolsAtBeginAndEnd());
             Assert.AreEqual("qwe", "qwe".ClearSystemSymbolsAtBeginAndEnd());
             Assert.AreEqual("qwe", "qwe\r\n".ClearSystemSymbolsAtBeginAndEnd());
             Assert.AreEqual("qwe", "qwe ".ClearSystemSymbolsAtBeginAndEnd());
@@ -78,16 +78,16 @@ namespace MathCore.Tests
         [TestMethod]
         public void ClerSymbolsAtEndTest()
         {
-            Assert.AreEqual("", "".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("", " ".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("", "\r ".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("", "\r".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("", "\r\n".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("qwe", "qwe".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("qwe", "qwe\r\n".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("qwe", "qwe ".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("\r\nqwe", "\r\nqwe".ClerSymbolsAtEnd('\r', '\n', ' '));
-            Assert.AreEqual("  qwe", "  qwe \n".ClerSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual(string.Empty, string.Empty.ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual(string.Empty, " ".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual(string.Empty, "\r ".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual(string.Empty, "\r".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual(string.Empty, "\r\n".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual("qwe", "qwe".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual("qwe", "qwe\r\n".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual("qwe", "qwe ".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual("\r\nqwe", "\r\nqwe".ClearSymbolsAtEnd('\r', '\n', ' '));
+            Assert.AreEqual("  qwe", "  qwe \n".ClearSymbolsAtEnd('\r', '\n', ' '));
         }
 
         ///// <summary>A test for IsNullOrEmpty</summary>

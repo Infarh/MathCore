@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
+// ReSharper disable ConvertToAutoProperty
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser
 {
@@ -30,7 +33,7 @@ namespace MathCore.MathParser
 
         /// <summary>Новый блок математического выражения</summary>
         /// <param name="Str">Строковое значение блока</param>
-        public BlockTerm(string Str) : this("", Str, "") { }
+        public BlockTerm([NotNull] string Str) : this(string.Empty, Str, string.Empty) { }
 
         /// <summary>Новый блок выражения</summary>
         /// <param name="OpenBracket">Открывающаяся скобка</param>
@@ -56,6 +59,7 @@ namespace MathCore.MathParser
         /// <param name="Str">Исследуемая строка</param>
         /// <param name="pos">Исходная позиция в строке</param>
         /// <returns>Строка цифрового значения</returns>
+        [CanBeNull]
         private static string GetNumberString([NotNull] string Str, ref int pos)
         {
             var p = pos;
@@ -74,7 +78,7 @@ namespace MathCore.MathParser
         /// <returns>Строка имени</returns>
         private static string GetNameString([NotNull] string Str, ref int pos)
         {
-            var result = "";
+            var result = string.Empty;
             var L = Str.Length;
             var i = pos;
             while(i < L && (char.IsLetter(Str[i]) || Str[i] == '∫'))
@@ -97,7 +101,7 @@ namespace MathCore.MathParser
         private static Term[] GetTerms([CanBeNull] string Str)
         {
             if(Str is null) return null;
-            if(Str.Length == 0) return new Term[0];
+            if(Str.Length == 0) return Array.Empty<Term>();
             var pos = 0;
             var len = Str.Length;
             var result = new List<Term>();
@@ -112,22 +116,22 @@ namespace MathCore.MathParser
                         {
                             case '(':
                                 {
-                                    var blok_str = Str.GetBracketText(ref pos);
-                                    var block = new BlockTerm("(", blok_str, ")");
+                                    var block_str = Str.GetBracketText(ref pos) ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                    var block = new BlockTerm("(", block_str, ")");
                                     value = new FunctionTerm((StringTerm)value, block);
                                 }
                                 break;
                             case '[':
                                 {
-                                    var blokStr = Str.GetBracketText(ref pos, "[", "]");
-                                    var block = new BlockTerm("[", blokStr, "]");
+                                    var blok_str = Str.GetBracketText(ref pos, "[", "]") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                    var block = new BlockTerm("[", blok_str, "]");
                                     value = new FunctionTerm((StringTerm)value, block);
                                 }
                                 break;
                             case '{':
                                 {
-                                    var blok_str = Str.GetBracketText(ref pos, "{", "}");
-                                    var block = new BlockTerm("{", blok_str, "}");
+                                    var block_str = Str.GetBracketText(ref pos, "{", "}") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                    var block = new BlockTerm("{", block_str, "}");
                                     value = new FunctionTerm((StringTerm)value, block);
                                 }
                                 break;
@@ -136,33 +140,33 @@ namespace MathCore.MathParser
                         value = new FunctionalTerm
                         (
                             (FunctionTerm)value,
-                            new BlockTerm("{", Str.GetBracketText(ref pos, "{", "}"), "}")
+                            new BlockTerm("{", Str.GetBracketText(ref pos, "{", "}") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения"), "}")
                         );
                     result.Add(value);
                 }
                 else if(char.IsDigit(c))
-                    result.Add(new NumberTerm(GetNumberString(Str, ref pos)));
+                    result.Add(new NumberTerm(GetNumberString(Str, ref pos) ?? throw new InvalidOperationException("Получена пустая ссылка на строку числового значения")));
                 else
                     switch(c)
                     {
                         case '(':
                             {
-                                var blok_str = Str.GetBracketText(ref pos);
-                                var block = new BlockTerm("(", blok_str, ")");
+                                var block_str = Str.GetBracketText(ref pos) ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                var block = new BlockTerm("(", block_str, ")");
                                 result.Add(block);
                             }
                             break;
                         case '[':
                             {
-                                var blok_str = Str.GetBracketText(ref pos, "[", "]");
-                                var block = new BlockTerm("[", blok_str, "]");
+                                var block_str = Str.GetBracketText(ref pos, "[", "]") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                var block = new BlockTerm("[", block_str, "]");
                                 result.Add(block);
                             }
                             break;
                         case '{':
                             {
-                                var blok_str = Str.GetBracketText(ref pos, "{", "}");
-                                var block = new BlockTerm("{", blok_str, "}");
+                                var block_str = Str.GetBracketText(ref pos, "{", "}") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                var block = new BlockTerm("{", block_str, "}");
                                 result.Add(block);
                             }
                             break;
@@ -176,7 +180,8 @@ namespace MathCore.MathParser
 
         /// <summary>Преобразование в строковое представление</summary>
         /// <returns>Строковое представление</returns>
-        public override string ToString() => $"{OpenBracket ?? ""}{Terms.ToSeparatedStr()}{CloseBracket ?? ""}";
+        [NotNull]
+        public override string ToString() => $"{OpenBracket ?? string.Empty}{Terms.ToSeparatedStr()}{CloseBracket ?? string.Empty}";
 
         /// <summary>Получить корень поддерева выражений</summary>
         /// <param name="Parser">Парсер выражения</param>

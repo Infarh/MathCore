@@ -33,7 +33,7 @@ namespace MathCore.Interpolation
             return (int)(K * n.Factorial() / (k.Factorial() - (n - k).Factorial()));
         }
 
-        /// <summary>Получить <see cref="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>
+        /// <summary>Получить <seealso cref="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</seealso>></summary>
         /// <param name="k">Номер многочлена</param>
         /// <param name="n">Степень</param>
         /// <returns></returns>

@@ -1,5 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
+using MathCore.Annotations;
 
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     public class DifferentialVisitor : ExpressionVisitorEx
@@ -16,16 +20,19 @@ namespace System.Linq.Expressions
             if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
         }
 
-        protected override Expression VisitConstant(ConstantExpression c)
+        [NotNull]
+        protected override Expression VisitConstant([NotNull] ConstantExpression c)
         {
             CheckValueType(c.Type);
             return Expression.Constant(0.0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sAdd(Expression a, Expression b) => sAdd(Expression.Add(a, b));
+        [NotNull]
+        private static Expression sAdd([NotNull] Expression a, [NotNull] Expression b) => sAdd(Expression.Add(a, b));
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sAdd(double a, Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
+        [NotNull]
+        private static Expression sAdd(double a, [NotNull] Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //private static Expression sAdd(Expression a, double b) { return sAdd(Expression.Add(a, Expression.Constant(b))); }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -33,11 +40,14 @@ namespace System.Linq.Expressions
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //private static Expression sSubtract(Expression a, Expression b) { return sAdd(Expression.Subtract(a, b)); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sSubtract(double a, Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
+        [NotNull]
+        private static Expression sSubtract(double a, [NotNull] Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sSubtract(Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
+        [NotNull]
+        private static Expression sSubtract([NotNull] Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
         //private static Expression sDec(Expression a) { return sSubtract(a, 1); }
-        private static Expression sAdd(BinaryExpression b)
+        [NotNull]
+        private static Expression sAdd([NotNull] BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
@@ -54,12 +64,14 @@ namespace System.Linq.Expressions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression sMultiply(Expression a, Expression b) => sMultiply(Expression.Multiply(a, b));
+        [NotNull]
+        private static Expression sMultiply([NotNull] Expression a, [NotNull] Expression b) => sMultiply(Expression.Multiply(a, b));
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //private static Expression sMultiply(double a, Expression b) { return sMultiply(Expression.Multiply(Expression.Constant(a), b)); }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //private static Expression sMultiply(Expression a, double b) { return sMultiply(Expression.Multiply(a, Expression.Constant(b))); }
-        private static Expression sMultiply(BinaryExpression b)
+        [NotNull]
+        private static Expression sMultiply([NotNull] BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
@@ -72,10 +84,11 @@ namespace System.Linq.Expressions
             return b;
         }
 
-        private static Expression sDivide(Expression a, Expression b) => sDivide(Expression.Divide(a, b));
-        private static Expression sDivide(double a, Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
+        [NotNull] private static Expression sDivide([NotNull] Expression a, [NotNull] Expression b) => sDivide(Expression.Divide(a, b));
+        [NotNull] private static Expression sDivide(double a, [NotNull] Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
         //private static Expression sDivide(Expression a, double b) { return sDivide(Expression.Divide(a, Expression.Constant(b))); }
-        private static Expression sDivide(BinaryExpression b)
+        [NotNull]
+        private static Expression sDivide([NotNull] BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
@@ -88,9 +101,10 @@ namespace System.Linq.Expressions
             return b;
         }
 
-        private static Expression sPower(Expression a, Expression b) => sPower(Expression.Power(a, b));
-        private static Expression sPower(Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
-        private static Expression sPower(BinaryExpression b)
+        [NotNull] private static Expression sPower([NotNull] Expression a, [NotNull] Expression b) => sPower(Expression.Power(a, b));
+        [NotNull] private static Expression sPower([NotNull] Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
+        [NotNull]
+        private static Expression sPower([NotNull] BinaryExpression b)
         {
             var l = b.Left as ConstantExpression;
             var r = b.Right as ConstantExpression;
@@ -102,7 +116,8 @@ namespace System.Linq.Expressions
             return b;
         }
 
-        private static Expression sCall(MethodCallExpression CallExpression)
+        [NotNull]
+        private static Expression sCall([NotNull] MethodCallExpression CallExpression)
         {
             var args = CallExpression.Arguments;
             if (!args.All(a => a is ConstantExpression)) return CallExpression;
@@ -113,7 +128,7 @@ namespace System.Linq.Expressions
             return CallExpression;
         }
 
-        protected override Expression VisitBinary(BinaryExpression b)
+        protected override Expression VisitBinary([NotNull] BinaryExpression b)
         {
             //return base.VisitBinary(b);
             var NodeType = b.NodeType;
@@ -184,16 +199,18 @@ namespace System.Linq.Expressions
             }
         }
 
-        protected override Expression VisitParameter(ParameterExpression p)
+        [NotNull]
+        protected override Expression VisitParameter([NotNull] ParameterExpression p)
         {
             CheckValueType(p.Type);
             return Expression.Constant(1.0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Expression MathMethod(string Name, params Expression[] p) => Expression.Call(typeof(Math), Name, null, p);
+        [NotNull]
+        private static Expression MathMethod([NotNull] string Name, params Expression[] p) => Expression.Call(typeof(Math), Name, null, p);
 
-        protected Expression VisitMathMethodCall(MethodCallExpression m)
+        protected Expression VisitMathMethodCall([NotNull] MethodCallExpression m)
         {
             switch(m.Method.Name)
             {

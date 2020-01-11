@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Reactive;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,6 +15,8 @@ using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable UnusedMember.Local
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedType.Local
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq
@@ -159,7 +162,7 @@ namespace System.Linq
         }
 
         [CN]
-        public static LambdaEnumerable<TValue> GetLamdaEnumerable<TObject, TValue>(this TObject obj,
+        public static LambdaEnumerable<TValue> GetLambdaEnumerable<TObject, TValue>(this TObject obj,
             Func<TObject, IEnumerable<TValue>> Creator) => new LambdaEnumerable<TValue>(() => Creator(obj));
 
         [CN]
@@ -310,7 +313,7 @@ namespace System.Linq
             foreach (var item in source) collection.Add(item);
         }
 
-        /// <summary>Удалить перечисление элементов из коллекци</summary>
+        /// <summary>Удалить перечисление элементов из коллекции</summary>
         /// <typeparam name="T">Тип элементов</typeparam>
         /// <param name="source">Перечисление удаляемых элементов</param>
         /// <param name="collection">Коллекция, из которой производится удаление</param>
@@ -361,7 +364,7 @@ namespace System.Linq
 
         /// <summary>Создать последовательность элементов, каждое значение в которой будет получено на основе двух значений исходной последовательности</summary>
         /// <typeparam name="TItem">Тип элементов исходной последовательности</typeparam>
-        /// <typeparam name="TValue">Тип элементов последовательности сконвертированных элементов</typeparam>
+        /// <typeparam name="TValue">Тип элементов последовательности конвертированных элементов</typeparam>
         /// <param name="collection">Исходная последовательность элементов</param>
         /// <param name="converter">
         /// Метод преобразования, в который передаётся исходный элемент последовательности, предыдущий элемент последовательности, 
@@ -447,22 +450,22 @@ namespace System.Linq
         /// <summary>Выполнение действия по завершению перечисления коллекции</summary>
         /// <typeparam name="T">Тип элементов коллекции</typeparam>
         /// <param name="collection">Коллекция элементов</param>
-        /// <param name="CompliteAction">ДЕйствие, выполняемое по завершению перечисления коллекции</param>
+        /// <param name="CompleteAction">Действие, выполняемое по завершению перечисления коллекции</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
-        public static IEnumerable<T> OnComplite<T>([CN] this IEnumerable<T> collection, [NN] Action CompliteAction)
+        public static IEnumerable<T> OnComplete<T>([CN] this IEnumerable<T> collection, [NN] Action CompleteAction)
         {
             if (collection is null) yield break;
             foreach (var item in collection) yield return item;
-            CompliteAction();
+            CompleteAction();
         }
 
         /// <summary>История перечисления последовательности элементов</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
-        public sealed class EnumerableHystory<T> : IEnumerable<T>, IObservable<T>
+        public sealed class EnumerableHistory<T> : IEnumerable<T>, IObservable<T>
         {
             /// <summary>Длина истории</summary>
-            private int _HystoryLength;
+            private int _HistoryLength;
 
             /// <summary>Список элементов в истории</summary>
             [NN]
@@ -477,7 +480,7 @@ namespace System.Linq
 
             /// <summary>Длина истории</summary>
             [MinValue(0)]
-            public int Length { get => _HystoryLength; set { _HystoryLength = value; Check(); } }
+            public int Length { get => _HistoryLength; set { _HistoryLength = value; Check(); } }
 
             /// <summary>Количество элементов в истории</summary>
             [MinValue(0)]
@@ -488,24 +491,24 @@ namespace System.Linq
             /// <returns>Элемент истории перечисления</returns>
             public T this[[MinValue(0)] int i] => _Queue[_Queue.Count - i];
 
-            /// <summary>Инициализация нового экземпляра <see cref="EnumerableHystory{T}"/></summary>
-            /// <param name="HystoryLength">Длина истории</param>
-            public EnumerableHystory([MinValue(0)] int HystoryLength)
+            /// <summary>Инициализация нового экземпляра <see cref="EnumerableHistory{T}"/></summary>
+            /// <param name="HistoryLength">Длина истории</param>
+            public EnumerableHistory([MinValue(0)] int HistoryLength)
             {
-                _HystoryLength = HystoryLength;
-                _Queue = new List<T>(HystoryLength);
+                _HistoryLength = HistoryLength;
+                _Queue = new List<T>(HistoryLength);
             }
 
             /// <summary>Удаление лишних элементов из истории</summary>
             private void Check()
             {
-                while (_Queue.Count > _HystoryLength) _Queue.RemoveAt(0);
+                while (_Queue.Count > _HistoryLength) _Queue.RemoveAt(0);
             }
 
             /// <summary>Добавить элемент в историю перечисления</summary>
             /// <param name="item">Добавляемый элемент</param>
             [NN]
-            public EnumerableHystory<T> Add(T item)
+            public EnumerableHistory<T> Add(T item)
             {
                 _Queue.Add(item);
                 Current = item;
@@ -522,7 +525,7 @@ namespace System.Linq
 
             /// <summary>Подписка на изменения истории перечисления</summary>
             /// <param name="observer">Объект-подписчик, уведомляемый об изменениях в истории перечисления</param>
-            /// <returns>ОБъект, осуществляющий возможность отписаться от уведомлений изменения истории перечисления</returns>
+            /// <returns>Объект, осуществляющий возможность отписаться от уведомлений изменения истории перечисления</returns>
             public IDisposable Subscribe(IObserver<T> observer) => _ObservableObject.Subscribe(observer);
         }
 
@@ -531,18 +534,18 @@ namespace System.Linq
         /// <typeparam name="TOut">Тип элементов результирующей коллекции</typeparam>
         /// <param name="collection">Исходная коллекция элементов</param>
         /// <param name="Selector">Метод преобразования элементов коллекции на основе истории их перечисления</param>
-        /// <param name="HystoryLength">Максимальная длина истории перечисления</param>
-        /// <returns>Коллекция элементов, сформированная на основе исходной с учётом истории процесса перчисления исходной коллекции</returns>
+        /// <param name="HistoryLength">Максимальная длина истории перечисления</param>
+        /// <returns>Коллекция элементов, сформированная на основе исходной с учётом истории процесса перечисления исходной коллекции</returns>
         [NN]
-        public static IEnumerable<TOut> SelectWithHystory<TIn, TOut>
+        public static IEnumerable<TOut> SelectWithHistory<TIn, TOut>
         (
             [NN] this IEnumerable<TIn> collection,
-            [NN] Func<EnumerableHystory<TIn>, TOut> Selector,
-            [MinValue(0)] int HystoryLength
+            [NN] Func<EnumerableHistory<TIn>, TOut> Selector,
+            [MinValue(0)] int HistoryLength
         )
         {
-            var hystory = new EnumerableHystory<TIn>(HystoryLength);
-            return collection.Select(item => Selector(hystory.Add(item)));
+            var History = new EnumerableHistory<TIn>(HistoryLength);
+            return collection.Select(item => Selector(History.Add(item)));
         }
 
         /// <summary>Оценка статистических параметров перечисления</summary>
@@ -560,7 +563,7 @@ namespace System.Linq
             return result;
         }
 
-        /// <summary>Отбросить нуллевые значения с конца перечисления</summary>
+        /// <summary>Отбросить нулевые значения с конца перечисления</summary>
         /// <param name="collection">Фильтруемое перечисление</param>
         /// <returns>Перечисление чисел, в котором отсутствуют хвостовые нули</returns>
         [NN]
@@ -603,15 +606,14 @@ namespace System.Linq
         }
 
         /// <summary>Определить минимальное и максимальное значение перечисления</summary>
-        /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
         /// <param name="Min">Минимальный элемент перечисления</param>
         /// <param name="Max">Максимальный элемент перечисления</param>
         public static void GetMinMax
         (
             [NN] this IEnumerable<double> collection,
-            [CN] out double Min,
-            [CN] out double Max
+            out double Min,
+            out double Max
         )
         {
             var min = new MinValue();
@@ -667,7 +669,6 @@ namespace System.Linq
         }
 
         /// <summary>Определить минимальное и максимальное значение перечисления</summary>
-        /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="collection">Перечисление, минимум и максимум которого необходимо определить</param>
         /// <param name="Min">Минимальный элемент перечисления</param>
         /// <param name="MinIndex">Индекс минимального элемента в коллекции</param>
@@ -676,9 +677,9 @@ namespace System.Linq
         public static void GetMinMax
         (
             [NN] this IEnumerable<double> collection,
-            [CN] out double Min,
+            out double Min,
             out int MinIndex,
-            [CN] out double Max,
+            out double Max,
             out int MaxIndex
         )
         {
@@ -758,7 +759,6 @@ namespace System.Linq
         }
 
         /// <summary>Определение максимального элемента последовательности</summary>
-        /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов</param>
         /// <param name="index">Индекс максимального элемента в последовательности</param>
         /// <returns>Максимальный элемент последовательности</returns>
@@ -837,7 +837,6 @@ namespace System.Linq
         /// <param name="collection">Последовательность элементов</param>
         /// <param name="index">Индекс минимального элемента в последовательности</param>
         /// <returns>Минимальный элемент последовательности</returns>
-        [CN]
         public static double GetMin([NN] this IEnumerable<double> collection, out int index)
         {
             var min = new MinValue();
@@ -863,7 +862,7 @@ namespace System.Linq
         /// <returns>Строка, составленная из строковых эквивалентов элементов входного перечисления, разделённых строкой-разделителем</returns>
         public static string ToSeparatedString<T>([NN] IEnumerable<T> collection, string Separator) =>
             collection
-               .Select((t, i) => (s: t.ToString(), v: i == 0 ? "" : Separator))
+               .Select((t, i) => (s: t.ToString(), v: i == 0 ? string.Empty : Separator))
                .Aggregate(new StringBuilder(), (sb, v) => sb.AppendFormat("{0}{1}", v.s, v.v), sb => sb.ToString());
 
         /// <summary>Быстрое преобразование последовательности в список</summary>
@@ -882,7 +881,7 @@ namespace System.Linq
         [DST]
         public static Complex Sum<T>([NN] this IEnumerable<T> collection, [NN] Func<T, Complex> selector) => collection.Select(selector).Aggregate((Z, z) => Z + z);
 
-        /// <summary>Объединить элементы коллеции</summary>
+        /// <summary>Объединить элементы коллекции</summary>
         /// <typeparam name="T">Тип элемента коллекции</typeparam>
         /// <typeparam name="TResult">Тип результата</typeparam>
         /// <param name="collection">Исходная коллекция элементов</param>
@@ -899,12 +898,14 @@ namespace System.Linq
             int index = 0) =>
             collection.Aggregate(Init, (last, e) => func(last, e, index++));
 
-        /// <summary>Проверка на наличие элемиента в коллекции</summary>
+        /// <summary>Проверка на наличие элемента в коллекции</summary>
         /// <typeparam name="T">Тип элемента</typeparam>
         /// <param name="collection">Проверяемая коллекция</param>
         /// <param name="selector">Метод выбора</param>
         /// <returns>Истина, если выполняется предикат хотя бы на одном элементе коллекции</returns>
         [DST]
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
+        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
         public static bool Contains<T>([NN] this IEnumerable<T> collection, [NN] Func<T, bool> selector)
         {
             if (collection is List<T> list1)
@@ -915,6 +916,7 @@ namespace System.Linq
                 for (var i = 0; i < i_list.Count; i++)
                     if (selector(i_list[i])) return true;
 
+            // ReSharper disable once InvertIf
             if (collection is T[] array)
                 if (array.Any(selector))
                     return true;
@@ -1025,8 +1027,8 @@ namespace System.Linq
         ///<summary>Выполнение действия для всех элементов коллекции с указанием индекса элемента</summary>
         ///<param name="collection">Коллекция элементов</param>
         ///<param name="Action">Действие над элементом</param>
-        ///<param name="index">Смещение индекса элемента колеекции</param>
-        ///<typeparam name="T">Тип элемента колекции</typeparam>
+        ///<param name="index">Смещение индекса элемента коллекции</param>
+        ///<typeparam name="T">Тип элемента коллекции</typeparam>
         [DST]
         public static void Foreach<T>([NN] this IEnumerable<T> collection, [NN] Action<T, int> Action, int index = 0)
         {
@@ -1043,8 +1045,8 @@ namespace System.Linq
         /// <param name="collection">Коллекция элементов</param>
         /// <param name="p">Параметр действия</param>
         /// <param name="Action">Действие над элементом</param>
-        /// <param name="index">Смещение индекса элемента колеекции</param>
-        /// <typeparam name="T">Тип элемента колекции</typeparam>
+        /// <param name="index">Смещение индекса элемента коллекции</param>
+        /// <typeparam name="T">Тип элемента коллекции</typeparam>
         /// <typeparam name="TP">Тип параметра процесса перебора</typeparam>
         [DST]
         public static void Foreach<T, TP>(
@@ -1067,8 +1069,8 @@ namespace System.Linq
         /// <param name="p1">Параметр действия 1</param>
         /// <param name="p2">Параметр действия 2</param>
         /// <param name="Action">Действие над элементом</param>
-        /// <param name="index">Смещение индекса элемента колеекции</param>
-        /// <typeparam name="T">Тип элемента колекции</typeparam>
+        /// <param name="index">Смещение индекса элемента коллекции</param>
+        /// <typeparam name="T">Тип элемента коллекции</typeparam>
         /// <typeparam name="TP1">Тип параметра процесса перебора 1</typeparam>
         /// <typeparam name="TP2">Тип параметра процесса перебора 2</typeparam>
         [DST]
@@ -1094,8 +1096,8 @@ namespace System.Linq
         /// <param name="p2">Параметр действия 2</param>
         /// <param name="p3">Параметр действия 3</param>
         /// <param name="Action">Действие над элементом</param>
-        /// <param name="index">Смещение индекса элемента колеекции</param>
-        /// <typeparam name="T">Тип элемента колекции</typeparam>
+        /// <param name="index">Смещение индекса элемента коллекции</param>
+        /// <typeparam name="T">Тип элемента коллекции</typeparam>
         /// <typeparam name="TP1">Тип параметра процесса перебора 1</typeparam>
         /// <typeparam name="TP2">Тип параметра процесса перебора 2</typeparam>
         /// <typeparam name="TP3">Тип параметра процесса перебора 3</typeparam>
@@ -1130,7 +1132,7 @@ namespace System.Linq
 
         /// <summary>Ленивое преобразование типов элементов перечисления</summary>
         /// <typeparam name="TItem">Тип элементов входной перечисления</typeparam>
-        /// <typeparam name="TValue">Тип элементов перечисления, в который требуется осуществить преобразвоание</typeparam>
+        /// <typeparam name="TValue">Тип элементов перечисления, в который требуется осуществить преобразование</typeparam>
         /// <param name="collection">Исходная перечисление элементов</param>
         /// <returns>Перечисление элементов преобразованного типа</returns>
         [NN]
@@ -1138,20 +1140,20 @@ namespace System.Linq
 
         /// <summary>Действие, выполняемое в процессе перебора элементов для всех элементов перечисления при условии выполнения предиката</summary>
         /// <typeparam name="T">Ип элементов перечисления</typeparam>
-        /// <param name="collection">ПЕречисление элементов, для которых надо выполнить действие</param>
-        /// <param name="Predicat">Условие выполнения действия</param>
+        /// <param name="collection">Перечисление элементов, для которых надо выполнить действие</param>
+        /// <param name="Predicate">Условие выполнения действия</param>
         /// <param name="Action">Действие, выполняемое для всех элементов перечисления</param>
         /// <returns>Исходное перечисление</returns>
         [NN]
         public static IEnumerable<T> ForeachLazyIf<T>
         (
             [NN] this IEnumerable<T> collection,
-            [NN] Func<T, bool> Predicat,
+            [NN] Func<T, bool> Predicate,
             [CN] Action<T> Action
         ) =>
             Action is null ? collection : collection.Select(t =>
             {
-                if (Predicat(t)) Action(t);
+                if (Predicate(t)) Action(t);
                 return t;
             });
 
@@ -1208,12 +1210,12 @@ namespace System.Linq
         ///<summary>Класс вычисления значений функции для коллекции аргументов</summary>
         ///<typeparam name="T">Тип аргумента функции</typeparam>
         ///<typeparam name="TResult">Тип значения функции</typeparam>
-        private class EnumirableCollectionFunctionCalculator<T, TResult> : IEnumerable<TResult>
+        private class EnumerableCollectionFunctionCalculator<T, TResult> : IEnumerable<TResult>
         {
             /* ------------------------------------------------------------------------------------------ */
 
-            ///<summary>Перечислитель коллеции рассчитанных значений функции</summary>
-            private class EnumerableCollectionFunctionCalculatorEnumirator : IEnumerator<TResult>
+            ///<summary>Перечислитель коллекции рассчитанных значений функции</summary>
+            private class EnumerableCollectionFunctionCalculatorEnumerator : IEnumerator<TResult>
             {
                 /* ------------------------------------------------------------------------------------------ */
 
@@ -1226,20 +1228,20 @@ namespace System.Linq
 
                 /* ------------------------------------------------------------------------------------------ */
 
-                /// <summary>Текцущий элемент коллекции значений функции</summary>
+                /// <summary>Текущий элемент коллекции значений функции</summary>
                 [NN]
                 public TResult Current => _FunctionValue;
 
-                /// <summary>Текцущий элемент коллекции значений функции</summary>
+                /// <summary>Текущий элемент коллекции значений функции</summary>
                 [NN]
                 object IEnumerator.Current => Current;
 
                 /* ------------------------------------------------------------------------------------------ */
 
-                ///<summary>Инициализация нового перечислителя колеекции рассчитанных значений функции</summary>
+                ///<summary>Инициализация нового перечислителя коллекции рассчитанных значений функции</summary>
                 ///<param name="Enumerator">Перечислитель коллекции аргументов области определения</param>
                 ///<param name="f">Вычисляемая функция</param>
-                public EnumerableCollectionFunctionCalculatorEnumirator([NN] IEnumerator<T> Enumerator, [NN] Func<T, TResult> f)
+                public EnumerableCollectionFunctionCalculatorEnumerator([NN] IEnumerator<T> Enumerator, [NN] Func<T, TResult> f)
                 {
                     _Enumerator = Enumerator;
                     _FunctionValue = new LazyValue<TResult>(() => f(_Enumerator.Current));
@@ -1280,20 +1282,20 @@ namespace System.Linq
             private readonly Func<T, TResult> _Function;
 
             /// <summary>Инициализация нового потокового вычислителя функции на коллекции аргументов</summary>
-            /// <param name="сollection">Коллекция аргументов</param>
+            /// <param name="collection">Коллекция аргументов</param>
             /// <param name="f">Вычисляемая функция</param>
-            public EnumirableCollectionFunctionCalculator([NN] IEnumerable<T> сollection, [NN] Func<T, TResult> f)
+            public EnumerableCollectionFunctionCalculator([NN] IEnumerable<T> collection, [NN] Func<T, TResult> f)
             {
-                _Collection = сollection;
+                _Collection = collection;
                 _Function = f;
             }
 
             /// <summary>Получение перечислителя</summary>
             /// <returns>Перечислитель рассчитанных значений функции</returns>
-            public IEnumerator<TResult> GetEnumerator() => new EnumerableCollectionFunctionCalculatorEnumirator(_Collection.GetEnumerator(), _Function);
+            public IEnumerator<TResult> GetEnumerator() => new EnumerableCollectionFunctionCalculatorEnumerator(_Collection.GetEnumerator(), _Function);
 
             /// <summary>Неявное получение перечислителя</summary>
-            /// <returns>Перечислитель расссчитанных значений функции</returns>
+            /// <returns>Перечислитель рассчитанных значений функции</returns>
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
@@ -1342,7 +1344,7 @@ namespace System.Linq
         /// <param name="Items">Последовательность элементов, которых не должно быть в выходной последовательности</param>
         /// <returns>Последовательность элементов, которые отсутствуют во второй последовательности</returns>
         [NN]
-        public static IEnumerable<T> MisingItems<T>([NN] this IEnumerable<T> Source, [NN] IEnumerable<T> Items)
+        public static IEnumerable<T> MissingItems<T>([NN] this IEnumerable<T> Source, [NN] IEnumerable<T> Items)
         {
             var list = Items.ToListFast();
             return Source.Where(t => !list.Contains(i => Equals(i, t)));
@@ -1401,8 +1403,8 @@ namespace System.Linq
             var b = B.ToListFast();
 
             var result = new List<T>(a.Count + b.Count);
-            result.AddRange(a.MisingItems(b));
-            result.AddRange(b.MisingItems(a));
+            result.AddRange(a.MissingItems(b));
+            result.AddRange(b.MissingItems(a));
 
             return result.ToArray();
         }
@@ -1432,12 +1434,12 @@ namespace System.Linq
             var a = A.ToListFast();
             var b = B.ToListFast();
 
-            var MissingInAFromB_list = new List<T>(a.Count + b.Count);
-            var MissingInBFromA_list = new List<T>(a.Count + b.Count);
-            var ExistingInAFromB_list = new List<T>(a.Count + b.Count);
-            var ExistingInBFromA_list = new List<T>(a.Count + b.Count);
-            var Intersection_list = new List<T>(a.Count + b.Count);
-            var NotIntersection_list = new List<T>(a.Count + b.Count);
+            var missing_in_a_from_b_list = new List<T>(a.Count + b.Count);
+            var missing_in_b_from_a_list = new List<T>(a.Count + b.Count);
+            var existing_in_a_from_b_list = new List<T>(a.Count + b.Count);
+            var existing_in_b_from_a_list = new List<T>(a.Count + b.Count);
+            var intersection_list = new List<T>(a.Count + b.Count);
+            var not_intersection_list = new List<T>(a.Count + b.Count);
 
             var b_existing_in_a = new bool[b.Count];
             foreach (var a_item in a)
@@ -1455,13 +1457,13 @@ namespace System.Linq
 
                 if (a_existing_in_b)
                 {
-                    ExistingInAFromB_list.Add(a_item);
-                    NotIntersection_list.Add(a_item);
+                    existing_in_a_from_b_list.Add(a_item);
+                    not_intersection_list.Add(a_item);
                 }
                 else
                 {
-                    MissingInAFromB_list.Add(a_item);
-                    Intersection_list.Add(a_item);
+                    missing_in_a_from_b_list.Add(a_item);
+                    intersection_list.Add(a_item);
                 }
             }
 
@@ -1470,22 +1472,22 @@ namespace System.Linq
                 var b_item = b[i];
                 if (b_existing_in_a[i])
                 {
-                    ExistingInBFromA_list.Add(b_item);
-                    NotIntersection_list.Add(b_item);
+                    existing_in_b_from_a_list.Add(b_item);
+                    not_intersection_list.Add(b_item);
                 }
                 else
                 {
-                    MissingInBFromA_list.Add(b_item);
-                    Intersection_list.Add(b_item);
+                    missing_in_b_from_a_list.Add(b_item);
+                    intersection_list.Add(b_item);
                 }
             }
 
-            ExistingInAFromB = ExistingInAFromB_list.ToArray();
-            ExistingInBFromA = ExistingInBFromA_list.ToArray();
-            MissingInAFromB = MissingInAFromB_list.ToArray();
-            MissingInBFromA = MissingInBFromA_list.ToArray();
-            Intersection = Intersection_list.ToArray();
-            NotIntersection = NotIntersection_list.ToArray();
+            ExistingInAFromB = existing_in_a_from_b_list.ToArray();
+            ExistingInBFromA = existing_in_b_from_a_list.ToArray();
+            MissingInAFromB = missing_in_a_from_b_list.ToArray();
+            MissingInBFromA = missing_in_b_from_a_list.ToArray();
+            Intersection = intersection_list.ToArray();
+            NotIntersection = not_intersection_list.ToArray();
         }
 
         /// <summary>Преобразовать последовательность в строку с указанной строкой-разделителем</summary>
@@ -1494,9 +1496,10 @@ namespace System.Linq
         /// <param name="Separator">Разделитель элементов в строке</param>
         /// <returns>Строка, составленная из строковых представлений объектов последовательности, разделённых указанной строкой-разделителем</returns>
         [NN]
-        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") => string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
+        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") => 
+            string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
 
-        /// <summary>Найти минимум и максимум последовательности вещественых чисел</summary>
+        /// <summary>Найти минимум и максимум последовательности вещественных чисел</summary>
         /// <param name="values">Последовательность вещественных чисел</param>
         /// <returns>Интервал, границы которого определяют минимум и максимум значений, которые принимала входная последовательность</returns>
         public static Interval GetMinMax([NN] this IEnumerable<double> values) => new MinMaxValue(values).Interval;
@@ -1588,7 +1591,7 @@ namespace System.Linq
             }
         }
 
-        /// <summary>Инверсная конкатинация перечислений</summary>
+        /// <summary>Инверсная конкатенация перечислений</summary>
         /// <typeparam name="T">Тип элементов перечислений</typeparam>
         /// <param name="FirstCollection">Исходная последовательность, добавляемая в конец</param>
         /// <param name="SecondCollection">Вторичная последовательность, добавляемая в начало</param>
@@ -1620,9 +1623,9 @@ namespace System.Linq
 
         /// <summary>Произведение перечисления полиномов</summary>
         /// <param name="P">Перечисление полиномов, которые надо перемножить</param>
-        /// <returns>Полином, являющийся произведеним полиномов</returns>
+        /// <returns>Полином, являющийся произведением полиномов</returns>
         [NN]
-        public static Polynom Multyiply([NN] this IEnumerable<Polynom> P)
+        public static Polynom Multiply([NN] this IEnumerable<Polynom> P)
         {
             Polynom result = null;
             foreach (var p in P)

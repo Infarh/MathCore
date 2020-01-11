@@ -1,6 +1,8 @@
 ﻿using System;
 using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
 
+// ReSharper disable once CheckNamespace
 namespace MathCore
 {
     public static class ComplexArray
@@ -14,7 +16,7 @@ namespace MathCore
             for (var i = 0; i < ComplexArray.Length; i++) (Re[i], Im[i]) = ComplexArray[i];
         }
 
-        public static void ToAbsArg(this Complex[] ComplexArray, [NotNull] out double[] Abs, [NotNull] out double[] Arg)
+        public static void ToAbsArg([NotNull] this Complex[] ComplexArray, [NotNull] out double[] Abs, [NotNull] out double[] Arg)
         {
             if (ComplexArray is null) throw new ArgumentNullException(nameof(ComplexArray));
 
@@ -27,7 +29,7 @@ namespace MathCore
             }
         }
 
-        public static void ToAbsArgDeg(this Complex[] ComplexArray, [NotNull] out double[] Abs, [NotNull] out double[] Arg)
+        public static void ToAbsArgDeg([NotNull] this Complex[] ComplexArray, [NotNull] out double[] Abs, [NotNull] out double[] Arg)
         {
             if (ComplexArray is null) throw new ArgumentNullException(nameof(ComplexArray));
 

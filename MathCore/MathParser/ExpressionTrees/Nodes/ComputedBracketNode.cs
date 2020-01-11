@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -11,7 +13,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Скобки</summary>
         public Bracket Bracket => _Bracket;
 
-        /// <summary>Вычислимыый блочный узел дерева</summary>
+        /// <summary>Вычислимый блочный узел дерева</summary>
         /// <param name="bracket">Скобки</param>
         /// <param name="Node">Узел-содержимое</param>
         public ComputedBracketNode(Bracket bracket, ExpressionTreeNode Node = null)
@@ -43,6 +45,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>
-        public override string ToString() => $"{_Bracket.Suround(Left.ToString())}{Right?.ToString() ?? ""}";
+        public override string ToString() => 
+            $"{_Bracket.Suround((Left ?? throw new InvalidOperationException()).ToString())}{Right?.ToString() ?? string.Empty}";
     }
 }
