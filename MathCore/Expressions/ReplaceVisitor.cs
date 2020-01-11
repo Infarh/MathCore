@@ -1,14 +1,17 @@
-﻿namespace System.Linq.Expressions
+﻿// ReSharper disable once CheckNamespace
+namespace System.Linq.Expressions
 {
     internal class ReplaceVisitor : ExpressionVisitorEx
     {
-        private readonly Expression from, to;
+        private readonly Expression _From;
+        private readonly Expression _To;
+
         public ReplaceVisitor(Expression from, Expression to)
         {
-            this.from = from;
-            this.to = to;
+            _From = from;
+            _To = to;
         }
 
-        public override Expression Visit(Expression node) => node == from ? to : base.Visit(node);
+        public override Expression Visit(Expression node) => node == _From ? _To : base.Visit(node);
     }
 }

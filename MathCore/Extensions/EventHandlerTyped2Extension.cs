@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Класс методов расширений для обработчиков событий</summary>
-    public static class EventHandlerTyped2Exsension
+    public static class EventHandlerTyped2Extension
     {
         /// <summary>Потоко-безопасная генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
@@ -17,12 +21,10 @@ namespace System
             if(handler is null) return;
             var invocations = handler.GetInvocationList();
             foreach (var invocation in invocations)
-            {
                 if(invocation.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired)
                     invoke.Invoke(invocation, new object[] { Sender, e });
                 else
                     invocation.DynamicInvoke(Sender, e);
-            }
         }
 
         /// <summary>Потоко-безопасная асинхронная генерация события</summary>
@@ -32,26 +34,35 @@ namespace System
         /// <param name="CallBack">Метод завершения генерации события</param>
         /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
         [DST]
-        public static void StartAsync<TSender, TEventArgs1, TEventArgs2>(this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e,
-                                              AsyncCallback CallBack = null, object State = null) => Handler?.BeginInvoke(Sender, e, CallBack, State);
+        public static void StartAsync<TSender, TEventArgs1, TEventArgs2>(
+            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, 
+            TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e,
+            AsyncCallback CallBack = null, 
+            object State = null) 
+            => Handler?.BeginInvoke(Sender, e, CallBack, State);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         [DST]
-        public static void FastStart<TSender, TEventArgs1, TEventArgs2>(this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, TSender Sender) => Handler?.Invoke(Sender, default);
+        public static void FastStart<TSender, TEventArgs1, TEventArgs2>(
+            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, 
+            TSender Sender) 
+            => Handler?.Invoke(Sender, default);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         [DST]
-        public static void FastStart<TSender, TEventArgs1, TEventArgs2>(this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e) => Handler?.Invoke(Sender, e);
+        public static void FastStart<TSender, TEventArgs1, TEventArgs2>(
+            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, 
+            TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e)
+            => Handler?.Invoke(Sender, e);
 
         ///// <summary>Быстрая генерация события</summary>
         ///// <param name="Handler">Обработчик события</param>
         ///// <param name="Sender">Источник события</param>
-        ///// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         ///// <param name="e">Аргументы события</param>
         //[DST]
         //public static void FastStart<TEventArgs>(this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e)
@@ -65,7 +76,6 @@ namespace System
         ///// <summary>Потоко-безопасная генерация события</summary>
         ///// <param name="Handler">Обработчик события</param>
         ///// <param name="Sender">Источник события</param>
-        ///// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         ///// <param name="e">Аргументы события</param>
         //[DST]
         //public static void Start<TEventArgs>(this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e)
@@ -84,10 +94,9 @@ namespace System
         //    }
         //}
 
-        ///// <summary>Потоко-безопасная асинхроная генерация события</summary>
+        ///// <summary>Потоко-безопасная асинхронная генерация события</summary>
         ///// <param name="Handler">Обработчик события</param>
         ///// <param name="Sender">Источник события</param>
-        ///// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         ///// <param name="e">Аргументы события</param>
         ///// <param name="CallBack">Метод завершения генерации события</param>
         ///// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
@@ -104,10 +113,7 @@ namespace System
         ///// <summary>Потоко-безопасная генерация события</summary>
         ///// <param name="Handler">Обработчик события</param>
         ///// <param name="Sender">Источник события</param>
-        ///// <typeparam name="TArgs">Тип аргумента события</typeparam>
         ///// <param name="Args">Аргументы события</param>
-        ///// <typeparam name="TResult">Тип результата обработки события</typeparam>
-        ///// <typeparam name="TSender">Тип источника события</typeparam>
         ///// <returns>Массив результатов обработки события</returns>
         //[DST]
         //public static TResult[] Start<TResult, TSender, TArgs>(this EventHandler<TResult, TSender, TArgs> Handler,

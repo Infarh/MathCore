@@ -1,15 +1,22 @@
 ﻿using System.Collections.Generic;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable UnusedType.Global
+
+// ReSharper disable once CheckNamespace
 namespace System.IO
 {
     public static class StreamReaderExtensions
     {
-        public static IEnumerable<string> GetStringLines(this StreamReader reader)
+        [ItemCanBeNull]
+        public static IEnumerable<string> GetStringLines([NotNull] this StreamReader reader)
         {
             while(!reader.EndOfStream) yield return reader.ReadLine();
         }
 
-        public static IEnumerable<char[]> GetCharBuffer(this StreamReader reader, int BufferLength)
+        [ItemNotNull]
+        public static IEnumerable<char[]> GetCharBuffer([NotNull] this StreamReader reader, int BufferLength)
         {
             while(!reader.EndOfStream)
             {

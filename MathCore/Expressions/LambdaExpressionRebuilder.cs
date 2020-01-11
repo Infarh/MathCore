@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MathCore.Annotations;
 
+// ReSharper disable UnusedType.Global
+
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     public class LambdaExpressionRebuilder : ExpressionVisitorEx, IEnumerable
@@ -24,8 +28,8 @@ namespace System.Linq.Expressions
 
         private readonly List<Rule> _NewValues;
 
-        public LambdaExpressionRebuilder(params Rule[] NewValues) : this((IEnumerable<Rule>)NewValues) { }
-        public LambdaExpressionRebuilder(IEnumerable<Rule> NewValues) => _NewValues = NewValues.ToList();
+        public LambdaExpressionRebuilder([NotNull] params Rule[] NewValues) : this((IEnumerable<Rule>)NewValues) { }
+        public LambdaExpressionRebuilder([NotNull] IEnumerable<Rule> NewValues) => _NewValues = NewValues.ToList();
 
         public override Expression Visit(Expression node)
         {

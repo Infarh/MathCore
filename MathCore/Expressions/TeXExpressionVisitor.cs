@@ -8,25 +8,6 @@ using MathCore.Annotations;
 namespace System.Linq.Expressions
 {
     /// <summary>
-    /// TeX supports several styles for multiplication sign
-    /// </summary>
-    public enum MultiplicationSign
-    {
-        /// <summary>
-        /// Without any sign
-        /// </summary>
-        None,
-        /// <summary>
-        /// * sign
-        /// </summary>
-        Asterisk,
-        /// <summary>
-        /// x sign
-        /// </summary>
-        Times
-    }
-
-    /// <summary>
     /// Класс "посетителя", который "изучает" дерево выражения путем переопределения соответствующих
     /// виртуальных методов базового класса System.Linq.Expressions.ExpressionVisitor
     /// </summary>

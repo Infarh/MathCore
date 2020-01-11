@@ -2,25 +2,24 @@
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Runtime.InteropServices;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System.IO
 {
     public static class BinaryReaderExtensions
     {
-        /// <summary>
-        /// Признак конца потока
-        /// </summary>
+        /// <summary>Признак конца потока</summary>
         /// <param name="reader">Объект чтения потока</param>
         /// <returns>Истина, если поток закончен</returns>
         [DST]
         public static bool IsEOF([NotNull] this BinaryReader reader) => reader.BaseStream.Position == reader.BaseStream.Length;
 
-        /// <summary>
-        /// Получить перечисление, содержащее массивы байт заданной длины из потока 
-        /// </summary>
+        /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
         /// <param name="reader">Объект чтения потока данных</param>
         /// <param name="BufferSize">Размер буфера</param>
         /// <returns>Перечислитель</returns>
+        [ItemNotNull]
         public static IEnumerable<byte[]> GetByteBuffer([NotNull] this BinaryReader reader, int BufferSize)
         {
             while(!reader.IsEOF())
@@ -31,7 +30,8 @@ namespace System.IO
             }
         }
 
-        public static IEnumerable<char[]> GetCharBuffer(this BinaryReader reader, int BufferSize)
+        [ItemNotNull]
+        public static IEnumerable<char[]> GetCharBuffer([NotNull] this BinaryReader reader, int BufferSize)
         {
             while(!reader.IsEOF())
             {

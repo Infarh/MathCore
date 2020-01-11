@@ -1,22 +1,29 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Reactive;
 using System.Reflection;
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
 {
     /// <summary>Свойство класса</summary>
     /// <typeparam name="T">Тип значения свойства</typeparam>
     public class Property<T> : ItemBase, INotifyPropertyChanged, IObservable<T>
     {
-        public static Expression<Func<TObject, T>> GetExtractorExpression<TObject>(string PropertyName, bool IsPublicOnly)
+        [NotNull]
+        public static Expression<Func<TObject, T>> GetExtractorExpression<TObject>([NotNull] string PropertyName, bool IsPublicOnly)
         {
             var type = typeof(TObject);
             var info = type.GetProperty(PropertyName, BindingFlags.Instance |
-                (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic));
+                (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic))
+                ?? throw new InvalidOperationException($"Свойство {PropertyName} не найдено в типе {type}");
 
             var expr_object = Expression.Parameter(typeof(object), "obj");
             return expr_object
@@ -25,7 +32,7 @@ namespace System.Linq.Expressions
                 .CreateLambda<Func<TObject, T>>(expr_object);
         }
 
-        public static Func<TObject, T> GetExtractor<TObject>(string PropertyName, bool IsPublicOnly) => GetExtractorExpression<TObject>(PropertyName, IsPublicOnly).Compile();
+        [NotNull] public static Func<TObject, T> GetExtractor<TObject>([NotNull] string PropertyName, bool IsPublicOnly) => GetExtractorExpression<TObject>(PropertyName, IsPublicOnly).Compile();
 
 
         /// <summary>Событие изменения свойства</summary>
@@ -41,6 +48,7 @@ namespace System.Linq.Expressions
         }
 
         /// <summary>Информация о свойстве</summary>
+        [NotNull]
         private readonly PropertyInfo _PropertyInfo;
 
         /// <summary>Метод чтения свойства</summary>
@@ -80,7 +88,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        /// <summary>Свойство доступа к значению аттрибута <see cref="ComponentModel.DescriptionAttribute"/></summary>
+        /// <summary>Свойство доступа к значению атрибута <see cref="ComponentModel.DescriptionAttribute"/></summary>
         public string DescriptionAttribute { get; private set; }
 
         /// <summary>Отображаемое имя</summary>
@@ -89,22 +97,23 @@ namespace System.Linq.Expressions
         /// <summary>Признак реализации объектом-хозяином свойства интерфейса <see cref="INotifyPropertyChanged"/></summary>
         public bool IsNotifyPropertyChanged { get; }
 
-        public AttributesExtractor Attributes => _Attributes ??= new AttributesExtractor(_PropertyInfo);
+        [NotNull] public AttributesExtractor Attributes => _Attributes ??= new AttributesExtractor(_PropertyInfo);
 
-        public PropertyInfo Info => _PropertyInfo;
+        [NotNull] public PropertyInfo Info => _PropertyInfo;
 
-        public Type PropertyType => _PropertyInfo.PropertyType;
+        [NotNull] public Type PropertyType => _PropertyInfo.PropertyType;
 
         /// <summary>Инициализация доступа к статическому свойству</summary>
         /// <param name="type">Рассматриваемый тип</param>
         /// <param name="Name">Имя статического свойства</param>
         /// <param name="IsPublicOnly">Признак публичности свойства</param>
-        public Property(Type type, string Name, bool IsPublicOnly = true)
+        public Property(Type type, [NotNull] string Name, bool IsPublicOnly = true)
             : base(type, Name)
         {
             IsNotifyPropertyChanged = false;
             _PropertyInfo = _ObjectType.GetProperty(Name, BindingFlags.Static
-                | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic));
+                | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic))
+                ?? throw new InvalidOperationException($"Свойство {Name} не найдено в типе {_ObjectType}");
 
             LoadAttributes();
 
@@ -113,15 +122,15 @@ namespace System.Linq.Expressions
             {
                 // ReSharper disable once AssignNullToNotNullAttribute
                 var body = Expression.Property(null, Name);
-                var ReaderExpr = Expression.Lambda<Func<T>>(body);
-                _Reader = ReaderExpr.Compile();
+                var reader_expr = Expression.Lambda<Func<T>>(body);
+                _Reader = reader_expr.Compile();
             }
 
             if(_PropertyInfo.CanWrite)
             {
-                var SetMethodInfo = _PropertyInfo.GetSetMethod(!IsPublicOnly);
-                var WrieExpr = Expression.Lambda<Action<T>>(Expression.Call(null, SetMethodInfo, ValueParameter), ValueParameter);
-                _Writer = WrieExpr.Compile();
+                var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly);
+                var writer_expr = Expression.Lambda<Action<T>>(Expression.Call(null, set_method_info, ValueParameter), ValueParameter);
+                _Writer = writer_expr.Compile();
                 // ReSharper disable once UseNameofExpression
                 _Writer += t => OnPropertyChanged("Value");
             }
@@ -131,8 +140,8 @@ namespace System.Linq.Expressions
         /// <param name="Obj">Рассматриваемый объект</param>
         /// <param name="Name">Имя свойства</param>
         /// <param name="IsPublicOnly">Признак публичности свойства</param>
-        public Property(object Obj, string Name, bool IsPublicOnly = true)
-            : this(Obj, Obj.GetType().GetProperty(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)))
+        public Property([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+            : this(Obj, Obj.GetType().GetProperty(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Свойство {Name} не найдено в типе {Obj.GetType()}"))
         { }
 
 
@@ -140,7 +149,7 @@ namespace System.Linq.Expressions
         /// <param name="Obj">Рассматриваемый объект</param>
         /// <param name="info">Информация о свойстве</param>
         /// <param name="IsPublicOnly">Признак публичности свойства</param>
-        public Property(object Obj, PropertyInfo info, bool IsPublicOnly = true)
+        public Property(object Obj, [NotNull] PropertyInfo info, bool IsPublicOnly = true)
             : base(Obj, info.Name)
         {
             _PropertyInfo = info;
@@ -158,9 +167,9 @@ namespace System.Linq.Expressions
 
             if(_PropertyInfo.CanWrite)
             {
-                var SetMethodInfo = _PropertyInfo.GetSetMethod(!IsPublicOnly);
-                var WrieExpr = Expression.Lambda<Action<T>>(Expression.Call(ObjConstant, SetMethodInfo, ValueParameter), ValueParameter);
-                _Writer = WrieExpr.Compile();
+                var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly);
+                var writer_expr = Expression.Lambda<Action<T>>(Expression.Call(ObjConstant, set_method_info, ValueParameter), ValueParameter);
+                _Writer = writer_expr.Compile();
                 // ReSharper disable once UseNameofExpression
                 if(!IsNotifyPropertyChanged) _Writer += t => OnPropertyChanged("Value");
             }
@@ -170,7 +179,7 @@ namespace System.Linq.Expressions
                 ((INotifyPropertyChanged)Obj).PropertyChanged += (s, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
         }
 
-        /// <summary>Чтение сведений из аттрибутов</summary>
+        /// <summary>Чтение сведений из атрибутов</summary>
         private void LoadAttributes()
         {
             var description_attributes = _PropertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
@@ -205,6 +214,7 @@ namespace System.Linq.Expressions
         }
 
         /// <summary>Информация о свойстве</summary>
+        [NotNull]
         private readonly PropertyInfo _PropertyInfo;
 
         /// <summary>Метод чтения свойства</summary>
@@ -229,7 +239,7 @@ namespace System.Linq.Expressions
         /// <summary>Метод чтения значения свойства</summary>
         public Func<object> Reader => _Reader;
 
-        /// <summary>Свойство доступа к значению аттрибута <see cref="ComponentModel.DescriptionAttribute"/></summary>
+        /// <summary>Свойство доступа к значению атрибута <see cref="ComponentModel.DescriptionAttribute"/></summary>
         public string DescriptionAttribute { get; private set; }
 
         /// <summary>Отображаемое имя</summary>
@@ -240,7 +250,7 @@ namespace System.Linq.Expressions
 
         public PropertyInfo Info => _PropertyInfo;
 
-        public Type PropertyType => _PropertyInfo.PropertyType;
+        [NotNull] public Type PropertyType => _PropertyInfo.PropertyType;
 
         /// <summary>Значение свойства</summary>
         public object Value
@@ -285,35 +295,36 @@ namespace System.Linq.Expressions
             {
                 if(!CanWrite) throw new NotSupportedException();
                 var value_type = value.GetType();
-                var lv_DestinationType = PropertyType;
-                if(value_type != lv_DestinationType)
+                var destination_type = PropertyType;
+                if(value_type != destination_type)
                     if(value_type != typeof(string))
-                        value = lv_DestinationType.GetCasterFrom(value_type)(value);
+                        value = destination_type.GetCasterFrom(value_type)(value);
                     else
                     {
-                        var converter = TypeDescriptor.GetConverter(lv_DestinationType);
+                        var converter = TypeDescriptor.GetConverter(destination_type);
                         if(!converter.CanConvertFrom(value_type))
                             throw new InvalidCastException(
-                                        $"Невозможно преобразовать значение типа {value_type} в {lv_DestinationType}");
-                        value = converter.ConvertTo(value, lv_DestinationType);
+                                        $"Невозможно преобразовать значение типа {value_type} в {destination_type}");
+                        value = converter.ConvertTo(value, destination_type);
                     }
                 _Writer(value);
             }
         }
 
-        public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_PropertyInfo);
+        [NotNull] public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_PropertyInfo);
 
         /// <summary>Инициализация доступа к статическому свойству</summary>
         /// <param name="type">Рассматриваемый тип</param>
         /// <param name="Name">Имя статического свойства</param>
         /// <param name="IsPublicOnly">Признак публичности свойства</param>
-        public Property(Type type, string Name, bool IsPublicOnly = true)
+        public Property(Type type, [NotNull] string Name, bool IsPublicOnly = true)
             : base(type, Name)
         {
             IsNotifyPropertyChanged = false;
 
             _PropertyInfo = _ObjectType.GetProperty(Name, BindingFlags.Static
-                  | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic));
+                  | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic))
+                    ?? throw new InvalidOperationException($"Свойство {Name} не найдено в типе {type}");
             var p = Expression.Parameter(_PropertyInfo.PropertyType, "value");
 
             var object_type = typeof(object);
@@ -321,15 +332,15 @@ namespace System.Linq.Expressions
             {
                 // ReSharper disable once AssignNullToNotNullAttribute
                 var body = Expression.Property(null, Name);
-                var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
-                _Reader = ReaderExpr.Compile();
+                var reader_expr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
+                _Reader = reader_expr.Compile();
             }
 
             if(_PropertyInfo.CanWrite)
             {
-                var SetMethodInfo = _PropertyInfo.GetSetMethod(!IsPublicOnly);
-                var WriteExpr = Expression.Lambda<Action<object>>(Expression.Call(null, SetMethodInfo, Expression.Convert(p, _PropertyInfo.PropertyType)), p);
-                _Writer = WriteExpr.Compile();
+                var set_method_info = _PropertyInfo.GetSetMethod(!IsPublicOnly);
+                var writer_expr = Expression.Lambda<Action<object>>(Expression.Call(null, set_method_info, Expression.Convert(p, _PropertyInfo.PropertyType)), p);
+                _Writer = writer_expr.Compile();
                 // ReSharper disable UseNameofExpression
                 _Writer += t => OnPropertyChanged("Value");
                 _Writer += t => OnPropertyChanged("ValueUnsafe");
@@ -342,8 +353,8 @@ namespace System.Linq.Expressions
         /// <param name="Obj">Рассматриваемый объект</param>
         /// <param name="Name">Имя свойства</param>
         /// <param name="IsPublicOnly">Признак публичности свойства</param>
-        public Property(object Obj, string Name, bool IsPublicOnly = true)
-            : this(Obj, Obj.GetType().GetProperty(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)))
+        public Property([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+            : this(Obj, Obj.GetType().GetProperty(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Свойство {Name} не найдено в типе {Obj.GetType()}"))
         { }
 
         //private static T Cast<T>(object obj) { return typeof(T) (T)obj; }
@@ -352,7 +363,7 @@ namespace System.Linq.Expressions
         /// <param name="Obj">Рассматриваемый объект</param>
         /// <param name="info">Информация о свойстве</param>
         /// <param name="IsPublicOnly">Признак публичности свойства</param>
-        public Property(object Obj, PropertyInfo info, bool IsPublicOnly = true)
+        public Property(object Obj, [NotNull] PropertyInfo info, bool IsPublicOnly = true)
             : base(Obj, info.Name)
         {
             _PropertyInfo = info;
@@ -364,19 +375,19 @@ namespace System.Linq.Expressions
             if(_PropertyInfo.CanRead)
             {
                 var body = Expression.Property(ObjConstant, Name);
-                var ReaderExpr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
-                _Reader = ReaderExpr.Compile();
+                var reader_expr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
+                _Reader = reader_expr.Compile();
             }
 
             //var q = typeof(double).Cast(4);
 
             if(_PropertyInfo.CanWrite)
             {
-                var SetMethodInfo = IsPublicOnly ? info.GetSetMethod() ?? info.GetSetMethod(true) : info.GetSetMethod(true);
+                var set_method_info = IsPublicOnly ? info.GetSetMethod() ?? info.GetSetMethod(true) : info.GetSetMethod(true);
                 var p = Expression.Parameter(typeof(object), "value");
-                var call = Expression.Call(Expression.Constant(Obj), SetMethodInfo, Expression.Convert(p, info.PropertyType));
-                var WriteExpr = Expression.Lambda<Action<object>>(call, p);
-                _Writer = WriteExpr.Compile();
+                var call = Expression.Call(Expression.Constant(Obj), set_method_info, Expression.Convert(p, info.PropertyType));
+                var writer_expr = Expression.Lambda<Action<object>>(call, p);
+                _Writer = writer_expr.Compile();
                 if(!IsNotifyPropertyChanged)
                 {
                     // ReSharper disable UseNameofExpression
@@ -393,7 +404,7 @@ namespace System.Linq.Expressions
         }
 
 
-        /// <summary>Чтение сведений из аттрибутов</summary>
+        /// <summary>Чтение сведений из атрибутов</summary>
         private void LoadAttributes()
         {
             var description_attributes = _PropertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
@@ -409,38 +420,5 @@ namespace System.Linq.Expressions
         public IDisposable Subscribe(IObserver<object> observer) => _ObservableObject.Subscribe(observer);
 
         #endregion
-    }
-
-    public class AttributesExtractor
-    {
-        private readonly MemberInfo _Info;
-        public bool Inherit { get; set; }
-
-        public Attribute this[string Name] => GetAttributes(Name, Inherit).FirstOrDefault();
-        public Attribute this[string Name, bool Inherit] => GetAttributes(Name, Inherit).FirstOrDefault();
-
-        public object this[string Name, string ValueName]
-        {
-            get
-            {
-                var attribute = this[Name];
-                if(attribute is null) return null;
-                var type = attribute.GetType();
-                var property = type.GetProperty(ValueName, BindingFlags.Instance | BindingFlags.Public);
-                if(property is null || !property.CanRead) return null;
-                return property.GetValue(attribute, null);
-            }
-        }
-
-        public AttributesExtractor(MemberInfo Info) => _Info = Info;
-
-        public IEnumerable<Attribute> GetAttributes(string Name) => GetAttributes(Name, Inherit);
-
-        public IEnumerable<Attribute> GetAttributes(string Name, bool Inherit)
-        {
-            return _Info.GetCustomAttributes(Inherit)
-                            .Cast<Attribute>()
-                            .Where(a => a.GetType().Name.StartsWith(Name));
-        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable UnusedType.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public class ActionsCollectionProcessor : Processor

@@ -2,7 +2,10 @@
 using System.Collections.Specialized;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace System.ComponentModel
 {
     public static class INotifyCollectionChangedExtensions
@@ -26,7 +29,7 @@ namespace System.ComponentModel
             }
 
             private event Action<NotifyCollectionChangedAction> OnCollectionChangedHandlers;
-            public event Action<NotifyCollectionChangedAction> OnPCollectionChanged
+            public event Action<NotifyCollectionChangedAction> OnPCollectionChanged   //todo: разобраться с событиями!
             {
                 add
                 {
@@ -98,29 +101,29 @@ namespace System.ComponentModel
         public sealed class Subscriber<TCollection, TItem> : Subscriber
             where TCollection : ICollection<TItem>, INotifyCollectionChanged
         {
-            private event Action<ICollection<TItem>> OnClooectionChangedEventHandlers;
-            public event Action<ICollection<TItem>> OnClooectionChangedEvent
+            private event Action<ICollection<TItem>> OnCollectionChangedEventHandlers;
+            public new event Action<ICollection<TItem>> OnCollectionChangedEvent   //todo: разобраться с событиями!
             {
                 add
                 {
                     if (IsEmpty) Subscribe();
-                    OnClooectionChangedEventHandlers += value;
+                    OnCollectionChangedEventHandlers += value;
                 }
                 remove
                 {
-                    OnClooectionChangedEventHandlers -= value;
+                    OnCollectionChangedEventHandlers -= value;
                     if (IsEmpty) Unsubscribe();
                 }
             }
 
-            public override bool IsEmpty => base.IsEmpty && OnClooectionChangedEventHandlers is null;
+            public override bool IsEmpty => base.IsEmpty && OnCollectionChangedEventHandlers is null;
 
             internal Subscriber([NotNull] TCollection Obj, NotifyCollectionChangedAction ChangeType) : base(Obj, ChangeType) { }
 
             protected override void OnCollectionChanged(object Sender, NotifyCollectionChangedEventArgs E)
             {
                 base.OnCollectionChanged(Sender, E);
-                var handlers = OnClooectionChangedEventHandlers;
+                var handlers = OnCollectionChangedEventHandlers;
                 if (handlers is null) return;
                 var collection = E.Action switch
                 {
@@ -137,7 +140,7 @@ namespace System.ComponentModel
             internal override void ClearHandlers()
             {
                 base.ClearHandlers();
-                OnClooectionChangedEventHandlers = null;
+                OnCollectionChangedEventHandlers = null;
             }
         }
 

@@ -1,11 +1,14 @@
-﻿namespace System.Linq.Expressions
+﻿using MathCore.Annotations;
+
+// ReSharper disable once CheckNamespace
+namespace System.Linq.Expressions
 {
     public class SubstitutionVisitor : ExpressionVisitorEx
     {
         private readonly LambdaExpression _Substitution;
         private readonly ParameterExpression _Parameter;
 
-        public SubstitutionVisitor(LambdaExpression Substitution)
+        public SubstitutionVisitor([NotNull] LambdaExpression Substitution)
         {
             _Substitution = Substitution;
             _Parameter = Substitution.Parameters.First();

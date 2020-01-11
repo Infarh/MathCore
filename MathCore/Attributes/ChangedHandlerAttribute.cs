@@ -1,4 +1,8 @@
-﻿namespace System
+﻿// ReSharper disable once CheckNamespace
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+namespace System
 {
     /// <summary>Указывает процедуру без параметров, определённую в классе, которая должна быть вызвана после изменения значения свойства</summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
