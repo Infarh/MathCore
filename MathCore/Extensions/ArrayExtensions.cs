@@ -878,7 +878,7 @@ namespace System
         public static T[] Liniarize<T>([NotNull] this T[][] array)
         {
             var result_length = array.Sum(a => a.Length);
-            if (result_length == 0) return new T[0];
+            if (result_length == 0) return Array.Empty<T>();
             var result = new T[result_length];
             for (int i = 0, k = 0; i < array.Length; i++)
             {

@@ -258,7 +258,7 @@ namespace MathCore.Graphs
                 next.Foreach(stack.Push);
             } while(stack.Count != 0);
 
-            return new GraphRoute<TValue, TWeight>(new IGraphNode<TValue, TWeight>[0]);
+            return new GraphRoute<TValue, TWeight>(Array.Empty<IGraphNode<TValue, TWeight>>());
         }
 
         /// <summary>Метод поиска всех путей из указанной вершины до всех доступных вершин графа методом фронта волны</summary>

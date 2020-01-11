@@ -128,7 +128,7 @@ namespace System.ComponentModel
                         if (!_Dependences.ContainsKey(e.PropertyName)) return;
                         if (e is DependentPropertyChangedEventArgs args)
                         {
-                            var p_stack = args.FromProperties ?? new string[0];
+                            var p_stack = args.FromProperties ?? Array.Empty<string>();
                             if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
                             foreach (var property in _Dependences[args.PropertyName])
                             {

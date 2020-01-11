@@ -1744,7 +1744,7 @@ namespace MathCore.Tests
         public void CreateDiagonal_ArgumentNullException_Test() => Matrix.Array.CreateDiagonal(null);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void CreateDiagonal_ArgumentException_Test() => Matrix.Array.CreateDiagonal(new double[0]);
+        public void CreateDiagonal_ArgumentException_Test() => Matrix.Array.CreateDiagonal(Array.Empty<double>());
 
         [TestMethod]
         public void GetMatrixShadow_Test()
@@ -1811,7 +1811,7 @@ namespace MathCore.Tests
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         // ReSharper disable once RedundantExplicitParamsArrayCreation
-        public void CreateColArray_ArgumentException_Test() => Matrix.Array.CreateColArray(new double[0]);
+        public void CreateColArray_ArgumentException_Test() => Matrix.Array.CreateColArray(Array.Empty<double>());
 
         [TestMethod]
         public void CreateRowArray_Test()
@@ -1828,7 +1828,7 @@ namespace MathCore.Tests
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         // ReSharper disable once RedundantExplicitParamsArrayCreation
-        public void CreateRowArray_ArgumentException_Test() => Matrix.Array.CreateRowArray(new double[0]);
+        public void CreateRowArray_ArgumentException_Test() => Matrix.Array.CreateRowArray(Array.Empty<double>());
 
         [TestMethod]
         public void GetUnitaryArrayMatrix_Test()
@@ -2806,13 +2806,13 @@ namespace MathCore.Tests
 
             Assert.AreEqual(b0, b);
 
-            x = new double[0];
+            x = Array.Empty<double>();
             a = new double[0, 3];
             b = Matrix.Array.Operator.BiliniarMultiply(x, a, y);
             Assert.IsTrue(double.IsNaN(b));
 
             x = new double[] { 1, 2, 3, 4 };
-            y = new double[0];
+            y = Array.Empty<double>();
             a = new double[4, 0];
             b = Matrix.Array.Operator.BiliniarMultiply(x, a, y);
             Assert.IsTrue(double.IsNaN(b));
@@ -2847,7 +2847,7 @@ namespace MathCore.Tests
 
             Assert.AreEqual(b0, b);
 
-            x = new double[0];
+            x = Array.Empty<double>();
             a = new double[0, 0];
             b = Matrix.Array.Operator.BiliniarMultiplyAuto(x, a);
             Assert.IsTrue(double.IsNaN(b));

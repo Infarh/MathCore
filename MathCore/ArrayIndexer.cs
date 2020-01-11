@@ -19,7 +19,7 @@ namespace MathCore
 
         [NotNull] public T[] Array { get => _Array; set => _Array = value ?? throw new ArgumentNullException(nameof(value)); }
 
-        public ArrayIndexer() => _Array = new T[0];
+        public ArrayIndexer() => _Array = System.Array.Empty<T>();
 
         public ArrayIndexer([NotNull] T[] Array, int Index = 0)
         {
