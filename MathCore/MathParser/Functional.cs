@@ -13,11 +13,8 @@ namespace MathCore.MathParser
 
         /// <summary>Метод определения значения</summary>
         /// <returns>Численное значение элемента выражения</returns>
-        [NotSupported("Функционал не моддерживает метод получения численного значения")]
-        public override double GetValue()
-        {
-            throw new NotSupportedException();
-        }
+        [NotSupported("Функционал не поддерживает метод получения численного значения")]
+        public override double GetValue() => throw new NotSupportedException();
 
         /// <summary>Метод определения значения</summary>
         /// <param name="ParametersExpression">Выражение параметров</param>

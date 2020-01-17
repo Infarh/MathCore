@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using MathCore.Annotations;
+
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace MathCore.Functions.Differentiable
 {
@@ -9,21 +10,23 @@ namespace MathCore.Functions.Differentiable
     {
         public abstract double Value(double x);
         public abstract Function Derivative();
-        public static Function operator +(Function f1, Function f2) => new Addition(f1, f2);
-        public static Function operator -(Function f1, Function f2) => new Substraction(f1, f2);
-        public static Function operator *(Function f1, Function f2) => new Multipycation(f1, f2);
-        public static Function operator /(Function f1, Function f2) => new Division(f1, f2);
-        public static Function operator ^(Function f1, Constant c) => new OperatorPowerOf(f1, c);
+        [NotNull] public static Function operator +(Function f1, Function f2) => new Addition(f1, f2);
+        [NotNull] public static Function operator -(Function f1, Function f2) => new Subtraction(f1, f2);
+        [NotNull] public static Function operator *(Function f1, Function f2) => new Multiplication(f1, f2);
+        [NotNull] public static Function operator /(Function f1, Function f2) => new Division(f1, f2);
+        [NotNull] public static Function operator ^(Function f1, Constant c) => new OperatorPowerOf(f1, c);
     }
 
     public class Constant : Function
     {
-        public readonly double C;
-        public Constant(double c) { C = c; }
-        public override double Value(double x) => C;
-        public override Function Derivative() => new Zero();
-        public static implicit operator Constant(double c) => new Constant(c);
-        public static implicit operator double(Constant c) => c.C;
+        private readonly double _C;
+        // ReSharper disable once UnusedMember.Global
+        public double C => _C;
+        public Constant(double c) => _C = c;
+        public override double Value(double x) => _C;
+        [NotNull] public override Function Derivative() => new Zero();
+        [NotNull] public static implicit operator Constant(double c) => new Constant(c);
+        public static implicit operator double([NotNull] Constant c) => c._C;
     }
 
     public class Zero : Constant { public Zero() : base(0) { } }
@@ -32,6 +35,6 @@ namespace MathCore.Functions.Differentiable
     public class Identity : Function
     {
         public override double Value(double x) => x;
-        public override Function Derivative() => new One();
+        [NotNull] public override Function Derivative() => new One();
     }
 }

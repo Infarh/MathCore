@@ -1,4 +1,9 @@
 ﻿
+// ReSharper disable UnusedMember.Global
+
+using MathCore.Annotations;
+
+// ReSharper disable once CheckNamespace
 namespace System.Reflection
 {
     public class Constructor<T>
@@ -10,10 +15,10 @@ namespace System.Reflection
         private Type[] _Types;
 
         // Methods
-        public Constructor(T o, bool Private = false, params Type[] Types) => Initialize(_Object = o, Types, _Private = Private);
+        public Constructor(T o, bool Private = false, [NotNull] params Type[] Types) => Initialize(_Object = o, Types, _Private = Private);
 
         // Properties
-        public bool IsExist => (_Info != null);
+        public bool IsExist => _Info != null;
 
         public T Object
         {
@@ -33,11 +38,9 @@ namespace System.Reflection
             set => Initialize(_Object, _Types = value, _Private);
         }
 
-        private void Initialize(T o, Type[] Types, bool Private)
-        {
+        private void Initialize([NotNull] T o, [NotNull] Type[] Types, bool Private) =>
             _Info =
                 o.GetType().GetConstructor(
                     BindingFlags.Instance | (Private ? BindingFlags.NonPublic : BindingFlags.Public), null, Types, null);
-        }
     }
 }

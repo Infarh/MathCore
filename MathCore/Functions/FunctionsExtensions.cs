@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Functions
 {
@@ -28,7 +29,7 @@ namespace MathCore.Functions
                 Value = value;
             }
 
-            public static implicit operator double(FuncValue fv) { return fv.Value; }
+            public static implicit operator double(FuncValue fv) => fv.Value;
         }
 
         /// <summary>Структура, содержащая максимальное и минимальное значение функции</summary>
@@ -56,7 +57,8 @@ namespace MathCore.Functions
         /// <param name="x2">Конец интервала</param>
         /// <param name="dx">Шаг сетки дискретизации</param>
         /// <returns>Массив значений функции</returns>
-        public static double[] GetValues(this Function f, double x1, double x2, double dx)
+        [NotNull]
+        public static double[] GetValues([NotNull] this Function f, double x1, double x2, double dx)
         {
             if (f == null)
                 throw new ArgumentNullException(nameof(f));
@@ -75,7 +77,7 @@ namespace MathCore.Functions
         /// <param name="x2">Конец интервала</param>
         /// <param name="dx">Шаг сетки разбиения</param>
         /// <returns>Структура, содержащая минимум и максимум функции</returns>
-        public static FuncMinMaxValue GetMinMax(this Function f, double x1, double x2, double dx = 0.0001)
+        public static FuncMinMaxValue GetMinMax([NotNull] this Function f, double x1, double x2, double dx = 0.0001)
         {
             var values = f.GetValues(x1, x2, dx);
             var N = values.Length;
@@ -109,7 +111,7 @@ namespace MathCore.Functions
         /// <param name="x2">Конец интервала</param>
         /// <param name="dx">Шаг</param>
         /// <returns>Минимум функции</returns>
-        public static FuncValue GetMinValue(this Function f, double x1, double x2, double dx = 0.0001)
+        public static FuncValue GetMinValue([NotNull] this Function f, double x1, double x2, double dx = 0.0001)
         {
             var values = f.GetValues(x1, x2, dx);
             var min = new FuncValue { Value = double.PositiveInfinity };
@@ -129,7 +131,7 @@ namespace MathCore.Functions
         /// <param name="x2">Конец интервала</param>
         /// <param name="dx">Шаг</param>
         /// <returns>Максимум функции</returns>
-        public static FuncValue GetMaxValue(this Function f, double x1, double x2, double dx = 0.0001)
+        public static FuncValue GetMaxValue([NotNull] this Function f, double x1, double x2, double dx = 0.0001)
         {
             var values = f.GetValues(x1, x2, dx);
             var max = new FuncValue { Value = double.NegativeInfinity };

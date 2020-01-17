@@ -13,7 +13,6 @@
     <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
     <PackageTags>Mathematic, Logiс</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageLicenseFile></PackageLicenseFile>
     <Description>Библиотека прикладных алгоритмов</Description>
     <PackageReleaseNotes>Рефакторинг</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>

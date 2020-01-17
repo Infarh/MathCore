@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MathCore.Annotations;
 
 namespace MathCore.Trees
 {
@@ -28,12 +29,13 @@ namespace MathCore.Trees
             }
         }
 
-        private static void DebugWrite(string str, params object[] obj) => Console.Title = string.Format(str, obj);
+        private static void DebugWrite([NotNull] string str, [NotNull] params object[] obj) => Console.Title = string.Format(str, obj);
 
         /// <summary>Определение корня дерева</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
         /// <returns>КОрневой объект дерева объектов</returns>
+        [NotNull]
         public static T GetRootItem<T>(this T Item) where T : class, ITreeItem<T>
         {
             while(Item.Parent != null) Item = Item.Parent;
@@ -45,6 +47,7 @@ namespace MathCore.Trees
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
         /// <param name="level"></param>
         /// <returns></returns>
+        [ItemNotNull]
         public static IEnumerable<TreeLevelItem<T>> OrderWalk<T>
                     (
                         this T Item,
@@ -104,6 +107,7 @@ namespace MathCore.Trees
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
         /// <returns></returns>
+        [NotNull]
         public static T[] GetParents<T>(this T Item) where T : class, ITreeItem<T>
         {
             var stack = new Stack<T>();
@@ -123,6 +127,7 @@ namespace MathCore.Trees
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
         /// <returns></returns>
+        [NotNull]
         public static T[] GetLevelItems<T>(this T Item) where T : class, ITreeItem<T>
         {
             var items = new List<T>();
@@ -159,6 +164,7 @@ namespace MathCore.Trees
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
         /// <returns></returns>
+        [NotNull]
         public static T[] GetChilds<T>(this T Item) where T : class, ITreeItem<T>
         {
             Item = Item.Child;

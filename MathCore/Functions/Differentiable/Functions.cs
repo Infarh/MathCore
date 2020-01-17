@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MathCore.Functions.Differentiable
+﻿namespace MathCore.Functions.Differentiable
 {
     public static class Functions
     {

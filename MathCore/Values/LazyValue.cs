@@ -54,26 +54,23 @@ namespace MathCore.Values
         /* ------------------------------------------------------------------------------------------ */
 
         ///<summary>Создание нового "ленивого" значения</summary>
-        ///<param name="Initializator">Инициализатор значения</param>
-        public LazyValue(Func<T> Initializator)
-        {
-            Initialize(Initializator);
-        }
+        ///<param name="Initializer">Инициализатор значения</param>
+        public LazyValue(Func<T> Initializer) => Initialize(Initializer);
 
         ///<summary>Инициализация "ленивого" значения</summary>
-        ///<param name="Initializator">Инициализатор</param>
-        public void Initialize(Func<T> Initializator)
+        ///<param name="Initializer">Инициализатор</param>
+        public void Initialize(Func<T> Initializer)
         {
             lock (_LockObject)
             {
-                _Initializator = Initializator;
+                _Initializator = Initializer;
                 Reset();
             }
         }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Невный вызов метода инициализации для интерфейса IInitializable</summary>
+        /// <summary>Вызов метода инициализации для интерфейса <see cref="IInitializable"/></summary>
         void IInitializable.Initialize() => Reset();
 
         ///<summary>Сброс состояния</summary>
@@ -87,25 +84,11 @@ namespace MathCore.Values
         public static implicit operator T([NotNull] LazyValue<T> value) => value.Value;
 
         ///<summary>Оператор неявного преобразования метода инициализации в "ленивое значение"</summary>
-        ///<param name="Initializator">Метод инициализации "ленивого" значения</param>
+        ///<param name="Initializer">Метод инициализации "ленивого" значения</param>
         ///<returns>"Ленивое" значение с указанным методом инициализации</returns>
         [NotNull]
-        public static implicit operator LazyValue<T>(Func<T> Initializator) => new LazyValue<T>(Initializator);
+        public static implicit operator LazyValue<T>(Func<T> Initializer) => new LazyValue<T>(Initializer);
 
         /* ------------------------------------------------------------------------------------------ */
-    }
-
-    public class TimeBufferedValue<TValue> : IFactory<TValue>
-    {
-        private readonly LazyValue<TValue> _Value;
-        private DateTime _LastAccessTime = DateTime.MinValue;
-
-        public TimeBufferedValue(Func<TValue> Generator, TimeSpan Timeout) => _Value = new LazyValue<TValue>(() =>
-        {
-            _LastAccessTime = DateTime.Now;
-            return Generator();
-        });
-
-        public TValue Create() => throw new NotImplementedException();
     }
 }

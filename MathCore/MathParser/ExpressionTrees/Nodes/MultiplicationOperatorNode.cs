@@ -32,12 +32,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Компиляция узла</summary>
         /// <param name="Parameters">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile(params ParameterExpression[] Parameters)
-        {
-            return Expression.Multiply(
+        public override Expression Compile(params ParameterExpression[] Parameters) =>
+            Expression.Multiply(
                 ((ComputedNode) Left)?.Compile(Parameters) ?? Expression.Constant(1.0),
                 ((ComputedNode) Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compile(Parameters));
-        }
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

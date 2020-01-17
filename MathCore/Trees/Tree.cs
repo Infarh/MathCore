@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MathCore.Annotations;
 using MathCore.Values;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.Trees
 {
@@ -10,8 +12,7 @@ namespace MathCore.Trees
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private readonly LazyValue<List<Tree<T>>> _SubTreeList =
-                    new LazyValue<List<Tree<T>>>(() => new List<Tree<T>>());
+        private readonly LazyValue<List<Tree<T>>> _SubTreeList = new LazyValue<List<Tree<T>>>(() => new List<Tree<T>>());
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -19,6 +20,7 @@ namespace MathCore.Trees
         public int Count => _SubTreeList.Initialized ? _SubTreeList.Value.Count : 0;
 
         /// <summary>Индексатор объекта</summary><param name="index">Индекс</param>
+        [CanBeNull]
         public Tree<T> this[int index]
         {
             get => _SubTreeList.Initialized ? _SubTreeList.Value[index] : null;
@@ -32,6 +34,7 @@ namespace MathCore.Trees
         }
 
         /// <summary>Индексатор объекта</summary><param name="index">Индекс</param>
+        [CanBeNull]
         ITree<T> IIndexable<int, ITree<T>>.this[int index] { get => this[index]; set => this[index] = value as Tree<T>; }
 
         /// <summary>Индексатор объекта только для записи</summary><param name="index">Индекс</param>
@@ -39,6 +42,7 @@ namespace MathCore.Trees
 
         /// <summary>Индексатор объекта только для чтения</summary>
         /// <param name="index">Индекс</param>
+        [CanBeNull]
         ITree<T> IIndexableRead<int, ITree<T>>.this[int index] => this[index];
 
         public T Value { get; set; }
@@ -80,12 +84,10 @@ namespace MathCore.Trees
         /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        IEnumerator<ITree<T>> IEnumerable<ITree<T>>.GetEnumerator()
-        {
-            return _SubTreeList.Initialized
+        IEnumerator<ITree<T>> IEnumerable<ITree<T>>.GetEnumerator() =>
+            _SubTreeList.Initialized
                 ? _SubTreeList.Value.Cast<ITree<T>>().GetEnumerator()
                 : new List<ITree<T>>().GetEnumerator();
-        }
 
         /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>
         /// <returns>

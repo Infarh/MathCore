@@ -1,6 +1,7 @@
 ﻿using System;
+using MathCore.Annotations;
 
-namespace MathCore.DataGenericSouces
+namespace MathCore.DataGenericSources
 {
     public abstract class DataSource<T>
     {
@@ -16,7 +17,7 @@ namespace MathCore.DataGenericSouces
 
         public T Value => _Value;
 
-        protected DataSource(DataHost<T> Host, Func<DataHost<T>, T> DataExtractor)
+        protected DataSource([NotNull] DataHost<T> Host, Func<DataHost<T>, T> DataExtractor)
         {
             _DataExtractor = DataExtractor;
             this.Host = Host;
