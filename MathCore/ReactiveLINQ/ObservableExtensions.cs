@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Threading;
-
+using System.Threading.Tasks;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ObjectCreationAsStatement
@@ -140,8 +140,13 @@ namespace System.Linq.Reactive
         [NotNull]
         public static IObservableEx<T> WhitAsync<T>(this IObservable<T> Observable, TimeSpan Interval)
         {
-            Action<IObserver<T>, T> OnNext = (o, t) => { Thread.Sleep(Interval); o.OnNext(t); };
-            void NextAsync(IObserver<T> o, T t) => OnNext.BeginInvoke(o, t, null, null);
+            async Task OnNext(IObserver<T> o, T t)
+            {
+                await Task.Delay(Interval).ConfigureAwait(false);
+                o.OnNext(t);
+            }
+
+            void NextAsync(IObserver<T> o, T t) => Task.Run(() => OnNext(o, t));
             return new LambdaObservable<T>(Observable, NextAsync);
         }
 
