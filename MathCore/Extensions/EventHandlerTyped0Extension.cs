@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -18,12 +21,10 @@ namespace System
             if(handler is null) return;
             var invocations = handler.GetInvocationList();
             foreach (var invocation in invocations)
-            {
                 if(invocation.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired)
                     invoke.Invoke(invocation, new object[] { Sender, e });
                 else
                     invocation.DynamicInvoke(Sender, e);
-            }
         }
 
         /// <summary>Потоко-безопасная асинхронная генерация события</summary>
@@ -33,21 +34,22 @@ namespace System
         /// <param name="CallBack">Метод завершения генерации события</param>
         /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
         [DST]
-        public static void StartAsync<TS, TE>(this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e, AsyncCallback CallBack = null, object State = null) => Handler?.BeginInvoke(Sender, e, CallBack, State);
+        public static void StartAsync<TS, TE>([CanBeNull] this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e, AsyncCallback CallBack = null, object State = null) => Handler?.BeginInvoke(Sender, e, CallBack, State);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         [DST]
-        public static void FastStart<TSender, TEventArgs>(this EventHandler<TSender, TEventArgs> Handler, TSender Sender) => Handler?.Invoke(Sender, default);
+        public static void FastStart<TSender, TEventArgs>([CanBeNull] this EventHandler<TSender, TEventArgs> Handler, TSender Sender) => Handler?.Invoke(Sender, default);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         [DST]
-        public static void FastStart<TSender, TEventArgs>(this EventHandler<TSender, TEventArgs> Handler, TSender Sender, EventArgs<TEventArgs> e) => Handler?.Invoke(Sender, e);
+        public static void FastStart<TSender, TEventArgs>([CanBeNull] this EventHandler<TSender, TEventArgs> Handler, TSender Sender, EventArgs<TEventArgs> e) => Handler?.Invoke(Sender, e);
 
+        // ReSharper disable CommentTypo
         ///// <summary>Быстрая генерация события</summary>
         ///// <param name="Handler">Обработчик события</param>
         ///// <param name="Sender">Источник события</param>
@@ -114,5 +116,6 @@ namespace System
         //                                                                 .Invoke(I, new object[] { Sender, Args })
         //                                                   : I.DynamicInvoke(Sender, Args))).ToArray();
         //}
+        // ReSharper restore CommentTypo
     }
 }

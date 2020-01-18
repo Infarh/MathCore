@@ -9,6 +9,9 @@ using MathCore.Values;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable AssignmentIsFullyDiscarded
 
 namespace MathCore.MathParser
 {
@@ -19,11 +22,8 @@ namespace MathCore.MathParser
         public event EventHandler<EventArgs<ExpressionTreeNode>> NewNodeAdded;
 
         /// <summary>При добавлении нового узла в дерево выражения</summary>
-        /// <param name="e">Аргумент события, содержащий добавляемй узел</param>
-        protected virtual void OnNewNodeAdded([NotNull] EventArgs<ExpressionTreeNode> e)
-        {
-            NewNodeAdded?.Invoke(this, e);
-        }
+        /// <param name="e">Аргумент события, содержащий добавляемый узел</param>
+        protected virtual void OnNewNodeAdded([NotNull] EventArgs<ExpressionTreeNode> e) => NewNodeAdded?.Invoke(this, e);
 
         /// <summary>Обработка очередного добавляемого в дерево узла</summary>
         /// <param name="NewNode">Новый добавляемый узел дерева выражения</param>
@@ -51,7 +51,7 @@ namespace MathCore.MathParser
                                 if (NewNode.Parent is CharNode c && c.Value == '.')
                                 {
                                     var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left is null);
-                                    NewNode["./."].Right = null;
+                                    (NewNode["./."] ?? throw new InvalidOperationException("NewNode/. is null")).Right = null;
                                     var parent = value_node.Parent;
                                     var interval_node = new IntervalNode(value_node);
                                     if (parent != null) parent.Right = interval_node;
@@ -71,10 +71,7 @@ namespace MathCore.MathParser
 
         /// <summary>Генерация события предобработки входящей строки</summary>
         /// <param name="args">Аргумент события, содержащий обрабатываемую строку</param>
-        protected virtual void OnStringPreprocessing([NotNull] EventArgs<string> args)
-        {
-            StringPreprocessing?.Invoke(this, args);
-        }
+        protected virtual void OnStringPreprocessing([NotNull] EventArgs<string> args) => StringPreprocessing?.Invoke(this, args);
 
         /// <summary>Генерация события предобработки входящей строки</summary>
         /// <param name="StrExpression">Обрабатываемая строка</param>
@@ -88,7 +85,7 @@ namespace MathCore.MathParser
         /// <summary>Аргумент события обнаружения функции</summary>
         public sealed class FindFunctionEventArgs : EventArgs
         {
-            /// <summary>Имя обнаруженой функции</summary>
+            /// <summary>Имя обнаруженной функции</summary>
             public string Name { get; }
             /// <summary>Массив имён аргументов функции</summary>
             public string[] Arguments { get; }
@@ -111,10 +108,7 @@ namespace MathCore.MathParser
             /// <param name="name">Имя проверяемой функции</param>
             /// <param name="ArgumentsCount">Число переменных</param>
             /// <returns></returns>
-            public bool SignatureEqual([NotNull] string name, int ArgumentsCount)
-            {
-                return Name == name && ArgumentsCount == ArgumentCount;
-            }
+            public bool SignatureEqual([NotNull] string name, int ArgumentsCount) => Name == name && ArgumentsCount == ArgumentCount;
         }
 
         /// <summary>Событие, возникающее в процессе разбора математического выражения при обнаружении функции</summary>
@@ -140,17 +134,11 @@ namespace MathCore.MathParser
 
         /// <summary> Обработка обнаруженной переменной</summary>
         /// <param name="e">Обнаруженная переменная</param>
-        protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariable> e)
-        {
-            VariableProcessing?.Invoke(this, e);
-        }
+        protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariable> e) => VariableProcessing?.Invoke(this, e);
 
         /// <summary> Обработка обнаруженной переменной</summary>
         /// <param name="Variable">Обнаруженная переменная</param>
-        private void OnVariableProcessing([NotNull] ExpressionVariable Variable)
-        {
-            OnVariableProcessing(new EventArgs<ExpressionVariable>(Variable));
-        }
+        private void OnVariableProcessing([NotNull] ExpressionVariable Variable) => OnVariableProcessing(new EventArgs<ExpressionVariable>(Variable));
 
         /// <summary>Множество запрещённых символов</summary>
         [NotNull]
@@ -158,21 +146,21 @@ namespace MathCore.MathParser
 
         /// <summary>Словарь констант</summary>
         [NotNull]
-        private readonly Dictionary<string, double> _Constans = new Dictionary<string, double>();
+        private readonly Dictionary<string, double> _Constants = new Dictionary<string, double>();
 
-        /// <summary>Множество запрещённых симовлов</summary>
+        /// <summary>Множество запрещённых символов</summary>
         [NotNull]
         public SetOf<char> ExcludeCharsSet => _ExcludeCharsSet;
 
         /// <summary>Разделитель выражений (по умолчанию ';')</summary>
         public char ExpressionSeparator { get; set; }
 
-        /// <summary>Разделитель целой части и мантисы десятичного числа</summary>
+        /// <summary>Разделитель целой части и мантисcы десятичного числа</summary>
         public char DecimalSeparator { get; set; }
 
         /// <summary>Константы</summary>
         [NotNull]
-        public Dictionary<string, double> Constants => _Constans;
+        public Dictionary<string, double> Constants => _Constants;
 
         /// <summary>Парсер математических выражений</summary>
         public ExpressionParser()
@@ -182,16 +170,16 @@ namespace MathCore.MathParser
 
             #region Добавление стандартных констант
 
-            _Constans.Add("pi", Math.PI);
-            _Constans.Add("pi2", Consts.pi2);
-            _Constans.Add("pi05", Consts.pi05);
-            _Constans.Add("e", Math.E);
-            _Constans.Add("sqrt2", Consts.sqrt_2);
-            _Constans.Add("sqrt2inv", Consts.sqrt_2_inv);
-            _Constans.Add("sqrt3", Consts.sqrt_3);
-            _Constans.Add("sqrt5", Consts.sqrt_5);
-            _Constans.Add("ToDeg", Consts.Geometry.ToDeg);
-            _Constans.Add("ToRad", Consts.Geometry.ToRad);
+            _Constants.Add("pi", Math.PI);
+            _Constants.Add("pi2", Consts.pi2);
+            _Constants.Add("pi05", Consts.pi05);
+            _Constants.Add("e", Math.E);
+            _Constants.Add("sqrt2", Consts.sqrt_2);
+            _Constants.Add("sqrt2inv", Consts.sqrt_2_inv);
+            _Constants.Add("sqrt3", Consts.sqrt_3);
+            _Constants.Add("sqrt5", Consts.sqrt_5);
+            _Constants.Add("ToDeg", Consts.Geometry.ToDeg);
+            _Constants.Add("ToRad", Consts.Geometry.ToRad);
 
             #endregion
         }
@@ -199,10 +187,7 @@ namespace MathCore.MathParser
         /// <summary>Предварительная обработка входного строкового выражения</summary>
         /// <param name="Str">Обрабатываемая строка</param>
         // Удаление из строки всех символов, из множества запрещённых символов
-        protected virtual void StrPreprocessing([NotNull] ref string Str)
-        {
-            Str = new string(Str.Where(_ExcludeCharsSet.NotContains).ToArray());
-        }
+        protected virtual void StrPreprocessing([NotNull] ref string Str) => Str = new string(Str.Where(_ExcludeCharsSet.NotContains).ToArray());
 
         /// <summary>Разобрать строку математического выражения</summary>
         /// <param name="StrExpression">Строковое представление математического выражения</param>
@@ -232,10 +217,10 @@ namespace MathCore.MathParser
                 .Foreach(v => Expression.Variable.Remove(v));
             foreach (var variable in Expression.Variable.ToArray())
             {
-                if (_Constans.ContainsKey(variable.Name))
+                if (_Constants.ContainsKey(variable.Name))
                 {
                     Expression.Variable.MoveToConstCollection(variable);
-                    variable.Value = _Constans[variable.Name];
+                    variable.Value = _Constants[variable.Name];
                 }
                 OnVariableProcessing(variable);
             }
@@ -244,6 +229,7 @@ namespace MathCore.MathParser
         /// <summary>Обработка функций</summary>
         /// <param name="Expression">Обрабатываемое математическое выражение</param>
         [SuppressMessage("ReSharper", "CyclomaticComplexity")]
+        [SuppressMessage("ReSharper", "ConvertSwitchStatementToSwitchExpression")]
         internal void ProcessFunctions([NotNull] MathExpression Expression)
         {
             foreach (var function in Expression.Functions)
@@ -365,7 +351,7 @@ namespace MathCore.MathParser
         public virtual ExpressionTreeNode GetOperatorNode(char Name) =>
             Name switch
             {
-                '+' => (ExpressionTreeNode)new AdditionOperatorNode(),
+                '+' => new AdditionOperatorNode(),
                 '-' => new subtractionOperatorNode(),
                 '*' => new MultiplicationOperatorNode(),
                 '×' => new MultiplicationOperatorNode(),
@@ -392,7 +378,7 @@ namespace MathCore.MathParser
         public static Functional GetFunctional([NotNull] string Name) =>
             Name switch
             {
-                "summ" => (Functional)new SummOperator(Name),
+                "sum" => (Functional)new SummOperator(Name),
                 "Sum" => new SummOperator(Name),
                 "Σ" => new SummOperator(Name),
                 "int" => new IntegralOperator(Name),
@@ -471,7 +457,7 @@ namespace MathCore.MathParser
 
                 if (parent_operator != null) // Если получена ссылка не предыдущий узел-оператор (и текущий является оператором)... то
                 {
-                    // Если левое поддерево предыдущего операторо пусто и родитель предыдущего оператора - тоже оператор
+                    // Если левое поддерево предыдущего оператор пусто и родитель предыдущего оператора - тоже оператор
                     //      op <- устанавливаем предыдущим оператором родителя
                     //      |
                     //      op 
@@ -507,12 +493,11 @@ namespace MathCore.MathParser
                                     operator_node.Left = parent_operator;
                                 // todo: проверить достижимость следующего блока
                                 else // если оператор в корне дерева имеет меньший приоритет, чем приоритет текущего оператора
-                                {    //  то вставить текущий оператор в правое поддерево родителя предыдущего оператора
+                                //  то вставить текущий оператор в правое поддерево родителя предыдущего оператора
                                     throw new NotImplementedException("!!!");
-                                    //var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
-                                    //parent_operator.Right = Node; // У предыдущего оператора в правое поддерево внести текущий оператор
-                                    //operator_node.Left = right;   // В левое поддерево текущего оператора внести сохранённое правое поддерево
-                                }
+                                //var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
+                                //parent_operator.Right = Node; // У предыдущего оператора в правое поддерево внести текущий оператор
+                                //operator_node.Left = right;   // В левое поддерево текущего оператора внести сохранённое правое поддерево
                             else // Иначе если предыдущий оператор не корень
                             {
                                 var parent = parent_operator.Parent; // сохранить ссылку на родителя предыдущего оператора
@@ -554,22 +539,22 @@ namespace MathCore.MathParser
 
             if (Last is OperatorNode) // если предыдущий узел является оператором
             {
-                Last.Right = Node; // добавыить текуий в правое поддерево предыдущего
+                Last.Right = Node; // добавить текущий в правое поддерево предыдущего
                 return;            // возврат
             }
-            // Если ни текущий не придыдущий узлы не являются операторами
+            // Если ни текущий не предыдущий узлы не являются операторами
 
             //Если предыдущий узел был числом, или предыдущий узел был скобками и текущий - скобки
             if (Last is ConstValueNode || (Last is ComputedBracketNode && Node is ComputedBracketNode))
             {
-                //Сохряняем ссылку на родителя предыдущего узла
+                //Сохраняем ссылку на родителя предыдущего узла
                 var parent = Last.Parent;
                 if (parent != null) // если родитель есть
                     // в правое поддерево родителя записываем оператор перемножения предыдущего узла и текущего
                     parent.Right = new MultiplicationOperatorNode(Last, Node);
                 else // если предыдущий узел был узлом дерева
                     // создаём новый узел-оператор умножения предыдущего узла и текущего, который становится новым корнем дерева
-                    new MultiplicationOperatorNode(Last, Node);
+                    _ = new MultiplicationOperatorNode(Last, Node);
                 return; // возврат.
             }
 

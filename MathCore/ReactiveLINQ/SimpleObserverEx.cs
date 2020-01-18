@@ -1,4 +1,9 @@
-﻿namespace System.Linq.Reactive
+﻿using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBeProtected.Global
+
+// ReSharper disable once CheckNamespace
+namespace System.Linq.Reactive
 {
     /// <summary>Простейший наблюдатель</summary>
     /// <typeparam name="T">Объект события</typeparam>
@@ -19,7 +24,7 @@
         public object Tag { get; set; }
 
         /// <summary>Инициализация нового простейшего наблюдателя</summary>
-        public SimpleObserverEx(IObservable<T> observable) => _Unsubscriber = observable.Subscribe(this);
+        public SimpleObserverEx([NotNull] IObservable<T> observable) => _Unsubscriber = observable.Subscribe(this);
 
         /// <summary>Метод генерации события появления следующего объекта</summary>
         /// <param name="item">Следующий объект в последовательности</param>
@@ -35,6 +40,19 @@
         /// <summary>Метод генерации события сброса последовательности</summary>
         public virtual void OnReset() => Reset?.Invoke();
 
-        void IDisposable.Dispose() => _Unsubscriber.Dispose();
+        /// <summary>Освобождение ресурсов и отписка от наблюдаемых объектов</summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>Освобождение ресурсов и отписка от наблюдаемых объектов</summary>
+        /// <param name="Disposing">Если истина, то выполнить освобождение ресурсов и отписку</param>
+        protected virtual void Dispose(bool Disposing)
+        {
+            if (!Disposing) return;
+            _Unsubscriber.Dispose();
+        }
     }
 }

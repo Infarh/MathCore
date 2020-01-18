@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using MathCore;
 using MathCore.Annotations;
-using MathCore.DifferencialEquations.Numerical;
+using MathCore.DifferentialEquations.Numerical;
 using MathCore.Evaluations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global

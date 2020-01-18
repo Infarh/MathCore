@@ -1,4 +1,5 @@
-﻿namespace System.Linq.Reactive
+﻿// ReSharper disable once CheckNamespace
+namespace System.Linq.Reactive
 {
     internal sealed class AsyncPatternObservable<T> : SimpleObservableEx<T>
     {

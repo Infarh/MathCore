@@ -118,8 +118,8 @@ namespace MathCore.Vectors
 
         /// <summary>Проекция вектора на направление</summary>
         /// <param name="Vector">Проецируемый вектор</param>
-        /// <param name="Direction">Пространственный угол направления проекциии</param>
-        /// <returns>Вещественное значение проекциии</returns>
+        /// <param name="Direction">Пространственный угол направления проекции</param>
+        /// <returns>Вещественное значение проекции</returns>
         public static double operator %(Vector3D Vector, SpaceAngle Direction) => Vector.GetProjectionTo(Direction);
         public static double operator %(Vector3D Vector, Basis3D b) => Vector.InBasis(b);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using MathCore.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Tests
 {
@@ -17,9 +18,6 @@ namespace MathCore.Tests
         //[TestCleanup] public void MyTestCleanup() { }
 
         #endregion
-
-        private static readonly Func<double, double> sin = Math.Sin;
-        private static readonly Func<double, double> cos = Math.Cos;
 
         private static void TestVectorsComponents(double x, double y, double z, Vector3D r, double delta = double.Epsilon)
         {
@@ -111,7 +109,9 @@ namespace MathCore.Tests
             double Theta;
             double Phi;
 
-            void TestThetaPhi() => TestXYZ(R, new SpaceAngle(Theta, Phi), R * sin(Theta) * cos(Phi), R * sin(Theta) * sin(Phi), R * cos(Theta));
+            Func<double, double> sin1 = Math.Sin;
+            Func<double, double> cos1 = Math.Cos;
+            void TestThetaPhi() => TestXYZ(R, new SpaceAngle(Theta, Phi), R * sin1(Theta) * cos1(Phi), R * sin1(Theta) * sin1(Phi), R * cos1(Theta));
 
             for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
                 for (Theta = -2 * pi; Theta <= 2 * pi; Theta += 0.1 * pi)
@@ -138,7 +138,7 @@ namespace MathCore.Tests
             //    Assert.AreEqual(a, v.Angle, "{0}.a = {1}[π] != {2}[π] = r", v, v.Angle / pi, a / pi);
             //};
 
-            void TestXYZ(SpaceAngle a, double x, double y, double z)
+            static void TestXYZ(SpaceAngle a, double x, double y, double z)
             {
                 //testRA(r, a);
                 var v = a.DirectionalVector;
@@ -161,7 +161,9 @@ namespace MathCore.Tests
             double Theta;
             double Phi;
 
-            void TestThetaPhi() => TestXYZ(new SpaceAngle(Theta, Phi), sin(Theta) * cos(Phi), sin(Theta) * sin(Phi), cos(Theta));
+            Func<double, double> sin1 = Math.Sin;
+            Func<double, double> cos1 = Math.Cos;
+            void TestThetaPhi() => TestXYZ(new SpaceAngle(Theta, Phi), sin1(Theta) * cos1(Phi), sin1(Theta) * sin1(Phi), cos1(Theta));
 
             for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
                 for (Theta = -2 * pi; Theta <= 2 * pi; Theta += 0.1 * pi)
@@ -184,8 +186,10 @@ namespace MathCore.Tests
             Assert.IsTrue(v.Equals((object)v));
             Assert.IsTrue(v.Equals((object)v.Clone()));
             Assert.IsFalse(v.Equals(null));
+            // ReSharper disable SuspiciousTypeConversion.Global
             Assert.IsFalse(v.Equals("123"));
             Assert.IsFalse(v.Equals(123));
+            // ReSharper restore SuspiciousTypeConversion.Global
             Assert.IsFalse(v.Equals(new object()));
         }
 
@@ -240,7 +244,7 @@ namespace MathCore.Tests
         {
             const double eps = double.Epsilon;
             Vector3D V;
-            do { V = Vector3D.Random(); } while (Math.Abs(V.X) < eps || Math.Abs(V.Y) < eps || Math.Abs(V.Z) < eps);
+            do V = Vector3D.Random(); while (Math.Abs(V.X) < eps || Math.Abs(V.Y) < eps || Math.Abs(V.Z) < eps);
             var inv = V.GetInverse();
             Assert.AreEqual(inv.X, 1 / V.X);
             Assert.AreEqual(inv.Y, 1 / V.Y);
@@ -248,8 +252,8 @@ namespace MathCore.Tests
             Assert.AreEqual(inv, 1 / V);
         }
 
-        /// <summary>Тестирование метода определения проекциии вектора на угловое направление</summary>
-        [TestMethod, Priority(3), Description("Тестирование метода определения проекциии вектора на угловое направление")]
+        /// <summary>Тестирование метода определения проекции вектора на угловое направление</summary>
+        [TestMethod, Priority(3), Description("Тестирование метода определения проекции вектора на угловое направление")]
         public void GetProjectionToAngleDirection_Test()
         {
             GetProjectionToVector3D_Test();
@@ -273,39 +277,6 @@ namespace MathCore.Tests
                 Direction = SpaceAngle.Random();
                 Test(Vector3D.Random());
             }
-        }
-
-        /// <summary>Тестирование метода определения проекциии вектора на вектор</summary>
-        [TestMethod, Priority(3), Description("Тестирование метода определения проекциии вектора на вектор")]
-        public void GetProjectionToVector3D_Test()
-        {
-            Assert.AreEqual(0, Vector3D.i.GetProjectionTo(Vector3D.j));
-            Assert.AreEqual(1, Vector3D.i.GetProjectionTo(Vector3D.i));
-
-            Vector3D X;
-            do { X = Vector3D.Random(); } while (Math.Abs(X.R) < double.Epsilon);
-
-            Assert.AreEqual(X.X, X.GetProjectionTo(Vector3D.i));
-            Assert.AreEqual(X.Y, X.GetProjectionTo(Vector3D.j));
-            Assert.AreEqual(X.Z, X.GetProjectionTo(Vector3D.k));
-
-            Vector3D Y;
-            do { Y = Vector3D.Random(); } while (Math.Abs(Y.R) < double.Epsilon);
-
-            X = new Vector3D(3, 5, 7);
-            Y = new Vector3D(-5, 7, -10);
-
-            var x_r = Math.Sqrt(X.X * X.X + X.Y * X.Y + X.Z * X.Z);
-            var y_r = Math.Sqrt(Y.X * Y.X + Y.Y * Y.Y + Y.Z * Y.Z);
-            var p = (X.X * Y.X + X.Y * Y.Y + X.Z * Y.Z);
-            Assert.AreEqual(p / y_r, X.GetProjectionTo(Y));
-            Assert.AreEqual(p / x_r, Y.GetProjectionTo(X));
-
-            do { X = Vector3D.Random(); } while (Math.Abs(X.R) < double.Epsilon);
-            do { Y = Vector3D.Random(); } while (Math.Abs(Y.R) < double.Epsilon);
-
-            Assert.AreEqual((X * Y) / Y.R, X.GetProjectionTo(Y));
-            Assert.AreEqual((X * Y) / X.R, Y.GetProjectionTo(X));
         }
 
         /// <summary>Тестирование метода преобразования вектора в базисе</summary>
@@ -342,6 +313,41 @@ namespace MathCore.Tests
                 x.AngleXOY / pi, x,
                 y.AngleXOY / pi, y,
                 (y.AngleXOY - x.AngleXOY) / pi);
+        }
+
+        /// <summary>Тестирование метода определения проекции вектора на вектор</summary>
+        [TestMethod, Priority(3), Description("Тестирование метода определения проекции вектора на вектор")]
+        public void GetProjectionToVector3D_Test()
+        {
+            Assert.AreEqual(0, Vector3D.i.GetProjectionTo(Vector3D.j));
+            Assert.AreEqual(1, Vector3D.i.GetProjectionTo(Vector3D.i));
+
+            Vector3D X;
+            do X = Vector3D.Random(); while (Math.Abs(X.R) < double.Epsilon);
+
+            Assert.AreEqual(X.X, X.GetProjectionTo(Vector3D.i));
+            Assert.AreEqual(X.Y, X.GetProjectionTo(Vector3D.j));
+            Assert.AreEqual(X.Z, X.GetProjectionTo(Vector3D.k));
+
+            Vector3D Y;
+            do Y = Vector3D.Random(); while (Math.Abs(Y.R) < double.Epsilon);
+
+            X = new Vector3D(3, 5, 7);
+            Y = new Vector3D(-5, 7, -10);
+
+            var x_r = Math.Sqrt(X.X * X.X + X.Y * X.Y + X.Z * X.Z);
+            var y_r = Math.Sqrt(Y.X * Y.X + Y.Y * Y.Y + Y.Z * Y.Z);
+            var p = (X.X * Y.X + X.Y * Y.Y + X.Z * Y.Z);
+            Assert.AreEqual(p / y_r, X.GetProjectionTo(Y));
+            Assert.AreEqual(p / x_r, Y.GetProjectionTo(X));
+
+            do X = Vector3D.Random(); while (Math.Abs(X.R) < double.Epsilon);
+            do Y = Vector3D.Random(); while (Math.Abs(Y.R) < double.Epsilon);
+
+#pragma warning disable IDE0047 // Удалить ненужные круглые скобки
+            Assert.AreEqual((X * Y) / Y.R, X.GetProjectionTo(Y));
+            Assert.AreEqual((X * Y) / X.R, Y.GetProjectionTo(X));
+#pragma warning restore IDE0047 // Удалить ненужные круглые скобки
         }
 
         /// <summary>Тестирование скалярного произведения двух векторов</summary>
@@ -779,7 +785,7 @@ namespace MathCore.Tests
         //}
 
         //[TestMethod, Ignore]
-        //public void op_Implicit_ToStaceAngle_Test()
+        //public void op_Implicit_ToSpaceAngle_Test()
         //{
         //    var V = new Vector3D(); 
         //    var expected = new SpaceAngle(); 
@@ -802,7 +808,7 @@ namespace MathCore.Tests
 
         #endregion
 
-        #region Операторы проекциии и т.п. (!)
+        #region Операторы проекции и т.п. (!)
 
         //[TestMethod, Ignore]
         //public void op_Modulus_VectorToVector_Test()
@@ -890,19 +896,19 @@ namespace MathCore.Tests
 
         /// <summary>Тест статического свойства - базисный вектор</summary>
         [TestMethod, Priority(2), Description("Тест статического свойства - базисный вектор")]
-        public void BasysUnitVector_Test() => TestVectorsComponents(1, 1, 1, Vector3D.BasysUnitVector);
+        public void BasisUnitVector_Test() => TestVectorsComponents(1, 1, 1, Vector3D.BasisUnitVector);
 
         /// <summary>Тест статического свойства - базисный вектор i</summary>
         [TestMethod, Priority(2), Description("Тест статического свойства - базисный вектор i")]
-        public void BasysVector_i_Test() => TestVectorsComponents(1, 0, 0, Vector3D.i);
+        public void BasisVector_i_Test() => TestVectorsComponents(1, 0, 0, Vector3D.i);
 
         /// <summary>Тест статического свойства - базисный вектор j</summary>
         [TestMethod, Priority(2), Description("Тест статического свойства - базисный вектор j")]
-        public void BasysVector_j_Test() => TestVectorsComponents(0, 1, 0, Vector3D.j);
+        public void BasisVector_j_Test() => TestVectorsComponents(0, 1, 0, Vector3D.j);
 
         /// <summary>Тест статического свойства - базисный вектор k</summary>
         [TestMethod, Priority(2), Description("Тест статического свойства - базисный вектор k")]
-        public void BasysVector_k_Test() => TestVectorsComponents(0, 0, 1, Vector3D.k);
+        public void BasisVector_k_Test() => TestVectorsComponents(0, 0, 1, Vector3D.k);
 
         #endregion
 
@@ -971,6 +977,7 @@ namespace MathCore.Tests
                 var R = Math.Sqrt(x * x + y * y + z * z);
 
                 var r = new Vector3D(x, y, z);
+                // ReSharper disable once InconsistentNaming
                 var rR = r.R;
                 Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
             }
@@ -986,8 +993,8 @@ namespace MathCore.Tests
 
         #region Длины векторов в плоскостях
 
-        /// <summary>Тестирование свойства - длина проекциии вектора в плоскости XOY</summary>
-        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекциии вектора в плоскости XOY")]
+        /// <summary>Тестирование свойства - длина проекции вектора в плоскости XOY</summary>
+        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекции вектора в плоскости XOY")]
         public void R_XOY_Test()
         {
             var x = 0.0;
@@ -999,6 +1006,7 @@ namespace MathCore.Tests
                 var R = Math.Sqrt(x * x + y * y);
 
                 var r = new Vector3D(x, y, z);
+                // ReSharper disable once InconsistentNaming
                 var rR = r.R_XOY;
                 Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
             }
@@ -1012,8 +1020,8 @@ namespace MathCore.Tests
             Test();
         }
 
-        /// <summary>Тестирование свойства - длина проекциии вектора в плоскости XOZ</summary>
-        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекциии вектора в плоскости XOZ")]
+        /// <summary>Тестирование свойства - длина проекции вектора в плоскости XOZ</summary>
+        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекции вектора в плоскости XOZ")]
         public void R_XOZ_Test()
         {
             var x = 0.0;
@@ -1025,6 +1033,7 @@ namespace MathCore.Tests
                 var R = Math.Sqrt(x * x + z * z);
 
                 var r = new Vector3D(x, y, z);
+                // ReSharper disable once InconsistentNaming
                 var rR = r.R_XOZ;
                 Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
             }
@@ -1038,8 +1047,8 @@ namespace MathCore.Tests
             Test();
         }
 
-        /// <summary>Тестирование свойства - длина проекциии вектора в плоскости YOZ</summary>
-        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекциии вектора в плоскости YOZ")]
+        /// <summary>Тестирование свойства - длина проекции вектора в плоскости YOZ</summary>
+        [TestMethod, Priority(2), Description("Тестирование свойства - длина проекции вектора в плоскости YOZ")]
         public void R_YOZ_Test()
         {
             var x = 0.0;
@@ -1051,6 +1060,7 @@ namespace MathCore.Tests
                 var R = Math.Sqrt(y * y + z * z);
 
                 var r = new Vector3D(x, y, z);
+                // ReSharper disable once InconsistentNaming
                 var rR = r.R_YOZ;
                 Assert.AreEqual(R, rR, double.Epsilon, "Длина вектора {0} = {1} не соответствует ожидаемой {2}", r, rR, R);
             }
@@ -1106,6 +1116,7 @@ namespace MathCore.Tests
         public void X_Test()
         {
             var x = GetRNDDouble();
+            // ReSharper disable once UseDeconstruction
             var r = new Vector3D(x, 0, 0);
             Assert.AreEqual(x, r.X, "Свойство вектора r.X = {0} не соответствует ожидаемому x = {1}", r.X, x);
         }
@@ -1115,6 +1126,7 @@ namespace MathCore.Tests
         public void Y_Test()
         {
             var y = GetRNDDouble();
+            // ReSharper disable once UseDeconstruction
             var r = new Vector3D(0, y, 0);
             Assert.AreEqual(y, r.Y, "Свойство вектора r.Y = {0} не соответствует ожидаемому y = {1}", r.Y, y);
         }
@@ -1124,6 +1136,7 @@ namespace MathCore.Tests
         public void Z_Test()
         {
             var z = GetRNDDouble();
+            // ReSharper disable once UseDeconstruction
             var r = new Vector3D(0, 0, z);
             Assert.AreEqual(z, r.Z, "Свойство вектора r.Z = {0} не соответствует ожидаемому z = {1}", r.Z, z);
         }

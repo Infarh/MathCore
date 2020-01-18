@@ -28,11 +28,9 @@ namespace MathCore
                  ITypeDescriptorContext Context,
                  CultureInfo Culture,
                  object Value,
-                 Type DestType)
-        {
-            return DestType == typeof(string) && Value is Interval
-                       ? Value.ToString()
-                       : base.ConvertTo(Context, Culture, Value, DestType);
-        }
+                 Type DestType) =>
+            DestType == typeof(string) && Value is Interval
+                ? Value.ToString()
+                : base.ConvertTo(Context, Culture, Value, DestType);
     }
 }

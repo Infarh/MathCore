@@ -1,40 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MathCore.Annotations;
 
 namespace MathCore.Functions.Differentiable
 {
     public abstract class OperatorBinary : OperatorUnary
     {
-        protected readonly Function f2;
-        protected OperatorBinary(Function f1, Function f2) : base(f1) { this.f2 = f2; }
+        protected readonly Function _F2;
+        protected OperatorBinary(Function f1, Function f2) : base(f1) => this._F2 = f2;
     }
 
     public class Addition : OperatorBinary
     {
         public Addition(Function f1, Function f2) : base(f1, f2) { }
-        public override double Value(double x) => f1.Value(x) + f2.Value(x);
-        public override Function Derivative() => f1.Derivative() + f2.Derivative();
+        public override double Value(double x) => _F1.Value(x) + _F2.Value(x);
+        [NotNull] public override Function Derivative() => _F1.Derivative() + _F2.Derivative();
     }
 
-    public class Substraction : OperatorBinary
+    public class Subtraction : OperatorBinary
     {
-        public Substraction(Function f1, Function f2) : base(f1, f2) { }
-        public override double Value(double x) => f1.Value(x) - f2.Value(x);
-        public override Function Derivative() => f1.Derivative() - f2.Derivative();
+        public Subtraction(Function f1, Function f2) : base(f1, f2) { }
+        public override double Value(double x) => _F1.Value(x) - _F2.Value(x);
+        [NotNull] public override Function Derivative() => _F1.Derivative() - _F2.Derivative();
     }
 
-    public class Multipycation : OperatorBinary
+    public class Multiplication : OperatorBinary
     {
-        public Multipycation(Function f1, Function f2) : base(f1, f2) { }
-        public override double Value(double x) => f1.Value(x) * f2.Value(x);
-        public override Function Derivative() => f1.Derivative() * f2 + f1 * f2.Derivative();
+        public Multiplication(Function f1, Function f2) : base(f1, f2) { }
+        public override double Value(double x) => _F1.Value(x) * _F2.Value(x);
+        [NotNull] public override Function Derivative() => _F1.Derivative() * _F2 + _F1 * _F2.Derivative();
     }
 
     public class Division : OperatorBinary
     {
         public Division(Function f1, Function f2) : base(f1, f2) { }
-        public override double Value(double x) => f1.Value(x) / f2.Value(x);
-        public override Function Derivative() => (f1.Derivative() * f2 - f1 * f2.Derivative()) / (f2 * f2);
+        public override double Value(double x) => _F1.Value(x) / _F2.Value(x);
+        [NotNull] public override Function Derivative() => (_F1.Derivative() * _F2 - _F1 * _F2.Derivative()) / (_F2 * _F2);
     }
 }

@@ -18,12 +18,14 @@ using uEx = System.Linq.Expressions.UnaryExpression;
 // ReSharper disable MergeCastWithTypeCheck
 // ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable ConvertIfStatementToSwitchStatement
+// ReSharper disable InvertIf
 
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace MathCore.Extensions.Expressions
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0046:Преобразовать в условное выражение", Justification = "<Ожидание>")]
     public static class ExpressionExtensions
     {
         #region Types
@@ -432,7 +434,7 @@ namespace MathCore.Extensions.Expressions
         {
             var i = 0;
             Ex l;
-            if (left != null) l = left; 
+            if (left != null) l = left;
             if (right is null) return null;
             if (right.Length == i) return null;
             l = right[i++].ToExpression();
@@ -1103,23 +1105,19 @@ namespace MathCore.Extensions.Expressions
                     if (IsZero(right))
                     {
                         if (right is double)
-                        {
                             return double.IsNaN((double)right)
                                 ? double.NaN.ToExpression()
                                 : ((double)right > 0
                                     ? ((int)left > 0 ? double.PositiveInfinity : double.NegativeInfinity)
                                     : ((int)left > 0 ? double.NegativeInfinity : double.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         if (right is float)
-                        {
                             return float.IsNaN((float)right)
                                 ? float.NaN.ToExpression()
                                 : ((float)right > 0
                                     ? ((int)left > 0 ? float.PositiveInfinity : float.NegativeInfinity)
                                     : ((int)left > 0 ? float.NegativeInfinity : float.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
                     if (right is byte) return ((int)left / (byte)right).ToExpression();
@@ -1171,23 +1169,19 @@ namespace MathCore.Extensions.Expressions
                     if (IsZero(right))
                     {
                         if (right is double)
-                        {
                             return double.IsNaN((double)right)
                                 ? double.NaN.ToExpression()
                                 : ((double)right > 0
                                     ? ((long)left > 0 ? double.PositiveInfinity : double.NegativeInfinity)
                                     : ((long)left > 0 ? double.NegativeInfinity : double.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         if (right is float)
-                        {
                             return float.IsNaN((float)right)
                                 ? float.NaN.ToExpression()
                                 : ((float)right > 0
                                     ? ((long)left > 0 ? float.PositiveInfinity : float.NegativeInfinity)
                                     : ((long)left > 0 ? float.NegativeInfinity : float.PositiveInfinity))
-                                    .ToExpression();
-                        }
+                               .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
                     if (right is byte) return ((long)left / (byte)right).ToExpression();

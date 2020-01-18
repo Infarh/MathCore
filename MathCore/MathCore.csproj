@@ -1,21 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Version>0.0.17.1</Version>
+    <PackageReleaseNotes>Рефакторинг</PackageReleaseNotes>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.17</Version>
+    <LangVersion>8</LangVersion>
     <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>8</LangVersion>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Shmachilin P.A.</Authors>
     <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
     <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
+    <Description>Библиотека прикладных алгоритмов</Description>
     <PackageTags>Mathematic, Logiс</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageLicenseFile></PackageLicenseFile>
-    <Description>Библиотека прикладных алгоритмов</Description>
-    <PackageReleaseNotes>Рефакторинг</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
     <Copyright>shmachilin@gmail.com</Copyright>

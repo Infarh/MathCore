@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Values
 {
     public class Set<TElement>
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private struct Slot
         {
             internal int HashCode;
@@ -41,10 +44,8 @@ namespace MathCore.Values
         {
             var hash = GetHashCodeOf(value);
             for(var i = _Buckets[hash % _Buckets.Length] - 1; i >= 0; i = _Slots[i].Next)
-            {
                 if(_Slots[i].HashCode == hash && _Comparer.Equals(_Slots[i].Value, value))
                     return true;
-            }
             if(!add) return false;
             int k;
             if(_FreeList >= 0)

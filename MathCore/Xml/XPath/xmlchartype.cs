@@ -15,6 +15,7 @@
 
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     // The XmlCharType class is used for quick character type recognition

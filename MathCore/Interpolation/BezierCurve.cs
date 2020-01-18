@@ -7,7 +7,7 @@ using MathCore.Vectors;
 
 namespace MathCore.Interpolation
 {
-    /// <summary><see cref="http://ru.wikipedia.org/wiki/Кривая_Безье">Кривая Безье</see></summary>
+    /// <summary><see url="http://ru.wikipedia.org/wiki/Кривая_Безье">Кривая Безье</see></summary>
     [Hyperlink("http://ru.wikipedia.org/wiki/Кривая_Безье")]
     public class BezierCurve
     {
@@ -17,9 +17,9 @@ namespace MathCore.Interpolation
 
         /// <summary>
         /// Биномиальный коэффициент (1+x)^n из <paramref name="n"/> по <paramref name="k"/>
-        /// <see cref="http://ru.wikipedia.org/wiki/Биномиальный_коэффициент">Википедия:Биномиальный коэффициент</see>
+        /// <see url="http://ru.wikipedia.org/wiki/Биномиальный_коэффициент">Википедия:Биномиальный коэффициент</see>
         /// </summary>
-        /// <param name="n">Степень <see cref="http://ru.wikipedia.org/wiki/Бином_Ньютона">бинома Ньютона</see></param>
+        /// <param name="n">Степень <see url="http://ru.wikipedia.org/wiki/Бином_Ньютона">бинома Ньютона</see></param>
         /// <param name="k">Номер коэффициента</param>
         /// <returns>Коэффициент разложения Бинома Ньютона (1+x)^n</returns>
         [Hyperlink("http://ru.wikipedia.org/wiki/Биномиальный_коэффициент")]
@@ -33,7 +33,7 @@ namespace MathCore.Interpolation
             return (int)(K * n.Factorial() / (k.Factorial() - (n - k).Factorial()));
         }
 
-        /// <summary>Получить <seealso cref="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</seealso>></summary>
+        /// <summary>Получить <seealso url="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</seealso>></summary>
         /// <param name="k">Номер многочлена</param>
         /// <param name="n">Степень</param>
         /// <returns></returns>
@@ -55,14 +55,14 @@ namespace MathCore.Interpolation
         private Vector2D[] _Points;
         //private Vector2D[] _SortedPoints;
 
-        /// <summary><see cref="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>        
+        /// <summary><see url="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>        
         private Func<double, double>[] _BernshteynPolynoms;
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Новая <see cref="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
-        /// <param name="X">Список координато точек x</param>
-        /// <param name="Y">Список кординат точек y</param>
+        /// <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
+        /// <param name="X">Список координат точек x</param>
+        /// <param name="Y">Список координат точек y</param>
         public BezierCurve([NotNull] IEnumerable<double> X, [NotNull] IEnumerable<double> Y)
         {
             var x = X.Select((xx, i) => (X:xx, i));
@@ -70,19 +70,13 @@ namespace MathCore.Interpolation
             Initialize(x.Join(y, xx => xx.i, yy => yy.i, (xx, yy) => new Vector2D(xx.X, yy.Y)));
         }
 
-        /// <summary>Новая <see cref="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
+        /// <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
         /// <param name="Points">Набор точек в виде <see cref="MathCore.Complex">комплексных чисел</see></param>
-        public BezierCurve([NotNull] IEnumerable<Complex> Points)
-        {
-            Initialize(Points.Select(c => (Vector2D)c));
-        }
+        public BezierCurve([NotNull] IEnumerable<Complex> Points) => Initialize(Points.Select(c => (Vector2D)c));
 
-        /// <summary>Новая <see cref="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
+        /// <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
         /// <param name="Points">Набор точек</param>
-        public BezierCurve(IEnumerable<Vector2D> Points)
-        {
-            Initialize(Points);
-        }
+        public BezierCurve([NotNull] IEnumerable<Vector2D> Points) => Initialize(Points);
 
         /// <summary>Инициализировать кривую Безье</summary>
         /// <param name="Points">Набор точек</param>

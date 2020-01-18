@@ -1,10 +1,13 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore
 {
     /// <summary>Константы</summary>
-    public static partial class Consts
+    public static class Consts
     {
         /// <summary>% = 0.01</summary>
         public const double Percent = 0.01;
@@ -121,9 +124,8 @@ namespace MathCore
         public const double Planck_Time = 5.39124e-44;
 
         /// <summary>Электродинамические константы</summary>
-        public static class ElectroDynamic
+        public static class Electrodynamic
         {
-
             /// <summary>Электрическая постоянная 1/(Mu0 · c^2) = 8,854187817620… ×10^−12 Ф·м^−1</summary>
             public const double Epsilon0 = 8.8541878171937079244693661186959426889222899381429e-12;//1 / (Mu0 * SpeedOfLightInVacuum * SpeedOfLightInVacuum);
 
@@ -136,17 +138,17 @@ namespace MathCore
             /// <summary>Сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 376.730313461771 Ом</summary>
             public const double Impedance0 = 376.73031346177065546819840042031930826862350835242;
 
-            public static double ToWaveLength(double Frequancy) => SpeedOfLight / Frequancy;
+            public static double ToWaveLength(double Frequency) => SpeedOfLight / Frequency;
 
-            public static double ToWaveLength(double Frequance, double Epsilon) => SpeedOfLight / Frequance / Math.Sqrt(Epsilon);
+            public static double ToWaveLength(double Frequency, double Epsilon) => SpeedOfLight / Frequency / Math.Sqrt(Epsilon);
 
-            public static double ToWaveLength(double Frequance, double Epsilon, double Mu) => SpeedOfLight / Frequance / Math.Sqrt(Epsilon / Mu);
+            public static double ToWaveLength(double Frequency, double Epsilon, double Mu) => SpeedOfLight / Frequency / Math.Sqrt(Epsilon / Mu);
 
-            public static double ToFrequance(double WaveLength) => SpeedOfLight / WaveLength;
+            public static double ToFrequency(double WaveLength) => SpeedOfLight / WaveLength;
 
-            public static double ToFrequance(double WaveLength, double Epsilon) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon);
+            public static double ToFrequency(double WaveLength, double Epsilon) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon);
 
-            public static double ToFrequance(double WaveLength, double Epsilon, double Mu) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon / Mu);
+            public static double ToFrequency(double WaveLength, double Epsilon, double Mu) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon / Mu);
         }
 
         /// <summary>0x3ffeffff = 1073676287</summary>
@@ -173,7 +175,7 @@ namespace MathCore
         public const double ElementaryCharge = 1.602176565353535353535353535353535353535e-19;
 
         /// <summary>Постоянная Больцмана k = 1,380 6488(13)·10^−23 Дж/К</summary>
-        public const double BoltzmanConstant = 1.38064881313131313131313131313131313131313e-23;
+        public const double BoltzmannConstant = 1.38064881313131313131313131313131313131313e-23;
 
         /// <summary>Число Авогадро Na = 6,022 141 29(27)·10^23 1/моль</summary>
         public const double AvogadroConstant = 6.02214129272727272727272727272727272727272727e23;

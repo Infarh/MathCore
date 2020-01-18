@@ -10,11 +10,12 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Diagnostics;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     internal class AstNode
@@ -52,7 +53,7 @@ namespace System.Xml.XPath
         {
             try
             {
-                return XPathParser.ParseXPathExpresion(parsestring);
+                return XPathParser.ParseXPathExpression(parsestring);
             }
             catch (XPathException e)
             {

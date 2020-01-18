@@ -7,6 +7,7 @@ using MathCore.Monades.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
+// ReSharper disable MemberCanBePrivate.Local
 
 namespace MathCore.Tests.Monades.WorkFlow
 {
@@ -25,16 +26,16 @@ namespace MathCore.Tests.Monades.WorkFlow
                 public Item(string Message) => (Time, this.Message) = (DateTime.Now, Message);
                 public Item(string Message, Exception Error) => (Time, this.Message, this.Error) = (DateTime.Now, Message, Error);
 
-                public static implicit operator Item(string Message) => new Item(Message);
+                [NN] public static implicit operator Item(string Message) => new Item(Message);
             }
             private readonly List<Item> _Items = new List<Item>();
 
             public void Add(string Message) => _Items.Add(Message);
             public void Add(string Message, Exception Error) => _Items.Add(new Item(Message, Error));
 
-            public IEnumerator<Item> GetEnumerator() { return _Items.GetEnumerator(); }
+            public IEnumerator<Item> GetEnumerator() => _Items.GetEnumerator();
 
-            IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable)_Items).GetEnumerator(); }
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Items).GetEnumerator();
         }
 
         private sealed class User

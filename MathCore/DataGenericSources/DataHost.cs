@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Linq.Reactive;
 
-namespace MathCore.DataGenericSouces
+namespace MathCore.DataGenericSources
 {
     public abstract class DataHost : IDisposable
     {
         /* -------------------------------------------------------------------------------- */
 
-        public virtual void Dispose() { }
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) { }
 
         /* -------------------------------------------------------------------------------- */
     }

@@ -2,7 +2,10 @@
 using System.Linq.Reactive;
 using System.Runtime.CompilerServices;
 using MathCore.Values;
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Класс поточного чтения объектов из потока данных</summary>
@@ -14,6 +17,7 @@ namespace System
 
         /// <summary>Событие чтения нового объекта из потока данных</summary>
         public event EventHandler<EventArgs<T>> Readed;
+
         /// <summary>Источник события чтения объекта из потока данных</summary>
         /// <param name="e">Аргумент события, содержащий прочитанный объект</param>
         protected virtual void OnReaded(EventArgs<T> e) => Readed?.Invoke(this, e);

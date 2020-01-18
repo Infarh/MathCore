@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Threading;
+using MathCore.Annotations;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.IoC
 {
@@ -20,11 +24,7 @@ namespace MathCore.IoC
 
         public SingleTaskServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType, FactoryMethod) => ResetAll();
 
-        public override object GetService()
-        {
-            throw new NotImplementedException();
-            return _Initializer.Value;
-        }
+        public override object GetService() => throw new NotImplementedException();
 
         public void ResetAll()
         {
@@ -40,12 +40,13 @@ namespace MathCore.IoC
             _Initializer.Value = null;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            //if (disposing && !Disposed) _Initializer.Dispose();
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    //if (disposing && !Disposed) _Initializer.Dispose();
+        //    base.Dispose(disposing);
+        //}
 
+        [NotNull]
         internal override ServiceRegistration CloneFor(IServiceManager manager) => _FactoryMethod is null
             ? new SingleThreadServiceRegistration<TService>(manager, ServiceType)
             : new SingleThreadServiceRegistration<TService>(manager, ServiceType, _FactoryMethod);

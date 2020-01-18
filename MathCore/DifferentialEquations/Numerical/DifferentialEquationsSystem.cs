@@ -1,9 +1,8 @@
-﻿
-namespace MathCore.DifferencialEquations.Numerical
+﻿namespace MathCore.DifferentialEquations.Numerical
 {
     /// <summary> Система дифференциальных уравнений</summary>
     /// <param name="X">Аргумент</param>
     /// <param name="Y">Значения функции</param>
     /// <returns>Значения производных</returns>
-    public delegate double[] DifferencialEquationsSystem(double[] X, double[] Y);
+    public delegate double[] DifferentialEquationsSystem(double[] X, double[] Y);
 }

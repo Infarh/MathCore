@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Reactive
+﻿// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable once CheckNamespace
+namespace System.Linq.Reactive
 {
     /// <summary>Интерфейс наблюдателя</summary>
     /// <typeparam name="T">Тип объектов последовательности событий</typeparam>
