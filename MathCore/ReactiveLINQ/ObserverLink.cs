@@ -30,7 +30,7 @@ namespace System.Linq.Reactive
         private IObserver<T> _Observer;
         /// <summary>Коллекция наблюдателей, из которой требуется удалить отслеживаемый наблюдатель</summary>
         private ICollection<IObserver<T>> _Observers;
-        /// <summary>Объект межпотоковой синхроницации</summary>
+        /// <summary>Объект межпотоковой синхронизации</summary>
         [NotNull]
         private readonly object _SyncRoot = new object();
 
@@ -59,7 +59,5 @@ namespace System.Linq.Reactive
                 _Observer = null;
             }
         }
-
-
     }
 }

@@ -1,15 +1,16 @@
 ﻿using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
-    public class LamdaObserver<T> : SimpleObserverEx<T>
+    public class LambdaObserver<T> : SimpleObserverEx<T>
     {
         private readonly Action<T> _OnNext;
         private readonly Action _OnCompleted;
         private readonly Action _OnReset;
         private readonly Action<Exception> _OnError;
 
-        public LamdaObserver
+        public LambdaObserver
         (
             [NotNull]IObservable<T> Observable,
             [CanBeNull]Action<T> OnNext = null,

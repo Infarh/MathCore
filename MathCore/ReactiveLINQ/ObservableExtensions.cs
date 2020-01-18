@@ -69,7 +69,7 @@ namespace System.Linq.Reactive
         /// <returns>Объект-наблюдатель с установленным методом фильтрации</returns>
         [NotNull]
         public static IObservableEx<T> Where<T>([NotNull] this IObservable<T> Observable, [NotNull] Func<T, bool> Predicate) =>
-            new WhereLamdaObservableEx<T>(Observable, Predicate);
+            new WhereLambdaObservableEx<T>(Observable, Predicate);
 
         /// <summary>Метод фильтрации событий</summary>
         /// <typeparam name="T">Тип объектов событий</typeparam>
@@ -90,7 +90,7 @@ namespace System.Linq.Reactive
                 return result;
             }
 
-            return new WhereLamdaObservableEx<T>(Observable, Selector);
+            return new WhereLambdaObservableEx<T>(Observable, Selector);
         }
 
         /// <summary>Метод преобразования объектов событий</summary>
@@ -101,7 +101,7 @@ namespace System.Linq.Reactive
         /// <returns>Объект-наблюдатель с преобразованными типами объектов</returns>
         [NotNull]
         public static IObservableEx<TResult> Select<T, TResult>([NotNull] this IObservable<T> Observable, [NotNull] Func<T, TResult> Selector) =>
-            new SelectLamdaObservableEx<T, TResult>(Observable, Selector);
+            new SelectLambdaObservableEx<T, TResult>(Observable, Selector);
 
         [NotNull]
         public static TimeIntervalObservable Interval_Seconds(double TimeInterval, bool Started = false) =>
@@ -130,7 +130,7 @@ namespace System.Linq.Reactive
         /// <returns>Объект-наблюдатель, события которого синхронно задержаны во времени на указанный интервал</returns>
         [NotNull]
         public static IObservableEx<T> WhitSync<T>([NotNull] this IObservable<T> Observable, TimeSpan Interval) =>
-            new LamdaObservable<T>(Observable, (o, t) => { Thread.Sleep(Interval); o.OnNext(t); });
+            new LambdaObservable<T>(Observable, (o, t) => { Thread.Sleep(Interval); o.OnNext(t); });
 
         /// <summary>Метод получения задержанных во времени событий</summary>
         /// <typeparam name="T">Тип объектов событий</typeparam>
@@ -142,7 +142,7 @@ namespace System.Linq.Reactive
         {
             Action<IObserver<T>, T> OnNext = (o, t) => { Thread.Sleep(Interval); o.OnNext(t); };
             void NextAsync(IObserver<T> o, T t) => OnNext.BeginInvoke(o, t, null, null);
-            return new LamdaObservable<T>(Observable, NextAsync);
+            return new LambdaObservable<T>(Observable, NextAsync);
         }
 
         /// <summary>Метод получения объекта-наблюдателя для указанного события</summary>
@@ -188,18 +188,18 @@ namespace System.Linq.Reactive
         /// <param name="Observable">Объект-наблюдатель источник событий</param>
         /// <param name="Open">Объект-наблюдатель разрешающий событий в выходной последовательности</param>
         /// <param name="Close">Объект-наблюдатель запрещающий событий в выходной последовательности</param>
-        /// <param name="IsOpen">Исходное состояния разрешения событий в выходной последовательности (по умолчанию разрешено)</param>
+        /// <param name="InitialState">Исходное состояния разрешения событий в выходной последовательности (по умолчанию разрешено)</param>
         /// <returns>Управляемый объект-наблюдатель</returns>
         [NotNull]
         public static IObservableEx<TSource> Take<TSource, TOpen, TClose>(
             [NotNull] this IObservable<TSource> Observable,
             [NotNull] IObservable<TOpen> Open,
             [NotNull] IObservable<TClose> Close,
-            bool IsOpen = true)
+            bool InitialState = true)
         {
-            var t = Observable as TriggeredObservable<TSource> ?? new TriggeredObservable<TSource>(Observable, IsOpen);
-            Open.ForeachAction(o => t.Open = true);
-            Close.ForeachAction(c => t.Open = false);
+            var t = Observable as TriggeredObservable<TSource> ?? new TriggeredObservable<TSource>(Observable, InitialState);
+            Open.ForeachAction(o => t.State = true);
+            Close.ForeachAction(c => t.State = false);
             return t;
         }
 
@@ -217,7 +217,7 @@ namespace System.Linq.Reactive
             bool IsOpen = true)
         {
             var o = Observable as TriggeredObservable<T> ?? new TriggeredObservable<T>(Observable, IsOpen);
-            Selector.ForeachAction(q => o.Open = false);
+            Selector.ForeachAction(q => o.State = false);
             return o;
         }
 
@@ -235,7 +235,7 @@ namespace System.Linq.Reactive
             bool IsOpen = false)
         {
             var o = Observable as TriggeredObservable<T> ?? new TriggeredObservable<T>(Observable, IsOpen);
-            Selector.ForeachAction(q => o.Open = true);
+            Selector.ForeachAction(q => o.State = true);
             return o;
         }
 
@@ -244,13 +244,19 @@ namespace System.Linq.Reactive
         /// <param name="Observable">Исходный объект-наблюдатель</param>
         /// <param name="Action">Метод обработки события <see cref="IObserverEx{T}.Next"/></param>
         /// <returns>Исходный объект-наблюдатель</returns>
-        [CanBeNull]
+        [NotNull]
         public static IObservable<T> ForeachAction<T>([NotNull] this IObservable<T> Observable, [NotNull] Action<T> Action) =>
-            Observable.InitializeObject(Action, (o, a) => new LamdaObserver<T>(o, a));
+            Observable.InitializeObject(Action, (o, a) => new LambdaObserver<T>(o, a))
+            ?? throw new InvalidOperationException("Возвращена пустая ссылка");
 
+        /// <summary>Подписаться на уведомления наблюдаемого объекта <see cref="IObservable{T}"/></summary>
+        /// <param name="Source">Источник событий</param>
+        /// <param name="Action">Действие, выполняемое при возникновении события</param>
+        /// <typeparam name="T">Тип значения событий</typeparam>
+        /// <returns>Объект отписки</returns>
         [NotNull]
         public static IDisposable Subscribe<T>([NotNull] this IObservable<T> Source, [NotNull] Action<T> Action) =>
-            new LamdaObserver<T>(Source, Action);
+            new LambdaObserver<T>(Source, Action);
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -263,7 +269,7 @@ namespace System.Linq.Reactive
             [NotNull] this IObservable<T> Observable,
             [NotNull] Action<T> Action,
             [NotNull] Func<T, bool> Where) =>
-            Observable.InitializeObject(Where, Action, (o, w, a) => new LamdaObserver<T>(o, t => { if (w(t)) a(t); }));
+            Observable.InitializeObject(Where, Action, (o, w, a) => new LambdaObserver<T>(o, t => { if (w(t)) a(t); }));
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -275,7 +281,7 @@ namespace System.Linq.Reactive
         {
             var i = 0;
             // ReSharper disable once HeapView.CanAvoidClosure
-            return Observable.InitializeObject(o => new LamdaObserver<T>(o, t => Action(t, i++)));
+            return Observable.InitializeObject(o => new LambdaObserver<T>(o, t => Action(t, i++)));
         }
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
@@ -289,7 +295,7 @@ namespace System.Linq.Reactive
         {
             var i = 0;
             // ReSharper disable once HeapView.CanAvoidClosure
-            return Observable.InitializeObject(o => new LamdaObserver<T>(o, t => { if (Where(t, i)) Action(t, i++); }));
+            return Observable.InitializeObject(o => new LambdaObserver<T>(o, t => { if (Where(t, i)) Action(t, i++); }));
         }
 
         /// <summary>Метод обработки события <see cref="Exception"/></summary>
@@ -299,7 +305,7 @@ namespace System.Linq.Reactive
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
         public static IObservable<T> OnError<T>(this IObservable<T> Observable, Action<Exception> OnError) =>
-            Observable.InitializeObject(OnError, (o, e) => new LamdaObserver<T>(o, OnError: e));
+            Observable.InitializeObject(OnError, (o, e) => new LambdaObserver<T>(o, OnError: e));
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Completed"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -308,7 +314,7 @@ namespace System.Linq.Reactive
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
         public static IObservable<T> OnCompleted<T>(this IObservable<T> Observable, Action OnCompleted) =>
-            Observable.InitializeObject(OnCompleted, (o, c) => new LamdaObserver<T>(o, OnCompleted: c));
+            Observable.InitializeObject(OnCompleted, (o, c) => new LambdaObserver<T>(o, OnCompleted: c));
 
         /// <summary>Метод обработки события <see cref="IObserverEx{T}.Reset"/></summary>
         /// <typeparam name="T">Тип объектов наблюдения</typeparam>
@@ -317,7 +323,7 @@ namespace System.Linq.Reactive
         /// <returns>Исходный объект-наблюдатель</returns>
         [CanBeNull]
         public static IObservable<T> OnReset<T>(this IObservable<T> Observable, Action OnReset) =>
-            Observable.InitializeObject(OnReset, (o, r) => new LamdaObserver<T>(o, OnReset: r));
+            Observable.InitializeObject(OnReset, (o, r) => new LambdaObserver<T>(o, OnReset: r));
 
         /// <summary>Создать метод генерации наблюдаемого объекта из шаблона асинхронной операции</summary>
         /// <typeparam name="T">Тип результата</typeparam>
@@ -428,67 +434,10 @@ namespace System.Linq.Reactive
 
         [NotNull]
         public static IObservableEx<T[]> Buffer<T>(
-            [NotNull] this IObservable<T> Observable, 
+            [NotNull] this IObservable<T> Observable,
             int BufferLength,
-            int BufferPeriod = 0, 
-            int BufferPhase = 0) 
+            int BufferPeriod = 0,
+            int BufferPhase = 0)
             => new CountedBufferedObservable<T>(Observable, BufferLength, BufferPeriod, BufferPhase);
-    }
-
-    internal abstract class BufferedObservable<T> : SimpleObservableEx<T[]>
-    {
-        private readonly int _BufferLength;
-        // ReSharper disable once NotAccessedField.Local
-        private readonly IObserver<T> _Observer;
-        private readonly Queue<Queue<T>> _Buffer;
-        protected readonly object _SyncRoot = new object();
-
-        protected BufferedObservable([NotNull] IObservable<T> ObservableObject, int QueueLength, int BufferLength = 0)
-        {
-            _BufferLength = BufferLength;
-            _Observer = new LamdaObserver<T>(ObservableObject, OnNext, OnCompleted, OnReset, OnError);
-            _Buffer = new Queue<Queue<T>>(QueueLength);
-        }
-
-        protected abstract void OnNext(T value);
-
-        [CanBeNull]
-        protected T[] AddValue(T Value)
-        {
-            lock (_SyncRoot)
-            {
-                foreach (var b in _Buffer) b.Enqueue(Value);
-                var f = _Buffer.Peek();
-                if (f.Count < _BufferLength) return null;
-                _Buffer.Dequeue();
-                return f.ToArray();
-            }
-        }
-
-        protected void AddBuffer() { lock (_SyncRoot) _Buffer.Enqueue(new Queue<T>(_BufferLength)); }
-    }
-
-    internal class CountedBufferedObservable<T> : BufferedObservable<T>
-    {
-        private volatile int _Phase;
-        private readonly int _BufferPeriod;
-        private readonly int _BufferPhase;
-
-        public CountedBufferedObservable([NotNull] IObservable<T> ObservableObject, int BufferLength,
-            int BufferPeriod = 0, int BufferPhase = 0) : base(ObservableObject, BufferPeriod / BufferLength + 1, BufferLength)
-        {
-            _BufferPeriod = BufferPeriod;
-            _BufferPhase = BufferPhase;
-        }
-        protected override void OnNext(T value)
-        {
-            T[] r;
-            lock (_SyncRoot)
-            {
-                if (_Phase++ % _BufferPeriod == _BufferPhase) AddBuffer();
-                r = AddValue(value);
-            }
-            if (r != null) OnNext(r);
-        }
     }
 }

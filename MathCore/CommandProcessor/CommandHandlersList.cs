@@ -4,57 +4,79 @@ using MathCore.Annotations;
 
 namespace MathCore.CommandProcessor
 {
-    using CommandHandler = Action<Command, int, Command[]>;
+    using CommandHandler = Action<Command, int, IReadOnlyList<Command>>;
 
     /// <summary>Список обработчиков команды</summary>
     public class CommandHandlersList : List<CommandHandler>
     {
         [NotNull] private readonly Dictionary<int, CommandHandler> _Handlers = new Dictionary<int, CommandHandler>();
 
-        /// <summary>Оператор добалвения команды к списку</summary>
+        /// <summary>Оператор добавления команды к списку</summary>
         /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Добавляемый обработчик команды</param>
+        /// <param name="Handler">Добавляемый обработчик команды</param>
         /// <returns>Список с добавленным обработчиком команды</returns>
-        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] CommandHandler handler)
+        [NotNull]
+        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] CommandHandler Handler)
         {
-            list.Add(handler);
-            return list;
-        }
-
-        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<Command> handler)
-        {
-            void Handler(Command c, int i, Command[] cc) => handler(c);
-            list._Handlers.Add(handler.GetHashCode(), Handler);
             list.Add(Handler);
             return list;
         }
 
-        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<Command, int> handler)
+        /// <summary>Оператор добавления обработчика команды в список обработчиков</summary>
+        /// <param name="list">Список действий обработчиков команды</param>
+        /// <param name="Handler">Добавляемый в список обработчик</param>
+        /// <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
+        [NotNull]
+        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<Command> Handler)
         {
-            void Handler(Command c, int i, Command[] cc) => handler(c, i);
-            list._Handlers.Add(handler.GetHashCode(), Handler);
-            list.Add(Handler);
+            void CommandHandler(Command c, int i, IReadOnlyList<Command> cc) => Handler(c);
+            list._Handlers.Add(Handler.GetHashCode(), CommandHandler);
+            list.Add(CommandHandler);
             return list;
         }
 
-        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action handler)
+        /// <summary>Оператор добавления позиционного обработчика команды в список обработчиков</summary>
+        /// <param name="list">Список действий обработчиков команды</param>
+        /// <param name="Handler">Добавляемый в список обработчик, поддерживающий параметр индекса</param>
+        /// <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
+        [NotNull]
+        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<Command, int> Handler)
         {
-            void Handler(Command c, int i, Command[] cc) => handler();
-            list._Handlers.Add(handler.GetHashCode(), Handler);
-            list.Add(Handler);
+            void CommandHandler(Command c, int i, IReadOnlyList<Command> cc) => Handler(c, i);
+            list._Handlers.Add(Handler.GetHashCode(), CommandHandler);
+            list.Add(CommandHandler);
             return list;
         }
 
-        /// <summary>Оператор удаления команды к списку</summary>
+        /// <summary>Оператор добавления безпараметрического обработчика команды в список обработчиков</summary>
+        /// <param name="list">Список действий обработчиков команды</param>
+        /// <param name="Handler">Добавляемый в список обработчик без параметров</param>
+        /// <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
+        [NotNull]
+        public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action Handler)
+        {
+            void CommandHandler(Command c, int i, IReadOnlyList<Command> cc) => Handler();
+            list._Handlers.Add(Handler.GetHashCode(), CommandHandler);
+            list.Add(CommandHandler);
+            return list;
+        }
+
+        /// <summary>Оператор удаления команды из списка обработчиков</summary>
         /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Удаляемый обработчик команды</param>
+        /// <param name="Handler">Удаляемый обработчик команды</param>
         /// <returns>Список с удалённым обработчиком команды</returns>
-        public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] CommandHandler handler)
+        [NotNull]
+        public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] CommandHandler Handler)
         {
-            list.Remove(handler);
+            list.Remove(Handler);
             return list;
         }
 
+        /// <summary>Оператор удаления обработчика команды из списка обработчиков</summary>
+        /// <param name="list">Список обработчиков команды</param>
+        /// <param name="Handler">Удаляемый обработчик команды</param>
+        /// <returns>Список с удалённым обработчиком команды</returns>
+        [NotNull]
         public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action<Command> Handler)
         {
             if(list._Handlers.TryGetValue(Handler.GetHashCode(), out var handler))
@@ -62,6 +84,11 @@ namespace MathCore.CommandProcessor
             return list;
         }
 
+        /// <summary>Оператор удаления обработчика команды с индексатором из списка обработчиков</summary>
+        /// <param name="list">Список обработчиков команды</param>
+        /// <param name="Handler">Удаляемый обработчик команды с индексатором</param>
+        /// <returns>Список с удалённым обработчиком команды</returns>
+        [NotNull]
         public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action<Command, int> Handler)
         {
             if(list._Handlers.TryGetValue(Handler.GetHashCode(), out var handler))
@@ -69,6 +96,11 @@ namespace MathCore.CommandProcessor
             return list;
         }
 
+        /// <summary>Оператор удаления обработчика команды из списка обработчиков</summary>
+        /// <param name="list">Список обработчиков команды</param>
+        /// <param name="Handler">Удаляемый обработчик команды</param>
+        /// <returns>Список с удалённым обработчиком команды</returns>
+        [NotNull]
         public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action Handler)
         {
             if(list._Handlers.TryGetValue(Handler.GetHashCode(), out var handler))
@@ -76,62 +108,35 @@ namespace MathCore.CommandProcessor
             return list;
         }
 
+        /// <summary>Словарь обработчиков команд (ключ - имя команды, значение - список обработчиков)</summary>
         [NotNull] private readonly Dictionary<string, CommandArgHandlersList> _CommandHandlers = new Dictionary<string, CommandArgHandlersList>();
 
-        public CommandArgHandlersList this[string ArgumentName]
+        /// <summary>Обращение к списку обработчиков команды по её имени (индексатор)</summary>
+        /// <param name="CommandName">Имя команды</param>
+        public CommandArgHandlersList this[[NotNull] string CommandName]
         {
             get
             {
-                if(!_CommandHandlers.TryGetValue(ArgumentName, out var result))
-                    _CommandHandlers.Add(ArgumentName, result = new CommandArgHandlersList());
+                if(!_CommandHandlers.TryGetValue(CommandName, out var result))
+                    _CommandHandlers.Add(CommandName, result = new CommandArgHandlersList());
                 return result;
             }
             set
             {
-                var list = this[ArgumentName];
+                var list = this[CommandName];
                 if(ReferenceEquals(list, value)) return;
                 list.AddRange(value);
-                //if(IsRegistredCommand(ArgumentName))
-                //{
-                //    if(value != null)
-                //        _CommandHandlers[ArgumentName] = value;
-                //    else
-                //        ClaerCommandHandlers(ArgumentName);
-                //}
-                //else if(value != null)
-                //    _CommandHandlers.Add(ArgumentName, value);
             }
         }
 
-        //private bool ClaerCommandHandlers(string ArgumentName) => _CommandHandlers.Remove(ArgumentName);
+        //private bool ClearCommandHandlers(string ArgumentName) => _CommandHandlers.Remove(ArgumentName);
 
-        public bool IsRegistredCommand(string ArgumentName) => Count != 0 || _CommandHandlers.ContainsKey(ArgumentName);
+        /// <summary>Зарегистрирована ли команда в процессоре?</summary>
+        /// <param name="CommandName">Имя команды</param>
+        /// <returns>Истина, если в процессоре существует обработчик команды с указанным именем</returns>
+        public bool IsRegisteredCommand(string CommandName) => Count != 0 || _CommandHandlers.ContainsKey(CommandName);
 
-        public override string ToString() => $"Handlers list count = {Count}";
-    }
-
-    public class CommandArgHandlersList : List<Action<Command, int, Command[], Argument>>
-    {
-        /// <summary>Оператор добалвения команды к списку</summary>
-        /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Добавляемый обработчик команды</param>
-        /// <returns>Список с добавленным обработчиком команды</returns>
-        public static CommandArgHandlersList operator +([NotNull] CommandArgHandlersList list, [NotNull] Action<Command, int, Command[], Argument> handler)
-        {
-            list.Add(handler);
-            return list;
-        }
-
-        /// <summary>Оператор удаления команды к списку</summary>
-        /// <param name="list">Список обработчиков команды</param>
-        /// <param name="handler">Удаляемый обработчик команды</param>
-        /// <returns>Список с удалённым обработчиком команды</returns>
-        public static CommandArgHandlersList operator -([NotNull] CommandArgHandlersList list, [NotNull] Action<Command, int, Command[], Argument> handler)
-        {
-            list.Remove(handler);
-            return list;
-        }
-
-        public override string ToString() => $"Args handlers list count = {Count}";
+        /// <inheritdoc />
+        [NotNull] public override string ToString() => $"Handlers list count = {Count}";
     }
 }
