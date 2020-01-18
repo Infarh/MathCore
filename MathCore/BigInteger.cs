@@ -630,11 +630,8 @@ namespace MathCore
             return result;
         }
 
-
-        //***********************************************************************
-        // Overloading of multiplication operator
-        //***********************************************************************
-
+        /// <summary>Overloading of multiplication operator</summary>
+        /// <exception cref="ArithmeticException">Multiplication overflow</exception>
         [NotNull]
         public static BigInteger operator *(BigInteger x, BigInteger y)
         {
@@ -670,22 +667,22 @@ namespace MathCore
                 {
                     if (x._Data[i] == 0) continue;
 
-                    ulong mcarry = 0;
+                    ulong mc_array = 0;
                     for (int j = 0, k = i; j < y._DataLength; j++, k++)
                     {
                         // k = i + j
-                        var val = x._Data[i] * (ulong)y._Data[j] + result._Data[k] + mcarry;
+                        var val = x._Data[i] * (ulong)y._Data[j] + result._Data[k] + mc_array;
 
                         result._Data[k] = (uint)(val & 0xFFFFFFFF);
-                        mcarry = val >> 32;
+                        mc_array = val >> 32;
                     }
 
-                    if (mcarry != 0) result._Data[i + y._DataLength] = (uint)mcarry;
+                    if (mc_array != 0) result._Data[i + y._DataLength] = (uint)mc_array;
                 }
             }
             catch (Exception)
             {
-                throw new ArithmeticException("Multipycation overflow.");
+                throw new ArithmeticException("Multiplication overflow.");
             }
 
 
@@ -1444,18 +1441,11 @@ namespace MathCore
             return this_negative && (exp._Data[0] & 0x1) != 0 ? -result_num : result_num;
         }
 
-
-
-        //***********************************************************************
-        // Fast calculation of modular reduction using Barrett's reduction.
-        // Requires x < b^(2k), where b is the base.  In this case, base is
-        // 2^32 (uint).
-        //
-        // Reference [4]
-        //***********************************************************************
-
+        /// <summary>Fast calculation of modular reduction using Barrett's reduction</summary>
+        /// <returns></returns>
+        /// <remarks>Requires x &lt; b^(2k), where b is the base.  In this case, base is 2^32 (uint). Reference [4]</remarks>
         [NotNull]
-        private BigInteger BarrettReduction([NotNull] BigInteger x, [NotNull] BigInteger n, BigInteger constant)
+        private static BigInteger BarrettReduction([NotNull] BigInteger x, [NotNull] BigInteger n, BigInteger constant)
         {
             var k = n._DataLength;
             var k_plus_one = k + 1;
@@ -1499,19 +1489,19 @@ namespace MathCore
             {
                 if (q3._Data[i] == 0) continue;
 
-                ulong mcarry = 0;
+                ulong mc_array = 0;
                 var t = i;
                 for (var j = 0; j < n._DataLength && t < k_plus_one; j++, t++)
                 {
                     // t = i + j
-                    var val = q3._Data[i] * (ulong)n._Data[j] + r2._Data[t] + mcarry;
+                    var val = q3._Data[i] * (ulong)n._Data[j] + r2._Data[t] + mc_array;
 
                     r2._Data[t] = (uint)(val & 0xFFFFFFFF);
-                    mcarry = val >> 32;
+                    mc_array = val >> 32;
                 }
 
                 if (t < k_plus_one)
-                    r2._Data[t] = (uint)mcarry;
+                    r2._Data[t] = (uint)mc_array;
             }
             r2._DataLength = k_plus_one;
             while (r2._DataLength > 1 && r2._Data[r2._DataLength - 1] == 0)
@@ -1556,40 +1546,37 @@ namespace MathCore
             return g;
         }
 
-
-        //***********************************************************************
-        // Populates "this" with the specified amount of random bits
-        //***********************************************************************
-
+        /// <summary>Populates "this" with the specified amount of random bits</summary>
+        /// <exception cref="ArithmeticException">Number of required bits &gt; maxLength</exception>
         public void GenRandomBits(int bits, Random rand)
         {
-            var dwords = bits >> 5;
+            var d_words = bits >> 5;
             var rem_bits = bits & 0x1F;
 
             if (rem_bits != 0)
-                dwords++;
+                d_words++;
 
-            if (dwords > __MaxLength)
-                throw new ArithmeticException("Number of required bits > maxLength.");
+            if (d_words > __MaxLength)
+                throw new ArithmeticException("Number of required bits > maxLength");
 
-            for (var i = 0; i < dwords; i++)
+            for (var i = 0; i < d_words; i++)
                 _Data[i] = (uint)(rand.NextDouble() * 0x100000000);
 
-            for (var i = dwords; i < __MaxLength; i++)
+            for (var i = d_words; i < __MaxLength; i++)
                 _Data[i] = 0;
 
             if (rem_bits != 0)
             {
                 var mask = (uint)(0x01 << (rem_bits - 1));
-                _Data[dwords - 1] |= mask;
+                _Data[d_words - 1] |= mask;
 
                 mask = 0xFFFFFFFF >> (32 - rem_bits);
-                _Data[dwords - 1] &= mask;
+                _Data[d_words - 1] &= mask;
             }
             else
-                _Data[dwords - 1] |= 0x80000000;
+                _Data[d_words - 1] |= 0x80000000;
 
-            _DataLength = dwords;
+            _DataLength = d_words;
 
             if (_DataLength == 0)
                 _DataLength = 1;
@@ -2024,14 +2011,14 @@ namespace MathCore
                 if (!is_prime)
                 {
                     // doubling of index
-                    lucas[1] = thisVal.BarrettReduction(lucas[1] * lucas[1], thisVal, constant);
+                    lucas[1] = BarrettReduction(lucas[1] * lucas[1], thisVal, constant);
                     lucas[1] = (lucas[1] - (lucas[2] << 1)) % thisVal;
 
                     if (lucas[1]._DataLength == 1 && lucas[1]._Data[0] == 0)
                         is_prime = true;
                 }
 
-                lucas[2] = thisVal.BarrettReduction(lucas[2] * lucas[2], thisVal, constant);     //Q^k
+                lucas[2] = BarrettReduction(lucas[2] * lucas[2], thisVal, constant);     //Q^k
             }
 
 
@@ -2600,13 +2587,13 @@ namespace MathCore
                         u1 = u1 * v1 % n;
 
                         v = (v * v1 - P * q_k) % n;
-                        v1 = n.BarrettReduction(v1 * v1, n, constant);
+                        v1 = BarrettReduction(v1 * v1, n, constant);
                         v1 = (v1 - ((q_k * Q) << 1)) % n;
 
                         if (flag)
                             flag = false;
                         else
-                            q_k = n.BarrettReduction(q_k * q_k, n, constant);
+                            q_k = BarrettReduction(q_k * q_k, n, constant);
 
                         q_k = q_k * Q % n;
                     }
@@ -2616,7 +2603,7 @@ namespace MathCore
                         u1 = (u1 * v - q_k) % n;
 
                         v1 = (v * v1 - P * q_k) % n;
-                        v = n.BarrettReduction(v * v, n, constant);
+                        v = BarrettReduction(v * v, n, constant);
                         v = (v - (q_k << 1)) % n;
 
                         if (flag)
@@ -2625,7 +2612,7 @@ namespace MathCore
                             flag = false;
                         }
                         else
-                            q_k = n.BarrettReduction(q_k * q_k, n, constant);
+                            q_k = BarrettReduction(q_k * q_k, n, constant);
                     }
 
                     mask >>= 1;
@@ -2639,7 +2626,7 @@ namespace MathCore
             u1 = (u1 * v - q_k) % n;
             v = (v * v1 - P * q_k) % n;
             if (!flag)
-                q_k = n.BarrettReduction(q_k * q_k, n, constant);
+                q_k = BarrettReduction(q_k * q_k, n, constant);
             //        else
             //            flag = false;
 
@@ -2652,7 +2639,7 @@ namespace MathCore
                 u1 = u1 * v % n;
                 v = (v * v - (q_k << 1)) % n;
 
-                q_k = n.BarrettReduction(q_k * q_k, n, constant);
+                q_k = BarrettReduction(q_k * q_k, n, constant);
             }
 
             result[0] = u1;

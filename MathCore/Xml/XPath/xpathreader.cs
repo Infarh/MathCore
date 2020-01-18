@@ -10,12 +10,13 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Collections;
 using System.IO;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     public class XPathReader : XmlReader
@@ -68,7 +69,7 @@ namespace System.Xml.XPath
         /// <devdoc>
         ///     <para>
         ///         Gets a value indicating whether
-        ///         <see cref='System.Xml.XPath.XPathReader.Value' /> has a value to return.
+        ///         <see cref='XPathReader.Value' /> has a value to return.
         ///     </para>
         /// </devdoc>
         public override bool HasValue => BaseReader.HasValue;
@@ -145,7 +146,7 @@ namespace System.Xml.XPath
         /// <devdoc>
         ///     <para>
         ///         Gets the value of the attribute with the specified
-        ///         <see cref='System.Xml.XPath.XPathReader.Name' /> .
+        ///         <see cref='XPathReader.Name' /> .
         ///     </para>
         /// </devdoc>
         /// <exception cref="InvalidOperationException">
@@ -158,8 +159,8 @@ namespace System.Xml.XPath
         /// <devdoc>
         ///     <para>
         ///         Gets the value of the attribute with the
-        ///         specified <see cref='System.Xml.XPath.XPathReader.LocalName' /> and
-        ///         <see cref='System.Xml.XPath.XPathReader.NamespaceURI' /> .
+        ///         specified <see cref='XPathReader.LocalName' /> and
+        ///         <see cref='XPathReader.NamespaceURI' /> .
         ///     </para>
         /// </devdoc>
         public override string this[string name, string NamespaceUri] => BaseReader[name, NamespaceUri];
@@ -385,7 +386,7 @@ namespace System.Xml.XPath
 
         /// <devdoc>
         ///     <para>
-        ///         Moves to the attribute with the specified <see cref='System.Xml.XPath.XPathReader.LocalName' />
+        ///         Moves to the attribute with the specified <see cref='XPathReader.LocalName' />
         ///         and <see cref='NamespaceURI' /> .
         ///     </para>
         /// </devdoc>

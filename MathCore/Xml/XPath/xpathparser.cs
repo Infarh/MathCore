@@ -10,13 +10,14 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Collections;
 using System.Diagnostics;
 using MathCore.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     // Howard

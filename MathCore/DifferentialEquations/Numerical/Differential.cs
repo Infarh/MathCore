@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using MathCore.Annotations;
 
-namespace MathCore.DifferencialEquations.Numerical
+namespace MathCore.DifferentialEquations.Numerical
 {
     public static partial class Solver
     {

@@ -10,9 +10,10 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     internal class BaseAxisQuery : Query
@@ -51,7 +52,7 @@ namespace System.Xml.XPath
 
         internal override XPathResultType ReturnType() => XPathResultType.NodeSet;
 
-        internal bool MatchType(XPathNodeType XType, XmlNodeType type)
+        internal static bool MatchType(XPathNodeType XType, XmlNodeType type)
         {
             var ret = false;
 

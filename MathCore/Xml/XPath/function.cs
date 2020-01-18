@@ -10,11 +10,12 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Collections;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     internal class Function : AstNode

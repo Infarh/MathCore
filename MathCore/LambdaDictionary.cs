@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore
 {
@@ -32,22 +33,18 @@ namespace MathCore
         public ICollection<TValue> Values => new Collection<TValue>(_ElementsGetter().Select(v => v.Value).ToList());
 
         /// <inheritdoc />
+        [CanBeNull]
         public TValue this[TKey key]
         {
             get => _ElementsGetter().Where(v => Equals(v.Key, key)).Select(v => v.Value).FirstOrDefault();
             set => Add(key, value);
         }
 
-        public LambdaDictionary
-        (
-            [NotNull]
-            Func<IEnumerable<KeyValuePair<TKey, TValue>>> ElementsGetter,
-            [CanBeNull]
-            Action<TKey, TValue> ElementSetter = null,
-            [CanBeNull]
-            Action Clear = null,
-            [CanBeNull]
-            Func<TKey, bool> Remove = null
+        public LambdaDictionary(
+            [NotNull] Func<IEnumerable<KeyValuePair<TKey, TValue>>> ElementsGetter,
+            [CanBeNull] Action<TKey, TValue> ElementSetter = null,
+            [CanBeNull] Action Clear = null,
+            [CanBeNull] Func<TKey, bool> Remove = null
         )
         {
             _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "Не задан метод получения значения");
@@ -57,7 +54,9 @@ namespace MathCore
         } 
 
         // ReSharper disable once UnusedParameter.Local
-        private void CheckSupported(Delegate action, string message)
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+        // ReSharper disable once AnnotateNotNullParameter
+        private static void CheckSupported(Delegate action, string message)
         {
             if(action is null)
                 throw new NotSupportedException(message);
@@ -67,38 +66,26 @@ namespace MathCore
         public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
         /// <inheritdoc />
-        public void Add(TKey key, TValue value)
-        {
-            CheckSupported(_ElementsGetter, "Словарь не поддерживает операции записи");
-            _ElementSetter(key, value);
-        }
+        public void Add(TKey key, TValue value) => _ElementSetter.NotNull("Словарь не поддерживает операции записи").Invoke(key, value);
 
         /// <inheritdoc />
-        public void Clear()
-        {
-            CheckSupported(_Clear, "Словарь не поддерживает операцию очистки");
-            _Clear();
-        }
+        public void Clear() => _Clear.NotNull("Словарь не поддерживает операцию очистки")();
 
         /// <inheritdoc />
         public bool Contains(KeyValuePair<TKey, TValue> item) => _ElementsGetter().Contains(item);
 
         /// <inheritdoc />
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int ArrayIndex)
         {
             foreach (var item in _ElementsGetter())
-                array[arrayIndex++] = item;
+                array[ArrayIndex++] = item;
         }
 
         /// <inheritdoc />
         public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
 
         /// <inheritdoc />
-        public bool Remove(TKey key)
-        {
-            CheckSupported(_Remove, "Словарь не поддерживает операцию удаления");
-            return _Remove(key);
-        }
+        public bool Remove(TKey key) => _Remove.NotNull("Словарь не поддерживает операцию удаления")(key);
 
         /// <inheritdoc />
         public bool ContainsKey(TKey key) => _ElementsGetter().Contains(v => Equals(v.Key, key));

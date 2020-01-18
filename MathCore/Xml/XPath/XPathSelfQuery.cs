@@ -1,4 +1,5 @@
-﻿namespace System.Xml.XPath
+﻿// ReSharper disable once CheckNamespace
+namespace System.Xml.XPath
 {
     internal class XPathSelfQuery : BaseAxisQuery
     {

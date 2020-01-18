@@ -1,4 +1,5 @@
-﻿namespace System.Collections.Generic
+﻿// ReSharper disable once CheckNamespace
+namespace System.Collections.Generic
 {
     public class DictionaryReadOnly<TKey, TValue> : IDictionary<TKey, TValue>
     {

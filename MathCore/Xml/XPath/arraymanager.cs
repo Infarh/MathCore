@@ -15,6 +15,7 @@
 
 using System.Collections;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     internal class ArrayManager

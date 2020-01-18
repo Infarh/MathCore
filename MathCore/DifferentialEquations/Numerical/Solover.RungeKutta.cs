@@ -1,6 +1,6 @@
 ﻿using DU = System.Func<double, double, double>;
 
-namespace MathCore.DifferencialEquations.Numerical
+namespace MathCore.DifferentialEquations.Numerical
 {
     public static partial class Solver
     {

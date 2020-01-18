@@ -61,7 +61,7 @@ namespace MathCore
 
             private static Complex sn_uk(Complex u, double[] kk)
             {
-                var w = Complex.Trigonomerty.Sin(u * Math.PI / 2);
+                var w = Complex.Trigonometry.Sin(u * Math.PI / 2);
                 for (var i = kk.Length - 1; i >= 0; i--) w = (1 + kk[i]) / (1 / w + kk[i] * w);
                 return w;
             }
@@ -75,7 +75,7 @@ namespace MathCore
 
             private static Complex cd_uk(in Complex u, double[] kk)
             {
-                var w = Complex.Trigonomerty.Cos(u * Math.PI / 2);
+                var w = Complex.Trigonometry.Cos(u * Math.PI / 2);
                 for (var i = kk.Length - 1; i >= 0; i--) w = (1 + kk[i]) / (1 / w + kk[i] * w);
                 return w;
             }
@@ -130,7 +130,7 @@ namespace MathCore
 
                 var ki = GetKi(k);
 
-                if (!(k - ki > 0)) return Complex.Trigonomerty.Sin(u * Math.PI / 2);
+                if (!(k - ki > 0)) return Complex.Trigonometry.Sin(u * Math.PI / 2);
                 var w = sn_uk_recursive(u, ki);
                 return (1 + ki) / (1 / w + ki * w);
 
@@ -156,7 +156,7 @@ namespace MathCore
 
                 var ki = GetKi(k);
 
-                if (!(k - ki > 0)) return Complex.Trigonomerty.Cos(u * Math.PI / 2);
+                if (!(k - ki > 0)) return Complex.Trigonometry.Cos(u * Math.PI / 2);
                 var w = cd_uk_recursive(u, ki);
                 return (1 + ki) / (1 / w + ki * w);
 
@@ -181,7 +181,7 @@ namespace MathCore
                 for (var i = 1; i < kk.Length; i++)
                     u *= 2 / (1 + kk[i]) / (1 + Complex.Sqrt(1 - (kk[i - 1] * u).Pow2()));
 
-                return 2 * Complex.Trigonomerty.Asin(u) / Math.PI;
+                return 2 * Complex.Trigonometry.Asin(u) / Math.PI;
             }
 
             public static double sn_inverse_recursive(double sn, double k)

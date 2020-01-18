@@ -1,5 +1,6 @@
 ﻿using System.IO;
 
+// ReSharper disable once CheckNamespace
 namespace System
 {
     public class StreamWrapper : Stream

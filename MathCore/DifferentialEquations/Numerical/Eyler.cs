@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace MathCore.DifferencialEquations.Numerical
+namespace MathCore.DifferentialEquations.Numerical
 {
     /// <summary>
     /// Метод Рунге-Кутты
     /// </summary>
-    public class RungeKutta
+    public class Eyler
     {
 
-        private readonly DifferencialEquationsSystem _System;
+        private readonly DifferentialEquationsSystem _System;
         private readonly ArgumentFunction _X;
 
         private readonly int _N;
@@ -44,7 +44,7 @@ namespace MathCore.DifferencialEquations.Numerical
         /// <param name="N">Размерность</param>
         /// <param name="System">Решаемая система</param>
         /// <param name="X">Производящая функция аргумента</param>
-        protected RungeKutta(int N, DifferencialEquationsSystem System, ArgumentFunction X)
+        protected Eyler(int N, DifferentialEquationsSystem System, ArgumentFunction X)
         {
             _X = X;
             _System = System;
@@ -90,8 +90,6 @@ namespace MathCore.DifferencialEquations.Numerical
 
             var dt2 = dt / 2;
 
-            int i;
-
             var X = _X(t);
             var X2 = _X(t + dt / 2);
             var X3 = _X(t + dt);
@@ -101,35 +99,10 @@ namespace MathCore.DifferencialEquations.Numerical
 
             var lv_Y = (double[])_Y.Clone();
 
-            // рассчитать Y1
-            //F(_t, Y, ref _Y1);
-            var Y1 = _System(X, lv_Y);
+            var dY = _System(X, lv_Y);
 
-            for(i = 0; i < N; i++)
-                _Yy[i] = lv_Y[i] + Y1[i] * dt2;
-
-            // рассчитать Y2
-            //F(_t + dt / 2, _Yy, ref _Y2);
-            var Y2 = _System(X2, _Yy);
-
-            for(i = 0; i < N; i++)
-                _Yy[i] = lv_Y[i] + Y2[i] * dt2;
-
-            // рассчитать Y3
-            //F(_t + dt / 2, _Yy, ref _Y3);
-            var Y3 = _System(X2, _Yy);
-
-
-            for(i = 0; i < N; i++)
-                _Yy[i] = lv_Y[i] + Y3[i] * dt;
-
-            // рассчитать Y4
-            //F(_t + dt, _Yy, ref _Y4);
-            var Y4 = _System(X3, _Yy);
-
-            // рассчитать решение на новом шаге
-            for(i = 0; i < N; i++)
-                lv_Y[i] += dt / 6 * (Y1[i] + 2 * Y2[i] + 2 * Y3[i] + Y4[i]);
+            for(var i = 0; i < lv_Y.Length; i++)
+                lv_Y[i] += dt * dY[i];
 
             // увеличить шаг
             _t += dt;

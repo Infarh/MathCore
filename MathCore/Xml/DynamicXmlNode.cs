@@ -1,5 +1,8 @@
 ﻿using System.Dynamic;
 using System.Reflection;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedType.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq
@@ -7,10 +10,14 @@ namespace System.Xml.Linq
     public class DynamicXmlNode : DynamicObject
     {
         private readonly XElement _Node;
+
         public DynamicXmlNode() { }
+
         public DynamicXmlNode(XElement node) => _Node = node;
-        public DynamicXmlNode(string name) => _Node = new XElement(name);
-        public override bool TrySetMember(SetMemberBinder binder, object value)
+
+        public DynamicXmlNode([NotNull] string name) => _Node = new XElement(name);
+
+        public override bool TrySetMember(SetMemberBinder binder, [NotNull] object value)
         {
             var node = _Node.Element(binder.Name);
             if(node != null)
@@ -22,19 +29,19 @@ namespace System.Xml.Linq
             return true;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        public override bool TryGetMember(GetMemberBinder binder, [CanBeNull] out object result)
         {
-            var lv_GetNode = _Node.Element(binder.Name);
-            if(lv_GetNode != null)
+            var get_node = _Node.Element(binder.Name);
+            if(get_node != null)
             {
-                result = new DynamicXmlNode(lv_GetNode);
+                result = new DynamicXmlNode(get_node);
                 return true;
             }
             result = null;
             return false;
         }
 
-        public override bool TryConvert(ConvertBinder binder, out object result)
+        public override bool TryConvert([NotNull] ConvertBinder binder, [CanBeNull] out object result)
         {
             if(binder.Type == typeof(string))
             {
@@ -47,11 +54,11 @@ namespace System.Xml.Linq
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            var xtype = typeof(XElement);
+            var x_type = typeof(XElement);
             try
             {
                 const BindingFlags flags = BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance;
-                result = xtype.InvokeMember(binder.Name, flags, null, _Node, args);
+                result = x_type.InvokeMember(binder.Name, flags, null, _Node, args);
                 return true;
             } catch
             {

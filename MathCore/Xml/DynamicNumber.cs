@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
+using MathCore.Annotations;
 
+// ReSharper disable UnusedType.Global
+
+// ReSharper disable once CheckNamespace
 namespace System.Xml.Linq
 {
     [NotImplemented]
@@ -10,7 +14,7 @@ namespace System.Xml.Linq
         private readonly Dictionary<string, object> _Dictionary = new Dictionary<string, object>();
 
         // Get the property value.
-        public override bool TryGetMember(GetMemberBinder binder, out object result) =>
+        public override bool TryGetMember(GetMemberBinder binder, [CanBeNull] out object result) =>
             _Dictionary.TryGetValue(binder.Name, out result);
 
         // Set the property value.
@@ -25,7 +29,7 @@ namespace System.Xml.Linq
         //{
         //    // The Textual property contains 
         //    // the name of the unary operation in addition 
-        //    // to the textual representaion of the number.
+        //    // to the textual representation of the number.
         //    string resultTextual = $"{binder.Operation} {dictionary["Textual"]}";
         //    int resultNumeric;
 
@@ -55,7 +59,7 @@ namespace System.Xml.Linq
 
         //public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
         //{
-        //    // The Textual property contains the textual representaion 
+        //    // The Textual property contains the textual representation 
         //    // of two numbers, in addition to the name 
         //    // of the binary operation.
         //    string resultTextual = $"{dictionary["Textual"]} {binder.Operation} {((DynamicNumber)arg).dictionary["Textual"]}";
@@ -65,7 +69,7 @@ namespace System.Xml.Linq
         //    // Checking what type of operation is being performed.
         //    switch(binder.Operation)
         //    {
-        //        // Proccessing mathematical addition (a + b).
+        //        // Processing mathematical addition (a + b).
         //        case ExpressionType.Add:
         //            resultNumeric = (int)dictionary["Numeric"] + (int)((DynamicNumber)arg).dictionary["Numeric"];
         //            break;

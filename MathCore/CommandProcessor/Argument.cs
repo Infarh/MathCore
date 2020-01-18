@@ -55,7 +55,6 @@ namespace MathCore.CommandProcessor
         /// <param name="value">Приведённое к типу <typeparamref name="T"/> значение аргумента</param>
         /// <typeparam name="T">Требуемый тип значения аргумента</typeparam>
         /// <returns>Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></returns>
-        [CanBeNull]
         public bool TryGetValueAs<T>(out T value)
         {
             try
@@ -75,7 +74,6 @@ namespace MathCore.CommandProcessor
         /// <param name="Error">Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></param>
         /// <typeparam name="T">Требуемый тип значения аргумента</typeparam>
         /// <returns>Истина, если преобразование выполнено успешно</returns>
-        [CanBeNull]
         public bool TryGetValueAs<T>(out T value, [CanBeNull] out Exception Error)
         {
             try
