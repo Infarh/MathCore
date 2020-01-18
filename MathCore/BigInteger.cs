@@ -1909,6 +1909,7 @@ namespace MathCore
         }
 
 
+        // ReSharper disable CommentTypo
         //***********************************************************************
         // Implementation of the Lucas Strong Pseudo Prime test.
         //
@@ -1922,19 +1923,15 @@ namespace MathCore
         // Returns True if number is a strong Lucus pseudo prime.
         // Otherwise, returns False indicating that number is composite.
         //***********************************************************************
+        // ReSharper restore CommentTypo
 
         public bool LucasStrongTest()
         {
-            BigInteger this_val;
-            if ((_Data[__MaxLength - 1] & 0x80000000) != 0)        // negative
-                this_val = -this;
-            else
-                this_val = this;
+            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
             if (this_val._DataLength == 1)
-                switch (this_val._Data[0])
+                switch (this_val._Data[0]) // test small numbers
                 {
-                    // test small numbers
                     case 0:
                     case 1:
                         return false;
@@ -1961,13 +1958,13 @@ namespace MathCore
 
             while (!done)
             {
-                var Jresult = Jacobi(D, thisVal);
+                var j_result = Jacobi(D, thisVal);
 
-                if (Jresult == -1)
+                if (j_result == -1)
                     done = true;    // J(D, this) = 1
                 else
                 {
-                    if (Jresult == 0 && Math.Abs(D) < thisVal)       // divisor found
+                    if (j_result == 0 && Math.Abs(D) < thisVal)       // divisor found
                         return false;
 
                     if (d_count == 20)
@@ -2073,7 +2070,7 @@ namespace MathCore
 
             // test for divisibility by primes < 2000
             return PrimesBelow2000
-                    .Cast<BigInteger>()
+                    .Select(i => new BigInteger(i))
                     .TakeWhile(divisor => divisor < this_val)
                     .All(divisor => (this_val % divisor).IntValue() != 0)
                 && this_val.RabinMillerTest(confidence);
@@ -2123,10 +2120,11 @@ namespace MathCore
 
 
             // test for divisibility by primes < 2000
-            if (PrimesBelow2000.Cast<BigInteger>()
-                .TakeWhile(divisor => divisor < this_val)
-                .Select(divisor => this_val % divisor)
-                .Any(ResultNum => ResultNum.IntValue() == 0))
+            if (PrimesBelow2000
+               .Select(i => new BigInteger(i))
+               .TakeWhile(divisor => divisor < this_val)
+               .Select(divisor => this_val % divisor)
+               .Any(ResultNum => ResultNum.IntValue() == 0))
                 return false;
 
             // Perform BASE 2 Rabin-Miller Test
@@ -2169,17 +2167,11 @@ namespace MathCore
 
 
 
-        //***********************************************************************
-        // Returns the lowest 4 bytes of the BigInteger as an int.
-        //***********************************************************************
-
+        /// <summary>Последние 4 байта значения числа <see cref="BigInteger"/></summary>
         public int IntValue() => (int)_Data[0];
 
 
-        //***********************************************************************
-        // Returns the lowest 8 bytes of the BigInteger as a long.
-        //***********************************************************************
-
+        /// <summary>Последние 8 байт значения числа <see cref="BigInteger"/></summary>
         public long LongValue()
         {
             long val = _Data[0];
@@ -2187,7 +2179,7 @@ namespace MathCore
             {       // exception if maxLength = 1
                 val |= (long)_Data[1] << 32;
             }
-            catch (Exception)
+            catch (Exception) //todo: избавиться от исключения
             {
                 if ((_Data[0] & 0x80000000) != 0) // negative
                     val = (int)_Data[0];
@@ -2216,8 +2208,9 @@ namespace MathCore
             }
 
             if (a < 0)
-                //if( (((b-1) >> 1)._Data[0] & 0x1) == 0)
-                return ((b - 1)._Data[0] & 0x2) == 0 ? Jacobi(-a, b) : -Jacobi(-a, b);
+                return ((b - 1)._Data[0] & 0x2) == 0 
+                    ? Jacobi(-a, b) 
+                    : -Jacobi(-a, b);
 
             var e = 0;
             for (var index = 0; index < a._DataLength; index++)
@@ -2274,7 +2267,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger genCoPrime(int bits, Random rand)
+        public BigInteger GenCoPrime(int bits, Random rand)
         {
             var done = false;
             var result = new BigInteger();
@@ -2299,7 +2292,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger modInverse(BigInteger modulus)
+        public BigInteger ModInverse(BigInteger modulus)
         {
             BigInteger[] p = { 0, 1 };
             var q = new BigInteger[2];    // quotients
@@ -2317,9 +2310,9 @@ namespace MathCore
 
                 if (step > 1)
                 {
-                    var pval = (p[0] - p[1] * q[0]) % modulus;
+                    var p_val = (p[0] - p[1] * q[0]) % modulus;
                     p[0] = p[1];
-                    p[1] = pval;
+                    p[1] = p_val;
                 }
 
                 if (b._DataLength == 1)
@@ -2355,7 +2348,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public byte[] getBytes()
+        public byte[] GetBytes()
         {
             var num_bits = BitCount();
 
@@ -2417,12 +2410,12 @@ namespace MathCore
         // The Least Significant Bit position is 0.
         //***********************************************************************
 
-        public void UnsetBit(uint bitNum)
+        public void UnsetBit(uint BitNum)
         {
-            var byte_pos = bitNum >> 5;
+            var byte_pos = BitNum >> 5;
 
             if (byte_pos >= _DataLength) return;
-            var bit_pos = (byte)(bitNum & 0x1F);
+            var bit_pos = (byte)(BitNum & 0x1F);
 
             var mask = (uint)1 << bit_pos;
             var mask2 = 0xFFFFFFFF ^ mask;
@@ -2523,7 +2516,7 @@ namespace MathCore
         public static BigInteger[] LucasSequence(
             [NotNull] BigInteger P,
             [NotNull] BigInteger Q,
-            [NotNull] BigInteger k, 
+            [NotNull] BigInteger k,
             BigInteger n)
         {
             if (k._DataLength == 1 && k._Data[0] == 0)
@@ -2572,11 +2565,11 @@ namespace MathCore
 
         [NotNull]
         private static BigInteger[] LucasSequenceHelper(
-            [NotNull] BigInteger P, 
+            [NotNull] BigInteger P,
             [NotNull] BigInteger Q,
-            [NotNull] BigInteger k, 
+            [NotNull] BigInteger k,
             [NotNull] BigInteger n,
-            [NotNull] BigInteger constant, 
+            [NotNull] BigInteger constant,
             int s)
         {
             var result = new BigInteger[3];
@@ -2584,8 +2577,8 @@ namespace MathCore
             if ((k._Data[0] & 0x00000001) == 0)
                 throw new ArgumentException("Argument k must be odd.");
 
-            var numbits = k.BitCount();
-            var mask = (uint)0x1 << ((numbits & 0x1F) - 1);
+            var num_of_bits = k.BitCount();
+            var mask = (uint)0x1 << ((num_of_bits & 0x1F) - 1);
 
             var v = 2 % n;
             var q_k = 1 % n;
@@ -2674,7 +2667,8 @@ namespace MathCore
         // Tests the correct implementation of the /, %, * and + operators
         //***********************************************************************
 
-        public static void MulDivTest(int rounds)
+        //todo: Перенести в модульные тесты
+        public static void MulDivTest(int rounds) 
         {
             var rand = new Random();
             var val = new byte[64];
@@ -2752,6 +2746,7 @@ namespace MathCore
         // decryption keys).
         //***********************************************************************
 
+        //todo: Перенести в модульные тесты
         public static void RSATest(int rounds)
         {
             var rand = new Random(1);
@@ -2825,6 +2820,7 @@ namespace MathCore
         // for each round of testing.
         //***********************************************************************
 
+        //todo: Перенести в модульные тесты
         public static void RSATest2(int rounds)
         {
             var rand = new Random();
@@ -2869,8 +2865,8 @@ namespace MathCore
             for (var count = 0; count < rounds; count++)
             {
                 // generate private and public key
-                var bi_e = bi_pq.genCoPrime(512, rand);
-                var bi_d = bi_e.modInverse(bi_pq);
+                var bi_e = bi_pq.GenCoPrime(512, rand);
+                var bi_d = bi_e.ModInverse(bi_pq);
 
                 Console.WriteLine("\ne =\n" + bi_e.ToString(10));
                 Console.WriteLine("\nd =\n" + bi_d.ToString(10));
@@ -2918,6 +2914,7 @@ namespace MathCore
         // Tests the correct implementation of sqrt() method.
         //***********************************************************************
 
+        //todo: Перенести в модульные тесты
         public static void SqrtTest(int rounds)
         {
             var rand = new Random();
@@ -2949,12 +2946,13 @@ namespace MathCore
 
 
 
+        //todo: Перенести в модульные тесты
         public static void Main(string[] args)
         {
             // Known problem -> these two pseudoprimes passes my implementation of
             // primality test but failed in JDK's IsProbablePrime test.
 
-            byte[] lv_PseudoPrime1 =
+            byte[] pseudo_prime1 =
         {
             0x00, 0x85, 0x84, 0x64, 0xFD, 0x70,
             0x6A, 0x9F, 0xF0, 0x94, 0x0C, 0x3E,
@@ -3002,7 +3000,7 @@ namespace MathCore
             Console.WriteLine("\nCount = " + count);
 
 
-            var x = new BigInteger(lv_PseudoPrime1);
+            var x = new BigInteger(pseudo_prime1);
             Console.WriteLine("\n\nPrimality testing for\n{0}\n", x);
             Console.WriteLine("SolovayStrassenTest(5) = {0}", x.SolovayStrassenTest(5));
             Console.WriteLine("RabinMillerTest(5) = {0}", x.RabinMillerTest(5));
