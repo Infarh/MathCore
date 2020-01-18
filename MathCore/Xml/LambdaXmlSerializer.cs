@@ -5,6 +5,9 @@ using System.Xml.Linq;
 
 using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable UnusedMethodReturnValue.Global
 
 namespace MathCore.Xml
 {
@@ -23,6 +26,7 @@ namespace MathCore.Xml
     public class LambdaXmlSerializer<T> : LambdaXmlSerializer
     {
         /// <summary>Название элемента по умолчанию</summary>
+        // ReSharper disable once StaticMemberInGenericType
         private static string __EmptyName = "item";
 
         /// <summary>Название элемента по умолчанию</summary>

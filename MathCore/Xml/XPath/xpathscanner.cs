@@ -10,12 +10,13 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Diagnostics;
 using System.Globalization;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     internal sealed class XPathScanner

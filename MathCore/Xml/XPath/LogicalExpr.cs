@@ -10,11 +10,14 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
+// ReSharper disable IdentifierTypo
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
+    // ReSharper disable CommentTypo
     //
     // Logical Expression should result in Boolean
     // Rules:
@@ -45,25 +48,26 @@ namespace System.Xml.XPath
     // opnd1 < opnd2
     // opnd1 >= opnd2
     // opnd1 <= opnd2
+    // ReSharper restore CommentTypo
 
     internal sealed class LogicalExpr : Query
     {
         #region Fields
 
-        private readonly Query _Opnd1;
-        private readonly Query _Opnd2;
+        private readonly Query _Operand1;
+        private readonly Query _Operand2;
 
-        internal Operator.Op Op;
+        internal readonly Operator.Op _Operator;
 
         #endregion
 
         #region Constructors
 
-        internal LogicalExpr(Operator.Op op, Query opnd1, Query opnd2)
+        internal LogicalExpr(Operator.Op Operator, Query Operand1, Query Operand2)
         {
-            _Opnd1 = opnd1;
-            _Opnd2 = opnd2;
-            Op = op;
+            _Operand1 = Operand1;
+            _Operand2 = Operand2;
+            _Operator = Operator;
         }
 
         #endregion
@@ -74,65 +78,42 @@ namespace System.Xml.XPath
         {
             double n1, n2;
 
-            var lv_OpndVar1 = _Opnd1.GetValue(reader);
-            var lv_OpndVar2 = _Opnd2.GetValue(reader);
+            var operand_var1 = _Operand1.GetValue(reader);
+            var operand_var2 = _Operand2.GetValue(reader);
 
             try
             {
-                n1 = Convert.ToDouble(lv_OpndVar1);
-                n2 = Convert.ToDouble(lv_OpndVar2);
-            } catch(Exception)
+                n1 = Convert.ToDouble(operand_var1);
+                n2 = Convert.ToDouble(operand_var2);
+            }
+            catch (Exception)
             {
                 return false;
             }
 
-            switch(Op)
+            return _Operator switch
             {
-                case Operator.Op.Lt:
-                    if(n1 < n2)
-                        return true;
-                    break;
-                case Operator.Op.Gt:
-                    if(n1 > n2)
-                        return true;
-                    break;
-                case Operator.Op.Le:
-                    if(n1 <= n2)
-                        return true;
-                    break;
-                case Operator.Op.Ge:
-                    if(n1 >= n2)
-                        return true;
-                    break;
-                case Operator.Op.Eq:
-                    if(n1.Equals(n2))
-                        return true;
-                    break;
-                case Operator.Op.Ne:
-                    if(!n1.Equals(n2))
-                        return true;
-                    break;
-            }
-
-            return false;
+                Operator.Op.Lt when n1 < n2 => true,
+                Operator.Op.Gt when n1 > n2 => true,
+                Operator.Op.Le when n1 <= n2 => true,
+                Operator.Op.Ge when n1 >= n2 => true,
+                Operator.Op.Eq when n1.Equals(n2) => true,
+                Operator.Op.Ne when !n1.Equals(n2) => true,
+                _ => false
+            };
         }
 
         private bool CompareAsString(XPathReader reader)
         {
-            var ret = false;
-
-            var lv_OpndVar1 = _Opnd1.GetValue(reader);
-            var lv_OpndVar2 = _Opnd2.GetValue(reader);
-            if(lv_OpndVar1 is null || lv_OpndVar2 is null)
+            var opnd_var1 = _Operand1.GetValue(reader);
+            var opnd_var2 = _Operand2.GetValue(reader);
+            if (opnd_var1 is null || opnd_var2 is null)
                 return false;
-            var s1 = lv_OpndVar1.ToString();
-            var s2 = lv_OpndVar2.ToString();
+            var s1 = opnd_var1.ToString();
+            var s2 = opnd_var2.ToString();
 
-            if(Op > Operator.Op.Ge)
-            {
-                if((Operator.Op.Eq == Op && s1.Equals(s2)) || (Operator.Op.Ne == Op && !s1.Equals(s2)))
-                    ret = true;
-            }
+            if (_Operator > Operator.Op.Ge)
+                return (Operator.Op.Eq == _Operator && s1.Equals(s2)) || (Operator.Op.Ne == _Operator && !s1.Equals(s2));
             else
             {
                 //need to covert the string to the number and compare the numbers.
@@ -141,112 +122,68 @@ namespace System.Xml.XPath
                 {
                     n1 = Convert.ToDouble(s1);
                     n2 = Convert.ToDouble(s2);
-                } catch
+                }
+                catch
                 {
+                    // ignored
                 }
 
-                switch(Op)
+                return _Operator switch
                 {
-                    case Operator.Op.Lt:
-                        if(n1 < n2) ret = true;
-                        break;
-                    case Operator.Op.Gt:
-                        if(n1 > n2) ret = true;
-                        break;
-                    case Operator.Op.Le:
-                        if(n1 <= n2) ret = true;
-                        break;
-                    case Operator.Op.Ge:
-                        if(n1 >= n2) ret = true;
-                        break;
-                }
+                    Operator.Op.Lt when n1 < n2 => true,
+                    Operator.Op.Gt when n1 > n2 => true,
+                    Operator.Op.Le when n1 <= n2 => true,
+                    Operator.Op.Ge when n1 >= n2 => true,
+                    _ => false
+                };
             }
-#if DEBUG1
-            Console.WriteLine("s1 {0}, s2 {1}, op {2}, ret: {3}", s1, s2, op, ret);
-#endif
-            return ret;
         }
 
         private bool CompareAsBoolean(XPathReader reader)
         {
             bool b1, b2;
 
-            var lv_OpndVar1 = _Opnd1.GetValue(reader);
-            var lv_OpndVar2 = _Opnd2.GetValue(reader);
+            var operand_var1 = _Operand1.GetValue(reader);
+            var operand_var2 = _Operand2.GetValue(reader);
 
-            if(_Opnd1.ReturnType() == XPathResultType.NodeSet)
-                b1 = lv_OpndVar1 != null;
-            else
-                b1 = Convert.ToBoolean(lv_OpndVar1);
+            b1 = _Operand1.ReturnType() == XPathResultType.NodeSet
+                ? operand_var1 != null
+                : Convert.ToBoolean(operand_var1);
 
-            if(_Opnd1.ReturnType() == XPathResultType.NodeSet)
-                b2 = lv_OpndVar2 != null;
-            else
-                b2 = Convert.ToBoolean(lv_OpndVar2);
+            b2 = _Operand1.ReturnType() == XPathResultType.NodeSet
+                ? operand_var2 != null
+                : Convert.ToBoolean(operand_var2);
 
-            if(Op > Operator.Op.Ge)
-                return (Operator.Op.Eq == Op && b1 == b2) || (Operator.Op.Ne == Op && b1 != b2);
+            if (_Operator > Operator.Op.Ge)
+                return (Operator.Op.Eq == _Operator && b1 == b2) || (Operator.Op.Ne == _Operator && b1 != b2);
             //need to covert the string to the number and compare the numbers.
-            double n1, n2;
-            try
-            {
-                n1 = Convert.ToDouble(b1);
-                n2 = Convert.ToDouble(b2);
-            } catch
-            {
-                return false;
-            }
+            var n1 = b1 ? 1d : 0;
+            var n2 = b2 ? 1d : 0;
 
-            switch(Op)
+            return _Operator switch
             {
-                case Operator.Op.Lt:
-                    if(n1 < n2) return true;
-                    break;
-                case Operator.Op.Gt:
-                    if(n1 > n2) return true;
-                    break;
-                case Operator.Op.Le:
-                    if(n1 <= n2) return true;
-                    break;
-                case Operator.Op.Ge:
-                    if(n1 >= n2) return true;
-                    break;
-            }
-            return false;
+                Operator.Op.Lt when n1 < n2 => true,
+                Operator.Op.Gt when n1 > n2 => true,
+                Operator.Op.Le when n1 <= n2 => true,
+                Operator.Op.Ge when n1 >= n2 => true,
+                _ => false
+            };
         }
 
         internal override object GetValue(XPathReader reader)
         {
-            var type1 = _Opnd1.ReturnType();
-            var type2 = _Opnd2.ReturnType();
+            var type1 = _Operand1.ReturnType();
+            var type2 = _Operand2.ReturnType();
 
-            if(type1 == XPathResultType.Boolean || type2 == XPathResultType.Boolean)
-                return CompareAsBoolean(reader);
-            if(type1 == XPathResultType.Number || type2 == XPathResultType.Number)
-                return CompareAsNumber(reader);
-            return CompareAsString(reader);
+            return type1 == XPathResultType.Boolean || type2 == XPathResultType.Boolean
+                ? CompareAsBoolean(reader)
+                : type1 == XPathResultType.Number || type2 == XPathResultType.Number
+                    ? CompareAsNumber(reader)
+                    : CompareAsString(reader);
         }
 
         internal override XPathResultType ReturnType() => XPathResultType.Boolean;
 
         #endregion
     }
-
-    //
-    // Get Value and result in number
-    //
-
-    //
-    // Process Or expression
-    //
-    // Data type between the two operations
-    //
-    // LogicalExpression or LogicalExpression
-    //
-    //
-    // for example:
-    //     @a > 1 or @b < 2
-    //     @a or @b
-    //
-    //   @a | @b or @c
 }

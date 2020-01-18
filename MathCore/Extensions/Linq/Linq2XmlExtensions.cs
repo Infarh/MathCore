@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.XPath;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq
@@ -157,13 +158,13 @@ namespace System.Xml.Linq
 
         [NotNull]
         private static string StrCat<T>([NotNull] this IEnumerable<T> source, [CanBeNull] string separator) =>
-            source.Aggregate(new StringBuilder(), (S, i) => S.Append(i.ToString()).Append(separator), S => S.ToString());
+            source.Aggregate(new StringBuilder(), (S, i) => S.Append(i).Append(separator), S => S.ToString());
 
         [CanBeNull]
-        public static string GetXPath([NotNull] this XObject xobj) => xobj.Parent is null ? GetXPathNoParent(xobj) : GetXPathParent(xobj);
+        public static string GetXPath([NotNull] this XObject XObj) => XObj.Parent is null ? GetXPathNoParent(XObj) : GetXPathParent(XObj);
 
-        [CanBeNull] private static string GetXPathNoParent([NotNull] XObject xobj) =>
-            xobj switch
+        [CanBeNull] private static string GetXPathNoParent([NotNull] XObject XObj) =>
+            XObj switch
             {
                 XDocument _ => ".",
                 XElement element => $"/{NameWithPredicate(element)}",
@@ -173,8 +174,8 @@ namespace System.Xml.Linq
                 _ => null
             };
 
-        [CanBeNull] private static string GetXPathParent([NotNull] XObject xobj) =>
-            xobj switch
+        [CanBeNull] private static string GetXPathParent([NotNull] XObject XObj) =>
+            XObj switch
             {
                 XElement element => $"/{element.Ancestors().InDocumentOrder().Select(NameWithPredicate).StrCat("/")}{NameWithPredicate(element)}",
                 XAttribute attribute => $"/{attribute.Parent?.AncestorsAndSelf().InDocumentOrder().Select(NameWithPredicate).StrCat("/")}@{GetQName(attribute)}",

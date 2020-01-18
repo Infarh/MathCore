@@ -24,7 +24,7 @@ namespace MathCore
         public static int Fibonachi(Complex z)
         {
             var phi_z = Consts.GoldenRatio.Power(z);
-            return (int)(Consts.sqrt_5_inv * (phi_z - Complex.Trigonomerty.Cos(Consts.pi * z) / phi_z));
+            return (int)(Consts.sqrt_5_inv * (phi_z - Complex.Trigonometry.Cos(Consts.pi * z) / phi_z));
         }
 
         public static int Fibonachi2(int n) => (int)(Consts.sqrt_5_inv * Consts.GoldenRatio.Power(n) + 0.5);

@@ -2,7 +2,7 @@
 using DU = System.Func<double, double, double>;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
-namespace MathCore.DifferencialEquations.Numerical
+namespace MathCore.DifferentialEquations.Numerical
 {
     public static partial class Solver
     {

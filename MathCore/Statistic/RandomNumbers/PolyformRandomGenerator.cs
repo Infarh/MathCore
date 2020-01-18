@@ -5,19 +5,20 @@ using MathCore.Exceptions;
 using MathCore.Extensions.Expressions;
 using static System.Math;
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedType.Global
 
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Statistic.RandomNumbers
 {
     [Copyright("Александр Самарин - Генераторы непрерывно распределенных случайных величин", url = "http://habrahabr.ru/post/263993/")]
-    public class PolyformRandomGenertor
+    public class PolyformRandomGenerator
     {
         //todo: http://habrahabr.ru/post/265321/
         private readonly Random _RND = new Random();
         private ulong _LastRND;
-        public const ulong RAND_MAX = ulong.MaxValue;
-        public PolyformRandomGenertor() => _LastRND = (ulong)_RND.Next();
+        public const ulong RandMax = ulong.MaxValue;
+        public PolyformRandomGenerator() => _LastRND = (ulong)_RND.Next();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public ulong BasicRandGenerator() => (_LastRND << 32) & (_LastRND = (ulong)_RND.Next());
@@ -31,7 +32,7 @@ namespace MathCore.Statistic.RandomNumbers
         public static Expression<Func<double, double>> GetUniformDestributionExpression(double a, double b)
             => x => x >= a && x <= b ? 1 / (b - a) : 0;
 
-        public double Uniform(double a, double b) => a + (double)BasicRandGenerator() / RAND_MAX * (b - a);
+        public double Uniform(double a, double b) => a + (double)BasicRandGenerator() / RandMax * (b - a);
 
         #endregion
 
@@ -53,84 +54,83 @@ namespace MathCore.Statistic.RandomNumbers
             return Expression.Lambda<Func<double, double>>(body, X);
         }
 
-        private static double[] __Normal_StairWidth;
-        private static double[] __Normal_StairHeight;
-        private static bool __Normal_Initialized;
-        private static readonly object __Normal_Initialization_SyncRoot = new object();
-        private const double c_Normal_x1 = 3.6541528853610088;
+        private static double[] __NormalStairWidth;
+        private static double[] __NormalStairHeight;
+        private static bool __NormalInitialized;
+        private static readonly object __NormalInitializationSyncRoot = new object();
+        private const double __Normal_x1 = 3.6541528853610088;
 
         /// <summary>area under rectangle</summary>
-        private const double c_Normal_A = 4.92867323399e-3;
+        private const double __Normal_A = 4.92867323399e-3;
 
         private static bool InitializeNormal()
         {
-            if(__Normal_Initialized) return true;
-            lock (__Normal_Initialization_SyncRoot)
+            if(__NormalInitialized) return true;
+            lock (__NormalInitializationSyncRoot)
             {
-                if(__Normal_Initialized) return true;
-                __Normal_StairWidth = new double[257];
-                __Normal_StairHeight = new double[256];
+                if(__NormalInitialized) return true;
+                __NormalStairWidth = new double[257];
+                __NormalStairHeight = new double[256];
                 // coordinates of the implicit rectangle in base layer
-                __Normal_StairHeight[0] = Exp(-.5 * c_Normal_x1 * c_Normal_x1);
-                __Normal_StairWidth[0] = c_Normal_A / __Normal_StairHeight[0];
+                __NormalStairHeight[0] = Exp(-.5 * __Normal_x1 * __Normal_x1);
+                __NormalStairWidth[0] = __Normal_A / __NormalStairHeight[0];
                 // implicit value for the top layer
-                __Normal_StairWidth[256] = 0;
+                __NormalStairWidth[256] = 0;
                 for(var i = 1; i <= 255; ++i)
                 {
                     // such x_i that f(x_i) = y_{i-1}
-                    __Normal_StairWidth[i] = Sqrt(-2 * Log(__Normal_StairHeight[i - 1]));
-                    __Normal_StairHeight[i] = __Normal_StairHeight[i - 1] + c_Normal_A / __Normal_StairWidth[i];
+                    __NormalStairWidth[i] = Sqrt(-2 * Log(__NormalStairHeight[i - 1]));
+                    __NormalStairHeight[i] = __NormalStairHeight[i - 1] + __Normal_A / __NormalStairWidth[i];
                 }
-                return __Normal_Initialized = true;
+                return __NormalInitialized = true;
             }
         }
 
-        private double _NormalZiggurat_z;
+        private double _NormalZigguratZ;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private double NormalZiggurat()
         {
-            var iter = 0;
+            var iterator = 0;
             do
             {
                 var B = BasicRandGenerator();
-                var stairId = (int)(B & 0xff);
-                var x = Uniform(0, __Normal_StairWidth[stairId]); // get horizontal coordinate
-                if(x < __Normal_StairWidth[stairId + 1])
+                var stair_id = (int)(B & 0xff);
+                var x = Uniform(0, __NormalStairWidth[stair_id]); // get horizontal coordinate
+                if(x < __NormalStairWidth[stair_id + 1])
                     return (long)B > 0 ? x : -x;
-                if(stairId == 0) // handle the base layer
+                if(stair_id == 0) // handle the base layer
                 {
-                    _NormalZiggurat_z = -1;
+                    _NormalZigguratZ = -1;
                     double y;
-                    if(_NormalZiggurat_z >= 0)
+                    if(_NormalZigguratZ >= 0)
                     // we don't have to generate another exponential variable as we already have one
                     {
                         y = Exponential(1);
-                        _NormalZiggurat_z = y - 0.5 * _NormalZiggurat_z * _NormalZiggurat_z;
+                        _NormalZigguratZ = y - 0.5 * _NormalZigguratZ * _NormalZigguratZ;
                     }
-                    if(_NormalZiggurat_z < 0) // if previous generation wasn't successful
-                    {
+                    if(_NormalZigguratZ < 0) // if previous generation wasn't successful
                         do
                         {
-                            x = Exponential(c_Normal_x1);
+                            x = Exponential(__Normal_x1);
                             y = Exponential(1);
-                            _NormalZiggurat_z = y - 0.5 * x * x;
+                            _NormalZigguratZ = y - 0.5 * x * x;
                             // we storage this value as after acceptance it becomes exponentially distributed
-                        } while(_NormalZiggurat_z <= 0);
-                    }
-                    x += c_Normal_x1;
+                        } while(_NormalZigguratZ <= 0);
+
+                    x += __Normal_x1;
                     return (long)B > 0 ? x : -x;
                 }
                 // handle the wedges of other stairs
-                if(Uniform(__Normal_StairHeight[stairId - 1], __Normal_StairHeight[stairId]) < Exp(-.5 * x * x))
+                if(Uniform(__NormalStairHeight[stair_id - 1], __NormalStairHeight[stair_id]) < Exp(-.5 * x * x))
                     return (long)B > 0 ? x : -x;
-            } while(++iter <= 1e9); // one billion should be enough
+            } while(++iterator <= 1e9); // one billion should be enough
             throw new CalculationsException();
         }
 
         public double Normal(double mu, double sigma)
         {
-            if(__Normal_Initialized || InitializeNormal()) return mu + NormalZiggurat() * sigma;
+            if(__NormalInitialized || InitializeNormal()) return mu + NormalZiggurat() * sigma;
             throw new CalculationsException();
         }
 

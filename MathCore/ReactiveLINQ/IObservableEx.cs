@@ -7,7 +7,7 @@ namespace System.Linq.Reactive
     {
         /// <summary>Метод получения наблюдателя</summary>
         /// <param name="observer">Наблюдатель объекта</param>
-        /// <returns>Объект, реализующий возможность разрушшения связи с наблюдаемым объектом</returns>
+        /// <returns>Объект, реализующий возможность разрушения связи с наблюдаемым объектом</returns>
         IDisposable Subscribe(IObserverEx<T> observer);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MathCore.DifferencialEquations.Numerical
+﻿namespace MathCore.DifferentialEquations.Numerical
 {
     /// <summary>Функция определения аргумента</summary>
     /// <param name="t">Параметр</param>

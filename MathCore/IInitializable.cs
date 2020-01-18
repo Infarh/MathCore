@@ -1,4 +1,6 @@
-﻿
+﻿// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Объект, поддерживающий инициализацию</summary>
@@ -28,7 +30,7 @@ namespace System
         void Initialize(T1 t1, T2 t2);
     }
 
-    /// <summary>Объект, поддерживаюий инициализацию с тремя параметрами</summary>
+    /// <summary>Объект, поддерживающий инициализацию с тремя параметрами</summary>
     /// <typeparam name="T1">Тип первого параметра</typeparam>
     /// <typeparam name="T2">Тип второго параметра</typeparam>
     /// <typeparam name="T3">Тип третьего параметра</typeparam>
@@ -41,11 +43,11 @@ namespace System
         void Initialize(T1 t1, T2 t2, T3 t3);
     }
 
-    /// <summary>ОБъект, поддерживающий инициализацию с четырьмя параметрами</summary>
+    /// <summary>Объект, поддерживающий инициализацию с четырьмя параметрами</summary>
     /// <typeparam name="T1">Тип первого параметра</typeparam>
     /// <typeparam name="T2">Тип второго параметра</typeparam>
     /// <typeparam name="T3">Тип третьего параметра</typeparam>
-    /// <typeparam name="T4">Тип четвёртого патаметра</typeparam>
+    /// <typeparam name="T4">Тип четвёртого параметра</typeparam>
     public interface IInitializable<in T1, in T2, in T3, in T4>
     {
         /// <summary>Инициализация</summary>
@@ -56,12 +58,12 @@ namespace System
         void Initialize(T1 t1, T2 t2, T3 t3, T4 t4);
     }
 
-    /// <summary>ОБъект, поддерживающий инициализацию с пятью параметрами</summary>
+    /// <summary>Объект, поддерживающий инициализацию с пятью параметрами</summary>
     /// <typeparam name="T1">Тип первого параметра</typeparam>
     /// <typeparam name="T2">Тип второго параметра</typeparam>
     /// <typeparam name="T3">Тип третьего параметра</typeparam>
-    /// <typeparam name="T4">Тип четвёртого патаметра</typeparam>
-    /// <typeparam name="T5">Тип пятого патаметра</typeparam>
+    /// <typeparam name="T4">Тип четвёртого параметра</typeparam>
+    /// <typeparam name="T5">Тип пятого параметра</typeparam>
     public interface IInitializable<in T1, in T2, in T3, in T4, in T5>
     {
         /// <summary>Инициализация</summary>

@@ -10,9 +10,10 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     internal class Root : AstNode

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+// ReSharper disable UnusedType.Global
 
-// ReSharper disable InconsistentNaming
 
 namespace MathCore
 {
@@ -11,7 +11,7 @@ namespace MathCore
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Тригонометрические функции комплексного переменного</summary>
-        public static class Trigonomerty
+        public static class Trigonometry
         {
             /// <summary>Синус</summary>
             /// <param name="z">Комплексный аргумент</param>
@@ -42,7 +42,7 @@ namespace MathCore
             /// <summary>Тангенс</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Тангенс комплексного аргумента</returns>
-            public static Complex tg(in Complex z)
+            public static Complex Tg(in Complex z)
             {
                 var (re, im) = z;
                 if (im.Equals(0d)) return new Complex(Math.Sin(re) / Math.Cos(re));
@@ -50,31 +50,34 @@ namespace MathCore
                 re *= 2;
                 im *= 2;
 
-                var sin2Re = Math.Sin(re);
-                var sinh2Im = Math.Sinh(im);
-                var cos2Re_cosh2Im = Math.Cos(re) + Math.Cosh(im);
+                var sin_2_re = Math.Sin(re);
+                var sinh_2_im = Math.Sinh(im);
+                var cos2_re_cosh2_im = Math.Cos(re) + Math.Cosh(im);
 
-                return new Complex(sin2Re / cos2Re_cosh2Im, sinh2Im / cos2Re_cosh2Im);
+                return new Complex(sin_2_re / cos2_re_cosh2_im, sinh_2_im / cos2_re_cosh2_im);
             }
 
             /// <summary>Котангенс</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Котангенс комплексного аргумента</returns>
-            public static Complex ctg(in Complex z)
+            public static Complex Ctg(in Complex z)
             {
                 var (re, im) = z;
                 if (im.Equals(0d)) return new Complex(Math.Sin(re) / Math.Cos(re));
 
-                var sinRe = Math.Sin(re);
-                var cosRe = Math.Cos(re);
+                var sin_re = Math.Sin(re);
+                var cos_re = Math.Cos(re);
                 im *= 2;
                 re *= 2;
-                var sin2Im = Math.Sinh(im);
-                var cos2Re_cosh2Im = Math.Cos(re) - Math.Cosh(im);
+                var sin2_im = Math.Sinh(im);
+                var cos2_re_cosh2_im = Math.Cos(re) - Math.Cosh(im);
 
-                return new Complex(2 * cosRe * sinRe / cos2Re_cosh2Im, sin2Im / cos2Re_cosh2Im);
+                return new Complex(2 * cos_re * sin_re / cos2_re_cosh2_im, sin2_im / cos2_re_cosh2_im);
             }
 
+            /// <summary>Арксинус комплексного переменного</summary>
+            /// <param name="z">Комплексный аргумент</param>
+            /// <returns>Арксинус комплексного аргумента</returns>
             public static Complex Asin(in Complex z)
             {
                 var (sqrt_re, sqrt_im) = Sqrt(1 - z.Pow2());
@@ -82,6 +85,9 @@ namespace MathCore
                 return new Complex(ln_im, -ln_re);
             }
 
+            /// <summary>Арккосинус комплексного переменного</summary>
+            /// <param name="z">Комплексный аргумент</param>
+            /// <returns>Арккосинус комплексного аргумента</returns>
             public static Complex Acos(in Complex z)
             {
                 var (sqrt_re, sqrt_im) = Sqrt(z.Pow2() - 1);
@@ -98,7 +104,10 @@ namespace MathCore
                 return i * (Ln(1 - iz) - Ln(1 + iz)) / new Complex(2d);
             }
 
-            public static Complex Atctg(in Complex z)
+            /// <summary>Арккатангенс комплексного переменного</summary>
+            /// <param name="z">Комплексный аргумент</param>
+            /// <returns>Арккатангенс комплексного аргумента</returns>
+            public static Complex Arctg(in Complex z)
             {
                 var iz = i * z;
                 return i * (Ln(iz + 1) - Ln(iz - 1)) / new Complex(2d);
@@ -114,12 +123,12 @@ namespace MathCore
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Sinh(re);
-                    var sinhRe = Math.Sinh(re);
-                    var coshRe = Math.Cosh(re);
-                    var sinIm = Math.Sin(im);
-                    var cosIm = Math.Cos(im);
+                    var sinh_re = Math.Sinh(re);
+                    var cosh_re = Math.Cosh(re);
+                    var sin_im = Math.Sin(im);
+                    var cos_im = Math.Cos(im);
 
-                    return new Complex(sinhRe * cosIm, coshRe * sinIm);
+                    return new Complex(sinh_re * cos_im, cosh_re * sin_im);
                 }
 
                 /// <summary>Гиперболический косинус</summary>
@@ -129,51 +138,50 @@ namespace MathCore
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Cosh(re);
-                    var sinhRe = Math.Sinh(re);
-                    var coshRe = Math.Cosh(re);
-                    var sinIm = Math.Sin(im);
-                    var cosIm = Math.Cos(im);
+                    var sinh_re = Math.Sinh(re);
+                    var cosh_re = Math.Cosh(re);
+                    var sin_im = Math.Sin(im);
+                    var cos_im = Math.Cos(im);
 
-                    return new Complex(coshRe * cosIm, sinhRe * sinIm);
+                    return new Complex(cosh_re * cos_im, sinh_re * sin_im);
                 }
 
                 /// <summary>Гиперболический тангенс</summary>
                 /// <param name="z">Комплексный аргумент</param>
                 /// <returns>Гиперболический тангенс комплексного аргумента</returns>
-                public static Complex tgh(in Complex z)
+                public static Complex Tgh(in Complex z)
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Tanh(re);
 
-                    var coshRe = Math.Cosh(re);
-                    var sinhRe = Math.Sinh(re);
+                    var cosh_re = Math.Cosh(re);
+                    var sinh_re = Math.Sinh(re);
                     im *= 2;
                     re *= 2;
-                    var sin2Im = Math.Sin(im);
-                    var cos2Im_cosh2Re = Math.Cos(2 * im) + Math.Cosh(2 * re);
+                    var sin2_im = Math.Sin(im);
+                    var cos2_im_cosh2_re = Math.Cos(2 * im) + Math.Cosh(2 * re);
 
-                    return new Complex(2 * coshRe * sinhRe / cos2Im_cosh2Re, sin2Im / cos2Im_cosh2Re);
+                    return new Complex(2 * cosh_re * sinh_re / cos2_im_cosh2_re, sin2_im / cos2_im_cosh2_re);
                 }
 
                 /// <summary>Гиперболический котангенс</summary>
                 /// <param name="z">Комплексный аргумент</param>
                 /// <returns>Гиперболический котангенс комплексного аргумента</returns>
-                public static Complex ctgh(in Complex z)
+                public static Complex Ctgh(in Complex z)
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Tanh(re);
 
-                    var coshRe = Math.Cosh(re);
-                    var sinhRe = Math.Sinh(re);
+                    var cosh_re = Math.Cosh(re);
+                    var sinh_re = Math.Sinh(re);
                     im *= 2;
                     re *= 2;
-                    var sin2Im = Math.Sin(im);
-                    var cos2Im_cosh2Re = Math.Cos(2 * im) - Math.Cosh(2 * re);
+                    var sin2_im = Math.Sin(im);
+                    var cos2_im_cosh2_re = Math.Cos(2 * im) - Math.Cosh(2 * re);
 
-                    return new Complex(2 * coshRe * sinhRe / cos2Im_cosh2Re, sin2Im / cos2Im_cosh2Re);
+                    return new Complex(2 * cosh_re * sinh_re / cos2_im_cosh2_re, sin2_im / cos2_im_cosh2_re);
                 }
             }
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.Serialization
 {
     /// <summary>Асинхронно сериализуемый в XML объект</summary>

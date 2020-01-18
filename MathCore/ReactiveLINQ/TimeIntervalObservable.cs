@@ -1,13 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
     public class TimeIntervalObservable : SimpleObservableEx<TimeSpan>
     {
         private readonly TimeSpan _Interval;
         private readonly bool _Async;
-        private bool _Work;
+        private volatile bool _Work;
         private readonly object _SyncObject = new object();
         private Thread _Thread;
 
@@ -22,6 +24,7 @@ namespace System.Linq.Reactive
 
         public void Start()
         {
+            // ReSharper disable once InconsistentlySynchronizedField
             if(_Work) return;
             lock (_SyncObject)
             {
@@ -73,10 +76,11 @@ namespace System.Linq.Reactive
             }
         }
 
-        public override async void Dispose()
+        /// <inheritdoc />
+        protected override async void Dispose(bool Disposing)
         {
-            base.Dispose();
-            await Task.Factory.StartNew((Action)Stop);
+            base.Dispose(Disposing);
+            await Task.Factory.StartNew(Stop);
         }
     }
 }

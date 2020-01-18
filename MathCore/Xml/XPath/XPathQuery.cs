@@ -1,5 +1,9 @@
 ﻿using System.Collections;
+using MathCore.Annotations;
 
+// ReSharper disable UnusedMember.Global
+
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     public class XPathQuery
@@ -36,7 +40,7 @@ namespace System.Xml.XPath
             private set
             {
                 _Value = value;
-                if(value != null) OnMatch(value);
+                if (value != null) OnMatch(value);
             }
         }
 
@@ -48,7 +52,7 @@ namespace System.Xml.XPath
 
         private XPathQuery() { }
 
-        // once the xpathexpression is constructed
+        // once the XPathExpression is constructed
         // the xpath is compiled into the query format
         public XPathQuery(string xpath)
         {
@@ -67,6 +71,7 @@ namespace System.Xml.XPath
 
         #region Methods
 
+        [NotNull]
         public XPathQuery Clone() => new XPathQuery
         {
             XPath = XPath,
@@ -84,32 +89,28 @@ namespace System.Xml.XPath
             var builder = new QueryBuilder();
 
             //
-            // Need to set the query with current reader heigth;
+            // Need to set the query with current reader height;
             //
             builder.Build(XPath, GetXPathQueries, _TreeDepth);
 
             // Index is 0 based , but the count is 1 based
             // plus the null query we added.
-            var lv_LookupLength = ((BaseAxisQuery)GetXPathQueries[GetXPathQueries.Count - 2]).Depth + 1;
+            var lookup_length = ((BaseAxisQuery)GetXPathQueries[GetXPathQueries.Count - 2]).Depth + 1;
 
-            _DepthLookup = new int[lv_LookupLength];
+            _DepthLookup = new int[lookup_length];
 
             //exclude the null query
-            for(var i = 0; i < GetXPathQueries.Count - 1; ++i)
-                if(_DepthLookup[((BaseAxisQuery)GetXPathQueries[i]).Depth] == 0)
+            for (var i = 0; i < GetXPathQueries.Count - 1; ++i)
+                if (_DepthLookup[((BaseAxisQuery)GetXPathQueries[i]).Depth] == 0)
                     _DepthLookup[((BaseAxisQuery)GetXPathQueries[i]).Depth] = i;
         }
 
+        /// <inheritdoc />
         public override string ToString() => XPath;
 
-        //
-        // report if the current query is matched
-        //
-        internal bool Match() =>
-#if DEBUG1
-            Console.WriteLine("GetState: Query: {0}, matchState {1}", xpath, matchState);
-#endif
-            _MatchState;
+        /// <summary>Report if the current query is matched</summary>
+        /// <returns>true if current query is matched</returns>
+        internal bool Match() => _MatchState;
 
 
         //
@@ -121,27 +122,22 @@ namespace System.Xml.XPath
 
         private void SetMatchState(XPathReader reader)
         {
-            if(_MatchIndex < 1) return;
+            if (_MatchIndex < 1) return;
 
-            var lv_QueryCount = GetXPathQueries.Count - 1; // take out the null query;
-            var lv_QueryDepth = ((BaseAxisQuery)GetXPathQueries[_MatchIndex - 1]).Depth;
+            var query_count = GetXPathQueries.Count - 1; // take out the null query;
+            var query_depth = ((BaseAxisQuery)GetXPathQueries[_MatchIndex - 1]).Depth;
 
-            if(_MatchCount == lv_QueryCount && lv_QueryDepth == reader.Depth)
+            if (_MatchCount != query_count || query_depth != reader.Depth) return;
+            _MatchState = true;
+            switch (reader.NodeType)
             {
-                _MatchState = true;
-                if(reader.NodeType == XmlNodeType.Attribute)
+                case XmlNodeType.Attribute:
                     Value = reader.Value;
-                if(reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
+                    break;
+                case XmlNodeType.Element when !reader.IsEmptyElement:
                     _IsElementValue = true;
+                    break;
             }
-
-#if DEBUG1
-            Console.WriteLine("\nMatch query: {0}", xpath);
-            Console.WriteLine("MatchCount {0}, query count{1}", matchCount, queryCount);
-            Console.WriteLine("reader depth {0}, queryDepth{1}", matchCount, queryCount);
-            Console.WriteLine("Name: {0}", reader.Name);
-            Console.WriteLine("matchState {0}", matchState);
-#endif
         }
 
 
@@ -156,11 +152,10 @@ namespace System.Xml.XPath
         // Reset the matching index if the reader move to the
         // node depth less than the expected depth
         //
-        private void ResetMatching(XPathReader reader)
+        private void ResetMatching([NotNull] XPathReader reader)
         {
-            if(_WaitingAttributes)
-            {
-                switch(reader.NodeType)
+            if (_WaitingAttributes)
+                switch (reader.NodeType)
                 {
                     case XmlNodeType.Text:
                         Value = reader.Value;
@@ -170,13 +165,12 @@ namespace System.Xml.XPath
                         _WaitingAttributes = false;
                         break;
                 }
-            }
 
-            if(_MatchState)
+            if (_MatchState)
             {
-                if(_IsElementValue)
+                if (_IsElementValue)
                 {
-                    if(reader.NodeType == XmlNodeType.Attribute)
+                    if (reader.NodeType == XmlNodeType.Attribute)
                         _WaitingAttributes = true;
                     _IsElementValue = false;
                 }
@@ -188,68 +182,59 @@ namespace System.Xml.XPath
             // reset the matching index
             var count = GetXPathQueries.Count;
 
-            if(reader.Depth < ((BaseAxisQuery)GetXPathQueries[_MatchIndex]).Depth)
+            if (reader.Depth < ((BaseAxisQuery)GetXPathQueries[_MatchIndex]).Depth)
                 _MatchCount = (_MatchIndex = _DepthLookup[reader.Depth]) + 1;
 
-            if(_MatchCount != count - 1 || _MatchIndex <= 0) return;
+            if (_MatchCount != count - 1 || _MatchIndex <= 0) return;
             _MatchCount--;
             _MatchIndex--;
-
-#if DEBUG1
-            Console.WriteLine("\nResetMatchingIndex: {0}\n", xpath);
-            Console.WriteLine("matchIndex: {0}, matchCount {1}, compiledXPath.Count {2}", matchIndex, matchCount, count);
-#endif
         }
 
 
         // In the query expression, we need to be
-        // store the depth of tree that we have treversed
+        // store the depth of tree that we have reversed
         // we shouldn't move the reader, if we move to the
         // an attribute, we need to move it back
 
-        internal void Advance(XPathReader reader)
+        internal void Advance([NotNull] XPathReader reader)
         {
             ResetMatching(reader);
 
 
-            if((Query)GetXPathQueries[_MatchIndex] is DescendantQuery)
+            if ((Query)GetXPathQueries[_MatchIndex] is DescendantQuery)
             {
                 //look through the subtree for the node is
                 //looking for
-                if(!((Query)GetXPathQueries[_MatchIndex + 1]).MatchNode(reader)) return;
+                if (!((Query)GetXPathQueries[_MatchIndex + 1]).MatchNode(reader)) return;
                 //found the node that we were looking for
                 _MatchIndex += 2;
                 _MatchCount = _MatchIndex;
 
                 //set the expected depth for the rest of query
-                for(var i = _MatchCount; i < GetXPathQueries.Count - 1; i++)
+                for (var i = _MatchCount; i < GetXPathQueries.Count - 1; i++)
                     ((BaseAxisQuery)GetXPathQueries[_MatchIndex]).Depth += reader.Depth - 1;
             }
             else
             {
-                while(reader.Depth == ((BaseAxisQuery)GetXPathQueries[_MatchIndex]).Depth)
-                {
-                    if(((Query)GetXPathQueries[_MatchIndex]).MatchNode(reader))
+                while (reader.Depth == ((BaseAxisQuery)GetXPathQueries[_MatchIndex]).Depth)
+                    if (((Query)GetXPathQueries[_MatchIndex]).MatchNode(reader))
                     {
                         _MatchIndex++;
                         _MatchCount = _MatchIndex;
                     }
                     else
-                    {
-                        //--matchIndex;
+                        //_MatchIndex--;
                         break;
-                    }
-                }
 
                 SetMatchState(reader);
             }
         }
 
-        internal void AdvanceUntil(XPathReader reader)
+        internal void AdvanceUntil([NotNull] XPathReader reader)
         {
             Advance(reader);
 
-            if(GetXPathQueries[_MatchIndex] is AttributeQuery)
+            if (GetXPathQueries[_MatchIndex] is AttributeQuery)
                 reader.ProcessAttribute = reader.Depth + 1; // the attribute depth should be current element plus one
         }
 

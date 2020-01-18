@@ -739,7 +739,7 @@ namespace MathCore.Tests
         {
             const double im = 1.9652382426275;
             var z = new Complex(0, im);
-            var (actual_asin_re, actual_asin_im) = Complex.Trigonomerty.Asin(z);
+            var (actual_asin_re, actual_asin_im) = Complex.Trigonometry.Asin(z);
 
             const double expected_asin_im = 1.427980580692356;
             Assert.That.Value(actual_asin_im).IsEqual(expected_asin_im, 2.23e-16);
@@ -751,7 +751,7 @@ namespace MathCore.Tests
         {
             const double im = 1.9652382426275;
             var z = new Complex(0, im);
-            var (actual_acos_re, actual_acos_im) = Complex.Trigonomerty.Acos(z);
+            var (actual_acos_re, actual_acos_im) = Complex.Trigonometry.Acos(z);
 
             const double expected_acos_re = 1.570796326794897;
             const double expected_asin_im = -1.427980580692356;

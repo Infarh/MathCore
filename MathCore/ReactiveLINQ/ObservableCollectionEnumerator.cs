@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
     internal sealed class ObservableCollectionEnumerator<T> : IObservable<T>

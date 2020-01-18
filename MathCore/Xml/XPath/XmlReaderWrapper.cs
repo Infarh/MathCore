@@ -1,4 +1,5 @@
-﻿namespace System.Xml.XPath
+﻿// ReSharper disable once CheckNamespace
+namespace System.Xml.XPath
 {
     internal class XmlReaderWrapper : XmlReader
     {
@@ -74,14 +75,7 @@
 
         public override XmlNodeType NodeType => _IsInFuture ? _OldNodeType : _Reader.NodeType;
 
-        public XmlNodeType? NextNodeType
-        {
-            get
-            {
-                if(_IsInFuture) return _Reader.NodeType;
-                return PeekNextNode() ? _Reader.NodeType : (XmlNodeType?)null;
-            }
-        }
+        public XmlNodeType? NextNodeType => _IsInFuture ? _Reader.NodeType : PeekNextNode() ? _Reader.NodeType : (XmlNodeType?)null;
 
         public override string LocalName => _IsInFuture ? _OldLocalName : _Reader.LocalName;
 

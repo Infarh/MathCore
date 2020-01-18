@@ -10,12 +10,13 @@
 //     
 //      You must not remove this notice, or any other, from this software.
 //     
-// </copyright>                                                                
+// </copyright>
 //------------------------------------------------------------------------------
 
 using System.Collections;
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
 {
     using FT = Function.FunctionType;

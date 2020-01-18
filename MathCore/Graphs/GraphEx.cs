@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Graphs
 {
+    /// <summary>Методы-расширения, позволяющие рассматривать любой объект как граф</summary>
     public static class GraphEx
     {
         //public static void Test()
@@ -64,7 +68,7 @@ namespace MathCore.Graphs
         /// <typeparam name="TValue">Тап значения вершины</typeparam>
         /// <typeparam name="TWeight">Тип веса связи</typeparam>
         /// <param name="value">Значение вершины</param>
-        /// <param name="GetChields">Метод выделения дочерних узлов</param>
+        /// <param name="GetChilds">Метод выделения дочерних узлов</param>
         /// <param name="GetWeight">Метод определения веса связи между узлами</param>
         /// <param name="Buffered">Буферизация узлов и связей</param>
         /// <returns>Узел графа</returns>
@@ -94,26 +98,30 @@ namespace MathCore.Graphs
         /// var tree = root.AsGraphNode(root => root.Links.Where(link => link.Weight == 1)
         ///                                               .Select(link => link.Node),
         ///                             (from, to) => to.Value.i - from.Value.i);
-        /// var rouht = tree.GetWaveRoute();
+        /// var rout = tree.GetWaveRoute();
         /// 
         /// </code>
         /// </example>
-        public static IGraphNode<TValue, TWeight> AsGraphNode<TValue, TWeight>
-            (
+        [NotNull]
+        public static IGraphNode<TValue, TWeight> AsGraphNode<TValue, TWeight>(
                 this TValue value,
-                Func<TValue, IEnumerable<TValue>> GetChields,
+                Func<TValue, IEnumerable<TValue>> GetChilds,
                 Func<TValue, TValue, TWeight> GetWeight,
-                bool Buffered = false
-            ) => new LambdaGraphNode<TValue, TWeight>(value, GetChields, GetWeight, Buffered);
+                bool Buffered = false) 
+            => new LambdaGraphNode<TValue, TWeight>(value, GetChilds, GetWeight, Buffered);
 
         /// <summary>Преобразование к виду графа</summary>
-        /// <typeparam name="TVAlue">Тип преобразуемого объекта</typeparam>
+        /// <typeparam name="TValue">Тип преобразуемого объекта</typeparam>
         /// <param name="value">Преобразуемый объект</param>
-        /// <param name="GetChields">Метод извлечения дочерних узлов из каждого узла графа</param>
-        /// <param name="Buffered">Флаг необходимости проведения буфферизации</param>
-        /// <returns></returns>
-        public static IGraphNode<TVAlue> AsGraphNode<TVAlue>(this TVAlue value, Func<TVAlue, IEnumerable<TVAlue>> GetChields, bool Buffered = false) => 
-            new LambdaGraphNode<TVAlue>(value, GetChields, Buffered);
+        /// <param name="GetChilds">Метод извлечения дочерних узлов из каждого узла графа</param>
+        /// <param name="Buffered">Флаг необходимости проведения буферизации</param>
+        /// <returns>Узел графа</returns>
+        [NotNull]
+        public static IGraphNode<TValue> AsGraphNode<TValue>(
+            this TValue value, 
+            Func<TValue, IEnumerable<TValue>> GetChilds, 
+            bool Buffered = false) 
+            => new LambdaGraphNode<TValue>(value, GetChilds, Buffered);
 
         /// <summary>Метод перебора вершин графа путём обхода "в глубину". Обход на основе стека дочерних узлов.</summary>
         /// <typeparam name="TValue">Тип узлов графа</typeparam>
@@ -127,7 +135,7 @@ namespace MathCore.Graphs
             var visited = new HashSet<IGraphNode<TValue, TWeight>>();
             do
             {
-                do { Node = stack.Pop(); } while(visited.Contains(Node));
+                do Node = stack.Pop(); while(visited.Contains(Node));
                 yield return Node;
                 visited.Add(Node);
                 Node.Links.Select(l => l.Node)
@@ -149,7 +157,7 @@ namespace MathCore.Graphs
             var visited = new HashSet<IGraphNode<TValue>>();
             do
             {
-                do { Node = stack.Pop(); } while(visited.Contains(Node));
+                do Node = stack.Pop(); while(visited.Contains(Node));
                 yield return Node;
                 visited.Add(Node);
                 Node.Where(node => !stack.Contains(node) && !visited.Contains(node))
@@ -164,7 +172,7 @@ namespace MathCore.Graphs
         /// <typeparam name="TWeight">Тип связи узлов графа</typeparam>
         /// <param name="Node">Начальный узел графа</param>
         /// <returns>Последовательность узлов графа</returns>
-        public static IEnumerable<IGraphNode<TValue, TWeight>> BaypassInWidth<TValue, TWeight>(this IGraphNode<TValue, TWeight> Node)
+        public static IEnumerable<IGraphNode<TValue, TWeight>> BypassInWidth<TValue, TWeight>(this IGraphNode<TValue, TWeight> Node)
         {
             var queue = new Queue<IGraphNode<TValue, TWeight>>();
             queue.Enqueue(Node);
@@ -185,7 +193,7 @@ namespace MathCore.Graphs
         /// <param name="Node">Начальный узел графа</param>
         /// <param name="TakeRoot">Перечислять корень дерева?</param>
         /// <returns>Последовательность узлов графа</returns>
-        public static IEnumerable<IGraphNode<TValue>> BaypassInWidth<TValue>(this IGraphNode<TValue> Node, bool TakeRoot = true)
+        public static IEnumerable<IGraphNode<TValue>> BypassInWidth<TValue>(this IGraphNode<TValue> Node, bool TakeRoot = true)
         {
             var queue = new Queue<IGraphNode<TValue>>();
             var visited = new HashSet<IGraphNode<TValue>>();
@@ -206,7 +214,10 @@ namespace MathCore.Graphs
         /// <param name="hash">Функция хеширования элементов</param>
         /// <param name="TakeRoot">Перечислять корень дерева?</param>
         /// <returns>Последовательность узлов графа</returns>
-        public static IEnumerable<IGraphNode<TValue>> BaypassInWidth<TValue>(this IGraphNode<TValue> Node, Func<IGraphNode<TValue>, int> hash, bool TakeRoot = true)
+        public static IEnumerable<IGraphNode<TValue>> BypassInWidth<TValue>(
+            this IGraphNode<TValue> Node,
+            Func<IGraphNode<TValue>, int> hash,
+            bool TakeRoot = true)
         {
             var queue = new Queue<IGraphNode<TValue>>();
             var visited = new HashSet<int>();
@@ -222,13 +233,16 @@ namespace MathCore.Graphs
             } while(queue.Count != 0);
         }
 
-        /// <summary>МЕтод поиска пути в графе путём обхода вершин "в глубину"</summary>
+        /// <summary>Метод поиска пути в графе путём обхода вершин "в глубину"</summary>
         /// <typeparam name="TValue">Тип вершины графа</typeparam>
         /// <typeparam name="TWeight">Тип связи вершин графа</typeparam>
         /// <param name="RootNode">Начальный элемент поиска пути</param>
         /// <param name="FindPredicate">Метод определения окончания поиска, как успешного</param>
         /// <returns>Маршрут в графе</returns>
-        public static GraphRoute<TValue, TWeight> FindRouteInDepth<TValue, TWeight>(this IGraphNode<TValue, TWeight> RootNode, Predicate<TValue> FindPredicate)
+        [NotNull]
+        public static GraphRoute<TValue, TWeight> FindRouteInDepth<TValue, TWeight>(
+            this IGraphNode<TValue, TWeight> RootNode,
+            [NotNull] Predicate<TValue> FindPredicate)
         {
             var stack = new Stack<IGraphNode<TValue, TWeight>>();
             var node = RootNode;
@@ -237,7 +251,7 @@ namespace MathCore.Graphs
             var route_stack = new Stack<IGraphNode<TValue, TWeight>>();
             do
             {
-                do { node = stack.Pop(); } while(visited.Contains(node));
+                do node = stack.Pop(); while(visited.Contains(node));
                 route_stack.Push(node);
 
                 if(FindPredicate(node.Value))
@@ -250,11 +264,9 @@ namespace MathCore.Graphs
                            .GetReversed();
 
                 if(next.Length == 0)
-                {
                     while(route_stack.Count > 0
-                        && route_stack.Peek().Links.All(l => visited.Contains(l.Node)))
+                          && route_stack.Peek().Links.All(l => visited.Contains(l.Node)))
                         route_stack.Pop();
-                }
                 next.Foreach(stack.Push);
             } while(stack.Count != 0);
 
@@ -266,6 +278,7 @@ namespace MathCore.Graphs
         /// <typeparam name="TWeight">Тип связи вершин графа</typeparam>
         /// <param name="Root">Начальный элемент поиска пути</param>
         /// <returns>Массив найденных путей</returns>
+        [NotNull]
         public static GraphRoute<TValue, TWeight>[] GetWaveRoute<TValue, TWeight>(this IGraphNode<TValue, TWeight> Root)
         {
             var visited = new HashSet<IGraphNode<TValue, TWeight>>();
@@ -278,7 +291,12 @@ namespace MathCore.Graphs
             do
             {
                 var route_stack = queue.Dequeue();
-                var wave = route_stack.Peek().Links.Select(l => l.Node).Where(n => !visited.Contains(n)).ToArray();
+                var wave = route_stack
+                   .Peek()
+                   .Links
+                   .Select(l => l.Node)
+                   .Where(n => !visited.Contains(n))
+                   .ToArray();
                 if(wave.Length == 0)
                 {
                     result.Add(new GraphRoute<TValue, TWeight>(route_stack.ToArray().GetReversed()));

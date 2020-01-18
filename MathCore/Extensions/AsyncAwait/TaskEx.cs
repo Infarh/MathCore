@@ -704,7 +704,6 @@ namespace System.Threading.Tasks
                     tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
                 else if (task.IsCanceled) tcs.TrySetCanceled();
                 else
-                {
                     try
                     {
                         var result = next(task.Result);
@@ -714,7 +713,6 @@ namespace System.Threading.Tasks
                     {
                         tcs.TrySetException(exc);
                     }
-                }
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -737,7 +735,6 @@ namespace System.Threading.Tasks
                     tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
                 else if (task.IsCanceled) tcs.TrySetCanceled();
                 else
-                {
                     // Otherwise, get the next task.  If it's null, bail.  If not,
                     // when it's done we'll have our result.
                     try
@@ -748,7 +745,6 @@ namespace System.Threading.Tasks
                     {
                         tcs.TrySetException(exc);
                     }
-                }
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -770,9 +766,8 @@ namespace System.Threading.Tasks
                 if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
                 else if (task.IsCanceled) tcs.TrySetCanceled();
                 else
-                {
-                    // Otherwise, get the next task.  If it's null, bail.  If not,
-                    // when it's done we'll have our result.
+                // Otherwise, get the next task.  If it's null, bail.  If not,
+                // when it's done we'll have our result.
                     try
                     {
                         next(task.Result).ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
@@ -781,7 +776,6 @@ namespace System.Threading.Tasks
                     {
                         tcs.TrySetException(exc);
                     }
-                }
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -803,9 +797,8 @@ namespace System.Threading.Tasks
                 if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
                 else if (task.IsCanceled) tcs.TrySetCanceled();
                 else
-                {
-                    // Otherwise, get the next task.  If it's null, bail.  If not,
-                    // when it's done we'll have our result.
+                // Otherwise, get the next task.  If it's null, bail.  If not,
+                // when it's done we'll have our result.
                     try
                     {
                         next().ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
@@ -814,7 +807,6 @@ namespace System.Threading.Tasks
                     {
                         tcs.TrySetException(exc);
                     }
-                }
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -836,9 +828,8 @@ namespace System.Threading.Tasks
                 if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
                 else if (task.IsCanceled) tcs.TrySetCanceled();
                 else
-                {
-                    // Otherwise, get the next task.  If it's null, bail.  If not,
-                    // when it's done we'll have our result.
+                // Otherwise, get the next task.  If it's null, bail.  If not,
+                // when it's done we'll have our result.
                     try
                     {
                         next(task.Result).ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
@@ -847,7 +838,6 @@ namespace System.Threading.Tasks
                     {
                         tcs.TrySetException(exc);
                     }
-                }
             }, TaskScheduler.Default);
             return tcs.Task;
         }

@@ -1,4 +1,5 @@
-﻿namespace System.Linq.Reactive
+﻿// ReSharper disable once CheckNamespace
+namespace System.Linq.Reactive
 {
     /// <summary>Управляемый наблюдаемый объект</summary>
     /// <typeparam name="T">Тип объекта последовательности</typeparam>
@@ -7,29 +8,36 @@
         /// <summary>Наблюдатель</summary>
         private readonly IObserver<T> _Observer;
 
-        /// <summary>Признак разрешения генерации событий</summary>
-        public bool Open { get; set; }
+        /// <summary>Признак разрешения потока элементов последовательности</summary>
+        public bool State { get; set; }
 
         /// <summary>Управляемый наблюдаемый объект</summary>
         /// <param name="observable">Наблюдаемый объект</param>
-        /// <param name="IsOpen">Исходное состояние</param>
-        public TriggeredObservable(IObservable<T> observable, bool IsOpen = true)
+        /// <param name="InitialState">Исходное состояние</param>
+        public TriggeredObservable(IObservable<T> observable, bool InitialState = true)
         {
             _Observer = new LinkedObserver<T>(observable, this);
-            Open = IsOpen;
+            State = InitialState;
         }
 
-        public override void OnNext(T item) { if(Open) base.OnNext(item); }
+        /// <summary>Если состояние <see langword="true"/>, то значения пропускаются в выходную последовательность</summary>
+        /// <param name="item">Объект события</param>
+        public override void OnNext(T item) { if(State) base.OnNext(item); }
 
-        public override void OnCompleted() { if(Open) base.OnCompleted(); }
+        /// <summary>Если состояние <see langword="true"/>, то генерирует событие завершения последовательности</summary>
+        public override void OnCompleted() { if(State) base.OnCompleted(); }
 
-        public override void OnReset() { if(Open) base.OnReset(); }
+        /// <summary>Если состояние <see langword="true"/>, то генерирует событие сброса последовательности</summary>
+        public override void OnReset() { if(State) base.OnReset(); }
 
-        public override void OnError(Exception error) { if(Open) base.OnError(error); }
+        /// <summary>Если состояние <see langword="true"/>, то генерирует событие возникновения ошибки</summary>
+        /// <param name="error">Возникшее исключение</param>
+        public override void OnError(Exception error) { if(State) base.OnError(error); }
 
-        public override void Dispose()
+        /// <inheritdoc />
+        protected override void Dispose(bool Disposing)
         {
-            base.Dispose();
+            base.Dispose(Disposing);
             (_Observer as IDisposable)?.Dispose();
         }
     }

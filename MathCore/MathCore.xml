@@ -7,6 +7,46 @@
         <member name="T:MathCore.ArgumentsString">
             <summary>Аргументы командной строки</summary>
         </member>
+        <member name="T:MathCore.ArrayIndexer`1">
+            <summary>Индексатор массива элементов</summary>
+            <typeparam name="T">Тип элемента массива</typeparam>
+        </member>
+        <member name="F:MathCore.ArrayIndexer`1._Array">
+            <summary>Индексируемый массив</summary>
+        </member>
+        <member name="F:MathCore.ArrayIndexer`1._Index">
+            <summary>Индекс текущего элемента</summary>
+        </member>
+        <member name="P:MathCore.ArrayIndexer`1.Length">
+            <summary>Длина массива</summary>
+        </member>
+        <member name="P:MathCore.ArrayIndexer`1.Index">
+            <summary>Индекс текущего элемента</summary>
+        </member>
+        <member name="P:MathCore.ArrayIndexer`1.Value">
+            <summary>Ссылка на текущий элемент массива</summary>
+        </member>
+        <member name="P:MathCore.ArrayIndexer`1.Item(System.Int32)">
+            <summary>Элемент массива с указанным индексом</summary>
+            <param name="index">Индекс элемента массива</param>
+            <returns>Ссылка на элемент с указанным индексом</returns>
+        </member>
+        <member name="P:MathCore.ArrayIndexer`1.Array">
+            <summary>Индексируемый массив</summary>
+        </member>
+        <member name="M:MathCore.ArrayIndexer`1.#ctor">
+            <summary>Инициализация нового <see cref="T:MathCore.ArrayIndexer`1"/></summary>
+        </member>
+        <member name="M:MathCore.ArrayIndexer`1.#ctor(`0[],System.Int32)">
+            <summary>Инициализация нового <see cref="T:MathCore.ArrayIndexer`1"/></summary>
+            <param name="Array">Индексируемый массив</param>
+            <param name="Index">Индекс текущего элемента</param>
+        </member>
+        <member name="M:MathCore.ArrayIndexer`1.op_Implicit(MathCore.ArrayIndexer{`0})~`0[]">
+            <summary>Оператор неявного приведения типа <see cref="T:MathCore.ArrayIndexer`1"/> к <see cref="T:System.Array`1"/></summary>
+            <param name="Indexer">Индексатор массива <see cref="T:MathCore.ArrayIndexer`1"/></param>
+            <returns>Индексируемый массив элементов</returns>
+        </member>
         <member name="T:MathCore.Attributes.ElementNameAttribute">
             <summary>Имя элемента</summary>
         </member>
@@ -39,14 +79,36 @@
         <member name="F:MathCore.BigInteger.PrimesBelow2000">
             <summary>Простые числа до 2000</summary>
         </member>
+        <member name="M:MathCore.BigInteger.op_Multiply(MathCore.BigInteger,MathCore.BigInteger)">
+            <summary>Overloading of multiplication operator</summary>
+            <exception cref="T:System.ArithmeticException">Multiplication overflow</exception>
+        </member>
+        <member name="M:MathCore.BigInteger.BarrettReduction(MathCore.BigInteger,MathCore.BigInteger,MathCore.BigInteger)">
+            <summary>Fast calculation of modular reduction using Barrett's reduction</summary>
+            <returns></returns>
+            <remarks>Requires x &lt; b^(2k), where b is the base.  In this case, base is 2^32 (uint). Reference [4]</remarks>
+        </member>
+        <member name="M:MathCore.BigInteger.GenRandomBits(System.Int32,System.Random)">
+            <summary>Populates "this" with the specified amount of random bits</summary>
+            <exception cref="T:System.ArithmeticException">Number of required bits &gt; maxLength</exception>
+        </member>
+        <member name="M:MathCore.BigInteger.IntValue">
+            <summary>Последние 4 байта значения числа <see cref="T:MathCore.BigInteger"/></summary>
+        </member>
+        <member name="M:MathCore.BigInteger.LongValue">
+            <summary>Последние 8 байт значения числа <see cref="T:MathCore.BigInteger"/></summary>
+        </member>
         <member name="T:MathCore.CommandProcessor.Argument">
             <summary>Аргумент команды</summary>
         </member>
         <member name="P:MathCore.CommandProcessor.Argument.Name">
             <summary>Имя аргумента</summary>
         </member>
+        <member name="F:MathCore.CommandProcessor.Argument._Values">
+            <summary>Значения аргумента</summary>
+        </member>
         <member name="P:MathCore.CommandProcessor.Argument.Values">
-            <summary>Массив значений аргумента</summary>
+            <summary>Значения аргумента</summary>
         </member>
         <member name="P:MathCore.CommandProcessor.Argument.Value">
             <summary>Значение аргумента</summary>
@@ -63,6 +125,24 @@
             <summary>Аргумент команды</summary>
             <param name="ArgStr">Строковое описание аргумента</param>
             <param name="ValueSplitter">Разделитель имени аргумента и значения</param>
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.ValueAs``1">
+            <summary>Представление значения в указанном типе</summary>
+            <typeparam name="T">Требуемый тип значения аргумента</typeparam>
+            <returns>Значение аргумента указанного типа</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.TryGetValueAs``1(``0@)">
+            <summary>Попытаться получить значение аргумента команды в указанном типе <typeparamref name="T"/></summary>
+            <param name="value">Приведённое к типу <typeparamref name="T"/> значение аргумента</param>
+            <typeparam name="T">Требуемый тип значения аргумента</typeparam>
+            <returns>Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.TryGetValueAs``1(``0@,System.Exception@)">
+            <summary>Попытаться получить значение аргумента команды в указанном типе <typeparamref name="T"/></summary>
+            <param name="value">Приведённое к типу <typeparamref name="T"/> значение аргумента</param>
+            <param name="Error">Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></param>
+            <typeparam name="T">Требуемый тип значения аргумента</typeparam>
+            <returns>Истина, если преобразование выполнено успешно</returns>
         </member>
         <member name="M:MathCore.CommandProcessor.Argument.ToString">
             <summary>Преобразование в строку</summary>
@@ -91,6 +171,24 @@
             <summary>Преобразование в строку</summary>
             <returns>Строковое представление команды</returns>
         </member>
+        <member name="T:MathCore.CommandProcessor.CommandArgHandlersList">
+            <summary>Список обработчиков команды</summary>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandArgHandlersList.op_Addition(MathCore.CommandProcessor.CommandArgHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[],MathCore.CommandProcessor.Argument})">
+            <summary>Оператор добавления команды к списку</summary>
+            <param name="list">Список обработчиков команды</param>
+            <param name="handler">Добавляемый обработчик команды</param>
+            <returns>Список с добавленным обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandArgHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandArgHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[],MathCore.CommandProcessor.Argument})">
+            <summary>Оператор удаления команды к списку</summary>
+            <param name="list">Список обработчиков команды</param>
+            <param name="handler">Удаляемый обработчик команды</param>
+            <returns>Список с удалённым обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandArgHandlersList.ToString">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.CommandProcessor.CommandEventArgs">
             <summary>Аргумент события обработки команды</summary>
         </member>
@@ -106,39 +204,95 @@
         <member name="P:MathCore.CommandProcessor.CommandEventArgs.Handled">
             <summary>Признак того, что команда обработана</summary>
         </member>
+        <member name="M:MathCore.CommandProcessor.CommandEventArgs.#ctor(MathCore.CommandProcessor.Command,System.Int32,System.Collections.Generic.IReadOnlyList{MathCore.CommandProcessor.Command})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.CommandProcessor.CommandEventArgs"/></summary>
+            <param name="Command">Обрабатываемая команда</param>
+            <param name="Index">Индекс команды в перечне команд сессии</param>
+            <param name="Commands">Перечень команд сессии</param>
+        </member>
         <member name="M:MathCore.CommandProcessor.CommandEventArgs.ToString">
             <summary>Строковое представление</summary>
             <returns>Строковое представление</returns>
         </member>
+        <member name="M:MathCore.CommandProcessor.CommandEventArgs.SetHandled">
+            <summary>Установка признака того, что команда была обработана</summary>
+        </member>
         <member name="T:MathCore.CommandProcessor.CommandHandlersList">
             <summary>Список обработчиков команды</summary>
         </member>
-        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Addition(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[]})">
-            <summary>Оператор добалвения команды к списку</summary>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Addition(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,System.Collections.Generic.IReadOnlyList{MathCore.CommandProcessor.Command}})">
+            <summary>Оператор добавления команды к списку</summary>
             <param name="list">Список обработчиков команды</param>
-            <param name="handler">Добавляемый обработчик команды</param>
+            <param name="Handler">Добавляемый обработчик команды</param>
             <returns>Список с добавленным обработчиком команды</returns>
         </member>
-        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[]})">
-            <summary>Оператор удаления команды к списку</summary>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Addition(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command})">
+            <summary>Оператор добавления обработчика команды в список обработчиков</summary>
+            <param name="list">Список действий обработчиков команды</param>
+            <param name="Handler">Добавляемый в список обработчик</param>
+            <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Addition(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32})">
+            <summary>Оператор добавления позиционного обработчика команды в список обработчиков</summary>
+            <param name="list">Список действий обработчиков команды</param>
+            <param name="Handler">Добавляемый в список обработчик, поддерживающий параметр индекса</param>
+            <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Addition(MathCore.CommandProcessor.CommandHandlersList,System.Action)">
+            <summary>Оператор добавления безпараметрического обработчика команды в список обработчиков</summary>
+            <param name="list">Список действий обработчиков команды</param>
+            <param name="Handler">Добавляемый в список обработчик без параметров</param>
+            <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,System.Collections.Generic.IReadOnlyList{MathCore.CommandProcessor.Command}})">
+            <summary>Оператор удаления команды из списка обработчиков</summary>
             <param name="list">Список обработчиков команды</param>
-            <param name="handler">Удаляемый обработчик команды</param>
+            <param name="Handler">Удаляемый обработчик команды</param>
             <returns>Список с удалённым обработчиком команды</returns>
         </member>
-        <member name="M:MathCore.CommandProcessor.CommandArgHandlersList.op_Addition(MathCore.CommandProcessor.CommandArgHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[],MathCore.CommandProcessor.Argument})">
-            <summary>Оператор добалвения команды к списку</summary>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command})">
+            <summary>Оператор удаления обработчика команды из списка обработчиков</summary>
             <param name="list">Список обработчиков команды</param>
-            <param name="handler">Добавляемый обработчик команды</param>
-            <returns>Список с добавленным обработчиком команды</returns>
-        </member>
-        <member name="M:MathCore.CommandProcessor.CommandArgHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandArgHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[],MathCore.CommandProcessor.Argument})">
-            <summary>Оператор удаления команды к списку</summary>
-            <param name="list">Список обработчиков команды</param>
-            <param name="handler">Удаляемый обработчик команды</param>
+            <param name="Handler">Удаляемый обработчик команды</param>
             <returns>Список с удалённым обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandHandlersList,System.Action{MathCore.CommandProcessor.Command,System.Int32})">
+            <summary>Оператор удаления обработчика команды с индексатором из списка обработчиков</summary>
+            <param name="list">Список обработчиков команды</param>
+            <param name="Handler">Удаляемый обработчик команды с индексатором</param>
+            <returns>Список с удалённым обработчиком команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.op_Subtraction(MathCore.CommandProcessor.CommandHandlersList,System.Action)">
+            <summary>Оператор удаления обработчика команды из списка обработчиков</summary>
+            <param name="list">Список обработчиков команды</param>
+            <param name="Handler">Удаляемый обработчик команды</param>
+            <returns>Список с удалённым обработчиком команды</returns>
+        </member>
+        <member name="F:MathCore.CommandProcessor.CommandHandlersList._CommandHandlers">
+            <summary>Словарь обработчиков команд (ключ - имя команды, значение - список обработчиков)</summary>
+        </member>
+        <member name="P:MathCore.CommandProcessor.CommandHandlersList.Item(System.String)">
+            <summary>Обращение к списку обработчиков команды по её имени (индексатор)</summary>
+            <param name="CommandName">Имя команды</param>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.IsRegisteredCommand(System.String)">
+            <summary>Зарегистрирована ли команда в процессоре?</summary>
+            <param name="CommandName">Имя команды</param>
+            <returns>Истина, если в процессоре существует обработчик команды с указанным именем</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandHandlersList.ToString">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.CommandProcessor.CommandLineProcessor">
             <summary>Командный процессор</summary>
+        </member>
+        <member name="M:MathCore.CommandProcessor.CommandLineProcessor.ParseConsole(System.String,System.Action{MathCore.CommandProcessor.CommandLineProcessor},System.IO.TextWriter,System.IO.TextReader)">
+            <summary>Разобрать команды консоли управления</summary>
+            <param name="Prompt">Формат запроса</param>
+            <param name="Initializer">Метод инициализации команд</param>
+            <param name="ConsoleWriter">Вывод в консоль (если не указано, то используется <see cref="T:System.Console"/>.<see cref="P:System.Console.Out"/>)</param>
+            <param name="ConsoleReader">Ввод с консоли (если не указано, то используется <see cref="T:System.Console"/>.<see cref="P:System.Console.In"/>)</param>
+            <returns>Сформированное перечисление команд запроса</returns>
         </member>
         <member name="E:MathCore.CommandProcessor.CommandLineProcessor.CommandProcess">
             <summary>Событие обработки команды</summary>
@@ -162,6 +316,9 @@
         </member>
         <member name="F:MathCore.CommandProcessor.CommandLineProcessor._CommandHandlers">
             <summary>Словарь списков обработчиков команд</summary>
+        </member>
+        <member name="P:MathCore.CommandProcessor.CommandLineProcessor.Commands">
+            <summary>Команды, обрабатываемые процессором</summary>
         </member>
         <member name="P:MathCore.CommandProcessor.CommandLineProcessor.CommandSplitter">
             <summary>Разделитель команд в строке</summary>
@@ -191,12 +348,12 @@
             <summary>Обработать команду</summary>
             <param name="CommandLine">Командная строка</param>
         </member>
-        <member name="M:MathCore.CommandProcessor.CommandLineProcessor.AddCommandHandler(System.String,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[]})">
+        <member name="M:MathCore.CommandProcessor.CommandLineProcessor.AddCommandHandler(System.String,System.Action{MathCore.CommandProcessor.Command,System.Int32,System.Collections.Generic.IReadOnlyList{MathCore.CommandProcessor.Command}})">
             <summary>Добавить обработчик команды</summary>
             <param name="CommandName">Имя команды</param>
             <param name="CommandHandler">Добавляемый обработчик команды</param>
         </member>
-        <member name="M:MathCore.CommandProcessor.CommandLineProcessor.RemoveCommandHandler(System.String,System.Action{MathCore.CommandProcessor.Command,System.Int32,MathCore.CommandProcessor.Command[]})">
+        <member name="M:MathCore.CommandProcessor.CommandLineProcessor.RemoveCommandHandler(System.String,System.Action{MathCore.CommandProcessor.Command,System.Int32,System.Collections.Generic.IReadOnlyList{MathCore.CommandProcessor.Command}})">
             <summary>Удалить обработчик команды</summary>
             <param name="CommandName">Имя команды</param>
             <param name="CommandHandler">Удаляемый обработчик команды</param>
@@ -217,35 +374,6 @@
             <summary>Проверка - имеет ли команда обработчики</summary>
             <param name="CommandName">Проверяемая команда</param>
             <returns>Истина, если указаны обработчики команды</returns>
-        </member>
-        <member name="M:MathCore.CommandProcessor.CommandLineProcessor.Subscribe(System.IObserver{MathCore.CommandProcessor.CommandEventArgs})">
-            <inheritdoc />
-        </member>
-        <member name="T:MathCore.CommandProcessor.TestCommandLineProcessor">
-            <summary>Пример использования класса командного процессора</summary>
-        </member>
-        <member name="P:MathCore.CommandProcessor.TestCommandLineProcessor.Work">
-            <summary>Флаг обработки запросов пользователя</summary>
-        </member>
-        <member name="P:MathCore.CommandProcessor.TestCommandLineProcessor.Prompt">
-            <summary>Приглашение командной строки</summary>
-        </member>
-        <member name="M:MathCore.CommandProcessor.TestCommandLineProcessor.Test">
-            <summary>Точка входа в пример</summary>
-        </member>
-        <member name="M:MathCore.CommandProcessor.TestCommandLineProcessor.UnknownCommandInformator(System.Object,MathCore.CommandProcessor.CommandEventArgs)">
-            <summary>Обработчик необработанных команд</summary>
-            <param name="Sender">Источник события</param>
-            <param name="e">Аргумент, содержащий информацию о необработанной команде</param>
-        </member>
-        <member name="M:MathCore.CommandProcessor.TestCommandLineProcessor.ExecuteCommand(System.Object,MathCore.CommandProcessor.CommandEventArgs)">
-            <summary>Обработчик команды</summary>
-            <param name="sender">Источник события</param>
-            <param name="e">Аргумент, содержащий информацию о команде</param>
-        </member>
-        <member name="M:MathCore.CommandProcessor.TestCommandLineProcessor.SetArgument(MathCore.CommandProcessor.Argument)">
-            <summary>Метод установки значения команды Set</summary>
-            <param name="SetArg">Аргумент команды Set</param>
         </member>
         <member name="M:MathCore.CommandStringArguments.GetEnumerator">
             <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции аргументов командной строки</summary>
@@ -816,53 +944,68 @@
             <param name="X">Целое число</param>
             <returns>Комплексное число</returns>
         </member>
-        <member name="T:MathCore.Complex.Trigonomerty">
+        <member name="T:MathCore.Complex.Trigonometry">
             <summary>Тригонометрические функции комплексного переменного</summary>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Sin(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Sin(MathCore.Complex@)">
             <summary>Синус</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Синус комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Cos(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Cos(MathCore.Complex@)">
             <summary>Косинус</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Косинус комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.tg(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Tg(MathCore.Complex@)">
             <summary>Тангенс</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Тангенс комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.ctg(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Ctg(MathCore.Complex@)">
             <summary>Котангенс</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Котангенс комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Atan(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Asin(MathCore.Complex@)">
+            <summary>Арксинус комплексного переменного</summary>
+            <param name="z">Комплексный аргумент</param>
+            <returns>Арксинус комплексного аргумента</returns>
+        </member>
+        <member name="M:MathCore.Complex.Trigonometry.Acos(MathCore.Complex@)">
+            <summary>Арккосинус комплексного переменного</summary>
+            <param name="z">Комплексный аргумент</param>
+            <returns>Арккосинус комплексного аргумента</returns>
+        </member>
+        <member name="M:MathCore.Complex.Trigonometry.Atan(MathCore.Complex@)">
             <summary>Арктангенс комплексного переменного</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Арктангенс комплексного аргумента</returns>
         </member>
-        <member name="T:MathCore.Complex.Trigonomerty.Hyperbolic">
+        <member name="M:MathCore.Complex.Trigonometry.Arctg(MathCore.Complex@)">
+            <summary>Арккатангенс комплексного переменного</summary>
+            <param name="z">Комплексный аргумент</param>
+            <returns>Арккатангенс комплексного аргумента</returns>
+        </member>
+        <member name="T:MathCore.Complex.Trigonometry.Hyperbolic">
             <summary>Гиперболические функции</summary>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Hyperbolic.Sh(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Hyperbolic.Sh(MathCore.Complex@)">
             <summary>Гиперболический синус</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Гиперболический синус комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Hyperbolic.Ch(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Hyperbolic.Ch(MathCore.Complex@)">
             <summary>Гиперболический косинус</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Гиперболический косинус комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Hyperbolic.tgh(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Hyperbolic.Tgh(MathCore.Complex@)">
             <summary>Гиперболический тангенс</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Гиперболический тангенс комплексного аргумента</returns>
         </member>
-        <member name="M:MathCore.Complex.Trigonomerty.Hyperbolic.ctgh(MathCore.Complex@)">
+        <member name="M:MathCore.Complex.Trigonometry.Hyperbolic.Ctgh(MathCore.Complex@)">
             <summary>Гиперболический котангенс</summary>
             <param name="z">Комплексный аргумент</param>
             <returns>Гиперболический котангенс комплексного аргумента</returns>
@@ -1067,19 +1210,19 @@
         <member name="F:MathCore.Consts.Planck_Time">
             <summary>Время Планка lp/c с</summary>
         </member>
-        <member name="T:MathCore.Consts.ElectroDynamic">
+        <member name="T:MathCore.Consts.Electrodynamic">
             <summary>Электродинамические константы</summary>
         </member>
-        <member name="F:MathCore.Consts.ElectroDynamic.Epsilon0">
+        <member name="F:MathCore.Consts.Electrodynamic.Epsilon0">
             <summary>Электрическая постоянная 1/(Mu0 · c^2) = 8,854187817620… ×10^−12 Ф·м^−1</summary>
         </member>
-        <member name="F:MathCore.Consts.ElectroDynamic.Mu0">
+        <member name="F:MathCore.Consts.Electrodynamic.Mu0">
             <summary>Магнитная постоянная 4·π ×10^-7 = 1.2566370614E-6 Гн/м</summary>
         </member>
-        <member name="F:MathCore.Consts.ElectroDynamic.Impedance">
+        <member name="F:MathCore.Consts.Electrodynamic.Impedance">
             <summary>Упрощённое сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 377 Ом</summary>
         </member>
-        <member name="F:MathCore.Consts.ElectroDynamic.Impedance0">
+        <member name="F:MathCore.Consts.Electrodynamic.Impedance0">
             <summary>Сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 376.730313461771 Ом</summary>
         </member>
         <member name="F:MathCore.Consts.BigPrime_int">
@@ -1091,7 +1234,7 @@
         <member name="F:MathCore.Consts.ElementaryCharge">
             <summary>Элементарный заряд e = 1,602 176 565(35)·10^−19 Кл</summary>
         </member>
-        <member name="F:MathCore.Consts.BoltzmanConstant">
+        <member name="F:MathCore.Consts.BoltzmannConstant">
             <summary>Постоянная Больцмана k = 1,380 6488(13)·10^−23 Дж/К</summary>
         </member>
         <member name="F:MathCore.Consts.AvogadroConstant">
@@ -1099,6 +1242,9 @@
         </member>
         <member name="F:MathCore.Consts.FaradayConstant">
             <summary>Постоянная Фарадея F = e * Na = 96485,33(83) Кл/моль</summary>
+        </member>
+        <member name="M:MathCore.DataGenericSources.DataHost.Dispose">
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Data.DataLength.ToString">
             <inheritdoc />
@@ -1163,38 +1309,38 @@
             <param name="sender">Источник события</param>
             <param name="e">Аргумент события</param>
         </member>
-        <member name="T:MathCore.DifferencialEquations.Numerical.ArgumentFunction">
+        <member name="T:MathCore.DifferentialEquations.Numerical.ArgumentFunction">
             <summary>Функция определения аргумента</summary>
             <param name="t">Параметр</param>
             <returns>Вектор аргумента уравнения</returns>
         </member>
-        <member name="T:MathCore.DifferencialEquations.Numerical.DifferencialEquationsSystem">
+        <member name="T:MathCore.DifferentialEquations.Numerical.DifferentialEquationsSystem">
             <summary> Система дифференциальных уравнений</summary>
             <param name="X">Аргумент</param>
             <param name="Y">Значения функции</param>
             <returns>Значения производных</returns>
         </member>
-        <member name="T:MathCore.DifferencialEquations.Numerical.Eyler">
+        <member name="T:MathCore.DifferentialEquations.Numerical.Eyler">
             <summary>
             Метод Рунге-Кутты
             </summary>
         </member>
-        <member name="P:MathCore.DifferencialEquations.Numerical.Eyler.N">
+        <member name="P:MathCore.DifferentialEquations.Numerical.Eyler.N">
             <summary>
             Размерность системы
             </summary>
         </member>
-        <member name="P:MathCore.DifferencialEquations.Numerical.Eyler.Y">
+        <member name="P:MathCore.DifferentialEquations.Numerical.Eyler.Y">
             <summary>
             Искомые решения
             </summary>
         </member>
-        <member name="P:MathCore.DifferencialEquations.Numerical.Eyler.t">
+        <member name="P:MathCore.DifferentialEquations.Numerical.Eyler.t">
             <summary>
             Текущее время
             </summary>
         </member>
-        <member name="M:MathCore.DifferencialEquations.Numerical.Eyler.#ctor(System.Int32,MathCore.DifferencialEquations.Numerical.DifferencialEquationsSystem,MathCore.DifferencialEquations.Numerical.ArgumentFunction)">
+        <member name="M:MathCore.DifferentialEquations.Numerical.Eyler.#ctor(System.Int32,MathCore.DifferentialEquations.Numerical.DifferentialEquationsSystem,MathCore.DifferentialEquations.Numerical.ArgumentFunction)">
             <summary>
             Метод Рунге-Кутты
             </summary>
@@ -1202,40 +1348,40 @@
             <param name="System">Решаемая система</param>
             <param name="X">Производящая функция аргумента</param>
         </member>
-        <member name="M:MathCore.DifferencialEquations.Numerical.Eyler.Initialize(System.Double,System.Double[])">
+        <member name="M:MathCore.DifferentialEquations.Numerical.Eyler.Initialize(System.Double,System.Double[])">
             <summary>
             Начальные условия
             </summary>
             <param name="t0">Начальное время</param>
             <param name="Y0">Начальные условия</param>
         </member>
-        <member name="M:MathCore.DifferencialEquations.Numerical.Eyler.NextStep(System.Double)">
+        <member name="M:MathCore.DifferentialEquations.Numerical.Eyler.NextStep(System.Double)">
             <summary>
             Рассчёт решения
             </summary>
             <param name="dt">Шаг</param>
         </member>
-        <member name="T:MathCore.DifferencialEquations.Numerical.RungeKutta">
+        <member name="T:MathCore.DifferentialEquations.Numerical.RungeKutta">
             <summary>
             Метод Рунге-Кутты
             </summary>
         </member>
-        <member name="P:MathCore.DifferencialEquations.Numerical.RungeKutta.N">
+        <member name="P:MathCore.DifferentialEquations.Numerical.RungeKutta.N">
             <summary>
             Размерность системы
             </summary>
         </member>
-        <member name="P:MathCore.DifferencialEquations.Numerical.RungeKutta.Y">
+        <member name="P:MathCore.DifferentialEquations.Numerical.RungeKutta.Y">
             <summary>
             Искомые решения
             </summary>
         </member>
-        <member name="P:MathCore.DifferencialEquations.Numerical.RungeKutta.t">
+        <member name="P:MathCore.DifferentialEquations.Numerical.RungeKutta.t">
             <summary>
             Текущее время
             </summary>
         </member>
-        <member name="M:MathCore.DifferencialEquations.Numerical.RungeKutta.#ctor(System.Int32,MathCore.DifferencialEquations.Numerical.DifferencialEquationsSystem,MathCore.DifferencialEquations.Numerical.ArgumentFunction)">
+        <member name="M:MathCore.DifferentialEquations.Numerical.RungeKutta.#ctor(System.Int32,MathCore.DifferentialEquations.Numerical.DifferentialEquationsSystem,MathCore.DifferentialEquations.Numerical.ArgumentFunction)">
             <summary>
             Метод Рунге-Кутты
             </summary>
@@ -1243,14 +1389,14 @@
             <param name="System">Решаемая система</param>
             <param name="X">Производящая функция аргумента</param>
         </member>
-        <member name="M:MathCore.DifferencialEquations.Numerical.RungeKutta.Initialize(System.Double,System.Double[])">
+        <member name="M:MathCore.DifferentialEquations.Numerical.RungeKutta.Initialize(System.Double,System.Double[])">
             <summary>
             Начальные условия
             </summary>
             <param name="t0">Начальное время</param>
             <param name="Y0">Начальные условия</param>
         </member>
-        <member name="M:MathCore.DifferencialEquations.Numerical.RungeKutta.NextStep(System.Double)">
+        <member name="M:MathCore.DifferentialEquations.Numerical.RungeKutta.NextStep(System.Double)">
             <summary>
             Рассчёт решения
             </summary>
@@ -1984,7 +2130,7 @@
             <returns>Длина дуги на поверхности Земли, начинающейся в первой точке и заканчивающейся во второй точке</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.EquirectangularApproximation_LengthBetween(System.Double,System.Double,System.Double,System.Double)">
-            <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекциии), заданными своими координатами</summary>
+            <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекции), заданными своими координатами</summary>
             <param name="latitude1">Широта первой точки в градусах</param>
             <param name="longitude1">Долгота первой точки в градусах</param>
             <param name="latitude2">Широта второй точки в градусах</param>
@@ -2035,12 +2181,15 @@
             <param name="heading2">Курс второй исходной точки</param>
             <returns>Точка пересечения двух курсов</returns>
         </member>
+        <member name="T:MathCore.Graphs.GraphEx">
+            <summary>Методы-расширения, позволяющие рассматривать любой объект как граф</summary>
+        </member>
         <member name="M:MathCore.Graphs.GraphEx.AsGraphNode``2(``0,System.Func{``0,System.Collections.Generic.IEnumerable{``0}},System.Func{``0,``0,``1},System.Boolean)">
             <summary>Преобразование к типу вершины графа</summary>
             <typeparam name="TValue">Тап значения вершины</typeparam>
             <typeparam name="TWeight">Тип веса связи</typeparam>
             <param name="value">Значение вершины</param>
-            <param name="GetChields">Метод выделения дочерних узлов</param>
+            <param name="GetChilds">Метод выделения дочерних узлов</param>
             <param name="GetWeight">Метод определения веса связи между узлами</param>
             <param name="Buffered">Буферизация узлов и связей</param>
             <returns>Узел графа</returns>
@@ -2070,18 +2219,18 @@
             var tree = root.AsGraphNode(root => root.Links.Where(link => link.Weight == 1)
                                                           .Select(link => link.Node),
                                         (from, to) => to.Value.i - from.Value.i);
-            var rouht = tree.GetWaveRoute();
+            var rout = tree.GetWaveRoute();
             
             </code>
             </example>
         </member>
         <member name="M:MathCore.Graphs.GraphEx.AsGraphNode``1(``0,System.Func{``0,System.Collections.Generic.IEnumerable{``0}},System.Boolean)">
             <summary>Преобразование к виду графа</summary>
-            <typeparam name="TVAlue">Тип преобразуемого объекта</typeparam>
+            <typeparam name="TValue">Тип преобразуемого объекта</typeparam>
             <param name="value">Преобразуемый объект</param>
-            <param name="GetChields">Метод извлечения дочерних узлов из каждого узла графа</param>
-            <param name="Buffered">Флаг необходимости проведения буфферизации</param>
-            <returns></returns>
+            <param name="GetChilds">Метод извлечения дочерних узлов из каждого узла графа</param>
+            <param name="Buffered">Флаг необходимости проведения буферизации</param>
+            <returns>Узел графа</returns>
         </member>
         <member name="M:MathCore.Graphs.GraphEx.BypassInDepth``2(MathCore.Graphs.IGraphNode{``0,``1})">
             <summary>Метод перебора вершин графа путём обхода "в глубину". Обход на основе стека дочерних узлов.</summary>
@@ -2096,21 +2245,21 @@
             <param name="Node">Начальный узел графа</param>
             <returns>Последовательность узлов графа</returns>
         </member>
-        <member name="M:MathCore.Graphs.GraphEx.BaypassInWidth``2(MathCore.Graphs.IGraphNode{``0,``1})">
+        <member name="M:MathCore.Graphs.GraphEx.BypassInWidth``2(MathCore.Graphs.IGraphNode{``0,``1})">
             <summary>Метод перебора вершин графа путём обхода "в ширину". Обход на основе очереди дочерних узлов.</summary>
             <typeparam name="TValue">Тип узлов графа</typeparam>
             <typeparam name="TWeight">Тип связи узлов графа</typeparam>
             <param name="Node">Начальный узел графа</param>
             <returns>Последовательность узлов графа</returns>
         </member>
-        <member name="M:MathCore.Graphs.GraphEx.BaypassInWidth``1(MathCore.Graphs.IGraphNode{``0},System.Boolean)">
+        <member name="M:MathCore.Graphs.GraphEx.BypassInWidth``1(MathCore.Graphs.IGraphNode{``0},System.Boolean)">
             <summary>Метод перебора вершин графа путём обхода "в ширину". Обход на основе очереди дочерних узлов.</summary>
             <typeparam name="TValue">Тип узлов графа</typeparam>
             <param name="Node">Начальный узел графа</param>
             <param name="TakeRoot">Перечислять корень дерева?</param>
             <returns>Последовательность узлов графа</returns>
         </member>
-        <member name="M:MathCore.Graphs.GraphEx.BaypassInWidth``1(MathCore.Graphs.IGraphNode{``0},System.Func{MathCore.Graphs.IGraphNode{``0},System.Int32},System.Boolean)">
+        <member name="M:MathCore.Graphs.GraphEx.BypassInWidth``1(MathCore.Graphs.IGraphNode{``0},System.Func{MathCore.Graphs.IGraphNode{``0},System.Int32},System.Boolean)">
             <summary>Метод перебора вершин графа путём обхода "в ширину". Обход на основе очереди дочерних узлов с указанием функции хеширования.</summary>
             <typeparam name="TValue">Тип узлов графа</typeparam>
             <param name="Node">Начальный узел графа</param>
@@ -2119,7 +2268,7 @@
             <returns>Последовательность узлов графа</returns>
         </member>
         <member name="M:MathCore.Graphs.GraphEx.FindRouteInDepth``2(MathCore.Graphs.IGraphNode{``0,``1},System.Predicate{``0})">
-            <summary>МЕтод поиска пути в графе путём обхода вершин "в глубину"</summary>
+            <summary>Метод поиска пути в графе путём обхода вершин "в глубину"</summary>
             <typeparam name="TValue">Тип вершины графа</typeparam>
             <typeparam name="TWeight">Тип связи вершин графа</typeparam>
             <param name="RootNode">Начальный элемент поиска пути</param>
@@ -2377,19 +2526,19 @@
             <param name="NewName">Новое имя объекта</param>
         </member>
         <member name="T:MathCore.Interpolation.BezierCurve">
-            <summary><see cref="!:http://ru.wikipedia.org/wiki/Кривая_Безье">Кривая Безье</see></summary>
+            <summary><see url="http://ru.wikipedia.org/wiki/Кривая_Безье">Кривая Безье</see></summary>
         </member>
         <member name="M:MathCore.Interpolation.BezierCurve.BinomCoefficient(System.Int32,System.Int32)">
             <summary>
             Биномиальный коэффициент (1+x)^n из <paramref name="n"/> по <paramref name="k"/>
-            <see cref="!:http://ru.wikipedia.org/wiki/Биномиальный_коэффициент">Википедия:Биномиальный коэффициент</see>
+            <see url="http://ru.wikipedia.org/wiki/Биномиальный_коэффициент">Википедия:Биномиальный коэффициент</see>
             </summary>
-            <param name="n">Степень <see cref="!:http://ru.wikipedia.org/wiki/Бином_Ньютона">бинома Ньютона</see></param>
+            <param name="n">Степень <see url="http://ru.wikipedia.org/wiki/Бином_Ньютона">бинома Ньютона</see></param>
             <param name="k">Номер коэффициента</param>
             <returns>Коэффициент разложения Бинома Ньютона (1+x)^n</returns>
         </member>
         <member name="M:MathCore.Interpolation.BezierCurve.GetBernshteynPolynom(System.Int32,System.Int32)">
-            <summary>Получить <see cref="!:http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>
+            <summary>Получить <seealso url="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</seealso>></summary>
             <param name="k">Номер многочлена</param>
             <param name="n">Степень</param>
             <returns></returns>
@@ -2398,19 +2547,19 @@
             <summary>Набор точек аппроксимации</summary>
         </member>
         <member name="F:MathCore.Interpolation.BezierCurve._BernshteynPolynoms">
-            <summary><see cref="!:http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>        
+            <summary><see url="http://ru.wikipedia.org/wiki/Многочлен_Бернштейна">Полином Бернштейна</see>></summary>        
         </member>
         <member name="M:MathCore.Interpolation.BezierCurve.#ctor(System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double})">
-            <summary>Новая <see cref="!:http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
-            <param name="X">Список координато точек x</param>
-            <param name="Y">Список кординат точек y</param>
+            <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
+            <param name="X">Список координат точек x</param>
+            <param name="Y">Список координат точек y</param>
         </member>
         <member name="M:MathCore.Interpolation.BezierCurve.#ctor(System.Collections.Generic.IEnumerable{MathCore.Complex})">
-            <summary>Новая <see cref="!:http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
+            <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
             <param name="Points">Набор точек в виде <see cref="T:MathCore.Complex">комплексных чисел</see></param>
         </member>
         <member name="M:MathCore.Interpolation.BezierCurve.#ctor(System.Collections.Generic.IEnumerable{MathCore.Vectors.Vector2D})">
-            <summary>Новая <see cref="!:http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
+            <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
             <param name="Points">Набор точек</param>
         </member>
         <member name="M:MathCore.Interpolation.BezierCurve.Initialize(System.Collections.Generic.IEnumerable{MathCore.Vectors.Vector2D})">
@@ -2924,6 +3073,12 @@
             <param name="obj">Объект <see cref="T:System.Object"/>, для которого должен быть возвращен хэш-код.</param>
             <exception cref="T:System.ArgumentNullException">Тип <paramref name="obj"/> является ссылочным типом, значением <paramref name="obj"/> является null.</exception>
         </member>
+        <member name="M:MathCore.LambdaFormatter`1.GetFormat(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.LambdaFormatter`1.Format(System.String,System.Object,System.IFormatProvider)">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.LambdaKeyedCollection`2">
             <summary>Коллекция, ключи которой определяются указанным методом на основе значений элементов</summary>
             <typeparam name="TKey">Тип ключа</typeparam>
@@ -3279,7 +3434,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionParser.OnNewNodeAdded(System.EventArgs{MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode})">
             <summary>При добавлении нового узла в дерево выражения</summary>
-            <param name="e">Аргумент события, содержащий добавляемй узел</param>
+            <param name="e">Аргумент события, содержащий добавляемый узел</param>
         </member>
         <member name="M:MathCore.MathParser.ExpressionParser.OnNewNodeAdded(MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode@)">
             <summary>Обработка очередного добавляемого в дерево узла</summary>
@@ -3304,7 +3459,7 @@
             <summary>Аргумент события обнаружения функции</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.Name">
-            <summary>Имя обнаруженой функции</summary>
+            <summary>Имя обнаруженной функции</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.Arguments">
             <summary>Массив имён аргументов функции</summary>
@@ -3353,17 +3508,17 @@
         <member name="F:MathCore.MathParser.ExpressionParser._ExcludeCharsSet">
             <summary>Множество запрещённых символов</summary>
         </member>
-        <member name="F:MathCore.MathParser.ExpressionParser._Constans">
+        <member name="F:MathCore.MathParser.ExpressionParser._Constants">
             <summary>Словарь констант</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionParser.ExcludeCharsSet">
-            <summary>Множество запрещённых симовлов</summary>
+            <summary>Множество запрещённых символов</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionParser.ExpressionSeparator">
             <summary>Разделитель выражений (по умолчанию ';')</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionParser.DecimalSeparator">
-            <summary>Разделитель целой части и мантисы десятичного числа</summary>
+            <summary>Разделитель целой части и мантисcы десятичного числа</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionParser.Constants">
             <summary>Константы</summary>
@@ -9467,13 +9622,13 @@
         <member name="T:MathCore.Statistic.Histogram">
             <summary>Гистограмма</summary>
         </member>
-        <member name="F:MathCore.Statistic.RandomNumbers.PolyformRandomGenertor.c_Normal_A">
+        <member name="F:MathCore.Statistic.RandomNumbers.PolyformRandomGenerator.__Normal_A">
             <summary>area under rectangle</summary>
         </member>
-        <member name="F:MathCore.Statistic.RandomNumbers.PolyformRandomGenertor.A">
+        <member name="F:MathCore.Statistic.RandomNumbers.PolyformRandomGenerator.A">
             <summary>area under rectangle</summary>
         </member>
-        <member name="M:MathCore.Statistic.RandomNumbers.PolyformRandomGenertor.Cauchy(System.Double,System.Double)">
+        <member name="M:MathCore.Statistic.RandomNumbers.PolyformRandomGenerator.Cauchy(System.Double,System.Double)">
             <summary>Случайная величина с распределением Коши</summary>
             <param name="x0"></param>
             <param name="gamma"></param>
@@ -10240,14 +10395,14 @@
         </member>
         <member name="M:MathCore.Values.LazyValue`1.#ctor(System.Func{`0})">
             <summary>Создание нового "ленивого" значения</summary>
-            <param name="Initializator">Инициализатор значения</param>
+            <param name="Initializer">Инициализатор значения</param>
         </member>
         <member name="M:MathCore.Values.LazyValue`1.Initialize(System.Func{`0})">
             <summary>Инициализация "ленивого" значения</summary>
-            <param name="Initializator">Инициализатор</param>
+            <param name="Initializer">Инициализатор</param>
         </member>
         <member name="M:MathCore.Values.LazyValue`1.System#IInitializable#Initialize">
-            <summary>Невный вызов метода инициализации для интерфейса IInitializable</summary>
+            <summary>Вызов метода инициализации для интерфейса <see cref="T:System.IInitializable"/></summary>
         </member>
         <member name="M:MathCore.Values.LazyValue`1.Reset">
             <summary>Сброс состояния</summary>
@@ -10259,7 +10414,7 @@
         </member>
         <member name="M:MathCore.Values.LazyValue`1.op_Implicit(System.Func{`0})~MathCore.Values.LazyValue{`0}">
             <summary>Оператор неявного преобразования метода инициализации в "ленивое значение"</summary>
-            <param name="Initializator">Метод инициализации "ленивого" значения</param>
+            <param name="Initializer">Метод инициализации "ленивого" значения</param>
             <returns>"Ленивое" значение с указанным методом инициализации</returns>
         </member>
         <member name="T:MathCore.Values.LinearQueue`1">
@@ -10814,7 +10969,7 @@
         <member name="T:MathCore.Vectors.Vector3D">
             <summary>Трёхмерный вектор</summary>
         </member>
-        <member name="F:MathCore.Vectors.Vector3D.BasysUnitVector">
+        <member name="F:MathCore.Vectors.Vector3D.BasisUnitVector">
             <summary>Единичный базисный вектор</summary>
         </member>
         <member name="F:MathCore.Vectors.Vector3D.i">
@@ -10848,13 +11003,13 @@
             <summary>Длина вектора</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleXOY">
-            <summary>Угол проекциии в плоскости XOY</summary>
+            <summary>Угол проекции в плоскости XOY</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleXOZ">
-            <summary>Угол проекциии в плоскости XOZ</summary>
+            <summary>Угол проекции в плоскости XOZ</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleYOZ">
-            <summary>Угол проекциии в плоскости YOZ</summary>
+            <summary>Угол проекции в плоскости YOZ</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.Phi">
             <summary>Азимутальный угол</summary>
@@ -10958,8 +11113,8 @@
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.SpaceAngle)">
             <summary>Проекция вектора на направление</summary>
             <param name="Vector">Проецируемый вектор</param>
-            <param name="Direction">Пространственный угол направления проекциии</param>
-            <returns>Вещественное значение проекциии</returns>
+            <param name="Direction">Пространственный угол направления проекции</param>
+            <returns>Вещественное значение проекции</returns>
         </member>
         <member name="T:MathCore.ViewModels.ViewModel">
             <summary>Наблюдаемая модель</summary>
@@ -11395,8 +11550,19 @@
             <summary>Добавление конфигурации, устанавливающий необходимость включения значения, определяемого на основе сериализуемого объекта</summary>
             <returns>Исходный сериализатор</returns>
         </member>
+        <member name="T:System.ActionsCollectionProcessor">
+            <summary>Процессор, выполняющий действия</summary>
+        </member>
+        <member name="M:System.ActionsCollectionProcessor.#ctor(System.Collections.Generic.IEnumerable{System.Action})">
+            <summary>Инициализация нового экземпляра <see cref="T:System.ActionsCollectionProcessor"/></summary>
+            <param name="ActionsCollection">Перечисление действий, которые требуется выполнить</param>
+        </member>
         <member name="M:System.ActionsCollectionProcessor.MainAction">
             <summary>Основной метод действия процессора, вызываемое в цикле. Должно быть переопределено в классах-наследниках</summary>
+        </member>
+        <member name="M:System.ActionsCollectionProcessor.ProcessAction(System.Action)">
+            <summary>Выполнить очередное действие</summary>
+            <param name="action">Очередное действие из очереди действий, которые должен выполнить процессор</param>
         </member>
         <member name="T:System.AffectsTheAttribute">
             <summary>Влияние на</summary>
@@ -11410,22 +11576,6 @@
         <member name="M:System.AffectsTheAttribute.#ctor(System.String)">
             <summary>Инициализация нового экземпляра <see cref="T:System.AffectsTheAttribute"/></summary>
             <param name="Name">Имя элемента, на что помеченный элемент оказывает влияние</param>
-        </member>
-        <member name="T:System.AxiomAttribute">
-            <summary>Помеенное данным атрибутом не требует доказательств, или проверок</summary>
-        </member>
-        <member name="P:System.AxiomAttribute.Comment">
-            <summary>Дополнительный комментарий</summary>
-        </member>
-        <member name="M:System.AxiomAttribute.#ctor">
-            <summary>Инициализация нового экземпляра <see cref="T:System.AxiomAttribute"/></summary>
-        </member>
-        <member name="M:System.AxiomAttribute.#ctor(System.String)">
-            <summary>Инициализация нового экземпляра <see cref="T:System.AxiomAttribute"/></summary>
-            <param name="Comment">Дополнительный комментарий</param>
-        </member>
-        <member name="M:System.AxiomAttribute.ToString">
-            <inheritdoc />
         </member>
         <member name="T:System.ChangedHandlerAttribute">
             <summary>Указывает процедуру без параметров, определённую в классе, которая должна быть вызвана после изменения значения свойства</summary>
@@ -11441,7 +11591,7 @@
             <param name="MethodName">Имя метода-реакции на изменение значения свойства</param>
         </member>
         <member name="T:System.CopyrightAttribute">
-            <summary>Сведения об автораских правах на участок кода</summary>
+            <summary>Сведения об авторских правах на участок кода</summary>
         </member>
         <member name="P:System.CopyrightAttribute.Copyright">
             <summary>Авторские права</summary>
@@ -11489,10 +11639,10 @@
             <summary>Описание</summary>
         </member>
         <member name="M:System.ElementDescriptionAttribute.#ctor">
-            <summary>Инициализация нового экземпляра <see cref="!:"/></summary> 
+            <summary>Инициализация нового экземпляра <see cref="T:System.ElementDescriptionAttribute"/></summary> 
         </member>
         <member name="M:System.ElementDescriptionAttribute.#ctor(System.String)">
-            <summary>Инициализация нового экземпляра <see cref="!:"/></summary>
+            <summary>Инициализация нового экземпляра <see cref="T:System.ElementDescriptionAttribute"/></summary>
             <param name="Description">Описание</param>
         </member>
         <member name="M:System.ElementDescriptionAttribute.ToString">
@@ -13118,7 +13268,7 @@
         <member name="M:System.Linq.Reactive.IObservableEx`1.Subscribe(System.Linq.Reactive.IObserverEx{`0})">
             <summary>Метод получения наблюдателя</summary>
             <param name="observer">Наблюдатель объекта</param>
-            <returns>Объект, реализующий возможность разрушшения связи с наблюдаемым объектом</returns>
+            <returns>Объект, реализующий возможность разрушения связи с наблюдаемым объектом</returns>
         </member>
         <member name="T:System.Linq.Reactive.IObserverEx`1">
             <summary>Интерфейс наблюдателя</summary>
@@ -13139,21 +13289,36 @@
         <member name="M:System.Linq.Reactive.IObserverEx`1.OnReset">
             <summary>Метод генерации события сброса последовательности</summary>
         </member>
-        <member name="T:System.Linq.Reactive.LamdaObservable`1">
-            <summary>НАблюдаемый объект с методами обработки событий, задаваемыми лямбда-синтексисом</summary>
+        <member name="T:System.Linq.Reactive.LambdaObservable`1">
+            <summary>Наблюдаемый объект с методами обработки событий, задаваемыми лямбда-синтаксисом</summary>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="F:System.Linq.Reactive.LamdaObservable`1._Observer">
+        <member name="F:System.Linq.Reactive.LambdaObservable`1._Observer">
             <summary>Присоединённый наблюдатель</summary>
         </member>
-        <member name="F:System.Linq.Reactive.LamdaObservable`1._OnNext">
+        <member name="F:System.Linq.Reactive.LambdaObservable`1._OnNext">
             <summary>Действие обработки следующего объекта наблюдения</summary>
         </member>
-        <member name="F:System.Linq.Reactive.LamdaObservable`1._OnCompleted">
+        <member name="F:System.Linq.Reactive.LambdaObservable`1._OnCompleted">
             <summary>Действие обработки завершения процесса наблюдения</summary>
         </member>
-        <member name="F:System.Linq.Reactive.LamdaObservable`1._OnReset">
+        <member name="F:System.Linq.Reactive.LambdaObservable`1._OnReset">
             <summary>Действие обработки сброса состояния наблюдаемого объекта</summary>
+        </member>
+        <member name="M:System.Linq.Reactive.LambdaObservable`1.OnNext(System.IObserver{`0},`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.Reactive.LambdaObservable`1.OnCompleted(System.IObserver{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.Reactive.LambdaObservable`1.OnReset(System.Linq.Reactive.IObserverEx{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.Reactive.LambdaObservable`1.OnError(System.IObserver{`0},System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.Reactive.LambdaObservable`1.Dispose(System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="T:System.Linq.Reactive.ObservableExtensions">
             <summary>Методы-расширения интерфейса наблюдаемых объектов <see cref="T:System.Linq.Reactive.IObservableEx`1"/></summary>
@@ -13238,7 +13403,7 @@
             <param name="Observable">Объект-наблюдатель источник событий</param>
             <param name="Open">Объект-наблюдатель разрешающий событий в выходной последовательности</param>
             <param name="Close">Объект-наблюдатель запрещающий событий в выходной последовательности</param>
-            <param name="IsOpen">Исходное состояния разрешения событий в выходной последовательности (по умолчанию разрешено)</param>
+            <param name="InitialState">Исходное состояния разрешения событий в выходной последовательности (по умолчанию разрешено)</param>
             <returns>Управляемый объект-наблюдатель</returns>
         </member>
         <member name="M:System.Linq.Reactive.ObservableExtensions.TakeUntil``2(System.IObservable{``0},System.IObservable{``1},System.Boolean)">
@@ -13265,6 +13430,13 @@
             <param name="Observable">Исходный объект-наблюдатель</param>
             <param name="Action">Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></param>
             <returns>Исходный объект-наблюдатель</returns>
+        </member>
+        <member name="M:System.Linq.Reactive.ObservableExtensions.Subscribe``1(System.IObservable{``0},System.Action{``0})">
+            <summary>Подписаться на уведомления наблюдаемого объекта <see cref="T:System.IObservable`1"/></summary>
+            <param name="Source">Источник событий</param>
+            <param name="Action">Действие, выполняемое при возникновении события</param>
+            <typeparam name="T">Тип значения событий</typeparam>
+            <returns>Объект отписки</returns>
         </member>
         <member name="M:System.Linq.Reactive.ObservableExtensions.ForeachAction``1(System.IObservable{``0},System.Action{``0},System.Func{``0,System.Boolean})">
             <summary>Метод обработки события <see cref="E:System.Linq.Reactive.IObserverEx`1.Next"/></summary>
@@ -13355,7 +13527,7 @@
             <summary>Коллекция наблюдателей, из которой требуется удалить отслеживаемый наблюдатель</summary>
         </member>
         <member name="F:System.Linq.Reactive.ObserverLink`1._SyncRoot">
-            <summary>Объект межпотоковой синхроницации</summary>
+            <summary>Объект межпотоковой синхронизации</summary>
         </member>
         <member name="M:System.Linq.Reactive.ObserverLink`1.#ctor(System.Collections.Generic.ICollection{System.IObserver{`0}},System.IObserver{`0})">
             <summary>Инициализация новой связи между списком наблюдателей и отслеживаемым наблюдателем</summary>
@@ -13384,7 +13556,7 @@
         </member>
         <member name="M:System.Linq.Reactive.SimpleObservableEx`1.OnError(System.IObserver{`0},System.Exception)">
             <summary>Генерация события возникновения исключения</summary>
-            <param name="observer">НАблюдаемый объект, в котором возникло исключение</param>
+            <param name="observer">Наблюдаемый объект, в котором возникло исключение</param>
             <param name="error">Возникшее исключение</param>
         </member>
         <member name="M:System.Linq.Reactive.SimpleObservableEx`1.Subscribe(System.Linq.Reactive.IObserverEx{`0})">
@@ -13395,6 +13567,10 @@
         </member>
         <member name="M:System.Linq.Reactive.SimpleObservableEx`1.Dispose">
             <inheritdoc />
+        </member>
+        <member name="M:System.Linq.Reactive.SimpleObservableEx`1.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов</summary>
+            <param name="Disposing">Если <see langword="true"/>, то выполнить освобождение управляемых ресурсов</param>
         </member>
         <member name="T:System.Linq.Reactive.SimpleObserverEx`1">
             <summary>Простейший наблюдатель</summary>
@@ -13432,6 +13608,13 @@
         <member name="M:System.Linq.Reactive.SimpleObserverEx`1.OnReset">
             <summary>Метод генерации события сброса последовательности</summary>
         </member>
+        <member name="M:System.Linq.Reactive.SimpleObserverEx`1.Dispose">
+            <summary>Освобождение ресурсов и отписка от наблюдаемых объектов</summary>
+        </member>
+        <member name="M:System.Linq.Reactive.SimpleObserverEx`1.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов и отписка от наблюдаемых объектов</summary>
+            <param name="Disposing">Если истина, то выполнить освобождение ресурсов и отписку</param>
+        </member>
         <member name="T:System.Linq.Reactive.TakeObservable`1">
             <summary>Наблюдаемый объект с указанным числом генерации событий</summary>
             <typeparam name="T">Тип объектов последовательности</typeparam>
@@ -13444,6 +13627,9 @@
             <param name="observable">Исходный наблюдаемый объект</param>
             <param name="Count">Количество извлекаемых событий</param>
         </member>
+        <member name="M:System.Linq.Reactive.TimeIntervalObservable.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
         <member name="T:System.Linq.Reactive.TriggeredObservable`1">
             <summary>Управляемый наблюдаемый объект</summary>
             <typeparam name="T">Тип объекта последовательности</typeparam>
@@ -13451,85 +13637,79 @@
         <member name="F:System.Linq.Reactive.TriggeredObservable`1._Observer">
             <summary>Наблюдатель</summary>
         </member>
-        <member name="P:System.Linq.Reactive.TriggeredObservable`1.Open">
-            <summary>Признак разрешения генерации событий</summary>
+        <member name="P:System.Linq.Reactive.TriggeredObservable`1.State">
+            <summary>Признак разрешения потока элементов последовательности</summary>
         </member>
         <member name="M:System.Linq.Reactive.TriggeredObservable`1.#ctor(System.IObservable{`0},System.Boolean)">
             <summary>Управляемый наблюдаемый объект</summary>
             <param name="observable">Наблюдаемый объект</param>
-            <param name="IsOpen">Исходное состояние</param>
+            <param name="InitialState">Исходное состояние</param>
+        </member>
+        <member name="M:System.Linq.Reactive.TriggeredObservable`1.OnNext(`0)">
+            <summary>Если состояние <see langword="true"/>, то значения пропускаются в выходную последовательность</summary>
+            <param name="item">Объект события</param>
+        </member>
+        <member name="M:System.Linq.Reactive.TriggeredObservable`1.OnCompleted">
+            <summary>Если состояние <see langword="true"/>, то генерирует событие завершения последовательности</summary>
+        </member>
+        <member name="M:System.Linq.Reactive.TriggeredObservable`1.OnReset">
+            <summary>Если состояние <see langword="true"/>, то генерирует событие сброса последовательности</summary>
+        </member>
+        <member name="M:System.Linq.Reactive.TriggeredObservable`1.OnError(System.Exception)">
+            <summary>Если состояние <see langword="true"/>, то генерирует событие возникновения ошибки</summary>
+            <param name="error">Возникшее исключение</param>
+        </member>
+        <member name="M:System.Linq.Reactive.TriggeredObservable`1.Dispose(System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="T:System.Linq.Reactive.Unit">
             <summary>
-            Represents a type with a single value. This type is often used to denote the successful completion of a void-returning method (C#) or a Sub procedure (Visual Basic).
-            
+            Represents a type with a single value.
+            This type is often used to denote the successful completion of a void-returning method (C#)
+            or a Sub procedure (Visual Basic).
             </summary>
         </member>
         <member name="P:System.Linq.Reactive.Unit.Default">
-            <summary>
-            Gets the single unit value.
-            
-            </summary>
+            <summary>Gets the single unit value</summary>
         </member>
         <member name="M:System.Linq.Reactive.Unit.op_Equality(System.Linq.Reactive.Unit,System.Linq.Reactive.Unit)">
             <summary>
-            Determines whether the two specified Unit values are equal. Because Unit has a single value, this always returns true.
-            
-            </summary>
-            <param name="first">The first Unit value to compare.</param><param name="second">The second Unit value to compare.</param>
-            <returns>
+            Determines whether the two specified Unit values are equal.
             Because Unit has a single value, this always returns true.
-            </returns>
+            </summary>
+            <param name="first">The first Unit value to compare</param>
+            <param name="second">The second Unit value to compare</param>
+            <returns>Because Unit has a single value, this always returns true</returns>
         </member>
         <member name="M:System.Linq.Reactive.Unit.op_Inequality(System.Linq.Reactive.Unit,System.Linq.Reactive.Unit)">
             <summary>
-            Determines whether the two specified Unit values are not equal. Because Unit has a single value, this always returns false.
-            
-            </summary>
-            <param name="first">The first Unit value to compare.</param><param name="second">The second Unit value to compare.</param>
-            <returns>
+            Determines whether the two specified Unit values are not equal.
             Because Unit has a single value, this always returns false.
-            </returns>
+            </summary>
+            <param name="first">The first Unit value to compare</param>
+            <param name="second">The second Unit value to compare</param>
+            <returns>Because Unit has a single value, this always returns false</returns>
         </member>
         <member name="M:System.Linq.Reactive.Unit.Equals(System.Linq.Reactive.Unit)">
             <summary>
-            Determines whether the specified Unit values is equal to the current Unit. Because Unit has a single value, this always returns true.
-            
-            </summary>
-            <param name="other">An object to compare to the current Unit value.</param>
-            <returns>
+            Determines whether the specified Unit values is equal to the current Unit.
             Because Unit has a single value, this always returns true.
-            </returns>
+            </summary>
+            <param name="other">An object to compare to the current Unit value</param>
+            <returns>Because Unit has a single value, this always returns true</returns>
         </member>
         <member name="M:System.Linq.Reactive.Unit.Equals(System.Object)">
-            <summary>
-            Determines whether the specified System.Object is equal to the current Unit.
-            
-            </summary>
-            <param name="obj">The System.Object to compare with the current Unit.</param>
-            <returns>
-            true if the specified System.Object is a Unit value; otherwise, false.
-            </returns>
+            <summary>Determines whether the specified System.Object is equal to the current Unit</summary>
+            <param name="obj">The System.Object to compare with the current Unit</param>
+            <returns>true if the specified System.Object is a Unit value; otherwise, false</returns>
         </member>
         <member name="M:System.Linq.Reactive.Unit.GetHashCode">
-            <summary>
-            Returns the hash code for the current Unit value.
-            
-            </summary>
-            
-            <returns>
-            A hash code for the current Unit value.
-            </returns>
+            <summary>Returns the hash code for the current Unit value</summary>
+            <returns>A hash code for the current Unit value</returns>
         </member>
         <member name="M:System.Linq.Reactive.Unit.ToString">
-            <summary>
-            Returns a string representation of the current Unit value.
-            
-            </summary>
-            
-            <returns>
-            String representation of the current Unit value.
-            </returns>
+            <summary>Returns a string representation of the current Unit value</summary>
+            <returns>String representation of the current Unit value</returns>
         </member>
         <member name="T:System.ArrayExtensions">
             <summary>Методы расширения для массивов</summary>
@@ -14249,6 +14429,62 @@
             <param name="list">Перемешиваемый список</param>
             <typeparam name="T">Тип элементов списка</typeparam>
             <returns>Перемешанный исходный список</returns>
+        </member>
+        <member name="T:System.Collections.Generic.QueueExtensions">
+            <summary>Методы-расширения для <see cref="T:System.Collections.Generic.Queue`1"/></summary>
+        </member>
+        <member name="M:System.Collections.Generic.QueueExtensions.Add``1(System.Collections.Generic.Queue{``0},``0)">
+            <summary>Добавить элемент в очередь</summary>
+            <typeparam name="T">Тип элементов очереди</typeparam>
+            <param name="queue">Очередь, в которую надо добавить элемент</param>
+            <param name="value">Добавляемый элемент</param>
+        </member>
+        <member name="M:System.Collections.Generic.QueueExtensions.AddValue``1(System.Collections.Generic.Queue{``0},``0)">
+            <summary>Добавить элемент в очередь и вернуть модифицированную очередь в качестве результата</summary>
+            <typeparam name="T">Тип элементов очереди</typeparam>
+            <param name="queue">Очередь, в которую надо добавить элемент</param>
+            <param name="value">Добавляемый элемент</param>
+            <returns>Модифицированная очередь</returns>
+        </member>
+        <member name="M:System.Collections.Generic.QueueExtensions.ToStack``1(System.Collections.Generic.Queue{``0})">
+            <summary>Преобразовать очередь в стек</summary>
+            <typeparam name="T">Тип элементов очереди</typeparam>
+            <param name="queue">Преобразуемая очередь</param>
+            <returns>Стек из элементов очереди</returns>
+        </member>
+        <member name="M:System.Collections.Generic.QueueExtensions.ToStackReverse``1(System.Collections.Generic.Queue{``0})">
+            <summary>Преобразовать очередь в стек в обратном порядке</summary>
+            <typeparam name="T">Тип элементов очереди</typeparam>
+            <param name="queue">Преобразуемая очередь</param>
+            <returns>Стек из элементов очереди, взятых в обратном порядке</returns>
+        </member>
+        <member name="T:System.Collections.Generic.StackExtensions">
+            <summary>Методы-расширения для <see cref="T:System.Collections.Generic.Stack`1"/></summary>
+        </member>
+        <member name="M:System.Collections.Generic.StackExtensions.Add``1(System.Collections.Generic.Stack{``0},``0)">
+            <summary>Добавить элемент в стек</summary>
+            <typeparam name="T">Тип элементов стека</typeparam>
+            <param name="stack">Стек, в который надо добавить элемент</param>
+            <param name="value">Добавляемый элемент</param>
+        </member>
+        <member name="M:System.Collections.Generic.StackExtensions.AddValue``1(System.Collections.Generic.Stack{``0},``0)">
+            <summary>Добавить элемент в стек и вернуть модифицированный стек в качестве результата</summary>
+            <typeparam name="T">Тип элементов стека</typeparam>
+            <param name="stack">Стек, в который надо добавить элемент</param>
+            <param name="value">Добавляемый элемент</param>
+            <returns>Модифицированный стек</returns>
+        </member>
+        <member name="M:System.Collections.Generic.StackExtensions.ToQueue``1(System.Collections.Generic.Stack{``0})">
+            <summary>Преобразовать стек в очередь</summary>
+            <typeparam name="T">Тип элементов стека</typeparam>
+            <param name="stack">Преобразуемый стек</param>
+            <returns>Очередь из элементов стека</returns>
+        </member>
+        <member name="M:System.Collections.Generic.StackExtensions.ToQueueReverse``1(System.Collections.Generic.Stack{``0})">
+            <summary>Преобразовать стек в инвертированную очередь</summary>
+            <typeparam name="T">Тип элементов стека</typeparam>
+            <param name="stack">Преобразуемый стек</param>
+            <returns>Очередь из элементов стека, взятых в обратном порядке</returns>
         </member>
         <member name="M:System.Collections.Generic.DictionaryReadOnly`2.GetEnumerator">
             <summary>
@@ -15560,7 +15796,7 @@
         <member name="M:System.Xml.XPath.XPathCollection.MatchesAny(System.Collections.ArrayList,System.Int32)">
             <exception cref="T:System.ArgumentNullException"><paramref name="list"/> is <see langword="null" />.</exception>
         </member>
-        <member name="M:System.Xml.XPath.XPathParser.ParseXPathExpresion(System.String)">
+        <member name="M:System.Xml.XPath.XPathParser.ParseXPathExpression(System.String)">
             <exception cref="T:System.Xml.XPath.XPathException"><see cref="P:System.Xml.XPath.XPathScanner.SourceText"/>  has an invalid token</exception>
         </member>
         <member name="M:System.Xml.XPath.XPathParser.ParseXPathPattern(System.String)">
@@ -15568,6 +15804,13 @@
         </member>
         <member name="P:System.Xml.XPath.XPathQuery.GetXPathQueries">
             use can store this compiled expression to query other documents
+        </member>
+        <member name="M:System.Xml.XPath.XPathQuery.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Xml.XPath.XPathQuery.Match">
+            <summary>Report if the current query is matched</summary>
+            <returns>true if current query is matched</returns>
         </member>
         <member name="P:System.Xml.XPath.XPathReader.NodeType">
             <devdoc>
@@ -16912,7 +17155,7 @@
             <param name="t2">Второй параметр</param>
         </member>
         <member name="T:System.IInitializable`3">
-            <summary>Объект, поддерживаюий инициализацию с тремя параметрами</summary>
+            <summary>Объект, поддерживающий инициализацию с тремя параметрами</summary>
             <typeparam name="T1">Тип первого параметра</typeparam>
             <typeparam name="T2">Тип второго параметра</typeparam>
             <typeparam name="T3">Тип третьего параметра</typeparam>
@@ -16924,11 +17167,11 @@
             <param name="t3">Третий параметр</param>
         </member>
         <member name="T:System.IInitializable`4">
-            <summary>ОБъект, поддерживающий инициализацию с четырьмя параметрами</summary>
+            <summary>Объект, поддерживающий инициализацию с четырьмя параметрами</summary>
             <typeparam name="T1">Тип первого параметра</typeparam>
             <typeparam name="T2">Тип второго параметра</typeparam>
             <typeparam name="T3">Тип третьего параметра</typeparam>
-            <typeparam name="T4">Тип четвёртого патаметра</typeparam>
+            <typeparam name="T4">Тип четвёртого параметра</typeparam>
         </member>
         <member name="M:System.IInitializable`4.Initialize(`0,`1,`2,`3)">
             <summary>Инициализация</summary>
@@ -16938,12 +17181,12 @@
             <param name="t4">Четвёртый параметр</param>
         </member>
         <member name="T:System.IInitializable`5">
-            <summary>ОБъект, поддерживающий инициализацию с пятью параметрами</summary>
+            <summary>Объект, поддерживающий инициализацию с пятью параметрами</summary>
             <typeparam name="T1">Тип первого параметра</typeparam>
             <typeparam name="T2">Тип второго параметра</typeparam>
             <typeparam name="T3">Тип третьего параметра</typeparam>
-            <typeparam name="T4">Тип четвёртого патаметра</typeparam>
-            <typeparam name="T5">Тип пятого патаметра</typeparam>
+            <typeparam name="T4">Тип четвёртого параметра</typeparam>
+            <typeparam name="T5">Тип пятого параметра</typeparam>
         </member>
         <member name="M:System.IInitializable`5.Initialize(`0,`1,`2,`3,`4)">
             <summary>Инициализация</summary>
@@ -16956,14 +17199,26 @@
         <member name="T:System.LambdaDisposable">
             <summary>Объект, выполняющий указанное действие при сборке мусора</summary>
         </member>
+        <member name="M:System.LambdaDisposable.OnDisposed(System.Action)">
+            <summary>При освобождении выполнить указанное действие</summary>
+            <param name="OnDispose">Действие, выполняемое при освобождении</param>
+            <returns>Объект <see cref="T:System.LambdaDisposable"/></returns>
+        </member>
+        <member name="F:System.LambdaDisposable._DisposableAction">
+            <summary>Действие, выполняемое при разрушении объекта</summary>
+        </member>
         <member name="M:System.LambdaDisposable.#ctor(System.Action)">
             <summary>Инициализация нового уничтожаемого объекта с указанием действия при уничтожении</summary>
-            <param name="DisposableAction">Дейтсвие, выполняемое при уничтожении объекта</param>
+            <param name="DisposableAction">Действие, выполняемое при уничтожении объекта</param>
         </member>
         <member name="M:System.LambdaDisposable.Dispose">
             <summary>Метод уничтожения объекта, вызывающий указанное действие</summary>
         </member>
-        <member name="M:System.LambdaDisposableObject`1.Dispose">
+        <member name="M:System.LambdaDisposable.Dispose(System.Boolean)">
+            <summary>Метод уничтожения объекта, вызывающий указанное действие</summary>
+            <param name="Disposing">Если истина, то освободить управляемые ресурсы</param>
+        </member>
+        <member name="M:System.LambdaDisposableObject`1.Dispose(System.Boolean)">
             <inheritdoc />
         </member>
         <member name="M:System.LambdaProcessor.MainAction">

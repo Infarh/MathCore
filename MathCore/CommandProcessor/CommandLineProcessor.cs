@@ -1,38 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Linq.Reactive;
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace MathCore.CommandProcessor
 {
-    using CommandHandler = Action<Command, int, Command[]>;
+    using CommandHandler = Action<Command, int, IReadOnlyList<Command>>;
 
     /// <summary>Командный процессор</summary>
-    public class CommandLineProcessor : IObservable<CommandEventArgs>
+    public class CommandLineProcessor
     {
-        public static IEnumerable<Command> ParseConsole(string Prompt = ">", [CanBeNull] Action<CommandLineProcessor> Initializer = null)
+        /// <summary>Разобрать команды консоли управления</summary>
+        /// <param name="Prompt">Формат запроса</param>
+        /// <param name="Initializer">Метод инициализации команд</param>
+        /// <param name="ConsoleWriter">Вывод в консоль (если не указано, то используется <see cref="Console"/>.<see cref="Console.Out"/>)</param>
+        /// <param name="ConsoleReader">Ввод с консоли (если не указано, то используется <see cref="Console"/>.<see cref="Console.In"/>)</param>
+        /// <returns>Сформированное перечисление команд запроса</returns>
+        public static IEnumerable<Command> ParseConsole(
+            string Prompt = ">", 
+            [CanBeNull] Action<CommandLineProcessor> Initializer = null, 
+            TextWriter ConsoleWriter = null,
+            TextReader ConsoleReader = null)
         {
+            if (ConsoleWriter is null) ConsoleWriter = Console.Out;
+            if (ConsoleReader is null) ConsoleReader = Console.In;
+
             var work = true;
             var processor = new CommandLineProcessor();
-            processor["exit"] += (command, index, commands) => work = false;
-            processor["help"] += (command, index, commands) => processor.GetRegisteredCommands().Foreach(Console.WriteLine);
+            processor["exit"] += delegate() { work = false; };
+            processor["help"] += delegate() { processor.GetRegisteredCommands().Foreach(ConsoleWriter.WriteLine); };
             var set = processor["set"];
-            set["prompt"] += (command, index, commands, arg) => Prompt = arg.Values is null || arg.Values.Length == 0 ? string.Empty : arg.Values[0];
-            set["work"] += (command, index, commands, arg) => {
-                if(bool.TryParse(arg.Value, out var can_work)) work = can_work; };
+            set["prompt"] += (_, __, ___, arg) => Prompt = arg.Value;
+            set["work"] += (_, __, ___, arg) => { if(bool.TryParse(arg.Value, out var can_work)) work = can_work; };
 
             Initializer?.Invoke(processor);
             while(work)
             {
                 Console.Write(Prompt);
-                foreach(var command in processor.Process(Console.ReadLine()))
+                foreach(var command in processor.Process(ConsoleReader.ReadLine()))
                     yield return command;
             }
         }
@@ -70,9 +84,9 @@ namespace MathCore.CommandProcessor
         /// <param name="commands">Массив команд сессии</param>
         private void OnCommandProcess(Command command, int index, Command[] commands)
         {
-            var Arg = new CommandEventArgs { Command = command, Index = index, Commands = commands };
-            OnCommandProcess(Arg);
-            if(!Arg.Handled) OnUnhandledCommand(Arg);
+            var arg = new CommandEventArgs(command, index, commands);
+            OnCommandProcess(arg);
+            if(!arg.Handled) OnUnhandledCommand(arg);
         }
 
         /// <summary>Событие появления необработанной команды</summary>
@@ -101,12 +115,18 @@ namespace MathCore.CommandProcessor
 
         private readonly SimpleObservableEx<CommandEventArgs> _ObservableObject = new SimpleObservableEx<CommandEventArgs>();
 
+        /// <summary>Команды, обрабатываемые процессором</summary>
+        public IObservable<CommandEventArgs> Commands => _ObservableObject;
+
         /// <summary>Разделитель команд в строке</summary>
         public char CommandSplitter { get; set; }
+
         /// <summary>Разделитель имени команды и её параметра</summary>
         public char CommandParameterSplitter { get; set; }
+
         /// <summary>Разделитель аргументов команды</summary>
         public char ArgSplitter { get; set; }
+
         /// <summary>Разделитель имени аргумента и его значения</summary>
         public char ValueSplitter { get; set; }
 
@@ -192,9 +212,6 @@ namespace MathCore.CommandProcessor
         /// <param name="CommandName">Проверяемая команда</param>
         /// <returns>Истина, если указаны обработчики команды</returns>
         public bool IsRegisteredCommand([NotNull] string CommandName) => 
-            _CommandHandlers.ContainsKey(CommandName) && this[CommandName].IsRegistredCommand(CommandName);
-
-        /// <inheritdoc />
-        public IDisposable Subscribe(IObserver<CommandEventArgs> observer) => _ObservableObject.Subscribe(observer);
+            _CommandHandlers.ContainsKey(CommandName) && this[CommandName].IsRegisteredCommand(CommandName);
     }
 }
