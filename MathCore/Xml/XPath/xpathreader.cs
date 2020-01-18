@@ -15,6 +15,8 @@
 
 using System.Collections;
 using System.IO;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
@@ -165,7 +167,7 @@ namespace System.Xml.XPath
         /// </devdoc>
         public override string this[string name, string NamespaceUri] => BaseReader[name, NamespaceUri];
 
-        //UE Atention
+        //UE Attention
         public override bool CanResolveEntity => BaseReader.CanResolveEntity;
 
         /// <devdoc>
@@ -186,7 +188,7 @@ namespace System.Xml.XPath
         public override ReadState ReadState => BaseReader.ReadState;
 
 
-        // Nametable and Namespace Helpers
+        // NameTable and Namespace Helpers
         /// <devdoc>
         ///     <para>
         ///         Gets the XmlNameTable associated with this
@@ -209,9 +211,7 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        private XPathReader()
-        {
-        }
+        private XPathReader() { }
 
         /// <internalonly />
         /// <devdoc>
@@ -220,29 +220,11 @@ namespace System.Xml.XPath
         ///         This constructor is used when creating reader with "new XPathReader(..)"
         ///     </para>
         /// </devdoc>
-        public XPathReader(XmlReader reader, XPathCollection xc) : this()
+        public XPathReader(XmlReader Reader, [NotNull] XPathCollection XPathCollection) : this()
         {
-            _XPathCollection = xc;
-            xc.SetReader = this;
-            BaseReader = reader;
-        }
-
-        /// <internalonly />
-        /// <devdoc>
-        ///     <para>
-        ///         Initializes a new instance of the XPathReader class with the specified XmlNameTable.
-        ///         This constructor is used when creating reader with "new XPathReader(..)"
-        ///     </para>
-        /// </devdoc>
-
-        //
-        // For class function provides the url, we will construct the
-        // XmlTextReader to process the URL
-        //
-        public XPathReader(string url, string xpath) : this()
-        {
-            BaseReader = new XmlTextReader(url);
-            _XPathCollection = new XPathCollection { xpath };
+            _XPathCollection = XPathCollection;
+            XPathCollection.SetReader = this;
+            BaseReader = Reader;
         }
 
         /// <internalonly />
@@ -257,10 +239,28 @@ namespace System.Xml.XPath
         // For class function provides the url, we will construct the
         // XmlTextReader to process the URL
         //
-        public XPathReader(TextReader reader, string xpath) : this()
+        public XPathReader([NotNull] string Url, string XPath) : this()
         {
-            BaseReader = new XmlTextReader(reader);
-            _XPathCollection = new XPathCollection { xpath };
+            BaseReader = new XmlTextReader(Url);
+            _XPathCollection = new XPathCollection { XPath };
+        }
+
+        /// <internalonly />
+        /// <devdoc>
+        ///     <para>
+        ///         Initializes a new instance of the XPathReader class with the specified XmlNameTable.
+        ///         This constructor is used when creating reader with "new XPathReader(..)"
+        ///     </para>
+        /// </devdoc>
+
+        //
+        // For class function provides the url, we will construct the
+        // XmlTextReader to process the URL
+        //
+        public XPathReader(TextReader Reader, string XPath) : this()
+        {
+            BaseReader = new XmlTextReader(Reader);
+            _XPathCollection = new XPathCollection { XPath };
         }
 
 
@@ -276,7 +276,7 @@ namespace System.Xml.XPath
         // For class function provides the url, we will construct the
         // XmlTextReader to process the URL
         //
-        public XPathReader(string url, XPathCollection xc) : this(new XmlTextReader(url), xc) { }
+        public XPathReader([NotNull] string Url, [NotNull] XPathCollection XPathCollection) : this(new XmlTextReader(Url), XPathCollection) { }
 
         #endregion
 
@@ -294,13 +294,7 @@ namespace System.Xml.XPath
         // check the query index in the query
         // collections match the result that we are
         // looking for.
-        public bool Match(int QueryIndex)
-        {
-#if DEBUG1
-            Console.WriteLine("queryIndex: {0}", queryIndex);
-#endif
-            return _XPathCollection[QueryIndex] != null && _XPathCollection[QueryIndex].Match();
-        }
+        public bool Match(int QueryIndex) => _XPathCollection[QueryIndex] != null && _XPathCollection[QueryIndex].Match();
 
         /// <internalonly />
         /// <devdoc>
@@ -309,13 +303,13 @@ namespace System.Xml.XPath
         ///         This constructor is used when creating reader with "new XPathReader(..)"
         ///     </para>
         /// </devdoc>
-        public bool Match(string XpathQuery) => true;
+        public bool Match(string XPathQuery) => true;
 
         /// <internalonly />
         /// <devdoc>
         ///     <para>return true when the </para>
         /// </devdoc>
-        public bool Match(XPathQuery XpathExpr) => _XPathCollection.Contains(XpathExpr) && XpathExpr.Match();
+        public bool Match(XPathQuery XPathExpr) => _XPathCollection.Contains(XPathExpr) && XPathExpr.Match();
 
         /// <internalonly />
         /// <devdoc>
@@ -330,15 +324,12 @@ namespace System.Xml.XPath
         public bool ReadUntilMatch()
         {
             while(true)
-            {
                 if(ProcessAttribute > 0)
                 {
                     //need to process the attribute one at time
 
                     if(MoveToNextAttribute())
                     {
-                        //attributeIndex < AttributeCount) {
-                        //MoveToAttribute(attributeIndex++);
                         if(_XPathCollection.MatchAnyQuery())
                             return true;
                     }
@@ -352,7 +343,6 @@ namespace System.Xml.XPath
                     _XPathCollection.AdvanceUntil(this);
                     if(_XPathCollection.MatchAnyQuery()) return true;
                 }
-            }
         }
 
         /// <devdoc>
@@ -374,11 +364,11 @@ namespace System.Xml.XPath
         /// <devdoc>
         ///     <para>Moves to the attribute with the specified <see cref='XPathReader.Name' /> .</para>
         /// </devdoc>
-        public override bool MoveToAttribute(string name)
+        public override bool MoveToAttribute(string AttributeName)
         {
             ReadMethod = ReadMethods.MoveToAttribute;
 
-            var ret = BaseReader.MoveToAttribute(name);
+            var ret = BaseReader.MoveToAttribute(AttributeName);
             if(ret) _XPathCollection.Advance(this);
             return ret;
         }
@@ -390,11 +380,11 @@ namespace System.Xml.XPath
         ///         and <see cref='NamespaceURI' /> .
         ///     </para>
         /// </devdoc>
-        public override bool MoveToAttribute(string name, string ns)
+        public override bool MoveToAttribute(string AttributeName, string ns)
         {
-            var ret = BaseReader.MoveToAttribute(name, ns);
-            if(ret) _XPathCollection.Advance(this);
-            return ret;
+            var result = BaseReader.MoveToAttribute(AttributeName, ns);
+            if(result) _XPathCollection.Advance(this);
+            return result;
         }
 
         /// <devdoc>
@@ -414,9 +404,9 @@ namespace System.Xml.XPath
         /// </devdoc>
         public override bool MoveToFirstAttribute()
         {
-            var ret = BaseReader.MoveToFirstAttribute();
-            if(ret) _XPathCollection.Advance(this);
-            return ret;
+            var result = BaseReader.MoveToFirstAttribute();
+            if(result) _XPathCollection.Advance(this);
+            return result;
         }
 
         /// <devdoc>
@@ -426,9 +416,9 @@ namespace System.Xml.XPath
         /// </devdoc>
         public override bool MoveToNextAttribute()
         {
-            var ret = BaseReader.MoveToNextAttribute();
-            if(ret) _XPathCollection.Advance(this);
-            return ret;
+            var result = BaseReader.MoveToNextAttribute();
+            if(result) _XPathCollection.Advance(this);
+            return result;
         }
 
         /// <devdoc>
@@ -439,9 +429,9 @@ namespace System.Xml.XPath
         public override bool MoveToElement()
         {
             ReadMethod = ReadMethods.MoveToElement;
-            var ret = BaseReader.MoveToElement();
-            if(ret) _XPathCollection.Advance(this);
-            return ret;
+            var result = BaseReader.MoveToElement();
+            if(result) _XPathCollection.Advance(this);
+            return result;
         }
 
         /// <devdoc>
@@ -450,7 +440,7 @@ namespace System.Xml.XPath
         ///         <see cref='XPathReader.Name' /> .
         ///     </para>
         /// </devdoc>
-        public override string GetAttribute(string name) => BaseReader.GetAttribute(name);
+        public override string GetAttribute(string AttributeName) => BaseReader.GetAttribute(AttributeName);
 
         /// <devdoc>
         ///     <para>
@@ -459,8 +449,8 @@ namespace System.Xml.XPath
         ///         <see cref='XPathReader.NamespaceURI' /> .
         ///     </para>
         /// </devdoc>
-        public override string GetAttribute(string name, string NamespaceUri)
-            => BaseReader.GetAttribute(name, NamespaceUri);
+        public override string GetAttribute(string AttributeName, string NamespaceUri)
+            => BaseReader.GetAttribute(AttributeName, NamespaceUri);
 
         /// <devdoc>
         ///     <para>Gets the value of the attribute with the specified index.</para>
@@ -485,7 +475,7 @@ namespace System.Xml.XPath
         ///         Resolves a namespace prefix in the current element's scope.
         ///     </para>
         /// </devdoc>
-        public override string LookupNamespace(string prefix) => BaseReader.LookupNamespace(prefix);
+        public override string LookupNamespace(string Prefix) => BaseReader.LookupNamespace(Prefix);
 
         /// <devdoc>
         ///     <para>Resolves the entity reference for nodes of NodeType EntityReference.</para>
@@ -510,11 +500,8 @@ namespace System.Xml.XPath
         /// </devdoc>
         public override string ReadOuterXml() => BaseReader.ReadOuterXml();
 
-        internal bool MapPrefixWithNamespace(string prefix)
-        {
-            var lv_NsMgr = _XPathCollection.NamespaceManager;
-            return lv_NsMgr != null && lv_NsMgr.LookupNamespace(prefix) == NamespaceURI;
-        }
+        internal bool MapPrefixWithNamespace(string prefix) => 
+            _XPathCollection.NamespaceManager?.LookupNamespace(prefix) == NamespaceURI;
 
         #endregion
     }

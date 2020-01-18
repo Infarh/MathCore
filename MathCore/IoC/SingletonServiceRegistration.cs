@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.IoC
 {
@@ -22,12 +25,15 @@ namespace MathCore.IoC
         }
 
         public bool IsInstanceCreated => _Created || _InstanceService;
+
         public TService CurrentInstance { get; private set; }
 
         public TService Instance => (TService)GetService();
+
         public bool NeedDisposeInstance { get; set; }
 
         public SingletonServiceRegistration(IServiceManager Manager, Type ServiceType) : base(Manager, ServiceType) { }
+
         public SingletonServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType, FactoryMethod) { }
 
         public SingletonServiceRegistration(IServiceManager Manager, Type ServiceType, TService ServiceInstance) : base(Manager, ServiceType)
@@ -68,9 +74,8 @@ namespace MathCore.IoC
             }
             var cancel = _InstanceActualityCheckCancel.Token;
             do
-            {
                 await Task.Delay((TimeSpan)InstanceActualityTime, cancel).ConfigureAwait(false);
-            } while (DateTime.Now - _InstanceLastAccessTime >= _InstanceActualityTime || !cancel.IsCancellationRequested);
+            while (DateTime.Now - _InstanceLastAccessTime >= _InstanceActualityTime || !cancel.IsCancellationRequested);
             _InstanceActualityCheckCancel = null;
             Reset();
         }
@@ -105,14 +110,16 @@ namespace MathCore.IoC
             base.Dispose(disposing);
         }
 
-        public SingletonServiceRegistration<TService> With(Action<SingletonServiceRegistration<TService>> Initializer)
+        [NotNull]
+        public SingletonServiceRegistration<TService> With([CanBeNull] Action<SingletonServiceRegistration<TService>> Initializer)
         {
             Initializer?.Invoke(this);
             return this;
         }
 
+        [NotNull]
         internal override ServiceRegistration CloneFor(IServiceManager manager) => _InstanceService
-            ? new SingletonServiceRegistration<TService>(manager, ServiceType, (TService)CurrentInstance)
+            ? new SingletonServiceRegistration<TService>(manager, ServiceType, CurrentInstance)
             : new SingletonServiceRegistration<TService>(manager, ServiceType);
     }
 }

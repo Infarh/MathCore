@@ -1984,7 +1984,7 @@
             <returns>Длина дуги на поверхности Земли, начинающейся в первой точке и заканчивающейся во второй точке</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.EquirectangularApproximation_LengthBetween(System.Double,System.Double,System.Double,System.Double)">
-            <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекциии), заданными своими координатами</summary>
+            <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекции), заданными своими координатами</summary>
             <param name="latitude1">Широта первой точки в градусах</param>
             <param name="longitude1">Долгота первой точки в градусах</param>
             <param name="latitude2">Широта второй точки в градусах</param>
@@ -10814,7 +10814,7 @@
         <member name="T:MathCore.Vectors.Vector3D">
             <summary>Трёхмерный вектор</summary>
         </member>
-        <member name="F:MathCore.Vectors.Vector3D.BasysUnitVector">
+        <member name="F:MathCore.Vectors.Vector3D.BasisUnitVector">
             <summary>Единичный базисный вектор</summary>
         </member>
         <member name="F:MathCore.Vectors.Vector3D.i">
@@ -10848,13 +10848,13 @@
             <summary>Длина вектора</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleXOY">
-            <summary>Угол проекциии в плоскости XOY</summary>
+            <summary>Угол проекции в плоскости XOY</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleXOZ">
-            <summary>Угол проекциии в плоскости XOZ</summary>
+            <summary>Угол проекции в плоскости XOZ</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.AngleYOZ">
-            <summary>Угол проекциии в плоскости YOZ</summary>
+            <summary>Угол проекции в плоскости YOZ</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.Phi">
             <summary>Азимутальный угол</summary>
@@ -10958,8 +10958,8 @@
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.SpaceAngle)">
             <summary>Проекция вектора на направление</summary>
             <param name="Vector">Проецируемый вектор</param>
-            <param name="Direction">Пространственный угол направления проекциии</param>
-            <returns>Вещественное значение проекциии</returns>
+            <param name="Direction">Пространственный угол направления проекции</param>
+            <returns>Вещественное значение проекции</returns>
         </member>
         <member name="T:MathCore.ViewModels.ViewModel">
             <summary>Наблюдаемая модель</summary>
@@ -15560,7 +15560,7 @@
         <member name="M:System.Xml.XPath.XPathCollection.MatchesAny(System.Collections.ArrayList,System.Int32)">
             <exception cref="T:System.ArgumentNullException"><paramref name="list"/> is <see langword="null" />.</exception>
         </member>
-        <member name="M:System.Xml.XPath.XPathParser.ParseXPathExpresion(System.String)">
+        <member name="M:System.Xml.XPath.XPathParser.ParseXPathExpression(System.String)">
             <exception cref="T:System.Xml.XPath.XPathException"><see cref="P:System.Xml.XPath.XPathScanner.SourceText"/>  has an invalid token</exception>
         </member>
         <member name="M:System.Xml.XPath.XPathParser.ParseXPathPattern(System.String)">

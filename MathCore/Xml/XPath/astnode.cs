@@ -53,7 +53,7 @@ namespace System.Xml.XPath
         {
             try
             {
-                return XPathParser.ParseXPathExpresion(parsestring);
+                return XPathParser.ParseXPathExpression(parsestring);
             }
             catch (XPathException e)
             {

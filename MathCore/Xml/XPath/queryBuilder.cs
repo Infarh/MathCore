@@ -15,6 +15,9 @@
 
 using System.Collections;
 using System.Diagnostics;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedParameter.Local
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.XPath
@@ -85,43 +88,43 @@ namespace System.Xml.XPath
                 case XPathNodeType.Comment:
                     ret = XmlNodeType.Comment;
                     break;
-                default:
-                    break;
             }
 
             return ret;
         }
 
-        private Query ProcessFilter(Filter root)
+        [NotNull]
+        private Query ProcessFilter([NotNull] Filter root)
         {
             //condition
-            var opnd = ProcessNode(root.Condition, null);
+            var operand = ProcessNode(root.Condition, null);
 
             //axis
-            var lv_QyInput = ProcessNode(root.Input, null);
+            var qy_input = ProcessNode(root.Input, null);
 
-            return new FilterQuery(lv_QyInput, opnd);
+            return new FilterQuery(qy_input, operand);
         }
 
-        private Query ProcessOperand(Operand root) => new OperandQuery(root.OperandValue, root.ReturnType);
+        [NotNull] private static Query ProcessOperand([NotNull] Operand root) => new OperandQuery(root.OperandValue, root.ReturnType);
 
-        private Query ProcessFunction(Function root, Query QyInput)
+        [CanBeNull]
+        private Query ProcessFunction([NotNull] Function root, Query InputQuery)
         {
-            Query qy = null;
+            Query query;
 
             switch(root.TypeOfFunction)
             {
                 case FT.FuncPosition:
-                    qy = new MethodOperand(null, root.TypeOfFunction);
-                    return qy;
+                    query = new MethodOperand(null, root.TypeOfFunction);
+                    return query;
 
                 // we should be able to count how many attributes
                 case FT.FuncCount:
-                    qy = ProcessNode((AstNode)root.ArgumentList[0], null);
+                    query = ProcessNode((AstNode)root.ArgumentList[0], null);
 
-                    if(qy is AttributeQuery)
-                        return new MethodOperand(qy, FT.FuncCount);
-                    //none attribute count funciton result in error.
+                    if(query is AttributeQuery)
+                        return new MethodOperand(query, FT.FuncCount);
+                    //none attribute count function result in error.
 
                     break;
 
@@ -143,15 +146,12 @@ namespace System.Xml.XPath
                 case FT.FuncStringLength:
                 case FT.FuncNormalize:
                 case FT.FuncTranslate:
-                    ArrayList lv_ArgList = null;
-                    if(root.ArgumentList != null)
-                    {
-                        var count = 0;
-                        lv_ArgList = new ArrayList();
-                        while(count < root.ArgumentList.Count)
-                            lv_ArgList.Add(ProcessNode((AstNode)root.ArgumentList[count++], null));
-                    }
-                    return new StringFunctions(lv_ArgList, root.TypeOfFunction);
+                    if (root.ArgumentList is null) return new StringFunctions(new ArrayList(), root.TypeOfFunction);
+                    var count = 0;
+                    var arg_list = new ArrayList();
+                    while(count < root.ArgumentList.Count)
+                        arg_list.Add(ProcessNode((AstNode)root.ArgumentList[count++], null));
+                    return new StringFunctions(arg_list, root.TypeOfFunction);
 
                 case FT.FuncNumber:
                 //case FT.FuncSum:
@@ -174,8 +174,8 @@ namespace System.Xml.XPath
                         root.TypeOfFunction);
 
 
-                // Unsupport functions
-                case FT.FuncID:
+                // Unsupported functions
+                //case FT.FuncID:
 
                 // Last Function is not supported, because we don't know
                 // how many we get in the list
@@ -183,7 +183,7 @@ namespace System.Xml.XPath
                 // /Root/e[last()=2]
                 // we will not return the first one because
                 // we don't if we have two e elements.
-                case FT.FuncLast:
+                //case FT.FuncLast:
                 //qy = new MethodOperand(null, root.TypeOfFunction);
                 //return qy;
 
@@ -194,50 +194,45 @@ namespace System.Xml.XPath
             return null;
         }
 
-
         //
         // Operator: Or, and, |
         //           +, -, *, div,
         //           >, >=, <, <=, =, !=
         //
-        private Query ProcessOperator(Operator root, Query QyInput)
+        [CanBeNull]
+        private Query ProcessOperator([NotNull] Operator root, Query InputQuery)
         {
-            Query ret = null;
-
             switch(root.OperatorType)
             {
                 case Operator.Op.Or:
-                    ret = new OrExpr(ProcessNode(root.Operand1, null),
+                    return new OrExpr(ProcessNode(root.Operand1, null),
                         ProcessNode(root.Operand2, null));
-                    return ret;
 
                 case Operator.Op.And:
-                    ret = new AndExpr(ProcessNode(root.Operand1, null),
+                    return new AndExpr(ProcessNode(root.Operand1, null),
                         ProcessNode(root.Operand2, null));
-                    return ret;
             }
 
             switch(root.ReturnType)
             {
                 case XPathResultType.Number:
-                    ret = new NumericExpr(root.OperatorType,
+                    return new NumericExpr(root.OperatorType,
                         ProcessNode(root.Operand1, null),
                         ProcessNode(root.Operand2, null));
-                    return ret;
 
                 case XPathResultType.Boolean:
-                    ret = new LogicalExpr(root.OperatorType,
+                    return new LogicalExpr(root.OperatorType,
                         ProcessNode(root.Operand1, null),
                         ProcessNode(root.Operand2, null));
-                    return ret;
             }
 
-            return ret;
+            return null;
         }
 
         //
         ///
-        private Query ProcessAxis(Axis root, Query QyInput) =>
+        [NotNull]
+        private static Query ProcessAxis([NotNull] Axis root, Query QyInput) =>
             root.TypeOfAxis switch
             {
                 Axis.AxisType.Attribute => (Query) new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type),
@@ -248,7 +243,8 @@ namespace System.Xml.XPath
                 _ => throw new XPathReaderException("xpath is not supported!")
             };
 
-        private Query ProcessNode(AstNode root, Query QyInput)
+        [CanBeNull]
+        private Query ProcessNode([CanBeNull] AstNode root, Query QyInput)
         {
             Query result = null;
 
@@ -292,31 +288,27 @@ namespace System.Xml.XPath
             return result;
         }
 
-        public void Build(string xpath, ArrayList CompiledXPath, int depth)
+        public void Build(string xpath, [NotNull] ArrayList CompiledXPath, int depth)
         {
             //
             // build the AST node first
             //
-            var root = XPathParser.ParseXPathExpresion(xpath);
+            var root = XPathParser.ParseXPathExpression(xpath);
 
             var stack = new Stack();
 
             var query = ProcessNode(root, null);
 
             while(query != null)
-            {
                 if(query is BaseAxisQuery axis_query)
                 {
                     stack.Push(query);
                     query = axis_query.QueryInput;
                 }
                 else
-                {
-                    // these queries are not supported
-                    // for example, the primary exprission not in the predicate.
+                // these queries are not supported
+                // for example, the primary expression not in the predicate.
                     throw new XPathReaderException("XPath query is not supported!");
-                }
-            }
 
             query = (Query)stack.Peek();
 
@@ -330,28 +322,34 @@ namespace System.Xml.XPath
                 CompiledXPath.Add(stack.Pop());
                 var current_query = (BaseAxisQuery)CompiledXPath[CompiledXPath.Count - 1];
 
-                FilterQuery lv_FilterQuery = null;
+                FilterQuery filter_query = null;
 
-                if(current_query is FilterQuery filter_query)
+                if(current_query is FilterQuery f)
                 {
-                    lv_FilterQuery = filter_query;
-                    current_query = filter_query.Axis;
+                    filter_query = f;
+                    current_query = f.Axis;
                 }
 
-                if(current_query is ChildQuery || current_query is AttributeQuery || current_query is DescendantQuery)
-                    ++depth;
-                else if(current_query is AbsoluteQuery)
-                    depth = 0;
+                switch (current_query)
+                {
+                    case ChildQuery _:
+                    case AttributeQuery _:
+                    case DescendantQuery _:
+                        depth++;
+                        break;
+                    case AbsoluteQuery _: depth = 0;
+                        break;
+                }
 
                 current_query.Depth = depth;
 
-                if(lv_FilterQuery != null)
-                    lv_FilterQuery.Depth = depth;
+                if(filter_query != null)
+                    filter_query.Depth = depth;
             }
 
             //
             // matchIndex always point to the next query to match.
-            // We use the matchIndex to retriev the query depth info,
+            // We use the MatchIndex to retrieve the query depth info,
             // without this added Null query, we need to check the
             // condition all the time in the Expression Advance method.
             //
