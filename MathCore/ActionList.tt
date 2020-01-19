@@ -1,26 +1,50 @@
 ﻿<#@ template debug="true" hostSpecific="true" #>
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
-<#@ Assembly Name="System.Windows.Forms.dll" #>
 <#@ import namespace="System" #>
-<#@ import namespace="System.IO" #>
-<#@ import namespace="System.Diagnostics" #>
-<#@ import namespace="System.Collections" #>
-<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="System.Linq" #>
 <#
-   const int TypeParamsCount = 5;
-#> 
+   const int TypeParamsCount = 7;
+#>
 using System;
 using System.Collections.Generic;
 
-namespace MathCore
-{
-    public class ActionList : List<Action>
-    {
-        public ActionList() { }
-        public ActionList(int capacity) : base(capacity) { }
-        public ActionList(IEnumerable<Action> collection) : base(collection) { }
+using MathCore.Annotations;
 
-        public void Invoke() => ForEach(a => a.Invoke());
+// ReSharper disable UnusedType.Global
+
+namespace MathCore
+{<# for(var i = 0; i <= TypeParamsCount; i++) 
+{
+    var types = i == 0 ? string.Empty : $"<{string.Join(", ", Enumerable.Range(1, i).Select(n => $"T{n}"))}>";
+    var types_comment = i == 0 ? string.Empty : $"{{{string.Join(", ", Enumerable.Range(1, i).Select(n => $"T{n}"))}}}";
+    var parameters_signature = i == 0 ? string.Empty : string.Join(", ", Enumerable.Range(1, i).Select(n => $"T{n} p{n}"));
+    var parameters = i == 0 ? string.Empty : string.Join(", ", Enumerable.Range(1, i).Select(n => $"p{n}"));
+#>
+
+    /// <summary>Список действий <see cref="Action<#=types_comment#>"/></summary>
+<# for(var j = 1; j <= i; j++) { #>
+    /// <typeparam name="T<#=j#>">Тип <#=j#> параметра действия</typeparam>
+<# } #>
+    public class ActionList<#=types#> : List<Action<#=types#>>
+    {
+        /// <summary>Инициализация нового экземпляра <see cref="ActionList<#=types_comment#>"/></summary>
+        public ActionList() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="ActionList<#=types_comment#>"/></summary>
+        /// <param name="Capacity">Ёмкость списка</param>
+        public ActionList(int Capacity) : base(Capacity) { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="ActionList<#=types_comment#>"/></summary>
+        /// <param name="ActionsEnumeration">Перечисление действий списка</param>
+        public ActionList([NotNull] IEnumerable<Action<#=types#>> ActionsEnumeration) : base(ActionsEnumeration) { }
+
+        /// <summary>Выполнение последовательности действий списка</summary>
+        public void Invoke(<#=parameters_signature#>)
+        {
+            for(int i = 0, actions_count = Count; i < actions_count; i++)
+                this[i](<#=parameters#>);
+        }
     }
+<# } #>
 }
