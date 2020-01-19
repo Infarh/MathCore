@@ -44,6 +44,14 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Complex.Decimal.cs</LastGenOutput>
     </None>
+    <None Update="EventArgs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EventArgs.cs</LastGenOutput>
+    </None>
+    <None Update="EventHandler.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EventHandler.cs</LastGenOutput>
+    </None>
     <None Update="Matrix.complex.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Matrix.complex.cs</LastGenOutput>
@@ -76,6 +84,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Complex.Decimal.tt</DependentUpon>
+    </Compile>
+    <Compile Update="EventArgs.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EventArgs.tt</DependentUpon>
+    </Compile>
+    <Compile Update="EventHandler.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EventHandler.tt</DependentUpon>
     </Compile>
     <Compile Update="Matrix.complex.cs">
       <DesignTime>True</DesignTime>

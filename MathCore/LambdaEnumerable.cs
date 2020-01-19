@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using MathCore.Annotations;
 
 namespace MathCore
 {
     public class LambdaEnumerable<T> : Factory<IEnumerator<T>>, IEnumerable<T>
-    {  
+    {
         /* ------------------------------------------------------------------------------------------ */
 
         public LambdaEnumerable([CanBeNull] Func<IEnumerable<T>> Generator) : base(() => (Generator?.Invoke() ?? Enumerable.Empty<T>()).GetEnumerator()) { }
@@ -16,18 +17,10 @@ namespace MathCore
 
         #region Implementation of IEnumerable
 
-        /// <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции.</summary>
-        /// <returns>
-        /// Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
-        /// </returns>
-        /// <filterpriority>1</filterpriority>
-        public IEnumerator<T> GetEnumerator() => Create();
+        /// <inheritdoc />
+        public IEnumerator<T> GetEnumerator() => Create() ?? throw new InvalidOperationException();
 
-        /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>
-        /// <returns>
-        /// Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #endregion

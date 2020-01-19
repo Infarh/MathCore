@@ -213,6 +213,7 @@ namespace MathCore
 
         #region Implementation of IEquatable<Polynom>
 
+        /// <inheritdoc />
         public bool Equals(Polynom other)
         {
             if (other is null) return false;
@@ -229,9 +230,13 @@ namespace MathCore
             return true;
         }
 
+        /// <inheritdoc />
         [NotNull] public Polynom Clone() => new Polynom((double[])_a.Clone());
+
+        /// <inheritdoc />
         object ICloneable.Clone() => Clone();
 
+        /// <inheritdoc />
         [DST]
         public override bool Equals(object obj) => Equals(obj as Polynom);
 

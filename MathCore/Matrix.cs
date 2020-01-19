@@ -110,7 +110,7 @@ namespace MathCore
         public Matrix T => GetTranspose();
 
         /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
-        public double Norm_m => Array.GetMaxRowAbsSumm(_Data);
+        public double Norm_m => Array.GetMaxRowAbsSum(_Data);
 
         /// <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
         public double Norm_l => Array.GetMaxColAbsSum(_Data);
@@ -397,7 +397,7 @@ namespace MathCore
         [DST, NotNull] public static Matrix operator *(double x, [NotNull] Matrix M) => new Matrix(Multiply(M._Data, x));
 
         /// <summary>Оператор матричного произведения двумерного массива и матрицы</summary>
-        /// <returns>Матрица - результат матричного умножения двухмергного массива и матрицы</returns>
+        /// <returns>Матрица - результат матричного умножения двухмерного массива и матрицы</returns>
         [DST, NotNull] public static Matrix operator *([NotNull] double[,] A, [NotNull] Matrix B) => new Matrix(Multiply(A, B._Data));
 
         /// <summary>Оператор матричного произведения одномерного массива (строки) и матрицы</summary>

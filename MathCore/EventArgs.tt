@@ -1,0 +1,134 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+    const int arguments_count = 10;
+#>
+using MathCore.Annotations;
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedTypeParameter
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
+
+// ReSharper disable once CheckNamespace
+namespace System
+{
+    /// <summary>Аргумент события с типизированным параметром</summary>
+    [DST]
+    public class EventArgs<TArgument> : EventArgs
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Параметр аргумента</summary>
+        public TArgument Argument { get; set;}
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgumen}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgumen}"/></summary>
+        /// <param name="Argument">Параметр аргумента</param>
+        public EventArgs(TArgument Argument) => this.Argument = Argument;
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Строковое представление аргумента события</summary>
+        public override string ToString() => Argument.ToString();
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения</summary>
+        /// <param name="Args">Аргумент события</param>
+        /// <returns>Хранимый объект</returns>
+        public static implicit operator TArgument([NotNull] EventArgs<TArgument> Args) => Args.Argument;
+
+        /// <summary>Оператор неявного преобразования типа хранимого значения в обёртку из аргумента события, содержащего это значение</summary>
+        /// <param name="Argument">Объект аргумента события</param>
+        /// <returns>Аргумент события</returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument>(TArgument Argument) => new EventArgs<TArgument>(Argument);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+<# for(var i = 2; i <= arguments_count; i++) {
+    var types = $"<{string.Join(", ", Enumerable.Range(1, i).Select(n => $"TArgument{n}"))}>";
+    var inherit_types = i == 2 ? string.Empty : $"<{string.Join(", ", Enumerable.Range(1, i-1).Select(n => $"TArgument{n}"))}>";
+    var types_comment = $"{{{string.Join(", ", Enumerable.Range(1, i).Select(n => $"TArgument{n}"))}}}";
+    var parameters_signature = string.Join(", ", Enumerable.Range(1, i).Select(n => $"TArgument{n} Argument{n}"));
+    var parameters = string.Join("\r\n            ", Enumerable.Range(1, i).Select(n => $"this.Argument{n} = Argument{n};"));
+    var inherit_parameters = string.Join(", ", Enumerable.Range(1, i-1).Select(n => $"Argument{n}"));
+#> 
+    /// <summary>Аргумент события с <#=i#> типизированными параметрами</summary>
+    <#=string.Join("\r\n    ", Enumerable.Range(1, i).Select(i => $"/// <typeparam name=\"TArgument{i}\">Тип аргумента {i}</typeparam>"))#>
+    [DST]
+    public class EventArgs<#=types#> 
+        : EventArgs<#=inherit_types#>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+<# if(i == 2) { #>
+        /// <summary>1 параметр аргумента</summary>
+        public TArgument1 Argument1 { get; set; }
+
+<# } #>
+        /// <summary><#=i#> параметр аргумента</summary>
+        public TArgument<#=i#> Argument<#=i#> { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs<#=types_comment#>"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs<#=types_comment#>"/></summary>
+<# if(i == 2) { #>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        public EventArgs(<#=parameters_signature#>) 
+        {
+            <#=parameters#>
+        }
+<# } else { #>
+        <#=string.Join("\r\n        ", Enumerable.Range(1, i).Select(i => $"/// <param name=\"Argument{i}\">{i} параметр аргумента</param>"))#>
+        public EventArgs(<#=parameters_signature#>) 
+            : base(<#=inherit_parameters#>) 
+            => this.Argument<#=i#> = Argument<#=i#>;
+<# } #>
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs<#=types_comment#>"/></summary>
+        <#=string.Join("\r\n        ", Enumerable.Range(1, i).Select(i => $"/// <param name=\"Arg{i}\">{i} параметр аргумента</param>"))#>
+        public void Deconstruct(<#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"out TArgument{i} Arg{i}"))#>)
+        {
+            <#=string.Join("\r\n            ", Enumerable.Range(1, i).Select(i => $"Arg{i} = Argument{i};"))#>
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs<#=types_comment#>"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs<#=types_comment#>"/></param>
+        /// <returns>Кортеж из <#=i#> параметров</returns>
+        public static implicit operator
+            (<#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"TArgument{i} Arg{i}"))#>)
+            ([NotNull] EventArgs<#=types#> Args)
+            => (<#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"Args.Argument{i}"))#>);
+
+        /// <summary>Оператор неявного преобразования кортежа из <#=i#> параметров к типу <see cref="EventArgs<#=types_comment#>"/></summary>
+        /// <param name="Args">Кортеж из <#=i#> параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs<#=types_comment#>"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<#=types#>
+            ((<#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"TArgument{i} Arg{i}"))#>) Args)
+            => new EventArgs<#=types#>(<#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"Args.Arg{i}"))#>);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+<# } #>
+}

@@ -177,7 +177,7 @@ namespace System.ComponentModel
                 __ObjectsSet.Add(new WeakReference(obj));
                 typeof(T).GetRegistrator().Subscribe(obj, OnPropertyChanged);
                 if (__ObjectsSet.Count == 1)
-                    GCWacher.Complete += OnGarbageCollected;
+                    GCWatcher.Complete += OnGarbageCollected;
             }
         }
 
@@ -197,7 +197,7 @@ namespace System.ComponentModel
                 __ObjectsSet.Add(new WeakReference(obj));
                 typeof(T).GetRegistrator().Subscribe(obj, OnPropertyChanged);
                 if (__ObjectsSet.Count == 1)
-                    GCWacher.Complete += OnGarbageCollected;
+                    GCWatcher.Complete += OnGarbageCollected;
             }
             return new LambdaDisposable(obj.PropertyDependences_Unregister);
         }
@@ -219,7 +219,7 @@ namespace System.ComponentModel
                 if (!__ObjectsSet.Any(w => w.Target is T))
                     __RegistrationPool.Remove(type);
                 if (__ObjectsSet.Count == 0)
-                    GCWacher.Complete -= OnGarbageCollected;
+                    GCWatcher.Complete -= OnGarbageCollected;
             }
         }
 
