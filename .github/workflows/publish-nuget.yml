@@ -31,4 +31,6 @@ jobs:
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m
         
       - name: Publishing
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.NuGetApiKey }} -n --skip-duplicate -s https://api.nuget.org/v3/index.json
+        run: |
+          dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.NuGetApiKey }} --skip-duplicate -s https://api.nuget.org/v3/index.json
+          dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate -s "github"
