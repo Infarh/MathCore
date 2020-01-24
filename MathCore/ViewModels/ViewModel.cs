@@ -11,6 +11,7 @@ using MathCore.Annotations;
 // ReSharper disable UnusedParameter.Global
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedType.Global
+// ReSharper disable AssignNullToNotNullAttribute
 
 // ReSharper disable once CheckNamespace
 namespace MathCore.ViewModels
@@ -23,7 +24,7 @@ namespace MathCore.ViewModels
         /// <inheritdoc />
         public event PropertyChangingEventHandler PropertyChanging;
 
-        protected virtual bool OnPropertyChanging<T>(T OldValue, [CanBeNull] ref T NewValue, [CallerMemberName] string PropertyName = null)
+        protected virtual bool OnPropertyChanging<T>(in T OldValue, [CanBeNull] ref T NewValue, [CallerMemberName] in string PropertyName = null)
         {
             PropertyChangingEventArgs<T> args = null;
             PropertyChanging?.Invoke(this, args = new PropertyChangingEventArgs<T>(OldValue, NewValue, PropertyName));
@@ -53,7 +54,7 @@ namespace MathCore.ViewModels
 
         /// <summary>Присоединить обработчик события <see cref="PropertyChanged"/></summary>
         /// <param name="handler">Присоединяемый обработчик события <see cref="PropertyChanged"/></param>
-        protected virtual void PropertyChanged_AddHandler(PropertyChangedEventHandler handler) => PropertyChangedEvent += handler;
+        protected virtual void PropertyChanged_AddHandler(in PropertyChangedEventHandler handler) => PropertyChangedEvent += handler;
 
         /// <summary>Словарь обработчиков событий изменений свойств</summary>
         private Dictionary<string, Action> _PropertyChangedHandlers;
@@ -61,7 +62,7 @@ namespace MathCore.ViewModels
         /// <summary>Добавление обработчика события изменения свойства</summary>
         /// <param name="PropertyName">Имя отслеживаемого события</param>
         /// <param name="handler">Устанавливаемый обработчик</param>
-        protected void PropertyChanged_AddHandler([NotNull] string PropertyName, Action handler)
+        protected void PropertyChanged_AddHandler([NotNull] in string PropertyName, in Action handler)
         {
             lock (_PropertiesDependenciesSyncRoot)
             {
@@ -75,7 +76,7 @@ namespace MathCore.ViewModels
         /// <param name="PropertyName">Имя отслеживаемого свойства</param>
         /// <param name="handler">Извлекаемый обработчик события</param>
         /// <returns>Истина, если обработчик события удалён успешно</returns>
-        protected bool PropertyChanged_RemoveHandler(string PropertyName, Action handler)
+        protected bool PropertyChanged_RemoveHandler(in string PropertyName, in Action handler)
         {
             lock (_PropertiesDependenciesSyncRoot)
             {
@@ -92,7 +93,7 @@ namespace MathCore.ViewModels
 
         /// <summary>Очистка обработчиков изменений свойства</summary>
         /// <returns>Истина, если очистка произведена успешно</returns>
-        protected bool PropertyChanged_ClearHandlers(string PropertyName)
+        protected bool PropertyChanged_ClearHandlers(in string PropertyName)
         {
             lock (_PropertiesDependenciesSyncRoot)
                 return _PropertyChangedHandlers != null && _PropertyChangedHandlers.Count > 0 &&
@@ -114,7 +115,7 @@ namespace MathCore.ViewModels
 
         /// <summary>Отсоединить обработчик события <see cref="PropertyChanged"/></summary>
         /// <param name="handler">Отсоединяемый обработчик события <see cref="PropertyChanged"/></param>
-        protected virtual void PropertyChanged_RemoveHandler(PropertyChangedEventHandler handler) => PropertyChangedEvent -= handler;
+        protected virtual void PropertyChanged_RemoveHandler(in PropertyChangedEventHandler handler) => PropertyChangedEvent -= handler;
 
         /// <summary>Получить перечисление всех объектов, подписанных на событие <see cref="PropertyChanged"/></summary>
         /// <typeparam name="T">Тип интересующих объектов</typeparam>
@@ -197,7 +198,7 @@ namespace MathCore.ViewModels
         /// <param name="invoke_stack">Стек вызова свойств</param>
         /// <returns>Истина, если найден цикл</returns>
         [CanBeNull]
-        private Queue<string> IsLoopDependency(string property, string dependency, string next_property = null, Stack<string> invoke_stack = null)
+        private Queue<string> IsLoopDependency(in string property, in string dependency, in string next_property = null, Stack<string> invoke_stack = null)
         {
             if(_PropertiesDependenciesDictionary is null) throw new InvalidOperationException("Отсутствует словарь свойств-зависимости");
             if (invoke_stack is null) invoke_stack = new Stack<string> { property };
@@ -218,7 +219,7 @@ namespace MathCore.ViewModels
         /// <param name="PropertyName">Исходное свойство</param>
         /// <param name="Dependence">Свойство, связь с которым надо разорвать</param>
         /// <returns>Истина, если связь успешно удалена, ложь - если связь отсутствовала</returns>
-        protected bool PropertyDependencies_Remove(string PropertyName, string Dependence)
+        protected bool PropertyDependencies_Remove(in string PropertyName, in string Dependence)
         {
             lock (_PropertiesDependenciesSyncRoot)
             {
@@ -233,7 +234,7 @@ namespace MathCore.ViewModels
 
         /// <summary>Очистить граф зависимостей между свойствами для указанного свойства</summary>
         /// <param name="PropertyName">Название свойства, связи которого нао удалить</param>
-        protected void PropertyDependencies_Clear(string PropertyName)
+        protected void PropertyDependencies_Clear(in string PropertyName)
         {
             lock (_PropertiesDependenciesSyncRoot)
                 _PropertiesDependenciesDictionary?.Remove(PropertyName);
@@ -242,8 +243,7 @@ namespace MathCore.ViewModels
         /// <summary>Метод генерации события изменения значения свойства</summary>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
         [NotifyPropertyChangedInvocator]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        protected virtual void OnPropertyChanged([NotNull] [CallerMemberName] string PropertyName = null)
+        protected virtual void OnPropertyChanged([NotNull, CallerMemberName] string PropertyName = null)
         {
             var handlers = PropertyChangedEvent;
             handlers.Start(this, PropertyName);
@@ -264,8 +264,7 @@ namespace MathCore.ViewModels
         }
 
         [NotifyPropertyChangedInvocator]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        protected virtual void OnPropertyChanged_Simple([NotNull] [CallerMemberName] string PropertyName = null) => 
+        protected virtual void OnPropertyChanged_Simple([NotNull, CallerMemberName] in string PropertyName = null) => 
             PropertyChangedEvent?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
 
         /// <summary>Словарь, хранящий время последней генерации события изменения указанного свойства в асинхронном режиме</summary>

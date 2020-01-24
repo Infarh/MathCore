@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToAutoProperty
 
 namespace MathCore.ViewModels
 {
@@ -9,15 +14,17 @@ namespace MathCore.ViewModels
     {
         public class PropertyChangingEventArgs<T> : PropertyChangingEventArgs
         {
-            public T OldValue { get; }
+            private readonly T _OldValue;
+            private T _NewValue;
 
-            public T NewValue { get; set; }
+            public T OldValue => _OldValue;
 
-            /// <inheritdoc />
-            public PropertyChangingEventArgs(T OldValue, T NewValue, string PropertyName) : base(PropertyName)
+            public T NewValue { get => _NewValue; set => _NewValue = value; }
+
+            public PropertyChangingEventArgs(in T OldValue, in T NewValue, in string PropertyName) : base(PropertyName)
             {
-                this.OldValue = OldValue;
-                this.NewValue = NewValue;
+                _OldValue = OldValue;
+                _NewValue = NewValue;
             }
         }
     }
