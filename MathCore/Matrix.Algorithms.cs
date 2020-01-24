@@ -279,6 +279,21 @@ namespace MathCore
                     }
             }
 
+            /// <summary>Создать и инициализировать двумерный массив-матрицу</summary>
+            /// <param name="N">Число строк</param>
+            /// <param name="M">Число столбцов</param>
+            /// <param name="Creator">Функция, принимающая номер строки и номер столбца и возвращающая значение элемента матрицы</param>
+            /// <returns>Массив элементов матрицы</returns>
+            [NotNull]
+            public static double[,] Create(int N, int M, Func<int, int, double> Creator)
+            {
+                var result = new double[N, M];
+                for(var n = 0; n < N; n++)
+                    for (var m = 0; m < M; m++)
+                        result[n, m] = Creator(n, m);
+                return result;
+            }
+
             /// <summary>Создать двумерный массив элементов матрицы-столбца</summary>
             /// <param name="data">Элементы массива матрицы-столбца</param>
             /// <returns>Двумерный массив элементов матрицы столбца</returns>

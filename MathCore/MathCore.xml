@@ -1279,7 +1279,7 @@
             <summary>Дескриптор свойства источника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.DestinationProperty">
-            <summary>Дескриптор свйоства примника данных</summary>
+            <summary>Дескриптор свойства примника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.SourceType">
             <summary>Источник данных</summary>
@@ -1288,7 +1288,7 @@
             <summary>Приёмник данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.SourcePropertyType">
-            <summary>Тип свйоства источника данных</summary>
+            <summary>Тип свойства источника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.DestinationPropertyType">
             <summary>Тип свойства приёмника данных</summary>
@@ -1733,7 +1733,7 @@
             <param name="PropertyName">Имя свойства</param>
         </member>
         <member name="M:MathCore.Evaluations.PropertyValueEvulation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
-            <summary>Инициализация нового вычисления свйоства объекта</summary>
+            <summary>Инициализация нового вычисления свойства объекта</summary>
             <param name="obj">Вычисление объекта, свойство которого надо получить</param>
             <param name="PropertyName">Имя свойства объекта</param>
         </member>
@@ -11174,7 +11174,7 @@
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.PropertyDependence_Add(System.String,System.String[])">
             <summary>Добавить зависимости между свйоствами</summary>
-            <param name="PropertyName">Имя исходного свйоства</param>
+            <param name="PropertyName">Имя исходного свойства</param>
             <param name="Dependences">Перечисление свйоств, на которые исходное свойство имеет влияние</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.IsLoopDependency(System.String,System.String,System.String,System.Collections.Generic.Stack{System.String})">
@@ -11190,19 +11190,19 @@
             <returns>Истина, если связь успено удалена, ложь - если связь отсутствовала</returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.PropertyDependences_Clear(System.String)">
-            <summary>Очистить граф зависимостей между свйоствами для указанного свйоства</summary>
-            <param name="PropertyName">Название свйоства, связи которого нао удалить</param>
+            <summary>Очистить граф зависимостей между свйоствами для указанного свойства</summary>
+            <param name="PropertyName">Название свойства, связи которого нао удалить</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanged(System.String)">
             <summary>Метод генерации события изменения значения свойства</summary>
             <param name="PropertyName">Имя изменившегося свойства</param>
         </member>
         <member name="F:MathCore.ViewModels.ViewModel._PropertyAsyncInvokeTime">
-            <summary>Словарь, хранящий время последней генерации события изменения указанного свйоства в асинхронном режиме</summary>
+            <summary>Словарь, хранящий время последней генерации события изменения указанного свойства в асинхронном режиме</summary>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChangedAsync(System.String,System.Int32,System.Action,System.Action)">
             <summary>Асинхронная генерация события изменения свойства с возможностью указания таймаута ожидания повторных изменений</summary>
-            <param name="PropertyName">Имя свйоства</param>
+            <param name="PropertyName">Имя свойства</param>
             <param name="Timeout">Таймаут ожидания повторных изменений, прежде чем событие будет сгенерировано</param>
             <param name="OnChanging">Метод, выполняемый до генерации события</param>
             <param name="OnChanged">Метод, выполняемый после генерации события</param>
@@ -11239,20 +11239,20 @@
             <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Action{System.String},System.String)">
-            <summary>Метод установки значения свйоства, осуществляющий генерацию события изменения свйоства</summary>
-            <typeparam name="T">Тип знначения свйоства</typeparam>
-            <param name="field">Ссылка на поле, хранящее значение свйоства</param>
-            <param name="value">Значение свйоства, которое надо установить</param>
+            <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>
+            <typeparam name="T">Тип знначения свойства</typeparam>
+            <param name="field">Ссылка на поле, хранящее значение свойства</param>
+            <param name="value">Значение свойства, которое надо установить</param>
             <param name="PropertyName">Имя свойства</param>
-            <returns>Истина, если значение свйоства установлено успешно</returns>
+            <returns>Истина, если значение свойства установлено успешно</returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Action{System.String},System.Func{``0,System.Boolean},System.String)">
-            <summary>Метод установки значения свйоства, осуществляющий генерацию события изменения свйоства</summary>
-            <typeparam name="T">Тип знначения свйоства</typeparam>
-            <param name="field">Ссылка на поле, хранящее значение свйоства</param>
-            <param name="value">Значение свйоства, которое надо установить</param>
+            <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>
+            <typeparam name="T">Тип знначения свойства</typeparam>
+            <param name="field">Ссылка на поле, хранящее значение свойства</param>
+            <param name="value">Значение свойства, которое надо установить</param>
             <param name="PropertyName">Имя свойства</param>
-            <returns>Истина, если значение свйоства установлено успешно</returns>
+            <returns>Истина, если значение свойства установлено успешно</returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.Dispose">
             <inheritdoc />
@@ -14106,16 +14106,16 @@
             <summary>Класс методов-расширений интерфейса <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></summary>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String)">
-            <summary>Подписка на событие изменения указанного свйоства</summary>
+            <summary>Подписка на событие изменения указанного свойства</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Name">Имя свйоства</param>
+            <param name="Name">Имя свойства</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler_Disposable(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String)">
-            <summary>Подписка на событие изменения указанного свйоства</summary>
+            <summary>Подписка на событие изменения указанного свойства</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Name">Имя свйоства</param>
+            <param name="Name">Имя свойства</param>
             <returns>Объект <see cref="T:System.IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String[])">

@@ -13,17 +13,17 @@ namespace System.ComponentModel
     // ReSharper disable once InconsistentNaming
     public static class INotifyPropertyChangedExtensions
     {
-        /// <summary>Подписка на событие изменения указанного свйоства</summary>
+        /// <summary>Подписка на событие изменения указанного свойства</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Name">Имя свйоства</param>
+        /// <param name="Name">Имя свойства</param>
         public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
             => obj.PropertyChanged += (s, e) => { if (string.Equals(e.PropertyName, Name)) handler(s, e); };
 
-        /// <summary>Подписка на событие изменения указанного свйоства</summary>
+        /// <summary>Подписка на событие изменения указанного свойства</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Name">Имя свйоства</param>
+        /// <param name="Name">Имя свойства</param>
         /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         [NotNull]
         public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
