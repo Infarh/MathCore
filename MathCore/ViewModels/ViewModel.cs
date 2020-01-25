@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -24,11 +23,20 @@ namespace MathCore.ViewModels
         /// <inheritdoc />
         public event PropertyChangingEventHandler PropertyChanging;
 
+        /// <summary>Генерация события находящегося в процессе изменения значения свойства</summary>
+        /// <param name="OldValue">Предыдущее значение свойства</param>
+        /// <param name="NewValue">Новое значение свойства</param>
+        /// <param name="PropertyName">Имя изменившегося свойства (если не указано, то берётся имя вызывающего метода)</param>
+        /// <typeparam name="T">Тип значения свойства</typeparam>
+        /// <returns>Истина, если событие было обработано и новое значение свойства не равно старому</returns>
         protected virtual bool OnPropertyChanging<T>(in T OldValue, [CanBeNull] ref T NewValue, [CallerMemberName] in string PropertyName = null)
         {
-            PropertyChangingEventArgs<T> args = null;
-            PropertyChanging?.Invoke(this, args = new PropertyChangingEventArgs<T>(OldValue, NewValue, PropertyName));
-            return !(args is null) && Equals(OldValue, NewValue = args.NewValue);
+            var handlers = PropertyChanging;
+            if (handlers is null) return false;
+            var args = new PropertyChangingEventArgs<T>(OldValue, NewValue, PropertyName);
+            handlers(this, args);
+            NewValue = args.NewValue;
+            return !Equals(OldValue, NewValue);
         }
 
         #endregion
@@ -263,6 +271,8 @@ namespace MathCore.ViewModels
                     if (dependency_handlers.TryGetValue(dependence, out handler)) handler?.Invoke();
         }
 
+        /// <summary>Ускоренная генерация события изменения свойства</summary>
+        /// <param name="PropertyName">Имя изменившегося свойства</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged_Simple([NotNull, CallerMemberName] in string PropertyName = null) => 
             PropertyChangedEvent?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
@@ -321,7 +331,7 @@ namespace MathCore.ViewModels
                     var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
                     if (handler is null) throw new InvalidOperationException(
                         $"Для свойства {property.Name} определён атрибут {typeof(ChangedHandlerAttribute).Name}, но в классе {type.Name} отсутствует " +
-                        $"указанный в аттрибуте метод реакции на изменение значения свойства {changed_handler_attribute.MethodName}");
+                        $"указанный в атрибуте метод реакции на изменение значения свойства {changed_handler_attribute.MethodName}");
                     PropertyChanged_AddHandler(property.Name, (Action)Delegate.CreateDelegate(typeof(Action), this, handler));
                 }
             }

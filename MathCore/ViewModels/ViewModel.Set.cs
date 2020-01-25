@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global

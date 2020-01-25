@@ -136,6 +136,8 @@ using System;
 using System.Linq;
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
@@ -144,10 +146,9 @@ namespace MathCore
     {
         // maximum length of the BigInteger in uint (4 bytes)
         // change this to suit the required level of precision.
-        /// <summary>Максимальная длина числа в байтах</summary>
+        /// <summary>Максимальная длина числа в байтах х8</summary>
         private const int __MaxLength = 70;
 
-        // primes smaller than 2000 to test the generated prime number
         /// <summary>Простые числа до 2000</summary>
         public static readonly int[] PrimesBelow2000 =
         {
@@ -171,26 +172,25 @@ namespace MathCore
         };
 
 
-        private readonly uint[] _Data;             // stores bytes from the Big Integer
-        private int _DataLength;                 // number of actual chars used
+        /// <summary>Байты числа</summary>
+        private readonly uint[] _Data;
+        /// <summary>Число символов числа</summary>
+        private int _DataLength;
 
+        /// <summary>Число символов числа</summary>
         public int DataLength => _DataLength;
 
-        //***********************************************************************
-        // Constructor (Default value for BigInteger is 0
-        //***********************************************************************
+        /* ---------------------------------------------------------------------------- */
 
+        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
         public BigInteger()
         {
             _Data = new uint[__MaxLength];
             _DataLength = 1;
         }
 
-
-        //***********************************************************************
-        // Constructor (Default value provided by long)
-        //***********************************************************************
-
+        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <param name="Value">Исходное значение числа</param>
         public BigInteger(long Value)
         {
             _Data = new uint[__MaxLength];
@@ -219,11 +219,8 @@ namespace MathCore
             if (_DataLength == 0) _DataLength = 1;
         }
 
-
-        //***********************************************************************
-        // Constructor (Default value provided by ulong)
-        //***********************************************************************
-
+        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <param name="Value">Исходное значение числа</param>
         public BigInteger(ulong Value)
         {
             _Data = new uint[__MaxLength];
@@ -245,12 +242,8 @@ namespace MathCore
             if (_DataLength == 0) _DataLength = 1;
         }
 
-
-
-        //***********************************************************************
-        // Constructor (Default value provided by BigInteger)
-        //***********************************************************************
-
+        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <param name="Value">Исходное значение числа</param>
         public BigInteger([NotNull] BigInteger Value)
         {
             _Data = new uint[__MaxLength];
@@ -286,41 +279,46 @@ namespace MathCore
         //
         //***********************************************************************
 
-        public BigInteger(string value, int radix)
+        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <param name="StringValue">Строковая форма записи <see cref="BigInteger"/></param>
+        /// <param name="Base">Основание системы счисления</param>
+        /// <exception cref="ArithmeticException">Если очередной символ в строке больше, либо равен <paramref name="Base"/></exception>
+        /// <exception cref="OverflowException">При переполнении разрядной сетки</exception>
+        public BigInteger(string StringValue, int Base = 10)
         {
             var multiplier = new BigInteger(1);
             var result = new BigInteger();
-            value = value.ToUpper().Trim();
+            StringValue = StringValue.ToUpper().Trim();
             var limit = 0;
 
-            if (value[0] == '-') limit = 1;
+            if (StringValue[0] == '-') limit = 1;
 
-            for (var i = value.Length - 1; i >= limit; i--)
+            for (var i = StringValue.Length - 1; i >= limit; i--)
             {
-                var pos_val = (int)value[i];
+                var pos_val = (int)StringValue[i];
 
                 if (pos_val >= '0' && pos_val <= '9') pos_val -= '0';
                 else pos_val = pos_val >= 'A' && pos_val <= 'Z' ? pos_val - 'A' + 10 : 9999999;       // arbitrary large
 
 
-                if (pos_val >= radix)
+                if (pos_val >= Base)
                     throw new ArithmeticException("Invalid string in constructor.");
-                if (value[0] == '-') pos_val = -pos_val;
+                if (StringValue[0] == '-') pos_val = -pos_val;
 
                 result += multiplier * pos_val;
 
-                if (i - 1 >= limit) multiplier *= radix;
+                if (i - 1 >= limit) multiplier *= Base;
             }
 
-            if (value[0] == '-')     // negative values
+            if (StringValue[0] == '-')     // negative values
             {
                 if ((result._Data[__MaxLength - 1] & 0x80000000) == 0)
-                    throw new ArithmeticException("Negative underflow in constructor.");
+                    throw new OverflowException("Negative underflow in constructor.");
             }
             else    // positive values
             {
                 if ((result._Data[__MaxLength - 1] & 0x80000000) != 0)
-                    throw new ArithmeticException("Positive overflow in constructor.");
+                    throw new OverflowException("Positive overflow in constructor.");
             }
 
             _Data = new uint[__MaxLength];
@@ -348,6 +346,9 @@ namespace MathCore
         //
         //***********************************************************************
 
+        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <param name="Data">Байты данных <see cref="BigInteger"/></param>
+        /// <exception cref="OverflowException">При переполнении разрядной сетки</exception>
         public BigInteger([NotNull] byte[] Data)
         {
             _DataLength = Data.Length >> 2;
@@ -358,7 +359,7 @@ namespace MathCore
 
 
             if (_DataLength > __MaxLength)
-                throw new ArithmeticException("Byte overflow in constructor.");
+                throw new OverflowException("Byte overflow in constructor.");
 
             _Data = new uint[__MaxLength];
 
@@ -383,21 +384,21 @@ namespace MathCore
         // specified length.)
         //***********************************************************************
 
-        public BigInteger([NotNull] byte[] Data, int inLen)
+        public BigInteger([NotNull] byte[] Data, int Length)
         {
-            _DataLength = inLen >> 2;
+            _DataLength = Length >> 2;
 
-            var left_over = inLen & 0x3;
+            var left_over = Length & 0x3;
             if (left_over != 0) _DataLength++;        // length not multiples of 4
 
 
-            if (_DataLength > __MaxLength || inLen > Data.Length)
-                throw new ArithmeticException("Byte overflow in constructor.");
+            if (_DataLength > __MaxLength || Length > Data.Length)
+                throw new OverflowException("Byte overflow in constructor.");
 
 
             _Data = new uint[__MaxLength];
 
-            for (int i = inLen - 1, j = 0; i >= 3; i -= 4, j++)
+            for (int i = Length - 1, j = 0; i >= 3; i -= 4, j++)
                 _Data[j] = (uint)((Data[i - 3] << 24) + (Data[i - 2] << 16) +
                                  (Data[i - 1] << 8) + Data[i]);
 
@@ -423,17 +424,17 @@ namespace MathCore
         // Constructor (Default value provided by an array of unsigned integers)
         //*********************************************************************
 
-        public BigInteger([NotNull] uint[] inData)
+        public BigInteger([NotNull] uint[] UintWords)
         {
-            _DataLength = inData.Length;
+            _DataLength = UintWords.Length;
 
             if (_DataLength > __MaxLength)
-                throw new ArithmeticException("Byte overflow in constructor.");
+                throw new OverflowException("Byte overflow in constructor.");
 
             _Data = new uint[__MaxLength];
 
             for (int i = _DataLength - 1, j = 0; i >= 0; i--, j++)
-                _Data[j] = inData[i];
+                _Data[j] = UintWords[i];
 
             while (_DataLength > 1 && _Data[_DataLength - 1] == 0)
                 _DataLength--;
