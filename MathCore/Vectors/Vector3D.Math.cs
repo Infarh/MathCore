@@ -2,11 +2,15 @@
 using System.Linq.Expressions;
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
+using static System.Math;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Vectors
 {
     public partial struct Vector3D
     {
+        /// <summary>Получить вектор, координаты которого являются обратными к координатам текущего вектора</summary>
+        /// <returns>Вектор с обратными координатами</returns>
         public Vector3D GetInverse() => new Vector3D(1 / _X, 1 / _Y, 1 / _Z);
 
         /// <summary>Скалярное произведение векторов</summary>
@@ -65,10 +69,12 @@ namespace MathCore.Vectors
         }
 
         /// <summary>Проекция на вектор</summary>
-        /// <param name="Vector">Вектор, НА который производится проекциия</param>
+        /// <param name="Vector">Вектор, НА который производится проекции</param>
         /// <returns>Проекция на вектор</returns>
         public double GetProjectionTo(Vector3D Vector) => Product_Scalar(Vector) / Vector.R;
 
+        /// <summary>Проекцию текущего вектора на вектор</summary>
+        /// <returns>Функция, вычисляющая проекцию текущего вектора на вектор</returns>
         [NotNull]
         public Func<Vector3D, double> GetProjectorV()
         {
@@ -76,19 +82,22 @@ namespace MathCore.Vectors
             return v => t * v / v.R;
         }
 
+        /// <summary>Проекция текущего вектора на вектор, передаваемый в качестве параметра</summary>
+        /// <param name="v">Выражение, результатом вычисления которого является <see cref="Vector3D"/></param>
+        /// <returns>Выражение, вычисляющее проекцию текущего вектора на вектор, передаваемый в параметре функции</returns>
+        /// <exception cref="ArgumentNullException">Если передана пустая ссылка</exception>
+        /// <exception cref="ArgumentException">Если тип результата <paramref name="v"/> не является <see cref="Vector3D"/></exception>
         [NotNull]
-        public Expression GetProjectorV_Expression(Expression v)
+        public Expression GetProjectorV_Expression([NotNull] Expression v)
         {
-            var t = this;
-            return Expression.Divide
-            (
-                Expression.Multiply
-                (
-                    Expression.Constant(t),
-                    v
-                ),
-                Expression.Property(v, "R")
-            );
+            if (v is null) throw new ArgumentNullException(nameof(v));
+            if(v.Type != typeof(Vector3D)) 
+                throw new ArgumentException($"Тип выражения {v.Type} не является {typeof(Vector3D)}");
+
+            var vector = this.ToExpression();
+            var scalar_multiply = vector.Multiply(v);
+            var length = v.GetProperty(nameof(R));
+            return scalar_multiply.Divide(length);
         }
 
         /// <summary>Проекция на направление</summary>
@@ -98,14 +107,11 @@ namespace MathCore.Vectors
         {
             var theta = Direction.ThetaRad;
             var phi = Direction.PhiRad;
-            return Math.Sin(theta) * (_X * Math.Cos(phi) + _Y * Math.Sin(phi)) + _Z * Math.Cos(theta);
+            return Sin(theta) * (_X * Cos(phi) + _Y * Sin(phi)) + _Z * Cos(theta);
         }
 
-        [NotNull] private static MethodCallExpression GetSinExpression([NotNull] Expression xx) => 
-            Expression.Call(((Func<double, double>)Math.Sin).Method, xx);
-        [NotNull] private static MethodCallExpression GetCosExpression([NotNull] Expression xx) => 
-            Expression.Call(((Func<double, double>)Math.Cos).Method, xx);
-
+        /// <summary>Проекцию текущего вектора на угол</summary>
+        /// <returns>Функция, вычисляющая проекцию текущего вектора на угол</returns>
         [NotNull]
         public Func<SpaceAngle, double> GetProjectorA()
         {
@@ -114,7 +120,7 @@ namespace MathCore.Vectors
             {
                 var th = d.ThetaRad;
                 var ph = d.PhiRad;
-                return Math.Sin(th) * (t._X * Math.Cos(ph) + t._Y * Math.Sin(ph)) + t._Z * Math.Cos(th);
+                return Sin(th) * (t._X * Cos(ph) + t._Y * Sin(ph)) + t._Z * Cos(th);
             };
         }
 
@@ -144,20 +150,50 @@ namespace MathCore.Vectors
         //    )
         //);
 
+        /// <summary>Создать выражение проекции вектора на пространственный угол</summary>
+        /// <param name="d">Выражение, результатом вычисления которого будет объект <see cref="SpaceAngle"/></param>
+        /// <returns>Выражение проекции вектора на угол</returns>
+        /// <exception cref="ArgumentNullException">Если <paramref name="d"/> <see langword="=="/> <see langword="null"/></exception>
+        /// <exception cref="ArgumentException">Если тип выражения <paramref name="d"/> является не <see cref="SpaceAngle"/></exception>
         [NotNull]
         public Expression GetProjectorA_Expression([NotNull] Expression d)
         {
-            var sin = (Func<double, double>)Math.Sin;
-            var cos = (Func<double, double>)Math.Cos;
-            return sin.GetCallExpression(d.GetProperty(nameof(SpaceAngle.ThetaRad)))
-                .Multiply
-                (
-                    _X.ToExpression().Multiply(cos.GetCallExpression(d.GetProperty(nameof(SpaceAngle.PhiRad))))
-                    .Add
-                    (
-                        _Y.ToExpression().Multiply(sin.GetCallExpression(d.GetProperty(nameof(SpaceAngle.PhiRad))))
-                    )
-                ).Add(_Z.ToExpression().Multiply(cos.GetCallExpression(d.GetProperty(nameof(SpaceAngle.ThetaRad)))));
+            if (d is null) throw new ArgumentNullException(nameof(d));
+            if(d.Type != typeof(SpaceAngle)) 
+                throw new ArgumentException($"Тип выражения должен быть {typeof(SpaceAngle)}, а получен {d.Type}");
+
+            // (X * cos(Phi) + Y * sin(Phi)) * sin(Theta) + Z * cos(Theta)
+
+            var x = _X.ToExpression();
+            var y = _Y.ToExpression();
+            var z = _Z.ToExpression();
+
+            var theta = d.GetProperty(nameof(SpaceAngle.ThetaRad));
+            var phi = d.GetProperty(nameof(SpaceAngle.PhiRad));
+
+            var sin_theta = MathExpression.Sin(theta);
+            var cos_theta = MathExpression.Cos(theta);
+            var sin_phi = MathExpression.Sin(phi);
+            var cos_phi = MathExpression.Cos(phi);
+
+            var x_cos_phi = x.Multiply(cos_phi);     // X * cos(Phi)
+            var y_sin_phi = y.Multiply(sin_phi);     // Y * sin(Phi)
+            var z_cos_theta = z.Multiply(cos_theta); // Z * cos(Theta)
+
+            var x_cos_phi_add_y_sin_phi = x_cos_phi.Add(y_sin_phi); // X * cos(Phi) + Y * sin(Phi)
+            var xoy = x_cos_phi_add_y_sin_phi.Multiply(sin_theta);  // (X * cos(Phi) + Y * sin(Phi)) * sin(Theta)
+
+            return xoy.Add(z_cos_theta);
+
+            //return MathExpression.Sin(d.GetProperty(nameof(SpaceAngle.ThetaRad)))
+            //   .Multiply 
+            //    (
+            //        _X.ToExpression().Multiply(MathExpression.Cos(d.GetProperty(nameof(SpaceAngle.PhiRad))))
+            //           .Add
+            //            (
+            //                _Y.ToExpression().Multiply(MathExpression.Sin(d.GetProperty(nameof(SpaceAngle.PhiRad))))
+            //            )
+            //    ).Add(_Z.ToExpression().Multiply(MathExpression.Cos(d.GetProperty(nameof(SpaceAngle.ThetaRad)))));
         }
     }
 }

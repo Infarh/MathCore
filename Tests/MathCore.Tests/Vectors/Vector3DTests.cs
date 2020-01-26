@@ -1,9 +1,11 @@
 ﻿using System;
 using MathCore.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static System.Math;
+
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.Tests
+namespace MathCore.Tests.Vectors
 {
     [TestClass]
     public class Vector3DTests : UnitTest
@@ -109,8 +111,8 @@ namespace MathCore.Tests
             double Theta;
             double Phi;
 
-            Func<double, double> sin1 = Math.Sin;
-            Func<double, double> cos1 = Math.Cos;
+            Func<double, double> sin1 = Sin;
+            Func<double, double> cos1 = Cos;
             void TestThetaPhi() => TestXYZ(R, new SpaceAngle(Theta, Phi), R * sin1(Theta) * cos1(Phi), R * sin1(Theta) * sin1(Phi), R * cos1(Theta));
 
             for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
@@ -127,16 +129,7 @@ namespace MathCore.Tests
         {
             const double pi = Consts.pi;
             const double pi05 = Consts.pi05;
-            //const double pi2 = Consts.pi2;
             const double pi3_2 = 3 * pi * .5;
-
-            //Action<double, SpaceAngle> testRA =
-            //(r, a) =>
-            //{
-            //    var v = new Vector3D(r, a);
-            //    Assert.AreEqual(r, v.R, 1e-15, "{0}.R = {1} != {2} = r", v, v.R, r);
-            //    Assert.AreEqual(a, v.Angle, "{0}.a = {1}[π] != {2}[π] = r", v, v.Angle / pi, a / pi);
-            //};
 
             static void TestXYZ(SpaceAngle a, double x, double y, double z)
             {
@@ -161,9 +154,7 @@ namespace MathCore.Tests
             double Theta;
             double Phi;
 
-            Func<double, double> sin1 = Math.Sin;
-            Func<double, double> cos1 = Math.Cos;
-            void TestThetaPhi() => TestXYZ(new SpaceAngle(Theta, Phi), sin1(Theta) * cos1(Phi), sin1(Theta) * sin1(Phi), cos1(Theta));
+            void TestThetaPhi() => TestXYZ(new SpaceAngle(Theta, Phi), Sin(Theta) * Cos(Phi), Sin(Theta) * Sin(Phi), Cos(Theta));
 
             for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
                 for (Theta = -2 * pi; Theta <= 2 * pi; Theta += 0.1 * pi)
@@ -211,7 +202,7 @@ namespace MathCore.Tests
                 V = Vector3D.Random();
                 v = Vector3D.Random();
             }
-            while (Math.Abs(V.X - v.X) < eps || Math.Abs(V.Y - v.Y) < eps || Math.Abs(V.Z - v.Z) < eps);
+            while (Abs(V.X - v.X) < eps || Abs(V.Y - v.Y) < eps || Abs(V.Z - v.Z) < eps);
             Assert.IsFalse(V.Equals(v));
             Assert.IsFalse(v.Equals(V));
         }
@@ -223,10 +214,10 @@ namespace MathCore.Tests
             var x = new Vector3D(5, 5, 7);
             var y = new Vector3D(-10, 15, -3);
 
-            var phi_x = Math.Atan2(x.Y, x.X);
-            var phi_y = Math.Atan2(y.Y, y.X);
-            var theta_x = Math.Atan2(Math.Sqrt(x.X * x.X + x.Y * x.Y), x.Z);
-            var theta_y = Math.Atan2(Math.Sqrt(y.X * y.X + y.Y * y.Y), y.Z);
+            var phi_x = Atan2(x.Y, x.X);
+            var phi_y = Atan2(y.Y, y.X);
+            var theta_x = Atan2(Sqrt(x.X * x.X + x.Y * x.Y), x.Z);
+            var theta_y = Atan2(Sqrt(y.X * y.X + y.Y * y.Y), y.Z);
 
             var angle_x = new SpaceAngle(theta_x, phi_x);
             var angle_y = new SpaceAngle(theta_y, phi_y);
@@ -244,7 +235,7 @@ namespace MathCore.Tests
         {
             const double eps = double.Epsilon;
             Vector3D V;
-            do V = Vector3D.Random(); while (Math.Abs(V.X) < eps || Math.Abs(V.Y) < eps || Math.Abs(V.Z) < eps);
+            do V = Vector3D.Random(); while (Abs(V.X) < eps || Abs(V.Y) < eps || Abs(V.Z) < eps);
             var inv = V.GetInverse();
             Assert.AreEqual(inv.X, 1 / V.X);
             Assert.AreEqual(inv.Y, 1 / V.Y);
@@ -308,7 +299,7 @@ namespace MathCore.Tests
                 "\r\nx.AngleXOY = {2}·π - {3}" +
                 "\r\nx.AngleXOY = {4}·π - {5}" +
                 "\r\ny.AngleXOY - x.AngleXOY = {6}·π",
-                Math.Abs((y.AngleXOY - x.AngleXOY) - angle),
+                Abs((y.AngleXOY - x.AngleXOY) - angle),
                 angle / Consts.pi,
                 x.AngleXOY / pi, x,
                 y.AngleXOY / pi, y,
@@ -323,26 +314,26 @@ namespace MathCore.Tests
             Assert.AreEqual(1, Vector3D.i.GetProjectionTo(Vector3D.i));
 
             Vector3D X;
-            do X = Vector3D.Random(); while (Math.Abs(X.R) < double.Epsilon);
+            do X = Vector3D.Random(); while (Abs(X.R) < double.Epsilon);
 
             Assert.AreEqual(X.X, X.GetProjectionTo(Vector3D.i));
             Assert.AreEqual(X.Y, X.GetProjectionTo(Vector3D.j));
             Assert.AreEqual(X.Z, X.GetProjectionTo(Vector3D.k));
 
             Vector3D Y;
-            do Y = Vector3D.Random(); while (Math.Abs(Y.R) < double.Epsilon);
+            do Y = Vector3D.Random(); while (Abs(Y.R) < double.Epsilon);
 
             X = new Vector3D(3, 5, 7);
             Y = new Vector3D(-5, 7, -10);
 
-            var x_r = Math.Sqrt(X.X * X.X + X.Y * X.Y + X.Z * X.Z);
-            var y_r = Math.Sqrt(Y.X * Y.X + Y.Y * Y.Y + Y.Z * Y.Z);
+            var x_r = Sqrt(X.X * X.X + X.Y * X.Y + X.Z * X.Z);
+            var y_r = Sqrt(Y.X * Y.X + Y.Y * Y.Y + Y.Z * Y.Z);
             var p = (X.X * Y.X + X.Y * Y.Y + X.Z * Y.Z);
             Assert.AreEqual(p / y_r, X.GetProjectionTo(Y));
             Assert.AreEqual(p / x_r, Y.GetProjectionTo(X));
 
-            do X = Vector3D.Random(); while (Math.Abs(X.R) < double.Epsilon);
-            do Y = Vector3D.Random(); while (Math.Abs(Y.R) < double.Epsilon);
+            do X = Vector3D.Random(); while (Abs(X.R) < double.Epsilon);
+            do Y = Vector3D.Random(); while (Abs(Y.R) < double.Epsilon);
 
 #pragma warning disable IDE0047 // Удалить ненужные круглые скобки
             Assert.AreEqual((X * Y) / Y.R, X.GetProjectionTo(Y));
@@ -922,7 +913,7 @@ namespace MathCore.Tests
             var y = 0.0;
             var z = 0.0;
 
-            void Test() => Assert.AreEqual(Math.Atan2(y, x), new Vector3D(x, y, z).Phi);
+            void Test() => Assert.AreEqual(Atan2(y, x), new Vector3D(x, y, z).Phi);
             Test();
 
             z = GetRNDDouble();
@@ -945,7 +936,7 @@ namespace MathCore.Tests
             void Test()
             {
                 var v = new Vector3D(x, y, z);
-                Assert.AreEqual(Math.Atan2(Math.Sqrt(x * x + y * y), z), v.Theta, "{0}", v);
+                Assert.AreEqual(Atan2(Sqrt(x * x + y * y), z), v.Theta, "{0}", v);
             }
 
             Test();
@@ -974,7 +965,7 @@ namespace MathCore.Tests
 
             void Test()
             {
-                var R = Math.Sqrt(x * x + y * y + z * z);
+                var R = Sqrt(x * x + y * y + z * z);
 
                 var r = new Vector3D(x, y, z);
                 // ReSharper disable once InconsistentNaming
@@ -1003,7 +994,7 @@ namespace MathCore.Tests
 
             void Test()
             {
-                var R = Math.Sqrt(x * x + y * y);
+                var R = Sqrt(x * x + y * y);
 
                 var r = new Vector3D(x, y, z);
                 // ReSharper disable once InconsistentNaming
@@ -1030,7 +1021,7 @@ namespace MathCore.Tests
 
             void Test()
             {
-                var R = Math.Sqrt(x * x + z * z);
+                var R = Sqrt(x * x + z * z);
 
                 var r = new Vector3D(x, y, z);
                 // ReSharper disable once InconsistentNaming
@@ -1057,7 +1048,7 @@ namespace MathCore.Tests
 
             void Test()
             {
-                var R = Math.Sqrt(y * y + z * z);
+                var R = Sqrt(y * y + z * z);
 
                 var r = new Vector3D(x, y, z);
                 // ReSharper disable once InconsistentNaming

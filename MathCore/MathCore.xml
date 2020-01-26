@@ -168,8 +168,50 @@
         <member name="M:MathCore.ActionList`7.Invoke(`0,`1,`2,`3,`4,`5,`6)">
             <summary>Выполнение последовательности действий списка</summary>
         </member>
+        <member name="T:MathCore.AngleType">
+            <summary>Тип значения угла</summary>
+        </member>
+        <member name="F:MathCore.AngleType.Rad">
+            <summary>Радиан</summary>
+        </member>
+        <member name="F:MathCore.AngleType.Deg">
+            <summary>Градус</summary>
+        </member>
         <member name="T:MathCore.ArgumentsString">
             <summary>Аргументы командной строки</summary>
+        </member>
+        <member name="F:MathCore.ArgumentsString._Arguments">
+            <summary>Строки значений аргументов</summary>
+        </member>
+        <member name="P:MathCore.ArgumentsString.Count">
+            <summary>Число аргументов</summary>
+        </member>
+        <member name="P:MathCore.ArgumentsString.Item(System.Int32)">
+            <summary>Получение аргумента по индексу</summary>
+            <param name="index">Индекс аргумента</param>
+            <returns>Значение аргумента по указанному индексу</returns>
+        </member>
+        <member name="M:MathCore.ArgumentsString.#ctor(System.String[])">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ArgumentsString"/></summary>
+            <param name="Arguments">Массив значений аргументов</param>
+        </member>
+        <member name="M:MathCore.ArgumentsString.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.ArgumentsString.op_Implicit(System.String[])~MathCore.ArgumentsString">
+            <summary>Оператор неявного приведения типа массива строк к <see cref="T:MathCore.ArgumentsString"/></summary>
+            <param name="Arguments">Массив строковых значений аргументов</param>
+            <returns>Экземпляр <see cref="T:MathCore.ArgumentsString"/></returns>
+        </member>
+        <member name="M:MathCore.ArgumentsString.op_Implicit(MathCore.ArgumentsString)~System.String[]">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.ArgumentsString"/> к типу массива строк</summary>
+            <param name="Arguments">Экземпляр <see cref="T:MathCore.ArgumentsString"/></param>
+            <returns>Массив строковых значений аргументов</returns>
+        </member>
+        <member name="M:MathCore.ArgumentsString.op_Explicit(MathCore.ArgumentsString)~System.String">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.ArgumentsString"/> к строке</summary>
+            <param name="Argument">Экземпляр <see cref="T:MathCore.ArgumentsString"/></param>
+            <returns>Строковое представление <see cref="T:MathCore.ArgumentsString"/></returns>
         </member>
         <member name="T:MathCore.ArrayIndexer`1">
             <summary>Индексатор массива элементов</summary>
@@ -238,10 +280,46 @@
             <summary> Целочисленная арифметика с большими числами  </summary>
         </member>
         <member name="F:MathCore.BigInteger.__MaxLength">
-            <summary>Максимальная длина числа в байтах</summary>
+            <summary>Максимальная длина числа в байтах х8</summary>
         </member>
         <member name="F:MathCore.BigInteger.PrimesBelow2000">
             <summary>Простые числа до 2000</summary>
+        </member>
+        <member name="F:MathCore.BigInteger._Data">
+            <summary>Байты числа</summary>
+        </member>
+        <member name="F:MathCore.BigInteger._DataLength">
+            <summary>Число символов числа</summary>
+        </member>
+        <member name="P:MathCore.BigInteger.DataLength">
+            <summary>Число символов числа</summary>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.Int64)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Value">Исходное значение числа</param>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.UInt64)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Value">Исходное значение числа</param>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(MathCore.BigInteger)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Value">Исходное значение числа</param>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.String,System.Int32)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="StringValue">Строковая форма записи <see cref="T:MathCore.BigInteger"/></param>
+            <param name="Base">Основание системы счисления</param>
+            <exception cref="T:System.ArithmeticException">Если очередной символ в строке больше, либо равен <paramref name="Base"/></exception>
+            <exception cref="T:System.OverflowException">При переполнении разрядной сетки</exception>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.Byte[])">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Data">Байты данных <see cref="T:MathCore.BigInteger"/></param>
+            <exception cref="T:System.OverflowException">При переполнении разрядной сетки</exception>
         </member>
         <member name="M:MathCore.BigInteger.op_Multiply(MathCore.BigInteger,MathCore.BigInteger)">
             <summary>Overloading of multiplication operator</summary>
@@ -620,25 +698,25 @@
         <member name="M:MathCore.Complex.Mod(System.Double,System.Double)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="M:MathCore.Complex.Mod(System.Double,MathCore.Complex@)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="M:MathCore.Complex.Mod(MathCore.Complex@,MathCore.Complex@)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="M:MathCore.Complex.Mod(MathCore.Complex@,System.Double)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="F:MathCore.Complex.Real">
@@ -694,20 +772,19 @@
             <param name="Im">Мнимая часть</param>
         </member>
         <member name="M:MathCore.Complex.ToString_Exponent">
-            <summary>Представление комплексного числа в текстовой экспонетциальной форме</summary>
-            <returns>Текстовое экспонетциальное представление комплексного числа</returns>
+            <summary>Представление комплексного числа в текстовой экспоненциальной форме</summary>
+            <returns>Текстовое экспоненциальное представление комплексного числа</returns>
         </member>
         <member name="M:MathCore.Complex.ToString_Exponent_pi">
-            <summary>Представление комплексного числа в текстовой экспонетциальной форме с нормировкой аргумента к значению pi</summary>
-            <returns>Текстовое экспонетциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
+            <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента к значению pi</summary>
+            <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
         </member>
         <member name="M:MathCore.Complex.ToString_Exponent_Deg">
-            <summary>Представление комплексного числа в текстовой экспонетциальной форме с нормировкой аргумента в градусах</summary>
-            <returns>Текстовое экспонетциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
+            <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента в градусах</summary>
+            <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
         </member>
         <member name="M:MathCore.Complex.ToString">
             <summary>Строковый эквивалент</summary>
-            <returns>Строковый эквивалент</returns>
         </member>
         <member name="M:MathCore.Complex.ToString(System.String)">
             <summary>Преобразование в строковый формат</summary>
@@ -841,6 +918,11 @@
             <param name="other">Проверяемое число</param>
             <returns>Истина, если числа идентичны</returns>
         </member>
+        <member name="M:MathCore.Complex.System#IEquatable{(System#DoubleRe,System#DoubleIm)}#Equals(System.ValueTuple{System.Double,System.Double})">
+            <summary>Проверка на идентичность</summary>
+            <param name="other">Кортеж двух вещественных чисел</param>
+            <returns>Истина, если действительная и мнимая части идентичны</returns>
+        </member>
         <member name="M:MathCore.Complex.Rotate(System.Double)">
             <summary>Поворот вектора комплексного числа на угол</summary>
             <param name="w">Угол поворота вектора в комплексной плоскости</param>
@@ -854,6 +936,16 @@
         <member name="M:MathCore.Complex.Sqrt">
             <summary>Вычисление квадратного корня числа</summary>
             <returns>Квадратный корень числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.Sqrt(MathCore.Complex@)">
+            <summary>Вычисление корня комплексной степени</summary>
+            <param name="z">Комплексная степень корня</param>
+            <returns>Комплексный результат вычисления корня комплексной степени от комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.Sqrt(System.Double)">
+            <summary>Вычисление корня действительной степени</summary>
+            <param name="x">Действительная степень корня</param>
+            <returns>Комплексный результат вычисления корня действительной степени от комплексного числа</returns>
         </member>
         <member name="M:MathCore.Complex.Deconstruct(System.Double@,System.Double@)">
             <summary>Деконструктор комплексного числа</summary>
@@ -1094,7 +1186,7 @@
             <returns>Истина, если числа не равны</returns>
         </member>
         <member name="M:MathCore.Complex.op_Explicit(MathCore.Complex@)~System.Double">
-            <summary>ОПератор неявного приведения к дробному типу чисел с двойной точностью</summary>
+            <summary>Оператор неявного приведения к дробному типу чисел с двойной точностью</summary>
             <param name="Z">Приводимое комплексное число</param>
             <returns>Модуль комплексного числа</returns>
         </member>
@@ -1107,6 +1199,16 @@
             <summary>Оператор неявного приведения целого числа к комплексному виду</summary>
             <param name="X">Целое число</param>
             <returns>Комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Implicit(System.ValueTuple{System.Double,System.Double})~MathCore.Complex">
+            <summary>Оператор неявного приведения кортежа, состоящего из двух вещественных чисел в комплексное число</summary>
+            <param name="Z">Кортеж из двух вещественных чисел - действительной и мнимой части</param>
+            <returns>Комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Implicit(MathCore.Complex)~System.ValueTuple{System.Double,System.Double}">
+            <summary>Оператор неявного приведения комплексного числа в кортеж, состоящий из двух вещественных чисел</summary>
+            <param name="Z">Комплексное число</param>
+            <returns>Кортеж из двух вещественных чисел - действительной и мнимой части</returns>
         </member>
         <member name="T:MathCore.Complex.Trigonometry">
             <summary>Тригонометрические функции комплексного переменного</summary>
@@ -1179,41 +1281,54 @@
         </member>
         <member name="M:MathCore.ComplexExtensions.ToRe(MathCore.Complex[])">
             <summary>Преобразование массива комплексных чисел в массив действительных</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив действительных чисел</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToIm(MathCore.Complex[])">
             <summary>Массив комплексных чисел в массив значений мнимых чисел</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив значений комплексных мнимых чисел</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToAbs(MathCore.Complex[])">
             <summary>Массив комплексных чисел в массив модулей</summary>
-            <param name="c">Массив сомплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив модулей комплексных чисел</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToArg(MathCore.Complex[])">
-            <summary>Массив сомплексных чисел в массив аргументов</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <summary>Массив комплексных чисел в массив аргументов</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив аргументов комплексных чисел</returns>
+        </member>
+        <member name="M:MathCore.ComplexExtensions.ToArgDeg(MathCore.Complex[])">
+            <summary>Преобразование массива комплексных чисел в массив значений аргумента каждого из них в градусах</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Массив аргументов в градусах</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToReImArray(MathCore.Complex[])">
             <summary>
             Массив комплексных чисел в двумерный массив действительных и мнимых частей, где
-            Re = V[i,0]
-            Im = V[i,1]
+            Re = V[i,0] Im = V[i,1]
             </summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Двумерный массив вещественных и мнимых частей</returns>
+        </member>
+        <member name="M:MathCore.ComplexExtensions.ToReImTuple(MathCore.Complex[])">
+            <summary>Массив комплексных чисел в массив кортежей действительных и мнимых частей</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Массив кортежей вещественных и мнимых частей</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToAbsArgArray(MathCore.Complex[])">
             <summary>
             Массив комплексных чисел в двумерный массив модулей и аргументов частей, где
-            Abs = V[i,0]
-            Arg = V[i,1]
+            Abs = V[i,0] Arg = V[i,1]
             </summary>
-            <param name="c">Массив комплексных чисел</param>
-            <returns>Двумерный массив Модулей и аргументов</returns>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Двумерный массив модулей и аргументов</returns>
+        </member>
+        <member name="M:MathCore.ComplexExtensions.ToAbsArgTuple(MathCore.Complex[])">
+            <summary>Массив комплексных чисел в массив кортежей модулей и аргументов</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Массив кортежей модулей и аргументов</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToComplex(System.Double[])">
             <summary>Преобразовать массив действительных в массив комплексных чисел</summary>
@@ -1227,7 +1342,7 @@
         </member>
         <member name="M:MathCore.ComplexExtensions.GetAbs(MathCore.Complex[])">
             <summary>Преобразование в массив модулей</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив модулей комплексных чисел</returns>
         </member>
         <member name="T:MathCore.ComplexConverter">
@@ -11186,6 +11301,33 @@
         <member name="T:MathCore.Vectors.Vector3D">
             <summary>Трёхмерный вектор</summary>
         </member>
+        <member name="M:MathCore.Vectors.Vector3D.ThetaPhiRadius(System.Double,System.Double,System.Double)">
+            <summary>Создать вектор по сферической системе координат</summary>
+            <param name="Theta">Угол места</param>
+            <param name="Phi">Азимут</param>
+            <param name="R">Длина вектора</param>
+            <returns>Трёхмерный вектор</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.XYZ(System.Double,System.Double,System.Double)">
+            <summary>Преобразовать координаты декартовой системы в вектор</summary>
+            <param name="X">Координата X</param>
+            <param name="Y">Координата Y</param>
+            <param name="Z">Координата Z</param>
+            <returns>Вектор с заданными координатами</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Random(System.Double,System.Double,System.Random)">
+            <summary>Вектор со случайными координатами (с равномерным распределением)</summary>
+            <param name="min">Минимальное значение</param>
+            <param name="max">Максимальное значение</param>
+            <param name="rnd">Генератор случайных чисел (если не задан, то будет создан новый)</param>
+            <returns>Вектор со случайными значениями координат из указанного диапазона</returns>
+        </member>
+        <member name="F:MathCore.Vectors.Vector3D.k">
+            <summary>Базисный вектор k</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Vector3D.Empty">
+            <summary>Вектор нулевой длины в начале координат</summary>
+        </member>
         <member name="F:MathCore.Vectors.Vector3D.BasisUnitVector">
             <summary>Единичный базисный вектор</summary>
         </member>
@@ -11194,9 +11336,6 @@
         </member>
         <member name="F:MathCore.Vectors.Vector3D.j">
             <summary>Базисный вектор j</summary>
-        </member>
-        <member name="F:MathCore.Vectors.Vector3D.k">
-            <summary>Базисный вектор k</summary>
         </member>
         <member name="F:MathCore.Vectors.Vector3D._X">
             <summary>Длина по оси X</summary>
@@ -11238,13 +11377,13 @@
             <summary>Пространственный угол</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorXOY">
-            <summary>Двумерный вектор - проекциия в плоскости XOY</summary>
+            <summary>Двумерный вектор - проекция в плоскости XOY</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorXOZ">
-            <summary>Двумерный вектор - проекциия в плоскости XOZ (X->X; Z->Y)</summary>
+            <summary>Двумерный вектор - проекция в плоскости XOZ (X->X; Z->Y)</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorYOZ">
-            <summary>Двумерный вектор - проекциия в плоскости YOZ (Y->X; Z->Y)</summary>
+            <summary>Двумерный вектор - проекция в плоскости YOZ (Y->X; Z->Y)</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.R_XOY">
             <summary>Длина в плоскости XOY</summary>
@@ -11261,6 +11400,10 @@
         </member>
         <member name="P:MathCore.Vectors.Vector3D.ComparisonsAccuracy">
             <summary>Точность сравнения (по умолчанию 10^-16)</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetInverse">
+            <summary>Получить вектор, координаты которого являются обратными к координатам текущего вектора</summary>
+            <returns>Вектор с обратными координатами</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.Product_Scalar(MathCore.Vectors.Vector3D)">
             <summary>Скалярное произведение векторов</summary>
@@ -11291,13 +11434,35 @@
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.Vector3D)">
             <summary>Проекция на вектор</summary>
-            <param name="Vector">Вектор, НА который производится проекциия</param>
+            <param name="Vector">Вектор, НА который производится проекции</param>
             <returns>Проекция на вектор</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorV">
+            <summary>Проекцию текущего вектора на вектор</summary>
+            <returns>Функция, вычисляющая проекцию текущего вектора на вектор</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorV_Expression(System.Linq.Expressions.Expression)">
+            <summary>Проекция текущего вектора на вектор, передаваемый в качестве параметра</summary>
+            <param name="v">Выражение, результатом вычисления которого является <see cref="T:MathCore.Vectors.Vector3D"/></param>
+            <returns>Выражение, вычисляющее проекцию текущего вектора на вектор, передаваемый в параметре функции</returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка</exception>
+            <exception cref="T:System.ArgumentException">Если тип результата <paramref name="v"/> не является <see cref="T:MathCore.Vectors.Vector3D"/></exception>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.SpaceAngle)">
             <summary>Проекция на направление</summary>
             <param name="Direction">Направление, на которое проектируется вектор</param>
             <returns>Проекция вектора на направление</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorA">
+            <summary>Проекцию текущего вектора на угол</summary>
+            <returns>Функция, вычисляющая проекцию текущего вектора на угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorA_Expression(System.Linq.Expressions.Expression)">
+            <summary>Создать выражение проекции вектора на пространственный угол</summary>
+            <param name="d">Выражение, результатом вычисления которого будет объект <see cref="T:MathCore.Vectors.SpaceAngle"/></param>
+            <returns>Выражение проекции вектора на угол</returns>
+            <exception cref="T:System.ArgumentNullException">Если <paramref name="d"/> <see langword="=="/> <see langword="null"/></exception>
+            <exception cref="T:System.ArgumentException">Если тип выражения <paramref name="d"/> является не <see cref="T:MathCore.Vectors.SpaceAngle"/></exception>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.op_Multiply(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
             <summary>Скалярное произведение векторов</summary>
@@ -11324,7 +11489,7 @@
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
             <summary>Проекция вектора A на вектор B</summary>
             <param name="A">Проецируемый вектор</param>
-            <param name="B">Вектор, на который производится проекциия</param>
+            <param name="B">Вектор, на который производится проекции</param>
             <returns>Проекция вектора А на вектор В</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.SpaceAngle)">
@@ -11339,28 +11504,36 @@
         <member name="E:MathCore.ViewModels.ViewModel.PropertyChanging">
             <inheritdoc />
         </member>
+        <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanging``1(``0@,``0@,System.String@)">
+            <summary>Генерация события находящегося в процессе изменения значения свойства</summary>
+            <param name="OldValue">Предыдущее значение свойства</param>
+            <param name="NewValue">Новое значение свойства</param>
+            <param name="PropertyName">Имя изменившегося свойства (если не указано, то берётся имя вызывающего метода)</param>
+            <typeparam name="T">Тип значения свойства</typeparam>
+            <returns>Истина, если событие было обработано и новое значение свойства не равно старому</returns>
+        </member>
         <member name="E:MathCore.ViewModels.ViewModel.PropertyChanged">
             <summary>Событие возникает когда изменяется значение свойства объекта</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.ComponentModel.PropertyChangedEventHandler)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.ComponentModel.PropertyChangedEventHandler@)">
             <summary>Присоединить обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></summary>
             <param name="handler">Присоединяемый обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></param>
         </member>
         <member name="F:MathCore.ViewModels.ViewModel._PropertyChangedHandlers">
             <summary>Словарь обработчиков событий изменений свойств</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.String,System.Action)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.String@,System.Action@)">
             <summary>Добавление обработчика события изменения свойства</summary>
             <param name="PropertyName">Имя отслеживаемого события</param>
             <param name="handler">Устанавливаемый обработчик</param>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.String,System.Action)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.String@,System.Action@)">
             <summary>Извлечение обработчика события изменения указанного свойства</summary>
             <param name="PropertyName">Имя отслеживаемого свойства</param>
             <param name="handler">Извлекаемый обработчик события</param>
             <returns>Истина, если обработчик события удалён успешно</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_ClearHandlers(System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_ClearHandlers(System.String@)">
             <summary>Очистка обработчиков изменений свойства</summary>
             <returns>Истина, если очистка произведена успешно</returns>
         </member>
@@ -11368,7 +11541,7 @@
             <summary>Очистка обработчиков изменений всех свойств</summary>
             <returns>Истина, если очистка произведена успешно</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.ComponentModel.PropertyChangedEventHandler)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.ComponentModel.PropertyChangedEventHandler@)">
             <summary>Отсоединить обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></summary>
             <param name="handler">Отсоединяемый обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></param>
         </member>
@@ -11394,7 +11567,7 @@
             <param name="PropertyName">Имя исходного свойства</param>
             <param name="Dependencies">Перечисление свойств, на которые исходное свойство имеет влияние</param>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.IsLoopDependency(System.String,System.String,System.String,System.Collections.Generic.Stack{System.String})">
+        <member name="M:MathCore.ViewModels.ViewModel.IsLoopDependency(System.String@,System.String@,System.String@,System.Collections.Generic.Stack{System.String})">
             <summary>Проверка модели на циклические зависимости между свойствами</summary>
             <param name="property">Проверяемое свойство</param>
             <param name="dependency">Зависимость</param>
@@ -11402,18 +11575,22 @@
             <param name="invoke_stack">Стек вызова свойств</param>
             <returns>Истина, если найден цикл</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependencies_Remove(System.String,System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependencies_Remove(System.String@,System.String@)">
             <summary>Удаление зависимости между свойствами</summary>
             <param name="PropertyName">Исходное свойство</param>
             <param name="Dependence">Свойство, связь с которым надо разорвать</param>
             <returns>Истина, если связь успешно удалена, ложь - если связь отсутствовала</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependencies_Clear(System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependencies_Clear(System.String@)">
             <summary>Очистить граф зависимостей между свойствами для указанного свойства</summary>
             <param name="PropertyName">Название свойства, связи которого нао удалить</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanged(System.String)">
             <summary>Метод генерации события изменения значения свойства</summary>
+            <param name="PropertyName">Имя изменившегося свойства</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanged_Simple(System.String@)">
+            <summary>Ускоренная генерация события изменения свойства</summary>
             <param name="PropertyName">Имя изменившегося свойства</param>
         </member>
         <member name="F:MathCore.ViewModels.ViewModel._PropertyAsyncInvokeTime">
@@ -11446,10 +11623,37 @@
         <member name="M:MathCore.ViewModels.ViewModel.DisposeUnmanagedObject">
             <summary>Освободить неуправляемые объекты</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.#ctor(`0,`0,System.String)">
-            <inheritdoc />
+        <member name="T:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1">
+            <summary>Аргумент события процесса изменения значения свойства</summary>
+            <typeparam name="T">Тип значения свойства</typeparam>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.String)">
+        <member name="F:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1._OldValue">
+            <summary>Предыдущее значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1._NewValue">
+            <summary>Новое значение свойства</summary>
+        </member>
+        <member name="P:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.OldValue">
+            <summary>Предыдущее значение свойства</summary>
+        </member>
+        <member name="P:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.NewValue">
+            <summary>Новое значение свойства (которое может быть изменено)</summary>
+        </member>
+        <member name="P:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.IsChangingValue">
+            <summary>Признак того, что новое значение свойства отличается от старого</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.#ctor(`0@,`0@,System.String@)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/></summary>
+            <param name="OldValue">Предыдущее значение свойства</param>
+            <param name="NewValue">Новое значение свойства</param>
+            <param name="PropertyName">Имя изменяющегося свойства</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.Set(`0@)">
+            <summary>Установить новое значение свойства</summary>
+            <param name="Value">Новое значение свойства</param>
+            <returns>Истина, Если новое значение свойства отличается от старого</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.String@)">
             <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
             <typeparam name="T">Тип значения поля</typeparam>
             <param name="field">Ссылка на поле модели</param>
@@ -11457,7 +11661,7 @@
             <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
             <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Func{``0,System.Boolean},System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.Func{``0,System.Boolean}@,System.String@)">
             <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
             <typeparam name="T">Тип значения поля</typeparam>
             <param name="field">Ссылка на поле модели</param>
@@ -11466,7 +11670,7 @@
             <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
             <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.String,System.Func{``0,System.Boolean},System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.String@,System.Func{``0,System.Boolean}@,System.String@)">
             <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
             <typeparam name="T">Тип значения поля</typeparam>
             <param name="field">Ссылка на поле модели</param>
@@ -11476,7 +11680,7 @@
             <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
             <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Action{System.String},System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.Action{System.String}@,System.String@)">
             <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>
             <typeparam name="T">Тип значения свойства</typeparam>
             <param name="field">Ссылка на поле, хранящее значение свойства</param>
@@ -11485,7 +11689,7 @@
             <param name="PropertyName">Имя свойства</param>
             <returns>Истина, если значение свойства установлено успешно</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Action{System.String},System.Func{``0,System.Boolean},System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.Action{System.String}@,System.Func{``0,System.Boolean}@,System.String@)">
             <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>
             <typeparam name="T">Тип значения свойства</typeparam>
             <param name="field">Ссылка на поле, хранящее значение свойства</param>
@@ -11494,6 +11698,100 @@
             <param name="Validator">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
             <param name="PropertyName">Имя свойства</param>
             <returns>Истина, если значение свойства установлено успешно</returns>
+        </member>
+        <member name="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1">
+            <summary>Объект, отвечающий за управление процессом установки значения свойства при статическом вызове метода Set</summary>
+            <typeparam name="T">Тип значения свойства</typeparam>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._Result">
+            <summary>Было ли значение свойства обновлено</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._OldValue">
+            <summary>Прежнее значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._NewValue">
+            <summary>Новое значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._OnPropertyChanged">
+            <summary>Действие по генерации события обновления свойства - делегат <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.#ctor(System.Boolean,`0@,System.Action{System.String}@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></summary>
+            <param name="Result">Было ли значение свойства обновлено</param>
+            <param name="OldValue">Прежнее значение свойства</param>
+            <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.#ctor(System.Boolean,`0@,`0@,System.Action{System.String}@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></summary>
+            <param name="Result">Было ли значение свойства обновлено</param>
+            <param name="OldValue">Прежнее значение свойства</param>
+            <param name="NewValue">Новое значение свойства</param>
+            <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Then(System.Action@)">
+            <summary>В случае если значение свойства было изменено вызывать указанное действие</summary>
+            <param name="execute">Действие, выполняемое в случае обновления значения свойства</param>
+            <returns>Признак того, что свойство изменило своё значение</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Then(System.Action{`0}@)">
+            <summary>В случае если значение свойства было изменено вызывать указанное действие над новым значением</summary>
+            <param name="execute">Действие над новым значением, выполняемое в случае обновления значения свойства</param>
+            <returns>Признак того, что свойство изменило своё значение</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Then(System.Action{`0,`0}@)">
+            <summary>В случае если значение свойства было изменено вызывать указанное действие над старым и новым значением</summary>
+            <param name="execute">Действие над старым и новым значением, выполняемое в случае обновления значения свойства</param>
+            <returns>Признак того, что свойство изменило своё значение</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Update(System.String@)">
+            <summary>Выполнить генерацию события изменения указанного свойства, если значение текущего свойства изменилось</summary>
+            <param name="PropertyName">Имя обновившегося связанного свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayUpdate(System.String@)">
+            <summary>Выполнить генерацию события изменения указанного свойства даже если значение свойства не изменилось</summary>
+            <param name="PropertyName">Имя обновившегося связанного свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Update(System.String[])">
+            <summary>Выполнить генерацию события изменения указанного набора свойств, если значение текущего свойства изменилось</summary>
+            <param name="PropertyName">Имена обновившихся связанных свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayUpdate(System.String[])">
+            <summary>Выполнить генерацию события изменения указанного набора свойств даже если значение свойства не изменилось</summary>
+            <param name="PropertyName">Имена обновившихся связанных свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action@)">
+            <summary>Выполнить указанное действие даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{System.Boolean}@)">
+            <summary>Выполнить указанное действие с признаком обновления свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие с признаком обновления свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0}@)">
+            <summary>Выполнить указанное действие над новым значением свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над новым значением свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0,System.Boolean}@)">
+            <summary>Выполнить указанное действие над новым значением и признаком изменения свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над новым значением и признаком изменения свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0,`0}@)">
+            <summary>Выполнить указанное действие над старым и новым значением свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над старым и новым значением свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0,`0,System.Boolean}@)">
+            <summary>Выполнить указанное действие над старым, новым значением и признаком изменения свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над старым, новым значением и признаком изменения свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Equals(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@)">
             <summary>Indicates whether this instance and a specified object are equal.</summary>
@@ -11505,11 +11803,30 @@
         <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.GetHashCode">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.op_Equality(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0},MathCore.ViewModels.ViewModel.SetStaticValueResult{`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.op_Equality(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@,MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@)">
             <summary>Оператор равенства двух значений</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.op_Inequality(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0},MathCore.ViewModels.ViewModel.SetStaticValueResult{`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.op_Inequality(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@,MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@)">
             <summary>Оператор неравенства двух значений</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.Action{System.String}@,System.String@)">
+            <summary>Установить новое значение свойства</summary>
+            <param name="field">Ссылка на поле свойства</param>
+            <param name="value">Устанавливаемое новое значение свойства</param>
+            <param name="OnPropertyChanged">Метод извещения об изменении значения свойства</param>
+            <param name="PropertyName">Имя изменяемого свойства</param>
+            <typeparam name="T">ТИп значения свойства</typeparam>
+            <returns>Объект контроля процесс обновления значения свойства</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.Func{``0,System.Boolean}@,System.Action{System.String}@,System.String@)">
+            <summary>Установить новое значение свойства</summary>
+            <param name="field">Ссылка на поле свойства</param>
+            <param name="value">Устанавливаемое новое значение свойства</param>
+            <param name="Validator">Метод проверки корректности значения свойства</param>
+            <param name="OnPropertyChanged">Метод извещения об изменении значения свойства</param>
+            <param name="PropertyName">Имя изменяемого свойства</param>
+            <typeparam name="T">ТИп значения свойства</typeparam>
+            <returns>Объект контроля процесс обновления значения свойства</returns>
         </member>
         <member name="T:MathCore.ViewModels.ViewModel.SetValueResult`1">
             <summary>Установщик значения</summary>
@@ -11527,35 +11844,35 @@
         <member name="F:MathCore.ViewModels.ViewModel.SetValueResult`1._Model">
             <summary>Модель-представления, для которой производится установка значения</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.#ctor(System.Boolean,`0,MathCore.ViewModels.ViewModel)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.#ctor(System.Boolean,`0@,MathCore.ViewModels.ViewModel@)">
             <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetValueResult`1"/></summary>
             <param name="Result">Было ли значение установлено для свойства</param>
             <param name="OldValue">Старое значение</param>
             <param name="model">Модель-представления, для свойство которой изменилось</param>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.#ctor(System.Boolean,`0,`0,MathCore.ViewModels.ViewModel)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.#ctor(System.Boolean,`0@,`0@,MathCore.ViewModels.ViewModel@)">
             <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetValueResult`1"/></summary>
             <param name="Result">Было ли значение установлено для свойства</param>
             <param name="OldValue">Старое значение</param>
             <param name="NewValue">Новое (установленное) значение</param>
             <param name="model">Модель-представления, для свойство которой изменилось</param>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action@)">
             <summary>В случае если значение было установлено, выполнить указанное действие</summary>
             <param name="execute">Действие, которое требуется выполнить в случае если значение свойства было установлено</param>
             <returns>Истина, если значение свойства было установлено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action{`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action{`0}@)">
             <summary>В случае если значение было установлено, выполнить указанное действие над новым значением</summary>
             <param name="execute">Действие над значением, которое требуется выполнить в случае если значение свойства было установлено</param>
             <returns>Истина, если значение свойства было установлено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action{`0,`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action{`0,`0}@)">
             <summary>В случае если значение было установлено, выполнить указанное действие над старым и новым значением</summary>
             <param name="execute">Действие над старым и новым значением, которое требуется выполнить в случае если значение свойства было установлено</param>
             <returns>Истина, если значение свойства было установлено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Update(System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Update(System.String@)">
             <summary>Выполнить генерацию события обновления указанного свойства</summary>
             <param name="PropertyName">Имя свойства, которое также изменилось</param>
             <returns>Текущий объект установки значения</returns>
@@ -11565,12 +11882,12 @@
             <param name="PropertyName">Массив имён изменившихся свойств</param>
             <returns>Текущий объект установки значения</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action@)">
             <summary>Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет</summary>
             <param name="execute">Действие, которое требуется выполнить</param>
             <returns>Истина, если свойство было изменено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{System.Boolean})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{System.Boolean}@)">
             <summary>
             Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
             Параметр действия - флаг, сигнализирующий о том, было ли изменено свойство
@@ -11578,12 +11895,12 @@
             <param name="execute">Действие, которое требуется выполнить</param>
             <returns>Истина, если свойство было изменено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0}@)">
             <summary>Выполнить действие с новым значением вне зависимости от того, изменилось оно, или нет</summary>
             <param name="execute">Действие, которое требуется выполнить с параметром в виде значения свойства</param>
             <returns>Истина, если свойство было изменено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,System.Boolean})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,System.Boolean}@)">
             <summary>
             Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
             Параметры действия - флаг, сигнализирующий о том, было ли изменено свойство, и значение свойства
@@ -11591,7 +11908,7 @@
             <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
             <returns>Истина, если свойство было изменено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,`0}@)">
             <summary>
             Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
             Параметры действия - предыдущее и текущее значение свойства
@@ -11599,7 +11916,7 @@
             <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
             <returns>Истина, если свойство было изменено</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,`0,System.Boolean})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,`0,System.Boolean}@)">
             <summary>
             Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
             Параметры действия - предыдущее и текущее значение свойства, а также признак изменения значения
@@ -11617,13 +11934,13 @@
         <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.GetHashCode">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.op_Equality(MathCore.ViewModels.ViewModel.SetValueResult{`0},MathCore.ViewModels.ViewModel.SetValueResult{`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.op_Equality(MathCore.ViewModels.ViewModel.SetValueResult{`0}@,MathCore.ViewModels.ViewModel.SetValueResult{`0}@)">
             <summary>Оператор равенства двух значений</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.op_Inequality(MathCore.ViewModels.ViewModel.SetValueResult{`0},MathCore.ViewModels.ViewModel.SetValueResult{`0})">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.op_Inequality(MathCore.ViewModels.ViewModel.SetValueResult{`0}@,MathCore.ViewModels.ViewModel.SetValueResult{`0}@)">
             <summary>Оператор неравенства двух значений</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.String@)">
             <summary>Установить значение свойства</summary>
             <param name="field">Поле свойства</param>
             <param name="value">Устанавливаемое значение</param>
@@ -11631,7 +11948,7 @@
             <typeparam name="T">Тип значения</typeparam>
             <returns>Объект, отвечающий за обработку результата установки значения</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0,System.Func{``0,System.Boolean},System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.Func{``0,System.Boolean}@,System.String@)">
             <summary>Установить значение свойства</summary>
             <param name="field">Поле свойства</param>
             <param name="value">Устанавливаемое значение</param>

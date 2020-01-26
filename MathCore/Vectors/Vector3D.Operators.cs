@@ -103,7 +103,9 @@ namespace MathCore.Vectors
         /// <summary>Проверка на параллельность</summary>
         /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
         /// <returns>Истина, если вектора параллельны</returns>
+#pragma warning disable IDE0047 // Удалить ненужные круглые скобки
         public static bool operator |(Vector3D A, Vector3D B) => Math.Abs((A * B) / (A.R * B.R) - 1).Equals(0d);
+#pragma warning restore IDE0047 // Удалить ненужные круглые скобки
 
         /// <summary>Проверка на ортогональность</summary>
         /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
@@ -112,7 +114,7 @@ namespace MathCore.Vectors
 
         /// <summary>Проекция вектора A на вектор B</summary>
         /// <param name="A">Проецируемый вектор</param>
-        /// <param name="B">Вектор, на который производится проекциия</param>
+        /// <param name="B">Вектор, на который производится проекции</param>
         /// <returns>Проекция вектора А на вектор В</returns>
         public static double operator %(Vector3D A, Vector3D B) => A.GetProjectionTo(B);
 
@@ -121,6 +123,7 @@ namespace MathCore.Vectors
         /// <param name="Direction">Пространственный угол направления проекции</param>
         /// <returns>Вещественное значение проекции</returns>
         public static double operator %(Vector3D Vector, SpaceAngle Direction) => Vector.GetProjectionTo(Direction);
+
         public static double operator %(Vector3D Vector, Basis3D b) => Vector.InBasis(b);
 
         #endregion
