@@ -33,8 +33,8 @@ jobs:
       - name: Publishing on NuGet
         run: dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.NuGetApiKey }} --skip-duplicate -s https://api.nuget.org/v3/index.json
                 
-      - name: Setup nuget.config for GitHub
-        run: sed 's/GITHUB_TOKEN/${{ secrets.GITHUB_TOKEN }}/g' .nuget.config > nuget.config
+      #- name: Setup nuget.config for GitHub
+      #  run: sed 's/GITHUB_TOKEN/${{ secrets.GITHUB_TOKEN }}/g' .nuget.config > nuget.config
 
       - name: Publishing on GitHub
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate -s "github"
+        run: dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate --source "github"
