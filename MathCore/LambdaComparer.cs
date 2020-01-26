@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace MathCore
 {
-    /// <summary>ОБъект, представляющий метод сравнения двух объектов типа <typeparamref name="T"/>, задаваемый lambda-выражением</summary>
+    /// <summary>Объект, представляющий метод сравнения двух объектов типа <typeparamref name="T"/>, задаваемый lambda-выражением</summary>
     /// <typeparam name="T">Тип сравниваемых объектов</typeparam>
     public class LambdaComparer<T> : IComparer<T>, IComparer
     {

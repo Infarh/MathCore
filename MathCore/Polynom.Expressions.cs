@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using MathCore.Annotations;
 using Ex = System.Linq.Expressions.Expression;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {

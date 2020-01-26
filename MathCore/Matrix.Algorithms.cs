@@ -279,6 +279,21 @@ namespace MathCore
                     }
             }
 
+            /// <summary>Создать и инициализировать двумерный массив-матрицу</summary>
+            /// <param name="N">Число строк</param>
+            /// <param name="M">Число столбцов</param>
+            /// <param name="Creator">Функция, принимающая номер строки и номер столбца и возвращающая значение элемента матрицы</param>
+            /// <returns>Массив элементов матрицы</returns>
+            [NotNull]
+            public static double[,] Create(int N, int M, Func<int, int, double> Creator)
+            {
+                var result = new double[N, M];
+                for(var n = 0; n < N; n++)
+                    for (var m = 0; m < M; m++)
+                        result[n, m] = Creator(n, m);
+                return result;
+            }
+
             /// <summary>Создать двумерный массив элементов матрицы-столбца</summary>
             /// <param name="data">Элементы массива матрицы-столбца</param>
             /// <returns>Двумерный массив элементов матрицы столбца</returns>
@@ -1540,17 +1555,17 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static double GetMaxRowAbsSumm([NotNull] double[,] matrix)
+            public static double GetMaxRowAbsSum([NotNull] double[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = 0d;
                 for (var i = 0; i < N; i++)
                 {
-                    var row_summ = 0d;
+                    var row_sum = 0d;
                     for (var j = 0; j < M; j++)
-                        row_summ += Math.Abs(matrix[i, j]);
-                    if (row_summ > max)
-                        max = row_summ;
+                        row_sum += Math.Abs(matrix[i, j]);
+                    if (row_sum > max)
+                        max = row_sum;
                 }
                 return max;
             }
@@ -1565,11 +1580,11 @@ namespace MathCore
                 var max = 0d;
                 for (var j = 0; j < M; j++)
                 {
-                    var col_summ = 0d;
+                    var col_sum = 0d;
                     for (var i = 0; i < N; i++)
-                        col_summ += Math.Abs(matrix[i, j]);
-                    if (col_summ > max)
-                        max = col_summ;
+                        col_sum += Math.Abs(matrix[i, j]);
+                    if (col_sum > max)
+                        max = col_sum;
                 }
                 return max;
             }
@@ -1760,10 +1775,10 @@ namespace MathCore
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static double PyThag(double a, double b)
             {
-                var absa = Math.Abs(a);
-                var absb = Math.Abs(b);
-                return absa > absb ? absa * Math.Sqrt(1d + Sqr(absb / absa)) :
-                    absb.Equals(0d) ? 0d : absb * Math.Sqrt(1d + Sqr(absa / absb));
+                var abs_a = Math.Abs(a);
+                var abs_b = Math.Abs(b);
+                return abs_a > abs_b ? abs_a * Math.Sqrt(1d + Sqr(abs_b / abs_a)) :
+                    abs_b.Equals(0d) ? 0d : abs_b * Math.Sqrt(1d + Sqr(abs_a / abs_b));
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1792,7 +1807,7 @@ namespace MathCore
                 w = new double[Math.Min(N, M)];
                 v = new double[w.Length, w.Length];
 
-                var anorm = 0d;
+                var a_norm = 0d;
                 var scale = 0d;
                 var g = 0d;
 
@@ -1864,7 +1879,7 @@ namespace MathCore
                                 u[i, k] *= scale;
                         }
                     }
-                    anorm = Math.Max(anorm, Math.Abs(w[i]) + Math.Abs(rv1[i]));
+                    a_norm = Math.Max(a_norm, Math.Abs(w[i]) + Math.Abs(rv1[i]));
                 }
                 /* Accumulation of right-hand transformations. */
                 for (var i = M - 1; i >= 0; i--)
@@ -1930,12 +1945,12 @@ namespace MathCore
                         {
                             nm = l - 1;
                             /* Note that rv1[0] is always zero. */
-                            if ((Math.Abs(rv1[l - 1]) + anorm).Equals(anorm))
+                            if ((Math.Abs(rv1[l - 1]) + a_norm).Equals(a_norm))
                             {
                                 flag = false;
                                 break;
                             }
-                            if ((Math.Abs(w[nm - 1]) + anorm).Equals(anorm))
+                            if ((Math.Abs(w[nm - 1]) + a_norm).Equals(a_norm))
                                 break;
                         }
                         double c;
@@ -1952,7 +1967,7 @@ namespace MathCore
                             {
                                 f = s * rv1[i - 1];
                                 rv1[i - 1] = c * rv1[i - 1];
-                                if ((Math.Abs(f) + anorm).Equals(anorm))
+                                if ((Math.Abs(f) + a_norm).Equals(a_norm))
                                     break;
                                 g = w[i - 1];
                                 h = PyThag(f, g);

@@ -3,45 +3,45 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedTypeParameter
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Аргумент события с типизированным параметром</summary>
-    /// <typeparam name="TArgument">Тип параметра аргумента</typeparam>
     [DST]
     public class EventArgs<TArgument> : EventArgs
     {
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Параметр аргумента</summary>
-        public TArgument Argument { get; set; }
+        public TArgument Argument { get; set;}
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Новый аргумент события с типизированным параметром</summary>
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgumen}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgumen}"/></summary>
         /// <param name="Argument">Параметр аргумента</param>
         public EventArgs(TArgument Argument) => this.Argument = Argument;
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>
-        /// Возвращает объект <see cref="T:System.String"/>, который представляет текущий объект <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>Объект <see cref="T:System.String"/>, представляющий текущий объект <see cref="T:System.Object"/>.</returns>
-        /// <filterpriority>2</filterpriority>
+        /// <summary>Строковое представление аргумента события</summary>
         public override string ToString() => Argument.ToString();
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
+        /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения</summary>
         /// <param name="Args">Аргумент события</param>
         /// <returns>Хранимый объект</returns>
         public static implicit operator TArgument([NotNull] EventArgs<TArgument> Args) => Args.Argument;
 
-        /// <summary>
-        /// Оgератор неявного преобразования типа зранимого значения в обёртку из аргумента события, содержащего это значение
-        /// </summary>
+        /// <summary>Оператор неявного преобразования типа хранимого значения в обёртку из аргумента события, содержащего это значение</summary>
         /// <param name="Argument">Объект аргумента события</param>
         /// <returns>Аргумент события</returns>
         [NotNull]
@@ -49,150 +49,648 @@ namespace System
 
         /* ------------------------------------------------------------------------------------------ */
     }
-
-    /// <summary>Аргумент события с двумя типизированными параметрами</summary>
-    /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
-    /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
+ 
+    /// <summary>Аргумент события с 2 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
     [DST]
-    public class EventArgs<TArgument1, TArgument2> : EventArgs
+    public class EventArgs<TArgument1, TArgument2> 
+        : EventArgs
     {
-        /// <summary>Первый аргумент</summary>
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>1 параметр аргумента</summary>
         public TArgument1 Argument1 { get; set; }
 
-        /// <summary>Второй аргумент</summary>
+        /// <summary>2 параметр аргумента</summary>
         public TArgument2 Argument2 { get; set; }
 
-        /// <summary>Новый аргумент события с двумя параметрами</summary>
-        protected EventArgs() { }
+        /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Новый аргумент события с двумя параметрами</summary>
-        /// <param name="Argument1">Первый аргумент события</param>
-        /// <param name="Argument2">Второй аргумент события</param>
-        public EventArgs(TArgument1 Argument1, TArgument2 Argument2)
-        {
-            this.Argument1 = Argument1;
-            this.Argument2 = Argument2;
-        }
-
-        /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
-        /// <param name="Args">Аргумент события</param>
-        /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument1([NotNull] EventArgs<TArgument1, TArgument2> Args) => Args.Argument1;
-
-        /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
-        /// <param name="Args">Аргумент события</param>
-        /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument2([NotNull] EventArgs<TArgument1, TArgument2> Args) => Args.Argument2;
-    }
-
-    /// <summary>Аргумент события с двумя типизированными параметрами</summary>
-    /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
-    /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
-    /// <typeparam name="TArgument3">Тип третьего параметра</typeparam>
-    [DST]
-    public class EventArgs<TArgument1, TArgument2, TArgument3> : EventArgs
-    {
-        /// <summary>Первый аргумент</summary>
-        public TArgument1 Argument1 { get; set; }
-
-        /// <summary>Второй аргумент</summary>
-        public TArgument2 Argument2 { get; set; }
-
-        /// <summary>Третий аргумент</summary>
-        public TArgument3 Argument3 { get; set; }
-
-        /// <summary>Новый аргумент события с тремя параметрами</summary>
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2}"/></summary>
         public EventArgs() { }
 
-        /// <summary>Новый аргумент события с тремя параметрами</summary>
-        /// <param name="Argument1">Первый аргумент события</param>
-        /// <param name="Argument2">Второй аргумент события</param>
-        /// <param name="Argument3">Третий аргумент события</param>
-        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3)
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2) 
         {
             this.Argument1 = Argument1;
             this.Argument2 = Argument2;
-            this.Argument3 = Argument3;
         }
-    }
-
-    /// <summary>Аргумент события с типизированным параметром</summary>
-    /// <typeparam name="TSender">Тип источника события</typeparam>
-    /// <typeparam name="TArgument">Тип параметра аргумента</typeparam>
-    [DST]
-    public class EventSenderArgs<TSender, TArgument> : EventArgs<TArgument>
-    {
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Источник события</summary>
-        public TSender Sender { get; set; }
-
-        /* ------------------------------------------------------------------------------------------ */
-
-        /// <summary>Новый аргумент события с типизированным параметром</summary>
-        /// <param name="Sender">Источник события</param>
-        /// <param name="Argument">Параметр аргумента</param>
-        public EventSenderArgs(TSender Sender, TArgument Argument) : base(Argument) => this.Sender = Sender;
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+        }
 
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>
-        /// Возвращает объект <see cref="T:System.String"/>, который представляет текущий объект <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>Объект <see cref="T:System.String"/>, представляющий текущий объект <see cref="T:System.Object"/>.</returns>
-        /// <filterpriority>2</filterpriority>
-        public override string ToString() => $"{Sender}->{Argument}";
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2}"/></param>
+        /// <returns>Кортеж из 2 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2)
+            ([NotNull] EventArgs<TArgument1, TArgument2> Args)
+            => (Args.Argument1, Args.Argument2);
 
-        /* ------------------------------------------------------------------------------------------ */
-
-        /// <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
-        /// <param name="Args">Аргумент события</param>
-        /// <returns>Хранимый объект</returns>
-        public static implicit operator TArgument([NotNull] EventSenderArgs<TSender, TArgument> Args) => Args.Argument;
+        /// <summary>Оператор неявного преобразования кортежа из 2 параметров к типу <see cref="EventArgs{TArgument1, TArgument2}"/></summary>
+        /// <param name="Args">Кортеж из 2 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2>
+            ((TArgument1 Arg1, TArgument2 Arg2) Args)
+            => new EventArgs<TArgument1, TArgument2>(Args.Arg1, Args.Arg2);
 
         /* ------------------------------------------------------------------------------------------ */
     }
-
-    /// <summary>Аргумент события с двумя типизированными параметрами</summary>
-    /// <typeparam name="TSender">Тип источника события</typeparam>
-    /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
-    /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
+ 
+    /// <summary>Аргумент события с 3 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
     [DST]
-    public class EventSenderArgs<TSender, TArgument1, TArgument2> : EventArgs<TArgument1, TArgument2>
+    public class EventArgs<TArgument1, TArgument2, TArgument3> 
+        : EventArgs<TArgument1, TArgument2>
     {
-        /// <summary>Источник события</summary>
-        public TSender Sender { get; set; }
+        /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Новый аргумент события с двумя параметрами</summary>
-        protected EventSenderArgs() { }
+        /// <summary>3 параметр аргумента</summary>
+        public TArgument3 Argument3 { get; set; }
 
-        /// <summary>Новый аргумент события с двумя параметрами</summary>
-        /// <param name="Sender">Источник события</param>
-        /// <param name="Argument1">Первый аргумент события</param>
-        /// <param name="Argument2">Второй аргумент события</param>
-        public EventSenderArgs(TSender Sender, TArgument1 Argument1, TArgument2 Argument2) :base(Argument1, Argument2) => this.Sender = Sender;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3) 
+            : base(Argument1, Argument2) 
+            => this.Argument3 = Argument3;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/></param>
+        /// <returns>Кортеж из 3 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3);
+
+        /// <summary>Оператор неявного преобразования кортежа из 3 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/></summary>
+        /// <param name="Args">Кортеж из 3 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3>(Args.Arg1, Args.Arg2, Args.Arg3);
+
+        /* ------------------------------------------------------------------------------------------ */
     }
-
-    /// <summary>Аргумент события с двумя типизированными параметрами</summary>
-    /// <typeparam name="TSender">Тип источника события</typeparam>
-    /// <typeparam name="TArgument1">Тип первого параметра</typeparam>
-    /// <typeparam name="TArgument2">Тип второго параметра</typeparam>
-    /// <typeparam name="TArgument3">Тип третьего параметра</typeparam>
+ 
+    /// <summary>Аргумент события с 4 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
     [DST]
-    public class EventSenderArgs<TSender, TArgument1, TArgument2, TArgument3> : EventArgs<TArgument1, TArgument2, TArgument3>
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4> 
+        : EventArgs<TArgument1, TArgument2, TArgument3>
     {
-        /// <summary>Источник события</summary>
-        public TSender Sender { get; set; }
+        /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Новый аргумент события с тремя параметрами</summary>
-        public EventSenderArgs() { }
+        /// <summary>4 параметр аргумента</summary>
+        public TArgument4 Argument4 { get; set; }
 
-        /// <summary>Новый аргумент события с тремя параметрами</summary>
-        /// <param name="Sender">Источник события</param>
-        /// <param name="Argument1">Первый аргумент события</param>
-        /// <param name="Argument2">Второй аргумент события</param>
-        /// <param name="Argument3">Третий аргумент события</param>
-        public EventSenderArgs(TSender Sender, TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3)
-            : base(Argument1, Argument2, Argument3) => this.Sender = Sender;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4) 
+            : base(Argument1, Argument2, Argument3) 
+            => this.Argument4 = Argument4;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/></param>
+        /// <returns>Кортеж из 4 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4);
+
+        /// <summary>Оператор неявного преобразования кортежа из 4 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/></summary>
+        /// <param name="Args">Кортеж из 4 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+ 
+    /// <summary>Аргумент события с 5 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+    /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+    [DST]
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5> 
+        : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>5 параметр аргумента</summary>
+        public TArgument5 Argument5 { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        /// <param name="Argument5">5 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5) 
+            : base(Argument1, Argument2, Argument3, Argument4) 
+            => this.Argument5 = Argument5;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        /// <param name="Arg5">5 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+            Arg5 = Argument5;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/></param>
+        /// <returns>Кортеж из 5 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4, Args.Argument5);
+
+        /// <summary>Оператор неявного преобразования кортежа из 5 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/></summary>
+        /// <param name="Args">Кортеж из 5 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+ 
+    /// <summary>Аргумент события с 6 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+    /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+    /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+    [DST]
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6> 
+        : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>6 параметр аргумента</summary>
+        public TArgument6 Argument6 { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        /// <param name="Argument5">5 параметр аргумента</param>
+        /// <param name="Argument6">6 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6) 
+            : base(Argument1, Argument2, Argument3, Argument4, Argument5) 
+            => this.Argument6 = Argument6;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        /// <param name="Arg5">5 параметр аргумента</param>
+        /// <param name="Arg6">6 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5, out TArgument6 Arg6)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+            Arg5 = Argument5;
+            Arg6 = Argument6;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/></param>
+        /// <returns>Кортеж из 6 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4, Args.Argument5, Args.Argument6);
+
+        /// <summary>Оператор неявного преобразования кортежа из 6 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/></summary>
+        /// <param name="Args">Кортеж из 6 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+ 
+    /// <summary>Аргумент события с 7 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+    /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+    /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+    /// <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+    [DST]
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7> 
+        : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>7 параметр аргумента</summary>
+        public TArgument7 Argument7 { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        /// <param name="Argument5">5 параметр аргумента</param>
+        /// <param name="Argument6">6 параметр аргумента</param>
+        /// <param name="Argument7">7 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7) 
+            : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6) 
+            => this.Argument7 = Argument7;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        /// <param name="Arg5">5 параметр аргумента</param>
+        /// <param name="Arg6">6 параметр аргумента</param>
+        /// <param name="Arg7">7 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5, out TArgument6 Arg6, out TArgument7 Arg7)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+            Arg5 = Argument5;
+            Arg6 = Argument6;
+            Arg7 = Argument7;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/></param>
+        /// <returns>Кортеж из 7 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4, Args.Argument5, Args.Argument6, Args.Argument7);
+
+        /// <summary>Оператор неявного преобразования кортежа из 7 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/></summary>
+        /// <param name="Args">Кортеж из 7 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+ 
+    /// <summary>Аргумент события с 8 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+    /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+    /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+    /// <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+    /// <typeparam name="TArgument8">Тип аргумента 8</typeparam>
+    [DST]
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8> 
+        : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>8 параметр аргумента</summary>
+        public TArgument8 Argument8 { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        /// <param name="Argument5">5 параметр аргумента</param>
+        /// <param name="Argument6">6 параметр аргумента</param>
+        /// <param name="Argument7">7 параметр аргумента</param>
+        /// <param name="Argument8">8 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8) 
+            : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7) 
+            => this.Argument8 = Argument8;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        /// <param name="Arg5">5 параметр аргумента</param>
+        /// <param name="Arg6">6 параметр аргумента</param>
+        /// <param name="Arg7">7 параметр аргумента</param>
+        /// <param name="Arg8">8 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5, out TArgument6 Arg6, out TArgument7 Arg7, out TArgument8 Arg8)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+            Arg5 = Argument5;
+            Arg6 = Argument6;
+            Arg7 = Argument7;
+            Arg8 = Argument8;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/></param>
+        /// <returns>Кортеж из 8 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4, Args.Argument5, Args.Argument6, Args.Argument7, Args.Argument8);
+
+        /// <summary>Оператор неявного преобразования кортежа из 8 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/></summary>
+        /// <param name="Args">Кортеж из 8 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+ 
+    /// <summary>Аргумент события с 9 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+    /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+    /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+    /// <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+    /// <typeparam name="TArgument8">Тип аргумента 8</typeparam>
+    /// <typeparam name="TArgument9">Тип аргумента 9</typeparam>
+    [DST]
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9> 
+        : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>9 параметр аргумента</summary>
+        public TArgument9 Argument9 { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        /// <param name="Argument5">5 параметр аргумента</param>
+        /// <param name="Argument6">6 параметр аргумента</param>
+        /// <param name="Argument7">7 параметр аргумента</param>
+        /// <param name="Argument8">8 параметр аргумента</param>
+        /// <param name="Argument9">9 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8, TArgument9 Argument9) 
+            : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7, Argument8) 
+            => this.Argument9 = Argument9;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        /// <param name="Arg5">5 параметр аргумента</param>
+        /// <param name="Arg6">6 параметр аргумента</param>
+        /// <param name="Arg7">7 параметр аргумента</param>
+        /// <param name="Arg8">8 параметр аргумента</param>
+        /// <param name="Arg9">9 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5, out TArgument6 Arg6, out TArgument7 Arg7, out TArgument8 Arg8, out TArgument9 Arg9)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+            Arg5 = Argument5;
+            Arg6 = Argument6;
+            Arg7 = Argument7;
+            Arg8 = Argument8;
+            Arg9 = Argument9;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/></param>
+        /// <returns>Кортеж из 9 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8, TArgument9 Arg9)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4, Args.Argument5, Args.Argument6, Args.Argument7, Args.Argument8, Args.Argument9);
+
+        /// <summary>Оператор неявного преобразования кортежа из 9 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/></summary>
+        /// <param name="Args">Кортеж из 9 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8, TArgument9 Arg9) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8, Args.Arg9);
+
+        /* ------------------------------------------------------------------------------------------ */
+    }
+ 
+    /// <summary>Аргумент события с 10 типизированными параметрами</summary>
+    /// <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+    /// <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+    /// <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+    /// <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+    /// <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+    /// <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+    /// <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+    /// <typeparam name="TArgument8">Тип аргумента 8</typeparam>
+    /// <typeparam name="TArgument9">Тип аргумента 9</typeparam>
+    /// <typeparam name="TArgument10">Тип аргумента 10</typeparam>
+    [DST]
+    public class EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10> 
+        : EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>
+    {
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>10 параметр аргумента</summary>
+        public TArgument10 Argument10 { get; set; }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/></summary>
+        public EventArgs() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/></summary>
+        /// <param name="Argument1">1 параметр аргумента</param>
+        /// <param name="Argument2">2 параметр аргумента</param>
+        /// <param name="Argument3">3 параметр аргумента</param>
+        /// <param name="Argument4">4 параметр аргумента</param>
+        /// <param name="Argument5">5 параметр аргумента</param>
+        /// <param name="Argument6">6 параметр аргумента</param>
+        /// <param name="Argument7">7 параметр аргумента</param>
+        /// <param name="Argument8">8 параметр аргумента</param>
+        /// <param name="Argument9">9 параметр аргумента</param>
+        /// <param name="Argument10">10 параметр аргумента</param>
+        public EventArgs(TArgument1 Argument1, TArgument2 Argument2, TArgument3 Argument3, TArgument4 Argument4, TArgument5 Argument5, TArgument6 Argument6, TArgument7 Argument7, TArgument8 Argument8, TArgument9 Argument9, TArgument10 Argument10) 
+            : base(Argument1, Argument2, Argument3, Argument4, Argument5, Argument6, Argument7, Argument8, Argument9) 
+            => this.Argument10 = Argument10;
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Деконструктор <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/></summary>
+        /// <param name="Arg1">1 параметр аргумента</param>
+        /// <param name="Arg2">2 параметр аргумента</param>
+        /// <param name="Arg3">3 параметр аргумента</param>
+        /// <param name="Arg4">4 параметр аргумента</param>
+        /// <param name="Arg5">5 параметр аргумента</param>
+        /// <param name="Arg6">6 параметр аргумента</param>
+        /// <param name="Arg7">7 параметр аргумента</param>
+        /// <param name="Arg8">8 параметр аргумента</param>
+        /// <param name="Arg9">9 параметр аргумента</param>
+        /// <param name="Arg10">10 параметр аргумента</param>
+        public void Deconstruct(out TArgument1 Arg1, out TArgument2 Arg2, out TArgument3 Arg3, out TArgument4 Arg4, out TArgument5 Arg5, out TArgument6 Arg6, out TArgument7 Arg7, out TArgument8 Arg8, out TArgument9 Arg9, out TArgument10 Arg10)
+        {
+            Arg1 = Argument1;
+            Arg2 = Argument2;
+            Arg3 = Argument3;
+            Arg4 = Argument4;
+            Arg5 = Argument5;
+            Arg6 = Argument6;
+            Arg7 = Argument7;
+            Arg8 = Argument8;
+            Arg9 = Argument9;
+            Arg10 = Argument10;
+        }
+
+        /* ------------------------------------------------------------------------------------------ */
+
+        /// <summary>Оператор неявного преобразования типа <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/> к кортежу</summary>
+        /// <param name="Args">Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/></param>
+        /// <returns>Кортеж из 10 параметров</returns>
+        public static implicit operator
+            (TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8, TArgument9 Arg9, TArgument10 Arg10)
+            ([NotNull] EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10> Args)
+            => (Args.Argument1, Args.Argument2, Args.Argument3, Args.Argument4, Args.Argument5, Args.Argument6, Args.Argument7, Args.Argument8, Args.Argument9, Args.Argument10);
+
+        /// <summary>Оператор неявного преобразования кортежа из 10 параметров к типу <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/></summary>
+        /// <param name="Args">Кортеж из 10 параметров</param>
+        /// <returns>Аргумент события <see cref="EventArgs{TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10}"/></returns>
+        [NotNull]
+        public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10>
+            ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8, TArgument9 Arg9, TArgument10 Arg10) Args)
+            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8, Args.Arg9, Args.Arg10);
+
+        /* ------------------------------------------------------------------------------------------ */
     }
 }

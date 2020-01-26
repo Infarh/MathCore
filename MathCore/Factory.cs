@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore
 {
@@ -36,7 +39,7 @@ namespace MathCore
         private Func<T> _FactoryMethod;
 
         private T _Last;
-        private readonly PropertyChangedEventArgs _PropertyLastChengedArgs = new PropertyChangedEventArgs(nameof(Last));
+        private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new PropertyChangedEventArgs(nameof(Last));
 
         protected bool _RaiseLastChangedEvents = true;
 
@@ -51,17 +54,15 @@ namespace MathCore
             {
                 _Last = value;
                 if(_RaiseLastChangedEvents)
-                    OnPropertyChanged(_PropertyLastChengedArgs);
+                    OnPropertyChanged(_PropertyLastChangedArgs);
             }
         }
 
         /// <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
         public Func<T> FactoryMethod
         {
-            [DST]
-            get => _FactoryMethod;
-            [DST]
-            set => _FactoryMethod = value;
+            [DST] get => _FactoryMethod;
+            [DST] set => _FactoryMethod = value;
         }
 
         /* ------------------------------------------------------------------------------------------ */
@@ -77,11 +78,12 @@ namespace MathCore
 
         /// <summary>Создать новый объект</summary>
         /// <returns>Новый объект типа <typeparamref name="T"/></returns>
-        [DST]
+        [DST, CanBeNull]
         public virtual T Create() => _FactoryMethod is null ? default : Last = _FactoryMethod();
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode() => typeof(T).GetHashCode() ^ _FactoryMethod.GetHashCode();
 

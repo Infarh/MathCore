@@ -9,14 +9,20 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using MathCore.Annotations;
 using static System.Linq.Expressions.Expression;
+// ReSharper disable UnusedType.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable ConvertToAutoProperty
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore
 {
     /// <summary>Инициализатор объекта по структуре xml-файла</summary>
     /// <typeparam name="TObject">Тип инициализируемого объекта</typeparam>
-    public class XmInitializer<TObject> : ICollection<XmInitializer<TObject>.Rule>, IIndexableRead<int, XmInitializer<TObject>.Rule>
+    public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>, IIndexableRead<int, XmlInitializer<TObject>.Rule>
     {
-        #region Rules region
+        #region Правила инициализации
 
         /// <summary>Правило инициализации</summary>
         public abstract class Rule
@@ -36,6 +42,7 @@ namespace MathCore
             /// <summary>XPath-выражение - путь в структуре xml</summary>
             public string XPath => _XPath;
 
+            /// <summary>Правилу не нужен объект</summary>
             public bool IsObjectLess { get; }
 
             /// <summary>Скомпилированный метод инициализации</summary>
@@ -44,7 +51,7 @@ namespace MathCore
             /// <summary>Инициализация нового правила</summary>
             /// <param name="XPath">XPath-путь в структуре xml</param>
             /// <param name="Expression">Выражение инициализации</param>
-            /// <param name="IsObjectLess"></param>
+            /// <param name="IsObjectLess">Правилу не нужен объект</param>
             protected Rule([NotNull] string XPath, [NotNull] Expression<Action<TObject, string>> Expression, bool IsObjectLess = false)
             {
                 this.IsObjectLess = IsObjectLess;
@@ -53,19 +60,18 @@ namespace MathCore
                 _Update = Expression.Compile();
             }
 
-
             /// <summary>Выполнить инициализацию</summary>
             /// <param name="obj">Инициализируемый объект</param>
             /// <param name="e">Корень структуры xml</param>
             /// <param name="ns">Описание пространств имён</param>
-            public void Execute(TObject obj, XElement e, [NotNull] IXmlNamespaceResolver ns) => e
+            public void Execute(TObject obj, [NotNull] XElement e, [NotNull] IXmlNamespaceResolver ns) => e
                 .GetXPathValues(_XPath, ns) //Пытаемся найти все значения по указанному пути
                 .Foreach(_Update, obj, (s, update, o) => update(o, s)); //Каждое найденное значение передаём в метод инициализации
 
             /// <summary>Выполнить инициализацию</summary>
             /// <param name="e">Корень структуры xml</param>
             /// <param name="ns">Описание пространств имён</param>
-            public void Execute(XElement e, [NotNull] IXmlNamespaceResolver ns) => e
+            public void Execute([NotNull] XElement e, [NotNull] IXmlNamespaceResolver ns) => e
                 .GetXPathValues(_XPath, ns) //Пытаемся найти все значения по указанному пути
                 .Foreach(_Update, (s, update) => update(default, s)); //Каждое найденное значение передаём в метод инициализации
         }
@@ -76,28 +82,28 @@ namespace MathCore
         {
             /// <summary>Получить выражение инициализации для выражения определения свойства</summary>
             /// <param name="expression">Выражение определения инициализируемого параметра объекта</param>
-            /// <param name="converter">Выражение преобразования строки в тип объекта</param>
+            /// <param name="ValueConverterExpression">Выражение преобразования строки в тип объекта</param>
             /// <returns>Выражение инициализации, как процедура с параметром - объектом и строкой xml-узла</returns>
             [NotNull]
             private static Expression<Action<TObject, string>> GetExpression
             (
                 [NotNull] Expression<Func<TObject, TValue>> expression,
-                [CanBeNull] Expression<Func<string, TValue>> converter
+                [CanBeNull] Expression<Func<string, TValue>> ValueConverterExpression
             )
             {
                 //Параметр выражения, содержащий объект
-                var pObj = expression.Parameters[0];
+                var p_obj = expression.Parameters[0];
                 //Параметр выражения конвертера, содержащий строку xml-структуры
-                var pStr = converter?.Parameters[0] ?? Parameter(typeof(string), "s");
+                var p_str = ValueConverterExpression?.Parameters[0] ?? Parameter(typeof(string), "s");
                 //Тело выражения конвертера из строки в нужный тип данных
-                var converter_body = converter?.Body;
+                var converter_body = ValueConverterExpression?.Body;
                 //Если конвертера не указано (тело отсутствует)
                 if(converter_body is null)
                 {
                     //Проверяем - можно ли преобразовать строку напрямую к нужному типу параметра
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
                         //Если да, то создаём выражение прямого присвоения
-                        return Lambda<Action<TObject, string>>(Assign(expression.Body, pStr), pObj, pStr);
+                        return Lambda<Action<TObject, string>>(Assign(expression.Body, p_str), p_obj, p_str);
                     //Если прямое присвоение строки не возможно, то
                     //Определяем конвертер для целевого типа
                     var c = TypeDescriptor.GetConverter(typeof(TValue));
@@ -113,13 +119,13 @@ namespace MathCore
                                 (
                                     Constant(c), //Узел выражения, содержащий значение объекта преобразователя
                                     ((Func<string, object>)c.ConvertFromString).Method, //Описание метода
-                                    pStr //Параметр метода - строковый
+                                    p_str //Параметр метода - строковый
                                 ),
                             typeof(TValue)
                         );
                 }
-                //Если выражение содержит не указание конкретного члена класса (поля, или свйоства), то генерируем исключение
-                if(!(expression.Body is MemberExpression)) throw new NotImplementedException();
+                //Если выражение содержит не указание конкретного члена класса (поля, или свойства), то генерируем исключение
+                if(!(expression.Body is MemberExpression)) throw new NotSupportedException("Выражение не поддерживается");
                 return Lambda<Action<TObject, string>> //Создаём лямбда-выражение
                     ( //содержащее
                         Assign //выражение присвоения
@@ -127,41 +133,41 @@ namespace MathCore
                                 expression.Body, //телу выражения определения члена объекта
                                 converter_body //тело метода-конвертера
                             ),
-                        pObj, //Первый параметр - объект
-                        pStr //Второй параметр - строка xml-структуры
+                        p_obj, //Первый параметр - объект
+                        p_str //Второй параметр - строка xml-структуры
                     );
             }
 
             /// <summary>Получить выражение инициализации объекта по выражению инициализации и выражению конвертера</summary>
             /// <param name="expression">Выражение инициализации</param>
-            /// <param name="converter">Конвертер преобразования строки в нужный тип данных</param>
+            /// <param name="ValueConverterExpression">Конвертер преобразования строки в нужный тип данных</param>
             /// <returns>Выражение инициализации объекта по строке xml-структуры</returns>
             [NotNull]
             private static Expression<Action<TObject, string>> GetExpression
             (
                 [NotNull] Expression<Action<TObject, TValue>> expression,
-                [CanBeNull] Expression<Func<string, TValue>> converter
+                [CanBeNull] Expression<Func<string, TValue>> ValueConverterExpression
             )
             {
                 //Параметр выражения инициализации, содержащий объект инициализации
-                var pObj = expression.Parameters[0];
-                //Парамметр выражения инициализации, содержащий целевое значение параметра целевого типа
-                var pArg = expression.Parameters[1];
+                var p_obj = expression.Parameters[0];
+                //Параметр выражения инициализации, содержащий целевое значение параметра целевого типа
+                var p_arg = expression.Parameters[1];
                 //Тело выражения инициализации
                 var expr_body = expression.Body;
                 //Параметр выражения конвертера, содержащий строку
-                var pStr = converter?.Parameters[0] ?? Parameter(typeof(string), "s");
+                var p_str = ValueConverterExpression?.Parameters[0] ?? Parameter(typeof(string), "s");
                 //Тело выражения конвертера
-                var converter_body = converter?.Body;
+                var converter_body = ValueConverterExpression?.Body;
                 //Если конвертер не указан - тело конвертера отсутствует
                 if(converter_body is null)
                 {
-                    //Проверяем - возможно ли прямое привоение строкового параметру целевого типа
+                    //Проверяем - возможно ли прямое присвоение строкового параметру целевого типа
                     if(typeof(TValue).IsAssignableFrom(typeof(string)))
                         //Если присвоение возможно, то заменяем в теле выражения инициализации 
                         //целевой параметр на строковый параметр и возвращаем лямбда-выражение
-                        return Lambda<Action<TObject, string>>(expr_body.Replace(pArg, pStr), pObj, pStr);
-                    //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощю конвертера
+                        return Lambda<Action<TObject, string>>(expr_body.Replace(p_arg, p_str), p_obj, p_str);
+                    //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощью конвертера
                     var c = TypeDescriptor.GetConverter(typeof(TValue));
                     //Если преобразование типов невозможно, то
                     if(!c.CanConvertFrom(typeof(string))) //генерируем исключение
@@ -174,7 +180,7 @@ namespace MathCore
                                 (
                                     Constant(c), //Значение объекта-преобразования типов
                                     ((Func<string, object>)c.ConvertFromString).Method, //Описание метода
-                                    pStr //Строковый параметр
+                                    p_str //Строковый параметр
                                 ),
                             typeof(TValue) //Целевой тип
                         );
@@ -182,48 +188,44 @@ namespace MathCore
                 //создаём лямбда-выражение инициализации объекта
                 return Lambda<Action<TObject, string>>
                     ( //За основу берём тело исходного выражения инициализации
-                        expr_body.Replace(pArg, converter_body),
+                        expr_body.Replace(p_arg, converter_body),
                         //Заменяем в дереве параметр целевого объекта на тело конвертера
-                        pObj, //Параметр - инициализируемый объект
-                        pStr //Параметр - строка xml-структуры
+                        p_obj, //Параметр - инициализируемый объект
+                        p_str //Параметр - строка xml-структуры
                     );
             }
 
             [NotNull]
-            private static Expression<Action<TObject, string>> GetExpression([NotNull] Expression<Action<TValue>> expression, [CanBeNull] Expression<Func<string, TValue>> converter)
+            private static Expression<Action<TObject, string>> GetExpression(
+                [NotNull] Expression<Action<TValue>> InitializationExpression, 
+                [CanBeNull] Expression<Func<string, TValue>> ValueConverterExpression)
             {
-                //Параметр выражения инициализации, содержащий объект инициализации
-                var pObj = Parameter(typeof(TObject), "o");
-                //Параметр выражения инициализации, содержащий параметр инициализации
-                var pArg = expression.Parameters[0];
-                //Тело выражения инициализации
-                var expr_body = expression.Body;
-                //Параметр выражения конвертера, содержащий строку
-                var pStr = converter?.Parameters[0] ?? Parameter(typeof(string), "s");
-                //Тело выражения конвертера
-                var converter_body = converter?.Body;
-                //Если конвертер не указан - тело конвертера отсутствует
-                if(converter_body is null)
+                var p_obj = Parameter(typeof(TObject), "o");         //Параметр выражения инициализации, содержащий объект инициализации
+                var p_arg = InitializationExpression.Parameters[0];  //Параметр выражения инициализации, содержащий параметр инициализации
+                var expr_body = InitializationExpression.Body;             //Тело выражения инициализации
+                var p_str = ValueConverterExpression?.Parameters[0] ?? Parameter(typeof(string), "s"); //Параметр выражения конвертера, содержащий строку
+                
+                var converter_body = ValueConverterExpression?.Body;       //Тело выражения конвертера
+                if(converter_body is null)                                         //Если конвертер не указан - тело конвертера отсутствует
                 {
-                    //Проверяем - возможно ли прямое привоение строкового параметру целевого типа
-                    if(typeof(TValue).IsAssignableFrom(typeof(string)))
-                        //Если присвоение возможно, то заменяем в теле выражения инициализации 
+                    if(typeof(TValue).IsAssignableFrom(typeof(string)))     //Проверяем - возможно ли прямое присвоение строкового параметру целевого типа
+                        //Если присвоение возможно, то заменяем в теле выражения инициализации
                         //целевой параметр на строковый параметр и возвращаем лямбда-выражение
-                        return Lambda<Action<TObject, string>>(expr_body.Replace(pArg, pStr), pObj, pStr);
-                    //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощю конвертера
-                    var c = TypeDescriptor.GetConverter(typeof(TValue));
-                    //Если преобразование типов невозможно, то
-                    if(!c.CanConvertFrom(typeof(string))) //генерируем исключение
-                        throw new NotSupportedException(
-                            $"Невозможно автоматически преобразовать тип {typeof(string)} в {typeof(TValue)}");
+                        return Lambda<Action<TObject, string>>(expr_body.Replace(p_arg, p_str), p_obj, p_str);
+
+                    var converter = TypeDescriptor.GetConverter(typeof(TValue)); //Если прямое присвоение не возможно, то пытаемся выполнить преобразование с помощью конвертера
+                    
+                    if(!converter.CanConvertFrom(typeof(string))) //Если преобразование типов невозможно, то генерируем исключение
+                        throw new NotSupportedException($"Невозможно автоматически преобразовать тип {typeof(string)} в {typeof(TValue)}");
+
                     //Если преобразование возможно, то создаём тело выражения-конвертера
                     converter_body = Convert //Создаём узел приведения к целевому типу
                         (
                             Call //Создаём узел вызова метода
                                 (
-                                    Constant(c), //Значение объекта-преобразования типов
-                                    ((Func<string, object>)c.ConvertFromString).Method, //Описание метода
-                                    pStr //Строковый параметр
+                                    Constant(converter), //Значение объекта-преобразования типов
+                                    ((Func<string, object>)converter.ConvertFromString).Method, //Описание метода
+                                    p_str //Строковый параметр
                                 ),
                             typeof(TValue) //Целевой тип
                         );
@@ -231,166 +233,252 @@ namespace MathCore
                 //создаём лямбда-выражение инициализации объекта
                 return Lambda<Action<TObject, string>>
                     ( //За основу берём тело исходного выражения инициализации
-                        expr_body.Replace(pArg, converter_body),
+                        expr_body.Replace(p_arg, converter_body),
                         //Заменяем в дереве параметр целевого объекта на тело конвертера
-                        pObj, //Параметр - инициализируемый объект
-                        pStr //Параметр - строка xml-структуры
+                        p_obj, //Параметр - инициализируемый объект
+                        p_str //Параметр - строка xml-структуры
                     );
             }
 
+            /// <summary>Инициализация нового экземпляра <see cref="Rule{TValue}"/></summary>
+            /// <param name="XPath">Путь к значению внутри xml-файла</param>
+            /// <param name="expression">Выражение преобразования значения объекта инициализации к типу <typeparamref name="TValue"/>, выполняемое для инициализации значения объекта</param>
+            /// <param name="converter">Выражение преобразования строкового типа значения из xml-файла в <typeparamref name="TValue"/></param>
             public Rule
             (
-                [NotNull] string xPath,
+                [NotNull] string XPath,
                 [NotNull] Expression<Func<TObject, TValue>> expression,
                 [CanBeNull] Expression<Func<string, TValue>> converter = null
-            ) : base(xPath, GetExpression(expression, converter))
+            ) : base(XPath, GetExpression(expression, converter))
             { }
 
+            /// <summary>Инициализация нового экземпляра <see cref="Rule{TValue}"/></summary>
+            /// <param name="XPath">Путь к значению внутри xml-файла</param>
+            /// <param name="expression">Выражение действия над объектом инициализации и типом <typeparamref name="TValue"/>, выполняемое для присвоения значения</param>
+            /// <param name="converter">Выражение преобразования строкового типа значения из xml-файла в <typeparamref name="TValue"/></param>
             public Rule
             (
-                [NotNull] string xPath,
+                [NotNull] string XPath,
                 [NotNull] Expression<Action<TObject, TValue>> expression,
                 [CanBeNull] Expression<Func<string, TValue>> converter = null
-            ) : base(xPath, GetExpression(expression, converter))
+            ) : base(XPath, GetExpression(expression, converter))
             { }
 
+            /// <summary>Инициализация нового экземпляра <see cref="Rule{TValue}"/></summary>
+            /// <param name="XPath">Путь к значению внутри xml-файла</param>
+            /// <param name="expression">Выражение действия над объектом инициализации и типом <typeparamref name="TValue"/>, выполняемое для присвоения значения</param>
             public Rule
             (
-                [NotNull] string xPath,
+                [NotNull] string XPath,
                 [NotNull] Expression<Action<TObject, string>> expression
-            ) : base(xPath, expression)
+            ) : base(XPath, expression)
             { }
 
+            /// <summary>Инициализация нового экземпляра <see cref="Rule{TValue}"/></summary>
+            /// <param name="XPath">Путь к значению внутри xml-файла</param>
+            /// <param name="expression">Выражение действия над объектом инициализации, выполняемое для присвоения значения</param>
+            /// <param name="converter">Выражение преобразования строкового типа значения из xml-файла в <typeparamref name="TValue"/></param>
             public Rule
             (
-                [NotNull] string xPath,
+                [NotNull] string XPath,
                 [NotNull] Expression<Action<TValue>> expression,
                 [CanBeNull] Expression<Func<string, TValue>> converter = null
-            ) : base(xPath, GetExpression(expression, converter), true)
+            ) : base(XPath, GetExpression(expression, converter), true)
             { }
         }
 
         #endregion
 
-
+        /// <summary>Набор правил</summary>
         [NotNull]
         private readonly List<Rule> _Rules = new List<Rule>();
 
+        /// <summary>Число правил инициализации</summary>
         public int Count => _Rules.Count;
 
+        /// <summary>Правило инициализации с указанным индексом</summary>
+        /// <param name="i">Индекс правила инициализации в списке</param>
+        /// <returns>Правило инициализации с указанным индексом</returns>
         public Rule this[int i] => _Rules[i];
 
+        /// <summary>Менеджер пространств имён xml-файла</summary>
         [NotNull]
         public XmlNamespaceManager Namespace { get; set; } = new XmlNamespaceManager(new NameTable());
 
-        public XmInitializer() { }
-        public XmInitializer([NotNull]params Rule[] Rules) : this() => _Rules.AddRange(Rules);
+        /// <summary>Инициализация нового экземпляра <see cref="XmlInitializer{TObject}"/></summary>
+        public XmlInitializer() { }
+
+        /// <summary>Инициализация нового экземпляра <see cref="XmlInitializer{TObject}"/></summary>
+        /// <param name="Rules">Список правил инициализации</param>
+        public XmlInitializer([NotNull]params Rule[] Rules) : this() => _Rules.AddRange(Rules);
 
         #region Методы обработки XML
 
         #region Linq to xml
 
-        public void Initialize([NotNull] TObject obj, XDocument doc) => Initialize(obj, doc?.Root, Namespace);
-        public void Initialize([NotNull] TObject obj, XElement e) => Initialize(obj, e, Namespace);
+        /// <summary>Инициализировать объект</summary>
+        /// <param name="obj">Инициализируемый объект</param>
+        /// <param name="xml">Xml-документ - источник данных процесса инициализации</param>
+        public void Initialize([NotNull] TObject obj, [CanBeNull] XDocument xml) => Initialize(obj, xml?.Root, Namespace);
 
-        public void Initialize(XDocument doc, [NotNull] IXmlNamespaceResolver ns) => Initialize(doc?.Root, ns);
+        /// <summary>Инициализировать объект</summary>
+        /// <param name="obj">Инициализируемый объект</param>
+        /// <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
+        public void Initialize([NotNull] TObject obj, XElement xml) => Initialize(obj, xml, Namespace);
 
-        public void Initialize([NotNull] TObject obj, XDocument doc, [NotNull] IXmlNamespaceResolver ns)
-            => Initialize(obj, doc?.Root, ns);
+        /// <summary>Инициализировать объект</summary>
+        /// <param name="xml">Xml-документ - источник данных процесса инициализации</param>
+        /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        public void Initialize(
+            [CanBeNull] XDocument xml,
+            [NotNull] IXmlNamespaceResolver XmlNamespace)
+            => Initialize(xml?.Root, XmlNamespace);
 
-        public void Initialize([NotNull] TObject obj, XElement e, [NotNull] IXmlNamespaceResolver ns)
+        /// <summary>Инициализировать объект</summary>
+        /// <param name="obj">Инициализируемый объект</param>
+        /// <param name="xml">Xml-документ - источник данных процесса инициализации</param>
+        /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        public void Initialize(
+            [NotNull] TObject obj, 
+            [CanBeNull] XDocument xml, 
+            [NotNull] IXmlNamespaceResolver XmlNamespace)
+            => Initialize(obj, xml?.Root, XmlNamespace);
+
+        /// <summary>Инициализировать объект</summary>
+        /// <param name="obj">Инициализируемый объект</param>
+        /// <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
+        /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        public void Initialize(
+            [NotNull] TObject obj, 
+            [CanBeNull] XElement xml, 
+            [NotNull] IXmlNamespaceResolver XmlNamespace)
         {
-            if(e is null) return;
-            _Rules.ForEach(r => r.Execute(obj, e, ns));
+            if(xml is null) return;
+            foreach (var rule in _Rules)
+                rule.Execute(obj, xml, XmlNamespace);
         }
 
-        public void Initialize(XElement Element, [NotNull] IXmlNamespaceResolver NamespaceResolver)
+        /// <summary>Инициализировать объект</summary>
+        /// <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
+        /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        public void Initialize(
+            [CanBeNull] XElement xml,
+            [NotNull] IXmlNamespaceResolver XmlNamespace)
         {
-            if(Element is null) return;
-            _Rules.Where(r => r.IsObjectLess).Foreach(Element, NamespaceResolver, (r, e, ns) => r.Execute(e, ns));
+            if(xml is null) return;
+            foreach (var rule in _Rules.Where(rule => rule.IsObjectLess))
+                rule.Execute(xml, XmlNamespace);
         }
 
         #endregion
 
+        /// <summary>Инициализировать объект данными из xml-документа</summary>
+        /// <param name="obj">инициализируемый объект</param>
+        /// <param name="xml">Объект чтения xml-документа</param>
         // <include file='http://informer.gismeteo.ru/rss/27612.xml' path='//rss/channel/title/*' />
-        /// <devdoc>
-        ///     <para>
-        ///         Gets the type of the current node.
-        ///     </para>
-        /// </devdoc>
-        public void Initialize([NotNull] TObject obj, [NotNull] XmlReader reader) => Initialize(obj, reader, Namespace);
-        public void Initialize([NotNull] TObject obj, [NotNull] XmlReader Reader, [CanBeNull]XmlNamespaceManager ns)
+        public void Initialize([NotNull] TObject obj, [NotNull] XmlReader xml) => Initialize(obj, xml, Namespace);
+
+        /// <summary>Инициализировать объект данными из xml-документа</summary>
+        /// <param name="obj">инициализируемый объект</param>
+        /// <param name="xml">Объект чтения xml-документа</param>
+        /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        public void Initialize([NotNull] TObject obj, [NotNull] XmlReader xml, [CanBeNull] XmlNamespaceManager XmlNamespace)
         {
-            var path = ns is null ? new XPathCollection() : new XPathCollection(ns);
-            _Rules.Select(r => new XPathQuery(r.XPath) { Tag = r })
-                .ForeachLazy(q => path.Add(q))
+            var path = XmlNamespace is null ? new XPathCollection() : new XPathCollection(XmlNamespace);
+            _Rules.Select(rule => new XPathQuery(rule.XPath) { Tag = rule })
+                .ForeachLazy(query => path.Add(query))
                 .Foreach(obj, (q, o) => q.QueryMatch += (s, e) => ((Rule)q.Tag).Update(o, e.Argument));
-            var reader = new XPathReader(Reader, path);
+            var reader = new XPathReader(xml, path);
             while(reader.ReadUntilMatch()) { }
         }
-
 
         #endregion
 
         /// <summary>Добавить правило с указанием выражения получения члена объекта</summary>
         /// <typeparam name="TPropertyValue">Тип значения свойства</typeparam>
-        /// <param name="path">Путь в xml-структуре</param>
-        /// <param name="expr">Выражение, определяющее член объекта</param>
-        /// <param name="conv">Выражение преобразования строки в целевой тип данных</param>
+        /// <param name="XPath">Путь в xml-структуре</param>
+        /// <param name="InitializationExpression">Выражение, определяющее член объекта</param>
+        /// <param name="DataConverterExpression">Выражение преобразования строки в целевой тип данных</param>
         public void Add<TPropertyValue>
         (
-            [NotNull]string path,
-            [NotNull]Expression<Func<TObject, TPropertyValue>> expr,
-            [CanBeNull]Expression<Func<string, TPropertyValue>> conv = null
-        ) => _Rules.Add(new Rule<TPropertyValue>(path, expr, conv));
+            [NotNull]string XPath,
+            [NotNull]Expression<Func<TObject, TPropertyValue>> InitializationExpression,
+            [CanBeNull]Expression<Func<string, TPropertyValue>> DataConverterExpression = null
+        ) => _Rules.Add(new Rule<TPropertyValue>(XPath, InitializationExpression, DataConverterExpression));
 
+        /// <summary>Добавить правило инициализации объекта <typeparamref name="TObject"/></summary>
+        /// <param name="XPath">Путь к данным внутри xml-файла</param>
+        /// <param name="InitializationExpression">Выражение, определяющее как записать данные в объект после извлечения их из xml-файла</param>
+        /// <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в тип данных, необходимый объекту</param>
+        /// <typeparam name="TArgument">Тип устанавливаемого значения для объекта инициализации</typeparam>
         public void Add<TArgument>
         (
-            [NotNull]string path,
-            [NotNull]Expression<Action<TObject, TArgument>> expr,
-            [CanBeNull]Expression<Func<string, TArgument>> conv = null
-        ) => _Rules.Add(new Rule<TArgument>(path, expr, conv));
+            [NotNull]string XPath,
+            [NotNull]Expression<Action<TObject, TArgument>> InitializationExpression,
+            [CanBeNull]Expression<Func<string, TArgument>> DataConverterExpression = null
+        ) => _Rules.Add(new Rule<TArgument>(XPath, InitializationExpression, DataConverterExpression));
 
+        /// <summary>Добавить правило инициализации</summary>
+        /// <param name="XPath">Путь к данным внутри xml-файла</param>
+        /// <param name="InitializationExpression">Выражение, определяющее как записать строку в объект после извлечения её из xml-файла</param>
+        /// <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в строку, необходимую объекту</param>
         public void Add
         (
-            [NotNull]string path,
-            [NotNull]Expression<Action<TObject, string>> expr,
-            [CanBeNull]Expression<Func<string, string>> conv = null
+            [NotNull]string XPath,
+            [NotNull]Expression<Action<TObject, string>> InitializationExpression,
+            [CanBeNull]Expression<Func<string, string>> DataConverterExpression = null
         ) => _Rules.Add
             (
-                conv is null
-                    ? new Rule<string>(path, expr)
-                    : new Rule<string>(path, expr, conv)
+                DataConverterExpression is null
+                    ? new Rule<string>(XPath, InitializationExpression)
+                    : new Rule<string>(XPath, InitializationExpression, DataConverterExpression)
             );
 
-        public void Add<TArgumet>
+        /// <summary>Добавить правило инициализации без инициализируемого объекта</summary>
+        /// <param name="XPath">Путь к данным внутри xml-файла</param>
+        /// <param name="InitializationExpression">Выражение, определяющее что требуется сделать с данными после извлечения их из xml-файла</param>
+        /// <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в тип данных, необходимый объекту</param>
+        /// <typeparam name="TArgument">Тип устанавливаемого значения для объекта инициализации</typeparam>
+        public void Add<TArgument>
         (
-            [NotNull]string path,
-            [NotNull]Expression<Action<TArgumet>> expr,
-            [CanBeNull]Expression<Func<string, TArgumet>> conv = null
-        ) => _Rules.Add(new Rule<TArgumet>(path, expr, conv));
+            [NotNull]string XPath,
+            [NotNull]Expression<Action<TArgument>> InitializationExpression,
+            [CanBeNull]Expression<Func<string, TArgument>> DataConverterExpression = null
+        ) => _Rules.Add(new Rule<TArgument>(XPath, InitializationExpression, DataConverterExpression));
 
+        /// <summary>Добавить правило инициализации без инициализируемого объекта</summary>
+        /// <param name="XPath">Путь к данным внутри xml-файла</param>
+        /// <param name="InitializationExpression">Выражение, определяющее что требуется сделать со строкой после её извлечения из xml-файла</param>
+        /// <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в строку, необходимую для процесса инициализации</param>
         public void Add
         (
-            [NotNull]string path,
-            [NotNull]Expression<Action<string>> expr,
-            [CanBeNull]Expression<Func<string, string>> conv = null
-        ) => _Rules.Add(new Rule<string>(path, expr, conv));
+            [NotNull]string XPath,
+            [NotNull]Expression<Action<string>> InitializationExpression,
+            [CanBeNull]Expression<Func<string, string>> DataConverterExpression = null
+        ) => _Rules.Add(new Rule<string>(XPath, InitializationExpression, DataConverterExpression));
 
+        /// <summary>Удалить все правила инициализации</summary>
         public void Clear() => _Rules.Clear();
 
+        /// <inheritdoc />
         bool ICollection<Rule>.IsReadOnly => false;
 
+        /// <inheritdoc />
         void ICollection<Rule>.Add(Rule item) => _Rules.Add(item);
 
+        /// <inheritdoc />
         bool ICollection<Rule>.Contains(Rule item) => _Rules.Contains(item);
 
+        /// <inheritdoc />
         void ICollection<Rule>.CopyTo(Rule[] array, int ArrayIndex) => _Rules.CopyTo(array, ArrayIndex);
 
+        /// <inheritdoc />
         bool ICollection<Rule>.Remove(Rule item) => _Rules.Remove(item);
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Rules).GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator<Rule> IEnumerable<Rule>.GetEnumerator() => _Rules.GetEnumerator();
     }
 }

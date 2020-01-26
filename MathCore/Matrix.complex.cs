@@ -108,10 +108,10 @@ namespace MathCore
         public MatrixComplex T => GetTranspose();
 
         /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
-        public Complex Norm_m => Array.GetMaxRowAbsSumm(_Data);
+        public Complex Norm_m => Array.GetMaxRowAbsSum(_Data);
 
         /// <summary>Максимум среди абсолютных сумм элементов столбцов</summary>
-        public Complex Norm_l => Array.GetMaxColAbsSumm(_Data);
+        public Complex Norm_l => Array.GetMaxColAbsSum(_Data);
 
         /// <summary>Среднеквадратичное значение элементов матрицы</summary>
         public Complex Norm_k => Array.GetRMS(_Data);

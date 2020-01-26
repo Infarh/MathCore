@@ -164,9 +164,9 @@ namespace MathCore.Extensions.Expressions
             return (lEx)visitor.Visit(Lambda(MainEx.Body, pars));
         }
 
-        [NotNull] public static mEx GetProperty([NotNull] this Ex obj, [NotNull] string PropertyName) => Property(obj, PropertyName);
+        [NotNull] public static mEx GetProperty(this Ex obj, [NotNull] PropertyInfo Info) => Expression.Property(obj, Info);
 
-        [NotNull] public static mEx GetProperty(this Ex obj, [NotNull] PropertyInfo Info) => Property(obj, Info);
+        [NotNull] public static mEx GetProperty([NotNull] this Ex obj, [NotNull] string PropertyName) => Property(obj, PropertyName);
 
         [NotNull] public static mEx GetField([NotNull] this Ex obj, [NotNull] string FieldName) => Field(obj, FieldName);
 

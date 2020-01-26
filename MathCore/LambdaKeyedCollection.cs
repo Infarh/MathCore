@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 using MathCore.Annotations;
 
 namespace MathCore
@@ -21,7 +22,7 @@ namespace MathCore
         /// <summary>Инициализация новой коллекции, ключи которой определяются на основе значений элементов</summary>
         /// <param name="KeyExtractor">Метод определения ключа элемента</param>
         /// <param name="Values">Коллекция элементов</param>
-        public LambdaKeyedCollection([NotNull] Func<TValue, TKey> KeyExtractor, IEnumerable<TValue> Values)
+        public LambdaKeyedCollection([NotNull] Func<TValue, TKey> KeyExtractor, [NotNull] IEnumerable<TValue> Values)
         {
             _KeyExtractor = KeyExtractor ?? throw new ArgumentNullException(nameof(KeyExtractor));
             foreach (var value in Values) Add(value);

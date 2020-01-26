@@ -96,8 +96,10 @@ namespace MathCore
             this.SetMethod = SetMethod;
         }
 
+        /// <inheritdoc />
         [NotNull] public override string ToString() => $"lProperty({(CanRead ? "R" : string.Empty)}.{(CanWrite ? "W" : string.Empty)}){(CanRead ? $":Value = {Value}" : string.Empty)}";
 
+        /// <inheritdoc />
         public override bool Equals(object obj) =>
             obj is { }
             && (ReferenceEquals(this, obj)
