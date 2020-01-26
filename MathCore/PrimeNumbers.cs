@@ -6,6 +6,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
+    /// <summary>Алгоритмы для Простых чисел</summary>
     public static class PrimeNumbers
     {
         //[System.Diagnostics.DST]
@@ -20,16 +21,18 @@ namespace MathCore
         //    return true;
         //}
 
-        [Copyright("Bodigrim@HabarHabar:\"Еще раз о поиске простых чисел\"", url = "http://habrahabr.ru/blogs/algorithm/133037/")]
-        [DST]
-        [NotNull]
+        /// <summary>Поиск простых чисел с использованием алгоритма "Решето Эратосфен"</summary>
+        /// <param name="n">Предельное значение до которого (включительно) осуществляется поиск</param>
+        /// <returns>Перечисление найденных простых чисел</returns>
+        [Copyright("Bodigrim@HabarHabar:\"Еще раз о поиске простых чисел\"", url = "http://habrahabr.ru/blogs/algorithm/133037/"), DST, NotNull]
         public static IEnumerable<int> GetNumbersTo(int n)
         {
             var result = new int[n + 1];
             for(var i = 2; i <= n; i++)
                 result[i] = i;
             for(var i = 2; i * i <= n; i++)
-                if(result[i] == i) for(var j = i * i; j <= n; j += i)
+                if(result[i] == i) 
+                    for(var j = i * i; j <= n; j += i)
                         result[j] = 0;
             return result.Where(v => v != 0);
         }

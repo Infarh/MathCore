@@ -44,7 +44,7 @@ namespace MathCore.Data
         /// <summary>Дескриптор свойства источника данных</summary>
         public PropertyDescriptor SourceProperty => _SourcePropertyDescriptor;
 
-        /// <summary>Дескриптор свйоства примника данных</summary>
+        /// <summary>Дескриптор свойства примника данных</summary>
         public PropertyDescriptor DestinationProperty => _DestinationPropertyDescriptor;
 
         /// <summary>Источник данных</summary>
@@ -55,7 +55,7 @@ namespace MathCore.Data
         [NotNull]
         public Type DestinationType => typeof(TDestination);
 
-        /// <summary>Тип свйоства источника данных</summary>
+        /// <summary>Тип свойства источника данных</summary>
         public Type SourcePropertyType => _SourcePropertyDescriptor.PropertyType;
 
         /// <summary>Тип свойства приёмника данных</summary>

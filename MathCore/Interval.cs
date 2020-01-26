@@ -5,6 +5,8 @@ using System.Linq;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 namespace MathCore
 {
@@ -60,7 +62,7 @@ namespace MathCore
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верзняя граница интервала</param>
+        /// <param name="Max">Верхняя граница интервала</param>
         [DST]
         public Interval(T Min, T Max) : this(Min, true, Max, true) { }
 
@@ -100,12 +102,16 @@ namespace MathCore
         public Interval<T> SetMax(T Value, bool IncludeMax) => new Interval<T>(_Min, _MinInclude, Value, IncludeMax);
 
         /// <summary>
-        /// Метод возвращает указанное значение, если оно находится внутри интервала, либо соответствующую его границу, если значение входит за его пределы
+        /// Метод возвращает указанное значение, если оно находится внутри интервала,
+        /// либо соответствующую его границу, если значение входит за его пределы
         /// </summary>
         /// <param name="Value">Нормализуемое значение</param>
-        /// <returns>Значение, переданное в качестве аргумента, если оно входит в интервал, иначе соответствующая граница интервала</returns>
+        /// <returns>
+        /// Значение, переданное в качестве аргумента, если оно входит в интервал,
+        /// иначе соответствующая граница интервала
+        /// </returns>
         [DST]
-        public T Normalize(T Value) => Value.CompareTo(_Max) > 0 ? _Max : (Value.CompareTo(_Min) < 0 ? _Min : Value);
+        public T Normalize([NotNull] T Value) => Value.CompareTo(_Max) > 0 ? _Max : (Value.CompareTo(_Min) < 0 ? _Min : Value);
 
         /// <summary>Замена значения ссылки на значение границы интервала, если значение не входит в интервал</summary>
         /// <param name="Value">Проверяемое значение</param>
@@ -220,21 +226,15 @@ namespace MathCore
         [DST]
         public override bool Equals(object obj) => obj is Interval<T> I && Equals(I);
 
-        /// <summary>Создает новый объект, который является копией текущего экземпляра.</summary>
-        /// <returns>Новый объект, являющийся копией этого экземпляра.</returns>
-        /// <filterpriority>2</filterpriority>
-        //[System.Diagnostics.DST]
+        /// <inheritdoc />
         object ICloneable.Clone() => Clone();
 
-        //[System.Diagnostics.DST]
+        /// <inheritdoc />
         public Interval<T> Clone() => new Interval<T>(_Min, _MinInclude, _Max, _MaxInclude);
 
-        /// <summary>
-        /// Возвращает объект <see cref="T:System.String"/>, который представляет текущий объект <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>Объект <see cref="T:System.String"/>, представляющий текущий объект <see cref="T:System.Object"/>.</returns>
-        /// <filterpriority>2</filterpriority>
+        /// <inheritdoc />
         [DST]
+        [NotNull]
         public override string ToString() => string.Format(
             "{0}{2};{3}{1}",
             _MinInclude ? "[" : "(",
@@ -259,14 +259,14 @@ namespace MathCore
         [DST, NotNull]
         public static implicit operator Predicate<T>(Interval<T> I) => I.Check;
 
-        /// <summary>Оператор проверки на вхоождение величины в интервал</summary>
+        /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="Value">Проверяемая величина</param>
         /// <param name="I">Интервал</param>
         /// <returns>Истина, если величина внутри интервала</returns>
         [DST]
         public static bool operator ^(T Value, Interval<T> I) => I.Check(Value);
 
-        /// <summary>Оператор проверки на вхоождение величины в интервал</summary>
+        /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="Value">Проверяемая величина</param>
         /// <param name="I">Интервал</param>
         /// <returns>Истина, если величина внутри интервала</returns>
@@ -279,6 +279,7 @@ namespace MathCore
             var result = I._Min.CompareTo(Value);
             return (result == 0 && !I._MinInclude) || result > 0;
         }
+
         [DST]
         public static bool operator <(Interval<T> I, T Value)
         {
@@ -287,14 +288,14 @@ namespace MathCore
         }
 
         [DST]
-        public static bool operator >(T Value, Interval<T> I)
+        public static bool operator >([NotNull] T Value, Interval<T> I)
         {
             var result = Value.CompareTo(I._Max);
             return (result == 0 && !I._MaxInclude) || result > 0;
         }
 
         [DST]
-        public static bool operator <(T Value, Interval<T> I)
+        public static bool operator <([NotNull] T Value, Interval<T> I)
         {
             var result = Value.CompareTo(I._Min);
             return (result == 0 && !I._MinInclude) || result < 0;
@@ -305,7 +306,7 @@ namespace MathCore
         /* ------------------------------------------------------------------------------------------ */
     }
 
-    /// <summary>Интервал вещественых значений двойной точности</summary>
+    /// <summary>Интервал вещественных значений двойной точности</summary>
     [Serializable]
     [TypeConverter(typeof(IntervalConverter))]
     public readonly struct Interval : IComparable<double>, IFormattable, IEquatable<Interval>
@@ -329,10 +330,13 @@ namespace MathCore
 
         /// <summary>Включена ли нижняя граница интервала?</summary>
         private readonly bool _MinInclude;
+
         /// <summary>Включена ли верхняя граница интервала?</summary>
         private readonly bool _MaxInclude;
+
         /// <summary>Нижняя граница интервала</summary>
         private readonly double _Min;
+
         /// <summary>Верхняя граница интервала</summary>
         private readonly double _Max;
 
@@ -368,7 +372,7 @@ namespace MathCore
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верзняя граница интервала</param>
+        /// <param name="Max">Верхняя граница интервала</param>
         public Interval(double Min, double Max) : this(Min, true, Max, true) { }
 
         /// <summary>Интервал</summary>
@@ -413,10 +417,14 @@ namespace MathCore
         }
 
         /// <summary>
-        /// Метод возвращает указанное значение, если оно находится внутри интервала, либо соответствующую его границу, если значение входит за его пределы
+        /// Метод возвращает указанное значение, если оно находится внутри интервала,
+        /// либо соответствующую его границу, если значение входит за его пределы
         /// </summary>
         /// <param name="Value">Нормализуемое значение</param>
-        /// <returns>Значение, переданное в качестве аргумента, если оно входит в интервал, иначе соответствующая граница интервала</returns>
+        /// <returns>
+        /// Значение, переданное в качестве аргумента, если оно входит в интервал,
+        /// иначе соответствующая граница интервала
+        /// </returns>
         [DST]
         public double Normalize(double Value) => Math.Max(_Min, Math.Min(Value, _Max));
 
@@ -516,13 +524,6 @@ namespace MathCore
 
         #endregion
 
-        //public double[] GetValues(int Count)
-        //{
-        //    var result = new double[Count];
-        //    For(Count, (i, x) => result[i] = x);
-        //    return result;
-        //}
-
         public IEnumerable<double> GetValues(int Count)
         {
             var len = Length;
@@ -560,6 +561,7 @@ namespace MathCore
                 .Select(v => new Interval(last, v, true));
         }
 
+        [NotNull]
         public string ToString(string Format) => string.Format(
             "{0}{2};{3}{1}",
             _MinInclude ? "[" : "(",
@@ -587,9 +589,7 @@ namespace MathCore
             _Min.ToString(Format, FormatProvider),
             _Max.ToString(Format, FormatProvider));
 
-        /// <summary>Играет роль хэш-функции для определенного типа. </summary>
-        /// <returns>Хэш-код для текущего объекта <see cref="T:System.Object"/>.</returns>
-        /// <filterpriority>2</filterpriority>
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {
@@ -603,9 +603,7 @@ namespace MathCore
             }
         }
 
-        /// <summary>Указывает, равен ли текущий объект другому объекту того же типа.</summary>
-        /// <returns>true, если текущий объект равен параметру <paramref name="other"/>, в противном случае — false.</returns>
-        /// <param name="other">Объект, который требуется сравнить с данным объектом.</param>
+        /// <inheritdoc />
         [DST]
         public bool Equals(Interval other) =>
             other._MinInclude == _MinInclude
@@ -613,6 +611,7 @@ namespace MathCore
             && other._Min.Equals(_Min)
             && other._Max.Equals(Max);
 
+        /// <inheritdoc />
         public override bool Equals(object obj) => obj is Interval I && Equals(I);
 
         /* ------------------------------------------------------------------------------------------ */

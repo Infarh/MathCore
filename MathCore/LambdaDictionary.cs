@@ -13,10 +13,13 @@ namespace MathCore
     {
         [NotNull]
         private readonly Func<IEnumerable<KeyValuePair<TKey, TValue>>> _ElementsGetter;
+
         [CanBeNull]
         private readonly Action<TKey, TValue> _ElementSetter;
+
         [CanBeNull]
         private readonly Action _Clear;
+
         [CanBeNull]
         private readonly Func<TKey, bool> _Remove;
 

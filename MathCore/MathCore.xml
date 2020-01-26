@@ -4,8 +4,214 @@
         <name>MathCore</name>
     </assembly>
     <members>
+        <member name="T:MathCore.ActionList">
+            <summary>Список действий <see cref="T:System.Action"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList.#ctor(System.Collections.Generic.IEnumerable{System.Action})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList.Invoke">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`1">
+            <summary>Список действий <see cref="T:System.Action`1"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`1.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`1"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`1.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`1"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`1.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`1"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`1.Invoke(`0)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`2">
+            <summary>Список действий <see cref="T:System.Action`2"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+            <typeparam name="T2">Тип 2 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`2.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`2"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`2.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`2"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`2.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0,`1}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`2"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`2.Invoke(`0,`1)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`3">
+            <summary>Список действий <see cref="T:System.Action`3"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+            <typeparam name="T2">Тип 2 параметра действия</typeparam>
+            <typeparam name="T3">Тип 3 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`3.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`3"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`3.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`3"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`3.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0,`1,`2}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`3"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`3.Invoke(`0,`1,`2)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`4">
+            <summary>Список действий <see cref="T:System.Action`4"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+            <typeparam name="T2">Тип 2 параметра действия</typeparam>
+            <typeparam name="T3">Тип 3 параметра действия</typeparam>
+            <typeparam name="T4">Тип 4 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`4.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`4"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`4.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`4"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`4.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0,`1,`2,`3}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`4"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`4.Invoke(`0,`1,`2,`3)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`5">
+            <summary>Список действий <see cref="T:System.Action`5"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+            <typeparam name="T2">Тип 2 параметра действия</typeparam>
+            <typeparam name="T3">Тип 3 параметра действия</typeparam>
+            <typeparam name="T4">Тип 4 параметра действия</typeparam>
+            <typeparam name="T5">Тип 5 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`5.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`5"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`5.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`5"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`5.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0,`1,`2,`3,`4}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`5"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`5.Invoke(`0,`1,`2,`3,`4)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`6">
+            <summary>Список действий <see cref="T:System.Action`6"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+            <typeparam name="T2">Тип 2 параметра действия</typeparam>
+            <typeparam name="T3">Тип 3 параметра действия</typeparam>
+            <typeparam name="T4">Тип 4 параметра действия</typeparam>
+            <typeparam name="T5">Тип 5 параметра действия</typeparam>
+            <typeparam name="T6">Тип 6 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`6.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`6"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`6.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`6"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`6.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0,`1,`2,`3,`4,`5}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`6"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`6.Invoke(`0,`1,`2,`3,`4,`5)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.ActionList`7">
+            <summary>Список действий <see cref="T:System.Action`7"/></summary>
+            <typeparam name="T1">Тип 1 параметра действия</typeparam>
+            <typeparam name="T2">Тип 2 параметра действия</typeparam>
+            <typeparam name="T3">Тип 3 параметра действия</typeparam>
+            <typeparam name="T4">Тип 4 параметра действия</typeparam>
+            <typeparam name="T5">Тип 5 параметра действия</typeparam>
+            <typeparam name="T6">Тип 6 параметра действия</typeparam>
+            <typeparam name="T7">Тип 7 параметра действия</typeparam>
+        </member>
+        <member name="M:MathCore.ActionList`7.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`7"/></summary>
+        </member>
+        <member name="M:MathCore.ActionList`7.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`7"/></summary>
+            <param name="Capacity">Ёмкость списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`7.#ctor(System.Collections.Generic.IEnumerable{System.Action{`0,`1,`2,`3,`4,`5,`6}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ActionList`7"/></summary>
+            <param name="ActionsEnumeration">Перечисление действий списка</param>
+        </member>
+        <member name="M:MathCore.ActionList`7.Invoke(`0,`1,`2,`3,`4,`5,`6)">
+            <summary>Выполнение последовательности действий списка</summary>
+        </member>
+        <member name="T:MathCore.AngleType">
+            <summary>Тип значения угла</summary>
+        </member>
+        <member name="F:MathCore.AngleType.Rad">
+            <summary>Радиан</summary>
+        </member>
+        <member name="F:MathCore.AngleType.Deg">
+            <summary>Градус</summary>
+        </member>
         <member name="T:MathCore.ArgumentsString">
             <summary>Аргументы командной строки</summary>
+        </member>
+        <member name="F:MathCore.ArgumentsString._Arguments">
+            <summary>Строки значений аргументов</summary>
+        </member>
+        <member name="P:MathCore.ArgumentsString.Count">
+            <summary>Число аргументов</summary>
+        </member>
+        <member name="P:MathCore.ArgumentsString.Item(System.Int32)">
+            <summary>Получение аргумента по индексу</summary>
+            <param name="index">Индекс аргумента</param>
+            <returns>Значение аргумента по указанному индексу</returns>
+        </member>
+        <member name="M:MathCore.ArgumentsString.#ctor(System.String[])">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ArgumentsString"/></summary>
+            <param name="Arguments">Массив значений аргументов</param>
+        </member>
+        <member name="M:MathCore.ArgumentsString.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.ArgumentsString.op_Implicit(System.String[])~MathCore.ArgumentsString">
+            <summary>Оператор неявного приведения типа массива строк к <see cref="T:MathCore.ArgumentsString"/></summary>
+            <param name="Arguments">Массив строковых значений аргументов</param>
+            <returns>Экземпляр <see cref="T:MathCore.ArgumentsString"/></returns>
+        </member>
+        <member name="M:MathCore.ArgumentsString.op_Implicit(MathCore.ArgumentsString)~System.String[]">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.ArgumentsString"/> к типу массива строк</summary>
+            <param name="Arguments">Экземпляр <see cref="T:MathCore.ArgumentsString"/></param>
+            <returns>Массив строковых значений аргументов</returns>
+        </member>
+        <member name="M:MathCore.ArgumentsString.op_Explicit(MathCore.ArgumentsString)~System.String">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.ArgumentsString"/> к строке</summary>
+            <param name="Argument">Экземпляр <see cref="T:MathCore.ArgumentsString"/></param>
+            <returns>Строковое представление <see cref="T:MathCore.ArgumentsString"/></returns>
         </member>
         <member name="T:MathCore.ArrayIndexer`1">
             <summary>Индексатор массива элементов</summary>
@@ -74,10 +280,46 @@
             <summary> Целочисленная арифметика с большими числами  </summary>
         </member>
         <member name="F:MathCore.BigInteger.__MaxLength">
-            <summary>Максимальная длина числа в байтах</summary>
+            <summary>Максимальная длина числа в байтах х8</summary>
         </member>
         <member name="F:MathCore.BigInteger.PrimesBelow2000">
             <summary>Простые числа до 2000</summary>
+        </member>
+        <member name="F:MathCore.BigInteger._Data">
+            <summary>Байты числа</summary>
+        </member>
+        <member name="F:MathCore.BigInteger._DataLength">
+            <summary>Число символов числа</summary>
+        </member>
+        <member name="P:MathCore.BigInteger.DataLength">
+            <summary>Число символов числа</summary>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.Int64)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Value">Исходное значение числа</param>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.UInt64)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Value">Исходное значение числа</param>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(MathCore.BigInteger)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Value">Исходное значение числа</param>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.String,System.Int32)">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="StringValue">Строковая форма записи <see cref="T:MathCore.BigInteger"/></param>
+            <param name="Base">Основание системы счисления</param>
+            <exception cref="T:System.ArithmeticException">Если очередной символ в строке больше, либо равен <paramref name="Base"/></exception>
+            <exception cref="T:System.OverflowException">При переполнении разрядной сетки</exception>
+        </member>
+        <member name="M:MathCore.BigInteger.#ctor(System.Byte[])">
+            <summary>Инициализация нового пустого <see cref="T:MathCore.BigInteger"/> = 0</summary>
+            <param name="Data">Байты данных <see cref="T:MathCore.BigInteger"/></param>
+            <exception cref="T:System.OverflowException">При переполнении разрядной сетки</exception>
         </member>
         <member name="M:MathCore.BigInteger.op_Multiply(MathCore.BigInteger,MathCore.BigInteger)">
             <summary>Overloading of multiplication operator</summary>
@@ -456,25 +698,25 @@
         <member name="M:MathCore.Complex.Mod(System.Double,System.Double)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="M:MathCore.Complex.Mod(System.Double,MathCore.Complex@)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="M:MathCore.Complex.Mod(MathCore.Complex@,MathCore.Complex@)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="M:MathCore.Complex.Mod(MathCore.Complex@,System.Double)">
             <summary>Алгебраическая форма записи комплексного числа</summary>
             <param name="Re">Действительная часть числа</param>
-            <param name="Im">Мнимиая часть числа</param>
+            <param name="Im">Мнимая часть числа</param>
             <returns>Комплексное число в алгебраической форме записи</returns>
         </member>
         <member name="F:MathCore.Complex.Real">
@@ -530,20 +772,19 @@
             <param name="Im">Мнимая часть</param>
         </member>
         <member name="M:MathCore.Complex.ToString_Exponent">
-            <summary>Представление комплексного числа в текстовой экспонетциальной форме</summary>
-            <returns>Текстовое экспонетциальное представление комплексного числа</returns>
+            <summary>Представление комплексного числа в текстовой экспоненциальной форме</summary>
+            <returns>Текстовое экспоненциальное представление комплексного числа</returns>
         </member>
         <member name="M:MathCore.Complex.ToString_Exponent_pi">
-            <summary>Представление комплексного числа в текстовой экспонетциальной форме с нормировкой аргумента к значению pi</summary>
-            <returns>Текстовое экспонетциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
+            <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента к значению pi</summary>
+            <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
         </member>
         <member name="M:MathCore.Complex.ToString_Exponent_Deg">
-            <summary>Представление комплексного числа в текстовой экспонетциальной форме с нормировкой аргумента в градусах</summary>
-            <returns>Текстовое экспонетциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
+            <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента в градусах</summary>
+            <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
         </member>
         <member name="M:MathCore.Complex.ToString">
             <summary>Строковый эквивалент</summary>
-            <returns>Строковый эквивалент</returns>
         </member>
         <member name="M:MathCore.Complex.ToString(System.String)">
             <summary>Преобразование в строковый формат</summary>
@@ -677,6 +918,11 @@
             <param name="other">Проверяемое число</param>
             <returns>Истина, если числа идентичны</returns>
         </member>
+        <member name="M:MathCore.Complex.System#IEquatable{(System#DoubleRe,System#DoubleIm)}#Equals(System.ValueTuple{System.Double,System.Double})">
+            <summary>Проверка на идентичность</summary>
+            <param name="other">Кортеж двух вещественных чисел</param>
+            <returns>Истина, если действительная и мнимая части идентичны</returns>
+        </member>
         <member name="M:MathCore.Complex.Rotate(System.Double)">
             <summary>Поворот вектора комплексного числа на угол</summary>
             <param name="w">Угол поворота вектора в комплексной плоскости</param>
@@ -690,6 +936,16 @@
         <member name="M:MathCore.Complex.Sqrt">
             <summary>Вычисление квадратного корня числа</summary>
             <returns>Квадратный корень числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.Sqrt(MathCore.Complex@)">
+            <summary>Вычисление корня комплексной степени</summary>
+            <param name="z">Комплексная степень корня</param>
+            <returns>Комплексный результат вычисления корня комплексной степени от комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.Sqrt(System.Double)">
+            <summary>Вычисление корня действительной степени</summary>
+            <param name="x">Действительная степень корня</param>
+            <returns>Комплексный результат вычисления корня действительной степени от комплексного числа</returns>
         </member>
         <member name="M:MathCore.Complex.Deconstruct(System.Double@,System.Double@)">
             <summary>Деконструктор комплексного числа</summary>
@@ -930,7 +1186,7 @@
             <returns>Истина, если числа не равны</returns>
         </member>
         <member name="M:MathCore.Complex.op_Explicit(MathCore.Complex@)~System.Double">
-            <summary>ОПератор неявного приведения к дробному типу чисел с двойной точностью</summary>
+            <summary>Оператор неявного приведения к дробному типу чисел с двойной точностью</summary>
             <param name="Z">Приводимое комплексное число</param>
             <returns>Модуль комплексного числа</returns>
         </member>
@@ -943,6 +1199,16 @@
             <summary>Оператор неявного приведения целого числа к комплексному виду</summary>
             <param name="X">Целое число</param>
             <returns>Комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Implicit(System.ValueTuple{System.Double,System.Double})~MathCore.Complex">
+            <summary>Оператор неявного приведения кортежа, состоящего из двух вещественных чисел в комплексное число</summary>
+            <param name="Z">Кортеж из двух вещественных чисел - действительной и мнимой части</param>
+            <returns>Комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Implicit(MathCore.Complex)~System.ValueTuple{System.Double,System.Double}">
+            <summary>Оператор неявного приведения комплексного числа в кортеж, состоящий из двух вещественных чисел</summary>
+            <param name="Z">Комплексное число</param>
+            <returns>Кортеж из двух вещественных чисел - действительной и мнимой части</returns>
         </member>
         <member name="T:MathCore.Complex.Trigonometry">
             <summary>Тригонометрические функции комплексного переменного</summary>
@@ -1015,41 +1281,54 @@
         </member>
         <member name="M:MathCore.ComplexExtensions.ToRe(MathCore.Complex[])">
             <summary>Преобразование массива комплексных чисел в массив действительных</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив действительных чисел</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToIm(MathCore.Complex[])">
             <summary>Массив комплексных чисел в массив значений мнимых чисел</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив значений комплексных мнимых чисел</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToAbs(MathCore.Complex[])">
             <summary>Массив комплексных чисел в массив модулей</summary>
-            <param name="c">Массив сомплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив модулей комплексных чисел</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToArg(MathCore.Complex[])">
-            <summary>Массив сомплексных чисел в массив аргументов</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <summary>Массив комплексных чисел в массив аргументов</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив аргументов комплексных чисел</returns>
+        </member>
+        <member name="M:MathCore.ComplexExtensions.ToArgDeg(MathCore.Complex[])">
+            <summary>Преобразование массива комплексных чисел в массив значений аргумента каждого из них в градусах</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Массив аргументов в градусах</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToReImArray(MathCore.Complex[])">
             <summary>
             Массив комплексных чисел в двумерный массив действительных и мнимых частей, где
-            Re = V[i,0]
-            Im = V[i,1]
+            Re = V[i,0] Im = V[i,1]
             </summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Двумерный массив вещественных и мнимых частей</returns>
+        </member>
+        <member name="M:MathCore.ComplexExtensions.ToReImTuple(MathCore.Complex[])">
+            <summary>Массив комплексных чисел в массив кортежей действительных и мнимых частей</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Массив кортежей вещественных и мнимых частей</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToAbsArgArray(MathCore.Complex[])">
             <summary>
             Массив комплексных чисел в двумерный массив модулей и аргументов частей, где
-            Abs = V[i,0]
-            Arg = V[i,1]
+            Abs = V[i,0] Arg = V[i,1]
             </summary>
-            <param name="c">Массив комплексных чисел</param>
-            <returns>Двумерный массив Модулей и аргументов</returns>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Двумерный массив модулей и аргументов</returns>
+        </member>
+        <member name="M:MathCore.ComplexExtensions.ToAbsArgTuple(MathCore.Complex[])">
+            <summary>Массив комплексных чисел в массив кортежей модулей и аргументов</summary>
+            <param name="ZZ">Массив комплексных чисел</param>
+            <returns>Массив кортежей модулей и аргументов</returns>
         </member>
         <member name="M:MathCore.ComplexExtensions.ToComplex(System.Double[])">
             <summary>Преобразовать массив действительных в массив комплексных чисел</summary>
@@ -1063,7 +1342,7 @@
         </member>
         <member name="M:MathCore.ComplexExtensions.GetAbs(MathCore.Complex[])">
             <summary>Преобразование в массив модулей</summary>
-            <param name="c">Массив комплексных чисел</param>
+            <param name="ZZ">Массив комплексных чисел</param>
             <returns>Массив модулей комплексных чисел</returns>
         </member>
         <member name="T:MathCore.ComplexConverter">
@@ -1279,7 +1558,7 @@
             <summary>Дескриптор свойства источника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.DestinationProperty">
-            <summary>Дескриптор свйоства примника данных</summary>
+            <summary>Дескриптор свойства примника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.SourceType">
             <summary>Источник данных</summary>
@@ -1288,7 +1567,7 @@
             <summary>Приёмник данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.SourcePropertyType">
-            <summary>Тип свйоства источника данных</summary>
+            <summary>Тип свойства источника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.DestinationPropertyType">
             <summary>Тип свойства приёмника данных</summary>
@@ -1733,7 +2012,7 @@
             <param name="PropertyName">Имя свойства</param>
         </member>
         <member name="M:MathCore.Evaluations.PropertyValueEvulation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
-            <summary>Инициализация нового вычисления свйоства объекта</summary>
+            <summary>Инициализация нового вычисления свойства объекта</summary>
             <param name="obj">Вычисление объекта, свойство которого надо получить</param>
             <param name="PropertyName">Имя свойства объекта</param>
         </member>
@@ -1906,6 +2185,9 @@
             <summary>Создать новый объект</summary>
             <returns>Новый объект типа <typeparamref name="T"/></returns>
         </member>
+        <member name="M:MathCore.Factory`1.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.Fraction">
             <summary>Дробь</summary>
         </member>
@@ -1921,13 +2203,13 @@
         <member name="F:MathCore.Fraction._Numerator">
             <summary>Числитель</summary>
         </member>
-        <member name="F:MathCore.Fraction._Denomirator">
+        <member name="F:MathCore.Fraction._Denominator">
             <summary>Знаменатель</summary>
         </member>
         <member name="P:MathCore.Fraction.Numerator">
             <summary>Числитель</summary>
         </member>
-        <member name="P:MathCore.Fraction.Deniminator">
+        <member name="P:MathCore.Fraction.Denominator">
             <summary>Знаменатель</summary>
         </member>
         <member name="P:MathCore.Fraction.DecimalValue">
@@ -1936,7 +2218,7 @@
         <member name="M:MathCore.Fraction.#ctor(System.Int32,System.Int32)">
             <summary>Новая дробь</summary>
             <param name="Nominator">Числитель</param>
-            <param name="Deniminator">Знаменатель</param>
+            <param name="Denominator">Знаменатель</param>
         </member>
         <member name="M:MathCore.Fraction.GetSimplified">
             <summary>Получить упрощённую дробь</summary>
@@ -2040,50 +2322,50 @@
         <member name="F:MathCore.Functions.PSO.Swarm2D._ParticleCount">
             <summary>Размер роя</summary>
         </member>
-        <member name="T:MathCore.GCWacher">
+        <member name="T:MathCore.GCWatcher">
             <summary>Наблюдатель за сборщиком мусора</summary>
         </member>
-        <member name="E:MathCore.GCWacher.__Approaches">
+        <member name="E:MathCore.GCWatcher.__Approaches">
             <summary>Событие запуска процесса сборки мусора</summary>
         </member>
-        <member name="E:MathCore.GCWacher.Approaches">
+        <member name="E:MathCore.GCWatcher.Approaches">
             <summary>Событие запуска процесса сборки мусора</summary>
         </member>
-        <member name="E:MathCore.GCWacher.__Complete">
+        <member name="E:MathCore.GCWatcher.__Complete">
             <summary>Событие завершения процесса сборки мусора</summary>
         </member>
-        <member name="E:MathCore.GCWacher.Complete">
+        <member name="E:MathCore.GCWatcher.Complete">
             <summary>Событие завершения процесса сборки мусора</summary>
         </member>
-        <member name="M:MathCore.GCWacher.OnApproaches">
-            <summary>Генерация осбытия начала сборки мусора</summary>
+        <member name="M:MathCore.GCWatcher.OnApproaches">
+            <summary>Генерация события начала сборки мусора</summary>
         </member>
-        <member name="M:MathCore.GCWacher.OnComplete">
-            <summary>Генерация осбытия окончания сборки мусора</summary>
+        <member name="M:MathCore.GCWatcher.OnComplete">
+            <summary>Генерация события окончания сборки мусора</summary>
         </member>
-        <member name="F:MathCore.GCWacher.__GCWacher">
+        <member name="F:MathCore.GCWatcher.__GcWatcher">
             <summary>Объект-наблюдатель за сборщиком мусора</summary>
         </member>
-        <member name="F:MathCore.GCWacher.__SyncRoot">
+        <member name="F:MathCore.GCWatcher.__SyncRoot">
             <summary>Объект синхронизации потоков управления наблюдателем</summary>
         </member>
-        <member name="F:MathCore.GCWacher._WatcherThread">
-            <summary>Поток наблюдения с борщиком мусора</summary>
+        <member name="F:MathCore.GCWatcher._WatcherThread">
+            <summary>Поток наблюдения с сборщиком мусора</summary>
         </member>
-        <member name="F:MathCore.GCWacher.__Enabled">
+        <member name="F:MathCore.GCWatcher.__Enabled">
             <summary>Признак активности наблюдателя</summary>
         </member>
-        <member name="M:MathCore.GCWacher.#ctor">
+        <member name="M:MathCore.GCWatcher.#ctor">
             <summary>Скрытая инициализация объекта-наблюдателя</summary>
         </member>
-        <member name="M:MathCore.GCWacher.Start">
+        <member name="M:MathCore.GCWatcher.Start">
             <summary>Запуск процесса наблюдения</summary>
         </member>
-        <member name="M:MathCore.GCWacher.Stop">
+        <member name="M:MathCore.GCWatcher.Stop">
             <summary>Остановка процесса наблюдения</summary>
         </member>
-        <member name="M:MathCore.GCWacher.Watch">
-            <summary>Проесс наблюдения</summary>
+        <member name="M:MathCore.GCWatcher.Watch">
+            <summary>Процесс наблюдения</summary>
         </member>
         <member name="T:MathCore.Geolocation.GPS">
             <summary>Класс сервисных функций работы с координатами</summary>
@@ -2608,10 +2890,10 @@
             <summary>Метод наименьших квадратов</summary>
         </member>
         <member name="F:MathCore.MNK._A">
-            <summary>Коэффициенты апроксимирующего полинома</summary>
+            <summary>Коэффициенты аппроксимирующего полинома</summary>
         </member>
         <member name="F:MathCore.MNK._M">
-            <summary>Максимальный показатель степени многочления апроксимации</summary>
+            <summary>Максимальный показатель степени многочлена аппроксимации</summary>
         </member>
         <member name="F:MathCore.MNK._XData">
             <summary>Значение абсцисс точек данных</summary>
@@ -2620,7 +2902,7 @@
             <summary>Значение ординат точек данных</summary>
         </member>
         <member name="M:MathCore.MNK.#ctor(System.Double[],System.Double[],System.Int32)">
-            <summary>Апроксиматор методом наименьших квадратов</summary>
+            <summary>Аппроксиматор методом наименьших квадратов</summary>
             <param name="X">Массив аргументов</param>
             <param name="Y">Массив значений</param>
             <param name="m">Степень полинома интерполяции</param>
@@ -2663,7 +2945,7 @@
         <member name="M:MathCore.Interval`1.#ctor(`0,`0)">
             <summary>Интервал</summary>
             <param name="Min">Нижняя граница интервала</param>
-            <param name="Max">Верзняя граница интервала</param>
+            <param name="Max">Верхняя граница интервала</param>
         </member>
         <member name="M:MathCore.Interval`1.#ctor(`0,`0,System.Boolean)">
             <summary>Интервал</summary>
@@ -2680,10 +2962,14 @@
         </member>
         <member name="M:MathCore.Interval`1.Normalize(`0)">
             <summary>
-            Метод возвращает указанное значение, если оно находится внутри интервала, либо соответствующую его границу, если значение входит за его пределы
+            Метод возвращает указанное значение, если оно находится внутри интервала,
+            либо соответствующую его границу, если значение входит за его пределы
             </summary>
             <param name="Value">Нормализуемое значение</param>
-            <returns>Значение, переданное в качестве аргумента, если оно входит в интервал, иначе соответствующая граница интервала</returns>
+            <returns>
+            Значение, переданное в качестве аргумента, если оно входит в интервал,
+            иначе соответствующая граница интервала
+            </returns>
         </member>
         <member name="M:MathCore.Interval`1.Normalize(`0@)">
             <summary>Замена значения ссылки на значение границы интервала, если значение не входит в интервал</summary>
@@ -2720,16 +3006,13 @@
             <exception cref="T:System.NullReferenceException">Параметр <paramref name="obj"/> имеет значение null.</exception><filterpriority>2</filterpriority>
         </member>
         <member name="M:MathCore.Interval`1.System#ICloneable#Clone">
-            <summary>Создает новый объект, который является копией текущего экземпляра.</summary>
-            <returns>Новый объект, являющийся копией этого экземпляра.</returns>
-            <filterpriority>2</filterpriority>
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Interval`1.Clone">
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Interval`1.ToString">
-            <summary>
-            Возвращает объект <see cref="T:System.String"/>, который представляет текущий объект <see cref="T:System.Object"/>.
-            </summary>
-            <returns>Объект <see cref="T:System.String"/>, представляющий текущий объект <see cref="T:System.Object"/>.</returns>
-            <filterpriority>2</filterpriority>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Interval`1.op_Implicit(MathCore.Interval{`0})~System.Predicate{`0}">
             <summary>Оператор неявного приведения типа к предикату</summary>
@@ -2737,19 +3020,19 @@
             <returns>Предикат от вещественного типа двойной точности</returns>
         </member>
         <member name="M:MathCore.Interval`1.op_ExclusiveOr(`0,MathCore.Interval{`0})">
-            <summary>Оператор проверки на вхоождение величины в интервал</summary>
+            <summary>Оператор проверки на вхождение величины в интервал</summary>
             <param name="Value">Проверяемая величина</param>
             <param name="I">Интервал</param>
             <returns>Истина, если величина внутри интервала</returns>
         </member>
         <member name="M:MathCore.Interval`1.op_ExclusiveOr(MathCore.Interval{`0},`0)">
-            <summary>Оператор проверки на вхоождение величины в интервал</summary>
+            <summary>Оператор проверки на вхождение величины в интервал</summary>
             <param name="Value">Проверяемая величина</param>
             <param name="I">Интервал</param>
             <returns>Истина, если величина внутри интервала</returns>
         </member>
         <member name="T:MathCore.Interval">
-            <summary>Интервал вещественых значений двойной точности</summary>
+            <summary>Интервал вещественных значений двойной точности</summary>
         </member>
         <member name="M:MathCore.Interval.Comparer_Length(MathCore.Interval,MathCore.Interval)">
             <summary>Метод сравнения двух интервалов</summary>
@@ -2790,7 +3073,7 @@
         <member name="M:MathCore.Interval.#ctor(System.Double,System.Double)">
             <summary>Интервал</summary>
             <param name="Min">Нижняя граница интервала</param>
-            <param name="Max">Верзняя граница интервала</param>
+            <param name="Max">Верхняя граница интервала</param>
         </member>
         <member name="M:MathCore.Interval.#ctor(System.Double,System.Double,System.Boolean)">
             <summary>Интервал</summary>
@@ -2807,10 +3090,14 @@
         </member>
         <member name="M:MathCore.Interval.Normalize(System.Double)">
             <summary>
-            Метод возвращает указанное значение, если оно находится внутри интервала, либо соответствующую его границу, если значение входит за его пределы
+            Метод возвращает указанное значение, если оно находится внутри интервала,
+            либо соответствующую его границу, если значение входит за его пределы
             </summary>
             <param name="Value">Нормализуемое значение</param>
-            <returns>Значение, переданное в качестве аргумента, если оно входит в интервал, иначе соответствующая граница интервала</returns>
+            <returns>
+            Значение, переданное в качестве аргумента, если оно входит в интервал,
+            иначе соответствующая граница интервала
+            </returns>
         </member>
         <member name="M:MathCore.Interval.Normalize(System.Double@)">
             <summary>Замена значения ссылки на значение границы интервала, если значение не входит в интервал</summary>
@@ -2837,14 +3124,13 @@
             <filterpriority>2</filterpriority>
         </member>
         <member name="M:MathCore.Interval.GetHashCode">
-            <summary>Играет роль хэш-функции для определенного типа. </summary>
-            <returns>Хэш-код для текущего объекта <see cref="T:System.Object"/>.</returns>
-            <filterpriority>2</filterpriority>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Interval.Equals(MathCore.Interval)">
-            <summary>Указывает, равен ли текущий объект другому объекту того же типа.</summary>
-            <returns>true, если текущий объект равен параметру <paramref name="other"/>, в противном случае — false.</returns>
-            <param name="other">Объект, который требуется сравнить с данным объектом.</param>
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Interval.Equals(System.Object)">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.IoC.ServiceManager">
             <summary>Менеджер сервисов</summary>
@@ -2985,7 +3271,7 @@
             </exception>
         </member>
         <member name="T:MathCore.LambdaComparer`1">
-            <summary>ОБъект, представляющий метод сравнения двух объектов типа <typeparamref name="T"/>, задаваемый lambda-выражением</summary>
+            <summary>Объект, представляющий метод сравнения двух объектов типа <typeparamref name="T"/>, задаваемый lambda-выражением</summary>
             <typeparam name="T">Тип сравниваемых объектов</typeparam>
         </member>
         <member name="M:MathCore.LambdaComparer`1.Compare(`0,`0)">
@@ -3048,24 +3334,16 @@
             <inheritdoc />
         </member>
         <member name="M:MathCore.LambdaEnumerable`1.GetEnumerator">
-            <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции.</summary>
-            <returns>
-            Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
-            </returns>
-            <filterpriority>1</filterpriority>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.LambdaEnumerable`1.System#Collections#IEnumerable#GetEnumerator">
-            <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>
-            <returns>
-            Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
-            </returns>
-            <filterpriority>2</filterpriority>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.LambdaEqualityComparer`1.Equals(`0,`0)">
             <summary>Определяет, равны ли два указанных объекта.</summary>
             <returns>Значение true, если указанные объекты равны; в противном случае — значение false.</returns>
-            <param name="x">Первый сравниваемый объект типа <typeparam name="T"/>.</param>
-            <param name="y">Второй сравниваемый объект типа <typeparam name="T"/>.</param>
+            <param name="x">Первый сравниваемый объект типа <typeparamref name="T"/>.</param>
+            <param name="y">Второй сравниваемый объект типа <typeparamref name="T"/>.</param>
         </member>
         <member name="M:MathCore.LambdaEqualityComparer`1.GetHashCode(`0)">
             <summary>Возвращает хэш-код указанного объекта.</summary>
@@ -3128,6 +3406,12 @@
             <param name="GetMethod">Метод чтения значения</param>
             <param name="SetMethod">Метод записи значения</param>
         </member>
+        <member name="M:MathCore.LambdaProperty`1.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.LambdaProperty`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.LambdaProperty`1.Equals(MathCore.LambdaProperty{`0})">
             <summary>Указывает, равен ли текущий объект другому объекту того же типа.</summary>
             <returns>true, если текущий объект равен параметру <paramref name="other"/>, в противном случае — false.</returns>
@@ -3142,8 +3426,14 @@
             <summary>Форматтер строки с помощью лямбда-выражения</summary>
         </member>
         <member name="M:MathCore.LambdaToString.#ctor(System.Func{System.String})">
-            <summary>Новый ламбда-форматтер</summary>
+            <summary>Новый лямбда-форматтер</summary>
             <param name="CreateMethod">Метод генерации строки</param>
+        </member>
+        <member name="M:MathCore.LambdaToString.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.LambdaToStringObjectIndicator`1.ToString">
+            <inheritdoc />
         </member>
         <member name="M:MathCore.LamdaComparer`1.Equals(`0,`0)">
             <inheritdoc />
@@ -5434,6 +5724,13 @@
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
             <exception cref="T:System.ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="p"/></exception>
         </member>
+        <member name="M:MathCore.Matrix.Array.Create(System.Int32,System.Int32,System.Func{System.Int32,System.Int32,System.Double})">
+            <summary>Создать и инициализировать двумерный массив-матрицу</summary>
+            <param name="N">Число строк</param>
+            <param name="M">Число столбцов</param>
+            <param name="Creator">Функция, принимающая номер строки и номер столбца и возвращающая значение элемента матрицы</param>
+            <returns>Массив элементов матрицы</returns>
+        </member>
         <member name="M:MathCore.Matrix.Array.CreateColArray(System.Double[])">
             <summary>Создать двумерный массив элементов матрицы-столбца</summary>
             <param name="data">Элементы массива матрицы-столбца</param>
@@ -5849,7 +6146,7 @@
             <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.Matrix.Array.GetMaxRowAbsSumm(System.Double[0:,0:])">
+        <member name="M:MathCore.Matrix.Array.GetMaxRowAbsSum(System.Double[0:,0:])">
             <summary>Вычисление максимума от сумм абсолютных значений по элементам строк</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
@@ -6418,7 +6715,7 @@
         </member>
         <member name="M:MathCore.Matrix.op_Multiply(System.Double[0:,0:],MathCore.Matrix)">
             <summary>Оператор матричного произведения двумерного массива и матрицы</summary>
-            <returns>Матрица - результат матричного умножения двухмергного массива и матрицы</returns>
+            <returns>Матрица - результат матричного умножения двухмерного массива и матрицы</returns>
         </member>
         <member name="M:MathCore.Matrix.op_Multiply(System.Double[],MathCore.Matrix)">
             <summary>Оператор матричного произведения одномерного массива (строки) и матрицы</summary>
@@ -7226,13 +7523,13 @@
             <returns>Истина, если оба массивы не определены, либо если оба массивы - один и тот же массив, либо если элементы массивов идентичны</returns>
             <exception cref="T:System.ArgumentNullException">matrix is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.GetMaxRowAbsSumm(MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.GetMaxRowAbsSum(MathCore.Complex[0:,0:])">
             <summary>Вычисление максимума от сумм абсолютных значений по элементам строк</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.GetMaxColAbsSumm(MathCore.Complex[0:,0:])">
+        <member name="M:MathCore.MatrixComplex.Array.GetMaxColAbsSum(MathCore.Complex[0:,0:])">
             <summary>Вычисление максимума от сумм абсолютных значений по элементам столбцов</summary>
             <param name="matrix">Массив элементов матрицы</param>
             <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
@@ -7249,7 +7546,7 @@
             <param name="x">Значение, квадрат которого требуется получить</param>
             <returns>Квадрат указанного числа</returns>
         </member>
-        <member name="M:MathCore.MatrixComplex.Array.GausSeidelConverge(MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,System.Double,System.Int32,System.Int32)">
+        <member name="M:MathCore.MatrixComplex.Array.GaussSeidelConverge(MathCore.Complex[0:,0:]@,MathCore.Complex[0:,0:]@,System.Double,System.Int32,System.Int32)">
             <summary>Метод проверки сходимости метода Метод Гаусса — Зейделя</summary>
             <remarks>Метод меняет местами матрицы решения текущего и прошлого шагов, если метод Гаусса — Зейделя не сошёлся на текущем шаге</remarks>
             <param name="new_x">Новое полученное решение</param>
@@ -8874,6 +9171,9 @@
             <summary>Получить функцию</summary>
             <returns>Функция вычисления значения результата деления полиномов</returns>
         </member>
+        <member name="M:MathCore.Polynom.PolynomDivisionResult.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.Polynom.PolynomDivisionResult.op_Implicit(MathCore.Polynom.PolynomDivisionResult)~MathCore.Polynom">
             <summary>Оператор неявного преобразования результата деления полиномов в полином результата</summary>
             <param name="Result">Результат деления полиномов</param>
@@ -8986,6 +9286,18 @@
             <param name="P">Полином - подстановка</param>
             <returns>Полином - результат подстановки</returns>
         </member>
+        <member name="M:MathCore.Polynom.Equals(MathCore.Polynom)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.System#ICloneable#Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.Equals(System.Object)">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.Polynom.GetHashCode">
             <inheritdoc />
         </member>
@@ -9052,6 +9364,12 @@
             <param name="Q">Вычитаемое</param>
             <returns>Разность</returns>
         </member>
+        <member name="M:MathCore.Polynom.op_Multiply(MathCore.Polynom,MathCore.Polynom)">
+            <summary>Оператор произведения полинома Q и полинома P</summary>
+            <param name="P">Первый сомножитель</param>
+            <param name="Q">Второй сомножитель</param>
+            <returns>Произведение полиномов</returns>
+        </member>
         <member name="M:MathCore.Polynom.op_Division(MathCore.Polynom,MathCore.Polynom)">
             <summary>Оператор деления двух полиномов</summary>
             <param name="p">Полином делимого</param>
@@ -9096,6 +9414,20 @@
         <member name="M:MathCore.Polynom.op_Implicit(System.Int16)~MathCore.Polynom">
             <summary>Оператор приведения типа целого числа к типу полинома</summary>
             <param name="a">Целое число</param>
+        </member>
+        <member name="M:MathCore.PrecisionTimer.#ctor">
+            <exception cref="T:System.PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
+        </member>
+        <member name="M:MathCore.PrecisionTimer.Initialize">
+            <exception cref="T:System.PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
+        </member>
+        <member name="T:MathCore.PrimeNumbers">
+            <summary>Алгоритмы для Простых чисел</summary>
+        </member>
+        <member name="M:MathCore.PrimeNumbers.GetNumbersTo(System.Int32)">
+            <summary>Поиск простых чисел с использованием алгоритма "Решето Эратосфен"</summary>
+            <param name="n">Предельное значение до которого (включительно) осуществляется поиск</param>
+            <returns>Перечисление найденных простых чисел</returns>
         </member>
         <member name="T:MathCore.Annotations.CanBeNullAttribute">
             <summary>
@@ -10969,6 +11301,33 @@
         <member name="T:MathCore.Vectors.Vector3D">
             <summary>Трёхмерный вектор</summary>
         </member>
+        <member name="M:MathCore.Vectors.Vector3D.ThetaPhiRadius(System.Double,System.Double,System.Double)">
+            <summary>Создать вектор по сферической системе координат</summary>
+            <param name="Theta">Угол места</param>
+            <param name="Phi">Азимут</param>
+            <param name="R">Длина вектора</param>
+            <returns>Трёхмерный вектор</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.XYZ(System.Double,System.Double,System.Double)">
+            <summary>Преобразовать координаты декартовой системы в вектор</summary>
+            <param name="X">Координата X</param>
+            <param name="Y">Координата Y</param>
+            <param name="Z">Координата Z</param>
+            <returns>Вектор с заданными координатами</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Random(System.Double,System.Double,System.Random)">
+            <summary>Вектор со случайными координатами (с равномерным распределением)</summary>
+            <param name="min">Минимальное значение</param>
+            <param name="max">Максимальное значение</param>
+            <param name="rnd">Генератор случайных чисел (если не задан, то будет создан новый)</param>
+            <returns>Вектор со случайными значениями координат из указанного диапазона</returns>
+        </member>
+        <member name="F:MathCore.Vectors.Vector3D.k">
+            <summary>Базисный вектор k</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Vector3D.Empty">
+            <summary>Вектор нулевой длины в начале координат</summary>
+        </member>
         <member name="F:MathCore.Vectors.Vector3D.BasisUnitVector">
             <summary>Единичный базисный вектор</summary>
         </member>
@@ -10977,9 +11336,6 @@
         </member>
         <member name="F:MathCore.Vectors.Vector3D.j">
             <summary>Базисный вектор j</summary>
-        </member>
-        <member name="F:MathCore.Vectors.Vector3D.k">
-            <summary>Базисный вектор k</summary>
         </member>
         <member name="F:MathCore.Vectors.Vector3D._X">
             <summary>Длина по оси X</summary>
@@ -11021,13 +11377,13 @@
             <summary>Пространственный угол</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorXOY">
-            <summary>Двумерный вектор - проекциия в плоскости XOY</summary>
+            <summary>Двумерный вектор - проекция в плоскости XOY</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorXOZ">
-            <summary>Двумерный вектор - проекциия в плоскости XOZ (X->X; Z->Y)</summary>
+            <summary>Двумерный вектор - проекция в плоскости XOZ (X->X; Z->Y)</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.VectorYOZ">
-            <summary>Двумерный вектор - проекциия в плоскости YOZ (Y->X; Z->Y)</summary>
+            <summary>Двумерный вектор - проекция в плоскости YOZ (Y->X; Z->Y)</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.R_XOY">
             <summary>Длина в плоскости XOY</summary>
@@ -11044,6 +11400,10 @@
         </member>
         <member name="P:MathCore.Vectors.Vector3D.ComparisonsAccuracy">
             <summary>Точность сравнения (по умолчанию 10^-16)</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetInverse">
+            <summary>Получить вектор, координаты которого являются обратными к координатам текущего вектора</summary>
+            <returns>Вектор с обратными координатами</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.Product_Scalar(MathCore.Vectors.Vector3D)">
             <summary>Скалярное произведение векторов</summary>
@@ -11074,13 +11434,35 @@
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.Vector3D)">
             <summary>Проекция на вектор</summary>
-            <param name="Vector">Вектор, НА который производится проекциия</param>
+            <param name="Vector">Вектор, НА который производится проекции</param>
             <returns>Проекция на вектор</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorV">
+            <summary>Проекцию текущего вектора на вектор</summary>
+            <returns>Функция, вычисляющая проекцию текущего вектора на вектор</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorV_Expression(System.Linq.Expressions.Expression)">
+            <summary>Проекция текущего вектора на вектор, передаваемый в качестве параметра</summary>
+            <param name="v">Выражение, результатом вычисления которого является <see cref="T:MathCore.Vectors.Vector3D"/></param>
+            <returns>Выражение, вычисляющее проекцию текущего вектора на вектор, передаваемый в параметре функции</returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка</exception>
+            <exception cref="T:System.ArgumentException">Если тип результата <paramref name="v"/> не является <see cref="T:MathCore.Vectors.Vector3D"/></exception>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetProjectionTo(MathCore.Vectors.SpaceAngle)">
             <summary>Проекция на направление</summary>
             <param name="Direction">Направление, на которое проектируется вектор</param>
             <returns>Проекция вектора на направление</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorA">
+            <summary>Проекцию текущего вектора на угол</summary>
+            <returns>Функция, вычисляющая проекцию текущего вектора на угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetProjectorA_Expression(System.Linq.Expressions.Expression)">
+            <summary>Создать выражение проекции вектора на пространственный угол</summary>
+            <param name="d">Выражение, результатом вычисления которого будет объект <see cref="T:MathCore.Vectors.SpaceAngle"/></param>
+            <returns>Выражение проекции вектора на угол</returns>
+            <exception cref="T:System.ArgumentNullException">Если <paramref name="d"/> <see langword="=="/> <see langword="null"/></exception>
+            <exception cref="T:System.ArgumentException">Если тип выражения <paramref name="d"/> является не <see cref="T:MathCore.Vectors.SpaceAngle"/></exception>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.op_Multiply(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
             <summary>Скалярное произведение векторов</summary>
@@ -11107,7 +11489,7 @@
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
             <summary>Проекция вектора A на вектор B</summary>
             <param name="A">Проецируемый вектор</param>
-            <param name="B">Вектор, на который производится проекциия</param>
+            <param name="B">Вектор, на который производится проекции</param>
             <returns>Проекция вектора А на вектор В</returns>
         </member>
         <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.SpaceAngle)">
@@ -11119,31 +11501,39 @@
         <member name="T:MathCore.ViewModels.ViewModel">
             <summary>Наблюдаемая модель</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.#ctor(`0,`0,System.String)">
+        <member name="E:MathCore.ViewModels.ViewModel.PropertyChanging">
             <inheritdoc />
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanging``1(``0@,``0@,System.String@)">
+            <summary>Генерация события находящегося в процессе изменения значения свойства</summary>
+            <param name="OldValue">Предыдущее значение свойства</param>
+            <param name="NewValue">Новое значение свойства</param>
+            <param name="PropertyName">Имя изменившегося свойства (если не указано, то берётся имя вызывающего метода)</param>
+            <typeparam name="T">Тип значения свойства</typeparam>
+            <returns>Истина, если событие было обработано и новое значение свойства не равно старому</returns>
         </member>
         <member name="E:MathCore.ViewModels.ViewModel.PropertyChanged">
             <summary>Событие возникает когда изменяется значение свойства объекта</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.ComponentModel.PropertyChangedEventHandler)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.ComponentModel.PropertyChangedEventHandler@)">
             <summary>Присоединить обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></summary>
             <param name="handler">Присоединяемый обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></param>
         </member>
         <member name="F:MathCore.ViewModels.ViewModel._PropertyChangedHandlers">
             <summary>Словарь обработчиков событий изменений свойств</summary>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.String,System.Action)">
-            <summary>Добавление собработчика события изменения свойства</summary>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_AddHandler(System.String@,System.Action@)">
+            <summary>Добавление обработчика события изменения свойства</summary>
             <param name="PropertyName">Имя отслеживаемого события</param>
             <param name="handler">Устанавливаемый обработчик</param>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.String,System.Action)">
-            <summary>Извлечение обработчика события изменния указанного свойства</summary>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.String@,System.Action@)">
+            <summary>Извлечение обработчика события изменения указанного свойства</summary>
             <param name="PropertyName">Имя отслеживаемого свойства</param>
             <param name="handler">Извлекаемый обработчик события</param>
             <returns>Истина, если обработчик события удалён успешно</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_ClearHandlers(System.String)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_ClearHandlers(System.String@)">
             <summary>Очистка обработчиков изменений свойства</summary>
             <returns>Истина, если очистка произведена успешно</returns>
         </member>
@@ -11151,14 +11541,14 @@
             <summary>Очистка обработчиков изменений всех свойств</summary>
             <returns>Истина, если очистка произведена успешно</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHanddler(System.ComponentModel.PropertyChangedEventHandler)">
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChanged_RemoveHandler(System.ComponentModel.PropertyChangedEventHandler@)">
             <summary>Отсоединить обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></summary>
             <param name="handler">Отсоединяемый обработчик события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.GetPropertyChangedObservers``1">
             <summary>Получить перечисление всех объектов, подписанных на событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></summary>
             <typeparam name="T">Тип интересующих объектов</typeparam>
-            <returns></returns>
+            <returns>Перечисление объектов-подписчиков события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.GetPropertyChangedObserversMethods">
             <summary>Получить перечисление всех методов, подписанных на событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></summary>
@@ -11169,90 +11559,53 @@
             <typeparam name="T">Тип интересующих объектов</typeparam>
             <returns>Перечисление всех методов-подписчиков события <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/> для объекта типа <typeparamref name="T"/></returns>
         </member>
-        <member name="F:MathCore.ViewModels.ViewModel._PropertiesDependencesDictionary">
-            <summary>Словарь графа зависимости изменений свйоств</summary>
+        <member name="F:MathCore.ViewModels.ViewModel._PropertiesDependenciesDictionary">
+            <summary>Словарь графа зависимости изменений свойств</summary>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.PropertyDependence_Add(System.String,System.String[])">
-            <summary>Добавить зависимости между свйоствами</summary>
-            <param name="PropertyName">Имя исходного свйоства</param>
-            <param name="Dependences">Перечисление свйоств, на которые исходное свойство имеет влияние</param>
+            <summary>Добавить зависимости между свойствами</summary>
+            <param name="PropertyName">Имя исходного свойства</param>
+            <param name="Dependencies">Перечисление свойств, на которые исходное свойство имеет влияние</param>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.IsLoopDependency(System.String,System.String,System.String,System.Collections.Generic.Stack{System.String})">
+        <member name="M:MathCore.ViewModels.ViewModel.IsLoopDependency(System.String@,System.String@,System.String@,System.Collections.Generic.Stack{System.String})">
             <summary>Проверка модели на циклические зависимости между свойствами</summary>
             <param name="property">Проверяемое свойство</param>
+            <param name="dependency">Зависимость</param>
             <param name="next_property">Следующее свойство в цепочке зависимости</param>
+            <param name="invoke_stack">Стек вызова свойств</param>
             <returns>Истина, если найден цикл</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependences_Remove(System.String,System.String)">
-            <summary>Удаление зависимости между свйоствами</summary>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependencies_Remove(System.String@,System.String@)">
+            <summary>Удаление зависимости между свойствами</summary>
             <param name="PropertyName">Исходное свойство</param>
-            <param name="Dependence">Свйоство, связь с которым надо разорвать</param>
-            <returns>Истина, если связь успено удалена, ложь - если связь отсутствовала</returns>
+            <param name="Dependence">Свойство, связь с которым надо разорвать</param>
+            <returns>Истина, если связь успешно удалена, ложь - если связь отсутствовала</returns>
         </member>
-        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependences_Clear(System.String)">
-            <summary>Очистить граф зависимостей между свйоствами для указанного свйоства</summary>
-            <param name="PropertyName">Название свйоства, связи которого нао удалить</param>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyDependencies_Clear(System.String@)">
+            <summary>Очистить граф зависимостей между свойствами для указанного свойства</summary>
+            <param name="PropertyName">Название свойства, связи которого нао удалить</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanged(System.String)">
             <summary>Метод генерации события изменения значения свойства</summary>
             <param name="PropertyName">Имя изменившегося свойства</param>
         </member>
+        <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChanged_Simple(System.String@)">
+            <summary>Ускоренная генерация события изменения свойства</summary>
+            <param name="PropertyName">Имя изменившегося свойства</param>
+        </member>
         <member name="F:MathCore.ViewModels.ViewModel._PropertyAsyncInvokeTime">
-            <summary>Словарь, хранящий время последней генерации события изменения указанного свйоства в асинхронном режиме</summary>
+            <summary>Словарь, хранящий время последней генерации события изменения указанного свойства в асинхронном режиме</summary>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.OnPropertyChangedAsync(System.String,System.Int32,System.Action,System.Action)">
             <summary>Асинхронная генерация события изменения свойства с возможностью указания таймаута ожидания повторных изменений</summary>
-            <param name="PropertyName">Имя свйоства</param>
+            <param name="PropertyName">Имя свойства</param>
             <param name="Timeout">Таймаут ожидания повторных изменений, прежде чем событие будет сгенерировано</param>
             <param name="OnChanging">Метод, выполняемый до генерации события</param>
             <param name="OnChanged">Метод, выполняемый после генерации события</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.#ctor(System.Boolean)">
             <summary>Инициализация новой view-модели</summary>
-            <param name="check_dependences">Создавать карту зависимостей на основе атрибутов</param>
-        </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.String)">
-            <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
-            <typeparam name="T">Тип значения поля</typeparam>
-            <param name="field">Ссылка на поле модели</param>
-            <param name="value">Значение, устанавливаемое для поля</param>
-            <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
-            <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
-        </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Func{``0,System.Boolean},System.String)">
-            <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
-            <typeparam name="T">Тип значения поля</typeparam>
-            <param name="field">Ссылка на поле модели</param>
-            <param name="value">Значение, устанавливаемое для поля</param>
-            <param name="value_check">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
-            <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
-            <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
-        </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Func{``0,System.Boolean},System.String,System.String)">
-            <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
-            <typeparam name="T">Тип значения поля</typeparam>
-            <param name="field">Ссылка на поле модели</param>
-            <param name="value">Значение, устанавливаемое для поля</param>
-            <param name="value_check">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
-            <param name="ErrorMessage">Сообщение, записываемое в генерируемое исключение <see cref="T:System.ArgumentOutOfRangeException"/> в случае если проверка <paramref name="value_check"/> не пройдена</param>
-            <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
-            <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
-        </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Action{System.String},System.String)">
-            <summary>Метод установки значения свйоства, осуществляющий генерацию события изменения свйоства</summary>
-            <typeparam name="T">Тип знначения свйоства</typeparam>
-            <param name="field">Ссылка на поле, хранящее значение свйоства</param>
-            <param name="value">Значение свйоства, которое надо установить</param>
-            <param name="PropertyName">Имя свойства</param>
-            <returns>Истина, если значение свйоства установлено успешно</returns>
-        </member>
-        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.Action{System.String},System.Func{``0,System.Boolean},System.String)">
-            <summary>Метод установки значения свйоства, осуществляющий генерацию события изменения свйоства</summary>
-            <typeparam name="T">Тип знначения свйоства</typeparam>
-            <param name="field">Ссылка на поле, хранящее значение свйоства</param>
-            <param name="value">Значение свйоства, которое надо установить</param>
-            <param name="PropertyName">Имя свойства</param>
-            <returns>Истина, если значение свйоства установлено успешно</returns>
+            <param name="check_dependencies">Создавать карту зависимостей на основе атрибутов</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.Dispose">
             <inheritdoc />
@@ -11262,7 +11615,7 @@
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.Dispose(System.Boolean)">
             <summary>Освобождение ресурсов</summary>
-            <param name="disposing">Если истина, то требуется освободить управляемые объекты. Освободить неуправляемыые объекты в любом случае</param>
+            <param name="disposing">Если истина, то требуется освободить управляемые объекты. Освободить неуправляемые объекты в любом случае</param>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.DisposeManagedObject">
             <summary>Освободить управляемые объекты</summary>
@@ -11270,77 +11623,544 @@
         <member name="M:MathCore.ViewModels.ViewModel.DisposeUnmanagedObject">
             <summary>Освободить неуправляемые объекты</summary>
         </member>
-        <member name="T:MathCore.XmInitializer`1">
+        <member name="T:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1">
+            <summary>Аргумент события процесса изменения значения свойства</summary>
+            <typeparam name="T">Тип значения свойства</typeparam>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1._OldValue">
+            <summary>Предыдущее значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1._NewValue">
+            <summary>Новое значение свойства</summary>
+        </member>
+        <member name="P:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.OldValue">
+            <summary>Предыдущее значение свойства</summary>
+        </member>
+        <member name="P:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.NewValue">
+            <summary>Новое значение свойства (которое может быть изменено)</summary>
+        </member>
+        <member name="P:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.IsChangingValue">
+            <summary>Признак того, что новое значение свойства отличается от старого</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.#ctor(`0@,`0@,System.String@)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/></summary>
+            <param name="OldValue">Предыдущее значение свойства</param>
+            <param name="NewValue">Новое значение свойства</param>
+            <param name="PropertyName">Имя изменяющегося свойства</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.Set(`0@)">
+            <summary>Установить новое значение свойства</summary>
+            <param name="Value">Новое значение свойства</param>
+            <returns>Истина, Если новое значение свойства отличается от старого</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.String@)">
+            <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
+            <typeparam name="T">Тип значения поля</typeparam>
+            <param name="field">Ссылка на поле модели</param>
+            <param name="value">Значение, устанавливаемое для поля</param>
+            <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
+            <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.Func{``0,System.Boolean}@,System.String@)">
+            <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
+            <typeparam name="T">Тип значения поля</typeparam>
+            <param name="field">Ссылка на поле модели</param>
+            <param name="value">Значение, устанавливаемое для поля</param>
+            <param name="ValueChecker">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
+            <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
+            <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.String@,System.Func{``0,System.Boolean}@,System.String@)">
+            <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
+            <typeparam name="T">Тип значения поля</typeparam>
+            <param name="field">Ссылка на поле модели</param>
+            <param name="value">Значение, устанавливаемое для поля</param>
+            <param name="ErrorMessage">Сообщение, записываемое в генерируемое исключение <see cref="T:System.ArgumentOutOfRangeException"/> в случае если проверка <paramref name="Validator"/> не пройдена</param>
+            <param name="Validator">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
+            <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
+            <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="E:MathCore.ViewModels.ViewModel.PropertyChanged"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.Action{System.String}@,System.String@)">
+            <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>
+            <typeparam name="T">Тип значения свойства</typeparam>
+            <param name="field">Ссылка на поле, хранящее значение свойства</param>
+            <param name="value">Значение свойства, которое надо установить</param>
+            <param name="OnPropertyChanged">Действие, выполняемое для извещения об изменении свойства</param>
+            <param name="PropertyName">Имя свойства</param>
+            <returns>Истина, если значение свойства установлено успешно</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0@,System.Action{System.String}@,System.Func{``0,System.Boolean}@,System.String@)">
+            <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>
+            <typeparam name="T">Тип значения свойства</typeparam>
+            <param name="field">Ссылка на поле, хранящее значение свойства</param>
+            <param name="value">Значение свойства, которое надо установить</param>
+            <param name="OnPropertyChanged">Действие, выполняемое для извещения об изменении свойства</param>
+            <param name="Validator">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
+            <param name="PropertyName">Имя свойства</param>
+            <returns>Истина, если значение свойства установлено успешно</returns>
+        </member>
+        <member name="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1">
+            <summary>Объект, отвечающий за управление процессом установки значения свойства при статическом вызове метода Set</summary>
+            <typeparam name="T">Тип значения свойства</typeparam>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._Result">
+            <summary>Было ли значение свойства обновлено</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._OldValue">
+            <summary>Прежнее значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._NewValue">
+            <summary>Новое значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetStaticValueResult`1._OnPropertyChanged">
+            <summary>Действие по генерации события обновления свойства - делегат <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.#ctor(System.Boolean,`0@,System.Action{System.String}@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></summary>
+            <param name="Result">Было ли значение свойства обновлено</param>
+            <param name="OldValue">Прежнее значение свойства</param>
+            <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.#ctor(System.Boolean,`0@,`0@,System.Action{System.String}@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></summary>
+            <param name="Result">Было ли значение свойства обновлено</param>
+            <param name="OldValue">Прежнее значение свойства</param>
+            <param name="NewValue">Новое значение свойства</param>
+            <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Then(System.Action@)">
+            <summary>В случае если значение свойства было изменено вызывать указанное действие</summary>
+            <param name="execute">Действие, выполняемое в случае обновления значения свойства</param>
+            <returns>Признак того, что свойство изменило своё значение</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Then(System.Action{`0}@)">
+            <summary>В случае если значение свойства было изменено вызывать указанное действие над новым значением</summary>
+            <param name="execute">Действие над новым значением, выполняемое в случае обновления значения свойства</param>
+            <returns>Признак того, что свойство изменило своё значение</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Then(System.Action{`0,`0}@)">
+            <summary>В случае если значение свойства было изменено вызывать указанное действие над старым и новым значением</summary>
+            <param name="execute">Действие над старым и новым значением, выполняемое в случае обновления значения свойства</param>
+            <returns>Признак того, что свойство изменило своё значение</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Update(System.String@)">
+            <summary>Выполнить генерацию события изменения указанного свойства, если значение текущего свойства изменилось</summary>
+            <param name="PropertyName">Имя обновившегося связанного свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayUpdate(System.String@)">
+            <summary>Выполнить генерацию события изменения указанного свойства даже если значение свойства не изменилось</summary>
+            <param name="PropertyName">Имя обновившегося связанного свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Update(System.String[])">
+            <summary>Выполнить генерацию события изменения указанного набора свойств, если значение текущего свойства изменилось</summary>
+            <param name="PropertyName">Имена обновившихся связанных свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayUpdate(System.String[])">
+            <summary>Выполнить генерацию события изменения указанного набора свойств даже если значение свойства не изменилось</summary>
+            <param name="PropertyName">Имена обновившихся связанных свойства</param>
+            <returns>Текущий объект <see cref="T:MathCore.ViewModels.ViewModel.SetStaticValueResult`1"/></returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action@)">
+            <summary>Выполнить указанное действие даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{System.Boolean}@)">
+            <summary>Выполнить указанное действие с признаком обновления свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие с признаком обновления свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0}@)">
+            <summary>Выполнить указанное действие над новым значением свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над новым значением свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0,System.Boolean}@)">
+            <summary>Выполнить указанное действие над новым значением и признаком изменения свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над новым значением и признаком изменения свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0,`0}@)">
+            <summary>Выполнить указанное действие над старым и новым значением свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над старым и новым значением свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.AnywayThen(System.Action{`0,`0,System.Boolean}@)">
+            <summary>Выполнить указанное действие над старым, новым значением и признаком изменения свойства даже в случае если значение свойства не изменилось</summary>
+            <param name="execute">Выполняемое действие над старым, новым значением и признаком изменения свойства</param>
+            <returns>Истина, если значение свойства изменилось</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Equals(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@)">
+            <summary>Indicates whether this instance and a specified object are equal.</summary>
+            <param name="other">The object to compare with the current instance.</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.op_Equality(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@,MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@)">
+            <summary>Оператор равенства двух значений</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetStaticValueResult`1.op_Inequality(MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@,MathCore.ViewModels.ViewModel.SetStaticValueResult{`0}@)">
+            <summary>Оператор неравенства двух значений</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.Action{System.String}@,System.String@)">
+            <summary>Установить новое значение свойства</summary>
+            <param name="field">Ссылка на поле свойства</param>
+            <param name="value">Устанавливаемое новое значение свойства</param>
+            <param name="OnPropertyChanged">Метод извещения об изменении значения свойства</param>
+            <param name="PropertyName">Имя изменяемого свойства</param>
+            <typeparam name="T">ТИп значения свойства</typeparam>
+            <returns>Объект контроля процесс обновления значения свойства</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.Func{``0,System.Boolean}@,System.Action{System.String}@,System.String@)">
+            <summary>Установить новое значение свойства</summary>
+            <param name="field">Ссылка на поле свойства</param>
+            <param name="value">Устанавливаемое новое значение свойства</param>
+            <param name="Validator">Метод проверки корректности значения свойства</param>
+            <param name="OnPropertyChanged">Метод извещения об изменении значения свойства</param>
+            <param name="PropertyName">Имя изменяемого свойства</param>
+            <typeparam name="T">ТИп значения свойства</typeparam>
+            <returns>Объект контроля процесс обновления значения свойства</returns>
+        </member>
+        <member name="T:MathCore.ViewModels.ViewModel.SetValueResult`1">
+            <summary>Установщик значения</summary>
+            <typeparam name="T">Тип устанавливаемого значения</typeparam>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetValueResult`1._Result">
+            <summary>Результат установки значения</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetValueResult`1._OldValue">
+            <summary>Предыдущее значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetValueResult`1._NewValue">
+            <summary>Новое значение свойства</summary>
+        </member>
+        <member name="F:MathCore.ViewModels.ViewModel.SetValueResult`1._Model">
+            <summary>Модель-представления, для которой производится установка значения</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.#ctor(System.Boolean,`0@,MathCore.ViewModels.ViewModel@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetValueResult`1"/></summary>
+            <param name="Result">Было ли значение установлено для свойства</param>
+            <param name="OldValue">Старое значение</param>
+            <param name="model">Модель-представления, для свойство которой изменилось</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.#ctor(System.Boolean,`0@,`0@,MathCore.ViewModels.ViewModel@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.ViewModels.ViewModel.SetValueResult`1"/></summary>
+            <param name="Result">Было ли значение установлено для свойства</param>
+            <param name="OldValue">Старое значение</param>
+            <param name="NewValue">Новое (установленное) значение</param>
+            <param name="model">Модель-представления, для свойство которой изменилось</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action@)">
+            <summary>В случае если значение было установлено, выполнить указанное действие</summary>
+            <param name="execute">Действие, которое требуется выполнить в случае если значение свойства было установлено</param>
+            <returns>Истина, если значение свойства было установлено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action{`0}@)">
+            <summary>В случае если значение было установлено, выполнить указанное действие над новым значением</summary>
+            <param name="execute">Действие над значением, которое требуется выполнить в случае если значение свойства было установлено</param>
+            <returns>Истина, если значение свойства было установлено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Then(System.Action{`0,`0}@)">
+            <summary>В случае если значение было установлено, выполнить указанное действие над старым и новым значением</summary>
+            <param name="execute">Действие над старым и новым значением, которое требуется выполнить в случае если значение свойства было установлено</param>
+            <returns>Истина, если значение свойства было установлено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Update(System.String@)">
+            <summary>Выполнить генерацию события обновления указанного свойства</summary>
+            <param name="PropertyName">Имя свойства, которое также изменилось</param>
+            <returns>Текущий объект установки значения</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Update(System.String[])">
+            <summary>Выполнить генерацию события обновления для указанных свойств</summary>
+            <param name="PropertyName">Массив имён изменившихся свойств</param>
+            <returns>Текущий объект установки значения</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action@)">
+            <summary>Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет</summary>
+            <param name="execute">Действие, которое требуется выполнить</param>
+            <returns>Истина, если свойство было изменено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{System.Boolean}@)">
+            <summary>
+            Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
+            Параметр действия - флаг, сигнализирующий о том, было ли изменено свойство
+            </summary>
+            <param name="execute">Действие, которое требуется выполнить</param>
+            <returns>Истина, если свойство было изменено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0}@)">
+            <summary>Выполнить действие с новым значением вне зависимости от того, изменилось оно, или нет</summary>
+            <param name="execute">Действие, которое требуется выполнить с параметром в виде значения свойства</param>
+            <returns>Истина, если свойство было изменено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,System.Boolean}@)">
+            <summary>
+            Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
+            Параметры действия - флаг, сигнализирующий о том, было ли изменено свойство, и значение свойства
+            </summary>
+            <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
+            <returns>Истина, если свойство было изменено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,`0}@)">
+            <summary>
+            Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
+            Параметры действия - предыдущее и текущее значение свойства
+            </summary>
+            <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
+            <returns>Истина, если свойство было изменено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.AnywayThen(System.Action{`0,`0,System.Boolean}@)">
+            <summary>
+            Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет.
+            Параметры действия - предыдущее и текущее значение свойства, а также признак изменения значения
+            </summary>
+            <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
+            <returns>Истина, если свойство было изменено</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Equals(MathCore.ViewModels.ViewModel.SetValueResult{`0}@)">
+            <summary>Indicates whether this instance and a specified object are equal.</summary>
+            <param name="other">The object to compare with the current instance.</param>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.op_Equality(MathCore.ViewModels.ViewModel.SetValueResult{`0}@,MathCore.ViewModels.ViewModel.SetValueResult{`0}@)">
+            <summary>Оператор равенства двух значений</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValueResult`1.op_Inequality(MathCore.ViewModels.ViewModel.SetValueResult{`0}@,MathCore.ViewModels.ViewModel.SetValueResult{`0}@)">
+            <summary>Оператор неравенства двух значений</summary>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.String@)">
+            <summary>Установить значение свойства</summary>
+            <param name="field">Поле свойства</param>
+            <param name="value">Устанавливаемое значение</param>
+            <param name="PropertyName">Имя свойства (если пусто, то будет взято имя метода, откуда выполняется запуск)</param>
+            <typeparam name="T">Тип значения</typeparam>
+            <returns>Объект, отвечающий за обработку результата установки значения</returns>
+        </member>
+        <member name="M:MathCore.ViewModels.ViewModel.SetValue``1(``0@,``0@,System.Func{``0,System.Boolean}@,System.String@)">
+            <summary>Установить значение свойства</summary>
+            <param name="field">Поле свойства</param>
+            <param name="value">Устанавливаемое значение</param>
+            <param name="Validator">Метод проверки корректности значения, передаваемого в свойство</param>
+            <param name="PropertyName">Имя свойства (если пусто, то будет взято имя метода, откуда выполняется запуск)</param>
+            <typeparam name="T">Тип значения</typeparam>
+            <returns>Объект, отвечающий за обработку результата установки значения</returns>
+        </member>
+        <member name="T:MathCore.XmlInitializer`1">
             <summary>Инициализатор объекта по структуре xml-файла</summary>
             <typeparam name="TObject">Тип инициализируемого объекта</typeparam>
         </member>
-        <member name="T:MathCore.XmInitializer`1.Rule">
+        <member name="T:MathCore.XmlInitializer`1.Rule">
             <summary>Правило инициализации</summary>
         </member>
-        <member name="F:MathCore.XmInitializer`1.Rule._XPath">
+        <member name="F:MathCore.XmlInitializer`1.Rule._XPath">
             <summary>XPath-выражение - путь в структуре xml</summary>
         </member>
-        <member name="F:MathCore.XmInitializer`1.Rule._PropertyBody">
+        <member name="F:MathCore.XmlInitializer`1.Rule._PropertyBody">
             <summary>Выражение, применяемое при обнаружении значения указанного XPath-пути</summary>
         </member>
-        <member name="F:MathCore.XmInitializer`1.Rule._Update">
+        <member name="F:MathCore.XmlInitializer`1.Rule._Update">
             <summary>Скомпилированный метод инициализации</summary>
         </member>
-        <member name="P:MathCore.XmInitializer`1.Rule.UpdateExpression">
+        <member name="P:MathCore.XmlInitializer`1.Rule.UpdateExpression">
             <summary>Выражение, применяемое при обнаружении значения указанного XPath-пути</summary>
         </member>
-        <member name="P:MathCore.XmInitializer`1.Rule.XPath">
+        <member name="P:MathCore.XmlInitializer`1.Rule.XPath">
             <summary>XPath-выражение - путь в структуре xml</summary>
         </member>
-        <member name="P:MathCore.XmInitializer`1.Rule.Update">
+        <member name="P:MathCore.XmlInitializer`1.Rule.IsObjectLess">
+            <summary>Правилу не нужен объект</summary>
+        </member>
+        <member name="P:MathCore.XmlInitializer`1.Rule.Update">
             <summary>Скомпилированный метод инициализации</summary>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Rule.#ctor(System.String,System.Linq.Expressions.Expression{System.Action{`0,System.String}},System.Boolean)">
+        <member name="M:MathCore.XmlInitializer`1.Rule.#ctor(System.String,System.Linq.Expressions.Expression{System.Action{`0,System.String}},System.Boolean)">
             <summary>Инициализация нового правила</summary>
             <param name="XPath">XPath-путь в структуре xml</param>
             <param name="Expression">Выражение инициализации</param>
-            <param name="IsObjectLess"></param>
+            <param name="IsObjectLess">Правилу не нужен объект</param>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Rule.Execute(`0,System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
+        <member name="M:MathCore.XmlInitializer`1.Rule.Execute(`0,System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
             <summary>Выполнить инициализацию</summary>
             <param name="obj">Инициализируемый объект</param>
             <param name="e">Корень структуры xml</param>
             <param name="ns">Описание пространств имён</param>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Rule.Execute(System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
+        <member name="M:MathCore.XmlInitializer`1.Rule.Execute(System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
             <summary>Выполнить инициализацию</summary>
             <param name="e">Корень структуры xml</param>
             <param name="ns">Описание пространств имён</param>
         </member>
-        <member name="T:MathCore.XmInitializer`1.Rule`1">
+        <member name="T:MathCore.XmlInitializer`1.Rule`1">
             <summary>Типизированное правило инициализации</summary>
             <typeparam name="TValue">Тип значения инициализируемого параметра объекта</typeparam>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Rule`1.GetExpression(System.Linq.Expressions.Expression{System.Func{`0,`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
+        <member name="M:MathCore.XmlInitializer`1.Rule`1.GetExpression(System.Linq.Expressions.Expression{System.Func{`0,`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
             <summary>Получить выражение инициализации для выражения определения свойства</summary>
             <param name="expression">Выражение определения инициализируемого параметра объекта</param>
-            <param name="converter">Выражение преобразования строки в тип объекта</param>
+            <param name="ValueConverterExpression">Выражение преобразования строки в тип объекта</param>
             <returns>Выражение инициализации, как процедура с параметром - объектом и строкой xml-узла</returns>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Rule`1.GetExpression(System.Linq.Expressions.Expression{System.Action{`0,`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
+        <member name="M:MathCore.XmlInitializer`1.Rule`1.GetExpression(System.Linq.Expressions.Expression{System.Action{`0,`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
             <summary>Получить выражение инициализации объекта по выражению инициализации и выражению конвертера</summary>
             <param name="expression">Выражение инициализации</param>
-            <param name="converter">Конвертер преобразования строки в нужный тип данных</param>
+            <param name="ValueConverterExpression">Конвертер преобразования строки в нужный тип данных</param>
             <returns>Выражение инициализации объекта по строке xml-структуры</returns>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Initialize(`0,System.Xml.XmlReader)">
-            <devdoc>
-                <para>
-                    Gets the type of the current node.
-                </para>
-            </devdoc>
+        <member name="M:MathCore.XmlInitializer`1.Rule`1.#ctor(System.String,System.Linq.Expressions.Expression{System.Func{`0,`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.XmlInitializer`1.Rule`1"/></summary>
+            <param name="XPath">Путь к значению внутри xml-файла</param>
+            <param name="expression">Выражение преобразования значения объекта инициализации к типу <typeparamref name="TValue"/>, выполняемое для инициализации значения объекта</param>
+            <param name="converter">Выражение преобразования строкового типа значения из xml-файла в <typeparamref name="TValue"/></param>
         </member>
-        <member name="M:MathCore.XmInitializer`1.Add``1(System.String,System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{System.String,``0}})">
+        <member name="M:MathCore.XmlInitializer`1.Rule`1.#ctor(System.String,System.Linq.Expressions.Expression{System.Action{`0,`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.XmlInitializer`1.Rule`1"/></summary>
+            <param name="XPath">Путь к значению внутри xml-файла</param>
+            <param name="expression">Выражение действия над объектом инициализации и типом <typeparamref name="TValue"/>, выполняемое для присвоения значения</param>
+            <param name="converter">Выражение преобразования строкового типа значения из xml-файла в <typeparamref name="TValue"/></param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Rule`1.#ctor(System.String,System.Linq.Expressions.Expression{System.Action{`0,System.String}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.XmlInitializer`1.Rule`1"/></summary>
+            <param name="XPath">Путь к значению внутри xml-файла</param>
+            <param name="expression">Выражение действия над объектом инициализации и типом <typeparamref name="TValue"/>, выполняемое для присвоения значения</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Rule`1.#ctor(System.String,System.Linq.Expressions.Expression{System.Action{`1}},System.Linq.Expressions.Expression{System.Func{System.String,`1}})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.XmlInitializer`1.Rule`1"/></summary>
+            <param name="XPath">Путь к значению внутри xml-файла</param>
+            <param name="expression">Выражение действия над объектом инициализации, выполняемое для присвоения значения</param>
+            <param name="converter">Выражение преобразования строкового типа значения из xml-файла в <typeparamref name="TValue"/></param>
+        </member>
+        <member name="F:MathCore.XmlInitializer`1._Rules">
+            <summary>Набор правил</summary>
+        </member>
+        <member name="P:MathCore.XmlInitializer`1.Count">
+            <summary>Число правил инициализации</summary>
+        </member>
+        <member name="P:MathCore.XmlInitializer`1.Item(System.Int32)">
+            <summary>Правило инициализации с указанным индексом</summary>
+            <param name="i">Индекс правила инициализации в списке</param>
+            <returns>Правило инициализации с указанным индексом</returns>
+        </member>
+        <member name="P:MathCore.XmlInitializer`1.Namespace">
+            <summary>Менеджер пространств имён xml-файла</summary>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.XmlInitializer`1"/></summary>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.#ctor(MathCore.XmlInitializer{`0}.Rule[])">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.XmlInitializer`1"/></summary>
+            <param name="Rules">Список правил инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(`0,System.Xml.Linq.XDocument)">
+            <summary>Инициализировать объект</summary>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="xml">Xml-документ - источник данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(`0,System.Xml.Linq.XElement)">
+            <summary>Инициализировать объект</summary>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(System.Xml.Linq.XDocument,System.Xml.IXmlNamespaceResolver)">
+            <summary>Инициализировать объект</summary>
+            <param name="xml">Xml-документ - источник данных процесса инициализации</param>
+            <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(`0,System.Xml.Linq.XDocument,System.Xml.IXmlNamespaceResolver)">
+            <summary>Инициализировать объект</summary>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="xml">Xml-документ - источник данных процесса инициализации</param>
+            <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(`0,System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
+            <summary>Инициализировать объект</summary>
+            <param name="obj">Инициализируемый объект</param>
+            <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
+            <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(System.Xml.Linq.XElement,System.Xml.IXmlNamespaceResolver)">
+            <summary>Инициализировать объект</summary>
+            <param name="xml">Узел Xml-документа - источник данных процесса инициализации</param>
+            <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(`0,System.Xml.XmlReader)">
+            <summary>Инициализировать объект данными из xml-документа</summary>
+            <param name="obj">инициализируемый объект</param>
+            <param name="xml">Объект чтения xml-документа</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Initialize(`0,System.Xml.XmlReader,System.Xml.XmlNamespaceManager)">
+            <summary>Инициализировать объект данными из xml-документа</summary>
+            <param name="obj">инициализируемый объект</param>
+            <param name="xml">Объект чтения xml-документа</param>
+            <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Add``1(System.String,System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{System.String,``0}})">
             <summary>Добавить правило с указанием выражения получения члена объекта</summary>
             <typeparam name="TPropertyValue">Тип значения свойства</typeparam>
-            <param name="path">Путь в xml-структуре</param>
-            <param name="expr">Выражение, определяющее член объекта</param>
-            <param name="conv">Выражение преобразования строки в целевой тип данных</param>
+            <param name="XPath">Путь в xml-структуре</param>
+            <param name="InitializationExpression">Выражение, определяющее член объекта</param>
+            <param name="DataConverterExpression">Выражение преобразования строки в целевой тип данных</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Add``1(System.String,System.Linq.Expressions.Expression{System.Action{`0,``0}},System.Linq.Expressions.Expression{System.Func{System.String,``0}})">
+            <summary>Добавить правило инициализации объекта <typeparamref name="TObject"/></summary>
+            <param name="XPath">Путь к данным внутри xml-файла</param>
+            <param name="InitializationExpression">Выражение, определяющее как записать данные в объект после извлечения их из xml-файла</param>
+            <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в тип данных, необходимый объекту</param>
+            <typeparam name="TArgument">Тип устанавливаемого значения для объекта инициализации</typeparam>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Add(System.String,System.Linq.Expressions.Expression{System.Action{`0,System.String}},System.Linq.Expressions.Expression{System.Func{System.String,System.String}})">
+            <summary>Добавить правило инициализации</summary>
+            <param name="XPath">Путь к данным внутри xml-файла</param>
+            <param name="InitializationExpression">Выражение, определяющее как записать строку в объект после извлечения её из xml-файла</param>
+            <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в строку, необходимую объекту</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Add``1(System.String,System.Linq.Expressions.Expression{System.Action{``0}},System.Linq.Expressions.Expression{System.Func{System.String,``0}})">
+            <summary>Добавить правило инициализации без инициализируемого объекта</summary>
+            <param name="XPath">Путь к данным внутри xml-файла</param>
+            <param name="InitializationExpression">Выражение, определяющее что требуется сделать с данными после извлечения их из xml-файла</param>
+            <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в тип данных, необходимый объекту</param>
+            <typeparam name="TArgument">Тип устанавливаемого значения для объекта инициализации</typeparam>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Add(System.String,System.Linq.Expressions.Expression{System.Action{System.String}},System.Linq.Expressions.Expression{System.Func{System.String,System.String}})">
+            <summary>Добавить правило инициализации без инициализируемого объекта</summary>
+            <param name="XPath">Путь к данным внутри xml-файла</param>
+            <param name="InitializationExpression">Выражение, определяющее что требуется сделать со строкой после её извлечения из xml-файла</param>
+            <param name="DataConverterExpression">Выражение, определяющее как требуется преобразовать строку, полученную из xml-файла в строку, необходимую для процесса инициализации</param>
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.Clear">
+            <summary>Удалить все правила инициализации</summary>
+        </member>
+        <member name="P:MathCore.XmlInitializer`1.System#Collections#Generic#ICollection{MathCore#XmlInitializer{TObject}#Rule}#IsReadOnly">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.System#Collections#Generic#ICollection{MathCore#XmlInitializer{TObject}#Rule}#Add(MathCore.XmlInitializer{`0}.Rule)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.System#Collections#Generic#ICollection{MathCore#XmlInitializer{TObject}#Rule}#Contains(MathCore.XmlInitializer{`0}.Rule)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.System#Collections#Generic#ICollection{MathCore#XmlInitializer{TObject}#Rule}#CopyTo(MathCore.XmlInitializer{`0}.Rule[],System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.System#Collections#Generic#ICollection{MathCore#XmlInitializer{TObject}#Rule}#Remove(MathCore.XmlInitializer{`0}.Rule)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.XmlInitializer`1.System#Collections#Generic#IEnumerable{MathCore#XmlInitializer{TObject}#Rule}#GetEnumerator">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.Xml.LambdaXmlSerializer">
             <summary>Настраиваемый сериализатор объектов в XML</summary>
@@ -11853,86 +12673,550 @@
         </member>
         <member name="T:System.EventArgs`1">
             <summary>Аргумент события с типизированным параметром</summary>
-            <typeparam name="TArgument">Тип параметра аргумента</typeparam>
         </member>
         <member name="P:System.EventArgs`1.Argument">
             <summary>Параметр аргумента</summary>
         </member>
+        <member name="M:System.EventArgs`1.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`1"/></summary>
+        </member>
         <member name="M:System.EventArgs`1.#ctor(`0)">
-            <summary>Новый аргумент события с типизированным параметром</summary>
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`1"/></summary>
             <param name="Argument">Параметр аргумента</param>
         </member>
         <member name="M:System.EventArgs`1.ToString">
-            <summary>
-            Возвращает объект <see cref="T:System.String"/>, который представляет текущий объект <see cref="T:System.Object"/>.
-            </summary>
-            <returns>Объект <see cref="T:System.String"/>, представляющий текущий объект <see cref="T:System.Object"/>.</returns>
-            <filterpriority>2</filterpriority>
+            <summary>Строковое представление аргумента события</summary>
         </member>
         <member name="M:System.EventArgs`1.op_Implicit(System.EventArgs{`0})~`0">
-            <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
+            <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения</summary>
             <param name="Args">Аргумент события</param>
             <returns>Хранимый объект</returns>
         </member>
         <member name="M:System.EventArgs`1.op_Implicit(`0)~System.EventArgs{`0}">
-            <summary>
-            Оgератор неявного преобразования типа зранимого значения в обёртку из аргумента события, содержащего это значение
-            </summary>
+            <summary>Оператор неявного преобразования типа хранимого значения в обёртку из аргумента события, содержащего это значение</summary>
             <param name="Argument">Объект аргумента события</param>
             <returns>Аргумент события</returns>
         </member>
         <member name="T:System.EventArgs`2">
-            <summary>Аргумент события с двумя типизированными параметрами</summary>
-            <typeparam name="TArgument1">Тип первого параметра</typeparam>
-            <typeparam name="TArgument2">Тип второго параметра</typeparam>
+            <summary>Аргумент события с 2 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
         </member>
         <member name="P:System.EventArgs`2.Argument1">
-            <summary>Первый аргумент</summary>
+            <summary>1 параметр аргумента</summary>
         </member>
         <member name="P:System.EventArgs`2.Argument2">
-            <summary>Второй аргумент</summary>
+            <summary>2 параметр аргумента</summary>
         </member>
         <member name="M:System.EventArgs`2.#ctor">
-            <summary>Новый аргумент события с двумя параметрами</summary>
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`2"/></summary>
         </member>
         <member name="M:System.EventArgs`2.#ctor(`0,`1)">
-            <summary>Новый аргумент события с двумя параметрами</summary>
-            <param name="Argument1">Первый аргумент события</param>
-            <param name="Argument2">Второй аргумент события</param>
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`2"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
         </member>
-        <member name="M:System.EventArgs`2.op_Implicit(System.EventArgs{`0,`1})~`0">
-            <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
-            <param name="Args">Аргумент события</param>
-            <returns>Хранимый объект</returns>
+        <member name="M:System.EventArgs`2.Deconstruct(`0@,`1@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`2"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
         </member>
-        <member name="M:System.EventArgs`2.op_Implicit(System.EventArgs{`0,`1})~`1">
-            <summary>Оператор неявного преобразования аргумента события к типу содержащегося в нём значения </summary>
-            <param name="Args">Аргумент события</param>
-            <returns>Хранимый объект</returns>
+        <member name="M:System.EventArgs`2.op_Implicit(System.EventArgs{`0,`1})~System.ValueTuple{`0,`1}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`2"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`2"/></param>
+            <returns>Кортеж из 2 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`2.op_Implicit(System.ValueTuple{`0,`1})~System.EventArgs{`0,`1}">
+            <summary>Оператор неявного преобразования кортежа из 2 параметров к типу <see cref="T:System.EventArgs`2"/></summary>
+            <param name="Args">Кортеж из 2 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`2"/></returns>
         </member>
         <member name="T:System.EventArgs`3">
-            <summary>Аргумент события с двумя типизированными параметрами</summary>
-            <typeparam name="TArgument1">Тип первого параметра</typeparam>
-            <typeparam name="TArgument2">Тип второго параметра</typeparam>
-            <typeparam name="TArgument3">Тип третьего параметра</typeparam>
-        </member>
-        <member name="P:System.EventArgs`3.Argument1">
-            <summary>Первый аргумент</summary>
-        </member>
-        <member name="P:System.EventArgs`3.Argument2">
-            <summary>Второй аргумент</summary>
+            <summary>Аргумент события с 3 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
         </member>
         <member name="P:System.EventArgs`3.Argument3">
-            <summary>Третий аргумент</summary>
+            <summary>3 параметр аргумента</summary>
         </member>
         <member name="M:System.EventArgs`3.#ctor">
-            <summary>Новый аргумент события с тремя параметрами</summary>
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`3"/></summary>
         </member>
         <member name="M:System.EventArgs`3.#ctor(`0,`1,`2)">
-            <summary>Новый аргумент события с тремя параметрами</summary>
-            <param name="Argument1">Первый аргумент события</param>
-            <param name="Argument2">Второй аргумент события</param>
-            <param name="Argument3">Третий аргумент события</param>
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`3"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`3.Deconstruct(`0@,`1@,`2@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`3"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`3.op_Implicit(System.EventArgs{`0,`1,`2})~System.ValueTuple{`0,`1,`2}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`3"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`3"/></param>
+            <returns>Кортеж из 3 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`3.op_Implicit(System.ValueTuple{`0,`1,`2})~System.EventArgs{`0,`1,`2}">
+            <summary>Оператор неявного преобразования кортежа из 3 параметров к типу <see cref="T:System.EventArgs`3"/></summary>
+            <param name="Args">Кортеж из 3 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`3"/></returns>
+        </member>
+        <member name="T:System.EventArgs`4">
+            <summary>Аргумент события с 4 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+        </member>
+        <member name="P:System.EventArgs`4.Argument4">
+            <summary>4 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`4.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`4"/></summary>
+        </member>
+        <member name="M:System.EventArgs`4.#ctor(`0,`1,`2,`3)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`4"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`4.Deconstruct(`0@,`1@,`2@,`3@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`4"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`4.op_Implicit(System.EventArgs{`0,`1,`2,`3})~System.ValueTuple{`0,`1,`2,`3}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`4"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`4"/></param>
+            <returns>Кортеж из 4 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`4.op_Implicit(System.ValueTuple{`0,`1,`2,`3})~System.EventArgs{`0,`1,`2,`3}">
+            <summary>Оператор неявного преобразования кортежа из 4 параметров к типу <see cref="T:System.EventArgs`4"/></summary>
+            <param name="Args">Кортеж из 4 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`4"/></returns>
+        </member>
+        <member name="T:System.EventArgs`5">
+            <summary>Аргумент события с 5 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+            <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+        </member>
+        <member name="P:System.EventArgs`5.Argument5">
+            <summary>5 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`5.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`5"/></summary>
+        </member>
+        <member name="M:System.EventArgs`5.#ctor(`0,`1,`2,`3,`4)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`5"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+            <param name="Argument5">5 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`5.Deconstruct(`0@,`1@,`2@,`3@,`4@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`5"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+            <param name="Arg5">5 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`5.op_Implicit(System.EventArgs{`0,`1,`2,`3,`4})~System.ValueTuple{`0,`1,`2,`3,`4}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`5"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`5"/></param>
+            <returns>Кортеж из 5 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`5.op_Implicit(System.ValueTuple{`0,`1,`2,`3,`4})~System.EventArgs{`0,`1,`2,`3,`4}">
+            <summary>Оператор неявного преобразования кортежа из 5 параметров к типу <see cref="T:System.EventArgs`5"/></summary>
+            <param name="Args">Кортеж из 5 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`5"/></returns>
+        </member>
+        <member name="T:System.EventArgs`6">
+            <summary>Аргумент события с 6 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+            <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+            <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+        </member>
+        <member name="P:System.EventArgs`6.Argument6">
+            <summary>6 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`6.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`6"/></summary>
+        </member>
+        <member name="M:System.EventArgs`6.#ctor(`0,`1,`2,`3,`4,`5)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`6"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+            <param name="Argument5">5 параметр аргумента</param>
+            <param name="Argument6">6 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`6.Deconstruct(`0@,`1@,`2@,`3@,`4@,`5@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`6"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+            <param name="Arg5">5 параметр аргумента</param>
+            <param name="Arg6">6 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`6.op_Implicit(System.EventArgs{`0,`1,`2,`3,`4,`5})~System.ValueTuple{`0,`1,`2,`3,`4,`5}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`6"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`6"/></param>
+            <returns>Кортеж из 6 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`6.op_Implicit(System.ValueTuple{`0,`1,`2,`3,`4,`5})~System.EventArgs{`0,`1,`2,`3,`4,`5}">
+            <summary>Оператор неявного преобразования кортежа из 6 параметров к типу <see cref="T:System.EventArgs`6"/></summary>
+            <param name="Args">Кортеж из 6 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`6"/></returns>
+        </member>
+        <member name="T:System.EventArgs`7">
+            <summary>Аргумент события с 7 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+            <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+            <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+            <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+        </member>
+        <member name="P:System.EventArgs`7.Argument7">
+            <summary>7 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`7.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`7"/></summary>
+        </member>
+        <member name="M:System.EventArgs`7.#ctor(`0,`1,`2,`3,`4,`5,`6)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`7"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+            <param name="Argument5">5 параметр аргумента</param>
+            <param name="Argument6">6 параметр аргумента</param>
+            <param name="Argument7">7 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`7.Deconstruct(`0@,`1@,`2@,`3@,`4@,`5@,`6@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`7"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+            <param name="Arg5">5 параметр аргумента</param>
+            <param name="Arg6">6 параметр аргумента</param>
+            <param name="Arg7">7 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`7.op_Implicit(System.EventArgs{`0,`1,`2,`3,`4,`5,`6})~System.ValueTuple{`0,`1,`2,`3,`4,`5,`6}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`7"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`7"/></param>
+            <returns>Кортеж из 7 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`7.op_Implicit(System.ValueTuple{`0,`1,`2,`3,`4,`5,`6})~System.EventArgs{`0,`1,`2,`3,`4,`5,`6}">
+            <summary>Оператор неявного преобразования кортежа из 7 параметров к типу <see cref="T:System.EventArgs`7"/></summary>
+            <param name="Args">Кортеж из 7 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`7"/></returns>
+        </member>
+        <member name="T:System.EventArgs`8">
+            <summary>Аргумент события с 8 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+            <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+            <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+            <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+            <typeparam name="TArgument8">Тип аргумента 8</typeparam>
+        </member>
+        <member name="P:System.EventArgs`8.Argument8">
+            <summary>8 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`8.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`8"/></summary>
+        </member>
+        <member name="M:System.EventArgs`8.#ctor(`0,`1,`2,`3,`4,`5,`6,`7)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`8"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+            <param name="Argument5">5 параметр аргумента</param>
+            <param name="Argument6">6 параметр аргумента</param>
+            <param name="Argument7">7 параметр аргумента</param>
+            <param name="Argument8">8 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`8.Deconstruct(`0@,`1@,`2@,`3@,`4@,`5@,`6@,`7@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`8"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+            <param name="Arg5">5 параметр аргумента</param>
+            <param name="Arg6">6 параметр аргумента</param>
+            <param name="Arg7">7 параметр аргумента</param>
+            <param name="Arg8">8 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`8.op_Implicit(System.EventArgs{`0,`1,`2,`3,`4,`5,`6,`7})~System.ValueTuple{`0,`1,`2,`3,`4,`5,`6,System.ValueTuple{`7}}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`8"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`8"/></param>
+            <returns>Кортеж из 8 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`8.op_Implicit(System.ValueTuple{`0,`1,`2,`3,`4,`5,`6,System.ValueTuple{`7}})~System.EventArgs{`0,`1,`2,`3,`4,`5,`6,`7}">
+            <summary>Оператор неявного преобразования кортежа из 8 параметров к типу <see cref="T:System.EventArgs`8"/></summary>
+            <param name="Args">Кортеж из 8 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`8"/></returns>
+        </member>
+        <member name="T:System.EventArgs`9">
+            <summary>Аргумент события с 9 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+            <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+            <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+            <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+            <typeparam name="TArgument8">Тип аргумента 8</typeparam>
+            <typeparam name="TArgument9">Тип аргумента 9</typeparam>
+        </member>
+        <member name="P:System.EventArgs`9.Argument9">
+            <summary>9 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`9.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`9"/></summary>
+        </member>
+        <member name="M:System.EventArgs`9.#ctor(`0,`1,`2,`3,`4,`5,`6,`7,`8)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`9"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+            <param name="Argument5">5 параметр аргумента</param>
+            <param name="Argument6">6 параметр аргумента</param>
+            <param name="Argument7">7 параметр аргумента</param>
+            <param name="Argument8">8 параметр аргумента</param>
+            <param name="Argument9">9 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`9.Deconstruct(`0@,`1@,`2@,`3@,`4@,`5@,`6@,`7@,`8@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`9"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+            <param name="Arg5">5 параметр аргумента</param>
+            <param name="Arg6">6 параметр аргумента</param>
+            <param name="Arg7">7 параметр аргумента</param>
+            <param name="Arg8">8 параметр аргумента</param>
+            <param name="Arg9">9 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`9.op_Implicit(System.EventArgs{`0,`1,`2,`3,`4,`5,`6,`7,`8})~System.ValueTuple{`0,`1,`2,`3,`4,`5,`6,System.ValueTuple{`7,`8}}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`9"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`9"/></param>
+            <returns>Кортеж из 9 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`9.op_Implicit(System.ValueTuple{`0,`1,`2,`3,`4,`5,`6,System.ValueTuple{`7,`8}})~System.EventArgs{`0,`1,`2,`3,`4,`5,`6,`7,`8}">
+            <summary>Оператор неявного преобразования кортежа из 9 параметров к типу <see cref="T:System.EventArgs`9"/></summary>
+            <param name="Args">Кортеж из 9 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`9"/></returns>
+        </member>
+        <member name="T:System.EventArgs`10">
+            <summary>Аргумент события с 10 типизированными параметрами</summary>
+            <typeparam name="TArgument1">Тип аргумента 1</typeparam>
+            <typeparam name="TArgument2">Тип аргумента 2</typeparam>
+            <typeparam name="TArgument3">Тип аргумента 3</typeparam>
+            <typeparam name="TArgument4">Тип аргумента 4</typeparam>
+            <typeparam name="TArgument5">Тип аргумента 5</typeparam>
+            <typeparam name="TArgument6">Тип аргумента 6</typeparam>
+            <typeparam name="TArgument7">Тип аргумента 7</typeparam>
+            <typeparam name="TArgument8">Тип аргумента 8</typeparam>
+            <typeparam name="TArgument9">Тип аргумента 9</typeparam>
+            <typeparam name="TArgument10">Тип аргумента 10</typeparam>
+        </member>
+        <member name="P:System.EventArgs`10.Argument10">
+            <summary>10 параметр аргумента</summary>
+        </member>
+        <member name="M:System.EventArgs`10.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`10"/></summary>
+        </member>
+        <member name="M:System.EventArgs`10.#ctor(`0,`1,`2,`3,`4,`5,`6,`7,`8,`9)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.EventArgs`10"/></summary>
+            <param name="Argument1">1 параметр аргумента</param>
+            <param name="Argument2">2 параметр аргумента</param>
+            <param name="Argument3">3 параметр аргумента</param>
+            <param name="Argument4">4 параметр аргумента</param>
+            <param name="Argument5">5 параметр аргумента</param>
+            <param name="Argument6">6 параметр аргумента</param>
+            <param name="Argument7">7 параметр аргумента</param>
+            <param name="Argument8">8 параметр аргумента</param>
+            <param name="Argument9">9 параметр аргумента</param>
+            <param name="Argument10">10 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`10.Deconstruct(`0@,`1@,`2@,`3@,`4@,`5@,`6@,`7@,`8@,`9@)">
+            <summary>Деконструктор <see cref="T:System.EventArgs`10"/></summary>
+            <param name="Arg1">1 параметр аргумента</param>
+            <param name="Arg2">2 параметр аргумента</param>
+            <param name="Arg3">3 параметр аргумента</param>
+            <param name="Arg4">4 параметр аргумента</param>
+            <param name="Arg5">5 параметр аргумента</param>
+            <param name="Arg6">6 параметр аргумента</param>
+            <param name="Arg7">7 параметр аргумента</param>
+            <param name="Arg8">8 параметр аргумента</param>
+            <param name="Arg9">9 параметр аргумента</param>
+            <param name="Arg10">10 параметр аргумента</param>
+        </member>
+        <member name="M:System.EventArgs`10.op_Implicit(System.EventArgs{`0,`1,`2,`3,`4,`5,`6,`7,`8,`9})~System.ValueTuple{`0,`1,`2,`3,`4,`5,`6,System.ValueTuple{`7,`8,`9}}">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.EventArgs`10"/> к кортежу</summary>
+            <param name="Args">Аргумент события <see cref="T:System.EventArgs`10"/></param>
+            <returns>Кортеж из 10 параметров</returns>
+        </member>
+        <member name="M:System.EventArgs`10.op_Implicit(System.ValueTuple{`0,`1,`2,`3,`4,`5,`6,System.ValueTuple{`7,`8,`9}})~System.EventArgs{`0,`1,`2,`3,`4,`5,`6,`7,`8,`9}">
+            <summary>Оператор неявного преобразования кортежа из 10 параметров к типу <see cref="T:System.EventArgs`10"/></summary>
+            <param name="Args">Кортеж из 10 параметров</param>
+            <returns>Аргумент события <see cref="T:System.EventArgs`10"/></returns>
+        </member>
+        <member name="T:System.EventHandlerArgs`2">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TArgs">Тип аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandlerArgs`3">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TResult">Тип результата события</typeparam>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TArgs">Тип аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+            <returns>Результат события</returns>
+        </member>
+        <member name="T:System.EventHandler`2">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter">Тип параметра аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`3">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`4">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`5">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`6">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <typeparam name="TParameter5">Тип параметра 5 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`7">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <typeparam name="TParameter5">Тип параметра 5 аргумента события</typeparam>
+            <typeparam name="TParameter6">Тип параметра 6 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`8">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <typeparam name="TParameter5">Тип параметра 5 аргумента события</typeparam>
+            <typeparam name="TParameter6">Тип параметра 6 аргумента события</typeparam>
+            <typeparam name="TParameter7">Тип параметра 7 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`9">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <typeparam name="TParameter5">Тип параметра 5 аргумента события</typeparam>
+            <typeparam name="TParameter6">Тип параметра 6 аргумента события</typeparam>
+            <typeparam name="TParameter7">Тип параметра 7 аргумента события</typeparam>
+            <typeparam name="TParameter8">Тип параметра 8 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`10">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <typeparam name="TParameter5">Тип параметра 5 аргумента события</typeparam>
+            <typeparam name="TParameter6">Тип параметра 6 аргумента события</typeparam>
+            <typeparam name="TParameter7">Тип параметра 7 аргумента события</typeparam>
+            <typeparam name="TParameter8">Тип параметра 8 аргумента события</typeparam>
+            <typeparam name="TParameter9">Тип параметра 9 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="T:System.EventHandler`11">
+            <summary>Делегат обработчика события</summary>
+            <typeparam name="TSender">Тип источника события</typeparam>
+            <typeparam name="TParameter1">Тип параметра 1 аргумента события</typeparam>
+            <typeparam name="TParameter2">Тип параметра 2 аргумента события</typeparam>
+            <typeparam name="TParameter3">Тип параметра 3 аргумента события</typeparam>
+            <typeparam name="TParameter4">Тип параметра 4 аргумента события</typeparam>
+            <typeparam name="TParameter5">Тип параметра 5 аргумента события</typeparam>
+            <typeparam name="TParameter6">Тип параметра 6 аргумента события</typeparam>
+            <typeparam name="TParameter7">Тип параметра 7 аргумента события</typeparam>
+            <typeparam name="TParameter8">Тип параметра 8 аргумента события</typeparam>
+            <typeparam name="TParameter9">Тип параметра 9 аргумента события</typeparam>
+            <typeparam name="TParameter10">Тип параметра 10 аргумента события</typeparam>
+            <param name="Sender">Источник события</param>
+            <param name="Args">Аргумент события</param>
         </member>
         <member name="T:System.EventSenderArgs`2">
             <summary>Аргумент события с типизированным параметром</summary>
@@ -11959,24 +13243,6 @@
             <param name="Args">Аргумент события</param>
             <returns>Хранимый объект</returns>
         </member>
-        <member name="T:System.EventSenderArgs`3">
-            <summary>Аргумент события с двумя типизированными параметрами</summary>
-            <typeparam name="TSender">Тип источника события</typeparam>
-            <typeparam name="TArgument1">Тип первого параметра</typeparam>
-            <typeparam name="TArgument2">Тип второго параметра</typeparam>
-        </member>
-        <member name="P:System.EventSenderArgs`3.Sender">
-            <summary>Источник события</summary>
-        </member>
-        <member name="M:System.EventSenderArgs`3.#ctor">
-            <summary>Новый аргумент события с двумя параметрами</summary>
-        </member>
-        <member name="M:System.EventSenderArgs`3.#ctor(`0,`1,`2)">
-            <summary>Новый аргумент события с двумя параметрами</summary>
-            <param name="Sender">Источник события</param>
-            <param name="Argument1">Первый аргумент события</param>
-            <param name="Argument2">Второй аргумент события</param>
-        </member>
         <member name="T:System.EventSenderArgs`4">
             <summary>Аргумент события с двумя типизированными параметрами</summary>
             <typeparam name="TSender">Тип источника события</typeparam>
@@ -11997,45 +13263,23 @@
             <param name="Argument2">Второй аргумент события</param>
             <param name="Argument3">Третий аргумент события</param>
         </member>
-        <member name="T:System.EventHandlerArgs`2">
-            <summary>Делегат обработчика события</summary>
+        <member name="T:System.EventSenderArgs`3">
+            <summary>Аргумент события с двумя типизированными параметрами</summary>
             <typeparam name="TSender">Тип источника события</typeparam>
-            <typeparam name="TArgs">Тип аргумента события</typeparam>
-            <param name="Sender">Источник события</param>
-            <param name="Args">Аргумент события</param>
+            <typeparam name="TArgument1">Тип первого параметра</typeparam>
+            <typeparam name="TArgument2">Тип второго параметра</typeparam>
         </member>
-        <member name="T:System.EventHandlerArgs`3">
-            <summary>Делегат обработчика события</summary>
-            <typeparam name="TResult">Тип результата события</typeparam>
-            <typeparam name="TSender">Тип источника события</typeparam>
-            <typeparam name="TArgs">Тип аргумента события</typeparam>
-            <param name="Sender">Источник события</param>
-            <param name="Args">Аргумент события</param>
-            <returns>Результат события</returns>
+        <member name="P:System.EventSenderArgs`3.Sender">
+            <summary>Источник события</summary>
         </member>
-        <member name="T:System.EventHandler`2">
-            <summary>Делегат обработчика события</summary>
-            <typeparam name="TSender">Тип источника события</typeparam>
-            <typeparam name="TEventParameter">Тип параметра аргумента события</typeparam>
-            <param name="Sender">Источник события</param>
-            <param name="Args">Аргумент события</param>
+        <member name="M:System.EventSenderArgs`3.#ctor">
+            <summary>Новый аргумент события с двумя параметрами</summary>
         </member>
-        <member name="T:System.EventHandler`3">
-            <summary>Делегат обработчика события</summary>
-            <typeparam name="TSender">Тип источника события</typeparam>
-            <typeparam name="TEventParameter1">Тип параметра 1 аргумента события</typeparam>
-            <typeparam name="TEventParameter2">Тип параметра 2 аргумента события</typeparam>
+        <member name="M:System.EventSenderArgs`3.#ctor(`0,`1,`2)">
+            <summary>Новый аргумент события с двумя параметрами</summary>
             <param name="Sender">Источник события</param>
-            <param name="Args">Аргумент события</param>
-        </member>
-        <member name="T:System.EventHandler`4">
-            <summary>Делегат обработчика события</summary>
-            <typeparam name="TSender">Тип источника события</typeparam>
-            <typeparam name="TEventParameter1">Тип параметра 1 аргумента события</typeparam>
-            <typeparam name="TEventParameter2">Тип параметра 2 аргумента события</typeparam>
-            <typeparam name="TEventParameter3">Тип параметра 3 аргумента события</typeparam>
-            <param name="Sender">Источник события</param>
-            <param name="Args">Аргумент события</param>
+            <param name="Argument1">Первый аргумент события</param>
+            <param name="Argument2">Второй аргумент события</param>
         </member>
         <member name="T:System.ExceptionEventHandler`1">
             <summary>Обработчик событий генерации исключения</summary>
@@ -12058,8 +13302,8 @@
             <param name="Handler">Обработчик события</param>
             <param name="Sender">Источник события</param>
             <param name="e">Аргументы события</param>
-            <param name="CallBack">Делегат заврешения вызова события</param>
-            <param name="State">ОБъект состояния, передаваемый в обработчик завершающего метода</param>
+            <param name="CallBack">Делегат завершения вызова события</param>
+            <param name="State">Объект состояния, передаваемый в обработчик завершающего метода</param>
             <typeparam name="TException">Тип исключения</typeparam>
         </member>
         <member name="M:System.ExceptionEventHandlerExtensions.FastStart``1(System.ExceptionEventHandler{``0},System.Object,System.ExceptionEventHandlerArgs{``0})">
@@ -12078,7 +13322,7 @@
             <param name="Sender">Источник события</param>
             <param name="e">Аргументы события</param>
             <param name="IsHandledDefault">
-            Если истина, то исключение считается обработанным до тех пор, пока обработчик обытия не укажет обратного
+            Если истина, то исключение считается обработанным до тех пор, пока обработчик события не укажет обратного
             Если ложь, то обработчики должны явно указать, что исключение обработано.
             По умолчанию значение не определено (= null) - при наличии обработчиков у события исключение считается обработанным. Иначе оно генерируется. 
             </param>
@@ -14106,16 +15350,16 @@
             <summary>Класс методов-расширений интерфейса <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></summary>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String)">
-            <summary>Подписка на событие изменения указанного свйоства</summary>
+            <summary>Подписка на событие изменения указанного свойства</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Name">Имя свйоства</param>
+            <param name="Name">Имя свойства</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler_Disposable(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String)">
-            <summary>Подписка на событие изменения указанного свйоства</summary>
+            <summary>Подписка на событие изменения указанного свойства</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Name">Имя свйоства</param>
+            <param name="Name">Имя свойства</param>
             <returns>Объект <see cref="T:System.IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String[])">

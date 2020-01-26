@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using MathCore.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Tests
 {
@@ -122,6 +124,7 @@ namespace MathCore.Tests
             Assert.IsFalse(P.Equals((object)null), "Полином {0} равен null", P);
             Assert.IsFalse(P.Equals(new object()), "Полином {0} равен null", P);
             Assert.IsFalse(P.Equals(5), "Полином {0} равен целому числу", P);
+            // ReSharper disable once SuspiciousTypeConversion.Global
             Assert.IsFalse(P.Equals("Test"), "Полином {0} равен строке", P);
             Assert.IsFalse(P.Equals((object)Z), "Полином {0} равен неравному ему полиному {1}", P, Z);
 
@@ -132,7 +135,7 @@ namespace MathCore.Tests
             Assert.IsFalse(P.Equals((object)Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
         }
 
-        public Polynom GetRandomPolynom(int Power = -1) => new Polynom(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
+        [NotNull] private Polynom GetRandomPolynom(int Power = -1) => new Polynom(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
 
         /// <summary>Тест оператора сложения полиномов</summary>
         [TestMethod]
@@ -150,15 +153,15 @@ namespace MathCore.Tests
 
             var X = GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5);
 
-            var yP = X.Select(P.Value);
-            var yQ = X.Select(Q.Value);
+            var y_p = X.Select(P.Value);
+            var y_q = X.Select(Q.Value);
 
             Z = P + Q;
 
-            var Y_actual = X.Select(Z.Value);
-            var Y_expected = yP.Zip(yQ, (a, b) => a + b);
+            var y_actual = X.Select(Z.Value);
+            var y_expected = y_p.Zip(y_q, (a, b) => a + b);
 
-            var Y = Y_actual.Zip(Y_expected, (actual, expected) => new { actual, expected });
+            var Y = y_actual.Zip(y_expected, (actual, expected) => new { actual, expected });
             Y.Foreach(v => Assert.IsFalse(Math.Abs(v.expected - v.actual) / v.expected > 4.45e-14,
                 "Относительная точность между ожидаемым {0} и полученным {1} значениями составила {2}",
                 v.expected, v.actual, Math.Abs(v.expected - v.actual) / v.expected));

@@ -2,7 +2,10 @@
 using System.ComponentModel;
 using System.Xml.Serialization;
 using MathCore.Annotations;
+using static System.Math;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 namespace MathCore.Vectors
 {
@@ -12,21 +15,42 @@ namespace MathCore.Vectors
     {
         /* -------------------------------------------------------------------------------------------- */
 
+        /// <summary>Создать вектор по сферической системе координат</summary>
+        /// <param name="Theta">Угол места</param>
+        /// <param name="Phi">Азимут</param>
+        /// <param name="R">Длина вектора</param>
+        /// <returns>Трёхмерный вектор</returns>
         [DST]
-        public static Vector3D RThetaPhi(double R, double Theta, double Phi) => new Vector3D(R, new SpaceAngle(Theta, Phi));
+        public static Vector3D ThetaPhiRadius(double Theta, double Phi, double R = 1) => new Vector3D(R, new SpaceAngle(Theta, Phi));
 
+        /// <summary>Преобразовать координаты декартовой системы в вектор</summary>
+        /// <param name="X">Координата X</param>
+        /// <param name="Y">Координата Y</param>
+        /// <param name="Z">Координата Z</param>
+        /// <returns>Вектор с заданными координатами</returns>
         [DST]
         public static Vector3D XYZ(double X, double Y, double Z) => new Vector3D(X, Y, Z);
 
-        public static Vector3D Random(double min = -100, double max = 100)
+        /// <summary>Вектор со случайными координатами (с равномерным распределением)</summary>
+        /// <param name="min">Минимальное значение</param>
+        /// <param name="max">Максимальное значение</param>
+        /// <param name="rnd">Генератор случайных чисел (если не задан, то будет создан новый)</param>
+        /// <returns>Вектор со случайными значениями координат из указанного диапазона</returns>
+        public static Vector3D Random(double min = -100, double max = 100, Random rnd = null)
         {
-            var random = new Random();
-            double Rnd() => Math.Abs(max - min) * (random.NextDouble() - .5) + (max + min) * .5;
-            return new Vector3D(Rnd(), Rnd(), Rnd());
+            if (rnd is null) rnd = new Random();
+            var d = Abs(max - min);
+            var m = (max + min) * .5;
+            return new Vector3D(rnd.NextDouble(d, m), rnd.NextDouble(d, m), rnd.NextDouble(d, m));
         }
 
         /* -------------------------------------------------------------------------------------------- */
+        // ReSharper disable InconsistentNaming
 
+        /// <summary>Базисный вектор k</summary>
+        public static readonly Vector3D k = new Vector3D(0, 0, 1);
+
+        /// <summary>Вектор нулевой длины в начале координат</summary>
         public static readonly Vector3D Empty = new Vector3D();
 
         /// <summary>Единичный базисный вектор</summary>
@@ -38,9 +62,7 @@ namespace MathCore.Vectors
         /// <summary>Базисный вектор j</summary>
         public static readonly Vector3D j = new Vector3D(0, 1, 0);
 
-        /// <summary>Базисный вектор k</summary>
-        public static readonly Vector3D k = new Vector3D(0, 0, 1);
-
+        // ReSharper restore InconsistentNaming
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Длина по оси X</summary>
@@ -68,40 +90,40 @@ namespace MathCore.Vectors
 
         /// <summary>Длина вектора</summary>
         [XmlIgnore]
-        public double R => Math.Sqrt(_X * _X + _Y * _Y + _Z * _Z);
+        public double R => Sqrt(_X * _X + _Y * _Y + _Z * _Z);
 
         /// <summary>Угол проекции в плоскости XOY</summary>
-        public double AngleXOY => Math.Abs(_X) < double.Epsilon
-                    ? Math.Abs(_Y) < double.Epsilon       // X == 0
+        public double AngleXOY => Abs(_X) < double.Epsilon
+                    ? Abs(_Y) < double.Epsilon       // X == 0
                         ? 0                               //  Y == 0 => 0
-                        : Math.Sign(_Y) * Consts.pi05     //  Y != 0 => pi/2 * sign(Y)
-                    : Math.Abs(_Y) < double.Epsilon       // X != 0
-                        ? Math.Sign(_X) > 0
+                        : Sign(_Y) * Consts.pi05     //  Y != 0 => pi/2 * sign(Y)
+                    : Abs(_Y) < double.Epsilon       // X != 0
+                        ? Sign(_X) > 0
                             ? 0
                             : Consts.pi
-                        : Math.Atan2(_Y, _X);
+                        : Atan2(_Y, _X);
 
         /// <summary>Угол проекции в плоскости XOZ</summary>
-        public double AngleXOZ => Math.Abs(_X) < double.Epsilon
-                    ? Math.Abs(_Z) < double.Epsilon       // X == 0
+        public double AngleXOZ => Abs(_X) < double.Epsilon
+                    ? Abs(_Z) < double.Epsilon       // X == 0
                         ? 0                               //  Z == 0 => 0
-                        : Math.Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Z)
-                    : Math.Abs(_Z) < double.Epsilon       // X != 0
-                        ? Math.Sign(_X) > 0
+                        : Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Z)
+                    : Abs(_Z) < double.Epsilon       // X != 0
+                        ? Sign(_X) > 0
                             ? 0
                             : Consts.pi
-                        : Math.Atan2(_Z, _X);
+                        : Atan2(_Z, _X);
 
         /// <summary>Угол проекции в плоскости YOZ</summary>
-        public double AngleYOZ => Math.Abs(_Y) < double.Epsilon
-                    ? Math.Abs(_Z) < double.Epsilon       // Y == 0
+        public double AngleYOZ => Abs(_Y) < double.Epsilon
+                    ? Abs(_Z) < double.Epsilon       // Y == 0
                         ? 0                               //  Z == 0 => 0
-                        : Math.Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Y)
-                    : Math.Abs(_Z) < double.Epsilon       // Y != 0
-                        ? Math.Sign(_Y) > 0
+                        : Sign(_Z) * Consts.pi05     //  Z != 0 => pi/2 * sign(Y)
+                    : Abs(_Z) < double.Epsilon       // Y != 0
+                        ? Sign(_Y) > 0
                             ? 0
                             : Consts.pi
-                        : Math.Atan2(_Z, _Y);
+                        : Atan2(_Z, _Y);
 
         /// <summary>Азимутальный угол</summary>
         [XmlIgnore]
@@ -109,45 +131,60 @@ namespace MathCore.Vectors
 
         /// <summary>Угол места</summary>
         [XmlIgnore]
-        public double Theta => Math.Atan2(R_XOY, _Z);
+        public double Theta => Atan2(R_XOY, _Z);
 
         /// <summary>Пространственный угол</summary>
         [XmlIgnore]
         public SpaceAngle Angle => new SpaceAngle(Theta, Phi);
 
-        /// <summary>Двумерный вектор - проекциия в плоскости XOY</summary>
+        /// <summary>Двумерный вектор - проекция в плоскости XOY</summary>
         public Vector2D VectorXOY => new Vector2D(_X, _Y);
 
-        /// <summary>Двумерный вектор - проекциия в плоскости XOZ (X->X; Z->Y)</summary>
+        /// <summary>Двумерный вектор - проекция в плоскости XOZ (X->X; Z->Y)</summary>
         public Vector2D VectorXOZ => new Vector2D(_X, _Z);
 
-        /// <summary>Двумерный вектор - проекциия в плоскости YOZ (Y->X; Z->Y)</summary>
+        /// <summary>Двумерный вектор - проекция в плоскости YOZ (Y->X; Z->Y)</summary>
         public Vector2D VectorYOZ => new Vector2D(_Y, _Z);
 
         /// <summary>Длина в плоскости XOY</summary>
-        public double R_XOY => Math.Sqrt(_X * _X + _Y * _Y);
+        public double R_XOY => Sqrt(_X * _X + _Y * _Y);
 
         /// <summary>Длина в плоскости XOZ</summary>
-        public double R_XOZ => Math.Sqrt(_X * _X + _Z * _Z);
+        public double R_XOZ => Sqrt(_X * _X + _Z * _Z);
 
         /// <summary>Длина в плоскости YOZ</summary>
-        public double R_YOZ => Math.Sqrt(_Y * _Y + _Z * _Z);
+        public double R_YOZ => Sqrt(_Y * _Y + _Z * _Z);
 
-        public Vector3D Abs => new Vector3D(Math.Abs(_X), Math.Abs(_Y), Math.Abs(_Z));
+        /// <summary>Длина вектора</summary>
+        public Vector3D Abs => new Vector3D(Abs(_X), Abs(_Y), Abs(_Z));
 
-        public Vector3D Sign => new Vector3D(Math.Sign(_X), Math.Sign(_Y), Math.Sign(_Z));
+        /// <summary>Вектор знаков координат текущего вектора</summary>
+        public Vector3D Sign => new Vector3D(Sign(_X), Sign(_Y), Sign(_Z));
 
         /* -------------------------------------------------------------------------------------------- */
 
+        /// <summary>Инициализация нового вектора, расположенного вдоль оси OX</summary>
+        /// <param name="X">Координата вдоль оси OX</param>
         [DST] public Vector3D(double X) { _X = X; _Y = 0; _Z = 0; }
 
-
+        /// <summary>Инициализация нового вектора, расположенного в плоскости XOY</summary>
+        /// <param name="X">Координата вдоль оси OX</param>
+        /// <param name="Y">Координата вдоль оси OY</param>
         [DST] public Vector3D(double X, double Y) { _X = X; _Y = Y; _Z = 0; }
 
+        /// <summary>Инициализация нового вектора, заданного своими координатами</summary>
+        /// <param name="X">Координата вдоль оси OX</param>
+        /// <param name="Y">Координата вдоль оси OY</param>
+        /// <param name="Z">Координата вдоль оси OZ</param>
         [DST] public Vector3D(double X, double Y, double Z) { _X = X; _Y = Y; _Z = Z; }
 
+        /// <summary>Единичный вектор, заданный двумя углами в сферической системе координат</summary>
+        /// <param name="Angle">Пространственный угол сферической системы координат</param>
         public Vector3D(in SpaceAngle Angle) : this(1, Angle) { }
 
+        /// <summary>Вектор, заданный двумя углами и радиусом в сферической системе координат</summary>
+        /// <param name="R">Радиус вектора</param>
+        /// <param name="Angle">Пространственный угол сферической системы координат</param>
         public Vector3D(double R, in SpaceAngle Angle)
         {
             double theta;
@@ -163,42 +200,97 @@ namespace MathCore.Vectors
                 phi = Angle.Phi;
             }
 
-            _Z = R * Math.Cos(theta);
-            var r = R * Math.Sin(theta);
-            _X = r * Math.Cos(phi);
-            _Y = r * Math.Sin(phi);
+            _Z = R * Cos(theta);
+            var r = R * Sin(theta);
+            _X = r * Cos(phi);
+            _Y = r * Sin(phi);
         }
 
-        private Vector3D(in Vector3D V) => (_X, _Y, _Z) = V;
+        /// <summary>Конструктор копирования</summary>
+        /// <param name="V">Вектор-прототип</param>
+        private Vector3D(in Vector3D V) { _X = V._X; _Y = V._Y; _Z = V._Z; }
 
+        /// <summary>Представление вектора в базисе</summary>
+        /// <param name="b">Новый базис вектора</param>
+        /// <returns>Вектор в указанном базисе</returns>
         public Vector3D InBasis(in Basis3D b) => new Vector3D(
             b.xx * _X + b.xy * _Y + b.xz * _Z,
             b.yx * _X + b.yy * _Y + b.yz * _Z,
             b.zx * _X + b.zy * _Y + b.zz * _Z);
 
+        /// <summary>Инкрементация координат вектора</summary>
+        /// <param name="dx">Величина приращения координаты X</param>
+        /// <param name="dy">Величина приращения координаты Y</param>
+        /// <param name="dz">Величина приращения координаты Z</param>
+        /// <returns>Вектор с новыми координатами</returns>
         public Vector3D Inc(double dx, double dy, double dz) => new Vector3D(_X + dx, _Y + dy, _Z + dz);
 
-        public Vector3D Inc_X(double dx) => new Vector3D(_X + dx, _Y, _Z);
-        public Vector3D Inc_Y(double dy) => new Vector3D(_X, _Y + dy, _Z);
-        public Vector3D Inc_Z(double dz) => new Vector3D(_X, _Y, _Z + dz);
+        /// <summary>Инкрементировать координату X</summary>
+        /// <param name="dx">Величина приращения координаты X</param>
+        /// <returns>Вектор с обновлённой координатой X</returns>
+        public Vector3D IncX(double dx) => new Vector3D(_X + dx, _Y, _Z);
 
+        /// <summary>Инкрементировать координату Y</summary>
+        /// <param name="dy">Величина приращения координаты Y</param>
+        /// <returns>Вектор с обновлённой координатой Y</returns>
+        public Vector3D IncY(double dy) => new Vector3D(_X, _Y + dy, _Z);
+
+        /// <summary>Инкрементировать координату Z</summary>
+        /// <param name="dz">Величина приращения координаты Z</param>
+        /// <returns>Вектор с обновлённой координатой Z</returns>
+        public Vector3D IncZ(double dz) => new Vector3D(_X, _Y, _Z + dz);
+
+        /// <summary>Декрементация координат вектора</summary>
+        /// <param name="dx">Величина приращения координаты X</param>
+        /// <param name="dy">Величина приращения координаты Y</param>
+        /// <param name="dz">Величина приращения координаты Z</param>
+        /// <returns>Вектор с новыми координатами</returns>
         public Vector3D Dec(double dx, double dy, double dz) => new Vector3D(_X - dx, _Y - dy, _Z - dz);
 
-        public Vector3D Dec_X(double dx) => new Vector3D(_X - dx, _Y, _Z);
-        public Vector3D Dec_Y(double dy) => new Vector3D(_X, _Y - dy, _Z);
-        public Vector3D Dec_Z(double dz) => new Vector3D(_X, _Y, _Z - dz);
+        /// <summary>Декрементировать координату X</summary>
+        /// <param name="dx">Величина приращения координаты X</param>
+        /// <returns>Вектор с обновлённой координатой X</returns>
+        public Vector3D DecX(double dx) => new Vector3D(_X - dx, _Y, _Z);
 
+        /// <summary>Декрементировать координату Y</summary>
+        /// <param name="dy">Величина приращения координаты Y</param>
+        /// <returns>Вектор с обновлённой координатой Y</returns>
+        public Vector3D DecY(double dy) => new Vector3D(_X, _Y - dy, _Z);
 
-        public Vector3D Scale_X(double kx) => new Vector3D(_X * kx, _Y, _Z);
-        public Vector3D Scale_Y(double ky) => new Vector3D(_X, _Y * ky, _Z);
-        public Vector3D Scale_Z(double kz) => new Vector3D(_X, _Y, _Z * kz);
+        /// <summary>Декрементировать координату Z</summary>
+        /// <param name="dz">Величина приращения координаты Z</param>
+        /// <returns>Вектор с обновлённой координатой Z</returns>
+        public Vector3D DecZ(double dz) => new Vector3D(_X, _Y, _Z - dz);
 
+        /// <summary>Выполнить масштабирование вектора по координатам</summary>
+        /// <param name="kx">Коэффициент масштабирования координаты X</param>
+        /// <param name="ky">Коэффициент масштабирования координаты Y</param>
+        /// <param name="kz">Коэффициент масштабирования координаты Z</param>
+        /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
         public Vector3D Scale(double kx, double ky, double kz) => new Vector3D(_X * kx, _Y * ky, _Z * kz);
+
+        /// <summary>Выполнить масштабирование вектора по оси OX</summary>
+        /// <param name="kx">Коэффициент масштабирования координаты X</param>
+        /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        public Vector3D ScaleX(double kx) => new Vector3D(_X * kx, _Y, _Z);
+
+        /// <summary>Выполнить масштабирование вектора по оси OY</summary>
+        /// <param name="ky">Коэффициент масштабирования координаты Y</param>
+        /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        public Vector3D ScaleY(double ky) => new Vector3D(_X, _Y * ky, _Z);
+
+        /// <summary>Выполнить масштабирование вектора по оси OZ</summary>
+        /// <param name="kz">Коэффициент масштабирования координаты Z</param>
+        /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        public Vector3D ScaleZ(double kz) => new Vector3D(_X, _Y, _Z * kz);
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST] public override string ToString() => $"({_X};{_Y};{_Z})";
+        /// <inheritdoc />
+        [DST, NotNull]
+        public override string ToString() => $"({_X};{_Y};{_Z})";
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {
@@ -211,23 +303,26 @@ namespace MathCore.Vectors
             }
         }
 
-        /// <summary>Создает новый объект, который является копией текущего экземпляра.</summary>
-        /// <returns>Новый объект, являющийся копией этого экземпляра.</returns><filterpriority>2</filterpriority>
+        /// <summary>Создает новый объект, который является копией текущего экземпляра</summary>
+        /// <returns>Новый объект, являющийся копией этого экземпляра</returns>
         [DST]
         object ICloneable.Clone() => Clone();
 
+        /// <inheritdoc />
         [DST]
         public Vector3D Clone() => new Vector3D(this);
 
+        /// <inheritdoc />
         [DST]
         public override bool Equals(object obj) => obj is Vector3D vector_3d && Equals(vector_3d);
 
-        [DST, NotNull] 
+        [DST, NotNull]
         public string ToString(string Format) => $"({_X.ToString(Format)};{_Y.ToString(Format)};{_Z.ToString(Format)})";
 
         [DST]
         public string ToString(string Format, IFormatProvider Provider) => $"({_X.ToString(Format, Provider)};{_Y.ToString(Format, Provider)};{_Z.ToString(Format, Provider)})";
 
+        /// <summary>Деконструктор вектора на значения его координат</summary>
         public void Deconstruct(out double x, out double y, out double z)
         {
             x = _X;
@@ -242,12 +337,13 @@ namespace MathCore.Vectors
         /// <summary>Точность сравнения (по умолчанию 10^-16)</summary>
         public static double ComparisonsAccuracy { get; set; } = 1e-16;
 
+        /// <inheritdoc />
         public bool Equals(Vector3D other)
         {
             var eps = ComparisonsAccuracy;
-            return Math.Abs(other._X - _X) < eps
-                   && Math.Abs(other._Y - _Y) < eps
-                   && Math.Abs(other._Z - _Z) < eps;
+            return Abs(other._X - _X) < eps
+                   && Abs(other._Y - _Y) < eps
+                   && Abs(other._Z - _Z) < eps;
         }
 
         #endregion

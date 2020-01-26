@@ -39,6 +39,10 @@ namespace MathCore
         /// <returns>Разность</returns>
         [NotNull] public static Polynom operator -([NotNull] Polynom P, [NotNull] Polynom Q) => new Polynom(Array.Subtract(P._a, Q._a));
 
+        /// <summary>Оператор произведения полинома Q и полинома P</summary>
+        /// <param name="P">Первый сомножитель</param>
+        /// <param name="Q">Второй сомножитель</param>
+        /// <returns>Произведение полиномов</returns>
         [NotNull]
         public static Polynom operator *([NotNull] Polynom P, [NotNull] Polynom Q) => new Polynom(Array.Multiply(P._a, Q._a));
 

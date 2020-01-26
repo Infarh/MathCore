@@ -385,6 +385,7 @@ namespace MathCore
             /// <param name="quotient">Коэффициенты полинома - частного</param>
             /// <param name="remainder">Коэффициенты полинома - остаток от деления</param>
             /// <returns>Коэффициенты полинома - частное</returns>
+            // ReSharper disable once EmptyString
             [Copyright("", url = "http://losev-al.blogspot.ru/2012/09/blog-post_14.htm")]
             public static void Divide([NotNull] double[] dividend, [NotNull] double[] divisor, [NotNull] out double[] quotient, [NotNull] out double[] remainder)
             {
@@ -566,6 +567,7 @@ namespace MathCore
             [NotNull]
             public Func<double, double> GetFunction() => Value;
 
+            /// <inheritdoc />
             [NotNull] public override string ToString() => $"({Result.ToMathString()}) + ({Remainder.ToMathString()}) / ({Divisor.ToMathString()})";
 
             /// <summary>Оператор неявного преобразования результата деления полиномов в полином результата</summary>
@@ -602,6 +604,7 @@ namespace MathCore
         }
 
         [NotNull] public static Polynom RandomWithIntCoefficients_P(int MaxPower = 5, int Ma = 0, int Da = 10) => RandomWithIntCoefficients(new Random().Next(MaxPower), Ma, Da);
+
         [NotNull] public static Polynom PolynomCoefficients([NotNull] params double[] Coefficients) => new Polynom(Coefficients.FilterNullValuesFromEnd());
     }
 }

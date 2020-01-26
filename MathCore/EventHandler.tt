@@ -1,0 +1,59 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+    const int arguments_count = 10;
+#>
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedTypeParameter
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
+
+// ReSharper disable once CheckNamespace
+namespace System
+{
+    /// <summary>Делегат обработчика события</summary>
+    /// <typeparam name="TSender">Тип источника события</typeparam>
+    /// <typeparam name="TArgs">Тип аргумента события</typeparam>
+    /// <param name="Sender">Источник события</param>
+    /// <param name="Args">Аргумент события</param>
+    [Serializable]
+    public delegate void EventHandlerArgs<in TSender, in TArgs>(TSender Sender, TArgs Args) where TArgs : EventArgs;
+
+    /// <summary>Делегат обработчика события</summary>
+    /// <typeparam name="TResult">Тип результата события</typeparam>
+    /// <typeparam name="TSender">Тип источника события</typeparam>
+    /// <typeparam name="TArgs">Тип аргумента события</typeparam>
+    /// <param name="Sender">Источник события</param>
+    /// <param name="Args">Аргумент события</param>
+    /// <returns>Результат события</returns>
+    [Serializable]
+    public delegate TResult EventHandlerArgs<out TResult, in TSender, in TArgs>(TSender Sender, TArgs Args) where TArgs : EventArgs;
+
+    /// <summary>Делегат обработчика события</summary>
+    /// <typeparam name="TSender">Тип источника события</typeparam>
+    /// <typeparam name="TParameter">Тип параметра аргумента события</typeparam>
+    /// <param name="Sender">Источник события</param>
+    /// <param name="Args">Аргумент события</param>
+    [Serializable]
+    public delegate void EventHandler<in TSender, TParameter>(TSender Sender, EventArgs<TParameter> Args);
+
+<# for(var i = 2; i <= arguments_count; i++) { #>
+    /// <summary>Делегат обработчика события</summary>
+    /// <typeparam name="TSender">Тип источника события</typeparam>
+    <#=string.Join("\r\n    ", Enumerable.Range(1, i).Select(i => $"/// <typeparam name=\"TParameter{i}\">Тип параметра {i} аргумента события</typeparam>"))#>
+    /// <param name="Sender">Источник события</param>
+    /// <param name="Args">Аргумент события</param>
+    [Serializable]
+    public delegate void EventHandler<in TSender, <#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"TParameter{i}"))#>>(
+        TSender Sender,
+        EventArgs<<#=string.Join(", ", Enumerable.Range(1, i).Select(i => $"TParameter{i}"))#>> Args);
+
+<# } #>
+}

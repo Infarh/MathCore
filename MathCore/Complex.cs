@@ -8,18 +8,19 @@ using MathCore.Expressions.Complex;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable MissingAnnotation
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 
 namespace MathCore
 {
     /// <summary>Комплексное число</summary>
-    [Serializable]
-    [TypeConverter(typeof(ComplexConverter))]
-    public partial struct Complex : ICloneable<Complex>, IFormattable, IEquatable<Complex>,
-        IEquatable<float>, IEquatable<double>,
-        IEquatable<byte>, IEquatable<sbyte>,
-        IEquatable<short>, IEquatable<ushort>,
-        IEquatable<int>, IEquatable<uint>,
-        IEquatable<long>, IEquatable<ulong>
+    [Serializable, TypeConverter(typeof(ComplexConverter))]
+    public readonly partial struct Complex : ICloneable<Complex>, IFormattable, 
+                                             IEquatable<Complex>, IEquatable<float>, IEquatable<double>, 
+                                             IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>, 
+                                             IEquatable<ushort>, IEquatable<int>, IEquatable<uint>,
+                                             IEquatable<long>, IEquatable<ulong>, IEquatable<(double Re, double Im)>
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -197,25 +198,25 @@ namespace MathCore
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
-        /// <param name="Im">Мнимиая часть числа</param>
+        /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
         public static Complex Mod(double Re, double Im = 0) => new Complex(Re, Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
-        /// <param name="Im">Мнимиая часть числа</param>
+        /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
         public static Complex Mod(double Re, in Complex Im) => new Complex(Re + Im.Re, Im.Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
-        /// <param name="Im">Мнимиая часть числа</param>
+        /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
         public static Complex Mod(in Complex Re, in Complex Im) => new Complex(Re.Re + Im.Re, Re.Im + Im.Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
-        /// <param name="Im">Мнимиая часть числа</param>
+        /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
         public static Complex Mod(in Complex Re, double Im) => new Complex(Re.Re, Re.Im + Im);
 
@@ -257,6 +258,7 @@ namespace MathCore
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Преобразование комплексного числа в выражение</summary>
+        [NotNull]
         public CopmlexConstantExpression Expression => ComplexExpression.Mod(_Re, _Im);
 
         /// <summary>Действительная часть</summary>
@@ -333,10 +335,9 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Представление комплексного числа в текстовой экспонетциальной форме</summary>
-        /// <returns>Текстовое экспонетциальное представление комплексного числа</returns>
-        [NotNull]
-        [DST]
+        /// <summary>Представление комплексного числа в текстовой экспоненциальной форме</summary>
+        /// <returns>Текстовое экспоненциальное представление комплексного числа</returns>
+        [NotNull, DST]
         public string ToString_Exponent()
         {
             var abs = Abs;
@@ -346,10 +347,9 @@ namespace MathCore
                 : arg.Equals(0) ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}}}";
         }
 
-        /// <summary>Представление комплексного числа в текстовой экспонетциальной форме с нормировкой аргумента к значению pi</summary>
-        /// <returns>Текстовое экспонетциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
-        [NotNull]
-        [DST]
+        /// <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента к значению pi</summary>
+        /// <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
+        [NotNull, DST]
         public string ToString_Exponent_pi()
         {
             var abs = Abs;
@@ -359,10 +359,9 @@ namespace MathCore
                 : arg.Equals(0) ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}pi}}";
         }
 
-        /// <summary>Представление комплексного числа в текстовой экспонетциальной форме с нормировкой аргумента в градусах</summary>
-        /// <returns>Текстовое экспонетциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
-        [NotNull]
-        [DST]
+        /// <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента в градусах</summary>
+        /// <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
+        [NotNull, DST]
         public string ToString_Exponent_Deg()
         {
             var abs = Abs;
@@ -373,8 +372,7 @@ namespace MathCore
         }
 
         /// <summary>Строковый эквивалент</summary>
-        /// <returns>Строковый эквивалент</returns>
-        [DST]
+        [DST, NotNull]
         public override string ToString()
         {
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
@@ -387,7 +385,7 @@ namespace MathCore
         /// <summary>Преобразование в строковый формат</summary>
         /// <param name="Format">Формат преобразования</param>
         /// <returns>Строковое представление</returns>
-        [DST]
+        [DST, NotNull]
         public string ToString(string Format)
         {
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
@@ -399,11 +397,11 @@ namespace MathCore
 
         /// <inheritdoc />
         [DST]
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string format, IFormatProvider FormatProvider)
         {
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
-            var re = Re.ToString(format, formatProvider);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(format, formatProvider) : string.Empty)}i";
+            var re = Re.ToString(format, FormatProvider);
+            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(format, FormatProvider) : string.Empty)}i";
             if (Im < 0) im = $"-{im}";
             return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
         }
@@ -567,6 +565,11 @@ namespace MathCore
         [DST]
         bool IEquatable<ulong>.Equals(ulong other) => Equals(other);
 
+        /// <summary>Проверка на идентичность</summary>
+        /// <param name="other">Кортеж двух вещественных чисел</param>
+        /// <returns>Истина, если действительная и мнимая части идентичны</returns>
+        bool IEquatable<(double Re, double Im)>.Equals((double Re, double Im) other) => _Re.Equals(other.Re) && _Im.Equals(other.Im);
+
         #endregion
 
         /// <summary>Поворот вектора комплексного числа на угол</summary>
@@ -592,8 +595,14 @@ namespace MathCore
         /// <returns>Квадратный корень числа</returns>
         public Complex Sqrt() => this ^ 0.5;
 
+        /// <summary>Вычисление корня комплексной степени</summary>
+        /// <param name="z">Комплексная степень корня</param>
+        /// <returns>Комплексный результат вычисления корня комплексной степени от комплексного числа</returns>
         public static Complex Sqrt(in Complex z) => z.Sqrt();
 
+        /// <summary>Вычисление корня действительной степени</summary>
+        /// <param name="x">Действительная степень корня</param>
+        /// <returns>Комплексный результат вычисления корня действительной степени от комплексного числа</returns>
         public static Complex Sqrt(double x) => x >= 0 ? new Complex(Math.Sqrt(x)) : new Complex(0, Math.Sqrt(-x));
     }
 }

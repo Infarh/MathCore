@@ -1,4 +1,5 @@
 ﻿using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
@@ -39,9 +40,11 @@ namespace System
     public class LambdaDisposableObject<T> : LambdaDisposable
     {
         private readonly T _Obj;
+
         private readonly Action<T, object> _ObjectDisposableAction;
 
         public T Object => _Obj;
+
         public object Parameter { get; set; }
 
         public LambdaDisposableObject(T obj, Action<T, object> ObjectDisposableAction = null, object parameter = null, Action BaseDisposableAction = null) :base(BaseDisposableAction)

@@ -1418,15 +1418,15 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов строк</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static Complex GetMaxRowAbsSumm([NotNull] Complex[,] matrix)
+            public static Complex GetMaxRowAbsSum([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = default(Complex);
                 for (var i = 0; i < N; i++)
                 {
-                    var row_summ = default(Complex);
-                    for (var j = 0; j < M; j++) row_summ += matrix[i, j].Abs;
-                    if (row_summ.Abs > max.Abs) max = row_summ;
+                    var row_sum = default(Complex);
+                    for (var j = 0; j < M; j++) row_sum += matrix[i, j].Abs;
+                    if (row_sum.Abs > max.Abs) max = row_sum;
                 }
                 return max;
             }
@@ -1435,15 +1435,15 @@ namespace MathCore
             /// <param name="matrix">Массив элементов матрицы</param>
             /// <returns>Максимальная из сумм абсолютных значений элементов столбцов</returns>
             /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
-            public static Complex GetMaxColAbsSumm([NotNull] Complex[,] matrix)
+            public static Complex GetMaxColAbsSum([NotNull] Complex[,] matrix)
             {
                 GetLength(matrix, out var N, out var M);
                 var max = default(Complex);
                 for (var j = 0; j < M; j++)
                 {
-                    var col_summ = default(Complex);
-                    for (var i = 0; i < N; i++) col_summ += matrix[i, j].Abs;
-                    if (col_summ.Abs > max.Abs) max = col_summ;
+                    var col_sum = default(Complex);
+                    for (var i = 0; i < N; i++) col_sum += matrix[i, j].Abs;
+                    if (col_sum.Abs > max.Abs) max = col_sum;
                 }
                 return max;
             }
@@ -1474,7 +1474,7 @@ namespace MathCore
             /// <param name="N">Число строк матрицы решения</param>
             /// <param name="M">Число столбцов матрицы решения</param>
             /// <returns>Истина, если метод сошёлся Метод Гаусса — Зейделя</returns>
-            private static bool GausSeidelConverge
+            private static bool GaussSeidelConverge
             (
                 [NotNull] ref Complex[,] new_x,
                 [NotNull] ref Complex[,] last_x,
@@ -1537,7 +1537,7 @@ namespace MathCore
                             for (var j = i + 1; j < N; j++) d += matrix[i, j] * x0[j, j_x];
                             x1[i, j_x] = (b[i, j_x] - d) / matrix[i, i];
                         }
-                while (!GausSeidelConverge(ref x1, ref x0, eps, x_N, x_M));
+                while (!GaussSeidelConverge(ref x1, ref x0, eps, x_N, x_M));
                 if (ReferenceEquals(x1, x)) return;
                 System.Array.Copy(x1, x, x.Length);
             }
@@ -1613,10 +1613,10 @@ namespace MathCore
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static Complex PyThag(Complex a, Complex b)
             {
-                var absa = a.Abs;
-                var absb = b.Abs;
-                return absa > absb ? absa * Complex.Real + Sqr(Math.Sqrt(absb / absa)) :
-                    absb.Equals(0) ? default : absb * Complex.Real + Sqr(Math.Sqrt(absa / absb));
+                var abs_a = a.Abs;
+                var abs_b = b.Abs;
+                return abs_a > abs_b ? abs_a * Complex.Real + Sqr(Math.Sqrt(abs_b / abs_a)) :
+                    abs_b.Equals(0) ? default : abs_b * Complex.Real + Sqr(Math.Sqrt(abs_a / abs_b));
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1648,7 +1648,7 @@ namespace MathCore
                 w = new Complex[Math.Min(N, M)];
                 v = new Complex[w.Length, w.Length];
 
-                var anorm = default(Complex);
+                var a_norm = default(Complex);
                 var scale = default(Complex);
                 var g = default(Complex);
 
@@ -1712,7 +1712,7 @@ namespace MathCore
                         }
                     }
 
-                    anorm = Max(anorm, w[i].Abs + rv1[i].Abs);
+                    a_norm = Max(a_norm, w[i].Abs + rv1[i].Abs);
                 }
                 /* Accumulation of right-hand transformations. */
                 for (var i = M - 1; i >= 0; i--)
@@ -1769,12 +1769,12 @@ namespace MathCore
                         {
                             nm = l - 1;
                             /* Note that rv1[0] is always zero. */
-                            if ((rv1[l - 1].Abs + anorm).Equals(anorm))
+                            if ((rv1[l - 1].Abs + a_norm).Equals(a_norm))
                             {
                                 flag = false;
                                 break;
                             }
-                            if ((w[nm - 1].Abs + anorm).Equals(anorm)) break;
+                            if ((w[nm - 1].Abs + a_norm).Equals(a_norm)) break;
                         }
                         Complex c;
                         Complex y;
@@ -1790,7 +1790,7 @@ namespace MathCore
                             {
                                 f = s * rv1[i - 1];
                                 rv1[i - 1] = c * rv1[i - 1];
-                                if ((f.Abs + anorm).Equals(anorm)) break;
+                                if ((f.Abs + a_norm).Equals(a_norm)) break;
                                 g = w[i - 1];
                                 h = PyThag(f, g);
                                 w[i - 1] = h;

@@ -4,7 +4,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
-    public partial struct Complex
+    public readonly partial struct Complex
     {
         /// <summary>Деконструктор комплексного числа</summary>
         /// <param name="re">Действительная часть</param>
@@ -502,7 +502,7 @@ namespace MathCore
 
         #region Операторы приведения
 
-        /// <summary>ОПератор неявного приведения к дробному типу чисел с двойной точностью</summary>
+        /// <summary>Оператор неявного приведения к дробному типу чисел с двойной точностью</summary>
         /// <param name="Z">Приводимое комплексное число</param>
         /// <returns>Модуль комплексного числа</returns>
         public static explicit operator double(in Complex Z) => Z.Abs;
@@ -516,6 +516,16 @@ namespace MathCore
         /// <param name="X">Целое число</param>
         /// <returns>Комплексное число</returns>
         public static implicit operator Complex(in int X) => new Complex(X);
+
+        /// <summary>Оператор неявного приведения кортежа, состоящего из двух вещественных чисел в комплексное число</summary>
+        /// <param name="Z">Кортеж из двух вещественных чисел - действительной и мнимой части</param>
+        /// <returns>Комплексное число</returns>
+        public static implicit operator Complex((double Re, double Im) Z) => new Complex(Z.Re, Z.Im);
+
+        /// <summary>Оператор неявного приведения комплексного числа в кортеж, состоящий из двух вещественных чисел</summary>
+        /// <param name="Z">Комплексное число</param>
+        /// <returns>Кортеж из двух вещественных чисел - действительной и мнимой части</returns>
+        public static implicit operator (double Re, double Im)(Complex Z) => (Z._Re, Z._Im);
 
         #endregion
 

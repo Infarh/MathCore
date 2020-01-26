@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 // ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore
 {
@@ -22,6 +23,7 @@ namespace MathCore
         // Methods
         static PrecisionTimer() => TimeGetDevCaps(ref __Caps, Marshal.SizeOf(__Caps));
 
+        /// <exception cref="PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
         public PrecisionTimer() => Initialize();
 
         public static PrecisionTimerCaps Capabilities => __Caps;
@@ -116,8 +118,11 @@ namespace MathCore
 
         ~PrecisionTimer() { if(IsRunning) TimeKillEvent(_TimerId); }
 
+        /// <exception cref="PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
         private void Initialize()
         {
+            if(Environment.OSVersion.Platform != PlatformID.Win32NT)
+                throw new PlatformNotSupportedException($"Платформа {Environment.OSVersion.Platform} не поддерживается");
             _Mode = PrecisionTimerMode.Periodic;
             _Period = Capabilities.PeriodMin;
             _Resolution = 1;
