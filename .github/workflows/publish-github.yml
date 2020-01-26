@@ -1,0 +1,37 @@
+name: Publish GitHub.com/packages
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    name: Update package
+    
+    steps:
+      
+      - name: Checkout repository
+        uses: actions/checkout@master
+        
+      - name: Building
+        run: |
+          dotnet build MathCore/MathCore.csproj --nologo
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        
+      - name: Testing
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        
+      - name: Packing
+        run: dotnet pack MathCore/MathCore.csproj -c Release -v m
+          
+      - name: Install NuGet
+        uses: NuGet/setup-nuget@v1.0.1
+        
+      - name: Add rigistry
+        run: nuget sources add -name "MathCore" -Source https://nuget.pkg.github.com/Infarh/index.json -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push package
+        run: nuget push MathCore/bin/Release/*.nupkg -Source "TestPackage" -SkipDuplicate
