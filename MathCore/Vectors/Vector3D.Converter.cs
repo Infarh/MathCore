@@ -4,15 +4,17 @@ using System.Globalization;
 
 namespace MathCore.Vectors
 {
+    /// <summary>Конвертер для <see cref="Vector3D"/></summary>
     internal class Vector3DConverter : TypeConverter<string, Vector2D>
     {
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext Context, CultureInfo Info, object value)
         {
             //Не указано объекта для преобразования
             if(value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            //Аргумент не является трокой, либо строка пуста
+            //Аргумент не является строкой, либо строка пуста
             if (!(value is string s) || string.IsNullOrWhiteSpace(s) || s.Length < 1)
                 return base.ConvertFrom(Context, Info, value);
 

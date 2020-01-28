@@ -4,8 +4,10 @@ using System.Globalization;
 
 namespace MathCore.Vectors
 {
+    /// <summary>Конвертер для <see cref="Vector2D"/></summary>
     internal class Vector2DConverter : TypeConverter
     {
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext Context, CultureInfo Info, object value)
         {
             //Не указано объекта для преобразования
