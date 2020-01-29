@@ -1,5 +1,7 @@
 ﻿using System;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
@@ -138,22 +140,19 @@ namespace MathCore
         /// <param name="X">Комплексное делимое число</param>
         /// <param name="Y">Вещественный делитель</param>
         /// <returns>Комплексное частное</returns>
-        [DST]
-        public static Complex operator /(in Complex X, double Y) => new Complex(X.Re / Y, X.Im / Y);
+        [DST] public static Complex operator /(in Complex X, double Y) => new Complex(X.Re / Y, X.Im / Y);
 
         /// <summary>Оператор деления комплексного числа на целое</summary>
         /// <param name="X">Комплексное делимое число</param>
         /// <param name="Y">Целый делитель</param>
         /// <returns>Комплексное частное</returns>
-        [DST]
-        public static Complex operator /(in Complex X, int Y) => new Complex(X.Re / Y, X.Im / Y);
+        [DST] public static Complex operator /(in Complex X, int Y) => new Complex(X.Re / Y, X.Im / Y);
 
         /// <summary>Оператор деления комплексного числа на вещественное одинарной точности</summary>
         /// <param name="X">Комплексное делимое число</param>
         /// <param name="Y">Вещественный делитель одинарной точности</param>
         /// <returns>Комплексное частное</returns>
-        [DST]
-        public static Complex operator /(in Complex X, float Y) => new Complex(X.Re / Y, X.Im / Y);
+        [DST] public static Complex operator /(in Complex X, float Y) => new Complex(X.Re / Y, X.Im / Y);
 
         /// <summary>Оператор произведения вещественного и комплексного числа</summary>
         /// <param name="X">Вещественное число</param>
@@ -227,7 +226,7 @@ namespace MathCore
             var (x_re, x_im) = X;
             var (y_re, y_im) = Y;
 
-            if(double.IsNaN(y_re) || double.IsNaN(y_im))
+            if (double.IsNaN(y_re) || double.IsNaN(y_im))
                 return new Complex(double.NaN, double.NaN);
 
             if (Math.Abs(y_im) < Math.Abs(y_re))
@@ -276,9 +275,9 @@ namespace MathCore
         public static Complex operator ^(double X, in Complex Z)
         {
             var (re, im) = Z;
-            if(X >= 0) return Exp(Math.Pow(X, re), Math.Log(X) * im);
-            var lnX = Math.Log(Math.Abs(X));
-            return Exp(lnX * re - Consts.pi * im, Consts.pi * re + lnX * im);
+            if (X >= 0) return Exp(Math.Pow(X, re), Math.Log(X) * im);
+            var ln_x = Math.Log(Math.Abs(X));
+            return Exp(ln_x * re - Consts.pi * im, Consts.pi * re + ln_x * im);
         }
 
         /// <summary>Оператор возведения вещественного числа одинарной точности в комплексную степень</summary>
@@ -289,9 +288,9 @@ namespace MathCore
         public static Complex operator ^(float X, in Complex Z)
         {
             var (re, im) = Z;
-            if(X >= 0) return Exp(Math.Pow(X, re), Math.Log(X) * im);
-            var lnX = Math.Log(Math.Abs(X));
-            return Exp(lnX * re - Consts.pi * im, Consts.pi * re + lnX * im);
+            if (X >= 0) return Exp(Math.Pow(X, re), Math.Log(X) * im);
+            var ln_x = Math.Log(Math.Abs(X));
+            return Exp(ln_x * re - Consts.pi * im, Consts.pi * re + ln_x * im);
         }
 
         /// <summary>Оператор возведения целого числа в комплексную степень</summary>
@@ -302,9 +301,9 @@ namespace MathCore
         public static Complex operator ^(int X, in Complex Z)
         {
             var (re, im) = Z;
-            if(X >= 0) return Exp(Math.Pow(X, re), Math.Log(X) * im);
-            var lnX = Math.Log(Math.Abs(X));
-            return Exp(lnX * re - Consts.pi * im, Consts.pi * re + lnX * im);
+            if (X >= 0) return Exp(Math.Pow(X, re), Math.Log(X) * im);
+            var ln_x = Math.Log(Math.Abs(X));
+            return Exp(ln_x * re - Consts.pi * im, Consts.pi * re + ln_x * im);
         }
 
         /// <summary>Оператор возведения комплексного числа в комплексную степень</summary>
@@ -329,127 +328,192 @@ namespace MathCore
 
         #region Операторы математики с массивами
 
+        /// <summary>Оператор, прибавляющий комплексное число к массиву целых чисел</summary>
+        /// <param name="X">Массив целых чисел</param>
+        /// <param name="Y">Прибавляемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы целых чисел исходного массива и указанного комплексного числа</returns>
         [DST, NotNull]
-        public static Complex[] operator +([NotNull] int[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for(var j = 0; j < result.Length; j++) result[j] = X[j] + Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator +([NotNull] float[] X, in Complex Y)
+        public static Complex[] operator +([NotNull] in int[] X, in Complex Y)
         {
             var result = new Complex[X.Length];
             for (var j = 0; j < result.Length; j++) result[j] = X[j] + Y;
             return result;
         }
 
+        /// <summary>Оператор, прибавляющий комплексное число к массиву действительных чисел одинарной точности</summary>
+        /// <param name="X">Массив действительных чисел одинарной точности</param>
+        /// <param name="Y">Прибавляемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы вещественных чисел одинарной точности исходного массива и указанного комплексного числа</returns>
         [DST, NotNull]
-        public static Complex[] operator +([NotNull] double[] X, in Complex Y)
+        public static Complex[] operator +([NotNull] in float[] X, in Complex Y)
         {
             var result = new Complex[X.Length];
             for (var j = 0; j < result.Length; j++) result[j] = X[j] + Y;
             return result;
         }
 
+        /// <summary>Оператор, прибавляющий комплексное число к массиву действительных чисел</summary>
+        /// <param name="X">Массив действительных чисел</param>
+        /// <param name="Y">Прибавляемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы вещественных чисел исходного массива и указанного комплексного числа</returns>
         [DST, NotNull]
-        public static Complex[] operator -([NotNull] int[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator -([NotNull] float[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator -([NotNull] double[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator *([NotNull] int[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator *([NotNull] float[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator *([NotNull] double[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator /([NotNull] int[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator /([NotNull] float[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator /([NotNull] double[] X, in Complex Y)
-        {
-            var result = new Complex[X.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
-            return result;
-        }
-
-        [DST, NotNull]
-        public static Complex[] operator +([NotNull] Complex[] X, in Complex Y)
+        public static Complex[] operator +([NotNull] in double[] X, in Complex Y)
         {
             var result = new Complex[X.Length];
             for (var j = 0; j < result.Length; j++) result[j] = X[j] + Y;
             return result;
         }
 
-        [DST, NotNull] public static Complex[] operator -([NotNull] Complex[] X, in Complex Y)
+        /// <summary>Оператор, вычитающий комплексное число из массива целых чисел</summary>
+        /// <param name="X">Массив целых чисел</param>
+        /// <param name="Y">Вычитаемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной разности целых чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator -([NotNull] in int[] X, in Complex Y)
         {
             var result = new Complex[X.Length];
             for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
             return result;
         }
 
+        /// <summary>Оператор, вычитающий комплексное число из массива вещественных чисел одинарной точности</summary>
+        /// <param name="X">Массив действительных чисел</param>
+        /// <param name="Y">Вычитаемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной разности вещественных чисел одинарной точности исходного массива и указанного комплексного числа</returns>
         [DST, NotNull]
-        public static Complex[] operator *([NotNull] Complex[] X, in Complex Y)
+        public static Complex[] operator -([NotNull] in float[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
+            return result;
+        }
+
+        /// <summary>Оператор, вычитающий комплексное число из массива вещественных чисел</summary>
+        /// <param name="X">Массив действительных чисел</param>
+        /// <param name="Y">Вычитаемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной разности вещественных чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator -([NotNull] in double[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
+            return result;
+        }
+
+        /// <summary>Оператор, умножающий комплексное число на массив целых чисел</summary>
+        /// <param name="X">Массив целых чисел</param>
+        /// <param name="Y">Комплексный множитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения целых чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator *([NotNull] in int[] X, in Complex Y)
         {
             var result = new Complex[X.Length];
             for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
             return result;
         }
 
+        /// <summary>Оператор, умножающий комплексное число на массив вещественных чисел одинарной точности</summary>
+        /// <param name="X">Массив вещественных чисел одинарной точности</param>
+        /// <param name="Y">Комплексный множитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения вещественных чисел одинарной точности исходного массива и указанного комплексного числа</returns>
         [DST, NotNull]
-        public static Complex[] operator /([NotNull] Complex[] X, in Complex Y)
+        public static Complex[] operator *([NotNull] in float[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
+            return result;
+        }
+
+        /// <summary>Оператор, умножающий комплексное число на массив вещественных чисел</summary>
+        /// <param name="X">Массив вещественных чисел</param>
+        /// <param name="Y">Комплексный множитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения вещественных чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator *([NotNull] in double[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементного деления массива целых чисел на комплексное число</summary>
+        /// <param name="X">Массив целых чисел</param>
+        /// <param name="Y">Комплексный делитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного деления целых чисел исходного массива на указанное комплексное число</returns>
+        [DST, NotNull]
+        public static Complex[] operator /([NotNull] in int[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементного деления массива вещественных чисел одинарной точности на комплексное число</summary>
+        /// <param name="X">Массив вещественных чисел одинарной точности</param>
+        /// <param name="Y">Комплексный делитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного деления вещественных чисел одинарной точности исходного массива на указанное комплексное число</returns>
+        [DST, NotNull]
+        public static Complex[] operator /([NotNull] in float[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементного деления массива вещественных чисел на комплексное число</summary>
+        /// <param name="X">Массив вещественных чисел</param>
+        /// <param name="Y">Комплексный делитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного деления вещественных чисел исходного массива на указанное комплексное число</returns>
+        [DST, NotNull]
+        public static Complex[] operator /([NotNull] in double[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементной суммы массива комплексных чисел и комплексного числа</summary>
+        /// <param name="X">Массив комплексных чисел</param>
+        /// <param name="Y">Прибавляемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы комплексных чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator +([NotNull] in Complex[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] + Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементной разности массива комплексных чисел и комплексного числа</summary>
+        /// <param name="X">Массив комплексных чисел</param>
+        /// <param name="Y">Вычитаемое комплексное число</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементной разности комплексных чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator -([NotNull] in Complex[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] - Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементного произведения массива комплексных чисел и комплексного числа</summary>
+        /// <param name="X">Массив комплексных чисел</param>
+        /// <param name="Y">Комплексных множитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения комплексных чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator *([NotNull] in Complex[] X, in Complex Y)
+        {
+            var result = new Complex[X.Length];
+            for (var j = 0; j < result.Length; j++) result[j] = X[j] * Y;
+            return result;
+        }
+
+        /// <summary>Оператор поэлементного частного массива комплексных чисел и комплексного числа</summary>
+        /// <param name="X">Массив комплексных чисел</param>
+        /// <param name="Y">Комплексных делитель</param>
+        /// <returns>Массив комплексных чисел, являющийся результатом поэлементного частного комплексных чисел исходного массива и указанного комплексного числа</returns>
+        [DST, NotNull]
+        public static Complex[] operator /([NotNull] in Complex[] X, in Complex Y)
         {
             var result = new Complex[X.Length];
             for (var j = 0; j < result.Length; j++) result[j] = X[j] / Y;
@@ -470,30 +534,124 @@ namespace MathCore
         /// <returns>Истина, если числа не равны</returns>
         [DST] public static bool operator !=(in Complex X, in Complex Y) => !X._Re.Equals(Y._Re) || !X._Im.Equals(Y._Im);
 
+        /// <summary>Оператор равенства комплексного числа вещественному числу одинарной точности</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое вещественное число одинарной точности</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, float Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор неравенства комплексного числа вещественному числу одинарной точности</summary>
+        /// <param name="X">Сравниваемое комплексное число одинарной точности</param>
+        /// <param name="Y">Сравниваемое вещественное число</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, float Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
 
+        /// <summary>Оператор равенства комплексного числа вещественному числу</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое вещественное число</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, double Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+        
+        /// <summary>Оператор неравенства комплексного числа вещественному числу</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое вещественное число</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, double Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
 
+        /// <summary>Оператор равенства комплексного числа целому числу (1 байт со знаком)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (1 байт со знаком)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, sbyte Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+        
+        /// <summary>Оператор неравенства комплексного числа целому числу (1 байт со знаком)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (1 байт со знаком)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, sbyte Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
+        
+        /// <summary>Оператор равенства комплексного числа целому числу (1 байт без знака)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (1 байт без знака)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, byte Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+        
+        /// <summary>Оператор неравенства комплексного числа целому числу (1 байт без знака)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (1 байт без знака)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, byte Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
 
+        /// <summary>Оператор равенства комплексного числа целому числу (2 байта со знаком)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (2 байта со знаком)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, short Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор неравенства комплексного числа целому числу (2 байта со знаком)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (2 байта со знаком)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, short Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
+
+        /// <summary>Оператор равенства комплексного числа целому числу (2 байта без знака)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (2 байта без знака)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, ushort Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор неравенства комплексного числа целому числу (2 байта без знака)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (2 байта без знака)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, ushort Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
 
+        /// <summary>Оператор равенства комплексного числа целому числу</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, int Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор неравенства комплексного числа целому числу</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, int Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
+
+        /// <summary>Оператор равенства комплексного числа целому числу без знака</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число без знака</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator ==(in Complex X, uint Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор неравенства комплексного числа целому числу без знака</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число без знака</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator !=(in Complex X, uint Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
 
+        /// <summary>Оператор неравенства комплексного числа целому числу (8 байт со знаком)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (8 байт со знаком)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator ==(in Complex X, long Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор равенства комплексного числа целому числу (8 байт со знаком)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (8 байт со знаком)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator !=(in Complex X, long Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
+
+        /// <summary>Оператор неравенства комплексного числа целому числу (8 байт без знака)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (8 байт без знака)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
         public static bool operator ==(in Complex X, ulong Y) => X._Re.Equals(Y) && X._Im.Equals(0d);
+
+        /// <summary>Оператор равенства комплексного числа целому числу (8 байт без знака)</summary>
+        /// <param name="X">Сравниваемое комплексное число</param>
+        /// <param name="Y">Сравниваемое целое число (8 байт без знака)</param>
+        /// <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         public static bool operator !=(in Complex X, ulong Y) => !X._Re.Equals(Y) || !X._Im.Equals(0d);
 
         #endregion
