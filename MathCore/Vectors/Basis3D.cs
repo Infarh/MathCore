@@ -7,7 +7,7 @@ using MathCore.Annotations;
 namespace MathCore.Vectors
 {
     /// <summary>Базис трёхмерного пространства</summary>
-    public readonly struct Basis3D
+    public readonly struct Basis3D : IEquatable<Basis3D>
     {
         /// <summary>Базис Евклидова пространства</summary>
         public static readonly Basis3D Euclid = new Basis3D(
@@ -180,5 +180,35 @@ namespace MathCore.Vectors
                 M[0, 0], M[0, 1], M[0, 2],
                 M[1, 0], M[1, 1], M[1, 2],
                 M[2, 0], M[2, 1], M[2, 2]);
+
+        /// <inheritdoc />
+        public bool Equals(Basis3D other) => _xx.Equals(other._xx) && _xy.Equals(other._xy) && _xz.Equals(other._xz) && _yx.Equals(other._yx) && _yy.Equals(other._yy) && _yz.Equals(other._yz) && _zx.Equals(other._zx) && _zy.Equals(other._zy) && _zz.Equals(other._zz);
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) => obj is Basis3D other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash_code = _xx.GetHashCode();
+                hash_code = (hash_code * 397) ^ _xy.GetHashCode();
+                hash_code = (hash_code * 397) ^ _xz.GetHashCode();
+                hash_code = (hash_code * 397) ^ _yx.GetHashCode();
+                hash_code = (hash_code * 397) ^ _yy.GetHashCode();
+                hash_code = (hash_code * 397) ^ _yz.GetHashCode();
+                hash_code = (hash_code * 397) ^ _zx.GetHashCode();
+                hash_code = (hash_code * 397) ^ _zy.GetHashCode();
+                hash_code = (hash_code * 397) ^ _zz.GetHashCode();
+                return hash_code;
+            }
+        }
+
+        /// <summary>Оператор равенства двух базисов</summary>
+        public static bool operator ==(Basis3D left, Basis3D right) => left.Equals(right);
+
+        /// <summary>Оператор неравенства двух базисов</summary>
+        public static bool operator !=(Basis3D left, Basis3D right) => !left.Equals(right);
     }
 }

@@ -7,6 +7,7 @@ using MathCore.Extensions.Expressions;
 using static System.Math;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 namespace MathCore.Vectors
 {
@@ -14,7 +15,7 @@ namespace MathCore.Vectors
     [Serializable]
     [DebuggerDisplay("Theta = {Theta}; Phi = {Phi}; {AngleType}")]
     [TypeConverter(typeof(SpaceAngleConverter))]
-    public struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
+    public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -24,12 +25,13 @@ namespace MathCore.Vectors
         /// <summary>Константа преобразования угла в градусах в радианы</summary>
         private const double __ToRad = Consts.Geometry.ToRad;
 
-        /// <summary>Число Пи</summary>
-        public const double pi = Consts.pi;
-
         /* -------------------------------------------------------------------------------------------- */
 
-        public static double NormaliseAngle(double angle, in AngleType type = AngleType.Rad)
+        /// <summary>Нормализация угла</summary>
+        /// <param name="angle">Номализуемый угол</param>
+        /// <param name="type">Тип значения угла (градусы/радианы)</param>
+        /// <returns>Угол, представленный в интервале от 0 до 360° (0 до 2π)</returns>
+        public static double NormalizeAngle(double angle, in AngleType type = AngleType.Rad)
         {
             var max = type == AngleType.Rad ? Consts.pi2 : 360;
             return angle % max + (angle < 0 ? max : 0);
@@ -39,7 +41,7 @@ namespace MathCore.Vectors
         /// <param name="Min">Минимальное значение угла</param>
         /// <param name="Max">Максимальное значение угла</param>
         /// <returns>Случайный пространственный угол</returns>
-        public static SpaceAngle Random(double Min = -pi, double Max = pi)
+        public static SpaceAngle Random(double Min = -Consts.pi, double Max = Consts.pi)
         {
             var rnd = new Random();
             // ReSharper disable once EventExceptionNotDocumented
@@ -48,25 +50,44 @@ namespace MathCore.Vectors
                 Abs(Max - Min) * (rnd.NextDouble() - .5) + (Max + Min) * .5);
         }
 
+        /// <summary>Создать новый пространственный угол на основе значений углов места и азимута</summary>
+        /// <param name="theta">Угол места</param>
+        /// <param name="phi">Угол азимута</param>
+        /// <param name="type">Тип значения угла</param>
+        /// <returns>Пространственный угол</returns>
         [DST]
         public static SpaceAngle Value(double theta, double phi, in AngleType type = AngleType.Rad) => new SpaceAngle(theta, phi, type);
 
+        /// <summary>Создать угол на основе направляющего вектора</summary>
+        /// <param name="r">Вектор направления</param>
+        /// <returns>Угол вектора направления</returns>
         [DST]
         public static SpaceAngle Direction(in Vector3D r) => r.Angle;
 
+        /// <summary>Создать пространственный угол по заданным координатам вектора направления</summary>
+        /// <returns>Угол вектора направления</returns>
         [DST]
         public static SpaceAngle Direction(double x, double y, double z = 0)
             => new SpaceAngle(Atan2(Sqrt(x * x + y * y), z), Atan2(y, x));
 
+        // ReSharper disable InconsistentNaming
+
+        /// <summary>Орта оси OX</summary>
         public static readonly SpaceAngle i = new SpaceAngle(Theta: Consts.pi05, Phi: 0);
+        /// <summary>Отрицательная орта оси OX</summary>
         public static readonly SpaceAngle i_negative = new SpaceAngle(Theta: Consts.pi05, Phi: Consts.pi);
 
+        /// <summary>Орта оси OY</summary>
         public static readonly SpaceAngle j = new SpaceAngle(Theta: Consts.pi05, Phi: Consts.pi05);
+        /// <summary>Отрицательная орта оси OY</summary>
         public static readonly SpaceAngle j_negative = new SpaceAngle(Theta: Consts.pi05, Phi: -Consts.pi05);
 
+        /// <summary>Орта оси OZ</summary>
         public static readonly SpaceAngle k = new SpaceAngle(Theta: 0, Phi: 0);
+        /// <summary>Отрицательная орта оси OZ</summary>
         public static readonly SpaceAngle k_negative = new SpaceAngle(Theta: Consts.pi, Phi: 0);
 
+        // ReSharper restore InconsistentNaming
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -87,12 +108,20 @@ namespace MathCore.Vectors
         /// <summary>Азимутальный угол в плоскости XOY</summary>
         public double Phi => _Phi;
 
+        /// <summary>Угол места в радианах</summary>
         public double ThetaRad => _AngleType == AngleType.Rad ? _Theta : _Theta * Consts.Geometry.ToRad;
+
+        /// <summary>Угол места в градусах</summary>
         public double ThetaDeg => _AngleType == AngleType.Deg ? _Theta : _Theta * Consts.Geometry.ToDeg;
+
+        /// <summary>Угол азимута в радианах</summary>
         public double PhiRad => _AngleType == AngleType.Rad ? _Phi : _Phi * Consts.Geometry.ToRad;
+
+        /// <summary>Угол азимута в градусах</summary>
         public double PhiDeg => _AngleType == AngleType.Deg ? _Phi : _Phi * Consts.Geometry.ToDeg;
 
-        public bool IsZerro => _Theta.Equals(0d) && _Phi.Equals(0d);
+        /// <summary>Являются ли значения угла места и азимута = 0?</summary>
+        public bool IsZero => _Theta.Equals(0d) && _Phi.Equals(0d);
 
         /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Theta"/>, мнимой частью - направляющий синус</summary>
         public Complex ComplexCosTheta => _AngleType == AngleType.Rad ? Complex.Exp(_Theta) : Complex.Exp(_Theta * __ToRad);
@@ -110,23 +139,26 @@ namespace MathCore.Vectors
             {
                 AngleType.Deg => this, //new SpaceAngle(_Theta, _Phi, AngleType.Deg);
                 AngleType.Rad => new SpaceAngle(_Theta * __ToDeg, _Phi * __ToDeg, AngleType.Deg),
-                _ => throw new NotSupportedException("Неизвестный тип угла")
+                _ => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
             };
 
-        /// <summary>Представлкние угла в радианах</summary>
+        /// <summary>Представление угла в радианах</summary>
         /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
         public SpaceAngle InRad =>
             _AngleType switch
             {
                 AngleType.Deg => new SpaceAngle(_Theta * __ToRad, _Phi * __ToRad, AngleType.Rad),
                 AngleType.Rad => this, //new SpaceAngle(_Theta, _Phi, AngleType.Rad);
-                _ => throw new NotSupportedException("Неизвестный тип угла")
+                _ => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
             };
 
+        /// <summary>Направляющий вектор</summary>
         public Vector3D DirectionalVector => new Vector3D(this);
 
         /* -------------------------------------------------------------------------------------------- */
 
+        /// <summary>Инициализация нового экземпляра <see cref="SpaceAngle"/></summary>
+        /// <param name="Phi">Угол азимута</param>
         public SpaceAngle(double Phi)
         {
             _Phi = Phi;
@@ -134,6 +166,9 @@ namespace MathCore.Vectors
             _AngleType = AngleType.Rad;
         }
 
+        /// <summary>Инициализация нового экземпляра <see cref="SpaceAngle"/></summary>
+        /// <param name="Phi">Угол азимута</param>
+        /// <param name="AngleType">Тип значения угла</param>
         public SpaceAngle(double Phi, in AngleType AngleType)
         {
             _Phi = Phi;
@@ -152,12 +187,21 @@ namespace MathCore.Vectors
             _AngleType = AngleType.Rad;
         }
 
+        /// <summary>Инициализация нового экземпляра <see cref="SpaceAngle"/></summary>
+        /// <param name="Theta">Угол места</param>
+        /// <param name="Phi">Угол азимута</param>
+        /// <param name="AngleType">Тип значения угла</param>
         [DST]
-        public SpaceAngle(double Theta, double Phi, in MathCore.AngleType AngleType) : this(Theta, Phi) => _AngleType = AngleType;
+        public SpaceAngle(double Theta, double Phi, in AngleType AngleType) : this(Theta, Phi) => _AngleType = AngleType;
 
+        /// <summary>Копирование нового экземпляра <see cref="SpaceAngle"/> из прототипа</summary>
+        /// <param name="Angle">Исходное значение угла</param>
         [DST]
         public SpaceAngle(in SpaceAngle Angle) : this(Angle._Theta, Angle._Phi, Angle._AngleType) { }
 
+        /// <summary>Инициализация нового экземпляра <see cref="SpaceAngle"/></summary>
+        /// <param name="Angle">Исходное значение угла</param>
+        /// <param name="AngleType">Тип желаемого значения угла</param>
         /// <exception cref="NotSupportedException">Если AngleType != Deg || Rad - Неизвестный тип угла</exception>
         [DST]
         public SpaceAngle(in SpaceAngle Angle, in AngleType AngleType)
@@ -165,11 +209,11 @@ namespace MathCore.Vectors
         {
             switch (_AngleType)
             {
-                default: throw new NotSupportedException("Неизвестный тип угла");
+                default: throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла");
                 case AngleType.Deg:
                     switch (Angle._AngleType)
                     {
-                        default: throw new NotSupportedException("Неизвестный тип угла");
+                        default: throw new ArgumentOutOfRangeException(nameof(AngleType), Angle._AngleType, "Неизвестный тип угла");
                         case AngleType.Deg: break;
                         case AngleType.Rad:
                             _Theta *= __ToDeg;
@@ -180,7 +224,7 @@ namespace MathCore.Vectors
                 case AngleType.Rad:
                     switch (Angle._AngleType)
                     {
-                        default: throw new NotSupportedException("Неизвестный тип угла");
+                        default: throw new ArgumentOutOfRangeException(nameof(AngleType), Angle._AngleType, "Неизвестный тип угла");
                         case AngleType.Deg:
                             _Theta *= __ToRad;
                             _Phi *= __ToRad;
@@ -192,17 +236,17 @@ namespace MathCore.Vectors
         }
 
         /// <summary>Повернуть угол в сферической системе координат</summary>
-        /// <param name="theta">Угол места поворота локальной системы кординат</param>
+        /// <param name="theta">Угол места поворота локальной системы координат</param>
         /// <param name="phi">Угол азимута поворота локальной системы координат</param>
         /// <param name="type">Тип значений угловых величин</param>
         /// <returns>Угол в повёрнутой локальной системе координат</returns>
-        public SpaceAngle Rotate_PhiTheta(double theta, double phi, in AngleType type = AngleType.Rad)
-            => Rotate_PhiTheta(new SpaceAngle(theta, phi, type));
+        public SpaceAngle RotatePhiTheta(double theta, double phi, in AngleType type = AngleType.Rad)
+            => RotatePhiTheta(new SpaceAngle(theta, phi, type));
 
         /// <summary>Повернуть угол в сферической системе координат</summary>
-        /// <param name="angle">Пространственный угол поворота локаьлной системы координат</param>
+        /// <param name="angle">Пространственный угол поворота локальной системы координат</param>
         /// <returns>Угол в повёрнутой локальной системе координат</returns>
-        public SpaceAngle Rotate_PhiTheta(in SpaceAngle angle)
+        public SpaceAngle RotatePhiTheta(in SpaceAngle angle)
         {
             var ph0 = angle.PhiRad;
             var th0 = angle.ThetaRad;
@@ -242,14 +286,21 @@ namespace MathCore.Vectors
 
             var ph1 = Atan2(y1, x1);
             var th1 = Atan2(Sqrt(x1 * x1 + y1 * y1), z1);
-            return AngleType == AngleType.Rad ? new SpaceAngle(th1, ph1) : new SpaceAngle(th1, ph1).InDeg;
+            return AngleType == AngleType.Rad
+                ? new SpaceAngle(th1, ph1)
+                : new SpaceAngle(th1 * __ToDeg, ph1 * __ToDeg, AngleType.Deg);
         }
 
+        /// <summary>Получить функцию, осуществляющую поворот пространственного угла на текущий пространственный угол</summary>
+        /// <returns>Функция, осуществляющая поворот пространственного угла на заданный угол</returns>
         [NotNull]
-        public Func<SpaceAngle, SpaceAngle> GetRotator_PhiTheta() => GetRotator_PhiTheta(this);
+        public Func<SpaceAngle, SpaceAngle> GetRotatorPhiTheta() => GetRotatorPhiTheta(this);
 
+        /// <summary>Получить функцию, осуществляющую поворот пространственного угла на заданный пространственный угол</summary>
+        /// <param name="angle"></param>
+        /// <returns></returns>
         [NotNull]
-        public static Func<SpaceAngle, SpaceAngle> GetRotator_PhiTheta(in SpaceAngle angle)
+        public static Func<SpaceAngle, SpaceAngle> GetRotatorPhiTheta(in SpaceAngle angle)
         {
             var ph0 = angle.PhiRad;
             var th0 = angle.ThetaRad;
@@ -303,13 +354,25 @@ namespace MathCore.Vectors
 
                 var ph1 = Atan2(y1, x1);
                 var th1 = Atan2(Sqrt(x1 * x1 + y1 * y1), z1);
-                return r.AngleType == AngleType.Rad ? new SpaceAngle(th1, ph1) : new SpaceAngle(th1, ph1).InDeg;
+                return r.AngleType == AngleType.Rad
+                    ? new SpaceAngle(th1, ph1)
+                    : new SpaceAngle(th1 * __ToDeg, ph1 * __ToDeg, AngleType.Deg);
             };
         }
 
 
-        public Expression GetRotator_PhiTheta_Expression(Expression r)
+        /// <summary>Получить выражение, осуществляющее поворот угла на текущий пространственный угол</summary>
+        /// <param name="r">Выражение, предоставляющее пространственный угол, который требуется повернуть</param>
+        /// <returns>Выражение, обеспечивающее поворот пространственного угла на текущий угол</returns>
+        [NotNull]
+        public Expression GetRotatorPhiThetaExpression([NotNull] Expression r)
         {
+            if (r is null) throw new ArgumentNullException(nameof(r));
+            if (r.Type != typeof(SpaceAngle))
+                throw new ArgumentException(
+                    $"Тип результата выражения {r.Type} не является типом {typeof(SpaceAngle)}",
+                    nameof(r));
+
             var a = this;
             var ph0 = a.PhiRad;
             var th0 = a.ThetaRad;
@@ -375,13 +438,20 @@ namespace MathCore.Vectors
             );
         }
 
+        /// <summary>Повернуть функцию от пространственного угла на текущий угол</summary>
+        /// <param name="f">Поворачиваемая функция</param>
+        /// <typeparam name="T">Тип значения функции</typeparam>
+        /// <returns>Функция, аргумент которой повёрнут на текущий угол</returns>
         [NotNull]
-        public Func<SpaceAngle, T> Rotate_PhiTheta<T>(Func<SpaceAngle, T> f)
+        public Func<SpaceAngle, T> RotatePhiTheta<T>(Func<SpaceAngle, T> f)
         {
-            var r = GetRotator_PhiTheta();
+            var r = GetRotatorPhiTheta();
             return a => f(r(a));
         }
 
+        /// <summary>Представить угол в указанном типе значения</summary>
+        /// <param name="type">Тип требуемого значения угла</param>
+        /// <returns></returns>
         [DST]
         public SpaceAngle In(in AngleType type) =>
             _AngleType == type
@@ -395,25 +465,35 @@ namespace MathCore.Vectors
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public void Deconstruct(out double th, out double phi)
+        /// <summary>Деконструктор значений угла</summary>
+        /// <param name="theta">Угол места</param>
+        /// <param name="phi">Угол азимута</param>
+        public void Deconstruct(out double theta, out double phi)
         {
-            th = _Theta;
+            theta = _Theta;
             phi = _Phi;
         }
 
+        /// <inheritdoc />
         [DST]
         public object Clone() => new SpaceAngle(this, AngleType);
 
-        [DST]
-        public override string ToString() => $"(Theta:{_Theta}; Phi:{_Phi}):{_AngleType}";
+        /// <inheritdoc />
+        [DST, NotNull] public override string ToString() => $"(Theta:{_Theta}; Phi:{_Phi}):{_AngleType}";
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {
-            if (_AngleType == AngleType.Deg) return InRad.GetHashCode();
-            unchecked { return (_Theta.GetHashCode() * 397) ^ _Phi.GetHashCode(); }
+            unchecked
+            {
+                return _AngleType == AngleType.Deg 
+                    ? InRad.GetHashCode()
+                    : (_Theta.GetHashCode() * 397) ^ _Phi.GetHashCode();
+            }
         }
 
+        /// <inheritdoc />
         [DST]
         public override bool Equals(object obj) => obj is { } && obj is SpaceAngle a && Equals(a);
 
@@ -435,6 +515,9 @@ namespace MathCore.Vectors
             return new SpaceAngle(x._Theta - y_th, x._Phi - y_ph, x._AngleType);
         }
 
+        /// <summary>Оператор отрицания значения пространственного угла</summary>
+        /// <param name="a">Исходный пространственный угол</param>
+        /// <returns>Пространственный угол у которого значения угла места и азимута имеют обратный знак по отношению к исходному значению</returns>
         public static SpaceAngle operator -(in SpaceAngle a) => new SpaceAngle(-a._Theta, -a._Phi, a._AngleType);
 
         public static SpaceAngle operator /(in SpaceAngle a, double x) => new SpaceAngle(a.Theta / x, a.Phi / x, a.AngleType);
@@ -452,14 +535,14 @@ namespace MathCore.Vectors
         /// <param name="a">Пространственный угол поворота</param>
         /// <returns>Вещественная функция, аргумент которой повёрнут на указанный пространственный угол</returns>
         [NotNull]
-        public static Func<SpaceAngle, double> operator ^(Func<SpaceAngle, double> f, in SpaceAngle a) => a.Rotate_PhiTheta(f);
+        public static Func<SpaceAngle, double> operator ^(Func<SpaceAngle, double> f, in SpaceAngle a) => a.RotatePhiTheta(f);
 
         /// <summary>Оператор поворота функции на пространственный угол</summary>
         /// <param name="f">Комплексная пространственная функция</param>
         /// <param name="a">Пространственный угол поворота</param>
         /// <returns>Комплексная функция, аргумент которой повёрнут на указанный пространственный угол</returns>
         [NotNull]
-        public static Func<SpaceAngle, Complex> operator ^(Func<SpaceAngle, Complex> f, in SpaceAngle a) => a.Rotate_PhiTheta(f);
+        public static Func<SpaceAngle, Complex> operator ^(Func<SpaceAngle, Complex> f, in SpaceAngle a) => a.RotatePhiTheta(f);
 
         /* -------------------------------------------------------------------------------------------- */
 

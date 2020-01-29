@@ -9,9 +9,9 @@ using MathCore.Annotations;
 
 namespace MathCore.Data
 {
-    public struct DataLength : IFormattable
+    public readonly struct DataLength : IFormattable
     {
-        private const double __Base = 1024;
+        //private const double __Base = 1024;
         private const double __Threshold = 0.948964729348844D; // Log(1024 * 0.7, __Base) - 70%
         private static readonly string[] __Units = {string.Empty, "k", "M", "G", "T", "P", "E", "Z", "Y" };
 
@@ -62,8 +62,11 @@ namespace MathCore.Data
         private readonly double _Base;
 
         public double Length => _Length;
+
         public double Base => _Base;
+
         public double FormattedLength => _FormattedLength;
+
         public string Unit => _Unit;
 
         public DataLength(double Length, double Base) => _FormattedLength = Value(_Length = Length, _Base = Base, out _Unit);

@@ -22,12 +22,12 @@ namespace MathCore.Tests
 
         #endregion
 
-        private SpaceAngle RandomAngle =>
-            new SpaceAngle
-            (
-                Theta: GetRNDDouble(Min: -Consts.Geometry.Pi / 2, Max: Consts.Geometry.Pi / 2),
-                Phi: GetRNDDouble(Min: 0, Max: 2 * Consts.Geometry.Pi)
-            );
+        //private SpaceAngle RandomAngle =>
+        //    new SpaceAngle
+        //    (
+        //        Theta: GetRNDDouble(Min: -Consts.Geometry.Pi / 2, Max: Consts.Geometry.Pi / 2),
+        //        Phi: GetRNDDouble(Min: 0, Max: 2 * Consts.Geometry.Pi)
+        //    );
 
         /// <summary></summary>
         [TestMethod, Priority(0), Description("")]
@@ -69,25 +69,25 @@ namespace MathCore.Tests
             var a = new SpaceAngle(90, 0, AngleType.Deg);
 
             Assert.AreEqual(SpaceAngle.i, a);
-            Assert.AreEqual(SpaceAngle.i, a.Rotate_PhiTheta(0, 0));
-            Assert.AreEqual(SpaceAngle.i, a.Rotate_PhiTheta(0, Consts.pi2));
-            Assert.AreEqual(SpaceAngle.i, a.Rotate_PhiTheta(0, -Consts.pi2));
+            Assert.AreEqual(SpaceAngle.i, a.RotatePhiTheta(0, 0));
+            Assert.AreEqual(SpaceAngle.i, a.RotatePhiTheta(0, Consts.pi2));
+            Assert.AreEqual(SpaceAngle.i, a.RotatePhiTheta(0, -Consts.pi2));
 
-            Assert.AreEqual(SpaceAngle.i_negative, a.Rotate_PhiTheta(0, Consts.pi));
-            Assert.AreEqual(SpaceAngle.i_negative, a.Rotate_PhiTheta(0, -Consts.pi));
-
-
-            Assert.AreEqual(SpaceAngle.j, a.Rotate_PhiTheta(0, Consts.pi05));
-            Assert.AreEqual(SpaceAngle.j, a.Rotate_PhiTheta(0, -Consts.pi3_2));
+            Assert.AreEqual(SpaceAngle.i_negative, a.RotatePhiTheta(0, Consts.pi));
+            Assert.AreEqual(SpaceAngle.i_negative, a.RotatePhiTheta(0, -Consts.pi));
 
 
-            Assert.AreEqual(SpaceAngle.j_negative, a.Rotate_PhiTheta(0, Consts.pi3_2));
-            Assert.AreEqual(SpaceAngle.j_negative, a.Rotate_PhiTheta(0, -Consts.pi05));
+            Assert.AreEqual(SpaceAngle.j, a.RotatePhiTheta(0, Consts.pi05));
+            Assert.AreEqual(SpaceAngle.j, a.RotatePhiTheta(0, -Consts.pi3_2));
 
-            Assert.AreEqual(SpaceAngle.k, a.Rotate_PhiTheta(-Consts.pi05, 0));
-            Assert.AreEqual(SpaceAngle.k_negative, a.Rotate_PhiTheta(Consts.pi05, 0));
-            Assert.AreEqual(SpaceAngle.i_negative, a.Rotate_PhiTheta(Consts.pi, 0));
-            Assert.AreEqual(SpaceAngle.i_negative, a.Rotate_PhiTheta(-Consts.pi, 0));
+
+            Assert.AreEqual(SpaceAngle.j_negative, a.RotatePhiTheta(0, Consts.pi3_2));
+            Assert.AreEqual(SpaceAngle.j_negative, a.RotatePhiTheta(0, -Consts.pi05));
+
+            Assert.AreEqual(SpaceAngle.k, a.RotatePhiTheta(-Consts.pi05, 0));
+            Assert.AreEqual(SpaceAngle.k_negative, a.RotatePhiTheta(Consts.pi05, 0));
+            Assert.AreEqual(SpaceAngle.i_negative, a.RotatePhiTheta(Consts.pi, 0));
+            Assert.AreEqual(SpaceAngle.i_negative, a.RotatePhiTheta(-Consts.pi, 0));
         }
 
         /// <summary></summary>
@@ -98,7 +98,7 @@ namespace MathCore.Tests
             static double Function(SpaceAngle a) => Func(a.ThetaRad);
             const double delta = 3d;
 
-            static double F1(SpaceAngle a) => Function(a.Rotate_PhiTheta(delta, 0, AngleType.Deg));
+            static double F1(SpaceAngle a) => Function(a.RotatePhiTheta(delta, 0, AngleType.Deg));
             static double F2(double a) => Func(a + delta * Consts.Geometry.ToRad);
 
             for (var a = new SpaceAngle(0, AngleType.Deg); a.ThetaDeg <= 360; a += new SpaceAngle(1, 0, AngleType.Deg))
@@ -115,7 +115,7 @@ namespace MathCore.Tests
         {
             static double Func(double a) => Math.Cos(a);
             static double Func1(SpaceAngle a) => Func(a.ThetaRad);
-            static double Func2(SpaceAngle a) => Func1(a.Rotate_PhiTheta(90, 0, AngleType.Deg));
+            static double Func2(SpaceAngle a) => Func1(a.RotatePhiTheta(90, 0, AngleType.Deg));
 
             for (var a = new SpaceAngle(0, AngleType.Deg); a.PhiDeg <= 360; a += new SpaceAngle(0, 15, AngleType.Deg))
             {

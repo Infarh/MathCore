@@ -1,4 +1,5 @@
-﻿using MathCore.Annotations;
+﻿using System;
+using MathCore.Annotations;
 using static System.Math;
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 // ReSharper disable InconsistentNaming
@@ -10,7 +11,7 @@ using static System.Math;
 namespace MathCore.Vectors
 {
     /// <summary>Двумерный базис</summary>
-    public readonly struct Basis2D
+    public readonly struct Basis2D : IEquatable<Basis2D>
     {
         /// <summary>Базис Евклидова пространства</summary>
         public static readonly Basis2D Euclid = new Basis2D(
@@ -81,5 +82,30 @@ namespace MathCore.Vectors
 
         /// <summary>Оператор явного преобразования матрицы 2х2 в двумерный базис</summary>
         public static explicit operator Basis2D([NotNull] in Matrix M) => new Basis2D(M[0, 0], M[0, 1], M[1, 0], M[1, 1]);
+
+        /// <inheritdoc />
+        public bool Equals(Basis2D other) => _xx.Equals(other._xx) && _xy.Equals(other._xy) && _yx.Equals(other._yx) && _yy.Equals(other._yy);
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) => obj is Basis2D other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash_code = _xx.GetHashCode();
+                hash_code = (hash_code * 397) ^ _xy.GetHashCode();
+                hash_code = (hash_code * 397) ^ _yx.GetHashCode();
+                hash_code = (hash_code * 397) ^ _yy.GetHashCode();
+                return hash_code;
+            }
+        }
+
+        /// <summary>Оператор равенства двух базисов</summary>
+        public static bool operator ==(Basis2D left, Basis2D right) => left.Equals(right);
+
+        /// <summary>Оператор неравенства двух базисов</summary>
+        public static bool operator !=(Basis2D left, Basis2D right) => !left.Equals(right);
     }
 }

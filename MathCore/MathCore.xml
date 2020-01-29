@@ -279,7 +279,7 @@
         <member name="T:MathCore.BigInteger">
             <summary> Целочисленная арифметика с большими числами  </summary>
         </member>
-        <member name="F:MathCore.BigInteger.__MaxLength">
+        <member name="F:MathCore.BigInteger.MaxLength">
             <summary>Максимальная длина числа в байтах х8</summary>
         </member>
         <member name="F:MathCore.BigInteger.PrimesBelow2000">
@@ -325,14 +325,29 @@
             <summary>Overloading of multiplication operator</summary>
             <exception cref="T:System.ArithmeticException">Multiplication overflow</exception>
         </member>
+        <member name="M:MathCore.BigInteger.ToHexString">
+            <summary>Представление <see cref="T:MathCore.BigInteger"/> в шестнадцатеричной системе счисления</summary>
+            <returns>Строка шестнадцатеричного представления числа <see cref="T:MathCore.BigInteger"/></returns>
+        </member>
         <member name="M:MathCore.BigInteger.BarrettReduction(MathCore.BigInteger,MathCore.BigInteger,MathCore.BigInteger)">
-            <summary>Fast calculation of modular reduction using Barrett's reduction</summary>
+            <summary>Быстрое вычисление сокращения числа по модулю с использованием редукции Барретта</summary>
             <returns></returns>
-            <remarks>Requires x &lt; b^(2k), where b is the base.  In this case, base is 2^32 (uint). Reference [4]</remarks>
+            <remarks>
+            Требуется <paramref name="x"/> &lt; b^(2k), где b база.
+            В этом случае база соответствует 2^32 (uint).
+            </remarks>
+        </member>
+        <member name="M:MathCore.BigInteger.Gcd(MathCore.BigInteger)">
+            <summary>Наибольший общий делитель</summary>
         </member>
         <member name="M:MathCore.BigInteger.GenRandomBits(System.Int32,System.Random)">
-            <summary>Populates "this" with the specified amount of random bits</summary>
-            <exception cref="T:System.ArithmeticException">Number of required bits &gt; maxLength</exception>
+            <summary>Случайный набор бит указанной длины <paramref name="bits"/></summary>
+            <param name="bits">Требуемое число бит</param>
+            <param name="rand">Генератор случайных чисел</param>
+            <exception cref="T:System.ArithmeticException">Число бит &gt; <see cref="F:MathCore.BigInteger.MaxLength"/> = (70)x(8x8) = 4'480 </exception>
+        </member>
+        <member name="P:MathCore.BigInteger.BitCount">
+            <summary>Число бит (номер последнего значащего бита)</summary>
         </member>
         <member name="M:MathCore.BigInteger.IntValue">
             <summary>Последние 4 байта значения числа <see cref="T:MathCore.BigInteger"/></summary>
@@ -616,6 +631,24 @@
             <summary>Проверка - имеет ли команда обработчики</summary>
             <param name="CommandName">Проверяемая команда</param>
             <returns>Истина, если указаны обработчики команды</returns>
+        </member>
+        <member name="T:MathCore.CommandStringArguments">
+            <summary>Аргументы командной строки</summary>
+        </member>
+        <member name="F:MathCore.CommandStringArguments._Arguments">
+            <summary>Массив аргументов командной строки</summary>
+        </member>
+        <member name="P:MathCore.CommandStringArguments.Count">
+            <summary>Количество аргументов командной строки</summary>
+        </member>
+        <member name="P:MathCore.CommandStringArguments.Item(System.Int32)">
+            <summary>Аргумент командной строки с указанным индексом</summary>
+            <param name="i">Индекс аргумента</param>
+            <returns>Значение аргумента с указанным индексом</returns>
+        </member>
+        <member name="M:MathCore.CommandStringArguments.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.CommandStringArguments"/></summary>
+            <param name="Args">Перечисление значений аргументов командной строки</param>
         </member>
         <member name="M:MathCore.CommandStringArguments.GetEnumerator">
             <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции аргументов командной строки</summary>
@@ -1177,6 +1210,102 @@
             <param name="Y">Комплексный показатель степени</param>
             <returns>Комплексный результат возведения комплексного числа в комплексную степень</returns>
         </member>
+        <member name="M:MathCore.Complex.op_Addition(System.Int32[]@,MathCore.Complex@)">
+            <summary>Оператор, прибавляющий комплексное число к массиву целых чисел</summary>
+            <param name="X">Массив целых чисел</param>
+            <param name="Y">Прибавляемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы целых чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Addition(System.Single[]@,MathCore.Complex@)">
+            <summary>Оператор, прибавляющий комплексное число к массиву действительных чисел одинарной точности</summary>
+            <param name="X">Массив действительных чисел одинарной точности</param>
+            <param name="Y">Прибавляемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы вещественных чисел одинарной точности исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Addition(System.Double[]@,MathCore.Complex@)">
+            <summary>Оператор, прибавляющий комплексное число к массиву действительных чисел</summary>
+            <param name="X">Массив действительных чисел</param>
+            <param name="Y">Прибавляемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы вещественных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Subtraction(System.Int32[]@,MathCore.Complex@)">
+            <summary>Оператор, вычитающий комплексное число из массива целых чисел</summary>
+            <param name="X">Массив целых чисел</param>
+            <param name="Y">Вычитаемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной разности целых чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Subtraction(System.Single[]@,MathCore.Complex@)">
+            <summary>Оператор, вычитающий комплексное число из массива вещественных чисел одинарной точности</summary>
+            <param name="X">Массив действительных чисел</param>
+            <param name="Y">Вычитаемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной разности вещественных чисел одинарной точности исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Subtraction(System.Double[]@,MathCore.Complex@)">
+            <summary>Оператор, вычитающий комплексное число из массива вещественных чисел</summary>
+            <param name="X">Массив действительных чисел</param>
+            <param name="Y">Вычитаемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной разности вещественных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Multiply(System.Int32[]@,MathCore.Complex@)">
+            <summary>Оператор, умножающий комплексное число на массив целых чисел</summary>
+            <param name="X">Массив целых чисел</param>
+            <param name="Y">Комплексный множитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения целых чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Multiply(System.Single[]@,MathCore.Complex@)">
+            <summary>Оператор, умножающий комплексное число на массив вещественных чисел одинарной точности</summary>
+            <param name="X">Массив вещественных чисел одинарной точности</param>
+            <param name="Y">Комплексный множитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения вещественных чисел одинарной точности исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Multiply(System.Double[]@,MathCore.Complex@)">
+            <summary>Оператор, умножающий комплексное число на массив вещественных чисел</summary>
+            <param name="X">Массив вещественных чисел</param>
+            <param name="Y">Комплексный множитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения вещественных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Division(System.Int32[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементного деления массива целых чисел на комплексное число</summary>
+            <param name="X">Массив целых чисел</param>
+            <param name="Y">Комплексный делитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного деления целых чисел исходного массива на указанное комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Division(System.Single[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементного деления массива вещественных чисел одинарной точности на комплексное число</summary>
+            <param name="X">Массив вещественных чисел одинарной точности</param>
+            <param name="Y">Комплексный делитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного деления вещественных чисел одинарной точности исходного массива на указанное комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Division(System.Double[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементного деления массива вещественных чисел на комплексное число</summary>
+            <param name="X">Массив вещественных чисел</param>
+            <param name="Y">Комплексный делитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного деления вещественных чисел исходного массива на указанное комплексное число</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Addition(MathCore.Complex[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементной суммы массива комплексных чисел и комплексного числа</summary>
+            <param name="X">Массив комплексных чисел</param>
+            <param name="Y">Прибавляемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной суммы комплексных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Subtraction(MathCore.Complex[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементной разности массива комплексных чисел и комплексного числа</summary>
+            <param name="X">Массив комплексных чисел</param>
+            <param name="Y">Вычитаемое комплексное число</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементной разности комплексных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Multiply(MathCore.Complex[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементного произведения массива комплексных чисел и комплексного числа</summary>
+            <param name="X">Массив комплексных чисел</param>
+            <param name="Y">Комплексных множитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного произведения комплексных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Division(MathCore.Complex[]@,MathCore.Complex@)">
+            <summary>Оператор поэлементного частного массива комплексных чисел и комплексного числа</summary>
+            <param name="X">Массив комплексных чисел</param>
+            <param name="Y">Комплексных делитель</param>
+            <returns>Массив комплексных чисел, являющийся результатом поэлементного частного комплексных чисел исходного массива и указанного комплексного числа</returns>
+        </member>
         <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,MathCore.Complex@)">
             <summary>Оператор сравнения двух комплексных чисел (равенства)</summary>
             <returns>Истина, если числа равны между собой</returns>
@@ -1184,6 +1313,126 @@
         <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,MathCore.Complex@)">
             <summary>Оператор сравнения двух комплексных чисел (неравенства)</summary>
             <returns>Истина, если числа не равны</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.Single)">
+            <summary>Оператор равенства комплексного числа вещественному числу одинарной точности</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое вещественное число одинарной точности</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.Single)">
+            <summary>Оператор неравенства комплексного числа вещественному числу одинарной точности</summary>
+            <param name="X">Сравниваемое комплексное число одинарной точности</param>
+            <param name="Y">Сравниваемое вещественное число</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.Double)">
+            <summary>Оператор равенства комплексного числа вещественному числу</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое вещественное число</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.Double)">
+            <summary>Оператор неравенства комплексного числа вещественному числу</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое вещественное число</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.SByte)">
+            <summary>Оператор равенства комплексного числа целому числу (1 байт со знаком)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (1 байт со знаком)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.SByte)">
+            <summary>Оператор неравенства комплексного числа целому числу (1 байт со знаком)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (1 байт со знаком)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.Byte)">
+            <summary>Оператор равенства комплексного числа целому числу (1 байт без знака)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (1 байт без знака)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.Byte)">
+            <summary>Оператор неравенства комплексного числа целому числу (1 байт без знака)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (1 байт без знака)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.Int16)">
+            <summary>Оператор равенства комплексного числа целому числу (2 байта со знаком)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (2 байта со знаком)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.Int16)">
+            <summary>Оператор неравенства комплексного числа целому числу (2 байта со знаком)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (2 байта со знаком)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.UInt16)">
+            <summary>Оператор равенства комплексного числа целому числу (2 байта без знака)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (2 байта без знака)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.UInt16)">
+            <summary>Оператор неравенства комплексного числа целому числу (2 байта без знака)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (2 байта без знака)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.Int32)">
+            <summary>Оператор равенства комплексного числа целому числу</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.Int32)">
+            <summary>Оператор неравенства комплексного числа целому числу</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.UInt32)">
+            <summary>Оператор равенства комплексного числа целому числу без знака</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число без знака</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.UInt32)">
+            <summary>Оператор неравенства комплексного числа целому числу без знака</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число без знака</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.Int64)">
+            <summary>Оператор неравенства комплексного числа целому числу (8 байт со знаком)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (8 байт со знаком)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.Int64)">
+            <summary>Оператор равенства комплексного числа целому числу (8 байт со знаком)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (8 байт со знаком)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Equality(MathCore.Complex@,System.UInt64)">
+            <summary>Оператор неравенства комплексного числа целому числу (8 байт без знака)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (8 байт без знака)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> не равна <paramref name="Y"/>, либо мнимая часть не равна 0</returns>
+        </member>
+        <member name="M:MathCore.Complex.op_Inequality(MathCore.Complex@,System.UInt64)">
+            <summary>Оператор равенства комплексного числа целому числу (8 байт без знака)</summary>
+            <param name="X">Сравниваемое комплексное число</param>
+            <param name="Y">Сравниваемое целое число (8 байт без знака)</param>
+            <returns>Истина, если реальная часть <paramref name="X"/> равна <paramref name="Y"/>, а мнимая часть равна 0</returns>
         </member>
         <member name="M:MathCore.Complex.op_Explicit(MathCore.Complex@)~System.Double">
             <summary>Оператор неявного приведения к дробному типу чисел с двойной точностью</summary>
@@ -11175,8 +11424,184 @@
         <member name="T:MathCore.Vectors.Basis2D">
             <summary>Двумерный базис</summary>
         </member>
-        <member name="F:MathCore.Vectors.Basis2D.Evclid">
-            <summary>Базис Эвклидова пространства</summary>
+        <member name="F:MathCore.Vectors.Basis2D.Euclid">
+            <summary>Базис Евклидова пространства</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.Rotate(System.Double,System.Boolean)">
+            <summary>Базис поворота вектора на заданный угол</summary>
+            <param name="Angle">Угол поворота пространства</param>
+            <param name="Positive">Направление поворота по часовой стрелке</param>
+            <returns>Базис, осуществляющий поворот вектора в пространстве на указанный угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.Scale(System.Double,System.Double)">
+            <summary>Базис масштабирования вектора по осям</summary>
+            <param name="kx">Коэффициент масштабирования вдоль оси OX</param>
+            <param name="ky">Коэффициент масштабирования вдоль оси OY</param>
+            <returns>Базис, осуществляющий масштабирования вектора по осям</returns>
+        </member>
+        <member name="F:MathCore.Vectors.Basis2D._xx">
+            <summary>Элемент X[0,0]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis2D.xx">
+            <summary>Элемент X[0,0]</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Basis2D._xy">
+            <summary>Элемент X[0,1]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis2D.xy">
+            <summary>Элемент X[0,1]</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Basis2D._yx">
+            <summary>Элемент X[1,0]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis2D.yx">
+            <summary>Элемент X[1,0]</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Basis2D._yy">
+            <summary>Элемент X[1,1]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis2D.yy">
+            <summary>Элемент X[1,1]</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Vectors.Basis2D"/></summary>
+            <param name="xx">Элемент X[0,0]</param>
+            <param name="xy">Элемент X[0,1]</param>
+            <param name="yx">Элемент X[1,0]</param>
+            <param name="yy">Элемент X[1,1]</param>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.op_Implicit(MathCore.Vectors.Basis2D@)~MathCore.Matrix">
+            <summary>Оператор неявного преобразования базиса в матрицу 2х2</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.op_Explicit(MathCore.Matrix@)~MathCore.Vectors.Basis2D">
+            <summary>Оператор явного преобразования матрицы 2х2 в двумерный базис</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.Equals(MathCore.Vectors.Basis2D)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.op_Equality(MathCore.Vectors.Basis2D,MathCore.Vectors.Basis2D)">
+            <summary>Оператор равенства двух базисов</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis2D.op_Inequality(MathCore.Vectors.Basis2D,MathCore.Vectors.Basis2D)">
+            <summary>Оператор неравенства двух базисов</summary>
+        </member>
+        <member name="T:MathCore.Vectors.Basis3D">
+            <summary>Базис трёхмерного пространства</summary>
+        </member>
+        <member name="F:MathCore.Vectors.Basis3D.Euclid">
+            <summary>Базис Евклидова пространства</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.Scale(System.Double,System.Double,System.Double)">
+            <summary>Базис масштабирования по осям</summary>
+            <param name="kx">Коэффициент масштабирования вдоль оси OX</param>
+            <param name="ky">Коэффициент масштабирования вдоль оси OY</param>
+            <param name="kz">Коэффициент масштабирования вдоль оси OZ</param>
+            <returns>Базис масштабирования вдоль основных осей</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.RotateOX(System.Double,System.Boolean)">
+            <summary>Базис поворота вокруг оси OX</summary>
+            <param name="Angle">Угол поворота</param>
+            <param name="Positive">Направление - по часовой стрелке</param>
+            <returns>Базис поворота вокруг оси OX</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.RotateOY(System.Double,System.Boolean)">
+            <summary>Базис поворота вокруг оси OY</summary>
+            <param name="Angle">Угол поворота</param>
+            <param name="Positive">Направление - по часовой стрелке</param>
+            <returns>Базис поворота вокруг оси OY</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.RotateOZ(System.Double,System.Boolean)">
+            <summary>Базис поворота вокруг оси OZ</summary>
+            <param name="Angle">Угол поворота</param>
+            <param name="Positive">Направление - по часовой стрелке</param>
+            <returns>Базис поворота вокруг оси OZ</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.Rotate(System.Double,System.Double,System.Double)">
+            <summary>Базис поворота на углы Эйлера</summary>
+            <param name="alpha">Угол поворота вокруг оси OX</param>
+            <param name="beta">Угол поворота вокруг оси OY</param>
+            <param name="gamma">Угол поворота вокруг оси OZ</param>
+            <returns></returns>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.Rotate(MathCore.Vectors.Vector3D@,System.Double)">
+            <summary>Базис сдвига и поворота на заданный угол</summary>
+            <param name="v">Вектор сдвига</param>
+            <param name="theta">Угол места поворота</param>
+            <returns>Базис сдвига и поворота</returns>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.xx">
+            <summary>Элемент [0,0]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.xy">
+            <summary>Элемент [0,1]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.xz">
+            <summary>Элемент [0,2]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.yx">
+            <summary>Элемент [1,0]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.yy">
+            <summary>Элемент [1,1]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.yz">
+            <summary>Элемент [1,2]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.zx">
+            <summary>Элемент [2,0]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.zy">
+            <summary>Элемент [2,1]</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Basis3D.zz">
+            <summary>Элемент [2,2]</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Vectors.Basis3D"/></summary>
+            <param name="xx">Элемент X[0,0]</param>
+            <param name="xy">Элемент X[0,1]</param>
+            <param name="xz">Элемент X[0,2]</param>
+            <param name="yx">Элемент X[1,0]</param>
+            <param name="yy">Элемент X[1,1]</param>
+            <param name="yz">Элемент X[1,2]</param>
+            <param name="zx">Элемент X[2,0]</param>
+            <param name="zy">Элемент X[2,1]</param>
+            <param name="zz">Элемент X[2,2]</param>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.op_Implicit(MathCore.Vectors.Basis3D@)~MathCore.Matrix">
+            <summary>Оператор неявного преобразования базиса в матрицу 3х3</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.op_Explicit(MathCore.Matrix)~MathCore.Vectors.Basis3D">
+            <summary>Оператор явного преобразования матрицы 2х2 в двумерный базис</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.Equals(MathCore.Vectors.Basis3D)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.op_Equality(MathCore.Vectors.Basis3D,MathCore.Vectors.Basis3D)">
+            <summary>Оператор равенства двух базисов</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Basis3D.op_Inequality(MathCore.Vectors.Basis3D,MathCore.Vectors.Basis3D)">
+            <summary>Оператор неравенства двух базисов</summary>
+        </member>
+        <member name="T:MathCore.Vectors.Fields.VectorField3D">
+            <summary>Трёхмерное векторное поле</summary>
+            <param name="r">Координата в пространстве</param>
+            <returns>Значение вектора в точке с указанными координатами</returns>
+        </member>
+        <member name="T:MathCore.Vectors.Fields.VectorField3DExtensions">
+            <summary>Методы-расширения над <see cref="T:MathCore.Vectors.Fields.VectorField3D"/></summary>
         </member>
         <member name="T:MathCore.Vectors.SpaceAngle">
             <summary>Пространственный угол</summary>
@@ -11187,14 +11612,51 @@
         <member name="F:MathCore.Vectors.SpaceAngle.__ToRad">
             <summary>Константа преобразования угла в градусах в радианы</summary>
         </member>
-        <member name="F:MathCore.Vectors.SpaceAngle.pi">
-            <summary>Число Пи</summary>
+        <member name="M:MathCore.Vectors.SpaceAngle.NormalizeAngle(System.Double,MathCore.AngleType@)">
+            <summary>Нормализация угла</summary>
+            <param name="angle">Номализуемый угол</param>
+            <param name="type">Тип значения угла (градусы/радианы)</param>
+            <returns>Угол, представленный в интервале от 0 до 360° (0 до 2π)</returns>
         </member>
         <member name="M:MathCore.Vectors.SpaceAngle.Random(System.Double,System.Double)">
             <summary>Случайный пространственный угол</summary>
             <param name="Min">Минимальное значение угла</param>
             <param name="Max">Максимальное значение угла</param>
             <returns>Случайный пространственный угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.Value(System.Double,System.Double,MathCore.AngleType@)">
+            <summary>Создать новый пространственный угол на основе значений углов места и азимута</summary>
+            <param name="theta">Угол места</param>
+            <param name="phi">Угол азимута</param>
+            <param name="type">Тип значения угла</param>
+            <returns>Пространственный угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.Direction(MathCore.Vectors.Vector3D@)">
+            <summary>Создать угол на основе направляющего вектора</summary>
+            <param name="r">Вектор направления</param>
+            <returns>Угол вектора направления</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.Direction(System.Double,System.Double,System.Double)">
+            <summary>Создать пространственный угол по заданным координатам вектора направления</summary>
+            <returns>Угол вектора направления</returns>
+        </member>
+        <member name="F:MathCore.Vectors.SpaceAngle.i">
+            <summary>Орта оси OX</summary>
+        </member>
+        <member name="F:MathCore.Vectors.SpaceAngle.i_negative">
+            <summary>Отрицательная орта оси OX</summary>
+        </member>
+        <member name="F:MathCore.Vectors.SpaceAngle.j">
+            <summary>Орта оси OY</summary>
+        </member>
+        <member name="F:MathCore.Vectors.SpaceAngle.j_negative">
+            <summary>Отрицательная орта оси OY</summary>
+        </member>
+        <member name="F:MathCore.Vectors.SpaceAngle.k">
+            <summary>Орта оси OZ</summary>
+        </member>
+        <member name="F:MathCore.Vectors.SpaceAngle.k_negative">
+            <summary>Отрицательная орта оси OZ</summary>
         </member>
         <member name="F:MathCore.Vectors.SpaceAngle._AngleType">
             <summary>Тип угла</summary>
@@ -11211,6 +11673,21 @@
         <member name="P:MathCore.Vectors.SpaceAngle.Phi">
             <summary>Азимутальный угол в плоскости XOY</summary>
         </member>
+        <member name="P:MathCore.Vectors.SpaceAngle.ThetaRad">
+            <summary>Угол места в радианах</summary>
+        </member>
+        <member name="P:MathCore.Vectors.SpaceAngle.ThetaDeg">
+            <summary>Угол места в градусах</summary>
+        </member>
+        <member name="P:MathCore.Vectors.SpaceAngle.PhiRad">
+            <summary>Угол азимута в радианах</summary>
+        </member>
+        <member name="P:MathCore.Vectors.SpaceAngle.PhiDeg">
+            <summary>Угол азимута в градусах</summary>
+        </member>
+        <member name="P:MathCore.Vectors.SpaceAngle.IsZero">
+            <summary>Являются ли значения угла места и азимута = 0?</summary>
+        </member>
         <member name="P:MathCore.Vectors.SpaceAngle.ComplexCosTheta">
             <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="P:MathCore.Vectors.SpaceAngle.Theta"/>, мнимой частью - направляющий синус</summary>
         </member>
@@ -11225,28 +11702,100 @@
             <exception cref="T:System.NotSupportedException" accessor="get">Неизвестный тип угла</exception>
         </member>
         <member name="P:MathCore.Vectors.SpaceAngle.InRad">
-            <summary>Представлкние угла в радианах</summary>
+            <summary>Представление угла в радианах</summary>
             <exception cref="T:System.NotSupportedException" accessor="get">Неизвестный тип угла</exception>
+        </member>
+        <member name="P:MathCore.Vectors.SpaceAngle.DirectionalVector">
+            <summary>Направляющий вектор</summary>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.#ctor(System.Double)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Vectors.SpaceAngle"/></summary>
+            <param name="Phi">Угол азимута</param>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.#ctor(System.Double,MathCore.AngleType@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Vectors.SpaceAngle"/></summary>
+            <param name="Phi">Угол азимута</param>
+            <param name="AngleType">Тип значения угла</param>
         </member>
         <member name="M:MathCore.Vectors.SpaceAngle.#ctor(System.Double,System.Double)">
             <summary>Пространственный угол в радианах</summary>
             <param name="Theta">Угол места [рад]</param>
             <param name="Phi">Азимутальный угол [рад]</param>
         </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.#ctor(System.Double,System.Double,MathCore.AngleType@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Vectors.SpaceAngle"/></summary>
+            <param name="Theta">Угол места</param>
+            <param name="Phi">Угол азимута</param>
+            <param name="AngleType">Тип значения угла</param>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.#ctor(MathCore.Vectors.SpaceAngle@)">
+            <summary>Копирование нового экземпляра <see cref="T:MathCore.Vectors.SpaceAngle"/> из прототипа</summary>
+            <param name="Angle">Исходное значение угла</param>
+        </member>
         <member name="M:MathCore.Vectors.SpaceAngle.#ctor(MathCore.Vectors.SpaceAngle@,MathCore.AngleType@)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Vectors.SpaceAngle"/></summary>
+            <param name="Angle">Исходное значение угла</param>
+            <param name="AngleType">Тип желаемого значения угла</param>
             <exception cref="T:System.NotSupportedException">Если AngleType != Deg || Rad - Неизвестный тип угла</exception>
         </member>
-        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiTheta(System.Double,System.Double,MathCore.AngleType@)">
+        <member name="M:MathCore.Vectors.SpaceAngle.RotatePhiTheta(System.Double,System.Double,MathCore.AngleType@)">
             <summary>Повернуть угол в сферической системе координат</summary>
-            <param name="theta">Угол места поворота локальной системы кординат</param>
+            <param name="theta">Угол места поворота локальной системы координат</param>
             <param name="phi">Угол азимута поворота локальной системы координат</param>
             <param name="type">Тип значений угловых величин</param>
             <returns>Угол в повёрнутой локальной системе координат</returns>
         </member>
-        <member name="M:MathCore.Vectors.SpaceAngle.Rotate_PhiTheta(MathCore.Vectors.SpaceAngle@)">
+        <member name="M:MathCore.Vectors.SpaceAngle.RotatePhiTheta(MathCore.Vectors.SpaceAngle@)">
             <summary>Повернуть угол в сферической системе координат</summary>
-            <param name="angle">Пространственный угол поворота локаьлной системы координат</param>
+            <param name="angle">Пространственный угол поворота локальной системы координат</param>
             <returns>Угол в повёрнутой локальной системе координат</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.GetRotatorPhiTheta">
+            <summary>Получить функцию, осуществляющую поворот пространственного угла на текущий пространственный угол</summary>
+            <returns>Функция, осуществляющая поворот пространственного угла на заданный угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.GetRotatorPhiTheta(MathCore.Vectors.SpaceAngle@)">
+            <summary>Получить функцию, осуществляющую поворот пространственного угла на заданный пространственный угол</summary>
+            <param name="angle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.GetRotatorPhiThetaExpression(System.Linq.Expressions.Expression)">
+            <summary>Получить выражение, осуществляющее поворот угла на текущий пространственный угол</summary>
+            <param name="r">Выражение, предоставляющее пространственный угол, который требуется повернуть</param>
+            <returns>Выражение, обеспечивающее поворот пространственного угла на текущий угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.RotatePhiTheta``1(System.Func{MathCore.Vectors.SpaceAngle,``0})">
+            <summary>Повернуть функцию от пространственного угла на текущий угол</summary>
+            <param name="f">Поворачиваемая функция</param>
+            <typeparam name="T">Тип значения функции</typeparam>
+            <returns>Функция, аргумент которой повёрнут на текущий угол</returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.In(MathCore.AngleType@)">
+            <summary>Представить угол в указанном типе значения</summary>
+            <param name="type">Тип требуемого значения угла</param>
+            <returns></returns>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.Deconstruct(System.Double@,System.Double@)">
+            <summary>Деконструктор значений угла</summary>
+            <param name="theta">Угол места</param>
+            <param name="phi">Угол азимута</param>
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.SpaceAngle.op_UnaryNegation(MathCore.Vectors.SpaceAngle@)">
+            <summary>Оператор отрицания значения пространственного угла</summary>
+            <param name="a">Исходный пространственный угол</param>
+            <returns>Пространственный угол у которого значения угла места и азимута имеют обратный знак по отношению к исходному значению</returns>
         </member>
         <member name="M:MathCore.Vectors.SpaceAngle.op_ExclusiveOr(System.Func{MathCore.Vectors.SpaceAngle,System.Double},MathCore.Vectors.SpaceAngle@)">
             <summary>Оператор поворота функции на пространственный угол</summary>
@@ -11262,6 +11811,12 @@
         </member>
         <member name="P:MathCore.Vectors.SpaceAngle.ComparisonsAccuracy">
             <summary>Точность сравнения (по умолчанию 10^-13)</summary>
+        </member>
+        <member name="T:MathCore.Vectors.Vector2DConverter">
+            <summary>Конвертер для <see cref="T:MathCore.Vectors.Vector2D"/></summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2DConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.Vectors.Vector2D">
             <summary>Двумерный вектор</summary>
@@ -11344,11 +11899,148 @@
             <summary>Унарный оператор отрицания</summary>
             <returns>Вектор, координаты которого имеют противоположенный знак</returns>
         </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вычисления суммы двух векторов</summary>
+            <returns>Вектор, координаты которого составлены из суммы координат слагаемых</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вычисления разности двух векторов</summary>
+            <returns>Вектор, координаты которого составлены из разности координат слагаемых</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вычисления скалярного произведения двух векторов</summary>
+            <returns>Вещественное число, равное суме попарных произведений координат векторов</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(MathCore.Vectors.Vector2D@,System.Double)">
+            <summary>Оператор вычисления суммы вектора и вещественного числа</summary>
+            <returns>Вектор, координаты которого увеличены на значение скалярного слагаемого</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(System.Double,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вычисления суммы вектора и вещественного числа</summary>
+            <returns>Вектор, координаты которого увеличены на значение скалярного слагаемого</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(MathCore.Vectors.Vector2D@,System.Double)">
+            <summary>Оператор вычитания скалярного значения из вектора</summary>
+            <param name="a">Уменьшаемое - вектор</param>
+            <param name="b">Вычитаемое - скаляр</param>
+            <returns>Вектор, координаты которого уменьшены на значение скаляра</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(System.Double,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вычитания вектора из скалярного значения</summary>
+            <param name="b">Уменьшаемое - скаляр</param>
+            <param name="a">вычитаемое - вектор</param>
+            <returns>Вектор, координаты которого вычтены из скалярного значения</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(MathCore.Vectors.Vector2D@,System.Double)">
+            <summary>Оператор умножения вектора на число</summary>
+            <returns>Вектор, координаты которого умножены на скалярное значение</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(System.Double,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор умножения вектора на число</summary>
+            <returns>Вектор, координаты которого умножены на скалярное значение</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Division(MathCore.Vectors.Vector2D@,System.Double)">
+            <summary>Оператор деления вектора на число</summary>
+            <returns>Вектор, координаты которого разделены на скалярное значение</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Division(System.Double,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор деления числа на вектор</summary>
+            <returns>Вектор, координаты которого образованы делением координат числа на координаты исходного вектора</returns>
+        </member>
         <member name="M:MathCore.Vectors.Vector2D.op_ExclusiveOr(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
             <summary>Оператор проекции в вектора на вектор</summary>
             <param name="a">Проецируемый вектор</param>
             <param name="b">Вектор проекции</param>
             <returns>Проекция первого вектора на второй</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_BitwiseOr(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор проверки на параллельность двух векторов</summary>
+            <returns>Истина, если вектора параллельны</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_BitwiseAnd(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор проверки на перпендикулярность двух векторов</summary>
+            <returns>Истина, если вектора перпендикулярны</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Modulus(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вычисления проекции вектора на вектор</summary>
+            <param name="a">Проецируемый вектор</param>
+            <param name="b">Вектор, на который осуществляется проекция</param>
+            <returns>Длина проекции</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Modulus(MathCore.Vectors.Vector2D@,MathCore.Vectors.Basis2D@)">
+            <summary>Оператор представление вектора в базисе</summary>
+            <param name="a">Вектор, представляемый в базисе</param>
+            <param name="b">Базис, в котором надо представить вектор</param>
+            <returns>Вектор, представленный в базисе</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(MathCore.Vectors.Vector2D@,System.Single)">
+            <summary>Оператор суммы вектора и вещественного числа одинарной точности</summary>
+            <returns>Вектор, координаты которого увеличены на значение числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(MathCore.Vectors.Vector2D@,System.Single)">
+            <summary>Оператор разности вектора и вещественного числа одинарной точности</summary>
+            <returns>Вектор, координаты которого уменьшены на значение числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(MathCore.Vectors.Vector2D@,System.Single)">
+            <summary>Оператор произведения вектора и вещественного числа одинарной точности</summary>
+            <returns>Вектор, координаты которого умножены на значение числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Division(MathCore.Vectors.Vector2D@,System.Single)">
+            <summary>Оператор деления вектора и вещественного числа одинарной точности</summary>
+            <returns>Вектор, координаты которого поделены на значение числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(System.Single,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор суммы вектора и вещественного числа одинарной точности</summary>
+            <returns>Вектор, координаты которого увеличены на значение числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(System.Single,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор вещественного числа одинарной точности и разности вектора</summary>
+            <returns>Вектор, координаты которого равны разности числа одинарной точности и координат исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(System.Single,MathCore.Vectors.Vector2D@)">
+            <returns>Вектор, координаты которого умножены на значение числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Division(System.Single,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор деления вещественного числа одинарной точности и вектора</summary>
+            <returns>Вектор, координаты которого равны отношению числа одинарной точности и координат исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(MathCore.Vectors.Vector2D@,System.Int32)">
+            <summary>Оператор суммы вектора и вещественного целого числа</summary>
+            <returns>Вектор, координаты которого увеличены на значение целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(MathCore.Vectors.Vector2D@,System.Int32)">
+            <summary>Оператор разности вектора и вещественного целого числа</summary>
+            <returns>Вектор, координаты которого уменьшены на значение целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(MathCore.Vectors.Vector2D@,System.Int32)">
+            <summary>Оператор произведения вектора и целого числа</summary>
+            <returns>Вектор, координаты которого умножены на значение целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Division(MathCore.Vectors.Vector2D@,System.Int32)">
+            <summary>Оператор деления вектора и целого числа</summary>
+            <returns>Вектор, координаты которого поделены на значение целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Addition(System.Int32,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор произведения вектора и целого числа</summary>
+            <returns>Вектор, координаты которого умножены на значение целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Subtraction(System.Int32,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор целого числа и разности вектора</summary>
+            <returns>Вектор, координаты которого равны разности целого числа и координат исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Multiply(System.Int32,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор произведения вектора и целого числа</summary>
+            <returns>Вектор, координаты которого умножены на значение целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Division(System.Int32,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор деления целого числа и вектора</summary>
+            <returns>Вектор, координаты которого равны отношению целого числа и координат исходного вектора</returns>
+        </member>
+        <member name="T:MathCore.Vectors.Vector3DConverter">
+            <summary>Конвертер для <see cref="T:MathCore.Vectors.Vector3D"/></summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3DConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.Vectors.Vector3D">
             <summary>Трёхмерный вектор</summary>
@@ -11567,6 +12259,17 @@
         <member name="M:MathCore.Vectors.Vector3D.Equals(System.Object)">
             <inheritdoc />
         </member>
+        <member name="M:MathCore.Vectors.Vector3D.ToString(System.String)">
+            <summary>Преобразование в строку с форматированием</summary>
+            <param name="Format">Строка формата</param>
+            <returns>Форматированное строковое представление</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.ToString(System.String,System.IFormatProvider)">
+            <summary>Преобразование в строку с форматированием</summary>
+            <param name="Format">Строка формата</param>
+            <param name="Provider">Провайдер форматирования данных</param>
+            <returns>Форматированное строковое представление</returns>
+        </member>
         <member name="M:MathCore.Vectors.Vector3D.Deconstruct(System.Double@,System.Double@,System.Double@)">
             <summary>Деконструктор вектора на значения его координат</summary>
         </member>
@@ -11639,6 +12342,197 @@
             <exception cref="T:System.ArgumentNullException">Если <paramref name="d"/> <see langword="=="/> <see langword="null"/></exception>
             <exception cref="T:System.ArgumentException">Если тип выражения <paramref name="d"/> является не <see cref="T:MathCore.Vectors.SpaceAngle"/></exception>
         </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(MathCore.Vectors.Vector3D,System.Double)">
+            <summary>Оператор суммы вектора и числа</summary>
+            <returns>Вектор, координаты которого увеличены на значения числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(System.Double,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы вектора и числа</summary>
+            <returns>Вектор, координаты которого увеличены на значения числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(MathCore.Vectors.Vector3D,System.Double)">
+            <summary>Оператор разности вектора и числа</summary>
+            <returns>Вектор, координаты которого уменьшены на значения числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(System.Double,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы числа и вектора</summary>
+            <returns>Вектор, координаты которого равны разности числа и координат исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Multiply(MathCore.Vectors.Vector3D,System.Double)">
+            <summary>Оператор произведения вектора и числа</summary>
+            <returns>Вектор, координаты которого умножены на значения числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Multiply(System.Double,MathCore.Vectors.Vector3D)">
+            <summary>Оператор произведения вектора и числа</summary>
+            <returns>Вектор, координаты которого умножены на значения числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Division(MathCore.Vectors.Vector3D,System.Double)">
+            <summary>Оператор деления вектора на число</summary>
+            <returns>Вектор, координаты которого разделены на значения числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Division(System.Double,MathCore.Vectors.Vector3D)">
+            <summary>Оператор деления числа на вектор</summary>
+            <returns>Вектор, координаты которого являются результатом деления числа на координаты исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(MathCore.Vectors.Vector3D,System.Single)">
+            <summary>Оператор суммы вектора и числа одинарной точности</summary>
+            <returns>Вектор, координаты которого увеличены на значения числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(System.Single,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы вектора и числа одинарной точности</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(MathCore.Vectors.Vector3D,System.Single)">
+            <summary>Оператор разности вектора и числа одинарной точности</summary>
+            <returns>Вектор, координаты которого уменьшены на значения числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(System.Single,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы числа одинарной точности и вектора</summary>
+            <returns>Вектор, координаты которого равны разности числа одинарной точности и координат исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Multiply(MathCore.Vectors.Vector3D,System.Single)">
+            <summary>Оператор произведения вектора и числа одинарной точности</summary>
+            <returns>Вектор, координаты которого умножены на значения числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Multiply(System.Single,MathCore.Vectors.Vector3D)">
+            <summary>Оператор произведения вектора и числа одинарной точности</summary>
+            <returns>Вектор, координаты которого умножены на значения числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Division(MathCore.Vectors.Vector3D,System.Single)">
+            <summary>Оператор деления вектора на число одинарной точности</summary>
+            <returns>Вектор, координаты которого разделены на значения числа одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Division(System.Single,MathCore.Vectors.Vector3D)">
+            <summary>Оператор деления числа одинарной точности на вектор</summary>
+            <returns>Вектор, координаты которого являются результатом деления числа одинарной точности на координаты исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(MathCore.Vectors.Vector3D,System.Int32)">
+            <summary>Оператор суммы вектора и целого числа</summary>
+            <returns>Вектор, координаты которого увеличены на значения целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(System.Int32,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы вектора и целого числа</summary>
+            <returns>Вектор, координаты которого увеличены на значения целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(MathCore.Vectors.Vector3D,System.Int32)">
+            <summary>Оператор разности вектора и целого числа</summary>
+            <returns>Вектор, координаты которого уменьшены на значения целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(System.Int32,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы целого числа и вектора</summary>
+            <returns>Вектор, координаты которого равны разности целого числа и координат исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Multiply(MathCore.Vectors.Vector3D,System.Int32)">
+            <summary>Оператор произведения вектора и целого числа</summary>
+            <returns>Вектор, координаты которого умножены на значения целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Multiply(System.Int32,MathCore.Vectors.Vector3D)">
+            <summary>Оператор произведения вектора и целого числа</summary>
+            <returns>Вектор, координаты которого умножены на значения целого числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Division(MathCore.Vectors.Vector3D,System.Int32)">
+            <summary>Оператор деления вектора на целое число</summary>
+            <returns>Вектор, координаты которого разделены на значения целое числа</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Division(System.Int32,MathCore.Vectors.Vector3D)">
+            <summary>Оператор деления целого числа на вектор</summary>
+            <returns>Вектор, координаты которого являются результатом деления целого числа на координаты исходного вектора</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
+            <summary>Оператор проверки равенства двух векторов</summary>
+            <returns>Истина, если координаты векторов равны</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
+            <summary>Оператор проверки неравенства двух векторов</summary>
+            <returns>Истина, если координаты векторов неравны</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.Byte)">
+            <summary>Оператор проверки равенства вектора и целого числа (1 байт)</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу (1 байт)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.SByte)">
+            <summary>Оператор проверки равенства вектора и целого числа (1 байт со знаком)</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу (1 байт со знаком)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.Int16)">
+            <summary>Оператор проверки равенства вектора и целого числа (2 байта со знаком)</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу (2 байта со знаком)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.UInt16)">
+            <summary>Оператор проверки равенства вектора и целого числа (2 байта без знака)</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу (2 байта без знака)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.Int32)">
+            <summary>Оператор проверки равенства вектора и целого числа</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.UInt32)">
+            <summary>Оператор проверки равенства вектора и целого числа без знака</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу без знака</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.Int64)">
+            <summary>Оператор проверки равенства вектора и целого числа (8 байт со знаком)</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу (8 байт со знаком)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.UInt64)">
+            <summary>Оператор проверки равенства вектора и целого числа (8 байт без знака)</summary>
+            <returns>Истина, если длина вектора равна указанному целому числу (8 байт без знака)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.Single)">
+            <summary>Оператор проверки равенства вектора и числа одинарной точности</summary>
+            <returns>Истина, если длина вектора равна указанному числу одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Equality(MathCore.Vectors.Vector3D,System.Double)">
+            <summary>Оператор проверки равенства вектора и числа двойной точности</summary>
+            <returns>Истина, если длина вектора равна указанному числу двойной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.Byte)">
+            <summary>Оператор проверки неравенства вектора и целого числа (1 байт без знака)</summary>
+            <returns>Истина, если длина вектора не равна целому числу (1 байт без знака)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.SByte)">
+            <summary>Оператор проверки неравенства вектора и целого числа (1 байт со знаком)</summary>
+            <returns>Истина, если длина вектора не равна целому числу (1 байт со знаком)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.Int16)">
+            <summary>Оператор проверки неравенства вектора и целого числа (2 байта со знаком)</summary>
+            <returns>Истина, если длина вектора не равна целому числу (2 байта со знаком)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.UInt16)">
+            <summary>Оператор проверки неравенства вектора и целого числа (2 байта без знака)</summary>
+            <returns>Истина, если длина вектора не равна целому числу (2 байта без знака)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.Int32)">
+            <summary>Оператор проверки неравенства вектора и целого числа</summary>
+            <returns>Истина, если длина вектора не равна целому числу</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.UInt32)">
+            <summary>Оператор проверки неравенства вектора и целого числа</summary>
+            <returns>Истина, если длина вектора не равна целому числу</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.Int64)">
+            <summary>Оператор проверки неравенства вектора и целого числа (8 байт со знаком)</summary>
+            <returns>Истина, если длина вектора не равна целому числу (8 байт со знаком)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.UInt64)">
+            <summary>Оператор проверки неравенства вектора и целого числа (8 байт без знака)</summary>
+            <returns>Истина, если длина вектора не равна целому числу (8 байт без знака)</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.Single)">
+            <summary>Оператор проверки неравенства вектора и вещественного числа одинарной точности</summary>
+            <returns>Истина, если длина вектора не равна вещественному числу одинарной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Inequality(MathCore.Vectors.Vector3D,System.Double)">
+            <summary>Оператор проверки неравенства вектора и вещественного числа двойной точности</summary>
+            <returns>Истина, если длина вектора не равна вещественному числу двойной точности</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Addition(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
+            <summary>Оператор суммы двух векторов</summary>
+            <returns>Вектор, координаты которого равны сумме координат двух исходных векторов</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Subtraction(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
+            <summary>Оператор разности двух векторов</summary>
+            <returns>Вектор, координаты которого равны разности координат двух исходных векторов</returns>
+        </member>
         <member name="M:MathCore.Vectors.Vector3D.op_Multiply(MathCore.Vectors.Vector3D,MathCore.Vectors.Vector3D)">
             <summary>Скалярное произведение векторов</summary>
             <param name="A">Первый вектор-множитель</param>
@@ -11672,6 +12566,26 @@
             <param name="Vector">Проецируемый вектор</param>
             <param name="Direction">Пространственный угол направления проекции</param>
             <returns>Вещественное значение проекции</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Modulus(MathCore.Vectors.Vector3D,MathCore.Vectors.Basis3D)">
+            <summary>Оператор представления вектора в базисе</summary>
+            <returns>Вектор, представленный в базисе</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Implicit(MathCore.Vectors.Vector3D)~System.Double">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.Vectors.Vector3D"/> к <see cref="T:System.Double"/>, результатом которого является длина вектора</summary>
+            <param name="V">Трёхмерный вектор</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Implicit(MathCore.Vectors.Vector3D)~MathCore.Vectors.SpaceAngle">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.Vectors.Vector3D"/> к <see cref="T:MathCore.Vectors.SpaceAngle"/></summary>
+            <param name="V">Трёхмерный вектор</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Explicit(MathCore.Vectors.SpaceAngle)~MathCore.Vectors.Vector3D">
+            <summary>Оператор неявного приведения <see cref="T:MathCore.Vectors.SpaceAngle"/> к <see cref="T:MathCore.Vectors.Vector3D"/>, результатом которого является единичный вектор, ориентированный в пространстве</summary>
+            <param name="Angle">Пространственный угол</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.op_Explicit(System.Double)~MathCore.Vectors.Vector3D">
+            <summary>Оператор явного приведения типа <see cref="T:System.Double"/> к <see cref="T:MathCore.Vectors.Vector3D"/>, результатом которого является вектор, с равными координатами, длина которого равна указанному числу</summary>
+            <param name="V">Длина вектора</param>
         </member>
         <member name="T:MathCore.ViewModels.ViewModel">
             <summary>Наблюдаемая модель</summary>

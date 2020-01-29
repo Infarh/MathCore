@@ -139,8 +139,7 @@ namespace MathCore.Tests.Extensions
         [TestMethod]
         public void GetValue_Test()
         {
-            var dictionary = new Dictionary<int, string>();
-            dictionary.Add(7, "value7");
+            var dictionary = new Dictionary<int, string> { { 7, "value7" } };
             Assert.AreEqual("value7", dictionary.GetValue(7, "123"));
             Assert.AreEqual("123", dictionary.GetValue(0, "123"));
         }
@@ -148,8 +147,7 @@ namespace MathCore.Tests.Extensions
         [TestMethod]
         public void GetValue_Interface_Test()
         {
-            IDictionary<int, string> dictionary = new Dictionary<int, string>();
-            dictionary.Add(7, "value7");
+            IDictionary<int, string> dictionary = new Dictionary<int, string> { { 7, "value7" } };
             Assert.AreEqual("value7", dictionary.GetValue(7, "123"));
             Assert.AreEqual("123", dictionary.GetValue(0, "123"));
         }
