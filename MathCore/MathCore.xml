@@ -11298,6 +11298,58 @@
             <param name="b">Базис</param>
             <returns>Вектор в базисе</returns>
         </member>
+        <member name="M:MathCore.Vectors.Vector2D.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.System#ICloneable#Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.Equals(MathCore.Vectors.Vector2D)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.Deconstruct(System.Double@,System.Double@)">
+            <summary>Деконструктор вектора на его составляющие</summary>
+            <param name="x">Координата X</param>
+            <param name="y">Координата Y</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Equality(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор равенства</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Inequality(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор неравенства</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Explicit(MathCore.Vectors.Vector2D@)~MathCore.Complex">
+            <summary>Оператор явного преобразования типа <see cref="T:MathCore.Vectors.Vector2D"/> в <see cref="T:MathCore.Complex"/></summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Explicit(MathCore.Complex@)~MathCore.Vectors.Vector2D">
+            <summary>Оператор явного преобразования типа <see cref="T:MathCore.Complex"/> в <see cref="T:MathCore.Vectors.Vector2D"/></summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_Implicit(System.Double)~MathCore.Vectors.Vector2D">
+            <summary>Оператор неявного преобразования типа <see cref="T:System.Double"/> в <see cref="T:MathCore.Vectors.Vector2D"/> (вектор вдоль оси OX)</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_UnaryPlus(MathCore.Vectors.Vector2D@)">
+            <summary>Унарный оператор +</summary>
+            <returns>Вектор без изменения</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_UnaryNegation(MathCore.Vectors.Vector2D@)">
+            <summary>Унарный оператор отрицания</summary>
+            <returns>Вектор, координаты которого имеют противоположенный знак</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector2D.op_ExclusiveOr(MathCore.Vectors.Vector2D@,MathCore.Vectors.Vector2D@)">
+            <summary>Оператор проекции в вектора на вектор</summary>
+            <param name="a">Проецируемый вектор</param>
+            <param name="b">Вектор проекции</param>
+            <returns>Проекция первого вектора на второй</returns>
+        </member>
         <member name="T:MathCore.Vectors.Vector3D">
             <summary>Трёхмерный вектор</summary>
         </member>
@@ -11394,12 +11446,135 @@
         <member name="P:MathCore.Vectors.Vector3D.R_YOZ">
             <summary>Длина в плоскости YOZ</summary>
         </member>
+        <member name="P:MathCore.Vectors.Vector3D.Abs">
+            <summary>Длина вектора</summary>
+        </member>
+        <member name="P:MathCore.Vectors.Vector3D.Sign">
+            <summary>Вектор знаков координат текущего вектора</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.#ctor(System.Double)">
+            <summary>Инициализация нового вектора, расположенного вдоль оси OX</summary>
+            <param name="X">Координата вдоль оси OX</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.#ctor(System.Double,System.Double)">
+            <summary>Инициализация нового вектора, расположенного в плоскости XOY</summary>
+            <param name="X">Координата вдоль оси OX</param>
+            <param name="Y">Координата вдоль оси OY</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.#ctor(System.Double,System.Double,System.Double)">
+            <summary>Инициализация нового вектора, заданного своими координатами</summary>
+            <param name="X">Координата вдоль оси OX</param>
+            <param name="Y">Координата вдоль оси OY</param>
+            <param name="Z">Координата вдоль оси OZ</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.#ctor(MathCore.Vectors.SpaceAngle@)">
+            <summary>Единичный вектор, заданный двумя углами в сферической системе координат</summary>
+            <param name="Angle">Пространственный угол сферической системы координат</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.#ctor(System.Double,MathCore.Vectors.SpaceAngle@)">
+            <summary>Вектор, заданный двумя углами и радиусом в сферической системе координат</summary>
+            <param name="R">Радиус вектора</param>
+            <param name="Angle">Пространственный угол сферической системы координат</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.#ctor(MathCore.Vectors.Vector3D@)">
+            <summary>Конструктор копирования</summary>
+            <param name="V">Вектор-прототип</param>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.InBasis(MathCore.Vectors.Basis3D@)">
+            <summary>Представление вектора в базисе</summary>
+            <param name="b">Новый базис вектора</param>
+            <returns>Вектор в указанном базисе</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Inc(System.Double,System.Double,System.Double)">
+            <summary>Инкрементация координат вектора</summary>
+            <param name="dx">Величина приращения координаты X</param>
+            <param name="dy">Величина приращения координаты Y</param>
+            <param name="dz">Величина приращения координаты Z</param>
+            <returns>Вектор с новыми координатами</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.IncX(System.Double)">
+            <summary>Инкрементировать координату X</summary>
+            <param name="dx">Величина приращения координаты X</param>
+            <returns>Вектор с обновлённой координатой X</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.IncY(System.Double)">
+            <summary>Инкрементировать координату Y</summary>
+            <param name="dy">Величина приращения координаты Y</param>
+            <returns>Вектор с обновлённой координатой Y</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.IncZ(System.Double)">
+            <summary>Инкрементировать координату Z</summary>
+            <param name="dz">Величина приращения координаты Z</param>
+            <returns>Вектор с обновлённой координатой Z</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Dec(System.Double,System.Double,System.Double)">
+            <summary>Декрементация координат вектора</summary>
+            <param name="dx">Величина приращения координаты X</param>
+            <param name="dy">Величина приращения координаты Y</param>
+            <param name="dz">Величина приращения координаты Z</param>
+            <returns>Вектор с новыми координатами</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.DecX(System.Double)">
+            <summary>Декрементировать координату X</summary>
+            <param name="dx">Величина приращения координаты X</param>
+            <returns>Вектор с обновлённой координатой X</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.DecY(System.Double)">
+            <summary>Декрементировать координату Y</summary>
+            <param name="dy">Величина приращения координаты Y</param>
+            <returns>Вектор с обновлённой координатой Y</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.DecZ(System.Double)">
+            <summary>Декрементировать координату Z</summary>
+            <param name="dz">Величина приращения координаты Z</param>
+            <returns>Вектор с обновлённой координатой Z</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Scale(System.Double,System.Double,System.Double)">
+            <summary>Выполнить масштабирование вектора по координатам</summary>
+            <param name="kx">Коэффициент масштабирования координаты X</param>
+            <param name="ky">Коэффициент масштабирования координаты Y</param>
+            <param name="kz">Коэффициент масштабирования координаты Z</param>
+            <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.ScaleX(System.Double)">
+            <summary>Выполнить масштабирование вектора по оси OX</summary>
+            <param name="kx">Коэффициент масштабирования координаты X</param>
+            <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.ScaleY(System.Double)">
+            <summary>Выполнить масштабирование вектора по оси OY</summary>
+            <param name="ky">Коэффициент масштабирования координаты Y</param>
+            <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.ScaleZ(System.Double)">
+            <summary>Выполнить масштабирование вектора по оси OZ</summary>
+            <param name="kz">Коэффициент масштабирования координаты Z</param>
+            <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.Vectors.Vector3D.System#ICloneable#Clone">
-            <summary>Создает новый объект, который является копией текущего экземпляра.</summary>
-            <returns>Новый объект, являющийся копией этого экземпляра.</returns><filterpriority>2</filterpriority>
+            <summary>Создает новый объект, который является копией текущего экземпляра</summary>
+            <returns>Новый объект, являющийся копией этого экземпляра</returns>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Deconstruct(System.Double@,System.Double@,System.Double@)">
+            <summary>Деконструктор вектора на значения его координат</summary>
         </member>
         <member name="P:MathCore.Vectors.Vector3D.ComparisonsAccuracy">
             <summary>Точность сравнения (по умолчанию 10^-16)</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector3D.Equals(MathCore.Vectors.Vector3D)">
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Vectors.Vector3D.GetInverse">
             <summary>Получить вектор, координаты которого являются обратными к координатам текущего вектора</summary>

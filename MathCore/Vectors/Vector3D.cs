@@ -6,6 +6,8 @@ using static System.Math;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace MathCore.Vectors
 {
@@ -316,9 +318,16 @@ namespace MathCore.Vectors
         [DST]
         public override bool Equals(object obj) => obj is Vector3D vector_3d && Equals(vector_3d);
 
+        /// <summary>Преобразование в строку с форматированием</summary>
+        /// <param name="Format">Строка формата</param>
+        /// <returns>Форматированное строковое представление</returns>
         [DST, NotNull]
         public string ToString(string Format) => $"({_X.ToString(Format)};{_Y.ToString(Format)};{_Z.ToString(Format)})";
 
+        /// <summary>Преобразование в строку с форматированием</summary>
+        /// <param name="Format">Строка формата</param>
+        /// <param name="Provider">Провайдер форматирования данных</param>
+        /// <returns>Форматированное строковое представление</returns>
         [DST]
         public string ToString(string Format, IFormatProvider Provider) => $"({_X.ToString(Format, Provider)};{_Y.ToString(Format, Provider)};{_Z.ToString(Format, Provider)})";
 
