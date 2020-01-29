@@ -34,4 +34,4 @@ jobs:
         run: nuget sources add -name "MathCore" -Source https://nuget.pkg.github.com/Infarh/index.json -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
       
       - name: Push package
-        run: nuget push MathCore/bin/Release/*.nupkg -Source "MathCore" -SkipDuplicate
+        run: nuget push .\**\*.nupkg -Source "MathCore" -SkipDuplicate
