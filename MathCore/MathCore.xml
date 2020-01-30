@@ -16234,26 +16234,26 @@
             <summary>Transfers the result of a Task to the TaskCompletionSource.</summary>
             <typeparam name="TResult">Specifies the type of the result.</typeparam>
             <param name="ResultSetter">The TaskCompletionSource.</param>
-            <param name="task">The task whose completion results should be transfered.</param>
+            <param name="task">The task whose completion results should be transferred.</param>
         </member>
         <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.SetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task{``0})">
             <summary>Transfers the result of a Task to the TaskCompletionSource.</summary>
             <typeparam name="TResult">Specifies the type of the result.</typeparam>
             <param name="ResultSetter">The TaskCompletionSource.</param>
-            <param name="task">The task whose completion results should be transfered.</param>
+            <param name="task">The task whose completion results should be transferred.</param>
         </member>
         <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.TrySetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task)">
             <summary>Attempts to transfer the result of a Task to the TaskCompletionSource.</summary>
             <typeparam name="TResult">Specifies the type of the result.</typeparam>
             <param name="ResultSetter">The TaskCompletionSource.</param>
-            <param name="task">The task whose completion results should be transfered.</param>
+            <param name="task">The task whose completion results should be transferred.</param>
             <returns>Whether the transfer could be completed.</returns>
         </member>
         <member name="M:System.Threading.Tasks.TaskCompletionSourceExtensions.TrySetFromTask``1(System.Threading.Tasks.TaskCompletionSource{``0},System.Threading.Tasks.Task{``0})">
             <summary>Attempts to transfer the result of a Task to the TaskCompletionSource.</summary>
             <typeparam name="TResult">Specifies the type of the result.</typeparam>
             <param name="ResultSetter">The TaskCompletionSource.</param>
-            <param name="task">The task whose completion results should be transfered.</param>
+            <param name="task">The task whose completion results should be transferred.</param>
             <returns>Whether the transfer could be completed.</returns>
         </member>
         <member name="M:System.Threading.Tasks.TaskEx.YieldAsync">
