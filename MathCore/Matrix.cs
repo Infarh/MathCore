@@ -7,6 +7,7 @@ using static MathCore.Matrix.Array.Operator;
 // ReSharper disable ExceptionNotThrown
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 // ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable LocalizableElement
@@ -30,7 +31,7 @@ namespace MathCore
     /// </remarks>
     [Serializable]
     public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormattable,
-        IEquatable<Matrix>, IEquatable<double[,]>, IIndexable<int, int, double>
+        IEquatable<Matrix>, IEquatable<double[,]>
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -88,7 +89,7 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public double this[int i, int j] { [DST] get => _Data[i, j]; [DST] set => _Data[i, j] = value; }
+        public ref double this[int i, int j] { [DST] get => ref _Data[i, j]; }
 
         /// <summary>Вектор-столбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
         [NotNull] public Matrix this[int j] => GetCol(j);

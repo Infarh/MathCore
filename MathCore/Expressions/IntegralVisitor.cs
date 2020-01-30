@@ -42,29 +42,28 @@ namespace System.Linq.Expressions
             if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sAdd([NotNull] Expression a, [NotNull] Expression b) => sAdd(Expression.Add(a, b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sAdd(double a, [NotNull] Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sAdd([NotNull] Expression a, double b) => sAdd(Expression.Add(a, Expression.Constant(b)));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sInc([NotNull] Expression a) => sAdd(a, 1);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sSubtract([NotNull] Expression a, [NotNull] Expression b) => sAdd(Expression.Subtract(a, b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sSubtract(double a, [NotNull] Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sSubtract([NotNull] Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sDec([NotNull] Expression a) => sSubtract(a, 1);
         [NotNull]
         private static Expression sAdd([NotNull] BinaryExpression b)
@@ -83,14 +82,13 @@ namespace System.Linq.Expressions
             return r != null && r.Value.Equals(0.0) ? b.Left : b;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sMultiply([NotNull] Expression a, [NotNull] Expression b) => sMultiply(Expression.Multiply(a, b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sMultiply(double a, [NotNull] Expression b) => sMultiply(Expression.Multiply(Expression.Constant(a), b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sMultiply([NotNull] Expression a, double b) => sMultiply(Expression.Multiply(a, Expression.Constant(b)));
         [NotNull]
         private static Expression sMultiply([NotNull] BinaryExpression b)
@@ -106,14 +104,13 @@ namespace System.Linq.Expressions
             return r?.Value.Equals(1.0) == true ? b.Left : b;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sDivide([NotNull] Expression a, [NotNull] Expression b) => sDivide(Expression.Divide(a, b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sDivide(double a, [NotNull] Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sDivide([NotNull] Expression a, double b) => sDivide(Expression.Divide(a, Expression.Constant(b)));
         [NotNull]
         private static Expression sDivide([NotNull] BinaryExpression b)
@@ -128,11 +125,10 @@ namespace System.Linq.Expressions
             return r?.Value.Equals(1.0) == true ? b.Left : b;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sPower([NotNull] Expression a, [NotNull] Expression b) => sPower(Expression.Power(a, b));
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [NotNull]
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
         private static Expression sPower([NotNull] Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
         [NotNull]
         private static Expression sPower([NotNull] BinaryExpression b)

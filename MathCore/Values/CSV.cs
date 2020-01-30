@@ -5,6 +5,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Values
 {
@@ -15,19 +18,21 @@ namespace MathCore.Values
         public class Item : IEnumerable<KeyValuePair<string, string>>
         {
             /// <summary>Элементы заголовка</summary>
-            private readonly ReadOnlyCollection<string> _Header;
+            private readonly string[] _Header;
             /// <summary>Элементы данных</summary>
             private readonly string[] _Items;
 
             /// <summary>Требуемый элемент данных по указанному индексу</summary>
             /// <param name="index">Индекс элемента данных</param>
             /// <returns>Элемент данных по указанному индексу</returns>
-            public string this[int index] => _Items[index];
-            public ReadOnlyCollection<string> Header => _Header;
-            /// <summary>Требуемый элемент данных по указнному имени заголовка столбца</summary>
-            /// <param name="key">Имя столбца зоголовка</param>
+            public ref readonly string this[int index] => ref _Items[index];
+
+            public IReadOnlyCollection<string> Header => _Header;
+
+            /// <summary>Требуемый элемент данных по указанному имени заголовка столбца</summary>
+            /// <param name="key">Имя столбца заголовка</param>
             /// <returns>Требуемый элемент данных</returns>
-            public string this[string key] => _Items[_Header.IndexOf(key)];
+            public ref readonly string this[string key] => ref _Items[Array.IndexOf(_Header, key)];
 
             /// <summary>Количество элементов данных</summary>
             public int ItemsCount => _Items.Length;
@@ -35,19 +40,20 @@ namespace MathCore.Values
             /// <summary>Новый элемент данных</summary>
             /// <param name="Header">Названия столбцов</param>
             /// <param name="Items">Элементы данных</param>
-            public Item(ReadOnlyCollection<string> Header, string[] Items)
+            public Item(string[] Header, string[] Items)
             {
                 _Header = Header;
                 _Items = Items;
             }
 
             /// <inheritdoc />
+            [NotNull]
             public override string ToString() => string.Join(" ", _Items.Select(i => i.Trim()));
 
             /// <inheritdoc />
             public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
             {
-                for (int i = 0, len = Math.Min(_Header.Count, _Items.Length); i < len; i++)
+                for (int i = 0, len = Math.Min(_Header.Length, _Items.Length); i < len; i++)
                     yield return new KeyValuePair<string, string>(_Header[i], _Items[i]);
             }
 
@@ -74,8 +80,8 @@ namespace MathCore.Values
         /// <param name="SkipFirstLines">Количество пропускаемых строк в начале файла</param>
         /// <param name="HeaderLine">Считывать ли заголовок</param>
         /// <param name="SkipEmptyLines">Пропускать пустые строки</param>
-        /// <param name="Encoding">Кодировка файла (если не указана, используется <see cref="Encoding.UTF8S"/>)</param>
-        public CSV(string FileName, char Separator = ';', int SkipFirstLines = 0, bool HeaderLine = true, bool SkipEmptyLines = true, Encoding Encoding = null)
+        /// <param name="Encoding">Кодировка файла (если не указана, используется <see cref="Encoding.UTF8"/>)</param>
+        public CSV(string FileName, char Separator = ';', int SkipFirstLines = 0, bool HeaderLine = true, bool SkipEmptyLines = true, [CanBeNull] Encoding Encoding = null)
         {
             _FileName = FileName;
             _Separator = Separator;
@@ -92,13 +98,13 @@ namespace MathCore.Values
             using var reader = new StreamReader(new FileStream(_FileName, FileMode.Open, FileAccess.Read, FileShare.Read), _Encoding);
             for (var skip = _SkipFirstLines; skip > 0 && !reader.EndOfStream; skip--) reader.ReadLine();
 
-            ReadOnlyCollection<string> header = null;
+            string[] header = null;
             if (_HeaderLine && !reader.EndOfStream)
             {
                 var header_line = reader.ReadLine();
                 if (string.IsNullOrEmpty(header_line))
                     throw new FormatException("Ошибка формата файла - отсутствует требуемая строка заголовка");
-                header = new List<string>(header_line?.Split(separator) ?? throw new InvalidOperationException()).AsReadOnly();
+                header = header_line.Split(separator);
             }
 
             while (!reader.EndOfStream)

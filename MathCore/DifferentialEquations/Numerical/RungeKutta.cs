@@ -1,13 +1,20 @@
 ﻿using System;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedType.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.DifferentialEquations.Numerical
 {
-    /// <summary>
-    /// Метод Рунге-Кутты
-    /// </summary>
+    // ReSharper disable CommentTypo
+    /// <summary>Метод Рунге-Кутты</summary>
+    // ReSharper restore CommentTypo
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification = "<Ожидание>")]
     public class RungeKutta
     {
-
         private readonly DifferentialEquationsSystem _System;
         private readonly ArgumentFunction _X;
 
@@ -23,27 +30,22 @@ namespace MathCore.DifferentialEquations.Numerical
         //private double[] Y3; // внутренние переменные 
         //private double[] Y4; // внутренние переменные
 
-        /// <summary>
-        /// Размерность системы
-        /// </summary>
+        /// <summary>Размерность системы</summary>
         public int N => _N;
 
-        /// <summary>
-        /// Искомые решения
-        /// </summary>
+        /// <summary>Искомые решения</summary>
         public double[] Y => _Y;
 
-        /// <summary>
-        /// Текущее время
-        /// </summary>
+
+        /// <summary>Текущее время</summary>
         public double t => _t;
 
-        /// <summary>
-        /// Метод Рунге-Кутты
-        /// </summary>
+        // ReSharper disable CommentTypo
+        /// <summary>Метод Рунге-Кутты</summary>
         /// <param name="N">Размерность</param>
         /// <param name="System">Решаемая система</param>
         /// <param name="X">Производящая функция аргумента</param>
+        // ReSharper restore CommentTypo
         protected RungeKutta(int N, DifferentialEquationsSystem System, ArgumentFunction X)
         {
             _X = X;
@@ -51,7 +53,7 @@ namespace MathCore.DifferentialEquations.Numerical
 
             _N = N; // сохранить размерность системы
 
-            if(N < 1)
+            if (N < 1)
                 throw new ArgumentOutOfRangeException(nameof(N), "Размерность системы - величина положительная");
 
 
@@ -63,14 +65,12 @@ namespace MathCore.DifferentialEquations.Numerical
             //Y4 = new double[N];
         }
 
-        /// <summary>
-        /// Начальные условия
-        /// </summary>
+        /// <summary>Начальные условия</summary>
         /// <param name="t0">Начальное время</param>
         /// <param name="Y0">Начальные условия</param>
         public void Initialize(double t0, params double[] Y0)
         {
-            if(Y0.Length != _N)
+            if (Y0.Length != _N)
                 throw new ArgumentOutOfRangeException(nameof(Y0), "Размер вектора начальных значений не соответствует размерности решения метода");
 
             _t = t0;
@@ -79,13 +79,12 @@ namespace MathCore.DifferentialEquations.Numerical
 
         //public abstract void F(double t, double[] Y, ref double[] dY); // правые части системы.
 
-        /// <summary>
-        /// Рассчёт решения
-        /// </summary>
+        /// <summary>Расчёт решения</summary>
         /// <param name="dt">Шаг</param>
+        [NotNull]
         public double[] NextStep(double dt)
         {
-            if(dt <= 0)
+            if (dt <= 0)
                 throw new ArgumentOutOfRangeException(nameof(dt), "Шаг должен быть больше нуля");
 
             var dt2 = dt / 2;
@@ -96,7 +95,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var X2 = _X(t + dt / 2);
             var X3 = _X(t + dt);
 
-            if(X.Length != _N || X2.Length != _N || X3.Length != _N)
+            if (X.Length != _N || X2.Length != _N || X3.Length != _N)
                 throw new ArgumentException("Функция определения аргумента вернула вектор аргумента размера, не соответствующего размерности системы");
 
             var lv_Y = (double[])_Y.Clone();
@@ -105,14 +104,14 @@ namespace MathCore.DifferentialEquations.Numerical
             //F(_t, Y, ref _Y1);
             var Y1 = _System(X, lv_Y);
 
-            for(i = 0; i < N; i++)
+            for (i = 0; i < N; i++)
                 _Yy[i] = lv_Y[i] + Y1[i] * dt2;
 
             // рассчитать Y2
             //F(_t + dt / 2, _Yy, ref _Y2);
             var Y2 = _System(X2, _Yy);
 
-            for(i = 0; i < N; i++)
+            for (i = 0; i < N; i++)
                 _Yy[i] = lv_Y[i] + Y2[i] * dt2;
 
             // рассчитать Y3
@@ -120,7 +119,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var Y3 = _System(X2, _Yy);
 
 
-            for(i = 0; i < N; i++)
+            for (i = 0; i < N; i++)
                 _Yy[i] = lv_Y[i] + Y3[i] * dt;
 
             // рассчитать Y4
@@ -128,7 +127,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var Y4 = _System(X3, _Yy);
 
             // рассчитать решение на новом шаге
-            for(i = 0; i < N; i++)
+            for (i = 0; i < N; i++)
                 lv_Y[i] += dt / 6 * (Y1[i] + 2 * Y2[i] + 2 * Y3[i] + Y4[i]);
 
             // увеличить шаг

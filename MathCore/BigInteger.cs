@@ -2186,7 +2186,7 @@ namespace MathCore
             {       // exception if maxLength = 1
                 val |= (long)_Data[1] << 32;
             }
-            catch (Exception) //todo: избавиться от исключения
+            catch (ArithmeticException) //todo: избавиться от исключения
             {
                 if ((_Data[0] & 0x80000000) != 0) // negative
                     val = (int)_Data[0];

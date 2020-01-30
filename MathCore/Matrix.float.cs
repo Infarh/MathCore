@@ -25,7 +25,7 @@ namespace MathCore
     /// \/
     /// </remarks>
     [Serializable]
-    public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>, IIndexable<int, int, float>
+    public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -79,13 +79,7 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public float this[int i, int j]
-        {
-            [DST]
-            get => _Data[i, j];
-            [DST]
-            set => _Data[i, j] = value;
-        }
+        public ref float this[int i, int j] { [DST] get => ref _Data[i, j]; }
 
         /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
@@ -526,6 +520,7 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
+        /// <inheritdoc />
         [DST, NotNull]  public override string ToString() => $"MatrixFloat[{N}x{M}]";
 
         [DST, NotNull]  public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
@@ -809,12 +804,14 @@ namespace MathCore
 
         #endregion
 
+        /// <inheritdoc />
         public override bool Equals(object obj) =>
             obj is { }
             && (ReferenceEquals(this, obj)
                 || obj.GetType() == typeof(MatrixFloat)
                 && Equals((MatrixFloat)obj));
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {

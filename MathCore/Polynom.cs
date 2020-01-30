@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 // ReSharper disable UnusedMember.Global
 
@@ -70,11 +71,7 @@ namespace MathCore
         /// <see cref="Power"/> = <see cref="Length"/> - 1
         /// </summary>
         ///<param name="n">Степень a[0]+a[1]*x+a[2]*x^2+...<b>+a[<paramref name="n"/>]*x^<paramref name="n"/>+</b>...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
-        public double this[int n]
-        {
-            [DST] get => _a[n];
-            [DST] set => _a[n] = value;
-        }
+        public ref double this[int n] { [DST] get => ref _a[n]; }
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -246,8 +243,10 @@ namespace MathCore
         [DST]
         public override int GetHashCode() => _a.Select((i, a) => i.GetHashCode() ^ a.GetHashCode()).Aggregate(0x285da41, (S, s) => S ^ s);
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<double>)this).GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator<double> IEnumerable<double>.GetEnumerator() => ((IEnumerable<double>)_a).GetEnumerator();
 
         /// <inheritdoc />
