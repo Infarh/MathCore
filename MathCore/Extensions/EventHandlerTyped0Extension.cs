@@ -32,7 +32,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
-        /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+        /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         [DST]
         public static void StartAsync<TS, TE>([CanBeNull] this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e, AsyncCallback CallBack = null, object State = null) => Handler?.BeginInvoke(Sender, e, CallBack, State);
 
@@ -88,7 +88,7 @@ namespace System
         ///// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         ///// <param name="e">Аргументы события</param>
         ///// <param name="CallBack">Метод завершения генерации события</param>
-        ///// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+        ///// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         //[DST]
         //public static void StartAsync<TEventArgs>(this EventHandler<TEventArgs> Handler,
         //    object Sender, TEventArgs e, AsyncCallback CallBack = null, object @State = null)

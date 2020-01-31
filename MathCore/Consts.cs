@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable InconsistentNaming
@@ -86,6 +89,7 @@ namespace MathCore
         public const double GoldenRatio_Inv = 1 / GoldenRatio;
 
         /// <summary>Геометрические константы</summary>
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         public static class Geometry
         {
             /// <summary>Константа преобразования радиан в градусы = 180/π</summary>
@@ -95,8 +99,14 @@ namespace MathCore
             /// <summary>Системная константа π = 3.1415926535897932384626433832</summary>
             public const double Pi = Math.PI;
 
+            /// <summary>Преобразовать значение из радиан в градусы</summary>
+            /// <param name="RadValue">Значение в радианах</param>
+            /// <returns>Значение в градусах</returns>
             public static double ConvertToDeg(double RadValue) => RadValue * ToDeg;
 
+            /// <summary>Преобразовать значение из градусов в радианы</summary>
+            /// <param name="DegValue">Значение в градусах</param>
+            /// <returns>Значение в радианах</returns>
             public static double ConvertToRad(double DegValue) => DegValue * ToRad;
         }
 
@@ -138,36 +148,74 @@ namespace MathCore
             /// <summary>Сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 376.730313461771 Ом</summary>
             public const double Impedance0 = 376.73031346177065546819840042031930826862350835242;
 
+            /// <summary>Преобразовать значение частоты в длину волны</summary>
+            /// <param name="Frequency">Значение частоты в Гц</param>
+            /// <returns>Длина волны в метрах</returns>
             public static double ToWaveLength(double Frequency) => SpeedOfLight / Frequency;
 
+            /// <summary>Преобразовать значение частоты в длину волны с учётом диэлектрической проницаемости среды</summary>
+            /// <param name="Frequency">Значение частоты в Гц</param>
+            /// <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            /// <returns>Значение длины волны в среде в метрах</returns>
             public static double ToWaveLength(double Frequency, double Epsilon) => SpeedOfLight / Frequency / Math.Sqrt(Epsilon);
 
+            /// <summary>Преобразовать значение частоты в длину волны с учётом диэлектрической и магнитной проницаемости среды</summary>
+            /// <param name="Frequency">Значение частоты в Гц</param>
+            /// <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            /// <param name="Mu">Значение магнитной проницаемости среды</param>
+            /// <returns>Значение длины волны в среде в метрах</returns>
             public static double ToWaveLength(double Frequency, double Epsilon, double Mu) => SpeedOfLight / Frequency / Math.Sqrt(Epsilon / Mu);
 
+            /// <summary>Преобразование длины волны в метрах в частоту в Гц</summary>
+            /// <param name="WaveLength">Значение длины волны в метрах</param>
+            /// <returns>Значение частоты в Гц</returns>
             public static double ToFrequency(double WaveLength) => SpeedOfLight / WaveLength;
 
+            /// <summary>Преобразование длины волны в среде в метрах в частоту в Гц</summary>
+            /// <param name="WaveLength">Значение длины волны в среде в метрах</param>
+            /// <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            /// <returns>Значение частоты в Гц</returns>
             public static double ToFrequency(double WaveLength, double Epsilon) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon);
 
+            /// <summary>Преобразование длины волны в среде в метрах в частоту в Гц</summary>
+            /// <param name="WaveLength">Значение длины волны в среде в метрах</param>
+            /// <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            /// <param name="Mu">Значение магнитной проницаемости среды</param>
+            /// <returns>Значение частоты в Гц</returns>
             public static double ToFrequency(double WaveLength, double Epsilon, double Mu) => SpeedOfLight / WaveLength / Math.Sqrt(Epsilon / Mu);
         }
 
+        // ReSharper disable once CommentTypo
         /// <summary>0x3ffeffff = 1073676287</summary>
         public const int BigPrime_int = 0x3ffeffff;
 
         /// <summary>0x3fffffefffffff = 18014398241046527</summary>
         public const long BigPrime_long = 0x3fffffefffffff;
 
+        /// <summary>Размеры данных</summary>
         public static class DataLength
         {
+            /// <summary>Размеры данных в байтах</summary>
             public static class Bytes
             {
+                /// <summary>1 Байт</summary>
                 public const int B = 1;
+                /// <summary>1 килобайт в байтах</summary>
                 public const int kB = 0x400 * B;
+                /// <summary>1 мегабайт в байтах</summary>
                 public const int MB = 0x400 * kB;
+                /// <summary>1 гигабайт в байтах</summary>
                 public const int GB = 0x400 * MB;
+                /// <summary>1 терабайт в байтах</summary>
                 public const long TB = 1024L * GB;
 
-                public static string[] GetDataNames() => new[] { "B", "kB", "MB", "GB", "TB" };
+                /// <summary>Получить имена значений количества байт с приставками "B", "kB", "MB", "GB", "TB"</summary>
+                /// <returns>"B", "kB", "MB", "GB", "TB"</returns>
+                [NotNull] public static string[] GetDataNames() => new[] { "B", "kB", "MB", "GB", "TB" };
+
+                /// <summary>Получить русскоязычные имена значений количества байт с приставками "Б", "кБ", "МБ", "ГБ", "ТБ"</summary>
+                /// <returns>"Б", "кБ", "МБ", "ГБ", "ТБ"</returns>
+                [NotNull] public static string[] GetDataNamesRu() => new[] { "Б", "кБ", "МБ", "ГБ", "ТБ" };
             }
         }
 

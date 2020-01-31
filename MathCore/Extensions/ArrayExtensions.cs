@@ -793,7 +793,7 @@ namespace System
 
         /// <summary>Создать массив последовательных значений длины <paramref name="length"/> начиная с <paramref name="offset"/></summary>
         /// <param name="length">Длина массива</param>
-        /// <param name="offset">НАчальное значение</param>
+        /// <param name="offset">Начальное значение</param>
         /// <returns>Массив чисел длины <paramref name="length"/> начиная с <paramref name="offset"/></returns>
         [DST, NotNull]
         public static int[] CreateSequence(int length, int offset = 0)

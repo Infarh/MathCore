@@ -2520,7 +2520,7 @@
         </member>
         <member name="M:MathCore.Functions.FunctionsExtensions.GetValues(System.Func{System.Double,System.Double},System.Double,System.Double,System.Double)">
             <summary>Получить массив значений функции в указанном интервале с указанным шагом</summary>
-            <param name="f">Функция, Массив значений которой требуется получить</param>
+            <param name="f">Функция, массив значений которой требуется получить</param>
             <param name="x1">Начало интервала</param>
             <param name="x2">Конец интервала</param>
             <param name="dx">Шаг сетки дискретизации</param>
@@ -16452,29 +16452,29 @@
             <returns>Объект <see cref="T:System.IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String[])">
-            <summary>Подписка на событие изменения указанных свйоств</summary>
+            <summary>Подписка на событие изменения указанных свойств</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Names">Имена свйоств</param>
+            <param name="Names">Имена свойств</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler_Disposable(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.String[])">
-            <summary>Подписка на событие изменения указанных свйоств</summary>
+            <summary>Подписка на событие изменения указанных свойств</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Names">Имена свйоств</param>
+            <param name="Names">Имена свойств</param>
             <returns>Объект <see cref="T:System.IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>Подписка на событие изменения указанных свйоств</summary>
+            <summary>Подписка на событие изменения указанных свойств</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Names">Имена свйоств</param>
+            <param name="Names">Имена свойств</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegisterPropertyChangedHandler_Disposable(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>Подписка на событие изменения указанных свйоств</summary>
+            <summary>Подписка на событие изменения указанных свойств</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="handler">Обработчик события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> типа <see cref="T:System.ComponentModel.PropertyChangedEventHandler"/></param>
-            <param name="Names">Имена свйоств</param>
+            <param name="Names">Имена свойств</param>
             <returns>Объект <see cref="T:System.IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         </member>
         <member name="T:System.ComponentModel.INotifyPropertyChangedExtensions.DependentPropertyChangedEventArgs">
@@ -16497,7 +16497,7 @@
         <member name="T:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo">
             <summary>Информация о связях между свойствами типов</summary>
         </member>
-        <member name="F:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo._Dependences">
+        <member name="F:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo._Dependencies">
             <summary>Словарь связей имён свойств типа</summary>
         </member>
         <member name="F:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo._Handler">
@@ -16505,7 +16505,7 @@
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo.#ctor(System.Collections.Generic.Dictionary{System.String,System.String[]})">
             <summary>Инициализация нового экземпляра информации и связях между свойствами типа</summary>
-            <param name="Dependences">Словарь имён свойст зависимостей</param>
+            <param name="Dependencies">Словарь имён свойст зависимостей</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo.Subscribe(System.ComponentModel.INotifyPropertyChanged,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
             <summary>Метод установки обработчика событий обновления свойства объекта, генерирующего вторичные события обновления зависимых свойств</summary>
@@ -16521,7 +16521,7 @@
             <param name="Sender">Источник события - не используется</param>
             <param name="e">Аргумент события - не используется</param>
         </member>
-        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependences_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
+        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
             <summary>
             Создание связей между свойствами объекта на основе атрибутов <see cref="T:System.AffectsTheAttribute"/> и <see cref="T:System.DependencyOnAttribute"/>
             </summary>
@@ -16529,7 +16529,7 @@
             <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
             <typeparam name="T">Тип объекта</typeparam>
         </member>
-        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependences_Register_Disposable``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
+        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register_Disposable``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
             <summary>
             Создание связей между свойствами объекта на основе атрибутов <see cref="T:System.AffectsTheAttribute"/> и <see cref="T:System.DependencyOnAttribute"/>
             </summary>
@@ -16538,9 +16538,9 @@
             <typeparam name="T">Тип объекта</typeparam>
             <returns></returns>
         </member>
-        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependences_Unregister``1(``0)">
+        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Unregister``1(``0)">
             <summary>
-            Разрушение связей между свойствами, созданными методом <see cref="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependences_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})"/>
+            Разрушение связей между свойствами, созданными методом <see cref="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})"/>
             </summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <typeparam name="T">Тип объекта</typeparam>
@@ -17774,7 +17774,7 @@
             <param name="Sender">Источник события</param>
             <param name="e">Аргумент события</param>
             <param name="CallBack">Метод завершения генерации события</param>
-            <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+            <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         </member>
         <member name="M:System.EventHandlerExtension.FastStart(System.EventHandler,System.Object)">
             <summary>Быстрая генерация события</summary>
@@ -17808,7 +17808,7 @@
             <typeparam name="TEventArgs">Тип аргумента события</typeparam>
             <param name="e">Аргументы события</param>
             <param name="CallBack">Метод завершения генерации события</param>
-            <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+            <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         </member>
         <member name="M:System.EventHandlerExtension.Start``3(System.EventHandler{``0,``1,``2},``1,``2)">
             <summary>Потоко-безопасная генерация события</summary>
@@ -17835,7 +17835,7 @@
             <param name="Sender">Источник события</param>
             <param name="e">Аргумент события</param>
             <param name="CallBack">Метод завершения генерации события</param>
-            <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+            <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         </member>
         <member name="M:System.EventHandlerTyped1Extension.FastStart``2(System.EventHandler{``0,``1},``0)">
             <summary>Быстрая генерация события</summary>
@@ -17863,7 +17863,7 @@
             <param name="Sender">Источник события</param>
             <param name="e">Аргумент события</param>
             <param name="CallBack">Метод завершения генерации события</param>
-            <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+            <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         </member>
         <member name="M:System.EventHandlerTyped2Extension.FastStart``3(System.EventHandler{``0,``1,``2},``0)">
             <summary>Быстрая генерация события</summary>
@@ -17891,7 +17891,7 @@
             <param name="Sender">Источник события</param>
             <param name="e">Аргумент события</param>
             <param name="CallBack">Метод завершения генерации события</param>
-            <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+            <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         </member>
         <member name="M:System.EventHandlerTyped3Extension.FastStart``4(System.EventHandler{``0,``1,``2,``3},``0)">
             <summary>Быстрая генерация события</summary>
@@ -18604,23 +18604,23 @@
             <returns>Значение x^z, где x - действительное, z - комплексное</returns>
         </member>
         <member name="M:System.DoubleExtensions.In_dB(System.Double)">
-            <summary>Преобразование в децебеллы по амплитуде</summary>
+            <summary>Преобразование в децибелы по амплитуде</summary>
             <param name="x">Амплитудное значение 20*lg(x)</param>
-            <returns>Значение в децебеллах</returns>
+            <returns>Значение в децибелах</returns>
         </member>
         <member name="M:System.DoubleExtensions.In_dB_byPower(System.Double)">
-            <summary>Преобразование в децебеллы по мощности</summary>
+            <summary>Преобразование в децибелы по мощности</summary>
             <param name="x">Значение мощности 10*lg(x)</param>
-            <returns>Значение в децебеллах</returns>
+            <returns>Значение в децибелах</returns>
         </member>
         <member name="M:System.DoubleExtensions.From_dB(System.Double)">
-            <summary>Преобразование из децебеллов в разы по значению (амплитуде)</summary>
-            <param name="db">Значение в децебеллах 10^(x/20)</param>
+            <summary>Преобразование из децибелов в разы по значению (амплитуде)</summary>
+            <param name="db">Значение в децибелах 10^(x/20)</param>
             <returns>Значение в разах по амплитуде</returns>
         </member>
         <member name="M:System.DoubleExtensions.From_dB_byPower(System.Double)">
-            <summary>Преобразование из децебеллов в разы по мощности</summary>
-            <param name="db">Значение в децебеллах 10^(x/10)</param>
+            <summary>Преобразование из децибелов в разы по мощности</summary>
+            <param name="db">Значение в децибелах 10^(x/10)</param>
             <returns>Значение в разах по мощности</returns>
         </member>
         <member name="M:System.DoubleExtensions.ToRad(System.Double)">

@@ -1,40 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Trees
 {
     /// <summary>Методы-расширения интерфейса элемента двусвязного дерева</summary>
     public static class ITreeItemEx
     {
+        /// <summary>Тип обхода узлов дерева</summary>
         [Serializable]
         public enum OrderWalkType : byte
         {
+            /// <summary>(К-Л-П) Сначала текущий узел в уровне, затем все дочерние узлы текущего, затем следующий узел уровня</summary>
             CurrentChildNext,
+
+            /// <summary>(К-П-Л) Сначала текущий узел в уровне, затем все узлы текущего уровня, затем дочерний узел</summary>
             CurrentNextChild,
+
+            /// <summary>(Л-К-П) Сначала дочерние узлы текущего узла, затем текущий узел, потом все оставшиеся узлы текущего уровня</summary>
             ChildCurrentNext,
+
+            /// <summary>(П-К-Л) Сначала все остальные узлы текущего уровня, затем текущий узел, потом все дочерние узлы текущего узла</summary>
             NextCurrentChild,
+
+            /// <summary>(Л-П-К) Сначала все дочерние узлы текущего узла, затем все узлы текущего уровня, в конце текущий узел</summary>
             ChildNextCurrent,
+
+            /// <summary>(П-Л-К) Сначала все узлы текущего уровня, затем все дочерние узлы текущего узла, В конце сам текущий узел</summary>
             NextChildCurrent
         }
 
-        public class TreeLevelItem<T> where T : class, ITreeItem<T>
+        /// <summary>Представление узла дерева</summary>
+        /// <typeparam name="T">Тип значения узла</typeparam>
+        public readonly struct TreeLevelItem<T> : IEquatable<TreeLevelItem<T>> where T : class, ITreeItem<T>
         {
+            /// <summary>Значение узла</summary>
             public T Item { get; }
+
+            /// <summary>Уровень узла в дереве</summary>
             public int Level { get; }
+
+            /// <summary>Инициализация нового экземпляра <see cref="TreeLevelItem{T}"/></summary>
+            /// <param name="Item">Значение узла</param>
+            /// <param name="Level">Уровень узла</param>
             public TreeLevelItem(T Item, int Level)
             {
                 this.Item = Item;
                 this.Level = Level;
             }
+
+            /// <inheritdoc />
+            public bool Equals(TreeLevelItem<T> other) => EqualityComparer<T>.Default.Equals(Item, other.Item) && Level == other.Level;
+
+            /// <inheritdoc />
+            public override bool Equals(object obj) => obj is TreeLevelItem<T> other && Equals(other);
+
+            /// <inheritdoc />
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (EqualityComparer<T>.Default.GetHashCode(Item) * 397) ^ Level;
+                }
+            }
+
+            /// <summary>Оператор определения равенства между двумя экземплярам <see cref="TreeLevelItem{T}"/></summary>
+            /// <returns>Истина, если свойства экземпляров равны</returns>
+            public static bool operator ==(TreeLevelItem<T> left, TreeLevelItem<T> right) => left.Equals(right);
+
+            /// <summary>Оператор определения неравенства между двумя экземплярам <see cref="TreeLevelItem{T}"/></summary>
+            /// <returns>Истина, если хотя бы одно свойство экземпляров отличается</returns>
+            public static bool operator !=(TreeLevelItem<T> left, TreeLevelItem<T> right) => !left.Equals(right);
         }
 
-        private static void DebugWrite([NotNull] string str, [NotNull] params object[] obj) => Console.Title = string.Format(str, obj);
+        //private static void DebugWrite([NotNull] string str, [NotNull] params object[] obj) => Console.Title = string.Format(str, obj);
 
         /// <summary>Определение корня дерева</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
-        /// <returns>КОрневой объект дерева объектов</returns>
+        /// <returns>Корневой объект дерева объектов</returns>
         [NotNull]
         public static T GetRootItem<T>(this T Item) where T : class, ITreeItem<T>
         {
@@ -45,45 +90,46 @@ namespace MathCore.Trees
         /// <summary>Обход элементов поддерева начиная с текущего в порядке: текущий, дочерний, следующий по уровню</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        [ItemNotNull]
-        public static IEnumerable<TreeLevelItem<T>> OrderWalk<T>
-                    (
-                        this T Item,
-                        OrderWalkType WalkType = OrderWalkType.ChildCurrentNext,
-                        int level = 0
-                    )
-                    where T : class, ITreeItem<T>
+        /// <param name="WalkType">Тип обхода</param>
+        /// <param name="Level">Уровень дерева</param>
+        /// <returns>Последовательность элементов дерева</returns>
+        public static IEnumerable<TreeLevelItem<T>> OrderWalk<T>(
+            this T Item,
+            OrderWalkType WalkType = OrderWalkType.ChildCurrentNext,
+            int Level = 0)
+            where T : class, ITreeItem<T>
         {
             var stack = new Stack<TreeLevelItem<T>>();
-            stack.Push(new TreeLevelItem<T>(Item, level));
-            Action<T, int> Push = (t, l) =>
-                                      {
-                                          if(t is null) return;
-                                          stack.Push(new TreeLevelItem<T>(t, l));
-                                      };
+            stack.Push(new TreeLevelItem<T>(Item, Level));
+
+            void Push(T t, int l)
+            {
+                if (t is null) return;
+                stack.Push(new TreeLevelItem<T>(t, l));
+            }
 
             switch(WalkType)
             {
                 case OrderWalkType.CurrentChildNext:
                     do
                     {
-                        var s = stack.Pop();
-                        var l = s.Level;
-                        yield return s;
-                        Push(s.Item.Next, l);
-                        Push(s.Item.Child, l + 1);
+                        var node = stack.Pop();
+                        yield return node;
+
+                        var node_level = node.Level;
+                        Push(node.Item.Next, node_level);
+                        Push(node.Item.Child, node_level + 1);
                     } while(stack.Count > 0);
                     break;
                 case OrderWalkType.CurrentNextChild:
                     do
                     {
-                        var s = stack.Pop();
-                        var l = s.Level;
-                        yield return s;
-                        Push(s.Item.Child, l + 1);
-                        Push(s.Item.Next, l);
+                        var node = stack.Pop();
+                        yield return node;
+
+                        var node_level = node.Level;
+                        Push(node.Item.Child, node_level + 1);
+                        Push(node.Item.Next, node_level);
                     } while(stack.Count > 0);
                     break;
                 case OrderWalkType.ChildCurrentNext:
@@ -106,7 +152,7 @@ namespace MathCore.Trees
         /// <summary>Получить все родительские элементы</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
-        /// <returns></returns>
+        /// <returns>Массив элементов родительских узлов дерева</returns>
         [NotNull]
         public static T[] GetParents<T>(this T Item) where T : class, ITreeItem<T>
         {
@@ -126,7 +172,7 @@ namespace MathCore.Trees
         /// <summary>Получить все элементы дочернего уровня поддерева</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
-        /// <returns></returns>
+        /// <returns>Массив элементов текущего уровня дерева</returns>
         [NotNull]
         public static T[] GetLevelItems<T>(this T Item) where T : class, ITreeItem<T>
         {
@@ -163,7 +209,7 @@ namespace MathCore.Trees
         /// <summary>Получить все дочерние элементы поддерева</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
         /// <param name="Item">Объект с интерфейсом элемента дерева</param>
-        /// <returns></returns>
+        /// <returns>Массив элементов дочерних узлов</returns>
         [NotNull]
         public static T[] GetChilds<T>(this T Item) where T : class, ITreeItem<T>
         {

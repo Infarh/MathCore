@@ -224,11 +224,11 @@ namespace System.Linq
         /// <param name="NotSelector">Функция для проверки каждого элемента на не соответствие условию.</param>
         /// <typeparam name="T">Тип элементов последовательности <paramref name="enumerable"/>.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="enumerable"/> или <paramref name="NotSelector"/> — null.</exception>
-        [CN]
+        [NN]
         public static IEnumerable<T> WhereNot<T>(
-            [CN] this IEnumerable<T> enumerable,
+            [NN] this IEnumerable<T> enumerable,
             [NN]Func<T, bool> NotSelector) 
-            => enumerable?.Where(t => !NotSelector(t));
+            => enumerable.Where(t => !NotSelector(t));
 
         /// <summary>Возвращает цепочку элементов последовательности, удовлетворяющих указанному условию</summary>
         /// <returns>
@@ -1218,7 +1218,7 @@ namespace System.Linq
         /// <summary>Выполнение указанного действия на каждом шаге перебора последовательности после выдачи элемента</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов</param>
-        /// <param name="action">Действие, Выполняемое после выдачи элемента последовательности</param>
+        /// <param name="action">Действие, выполняемое после выдачи элемента последовательности</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
         public static IEnumerable<T> ForeachLazyLast<T>([NN] this IEnumerable<T> collection, [CN] Action<T> action)

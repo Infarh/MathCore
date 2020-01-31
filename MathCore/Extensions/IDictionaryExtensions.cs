@@ -63,9 +63,9 @@ namespace System.Collections.Generic
 
         /// <summary>Добавление значений в словарь</summary>
         /// <param name="dictionary">Словарь в который надо добавить значения</param>
-        /// <param name="collection">Коллекция добавляемух значений</param>
+        /// <param name="collection">Коллекция добавляемых значений</param>
         /// <param name="converter">Метод определения ключа словаря для каждого из элементов коллекции</param>
-        /// <typeparam name="TKey">ТИп ключа словаря</typeparam>
+        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         public static void AddValues<TKey, TValue>
         (
@@ -154,7 +154,7 @@ namespace System.Collections.Generic
         /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
         /// <param name="dictionary">Рассматриваемый словарь</param>
         /// <param name="key">Ключ, значение для которого требуется получить</param>
-        /// <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключём, если он отсутствует</param>
+        /// <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключом, если он отсутствует</param>
         /// <typeparam name="TKey">Тип ключа</typeparam>
         /// <typeparam name="TValue">Тип значения</typeparam>
         /// <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
@@ -186,6 +186,7 @@ namespace System.Collections.Generic
         /// <param name="name">Название объекта, значение для которого требуется получить</param>
         /// <typeparam name="TValue">Тип значения</typeparam>
         /// <returns>Значение словаря для указанного ключа</returns>
+        [CanBeNull]
         public static TValue GetValue<TValue>([NotNull] this Dictionary<string, object> dictionary, [NotNull] string name) => dictionary.TryGetValue(name, out var value) ? (TValue)value : default;
 
         /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
@@ -257,7 +258,7 @@ namespace System.Collections.Generic
         /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
         /// <param name="dictionary">Инициализируемый словарь</param>
         /// <param name="count">Количество добавляемых элементов</param>
-        /// <param name="parameter">Параметр инициалализации</param>
+        /// <param name="parameter">Параметр инициализации</param>
         /// <param name="initializer">Метод генерации новых элементов</param>
         /// <typeparam name="TKey">Тип ключа словаря</typeparam>
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
@@ -302,7 +303,7 @@ namespace System.Collections.Generic
         /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
         /// <param name="dictionary">Инициализируемый словарь</param>
         /// <param name="keys">Коллекция ключей</param>
-        /// <param name="parameter">Параметр инициалализации</param>
+        /// <param name="parameter">Параметр инициализации</param>
         /// <param name="initializer">Метод генерации новых элементов</param>
         /// <typeparam name="TKey">Тип ключа словаря</typeparam>
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
@@ -342,7 +343,8 @@ namespace System.Collections.Generic
             return to_remove;
         }
 
-        public static TValue[] RemoveItems<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IEnumerable<TKey> keys)
+        [NotNull]
+        public static TValue[] RemoveItems<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> dictionary, [NotNull] IEnumerable<TKey> keys)
         {
             var result = new List<TValue>(dictionary.Count);
             foreach (var key in keys)

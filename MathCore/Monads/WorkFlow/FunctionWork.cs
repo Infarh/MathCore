@@ -1,7 +1,7 @@
 ﻿using System;
 using MathCore.Annotations;
 
-namespace MathCore.Monades.WorkFlow
+namespace MathCore.Monads.WorkFlow
 {
     /// <summary>Работа, выполняющая указанную функцию</summary>
     /// <typeparam name="T">Тип значения функции</typeparam>

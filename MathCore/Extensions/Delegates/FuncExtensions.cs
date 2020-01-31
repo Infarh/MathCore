@@ -12,6 +12,7 @@ using MathCore.DifferentialEquations.Numerical;
 using MathCore.Evaluations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
 // ReSharper disable UnusedMember.Global
@@ -401,7 +402,7 @@ namespace System
 
         /// <summary>Функция от функции - функционал (преобразователь функции)</summary>
         /// <typeparam name="TIn">Тип аргумента функции</typeparam>
-        /// <typeparam name="TOut">ТИп значения функции</typeparam>
+        /// <typeparam name="TOut">Тип значения функции</typeparam>
         /// <param name="f">Исходная (преобразуемая) функция</param>
         /// <param name="q">Метод преобразования исходной функции, тип значения которого соответствует типу исходной функции</param>
         /// <returns>Новая функция, преобразованная указанным методом на основе исходной функции</returns>
@@ -604,7 +605,7 @@ namespace System
         /// <param name="x1">Начало интервала интегрирования</param>
         /// <param name="x2">Конец интервала интегрирования</param>
         /// <param name="f0">Начальное значение функции (задача Коши)</param>
-        /// <param name="dx">ШАг интегрирования</param>
+        /// <param name="dx">Шаг интегрирования</param>
         /// <returns>Задача расчёта значения интеграла функции</returns>
         [NotNull]
         public static Task<double> GetIntegralValueAsync
@@ -931,7 +932,7 @@ namespace System
         /// <param name="f">Дискретизируемая функция</param>
         /// <param name="x1">Начало интервала дискретизации</param>
         /// <param name="x2">Конец интервала дискретизации</param>
-        /// <param name="dx">ШАг дискретизации</param>
+        /// <param name="dx">Шаг дискретизации</param>
         /// <returns>Перечисление дискретных значений функции</returns>
         [NotNull]
         public static IEnumerable<T> Sampling<T>([NotNull] this Func<double, T> f, double x1, double x2, double dx)
@@ -964,7 +965,7 @@ namespace System
             args.Function(f);
 
         /// <summary>Получить массив значений функции на указанном интервале с указанным шагом дискретизации</summary>
-        /// <typeparam name="TResult">ТИп значений функции</typeparam>
+        /// <typeparam name="TResult">Тип значений функции</typeparam>
         /// <param name="f">Дискретизируемая функция</param>
         /// <param name="x1">Начало интервала дискретизации</param>
         /// <param name="x2">Конец интервала дискретизации</param>
@@ -1163,7 +1164,7 @@ namespace System
         public class SamplingResult<TValue> : IEnumerable<SamplingResult<TValue>.Result>
         {
             /// <summary>Отсчёт функции</summary>
-            public struct Result
+            public readonly struct Result
             {
                 /// <summary>Значение аргумента отсчёта</summary>
                 public readonly double Argument;
@@ -1181,7 +1182,6 @@ namespace System
 
                 /// <summary>Оператор неявного приведения отсчёта функции к кортежу двух элементов - значение отсчёта функции - значение функции</summary>
                 /// <param name="result">Отсчёт функции</param>
-                [NotNull]
                 public static implicit operator (double Argument, TValue Value)(Result result) => (result.Argument, result.Value);
             }
 
@@ -1402,7 +1402,7 @@ namespace System
                 return (result, Math.Sqrt(accuracy));
             }
 
-            /// <summary>СВязанный список с дискретами функции</summary>
+            /// <summary>Связанный список с дискретами функции</summary>
             private readonly LinkedList<Result> _List;
 
             /// <summary>Дискретизируемая функция</summary>
@@ -1580,7 +1580,7 @@ namespace System
         }
 
         /// <summary>Результаты адаптивной однопроходной дискретизации функции значений указанного типа</summary>
-        /// <typeparam name="T">ТИп значений функции</typeparam>
+        /// <typeparam name="T">Тип значений функции</typeparam>
         private sealed class SamplingResultOneWayT<T> : SamplingResult<T>
         {
             public SamplingResultOneWayT
@@ -1710,7 +1710,10 @@ namespace System
             {
                 Debug.Assert(node?.Next != null, "node?.Next != null");
                 var v1 = node.Value;
-                var v2 = node.Next.Value;
+
+                var next_node = node.Next;
+                if (next_node is null) break;
+                var v2 = next_node.Value;
                 var xx = v2.Argument - v1.Argument;
                 var yy = v2.Value - v1.Value;
                 var l = Math.Sqrt(xx * xx + yy * yy);
@@ -1731,7 +1734,7 @@ namespace System
                         result.AddAfter(node, new SamplingResult<double>.Result(x, y));
                     else
                     {
-                        node = node.Next;
+                        node = next_node;
                         var dl = Eps - l;
                         dl *= dl;
                         accuracy += dl;
@@ -1809,8 +1812,9 @@ namespace System
                 var x11 = v1.Argument;
 
                 var y11 = converter(v1.Value);
-                Debug.Assert(node?.Next != null, "node?.Next != null");
-                var v2 = node.Next.Value;
+                var next_node = node.Next;
+                if(next_node is null) break;
+                var v2 = next_node.Value;
                 var x22 = v2.Argument;
                 var y22 = converter(v2.Value);
                 var l = Math.Sqrt((x22 - x11) * (x22 - x11) + (y22 - y11) * (y22 - y11));
@@ -1832,7 +1836,7 @@ namespace System
                         result.AddAfter(node, new SamplingResult<T>.Result(x, v));
                     else
                     {
-                        node = node.Next;
+                        node = next_node;
                         var dl = Eps - l;
                         accuracy += dl * dl;
                     }

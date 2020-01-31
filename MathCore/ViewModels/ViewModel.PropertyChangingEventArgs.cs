@@ -43,7 +43,7 @@ namespace MathCore.ViewModels
 
             /// <summary>Установить новое значение свойства</summary>
             /// <param name="Value">Новое значение свойства</param>
-            /// <returns>Истина, Если новое значение свойства отличается от старого</returns>
+            /// <returns>Истина, если новое значение свойства отличается от старого</returns>
             public bool Set(in T Value)
             {
                 _NewValue = Value;

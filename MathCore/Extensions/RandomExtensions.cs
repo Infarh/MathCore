@@ -247,7 +247,7 @@ namespace System
         /// <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="min">Минимум</param>
-        /// <param name="max">МАксимум</param>
+        /// <param name="max">Максимум</param>
         /// <param name="mode">Медиана</param>
         /// <returns>Случайное число с треугольным распределением</returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
@@ -294,9 +294,7 @@ namespace System
 
         public static double NextDoubleInterval([NotNull] this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min));
 
-        /// <summary>
-        ///   Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
-        /// </summary>
+        /// <summary>Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm</summary>
         /// <param name="rnd"></param>
         /// <param name = "list"></param>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]

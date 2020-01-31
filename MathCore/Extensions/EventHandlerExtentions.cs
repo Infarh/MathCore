@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -107,8 +108,8 @@ namespace System
         public static void Start([CanBeNull] this EventHandler Handler, object Sender, EventArgs e)
         {
             if (Handler is null) return;
-            var invokations = Handler.GetInvocationList();
-            foreach (var d in invokations)
+            var invocations = Handler.GetInvocationList();
+            foreach (var d in invocations)
                 switch (d.Target)
                 {
                     case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
@@ -125,7 +126,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
-        /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+        /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         [DST, CanBeNull]
         public static IAsyncResult StartAsync([CanBeNull] this EventHandler Handler, object Sender, EventArgs e, [CanBeNull] AsyncCallback CallBack = null, [CanBeNull] object State = null) =>
             Handler is null ? null : ((Action)(() => Handler.Invoke(Sender, e))).BeginInvoke(CallBack, State);
@@ -162,8 +163,8 @@ namespace System
             where TEventArgs : EventArgs
         {
             if (Handler is null) return;
-            var invokations = Handler.GetInvocationList();
-            foreach (var d in invokations)
+            var invocations = Handler.GetInvocationList();
+            foreach (var d in invocations)
                 switch (d.Target)
                 {
                     case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
@@ -175,13 +176,13 @@ namespace System
                 }
         }
 
-        /// <summary>Потоко-безопасная асинхроная генерация события</summary>
+        /// <summary>Потоко-безопасная асинхронная генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
         /// <param name="Sender">Источник события</param>
         /// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         /// <param name="e">Аргументы события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
-        /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+        /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         [DST, CanBeNull]
         public static IAsyncResult StartAsync<TEventArgs>(
             [CanBeNull] this EventHandler<TEventArgs> Handler,

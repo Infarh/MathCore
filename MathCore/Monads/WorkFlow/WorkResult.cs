@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
 
-namespace MathCore.Monades.WorkFlow
+namespace MathCore.Monads.WorkFlow
 {
     /// <summary>Результат выполнения работы</summary>
     public readonly struct WorkResult : IWorkResult, IEquatable<WorkResult>

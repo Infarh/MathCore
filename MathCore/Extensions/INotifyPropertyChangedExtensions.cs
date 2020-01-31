@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using MathCore;
 using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
 
 // ReSharper disable UnusedMember.Global
 
@@ -17,7 +18,7 @@ namespace System.ComponentModel
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
         /// <param name="Name">Имя свойства</param>
-        public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
+        public static void RegisterPropertyChangedHandler([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
             => obj.PropertyChanged += (s, e) => { if (string.Equals(e.PropertyName, Name)) handler(s, e); };
 
         /// <summary>Подписка на событие изменения указанного свойства</summary>
@@ -26,7 +27,7 @@ namespace System.ComponentModel
         /// <param name="Name">Имя свойства</param>
         /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         [NotNull]
-        public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
+        public static IDisposable RegisterPropertyChangedHandler_Disposable([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
         {
             void Handler(object s, PropertyChangedEventArgs e)
             {
@@ -37,21 +38,21 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
         }
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
+        /// <summary>Подписка на событие изменения указанных свойств</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
-        public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
+        /// <param name="Names">Имена свойств</param>
+        public static void RegisterPropertyChangedHandler([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
             => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
 
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
+        /// <summary>Подписка на событие изменения указанных свойств</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
+        /// <param name="Names">Имена свойств</param>
         /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         [NotNull]
-        public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
+        public static IDisposable RegisterPropertyChangedHandler_Disposable([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, [NotNull] params string[] Names)
         {
             void Handler(object s, PropertyChangedEventArgs e)
             {
@@ -62,20 +63,20 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
         }
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
+        /// <summary>Подписка на событие изменения указанных свойств</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
-        public static void RegisterPropertyChangedHandler(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
+        /// <param name="Names">Имена свойств</param>
+        public static void RegisterPropertyChangedHandler([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
             => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
 
-        /// <summary>Подписка на событие изменения указанных свйоств</summary>
+        /// <summary>Подписка на событие изменения указанных свойств</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
-        /// <param name="Names">Имена свйоств</param>
+        /// <param name="Names">Имена свойств</param>
         /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
         [NotNull]
-        public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
+        public static IDisposable RegisterPropertyChangedHandler_Disposable([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, [NotNull] IEnumerable<string> Names)
         {
             var names = Names as string[] ?? Names.ToArray();
             void Handler(object s, PropertyChangedEventArgs e)
@@ -87,7 +88,7 @@ namespace System.ComponentModel
             return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
         }
 
-        #region Связи свйоств по атрибутам AffectsTheAttribute и DependencyOnAttribute
+        #region Связи свойств по атрибутам AffectsTheAttribute и DependencyOnAttribute
 
         /// <summary>Аргумент события изменения зависимого свойства</summary>
         public sealed class DependentPropertyChangedEventArgs : PropertyChangedEventArgs
@@ -109,28 +110,28 @@ namespace System.ComponentModel
         private sealed class RegistratorInfo
         {
             /// <summary>Словарь связей имён свойств типа</summary>
-            private readonly Dictionary<string, string[]> _Dependences;
+            private readonly Dictionary<string, string[]> _Dependencies;
             /// <summary>Обработчик события изменения свойства объекта</summary>
             private PropertyChangedEventHandler _Handler;
 
             /// <summary>Инициализация нового экземпляра информации и связях между свойствами типа</summary>
-            /// <param name="Dependences">Словарь имён свойст зависимостей</param>
-            public RegistratorInfo(Dictionary<string, string[]> Dependences) => _Dependences = Dependences;
+            /// <param name="Dependencies">Словарь имён свойств зависимостей</param>
+            public RegistratorInfo(Dictionary<string, string[]> Dependencies) => _Dependencies = Dependencies;
 
             /// <summary>Метод установки обработчика событий обновления свойства объекта, генерирующего вторичные события обновления зависимых свойств</summary>
             /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
             /// <param name="OnPropertyChanged">Метод генерации события <see cref="INotifyPropertyChanged.PropertyChanged"/> в объекте <paramref name="obj"/></param>
-            public void Subscribe(INotifyPropertyChanged obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
+            public void Subscribe([NotNull] INotifyPropertyChanged obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             {
                 if (_Handler is null)
                     _Handler = (s, e) =>
                     {
-                        if (!_Dependences.ContainsKey(e.PropertyName)) return;
+                        if (!_Dependencies.ContainsKey(e.PropertyName)) return;
                         if (e is DependentPropertyChangedEventArgs args)
                         {
                             var p_stack = args.FromProperties ?? Array.Empty<string>();
                             if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
-                            foreach (var property in _Dependences[args.PropertyName])
+                            foreach (var property in _Dependencies[args.PropertyName])
                             {
                                 var new_p_stack = new string[p_stack.Length + 1];
                                 new_p_stack[0] = args.PropertyName;
@@ -139,7 +140,7 @@ namespace System.ComponentModel
                             }
                         }
                         else
-                            foreach (var property in _Dependences[e.PropertyName])
+                            foreach (var property in _Dependencies[e.PropertyName])
                                 OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new[] { e.PropertyName }));
                     };
                 obj.PropertyChanged += _Handler;
@@ -147,10 +148,10 @@ namespace System.ComponentModel
 
             /// <summary>Отписка от события обновления свойств объекта</summary>
             /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
-            public void UnSubscrige(INotifyPropertyChanged obj) => obj.PropertyChanged -= _Handler;
+            public void UnSubscribe([NotNull] INotifyPropertyChanged obj) => obj.PropertyChanged -= _Handler;
         }
 
-        /// <summary>Обработка событий слорки мусора в системе</summary>
+        /// <summary>Обработка событий сборки мусора в системе</summary>
         /// <param name="Sender">Источник события - не используется</param>
         /// <param name="e">Аргумент события - не используется</param>
         private static void OnGarbageCollected(object Sender, EventArgs e)
@@ -162,13 +163,11 @@ namespace System.ComponentModel
             }
         }
 
-        /// <summary>
-        /// Создание связей между свойствами объекта на основе атрибутов <see cref="AffectsTheAttribute"/> и <see cref="DependencyOnAttribute"/>
-        /// </summary>
+        /// <summary>Создание связей между свойствами объекта на основе атрибутов <see cref="AffectsTheAttribute"/> и <see cref="DependencyOnAttribute"/></summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
         /// <typeparam name="T">Тип объекта</typeparam>
-        public static void PropertyDependences_Register<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
+        public static void PropertyDependencies_Register<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             where T : class, INotifyPropertyChanged
         {
             lock (__ObjectsSet)
@@ -181,14 +180,13 @@ namespace System.ComponentModel
             }
         }
 
-        /// <summary>
-        /// Создание связей между свойствами объекта на основе атрибутов <see cref="AffectsTheAttribute"/> и <see cref="DependencyOnAttribute"/>
-        /// </summary>
+        /// <summary>Создание связей между свойствами объекта на основе атрибутов <see cref="AffectsTheAttribute"/> и <see cref="DependencyOnAttribute"/></summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
         /// <typeparam name="T">Тип объекта</typeparam>
         /// <returns></returns>
-        public static IDisposable PropertyDependences_Register_Disposable<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
+        [NotNull]
+        public static IDisposable PropertyDependencies_Register_Disposable<T>([NotNull] this T obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             where T : class, INotifyPropertyChanged
         {
             lock (__ObjectsSet)
@@ -199,22 +197,20 @@ namespace System.ComponentModel
                 if (__ObjectsSet.Count == 1)
                     GCWatcher.Complete += OnGarbageCollected;
             }
-            return new LambdaDisposable(obj.PropertyDependences_Unregister);
+            return new LambdaDisposable(obj.PropertyDependencies_Unregister);
         }
 
-        /// <summary>
-        /// Разрушение связей между свойствами, созданными методом <see cref="PropertyDependences_Register{T}"/>
-        /// </summary>
+        /// <summary>Разрушение связей между свойствами, созданными методом <see cref="PropertyDependencies_Register{T}"/></summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <typeparam name="T">Тип объекта</typeparam>
-        public static void PropertyDependences_Unregister<T>([NotNull] this T obj) where T : class, INotifyPropertyChanged
+        public static void PropertyDependencies_Unregister<T>([NotNull] this T obj) where T : class, INotifyPropertyChanged
         {
             lock (__ObjectsSet)
             {
                 var w_ref = __ObjectsSet.FirstOrDefault(wr => obj.Equals(wr.Target));
                 if (w_ref is null) return;
                 var type = typeof(T);
-                type.GetRegistrator().UnSubscrige(obj);
+                type.GetRegistrator().UnSubscribe(obj);
                 __ObjectsSet.Remove(w_ref);
                 if (!__ObjectsSet.Any(w => w.Target is T))
                     __RegistrationPool.Remove(type);
@@ -244,8 +240,8 @@ namespace System.ComponentModel
                         dep.GetValueOrAddNew(dependence_on.Name, () => new List<string>()).Add(property.Name);
                 }
 
-                var dependences = dep.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
-                __RegistrationPool.Add(type, registration = new RegistratorInfo(dependences));
+                var dependencies = dep.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
+                __RegistrationPool.Add(type, registration = new RegistratorInfo(dependencies));
                 return registration;
             }
         }
@@ -393,7 +389,7 @@ namespace System.ComponentModel
         /// <typeparam name="T">Тип объекта, генерирующего событие</typeparam>
         /// <param name="obj">Объект, на событие изменения свойств которого производится подписка</param>
         /// <param name="PropertyName">Имя отслеживаемого свойства</param>
-        /// <param name="Handler">ОБработчик события</param>
+        /// <param name="Handler">Обработчик события</param>
         public static void SubscribeTo<T>(
             [CanBeNull] this T obj,
             [NotNull] string PropertyName,
