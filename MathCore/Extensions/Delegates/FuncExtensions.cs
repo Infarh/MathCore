@@ -26,12 +26,21 @@ namespace System
     /// <summary>Класс методов-расширений для функции</summary>
     public static class FuncExtensions
     {
+        /// <summary>синхронный вызов функции</summary>
+        /// <param name="func">Вызываемая функция</param>
+        /// <typeparam name="TResult">Тип значения функции</typeparam>
+        /// <returns>Задача асинхронного вычисления значения функции</returns>
         [NotNull]
-        public static Task<TResult> InvokeAsync<TResult>([NotNull] this Func<TResult> func) =>
-            Task.Factory.FromAsync(func.BeginInvoke, func.EndInvoke, null);
+        public static Task<TResult> InvokeAsync<TResult>([NotNull] this Func<TResult> func) => Task.Run(func);
+
+        /// <summary>синхронный вызов функции</summary>
+        /// <param name="func">Вызываемая функция</param>
+        /// <param name="value">Значение параметра функции</param>
+        /// <typeparam name="TValue">Тип параметра функции</typeparam>
+        /// <typeparam name="TResult">Тип значения функции</typeparam>
+        /// <returns>Задача асинхронного вычисления значения функции</returns>
         [NotNull]
-        public static Task<TResult> InvokeAsync<TValue, TResult>([NotNull] this Func<TValue, TResult> func, TValue value) =>
-            Task.Factory.FromAsync(func.BeginInvoke, func.EndInvoke, value, null);
+        public static Task<TResult> InvokeAsync<TValue, TResult>([NotNull] this Func<TValue, TResult> func, TValue value) => Task.Run(() => func(value));
 
         /// <summary>Преобразование функции в вычисление</summary>
         /// <typeparam name="T">Тип возвращаемого функцией результата</typeparam>

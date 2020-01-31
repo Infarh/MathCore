@@ -405,6 +405,23 @@
             <summary>Преобразование в строку</summary>
             <returns>Строковое представление аргумента</returns>
         </member>
+        <member name="M:MathCore.CommandProcessor.Argument.Equals(MathCore.CommandProcessor.Argument)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.op_Equality(MathCore.CommandProcessor.Argument,MathCore.CommandProcessor.Argument)">
+            <summary>Оператор, проверяющий равенство между двумя экземплярами <see cref="T:MathCore.CommandProcessor.Argument"/></summary>
+            <returns>Истина, если все поля экземпляров равны между собой</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.Argument.op_Inequality(MathCore.CommandProcessor.Argument,MathCore.CommandProcessor.Argument)">
+            <summary>Оператор, проверяющий неравенство между двумя экземплярами <see cref="T:MathCore.CommandProcessor.Argument"/></summary>
+            <returns>Истина, если хотя бы одно поле у экземпляров отличается</returns>
+        </member>
         <member name="T:MathCore.CommandProcessor.Command">
             <summary>Команда</summary>
         </member>
@@ -413,6 +430,9 @@
         </member>
         <member name="P:MathCore.CommandProcessor.Command.Parameter">
             <summary>Параметр команды</summary>
+        </member>
+        <member name="F:MathCore.CommandProcessor.Command._Argument">
+            <summary>Массив аргументов команды</summary>
         </member>
         <member name="P:MathCore.CommandProcessor.Command.Argument">
             <summary>Массив аргументов команды</summary>
@@ -427,6 +447,23 @@
         <member name="M:MathCore.CommandProcessor.Command.ToString">
             <summary>Преобразование в строку</summary>
             <returns>Строковое представление команды</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.Command.Equals(MathCore.CommandProcessor.Command)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.CommandProcessor.Command.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.CommandProcessor.Command.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.CommandProcessor.Command.op_Equality(MathCore.CommandProcessor.Command,MathCore.CommandProcessor.Command)">
+            <summary>Оператор, проверяющий равенство между двумя экземплярами <see cref="T:MathCore.CommandProcessor.Command"/></summary>
+            <returns>Истина, если все поля экземпляров равны между собой</returns>
+        </member>
+        <member name="M:MathCore.CommandProcessor.Command.op_Inequality(MathCore.CommandProcessor.Command,MathCore.CommandProcessor.Command)">
+            <summary>Оператор, проверяющий неравенство между двумя экземплярами <see cref="T:MathCore.CommandProcessor.Command"/></summary>
+            <returns>Истина, если хотя бы одно поле у экземпляров отличается</returns>
         </member>
         <member name="T:MathCore.CommandProcessor.CommandArgHandlersList">
             <summary>Список обработчиков команды</summary>
@@ -1714,6 +1751,16 @@
         <member name="F:MathCore.Consts.Geometry.Pi">
             <summary>Системная константа π = 3.1415926535897932384626433832</summary>
         </member>
+        <member name="M:MathCore.Consts.Geometry.ConvertToDeg(System.Double)">
+            <summary>Преобразовать значение из радиан в градусы</summary>
+            <param name="RadValue">Значение в радианах</param>
+            <returns>Значение в градусах</returns>
+        </member>
+        <member name="M:MathCore.Consts.Geometry.ConvertToRad(System.Double)">
+            <summary>Преобразовать значение из градусов в радианы</summary>
+            <param name="DegValue">Значение в градусах</param>
+            <returns>Значение в радианах</returns>
+        </member>
         <member name="F:MathCore.Consts.SpeedOfLight">
             <summary>Скорость света 300`000`000 м/с = 3e8 м/с</summary>
         </member>
@@ -1753,11 +1800,76 @@
         <member name="F:MathCore.Consts.Electrodynamic.Impedance0">
             <summary>Сопротивление среды (вакуума) = √(Mu0/Epsilon0) = 376.730313461771 Ом</summary>
         </member>
+        <member name="M:MathCore.Consts.Electrodynamic.ToWaveLength(System.Double)">
+            <summary>Преобразовать значение частоты в длину волны</summary>
+            <param name="Frequency">Значение частоты в Гц</param>
+            <returns>Длина волны в метрах</returns>
+        </member>
+        <member name="M:MathCore.Consts.Electrodynamic.ToWaveLength(System.Double,System.Double)">
+            <summary>Преобразовать значение частоты в длину волны с учётом диэлектрической проницаемости среды</summary>
+            <param name="Frequency">Значение частоты в Гц</param>
+            <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            <returns>Значение длины волны в среде в метрах</returns>
+        </member>
+        <member name="M:MathCore.Consts.Electrodynamic.ToWaveLength(System.Double,System.Double,System.Double)">
+            <summary>Преобразовать значение частоты в длину волны с учётом диэлектрической и магнитной проницаемости среды</summary>
+            <param name="Frequency">Значение частоты в Гц</param>
+            <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            <param name="Mu">Значение магнитной проницаемости среды</param>
+            <returns>Значение длины волны в среде в метрах</returns>
+        </member>
+        <member name="M:MathCore.Consts.Electrodynamic.ToFrequency(System.Double)">
+            <summary>Преобразование длины волны в метрах в частоту в Гц</summary>
+            <param name="WaveLength">Значение длины волны в метрах</param>
+            <returns>Значение частоты в Гц</returns>
+        </member>
+        <member name="M:MathCore.Consts.Electrodynamic.ToFrequency(System.Double,System.Double)">
+            <summary>Преобразование длины волны в среде в метрах в частоту в Гц</summary>
+            <param name="WaveLength">Значение длины волны в среде в метрах</param>
+            <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            <returns>Значение частоты в Гц</returns>
+        </member>
+        <member name="M:MathCore.Consts.Electrodynamic.ToFrequency(System.Double,System.Double,System.Double)">
+            <summary>Преобразование длины волны в среде в метрах в частоту в Гц</summary>
+            <param name="WaveLength">Значение длины волны в среде в метрах</param>
+            <param name="Epsilon">Значение относительной диэлектрической проницаемости среды</param>
+            <param name="Mu">Значение магнитной проницаемости среды</param>
+            <returns>Значение частоты в Гц</returns>
+        </member>
         <member name="F:MathCore.Consts.BigPrime_int">
             <summary>0x3ffeffff = 1073676287</summary>
         </member>
         <member name="F:MathCore.Consts.BigPrime_long">
             <summary>0x3fffffefffffff = 18014398241046527</summary>
+        </member>
+        <member name="T:MathCore.Consts.DataLength">
+            <summary>Размеры данных</summary>
+        </member>
+        <member name="T:MathCore.Consts.DataLength.Bytes">
+            <summary>Размеры данных в байтах</summary>
+        </member>
+        <member name="F:MathCore.Consts.DataLength.Bytes.B">
+            <summary>1 Байт</summary>
+        </member>
+        <member name="F:MathCore.Consts.DataLength.Bytes.kB">
+            <summary>1 килобайт в байтах</summary>
+        </member>
+        <member name="F:MathCore.Consts.DataLength.Bytes.MB">
+            <summary>1 мегабайт в байтах</summary>
+        </member>
+        <member name="F:MathCore.Consts.DataLength.Bytes.GB">
+            <summary>1 гигабайт в байтах</summary>
+        </member>
+        <member name="F:MathCore.Consts.DataLength.Bytes.TB">
+            <summary>1 терабайт в байтах</summary>
+        </member>
+        <member name="M:MathCore.Consts.DataLength.Bytes.GetDataNames">
+            <summary>Получить имена значений количества байт с приставками "B", "kB", "MB", "GB", "TB"</summary>
+            <returns>"B", "kB", "MB", "GB", "TB"</returns>
+        </member>
+        <member name="M:MathCore.Consts.DataLength.Bytes.GetDataNamesRu">
+            <summary>Получить русскоязычные имена значений количества байт с приставками "Б", "кБ", "МБ", "ГБ", "ТБ"</summary>
+            <returns>"Б", "кБ", "МБ", "ГБ", "ТБ"</returns>
         </member>
         <member name="F:MathCore.Consts.ElementaryCharge">
             <summary>Элементарный заряд e = 1,602 176 565(35)·10^−19 Кл</summary>
@@ -1774,11 +1886,91 @@
         <member name="M:MathCore.DataGenericSources.DataHost.Dispose">
             <inheritdoc />
         </member>
+        <member name="T:MathCore.Data.DataLength">
+            <summary>Структура для отображения размера данных в Байтах, кБ, МБ, ГБ, ТБ ...</summary>
+        </member>
+        <member name="F:MathCore.Data.DataLength.__Threshold">
+            <summary>Порог перехода между множителями Log(1024 * 0.7, __Base = 1024) - 70%</summary>
+        </member>
+        <member name="F:MathCore.Data.DataLength.__Units">
+            <summary>Множители единиц измерения</summary>
+        </member>
+        <member name="P:MathCore.Data.DataLength.Units">
+            <summary>Множители единиц измерения</summary>
+        </member>
+        <member name="M:MathCore.Data.DataLength.Value(System.UInt64,System.Double,System.String@,System.Int32@)">
+            <summary>Преобразовать значение в представление размера с множителем</summary>
+            <param name="value">Преобразуемое значение</param>
+            <param name="Base">Основание</param>
+            <param name="unit">Имя множителя единицы измерения</param>
+            <param name="index">Индекс множителя</param>
+            <returns>Значение X в представлении value = Base^index</returns>
+        </member>
+        <member name="M:MathCore.Data.DataLength.Value(System.Double,System.Double,System.String@,System.Int32@)">
+            <summary>Преобразовать значение в представление размера с множителем</summary>
+            <param name="value">Преобразуемое значение</param>
+            <param name="Base">Основание</param>
+            <param name="unit">Имя множителя единицы измерения</param>
+            <param name="index">Индекс множителя</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Если значение <paramref name="value"/> меньше 0</exception>
+            <returns>Значение X в представлении value = Base^index</returns>
+        </member>
+        <member name="F:MathCore.Data.DataLength._Length">
+            <summary>Исходное значение размера</summary>
+        </member>
+        <member name="F:MathCore.Data.DataLength._Base">
+            <summary>Основание системы счисления для выделения множителя (1024 б, либо 1000 для физических значений)</summary>
+        </member>
+        <member name="F:MathCore.Data.DataLength._FormattedLength">
+            <summary>Количественный размер данных с множителем</summary>
+        </member>
+        <member name="F:MathCore.Data.DataLength._Unit">
+            <summary>Множитель размера данных</summary>
+        </member>
+        <member name="P:MathCore.Data.DataLength.Length">
+            <summary>Исходное значение размера</summary>
+        </member>
+        <member name="P:MathCore.Data.DataLength.Base">
+            <summary>Основание системы счисления для выделения множителя (1024 б, либо 1000 для физических значений)</summary>
+        </member>
+        <member name="P:MathCore.Data.DataLength.FormattedLength">
+            <summary>Количественный размер данных с множителем</summary>
+        </member>
+        <member name="P:MathCore.Data.DataLength.Unit">
+            <summary>Множитель размера данных</summary>
+        </member>
+        <member name="M:MathCore.Data.DataLength.#ctor(System.Double,System.Double)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Data.DataLength"/></summary>
+            <param name="Length">Количественный размер данных</param>
+            <param name="Base">Основание системы счисления (на пример 1024 = 1кб, либо 1000 для физических значений)</param>
+        </member>
         <member name="M:MathCore.Data.DataLength.ToString">
             <inheritdoc />
         </member>
+        <member name="M:MathCore.Data.DataLength.ToString(System.String)">
+            <summary>Представление значения в строковом виде с форматированием числовых данных</summary>
+            <param name="format">Строка формата числовых значений</param>
+            <returns>Строковое представление с форматированием</returns>
+        </member>
         <member name="M:MathCore.Data.DataLength.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
+        </member>
+        <member name="M:MathCore.Data.DataLength.Equals(MathCore.Data.DataLength)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Data.DataLength.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Data.DataLength.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Data.DataLength.op_Equality(MathCore.Data.DataLength,MathCore.Data.DataLength)">
+            <summary>Оператор определения равенства между двумя экземплярами <see cref="T:MathCore.Data.DataLength"/></summary>
+            <returns>Истина, если все поля экземпляров совпадают</returns>
+        </member>
+        <member name="M:MathCore.Data.DataLength.op_Inequality(MathCore.Data.DataLength,MathCore.Data.DataLength)">
+            <summary>Оператор определения неравенства между двумя экземплярами <see cref="T:MathCore.Data.DataLength"/></summary>
+            <returns>Истина, если хотя бы одно поле экземпляров отличается</returns>
         </member>
         <member name="T:MathCore.Data.PropertyLink`2">
             <summary>Связь между свойствами</summary>
@@ -1848,91 +2040,75 @@
             <param name="Y">Значения функции</param>
             <returns>Значения производных</returns>
         </member>
-        <member name="T:MathCore.DifferentialEquations.Numerical.Eyler">
-            <summary>
-            Метод Рунге-Кутты
-            </summary>
+        <member name="M:MathCore.DifferentialEquations.Numerical.EquationSystemMethods.SystemResultItem`1.ToString">
+            <inheritdoc />
         </member>
-        <member name="P:MathCore.DifferentialEquations.Numerical.Eyler.N">
-            <summary>
-            Размерность системы
-            </summary>
+        <member name="M:MathCore.DifferentialEquations.Numerical.EquationSystemMethods.SystemResultItem`1.Equals(MathCore.DifferentialEquations.Numerical.EquationSystemMethods.SystemResultItem{`0})">
+            <inheritdoc />
         </member>
-        <member name="P:MathCore.DifferentialEquations.Numerical.Eyler.Y">
-            <summary>
-            Искомые решения
-            </summary>
+        <member name="M:MathCore.DifferentialEquations.Numerical.EquationSystemMethods.SystemResultItem`1.Equals(System.Object)">
+            <inheritdoc />
         </member>
-        <member name="P:MathCore.DifferentialEquations.Numerical.Eyler.t">
-            <summary>
-            Текущее время
-            </summary>
+        <member name="M:MathCore.DifferentialEquations.Numerical.EquationSystemMethods.SystemResultItem`1.GetHashCode">
+            <inheritdoc />
         </member>
-        <member name="M:MathCore.DifferentialEquations.Numerical.Eyler.#ctor(System.Int32,MathCore.DifferentialEquations.Numerical.DifferentialEquationsSystem,MathCore.DifferentialEquations.Numerical.ArgumentFunction)">
-            <summary>
-            Метод Рунге-Кутты
-            </summary>
+        <member name="T:MathCore.DifferentialEquations.Numerical.Euler">
+            <summary>Метод Рунге-Кутты</summary>
+        </member>
+        <member name="P:MathCore.DifferentialEquations.Numerical.Euler.N">
+            <summary>Размерность системы</summary>
+        </member>
+        <member name="P:MathCore.DifferentialEquations.Numerical.Euler.Y">
+            <summary>Искомые решения</summary>
+        </member>
+        <member name="P:MathCore.DifferentialEquations.Numerical.Euler.t">
+            <summary>Текущее время</summary>
+        </member>
+        <member name="M:MathCore.DifferentialEquations.Numerical.Euler.#ctor(System.Int32,MathCore.DifferentialEquations.Numerical.DifferentialEquationsSystem,MathCore.DifferentialEquations.Numerical.ArgumentFunction)">
+            <summary>Метод Рунге-Кутты</summary>
             <param name="N">Размерность</param>
             <param name="System">Решаемая система</param>
             <param name="X">Производящая функция аргумента</param>
         </member>
-        <member name="M:MathCore.DifferentialEquations.Numerical.Eyler.Initialize(System.Double,System.Double[])">
-            <summary>
-            Начальные условия
-            </summary>
+        <member name="M:MathCore.DifferentialEquations.Numerical.Euler.Initialize(System.Double,System.Double[])">
+            <summary>Начальные условия</summary>
             <param name="t0">Начальное время</param>
             <param name="Y0">Начальные условия</param>
         </member>
-        <member name="M:MathCore.DifferentialEquations.Numerical.Eyler.NextStep(System.Double)">
-            <summary>
-            Рассчёт решения
-            </summary>
+        <member name="M:MathCore.DifferentialEquations.Numerical.Euler.NextStep(System.Double)">
+            <summary>Расчёт решения</summary>
             <param name="dt">Шаг</param>
         </member>
         <member name="T:MathCore.DifferentialEquations.Numerical.RungeKutta">
-            <summary>
-            Метод Рунге-Кутты
-            </summary>
+            <summary>Метод Рунге-Кутты</summary>
         </member>
         <member name="P:MathCore.DifferentialEquations.Numerical.RungeKutta.N">
-            <summary>
-            Размерность системы
-            </summary>
+            <summary>Размерность системы</summary>
         </member>
         <member name="P:MathCore.DifferentialEquations.Numerical.RungeKutta.Y">
-            <summary>
-            Искомые решения
-            </summary>
+            <summary>Искомые решения</summary>
         </member>
         <member name="P:MathCore.DifferentialEquations.Numerical.RungeKutta.t">
-            <summary>
-            Текущее время
-            </summary>
+            <summary>Текущее время</summary>
         </member>
         <member name="M:MathCore.DifferentialEquations.Numerical.RungeKutta.#ctor(System.Int32,MathCore.DifferentialEquations.Numerical.DifferentialEquationsSystem,MathCore.DifferentialEquations.Numerical.ArgumentFunction)">
-            <summary>
-            Метод Рунге-Кутты
-            </summary>
+            <summary>Метод Рунге-Кутты</summary>
             <param name="N">Размерность</param>
             <param name="System">Решаемая система</param>
             <param name="X">Производящая функция аргумента</param>
         </member>
         <member name="M:MathCore.DifferentialEquations.Numerical.RungeKutta.Initialize(System.Double,System.Double[])">
-            <summary>
-            Начальные условия
-            </summary>
+            <summary>Начальные условия</summary>
             <param name="t0">Начальное время</param>
             <param name="Y0">Начальные условия</param>
         </member>
         <member name="M:MathCore.DifferentialEquations.Numerical.RungeKutta.NextStep(System.Double)">
-            <summary>
-            Рассчёт решения
-            </summary>
+            <summary>Расчёт решения</summary>
             <param name="dt">Шаг</param>
         </member>
         <member name="T:MathCore.DisposableGroup`1">
             <summary>Группа объектов, поддерживающих интерфейс <see cref="T:System.IDisposable">освобождения ресурсов</see></summary>
-            <typeparam name="T">Тип объектов, подерживающих интерфейс <see cref="T:System.IDisposable"/></typeparam>
+            <typeparam name="T">Тип объектов, поддерживающих интерфейс <see cref="T:System.IDisposable"/></typeparam>
         </member>
         <member name="F:MathCore.DisposableGroup`1._Items">
             <summary>Массив содержащихся объектов интерфейса <see cref="T:System.IDisposable"/></summary>
@@ -1943,21 +2119,31 @@
         <member name="P:MathCore.DisposableGroup`1.Items">
             <summary>Массив элементов группы</summary>
         </member>
+        <member name="P:MathCore.DisposableGroup`1.MathCore#IIndexableRead{System#Int32,T}#Item(System.Int32)">
+            <inheritdoc />
+        </member>
         <member name="P:MathCore.DisposableGroup`1.Item(System.Int32)">
             <summary>Элемент группы</summary>
             <param name="i">Номер элемента группы</param>
             <returns>Элемент группы с номером <paramref name="i"/></returns>
         </member>
         <member name="M:MathCore.DisposableGroup`1.#ctor(`0[])">
-            <summary>Группа <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></summary>
-            <param name="item"><typeparam name="T">Объект</typeparam> интерфейса <see cref="T:System.IDisposable"/></param>
+            <summary>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></summary>
+            <param name="item"><typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
         </member>
         <member name="M:MathCore.DisposableGroup`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
-            <summary>Группа <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></summary>
-            <param name="items">Перечисление <typeparam name="T">объектов</typeparam> интерфейса <see cref="T:System.IDisposable"/></param>
+            <summary>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></summary>
+            <param name="items">Перечисление <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
         </member>
         <member name="M:MathCore.DisposableGroup`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="F:MathCore.DisposableGroup`1._Disposed">
+            <summary>Объект уничтожен</summary>
+        </member>
+        <member name="M:MathCore.DisposableGroup`1.Dispose(System.Boolean)">
             <summary>Освободить ресурсы группы</summary>
+            <param name="disposing">Признак того, что требуется освобождение управляемых ресурсов</param>
         </member>
         <member name="M:MathCore.DisposableGroup`1.GetEnumerator">
             <summary>Получить перечислитель элементов группы</summary>
@@ -2136,16 +2322,16 @@
             <param name="y">Делитель</param>
             <returns>Вычисление частного двух вычислений</returns>
         </member>
-        <member name="T:MathCore.Evaluations.FieldValueEvulation`2">
+        <member name="T:MathCore.Evaluations.FieldValueEvaluation`2">
             <summary>Вычисление значения поля объекта</summary>
             <typeparam name="TObject">Тип объекта, поле которого надо получить</typeparam>
             <typeparam name="TValue">Тип значения поля</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.FieldValueEvulation`2.#ctor(System.String)">
+        <member name="M:MathCore.Evaluations.FieldValueEvaluation`2.#ctor(System.String)">
             <summary>Инициализация нового вычисления значения поля объекта</summary>
             <param name="PropertyName">Имя поля</param>
         </member>
-        <member name="M:MathCore.Evaluations.FieldValueEvulation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
+        <member name="M:MathCore.Evaluations.FieldValueEvaluation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
             <summary>Инициализация нового вычисления поля объекта</summary>
             <param name="obj">Вычисление объекта, поле которого надо получить</param>
             <param name="FieldName">Имя поля объекта</param>
@@ -2240,27 +2426,27 @@
         <member name="M:MathCore.Evaluations.NamedValueEvaluation`1.ToString">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Evaluations.NegateOperatorEvulation`1">
+        <member name="T:MathCore.Evaluations.NegateOperatorEvaluation`1">
             <summary>Вычисление отрицания значения</summary>
             <typeparam name="T">Тип значения параметра</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.NegateOperatorEvulation`1.#ctor">
+        <member name="M:MathCore.Evaluations.NegateOperatorEvaluation`1.#ctor">
             <summary>Инициализация нового вычисления отризацания</summary>
         </member>
-        <member name="M:MathCore.Evaluations.NegateOperatorEvulation`1.#ctor(MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.NegateOperatorEvaluation`1.#ctor(MathCore.Evaluations.Evulation{`0})">
             <summary>Инициализация нового вычисления отрицания</summary>
             <param name="value">Вычисление значения операнда</param>
         </member>
-        <member name="T:MathCore.Evaluations.PropertyValueEvulation`2">
+        <member name="T:MathCore.Evaluations.PropertyValueEvaluation`2">
             <summary>Вычисление значения свойства объекта</summary>
             <typeparam name="TObject">Тип объекта, свойство которого надо получить</typeparam>
             <typeparam name="TValue">Тип значения свойства</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.PropertyValueEvulation`2.#ctor(System.String)">
+        <member name="M:MathCore.Evaluations.PropertyValueEvaluation`2.#ctor(System.String)">
             <summary>Инициализация нового вычисления значения свойства объекта</summary>
             <param name="PropertyName">Имя свойства</param>
         </member>
-        <member name="M:MathCore.Evaluations.PropertyValueEvulation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
+        <member name="M:MathCore.Evaluations.PropertyValueEvaluation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
             <summary>Инициализация нового вычисления свойства объекта</summary>
             <param name="obj">Вычисление объекта, свойство которого надо получить</param>
             <param name="PropertyName">Имя свойства объекта</param>
@@ -2277,29 +2463,29 @@
             <param name="a">Вычисление первого сомножителя</param>
             <param name="b">Вычисление второго сомножителя</param>
         </member>
-        <member name="T:MathCore.Evaluations.UnaryOperatorEvulation`2">
+        <member name="T:MathCore.Evaluations.UnaryOperatorEvaluation`2">
             <summary>Вычисление операции с одним операндом</summary>
             <typeparam name="TObject">Тип значения операнда</typeparam>
             <typeparam name="TValue">Тип значения вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.UnaryOperatorEvulation`2.GetOperation(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression})">
+        <member name="M:MathCore.Evaluations.UnaryOperatorEvaluation`2.GetOperation(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression})">
             <summary>Метод, генерирующий функция преобразования значения операнда в значение вычисления</summary>
             <param name="OP">Функция преобразования выражения, вычисляющего значение операнда, в выражение, определяющее значение вычисления</param>
             <returns></returns>
         </member>
-        <member name="F:MathCore.Evaluations.UnaryOperatorEvulation`2._Operator">
+        <member name="F:MathCore.Evaluations.UnaryOperatorEvaluation`2._Operator">
             <summary>Функция преобразования выражения операнда в выражение вычисления над этим операндом</summary>
         </member>
-        <member name="M:MathCore.Evaluations.UnaryOperatorEvulation`2.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression})">
+        <member name="M:MathCore.Evaluations.UnaryOperatorEvaluation`2.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression})">
             <summary>Инициализация нового унарного вычисления</summary>
-            <param name="Operator">ОПератор преобразования выражения операнда в выражение вычисления</param>
+            <param name="Operator">Оператор преобразования выражения операнда в выражение вычисления</param>
         </member>
-        <member name="M:MathCore.Evaluations.UnaryOperatorEvulation`2.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.UnaryOperatorEvaluation`2.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression},MathCore.Evaluations.Evulation{`0})">
             <summary>Инициализация нового унарного вычисления</summary>
             <param name="Operator">Оператор преобразования выражения операнда в выражение вычисления</param>
             <param name="value">Вычисление операнда</param>
         </member>
-        <member name="M:MathCore.Evaluations.UnaryOperatorEvulation`2.GetExpression">
+        <member name="M:MathCore.Evaluations.UnaryOperatorEvaluation`2.GetExpression">
             <inheritdoc />
         </member>
         <member name="T:MathCore.Evaluations.ValueEvaluation`1">
@@ -2813,6 +2999,15 @@
             <param name="Root">Начальный элемент поиска пути</param>
             <returns>Массив найденных путей</returns>
         </member>
+        <member name="M:MathCore.Graphs.GraphRoute`2.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Graphs.GraphRoute`2.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Graphs.GraphRoute`2.ToString">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.Graphs.IGraphLink`2">
             <summary>Связь узла</summary>
             <typeparam name="TValue">Тип значения узла</typeparam>
@@ -3107,7 +3302,7 @@
         <member name="T:MathCore.Interpolation.CubicSpline.SplineState">
             <summary>Структура, описывающая сплайн на каждом сегменте сетки</summary>
         </member>
-        <member name="F:MathCore.Interpolation.CubicSpline._SplinStates">
+        <member name="F:MathCore.Interpolation.CubicSpline._SplineStates">
             <summary>Сплайн</summary>
         </member>
         <member name="M:MathCore.Interpolation.CubicSpline.Initialize(System.Double[],System.Double[])">
@@ -4360,12 +4555,12 @@
             <returns>Строковое представление</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор равенства</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор равенства</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.GetAbsMethodCall(System.Linq.Expressions.Expression)">
             <summary>Получить выражение вызова метода определения модуля числа из класса Math</summary>
             <param name="x">Параметр выражения</param>
-            <returns>Выражение Linq.Expression, Вызывающее метод Math.Abs с параметром x</returns>
+            <returns>Выражение <see cref="T:System.Linq.Expressions.Expression"/>, вызывающее метод Math.Abs с параметром x</returns>
         </member>
         <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.__Epsilon">
             <summary>Точность вычисления равенства для чисел с плавающей точкой</summary>
@@ -7852,7 +8047,7 @@
         </member>
         <member name="M:MathCore.MatrixComplex.GetTransvection(MathCore.MatrixComplex,System.Int32)">
             <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
-            <returns>Трансвекция матрицы А</returns>                    
+            <returns>Трансвекция матрицы А</returns>
         </member>
         <member name="F:MathCore.MatrixComplex._N">
             <summary>Число строк матрицы</summary>
@@ -8215,6 +8410,9 @@
             <param name="U">An array where the upper triangular matrix is returned</param>
             <param name="P">An array where the permutation matrix is returned</param>
         </member>
+        <member name="M:MathCore.MatrixDecimal.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.MatrixDecimal.Clone">
             <summary>Клонирование матрицы</summary>
             <returns>Копия текущей матрицы</returns>
@@ -8252,6 +8450,15 @@
         <member name="M:MathCore.MatrixDecimal.op_Implicit(System.Decimal)~MathCore.MatrixDecimal">
             <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
             <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
+        </member>
+        <member name="M:MathCore.MatrixDecimal.System#IEquatable{MathCore#MatrixDecimal}#Equals(MathCore.MatrixDecimal)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixDecimal.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixDecimal.GetHashCode">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MatrixFloat">
             <summary>Матрица NxM</summary>
@@ -8398,6 +8605,9 @@
             <param name="U">An array where the upper triangular matrix is returned</param>
             <param name="P">An array where the permutation matrix is returned</param>
         </member>
+        <member name="M:MathCore.MatrixFloat.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.MatrixFloat.Clone">
             <summary>Клонирование матрицы</summary>
             <returns>Копия текущей матрицы</returns>
@@ -8435,6 +8645,12 @@
         <member name="M:MathCore.MatrixFloat.op_Implicit(System.Single)~MathCore.MatrixFloat">
             <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
             <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
+        </member>
+        <member name="M:MathCore.MatrixFloat.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixFloat.GetHashCode">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MatrixInt">
             <summary>Матрица NxM</summary>
@@ -8564,6 +8780,9 @@
         <member name="M:MathCore.MatrixInt.GetDeterminant">
             <summary>Определитель матрицы</summary>
         </member>
+        <member name="M:MathCore.MatrixInt.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.MatrixInt.Clone">
             <summary>Клонирование матрицы</summary>
             <returns>Копия текущей матрицы</returns>
@@ -8601,6 +8820,15 @@
         <member name="M:MathCore.MatrixInt.op_Implicit(System.Int32)~MathCore.MatrixInt">
             <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
             <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
+        </member>
+        <member name="M:MathCore.MatrixInt.System#IEquatable{MathCore#MatrixInt}#Equals(MathCore.MatrixInt)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixInt.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixInt.GetHashCode">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MatrixLong">
             <summary>Матрица NxM</summary>
@@ -8739,6 +8967,9 @@
             <param name="U">An array where the upper triangular matrix is returned</param>
             <param name="P">An array where the permutation matrix is returned</param>
         </member>
+        <member name="M:MathCore.MatrixLong.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.MatrixLong.Clone">
             <summary>Клонирование матрицы</summary>
             <returns>Копия текущей матрицы</returns>
@@ -8781,410 +9012,424 @@
             <param name="X">Приводимое число</param>
             <returns>Матрица порядка 1х1</returns>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.ActionWork">
+        <member name="M:MathCore.MatrixLong.System#IEquatable{MathCore#MatrixLong}#Equals(MathCore.MatrixLong)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixLong.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MatrixLong.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.Monads.WorkFlow.ActionWork">
             <summary>Работа, выполняющая действие</summary>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.ActionWork._WorkAction">
+        <member name="F:MathCore.Monads.WorkFlow.ActionWork._WorkAction">
             <summary>Действие, выполняемое работой</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.ActionWork.#ctor(System.Action,MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.ActionWork.#ctor(System.Action,MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация нового работы на основе действия</summary>
             <param name="WorkAction">Действие, выполняемое в рамках работы</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.ActionWork.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.ActionWork.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.ConstValueWork`1">
+        <member name="T:MathCore.Monads.WorkFlow.ConstValueWork`1">
             <summary>Работа, возвращающая указанное константное значение</summary>
             <typeparam name="T">Тип возвращаемого работой значения</typeparam>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.ConstValueWork`1.Value">
+        <member name="P:MathCore.Monads.WorkFlow.ConstValueWork`1.Value">
             <summary>Значение, возвращаемое работой</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.ConstValueWork`1.#ctor(`0,MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.ConstValueWork`1.#ctor(`0,MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы, возвращающей константное значение</summary>
             <param name="Value">Значение, которое будет возвращать работа</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.ConstValueWork`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.ConstValueWork`1.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.FunctionWork`1">
+        <member name="T:MathCore.Monads.WorkFlow.FunctionWork`1">
             <summary>Работа, выполняющая указанную функцию</summary>
             <typeparam name="T">Тип значения функции</typeparam>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.FunctionWork`1._WorkFunction">
+        <member name="F:MathCore.Monads.WorkFlow.FunctionWork`1._WorkFunction">
             <summary>Функция, выполняемая в рамках работы</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.FunctionWork`1.#ctor(System.Func{`0},MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.FunctionWork`1.#ctor(System.Func{`0},MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы, выполняющей указанную функцию</summary>
             <param name="WorkFunction">Функция, выполняемая работой</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.FunctionWork`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.FunctionWork`1.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.IWorkResult">
+        <member name="T:MathCore.Monads.WorkFlow.IWorkResult">
             <summary>Результат выполнения работы</summary>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.IWorkResult.Error">
+        <member name="P:MathCore.Monads.WorkFlow.IWorkResult.Error">
             <summary>Ошибка, которая произошла в ходе выполнения работы</summary>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.IWorkResult.Success">
+        <member name="P:MathCore.Monads.WorkFlow.IWorkResult.Success">
             <summary>Признак того, что работа завершилась успешно</summary>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.IWorkResult.Failure">
+        <member name="P:MathCore.Monads.WorkFlow.IWorkResult.Failure">
             <summary>Признак того, что работа завершилась провалом</summary>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.IWorkResult`1">
+        <member name="T:MathCore.Monads.WorkFlow.IWorkResult`1">
             <summary>Результат выполнения работы со значением</summary>
             <typeparam name="T">Тип результата, доступного после выполнения работы</typeparam>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.IWorkResult`1.Result">
+        <member name="P:MathCore.Monads.WorkFlow.IWorkResult`1.Result">
             <summary>Результат выполнения работы</summary>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.IWorkResult`2">
+        <member name="T:MathCore.Monads.WorkFlow.IWorkResult`2">
             <summary>Результат выполнения параметрической работы</summary>
             <typeparam name="TParameter">Тип параметра работы</typeparam>
             <typeparam name="T">Тип значения, доступного по завершении работы</typeparam>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.IWorkResult`2.Parameter">
+        <member name="P:MathCore.Monads.WorkFlow.IWorkResult`2.Parameter">
             <summary>Параметр, с которым работа была выполнена</summary>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work`2">
+        <member name="T:MathCore.Monads.WorkFlow.Work`2">
             <summary>Работа, выполняющая преобразование данных указанным методом</summary>
             <typeparam name="TParameter">Тип сходных данных для преобразования</typeparam>
             <typeparam name="TResult">Тип результата преобразования</typeparam>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.Work`2._WorkFunction">
+        <member name="F:MathCore.Monads.WorkFlow.Work`2._WorkFunction">
             <summary>Функция преобразования значения, выполняемая в рамках работы</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`2.#ctor(System.Func{`0,`1},MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work`2.#ctor(System.Func{`0,`1},MathCore.Monads.WorkFlow.Work)">
             <summary>Внутренняя инициализация новой работы по преобразованию значения на основе указанной функции</summary>
             <param name="WorkFunction">Функция, преобразующая значение</param>
             <param name="BaseWork">Базовая работа, являющаяся источником аргумента функции</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`2.#ctor(System.Func{`0,`1},MathCore.Monades.WorkFlow.Work{`0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`2.#ctor(System.Func{`0,`1},MathCore.Monads.WorkFlow.Work{`0})">
             <summary>Инициализация новой работы по преобразованию значения на основе указанной функции</summary>
             <param name="WorkFunction">Функция, преобразующая значение</param>
             <param name="BaseWork">Базовая работа, являющаяся источником аргумента функции</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`2.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work`2.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`2.Execute">
+        <member name="M:MathCore.Monads.WorkFlow.Work`2.Execute">
             <summary>Выполнение работы</summary>
             <returns>Результат выполнения работы, содержавший исходные данные и полученное значение</returns>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work`1">
+        <member name="T:MathCore.Monads.WorkFlow.Work`1">
             <summary>Работа, возвращающая значение</summary>
             <typeparam name="T">Тип результата работы</typeparam>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work`1.FunctionWorkIfSuccess`2">
+        <member name="T:MathCore.Monads.WorkFlow.Work`1.FunctionWorkIfSuccess`2">
             <summary>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа была выполнена успешно</summary>
             <typeparam name="TParameter">Тип исходных данных преобразования</typeparam>
             <typeparam name="TResult">Тип результата</typeparam>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.FunctionWorkIfSuccess`2.#ctor(System.Func{`1,`2},MathCore.Monades.WorkFlow.Work{`1})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.FunctionWorkIfSuccess`2.#ctor(System.Func{`1,`2},MathCore.Monads.WorkFlow.Work{`1})">
             <summary>Инициализация новой работы по преобразованию значения, выполняемой в случае если предыдущая работа была выполнена успешно</summary>
             <param name="WorkFunction">Метод преобразования значения</param>
             <param name="BaseWork">Предыдущая работа, формирующая исходные данные для текущей выполняемой работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.FunctionWorkIfSuccess`2.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.FunctionWorkIfSuccess`2.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work`1.ActionWork`1">
+        <member name="T:MathCore.Monads.WorkFlow.Work`1.ActionWork`1">
             <summary>Работа, выполняемая над результатом предыдущей работы</summary>
             <typeparam name="TParameter">Тип результата предыдущей работы</typeparam>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.Work`1.ActionWork`1._WorkAction">
+        <member name="F:MathCore.Monads.WorkFlow.Work`1.ActionWork`1._WorkAction">
             <summary>Действие, выполняемое над результатом предыдущей работы</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.ActionWork`1.#ctor(System.Action{`1},MathCore.Monades.WorkFlow.Work{`1})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.ActionWork`1.#ctor(System.Action{`1},MathCore.Monads.WorkFlow.Work{`1})">
             <summary>Инициализация новой работы, выполняющей действие над результатом выполнения предыдущей работы</summary>
             <param name="WorkAction">Действие, выполняемое над результатом предыдущей работы</param>
             <param name="BaseWork">Предыдущая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.ActionWork`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.ActionWork`1.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.#ctor(MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.#ctor(MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы</summary><param name="BaseWork">объект базовой работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.Execute">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.Execute">
             <summary>Выполнение работы</summary><returns>Результат работы</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.Invoke(System.Action{`0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.Invoke(System.Action{`0})">
             <summary>Действие, выполняемое в любом случае для результата предыдущей работы</summary>
             <param name="action">Выполняемое действие</param>
             <returns>Работа, выполняющая действие для результата выполнения предыдущей работы</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.Get``1(System.Func{`0,``0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.Get``1(System.Func{`0,``0})">
             <summary>Работа, в результате которой формируется результат</summary>
             <typeparam name="TResult">Тип результата работы</typeparam>
             <param name="function">Функция, выполняемая в рамках работы над параметром, получаемым от предыдущей работы</param>
             <returns>Работа по получению результата</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.GetIfSuccess``1(System.Func{`0,``0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.GetIfSuccess``1(System.Func{`0,``0})">
             <summary>Выполнение преобразования в случае если предыдущая работа выполнена успешно</summary>
             <typeparam name="TResult">Результат преобразования</typeparam>
             <param name="function">Метод преобразования значения</param>
             <returns>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа выполнена успешно</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work`1.GetIfFailure(System.Func{System.Exception,`0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.GetIfFailure(System.Func{System.Exception,`0})">
             <summary>Добавление обработчика исключительных ситуаций</summary>
             <param name="ErrorHandler">Функция, получающая в качестве параметра исключение и на его основе формирующая значение функции</param>
             <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work">
+        <member name="M:MathCore.Monads.WorkFlow.Work`1.op_Implicit(MathCore.Monads.WorkFlow.Work{`0})~`0">
+            <summary>Оператор неявного преобразования типа <see cref="T:MathCore.Monads.WorkFlow.Work`1"/> к типу <typeparamref name="T"/></summary>
+            <param name="work">Работа с типизированным результатом <see cref="T:MathCore.Monads.WorkFlow.Work`1"/></param>
+            <returns>Результат выполнения работы типа <typeparamref name="T"/></returns>
+        </member>
+        <member name="T:MathCore.Monads.WorkFlow.Work">
             <summary>Класс-оболочка для выполняемой работы</summary>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work.ActionWorkIfSuccess">
+        <member name="T:MathCore.Monads.WorkFlow.Work.ActionWorkIfSuccess">
             <summary>Работа на основе действия, выполняемая лишь в том случае, если базовая работа выполнилась успешно</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfSuccess.#ctor(System.Action,MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ActionWorkIfSuccess.#ctor(System.Action,MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы, выполняемой в случае успешного выполнения предыдущей работы</summary>
             <param name="WorkAction">Действие, выполняемое в рамках работы</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfSuccess.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ActionWorkIfSuccess.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work.ActionWorkIfFailure">
+        <member name="T:MathCore.Monads.WorkFlow.Work.ActionWorkIfFailure">
             <summary>Работа на основе действия, выполняемая лишь в том случае, если базовая работа выполнилась с ошибкой</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfFailure.#ctor(System.Action,MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ActionWorkIfFailure.#ctor(System.Action,MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы, выполняемой в случае ошибочного выполнения предыдущей работы</summary>
             <param name="WorkAction">Действие, выполняемое в рамках работы</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ActionWorkIfFailure.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ActionWorkIfFailure.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler">
+        <member name="T:MathCore.Monads.WorkFlow.Work.ExceptionActionHandler">
             <summary>Работа по обработке ошибок</summary>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler._ErrorHandler">
+        <member name="F:MathCore.Monads.WorkFlow.Work.ExceptionActionHandler._ErrorHandler">
             <summary>Действие-обработчик исключения</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler.#ctor(System.Action{System.Exception},MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ExceptionActionHandler.#ctor(System.Action{System.Exception},MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы по обработке ошибок</summary>
             <param name="ErrorHandler">Действие-обработчик ошибок</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionActionHandler.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ExceptionActionHandler.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work.FunctionWorkIfSuccess`1">
+        <member name="T:MathCore.Monads.WorkFlow.Work.FunctionWorkIfSuccess`1">
             <summary>Работа, возвращающая результат выполнения функции в случае если предыдущая работа завершилась успешно</summary>
             <typeparam name="T">Тип значения функции</typeparam>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfSuccess`1.#ctor(System.Func{`0},MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.FunctionWorkIfSuccess`1.#ctor(System.Func{`0},MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы, возвращающей значение функции в случае если предыдущая работа завершилась успешно</summary>
             <param name="WorkFunction">Функция, выполняемая в рамках работы</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfSuccess`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.FunctionWorkIfSuccess`1.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work.FunctionWorkIfFailure`1">
+        <member name="T:MathCore.Monads.WorkFlow.Work.FunctionWorkIfFailure`1">
             <summary>Работа по преобразованию значения, выполняемая в случае, если предыдущая работа завершилась исключением</summary>
             <typeparam name="T">Тип значения</typeparam>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfFailure`1.#ctor(System.Func{`0},MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.FunctionWorkIfFailure`1.#ctor(System.Func{`0},MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация новой работы, выполняемой в случае неудачи предыдущей работы</summary>
             <param name="WorkFunction">Функция - генератор значения</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.FunctionWorkIfFailure`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.FunctionWorkIfFailure`1.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1">
+        <member name="T:MathCore.Monads.WorkFlow.Work.ExceptionFunctionHandler`1">
             <summary>Работа по обработке ошибок</summary><typeparam name="T">Тип исключительной ситуации</typeparam>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1._ErrorHandler">
+        <member name="F:MathCore.Monads.WorkFlow.Work.ExceptionFunctionHandler`1._ErrorHandler">
             <summary>Функция-обработчик исключения</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1.#ctor(System.Func{System.Exception,`0},MathCore.Monades.WorkFlow.Work{`0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ExceptionFunctionHandler`1.#ctor(System.Func{System.Exception,`0},MathCore.Monads.WorkFlow.Work{`0})">
             <summary>Инициализация новой работы по обработке ошибок</summary>
             <param name="ErrorHandler">Функция-обработчик ошибок</param>
             <param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.ExceptionFunctionHandler`1.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.ExceptionFunctionHandler`1.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.BeginInvoke(System.Action)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.BeginInvoke(System.Action)">
             <summary>Начало работы на основе делегата действия</summary>
             <param name="WorkAction">Делегат, на основе которого формируется работа</param>
             <returns>Работа, выполняющая указанный делегат</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.BeginGet``1(System.Func{``0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work.BeginGet``1(System.Func{``0})">
             <summary>Начало работы с указанной функцией</summary>
             <typeparam name="T">Тип значения, возвращаемого функцией</typeparam>
             <param name="WorkFunction">Функция, выполняемая работой</param>
             <returns>Работа, выполняющая указанную функцию, возвращающую значение</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.With``1(``0)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.With``1(``0)">
             <summary>Фиксированное исходное значение для начала работы</summary>
             <typeparam name="T">Тип значения</typeparam>
             <param name="value">Исходное, используемое в дальнейшем, значение</param>
             <returns>Работа, результатом которой является указанное значение</returns>
         </member>
-        <member name="F:MathCore.Monades.WorkFlow.Work._BaseWork">
+        <member name="F:MathCore.Monads.WorkFlow.Work._BaseWork">
             <summary>Базовая работа</summary>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.#ctor(MathCore.Monades.WorkFlow.Work)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.#ctor(MathCore.Monads.WorkFlow.Work)">
             <summary>Инициализация нового работы</summary><param name="BaseWork">Базовая работа</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.Execute(MathCore.Monades.WorkFlow.IWorkResult)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.Execute(MathCore.Monads.WorkFlow.IWorkResult)">
             <summary>Выполнить действие текущей работы</summary>
             <param name="BaseResult">Результат выполнения предыдущей работы</param>
             <returns>Результат выполнения действия</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.Execute">
+        <member name="M:MathCore.Monads.WorkFlow.Work.Execute">
             <summary>Выполнить работу</summary>
             <returns>Результат выполнения работы</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.Invoke(System.Action)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.Invoke(System.Action)">
             <summary>Действие, выполняемое в любом случае</summary>
             <param name="action">Выполняемое действие</param>
-            <returns>СФормированная работа, выполняемая в любом случае</returns>
+            <returns>Сформированная работа, выполняемая в любом случае</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.InvokeIfSuccess(System.Action)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.InvokeIfSuccess(System.Action)">
             <summary>Действие, выполняемое в случае успеха предыдущего действия</summary>
             <param name="action">Выполняемое действие</param>
             <returns>Сформированная работа, выполняемая в случае успеха предыдущего действия</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.InvokeIfFailure(System.Action)">
+        <member name="M:MathCore.Monads.WorkFlow.Work.InvokeIfFailure(System.Action)">
             <summary>Работа, которую надо выполнить в случае, если предыдущая работа завершилась с ошибкой</summary>
             <param name="action">Действие, выполняемое в случае неудачи предыдущего действия</param>
             <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.InvokeIfFailure(System.Action{System.Exception})">
+        <member name="M:MathCore.Monads.WorkFlow.Work.InvokeIfFailure(System.Action{System.Exception})">
             <summary>Действие, выполняемое в случае неудачи предыдущего действия</summary>
             <param name="ErrorHandler">Обработчик ошибки</param>
             <returns>Сформированная работа, выполняемая в случае неудачи предыдущего действия</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.Get``1(System.Func{``0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work.Get``1(System.Func{``0})">
             <summary>Выполнение функции в любом случае</summary>
             <typeparam name="T">Тип значения функции</typeparam>
             <param name="function">Функция, выполняемая в рамках работы</param>
             <returns>Работа, выполняющая функцию, возвращающую значение</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.GetIfSuccess``1(System.Func{``0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work.GetIfSuccess``1(System.Func{``0})">
             <summary>Выполнение функции в случае если предыдущая работа завершилась успешно</summary>
             <typeparam name="T">Тип результата функции</typeparam>
             <param name="function">Выполняемая функция</param>
             <returns>Работа, выполняющая функцию в случае если предыдущая работа завершилась успешно</returns>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.Work.GetIfFailure``1(System.Func{``0})">
+        <member name="M:MathCore.Monads.WorkFlow.Work.GetIfFailure``1(System.Func{``0})">
             <summary>Работа, выполняемая в случае если функция завершилась ошибкой</summary>
             <typeparam name="T">Тип значения функции</typeparam>
             <param name="function">Функция, выполняемая в случае неудачи</param>
             <returns>Работа, выполняющая функцию в случае неудачи предыдущей работы</returns>
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.WorkResult">
+        <member name="T:MathCore.Monads.WorkFlow.WorkResult">
             <summary>Результат выполнения работы</summary>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult.Error">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult.Error">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult.Success">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult.Success">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult.Failure">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult.Failure">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult.#ctor(System.Exception,System.Exception)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult.#ctor(System.Exception,System.Exception)">
             <summary>Инициализация нового результата выполнения работы</summary>
             <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
             <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult.Equals(System.Object)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult.Equals(System.Object)">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult.GetHashCode">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult.GetHashCode">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.WorkResult`1">
+        <member name="T:MathCore.Monads.WorkFlow.WorkResult`1">
             <summary>Результат выполнения работы со значением</summary>
             <typeparam name="T">Тип результата, доступного после выполнения работы</typeparam>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Error">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`1.Error">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Success">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`1.Success">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Failure">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`1.Failure">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`1.Result">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`1.Result">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.#ctor(`0,System.Exception)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`1.#ctor(`0,System.Exception)">
             <summary>Инициализация нового результата выполнения работы</summary>
             <param name="Result">Результат выполнения работы</param>
             <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.#ctor(System.Exception,System.Exception)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`1.#ctor(System.Exception,System.Exception)">
             <summary>Инициализация нового результата выполнения работы</summary>
             <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
             <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.Equals(MathCore.Monades.WorkFlow.WorkResult{`0})">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`1.Equals(MathCore.Monads.WorkFlow.WorkResult{`0})">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.Equals(System.Object)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`1.Equals(System.Object)">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`1.GetHashCode">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`1.GetHashCode">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Monades.WorkFlow.WorkResult`2">
+        <member name="T:MathCore.Monads.WorkFlow.WorkResult`2">
             <summary>Результат выполнения параметрической работы</summary>
             <typeparam name="TParameter">Тип параметра работы</typeparam>
             <typeparam name="T">Тип значения, доступного по завершении работы</typeparam>
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Error">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`2.Error">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Success">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`2.Success">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Failure">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`2.Failure">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Parameter">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`2.Parameter">
             <inheritdoc />
         </member>
-        <member name="P:MathCore.Monades.WorkFlow.WorkResult`2.Result">
+        <member name="P:MathCore.Monads.WorkFlow.WorkResult`2.Result">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.#ctor(System.Exception)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`2.#ctor(System.Exception)">
             <summary>Инициализация нового результата выполнения работы</summary>
             <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.#ctor(`0,`1,System.Exception)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`2.#ctor(`0,`1,System.Exception)">
             <summary>Инициализация нового результата выполнения работы</summary>
             <param name="Parameter">Параметр текущего процесса выполнения работы</param>
             <param name="Result">Результат выполнения работы</param>
             <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.#ctor(`0,System.Exception,System.Exception)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`2.#ctor(`0,System.Exception,System.Exception)">
             <summary>Инициализация нового результата выполнения работы</summary>
             <param name="Parameter">Параметр текущего процесса выполнения работы</param>
             <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
             <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.Equals(MathCore.Monades.WorkFlow.WorkResult{`0,`1})">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`2.Equals(MathCore.Monads.WorkFlow.WorkResult{`0,`1})">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.Equals(System.Object)">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`2.Equals(System.Object)">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Monades.WorkFlow.WorkResult`2.GetHashCode">
+        <member name="M:MathCore.Monads.WorkFlow.WorkResult`2.GetHashCode">
             <inheritdoc />
         </member>
         <member name="F:MathCore.Optimization.ParticleSwarm.Swarm._Inertia">
@@ -9548,6 +9793,12 @@
             <inheritdoc />
         </member>
         <member name="M:MathCore.Polynom.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Polynom.System#Collections#Generic#IEnumerable{System#Double}#GetEnumerator">
             <inheritdoc />
         </member>
         <member name="M:MathCore.Polynom.ToString">
@@ -10566,36 +10817,90 @@
         <member name="T:MathCore.Trees.ITreeItemEx">
             <summary>Методы-расширения интерфейса элемента двусвязного дерева</summary>
         </member>
+        <member name="T:MathCore.Trees.ITreeItemEx.OrderWalkType">
+            <summary>Тип обхода узлов дерева</summary>
+        </member>
+        <member name="F:MathCore.Trees.ITreeItemEx.OrderWalkType.CurrentChildNext">
+            <summary>(К-Л-П) Сначала текущий узел в уровне, затем все дочерние узлы текущего, затем следующий узел уровня</summary>
+        </member>
+        <member name="F:MathCore.Trees.ITreeItemEx.OrderWalkType.CurrentNextChild">
+            <summary>(К-П-Л) Сначала текущий узел в уровне, затем все узлы текущего уровня, затем дочерний узел</summary>
+        </member>
+        <member name="F:MathCore.Trees.ITreeItemEx.OrderWalkType.ChildCurrentNext">
+            <summary>(Л-К-П) Сначала дочерние узлы текущего узла, затем текущий узел, потом все оставшиеся узлы текущего уровня</summary>
+        </member>
+        <member name="F:MathCore.Trees.ITreeItemEx.OrderWalkType.NextCurrentChild">
+            <summary>(П-К-Л) Сначала все остальные узлы текущего уровня, затем текущий узел, потом все дочерние узлы текущего узла</summary>
+        </member>
+        <member name="F:MathCore.Trees.ITreeItemEx.OrderWalkType.ChildNextCurrent">
+            <summary>(Л-П-К) Сначала все дочерние узлы текущего узла, затем все узлы текущего уровня, в конце текущий узел</summary>
+        </member>
+        <member name="F:MathCore.Trees.ITreeItemEx.OrderWalkType.NextChildCurrent">
+            <summary>(П-Л-К) Сначала все узлы текущего уровня, затем все дочерние узлы текущего узла, В конце сам текущий узел</summary>
+        </member>
+        <member name="T:MathCore.Trees.ITreeItemEx.TreeLevelItem`1">
+            <summary>Представление узла дерева</summary>
+            <typeparam name="T">Тип значения узла</typeparam>
+        </member>
+        <member name="P:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.Item">
+            <summary>Значение узла</summary>
+        </member>
+        <member name="P:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.Level">
+            <summary>Уровень узла в дереве</summary>
+        </member>
+        <member name="M:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.#ctor(`0,System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Trees.ITreeItemEx.TreeLevelItem`1"/></summary>
+            <param name="Item">Значение узла</param>
+            <param name="Level">Уровень узла</param>
+        </member>
+        <member name="M:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.Equals(MathCore.Trees.ITreeItemEx.TreeLevelItem{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.op_Equality(MathCore.Trees.ITreeItemEx.TreeLevelItem{`0},MathCore.Trees.ITreeItemEx.TreeLevelItem{`0})">
+            <summary>Оператор определения равенства между двумя экземплярам <see cref="T:MathCore.Trees.ITreeItemEx.TreeLevelItem`1"/></summary>
+            <returns>Истина, если свойства экземпляров равны</returns>
+        </member>
+        <member name="M:MathCore.Trees.ITreeItemEx.TreeLevelItem`1.op_Inequality(MathCore.Trees.ITreeItemEx.TreeLevelItem{`0},MathCore.Trees.ITreeItemEx.TreeLevelItem{`0})">
+            <summary>Оператор определения неравенства между двумя экземплярам <see cref="T:MathCore.Trees.ITreeItemEx.TreeLevelItem`1"/></summary>
+            <returns>Истина, если хотя бы одно свойство экземпляров отличается</returns>
+        </member>
         <member name="M:MathCore.Trees.ITreeItemEx.GetRootItem``1(``0)">
             <summary>Определение корня дерева</summary>
             <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
             <param name="Item">Объект с интерфейсом элемента дерева</param>
-            <returns>КОрневой объект дерева объектов</returns>
+            <returns>Корневой объект дерева объектов</returns>
         </member>
         <member name="M:MathCore.Trees.ITreeItemEx.OrderWalk``1(``0,MathCore.Trees.ITreeItemEx.OrderWalkType,System.Int32)">
             <summary>Обход элементов поддерева начиная с текущего в порядке: текущий, дочерний, следующий по уровню</summary>
             <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
             <param name="Item">Объект с интерфейсом элемента дерева</param>
-            <param name="level"></param>
-            <returns></returns>
+            <param name="WalkType">Тип обхода</param>
+            <param name="Level">Уровень дерева</param>
+            <returns>Последовательность элементов дерева</returns>
         </member>
         <member name="M:MathCore.Trees.ITreeItemEx.GetParents``1(``0)">
             <summary>Получить все родительские элементы</summary>
             <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
             <param name="Item">Объект с интерфейсом элемента дерева</param>
-            <returns></returns>
+            <returns>Массив элементов родительских узлов дерева</returns>
         </member>
         <member name="M:MathCore.Trees.ITreeItemEx.GetLevelItems``1(``0)">
             <summary>Получить все элементы дочернего уровня поддерева</summary>
             <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
             <param name="Item">Объект с интерфейсом элемента дерева</param>
-            <returns></returns>
+            <returns>Массив элементов текущего уровня дерева</returns>
         </member>
         <member name="M:MathCore.Trees.ITreeItemEx.GetChilds``1(``0)">
             <summary>Получить все дочерние элементы поддерева</summary>
             <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>
             <param name="Item">Объект с интерфейсом элемента дерева</param>
-            <returns></returns>
+            <returns>Массив элементов дочерних узлов</returns>
         </member>
         <member name="P:MathCore.Trees.Tree`1.Count">
             <summary>Число элементов</summary>
@@ -10757,10 +11062,15 @@
         <member name="P:MathCore.Values.AbstractSetOf`1.Power">
             <summary>Мощность множества</summary>
         </member>
+        <member name="M:MathCore.Values.AbstractSetOf`1.Add(`0)">
+            <summary>Добавить элемент в множество</summary>
+            <param name="Value">Добавляемый элемент</param>
+            <returns>Истина, если элемент был добавлен в множество и ложь, если элемент уже присутствует в множестве</returns>
+        </member>
         <member name="M:MathCore.Values.AbstractSetOf`1.Contains(`0)">
             <summary>Признак вхождения элемента в множество</summary>
             <param name="value">Проверяемый элемент</param>
-            <returns>Истина, если элемент принедлежит множеству</returns>
+            <returns>Истина, если элемент принадлежит множеству</returns>
         </member>
         <member name="M:MathCore.Values.AbstractSetOf`1.NotContains(`0)">
             <summary>Признак того, что элемент не входит в множество</summary>
@@ -10788,7 +11098,7 @@
             <summary>Начальное значение</summary>
         </member>
         <member name="F:MathCore.Values.AverageValue._Length">
-            <summary>Размер окна усреднеия</summary>
+            <summary>Размер окна усреднения</summary>
         </member>
         <member name="P:MathCore.Values.AverageValue.StartValue">
             <summary>Начальное значение</summary>
@@ -10798,6 +11108,9 @@
         </member>
         <member name="P:MathCore.Values.AverageValue.Value">
             <summary>Текущее значение усредняемой величины</summary>
+        </member>
+        <member name="P:MathCore.Values.AverageValue.Dispersion">
+            <summary>Дисперсия значений</summary>
         </member>
         <member name="P:MathCore.Values.AverageValue.ValuesCount">
             <summary>Количество точек усреднения</summary>
@@ -10836,7 +11149,7 @@
             <param name="Value">Усредняемое значение</param>
         </member>
         <member name="M:MathCore.Values.AverageValue.op_Implicit(System.Double)~MathCore.Values.AverageValue">
-            <summary>ОПератор неявного приведнеия вещественного числа к скользящему среднему</summary>
+            <summary>Оператор неявного приведения вещественного числа к скользящему среднему</summary>
             <param name="Data">Вещественное число</param>
         </member>
         <member name="M:MathCore.Values.AverageValue.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
@@ -10871,14 +11184,14 @@
             <returns>Элемент данных по указанному индексу</returns>
         </member>
         <member name="P:MathCore.Values.CSV.Item.Item(System.String)">
-            <summary>Требуемый элемент данных по указнному имени заголовка столбца</summary>
-            <param name="key">Имя столбца зоголовка</param>
+            <summary>Требуемый элемент данных по указанному имени заголовка столбца</summary>
+            <param name="key">Имя столбца заголовка</param>
             <returns>Требуемый элемент данных</returns>
         </member>
         <member name="P:MathCore.Values.CSV.Item.ItemsCount">
             <summary>Количество элементов данных</summary>
         </member>
-        <member name="M:MathCore.Values.CSV.Item.#ctor(System.Collections.ObjectModel.ReadOnlyCollection{System.String},System.String[])">
+        <member name="M:MathCore.Values.CSV.Item.#ctor(System.String[],System.String[])">
             <summary>Новый элемент данных</summary>
             <param name="Header">Названия столбцов</param>
             <param name="Items">Элементы данных</param>
@@ -10917,7 +11230,7 @@
             <param name="SkipFirstLines">Количество пропускаемых строк в начале файла</param>
             <param name="HeaderLine">Считывать ли заголовок</param>
             <param name="SkipEmptyLines">Пропускать пустые строки</param>
-            <param name="Encoding">Кодировка файла (если не указана, используется <see cref="!:Encoding.UTF8S"/>)</param>
+            <param name="Encoding">Кодировка файла (если не указана, используется <see cref="P:System.Text.Encoding.UTF8"/>)</param>
         </member>
         <member name="M:MathCore.Values.CSV.GetEnumerator">
             <inheritdoc />
@@ -11111,6 +11424,9 @@
             <summary>Оператор неявного приведения типа <see cref="T:MathCore.Values.MinValue"/> к <see cref="T:System.Double"/></summary>
             <param name="MinValue">Минимальное значение</param>
         </member>
+        <member name="M:MathCore.Values.NumberedValues`1.GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.Values.ObjectSelector`1">
             <summary>Система псевдопараллельного потокового доступа к значению ряда источников объектов</summary>
             <typeparam name="T">Тип объектов в источниках</typeparam>
@@ -11160,6 +11476,51 @@
             <param name="CanRead">Метод определения возможности чтения значения</param>
             <param name="GeneratorsEnum">Массив генераторов объектов "ленивых" значений</param>
         </member>
+        <member name="T:MathCore.Values.Set`1">
+            <summary>Множество элементов</summary>
+            <typeparam name="T">Тип данных множества</typeparam>
+        </member>
+        <member name="P:MathCore.Values.Set`1.Power">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Values.Set`1.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Values.Set`1"/></summary>
+        </member>
+        <member name="M:MathCore.Values.Set`1.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Values.Set`1"/></summary>
+            <param name="comparer">Объект, осуществляющий сравнение элементов множества</param>
+        </member>
+        <member name="M:MathCore.Values.Set`1.Add(`0)">
+            <summary>Добавить элемент в множество</summary>
+            <param name="Value">Добавляемый элемент</param>
+            <returns>Истина, если элемент был успешно добавлен и ложь, если элемент уже присутствует в множестве</returns>
+        </member>
+        <member name="M:MathCore.Values.Set`1.Contains(`0)">
+            <summary>Проверка на вхождение элемента в множество</summary>
+            <param name="Value">Проверяемый элемент</param>
+            <returns>Истина, если элемент входит в множество</returns>
+        </member>
+        <member name="M:MathCore.Values.Set`1.Add(`0,System.Int32)">
+            <summary>Добавить элемент в множество</summary>
+            <param name="Value">Добавляемый элемент</param>
+            <param name="Hash">Хеш-код элемента</param>
+        </member>
+        <member name="M:MathCore.Values.Set`1.Remove(`0)">
+            <summary>Удаление элемента из множества</summary>
+            <param name="Value">Удаляемый элемент</param>
+            <returns>Истина, если элемент присутствовал в множестве и был оттуда удалён</returns>
+        </member>
+        <member name="M:MathCore.Values.Set`1.Resize">
+            <summary>Подгон размера хранилища</summary>
+        </member>
+        <member name="M:MathCore.Values.Set`1.GetHashCodeOf(`0)">
+            <summary>Получить хещ-код элемента</summary>
+            <param name="Value">Элемент, хеш-код которого требуется получить</param>
+            <returns>Рассчитанный хеш-код элемента</returns>
+        </member>
+        <member name="M:MathCore.Values.Set`1.GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.Values.SetOf`1">
             <summary>Множество объектов типа <typeparamref name="T"/></summary>
             <typeparam name="T">Тип элементов множества</typeparam>
@@ -11202,6 +11563,12 @@
             <summary>Клонирование множества элементов</summary>
             <returns></returns>
         </member>
+        <member name="M:MathCore.Values.SetOf`1.Equals(MathCore.Values.SetOf{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Values.SetOf`1.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.Values.SetOf`1.GetEnumerator">
             <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции.</summary>
             <returns>
@@ -11220,63 +11587,26 @@
             <summary>Добавляет элемент в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
             <param name="item">Объект, добавляемый в интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
         </member>
+        <member name="M:MathCore.Values.SetOf`1.System#Collections#Generic#ICollection{T}#Add(`0)">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.Values.SetOf`1.Clear">
-            <summary>Удаляет все элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</summary>
-            <exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения. </exception>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Values.SetOf`1.Contains(`0)">
-            <summary>
-            Определяет, содержит ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> указанное значение.
-            </summary>
-            <returns>
-            Значение true, если объект <paramref name="item"/> найден в <see cref="T:System.Collections.Generic.ICollection`1"/>; в противном случае — значение false.
-            </returns>
-            <param name="item">Объект, который требуется найти в <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
+            <inheritdoc cref="T:System.Collections.Generic.ICollection`1" />
         </member>
         <member name="M:MathCore.Values.SetOf`1.System#Collections#Generic#ICollection{T}#CopyTo(`0[],System.Int32)">
-            <summary>
-            Копирует элементы <see cref="T:System.Collections.Generic.ICollection`1"/> в массив <see cref="T:System.Array"/>, начиная с указанного индекса <see cref="T:System.Array"/>.
-            </summary>
-            <param name="array">
-            Одномерный массив <see cref="T:System.Array"/>, в который копируются элементы из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>. 
-            Индексация в массиве <see cref="T:System.Array"/> должна начинаться с нуля.
-            </param>
-            <param name="arrayIndex">
-            Значение индекса (с нуля) в массиве <paramref name="array"/>, с которого начинается копирование.
-            </param>
-            <exception cref="T:System.ArgumentNullException">Параметр <paramref name="array"/> имеет значение null.</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">Значение параметра <paramref name="arrayIndex"/> меньше 0.</exception>
-            <exception cref="T:System.ArgumentException">
-            Массив <paramref name="array"/> является многомерным.
-              -или- Значение индекса массива <paramref name="arrayIndex"/> больше или равно длине массива <paramref name="array"/>.
-              -или-Количество элементов в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/> превышает размер доступного места, начиная с индекса <paramref name="arrayIndex"/> и до конца массива назначения <paramref name="array"/>.
-              -или-Тип не может быть автоматически приведен к типу массива назначения <paramref name="array"/>.
-            </exception>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.Values.SetOf`1.Remove(`0)">
-            <summary>
-            Удаляет первое вхождение указанного объекта из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.
-            </summary>
-            <returns>
-            Значение true, если объект <paramref name="item"/> успешно удален из <see cref="T:System.Collections.Generic.ICollection`1"/>, в противном случае — значение false. Этот метод также возвращает значение false, если параметр <paramref name="item"/> не найден в исходном интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
-            </returns>
-            <param name="item">Объект, который необходимо удалить из интерфейса <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения.</exception>
+            <inheritdoc />
         </member>
         <member name="P:MathCore.Values.SetOf`1.System#Collections#Generic#ICollection{T}#Count">
-            <summary>
-            Получает число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
-            </summary>
-            <returns>
-            Число элементов, содержащихся в интерфейсе <see cref="T:System.Collections.Generic.ICollection`1"/>.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="P:MathCore.Values.SetOf`1.System#Collections#Generic#ICollection{T}#IsReadOnly">
-            <summary>
-            Получает значение, указывающее, доступен ли интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> только для чтения.
-            </summary>
-            <returns>
-            Значение true, если интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/> доступен только для чтения, в противном случае — значение false.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="T:MathCore.Values.StatisticValue">
             <summary>Статистическая информация о значении</summary>
@@ -11811,6 +12141,27 @@
         </member>
         <member name="P:MathCore.Vectors.SpaceAngle.ComparisonsAccuracy">
             <summary>Точность сравнения (по умолчанию 10^-13)</summary>
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.Equals(MathCore.Vectors.Vector{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.System#ICloneable#Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.Vectors.Vector`1.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.Vectors.Vector2DConverter">
             <summary>Конвертер для <see cref="T:MathCore.Vectors.Vector2D"/></summary>
@@ -12740,7 +13091,7 @@
         <member name="M:MathCore.ViewModels.ViewModel.PropertyChangingEventArgs`1.Set(`0@)">
             <summary>Установить новое значение свойства</summary>
             <param name="Value">Новое значение свойства</param>
-            <returns>Истина, Если новое значение свойства отличается от старого</returns>
+            <returns>Истина, если новое значение свойства отличается от старого</returns>
         </member>
         <member name="M:MathCore.ViewModels.ViewModel.Set``1(``0@,``0,System.String@)">
             <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
@@ -14444,6 +14795,47 @@
         <member name="M:System.ExceptionEventHandlerArgs`1.Unhandled">
             <summary>Исключение должно быть сгенерировано в любом случае</summary>
         </member>
+        <member name="T:System.Linq.Expressions.AttributesExtractor">
+            <summary>Объект, осуществляющий извлечение атрибута с указанным именем из информации о методе</summary>
+        </member>
+        <member name="F:System.Linq.Expressions.AttributesExtractor._Info">
+            <summary>Информация о методе</summary>
+        </member>
+        <member name="P:System.Linq.Expressions.AttributesExtractor.Inherit">
+            <summary>Искать в данных предков цепочки наследования классов/интерфейсов</summary>
+        </member>
+        <member name="P:System.Linq.Expressions.AttributesExtractor.Item(System.String)">
+            <summary>Атрибут (если найден) с указанным именем</summary>
+            <param name="Name">Имя искомого атрибута</param>
+            <returns>Атрибут, с указанным именем, либо <see langword="null"/></returns>
+        </member>
+        <member name="P:System.Linq.Expressions.AttributesExtractor.Item(System.String,System.Boolean)">
+            <summary>Атрибут (если найден) с указанным именем</summary>
+            <param name="Name">Имя искомого атрибута</param>
+            <param name="IsInherit">Искать в данных предков цепочки наследования классов/интерфейсов</param>
+            <returns>Атрибут, с указанным именем, либо <see langword="null"/></returns>
+        </member>
+        <member name="P:System.Linq.Expressions.AttributesExtractor.Item(System.String,System.String)">
+            <summary>Получить значение свойства атрибута, определяемое именем атрибута и именем свойства атрибута</summary>
+            <param name="Name">Имя искомого атрибута</param>
+            <param name="ValueName">Имя свойства атрибута, значение которого надо получить</param>
+            <returns>Значение свойства атрибута, если тот был найден и если у него было найдено указанное свойство</returns>
+        </member>
+        <member name="M:System.Linq.Expressions.AttributesExtractor.#ctor(System.Reflection.MemberInfo)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Linq.Expressions.AttributesExtractor"/></summary>
+            <param name="Info">Мета-информация о методе, для для которого надо осуществлять поиск атрибутов</param>
+        </member>
+        <member name="M:System.Linq.Expressions.AttributesExtractor.GetAttributes(System.String)">
+            <summary>Получить все атрибуты с указанным именем</summary>
+            <param name="Name">Имя искомых атрибутов</param>
+            <returns>Перечисление атрибутов с указанным именем</returns>
+        </member>
+        <member name="M:System.Linq.Expressions.AttributesExtractor.GetAttributes(System.String,System.Boolean)">
+            <summary>Получить все атрибуты с указанным именем</summary>
+            <param name="Name">Имя искомых атрибутов</param>
+            <param name="IsInherit">Искать в данных предков цепочки наследования классов/интерфейсов</param>
+            <returns>Перечисление атрибутов с указанным именем</returns>
+        </member>
         <member name="M:System.Linq.Expressions.CloningVisitor.VisitElementInitializer(System.Linq.Expressions.ElementInit)">
             <inheritdoc />
         </member>
@@ -14561,27 +14953,27 @@
             <summary>Транспонированная матрица</summary>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.#ctor(System.Int32,System.Int32)">
-            <summary>Матрица</summary>
+            <summary>Матрица выражения</summary>
             <param name="N">Число строк</param>
             <param name="M">Число столбцов</param>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.#ctor(System.Int32)">
-            <summary>Квадратная матрица</summary>
+            <summary>Квадратная матрица выражения</summary>
             <param name="N">Размерность</param>
         </member>
         <member name="T:System.Linq.Expressions.ExpressionMatrix.MatrixItemCreator">
-            <summary>Метод определения значения элемента матрицы</summary>
+            <summary>Метод определения значения элемента матрицы выражения</summary>
             <param name="i">Номер строки</param>
             <param name="j">Номер столбца</param>
             <returns>Значение элемента матрицы M[<paramref name="i"/>, <paramref name="j"/>]</returns>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.#ctor(System.Int32,System.Linq.Expressions.ExpressionMatrix.MatrixItemCreator)">
-            <summary>Квадратная матрица</summary>
+            <summary>Квадратная матрица выражения</summary>
             <param name="N">Размерность</param>
             <param name="CreateFunction">Порождающая функция</param>
         </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.#ctor(System.Int32,System.Int32,System.Linq.Expressions.ExpressionMatrix.MatrixItemCreator)">
-            <summary>Матрица</summary>
+            <summary>Матрица выражения</summary>
             <param name="N">Число строк</param>
             <param name="M">Число столбцов</param>
             <param name="CreateFunction">Порождающая функция f(i,j) - i-строка, j-столбец</param>
@@ -14628,6 +15020,9 @@
         <member name="M:System.Linq.Expressions.ExpressionMatrix.GetDeterminant">
             <summary>Определитель матрицы</summary>
         </member>
+        <member name="M:System.Linq.Expressions.ExpressionMatrix.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:System.Linq.Expressions.ExpressionMatrix.Clone">
             <summary>Клонирование матрицы</summary>
             <returns>Копия текущей матрицы</returns>
@@ -14669,6 +15064,12 @@
         <member name="M:System.Linq.Expressions.ExpressionMatrix.op_Implicit(System.Linq.Expressions.Expression)~System.Linq.Expressions.ExpressionMatrix">
             <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
             <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionMatrix.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionMatrix.GetHashCode">
+            <inheritdoc />
         </member>
         <member name="T:System.Linq.Expressions.ExpressionRebuilder">
             <summary>Пересборщик дерева выражения Linq.Expression</summary>
@@ -14925,14 +15326,14 @@
         <member name="M:System.Linq.IEnumerableExtensions.InsertBefore``1(System.Collections.Generic.IEnumerable{``0},``0[])">
             <summary>Добавить элемент в начало последовательности</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
-            <param name="collection">Исходная последовательность элементов</param>
+            <param name="enumerable">Исходная последовательность элементов</param>
             <param name="values">Добавляемый элемент</param>
             <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.InsertBefore``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>Добавить элемент в начало последовательности</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
-            <param name="collection">Исходная последовательность элементов</param>
+            <param name="enumerable">Исходная последовательность элементов</param>
             <param name="values">Добавляемый элемент</param>
             <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         </member>
@@ -14965,26 +15366,26 @@
             <returns>
             Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, содержащий элементы входной последовательности, которые не удовлетворяют условию.
             </returns>
-            <param name="collection">Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, подлежащий фильтрации.</param>
+            <param name="enumerable">Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, подлежащий фильтрации.</param>
             <param name="NotSelector">Функция для проверки каждого элемента на не соответствие условию.</param>
-            <typeparam name="T">Тип элементов последовательности <paramref name="collection"/>.</typeparam>
-            <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="collection"/> или <paramref name="NotSelector"/> — null.</exception>
+            <typeparam name="T">Тип элементов последовательности <paramref name="enumerable"/>.</typeparam>
+            <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="enumerable"/> или <paramref name="NotSelector"/> — null.</exception>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.TakeWhileNot``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>Возвращает цепочку элементов последовательности, удовлетворяющих указанному условию</summary>
             <returns>
             Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, содержащий элементы входной последовательности до первого элемента, который не прошел проверку.
             </returns>
-            <param name="collection">Последовательность, из которой требуется возвратить элементы.</param>
+            <param name="enumerable">Последовательность, из которой требуется возвратить элементы.</param>
             <param name="NotSelector">Функция для проверки каждого элемента на соответствие условию.</param>
-            <typeparam name="T">Тип элементов последовательности <paramref name="collection"/>.</typeparam>
-            <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="collection"/> или <paramref name="NotSelector"/> — null.</exception>
+            <typeparam name="T">Тип элементов последовательности <paramref name="enumerable"/>.</typeparam>
+            <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="enumerable"/> или <paramref name="NotSelector"/> — null.</exception>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
             <typeparam name="T">Тип элементов исходного перечисления</typeparam>
             <typeparam name="TV">Тип элементов результирующего массива</typeparam>
-            <param name="items">Исходное перечисление</param>
+            <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
             <returns>
             Если ссылка на исходное перечисление не пуста, то
@@ -14997,7 +15398,7 @@
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
             <typeparam name="T">Тип элементов исходного перечисления</typeparam>
             <typeparam name="TV">Тип элементов результирующего массива</typeparam>
-            <param name="items">Исходное перечисление</param>
+            <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов и индекса элемента</param>
             <returns>
             Если ссылка на исходное перечисление не пуста, то
@@ -15010,7 +15411,7 @@
             <summary>Преобразование перечисления в список с преобразованием элементов</summary>
             <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
             <typeparam name="TValue">Тип элементов результирующего списка</typeparam>
-            <param name="collection">Исходное перечисление</param>
+            <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
             <returns>
             Если ссылка на исходное перечисление не пуста, то
@@ -15393,7 +15794,7 @@
             <summary>Выполнение указанного действия на каждом шаге перебора последовательности после выдачи элемента</summary>
             <typeparam name="T">Тип элементов последовательности</typeparam>
             <param name="collection">Последовательность элементов</param>
-            <param name="action">Действие, Выполняемое после выдачи элемента последовательности</param>
+            <param name="action">Действие, выполняемое после выдачи элемента последовательности</param>
             <returns>Исходная последовательность элементов</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ForeachLazy``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Int32},System.Int32)">
@@ -15403,57 +15804,6 @@
             <param name="Action">Выполняемое действие</param>
             <param name="index">Начальный индекс элемента последовательности</param>
             <returns>Последовательность элементов, для элементов которой которой выполняется действие</returns>
-        </member>
-        <member name="T:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2">
-            <summary>Класс вычисления значений функции для коллекции аргументов</summary>
-            <typeparam name="T">Тип аргумента функции</typeparam>
-            <typeparam name="TResult">Тип значения функции</typeparam>
-        </member>
-        <member name="T:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator">
-            <summary>Перечислитель коллекции рассчитанных значений функции</summary>
-        </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator._Enumerator">
-            <summary>Перечислитель коллекции аргументов функции</summary>
-        </member>
-        <member name="P:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator.Current">
-            <summary>Текущий элемент коллекции значений функции</summary>
-        </member>
-        <member name="P:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator.System#Collections#IEnumerator#Current">
-            <summary>Текущий элемент коллекции значений функции</summary>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator.#ctor(System.Collections.Generic.IEnumerator{`0},System.Func{`0,`1})">
-            <summary>Инициализация нового перечислителя коллекции рассчитанных значений функции</summary>
-            <param name="Enumerator">Перечислитель коллекции аргументов области определения</param>
-            <param name="f">Вычисляемая функция</param>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator.Dispose">
-            <summary>Освобождение ресурсов</summary>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator.MoveNext">
-            <summary>Переход к следующему элементу коллекции</summary>
-            <returns>Истина, если переход выполнен успешно</returns>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.EnumerableCollectionFunctionCalculatorEnumerator.Reset">
-            <summary>Сброс состояния перечислителя</summary>
-        </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2._Collection">
-            <summary>Коллекция аргументов функции</summary>
-        </member>
-        <member name="F:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2._Function">
-            <summary>Вычисляемая функция</summary>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.#ctor(System.Collections.Generic.IEnumerable{`0},System.Func{`0,`1})">
-            <summary>Инициализация нового потокового вычислителя функции на коллекции аргументов</summary>
-            <param name="collection">Коллекция аргументов</param>
-            <param name="f">Вычисляемая функция</param>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.GetEnumerator">
-            <summary>Получение перечислителя</summary>
-            <returns>Перечислитель рассчитанных значений функции</returns>
-        </member>
-        <member name="M:System.Linq.IEnumerableExtensions.EnumerableCollectionFunctionCalculator`2.System#Collections#IEnumerable#GetEnumerator">
-            <summary>Неявное получение перечислителя</summary>
-            <returns>Перечислитель рассчитанных значений функции</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ExistingItems``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>Пересечение последовательностей</summary>
@@ -16180,7 +16530,7 @@
         <member name="M:System.ArrayExtensions.CreateSequence(System.Int32,System.Int32)">
             <summary>Создать массив последовательных значений длины <paramref name="length"/> начиная с <paramref name="offset"/></summary>
             <param name="length">Длина массива</param>
-            <param name="offset">НАчальное значение</param>
+            <param name="offset">Начальное значение</param>
             <returns>Массив чисел длины <paramref name="length"/> начиная с <paramref name="offset"/></returns>
         </member>
         <member name="M:System.ArrayExtensions.Mix``1(``0[])">
@@ -16505,43 +16855,37 @@
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo.#ctor(System.Collections.Generic.Dictionary{System.String,System.String[]})">
             <summary>Инициализация нового экземпляра информации и связях между свойствами типа</summary>
-            <param name="Dependencies">Словарь имён свойст зависимостей</param>
+            <param name="Dependencies">Словарь имён свойств зависимостей</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo.Subscribe(System.ComponentModel.INotifyPropertyChanged,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
             <summary>Метод установки обработчика событий обновления свойства объекта, генерирующего вторичные события обновления зависимых свойств</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="OnPropertyChanged">Метод генерации события <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> в объекте <paramref name="obj"/></param>
         </member>
-        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo.UnSubscrige(System.ComponentModel.INotifyPropertyChanged)">
+        <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.RegistratorInfo.UnSubscribe(System.ComponentModel.INotifyPropertyChanged)">
             <summary>Отписка от события обновления свойств объекта</summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.OnGarbageCollected(System.Object,System.EventArgs)">
-            <summary>Обработка событий слорки мусора в системе</summary>
+            <summary>Обработка событий сборки мусора в системе</summary>
             <param name="Sender">Источник события - не используется</param>
             <param name="e">Аргумент события - не используется</param>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
-            <summary>
-            Создание связей между свойствами объекта на основе атрибутов <see cref="T:System.AffectsTheAttribute"/> и <see cref="T:System.DependencyOnAttribute"/>
-            </summary>
+            <summary>Создание связей между свойствами объекта на основе атрибутов <see cref="T:System.AffectsTheAttribute"/> и <see cref="T:System.DependencyOnAttribute"/></summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
             <typeparam name="T">Тип объекта</typeparam>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register_Disposable``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})">
-            <summary>
-            Создание связей между свойствами объекта на основе атрибутов <see cref="T:System.AffectsTheAttribute"/> и <see cref="T:System.DependencyOnAttribute"/>
-            </summary>
+            <summary>Создание связей между свойствами объекта на основе атрибутов <see cref="T:System.AffectsTheAttribute"/> и <see cref="T:System.DependencyOnAttribute"/></summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <param name="OnPropertyChanged">Метод генерации события обновления свойства</param>
             <typeparam name="T">Тип объекта</typeparam>
             <returns></returns>
         </member>
         <member name="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Unregister``1(``0)">
-            <summary>
-            Разрушение связей между свойствами, созданными методом <see cref="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})"/>
-            </summary>
+            <summary>Разрушение связей между свойствами, созданными методом <see cref="M:System.ComponentModel.INotifyPropertyChangedExtensions.PropertyDependencies_Register``1(``0,System.Action{System.ComponentModel.PropertyChangedEventArgs})"/></summary>
             <param name="obj">Объект, реализующий интерфейс <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></param>
             <typeparam name="T">Тип объекта</typeparam>
         </member>
@@ -16555,7 +16899,7 @@
             <typeparam name="T">Тип объекта, генерирующего событие</typeparam>
             <param name="obj">Объект, на событие изменения свойств которого производится подписка</param>
             <param name="PropertyName">Имя отслеживаемого свойства</param>
-            <param name="Handler">ОБработчик события</param>
+            <param name="Handler">Обработчик события</param>
         </member>
         <member name="M:System.Collections.BitArrayExtensions.IsPartyCorrect(System.Collections.BitArray,System.Boolean)">
             <summary>Проверка корректности чётности</summary>
@@ -16600,9 +16944,9 @@
         <member name="M:System.Collections.Generic.IDictionaryExtensions.AddValues``2(System.Collections.Generic.IDictionary{``0,``1},System.Collections.Generic.IEnumerable{``1},System.Func{``1,``0})">
             <summary>Добавление значений в словарь</summary>
             <param name="dictionary">Словарь в который надо добавить значения</param>
-            <param name="collection">Коллекция добавляемух значений</param>
+            <param name="collection">Коллекция добавляемых значений</param>
             <param name="converter">Метод определения ключа словаря для каждого из элементов коллекции</param>
-            <typeparam name="TKey">ТИп ключа словаря</typeparam>
+            <typeparam name="TKey">Тип ключа словаря</typeparam>
             <typeparam name="TValue">Тип значения словаря</typeparam>
         </member>
         <member name="M:System.Collections.Generic.IDictionaryExtensions.GetValueOrAddNew``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Func{``1})">
@@ -16645,7 +16989,7 @@
             <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
             <param name="dictionary">Рассматриваемый словарь</param>
             <param name="key">Ключ, значение для которого требуется получить</param>
-            <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключём, если он отсутствует</param>
+            <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключом, если он отсутствует</param>
             <typeparam name="TKey">Тип ключа</typeparam>
             <typeparam name="TValue">Тип значения</typeparam>
             <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
@@ -16699,7 +17043,7 @@
             <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
             <param name="dictionary">Инициализируемый словарь</param>
             <param name="count">Количество добавляемых элементов</param>
-            <param name="parameter">Параметр инициалализации</param>
+            <param name="parameter">Параметр инициализации</param>
             <param name="initializer">Метод генерации новых элементов</param>
             <typeparam name="TKey">Тип ключа словаря</typeparam>
             <typeparam name="TValue">Тип значения словаря</typeparam>
@@ -16719,7 +17063,7 @@
             <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
             <param name="dictionary">Инициализируемый словарь</param>
             <param name="keys">Коллекция ключей</param>
-            <param name="parameter">Параметр инициалализации</param>
+            <param name="parameter">Параметр инициализации</param>
             <param name="initializer">Метод генерации новых элементов</param>
             <typeparam name="TKey">Тип ключа словаря</typeparam>
             <typeparam name="TValue">Тип значения словаря</typeparam>
@@ -16949,6 +17293,20 @@
         <member name="T:System.FuncExtensions">
             <summary>Класс методов-расширений для функции</summary>
         </member>
+        <member name="M:System.FuncExtensions.InvokeAsync``1(System.Func{``0})">
+            <summary>синхронный вызов функции</summary>
+            <param name="func">Вызываемая функция</param>
+            <typeparam name="TResult">Тип значения функции</typeparam>
+            <returns>Задача асинхронного вычисления значения функции</returns>
+        </member>
+        <member name="M:System.FuncExtensions.InvokeAsync``2(System.Func{``0,``1},``0)">
+            <summary>синхронный вызов функции</summary>
+            <param name="func">Вызываемая функция</param>
+            <param name="value">Значение параметра функции</param>
+            <typeparam name="TValue">Тип параметра функции</typeparam>
+            <typeparam name="TResult">Тип значения функции</typeparam>
+            <returns>Задача асинхронного вычисления значения функции</returns>
+        </member>
         <member name="M:System.FuncExtensions.ToEvaluation``1(System.Func{``0},System.String)">
             <summary>Преобразование функции в вычисление</summary>
             <typeparam name="T">Тип возвращаемого функцией результата</typeparam>
@@ -17138,7 +17496,7 @@
         <member name="M:System.FuncExtensions.FuncFrom``2(System.Func{``0,``1},System.Func{System.Func{``0,``1},System.Func{``0,``1}})">
             <summary>Функция от функции - функционал (преобразователь функции)</summary>
             <typeparam name="TIn">Тип аргумента функции</typeparam>
-            <typeparam name="TOut">ТИп значения функции</typeparam>
+            <typeparam name="TOut">Тип значения функции</typeparam>
             <param name="f">Исходная (преобразуемая) функция</param>
             <param name="q">Метод преобразования исходной функции, тип значения которого соответствует типу исходной функции</param>
             <returns>Новая функция, преобразованная указанным методом на основе исходной функции</returns>
@@ -17234,7 +17592,7 @@
             <param name="x1">Начало интервала интегрирования</param>
             <param name="x2">Конец интервала интегрирования</param>
             <param name="f0">Начальное значение функции (задача Коши)</param>
-            <param name="dx">ШАг интегрирования</param>
+            <param name="dx">Шаг интегрирования</param>
             <returns>Задача расчёта значения интеграла функции</returns>
         </member>
         <member name="M:System.FuncExtensions.GetIntegral2Value(System.Func{System.Double,System.Double},System.Func{System.Double,System.Double,System.Double},System.Double,System.Double,System.Double,System.Double,System.Double)">
@@ -17351,7 +17709,7 @@
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
             <param name="x2">Конец интервала дискретизации</param>
-            <param name="dx">ШАг дискретизации</param>
+            <param name="dx">Шаг дискретизации</param>
             <returns>Перечисление дискретных значений функции</returns>
         </member>
         <member name="M:System.FuncExtensions.GetValues``2(System.Func{``0,``1},``0[])">
@@ -17364,7 +17722,7 @@
         </member>
         <member name="M:System.FuncExtensions.GetValues``1(System.Func{System.Double,``0},System.Double,System.Double,System.Double)">
             <summary>Получить массив значений функции на указанном интервале с указанным шагом дискретизации</summary>
-            <typeparam name="TResult">ТИп значений функции</typeparam>
+            <typeparam name="TResult">Тип значений функции</typeparam>
             <param name="f">Дискретизируемая функция</param>
             <param name="x1">Начало интервала дискретизации</param>
             <param name="x2">Конец интервала дискретизации</param>
@@ -17574,7 +17932,7 @@
             <returns>Кортеж со списком значений функции и вещественным число, оценивающим точность дискретизации</returns>
         </member>
         <member name="F:System.FuncExtensions.AdaptiveSamplingResult`1._List">
-            <summary>СВязанный список с дискретами функции</summary>
+            <summary>Связанный список с дискретами функции</summary>
         </member>
         <member name="F:System.FuncExtensions.AdaptiveSamplingResult`1._F">
             <summary>Дискретизируемая функция</summary>
@@ -17639,7 +17997,7 @@
         </member>
         <member name="T:System.FuncExtensions.SamplingResultOneWayT`1">
             <summary>Результаты адаптивной однопроходной дискретизации функции значений указанного типа</summary>
-            <typeparam name="T">ТИп значений функции</typeparam>
+            <typeparam name="T">Тип значений функции</typeparam>
         </member>
         <member name="M:System.FuncExtensions.SamplingAdaptive_OneWay``1(System.Func{System.Double,``0},System.Func{``0,System.Double},System.Double,System.Double,System.Double,System.Double)">
             <summary>Адаптивная дискретизация функции в один проход</summary>
@@ -17802,7 +18160,7 @@
             <param name="e">Аргументы события</param>
         </member>
         <member name="M:System.EventHandlerExtension.StartAsync``1(System.EventHandler{``0},System.Object,``0,System.AsyncCallback,System.Object)">
-            <summary>Потоко-безопасная асинхроная генерация события</summary>
+            <summary>Потоко-безопасная асинхронная генерация события</summary>
             <param name="Handler">Обработчик события</param>
             <param name="Sender">Источник события</param>
             <typeparam name="TEventArgs">Тип аргумента события</typeparam>
@@ -18595,7 +18953,7 @@
         </member>
         <member name="M:System.DoubleExtensions.Power(System.Double,System.Double)">
             <summary>Возведение числа в действительную степень</summary>
-            <param name="x">ОСнование</param><param name="y">Действительный показатель степени</param>
+            <param name="x">Основание</param><param name="y">Действительный показатель степени</param>
             <returns>Действительное число x возведённое в степень y: x^y</returns>
         </member>
         <member name="M:System.DoubleExtensions.Power(System.Double,MathCore.Complex)">
@@ -19306,14 +19664,12 @@
             <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
             <param name="rnd">Датчик случайных чисел</param>
             <param name="min">Минимум</param>
-            <param name="max">МАксимум</param>
+            <param name="max">Максимум</param>
             <param name="mode">Медиана</param>
             <returns>Случайное число с треугольным распределением</returns>
         </member>
         <member name="M:System.RandomExtensions.Mix(System.Random,System.Collections.IList)">
-            <summary>
-              Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
-            </summary>
+            <summary>Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm</summary>
             <param name="rnd"></param>
             <param name = "list"></param>
         </member>
@@ -19560,8 +19916,8 @@
         <member name="T:System.Processor">
             <summary>Класс объектов, выполняющих некоторое циклическое действие в отдельном фоновом потоке</summary>
         </member>
-        <member name="F:System.Processor.__AcyncException">
-            <summary>Объект-ислюкение, передаваемое в качестве параметра события ошибки при рассинхронизации потока процессора</summary>
+        <member name="F:System.Processor.__AsyncException">
+            <summary>Объект-исключение, передаваемое в качестве параметра события ошибки при рассинхронизации потока процессора</summary>
         </member>
         <member name="P:System.Processor.Now">
             <summary>Текущее время системы</summary>
@@ -19571,17 +19927,17 @@
         </member>
         <member name="M:System.Processor.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
             <summary>Вызов события изменения свойства объекта</summary>
-             <param name="e">Параметры события изменения свойства объекта, содержашие имя свойства</param>
+             <param name="e">Параметры события изменения свойства объекта, содержащие имя свойства</param>
         </member>
         <member name="M:System.Processor.OnPropertyChanged(System.String)">
-            <summary>Вызов собйтия изменения свойтсва объекта с указанием имени свойства</summary>
+            <summary>Вызов события изменения свойства объекта с указанием имени свойства</summary>
             <param name="PropertyName">Имя изменившегося свойства</param>
         </member>
         <member name="E:System.Processor.EnableChanged">
             <summary>Событие изменения свойства активности процессора</summary>
         </member>
         <member name="M:System.Processor.OnEnableChanged(System.EventArgs)">
-            <summary>Источник собйтия изменения свойства активности процессора</summary><param name="e">Параметры события</param>
+            <summary>Источник события изменения свойства активности процессора</summary><param name="e">Параметры события</param>
         </member>
         <member name="E:System.Processor.ProcessStarted">
             <summary>Событие запуска процессора</summary>
@@ -19596,7 +19952,7 @@
             <summary>Источник события завершения работы процессора</summary><param name="e">Параметры события</param>
         </member>
         <member name="E:System.Processor.Error">
-            <summary>Событие, вознакающие при возникновении исключений в процессе работы процессора</summary>
+            <summary>Событие, возникающие при возникновении исключений в процессе работы процессора</summary>
         </member>
         <member name="M:System.Processor.OnError(System.ExceptionEventHandlerArgs{System.Exception})">
             <summary>Источник события возникновения исключительной ситуации в процессе работы процессора</summary>
@@ -19633,13 +19989,13 @@
         <member name="F:System.Processor._ActionTimeout">
             <summary>Таймаут выполнения между циклами процессора </summary>
         </member>
-        <member name="F:System.Processor._Set_Timeout">
+        <member name="F:System.Processor._SetTimeout">
             <summary>Метод установки времени таймаута для работающего потока процессора</summary>
         </member>
-        <member name="F:System.Processor._IsSychronus">
+        <member name="F:System.Processor._IsSynchronous">
             <summary>Признак синхронной работы</summary>
         </member>
-        <member name="F:System.Processor._ErrorIfAcync">
+        <member name="F:System.Processor._ErrorIfAsync">
             <summary>Флаг, разрешающий вызов события ошибки в случае рассинхронизации потока</summary>
         </member>
         <member name="F:System.Processor._CyclesCount">
@@ -19648,14 +20004,14 @@
         <member name="F:System.Processor._NameForeNewMainThread">
             <summary>Имя для генерируемой потока выполнения процессора</summary>
         </member>
-        <member name="F:System.Processor._Get_LastDeltaTime">
+        <member name="F:System.Processor._GetLastDeltaTime">
             <summary>Метод извлечения времени выполнения одного цикла основного метода процессора</summary>
         </member>
         <member name="F:System.Processor._StartWaitHandle">
-            <summary>Объект синхрониации потоков по запуску процессора</summary>
+            <summary>Объект синхронизации потоков по запуску процессора</summary>
         </member>
         <member name="F:System.Processor._StopWaitHandle">
-            <summary>Объект синхрониации потоков по остановке процессора</summary>
+            <summary>Объект синхронизации потоков по остановке процессора</summary>
         </member>
         <member name="P:System.Processor.Priority">
             <summary>Приоритет выполнения метода наблюдения</summary>
@@ -19667,7 +20023,7 @@
             <summary>Основной поток работы процессора</summary>
         </member>
         <member name="P:System.Processor.JoinThreadTimeout">
-            <summary>ТАймаут времени синхронизации основного потока процессора с потоком, завершившим его работу.</summary>
+            <summary>Таймаут времени синхронизации основного потока процессора с потоком, завершившим его работу.</summary>
         </member>
         <member name="P:System.Processor.StartTime">
             <summary>Время запуска</summary>
@@ -19679,19 +20035,25 @@
             <summary>Время, прошедшее после запуска</summary>
         </member>
         <member name="P:System.Processor.Monitor">
-            <summary>ОБъект-наблюдатель за состоянием процессора</summary>
+            <summary>Объект-наблюдатель за состоянием процессора</summary>
         </member>
         <member name="P:System.Processor.ActionTimeout">
-            <summary>ТАймаут основной циклической операции в миллисекундах</summary>
+            <summary>Таймаут основной циклической операции в миллисекундах</summary>
         </member>
-        <member name="P:System.Processor.IsSynchronus">
+        <member name="P:System.Processor.IsSynchronous">
             <summary>Признак синхронной работы</summary>
         </member>
         <member name="P:System.Processor.ErrorIfAsync">
-            <summary>ГЕнерировать ошибку в случае рассинхронизации?</summary>
+            <summary>Генерировать ошибку в случае рассинхронизации?</summary>
         </member>
         <member name="P:System.Processor.CyclesCount">
             <summary>Количество пройденных циклов</summary>
+        </member>
+        <member name="M:System.Processor.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Processor"/></summary>
+        </member>
+        <member name="M:System.Processor.Restart">
+            <summary>Перезапуск</summary>
         </member>
         <member name="M:System.Processor.Start">
             <summary>Запуск обработки</summary>
@@ -19703,7 +20065,7 @@
             <summary>Блокировать поток до запуска процессора</summary>
         </member>
         <member name="M:System.Processor.WaitToStop(System.Nullable{System.TimeSpan})">
-            <summary>Блокировать пото до остановки процессора</summary>
+            <summary>Блокировать поток до остановки процессора</summary>
         </member>
         <member name="M:System.Processor.ThreadMethod">
             <summary>Основной метод процессора, выполняемый в отдельном потоке </summary>
@@ -19731,6 +20093,10 @@
         </member>
         <member name="M:System.Processor.Dispose">
             <inheritdoc />
+        </member>
+        <member name="M:System.Processor.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов</summary>
+            <param name="disposing">Признак того, что требуется выполнить освобождение управляемых ресурсов</param>
         </member>
         <member name="T:System.Reflection.Event`2">
             <summary>Событие</summary>
@@ -19844,6 +20210,159 @@
         </member>
         <member name="P:System.StreamingObjectReader`1.RemainingTime">
             <summary>Оставшееся время до окончания обработки</summary>
+        </member>
+        <member name="T:System.StreamWrapper">
+            <summary>Объект с интерфейсом потока байт данных, обеспечивающий слежение за процессами чтения/записи данных</summary>
+        </member>
+        <member name="T:System.StreamWrapper.SeekArgs">
+            <summary>Аргумент события <see cref="E:System.StreamWrapper.OnSeek"/></summary>
+        </member>
+        <member name="P:System.StreamWrapper.SeekArgs.Offset">
+            <summary>Величина заданного смещения в потоке</summary>
+        </member>
+        <member name="P:System.StreamWrapper.SeekArgs.Origin">
+            <summary>Направление смещения в потоке</summary>
+        </member>
+        <member name="P:System.StreamWrapper.SeekArgs.Result">
+            <summary>Результат выполнения смещения в потоке</summary>
+        </member>
+        <member name="M:System.StreamWrapper.SeekArgs.#ctor(System.Int64,System.IO.SeekOrigin,System.Int64)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.StreamWrapper.SeekArgs"/></summary>
+            <param name="Offset">Величина заданного смещения в потоке</param>
+            <param name="Origin">Направление смещения в потоке</param>
+            <param name="Result">Результат выполнения смещения в потоке</param>
+        </member>
+        <member name="T:System.StreamWrapper.SetLengthArgs">
+            <summary>Аргумент события <see cref="E:System.StreamWrapper.OnSetLength"/></summary>
+        </member>
+        <member name="P:System.StreamWrapper.SetLengthArgs.OldLength">
+            <summary>Предыдущая длина потока</summary>
+        </member>
+        <member name="P:System.StreamWrapper.SetLengthArgs.Length">
+            <summary>Установленная длина потока</summary>
+        </member>
+        <member name="M:System.StreamWrapper.SetLengthArgs.#ctor(System.Int64,System.Int64)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.StreamWrapper.SetLengthArgs"/></summary>
+            <param name="OldLength">Предыдущая длина потока</param>
+            <param name="Length">Установленная длина потока</param>
+        </member>
+        <member name="T:System.StreamWrapper.ReadArgs">
+            <summary>Аргумент события <see cref="E:System.StreamWrapper.OnRead"/></summary>
+        </member>
+        <member name="P:System.StreamWrapper.ReadArgs.Buffer">
+            <summary>Прочитанный массив байт</summary>
+        </member>
+        <member name="P:System.StreamWrapper.ReadArgs.Offset">
+            <summary>Смещение в массиве</summary>
+        </member>
+        <member name="P:System.StreamWrapper.ReadArgs.Count">
+            <summary>Число читаемых байт</summary>
+        </member>
+        <member name="P:System.StreamWrapper.ReadArgs.Result">
+            <summary>Число прочитанных байт</summary>
+        </member>
+        <member name="M:System.StreamWrapper.ReadArgs.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.StreamWrapper.ReadArgs"/></summary>
+            <param name="Buffer">Прочитанный массив байт</param>
+            <param name="Offset">Смещение в массиве</param>
+            <param name="Count">Число читаемых байт</param>
+            <param name="Result">Число прочитанных байт</param>
+        </member>
+        <member name="T:System.StreamWrapper.WriteArgs">
+            <summary>Аргумент события <see cref="E:System.StreamWrapper.OnWrite"/></summary>
+        </member>
+        <member name="P:System.StreamWrapper.WriteArgs.Buffer">
+            <summary>Записываемый массив байт</summary>
+        </member>
+        <member name="P:System.StreamWrapper.WriteArgs.Offset">
+            <summary>Смещение в массиве</summary>
+        </member>
+        <member name="P:System.StreamWrapper.WriteArgs.Count">
+            <summary>Число записываемых байт</summary>
+        </member>
+        <member name="M:System.StreamWrapper.WriteArgs.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.StreamWrapper.WriteArgs"/></summary>
+            <param name="Buffer">Записываемый массив байт</param>
+            <param name="Offset">Смещение в массиве</param>
+            <param name="Count">Число записываемых байт</param>
+        </member>
+        <member name="T:System.StreamWrapper.PositionChangedArgs">
+            <summary>Аргумент события <see cref="E:System.StreamWrapper.OnPositionChanged"/></summary>
+        </member>
+        <member name="P:System.StreamWrapper.PositionChangedArgs.OldPosition">
+            <summary>Предыдущее положение в потоке данных</summary>
+        </member>
+        <member name="P:System.StreamWrapper.PositionChangedArgs.NewPosition">
+            <summary>Новое положение в потоке данных</summary>
+        </member>
+        <member name="M:System.StreamWrapper.PositionChangedArgs.#ctor(System.Int64,System.Int64)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.StreamWrapper.PositionChangedArgs"/></summary>
+            <param name="OldPosition">Предыдущее положение в потоке данных</param>
+            <param name="NewPosition">Новое положение в потоке данных</param>
+        </member>
+        <member name="E:System.StreamWrapper.OnFlush">
+            <summary>Событие возникает при вызове метода <see cref="M:System.StreamWrapper.Flush"/></summary>
+        </member>
+        <member name="E:System.StreamWrapper.OnSeek">
+            <summary>Событие возникает при изменении положения считывания/записи</summary>
+        </member>
+        <member name="E:System.StreamWrapper.OnSetLength">
+            <summary>Событие возникает при изменении длины потока</summary>
+        </member>
+        <member name="E:System.StreamWrapper.OnRead">
+            <summary>Событие возникает при чтении данных из потока</summary>
+        </member>
+        <member name="E:System.StreamWrapper.OnWrite">
+            <summary>Событие возникает при записи данных в поток</summary>
+        </member>
+        <member name="E:System.StreamWrapper.OnPositionChanged">
+            <summary>Событие возникает в момент, когда положение чтение/записи в потоке смещается</summary>
+        </member>
+        <member name="E:System.StreamWrapper.OnEndOfStream">
+            <summary>Событие, возникающее когда положение чтение/записи выходит на конец потока</summary>
+        </member>
+        <member name="M:System.StreamWrapper.#ctor(System.IO.Stream)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.StreamWrapper"/></summary>
+            <param name="Source">Поток, доступ к которому требуется контролировать</param>
+        </member>
+        <member name="M:System.StreamWrapper.Flush">
+            <inheritdoc />
+        </member>
+        <member name="M:System.StreamWrapper.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc />
+        </member>
+        <member name="M:System.StreamWrapper.SetLength(System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:System.StreamWrapper.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:System.StreamWrapper.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="P:System.StreamWrapper.CanRead">
+            <summary>Можно ли осуществлять чтение данных из потока (определяется внутренним потоком)</summary>
+        </member>
+        <member name="P:System.StreamWrapper.CanSeek">
+            <summary>Можно ли осуществлять перемещение позиции чтения/записи в потоке (определяется внутренним потоком)</summary>
+        </member>
+        <member name="P:System.StreamWrapper.CanWrite">
+            <summary>Можно ли осуществлять запись данных в поток (определяется внутренним потоком)</summary>
+        </member>
+        <member name="P:System.StreamWrapper.Length">
+            <summary>Длина потока</summary>
+        </member>
+        <member name="P:System.StreamWrapper.Position">
+            <summary>Текущее положение в потоке (при установке значения осуществляется проверка на предмет конца потока)</summary>
+        </member>
+        <member name="P:System.StreamWrapper.EndOfStream">
+            <summary>Признак конца потока</summary>
+        </member>
+        <member name="P:System.StreamWrapper.Progress">
+            <summary>Прогресс</summary>
+        </member>
+        <member name="M:System.StreamWrapper.Dispose(System.Boolean)">
+            <inheritdoc />
         </member>
     </members>
 </doc>
