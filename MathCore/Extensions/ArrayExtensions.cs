@@ -18,6 +18,7 @@ namespace System
             N = array.GetLength(0);
             M = array.GetLength(1);
         }
+
         public static void Deconstruct<T>([NotNull] this T[,,] array, out int N, out int M, out int K)
         {
             N = array.GetLength(0);

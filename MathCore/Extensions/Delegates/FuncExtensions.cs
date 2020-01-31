@@ -143,15 +143,13 @@ namespace System
         /// <exception cref="IndexOutOfRangeException">Если корень не найден за указанное число шагов</exception>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
-        public static Task<double> GetRoot_BisectionMethodAsync
-        (
+        public static Task<double> GetRoot_BisectionMethodAsync(
             [NotNull] this Function f,
             double x1,
             double x2,
             int MaxIterations,
-            double Eps = 1e-5
-        ) =>
-            Task.Factory.StartNew(() => f.GetRoot_BisectionMethod(x1, x2, MaxIterations, Eps));
+            double Eps = 1e-5)
+            => Task.Run(() => f.GetRoot_BisectionMethod(x1, x2, MaxIterations, Eps));
 
         /// <summary> Поиск нуля функции методом Золотого сечения</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -197,7 +195,7 @@ namespace System
         /// <returns>Значение аргумента нуля функции</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
-        public static Task<double> GetRoot_GoldenSectionAsync([NotNull] this Function f, double x1, double x2, double Eps = 1e-5) => f.GetRoot_GoldenSectionAsync(x1, x2, Eps);
+        public static Task<double> GetRoot_GoldenSectionAsync([NotNull] this Function f, double x1, double x2, double Eps = 1e-5) => Task.Run(() => f.GetRoot_GoldenSection(x1, x2, Eps));
 
         /// <summary> Поиск нуля функции методом Троичного деления</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -950,11 +948,20 @@ namespace System
             do yield return f(x += dx); while (x <= x2);
         }
 
+        /// <summary>Дискретизация функции</summary>
+        /// <param name="f">Дискретизируемая функция</param>
+        /// <param name="x1">Начало интервала дискретизации</param>
+        /// <param name="dx">Шаг изменения аргумента</param>
+        /// <param name="SamplesCount">Число формируемых отсчётов</param>
+        /// <typeparam name="T">Тип значения функции</typeparam>
+        /// <returns>Массив значений функции, полученных в результате дискретизации</returns>
+        /// <exception cref="ArgumentNullException">Если передана пустая ссылка на функцию</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Если указано число отсчётов меньше 0, либо если <paramref name="dx"/> равен 0</exception>
         [NotNull]
         public static T[] Sampling<T>([NotNull] this Func<double, T> f, double x1, double dx, int SamplesCount)
         {
             if (f is null) throw new ArgumentNullException(nameof(f));
-            if (SamplesCount < 0) throw new ArgumentOutOfRangeException(nameof(SamplesCount), "Число отсчётов должно быть больше 0");
+            if (SamplesCount < 0) throw new ArgumentOutOfRangeException(nameof(SamplesCount), SamplesCount, "Число отсчётов должно быть больше 0");
             if (dx.Equals(0d)) throw new ArgumentOutOfRangeException(nameof(dx), "Шаг дискретизации не должен быть равен 0");
 
             var result = new T[SamplesCount];
@@ -1822,7 +1829,7 @@ namespace System
 
                 var y11 = converter(v1.Value);
                 var next_node = node.Next;
-                if(next_node is null) break;
+                if (next_node is null) break;
                 var v2 = next_node.Value;
                 var x22 = v2.Argument;
                 var y22 = converter(v2.Value);
