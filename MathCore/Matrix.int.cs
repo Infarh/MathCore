@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 using System.Text;
+using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 namespace MathCore
 {
@@ -22,14 +25,14 @@ namespace MathCore
     /// \/
     /// </remarks>
     [Serializable]
-    public class MatrixInt : ICloneable, IEquatable<MatrixInt>, IIndexable<int, int, int>
+    public class MatrixInt : ICloneable, IEquatable<MatrixInt>
     {
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param>
         /// <returns>Единичная матрица размерности NxN</returns>
-        [DST]
+        [DST, NotNull]
         public static MatrixInt GetUnitaryMatrix(int N)
         {
             var Result = new MatrixInt(N);
@@ -41,10 +44,11 @@ namespace MathCore
         /// <param name="A">Трансвецируемая матрица</param>
         /// <param name="j">Опорный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>
-        public static MatrixInt GetTransvection(MatrixInt A, int j)
+        [NotNull]
+        public static MatrixInt GetTransvection([NotNull] MatrixInt A, int j)
         {
             if (!A.IsSquare)
-                throw new InvalidOperationException("Трансвенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("Трансвекция неквадратной матрицы невозможна");
 
             var result = GetUnitaryMatrix(A.N);
             for (var i = 0; i < A.N; i++)
@@ -75,13 +79,7 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public int this[int i, int j]
-        {
-            [DST]
-            get => _Data[i, j];
-            [DST]
-            set => _Data[i, j] = value;
-        }
+        public ref int this[int i, int j] { [DST] get => ref _Data[i, j]; }
 
         /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
@@ -177,7 +175,7 @@ namespace MathCore
         }
 
         [DST]
-        public MatrixInt(int[,] Data)
+        public MatrixInt([NotNull] int[,] Data)
             : this(Data.GetLength(0), Data.GetLength(1))
         {
             for (var i = 0; i < _N; i++)
@@ -186,7 +184,7 @@ namespace MathCore
         }
 
         [DST]
-        public MatrixInt(IList<int> DataRow)
+        public MatrixInt([NotNull] IList<int> DataRow)
             : this(DataRow.Count, 1)
         {
             for (var i = 0; i < _N; i++)
@@ -195,7 +193,8 @@ namespace MathCore
 
         public MatrixInt(IEnumerable<IEnumerable<int>> Items) : this(GetElements(Items)) { }
 
-        private static int[,] GetElements(IEnumerable<IEnumerable<int>> Items)
+        [NotNull]
+        private static int[,] GetElements([NotNull] IEnumerable<IEnumerable<int>> Items)
         {
             var cols = Items.Select(col => col.ToListFast()).ToList();
             var cols_count = cols.Count;
@@ -215,7 +214,7 @@ namespace MathCore
         /// <summary>Получить столбец матрицы</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы номер j</returns>
-        [DST]
+        [DST, NotNull]
         public MatrixInt GetCol(int j)
         {
             var a = new MatrixInt(N, 1);
@@ -226,7 +225,7 @@ namespace MathCore
         /// <summary>Получить строку матрицы</summary>
         /// <param name="i">Номер строки</param>
         /// <returns>Строка матрицы номер i</returns>
-        [DST]
+        [DST, NotNull]
         public MatrixInt GetRow(int i)
         {
             var a = new MatrixInt(1, M);
@@ -236,6 +235,7 @@ namespace MathCore
 
         /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <returns></returns>
+        [NotNull]
         public MatrixInt GetTriangle()
         {
             var result = (MatrixInt)Clone();
@@ -273,7 +273,7 @@ namespace MathCore
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST]
+        [DST, NotNull]
         public MatrixInt GetTranspose()
         {
             var Result = new MatrixInt(M, N);
@@ -289,12 +289,14 @@ namespace MathCore
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
+        [NotNull]
         public MatrixInt GetAdjunct(int n, int m) => ((n + m) % 2 == 0 ? 1 : -1) * GetMinor(n, m).GetDeterminant();
 
         /// <summary>Минор матрицы по определённому элементу</summary>
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Минор элемента матрицы [n,m]</returns>
+        [NotNull]
         public MatrixInt GetMinor(int n, int m)
         {
             var result = new MatrixInt(N - 1, M - 1);
@@ -501,6 +503,7 @@ namespace MathCore
         //        P.SwapRows(i, lv_Indexes[i]);
         //}
 
+        [NotNull]
         private static int[,] Identity(int n)
         {
             var temp = new int[n, n];
@@ -511,14 +514,15 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST]
-        public override string ToString() => $"MatrixInt[{N}x{M}]";
+        /// <inheritdoc />
+        [DST, NotNull]  public override string ToString() => $"MatrixInt[{N}x{M}]";
 
         [DST]
         public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
 
         //[DST] public string ToStringFormat(char Splitter) { return ToStringFormat(Splitter, "r"); }
 
+        [NotNull]
         public string ToStringFormat(char Splitter = '\t', string Format = "r")
         {
             var result = new StringBuilder();
@@ -551,12 +555,12 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==(MatrixInt A, MatrixInt B) => A is null && (B is null) || A is { } && B is { } && A.Equals(B);
+        public static bool operator ==([CanBeNull] MatrixInt A, [CanBeNull] MatrixInt B) => A is null && (B is null) || A is { } && B is { } && A.Equals(B);
 
-        public static bool operator !=(MatrixInt A, MatrixInt B) => !(A == B);
+        public static bool operator !=([CanBeNull] MatrixInt A, [CanBeNull] MatrixInt B) => !(A == B);
 
-        [DST]
-        public static MatrixInt operator +(MatrixInt M, int x)
+        [DST, NotNull]
+        public static MatrixInt operator +([NotNull] MatrixInt M, int x)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -565,8 +569,8 @@ namespace MathCore
             return result;
         }
 
-        [DST]
-        public static MatrixInt operator +(int x, MatrixInt M)
+        [DST, NotNull]
+        public static MatrixInt operator +(int x, [NotNull] MatrixInt M)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -575,8 +579,8 @@ namespace MathCore
             return result;
         }
 
-        [DST]
-        public static MatrixInt operator -(MatrixInt M, int x)
+        [DST, NotNull]
+        public static MatrixInt operator -([NotNull] MatrixInt M, int x)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -585,8 +589,8 @@ namespace MathCore
             return result;
         }
 
-        [DST]
-        public static MatrixInt operator -(int x, MatrixInt M)
+        [DST, NotNull]
+        public static MatrixInt operator -(int x, [NotNull] MatrixInt M)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -595,8 +599,8 @@ namespace MathCore
             return result;
         }
 
-        [DST]
-        public static MatrixInt operator *(MatrixInt M, int x)
+        [DST, NotNull]
+        public static MatrixInt operator *([NotNull] MatrixInt M, int x)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -605,8 +609,8 @@ namespace MathCore
             return result;
         }
 
-        [DST]
-        public static MatrixInt operator *(int x, MatrixInt M)
+        [DST, NotNull]
+        public static MatrixInt operator *(int x, [NotNull] MatrixInt M)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -627,8 +631,8 @@ namespace MathCore
         [DST]
         public static MatrixInt operator *(MatrixInt A, int[,] B) => A * (MatrixInt)B;
 
-        [DST]
-        public static MatrixInt operator /(MatrixInt M, int x)
+        [DST, NotNull]
+        public static MatrixInt operator /([NotNull] MatrixInt M, int x)
         {
             var result = new MatrixInt(M.N, M.M);
             for (var i = 0; i < M.N; i++)
@@ -637,6 +641,7 @@ namespace MathCore
             return result;
         }
 
+        [NotNull]
         public static MatrixInt operator /(int x, MatrixInt M)
         {
             M = M.GetInverse();
@@ -651,8 +656,8 @@ namespace MathCore
         /// <param name="A">Первое слагаемое</param>
         /// <param name="B">Второе слагаемое</param>
         /// <returns>Сумма двух матриц</returns>
-        [DST]
-        public static MatrixInt operator +(MatrixInt A, MatrixInt B)
+        [DST, NotNull]
+        public static MatrixInt operator +([NotNull] MatrixInt A, [NotNull] MatrixInt B)
         {
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
@@ -670,8 +675,8 @@ namespace MathCore
         /// <param name="A">Уменьшаемое</param>
         /// <param name="B">Вычитаемое</param>
         /// <returns>Разность двух матриц</returns>
-        [DST]
-        public static MatrixInt operator -(MatrixInt A, MatrixInt B)
+        [DST, NotNull]
+        public static MatrixInt operator -([NotNull] MatrixInt A, [NotNull] MatrixInt B)
         {
             if (A.N != B.N || A.M != B.M)
                 throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
@@ -689,8 +694,8 @@ namespace MathCore
         /// <param name="A">Первый сомножитель</param>
         /// <param name="B">Второй сомножитель</param>
         /// <returns>Произведение двух матриц</returns>
-        [DST]
-        public static MatrixInt operator *(MatrixInt A, MatrixInt B)
+        [DST, NotNull]
+        public static MatrixInt operator *([NotNull] MatrixInt A, [NotNull] MatrixInt B)
         {
             if (A.M != B.N)
                 throw new ArgumentOutOfRangeException(nameof(B), "Матрицы несогласованных порядков.");
@@ -709,7 +714,8 @@ namespace MathCore
         /// <param name="A">Делимое</param>
         /// <param name="B">Делитель</param>
         /// <returns>Частное двух матриц</returns>
-        public static MatrixInt operator /(MatrixInt A, MatrixInt B)
+        [NotNull]
+        public static MatrixInt operator /([NotNull] MatrixInt A, MatrixInt B)
         {
             B = B.GetInverse();
             if (A.M != B.N)
@@ -729,7 +735,8 @@ namespace MathCore
         /// <param name="A">Первое слагаемое</param>
         /// <param name="B">Второе слагаемое</param>
         /// <returns>Объединённая матрица</returns>
-        public static MatrixInt operator |(MatrixInt A, MatrixInt B)
+        [NotNull]
+        public static MatrixInt operator |([NotNull] MatrixInt A, [NotNull] MatrixInt B)
         {
             MatrixInt result;
             if (A.M == B.M) // Конкатенация по строкам
@@ -767,40 +774,40 @@ namespace MathCore
 
         /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
-        [DST]
+        [DST, NotNull]
         public static implicit operator MatrixInt(int X) => new MatrixInt(1, 1) { [0, 0] = X };
 
-        [DST]
-        public static explicit operator int[,](MatrixInt M) => (int[,])M._Data.Clone();
+        [DST, NotNull]  public static explicit operator int[,]([NotNull] MatrixInt M) => (int[,])M._Data.Clone();
 
-        [DST]
-        public static explicit operator MatrixInt(int[,] Data) => new MatrixInt(Data);
+        [DST, NotNull]  public static explicit operator MatrixInt([NotNull] int[,] Data) => new MatrixInt(Data);
 
-        [DST]
-        public static explicit operator MatrixInt(int[] Data) => new MatrixInt(Data);
+        [DST, NotNull]  public static explicit operator MatrixInt([NotNull] int[] Data) => new MatrixInt(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 
         #region IEquatable<MatrixInt> Members
 
-        public bool Equals(MatrixInt other) =>
+        public bool Equals([CanBeNull] MatrixInt other) =>
             other is { }
             && (ReferenceEquals(this, other)
                 || other._N == _N
                 && other._M == _M
                 && Equals(other._Data, _Data));
 
+        /// <inheritdoc />
         [DST]
         bool IEquatable<MatrixInt>.Equals(MatrixInt other) => Equals(other);
 
         #endregion
 
+        /// <inheritdoc />
         public override bool Equals(object obj) =>
             obj is { }
             && (ReferenceEquals(this, obj)
                 || obj.GetType() == typeof(MatrixInt)
                 && Equals((MatrixInt)obj));
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {

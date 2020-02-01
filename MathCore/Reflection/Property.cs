@@ -7,6 +7,7 @@ using MathCore.Values;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Reflection
@@ -18,9 +19,12 @@ namespace System.Reflection
     {
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <summary>Событие возникает если свойство <see cref="Value"/> изменило своё значение</summary>
         public event EventHandler ValueChanged;
 
-        protected virtual void OnValueChanged(EventArgs E) => ValueChanged.Start(this, EventArgs.Empty);
+        /// <summary>Генерация события <see cref="ValueChanged"/></summary>
+        /// <param name="E">Аргумент события</param>
+        protected virtual void OnValueChanged([CanBeNull] EventArgs E = null) => ValueChanged.Start(this, E ?? EventArgs.Empty);
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -45,25 +49,13 @@ namespace System.Reflection
         public Type PropertyType => _PropertyInfo.PropertyType;
 
         ///<summary>Имя свойства</summary>
-        public string Name
-        {
-            get => _Name;
-            set => Initialize(_Object, value, _Private);
-        }
+        public string Name { get => _Name; set => Initialize(_Object, value, _Private); }
 
         ///<summary>Объект, определяющий свойство</summary>
-        public TObject Object
-        {
-            get => _Object;
-            set => Initialize(value, _Name, _Private);
-        }
+        public TObject Object { get => _Object; set => Initialize(value, _Name, _Private); }
 
         ///<summary>Признак - является ли свойство приватным</summary>
-        public bool Private
-        {
-            get => _Private;
-            set => Initialize(_Object, _Name, _Private = value);
-        }
+        public bool Private { get => _Private; set => Initialize(_Object, _Name, _Private = value); }
 
         ///<summary>Признак </summary>
         public bool IsExist => _PropertyInfo != null;
@@ -77,9 +69,7 @@ namespace System.Reflection
         /// <summary>Признак возможности устанавливать значение</summary>
         public bool CanWrite => _PropertyInfo != null && _PropertyInfo.CanWrite;
 
-        /// <summary>
-        /// Поддерживает генерацию событий изменения значения
-        /// </summary>
+        /// <summary>Поддерживает генерацию событий изменения значения</summary>
         public bool SupportsChangeEvents => _Descriptor != null && _Descriptor.SupportsChangeEvents;
 
         ///<summary>Атрибуты свойства</summary>
@@ -88,9 +78,11 @@ namespace System.Reflection
         /// <summary>Дескриптор свойства объекта</summary>
         public PropertyDescriptor Descriptor => _Descriptor;
 
+        /// <summary>Значение <see cref="DisplayNameAttribute.DisplayName"/></summary>
         public string DisplayName { get; private set; }
 
-        public string DescriptionAttribute { get; private set; }
+        /// <summary>Значение <see cref="DescriptionAttribute.Description"/></summary>
+        public string Description { get; private set; }
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -107,9 +99,13 @@ namespace System.Reflection
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <summary>Инициализация данных о свойстве</summary>
+        /// <param name="o">Объект, свойство которого требуется контролировать</param>
+        /// <param name="PropertyName">Имя запрашиваемого свойства</param>
+        /// <param name="IsPrivate">Искать непубличные свойства</param>
         private void Initialize([CanBeNull] TObject o, [NotNull] string PropertyName, bool IsPrivate)
         {
-            if(_Descriptor != null
+            if (_Descriptor != null
                 && _Object is { }
                 && !ReferenceEquals(o, _Object)
                 && _Name != PropertyName)
@@ -122,7 +118,7 @@ namespace System.Reflection
             _Descriptor = _Object != null
                 ? TypeDescriptor.GetProperties(_Object).Find(PropertyName, true)
                 : TypeDescriptor.GetProperties(typeof(TObject)).Find(PropertyName, true);
-            if(_Descriptor != null && _Object is { } && _Descriptor.SupportsChangeEvents)
+            if (_Descriptor != null && _Object is { } && _Descriptor.SupportsChangeEvents)
                 _Descriptor.AddValueChanged(_Object, PropertyValueChanged);
 
 
@@ -130,7 +126,7 @@ namespace System.Reflection
             _SetMethod = SetValue;
 
             var type = typeof(TObject);
-            if(type == typeof(object) && o is { })
+            if (type == typeof(object) && o is { })
                 type = o.GetType();
 
             var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
@@ -138,7 +134,7 @@ namespace System.Reflection
 
             _PropertyInfo = type.GetProperty(PropertyName, IsStatic | IsPublic);
 
-            if(_PropertyInfo is null)
+            if (_PropertyInfo is null)
             {
                 var get_method = new Method<TObject, TValue>(o, $"get_{PropertyName}", IsPrivate);
                 var set_method = new Method<TObject, object>(o, $"set_{PropertyName}", IsPrivate);
@@ -147,39 +143,42 @@ namespace System.Reflection
                 _SetMethod = value => set_method.Invoke(value);
             }
 
-            if(!(o is ISynchronizeInvoke)) return;
+            if (!(o is ISynchronizeInvoke)) return;
 
             var obj = (ISynchronizeInvoke)o;
             _GetMethod = () => (TValue)obj.Invoke(_GetMethod, null);
             _SetMethod = value => obj.Invoke(_SetMethod, new object[] { value });
 
+            Description = _PropertyInfo?.GetCustomAttribute<DescriptionAttribute>()?.Description;
+            DisplayName = _PropertyInfo?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? _PropertyInfo?.Name;
         }
 
-        private void LoadAttributes()
-        {
-            var description_attributes = _PropertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if(description_attributes.Length > 0)
-                DescriptionAttribute = ((DescriptionAttribute)description_attributes[0]).Description;
+        //private void LoadAttributes()
+        //{
+        //    var description_attributes = _PropertyInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+        //    if(description_attributes.Length > 0)
+        //        DescriptionAttribute = ((DescriptionAttribute)description_attributes[0]).Description;
 
-            var name_attributes = _PropertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
-            DisplayName = name_attributes.Length > 0 ? ((DisplayNameAttribute)name_attributes[0]).DisplayName : Name;
-        }
+        //    var name_attributes = _PropertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
+        //    DisplayName = name_attributes.Length > 0 ? ((DisplayNameAttribute)name_attributes[0]).DisplayName : Name;
+        //}
 
         private void PropertyValueChanged(object Sender, EventArgs Args) => OnValueChanged(EventArgs.Empty);
 
-        private void SetValue(TValue value) { if(CanWrite) _PropertyInfo.SetValue(_Object, value, null); }
+        private void SetValue(TValue value) { if (CanWrite) _PropertyInfo.SetValue(_Object, value, null); }
 
         [CanBeNull]
         private TValue GetValue() => CanRead ? (TValue)_PropertyInfo.GetValue(_Object, null) : default;
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <inheritdoc />
         [NotNull]
         public override string ToString()
         {
             var property_type = _Object is null ? "Static property" : "Property";
 
-            if(_PropertyInfo is null)
+            if (_PropertyInfo is null)
                 return $"Incorrect {property_type.ToLower()} of {typeof(TObject)} name {_Name}";
 
             var value = CanRead ? $" = {Value}" : string.Empty;

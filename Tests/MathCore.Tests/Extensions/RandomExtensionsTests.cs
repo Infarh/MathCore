@@ -18,7 +18,7 @@ namespace MathCore.Tests.Extensions
             var values = new double[count];
 
             //var seed = (int) (DateTime.Now.Ticks % int.MaxValue);
-            int seed = 1395601201;
+            const int seed = 1395601201;
             var rnd = new Random(seed);
             for (var i = 0; i < count; i++) 
                 values[i] = rnd.NextNormal(sigma, mu);

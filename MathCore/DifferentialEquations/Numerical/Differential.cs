@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.DifferentialEquations.Numerical
 {
@@ -7,11 +8,9 @@ namespace MathCore.DifferentialEquations.Numerical
     {
         public static class Differential
         {
-            static Differential() => __MethodsCount = diff_b.Length;
-
-            private static readonly int __MethodsCount;
-
             internal static readonly int[] diff_b = { 1, 2, 6, 12, 60 };
+
+            private static readonly int __MethodsCount = diff_b.Length;
 
             internal static readonly int[,] diff_a = {
                 {-1, 1, 0, 0, 0, 0},
@@ -45,7 +44,7 @@ namespace MathCore.DifferentialEquations.Numerical
                     for(var i = 0; i < N; i++)
                     {
                         var y = 0d;
-                        for(var j = 0; j < a_len && (i + j) < N; j++)
+                        for(var j = 0; j < a_len && i + j < N; j++)
                             y += a[j] * X[i + j];
                         Y[i] = y / b;
                     }
@@ -63,7 +62,7 @@ namespace MathCore.DifferentialEquations.Numerical
                     var b = diff_b[n];
 
                     var y = 0d;
-                    for(var j = 0; j < a_len && (i + j) < N; j++)
+                    for(var j = 0; j < a_len && i + j < N; j++)
                         y += a[j] * X[i + j];
                     Y[i] = y / b;
                 }

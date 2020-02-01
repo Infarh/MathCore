@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MathCore.Annotations;
-using MathCore.Monades.WorkFlow;
+using MathCore.Monads.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.Monades.WorkFlow

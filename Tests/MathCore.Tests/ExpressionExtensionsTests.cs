@@ -61,8 +61,8 @@ namespace MathCore.Tests
         public void TestComplexPolynomial()
         {
             Expression<Func<double, double>> original_expression =
-                t => (1 - t) * (1 - t) * (1 - t) * (-50) +
-                        3 * (1 - t) * (1 - t) * t * (-25) +
+                t => (1 - t) * (1 - t) * (1 - t) * -50 +
+                        3 * (1 - t) * (1 - t) * t * -25 +
                         3 * (1 - t) * t * t * 25 +
                         t * t * t * 50;
 

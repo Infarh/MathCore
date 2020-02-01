@@ -5,15 +5,15 @@ namespace MathCore.Evaluations
     /// <summary>Вычисление значения поля объекта</summary>
     /// <typeparam name="TObject">Тип объекта, поле которого надо получить</typeparam>
     /// <typeparam name="TValue">Тип значения поля</typeparam>
-    public class FieldValueEvulation<TObject, TValue> : UnaryOperatorEvulation<TObject, TValue>
+    public class FieldValueEvaluation<TObject, TValue> : UnaryOperatorEvaluation<TObject, TValue>
     {
         /// <summary>Инициализация нового вычисления значения поля объекта</summary>
         /// <param name="PropertyName">Имя поля</param>
-        public FieldValueEvulation(string PropertyName) : base(e => Ex.Field(e, PropertyName)) { }
+        public FieldValueEvaluation(string PropertyName) : base(e => Ex.Field(e, PropertyName)) { }
 
         /// <summary>Инициализация нового вычисления поля объекта</summary>
         /// <param name="obj">Вычисление объекта, поле которого надо получить</param>
         /// <param name="FieldName">Имя поля объекта</param>
-        public FieldValueEvulation(Evulation<TObject> obj, string FieldName) : base(e => Ex.Field(e, FieldName), obj) { }
+        public FieldValueEvaluation(Evulation<TObject> obj, string FieldName) : base(e => Ex.Field(e, FieldName), obj) { }
     }
 }

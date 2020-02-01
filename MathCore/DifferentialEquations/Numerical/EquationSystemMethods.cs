@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using MathCore.Annotations;
 using MathCore.Vectors;
@@ -14,7 +15,7 @@ namespace MathCore.DifferentialEquations.Numerical
 
     public static class EquationSystemMethods
     {
-        public struct SystemResultItem<TValue>
+        public readonly struct SystemResultItem<TValue> : IEquatable<SystemResultItem<TValue>>
         {
             public readonly double x;
             public readonly ReadOnlyCollection<TValue> y;
@@ -25,7 +26,26 @@ namespace MathCore.DifferentialEquations.Numerical
                 this.y = new ReadOnlyCollection<TValue>(y);
             }
 
+            /// <inheritdoc />
             [NotNull] public override string ToString() => $"{x}:{{{string.Join(",", y)}}}";
+
+            /// <inheritdoc />
+            public bool Equals(SystemResultItem<TValue> other) => x.Equals(other.x) && Equals(y, other.y);
+
+            /// <inheritdoc />
+            public override bool Equals(object obj) => obj is SystemResultItem<TValue> other && Equals(other);
+
+            /// <inheritdoc />
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (x.GetHashCode() * 397) ^ (y != null ? y.GetHashCode() : 0);
+                }
+            }
+
+            public static bool operator ==(SystemResultItem<TValue> left, SystemResultItem<TValue> right) => left.Equals(right);
+            public static bool operator !=(SystemResultItem<TValue> left, SystemResultItem<TValue> right) => !left.Equals(right);
         }
 
         [NotNull]

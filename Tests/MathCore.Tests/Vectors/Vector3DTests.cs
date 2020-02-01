@@ -299,7 +299,7 @@ namespace MathCore.Tests.Vectors
                 "\r\nx.AngleXOY = {2}·π - {3}" +
                 "\r\nx.AngleXOY = {4}·π - {5}" +
                 "\r\ny.AngleXOY - x.AngleXOY = {6}·π",
-                Abs((y.AngleXOY - x.AngleXOY) - angle),
+                Abs(y.AngleXOY - x.AngleXOY - angle),
                 angle / Consts.pi,
                 x.AngleXOY / pi, x,
                 y.AngleXOY / pi, y,

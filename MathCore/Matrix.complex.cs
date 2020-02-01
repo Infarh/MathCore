@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
+
 using MathCore.Annotations;
+
 using static MathCore.MatrixComplex.Array.Operator;
+
+using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ExceptionNotThrown
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
@@ -30,7 +33,7 @@ namespace MathCore
     /// </remarks>
     [Serializable]
     public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Complex[,]>, IFormattable,
-        IEquatable<MatrixComplex>, IEquatable<Complex[,]>, IIndexable<int, int, Complex>
+        IEquatable<MatrixComplex>, IEquatable<Complex[,]>
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -58,11 +61,13 @@ namespace MathCore
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         [DST]
+        [NotNull]
         public static MatrixComplex GetUnitaryMatrix(int N) => new MatrixComplex(Array.GetUnitaryArrayMatrix(N));
 
         /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
-        /// <returns>Трансвекция матрицы А</returns>                    
-        public static MatrixComplex GetTransvection(MatrixComplex A, int j) => new MatrixComplex(Array.GetTransvection(A._Data, j));
+        /// <returns>Трансвекция матрицы А</returns>
+        [NotNull]
+        public static MatrixComplex GetTransvection([NotNull] MatrixComplex A, int j) => new MatrixComplex(Array.GetTransvection(A._Data, j));
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -87,7 +92,7 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public Complex this[int i, int j] { [DST] get => _Data[i, j]; [DST] set => _Data[i, j] = value; }
+        public ref Complex this[int i, int j] { [DST] get => ref _Data[i, j]; }
 
         /// <summary>Вектор-столбец</summary><param name="j">Номер столбца</param><returns>Столбец матрицы</returns>
         [NotNull] public MatrixComplex this[int j] => GetCol(j);
@@ -105,6 +110,7 @@ namespace MathCore
         public bool IsScalar => _N == 1 && _M == 1;
 
         /// <summary>Транспонированная матрица</summary>
+        [NotNull]
         public MatrixComplex T => GetTranspose();
 
         /// <summary>Максимум среди абсолютных сумм элементов строк</summary>
@@ -256,7 +262,7 @@ namespace MathCore
         /// <param name="P">Матрица перестановок</param>
         /// <returns>Обратная матрица</returns>
         [NotNull]
-        public MatrixComplex GetInverse(out MatrixComplex P)
+        public MatrixComplex GetInverse([NotNull] out MatrixComplex P)
         {
             var inverse = new MatrixComplex(Array.Inverse(_Data, out var p));
             P = new MatrixComplex(p);
@@ -293,9 +299,9 @@ namespace MathCore
             if (!IsSquare) throw new InvalidOperationException("Невозможно осуществить LU-разложение неквадратной матрицы");
 
             var decomposition_success = Array.GetLUPDecomposition(_Data, out var l, out var u, out var p, out var d);
-            L = decomposition_success ? new MatrixComplex(l) : null;
-            U = decomposition_success ? new MatrixComplex(u) : null;
-            P = decomposition_success ? new MatrixComplex(p) : null;
+            L = decomposition_success ? new MatrixComplex(l ?? throw new InvalidOperationException("Отсутствует ссылка на массив матрицы l")) : null;
+            U = decomposition_success ? new MatrixComplex(u ?? throw new InvalidOperationException("Отсутствует ссылка на массив матрицы u")) : null;
+            P = decomposition_success ? new MatrixComplex(p ?? throw new InvalidOperationException("Отсутствует ссылка на массив матрицы p")) : null;
             D = decomposition_success ? d : 0;
             return decomposition_success;
         }
@@ -307,7 +313,9 @@ namespace MathCore
         /* -------------------------------------------------------------------------------------------- */
 
         /// <inheritdoc/>
-        [DST] public override string ToString() => $"MatrixComplex[{_N}x{_M}]";
+        [DST]
+        [NotNull]
+        public override string ToString() => $"MatrixComplex[{_N}x{_M}]";
 
         /// <summary>Преобразование матрицы в строку с форматированием</summary>
         /// <param name="Format">Строка формата вывода чисел</param>
@@ -427,7 +435,7 @@ namespace MathCore
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull] public static implicit operator MatrixComplex(Complex X) => new MatrixComplex(1, 1) { [0, 0] = X };
 
-        [DST, NotNull] public static explicit operator Complex[,] ([NotNull] MatrixComplex M) => M._Data;
+        [DST, NotNull] public static explicit operator Complex[,]([NotNull] MatrixComplex M) => M._Data;
 
         [DST, NotNull] public static explicit operator MatrixComplex([NotNull] Complex[,] Data) => new MatrixComplex(Data);
 

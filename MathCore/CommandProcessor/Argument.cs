@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -10,13 +11,13 @@ using MathCore.Annotations;
 namespace MathCore.CommandProcessor
 {
     /// <summary>Аргумент команды</summary>
-    public struct Argument
+    public readonly struct Argument: IEquatable<Argument>
     {
         /// <summary>Имя аргумента</summary>
-        public string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>Значения аргумента</summary>
-        private string[] _Values;
+        private readonly string[] _Values;
 
         /// <summary>Значения аргумента</summary>
         public IReadOnlyList<string> Values => _Values;
@@ -30,7 +31,7 @@ namespace MathCore.CommandProcessor
         /// <summary>Доступ к значениям аргумента по номеру</summary>
         /// <param name="i">Номер значения</param>
         /// <returns>Значение аргумента с указанным номером</returns>
-        public string this[int i] => _Values[i];
+        public ref string this[int i] => ref _Values[i];
 
         /// <summary>Аргумент команды</summary>
         /// <param name="ArgStr">Строковое описание аргумента</param>
@@ -62,11 +63,13 @@ namespace MathCore.CommandProcessor
                 value = ValueAs<T>();
                 return true;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
                 value = default;
                 return false;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         /// <summary>Попытаться получить значение аргумента команды в указанном типе <typeparamref name="T"/></summary>
@@ -82,17 +85,42 @@ namespace MathCore.CommandProcessor
                 Error = null;
                 return true;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception error)
             {
                 value = default;
                 Error = error;
                 return false;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление аргумента</returns>
         [NotNull]
         public override string ToString() => $"{Name}{(_Values is null || _Values.Length == 0 ? string.Empty : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
+
+        /// <inheritdoc />
+        public bool Equals(Argument other) => Equals(_Values, other._Values) && Name == other.Name;
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) => obj is Argument other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_Values != null ? _Values.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+            }
+        }
+
+        /// <summary>Оператор, проверяющий равенство между двумя экземплярами <see cref="Argument"/></summary>
+        /// <returns>Истина, если все поля экземпляров равны между собой</returns>
+        public static bool operator ==(Argument left, Argument right) => left.Equals(right);
+
+        /// <summary>Оператор, проверяющий неравенство между двумя экземплярами <see cref="Argument"/></summary>
+        /// <returns>Истина, если хотя бы одно поле у экземпляров отличается</returns>
+        public static bool operator !=(Argument left, Argument right) => !left.Equals(right);
     }
 }

@@ -1,39 +1,44 @@
 ﻿using System;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.Vectors
 {
     public class VectorND<T>
     {
-        private readonly VectorND<T>[] _Demention;
+        private readonly VectorND<T>[] _Dimensions;
 
-        public VectorND<T> this[int i] => _Demention[i];
+        public ref readonly VectorND<T> this[int i] => ref _Dimensions[i];
 
         public T[] Values { get; }
 
-        public bool IsFinite => _Demention is null;
+        public bool IsFinite => _Dimensions is null;
 
-        public VectorND(int[] Dementions) : this(Dementions, 0) { }
+        public VectorND([NotNull] int[] Dimensions) : this(Dimensions, 0) { }
 
-        private VectorND(int[] Dementions, int i)
+        private VectorND([NotNull] int[] Dimensions, int i)
         {
-            if(Dementions is null) throw new ArgumentNullException(nameof(Dementions));
-            if(i + 1 > Dementions.Length) 
+            if(Dimensions is null) throw new ArgumentNullException(nameof(Dimensions));
+            if(i + 1 > Dimensions.Length) 
                 throw new ArgumentOutOfRangeException(nameof(i), "Запрашиваемый индекс оси превышает указанную размерность");
 
-            if(i + 1 == Dementions.Length)
+            if(i + 1 == Dimensions.Length)
             {
-                _Demention = null;
-                Values = new T[Dementions[i]];
+                _Dimensions = null;
+                Values = new T[Dimensions[i]];
                 return;
             }
 
-            var lenght = Dementions[i];
-            if(lenght < 1)
-                throw new ArgumentOutOfRangeException(nameof(Dementions), $"Размер по оси {i} не может быть меньше 1"); 
+            var length = Dimensions[i];
+            if(length < 1)
+                throw new ArgumentOutOfRangeException(nameof(Dimensions), $"Размер по оси {i} не может быть меньше 1"); 
 
-            _Demention = new VectorND<T>[lenght];
-            for(var j = 0; j < lenght; j++)
-                _Demention[j] = new VectorND<T>(Dementions, i);
+            _Dimensions = new VectorND<T>[length];
+            for(var j = 0; j < length; j++)
+                _Dimensions[j] = new VectorND<T>(Dimensions, i);
         }
     }
 }

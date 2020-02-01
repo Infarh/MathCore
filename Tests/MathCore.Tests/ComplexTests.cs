@@ -27,16 +27,16 @@ namespace MathCore.Tests
 
         private static Complex Rnd => new Complex(Random, Random);
 
-        private static int GetRNDInt(int Min = 5, int Max = 15) => __RndGenerator.Next(Min, Max);
+        //private static int GetRNDInt(int Min = 5, int Max = 15) => __RndGenerator.Next(Min, Max);
 
-        private static double GetRNDDouble(double Min = -20, double Max = 20)
-        {
-            var delta = Max - Min;
-            return delta * __RndGenerator.NextDouble() - Min;
-        }
+        //private static double GetRNDDouble(double Min = -20, double Max = 20)
+        //{
+        //    var delta = Max - Min;
+        //    return delta * __RndGenerator.NextDouble() - Min;
+        //}
 
-        [NotNull]
-        private static double[] GetRandomVector(int Length = 0) => new double[Length == 0 ? GetRNDInt() : Length].Initialize(i => GetRNDDouble());
+        //[NotNull]
+        //private static double[] GetRandomVector(int Length = 0) => new double[Length == 0 ? GetRNDInt() : Length].Initialize(i => GetRNDDouble());
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -726,6 +726,7 @@ namespace MathCore.Tests
 
         /// <summary>Тестирование статического свойства класса комплексных чисел "Мнимая единица"</summary>
         [TestMethod, Priority(1), Description("Тестирование статического свойства класса комплексных чисел \"Мнимая единица\"")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification = "<Ожидание>")]
         public void iTest()
         {
             Assert.AreEqual(1, Complex.i.Im, "Мнимая часть комплексного числа 0+i не равно 1");

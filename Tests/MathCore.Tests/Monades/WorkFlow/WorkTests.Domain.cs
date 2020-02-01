@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MathCore.Monades.WorkFlow;
+using MathCore.Monads.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;

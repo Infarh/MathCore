@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
-using MathCore.Values;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -142,7 +141,7 @@ namespace MathCore.MathParser
 
         /// <summary>Множество запрещённых символов</summary>
         [NotNull]
-        private readonly SetOf<char> _ExcludeCharsSet = new SetOf<char>(" \r\n");
+        private readonly HashSet<char> _ExcludeCharsSet = new HashSet<char>(" \r\n");
 
         /// <summary>Словарь констант</summary>
         [NotNull]
@@ -150,7 +149,7 @@ namespace MathCore.MathParser
 
         /// <summary>Множество запрещённых символов</summary>
         [NotNull]
-        public SetOf<char> ExcludeCharsSet => _ExcludeCharsSet;
+        public HashSet<char> ExcludeCharsSet => _ExcludeCharsSet;
 
         /// <summary>Разделитель выражений (по умолчанию ';')</summary>
         public char ExpressionSeparator { get; set; }
@@ -187,7 +186,7 @@ namespace MathCore.MathParser
         /// <summary>Предварительная обработка входного строкового выражения</summary>
         /// <param name="Str">Обрабатываемая строка</param>
         // Удаление из строки всех символов, из множества запрещённых символов
-        protected virtual void StrPreprocessing([NotNull] ref string Str) => Str = new string(Str.Where(_ExcludeCharsSet.NotContains).ToArray());
+        protected virtual void StrPreprocessing([NotNull] ref string Str) => Str = new string(Str.WhereNot(_ExcludeCharsSet.Contains).ToArray());
 
         /// <summary>Разобрать строку математического выражения</summary>
         /// <param name="StrExpression">Строковое представление математического выражения</param>
@@ -495,9 +494,9 @@ namespace MathCore.MathParser
                                 else // если оператор в корне дерева имеет меньший приоритет, чем приоритет текущего оператора
                                 //  то вставить текущий оператор в правое поддерево родителя предыдущего оператора
                                     throw new NotImplementedException("!!!");
-                                //var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
-                                //parent_operator.Right = Node; // У предыдущего оператора в правое поддерево внести текущий оператор
-                                //operator_node.Left = right;   // В левое поддерево текущего оператора внести сохранённое правое поддерево
+                            //var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
+                            //parent_operator.Right = Node; // У предыдущего оператора в правое поддерево внести текущий оператор
+                            //operator_node.Left = right;   // В левое поддерево текущего оператора внести сохранённое правое поддерево
                             else // Иначе если предыдущий оператор не корень
                             {
                                 var parent = parent_operator.Parent; // сохранить ссылку на родителя предыдущего оператора

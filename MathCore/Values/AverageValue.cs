@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 namespace MathCore.Values
 {
@@ -23,7 +24,7 @@ namespace MathCore.Values
         /// <summary>Начальное значение</summary>
         private readonly double _StartValue;
 
-        /// <summary>Размер окна усреднеия</summary>
+        /// <summary>Размер окна усреднения</summary>
         private int _Length;
 
         /* --------------------------------------------------------------------------------------------- */
@@ -37,6 +38,7 @@ namespace MathCore.Values
         /// <summary>Текущее значение усредняемой величины</summary>
         public double Value { get => _Value; set => AddValue(value); }
 
+        /// <summary>Дисперсия значений</summary>
         public double Dispersion => _Value * _Value - _Value2;
 
         /// <summary>Количество точек усреднения</summary>
@@ -131,7 +133,7 @@ namespace MathCore.Values
         /// <param name="Value">Усредняемое значение</param>
         public static implicit operator double([NotNull] AverageValue Value) => Value.Value;
 
-        /// <summary>ОПератор неявного приведнеия вещественного числа к скользящему среднему</summary>
+        /// <summary>Оператор неявного приведения вещественного числа к скользящему среднему</summary>
         /// <param name="Data">Вещественное число</param>
         public static implicit operator AverageValue(double Data) => new AverageValue(Data);
 

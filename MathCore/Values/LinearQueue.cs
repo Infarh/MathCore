@@ -1,4 +1,8 @@
 ﻿using System;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Values
 {
@@ -11,21 +15,7 @@ namespace MathCore.Values
 
         public int Length { get; }
 
-        public T this[int i]
-        {
-            get
-            {
-                if(i < 0 || i >= Length)
-                    throw new ArgumentOutOfRangeException();
-                return _Buffer[(i + _Offset) % Length];
-            }
-            set
-            {
-                if(i < 0 || i >= Length)
-                    throw new ArgumentOutOfRangeException();
-                _Buffer[(i + _Offset) % Length] = value;
-            }
-        }
+        public ref T this[int i] => ref _Buffer[(i + _Offset) % Length];
 
         public LinearQueue(int Length) => _Buffer = new T[this.Length = Length];
 
@@ -36,6 +26,7 @@ namespace MathCore.Values
             _Offset %= Length;
         }
 
+        [NotNull]
         public T[] ToArray()
         {
             var result = new T[Length];

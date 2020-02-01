@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Graphs
 {
@@ -194,6 +196,7 @@ namespace MathCore.Graphs
         }
 
         public TreeListNode() { }
+
         public TreeListNode(TValue Value) => this.Value = Value;
 
         public TreeListNode([NotNull] IEnumerable<TValue> Collection)

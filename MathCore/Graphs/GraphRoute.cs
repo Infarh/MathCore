@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.Graphs
 {
@@ -33,19 +36,22 @@ namespace MathCore.Graphs
 
         public bool IsEmpty => _Nodes.Length == 0;
 
-        public IGraphNode<TValue, TWeight> this[int i] => _Nodes[i];
+        public ref readonly IGraphNode<TValue, TWeight> this[int i] => ref _Nodes[i];
 
         public GraphRoute(IGraphNode<TValue, TWeight>[] Nodes) => _Nodes = Nodes;
 
-        public GraphRoute(IEnumerable<IGraphNode<TValue, TWeight>> Collection) => _Nodes = Collection.ToArray();
+        public GraphRoute([NotNull] IEnumerable<IGraphNode<TValue, TWeight>> Collection) => _Nodes = Collection.ToArray();
 
-        public TWeight GetWeight(Func<TWeight, TWeight, TWeight> Aggregator) => this.SelectWithLastValue((last, next) => last.Links.First(l => l.Node.Equals(next)).Weight).Aggregate(Aggregator);
+        public TWeight GetWeight([NotNull] Func<TWeight, TWeight, TWeight> Aggregator) => this.SelectWithLastValue((last, next) => last.Links.First(l => l.Node.Equals(next)).Weight).Aggregate(Aggregator);
 
+        /// <inheritdoc />
         public IEnumerator<IGraphNode<TValue, TWeight>> GetEnumerator() => _Nodes.Cast<IGraphNode<TValue, TWeight>>().GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => _Nodes.GetEnumerator();
 
-
-        public override string ToString() => IsEmpty ? "Empty rouhe" : $"{First} -[{Length}]-> {Last}";
+        /// <inheritdoc />
+        [NotNull]
+        public override string ToString() => IsEmpty ? "Empty route" : $"{First} -[{Length}]-> {Last}";
     }
 }

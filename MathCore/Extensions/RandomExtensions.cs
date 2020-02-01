@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MathCore;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -247,7 +248,7 @@ namespace System
         /// <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="min">Минимум</param>
-        /// <param name="max">МАксимум</param>
+        /// <param name="max">Максимум</param>
         /// <param name="mode">Медиана</param>
         /// <returns>Случайное число с треугольным распределением</returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
@@ -260,18 +261,30 @@ namespace System
                 : max - Math.Sqrt((1 - u) * (max - min) * (max - mode));
         }
 
+        /// <summary>Заполнить массив случайными числами с равномерным распределением в интервале [0, 1)</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Array">Заполняемый массив</param>
         public static void FillUniform(this Random rnd, [NotNull] double[] Array)
         {
             for (var i = 0; i < Array.Length; i++)
                 Array[i] = rnd.NextDouble();
         }
 
+        /// <summary>Заполнить массив случайными числами с равномерным распределением в интервале [-D/2, D/2)</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Array">Заполняемый массив</param>
+        /// <param name="D">Дисперсия значений</param>
         public static void FillUniform(this Random rnd, [NotNull] double[] Array, double D)
         {
             for (var i = 0; i < Array.Length; i++)
                 Array[i] = rnd.NextDouble(D);
         }
 
+        /// <summary>Заполнить массив случайными числами с равномерным распределением в интервале [-D/2 + M, D/2 + M)</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Array">Заполняемый массив</param>
+        /// <param name="D">Дисперсия значений</param>
+        /// <param name="M">Математическое ожидание</param>
         public static void FillUniform(this Random rnd, [NotNull] double[] Array, double D, double M)
         {
             for (var i = 0; i < Array.Length; i++)
@@ -284,19 +297,28 @@ namespace System
                 Array[i] = rnd.NextNormal(sigma, mu);
         }
 
-        public static bool NextBoolean([NotNull] this Random rnd) => rnd.Next(2) > 0;
+        /// <summary>Случайное значение <see langword="true"/>/<see langword="false"/></summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        public static bool NextBoolean([NotNull] this Random rnd) => rnd.Next(2) > 1;
 
+        /// <summary>Случайное число с равномерным распределением в интервале [-D/2, D/2)</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="D">Дисперсия значений</param>
+        /// <returns>Случайное число в интервале  [-D/2, D/2)</returns>
         public static double NextDouble([NotNull] this Random rnd, double D) => (rnd.NextDouble() - 0.5) * D;
 
+        /// <summary>Случайное число с равномерным распределением в интервале [-D/2 + M, D/2 + M)</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="D">Дисперсия значений</param>
+        /// <param name="M">Математическое ожидание</param>
+        /// <returns>Случайное число в интервале  [-D/2 + M, D/2 + M)</returns>
         public static double NextDouble([NotNull] this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
 
         public static double NextDoubleInterval([NotNull] this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle);
 
         public static double NextDoubleInterval([NotNull] this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min));
 
-        /// <summary>
-        ///   Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm.
-        /// </summary>
+        /// <summary>Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm</summary>
         /// <param name="rnd"></param>
         /// <param name = "list"></param>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]

@@ -47,7 +47,7 @@ namespace MathCore.Evaluations
         /// <summary>Оператор получения отрицательного значения на основе вычисления</summary>
         /// <param name="x">Вычисление значения оператора</param>
         /// <returns>Оператор получения отрицательного значения</returns>
-        public static NegateOperatorEvulation<T> operator -(Evulation<T> x) => new NegateOperatorEvulation<T>(x);
+        public static NegateOperatorEvaluation<T> operator -(Evulation<T> x) => new NegateOperatorEvaluation<T>(x);
 
         /// <summary>Вычисление произведения двух вычислений</summary>
         /// <param name="x">Первый сомножитель</param>

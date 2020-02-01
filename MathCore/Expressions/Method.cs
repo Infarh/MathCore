@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using MathCore.Extensions.Expressions;
+// ReSharper disable UnusedType.Global
+// ReSharper disable AnnotateNotNullTypeMember
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
@@ -15,6 +17,7 @@ namespace System.Linq.Expressions
 
         private static readonly Dictionary<MethodInfo, Delegate> __InvokersDictionary =
             new Dictionary<MethodInfo, Delegate>();
+
         public static Func<TObject, TResult> GetInvoker<TObject>(MethodInfo method) =>
             (Func<TObject, TResult>)__InvokersDictionary.GetValueOrAddNew(method,
                 m => GetInvokerExpression<TObject>(m).Compile());
