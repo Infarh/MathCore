@@ -1438,7 +1438,7 @@ namespace MathCore.Tests
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Subtract(U0, U).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Subtract(U0, U).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
                 }
 
                 Assert.AreEqual(W0.Length, W.Length);
@@ -1461,7 +1461,7 @@ namespace MathCore.Tests
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.Subtract(V0, V).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.Subtract(V0, V).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
                 }
 
                 var M1 = Matrix.Array.Operator.Multiply(U, Matrix.Array.CreateDiagonal(W));
@@ -1473,7 +1473,7 @@ namespace MathCore.Tests
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.Subtract(M, M1).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.Subtract(M, M1).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
                 }
             }
 
