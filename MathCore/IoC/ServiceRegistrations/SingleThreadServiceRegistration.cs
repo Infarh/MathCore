@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Threading;
+using MathCore.Annotations;
 
-namespace MathCore.IoC
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
+
+namespace MathCore.IoC.ServiceRegistrations
 {
     public class SingleThreadServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
     {
@@ -11,7 +15,7 @@ namespace MathCore.IoC
         public bool IsInstanceCreated => _Initializer.IsValueCreated;
         public bool NeedDisposeInstance { get; set; }
 
-        public object CurrentInstance => IsInstanceCreated ? Instance : null;
+        [CanBeNull] public object CurrentInstance => IsInstanceCreated ? Instance : null;
         public object Instance => GetService();
 
         public override Exception LastException { get => _Exceptions.Value; set => _Exceptions.Value = value; }
@@ -37,12 +41,18 @@ namespace MathCore.IoC
             _Initializer.Value = null;
         }
 
+        /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
-            if (disposing && !Disposed) _Initializer.Dispose();
+            if (disposing && !Disposed)
+            {
+                _Initializer.Dispose();
+                _Exceptions.Dispose();
+            }
             base.Dispose(disposing);
         }
 
+        [NotNull]
         internal override ServiceRegistration CloneFor(IServiceManager manager) => _FactoryMethod is null
             ? new SingleThreadServiceRegistration<TService>(manager, ServiceType)
             : new SingleThreadServiceRegistration<TService>(manager, ServiceType, _FactoryMethod);

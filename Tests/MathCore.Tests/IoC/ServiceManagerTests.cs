@@ -2,7 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MathCore.IoC;
+using MathCore.IoC.ServiceRegistrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Local
+// ReSharper disable UnusedMember.Local
+// ReSharper disable MemberCanBePrivate.Local
 
 namespace MathCore.Tests.IoC
 {
@@ -48,22 +53,22 @@ namespace MathCore.Tests.IoC
 
         private class Service_Value : IService
         {
-            private readonly int f_Value;
+            private readonly int _Value;
 
-            public Service_Value(int value) => f_Value = value;
+            public Service_Value(int value) => _Value = value;
 
-            public int GetValue() => f_Value;
+            public int GetValue() => _Value;
         }
 
         private class Service_TwoInterfaces : IService, IService2
         {
-            private readonly int f_Value;
+            private readonly int _Value;
             public Service_TwoInterfaces() : this(15) { }
-            public Service_TwoInterfaces(int value) => f_Value = value;
+            public Service_TwoInterfaces(int value) => _Value = value;
 
-            int IService.GetValue() => f_Value;
+            int IService.GetValue() => _Value;
 
-            int IService2.Value => f_Value;
+            int IService2.Value => _Value;
         }
 
         private class Service_ThrowException<TException> : IService
@@ -128,6 +133,7 @@ namespace MathCore.Tests.IoC
             service_manager.Register<IService, Service_42>();
 
             var service = service_manager.Get<IService>();
+            Assert.IsNotNull(service);
             Assert.IsInstanceOfType(service, typeof(IService));
             Assert.IsInstanceOfType(service, typeof(Service_42));
 
@@ -158,6 +164,7 @@ namespace MathCore.Tests.IoC
             service_manager.Register<IService>(() => new Service_Value(++counter), ServiceRegistrationMode.SingleCall);
 
             var service = service_manager.Get<IService>();
+            Assert.IsNotNull(service);
             Assert.IsInstanceOfType(service, typeof(IService));
             Assert.IsInstanceOfType(service, typeof(Service_Value));
 
@@ -166,6 +173,7 @@ namespace MathCore.Tests.IoC
             Assert.AreEqual(expected, actual);
 
             service = service_manager.Get<IService>();
+            Assert.IsNotNull(service);
             Assert.IsInstanceOfType(service, typeof(IService));
             Assert.IsInstanceOfType(service, typeof(Service_Value));
 
@@ -363,7 +371,7 @@ namespace MathCore.Tests.IoC
         }
 
         [TestMethod]
-        public void ServiceRegistred()
+        public void ServiceRegistered()
         {
             var service_manager = new ServiceManager();
             Assert.IsFalse(service_manager.ServiceRegistered<IService>());
@@ -372,7 +380,7 @@ namespace MathCore.Tests.IoC
         }
 
         [TestMethod]
-        public void ServiceRegistred_ByType()
+        public void ServiceRegistered_ByType()
         {
             var service_manager = new ServiceManager();
             Assert.IsFalse(service_manager.ServiceRegistered(typeof(IService)));
