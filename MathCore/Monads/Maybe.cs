@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MathCore.Monades
+namespace MathCore.Monads
 {
     public delegate T IMaybe<out T>();
 

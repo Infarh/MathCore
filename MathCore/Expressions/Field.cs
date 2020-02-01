@@ -37,7 +37,7 @@ namespace System.Linq.Expressions
 
         public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
 
-        // ReSharper disable once RedundantAssignment
+        [Diagnostics.CodeAnalysis.SuppressMessage("Качество кода", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
         private static void Set(ref T field, T value) => field = value;
 
         public Field(Type type, [NotNull] string Name, bool IsPublicOnly = true)
@@ -95,6 +95,7 @@ namespace System.Linq.Expressions
         public bool IsReadOnly => (_FieldInfo.Attributes & FieldAttributes.InitOnly) == FieldAttributes.InitOnly;
 
         public Action<object> Writer => _Writer;
+
         public Func<object> Reader => _Reader;
 
         public object Value
@@ -109,7 +110,7 @@ namespace System.Linq.Expressions
 
         public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
 
-        // ReSharper disable once RedundantAssignment
+        [Diagnostics.CodeAnalysis.SuppressMessage("Качество кода", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
         private static void Set(ref object field, object value) => field = value;
 
         public Field(Type type, [NotNull] string Name, bool IsPublicOnly = true)

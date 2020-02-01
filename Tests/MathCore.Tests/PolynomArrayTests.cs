@@ -92,7 +92,7 @@ namespace MathCore.Tests
 
             var coefficients = Polynom.Array.GetCoefficients(roots);
 
-            double GetValue(double[] X0, double x) => X0.Select(x0 => x - x0).Aggregate(1d, (P, p) => P * p);
+            static double GetValue(double[] X0, double x) => X0.Select(x0 => x - x0).Aggregate(1d, (P, p) => P * p);
             void Check(double x) => Assert.AreEqual(GetValue(roots, x), Polynom.Array.GetValue(x, coefficients));
             Check(23);
             Check(17);
@@ -189,7 +189,7 @@ namespace MathCore.Tests
 
             var coefficients = Polynom.Array.GetCoefficients(roots);
 
-            Complex GetValue(Complex[] X0, Complex x) => X0.Select(x0 => x - x0).Aggregate(new Complex(1), (P, p) => P * p);
+            static Complex GetValue(Complex[] X0, Complex x) => X0.Select(x0 => x - x0).Aggregate(new Complex(1), (P, p) => P * p);
             void Check(Complex x) => Assert.AreEqual(GetValue(roots, x), Polynom.Array.GetValue(x, coefficients));
             Check(23);
             Check(17);

@@ -13,7 +13,7 @@ namespace MathCore.Tests
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private static Random RndGenerator;
+        //private static Random RndGenerator;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -38,70 +38,72 @@ namespace MathCore.Tests
         //}
 
         //Use TestInitialize to run code before running each test
-        [TestInitialize]
-        public void MyTestInitialize() => RndGenerator = new Random();
+        //[TestInitialize]
+        //public void MyTestInitialize() => RndGenerator = new Random();
 
         //Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void MyTestCleanup() => RndGenerator = null;
+        //[TestCleanup]
+        //public void MyTestCleanup() => RndGenerator = null;
 
         #endregion
 
         #region DebugPrint
 
-        public static string ToArrayFormat(double[,] array, string format = "g") =>
+        [CanBeNull]
+        public static string ToArrayFormat(double[,] array, [NotNull] string format = "g") =>
             array.ToStringFormatView(format, ", ")
                 ?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => $"\t\t\t\t{{ {s} }}")
                 .JoinStrings(",\r\n")
                 .ToFormattedString("{{\r\n{0}\r\n\t\t\t}}");
 
-        public static void ToDebug(double[,] u, double[] w, double[,] v)
-        {
-            Debug.WriteLine("u0 = new[,]");
-            Debug.WriteLine($"{ToArrayFormat(u)};");
-            Debug.WriteLine(string.Empty);
-            Debug.WriteLine($"w0 = new[] {ToArrayFormat(w)};");
-            Debug.WriteLine(string.Empty);
-            Debug.WriteLine("v0 = new[,]");
-            Debug.WriteLine($"{ToArrayFormat(v)};");
-        }
+        //public static void ToDebug(double[,] u, double[] w, double[,] v)
+        //{
+        //    Debug.WriteLine("u0 = new[,]");
+        //    Debug.WriteLine($"{ToArrayFormat(u)};");
+        //    Debug.WriteLine(string.Empty);
+        //    Debug.WriteLine($"w0 = new[] {ToArrayFormat(w)};");
+        //    Debug.WriteLine(string.Empty);
+        //    Debug.WriteLine("v0 = new[,]");
+        //    Debug.WriteLine($"{ToArrayFormat(v)};");
+        //}
 
-        public static string ToArrayFormat(double[] array, string format = "g") =>
-            $"{{ {string.Join(", ", array.Select(v => v.ToString(format, CultureInfo.InvariantCulture)).ToArray())} }}";
+        //[NotNull]
+        //public static string ToArrayFormat([NotNull] double[] array, string format = "g") =>
+        //    $"{{ {string.Join(", ", array.Select(v => v.ToString(format, CultureInfo.InvariantCulture)).ToArray())} }}";
 
         #endregion
 
-        [DebuggerStepThrough, NotNull]
-        private static double[,] GetRandom(int N, int M, double d = 1, double m = 0) =>
-            new double[N, M].Initialize(new Tuple<double, double, Random>(m, d, RndGenerator), (i, j, v) => v.Item1 + v.Item2 * v.Item3.NextDouble());
+        //[DebuggerStepThrough, NotNull]
+        //private static double[,] GetRandom(int N, int M, double d = 1, double m = 0) =>
+        //    new double[N, M].Initialize(new Tuple<double, double, Random>(m, d, RndGenerator), (i, j, v) => v.Item1 + v.Item2 * v.Item3.NextDouble());
 
-        [DebuggerStepThrough, NotNull]
-        private static double[,] GetRandom(int N, double d = 1, double m = 0) => GetRandom(N, N, d, m);
+        //[DebuggerStepThrough, NotNull]
+        //private static double[,] GetRandom(int N, double d = 1, double m = 0) => GetRandom(N, N, d, m);
 
-        private static double[,] GetRandom_NonSingular(int N, double d = 1, double m = 0)
-        {
-            var matrix = GetRandom(N, d, m);
+        //private static double[,] GetRandom_NonSingular(int N, double d = 1, double m = 0)
+        //{
+        //    var matrix = GetRandom(N, d, m);
 
-            while (Matrix.Array.IsMatrixSingular(matrix))
-                matrix[RndGenerator.Next(0, N - 1), RndGenerator.Next(0, N - 1)] = m + d * RndGenerator.NextDouble();
+        //    while (Matrix.Array.IsMatrixSingular(matrix))
+        //        matrix[RndGenerator.Next(0, N - 1), RndGenerator.Next(0, N - 1)] = m + d * RndGenerator.NextDouble();
 
-            return matrix;
-        }
+        //    return matrix;
+        //}
 
-        [DebuggerStepThrough, NotNull]
-        private static double[,] GetRandom_Singular(int N, double d = 1, double m = 0)
-        {
-            var matrix = GetRandom(N, d, m);
-            var i1 = RndGenerator.Next(0, N - 1);
-            var i2 = RndGenerator.Next(0, N - 1);
-            if (i1 == i2) i2 = (i2 + 1) % N;
-            var k = RndGenerator.NextDouble();
-            for (var j = 0; j < N; j++)
-                matrix[i2, j] = matrix[i1, j] * k;
+        //[DebuggerStepThrough, NotNull]
+        //private static double[,] GetRandom_Singular(int N, double d = 1, double m = 0)
+        //{
+        //    var matrix = GetRandom(N, d, m);
+        //    var i1 = RndGenerator.Next(0, N - 1);
+        //    var i2 = RndGenerator.Next(0, N - 1);
+        //    if (i1 == i2) i2 = (i2 + 1) % N;
+        //    var k = RndGenerator.NextDouble();
+        //    for (var j = 0; j < N; j++)
+        //        matrix[i2, j] = matrix[i1, j] * k;
 
-            return matrix;
-        }
+        //    return matrix;
+        //}
 
         [DebuggerStepThrough, NotNull]
         private static double[,] GetUnitaryArrayMatrix(int n) => Matrix.Array.GetUnitaryArrayMatrix(n);
@@ -846,7 +848,7 @@ namespace MathCore.Tests
 
             t = m;
             b1 = b;
-            rank = Matrix.Array.Triangulate(ref t, ref b1, out p, out d, true, true);
+            rank = Matrix.Array.Triangulate(ref t, ref b1, out _, out _);
             Assert.IsFalse(ReferenceEquals(t, m));
             Assert.IsFalse(ReferenceEquals(b1, b));
             Assert.AreEqual(-2, d);
@@ -856,7 +858,7 @@ namespace MathCore.Tests
 
             t = m;
             b1 = b;
-            rank = Matrix.Array.Triangulate(ref t, ref b1, out p, out d, false, false);
+            rank = Matrix.Array.Triangulate(ref t, ref b1, out _, out d, false, false);
             Assert.IsTrue(ReferenceEquals(t, m));
             Assert.IsTrue(ReferenceEquals(b1, b));
             Assert.AreEqual(-2, d);
@@ -877,10 +879,12 @@ namespace MathCore.Tests
                 Matrix.Array.TrySolve(m, ref b, out p);
                 error = null;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 error = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(error);
             Assert.IsInstanceOfType(error, typeof(ArgumentNullException));
             Assert.AreEqual("matrix", ((ArgumentNullException)error).ParamName);
@@ -892,10 +896,12 @@ namespace MathCore.Tests
                 Matrix.Array.TrySolve(m, ref b, out p);
                 error = null;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 error = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(error);
             Assert.IsInstanceOfType(error, typeof(ArgumentNullException));
             Assert.AreEqual("b", ((ArgumentNullException)error).ParamName);
@@ -907,10 +913,12 @@ namespace MathCore.Tests
                 Matrix.Array.TrySolve(m, ref b, out p);
                 error = null;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 error = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(error);
             Assert.IsInstanceOfType(error, typeof(ArgumentException));
             Assert.AreEqual("matrix", ((ArgumentException)error).ParamName);
@@ -922,10 +930,12 @@ namespace MathCore.Tests
                 Matrix.Array.TrySolve(m, ref b, out p);
                 error = null;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 error = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(error);
             Assert.IsInstanceOfType(error, typeof(ArgumentException));
             Assert.AreEqual("b", ((ArgumentException)error).ParamName);
@@ -1071,14 +1081,14 @@ namespace MathCore.Tests
             b1 = b.CloneObject();
             var b2 = b1;
 
-            Matrix.Array.Solve(m, ref b2, out p, false);
+            Matrix.Array.Solve(m, ref b2, out _);
             Assert.AreEqual(b1, b2);
             CollectionAssert.AreEqual(b2, b0);
 
             b1 = b.CloneObject();
             b2 = b1;
 
-            Matrix.Array.Solve(m, ref b2, out p, true);
+            Matrix.Array.Solve(m, ref b2, out _, true);
             Assert.AreNotEqual(b1, b2);
             CollectionAssert.AreEqual(b0, b2);
 
@@ -1099,10 +1109,12 @@ namespace MathCore.Tests
 
             }
             // ReSharper disable once CatchAllClause
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 Assert.IsInstanceOfType(e, typeof(InvalidOperationException));
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.AreEqual(b1, b2);
             CollectionAssert.AreEqual(b, b2);
         }
@@ -1147,10 +1159,12 @@ namespace MathCore.Tests
 
             }
             // ReSharper disable once CatchAllClause
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 Assert.IsInstanceOfType(e, typeof(InvalidOperationException));
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             CollectionAssert.AreEqual(b, b1);
             CollectionAssert.AreEqual(x0, x);
         }
@@ -1211,10 +1225,12 @@ namespace MathCore.Tests
                 Matrix.Array.GetDeterminant(new double[5, 7]);
             }
             // ReSharper disable once CatchAllClause
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception as ArgumentException);
         }
 
@@ -1408,7 +1424,7 @@ namespace MathCore.Tests
         [TestMethod, Priority(1), Description("Тест SVD-разложения матрицы")]
         public void SVD_Decomposition_Test()
         {
-            void Check(double[,] M, double[,] U0, double[] W0, double[,] V0, double eps = double.Epsilon)
+            static void Check(double[,] M, double[,] U0, double[] W0, double[,] V0, double eps = double.Epsilon)
             {
                 Matrix.Array.SVD(M, out var U, out var W, out var V);
 
@@ -1422,7 +1438,7 @@ namespace MathCore.Tests
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Subtract(U0, U).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (U0 - U) составила {Matrix.Array.Operator.Subtract(U0, U).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
                 }
 
                 Assert.AreEqual(W0.Length, W.Length);
@@ -1445,7 +1461,7 @@ namespace MathCore.Tests
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.Subtract(V0, V).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (V0 - V) составила {Matrix.Array.Operator.Subtract(V0, V).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
                 }
 
                 var M1 = Matrix.Array.Operator.Multiply(U, Matrix.Array.CreateDiagonal(W));
@@ -1457,7 +1473,7 @@ namespace MathCore.Tests
                 }
                 catch (AssertFailedException e)
                 {
-                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.Subtract(M, M1).EnumerateElements().Select(Math.Abs).Max()}", e);
+                    throw new AssertFailedException($"Разница в элементах матрицы (M - M1) составила {Matrix.Array.Operator.Subtract(M, M1).EnumerateElementsByRows().Select(Math.Abs).Max()}", e);
                 }
             }
 
@@ -2334,7 +2350,7 @@ namespace MathCore.Tests
                 { 7, 8, 9 },
                 { 10,11,12 }
             };
-            double[,] actual = new double[a.GetLength(1), 1];
+            var actual = new double[a.GetLength(1), 1];
             Matrix.Array.Transpose(a, actual);
         }
 
@@ -2348,7 +2364,7 @@ namespace MathCore.Tests
                 { 7, 8, 9 },
                 { 10,11,12 }
             };
-            double[,] actual = new double[1, a.GetLength(0)];
+            var actual = new double[1, a.GetLength(0)];
             Matrix.Array.Transpose(a, actual);
         }
 
@@ -2550,22 +2566,25 @@ namespace MathCore.Tests
                 { 7, 8, 9 }
             };
 
-            double[,] expected_minor =
-            {
-                { 4, 5 },
-                { 7, 8 }
-            };
+            //double[,] expected_minor =
+            //{
+            //    { 4, 5 },
+            //    { 7, 8 }
+            //};
 
             Exception exception = null;
             try
             {
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
+                // ReSharper disable once AssignNullToNotNullAttribute
                 Matrix.Array.GetMinor(null, 0, 2, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentNullException));
             Assert.AreEqual("matrix", ((ArgumentNullException)exception).ParamName);
@@ -2574,12 +2593,15 @@ namespace MathCore.Tests
             try
             {
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
+                // ReSharper disable once AssignNullToNotNullAttribute
                 Matrix.Array.GetMinor(a, 0, 2, null);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentNullException));
             Assert.AreEqual("result", ((ArgumentNullException)exception).ParamName);
@@ -2590,10 +2612,12 @@ namespace MathCore.Tests
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
                 Matrix.Array.GetMinor(a, -1, 2, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
             Assert.AreEqual("n", ((ArgumentOutOfRangeException)exception).ParamName);
@@ -2605,10 +2629,12 @@ namespace MathCore.Tests
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
                 Matrix.Array.GetMinor(a, 3, 2, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
             Assert.AreEqual("n", ((ArgumentOutOfRangeException)exception).ParamName);
@@ -2620,10 +2646,12 @@ namespace MathCore.Tests
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
                 Matrix.Array.GetMinor(a, 0, -1, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
             Assert.AreEqual("m", ((ArgumentOutOfRangeException)exception).ParamName);
@@ -2635,10 +2663,12 @@ namespace MathCore.Tests
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1) - 1];
                 Matrix.Array.GetMinor(a, 0, 3, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentOutOfRangeException));
             Assert.AreEqual("m", ((ArgumentOutOfRangeException)exception).ParamName);
@@ -2650,10 +2680,12 @@ namespace MathCore.Tests
                 var actual_minor = new double[a.GetLength(0), a.GetLength(1) - 1];
                 Matrix.Array.GetMinor(a, 0, 2, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentException));
             Assert.AreEqual("result", ((ArgumentException)exception).ParamName);
@@ -2664,10 +2696,12 @@ namespace MathCore.Tests
                 var actual_minor = new double[a.GetLength(0) - 1, a.GetLength(1)];
                 Matrix.Array.GetMinor(a, 0, 2, actual_minor);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 exception = e;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(ArgumentException));
             Assert.AreEqual("result", ((ArgumentException)exception).ParamName);

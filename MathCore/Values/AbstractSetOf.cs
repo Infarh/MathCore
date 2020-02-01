@@ -9,11 +9,16 @@ namespace MathCore.Values
     public abstract class AbstractSetOf<T> : IEnumerable<T>
     {
         /// <summary>Мощность множества</summary>
-        public abstract int Power { get; }
+        public virtual int Power => this.Count();
+
+        /// <summary>Добавить элемент в множество</summary>
+        /// <param name="Value">Добавляемый элемент</param>
+        /// <returns>Истина, если элемент был добавлен в множество и ложь, если элемент уже присутствует в множестве</returns>
+        public abstract bool Add(T Value);
 
         /// <summary>Признак вхождения элемента в множество</summary>
         /// <param name="value">Проверяемый элемент</param>
-        /// <returns>Истина, если элемент принедлежит множеству</returns>
+        /// <returns>Истина, если элемент принадлежит множеству</returns>
         public virtual bool Contains(T value) => ((IEnumerable<T>)this).Contains(value);
 
         /// <summary>Признак того, что элемент не входит в множество</summary>

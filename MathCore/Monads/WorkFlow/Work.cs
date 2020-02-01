@@ -4,7 +4,7 @@ using CN = MathCore.Annotations.CanBeNullAttribute;
 using INN = MathCore.Annotations.ItemNotNullAttribute;
 using ICN = MathCore.Annotations.ItemCanBeNullAttribute;
 
-namespace MathCore.Monades.WorkFlow
+namespace MathCore.Monads.WorkFlow
 {
     /// <summary>Работа, выполняющая преобразование данных указанным методом</summary>
     /// <typeparam name="TParameter">Тип сходных данных для преобразования</typeparam>
@@ -33,10 +33,12 @@ namespace MathCore.Monades.WorkFlow
             {
                 return new WorkResult<TParameter, TResult>(parameter, _WorkFunction(parameter), BaseResult.Error);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception error)
             {
                 return new WorkResult<TParameter, TResult>(parameter, BaseResult.Error, error);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         /// <summary>Выполнение работы</summary>
@@ -88,10 +90,12 @@ namespace MathCore.Monades.WorkFlow
                     _WorkAction(base_result.Result);
                     return new WorkResult(base_result.Error);
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception error)
                 {
                     return new WorkResult(base_result.Error, error);
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
         }
 
@@ -129,6 +133,9 @@ namespace MathCore.Monades.WorkFlow
         /// <returns>Работа по обработке исключений, возникающих на предыдущих этапах выполнения работы</returns>
         [NN] public Work<T> GetIfFailure([NN] Func<Exception, T> ErrorHandler) => new ExceptionFunctionHandler<T>(ErrorHandler, this);
 
+        /// <summary>Оператор неявного преобразования типа <see cref="Work{T}"/> к типу <typeparamref name="T"/></summary>
+        /// <param name="work">Работа с типизированным результатом <see cref="Work{T}"/></param>
+        /// <returns>Результат выполнения работы типа <typeparamref name="T"/></returns>
         public static implicit operator T([NN] Work<T> work) => work.Execute().Result;
     }
 
@@ -183,10 +190,12 @@ namespace MathCore.Monades.WorkFlow
                     _ErrorHandler(base_result.Error);
                     return new WorkResult(base_result.Error);
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception error)
                 {
                     return new WorkResult(base_result.Error, error);
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
         }
 
@@ -246,10 +255,12 @@ namespace MathCore.Monades.WorkFlow
                 {
                     return new WorkResult<T>(_ErrorHandler(base_result.Error));
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception error)
                 {
                     return new WorkResult<T>(base_result.Error, error);
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
         }
 
@@ -298,7 +309,7 @@ namespace MathCore.Monades.WorkFlow
 
         /// <summary>Действие, выполняемое в любом случае</summary>
         /// <param name="action">Выполняемое действие</param>
-        /// <returns>СФормированная работа, выполняемая в любом случае</returns>
+        /// <returns>Сформированная работа, выполняемая в любом случае</returns>
         [NN] public Work Invoke([NN] Action action) => new ActionWork(action, this);
 
         /// <summary>Действие, выполняемое в случае успеха предыдущего действия</summary>

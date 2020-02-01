@@ -1,5 +1,5 @@
-﻿
-
+﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMemberInSuper.Global
 namespace MathCore
 {
     /// <summary>Объект индексируемый только для чтения значений</summary>

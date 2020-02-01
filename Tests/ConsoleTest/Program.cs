@@ -6,8 +6,13 @@ namespace ConsoleTest
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
+
+            //                        3222 2222 2222 1111 1111 1             
+            //                        1098 7654 3210 9876 5432 1098 7654 3210
+            var res = (int)Math.Log(0b0000_0001_1000_0000_0000_0001_0000_0000, 2); //24
+
             var times = new PrimitiveDataFrameColumn<DateTime>("Date");
             times.Append(DateTime.Now.Subtract(TimeSpan.FromDays(2)));
             times.Append(DateTime.Now.Subtract(TimeSpan.FromDays(1)));

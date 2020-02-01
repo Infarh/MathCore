@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using MathCore.Annotations;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Tests
 {
     [TestClass]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class PolynomTests : UnitTest
     {
         public TestContext TestContext { get; set; }
@@ -75,7 +76,7 @@ namespace MathCore.Tests
                 return result;
             }
 
-            foreach (var x in X) 
+            foreach (var x in X)
                 Assert.That.Value(p.Value(x)).IsEqual(P(x), 2.0e-15);
         }
 
@@ -135,7 +136,7 @@ namespace MathCore.Tests
             Assert.IsFalse(P.Equals((object)Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
         }
 
-        [NotNull] private Polynom GetRandomPolynom(int Power = -1) => new Polynom(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
+        [MathCore.Annotations.NotNull] private Polynom GetRandomPolynom(int Power = -1) => new Polynom(GetRNDDoubleArray(Power <= -1 ? GetRNDInt(5, 15) : Power + 1, -5, 5));
 
         /// <summary>Тест оператора сложения полиномов</summary>
         [TestMethod]
@@ -235,8 +236,8 @@ namespace MathCore.Tests
             {
                 Assert.AreEqual(PP.Power, QQ.Power, "Порядки полиномов P = {0} и Q = {1} не совпадают!", PP, QQ);
                 PP.Zip(QQ, (p, q) => new { p, q })
-                   .Foreach((z, i) => Assert.AreEqual(z.p, -z.q, "Для полинома P = {0} значение {1} коэффициента P[{1}] = {2} " + "не равно инвертированному значению полинома Q = {3} : -Q[{1}] = {4}", PP, i, z.p, QQ, -z.q));
-                Assert.IsTrue(PP.Equals(-QQ), "Не выполняется равенство P == Q, Если Q = -P для P = {0}, Q = {1}", PP, QQ);
+                   .Foreach((z, i) => Assert.AreEqual(z.p, -z.q, "Для полинома P = {0} значение {1} коэффициента P[{1}] = {2} не равно инвертированному значению полинома Q = {3} : -Q[{1}] = {4}", PP, i, z.p, QQ, -z.q));
+                Assert.IsTrue(PP.Equals(-QQ), "Не выполняется равенство P == Q, если Q = -P для P = {0}, Q = {1}", PP, QQ);
 
                 GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5).Foreach(x => Assert.AreEqual(0, PP.Value(x) + QQ.Value(x), 1e-16));
             }
@@ -257,8 +258,8 @@ namespace MathCore.Tests
                 var Z = P - Q;
                 Assert.AreEqual(Math.Max(P.Power, Q.Power), Z.Power, "Степень полинома разности {2} = {5} не равна " + "максимуму из степеней уменьшаемого {0} = {3} и вычитаемого {1} = {4} полиномов", P, Q, Z, P.Power, Q.Power, Z.Power);
                 GetRNDDoubleArray(1000, -50, 50)
-                   .Select(x => new {yP = P.Value(x), yQ = Q.Value(x), yZ = Z.Value(x)})
-                   .Select(v => new {expected = v.yP - v.yQ, actual = v.yZ})
+                   .Select(x => new { yP = P.Value(x), yQ = Q.Value(x), yZ = Z.Value(x) })
+                   .Select(v => new { expected = v.yP - v.yQ, actual = v.yZ })
                    .Foreach(v => Assert.AreEqual(0, (v.expected - v.actual) / v.expected, 1e-10));
             }
 
@@ -268,7 +269,6 @@ namespace MathCore.Tests
             Test(p, q);
             Test(GetRandomPolynom(4), GetRandomPolynom(5));
             Test(GetRandomPolynom(), GetRandomPolynom());
-
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace MathCore.Tests
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private static Random RndGenerator;
+        //private static Random RndGenerator;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -37,12 +37,12 @@ namespace MathCore.Tests
         //}
 
         //Use TestInitialize to run code before running each test
-        [TestInitialize]
-        public void MyTestInitialize() => RndGenerator = new Random();
+        //[TestInitialize]
+        //public void MyTestInitialize() => RndGenerator = new Random();
 
         //Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void MyTestCleanup() => RndGenerator = null;
+        //[TestCleanup]
+        //public void MyTestCleanup() => RndGenerator = null;
 
         #endregion
 

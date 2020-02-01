@@ -4,6 +4,7 @@ using MathCore;
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions
@@ -75,6 +76,7 @@ namespace System.Linq.Expressions
         /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы</returns>
+        [NotNull]
         public ExpressionMatrix this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
@@ -90,41 +92,42 @@ namespace System.Linq.Expressions
         public bool IsDigit => N == 1 && M == 1;
 
         /// <summary>Транспонированная матрица</summary>
+        [NotNull]
         public ExpressionMatrix T => GetTranspose();
 
         /* -------------------------------------------------------------------------------------------- */
 
-        /// <summary>Матрица</summary>
+        /// <summary>Матрица выражения</summary>
         /// <param name="N">Число строк</param>
         /// <param name="M">Число столбцов</param>
         [DST]
         public ExpressionMatrix(int N, int M)
         {
             _Data = new Expression[_N = N, _M = M];
-            var zerro = 0d.ToExpression();
+            var zero = 0d.ToExpression();
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
-                    _Data[i, j] = zerro;
+                    _Data[i, j] = zero;
         }
 
-        /// <summary>Квадратная матрица</summary>
+        /// <summary>Квадратная матрица выражения</summary>
         /// <param name="N">Размерность</param>
         [DST]
         public ExpressionMatrix(int N) : this(N, N) { }
 
-        /// <summary>Метод определения значения элемента матрицы</summary>
+        /// <summary>Метод определения значения элемента матрицы выражения</summary>
         /// <param name="i">Номер строки</param>
         /// <param name="j">Номер столбца</param>
         /// <returns>Значение элемента матрицы M[<paramref name="i"/>, <paramref name="j"/>]</returns>
         public delegate Expression MatrixItemCreator(int i, int j);
 
-        /// <summary>Квадратная матрица</summary>
+        /// <summary>Квадратная матрица выражения</summary>
         /// <param name="N">Размерность</param>
         /// <param name="CreateFunction">Порождающая функция</param>
         [DST]
         public ExpressionMatrix(int N, MatrixItemCreator CreateFunction) : this(N, N, CreateFunction) { }
 
-        /// <summary>Матрица</summary>
+        /// <summary>Матрица выражения</summary>
         /// <param name="N">Число строк</param>
         /// <param name="M">Число столбцов</param>
         /// <param name="CreateFunction">Порождающая функция f(i,j) - i-строка, j-столбец</param>
@@ -155,7 +158,7 @@ namespace System.Linq.Expressions
         }
 
 
-        public ExpressionMatrix(IEnumerable<IEnumerable<Expression>> Items) : this(GetElements(Items)) { }
+        public ExpressionMatrix([NotNull] IEnumerable<IEnumerable<Expression>> Items) : this(GetElements(Items)) { }
         [NotNull]
         private static Expression[,] GetElements([NotNull] IEnumerable<IEnumerable<Expression>> Items)
         {
@@ -198,6 +201,7 @@ namespace System.Linq.Expressions
 
         /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <returns>Треугольная матрица</returns>
+        [NotNull]
         public ExpressionMatrix GetTriangle()
         {
             var result = Clone();
@@ -223,6 +227,7 @@ namespace System.Linq.Expressions
 
         /// <summary>Получить обратную матрицу</summary>
         /// <returns>Обратная матрица</returns>
+        [NotNull]
         public ExpressionMatrix GetInverse()
         {
             if (!IsSquare)
@@ -241,7 +246,7 @@ namespace System.Linq.Expressions
         public ExpressionMatrix GetTransvection(int col)
         {
             if (!IsSquare)
-                throw new InvalidOperationException("Трансвенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("Трансвекция неквадратной матрицы невозможна");
 
             var u_matrix = GetUnitaryMatrix(_N);
             var a = _Data;
@@ -310,7 +315,9 @@ namespace System.Linq.Expressions
                     return this[0, 0].MultiplyWithConversion(this[1, 1]).SubtractWithConversion(this[0, 1].MultiplyWithConversion(this[1, 0]));
             }
 
-            var data = _Data.CloneArray();
+            var data = _Data.CloneArray() 
+                       ?? throw new InvalidOperationException(
+                           "Получена пустая ссылка на массив данных матрицы при его клонировании");
 
             Expression det = null;
             var negate = false;
@@ -361,8 +368,8 @@ namespace System.Linq.Expressions
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST]
-        public override string ToString() => $"ExpressionMatrix[{N}x{M}]";
+        /// <inheritdoc />
+        [DST] [NotNull] public override string ToString() => $"ExpressionMatrix[{N}x{M}]";
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -408,17 +415,13 @@ namespace System.Linq.Expressions
         [DST, NotNull]
         public static ExpressionMatrix operator *(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
 
-        [DST]
-        public static ExpressionMatrix operator *(Expression[,] A, ExpressionMatrix B) => (ExpressionMatrix)A * B;
+        [DST] [NotNull] public static ExpressionMatrix operator *(Expression[,] A, ExpressionMatrix B) => (ExpressionMatrix)A * B;
 
-        [DST]
-        public static ExpressionMatrix operator *(Expression[] A, ExpressionMatrix B) => (ExpressionMatrix)A * B;
+        [DST] [NotNull] public static ExpressionMatrix operator *(Expression[] A, ExpressionMatrix B) => (ExpressionMatrix)A * B;
 
-        [DST]
-        public static ExpressionMatrix operator *(ExpressionMatrix A, Expression[] B) => A * (ExpressionMatrix)B;
+        [DST] [NotNull] public static ExpressionMatrix operator *(ExpressionMatrix A, Expression[] B) => A * (ExpressionMatrix)B;
 
-        [DST]
-        public static ExpressionMatrix operator *(ExpressionMatrix A, Expression[,] B) => A * (ExpressionMatrix)B;
+        [DST] [NotNull] public static ExpressionMatrix operator *(ExpressionMatrix A, Expression[,] B) => A * (ExpressionMatrix)B;
 
         [DST, NotNull]
         public static ExpressionMatrix operator /([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Divide(x));
@@ -583,8 +586,10 @@ namespace System.Linq.Expressions
 
         #endregion
 
+        /// <inheritdoc />
         public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || Equals(obj as ExpressionMatrix));
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {
@@ -597,8 +602,6 @@ namespace System.Linq.Expressions
                 return result;
             }
         }
-
-
 
         /* -------------------------------------------------------------------------------------------- */
     }

@@ -5,7 +5,7 @@ using CN = MathCore.Annotations.CanBeNullAttribute;
 using INN = MathCore.Annotations.ItemNotNullAttribute;
 using ICN = MathCore.Annotations.ItemCanBeNullAttribute;
 
-namespace MathCore.Monades.WorkFlow
+namespace MathCore.Monads.WorkFlow
 {
     /// <summary>Работа, выполняющая действие</summary>
     public class ActionWork : Work

@@ -443,10 +443,12 @@ namespace MathCore.Tests.IoC
             {
                 service_manager.Get<IService>();
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (ApplicationException)
             {
                 exception_throwed = true;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsTrue(exception_throwed);
             Assert.IsNotNull(registration.LastException);
             Assert.IsInstanceOfType(registration.LastException, typeof(ApplicationException));
@@ -457,10 +459,12 @@ namespace MathCore.Tests.IoC
             {
                 service_manager.Get<IService>();
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (ApplicationException)
             {
                 exception_throwed = true;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsTrue(exception_throwed);
             Assert.IsNotNull(registration.LastException);
             Assert.IsInstanceOfType(registration.LastException, typeof(ApplicationException));
@@ -484,10 +488,12 @@ namespace MathCore.Tests.IoC
             {
                 service_manager.Get<IService>();
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (ApplicationException)
             {
                 exception_throwed = true;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsTrue(exception_throwed);
             var last_exception = registration.LastException;
             Assert.IsNotNull(last_exception);
@@ -499,10 +505,12 @@ namespace MathCore.Tests.IoC
             {
                 service_manager.Get<IService>();
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (ApplicationException)
             {
                 exception_throwed = true;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
             Assert.IsTrue(exception_throwed);
             Assert.IsNotNull(registration.LastException);
             Assert.IsInstanceOfType(registration.LastException, typeof(ApplicationException));

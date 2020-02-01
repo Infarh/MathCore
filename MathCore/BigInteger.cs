@@ -147,7 +147,7 @@ namespace MathCore
         // maximum length of the BigInteger in uint (4 bytes)
         // change this to suit the required level of precision.
         /// <summary>Максимальная длина числа в байтах х8</summary>
-        private const int __MaxLength = 70;
+        public const int MaxLength = 70;
 
         /// <summary>Простые числа до 2000</summary>
         public static readonly int[] PrimesBelow2000 =
@@ -185,7 +185,7 @@ namespace MathCore
         /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
         public BigInteger()
         {
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
             _DataLength = 1;
         }
 
@@ -193,14 +193,14 @@ namespace MathCore
         /// <param name="Value">Исходное значение числа</param>
         public BigInteger(long Value)
         {
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
             var temp_val = Value;
 
             // copy bytes from long to BigInteger without any assumption of
             // the length of the long datatype
 
             _DataLength = 0;
-            while (Value != 0 && _DataLength < __MaxLength)
+            while (Value != 0 && _DataLength < MaxLength)
             {
                 _Data[_DataLength] = (uint)(Value & 0xFFFFFFFF);
                 Value >>= 32;
@@ -209,7 +209,7 @@ namespace MathCore
 
             if (temp_val > 0)         // overflow check for +ve value
             {
-                if (Value != 0 || (_Data[__MaxLength - 1] & 0x80000000) != 0)
+                if (Value != 0 || (_Data[MaxLength - 1] & 0x80000000) != 0)
                     throw new ArithmeticException("Positive overflow in constructor.");
             }
             else if (temp_val < 0) // underflow check for -ve value
@@ -223,20 +223,20 @@ namespace MathCore
         /// <param name="Value">Исходное значение числа</param>
         public BigInteger(ulong Value)
         {
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
 
             // copy bytes from ulong to BigInteger without any assumption of
             // the length of the ulong datatype
 
             _DataLength = 0;
-            while (Value != 0 && _DataLength < __MaxLength)
+            while (Value != 0 && _DataLength < MaxLength)
             {
                 _Data[_DataLength] = (uint)(Value & 0xFFFFFFFF);
                 Value >>= 32;
                 _DataLength++;
             }
 
-            if (Value != 0 || (_Data[__MaxLength - 1] & 0x80000000) != 0)
+            if (Value != 0 || (_Data[MaxLength - 1] & 0x80000000) != 0)
                 throw new ArithmeticException("Positive overflow in constructor.");
 
             if (_DataLength == 0) _DataLength = 1;
@@ -246,7 +246,7 @@ namespace MathCore
         /// <param name="Value">Исходное значение числа</param>
         public BigInteger([NotNull] BigInteger Value)
         {
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
 
             _DataLength = Value._DataLength;
 
@@ -312,16 +312,16 @@ namespace MathCore
 
             if (StringValue[0] == '-')     // negative values
             {
-                if ((result._Data[__MaxLength - 1] & 0x80000000) == 0)
+                if ((result._Data[MaxLength - 1] & 0x80000000) == 0)
                     throw new OverflowException("Negative underflow in constructor.");
             }
             else    // positive values
             {
-                if ((result._Data[__MaxLength - 1] & 0x80000000) != 0)
+                if ((result._Data[MaxLength - 1] & 0x80000000) != 0)
                     throw new OverflowException("Positive overflow in constructor.");
             }
 
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
             for (var i = 0; i < result._DataLength; i++)
                 _Data[i] = result._Data[i];
 
@@ -358,10 +358,10 @@ namespace MathCore
                 _DataLength++;
 
 
-            if (_DataLength > __MaxLength)
+            if (_DataLength > MaxLength)
                 throw new OverflowException("Byte overflow in constructor.");
 
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
 
             for (int i = Data.Length - 1, j = 0; i >= 3; i -= 4, j++)
                 _Data[j] = (uint)((Data[i - 3] << 24) + (Data[i - 2] << 16) +
@@ -392,11 +392,11 @@ namespace MathCore
             if (left_over != 0) _DataLength++;        // length not multiples of 4
 
 
-            if (_DataLength > __MaxLength || Length > Data.Length)
+            if (_DataLength > MaxLength || Length > Data.Length)
                 throw new OverflowException("Byte overflow in constructor.");
 
 
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
 
             for (int i = Length - 1, j = 0; i >= 3; i -= 4, j++)
                 _Data[j] = (uint)((Data[i - 3] << 24) + (Data[i - 2] << 16) +
@@ -428,10 +428,10 @@ namespace MathCore
         {
             _DataLength = UintWords.Length;
 
-            if (_DataLength > __MaxLength)
+            if (_DataLength > MaxLength)
                 throw new OverflowException("Byte overflow in constructor.");
 
-            _Data = new uint[__MaxLength];
+            _Data = new uint[MaxLength];
 
             for (int i = _DataLength - 1, j = 0; i >= 0; i--, j++)
                 _Data[j] = UintWords[i];
@@ -483,7 +483,7 @@ namespace MathCore
                 result._Data[i] = (uint)(sum & 0xFFFFFFFF);
             }
 
-            if (carry != 0 && result._DataLength < __MaxLength)
+            if (carry != 0 && result._DataLength < MaxLength)
             {
                 result._Data[result._DataLength] = (uint)carry;
                 result._DataLength++;
@@ -494,7 +494,7 @@ namespace MathCore
 
 
             // overflow check
-            const int lc_LastPos = __MaxLength - 1;
+            const int lc_LastPos = MaxLength - 1;
             if ((x._Data[lc_LastPos] & 0x80000000) == (y._Data[lc_LastPos] & 0x80000000) &&
                (result._Data[lc_LastPos] & 0x80000000) != (x._Data[lc_LastPos] & 0x80000000))
                 throw new ArithmeticException();
@@ -515,7 +515,7 @@ namespace MathCore
             long carry = 1;
             var index = 0;
 
-            while (carry != 0 && index < __MaxLength)
+            while (carry != 0 && index < MaxLength)
             {
                 var val = (long)result._Data[index];
                 val++;
@@ -531,7 +531,7 @@ namespace MathCore
                     result._DataLength--;
 
             // overflow check
-            const int lc_LastPos = __MaxLength - 1;
+            const int lc_LastPos = MaxLength - 1;
 
             // overflow if initial value was +ve but ++ caused a sign
             // change to negative.
@@ -569,9 +569,9 @@ namespace MathCore
             // roll over to negative
             if (carry_in != 0)
             {
-                for (var i = result._DataLength; i < __MaxLength; i++)
+                for (var i = result._DataLength; i < MaxLength; i++)
                     result._Data[i] = 0xFFFFFFFF;
-                result._DataLength = __MaxLength;
+                result._DataLength = MaxLength;
             }
 
             // fixed in v1.03 to give correct datalength for a - (-b)
@@ -580,7 +580,7 @@ namespace MathCore
 
             // overflow check
 
-            const int lc_LastPos = __MaxLength - 1;
+            const int lc_LastPos = MaxLength - 1;
             if ((x._Data[lc_LastPos] & 0x80000000) != (y._Data[lc_LastPos] & 0x80000000) &&
                (result._Data[lc_LastPos] & 0x80000000) != (x._Data[lc_LastPos] & 0x80000000))
                 throw new ArithmeticException();
@@ -601,7 +601,7 @@ namespace MathCore
             var carry_in = true;
             var index = 0;
 
-            while (carry_in && index < __MaxLength)
+            while (carry_in && index < MaxLength)
             {
                 var val = (long)result._Data[index];
                 val--;
@@ -619,7 +619,7 @@ namespace MathCore
                 result._DataLength--;
 
             // overflow check
-            const int last_pos = __MaxLength - 1;
+            const int last_pos = MaxLength - 1;
 
             // overflow if initial value was -ve but -- caused a sign
             // change to positive.
@@ -636,7 +636,7 @@ namespace MathCore
         [NotNull]
         public static BigInteger operator *(BigInteger x, BigInteger y)
         {
-            const int last_pos = __MaxLength - 1;
+            const int last_pos = MaxLength - 1;
             var x_neg = false;
             var y_neg = false;
 
@@ -654,10 +654,12 @@ namespace MathCore
                     y = -y;
                 }
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
                 // ignored
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             var result = new BigInteger();
 
@@ -688,7 +690,7 @@ namespace MathCore
 
 
             result._DataLength = x._DataLength + y._DataLength;
-            if (result._DataLength > __MaxLength) result._DataLength = __MaxLength;
+            if (result._DataLength > MaxLength) result._DataLength = MaxLength;
 
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
@@ -769,8 +771,8 @@ namespace MathCore
             var result = new BigInteger(x);
             result._DataLength = ShiftRight(result._Data, ShiftVal);
 
-            if ((x._Data[__MaxLength - 1] & 0x80000000) == 0) return result;
-            for (var i = __MaxLength - 1; i >= result._DataLength; i--)
+            if ((x._Data[MaxLength - 1] & 0x80000000) == 0) return result;
+            for (var i = MaxLength - 1; i >= result._DataLength; i--)
                 result._Data[i] = 0xFFFFFFFF;
 
             var mask = 0x80000000;
@@ -781,7 +783,7 @@ namespace MathCore
                 result._Data[result._DataLength - 1] |= mask;
                 mask >>= 1;
             }
-            result._DataLength = __MaxLength;
+            result._DataLength = MaxLength;
 
             return result;
         }
@@ -831,10 +833,10 @@ namespace MathCore
         {
             var result = new BigInteger(x);
 
-            for (var i = 0; i < __MaxLength; i++)
+            for (var i = 0; i < MaxLength; i++)
                 result._Data[i] = ~x._Data[i];
 
-            result._DataLength = __MaxLength;
+            result._DataLength = MaxLength;
 
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
@@ -859,14 +861,14 @@ namespace MathCore
             var result = new BigInteger(x);
 
             // 1's complement
-            for (var i = 0; i < __MaxLength; i++)
+            for (var i = 0; i < MaxLength; i++)
                 result._Data[i] = ~x._Data[i];
 
             // add one to result of 1's complement
             long carry = 1;
             var index = 0;
 
-            while (carry != 0 && index < __MaxLength)
+            while (carry != 0 && index < MaxLength)
             {
                 var val = (long)result._Data[index];
                 val++;
@@ -877,10 +879,10 @@ namespace MathCore
                 index++;
             }
 
-            if ((x._Data[__MaxLength - 1] & 0x80000000) == (result._Data[__MaxLength - 1] & 0x80000000))
+            if ((x._Data[MaxLength - 1] & 0x80000000) == (result._Data[MaxLength - 1] & 0x80000000))
                 throw new ArithmeticException("Overflow in negation.\n");
 
-            result._DataLength = __MaxLength;
+            result._DataLength = MaxLength;
 
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
@@ -919,7 +921,7 @@ namespace MathCore
         //***********************************************************************
         public static bool operator >([NotNull] BigInteger x, [NotNull] BigInteger y)
         {
-            var pos = __MaxLength - 1;
+            var pos = MaxLength - 1;
 
             // x is negative, y is positive
             if ((x._Data[pos] & 0x80000000) != 0 && (y._Data[pos] & 0x80000000) == 0)
@@ -939,7 +941,7 @@ namespace MathCore
 
         public static bool operator <([NotNull] BigInteger x, [NotNull] BigInteger y)
         {
-            var pos = __MaxLength - 1;
+            var pos = MaxLength - 1;
 
             // x is negative, y is positive
             if ((x._Data[pos] & 0x80000000) != 0 && (y._Data[pos] & 0x80000000) == 0)
@@ -976,7 +978,7 @@ namespace MathCore
             [NotNull] BigInteger OutQuotient,
             [NotNull] BigInteger OutRemainder)
         {
-            var result = new uint[__MaxLength];
+            var result = new uint[MaxLength];
 
             var remainder_len = X._DataLength + 1;
             var remainder = new uint[remainder_len];
@@ -1051,7 +1053,7 @@ namespace MathCore
             var y = 0;
             for (var x = OutQuotient._DataLength - 1; x >= 0; x--, y++)
                 OutQuotient._Data[y] = result[x];
-            for (; y < __MaxLength; y++) OutQuotient._Data[y] = 0;
+            for (; y < MaxLength; y++) OutQuotient._Data[y] = 0;
 
             while (OutQuotient._DataLength > 1 && OutQuotient._Data[OutQuotient._DataLength - 1] == 0)
                 OutQuotient._DataLength--;
@@ -1061,7 +1063,7 @@ namespace MathCore
             OutRemainder._DataLength = ShiftRight(remainder, shift);
 
             for (y = 0; y < OutRemainder._DataLength; y++) OutRemainder._Data[y] = remainder[y];
-            for (; y < __MaxLength; y++) OutRemainder._Data[y] = 0;
+            for (; y < MaxLength; y++) OutRemainder._Data[y] = 0;
         }
 
 
@@ -1076,11 +1078,11 @@ namespace MathCore
             [NotNull] BigInteger OutQuotient,
             [NotNull] BigInteger OutRemainder)
         {
-            var result = new uint[__MaxLength];
+            var result = new uint[MaxLength];
             var result_pos = 0;
 
             // copy dividend to reminder
-            for (var i = 0; i < __MaxLength; i++)
+            for (var i = 0; i < MaxLength; i++)
                 OutRemainder._Data[i] = x._Data[i];
             OutRemainder._DataLength = x._DataLength;
 
@@ -1114,7 +1116,7 @@ namespace MathCore
             var j = 0;
             for (var i = OutQuotient._DataLength - 1; i >= 0; i--, j++)
                 OutQuotient._Data[j] = result[i];
-            for (; j < __MaxLength; j++)
+            for (; j < MaxLength; j++)
                 OutQuotient._Data[j] = 0;
 
             while (OutQuotient._DataLength > 1 && OutQuotient._Data[OutQuotient._DataLength - 1] == 0)
@@ -1137,7 +1139,7 @@ namespace MathCore
             var quotient = new BigInteger();
             var remainder = new BigInteger();
 
-            const int lc_LastPos = __MaxLength - 1;
+            const int lc_LastPos = MaxLength - 1;
             bool divisor_neg = false, dividend_neg = false;
 
             if ((x._Data[lc_LastPos] & 0x80000000) != 0)     // x negative
@@ -1171,7 +1173,7 @@ namespace MathCore
             var quotient = new BigInteger();
             var remainder = new BigInteger(x);
 
-            const int last_pos = __MaxLength - 1;
+            const int last_pos = MaxLength - 1;
             var dividend_neg = false;
 
             if ((x._Data[last_pos] & 0x80000000) != 0)     // x negative
@@ -1206,7 +1208,7 @@ namespace MathCore
             for (var i = 0; i < len; i++)
                 result._Data[i] = x._Data[i] & y._Data[i];
 
-            result._DataLength = __MaxLength;
+            result._DataLength = MaxLength;
 
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
@@ -1229,7 +1231,7 @@ namespace MathCore
             for (var i = 0; i < len; i++)
                 result._Data[i] = x._Data[i] | y._Data[i];
 
-            result._DataLength = __MaxLength;
+            result._DataLength = MaxLength;
 
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
@@ -1255,7 +1257,7 @@ namespace MathCore
                 result._Data[i] = sum;
             }
 
-            result._DataLength = __MaxLength;
+            result._DataLength = MaxLength;
 
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
@@ -1285,7 +1287,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger Abs() => (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : new BigInteger(this);
+        public BigInteger Abs() => (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : new BigInteger(this);
 
 
         //***********************************************************************
@@ -1319,14 +1321,16 @@ namespace MathCore
             var a = this;
 
             var negative = false;
-            if ((a._Data[__MaxLength - 1] & 0x80000000) != 0)
+            if ((a._Data[MaxLength - 1] & 0x80000000) != 0)
             {
                 negative = true;
                 try { a = -a; }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch
                 {
                     // ignored
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
 
             var quotient = new BigInteger();
@@ -1368,6 +1372,8 @@ namespace MathCore
         //
         //***********************************************************************
 
+        /// <summary>Представление <see cref="BigInteger"/> в шестнадцатеричной системе счисления</summary>
+        /// <returns>Строка шестнадцатеричного представления числа <see cref="BigInteger"/></returns>
         public string ToHexString()
         {
             var result = _Data[_DataLength - 1].ToString("X");
@@ -1386,14 +1392,14 @@ namespace MathCore
 
         public BigInteger ModPow([NotNull] BigInteger exp, BigInteger n)
         {
-            if ((exp._Data[__MaxLength - 1] & 0x80000000) != 0)
+            if ((exp._Data[MaxLength - 1] & 0x80000000) != 0)
                 throw new ArithmeticException("Positive exponents only.");
 
             BigInteger result_num = 1;
             BigInteger temp_num;
             var this_negative = false;
 
-            if ((_Data[__MaxLength - 1] & 0x80000000) != 0)   // negative this
+            if ((_Data[MaxLength - 1] & 0x80000000) != 0)   // negative this
             {
                 temp_num = -this % n;
                 this_negative = true;
@@ -1401,7 +1407,7 @@ namespace MathCore
             else
                 temp_num = this % n;  // ensures (tempNum * tempNum) < b^(2k)
 
-            if ((n._Data[__MaxLength - 1] & 0x80000000) != 0)   // negative n
+            if ((n._Data[MaxLength - 1] & 0x80000000) != 0)   // negative n
                 n = -n;
 
             // calculate constant = b^(2k) / m
@@ -1412,7 +1418,7 @@ namespace MathCore
             constant._DataLength = i + 1;
 
             constant /= n;
-            var total_bits = exp.BitCount();
+            var total_bits = exp.BitCount;
             var count = 0;
 
             // perform squaring and multiply exponentiation
@@ -1442,9 +1448,12 @@ namespace MathCore
             return this_negative && (exp._Data[0] & 0x1) != 0 ? -result_num : result_num;
         }
 
-        /// <summary>Fast calculation of modular reduction using Barrett's reduction</summary>
+        /// <summary>Быстрое вычисление сокращения числа по модулю с использованием редукции Барретта</summary>
         /// <returns></returns>
-        /// <remarks>Requires x &lt; b^(2k), where b is the base.  In this case, base is 2^32 (uint). Reference [4]</remarks>
+        /// <remarks>
+        /// Требуется <paramref name="x"/> &lt; b^(2k), где b база.
+        /// В этом случае база соответствует 2^32 (uint).
+        /// </remarks>
         [NotNull]
         private static BigInteger BarrettReduction([NotNull] BigInteger x, [NotNull] BigInteger n, BigInteger constant)
         {
@@ -1509,7 +1518,7 @@ namespace MathCore
                 r2._DataLength--;
 
             r1 -= r2;
-            if ((r1._Data[__MaxLength - 1] & 0x80000000) != 0)        // negative
+            if ((r1._Data[MaxLength - 1] & 0x80000000) != 0)        // negative
             {
                 var val = new BigInteger();
                 val._Data[k_plus_one] = 0x00000001;
@@ -1528,12 +1537,13 @@ namespace MathCore
         // Returns gcd(this, Value)
         //***********************************************************************
 
+        /// <summary>Наибольший общий делитель</summary>
         [NotNull]
         public BigInteger Gcd([NotNull] BigInteger X)
         {
-            var x = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var x = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
-            var y = (X._Data[__MaxLength - 1] & 0x80000000) != 0 ? -X : X;
+            var y = (X._Data[MaxLength - 1] & 0x80000000) != 0 ? -X : X;
 
             var g = y;
 
@@ -1547,8 +1557,10 @@ namespace MathCore
             return g;
         }
 
-        /// <summary>Populates "this" with the specified amount of random bits</summary>
-        /// <exception cref="ArithmeticException">Number of required bits &gt; maxLength</exception>
+        /// <summary>Случайный набор бит указанной длины <paramref name="bits"/></summary>
+        /// <param name="bits">Требуемое число бит</param>
+        /// <param name="rand">Генератор случайных чисел</param>
+        /// <exception cref="ArithmeticException">Число бит &gt; <see cref="MaxLength"/> = (70)x(8x8) = 4'480 </exception>
         public void GenRandomBits(int bits, Random rand)
         {
             var d_words = bits >> 5;
@@ -1557,13 +1569,13 @@ namespace MathCore
             if (rem_bits != 0)
                 d_words++;
 
-            if (d_words > __MaxLength)
+            if (d_words > MaxLength)
                 throw new ArithmeticException("Number of required bits > maxLength");
 
             for (var i = 0; i < d_words; i++)
-                _Data[i] = (uint)(rand.NextDouble() * 0x100000000);
+                _Data[i] = (uint)(rand.NextDouble() * 0x1_0000_0000);
 
-            for (var i = d_words; i < __MaxLength; i++)
+            for (var i = d_words; i < MaxLength; i++)
                 _Data[i] = 0;
 
             if (rem_bits != 0)
@@ -1575,7 +1587,7 @@ namespace MathCore
                 _Data[d_words - 1] &= mask;
             }
             else
-                _Data[d_words - 1] |= 0x80000000;
+                _Data[d_words - 1] |= 0x8_000_0000;
 
             _DataLength = d_words;
 
@@ -1594,23 +1606,30 @@ namespace MathCore
         //
         //***********************************************************************
 
-        public int BitCount()
+        /// <summary>Число бит (номер последнего значащего бита)</summary>
+        public int BitCount
         {
-            while (_DataLength > 1 && _Data[_DataLength - 1] == 0)
-                _DataLength--;
-
-            var value = _Data[_DataLength - 1];
-            var mask = 0x80000000;
-            var bits = 32;
-
-            while (bits > 0 && (value & mask) == 0)
+            get
             {
-                bits--;
-                mask >>= 1;
-            }
-            bits += (_DataLength - 1) << 5;
 
-            return bits;
+                var data_length = _DataLength;
+                while (data_length > 1 && _Data[data_length - 1] == 0)
+                    data_length--;
+
+                var value = _Data[data_length - 1];
+                var mask = 0x8_000_0000;
+                var bits = 32;
+
+                while (bits > 0 && (value & mask) == 0)
+                {
+                    bits--;
+                    mask >>= 1;
+                }
+
+                bits += (data_length - 1) << 5;
+
+                return bits;
+            }
         }
 
 
@@ -1637,7 +1656,7 @@ namespace MathCore
 
         public bool FermatLittleTest(int confidence)
         {
-            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
             if (this_val._DataLength == 1)
             {
@@ -1651,7 +1670,7 @@ namespace MathCore
             if ((this_val._Data[0] & 0x1) == 0)     // even numbers
                 return false;
 
-            var bits = this_val.BitCount();
+            var bits = this_val.BitCount;
             var a = new BigInteger();
             var p_sub1 = this_val - new BigInteger(1);
             var rand = new Random();
@@ -1720,7 +1739,7 @@ namespace MathCore
 
         public bool RabinMillerTest(int confidence)
         {
-            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
             if (this_val._DataLength == 1)
                 switch (this_val._Data[0])
@@ -1756,7 +1775,7 @@ namespace MathCore
 
             var t = p_sub1 >> s;
 
-            var bits = this_val.BitCount();
+            var bits = this_val.BitCount;
             var a = new BigInteger();
             var rand = new Random();
 
@@ -1825,7 +1844,7 @@ namespace MathCore
 
         public bool SolovayStrassenTest(int confidence)
         {
-            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
             if (this_val._DataLength == 1)
                 switch (this_val._Data[0])
@@ -1843,7 +1862,7 @@ namespace MathCore
                 return false;
 
 
-            var bits = this_val.BitCount();
+            var bits = this_val.BitCount;
             var a = new BigInteger();
             var p_sub1 = this_val - 1;
             var p_sub1_shift = p_sub1 >> 1;
@@ -1915,7 +1934,7 @@ namespace MathCore
 
         public bool LucasStrongTest()
         {
-            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
             if (this_val._DataLength == 1)
                 switch (this_val._Data[0]) // test small numbers
@@ -2029,11 +2048,11 @@ namespace MathCore
 
             var g = thisVal.Gcd(Q);
             if (g._DataLength != 1 || g._Data[0] != 1) return true;
-            if ((lucas[2]._Data[__MaxLength - 1] & 0x80000000) != 0)
+            if ((lucas[2]._Data[MaxLength - 1] & 0x80000000) != 0)
                 lucas[2] += thisVal;
 
             var temp = Q * Jacobi(Q, thisVal) % thisVal;
-            if ((temp._Data[__MaxLength - 1] & 0x80000000) != 0)
+            if ((temp._Data[MaxLength - 1] & 0x80000000) != 0)
                 temp += thisVal;
 
             if (lucas[2] != temp)
@@ -2053,7 +2072,7 @@ namespace MathCore
 
         public bool IsProbablePrime(int confidence)
         {
-            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
 
             // test for divisibility by primes < 2000
@@ -2089,7 +2108,7 @@ namespace MathCore
 
         public bool IsProbablePrime()
         {
-            var this_val = (_Data[__MaxLength - 1] & 0x80000000) != 0 ? -this : this;
+            var this_val = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
             if (this_val._DataLength == 1)
                 switch (this_val._Data[0])
@@ -2167,7 +2186,7 @@ namespace MathCore
             {       // exception if maxLength = 1
                 val |= (long)_Data[1] << 32;
             }
-            catch (Exception) //todo: избавиться от исключения
+            catch (ArithmeticException) //todo: избавиться от исключения
             {
                 if ((_Data[0] & 0x80000000) != 0) // negative
                     val = (int)_Data[0];
@@ -2196,8 +2215,8 @@ namespace MathCore
             }
 
             if (a < 0)
-                return ((b - 1)._Data[0] & 0x2) == 0 
-                    ? Jacobi(-a, b) 
+                return ((b - 1)._Data[0] & 0x2) == 0
+                    ? Jacobi(-a, b)
                     : -Jacobi(-a, b);
 
             var e = 0;
@@ -2232,7 +2251,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger genPseudoPrime(int bits, int confidence, Random rand)
+        public static BigInteger GetPseudoPrime(int bits, int confidence, Random rand)
         {
             var result = new BigInteger();
             var done = false;
@@ -2323,7 +2342,7 @@ namespace MathCore
 
             var result = (p[0] - p[1] * q[0]) % modulus;
 
-            if ((result._Data[__MaxLength - 1] & 0x80000000) != 0)
+            if ((result._Data[MaxLength - 1] & 0x80000000) != 0)
                 result += modulus;  // get the least positive modulus
 
             return result;
@@ -2338,7 +2357,7 @@ namespace MathCore
         [NotNull]
         public byte[] GetBytes()
         {
-            var num_bits = BitCount();
+            var num_bits = BitCount;
 
             var num_bytes = num_bits >> 3;
             if ((num_bits & 0x7) != 0)
@@ -2427,7 +2446,7 @@ namespace MathCore
         [NotNull]
         public BigInteger Sqrt()
         {
-            var num_bits = (uint)BitCount();
+            var num_bits = (uint)BitCount;
 
             if ((num_bits & 0x1) != 0)        // odd number of bits
                 num_bits = (num_bits >> 1) + 1;
@@ -2565,7 +2584,7 @@ namespace MathCore
             if ((k._Data[0] & 0x00000001) == 0)
                 throw new ArgumentException("Argument k must be odd.");
 
-            var num_of_bits = k.BitCount();
+            var num_of_bits = k.BitCount;
             var mask = (uint)0x1 << ((num_of_bits & 0x1F) - 1);
 
             var v = 2 % n;
@@ -2655,77 +2674,77 @@ namespace MathCore
         // Tests the correct implementation of the /, %, * and + operators
         //***********************************************************************
 
-        //todo: Перенести в модульные тесты
-        public static void MulDivTest(int rounds) 
-        {
-            var rand = new Random();
-            var val = new byte[64];
-            var val2 = new byte[64];
+        ////todo: Перенести в модульные тесты
+        //public static void MulDivTest(int rounds)
+        //{
+        //    var rand = new Random();
+        //    var val = new byte[64];
+        //    var val2 = new byte[64];
 
-            for (var count = 0; count < rounds; count++)
-            {
-                // generate 2 numbers of random length
-                var t1 = 0;
-                while (t1 == 0)
-                    t1 = (int)(rand.NextDouble() * 65);
+        //    for (var count = 0; count < rounds; count++)
+        //    {
+        //        // generate 2 numbers of random length
+        //        var t1 = 0;
+        //        while (t1 == 0)
+        //            t1 = (int)(rand.NextDouble() * 65);
 
-                var t2 = 0;
-                while (t2 == 0)
-                    t2 = (int)(rand.NextDouble() * 65);
+        //        var t2 = 0;
+        //        while (t2 == 0)
+        //            t2 = (int)(rand.NextDouble() * 65);
 
-                var done = false;
-                while (!done)
-                    for (var i = 0; i < 64; i++)
-                    {
-                        if (i < t1)
-                            val[i] = (byte)(rand.NextDouble() * 256);
-                        else
-                            val[i] = 0;
+        //        var done = false;
+        //        while (!done)
+        //            for (var i = 0; i < 64; i++)
+        //            {
+        //                if (i < t1)
+        //                    val[i] = (byte)(rand.NextDouble() * 256);
+        //                else
+        //                    val[i] = 0;
 
-                        if (val[i] != 0)
-                            done = true;
-                    }
+        //                if (val[i] != 0)
+        //                    done = true;
+        //            }
 
-                done = false;
-                while (!done)
-                    for (var i = 0; i < 64; i++)
-                    {
-                        val2[i] = (byte)(i < t2 ? (byte)(rand.NextDouble() * 256) : 0);
+        //        done = false;
+        //        while (!done)
+        //            for (var i = 0; i < 64; i++)
+        //            {
+        //                val2[i] = (byte)(i < t2 ? (byte)(rand.NextDouble() * 256) : 0);
 
-                        if (val2[i] != 0)
-                            done = true;
-                    }
+        //                if (val2[i] != 0)
+        //                    done = true;
+        //            }
 
-                while (val[0] == 0)
-                    val[0] = (byte)(rand.NextDouble() * 256);
-                while (val2[0] == 0)
-                    val2[0] = (byte)(rand.NextDouble() * 256);
+        //        while (val[0] == 0)
+        //            val[0] = (byte)(rand.NextDouble() * 256);
+        //        while (val2[0] == 0)
+        //            val2[0] = (byte)(rand.NextDouble() * 256);
 
-                //            Console.WriteLine(count);
-                var bn1 = new BigInteger(val, t1);
-                var bn2 = new BigInteger(val2, t2);
+        //        //            Console.WriteLine(count);
+        //        var bn1 = new BigInteger(val, t1);
+        //        var bn2 = new BigInteger(val2, t2);
 
 
-                // Determine the quotient and remainder by dividing
-                // the first number by the second.
+        //        // Determine the quotient and remainder by dividing
+        //        // the first number by the second.
 
-                var bn3 = bn1 / bn2;
-                var bn4 = bn1 % bn2;
+        //        var bn3 = bn1 / bn2;
+        //        var bn4 = bn1 % bn2;
 
-                // Recalculate the number
-                var bn5 = bn3 * bn2 + bn4;
+        //        // Recalculate the number
+        //        var bn5 = bn3 * bn2 + bn4;
 
-                // Make sure they're the same
-                if (bn5 == bn1) continue;
-                //            Console.WriteLine("Error at " + count);
-                //            Console.WriteLine(bn1 + "\n");
-                //            Console.WriteLine(bn2 + "\n");
-                //            Console.WriteLine(bn3 + "\n");
-                //            Console.WriteLine(bn4 + "\n");
-                //            Console.WriteLine(bn5 + "\n");
-                return;
-            }
-        }
+        //        // Make sure they're the same
+        //        if (bn5 == bn1) continue;
+        //        //            Console.WriteLine("Error at " + count);
+        //        //            Console.WriteLine(bn1 + "\n");
+        //        //            Console.WriteLine(bn2 + "\n");
+        //        //            Console.WriteLine(bn3 + "\n");
+        //        //            Console.WriteLine(bn4 + "\n");
+        //        //            Console.WriteLine(bn5 + "\n");
+        //        return;
+        //    }
+        //}
 
 
         //***********************************************************************
@@ -2734,277 +2753,276 @@ namespace MathCore
         // decryption keys).
         //***********************************************************************
 
-        //todo: Перенести в модульные тесты
-        public static void RSATest(int rounds)
-        {
-            var rand = new Random(1);
-            var val = new byte[64];
+        ////todo: Перенести в модульные тесты
+        //public static void RSATest(int rounds)
+        //{
+        //    var rand = new Random(1);
+        //    var val = new byte[64];
 
-            // private and public key
-            var bi_e = new BigInteger("a932b948feed4fb2b692609bd22164fc9edb59fae7880c" +
-                                      "c1eaff7b3c9626b7e5b241c27a974833b2622ebe09beb4" +
-                                      "51917663d47232488f23a117fc97720f1e7", 16);
-            var bi_d = new BigInteger("4adf2f7a89da93248509347d2ae506d683dd3a16357e85" +
-                                      "9a980c4f77a4e2f7a01fae289f13a851df6e9db5adaa60" +
-                                      "bfd2b162bbbe31f7c8f828261a6839311929d2cef4f864" +
-                                      "dde65e556ce43c89bbbf9f1ac5511315847ce9cc8dc924" +
-                                      "70a747b8792d6a83b0092d2e5ebaf852c85cacf34278ef" +
-                                      "a99160f2f8aa7ee7214de07b7", 16);
-            var bi_n = new BigInteger("e8e77781f36a7b3188d711c2190b560f205a52391b3479" +
-                                      "cdb99fa010745cbeba5f2adc08e1de6bf38398a0487c4a" +
-                                      "73610d94ec36f17f3f46ad75e17bc1adfec99839589f45" +
-                                      "f95ccc94cb2a5c500b477eb3323d8cfab0c8458c96f014" +
-                                      "7a45d27e45a4d11d54d77684f65d48f15fafcc1ba208e7" +
-                                      "1e921b9bd9017c16a5231af7f", 16);
+        //    // private and public key
+        //// ReSharper disable CommentTypo
+        //    var bi_e = new BigInteger("a932b948feed4fb2b692609bd22164fc9edb59fae7880c" +
+        //                              "c1eaff7b3c9626b7e5b241c27a974833b2622ebe09beb4" +
+        //                              "51917663d47232488f23a117fc97720f1e7", 16);
+        //    var bi_d = new BigInteger("4adf2f7a89da93248509347d2ae506d683dd3a16357e85" +
+        //                              "9a980c4f77a4e2f7a01fae289f13a851df6e9db5adaa60" +
+        //                              "bfd2b162bbbe31f7c8f828261a6839311929d2cef4f864" +
+        //                              "dde65e556ce43c89bbbf9f1ac5511315847ce9cc8dc924" +
+        //                              "70a747b8792d6a83b0092d2e5ebaf852c85cacf34278ef" +
+        //                              "a99160f2f8aa7ee7214de07b7", 16);
+        //    var bi_n = new BigInteger("e8e77781f36a7b3188d711c2190b560f205a52391b3479" +
+        //                              "cdb99fa010745cbeba5f2adc08e1de6bf38398a0487c4a" +
+        //                              "73610d94ec36f17f3f46ad75e17bc1adfec99839589f45" +
+        //                              "f95ccc94cb2a5c500b477eb3323d8cfab0c8458c96f014" +
+        //                              "7a45d27e45a4d11d54d77684f65d48f15fafcc1ba208e7" +
+        //                              "1e921b9bd9017c16a5231af7f", 16);
+        //// ReSharper restore CommentTypo
 
-            Console.WriteLine("e =\n" + bi_e.ToString(10));
-            Console.WriteLine("\nd =\n" + bi_d.ToString(10));
-            Console.WriteLine("\nn =\n" + bi_n.ToString(10) + "\n");
+        //    Console.WriteLine("e =\n" + bi_e.ToString(10));
+        //    Console.WriteLine("\nd =\n" + bi_d.ToString(10));
+        //    Console.WriteLine("\nn =\n" + bi_n.ToString(10) + "\n");
 
-            for (var count = 0; count < rounds; count++)
-            {
-                // generate data of random length
-                var t1 = 0;
-                while (t1 == 0)
-                    t1 = (int)(rand.NextDouble() * 65);
+        //    for (var count = 0; count < rounds; count++)
+        //    {
+        //        // generate data of random length
+        //        var t1 = 0;
+        //        while (t1 == 0)
+        //            t1 = (int)(rand.NextDouble() * 65);
 
-                var done = false;
-                while (!done)
-                    for (var i = 0; i < 64; i++)
-                    {
-                        val[i] = i < t1 ? (byte)(rand.NextDouble() * 256) : (byte)0;
+        //        var done = false;
+        //        while (!done)
+        //            for (var i = 0; i < 64; i++)
+        //            {
+        //                val[i] = i < t1 ? (byte)(rand.NextDouble() * 256) : (byte)0;
 
-                        if (val[i] != 0)
-                            done = true;
-                    }
+        //                if (val[i] != 0)
+        //                    done = true;
+        //            }
 
-                while (val[0] == 0)
-                    val[0] = (byte)(rand.NextDouble() * 256);
+        //        while (val[0] == 0)
+        //            val[0] = (byte)(rand.NextDouble() * 256);
 
-                Console.Write("Round = " + count);
+        //        Console.Write("Round = " + count);
 
-                // encrypt and decrypt data
-                var bi_data = new BigInteger(val, t1);
-                var bi_encrypted = bi_data.ModPow(bi_e, bi_n);
-                var bi_decrypted = bi_encrypted.ModPow(bi_d, bi_n);
+        //        // encrypt and decrypt data
+        //        var bi_data = new BigInteger(val, t1);
+        //        var bi_encrypted = bi_data.ModPow(bi_e, bi_n);
+        //        var bi_decrypted = bi_encrypted.ModPow(bi_d, bi_n);
 
-                // compare
-                if (bi_decrypted != bi_data)
-                {
-                    Console.WriteLine("\nError at round " + count);
-                    Console.WriteLine(bi_data + "\n");
-                    return;
-                }
-                Console.WriteLine(" <PASSED>.");
-            }
-
-        }
+        //        // compare
+        //        if (bi_decrypted != bi_data)
+        //        {
+        //            Console.WriteLine("\nError at round " + count);
+        //            Console.WriteLine(bi_data + "\n");
+        //            return;
+        //        }
+        //        Console.WriteLine(" <PASSED>.");
+        //    }
+        //}
 
 
         //***********************************************************************
         // Tests the correct implementation of the modulo exponential and
         // inverse modulo functions using RSA encryption and decryption.  The two
-        // pseudoprimes p and q are fixed, but the two RSA keys are generated
+        // pseudo primes p and q are fixed, but the two RSA keys are generated
         // for each round of testing.
         //***********************************************************************
 
-        //todo: Перенести в модульные тесты
-        public static void RSATest2(int rounds)
-        {
-            var rand = new Random();
-            var val = new byte[64];
+        ////todo: Перенести в модульные тесты
+        //public static void RSATest2(int rounds)
+        //{
+        //    var rand = new Random();
+        //    var val = new byte[64];
 
-            byte[] lv_PseudoPrime1 =
-            {
-                0x85, 0x84, 0x64, 0xFD, 0x70, 0x6A,
-                0x9F, 0xF0, 0x94, 0x0C, 0x3E, 0x2C,
-                0x74, 0x34, 0x05, 0xC9, 0x55, 0xB3,
-                0x85, 0x32, 0x98, 0x71, 0xF9, 0x41,
-                0x21, 0x5F, 0x02, 0x9E, 0xEA, 0x56,
-                0x8D, 0x8C, 0x44, 0xCC, 0xEE, 0xEE,
-                0x3D, 0x2C, 0x9D, 0x2C, 0x12, 0x41,
-                0x1E, 0xF1, 0xC5, 0x32, 0xC3, 0xAA,
-                0x31, 0x4A, 0x52, 0xD8, 0xE8, 0xAF,
-                0x42, 0xF4, 0x72, 0xA1, 0x2A, 0x0D,
-                0x97, 0xB1, 0x31, 0xB3
-            };
+        //    byte[] lv_PseudoPrime1 =
+        //    {
+        //        0x85, 0x84, 0x64, 0xFD, 0x70, 0x6A,
+        //        0x9F, 0xF0, 0x94, 0x0C, 0x3E, 0x2C,
+        //        0x74, 0x34, 0x05, 0xC9, 0x55, 0xB3,
+        //        0x85, 0x32, 0x98, 0x71, 0xF9, 0x41,
+        //        0x21, 0x5F, 0x02, 0x9E, 0xEA, 0x56,
+        //        0x8D, 0x8C, 0x44, 0xCC, 0xEE, 0xEE,
+        //        0x3D, 0x2C, 0x9D, 0x2C, 0x12, 0x41,
+        //        0x1E, 0xF1, 0xC5, 0x32, 0xC3, 0xAA,
+        //        0x31, 0x4A, 0x52, 0xD8, 0xE8, 0xAF,
+        //        0x42, 0xF4, 0x72, 0xA1, 0x2A, 0x0D,
+        //        0x97, 0xB1, 0x31, 0xB3
+        //    };
 
-            byte[] lv_PseudoPrime2 =
-            {
-                0x99, 0x98, 0xCA, 0xB8, 0x5E, 0xD7,
-                0xE5, 0xDC, 0x28, 0x5C, 0x6F, 0x0E,
-                0x15, 0x09, 0x59, 0x6E, 0x84, 0xF3,
-                0x81, 0xCD, 0xDE, 0x42, 0xDC, 0x93,
-                0xC2, 0x7A, 0x62, 0xAC, 0x6C, 0xAF,
-                0xDE, 0x74, 0xE3, 0xCB, 0x60, 0x20,
-                0x38, 0x9C, 0x21, 0xC3, 0xDC, 0xC8,
-                0xA2, 0x4D, 0xC6, 0x2A, 0x35, 0x7F,
-                0xF3, 0xA9, 0xE8, 0x1D, 0x7B, 0x2C,
-                0x78, 0xFA, 0xB8, 0x02, 0x55, 0x80,
-                0x9B, 0xC2, 0xA5, 0xCB
-            };
+        //    byte[] lv_PseudoPrime2 =
+        //    {
+        //        0x99, 0x98, 0xCA, 0xB8, 0x5E, 0xD7,
+        //        0xE5, 0xDC, 0x28, 0x5C, 0x6F, 0x0E,
+        //        0x15, 0x09, 0x59, 0x6E, 0x84, 0xF3,
+        //        0x81, 0xCD, 0xDE, 0x42, 0xDC, 0x93,
+        //        0xC2, 0x7A, 0x62, 0xAC, 0x6C, 0xAF,
+        //        0xDE, 0x74, 0xE3, 0xCB, 0x60, 0x20,
+        //        0x38, 0x9C, 0x21, 0xC3, 0xDC, 0xC8,
+        //        0xA2, 0x4D, 0xC6, 0x2A, 0x35, 0x7F,
+        //        0xF3, 0xA9, 0xE8, 0x1D, 0x7B, 0x2C,
+        //        0x78, 0xFA, 0xB8, 0x02, 0x55, 0x80,
+        //        0x9B, 0xC2, 0xA5, 0xCB
+        //    };
 
 
-            var bi_p = new BigInteger(lv_PseudoPrime1);
-            var bi_q = new BigInteger(lv_PseudoPrime2);
-            var bi_pq = (bi_p - 1) * (bi_q - 1);
-            var bi_n = bi_p * bi_q;
+        //    var bi_p = new BigInteger(lv_PseudoPrime1);
+        //    var bi_q = new BigInteger(lv_PseudoPrime2);
+        //    var bi_pq = (bi_p - 1) * (bi_q - 1);
+        //    var bi_n = bi_p * bi_q;
 
-            for (var count = 0; count < rounds; count++)
-            {
-                // generate private and public key
-                var bi_e = bi_pq.GenCoPrime(512, rand);
-                var bi_d = bi_e.ModInverse(bi_pq);
+        //    for (var count = 0; count < rounds; count++)
+        //    {
+        //        // generate private and public key
+        //        var bi_e = bi_pq.GenCoPrime(512, rand);
+        //        var bi_d = bi_e.ModInverse(bi_pq);
 
-                Console.WriteLine("\ne =\n" + bi_e.ToString(10));
-                Console.WriteLine("\nd =\n" + bi_d.ToString(10));
-                Console.WriteLine("\nn =\n" + bi_n.ToString(10) + "\n");
+        //        Console.WriteLine("\ne =\n" + bi_e.ToString(10));
+        //        Console.WriteLine("\nd =\n" + bi_d.ToString(10));
+        //        Console.WriteLine("\nn =\n" + bi_n.ToString(10) + "\n");
 
-                // generate data of random length
-                var t1 = 0;
-                while (t1 == 0)
-                    t1 = (int)(rand.NextDouble() * 65);
+        //        // generate data of random length
+        //        var t1 = 0;
+        //        while (t1 == 0)
+        //            t1 = (int)(rand.NextDouble() * 65);
 
-                var done = false;
-                while (!done)
-                    for (var i = 0; i < 64; i++)
-                    {
-                        val[i] = (byte)(i < t1 ? (byte)(rand.NextDouble() * 256) : 0);
+        //        var done = false;
+        //        while (!done)
+        //            for (var i = 0; i < 64; i++)
+        //            {
+        //                val[i] = (byte)(i < t1 ? (byte)(rand.NextDouble() * 256) : 0);
 
-                        if (val[i] != 0)
-                            done = true;
-                    }
+        //                if (val[i] != 0)
+        //                    done = true;
+        //            }
 
-                while (val[0] == 0)
-                    val[0] = (byte)(rand.NextDouble() * 256);
+        //        while (val[0] == 0)
+        //            val[0] = (byte)(rand.NextDouble() * 256);
 
-                Console.Write("Round = " + count);
+        //        Console.Write("Round = " + count);
 
-                // encrypt and decrypt data
-                var bi_data = new BigInteger(val, t1);
-                var bi_encrypted = bi_data.ModPow(bi_e, bi_n);
-                var bi_decrypted = bi_encrypted.ModPow(bi_d, bi_n);
+        //        // encrypt and decrypt data
+        //        var bi_data = new BigInteger(val, t1);
+        //        var bi_encrypted = bi_data.ModPow(bi_e, bi_n);
+        //        var bi_decrypted = bi_encrypted.ModPow(bi_d, bi_n);
 
-                // compare
-                if (bi_decrypted != bi_data)
-                {
-                    Console.WriteLine("\nError at round {0}", count);
-                    Console.WriteLine("{0}\n", bi_data);
-                    return;
-                }
-                Console.WriteLine(" <PASSED>.");
-            }
+        //        // compare
+        //        if (bi_decrypted != bi_data)
+        //        {
+        //            Console.WriteLine("\nError at round {0}", count);
+        //            Console.WriteLine("{0}\n", bi_data);
+        //            return;
+        //        }
+        //        Console.WriteLine(" <PASSED>.");
+        //    }
 
-        }
+        //}
 
 
         //***********************************************************************
         // Tests the correct implementation of sqrt() method.
         //***********************************************************************
 
-        //todo: Перенести в модульные тесты
-        public static void SqrtTest(int rounds)
-        {
-            var rand = new Random();
-            for (var count = 0; count < rounds; count++)
-            {
-                // generate data of random length
-                var t1 = 0;
-                while (t1 == 0)
-                    t1 = (int)(rand.NextDouble() * 1024);
+        ////todo: Перенести в модульные тесты
+        //public static void SqrtTest(int rounds)
+        //{
+        //    var rand = new Random();
+        //    for (var count = 0; count < rounds; count++)
+        //    {
+        //        // generate data of random length
+        //        var t1 = 0;
+        //        while (t1 == 0)
+        //            t1 = (int)(rand.NextDouble() * 1024);
 
-                Console.Write("Round = " + count);
+        //        Console.Write("Round = " + count);
 
-                var a = new BigInteger();
-                a.GenRandomBits(t1, rand);
+        //        var a = new BigInteger();
+        //        a.GenRandomBits(t1, rand);
 
-                var b = a.Sqrt();
-                var c = (b + 1) * (b + 1);
+        //        var b = a.Sqrt();
+        //        var c = (b + 1) * (b + 1);
 
-                // check that b is the largest integer such that b*b <= a
-                if (c <= a)
-                {
-                    Console.WriteLine("\nError at round " + count);
-                    Console.WriteLine(a + "\n");
-                    return;
-                }
-                Console.WriteLine(" <PASSED>.");
-            }
-        }
+        //        // check that b is the largest integer such that b*b <= a
+        //        if (c <= a)
+        //        {
+        //            Console.WriteLine("\nError at round " + count);
+        //            Console.WriteLine(a + "\n");
+        //            return;
+        //        }
+        //        Console.WriteLine(" <PASSED>.");
+        //    }
+        //}
 
+        ////todo: Перенести в модульные тесты
+        //public static void Main(string[] args)
+        //{
+        //    // Known problem -> these two pseudoprimes passes my implementation of
+        //    // primality test but failed in JDK's IsProbablePrime test.
 
+        //    byte[] pseudo_prime1 =
+        //{
+        //    0x00, 0x85, 0x84, 0x64, 0xFD, 0x70,
+        //    0x6A, 0x9F, 0xF0, 0x94, 0x0C, 0x3E,
+        //    0x2C, 0x74, 0x34, 0x05, 0xC9, 0x55,
+        //    0xB3, 0x85, 0x32, 0x98, 0x71, 0xF9,
+        //    0x41, 0x21, 0x5F, 0x02, 0x9E, 0xEA,
+        //    0x56, 0x8D, 0x8C, 0x44, 0xCC, 0xEE,
+        //    0xEE, 0x3D, 0x2C, 0x9D, 0x2C, 0x12,
+        //    0x41, 0x1E, 0xF1, 0xC5, 0x32, 0xC3,
+        //    0xAA, 0x31, 0x4A, 0x52, 0xD8, 0xE8,
+        //    0xAF, 0x42, 0xF4, 0x72, 0xA1, 0x2A,
+        //    0x0D, 0x97, 0xB1, 0x31, 0xB3
+        //};
 
-        //todo: Перенести в модульные тесты
-        public static void Main(string[] args)
-        {
-            // Known problem -> these two pseudoprimes passes my implementation of
-            // primality test but failed in JDK's IsProbablePrime test.
+        //    //        byte[] pseudoPrime2 = { (byte)0x00,
+        //    //                        (byte)0x99, (byte)0x98, (byte)0xCA, (byte)0xB8, (byte)0x5E, (byte)0xD7,
+        //    //                        (byte)0xE5, (byte)0xDC, (byte)0x28, (byte)0x5C, (byte)0x6F, (byte)0x0E,
+        //    //                        (byte)0x15, (byte)0x09, (byte)0x59, (byte)0x6E, (byte)0x84, (byte)0xF3,
+        //    //                        (byte)0x81, (byte)0xCD, (byte)0xDE, (byte)0x42, (byte)0xDC, (byte)0x93,
+        //    //                        (byte)0xC2, (byte)0x7A, (byte)0x62, (byte)0xAC, (byte)0x6C, (byte)0xAF,
+        //    //                        (byte)0xDE, (byte)0x74, (byte)0xE3, (byte)0xCB, (byte)0x60, (byte)0x20,
+        //    //                        (byte)0x38, (byte)0x9C, (byte)0x21, (byte)0xC3, (byte)0xDC, (byte)0xC8,
+        //    //                        (byte)0xA2, (byte)0x4D, (byte)0xC6, (byte)0x2A, (byte)0x35, (byte)0x7F,
+        //    //                        (byte)0xF3, (byte)0xA9, (byte)0xE8, (byte)0x1D, (byte)0x7B, (byte)0x2C,
+        //    //                        (byte)0x78, (byte)0xFA, (byte)0xB8, (byte)0x02, (byte)0x55, (byte)0x80,
+        //    //                        (byte)0x9B, (byte)0xC2, (byte)0xA5, (byte)0xCB,
+        //    //                };
 
-            byte[] pseudo_prime1 =
-        {
-            0x00, 0x85, 0x84, 0x64, 0xFD, 0x70,
-            0x6A, 0x9F, 0xF0, 0x94, 0x0C, 0x3E,
-            0x2C, 0x74, 0x34, 0x05, 0xC9, 0x55,
-            0xB3, 0x85, 0x32, 0x98, 0x71, 0xF9,
-            0x41, 0x21, 0x5F, 0x02, 0x9E, 0xEA,
-            0x56, 0x8D, 0x8C, 0x44, 0xCC, 0xEE,
-            0xEE, 0x3D, 0x2C, 0x9D, 0x2C, 0x12,
-            0x41, 0x1E, 0xF1, 0xC5, 0x32, 0xC3,
-            0xAA, 0x31, 0x4A, 0x52, 0xD8, 0xE8,
-            0xAF, 0x42, 0xF4, 0x72, 0xA1, 0x2A,
-            0x0D, 0x97, 0xB1, 0x31, 0xB3
-        };
+        //    Console.WriteLine("List of primes < 2000\n---------------------");
+        //    int limit = 100, count = 0;
+        //    for (var i = 0; i < 2000; i++)
+        //    {
+        //        if (i >= limit)
+        //        {
+        //            Console.WriteLine();
+        //            limit += 100;
+        //        }
 
-            //        byte[] pseudoPrime2 = { (byte)0x00,
-            //                        (byte)0x99, (byte)0x98, (byte)0xCA, (byte)0xB8, (byte)0x5E, (byte)0xD7,
-            //                        (byte)0xE5, (byte)0xDC, (byte)0x28, (byte)0x5C, (byte)0x6F, (byte)0x0E,
-            //                        (byte)0x15, (byte)0x09, (byte)0x59, (byte)0x6E, (byte)0x84, (byte)0xF3,
-            //                        (byte)0x81, (byte)0xCD, (byte)0xDE, (byte)0x42, (byte)0xDC, (byte)0x93,
-            //                        (byte)0xC2, (byte)0x7A, (byte)0x62, (byte)0xAC, (byte)0x6C, (byte)0xAF,
-            //                        (byte)0xDE, (byte)0x74, (byte)0xE3, (byte)0xCB, (byte)0x60, (byte)0x20,
-            //                        (byte)0x38, (byte)0x9C, (byte)0x21, (byte)0xC3, (byte)0xDC, (byte)0xC8,
-            //                        (byte)0xA2, (byte)0x4D, (byte)0xC6, (byte)0x2A, (byte)0x35, (byte)0x7F,
-            //                        (byte)0xF3, (byte)0xA9, (byte)0xE8, (byte)0x1D, (byte)0x7B, (byte)0x2C,
-            //                        (byte)0x78, (byte)0xFA, (byte)0xB8, (byte)0x02, (byte)0x55, (byte)0x80,
-            //                        (byte)0x9B, (byte)0xC2, (byte)0xA5, (byte)0xCB,
-            //                };
+        //        var p = new BigInteger(-i);
 
-            Console.WriteLine("List of primes < 2000\n---------------------");
-            int limit = 100, count = 0;
-            for (var i = 0; i < 2000; i++)
-            {
-                if (i >= limit)
-                {
-                    Console.WriteLine();
-                    limit += 100;
-                }
-
-                var p = new BigInteger(-i);
-
-                if (!p.IsProbablePrime()) continue;
-                Console.Write(i + ", ");
-                count++;
-            }
-            Console.WriteLine("\nCount = " + count);
+        //        if (!p.IsProbablePrime()) continue;
+        //        Console.Write(i + ", ");
+        //        count++;
+        //    }
+        //    Console.WriteLine("\nCount = " + count);
 
 
-            var x = new BigInteger(pseudo_prime1);
-            Console.WriteLine("\n\nPrimality testing for\n{0}\n", x);
-            Console.WriteLine("SolovayStrassenTest(5) = {0}", x.SolovayStrassenTest(5));
-            Console.WriteLine("RabinMillerTest(5) = {0}", x.RabinMillerTest(5));
-            Console.WriteLine("FermatLittleTest(5) = {0}", x.FermatLittleTest(5));
-            Console.WriteLine("IsProbablePrime() = {0}", x.IsProbablePrime());
+        //    var x = new BigInteger(pseudo_prime1);
+        //    Console.WriteLine("\n\nPrimality testing for\n{0}\n", x);
+        //    Console.WriteLine("SolovayStrassenTest(5) = {0}", x.SolovayStrassenTest(5));
+        //    Console.WriteLine("RabinMillerTest(5) = {0}", x.RabinMillerTest(5));
+        //    Console.WriteLine("FermatLittleTest(5) = {0}", x.FermatLittleTest(5));
+        //    Console.WriteLine("IsProbablePrime() = {0}", x.IsProbablePrime());
 
-            Console.Write("\nGenerating 512-bits random pseudoprime. . .");
-            var rand = new Random();
-            var prime = genPseudoPrime(512, 5, rand);
-            Console.WriteLine("\n" + prime);
+        //    Console.Write("\nGenerating 512-bits random pseudoprime. . .");
+        //    var rand = new Random();
+        //    var prime = GetPseudoPrime(512, 5, rand);
+        //    Console.WriteLine("\n" + prime);
 
-            //int dwStart = System.Environment.TickCount;
-            //BigInteger.MulDivTest(100000);
-            //BigInteger.RSATest(10);
-            //BigInteger.RSATest2(10);
-            //Console.WriteLine(System.Environment.TickCount - dwStart);
-        }
+        //    //int dwStart = System.Environment.TickCount;
+        //    //BigInteger.MulDivTest(100000);
+        //    //BigInteger.RSATest(10);
+        //    //BigInteger.RSATest2(10);
+        //    //Console.WriteLine(System.Environment.TickCount - dwStart);
+        //}
     }
 }

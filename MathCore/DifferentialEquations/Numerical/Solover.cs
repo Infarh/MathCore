@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using MathCore.Annotations;
 using DU = System.Func<double, double, double>;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.DifferentialEquations.Numerical
 {
@@ -8,67 +10,63 @@ namespace MathCore.DifferentialEquations.Numerical
     {
         public delegate double NextValueMethod(double x0, double dx, double y0, DU f);
 
-        public static IEnumerable<double> RungeKutta4(this IEnumerable<double> X, double y0, DU f)
+        public static IEnumerable<double> RungeKutta4([NotNull] this IEnumerable<double> X, double y0, DU f)
         {
-            using (var xx = X.GetEnumerator())
+            using var xx = X.GetEnumerator();
+            if (!xx.MoveNext()) yield break;
+
+            var x = xx.Current;
+            var y = y0;
+            yield return y;
+
+            while (xx.MoveNext())
             {
-                if (!xx.MoveNext()) yield break;
+                var x1 = xx.Current;
+                var dx = x1 - x;
 
-                var x = xx.Current;
-                var y = y0;
-                yield return y;
+                yield return y = RungeKutta.NextValue(x, dx, y, f);
+                x = x1;
 
-                while (xx.MoveNext())
-                {
-                    var x1 = xx.Current;
-                    var dx = x1 - x;
+                //var dx_05 = dx * .5;
 
-                    yield return y = RungeKutta.NextValue(x, dx, y, f);
-                    x = x1;
+                //var k1 = f(x, y);
+                //var k2 = f(x + dx_05, y + k1 / 2);
+                //var k3 = f(x + dx_05, y + k2 / 2);
+                //var k4 = f(x + dx, y + k3);
 
-                    //var dx_05 = dx * .5;
-
-                    //var k1 = f(x, y);
-                    //var k2 = f(x + dx_05, y + k1 / 2);
-                    //var k3 = f(x + dx_05, y + k2 / 2);
-                    //var k4 = f(x + dx, y + k3);
-
-                    //x = x1;
-                    //y = y + dx * (k1 + 2 * k2 + 2 * k3 + k4) / 6;
-                    //yield return y;
-                }
+                //x = x1;
+                //y = y + dx * (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+                //yield return y;
             }
         }
 
-        public static IEnumerable<double> Eyler_Simple(this IEnumerable<double> X, double y0, DU f)
+        public static IEnumerable<double> EulerSimple([NotNull] this IEnumerable<double> X, double y0, DU f)
         {
-            using (var xx = X.GetEnumerator())
+            using var xx = X.GetEnumerator();
+            if (!xx.MoveNext()) yield break;
+
+            var x = xx.Current;
+            var y = y0;
+            yield return y;
+
+            while (xx.MoveNext())
             {
-                if (!xx.MoveNext()) yield break;
-
-                var x = xx.Current;
-                var y = y0;
+                var x1 = xx.Current;
+                var dx = x1 - x;
+                y += dx * f(x, y);
+                x = x1;
                 yield return y;
-
-                while (xx.MoveNext())
-                {
-                    var x1 = xx.Current;
-                    var dx = x1 - x;
-                    y += dx * f(x, y);
-                    x = x1;
-                    yield return y;
-                }
             }
         }
 
         [DST]
         public static double[] FixedStep(double y0, double start, double stop, int Count, DU f, NextValueMethod NextValue) => FixedStep(y0, new Interval(start, stop), Count, f, NextValue);
 
-        [DST]
+        [DST, NotNull]
         public static double[] FixedStep(double y0, Interval interval, int Count, DU f, NextValueMethod NextValue)
         {
-            var lenght = interval.Length;
-            var dx = lenght / (Count - 1);
+            var length = interval.Length;
+            var dx = length / (Count - 1);
 
             var x = interval.Min;
             var y = y0;
@@ -82,7 +80,8 @@ namespace MathCore.DifferentialEquations.Numerical
             return Y;
         }
 
-        public static double[] ValuesByGreed(double y0, double[] X, DU f, NextValueMethod NextValue)
+        [NotNull]
+        public static double[] ValuesByGreed(double y0, [NotNull] double[] X, DU f, NextValueMethod NextValue)
         {
             var Y = new double[X.Length];
 

@@ -34,7 +34,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
-        /// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+        /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         [DST]
         public static void StartAsync<TS, TEventArgs1, TEventArgs2, TEventArgs3>(
             [CanBeNull] this EventHandler<TS, TEventArgs1, TEventArgs2, TEventArgs3> Handler, 
@@ -102,7 +102,7 @@ namespace System
         ///// <param name="Sender">Источник события</param>
         ///// <param name="e">Аргументы события</param>
         ///// <param name="CallBack">Метод завершения генерации события</param>
-        ///// <param name="State">Объект-состояние, Передаваемый в метод завершения генерации события</param>
+        ///// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         //[DST]
         //public static void StartAsync<TEventArgs>(this EventHandler<TEventArgs> Handler,
         //    object Sender, TEventArgs e, AsyncCallback CallBack = null, object @State = null)

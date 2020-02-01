@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using MathCore.Values;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -33,7 +34,9 @@ namespace System
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Потока данных</summary>
+#pragma warning disable CA2213 // Disposable fields should be disposed
         private readonly Stream _DataStream;
+#pragma warning restore CA2213 // Disposable fields should be disposed
 
         private long _StartStreamPosition;
         private long _LastStreamPosition;
@@ -65,13 +68,16 @@ namespace System
 
                 var length_left = length - position;
                 var time_sec = length_left / speed;
-                if(double.IsNaN(time_sec) || double.IsInfinity(time_sec)) return null;
-                return TimeSpan.FromSeconds(time_sec);
+                return double.IsNaN(time_sec) || double.IsInfinity(time_sec) 
+                    ? (TimeSpan?)null 
+                    : TimeSpan.FromSeconds(time_sec);
             }
         }
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <summary>Инициализация нового экземпляра <see cref="StreamingObjectReader{T}"/></summary>
+        /// <param name="DataStream">Поток байт из которого требуется читать объекты</param>
         protected StreamingObjectReader(Stream DataStream)
         {
             _Speed = new StreamDataSpeedValue(_DataStream = DataStream);
@@ -80,6 +86,7 @@ namespace System
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <inheritdoc />
         protected override void Initializer()
         {
             _LastStreamPosition = _StartStreamPosition = _DataStream.Position;
@@ -99,6 +106,7 @@ namespace System
 
         protected abstract T Read();
 
+        /// <inheritdoc />
         protected override void MainAction()
         {
             try
@@ -126,6 +134,7 @@ namespace System
             }
         }
 
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.Synchronized)]
         public IDisposable Subscribe(IObserver<T> observer)
         {

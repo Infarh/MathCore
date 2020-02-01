@@ -27,49 +27,53 @@ namespace System.Linq
     {
         /// <summary>Добавить элемент в начало последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
-        /// <param name="collection">Исходная последовательность элементов</param>
+        /// <param name="enumerable">Исходная последовательность элементов</param>
         /// <param name="values">Добавляемый элемент</param>
         /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         [NN]
-        public static IEnumerable<T> InsertBefore<T>([CN] this IEnumerable<T> collection, [CN] params T[] values)
+        public static IEnumerable<T> InsertBefore<T>([CN] this IEnumerable<T> enumerable, [CN] params T[] values)
         {
             if (values != null) foreach (var v in values) yield return v;
-            if (collection != null) foreach (var v in collection) yield return v;
+            if (enumerable != null) foreach (var v in enumerable) yield return v;
         }
 
         /// <summary>Добавить элемент в начало последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
-        /// <param name="collection">Исходная последовательность элементов</param>
+        /// <param name="enumerable">Исходная последовательность элементов</param>
         /// <param name="values">Добавляемый элемент</param>
         /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         [NN]
-        public static IEnumerable<T> InsertBefore<T>([CN] this IEnumerable<T> collection, [CN] IEnumerable<T> values)
+        public static IEnumerable<T> InsertBefore<T>([CN] this IEnumerable<T> enumerable, [CN] IEnumerable<T> values)
         {
             if (values != null) foreach (var v in values) yield return v;
-            if (collection != null) foreach (var v in collection) yield return v;
+            if (enumerable != null) foreach (var v in enumerable) yield return v;
         }
 
-        public static T FirstOrDefault<T, TP>([NN] this IEnumerable<T> collection, TP p, Func<T, TP, bool> Selector)
+        public static T FirstOrDefault<T, TP>([NN] this IEnumerable<T> enumerable, TP p, Func<T, TP, bool> Selector)
         {
-            foreach (var item in collection)
+            foreach (var item in enumerable)
                 if (Selector(item, p))
                     return item;
             return default;
         }
 
-        public static T FirstOrDefault<T, TP1, TP2>([NN] this IEnumerable<T> collection, TP1 p1, TP2 p2, Func<T, TP1, TP2, bool> Selector)
+        public static T FirstOrDefault<T, TP1, TP2>(
+            [NN] this IEnumerable<T> enumerable,
+            TP1 p1, 
+            TP2 p2, 
+            Func<T, TP1, TP2, bool> Selector)
         {
-            foreach (var item in collection)
+            foreach (var item in enumerable)
                 if (Selector(item, p1, p2))
                     return item;
             return default;
         }
 
         [NN]
-        public static IEnumerable<T> SelectMany<T>([CN] this IEnumerable<IEnumerable<T>> collection)
+        public static IEnumerable<T> SelectMany<T>([CN] this IEnumerable<IEnumerable<T>> enumerable)
         {
-            if (collection is null) yield break;
-            foreach (var items in collection)
+            if (enumerable is null) yield break;
+            foreach (var items in enumerable)
                 if (items != null)
                     foreach (var item in items)
                         yield return item;
@@ -102,7 +106,7 @@ namespace System.Linq
         }
 
         [NN, InN]
-        public static IEnumerable<IEnumerable<T>> AsBlockEnumerable<T>([NN, IcN] this IEnumerable<T> source, int BlockSize)
+        public static IEnumerable<IEnumerable<T>> AsBlockEnumerable<T>([NN, IcN] this IEnumerable<T> enumerable, int BlockSize)
         {
             if (BlockSize <= 0)
                 throw new ArgumentOutOfRangeException(nameof(BlockSize), "Размер блока должен быть положительным значением");
@@ -110,7 +114,7 @@ namespace System.Linq
             IEnumerator<T> enumerator = null;
             try
             {
-                enumerator = source.GetEnumerator();
+                enumerator = enumerable.GetEnumerator();
                 BlockEnumerator<T> block;
                 do
                 {
@@ -125,17 +129,17 @@ namespace System.Linq
         }
 
         [NN]
-        public static IEnumerable<T> Except<T>([NN] this IEnumerable<T> items, T item)
+        public static IEnumerable<T> Except<T>([NN] this IEnumerable<T> enumerable, T item)
         {
-            foreach (var i in items)
+            foreach (var i in enumerable)
                 if (!Equals(i, item))
                     yield return i;
         }
 
-        public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> collection, [CN] T item)
+        public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] T item)
         {
             var index = -1;
-            foreach (var element in collection)
+            foreach (var element in enumerable)
             {
                 index++;
                 if (Equals(element, item)) return index;
@@ -143,11 +147,11 @@ namespace System.Linq
             return index;
         }
 
-        public static int LastIndexOf<T>([NN, IcN] this IEnumerable<T> collection, [CN] T item)
+        public static int LastIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] T item)
         {
             var i = 0;
             var index = -1;
-            foreach (var element in collection)
+            foreach (var element in enumerable)
             {
                 if (Equals(element, item)) index = i;
                 i++;
@@ -162,66 +166,88 @@ namespace System.Linq
         }
 
         [CN]
-        public static LambdaEnumerable<TValue> GetLambdaEnumerable<TObject, TValue>(this TObject obj,
-            Func<TObject, IEnumerable<TValue>> Creator) => new LambdaEnumerable<TValue>(() => Creator(obj));
+        public static LambdaEnumerable<TValue> GetLambdaEnumerable<TObject, TValue>(
+            this TObject obj,
+            Func<TObject, IEnumerable<TValue>> Creator)
+            => new LambdaEnumerable<TValue>(() => Creator(obj));
 
         [CN]
-        public static IEnumerable<T> WhereNotNull<T>([CN] this IEnumerable<T> items) where T : class => items?.Where(i => i is { });
-
-        /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
-        /// <param name="strings">Последовательность строк</param>
-        /// <param name="regex">Регулярное выражение-фильтр</param>
-        /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
-        [CN]
-        public static IEnumerable<string> Where([CN] this IEnumerable<string> strings, [NN] Regex regex) => strings?.Where((Func<string, bool>)regex.IsMatch);
-
-        /// <summary>Фильтрация последовательности строк, которые не удовлетворяют регулярному выражению</summary>
-        /// <param name="strings">Фильтруемая последовательность строк</param>
-        /// <param name="regex">Регулярное выражение-фильтр</param>
-        /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
-        [CN]
-        public static IEnumerable<string> WhereNot([CN] this IEnumerable<string> strings, [NN] Regex regex) => strings?.WhereNot(regex.IsMatch);
+        public static IEnumerable<T> WhereNotNull<T>([CN] this IEnumerable<T> enumerable) 
+            where T : class 
+            => enumerable?.Where(i => i is { });
 
         /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
         /// <param name="strings">Последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
         [CN]
-        public static IEnumerable<string> Where([CN] this IEnumerable<string> strings, [NN] string regex) => strings?.Where(s => Regex.IsMatch(s, regex));
+        public static IEnumerable<string> Where(
+            [CN] this IEnumerable<string> strings,
+            [NN] Regex regex) 
+            => strings?.Where((Func<string, bool>)regex.IsMatch);
 
         /// <summary>Фильтрация последовательности строк, которые не удовлетворяют регулярному выражению</summary>
         /// <param name="strings">Фильтруемая последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
         [CN]
-        public static IEnumerable<string> WhereNot([CN] this IEnumerable<string> strings, [NN] string regex) => strings?.WhereNot(s => Regex.IsMatch(s, regex));
+        public static IEnumerable<string> WhereNot(
+            [CN] this IEnumerable<string> strings,
+            [NN] Regex regex) 
+            => strings?.WhereNot(regex.IsMatch);
+
+        /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
+        /// <param name="strings">Последовательность строк</param>
+        /// <param name="regex">Регулярное выражение-фильтр</param>
+        /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
+        [CN]
+        public static IEnumerable<string> Where(
+            [CN] this IEnumerable<string> strings,
+            [NN] string regex) 
+            => strings?.Where(s => Regex.IsMatch(s, regex));
+
+        /// <summary>Фильтрация последовательности строк, которые не удовлетворяют регулярному выражению</summary>
+        /// <param name="strings">Фильтруемая последовательность строк</param>
+        /// <param name="regex">Регулярное выражение-фильтр</param>
+        /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
+        [CN]
+        public static IEnumerable<string> WhereNot(
+            [CN] this IEnumerable<string> strings, 
+            [NN] string regex) 
+            => strings?.WhereNot(s => Regex.IsMatch(s, regex));
 
         /// <summary>Выполняет фильтрацию последовательности значений на основе заданного предиката</summary>
         /// <returns>
         /// Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, содержащий элементы входной последовательности, которые не удовлетворяют условию.
         /// </returns>
-        /// <param name="collection">Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, подлежащий фильтрации.</param>
+        /// <param name="enumerable">Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, подлежащий фильтрации.</param>
         /// <param name="NotSelector">Функция для проверки каждого элемента на не соответствие условию.</param>
-        /// <typeparam name="T">Тип элементов последовательности <paramref name="collection"/>.</typeparam>
-        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="collection"/> или <paramref name="NotSelector"/> — null.</exception>
-        [CN]
-        public static IEnumerable<T> WhereNot<T>([CN] this IEnumerable<T> collection, [NN]Func<T, bool> NotSelector) => collection?.Where(t => !NotSelector(t));
+        /// <typeparam name="T">Тип элементов последовательности <paramref name="enumerable"/>.</typeparam>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="enumerable"/> или <paramref name="NotSelector"/> — null.</exception>
+        [NN]
+        public static IEnumerable<T> WhereNot<T>(
+            [NN] this IEnumerable<T> enumerable,
+            [NN]Func<T, bool> NotSelector) 
+            => enumerable.Where(t => !NotSelector(t));
 
         /// <summary>Возвращает цепочку элементов последовательности, удовлетворяющих указанному условию</summary>
         /// <returns>
         /// Объект <see cref="T:System.Collections.Generic.IEnumerable`1"/>, содержащий элементы входной последовательности до первого элемента, который не прошел проверку.
         /// </returns>
-        /// <param name="collection">Последовательность, из которой требуется возвратить элементы.</param>
+        /// <param name="enumerable">Последовательность, из которой требуется возвратить элементы.</param>
         /// <param name="NotSelector">Функция для проверки каждого элемента на соответствие условию.</param>
-        /// <typeparam name="T">Тип элементов последовательности <paramref name="collection"/>.</typeparam>
-        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="collection"/> или <paramref name="NotSelector"/> — null.</exception>
+        /// <typeparam name="T">Тип элементов последовательности <paramref name="enumerable"/>.</typeparam>
+        /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="enumerable"/> или <paramref name="NotSelector"/> — null.</exception>
         [CN]
-        public static IEnumerable<T> TakeWhileNot<T>([CN] this IEnumerable<T> collection, [NN]Func<T, bool> NotSelector) => collection?.TakeWhile(t => !NotSelector(t));
+        public static IEnumerable<T> TakeWhileNot<T>(
+            [CN] this IEnumerable<T> enumerable,
+            [NN]Func<T, bool> NotSelector)
+            => enumerable?.TakeWhile(t => !NotSelector(t));
 
         /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
         /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
         /// <typeparam name="TV">Тип элементов результирующего массива</typeparam>
-        /// <param name="items">Исходное перечисление</param>
+        /// <param name="enumerable">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов</param>
         /// <returns>
         /// Если ссылка на исходное перечисление не пуста, то
@@ -229,12 +255,15 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [NN] public static TV[] ToArray<T, TV>([NN] this IEnumerable<T> items, [NN] Func<T, TV> converter) => items.Select(converter).ToArray();
+        [NN] public static TV[] ToArray<T, TV>(
+            [NN] this IEnumerable<T> enumerable,
+            [NN] Func<T, TV> converter)
+            => enumerable.Select(converter).ToArray();
 
         /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
         /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
         /// <typeparam name="TV">Тип элементов результирующего массива</typeparam>
-        /// <param name="items">Исходное перечисление</param>
+        /// <param name="enumerable">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов и индекса элемента</param>
         /// <returns>
         /// Если ссылка на исходное перечисление не пуста, то
@@ -242,12 +271,15 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [NN] public static TV[] ToArray<T, TV>([NN] this IEnumerable<T> items, [NN] Func<T, int, TV> converter) => items.Select(converter).ToArray();
+        [NN] public static TV[] ToArray<T, TV>(
+            [NN] this IEnumerable<T> enumerable, 
+            [NN] Func<T, int, TV> converter) 
+            => enumerable.Select(converter).ToArray();
 
         /// <summary>Преобразование перечисления в список с преобразованием элементов</summary>
         /// <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
         /// <typeparam name="TValue">Тип элементов результирующего списка</typeparam>
-        /// <param name="collection">Исходное перечисление</param>
+        /// <param name="enumerable">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов</param>
         /// <returns>
         /// Если ссылка на исходное перечисление не пуста, то
@@ -256,21 +288,27 @@ namespace System.Linq
         ///     пустая ссылка на список
         /// </returns>
         [CN]
-        public static List<TValue> ToList<TItem, TValue>([CN] this IEnumerable<TItem> collection, [NN] Func<TItem, TValue> converter) => collection?.Select(converter).ToList();
+        public static List<TValue> ToList<TItem, TValue>(
+            [CN] this IEnumerable<TItem> enumerable,
+            [NN] Func<TItem, TValue> converter)
+            => enumerable?.Select(converter).ToList();
 
         [NN]
-        public static Dictionary<TKey, T> ToDictionaryDistinctKeys<T, TKey>([NN] this IEnumerable<T> collection, Func<T, TKey> KeySelector, bool OverloadValues = false)
+        public static Dictionary<TKey, T> ToDictionaryDistinctKeys<T, TKey>(
+            [NN] this IEnumerable<T> enumerable,
+            Func<T, TKey> KeySelector, 
+            bool OverloadValues = false)
         {
             var dic = new Dictionary<TKey, T>();
             if (OverloadValues)
-                foreach (var item in collection)
+                foreach (var item in enumerable)
                 {
                     var key = KeySelector(item);
                     if (dic.ContainsKey(key)) continue;
                     dic.Add(key, item);
                 }
             else
-                foreach (var item in collection)
+                foreach (var item in enumerable)
                 {
                     var key = KeySelector(item);
                     dic[key] = item;
@@ -279,18 +317,22 @@ namespace System.Linq
         }
 
         [NN]
-        public static Dictionary<TKey, TValue> ToDictionaryDistinctKeys<T, TKey, TValue>([NN] this IEnumerable<T> collection, Func<T, TKey> KeySelector, Func<T, TValue> ValueSelector, bool OverloadValues = false)
+        public static Dictionary<TKey, TValue> ToDictionaryDistinctKeys<T, TKey, TValue>(
+            [NN] this IEnumerable<T> enumerable, 
+            Func<T, TKey> KeySelector, 
+            Func<T, TValue> ValueSelector,
+            bool OverloadValues = false)
         {
             var dic = new Dictionary<TKey, TValue>();
             if (OverloadValues)
-                foreach (var item in collection)
+                foreach (var item in enumerable)
                 {
                     var key = KeySelector(item);
                     if (dic.ContainsKey(key)) continue;
                     dic.Add(key, ValueSelector(item));
                 }
             else
-                foreach (var item in collection)
+                foreach (var item in enumerable)
                 {
                     var key = KeySelector(item);
                     dic[key] = ValueSelector(item);
@@ -302,7 +344,8 @@ namespace System.Linq
         /// <param name="Lines">Перечисление строк</param>
         /// <returns>Если ссылка на перечисление пуста, то пустая ссылка на строку, иначе - объединение строк с разделителем - переносом строки</returns>
         [CN]
-        public static string Aggregate([CN] this IEnumerable<string> Lines) => Lines?.Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s), sb => sb.ToString());
+        public static string Aggregate([CN] this IEnumerable<string> Lines) 
+            => Lines?.Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s), sb => sb.ToString());
 
         /// <summary>Добавить элементы перечисления в коллекцию</summary>
         /// <typeparam name="T">Тип элемента</typeparam>
@@ -319,7 +362,8 @@ namespace System.Linq
         /// <param name="collection">Коллекция, из которой производится удаление</param>
         /// <returns>Перечисление результатов операций удаления для каждого из элементов исходного перечисления</returns>
         [NN]
-        public static bool[] RemoveFrom<T>([NN] this IEnumerable<T> source, [NN] ICollection<T> collection) => source.Select(collection.Remove).ToArray();
+        public static bool[] RemoveFrom<T>([NN] this IEnumerable<T> source, [NN] ICollection<T> collection)
+            => source.Select(collection.Remove).ToArray();
 
 
         /// <summary>Добавить в словарь</summary>
@@ -353,7 +397,6 @@ namespace System.Linq
 
             if (source_type == target_type) return (IEnumerable<TValue>)collection;
             if (collection is null) return null;
-
 
             Func<object, object> type_converter = null;
             var converter = source_type == typeof(object)
@@ -556,7 +599,9 @@ namespace System.Linq
         public static StatisticValue GetStatistic([NN] this IEnumerable<double> collection, [MinValue(0)] int Length = 0)
         {
             if (Length > 0)
-                return new StatisticValue(Length).InitializeObject(collection, (sv, items) => sv.AddEnumerable(items)) ?? throw new InvalidOperationException();
+                return new StatisticValue(Length)
+                          .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items)) 
+                       ?? throw new InvalidOperationException();
             var values = collection.ToArray();
             var result = new StatisticValue(values.Length);
             result.AddEnumerable(values);
@@ -1173,7 +1218,7 @@ namespace System.Linq
         /// <summary>Выполнение указанного действия на каждом шаге перебора последовательности после выдачи элемента</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов</param>
-        /// <param name="action">Действие, Выполняемое после выдачи элемента последовательности</param>
+        /// <param name="action">Действие, выполняемое после выдачи элемента последовательности</param>
         /// <returns>Исходная последовательность элементов</returns>
         [NN]
         public static IEnumerable<T> ForeachLazyLast<T>([NN] this IEnumerable<T> collection, [CN] Action<T> action)
@@ -1206,98 +1251,6 @@ namespace System.Linq
                 Action(t, index++);
                 return t;
             });
-
-        ///<summary>Класс вычисления значений функции для коллекции аргументов</summary>
-        ///<typeparam name="T">Тип аргумента функции</typeparam>
-        ///<typeparam name="TResult">Тип значения функции</typeparam>
-        private class EnumerableCollectionFunctionCalculator<T, TResult> : IEnumerable<TResult>
-        {
-            /* ------------------------------------------------------------------------------------------ */
-
-            ///<summary>Перечислитель коллекции рассчитанных значений функции</summary>
-            private class EnumerableCollectionFunctionCalculatorEnumerator : IEnumerator<TResult>
-            {
-                /* ------------------------------------------------------------------------------------------ */
-
-                /// <summary>Перечислитель коллекции аргументов функции</summary>
-                [NN]
-                private readonly IEnumerator<T> _Enumerator;
-
-                [NN]
-                private readonly LazyValue<TResult> _FunctionValue;
-
-                /* ------------------------------------------------------------------------------------------ */
-
-                /// <summary>Текущий элемент коллекции значений функции</summary>
-                [NN]
-                public TResult Current => _FunctionValue;
-
-                /// <summary>Текущий элемент коллекции значений функции</summary>
-                [NN]
-                object IEnumerator.Current => Current;
-
-                /* ------------------------------------------------------------------------------------------ */
-
-                ///<summary>Инициализация нового перечислителя коллекции рассчитанных значений функции</summary>
-                ///<param name="Enumerator">Перечислитель коллекции аргументов области определения</param>
-                ///<param name="f">Вычисляемая функция</param>
-                public EnumerableCollectionFunctionCalculatorEnumerator([NN] IEnumerator<T> Enumerator, [NN] Func<T, TResult> f)
-                {
-                    _Enumerator = Enumerator;
-                    _FunctionValue = new LazyValue<TResult>(() => f(_Enumerator.Current));
-                }
-
-                /* ------------------------------------------------------------------------------------------ */
-
-                /// <summary>Освобождение ресурсов</summary>
-                public void Dispose() => _Enumerator.Dispose();
-
-                /// <summary>Переход к следующему элементу коллекции</summary>
-                /// <returns>Истина, если переход выполнен успешно</returns>
-                public bool MoveNext()
-                {
-                    var can_move = _Enumerator.MoveNext();
-                    if (can_move) _FunctionValue.Reset();
-                    return can_move;
-                }
-
-                /// <summary>Сброс состояния перечислителя</summary>
-                public void Reset()
-                {
-                    _Enumerator.Reset();
-                    _FunctionValue.Reset();
-                }
-
-                /* ------------------------------------------------------------------------------------------ */
-            }
-
-            /* ------------------------------------------------------------------------------------------ */
-
-            /// <summary>Коллекция аргументов функции</summary>
-            [NN]
-            private readonly IEnumerable<T> _Collection;
-
-            /// <summary>Вычисляемая функция</summary>
-            [NN]
-            private readonly Func<T, TResult> _Function;
-
-            /// <summary>Инициализация нового потокового вычислителя функции на коллекции аргументов</summary>
-            /// <param name="collection">Коллекция аргументов</param>
-            /// <param name="f">Вычисляемая функция</param>
-            public EnumerableCollectionFunctionCalculator([NN] IEnumerable<T> collection, [NN] Func<T, TResult> f)
-            {
-                _Collection = collection;
-                _Function = f;
-            }
-
-            /// <summary>Получение перечислителя</summary>
-            /// <returns>Перечислитель рассчитанных значений функции</returns>
-            public IEnumerator<TResult> GetEnumerator() => new EnumerableCollectionFunctionCalculatorEnumerator(_Collection.GetEnumerator(), _Function);
-
-            /// <summary>Неявное получение перечислителя</summary>
-            /// <returns>Перечислитель рассчитанных значений функции</returns>
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
 
         /// <summary>Пересечение последовательностей</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
@@ -1496,6 +1449,7 @@ namespace System.Linq
         /// <param name="Separator">Разделитель элементов в строке</param>
         /// <returns>Строка, составленная из строковых представлений объектов последовательности, разделённых указанной строкой-разделителем</returns>
         [NN]
+        // ReSharper disable once EmptyString
         public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") => 
             string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
 

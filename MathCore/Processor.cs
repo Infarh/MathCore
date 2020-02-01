@@ -7,6 +7,9 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -16,8 +19,8 @@ namespace System
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        /// <summary>Объект-ислюкение, передаваемое в качестве параметра события ошибки при рассинхронизации потока процессора</summary>
-        private static readonly Exception __AcyncException = new ApplicationException("Рассинхронизация обработки");
+        /// <summary>Объект-исключение, передаваемое в качестве параметра события ошибки при рассинхронизации потока процессора</summary>
+        private static readonly Exception __AsyncException = new ApplicationException("Рассинхронизация обработки");
 
         /// <summary>Текущее время системы</summary>
         protected static DateTime Now { [DST] get => DateTime.Now; }
@@ -34,18 +37,18 @@ namespace System
         }
         private event PropertyChangedEventHandler _PropertyChanged;
         /// <summary>Вызов события изменения свойства объекта</summary>
-        ///  <param name="e">Параметры события изменения свойства объекта, содержашие имя свойства</param>
+        ///  <param name="e">Параметры события изменения свойства объекта, содержащие имя свойства</param>
         [DST]
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => _PropertyChanged?.Invoke(this, e);
 
-        /// <summary>Вызов собйтия изменения свойтсва объекта с указанием имени свойства</summary>
+        /// <summary>Вызов события изменения свойства объекта с указанием имени свойства</summary>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
         [DST, NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
 
         /// <summary>Событие изменения свойства активности процессора</summary>
         public event EventHandler EnableChanged;
-        /// <summary>Источник собйтия изменения свойства активности процессора</summary><param name="e">Параметры события</param>
+        /// <summary>Источник события изменения свойства активности процессора</summary><param name="e">Параметры события</param>
         [DST]
         protected virtual void OnEnableChanged(EventArgs e) => EnableChanged?.Invoke(this, e);
 
@@ -63,7 +66,7 @@ namespace System
         [DST]
         protected virtual void OnProcessCompleted(EventArgs e) => ProcessCompleted.FastStart(this, e);
 
-        /// <summary>Событие, вознакающие при возникновении исключений в процессе работы процессора</summary>
+        /// <summary>Событие, возникающие при возникновении исключений в процессе работы процессора</summary>
         public event ExceptionEventHandler<Exception> Error;
         /// <summary>Источник события возникновения исключительной ситуации в процессе работы процессора</summary>
         /// <param name="e">Аргумент события ошибки, содержащий объект исключения</param>
@@ -104,13 +107,13 @@ namespace System
         private int _ActionTimeout;
 
         /// <summary>Метод установки времени таймаута для работающего потока процессора</summary>
-        private Action<int> _Set_Timeout;
+        private Action<int> _SetTimeout;
 
         /// <summary>Признак синхронной работы</summary>
-        private volatile bool _IsSychronus;
+        private volatile bool _IsSynchronous;
 
         /// <summary>Флаг, разрешающий вызов события ошибки в случае рассинхронизации потока</summary>
-        private volatile bool _ErrorIfAcync;
+        private volatile bool _ErrorIfAsync;
 
         /// <summary>Количество выполненных циклов обработки</summary>
         private long _CyclesCount;
@@ -122,13 +125,13 @@ namespace System
 
         // ReSharper disable NotAccessedField.Global
         /// <summary>Метод извлечения времени выполнения одного цикла основного метода процессора</summary>
-        protected Func<TimeSpan> _Get_LastDeltaTime;
+        protected Func<TimeSpan> _GetLastDeltaTime;
         // ReSharper restore NotAccessedField.Global
 
-        /// <summary>Объект синхрониации потоков по запуску процессора</summary>
+        /// <summary>Объект синхронизации потоков по запуску процессора</summary>
         protected readonly EventWaitHandle _StartWaitHandle = new ManualResetEvent(false);
 
-        /// <summary>Объект синхрониации потоков по остановке процессора</summary>
+        /// <summary>Объект синхронизации потоков по остановке процессора</summary>
         protected readonly EventWaitHandle _StopWaitHandle = new ManualResetEvent(false);
 
         /* ------------------------------------------------------------------------------------------ */
@@ -142,10 +145,10 @@ namespace System
             set
             {
                 _Priority = value;
-                var lv_Thread = _MainWorkThread;
+                var thread = _MainWorkThread;
                 lock (_StartStopSectionLocker)
-                    if(lv_Thread != null && (lv_Thread.IsAlive || lv_Thread.IsBackground))
-                        lv_Thread.Priority = value;
+                    if(thread != null && (thread.IsAlive || thread.IsBackground))
+                        thread.Priority = value;
                 OnPropertyChanged();
             }
         }
@@ -156,7 +159,7 @@ namespace System
         /// <summary>Основной поток работы процессора</summary>
         public Thread MainThread { [DST] get => _MainWorkThread; }
 
-        /// <summary>ТАймаут времени синхронизации основного потока процессора с потоком, завершившим его работу.</summary>
+        /// <summary>Таймаут времени синхронизации основного потока процессора с потоком, завершившим его работу.</summary>
         public int JoinThreadTimeout
         {
             [DST]
@@ -178,10 +181,10 @@ namespace System
         /// <summary>Время, прошедшее после запуска</summary>
         public TimeSpan? ElapsedTime { [DST] get { var start = _StartTime; return start is null ? (TimeSpan?)null : Now - start.Value; } }
 
-        /// <summary>ОБъект-наблюдатель за состоянием процессора</summary>
+        /// <summary>Объект-наблюдатель за состоянием процессора</summary>
         public ProgressMonitor Monitor => _Monitor;
 
-        /// <summary>ТАймаут основной циклической операции в миллисекундах</summary>
+        /// <summary>Таймаут основной циклической операции в миллисекундах</summary>
         public int ActionTimeout
         {
             [DST]
@@ -191,27 +194,29 @@ namespace System
             {
                 if(_ActionTimeout == value) return;
                 _ActionTimeout = value;
-                _Set_Timeout?.Invoke(value);
+                _SetTimeout?.Invoke(value);
                 OnPropertyChanged();
             }
         }
 
         /// <summary>Признак синхронной работы</summary>
-        public bool IsSynchronus { [DST] get => _IsSychronus; }
+        public bool IsSynchronous { [DST] get => _IsSynchronous; }
 
-        /// <summary>ГЕнерировать ошибку в случае рассинхронизации?</summary>
-        public bool ErrorIfAsync { [DST] get => _ErrorIfAcync; [DST] set { _ErrorIfAcync = value; OnPropertyChanged(); } }
+        /// <summary>Генерировать ошибку в случае рассинхронизации?</summary>
+        public bool ErrorIfAsync { [DST] get => _ErrorIfAsync; [DST] set { _ErrorIfAsync = value; OnPropertyChanged(); } }
 
         /// <summary>Количество пройденных циклов</summary>
         public long CyclesCount { [DST] get => _CyclesCount; }
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <summary>Инициализация нового экземпляра <see cref="Processor"/></summary>
         [DST]
         protected Processor() => _NameForeNewMainThread = $"{GetType().Name}Thread";
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <summary>Перезапуск</summary>
         [DST]
         public virtual void Restart()
         {
@@ -260,8 +265,8 @@ namespace System
                 if(!_MainWorkThread.Join(_JoinThreadTimeout))
                     _MainWorkThread.Abort();
                 _MainWorkThread = null;
-                _Set_Timeout = null;
-                _Get_LastDeltaTime = null;
+                _SetTimeout = null;
+                _GetLastDeltaTime = null;
 
                 _StartWaitHandle.Reset();
                 _StopWaitHandle.Set();
@@ -276,7 +281,7 @@ namespace System
             ? _StartWaitHandle.WaitOne()
             : _StartWaitHandle.WaitOne(Timeout.Value);
 
-        /// <summary>Блокировать пото до остановки процессора</summary>
+        /// <summary>Блокировать поток до остановки процессора</summary>
         [DST]
         public bool WaitToStop(TimeSpan? Timeout = null) => Timeout is null || Timeout.Value.Ticks == 0
             ? _StopWaitHandle.WaitOne()
@@ -295,19 +300,19 @@ namespace System
             #region Переменные
 
             var timeout = TimeSpan.FromMilliseconds(_ActionTimeout);
-            _Set_Timeout = new_timeout => timeout = TimeSpan.FromMilliseconds(new_timeout);
+            _SetTimeout = new_timeout => timeout = TimeSpan.FromMilliseconds(new_timeout);
 
 
             var delta = new TimeSpan();
             // ReSharper disable AccessToModifiedClosure
-            _Get_LastDeltaTime = () => delta;
+            _GetLastDeltaTime = () => delta;
             // ReSharper restore AccessToModifiedClosure
 
             // ReSharper disable TooWideLocalVariableScope
             DateTime start_time;
             DateTime stop_time;
             TimeSpan time_to_sleep;
-            bool is_sychronus;
+            bool is_synchronous;
             // ReSharper restore TooWideLocalVariableScope 
 
             #endregion
@@ -319,9 +324,9 @@ namespace System
                 start_time = Now;
                 try { MainAction(); } catch(Exception Error)
                 {
-                    var lv_EventArgs = new ExceptionEventHandlerArgs<Exception>(Error);
-                    OnError(lv_EventArgs);
-                    if(lv_EventArgs.NeedToThrow) throw;
+                    var args = new ExceptionEventHandlerArgs<Exception>(Error);
+                    OnError(args);
+                    if(args.NeedToThrow) throw;
                     if(Error is ThreadAbortException) Thread.ResetAbort();
                 }
                 stop_time = Now;
@@ -329,11 +334,11 @@ namespace System
                 if(timeout.Ticks <= 0) continue;
                 delta = stop_time - start_time;
                 time_to_sleep = timeout - delta;
-                is_sychronus = _IsSychronus = timeout.Ticks > 0 && time_to_sleep.Ticks > 0;
-                if(is_sychronus)
+                is_synchronous = _IsSynchronous = timeout.Ticks > 0 && time_to_sleep.Ticks > 0;
+                if(is_synchronous)
                     Thread.Sleep(time_to_sleep);
-                else if(_ErrorIfAcync)
-                    OnError(__AcyncException);
+                else if(_ErrorIfAsync)
+                    OnError(__AsyncException);
             }
 
             #endregion
@@ -350,9 +355,9 @@ namespace System
         {
             try { Initializer(); } catch(Exception Error)
             {
-                var lv_EventArgs = new ExceptionEventHandlerArgs<Exception>(Error);
-                OnError(lv_EventArgs);
-                if(lv_EventArgs.NeedToThrow) throw;
+                var args = new ExceptionEventHandlerArgs<Exception>(Error);
+                OnError(args);
+                if(args.NeedToThrow) throw;
                 if(Error is ThreadAbortException) Thread.ResetAbort();
             }
         }
@@ -367,7 +372,7 @@ namespace System
             _StartTime = Now;
             _StopTime = null;
             _CyclesCount = 0;
-            _IsSychronus = true;
+            _IsSynchronous = true;
             _Monitor.Status = "Обработка";
             OnProcessStarted(EventArgs.Empty);
         }
@@ -392,24 +397,30 @@ namespace System
         {
             try { Finalizer(); } catch(Exception Error)
             {
-                var lv_EventArgs = new ExceptionEventHandlerArgs<Exception>(Error);
-                OnError(lv_EventArgs);
-                if(lv_EventArgs.NeedToThrow) throw;
+                var args = new ExceptionEventHandlerArgs<Exception>(Error);
+                OnError(args);
+                if(args.NeedToThrow) throw;
 
                 if(Error is ThreadAbortException) Thread.ResetAbort();
             }
         }
 
-        protected void Dispose(bool disposing)
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>Освобождение ресурсов</summary>
+        /// <param name="disposing">Признак того, что требуется выполнить освобождение управляемых ресурсов</param>
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;
             Stop();
             _StartWaitHandle.Dispose();
             _StopWaitHandle.Dispose();
         }
-
-        /// <inheritdoc />
-        public void Dispose() => Dispose(true);
 
         /* ------------------------------------------------------------------------------------------ */
     }

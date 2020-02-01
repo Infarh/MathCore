@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MathCore.Monades.WorkFlow
+namespace MathCore.Monads.WorkFlow
 {
     /// <summary>Результат выполнения работы</summary>
     public interface IWorkResult

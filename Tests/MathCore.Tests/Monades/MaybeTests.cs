@@ -1,5 +1,5 @@
 ﻿using System;
-using MathCore.Monades;
+using MathCore.Monads;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.Monades

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks
@@ -620,10 +621,12 @@ namespace System.Threading.Tasks
                         next();
                         tcs.TrySetResult(null);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -649,10 +652,12 @@ namespace System.Threading.Tasks
                         var result = next();
                         tcs.TrySetResult(result);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -679,10 +684,12 @@ namespace System.Threading.Tasks
                         next(task.Result);
                         tcs.TrySetResult(null);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -709,10 +716,12 @@ namespace System.Threading.Tasks
                         var result = next(task.Result);
                         tcs.TrySetResult(result);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -741,10 +750,12 @@ namespace System.Threading.Tasks
                     {
                         next().ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -772,10 +783,12 @@ namespace System.Threading.Tasks
                     {
                         next(task.Result).ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -803,10 +816,12 @@ namespace System.Threading.Tasks
                     {
                         next().ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -834,10 +849,12 @@ namespace System.Threading.Tasks
                     {
                         next(task.Result).ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
                         tcs.TrySetException(exc);
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }

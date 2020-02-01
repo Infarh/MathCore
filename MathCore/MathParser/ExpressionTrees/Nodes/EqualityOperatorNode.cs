@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Linq.Expressions;
+using MathCore.Annotations;
+
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор равенства</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор равенства</summary>
     public class EqualityOperatorNode : LogicOperatorNode
     {
         /// <summary>Получить выражение вызова метода определения модуля числа из класса Math</summary>
         /// <param name="x">Параметр выражения</param>
-        /// <returns>Выражение Linq.Expression, Вызывающее метод Math.Abs с параметром x</returns>
-        public static Expression GetAbsMethodCall(Expression x) => Expression.Call(((Func<double, double>)Math.Abs).Method, x);
+        /// <returns>Выражение <see cref="System.Linq.Expressions.Expression"/>, вызывающее метод Math.Abs с параметром x</returns>
+        [NotNull]
+        public static Expression GetAbsMethodCall([NotNull] Expression x) => Expression.Call(((Func<double, double>)Math.Abs).Method, x);
 
         /// <summary>Точность вычисления равенства для чисел с плавающей точкой</summary>
         internal static double __Epsilon = 1e-12;
@@ -42,6 +46,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Равенство</returns>
+        [NotNull]
         public override Expression LogicCompile() => 
             Left is LogicOperatorNode left_node && Right is LogicOperatorNode right_node
                 ? Expression.Equal(left_node.LogicCompile(), right_node.LogicCompile())
@@ -58,6 +63,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Компиляция логики узла</summary>
         /// <param name="Parameters">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Равенство</returns>
+        [NotNull]
         public override Expression LogicCompile(ParameterExpression[] Parameters) => 
             Left is LogicOperatorNode left_node && Right is LogicOperatorNode right_node
                 ? Expression.Equal(left_node.LogicCompile(Parameters), right_node.LogicCompile(Parameters))

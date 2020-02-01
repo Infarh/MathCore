@@ -24,7 +24,7 @@ namespace MathCore
     /// \/
     /// </remarks>
     [Serializable]
-    public class MatrixDecimal : ICloneable, IEquatable<MatrixDecimal>, IIndexable<int, int, decimal>
+    public class MatrixDecimal : ICloneable, IEquatable<MatrixDecimal>
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -48,7 +48,7 @@ namespace MathCore
         public static MatrixDecimal GetTransvection([NotNull] MatrixDecimal A, int j)
         {
             if (!A.IsSquare)
-                throw new InvalidOperationException("Трансвенция неквадратной матрицы невозможна");
+                throw new InvalidOperationException("Трансвекция неквадратной матрицы невозможна");
 
             var result = GetUnitaryMatrix(A.N);
             for (var i = 0; i < A.N; i++)
@@ -79,13 +79,12 @@ namespace MathCore
         /// <param name="i">Номер строки (элемента в столбце)</param>
         /// <param name="j">Номер столбца (элемента в строке)</param>
         /// <returns>Элемент матрицы</returns>
-        public decimal this[int i, int j] { [DST] get => _Data[i, j];
-            [DST] set => _Data[i, j] = value;
-        }
+        public ref decimal this[int i, int j] { [DST] get => ref _Data[i, j]; }
 
         /// <summary>Вектор-столбец</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы</returns>
+        [NotNull]
         public MatrixDecimal this[int j] => GetCol(j);
 
         /// <summary>Матрица является квадратной матрицей</summary>
@@ -100,7 +99,7 @@ namespace MathCore
         /// <summary>Матрица является числом</summary>
         public bool IsDigit => N == 1 && M == 1;
 
-        public MatrixDecimal T => GetTranspose();
+        [NotNull] public MatrixDecimal T => GetTranspose();
 
         public decimal Norm_m
         {
@@ -193,7 +192,7 @@ namespace MathCore
                 _Data[i, 0] = DataRow[i];
         }
 
-        public MatrixDecimal(IEnumerable<IEnumerable<decimal>> Items) : this(GetElements(Items)) { }
+        public MatrixDecimal([NotNull] IEnumerable<IEnumerable<decimal>> Items) : this(GetElements(Items)) { }
 
         [NotNull]
         private static decimal[,] GetElements([NotNull] IEnumerable<IEnumerable<decimal>> Items)
@@ -264,6 +263,7 @@ namespace MathCore
 
         /// <summary>Получить обратную матрицу</summary>
         /// <returns>Обратная матрица</returns>
+        [NotNull]
         public MatrixDecimal GetInverse()
         {
             if (!IsSquare)
@@ -402,7 +402,7 @@ namespace MathCore
         /// <param name="L">An array where the lower triangular matrix is returned</param>
         /// <param name="U">An array where the upper triangular matrix is returned</param>
         /// <param name="P">An array where the permutation matrix is returned</param>
-        private static void LUDecomposition([NotNull] decimal[,] Mat, [NotNull] out decimal[,] L, [NotNull] out decimal[,] U, out decimal[,] P)
+        private static void LUDecomposition([NotNull] decimal[,] Mat, [NotNull] out decimal[,] L, [NotNull] out decimal[,] U, [NotNull] out decimal[,] P)
         {
             var A = (decimal[,])Mat.Clone();
             var Rows = Mat.GetUpperBound(0);
@@ -523,10 +523,10 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
+        /// <inheritdoc />
         [DST] [NotNull] public override string ToString() => $"MatrixDecimal[{N}x{M}]";
 
-        [DST]
-        public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
+        [DST] [NotNull] public string ToStringFormat(string Format) => ToStringFormat('\t', Format);
 
         //[DST] public string ToStringFormat(char Splitter) { return ToStringFormat(Splitter, "r"); }
 
@@ -633,17 +633,13 @@ namespace MathCore
             return result;
         }
 
-        [DST]
-        public static MatrixDecimal operator *(decimal[,] A, MatrixDecimal B) => (MatrixDecimal)A * B;
+        [DST] [NotNull] public static MatrixDecimal operator *(decimal[,] A, MatrixDecimal B) => (MatrixDecimal)A * B;
 
-        [DST]
-        public static MatrixDecimal operator *(decimal[] A, MatrixDecimal B) => (MatrixDecimal)A * B;
+        [DST] [NotNull] public static MatrixDecimal operator *(decimal[] A, MatrixDecimal B) => (MatrixDecimal)A * B;
 
-        [DST]
-        public static MatrixDecimal operator *(MatrixDecimal A, decimal[] B) => A * (MatrixDecimal)B;
+        [DST] [NotNull] public static MatrixDecimal operator *(MatrixDecimal A, decimal[] B) => A * (MatrixDecimal)B;
 
-        [DST]
-        public static MatrixDecimal operator *(MatrixDecimal A, decimal[,] B) => A * (MatrixDecimal)B;
+        [DST] [NotNull] public static MatrixDecimal operator *(MatrixDecimal A, decimal[,] B) => A * (MatrixDecimal)B;
 
         [DST]
         [NotNull]
@@ -813,17 +809,20 @@ namespace MathCore
                 && other._M == _M
                 && Equals(other._Data, _Data));
 
+        /// <inheritdoc />
         [DST]
         bool IEquatable<MatrixDecimal>.Equals(MatrixDecimal other) => Equals(other);
 
         #endregion
 
+        /// <inheritdoc />
         public override bool Equals(object obj) =>
             obj is { }
             && (ReferenceEquals(this, obj)
                 || obj.GetType() == typeof(MatrixDecimal)
                 && Equals((MatrixDecimal)obj));
 
+        /// <inheritdoc />
         [DST]
         public override int GetHashCode()
         {
