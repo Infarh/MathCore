@@ -21,9 +21,8 @@ namespace ConsoleTest
             var ints = new PrimitiveDataFrameColumn<int>("ints", 3);
             var strs = new StringDataFrameColumn("strings", 3);
 
-            var data = new DataFrame(times, ints, strs);
+            var data = new DataFrame(times, ints, strs) {[0, 1] = 10};
 
-            data[0, 1] = 10;
 
             Console.ReadLine();
         }

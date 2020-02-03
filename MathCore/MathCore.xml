@@ -2601,6 +2601,10 @@
             <param name="s"></param>
             <returns></returns>
         </member>
+        <member name="T:MathCore.IFactory`1">
+            <summary>Фабрика объектов</summary>
+            <typeparam name="T">Тип объектов, порождаемых фабрикой</typeparam>
+        </member>
         <member name="M:MathCore.IFactory`1.Create">
             <summary>Создать новый объект</summary>
             <returns>Новый объект типа <typeparamref name="T"/></returns>
@@ -2612,14 +2616,24 @@
         <member name="E:MathCore.Factory`1.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
             <summary>Событие возникает при генерации новой строки</summary>
         </member>
+        <member name="M:MathCore.Factory`1.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>Генерация события уведомления об изменении значения свойства</summary>
+            <param name="e">Аргумент события, указывающий имя изменившегося свойства</param>
+        </member>
         <member name="F:MathCore.Factory`1._FactoryMethod">
             <summary>Метод генерации объектов</summary>
+        </member>
+        <member name="F:MathCore.Factory`1._RaiseLastChangedEvents">
+            <summary>Генерировать события изменения свойств</summary>
         </member>
         <member name="P:MathCore.Factory`1.Last">
             <summary>Последний сгенерированный объект</summary>
         </member>
         <member name="P:MathCore.Factory`1.FactoryMethod">
             <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
+        </member>
+        <member name="M:MathCore.Factory`1.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Factory`1"/></summary>
         </member>
         <member name="M:MathCore.Factory`1.#ctor(System.Func{`0})">
             <summary>Новый генератор объектов типа <typeparamref name="T"/></summary>
@@ -3585,20 +3599,39 @@
         <member name="M:MathCore.Interval.Equals(System.Object)">
             <inheritdoc />
         </member>
+        <member name="T:MathCore.IoC.IServiceRegistrations">
+            <summary>Регистратор сервисов</summary>
+        </member>
+        <member name="P:MathCore.IoC.IServiceRegistrations.Item(System.Type)">
+            <summary>Запрос регистрации сервиса по его типу</summary>
+            <param name="ServiceType">Тип запрашиваемого сервиса</param>
+        </member>
         <member name="T:MathCore.IoC.ServiceManager">
             <summary>Менеджер сервисов</summary>
         </member>
-        <member name="T:MathCore.IoC.ServiceRegistrationMode">
+        <member name="M:MathCore.IoC.ServiceManager.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.IoC.ServiceRegistrations.ServiceRegistration.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode">
             <summary>Режим регистрации сервиса</summary>
         </member>
-        <member name="F:MathCore.IoC.ServiceRegistrationMode.Singleton">
+        <member name="F:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode.Singleton">
             <summary>Режим регистрации единого объекта для всех вызовов</summary>
         </member>
-        <member name="F:MathCore.IoC.ServiceRegistrationMode.SingleCall">
+        <member name="F:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode.SingleCall">
             <summary>Режим регистрации, при котором для каждого вызова будет создан новый экземпляр сервиса</summary>
         </member>
-        <member name="F:MathCore.IoC.ServiceRegistrationMode.SingleThread">
+        <member name="F:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode.SingleThread">
             <summary>Режим регистрации, при котором для каждого потока будет создан единый экземпляр сервиса</summary>
+        </member>
+        <member name="M:MathCore.IoC.ServiceRegistrations.SingleThreadServiceRegistration`1.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.IoC.ServiceRegistrations.SingletonServiceRegistration`1.Dispose(System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.JSON.JSONObjectCreatorBase">
             <summary>Базовый класс генераторов JSON объектов</summary>
@@ -3785,6 +3818,10 @@
         </member>
         <member name="M:MathCore.LambdaDictionary`2.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc />
+        </member>
+        <member name="T:MathCore.LambdaEnumerable`1">
+            <summary>Настраиваемое перечисление</summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:MathCore.LambdaEnumerable`1.GetEnumerator">
             <inheritdoc />
@@ -15346,6 +15383,14 @@
             <param name="values">Добавляемый элемент</param>
             <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetLambdaEnumerable``2(``0,System.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
+            <summary>Преобразовать объект в перечисление</summary>
+            <param name="obj">Объект-источник элементов</param>
+            <param name="Creator">Метод извлечения дочерних элементов объекта</param>
+            <typeparam name="TObject">Тип объекта</typeparam>
+            <typeparam name="TValue">Тип дочерних элементов</typeparam>
+            <returns>Перечисление дочерних элементов</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.Where(System.Collections.Generic.IEnumerable{System.String},System.Text.RegularExpressions.Regex)">
             <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
             <param name="strings">Последовательность строк</param>
@@ -15393,7 +15438,7 @@
         <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
             <typeparam name="T">Тип элементов исходного перечисления</typeparam>
-            <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+            <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
             <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
             <returns>
@@ -15406,7 +15451,7 @@
         <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Int32,``1})">
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
             <typeparam name="T">Тип элементов исходного перечисления</typeparam>
-            <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+            <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
             <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов и индекса элемента</param>
             <returns>
@@ -15418,7 +15463,7 @@
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ToList``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в список с преобразованием элементов</summary>
-            <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
+            <typeparam name="T">Тип элементов исходного перечисления</typeparam>
             <typeparam name="TValue">Тип элементов результирующего списка</typeparam>
             <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
@@ -19623,6 +19668,24 @@
             <summary>Получить обратное число</summary>
             <param name="x">Инвертируемое число</param>
             <returns>Число, обратное к исходном</returns>
+        </member>
+        <member name="T:System.DoubleArrayExtensions">
+            <summary>Методы-расширения для массивов вещественных чисел</summary>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Add(System.Double[],System.Double)">
+            <summary>Прибавить значение ко всем элементам массива</summary>
+            <param name="array">Массив вещественных чисел</param>
+            <param name="value">Прибавляемое ко всем элементам значение</param>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Add(System.Double[],System.Double[])">
+            <summary>Поэлементно сложить два массива (для минимального числа совпадающих элементов)</summary>
+            <param name="array">Массив - первое слагаемое</param>
+            <param name="values">Массив - второе слагаемое</param>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Average(System.Double[][])">
+            <summary>Усреднить значения всех массивов</summary>
+            <param name="array">Усредняемые массивы</param>
+            <returns>Массив средних значений</returns>
         </member>
         <member name="T:System.DoubleExtensions">
             <summary>Расширения для чисел двойной точности</summary>
