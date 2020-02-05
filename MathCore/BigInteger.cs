@@ -900,6 +900,7 @@ namespace MathCore
         public static bool operator !=([CanBeNull] BigInteger x, [CanBeNull] BigInteger y) => !(x == y);
 
 
+        /// <inheritdoc />
         public override bool Equals(object o) => Equals(o as BigInteger);
 
         public bool Equals([CanBeNull] BigInteger x)
@@ -913,6 +914,7 @@ namespace MathCore
         }
 
 
+        /// <inheritdoc />
         public override int GetHashCode() => _Data.GetComplexHashCode();//        return ToString().GetHashCode();
 
 
@@ -1294,6 +1296,7 @@ namespace MathCore
         // Returns a string representing the BigInteger in base 10.
         //***********************************************************************
 
+        /// <inheritdoc />
         public override string ToString() => ToString(10);
 
 
@@ -1358,6 +1361,7 @@ namespace MathCore
         }
 
 
+        // ReSharper disable CommentTypo
         //***********************************************************************
         // Returns a hex string showing the contains of the BigInteger
         //
@@ -1371,6 +1375,7 @@ namespace MathCore
         //    which is the 2's complement representation of -255.
         //
         //***********************************************************************
+        // ReSharper restore CommentTypo
 
         /// <summary>Представление <see cref="BigInteger"/> в шестнадцатеричной системе счисления</summary>
         /// <returns>Строка шестнадцатеричного представления числа <see cref="BigInteger"/></returns>

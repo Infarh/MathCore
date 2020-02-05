@@ -3,9 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MathCore.Annotations;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.IoC
+namespace MathCore.IoC.ServiceRegistrations
 {
     public class SingletonServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
     {
@@ -32,11 +34,11 @@ namespace MathCore.IoC
 
         public bool NeedDisposeInstance { get; set; }
 
-        public SingletonServiceRegistration(IServiceManager Manager, Type ServiceType) : base(Manager, ServiceType) { }
+        public SingletonServiceRegistration(IServiceManager Manager, [NotNull] Type ServiceType) : base(Manager, ServiceType) { }
 
         public SingletonServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType, FactoryMethod) { }
 
-        public SingletonServiceRegistration(IServiceManager Manager, Type ServiceType, TService ServiceInstance) : base(Manager, ServiceType)
+        public SingletonServiceRegistration(IServiceManager Manager, [NotNull] Type ServiceType, TService ServiceInstance) : base(Manager, ServiceType)
         {
             CurrentInstance = ServiceInstance;
             _Created = true;
@@ -93,6 +95,7 @@ namespace MathCore.IoC
             }
         }
 
+        /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
             if (disposing && !Disposed)
@@ -105,6 +108,7 @@ namespace MathCore.IoC
                         _Created = false;
                         CurrentInstance = null;
                         _InstanceActualityCheckCancel?.Cancel();
+                        _InstanceActualityCheckCancel?.Dispose();
                     }
             }
             base.Dispose(disposing);

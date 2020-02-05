@@ -7,6 +7,8 @@ using MathCore.Annotations;
 
 namespace MathCore
 {
+    /// <summary>Настраиваемое перечисление</summary>
+    /// <typeparam name="T"></typeparam>
     public class LambdaEnumerable<T> : Factory<IEnumerator<T>>, IEnumerable<T>
     {
         /* ------------------------------------------------------------------------------------------ */

@@ -1,4 +1,4 @@
-﻿namespace MathCore.IoC
+﻿namespace MathCore.IoC.ServiceRegistrations
 {
     /// <summary>Режим регистрации сервиса</summary>
     public enum ServiceRegistrationMode : byte

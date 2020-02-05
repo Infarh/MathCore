@@ -6,9 +6,12 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 namespace MathCore
 {
+    /// <summary>Фабрика объектов</summary>
+    /// <typeparam name="T">Тип объектов, порождаемых фабрикой</typeparam>
     public interface IFactory<out T>
     {
         /// <summary>Создать новый объект</summary>
@@ -31,6 +34,8 @@ namespace MathCore
             [DST] remove => _PropertyChanged -= value;
         }
 
+        /// <summary>Генерация события уведомления об изменении значения свойства</summary>
+        /// <param name="e">Аргумент события, указывающий имя изменившегося свойства</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => _PropertyChanged?.Invoke(this, e);
 
         /* ------------------------------------------------------------------------------------------ */
@@ -41,6 +46,7 @@ namespace MathCore
         private T _Last;
         private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new PropertyChangedEventArgs(nameof(Last));
 
+        /// <summary>Генерировать события изменения свойств</summary>
         protected bool _RaiseLastChangedEvents = true;
 
         /* ------------------------------------------------------------------------------------------ */
@@ -67,6 +73,7 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
+        /// <summary>Инициализация нового экземпляра <see cref="Factory{T}"/></summary>
         protected Factory() { }
 
         /// <summary>Новый генератор объектов типа <typeparamref name="T"/></summary>

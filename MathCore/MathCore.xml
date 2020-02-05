@@ -325,6 +325,15 @@
             <summary>Overloading of multiplication operator</summary>
             <exception cref="T:System.ArithmeticException">Multiplication overflow</exception>
         </member>
+        <member name="M:MathCore.BigInteger.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.BigInteger.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.BigInteger.ToString">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.BigInteger.ToHexString">
             <summary>Представление <see cref="T:MathCore.BigInteger"/> в шестнадцатеричной системе счисления</summary>
             <returns>Строка шестнадцатеричного представления числа <see cref="T:MathCore.BigInteger"/></returns>
@@ -2592,6 +2601,10 @@
             <param name="s"></param>
             <returns></returns>
         </member>
+        <member name="T:MathCore.IFactory`1">
+            <summary>Фабрика объектов</summary>
+            <typeparam name="T">Тип объектов, порождаемых фабрикой</typeparam>
+        </member>
         <member name="M:MathCore.IFactory`1.Create">
             <summary>Создать новый объект</summary>
             <returns>Новый объект типа <typeparamref name="T"/></returns>
@@ -2603,14 +2616,24 @@
         <member name="E:MathCore.Factory`1.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
             <summary>Событие возникает при генерации новой строки</summary>
         </member>
+        <member name="M:MathCore.Factory`1.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>Генерация события уведомления об изменении значения свойства</summary>
+            <param name="e">Аргумент события, указывающий имя изменившегося свойства</param>
+        </member>
         <member name="F:MathCore.Factory`1._FactoryMethod">
             <summary>Метод генерации объектов</summary>
+        </member>
+        <member name="F:MathCore.Factory`1._RaiseLastChangedEvents">
+            <summary>Генерировать события изменения свойств</summary>
         </member>
         <member name="P:MathCore.Factory`1.Last">
             <summary>Последний сгенерированный объект</summary>
         </member>
         <member name="P:MathCore.Factory`1.FactoryMethod">
             <summary>Метод генерации объектов типа <typeparamref name="T"/></summary>
+        </member>
+        <member name="M:MathCore.Factory`1.#ctor">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Factory`1"/></summary>
         </member>
         <member name="M:MathCore.Factory`1.#ctor(System.Func{`0})">
             <summary>Новый генератор объектов типа <typeparamref name="T"/></summary>
@@ -3576,20 +3599,39 @@
         <member name="M:MathCore.Interval.Equals(System.Object)">
             <inheritdoc />
         </member>
+        <member name="T:MathCore.IoC.IServiceRegistrations">
+            <summary>Регистратор сервисов</summary>
+        </member>
+        <member name="P:MathCore.IoC.IServiceRegistrations.Item(System.Type)">
+            <summary>Запрос регистрации сервиса по его типу</summary>
+            <param name="ServiceType">Тип запрашиваемого сервиса</param>
+        </member>
         <member name="T:MathCore.IoC.ServiceManager">
             <summary>Менеджер сервисов</summary>
         </member>
-        <member name="T:MathCore.IoC.ServiceRegistrationMode">
+        <member name="M:MathCore.IoC.ServiceManager.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.IoC.ServiceRegistrations.ServiceRegistration.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode">
             <summary>Режим регистрации сервиса</summary>
         </member>
-        <member name="F:MathCore.IoC.ServiceRegistrationMode.Singleton">
+        <member name="F:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode.Singleton">
             <summary>Режим регистрации единого объекта для всех вызовов</summary>
         </member>
-        <member name="F:MathCore.IoC.ServiceRegistrationMode.SingleCall">
+        <member name="F:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode.SingleCall">
             <summary>Режим регистрации, при котором для каждого вызова будет создан новый экземпляр сервиса</summary>
         </member>
-        <member name="F:MathCore.IoC.ServiceRegistrationMode.SingleThread">
+        <member name="F:MathCore.IoC.ServiceRegistrations.ServiceRegistrationMode.SingleThread">
             <summary>Режим регистрации, при котором для каждого потока будет создан единый экземпляр сервиса</summary>
+        </member>
+        <member name="M:MathCore.IoC.ServiceRegistrations.SingleThreadServiceRegistration`1.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.IoC.ServiceRegistrations.SingletonServiceRegistration`1.Dispose(System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.JSON.JSONObjectCreatorBase">
             <summary>Базовый класс генераторов JSON объектов</summary>
@@ -3776,6 +3818,10 @@
         </member>
         <member name="M:MathCore.LambdaDictionary`2.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc />
+        </member>
+        <member name="T:MathCore.LambdaEnumerable`1">
+            <summary>Настраиваемое перечисление</summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:MathCore.LambdaEnumerable`1.GetEnumerator">
             <inheritdoc />
@@ -15337,6 +15383,14 @@
             <param name="values">Добавляемый элемент</param>
             <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.GetLambdaEnumerable``2(``0,System.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
+            <summary>Преобразовать объект в перечисление</summary>
+            <param name="obj">Объект-источник элементов</param>
+            <param name="Creator">Метод извлечения дочерних элементов объекта</param>
+            <typeparam name="TObject">Тип объекта</typeparam>
+            <typeparam name="TValue">Тип дочерних элементов</typeparam>
+            <returns>Перечисление дочерних элементов</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.Where(System.Collections.Generic.IEnumerable{System.String},System.Text.RegularExpressions.Regex)">
             <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
             <param name="strings">Последовательность строк</param>
@@ -15384,7 +15438,7 @@
         <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
             <typeparam name="T">Тип элементов исходного перечисления</typeparam>
-            <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+            <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
             <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
             <returns>
@@ -15397,7 +15451,7 @@
         <member name="M:System.Linq.IEnumerableExtensions.ToArray``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Int32,``1})">
             <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
             <typeparam name="T">Тип элементов исходного перечисления</typeparam>
-            <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+            <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
             <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов и индекса элемента</param>
             <returns>
@@ -15409,7 +15463,7 @@
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.ToList``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>Преобразование перечисления в список с преобразованием элементов</summary>
-            <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
+            <typeparam name="T">Тип элементов исходного перечисления</typeparam>
             <typeparam name="TValue">Тип элементов результирующего списка</typeparam>
             <param name="enumerable">Исходное перечисление</param>
             <param name="converter">Метод преобразования элементов</param>
@@ -16397,6 +16451,75 @@
         <member name="T:System.ArrayExtensions">
             <summary>Методы расширения для массивов</summary>
         </member>
+        <member name="M:System.ArrayExtensions.Deconstruct``1(``0[0:,0:],System.Int32@,System.Int32@)">
+            <summary>Деконструктор двумерного массива на размеры по первому и второму измерению</summary>
+            <param name="array">Деконструируемый массив</param>
+            <param name="N">Число строк (первое измерение)</param>
+            <param name="M">Число столбцов (второе измерение)</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="M:System.ArrayExtensions.Deconstruct``1(``0[0:,0:,0:],System.Int32@,System.Int32@,System.Int32@)">
+            <summary>Деконструктор трёхмерного массива на размеры по первому, второму и третьему измерению</summary>
+            <param name="array">Деконструируемый массив</param>
+            <param name="N">Число строк (первое измерение)</param>
+            <param name="M">Число столбцов (второе измерение)</param>
+            <param name="K">Глубина (третье измерение)</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="M:System.ArrayExtensions.AsRandomEnumerable``1(``0[],System.Random)">
+            <summary>Перебрать элементы массива случайным образом без повторений</summary>
+            <param name="Items">Массив элементов</param>
+            <param name="Rnd">Генератор случайных чисел</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Перечисление элементов массива в случайном порядке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.TakeLast``1(``0[],System.Int32)">
+            <summary>Получить последовательность из последних элементов массива (в прямом порядке)</summary>
+            <param name="Items">Перебираемый массив элементов</param>
+            <param name="Count">Число элементов с конца, которые надо перебрать</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Перечисление элементов в конце массива в указанном количестве</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.TakeLastInverted``1(``0[],System.Int32)">
+            <summary>Получить последовательность из последних элементов массива (в обратном порядке)</summary>
+            <param name="Items">Перебираемый массив элементов</param>
+            <param name="Count">Число элементов с конца, которые надо перебрать</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Перечисление элементов в конце массива в указанном количестве</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.TakeLastElements``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>Получить последние элементы перечисления</summary>
+            <param name="Items">Перечисление элементов</param>
+            <param name="Count">Количество элементов с конца перечисления, которые требуется получить</param>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <returns>Перечисление последних <paramref name="Count"/> элементов <paramref name="Items"/></returns>
+        </member>
+        <member name="M:System.ArrayExtensions.EnumerateElementsByRows``1(``0[0:,0:])">
+            <summary>Перечисление элементов двумерного массива по строкам</summary>
+            <param name="array">Двумерный массив, элементы которого требуется перечислить</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Перечисление элементов двумерного массива по строкам</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.EnumerateElementsByCols``1(``0[0:,0:])">
+            <summary>Перечисление элементов двумерного массива по столбцам</summary>
+            <param name="array">Двумерный массив, элементы которого требуется перечислить</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Перечисление элементов двумерного массива по столбцам</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Exist``1(``0[],``0)">
+            <summary>Проверка на наличие элемента в массиве</summary>
+            <param name="array">Массив, проверка наличия элемента в котором выполняется</param>
+            <param name="value">Искомый элемент</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Истина, если элемент найден</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.NotExist``1(``0[],``0)">
+            <summary>Проверка на отсутствие элемента в массиве</summary>
+            <param name="array">Массив, проверка отсутствия элемента в котором выполняется</param>
+            <param name="value">Искомый элемент</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Истина, если элемент в массиве отсутствует</returns>
+        </member>
         <member name="M:System.ArrayExtensions.Split``1(``0[],System.Func{``0,System.Boolean})">
             <summary>Разделить входной массив на подмассивы указанным методом</summary>
             <typeparam name="T">Тип элементов массива</typeparam>
@@ -16414,12 +16537,30 @@
             <param name="low">Нижняя граница индекса сортировки</param>
             <param name="high">Верхняя граница индекса сортировки</param>
         </member>
-        <member name="M:System.ArrayExtensions.QuickSortT``1(``0[],System.Int32,System.Int32)">
+        <member name="M:System.ArrayExtensions.QuickSortAsync``1(``0[],System.Int32,System.Int32)">
+            <summary>Асинхронная быстрая сортировка Хоара</summary>
+            <typeparam name="T">Тип сортируемых элементов</typeparam>
+            <param name="A">Сортируемый массив элементов</param>
+            <param name="low">Нижняя граница индекса сортировки</param>
+            <param name="high">Верхняя граница индекса сортировки</param>
+            <returns>Задача, выполняющая процесс быстрой сортировки</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.QuickSort``1(``0[],System.Int32,System.Int32,System.Collections.Generic.IComparer{``0})">
             <summary>Быстрая сортировка Хоара</summary>
             <typeparam name="T">Тип сортируемых элементов</typeparam>
             <param name="A">Сортируемый массив элементов</param>
             <param name="low">Нижняя граница индекса сортировки</param>
             <param name="high">Верхняя граница индекса сортировки</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух объектов <typeparamref name="T"/></param>
+        </member>
+        <member name="M:System.ArrayExtensions.QuickSortAsync``1(``0[],System.Int32,System.Int32,System.Collections.Generic.IComparer{``0})">
+            <summary>Асинхронная быстрая сортировка Хоара</summary>
+            <typeparam name="T">Тип сортируемых элементов</typeparam>
+            <param name="A">Сортируемый массив элементов</param>
+            <param name="low">Нижняя граница индекса сортировки</param>
+            <param name="high">Верхняя граница индекса сортировки</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух объектов <typeparamref name="T"/></param>
+            <returns>Задача, выполняющая процесс быстрой сортировки</returns>
         </member>
         <member name="M:System.ArrayExtensions.GetComplexHashCode``1(``0[])">
             <summary>Расчёт хеш-суммы всех элементов массива</summary>
@@ -16433,6 +16574,13 @@
             <param name="B">Присоединяемый массив</param>
             <typeparam name="TArray">Тип элементов массива</typeparam>
             <returns>Массив из объединенных элементов</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Concatenate``1(``0[],``0[][])">
+            <summary>Конкатенация массивов</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <param name="A">Исходный массив</param>
+            <param name="B">Присоединяемые массивы</param>
+            <returns>Массив, содержащий все элементы объединяемых массивов</returns>
         </member>
         <member name="M:System.ArrayExtensions.GetSelectedValue``2(``0[],System.Func{``0,``1,``1})">
             <summary>Получить элемент массива</summary>
@@ -16486,11 +16634,25 @@
             <param name="array">Переворачиваемый массив</param>
             <returns>Перевёрнутый массив</returns>
         </member>
+        <member name="M:System.ArrayExtensions.GetSubArray``1(``0[],System.Int32,System.Int32)">
+            <summary>Извлечь подмассив</summary>
+            <param name="array">Исходный массив</param>
+            <param name="Length">Длина извлекаемого участка</param>
+            <param name="Start">Начальное положение</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <returns>
+            Новый экземпляр массива, содержащий последовательность элементов
+            начиная с указанного <paramref name="Start"/> положения и указанной длины <paramref name="Length"/>
+            </returns>
+        </member>
         <member name="M:System.ArrayExtensions.Initialize``1(``0[],System.Func{System.Int32,``0})">
             <summary>Инициализация массива</summary>
             <typeparam name="TArray">Тип элементов массива</typeparam>
-            <param name="array">Инициализированный массив</param>
-            <param name="Initializer">Метод инициализации</param>
+            <param name="array">Инициализируемый массив</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра номер элемента,
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
             <returns>Инициализированный массив</returns>
         </member>
         <member name="M:System.ArrayExtensions.Initialize``1(``0[],``0)">
@@ -16504,7 +16666,7 @@
             <summary>Инициализация массива</summary>
             <typeparam name="TValue">Тип элементов массива</typeparam>
             <typeparam name="TP">Тип параметра инициализации</typeparam>
-            <param name="array">Инициализированный массив</param>
+            <param name="array">Инициализируемый массив</param>
             <param name="p">Параметр инициализации</param>
             <param name="Initializer">Метод инициализации</param>
             <returns>Инициализированный массив</returns>
@@ -16514,18 +16676,516 @@
             <typeparam name="TValue">Тип элементов массива</typeparam>
             <typeparam name="TP1">Тип первого параметра инициализации</typeparam>
             <typeparam name="TP2">Тип второго параметра инициализации</typeparam>
-            <param name="array">Инициализированный массив</param>
+            <param name="array">Инициализируемый массив</param>
             <param name="p1">Первый параметр инициализации</param>
             <param name="p2">Второй параметр инициализации</param>
             <param name="Initializer">Метод инициализации</param>
             <returns>Инициализированный массив</returns>
         </member>
+        <member name="M:System.ArrayExtensions.Initialize``1(``0[],System.Func{``0,System.Int32,``0})">
+            <summary>Инициализация массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <param name="array">Инициализируемый массив</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметров инициализируемый массив и номер элемента,
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``2(``0[],``1,System.Func{``0,System.Int32,``1,``0})">
+            <summary>Инициализация массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <typeparam name="TP">Тип параметра инициализации</typeparam>
+            <param name="array">Инициализируемый массив</param>
+            <param name="p">Параметр инициализации</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметров инициализируемый массив
+            и номер элемента и параметр <paramref name="p"/>, 
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``3(``0[],``1,``2,System.Func{``0,System.Int32,``1,``2,``0})">
+            <summary>Инициализация массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <typeparam name="TP1">Тип 1 параметра инициализации</typeparam>
+            <typeparam name="TP2">Тип 2 параметра инициализации</typeparam>
+            <param name="array">Инициализируемый массив</param>
+            <param name="p1">Параметр 1 инициализации</param>
+            <param name="p2">Параметр 2 инициализации</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметров инициализируемый массив
+            и номер элемента, параметр <paramref name="p1"/> и параметр <paramref name="p2"/>, 
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``1(``0[0:,0:],System.Func{System.Int32,System.Int32,``0})">
+            <summary>Инициализация двумерного массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <param name="array">Инициализируемый двумерный массив</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра номер строки и номер столбца элемента,
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``2(``0[0:,0:],``1,System.Func{System.Int32,System.Int32,``1,``0})">
+            <summary>Инициализация двумерного массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <typeparam name="TP">Тип параметра инициализации</typeparam>
+            <param name="array">Инициализируемый двумерный массив</param>
+            <param name="p">Параметр инициализации</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра номер строки и номер столбца элемента,
+            параметр инициализации <paramref name="p"/>
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``3(``0[0:,0:],``1,``2,System.Func{System.Int32,System.Int32,``1,``2,``0})">
+            <summary>Инициализация двумерного массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <typeparam name="TP1">Тип 1 параметра инициализации</typeparam>
+            <typeparam name="TP2">Тип 2 параметра инициализации</typeparam>
+            <param name="array">Инициализируемый двумерный массив</param>
+            <param name="p1">Параметр 1 инициализации</param>
+            <param name="p2">Параметр 2 инициализации</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра номер строки и номер столбца элемента,
+            параметры инициализации <paramref name="p1"/> и <paramref name="p2"/>
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``4(``0[0:,0:],``1,``2,``3,System.Func{System.Int32,System.Int32,``1,``2,``3,``0})">
+            <summary>Инициализация двумерного массива</summary>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <typeparam name="TP1">Тип 1 параметра инициализации</typeparam>
+            <typeparam name="TP2">Тип 2 параметра инициализации</typeparam>
+            <typeparam name="TP3">Тип 3 параметра инициализации</typeparam>
+            <param name="array">Инициализируемый двумерный массив</param>
+            <param name="p1">Параметр 1 инициализации</param>
+            <param name="p2">Параметр 2 инициализации</param>
+            <param name="p3">Параметр 3 инициализации</param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра номер строки и номер столбца элемента,
+            параметры инициализации <paramref name="p1"/>, <paramref name="p2"/> и <paramref name="p3"/>
+            а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``1(``0[][],System.Func{System.Int32,``0[]},System.Func{System.Int32,System.Int32,``0})">
+            <summary>Инициализация невыровненного двумерного массива элементов</summary>
+            <typeparam name="TArray">Тип элементов массивов</typeparam>
+            <param name="array">Инициализируемый невыровненный массив</param>
+            <param name="ArrayInitializer">
+            Метод создания очередного одномерного массива, получающий в качестве параметра индекс инициализируемого
+            одномерного массива, а в результате своей работы он должен вернуть одномерный массив элементов,
+            который будет помещён в ячейку массива верхнего уровня
+            </param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра индекс массива и индекс элемента
+            в одномерном массиве, а результатом его вызова должно быть значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный невыровненный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``2(``0[][],``1,System.Func{System.Int32,``1,``0[]},System.Func{System.Int32,System.Int32,``1,``0})">
+            <summary>Инициализация невыровненного двумерного массива элементов</summary>
+            <typeparam name="TArray">Тип элементов массивов</typeparam>
+            <typeparam name="TP">Тип параметра инициализации</typeparam>
+            <param name="array">Инициализируемый невыровненный массив</param>
+            <param name="p">Параметр процесса инициализации</param>
+            <param name="ArrayInitializer">
+            Метод создания очередного одномерного массива, получающий в качестве параметра индекс инициализируемого
+            одномерного массива и параметр, а в результате своей работы он должен вернуть одномерный массив
+            элементов, который будет помещён в ячейку массива верхнего уровня
+            </param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра индекс массива и индекс элемента
+            в одномерном массиве, а также параметр инициализации, а результатом его вызова должно быть значение,
+            помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный невыровненный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``3(``0[][],``1,``2,System.Func{System.Int32,``1,``2,``0[]},System.Func{System.Int32,System.Int32,``1,``2,``0})">
+            <summary>Инициализация невыровненного двумерного массива элементов</summary>
+            <typeparam name="TArray">Тип элементов массивов</typeparam>
+            <typeparam name="TP1">Тип 1 параметра инициализации</typeparam>
+            <typeparam name="TP2">Тип 2 параметра инициализации</typeparam>
+            <param name="array">Инициализируемый невыровненный массив</param>
+            <param name="p1">Параметр 1 процесса инициализации</param>
+            <param name="p2">Параметр 2 процесса инициализации</param>
+            <param name="ArrayInitializer">
+            Метод создания очередного одномерного массива, получающий в качестве параметра индекс инициализируемого
+            одномерного массива и два параметра, а в результате своей работы он должен вернуть одномерный массив
+            элементов, который будет помещён в ячейку массива верхнего уровня
+            </param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра индекс массива и индекс элемента
+            в одномерном массиве, а также два параметра инициализации, а результатом его вызова должно быть
+            значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный невыровненный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Initialize``4(``0[][],``1,``2,``3,System.Func{System.Int32,``1,``2,``3,``0[]},System.Func{System.Int32,System.Int32,``1,``2,``3,``0})">
+            <summary>Инициализация невыровненного двумерного массива элементов</summary>
+            <typeparam name="TArray">Тип элементов массивов</typeparam>
+            <typeparam name="TP1">Тип 1 параметра инициализации</typeparam>
+            <typeparam name="TP2">Тип 2 параметра инициализации</typeparam>
+            <typeparam name="TP3">Тип 3 параметра инициализации</typeparam>
+            <param name="array">Инициализируемый невыровненный массив</param>
+            <param name="p1">Параметр 1 процесса инициализации</param>
+            <param name="p2">Параметр 2 процесса инициализации</param>
+            <param name="p3">Параметр 3 процесса инициализации</param>
+            <param name="ArrayInitializer">
+            Метод создания очередного одномерного массива, получающий в качестве параметра индекс инициализируемого
+            одномерного массива и три параметра, а в результате своей работы он должен вернуть одномерный массив
+            элементов, который будет помещён в ячейку массива верхнего уровня
+            </param>
+            <param name="Initializer">
+            Метод инициализации, получающий в качестве параметра индекс массива и индекс элемента
+            в одномерном массиве, а также три параметра инициализации, а результатом его вызова должно быть
+            значение, помещаемое в ячейку массива
+            </param>
+            <returns>Инициализированный невыровненный двумерный массив</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Reverse``1(``0[])">
+            <summary>Обращение порядка элементов в массиве</summary>
+            <param name="array">
+            Обращаемый массив, порядок следования элементов которого требуется перевернуть
+            </param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.SetValues``1(``0[],System.Int32,``0[])">
+            <summary>Установить значения ячеек массива</summary>
+            <param name="array">Массив, значения ячеек которого требуется установить</param>
+            <param name="StartIndex">Индекс первой устанавливаемой ячейки</param>
+            <param name="Values">Значения, Которые требуется внести с <paramref name="array"/></param>
+            <typeparam name="TArray">Тип ячеек массива</typeparam>
+        </member>
+        <member name="M:System.ArrayExtensions.ToAlignedRows``1(``0[][])">
+            <summary>
+            Преобразование массива массивов в двумерный массив, где исходные массивы располагаются построчно
+            </summary>
+            <param name="array">Массив массивов элементов</param>
+            <typeparam name="TArray">Тим элементов</typeparam>
+            <returns>Двумерный массив, составленный построчно из исходных массивов</returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.ToAlignedCols``1(``0[][])">
+            <summary>
+            Преобразование массива массивов в двумерный массив, где исходные массивы располагаются по столбцам
+            </summary>
+            <param name="array">Массив массивов элементов</param>
+            <typeparam name="TArray">Тим элементов</typeparam>
+            <returns>Двумерный массив, составленный из исходных массивов, расположенных по столбцам</returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.ToNonAlignedRows``1(``0[0:,0:])">
+            <summary>Преобразовать двумерный массив в массив массивов элементов строк</summary>
+            <param name="array">Исходный двумерный массив</param>
+            <typeparam name="TArray">Тип элементов массивов</typeparam>
+            <returns>Массив строк двумерного массива <paramref name="array"/></returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.ToNonAlignedCols``1(``0[0:,0:])">
+            <summary>Преобразовать двумерный массив в массив массивов элементов столбцов</summary>
+            <param name="array">Исходный двумерный массив</param>
+            <typeparam name="TArray">Тип элементов массивов</typeparam>
+            <returns>Массив столбцов двумерного массива <paramref name="array"/></returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.SetCol``1(``0[0:,0:],``0[],System.Int32)">
+            <summary>Установить значения колонки (второй индекс) двумерного массива</summary>
+            <param name="array">Двумерный массив, значение столбца которого требуется установить</param>
+            <param name="Col">Массив элементов столбца, которые надо установить в <paramref name="array"/></param>
+            <param name="m">Номер колонки (второй индекс массива)</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+            <exception cref="T:System.ArgumentException">
+            Если длина <paramref name="Col"/> неравна числу строк (первая размерность) <paramref name="array"/>
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Если номер колонки <paramref name="m"/> больше, либо равен числу колонок массива (вторая размерность)
+            <paramref name="array"/>, либо меньше 0
+            </exception>
+        </member>
+        <member name="M:System.ArrayExtensions.SetRow``1(``0[0:,0:],``0[],System.Int32)">
+            <summary>Установить значения строки (первый индекс) двумерного массива</summary>
+            <param name="array">Двумерный массив, значение строки которого требуется установить</param>
+            <param name="Row">Массив элементов строки, которые надо установить в <paramref name="array"/></param>
+            <param name="n">Номер строки (первый индекс массива)</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+            <exception cref="T:System.ArgumentException">Если длина <paramref name="Row"/> неравна числу столбцов (вторая размерность) <paramref name="array"/></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Если номер колонки <paramref name="n"/> больше, либо равен числу строк массива (первая размерность)
+            <paramref name="array"/>, либо меньше 0
+            </exception>
+        </member>
+        <member name="M:System.ArrayExtensions.GetCol``1(``0[0:,0:],System.Int32)">
+            <summary>Получить столбец двумерного массива (второй индекс)</summary>
+            <param name="array">Двумерный массив из которого требуется извлечь столбец значений</param>
+            <param name="m">Номер столбца массива (второй индекс)</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <returns>
+            Новый массив, значения которого скопированы из столбца элементов двумерного массива
+            с выбранным индексом <paramref name="m"/>
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Если номер столбца больше, либо равен числу столбцов массива (вторая размерность), либо меньше 0
+            </exception>
+        </member>
+        <member name="M:System.ArrayExtensions.GetCol``1(``0[0:,0:],System.Int32,``0[]@)">
+            <summary>Получить столбец двумерного массива (второй индекс)</summary>
+            <param name="array">Двумерный массив из которого требуется извлечь столбец значений</param>
+            <param name="m">Номер столбца массива (второй индекс)</param>
+            <param name="Col">Массив столбца (если передана пустая ссылка, то будет создан новый)</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Если номер столбца больше, либо равен числу столбцов массива (вторая размерность), либо меньше 0
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Если размер массива, переданного для копирования элементов столбца,
+            не равен числу строк исходного двумерного массива
+            </exception>
+        </member>
+        <member name="M:System.ArrayExtensions.GetRow``1(``0[0:,0:],System.Int32)">
+            <summary>Получить строку двумерного массива (первый индекс)</summary>
+            <param name="array">Двумерный массив из которого требуется извлечь строку значений</param>
+            <param name="n">Номер строки массива (первый индекс)</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <returns>Новый массив, значения которого скопированы из строки элементов двумерного массива с выбранным индексом <paramref name="n"/></returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Если номер строки больше, либо равен числу строк массива (первая размерность), либо меньше 0</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.GetRow``1(``0[0:,0:],System.Int32,``0[]@)">
+            <summary>Получить строку двумерного массива (первый индекс)</summary>
+            <param name="array">Двумерный массив из которого требуется извлечь строку значений</param>
+            <param name="n">Номер строки массива (первый индекс)</param>
+            <param name="Row">Массив строки (если передана пустая ссылка, то будет создан новый)</param>
+            <typeparam name="TArray">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Если номер строки больше, либо равен числу строк массива (первая размерность), либо меньше 0
+            </exception>
+        </member>
+        <member name="M:System.ArrayExtensions.SwapRows``1(``0[0:,0:],System.Int32,System.Int32)">
+            <summary>Поменять местами элементы двух строк двумерного массива</summary>
+            <param name="array">Массив в котором требуется поменять местами две строки</param>
+            <param name="i1">Индекс первой строки</param>
+            <param name="i2">Индекс второй строки</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
         <member name="M:System.ArrayExtensions.SwapCols``1(``0[0:,0:],System.Int32,System.Int32)">
             <summary>Поменять местами два столбца двумерного массива</summary>
-            <param name="array">Двумерный массив</param>
-            <param name="j1">Номер первого столбца</param>
-            <param name="j2">Номер второго столбца</param>
+            <param name="array">Массив в котором требуется поменять местами два столбца</param>
+            <param name="j1">Индекс первого столбца</param>
+            <param name="j2">Индекс второго столбца</param>
             <typeparam name="T">Тип элементов массива</typeparam>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinIndex``1(``0[],System.Comparison{``0})">
+            <summary>Найти индекс минимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс минимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Comparison{``0})">
+            <summary>Найти минимальный элемента в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Comparison{``0},System.Int32@)">
+            <summary>Найти минимальный элемента в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <param name="MinIndex">Индекс минимального элемента</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinIndex``1(``0[],System.Collections.Generic.IComparer{``0})">
+            <summary>Найти индекс минимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс минимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Collections.Generic.IComparer{``0})">
+            <summary>Найти минимальный элемент в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Collections.Generic.IComparer{``0},System.Int32@)">
+            <summary>Найти минимальный элемент в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <param name="MinIndex">Индекс минимального элемента</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinIndex``1(``0[],System.Func{``0,System.Double})">
+            <summary>Найти индекс минимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс минимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Func{``0,System.Double})">
+            <summary>Найти минимальный элемент в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Func{``0,System.Double},System.Int32@)">
+            <summary>Найти минимальный элемент в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <param name="MinIndex">Индекс минимального элемента</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinIndex``1(``0[])">
+            <summary>Найти индекс минимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <returns>Индекс минимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[])">
+            <summary>Найти минимальный элемент в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinRef``1(``0[],System.Int32@)">
+            <summary>Найти минимальный элемент в массиве и получить ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <param name="MinIndex">Индекс минимального элемента</param>
+            <returns>Минимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxIndex``1(``0[],System.Comparison{``0})">
+            <summary>Найти индекс максимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс максимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Comparison{``0})">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Comparison{``0},System.Int32@)">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <param name="MaxIndex">Индекс максимального элемента</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxIndex``1(``0[],System.Collections.Generic.IComparer{``0})">
+            <summary>Найти индекс максимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс максимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Collections.Generic.IComparer{``0})">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Collections.Generic.IComparer{``0},System.Int32@)">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <param name="MaxIndex">Индекс максимального элемента</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxIndex``1(``0[],System.Func{``0,System.Double})">
+            <summary>Найти индекс максимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс максимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Func{``0,System.Double})">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Func{``0,System.Double},System.Int32@)">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <param name="MaxIndex">Индекс максимального элемента</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxIndex``1(``0[])">
+            <summary>Найти индекс максимального элемента в массиве</summary>
+            <param name="array">Массив элементов</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <returns>Индекс максимального элемента</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[])">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMaxRef``1(``0[],System.Int32@)">
+            <summary>Найти максимальный элемент в массиве и вернуть ссылку на него</summary>
+            <param name="array">Массив элементов</param>
+            <param name="MaxIndex">Индекс максимального элемента</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <returns>Максимальный элемент массива по ссылке</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinMaxIndex``1(``0[],System.Comparison{``0})">
+            <summary>Найти индексы минимального и максимального элементов</summary>
+            <param name="array">Массив элементов</param>
+            <param name="compare">Метод сравнения двух объектов между собой</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс минимального и максимального элементов массива</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinMaxIndex``1(``0[],System.Collections.Generic.IComparer{``0})">
+            <summary>Найти индексы минимального и максимального элементов</summary>
+            <param name="array">Массив элементов</param>
+            <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс минимального и максимального элементов массива</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinMaxIndex``1(``0[],System.Func{``0,System.Double})">
+            <summary>Найти индексы минимального и максимального элементов</summary>
+            <param name="array">Массив элементов</param>
+            <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Индекс минимального и максимального элементов массива</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.GetMinMaxIndex``1(``0[])">
+            <summary>Найти индексы минимального и максимального элементов</summary>
+            <param name="array">Массив элементов</param>
+            <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
+            <returns>Индекс минимального и максимального элементов массива</returns>
         </member>
         <member name="M:System.ArrayExtensions.CreateSequence(System.Int32,System.Int32)">
             <summary>Создать массив последовательных значений длины <paramref name="length"/> начиная с <paramref name="offset"/></summary>
@@ -16564,6 +17224,105 @@
             <param name="A">Буферный массив соответствующей длины</param>
             <param name="B">Перечень устанавливаемых значений</param>
             <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="M:System.ArrayExtensions.IsContains``1(``0[],``0)">
+            <summary>Проверка, что элемент входит в состав массива</summary>
+            <param name="array">Проверяемый массив элементов</param>
+            <param name="item">Элемент, вхождение в состав массива <paramref name="array"/> которого проверяется</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Истина, если массив <paramref name="array"/> содержит среди своих элементов <paramref name="item"/></returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Linearize``1(``0[][])">
+            <summary>Создать одномерный массив, содержащий все элементы указанных массивов</summary>
+            <param name="array">Массив массивов элементов</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>Одномерный массив, содержащий все элементы массивов из <paramref name="array"/></returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Foreach``1(``0[0:,0:],System.Action{``0})">
+            <summary>Выполнить действие для всех элементов двумерного массива</summary>
+            <param name="array">Двумерный массив элементов, действие для всех элементов которого следует выполнить</param>
+            <param name="action">Выполняемое действие, получающее в качестве параметра элемент массива</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="M:System.ArrayExtensions.Foreach``1(``0[0:,0:],System.Action{System.Int32,System.Int32,``0})">
+            <summary>Выполнить действие для всех элементов двумерного массива</summary>
+            <param name="array">Двумерный массив элементов, действие для всех элементов которого следует выполнить</param>
+            <param name="action">
+            Выполняемое действие, получающее в качестве параметра номер строки (первый индекс),
+            номер столбца (второй индекс) и элемент массива
+            </param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="M:System.ArrayExtensions.Select``2(``0[0:,0:],System.Func{``0,``1})">
+            <summary>Получить перечисление значений на основе элементов двумерного массива</summary>
+            <param name="array">Двумерный массив элементов</param>
+            <param name="selector">
+            Метод конвертации элемента массива <typeparamref name="TItem"/> в его значение
+            <typeparamref name="TValue"/>, получающий в качестве параметра значение элемента массива
+            </param>
+            <typeparam name="TItem">Тип элементов массива</typeparam>
+            <typeparam name="TValue">Тип результата элементов перечисления</typeparam>
+            <returns>Перечисление значений, сформированное на основе элементов двумерного массива</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.Select``2(``0[0:,0:],System.Func{System.Int32,System.Int32,``0,``1})">
+            <summary>Получить перечисление значений на основе элементов двумерного массива</summary>
+            <param name="array">Двумерный массив элементов</param>
+            <param name="selector">
+            Метод конвертации элемента массива <typeparamref name="TItem"/> в его значение
+            <typeparamref name="TValue"/>, получающий в качестве параметров номер строки (первый индекс),
+            номер столбца (второй индекс) и значение элемента массива
+            </param>
+            <typeparam name="TItem">Тип элементов массива</typeparam>
+            <typeparam name="TValue">Тип результата элементов перечисления</typeparam>
+            <returns>Перечисление значений, сформированное на основе элементов двумерного массива</returns>
+        </member>
+        <member name="M:System.ArrayExtensions.ToStringView``1(``0[0:,0:],System.String)">
+            <summary>Представить двумерный массив в текстовом виде в виде матрицы</summary>
+            <param name="array">Двумерный массив, текстовое представление которого требуется выполнить</param>
+            <param name="Splitter">Строка-разделитель элементов матрицы</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>
+            Строковое представление двумерного массива в котором строки массива разделены переносом строки
+            </returns>
+        </member>
+        <member name="M:System.ArrayExtensions.ToStringView``2(``0[0:,0:],System.Func{``0,``1},System.String)">
+            <summary>Представить двумерный массив в текстовом виде в виде матрицы</summary>
+            <param name="array">Двумерный массив, текстовое представление которого требуется выполнить</param>
+            <param name="Selector">Метод преобразования значения элемента массива перед его записью</param>
+            <param name="Splitter">Строка-разделитель элементов матрицы</param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <typeparam name="TValue">Тип данных, записываемых в текстовую форму представления</typeparam>
+            <returns>
+            Строковое представление двумерного массива в котором строки массива разделены переносом строки
+            </returns>
+        </member>
+        <member name="M:System.ArrayExtensions.ToStringFormatView``1(``0[0:,0:],System.String,System.String,System.IFormatProvider)">
+            <summary>Представить двумерный массив в текстовом виде в виде матрицы</summary>
+            <param name="array">Двумерный массив, текстовое представление которого требуется выполнить</param>
+            <param name="Format">Строка формата данных каждого элемента</param>
+            <param name="Splitter">Строка-разделитель элементов матрицы</param>
+            <param name="provider">
+            Объект, осуществляющий конечное форматирование элемента массива перед его выводом в текстовую форму
+            </param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <returns>
+            Строковое представление двумерного массива в котором строки массива разделены переносом строки
+            </returns>
+        </member>
+        <member name="M:System.ArrayExtensions.ToStringFormatView``2(``0[0:,0:],System.Func{``0,``1},System.String,System.String,System.IFormatProvider)">
+            <summary>Представить двумерный массив в текстовом виде в виде матрицы</summary>
+            <param name="array">Двумерный массив, текстовое представление которого требуется выполнить</param>
+            <param name="Selector">Метод преобразования значения элемента массива перед его записью</param>
+            <param name="Format">Строка формата данных каждого элемента</param>
+            <param name="Splitter">Строка-разделитель элементов матрицы</param>
+            <param name="provider">
+            Объект, осуществляющий конечное форматирование элемента массива перед его выводом в текстовую форму
+            </param>
+            <typeparam name="T">Тип элементов массива</typeparam>
+            <typeparam name="TValue">Тип данных, записываемых в текстовую форму представления</typeparam>
+            <returns>
+            Строковое представление двумерного массива в котором строки массива разделены переносом строки
+            </returns>
         </member>
         <member name="T:System.Threading.Tasks.CancellationTokenExtensions">
             <summary>Extension methods for CancellationToken.</summary>
@@ -17711,6 +18470,17 @@
             <param name="x2">Конец интервала дискретизации</param>
             <param name="dx">Шаг дискретизации</param>
             <returns>Перечисление дискретных значений функции</returns>
+        </member>
+        <member name="M:System.FuncExtensions.Sampling``1(System.Func{System.Double,``0},System.Double,System.Double,System.Int32)">
+            <summary>Дискретизация функции</summary>
+            <param name="f">Дискретизируемая функция</param>
+            <param name="x1">Начало интервала дискретизации</param>
+            <param name="dx">Шаг изменения аргумента</param>
+            <param name="SamplesCount">Число формируемых отсчётов</param>
+            <typeparam name="T">Тип значения функции</typeparam>
+            <returns>Массив значений функции, полученных в результате дискретизации</returns>
+            <exception cref="T:System.ArgumentNullException">Если передана пустая ссылка на функцию</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Если указано число отсчётов меньше 0, либо если <paramref name="dx"/> равен 0</exception>
         </member>
         <member name="M:System.FuncExtensions.GetValues``2(System.Func{``0,``1},``0[])">
             <summary>Определение значений функции в дискретном перечне значений аргумента</summary>
@@ -18898,6 +19668,24 @@
             <summary>Получить обратное число</summary>
             <param name="x">Инвертируемое число</param>
             <returns>Число, обратное к исходном</returns>
+        </member>
+        <member name="T:System.DoubleArrayExtensions">
+            <summary>Методы-расширения для массивов вещественных чисел</summary>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Add(System.Double[],System.Double)">
+            <summary>Прибавить значение ко всем элементам массива</summary>
+            <param name="array">Массив вещественных чисел</param>
+            <param name="value">Прибавляемое ко всем элементам значение</param>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Add(System.Double[],System.Double[])">
+            <summary>Поэлементно сложить два массива (для минимального числа совпадающих элементов)</summary>
+            <param name="array">Массив - первое слагаемое</param>
+            <param name="values">Массив - второе слагаемое</param>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Average(System.Double[][])">
+            <summary>Усреднить значения всех массивов</summary>
+            <param name="array">Усредняемые массивы</param>
+            <returns>Массив средних значений</returns>
         </member>
         <member name="T:System.DoubleExtensions">
             <summary>Расширения для чисел двойной точности</summary>

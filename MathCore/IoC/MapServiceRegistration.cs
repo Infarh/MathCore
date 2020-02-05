@@ -1,4 +1,6 @@
 ﻿using System;
+using MathCore.Annotations;
+using MathCore.IoC.ServiceRegistrations;
 
 namespace MathCore.IoC
 {
@@ -11,6 +13,6 @@ namespace MathCore.IoC
 
         public override object GetService() => _BaseServiceRegistration.GetService();
 
-        internal override ServiceRegistration CloneFor(IServiceManager manager) => new MapServiceRegistration(manager, ServiceType, manager.ServiceRegistrations[_BaseServiceRegistration.ServiceType]);
+        [NotNull] internal override ServiceRegistration CloneFor([NotNull] IServiceManager manager) => new MapServiceRegistration(manager, ServiceType, manager.ServiceRegistrations[_BaseServiceRegistration.ServiceType]);
     }
 }

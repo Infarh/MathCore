@@ -54,7 +54,7 @@ namespace MathCore.Tests.Optimization
                 out var X,
                 out var Y);
             Assert.That.Value(X).IsEqual(-__X0, 6e-5);
-            Assert.That.Value(Y).IsEqual(-__Y0, 7e-10);
+            Assert.That.Value(Y).IsEqual(-__Y0, 1e-9);
         }
 
         [TestMethod]

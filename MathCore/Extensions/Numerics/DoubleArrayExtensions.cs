@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using MathCore;
 using MathCore.Annotations;
+using MathCore.Evaluations;
 using MathCore.Interpolation;
 using MathCore.Statistic;
 using MathCore.Values;
@@ -12,112 +13,122 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    /// <summary>Методы-расширения для массивов вещественных чисел</summary>
     public static class DoubleArrayExtensions
     {
+        /// <summary>Прибавить значение ко всем элементам массива</summary>
+        /// <param name="array">Массив вещественных чисел</param>
+        /// <param name="value">Прибавляемое ко всем элементам значение</param>
         [DST]
         public static void Add([NotNull] this double[] array, double value)
         {
-            for (var i = 0; i < array.Length; i++)
+            var array_length = array.Length;
+            for (var i = 0; i < array_length; i++)
                 array[i] += value;
         }
 
+        /// <summary>Поэлементно сложить два массива (для минимального числа совпадающих элементов)</summary>
+        /// <param name="array">Массив - первое слагаемое</param>
+        /// <param name="values">Массив - второе слагаемое</param>
         [DST]
         public static void Add([NotNull] this double[] array, [NotNull] double[] values)
         {
-            for (var i = 0; i < array.Length && i < values.Length; i++)
+            var array_length = array.Length;
+            var values_length = values.Length;
+            for (var i = 0; i < array_length && i < values_length; i++)
                 array[i] += values[i];
         }
 
-        [DST]
-        public static double Average([NotNull] this double[] array) => array.Length == 0 ? 0 : array.Sum() / array.Length;
+        /// <summary>Усреднить значения всех массивов</summary>
+        /// <param name="array">Усредняемые массивы</param>
+        /// <returns>Массив средних значений</returns>
+        [DST, NotNull]
+        public static double[] Average([NotNull] this double[][] array) => array.ToArray(a => a?.Average() ?? double.NaN);
 
         [DST, NotNull]
-        public static double[] Average([NotNull] this double[][] array)
+        public static double[] AverageByRows([NotNull] this double[,] array)
         {
-            var length_0 = array[0].Length;
-            var result = new double[length_0];
-            for (var i = 0; i < length_0; i++)
+            var rows_count = array.GetLength(0);
+            var cols_count = array.GetLength(1);
+            var col_average = new double[cols_count];
+            for (var row = 0; row < cols_count; row++)
             {
-                result[i] = 0;
-                for (var n = 0; n < array.Length; n++)
-                    result[i] += array[n][i];
-                result[i] /= length_0;
+                var sum = 0d;
+                for (var row_cell = 0; row_cell < rows_count; row_cell++)
+                    sum += array[row_cell, row];
+                col_average[row] = sum / rows_count;
             }
-            return result;
+            return col_average;
         }
 
         [DST, NotNull]
-        public static double[] Average([NotNull] this double[,] array)
+        public static double[] AverageByCols([NotNull] this double[,] array)
         {
-            var length_1 = array.GetLength(1);
-            var result = new double[length_1];
-            for (var i = 0; i < length_1; i++)
+            var rows_count = array.GetLength(0);
+            var cols_count = array.GetLength(1);
+            var row_average = new double[rows_count];
+            for (var col = 0; col < rows_count; col++)
             {
-                result[i] = 0;
-                for (var n = 0; n < array.Length; n++)
-                    result[i] += array[n, i];
-                result[i] /= length_1;
+                var sum = 0d;
+                for (var col_cell = 0; col_cell < cols_count; col_cell++)
+                    sum += array[col, col_cell];
+                row_average[col] = sum / rows_count;
             }
-            return result;
+            return row_average;
         }
 
-        [DST]
+        /// <summary>Рассчитать дисперсию массива как M{X^2} - M{X}^2</summary>
+        /// <param name="array">Массив, дисперсию элементов которого требуется рассчитать</param>
+        /// <returns>Если длина 0, то NaN, если длина 1, то 0, иначе - дисперсия элементов массива</returns>
         public static double Dispersion([NotNull] this double[] array)
         {
-            var m2 = 0.0;
-            var m = 0.0;
             var length = array.Length;
+            if (length == 0) return double.NaN;
+            if (length == 1) return 0;
+
+            var average = 0d;
+            var average2 = 0d;
             for (var i = 0; i < length; i++)
             {
-                var v = array[i];
-                m2 += v * v;
-                m += v;
+                var x = array[i];
+                average += x;
+                average2 += x * x;
             }
-            return (m2 - m) / length;
+
+            return (average2 - average * average / length) / length;
         }
 
         [DST, NotNull]
         public static double[] Dispersion([NotNull] this double[][] array)
         {
-            var i_length = array[0].Length;
-            var m2 = new double[i_length];
-            var m = new double[i_length];
-            for (var i = 0; i < i_length; i++)
-            {
-                m2[i] = 0.0;
-                var j_length = array.Length;
-                for (var j = 0; j < j_length; j++)
-                {
-                    var val = array[j][i];
-                    m2[i] += val * val;
-                    m[i] += val;
-                }
-                m[i] -= m2[i];
-                m2[i] /= i_length;
-            }
-            return m2;
+            var length = array.Length;
+            var result = new double[length];
+            for (var i = 0; i < length; i++)
+                result[i] = array[i].Dispersion();
+            return result;
         }
 
         [DST, NotNull]
         public static double[] Dispersion([NotNull] this double[,] array)
         {
-            var i_length = array.GetLength(1);
-            var lv_NumArray = new double[i_length];
-            var lv_NumArray2 = new double[i_length];
-            for (var i = 0; i < i_length; i++)
+            var cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+
+            var average = new double[cols];
+            var average2 = new double[cols];
+            for (var i = 0; i < cols; i++)
             {
-                lv_NumArray[i] = 0.0;
-                var j_length = array.Length;
-                for (var j = 0; j < j_length; j++)
+                average[i] = 0.0;
+                for (var j = 0; j < rows; j++)
                 {
-                    var num5 = array[j, i];
-                    lv_NumArray[i] += num5 * num5;
-                    lv_NumArray2[i] += num5;
+                    var x = array[j, i];
+                    average[i] += x * x;
+                    average2[i] += x;
                 }
-                lv_NumArray[i] -= lv_NumArray2[i];
-                lv_NumArray[i] /= i_length;
+                average[i] -= average2[i];
+                average[i] /= cols;
             }
-            return lv_NumArray;
+            return average;
         }
 
         [DST]
