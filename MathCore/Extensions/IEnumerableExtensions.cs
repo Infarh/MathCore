@@ -26,6 +26,106 @@ namespace System.Linq
     [PublicAPI]
     public static class IEnumerableExtensions
     {
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion([NN] this IEnumerable<double> enumerable)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+
+            if (enumerable is double[] array) return DoubleArrayExtensions.Dispersion(array);
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            var sum = enumerator.Current;
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = enumerator.Current;
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / count) / count;
+        }
+
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion([NN] this IEnumerable<int> enumerable)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            long sum = enumerator.Current;
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = enumerator.Current;
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / (double)count) / count;
+        }
+
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion([NN] this IEnumerable<long> enumerable)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            var sum = enumerator.Current;
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = enumerator.Current;
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / (double)count) / count;
+        }
+
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <param name="Selector">Метод получения вещественного значения</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion<T>([NN] this IEnumerable<T> enumerable, [NotNull] Func<T, double> Selector)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+            if (Selector is null) throw new ArgumentNullException(nameof(Selector));
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            var sum = Selector(enumerator.Current);
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = Selector(enumerator.Current);
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / count) / count;
+        }
+
         /// <summary>Добавить элемент в начало последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="enumerable">Исходная последовательность элементов</param>
