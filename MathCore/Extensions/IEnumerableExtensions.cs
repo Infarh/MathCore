@@ -17,6 +17,7 @@ using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Local
+// ReSharper disable LoopCanBeConvertedToQuery
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq
@@ -25,6 +26,106 @@ namespace System.Linq
     [PublicAPI]
     public static class IEnumerableExtensions
     {
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion([NN] this IEnumerable<double> enumerable)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+
+            if (enumerable is double[] array) return DoubleArrayExtensions.Dispersion(array);
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            var sum = enumerator.Current;
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = enumerator.Current;
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / count) / count;
+        }
+
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion([NN] this IEnumerable<int> enumerable)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            long sum = enumerator.Current;
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = enumerator.Current;
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / (double)count) / count;
+        }
+
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion([NN] this IEnumerable<long> enumerable)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            var sum = enumerator.Current;
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = enumerator.Current;
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / (double)count) / count;
+        }
+
+        /// <summary>Дисперсия значений</summary>
+        /// <param name="enumerable">Объект-источник данных</param>
+        /// <param name="Selector">Метод получения вещественного значения</param>
+        /// <returns>Дисперсия значений</returns>
+        public static double Dispersion<T>([NN] this IEnumerable<T> enumerable, [NotNull] Func<T, double> Selector)
+        {
+            if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
+            if (Selector is null) throw new ArgumentNullException(nameof(Selector));
+
+            using var enumerator = enumerable.GetEnumerator();
+            if (!enumerator.MoveNext()) return double.NaN;
+
+            var sum = Selector(enumerator.Current);
+            var sum2 = sum * sum;
+            long count = 1;
+            while (enumerator.MoveNext())
+            {
+                var x = Selector(enumerator.Current);
+                sum += x;
+                sum2 += x * x;
+                count++;
+            }
+
+            return count == 1 ? 0 : (sum2 - sum / count) / count;
+        }
+
         /// <summary>Добавить элемент в начало последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="enumerable">Исходная последовательность элементов</param>
@@ -59,8 +160,8 @@ namespace System.Linq
 
         public static T FirstOrDefault<T, TP1, TP2>(
             [NN] this IEnumerable<T> enumerable,
-            TP1 p1, 
-            TP2 p2, 
+            TP1 p1,
+            TP2 p2,
             Func<T, TP1, TP2, bool> Selector)
         {
             foreach (var item in enumerable)
@@ -111,21 +212,13 @@ namespace System.Linq
             if (BlockSize <= 0)
                 throw new ArgumentOutOfRangeException(nameof(BlockSize), "Размер блока должен быть положительным значением");
 
-            IEnumerator<T> enumerator = null;
-            try
+            using var enumerator = enumerable.GetEnumerator();
+            BlockEnumerator<T> block;
+            do
             {
-                enumerator = enumerable.GetEnumerator();
-                BlockEnumerator<T> block;
-                do
-                {
-                    block = new BlockEnumerator<T>(enumerator, BlockSize);
-                    yield return block;
-                } while (block.Complete);
-            }
-            finally
-            {
-                enumerator?.Dispose();
-            }
+                block = new BlockEnumerator<T>(enumerator, BlockSize);
+                yield return block;
+            } while (block.Complete);
         }
 
         [NN]
@@ -159,62 +252,68 @@ namespace System.Linq
             return index;
         }
 
-        public static IEnumerable Concat([CN] this IEnumerable source, [CN] IEnumerable other)
+        public static IEnumerable Concat([NN] this IEnumerable source, [CN] IEnumerable other)
         {
             if (source != null) foreach (var src in source) yield return src;
             if (other != null) foreach (var oth in other) yield return oth;
         }
 
-        [CN]
-        public static LambdaEnumerable<TValue> GetLambdaEnumerable<TObject, TValue>(
+        /// <summary>Преобразовать объект в перечисление</summary>
+        /// <param name="obj">Объект-источник элементов</param>
+        /// <param name="Creator">Метод извлечения дочерних элементов объекта</param>
+        /// <typeparam name="TObject">Тип объекта</typeparam>
+        /// <typeparam name="TValue">Тип дочерних элементов</typeparam>
+        /// <returns>Перечисление дочерних элементов</returns>
+        [NN]
+        public static IEnumerable<TValue> GetLambdaEnumerable<TObject, TValue>(
             this TObject obj,
             Func<TObject, IEnumerable<TValue>> Creator)
             => new LambdaEnumerable<TValue>(() => Creator(obj));
 
-        [CN]
-        public static IEnumerable<T> WhereNotNull<T>([CN] this IEnumerable<T> enumerable) 
-            where T : class 
-            => enumerable?.Where(i => i is { });
+        [NN]
+        public static IEnumerable<T> WhereNotNull<T>([NN] this IEnumerable<T> enumerable)
+            where T : class
+            => enumerable.Where(i => i is { });
 
         /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
         /// <param name="strings">Последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
-        [CN]
+        [NN]
         public static IEnumerable<string> Where(
-            [CN] this IEnumerable<string> strings,
-            [NN] Regex regex) 
-            => strings?.Where((Func<string, bool>)regex.IsMatch);
+            [NN] this IEnumerable<string> strings,
+            [NN] Regex regex)
+            => strings.Where((Func<string, bool>)regex.IsMatch);
 
         /// <summary>Фильтрация последовательности строк, которые не удовлетворяют регулярному выражению</summary>
         /// <param name="strings">Фильтруемая последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
-        [CN]
+        [NN]
         public static IEnumerable<string> WhereNot(
-            [CN] this IEnumerable<string> strings,
-            [NN] Regex regex) 
-            => strings?.WhereNot(regex.IsMatch);
+            [NN] this IEnumerable<string> strings,
+            [NN] Regex regex)
+            => strings.WhereNot(regex.IsMatch);
 
         /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
         /// <param name="strings">Последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, удовлетворяющая регулярному выражению</returns>
-        [CN]
+        [NN]
         public static IEnumerable<string> Where(
-            [CN] this IEnumerable<string> strings,
-            [NN] string regex) 
-            => strings?.Where(s => Regex.IsMatch(s, regex));
+            [NN] this IEnumerable<string> strings,
+            [NN] string regex)
+            => strings.Where(s => Regex.IsMatch(s, regex));
 
         /// <summary>Фильтрация последовательности строк, которые не удовлетворяют регулярному выражению</summary>
         /// <param name="strings">Фильтруемая последовательность строк</param>
         /// <param name="regex">Регулярное выражение-фильтр</param>
         /// <returns>Последовательность строк, которые не удовлетворяют регулярному выражению</returns>
-        [CN]
+        [NN]
         public static IEnumerable<string> WhereNot(
-            [CN] this IEnumerable<string> strings, 
-            [NN] string regex) 
-            => strings?.WhereNot(s => Regex.IsMatch(s, regex));
+            [NN] this IEnumerable<string> strings,
+            [NN] string regex)
+            => strings.WhereNot(s => Regex.IsMatch(s, regex));
 
         /// <summary>Выполняет фильтрацию последовательности значений на основе заданного предиката</summary>
         /// <returns>
@@ -227,7 +326,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> WhereNot<T>(
             [NN] this IEnumerable<T> enumerable,
-            [NN]Func<T, bool> NotSelector) 
+            [NN]Func<T, bool> NotSelector)
             => enumerable.Where(t => !NotSelector(t));
 
         /// <summary>Возвращает цепочку элементов последовательности, удовлетворяющих указанному условию</summary>
@@ -238,15 +337,15 @@ namespace System.Linq
         /// <param name="NotSelector">Функция для проверки каждого элемента на соответствие условию.</param>
         /// <typeparam name="T">Тип элементов последовательности <paramref name="enumerable"/>.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">Значение параметра <paramref name="enumerable"/> или <paramref name="NotSelector"/> — null.</exception>
-        [CN]
+        [NN]
         public static IEnumerable<T> TakeWhileNot<T>(
-            [CN] this IEnumerable<T> enumerable,
+            [NN] this IEnumerable<T> enumerable,
             [NN]Func<T, bool> NotSelector)
-            => enumerable?.TakeWhile(t => !NotSelector(t));
+            => enumerable.TakeWhile(t => !NotSelector(t));
 
         /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
         /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
-        /// <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+        /// <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
         /// <param name="enumerable">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов</param>
         /// <returns>
@@ -255,14 +354,48 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [NN] public static TV[] ToArray<T, TV>(
+        [NN]
+        public static TValue[] ToArray<T, TValue>(
             [NN] this IEnumerable<T> enumerable,
-            [NN] Func<T, TV> converter)
-            => enumerable.Select(converter).ToArray();
+            [NN] Func<T, TValue> converter)
+        {
+            switch (enumerable)
+            {
+                default: return enumerable.Select(converter).ToArray();
+
+                case T[] array:
+                    {
+                        var length = array.Length;
+                        if (length == 0) return Array.Empty<TValue>();
+                        var result = new TValue[length];
+                        for (var i = 0; i < length; i++)
+                            result[i] = converter(array[i]);
+                        return result;
+                    }
+                case List<T> list:
+                    {
+                        var length = list.Count;
+                        if (length == 0) return Array.Empty<TValue>();
+                        var result = new TValue[length];
+                        for (var i = 0; i < length; i++)
+                            result[i] = converter(list[i]);
+                        return result;
+                    }
+                case IList<T> list:
+                    {
+                        var length = list.Count;
+                        if (length == 0) return Array.Empty<TValue>();
+                        var result = new TValue[length];
+                        for (var i = 0; i < length; i++)
+                            result[i] = converter(list[i]);
+                        return result;
+                    }
+            }
+        }
 
         /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
         /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
-        /// <typeparam name="TV">Тип элементов результирующего массива</typeparam>
+        /// <typeparam name="TValue">Тип элементов результирующего массива</typeparam>
         /// <param name="enumerable">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов и индекса элемента</param>
         /// <returns>
@@ -271,13 +404,47 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на массив
         /// </returns>
-        [NN] public static TV[] ToArray<T, TV>(
-            [NN] this IEnumerable<T> enumerable, 
-            [NN] Func<T, int, TV> converter) 
-            => enumerable.Select(converter).ToArray();
+        [NN]
+        public static TValue[] ToArray<T, TValue>(
+            [NN] this IEnumerable<T> enumerable,
+            [NN] Func<T, int, TValue> converter)
+        {
+            switch (enumerable)
+            {
+                default: return enumerable.Select(converter).ToArray();
+
+                case T[] array:
+                    {
+                        var length = array.Length;
+                        if (length == 0) return Array.Empty<TValue>();
+                        var result = new TValue[length];
+                        for (var i = 0; i < length; i++)
+                            result[i] = converter(array[i], i);
+                        return result;
+                    }
+                case List<T> list:
+                    {
+                        var length = list.Count;
+                        if (length == 0) return Array.Empty<TValue>();
+                        var result = new TValue[length];
+                        for (var i = 0; i < length; i++)
+                            result[i] = converter(list[i], i);
+                        return result;
+                    }
+                case IList<T> list:
+                    {
+                        var length = list.Count;
+                        if (length == 0) return Array.Empty<TValue>();
+                        var result = new TValue[length];
+                        for (var i = 0; i < length; i++)
+                            result[i] = converter(list[i], i);
+                        return result;
+                    }
+            }
+        }
 
         /// <summary>Преобразование перечисления в список с преобразованием элементов</summary>
-        /// <typeparam name="TItem">Тип элементов исходного перечисления</typeparam>
+        /// <typeparam name="T">Тип элементов исходного перечисления</typeparam>
         /// <typeparam name="TValue">Тип элементов результирующего списка</typeparam>
         /// <param name="enumerable">Исходное перечисление</param>
         /// <param name="converter">Метод преобразования элементов</param>
@@ -287,16 +454,46 @@ namespace System.Linq
         /// иначе
         ///     пустая ссылка на список
         /// </returns>
-        [CN]
-        public static List<TValue> ToList<TItem, TValue>(
-            [CN] this IEnumerable<TItem> enumerable,
-            [NN] Func<TItem, TValue> converter)
-            => enumerable?.Select(converter).ToList();
+        [NN]
+        public static List<TValue> ToList<T, TValue>(
+            [NN] this IEnumerable<T> enumerable,
+            [NN] Func<T, TValue> converter)
+        {
+            switch (enumerable)
+            {
+                default: return enumerable.Select(converter).ToList();
+
+                case T[] array:
+                    {
+                        var length = array.Length;
+                        var result = new List<TValue>(length);
+                        for (var i = 0; i < length; i++)
+                            result.Add(converter(array[i]));
+                        return result;
+                    }
+                case List<T> list:
+                    {
+                        var length = list.Count;
+                        var result = new List<TValue>(length);
+                        for (var i = 0; i < length; i++)
+                            result.Add(converter(list[i]));
+                        return result;
+                    }
+                case IList<T> list:
+                    {
+                        var length = list.Count;
+                        var result = new List<TValue>(length);
+                        for (var i = 0; i < length; i++)
+                            result.Add(converter(list[i]));
+                        return result;
+                    }
+            }
+        }
 
         [NN]
         public static Dictionary<TKey, T> ToDictionaryDistinctKeys<T, TKey>(
             [NN] this IEnumerable<T> enumerable,
-            Func<T, TKey> KeySelector, 
+            Func<T, TKey> KeySelector,
             bool OverloadValues = false)
         {
             var dic = new Dictionary<TKey, T>();
@@ -318,8 +515,8 @@ namespace System.Linq
 
         [NN]
         public static Dictionary<TKey, TValue> ToDictionaryDistinctKeys<T, TKey, TValue>(
-            [NN] this IEnumerable<T> enumerable, 
-            Func<T, TKey> KeySelector, 
+            [NN] this IEnumerable<T> enumerable,
+            Func<T, TKey> KeySelector,
             Func<T, TValue> ValueSelector,
             bool OverloadValues = false)
         {
@@ -344,7 +541,7 @@ namespace System.Linq
         /// <param name="Lines">Перечисление строк</param>
         /// <returns>Если ссылка на перечисление пуста, то пустая ссылка на строку, иначе - объединение строк с разделителем - переносом строки</returns>
         [CN]
-        public static string Aggregate([CN] this IEnumerable<string> Lines) 
+        public static string Aggregate([CN] this IEnumerable<string> Lines)
             => Lines?.Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s), sb => sb.ToString());
 
         /// <summary>Добавить элементы перечисления в коллекцию</summary>
@@ -600,7 +797,7 @@ namespace System.Linq
         {
             if (Length > 0)
                 return new StatisticValue(Length)
-                          .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items)) 
+                          .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items))
                        ?? throw new InvalidOperationException();
             var values = collection.ToArray();
             var result = new StatisticValue(values.Length);
@@ -1450,7 +1647,7 @@ namespace System.Linq
         /// <returns>Строка, составленная из строковых представлений объектов последовательности, разделённых указанной строкой-разделителем</returns>
         [NN]
         // ReSharper disable once EmptyString
-        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") => 
+        public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") =>
             string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
 
         /// <summary>Найти минимум и максимум последовательности вещественных чисел</summary>
