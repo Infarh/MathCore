@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>0.0.19</Version>
-    <PackageReleaseNotes>Интерфейс индексируемого по ссылке объекта</PackageReleaseNotes>
+    <Version>0.0.20</Version>
+    <PackageReleaseNotes>Методы-расширения для IEnumerable, вычисляющие дисперсию</PackageReleaseNotes>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8</LangVersion>
     <IsPackable>true</IsPackable>
