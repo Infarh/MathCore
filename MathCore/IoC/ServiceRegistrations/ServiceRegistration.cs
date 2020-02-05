@@ -1,15 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using MathCore.Annotations;
+using MathCore.IoC.Exceptions;
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
-namespace MathCore.IoC
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBeProtected.Global
+
+namespace MathCore.IoC.ServiceRegistrations
 {
-    public abstract class ServiceRegistration : IDisposable
+    public abstract partial class ServiceRegistration : IDisposable
     {
         public event ExceptionEventHandler<Exception> ExceptionThrown;
 
-        protected virtual void OnExceptionThrown(Exception e) => ExceptionThrown.ThrowIfUnhandled(this, e);
+        protected virtual void OnExceptionThrown([NotNull] Exception e) => ExceptionThrown.ThrowIfUnhandled(this, e);
 
         protected readonly IServiceManager _Manager;
 
@@ -36,11 +43,13 @@ namespace MathCore.IoC
                     throw last_exception;
                 return CreateServiceInstance();
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 LastException = e;
                 OnExceptionThrown(e);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             return null;
         }
@@ -59,7 +68,8 @@ namespace MathCore.IoC
 
         //~ServiceRegistration() => Dispose(false);
 
-        void IDisposable.Dispose()
+        /// <inheritdoc />
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -72,31 +82,12 @@ namespace MathCore.IoC
 
     public abstract class ServiceRegistration<TService> : ServiceRegistration where TService : class
     {
-        protected class ServiceConstructorInfo
-        {
-            private readonly ConstructorInfo _Constructor;
-            private ParameterInfo[] _Parameters;
-
-            public ParameterInfo[] Parameters => _Parameters ??= _Constructor.GetParameters();
-            public IEnumerable<Type> ParameterTypes => Parameters.Select(p => p.ParameterType);
-
-            public bool IsDefault => Parameters.Length == 0;
-
-            public ServiceConstructorInfo(ConstructorInfo constructor) => _Constructor = constructor;
-
-            public object[] GetParametersValues(Func<Type, object> ParameterSelector) => ParameterTypes.ToArray(ParameterSelector);
-
-            public object CreateInstance(object[] parameters) => _Constructor.Invoke(parameters);
-
-            public object CreateInstance(Func<Type, object> ParameterSelector) => CreateInstance(GetParametersValues(ParameterSelector));
-        }
-
         protected readonly ServiceConstructorInfo[] _Constructors;
         protected readonly Func<TService> _FactoryMethod;
 
         #region Конструкторы
 
-        protected ServiceRegistration(IServiceManager Manager, Type ServiceType) : base(Manager, ServiceType) => _Constructors = ServiceType.GetConstructors().Select(c => new ServiceConstructorInfo(c)).OrderByDescending(c => c.Parameters.Length).ToArray();
+        protected ServiceRegistration(IServiceManager Manager, [NotNull] Type ServiceType) : base(Manager, ServiceType) => _Constructors = ServiceType.GetConstructors().Select(c => new ServiceConstructorInfo(c)).OrderByDescending(c => c.Parameters.Count).ToArray();
 
         protected ServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType) => _FactoryMethod = FactoryMethod;
 
@@ -113,12 +104,13 @@ namespace MathCore.IoC
             return constructor.CreateInstance(service_manager.Get);
         }
 
-        public ServiceRegistration<TService> With(Action<ServiceRegistration<TService>> Initializer)
+        [NotNull]
+        public ServiceRegistration<TService> With([CanBeNull] Action<ServiceRegistration<TService>> Initializer)
         {
             Initializer?.Invoke(this);
             return this;
         }
 
-        public MapServiceRegistration MapTo<TMapService>() where TMapService : class => _Manager.Map<TService, TMapService>();
+        [NotNull] public MapServiceRegistration MapTo<TMapService>() where TMapService : class => _Manager.Map<TService, TMapService>();
     }
 }

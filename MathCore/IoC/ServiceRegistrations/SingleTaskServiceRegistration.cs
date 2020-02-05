@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
 using MathCore.Annotations;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
-namespace MathCore.IoC
+namespace MathCore.IoC.ServiceRegistrations
 {
     [NotImplemented]
     public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
