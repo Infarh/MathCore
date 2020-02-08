@@ -8,7 +8,7 @@ namespace MathCore.Evaluations
 {
     /// <summary>Вычисление конкретного значения</summary>
     /// <typeparam name="T">Тип возвращаемого значения</typeparam>
-    public class ValueEvaluation<T> : Evulation<T>
+    public class ValueEvaluation<T> : Evaluation<T>
     {
         /// <summary>Возвращаемое значение</summary>
         public T Value { get; set; }

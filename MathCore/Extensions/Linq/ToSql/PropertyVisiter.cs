@@ -4,7 +4,7 @@
 //namespace System.Linq.ToSQL
 //{
 //    //http://jslcore.codeplex.com/SourceControl/changeset/view/8699#180670
-//    public class PropertyVisiter : ExpressionVisitorEx
+//    public class PropertyVisitor : ExpressionVisitorEx
 //    {
 //        protected override Expression VisitMember(MemberExpression node)
 //        {

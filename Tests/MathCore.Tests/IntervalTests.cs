@@ -64,10 +64,10 @@ namespace MathCore.Tests
         public void PropertyMinIncludeTest()
         {
             var I = new Interval<double>(-3, false, 5, true);
-            Assert.IsFalse(I.MinInclude, "Режим обраотки нижней границы интервала не соответствует объявленному в конструкторе");
+            Assert.IsFalse(I.MinInclude, "Режим обработки нижней границы интервала не соответствует объявленному в конструкторе");
             Assert.IsFalse(I.Check(-3), "Величина {0} на нижней границе интервала вошла в интервал {1}", -3, I);
             I = I.IncludeMin(true);
-            Assert.IsTrue(I.MinInclude, "Режим обраотки нижней границы интервала не соответствует установленному через свойство");
+            Assert.IsTrue(I.MinInclude, "Режим обработки нижней границы интервала не соответствует установленному через свойство");
             Assert.IsTrue(I.Check(-3), "Величина {0} на нижней границе интервала не вошла в интервал {1}", -3, I);
         }
 
@@ -75,10 +75,10 @@ namespace MathCore.Tests
         public void PropertyMaxIncludeTest()
         {
             var I = new Interval<double>(-3, true, 5, false);
-            Assert.IsFalse(I.MaxInclude, "Режим обраотки верхней границы интервала не соответствует объявленному в конструкторе");
+            Assert.IsFalse(I.MaxInclude, "Режим обработки верхней границы интервала не соответствует объявленному в конструкторе");
             Assert.IsFalse(I.Check(5), "Величина {0} на верхней границе интервала вошла в интервал {1}", 5, I);
             I = I.IncludeMax(true);
-            Assert.IsTrue(I.MaxInclude, "Режим обраотки верхней границы интервала не соответствует установленному через свойство");
+            Assert.IsTrue(I.MaxInclude, "Режим обработки верхней границы интервала не соответствует установленному через свойство");
             Assert.IsTrue(I.Check(5), "Величина {0} на верхней границе интервала не вошла в интервал {1}", 5, I);
         }
 
@@ -99,8 +99,8 @@ namespace MathCore.Tests
             var interval = new Interval<double>(min, max);
             Assert.AreEqual(interval.Min, min, "Минимальное значение установлено некорректно");
             Assert.AreEqual(interval.Max, max, "Максимальное значение установлено некорректно");
-            Assert.IsTrue(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно");
-            Assert.IsTrue(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно");
+            Assert.IsTrue(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно");
+            Assert.IsTrue(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно");
         }
 
         [TestMethod, Priority(1), Description("Тестирование конструктора с тремя параметрами (Min, Max, IncludeLimits)")]
@@ -114,15 +114,15 @@ namespace MathCore.Tests
             var interval = new Interval<double>(min, max, false);
             Assert.AreEqual(interval.Min, min, "Минимальное значение установлено некорректно");
             Assert.AreEqual(interval.Max, max, "Максимальное значение установлено некорректно");
-            Assert.IsFalse(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно");
-            Assert.IsFalse(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно");
+            Assert.IsFalse(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно");
+            Assert.IsFalse(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно");
 
             interval = new Interval<double>(min, max, true);
 
             Assert.AreEqual(interval.Min, min, "Минимальное значение установлено некорректно");
             Assert.AreEqual(interval.Max, max, "Максимальное значение установлено некорректно");
-            Assert.IsTrue(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно");
-            Assert.IsTrue(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно");
+            Assert.IsTrue(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно");
+            Assert.IsTrue(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно");
         }
 
         [TestMethod, Priority(1), Description("Тестирование конструктора с тремя параметрами (Min, IncludeMin, Max)")]
@@ -136,15 +136,15 @@ namespace MathCore.Tests
             var I = new Interval<double>(min, false, max, true);
             Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
             Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно");
-            Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно для интервала {0}", I);
-            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно для интервала {0}", I);
+            Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
+            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
             I = new Interval<double>(min, true, max, true);
 
             Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
             Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
-            Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно для интервала {0}", I);
-            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно для интервала {0}", I);
+            Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
+            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
         }
 
         [TestMethod, Priority(1), Description("Тестирование конструктора с четырьмя параметрами (Min, IncludeMin, Max, IncludeMax)")]
@@ -156,29 +156,29 @@ namespace MathCore.Tests
             var I = new Interval<double>(min, false, max, false);
             Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
             Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
-            Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно для интервала {0}", I);
-            Assert.IsFalse(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно для интервала {0}", I);
+            Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
+            Assert.IsFalse(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
             I = new Interval<double>(min, true, max, false);
 
             Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
             Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
-            Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно для интервала {0}", I);
-            Assert.IsFalse(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно для интервала {0}", I);
+            Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
+            Assert.IsFalse(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
             I = new Interval<double>(min, true, max, true);
 
             Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
             Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
-            Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно для интервала {0}", I);
-            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно для интервала {0}", I);
+            Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
+            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
             I = new Interval<double>(min, false, max, true);
 
             Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
             Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
-            Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некооректно для интервала {0}", I);
-            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некооректно для интервала {0}", I);
+            Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
+            Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
         }
 
         #endregion

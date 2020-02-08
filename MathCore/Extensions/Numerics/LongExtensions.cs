@@ -55,7 +55,7 @@ namespace System
         public static long BitReversing(this long x) => x.BitReversing(16);
 
         [DST]
-        public static bool IsDevidedTo(this long x, long y) => x % y == 0;
+        public static bool IsDeviatedTo(this long x, long y) => x % y == 0;
 
         [DST]
         public static long GetAbsMod(this long x, long mod) => x % mod + (x < 0 ? mod : 0);
@@ -70,7 +70,7 @@ namespace System
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
         [DST]
-        public static bool IsEven(this long x) => x.IsDevidedTo(2);
+        public static bool IsEven(this long x) => x.IsDeviatedTo(2);
 
         [DST]
         public static long Factorial(this long x)

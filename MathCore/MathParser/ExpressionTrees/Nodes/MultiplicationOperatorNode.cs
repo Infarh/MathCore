@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор умножения "*"</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор умножения "*"</summary>
     public class MultiplicationOperatorNode : OperatorNode
     {
         public const string NodeName = "·";

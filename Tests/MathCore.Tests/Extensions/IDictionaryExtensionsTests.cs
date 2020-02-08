@@ -2,12 +2,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable StringLiteralTypo
 
 namespace MathCore.Tests.Extensions
 {
 
     [TestClass, SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class IDictionaryExtentionsTests
+    public class IDictionaryExtensionsTests
     {
         [TestMethod]
         public void AddValue_Test()

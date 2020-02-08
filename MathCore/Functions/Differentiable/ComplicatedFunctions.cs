@@ -5,38 +5,39 @@ namespace MathCore.Functions.Differentiable
     public class Sinus : Function
     {
         public override double Value(double x) => Math.Sin(x);
-        public override Function Derivative() => new Cosinus();
+        public override Function Derivative() => new Cousins();
     }
 
-    public class Cosinus : Function
+    public class Cousins : Function
     {
         public override double Value(double x) => Math.Cos(x);
         public override Function Derivative() => new Sinus();
     }
 
-    public class Tangens : Division { public Tangens() : base(new Sinus(), new Cosinus()) { } }
-    public class Cotangens : Division { public Cotangens() : base(new Cosinus(), new Sinus()) { } }
+    public class Tangent : Division { public Tangent() : base(new Sinus(), new Cousins()) { } }
+    public class Cotangent : Division { public Cotangent() : base(new Cousins(), new Sinus()) { } }
 
-    public class Exponenta : Function
+    public class Exponent : Function
     {
         public override double Value(double x) => Math.Exp(x);
-        public override Function Derivative() => new Exponenta();
+        public override Function Derivative() => new Exponent();
     }
 
-    public class HiperbolicSinus : Division
+    public class HyperbolicSinus : Division
     {
-        public HiperbolicSinus()
-            : base(new Exponenta() - new One() / new Exponenta(), (Constant)2)
+        public HyperbolicSinus()
+            : base(new Exponent() - new One() / new Exponent(), (Constant)2)
         { }
     }
 
-    public class HiperbolicCosinus : Division
+    public class HyperbolicCosines : Division
     {
-        public HiperbolicCosinus()
-            : base(new Exponenta() + new One() / new Exponenta(), (Constant)2)
+        public HyperbolicCosines()
+            : base(new Exponent() + new One() / new Exponent(), (Constant)2)
         { }
     }
 
-    public class HiperbolicTangens : Division { public HiperbolicTangens() : base(new HiperbolicSinus(), new HiperbolicCosinus()) { } }
-    public class HiperbolicCotangens : Division { public HiperbolicCotangens() : base(new HiperbolicCosinus(), new HiperbolicSinus()) { } }
+    public class HyperbolicTangent : Division { public HyperbolicTangent() : base(new HyperbolicSinus(), new HyperbolicCosines()) { } }
+
+    public class HyperbolicCotangent : Division { public HyperbolicCotangent() : base(new HyperbolicCosines(), new HyperbolicSinus()) { } }
 }

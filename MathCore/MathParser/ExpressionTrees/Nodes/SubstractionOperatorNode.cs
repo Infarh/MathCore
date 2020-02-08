@@ -2,7 +2,7 @@
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения, релизующий оператор вычитания</summary>
+    /// <summary>Узел дерева выражения, реализующий оператор вычитания</summary>
     public class subtractionOperatorNode : OperatorNode
     {
         /// <summary>Инициализация нового оператора вычитания</summary>

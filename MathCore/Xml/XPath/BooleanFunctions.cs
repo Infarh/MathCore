@@ -13,10 +13,10 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        internal BooleanFunctions(Query qy, Function.FunctionType ftype)
+        internal BooleanFunctions(Query qy, Function.FunctionType FType)
         {
             _Qy = qy;
-            _FuncType = ftype;
+            _FuncType = FType;
         }
 
         internal BooleanFunctions(Query qy)

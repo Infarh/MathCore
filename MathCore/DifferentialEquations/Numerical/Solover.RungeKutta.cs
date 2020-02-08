@@ -11,8 +11,8 @@ namespace MathCore.DifferentialEquations.Numerical
 
             public static double[] FixedStep(double y0, Interval interval, int Count, DU f)
             {
-                var lenght = interval.Length;
-                var dx = lenght / (Count - 1);
+                var length = interval.Length;
+                var dx = length / (Count - 1);
 
                 var dx05 = dx / 2;
 

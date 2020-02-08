@@ -3,7 +3,7 @@
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор определения вариантов</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор определения вариантов</summary>
     public class VariantOperatorNode : OperatorNode
     {
         /// <summary>Инициализация нового узла оператора определения вариантов</summary>

@@ -28,7 +28,7 @@ namespace System
 
         /// <summary>Разархивировать последовательность байт в строку</summary>
         /// <param name="bytes">Сжатая последовательность бай, содержащая строку</param>
-        /// <returns>Разжатая последовательность байт в строковом представлении</returns>
+        /// <returns>Распакованная последовательность байт в строковом представлении</returns>
         [NotNull]
         public static string DecompressAsString([NotNull] this byte[] bytes)
         {
@@ -70,12 +70,12 @@ namespace System
 
         /// <summary>Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения</summary>
         /// <param name="Str">Входная строка</param>
-        /// <param name="Offset">Смещеине во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска</param>
+        /// <param name="Offset">Смещение во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска</param>
         /// <param name="Open">Шаблон начала подстроки</param>
         /// <param name="Close">Шаблон окончания подстроки</param>
         /// <returns>Подстрока, заключённая между указанными шаблонами начала и окончания</returns>
         /// <exception cref="FormatException">
-        /// Если шаблон завершения строки на нейден, либо если количество шаблонов начала строки превышает 
+        /// Если шаблон завершения строки на найден, либо если количество шаблонов начала строки превышает 
         /// количество шаблонов окончания во входной строке
         /// </exception>
         [CanBeNull]
@@ -205,6 +205,6 @@ namespace System
                 : str;
 
         [NotNull]
-        public static string NotNull([CanBeNull] this string str, [CanBeNull] string Message = null) => str ?? throw new InvalidOperationException(Message ?? "Отсусттвует ссылка на объект");
+        public static string NotNull([CanBeNull] this string str, [CanBeNull] string Message = null) => str ?? throw new InvalidOperationException(Message ?? "Отсутствует ссылка на объект");
     }
 }

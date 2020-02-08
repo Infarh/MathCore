@@ -14,6 +14,6 @@ namespace MathCore.Evaluations
         /// <summary>Инициализация нового вычисления поля объекта</summary>
         /// <param name="obj">Вычисление объекта, поле которого надо получить</param>
         /// <param name="FieldName">Имя поля объекта</param>
-        public FieldValueEvaluation(Evulation<TObject> obj, string FieldName) : base(e => Ex.Field(e, FieldName), obj) { }
+        public FieldValueEvaluation(Evaluation<TObject> obj, string FieldName) : base(e => Ex.Field(e, FieldName), obj) { }
     }
 }

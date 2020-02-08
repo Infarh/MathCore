@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+// ReSharper disable IdentifierTypo
+// ReSharper disable CommentTypo
 
 namespace MathCore.Extensions.String
 {
@@ -32,7 +34,7 @@ namespace MathCore.Extensions.String
         /// <param name="c"></param><returns></returns>
         private static bool isSpecSign(char c) => SpecSign.Contains(c);
 
-        /// <summary>Возвращает тип символа: согласный, гласный, разделитель, неопределен</summary>
+        /// <summary>Возвращает тип символа: согласный, гласный, разделитель, не определён</summary>
         /// <param name="c"></param><returns></returns>
         private static SymbType GetSymbType(char c) => isSogl(c) ? SymbType.Sogl : (isGlas(c) ? SymbType.Glas : (isSpecSign(c) ? SymbType.Spec : SymbType.NoDefined));
 

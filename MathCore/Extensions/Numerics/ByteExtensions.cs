@@ -19,8 +19,8 @@ namespace System
 
         /// <summary>Реверсирование бит числа</summary>
         /// <param name="x">исходное число</param>
-        /// <param name="N">Число реверсируемых бит [ = 16 ]</param>
-        /// <returns>Реверсированное число</returns>
+        /// <param name="N">Число резервируемых бит [ = 16 ]</param>
+        /// <returns>Инверсированное число</returns>
         [DST]
         public static byte BitReversing(this byte x, int N = 16)
         {
@@ -35,7 +35,7 @@ namespace System
         }
 
         [DST]
-        public static bool IsDevidedTo(this byte x, byte y) => x % y == 0;
+        public static bool IsDeviatedTo(this byte x, byte y) => x % y == 0;
 
         [DST]
         public static byte GetAbsMod(this byte x, byte mod) => (byte)(x % mod);
@@ -50,7 +50,7 @@ namespace System
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
         [DST]
-        public static bool IsEven(this byte x) => x.IsDevidedTo(2);
+        public static bool IsEven(this byte x) => x.IsDeviatedTo(2);
 
         [DST]
         public static bool IsSetBit(this byte x, int BitN)

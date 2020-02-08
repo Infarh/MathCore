@@ -46,6 +46,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>
         public override string ToString() => 
-            $"{_Bracket.Suround((Left ?? throw new InvalidOperationException()).ToString())}{Right?.ToString() ?? string.Empty}";
+            $"{_Bracket.Surround((Left ?? throw new InvalidOperationException()).ToString())}{Right?.ToString() ?? string.Empty}";
     }
 }

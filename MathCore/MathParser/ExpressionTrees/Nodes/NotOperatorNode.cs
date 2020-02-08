@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор отрицания</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор отрицания</summary>
     public class NotOperatorNode : LogicOperatorNode
     {
         /// <summary>Инициализация нового узла оператора меньше</summary>

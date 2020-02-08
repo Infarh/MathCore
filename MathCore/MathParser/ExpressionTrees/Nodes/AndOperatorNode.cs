@@ -2,7 +2,7 @@
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор ленивого И</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор ленивого И</summary>
     public class AndOperatorNode : LogicOperatorNode
     {
         /// <summary>Инициализация нового узла оператора ленивого И</summary>

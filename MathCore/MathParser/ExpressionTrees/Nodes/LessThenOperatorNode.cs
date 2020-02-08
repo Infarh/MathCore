@@ -2,7 +2,7 @@
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор меньше</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор меньше</summary>
     public class LessThenOperatorNode : LogicOperatorNode
     {
         /// <summary>Инициализация нового узла оператора меньше</summary>

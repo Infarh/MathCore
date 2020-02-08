@@ -237,11 +237,11 @@ namespace System.Linq.Expressions
 
         protected virtual Expression VisitNewArray(NewArrayExpression na)
         {
-            var exprs = VisitExpressionList(na.Expressions);
-            return exprs != na.Expressions
+            var expr = VisitExpressionList(na.Expressions);
+            return expr != na.Expressions
                 ? (na.NodeType == ExpressionType.NewArrayInit
-                    ? Expression.NewArrayInit(na.Type.GetElementType(), exprs)
-                    : Expression.NewArrayBounds(na.Type.GetElementType(), exprs))
+                    ? Expression.NewArrayInit(na.Type.GetElementType(), expr)
+                    : Expression.NewArrayBounds(na.Type.GetElementType(), expr))
                 : na;
         }
 

@@ -9,13 +9,13 @@ namespace System
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
     public sealed class ValueBetweenAttribute : Attribute
     {
-        /// <summary>Инжнее пороговое значение</summary>
+        /// <summary>Нижнее пороговое значение</summary>
         private object _Min;
 
-        /// <summary>Инжнее пороговое значение</summary>
+        /// <summary>Нижнее пороговое значение</summary>
         private object _Max;
 
-        /// <summary>Инжнее пороговое значение</summary>
+        /// <summary>Нижнее пороговое значение</summary>
         public object Min
         {
             get => _Min;
@@ -26,7 +26,7 @@ namespace System
             }
         }
 
-        /// <summary>Инжнее пороговое значение</summary>
+        /// <summary>Нижнее пороговое значение</summary>
         public object Max
         {
             get => _Max;

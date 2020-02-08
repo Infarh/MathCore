@@ -2880,24 +2880,24 @@
         </member>
         <member name="M:MathCore.Geolocation.GPS.Heading(System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение курса по координатам начальной и конечной точки</summary>
-            <param name="latitude1">Широта первой иходной точки</param>
-            <param name="longitude1">Долгота первой иходной точки</param>
-            <param name="latitude2">Широта второй иходной точки</param>
-            <param name="longitude2">Долгота второй иходной точки</param>
+            <param name="latitude1">Широта первой исходной точки</param>
+            <param name="longitude1">Долгота первой исходной точки</param>
+            <param name="latitude2">Широта второй исходной точки</param>
+            <param name="longitude2">Долгота второй исходной точки</param>
             <returns>Курс в градусах</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.HalfWayPoint(System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение точки на середине отрезка, заданного двумя точками</summary>
-            <param name="latitude1">Широта первой иходной точки</param>
-            <param name="longitude1">Долгота первой иходной точки</param>
-            <param name="latitude2">Широта второй иходной точки</param>
-            <param name="longitude2">Долгота второй иходной точки</param>
+            <param name="latitude1">Широта первой исходной точки</param>
+            <param name="longitude1">Долгота первой исходной точки</param>
+            <param name="latitude2">Широта второй исходной точки</param>
+            <param name="longitude2">Долгота второй исходной точки</param>
             <returns>Точка в середине отрезка</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.DestinationPoint(System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
             <param name="latitude">Широта исходной точки</param>
-            <param name="longitude">Долгота исхоной точки</param>
+            <param name="longitude">Долгота исходной точки</param>
             <param name="heading">Курс на точкуу назначения</param>
             <param name="distance">Пройденная дистанция в метрах</param>
             <returns>Точка назначения</returns>
@@ -2905,7 +2905,7 @@
         <member name="M:MathCore.Geolocation.GPS.DestinationPoint(System.Double,System.Double,System.Double,System.Double,System.Double@)">
             <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
             <param name="latitude">Широта исходной точки</param>
-            <param name="longitude">Долгота исхоной точки</param>
+            <param name="longitude">Долгота исходной точки</param>
             <param name="heading">Курс на точкуу назначения</param>
             <param name="distance">Пройденная дистанция в метрах</param>
             <param name="final_heading">Курс из точки назначения на исходную точку</param>
@@ -2913,11 +2913,11 @@
         </member>
         <member name="M:MathCore.Geolocation.GPS.Intersection(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение точки персечения двух курсов, каждый из которых задан исходной точкой</summary>
-            <param name="latitude1">Широта первой иходной точки</param>
-            <param name="longitude1">Долгота первой иходной точки</param>
-            <param name="heading1">Курс из первой иходной точки</param>
-            <param name="latitude2">Широта второй иходной точки</param>
-            <param name="longitude2">Долгота второй иходной точки</param>
+            <param name="latitude1">Широта первой исходной точки</param>
+            <param name="longitude1">Долгота первой исходной точки</param>
+            <param name="heading1">Курс из первой исходной точки</param>
+            <param name="latitude2">Широта второй исходной точки</param>
+            <param name="longitude2">Долгота второй исходной точки</param>
             <param name="heading2">Курс второй исходной точки</param>
             <returns>Точка пересечения двух курсов</returns>
         </member>
@@ -4433,7 +4433,7 @@
             <returns>Полный клон узла с клонами поддеревьев</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор ленивого И</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор ленивого И</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора ленивого И</summary>
@@ -4988,7 +4988,7 @@
             <returns>Строковое представление узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор больше</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор больше</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора больше</summary>
@@ -5039,7 +5039,7 @@
             <returns>Строковое представление узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор меньше</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор меньше</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора меньше</summary>
@@ -5094,7 +5094,7 @@
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор умножения "*"</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор умножения "*"</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора произведения</summary>
@@ -5122,7 +5122,7 @@
             <returns>Клон узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор отрицания</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор отрицания</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора меньше</summary>
@@ -5202,7 +5202,7 @@
             <returns>Строковое представление узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор ленивого ИЛИ</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор ленивого ИЛИ</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора ленивого ИЛИ</summary>
@@ -5251,7 +5251,7 @@
             <returns>Клон узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор выбора</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор выбора</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора выбора</summary>
@@ -5310,7 +5310,7 @@
             <returns>Значение строкового узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode">
-            <summary>Узел дерева выражения, релизующий оператор вычитания</summary>
+            <summary>Узел дерева выражения, реализующий оператор вычитания</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.#ctor">
             <summary>Инициализация нового оператора вычитания</summary>
@@ -5384,7 +5384,7 @@
             <returns>Клон узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор определения вариантов</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор определения вариантов</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора определения вариантов</summary>
@@ -14135,16 +14135,16 @@
             <summary>Значение должно быть в диапазоне значений</summary>
         </member>
         <member name="F:System.ValueBetweenAttribute._Min">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="F:System.ValueBetweenAttribute._Max">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="P:System.ValueBetweenAttribute.Min">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="P:System.ValueBetweenAttribute.Max">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="M:System.ValueBetweenAttribute.#ctor">
             <summary>Инициализация нового экземпляра <see cref="T:System.GreaterOrEqualAttribute"/></summary>

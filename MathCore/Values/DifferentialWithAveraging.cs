@@ -3,7 +3,7 @@
 namespace MathCore.Values
 {
     [Serializable]
-    public class DifferentialWithAveraging : IResetable, IValue<double>
+    public class DifferentialWithAveraging : IResettable, IValue<double>
     {
         protected double _LastValue;
         protected TimeSpan _LastTime;
@@ -69,12 +69,12 @@ namespace MathCore.Values
             if(dt == 0) return Value;
 
             var dv = (value - _LastV1) / Tau;
-            var dvdt = _LastV1 + (dv * dt);
+            var dv_dt = _LastV1 + (dv * dt);
             var lv_IntV = Value + (((dv - Value) / Tau) * dt);
-            //var result = dvdt + (Tau * lv_IntV);
+            //var result = dv_dt + (Tau * lv_IntV);
 
             _LastTime = t;
-            _LastV1 = dvdt;
+            _LastV1 = dv_dt;
             _LastValue = value;
             //_LastVf = result;
             Value = lv_IntV;

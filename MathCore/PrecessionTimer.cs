@@ -166,9 +166,11 @@ namespace MathCore
                 OnStopped(EventArgs.Empty);
         }
 
+        // ReSharper disable once StringLiteralTypo
         [DllImport("winmm.dll", EntryPoint = "timeGetDevCaps")]
         private static extern int TimeGetDevCaps(ref PrecisionTimerCaps Caps, int SizeOfTimerCaps);
 
+        // ReSharper disable once StringLiteralTypo
         [DllImport("winmm.dll", EntryPoint = "timeKillEvent")]
         private static extern int TimeKillEvent(int ID);
 
@@ -194,6 +196,7 @@ namespace MathCore
                 OnTick(EventArgs.Empty);
         }
 
+        // ReSharper disable once StringLiteralTypo
         [DllImport("winmm.dll", EntryPoint = "timeSetEvent")]
         private static extern int TimeSetEvent(int Delay, int Resolution, TimeProc Proc, int User,
                                                PrecisionTimerMode Mode);

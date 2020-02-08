@@ -13,10 +13,10 @@ namespace System.Xml.XPath
         #region Constructors
 
         public NumberFunctions(Query qy,
-            Function.FunctionType ftype)
+            Function.FunctionType FType)
         {
             _Qy = qy;
-            _FuncType = ftype;
+            _FuncType = FType;
         }
 
         public NumberFunctions() { }
@@ -102,7 +102,7 @@ namespace System.Xml.XPath
         {
             var n = Convert.ToDouble(_Qy.GetValue(reader));
             // Math.Round does bankers rounding and Round(1.5) == Round(2.5) == 2
-            // This is incorrect in XPath and to fix this we are useing Math.Floor(n + 0.5) istead
+            // This is incorrect in XPath and to fix this we are useing Math.Floor(n + 0.5) instead
             // To deal with -0.0 we have to use Math.Round in [0.5, 0.0]
             return -0.5 <= n && n <= 0.0 ? Math.Round(n) : Math.Floor(n + 0.5);
         }

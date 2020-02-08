@@ -5,7 +5,7 @@ using System.Linq;
 namespace MathCore.Values
 {
     /// <summary>Статистическая информация о значении</summary>
-    public class StatisticValue : IResetable
+    public class StatisticValue : IResettable
     {
         /// <summary>Среднее значение</summary>
         private readonly AverageValue _Average;

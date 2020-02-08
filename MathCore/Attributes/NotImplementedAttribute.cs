@@ -16,7 +16,7 @@ namespace System
         public NotImplementedAttribute() { }
 
         /// <summary>Новый атрибут нереализованности</summary>
-        /// <param name="Message">Сообщение (почему не раелизовано?)</param>
+        /// <param name="Message">Сообщение (почему не реализовано?)</param>
         public NotImplementedAttribute(string Message) => this.Message = Message;
 
         /// <summary>Признак атрибута "по умолчанию"</summary>

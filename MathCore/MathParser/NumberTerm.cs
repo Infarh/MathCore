@@ -28,7 +28,7 @@ namespace MathCore.MathParser
 
         public NumberTerm(int Value) : base(Value.ToString()) => _IntValue = Value;
 
-        /// <summary>Извлеч поддерево</summary>
+        /// <summary>Извлечь поддерево</summary>
         /// <param name="Parser">Парсер</param>
         /// <param name="Expression">Математическое выражение</param>
         /// <returns>Узел константного значения</returns>
@@ -39,13 +39,13 @@ namespace MathCore.MathParser
         /// <param name="node">Узел выражения</param>
         /// <param name="SeparatorTerm">Блок разделитель</param>
         /// <param name="DecimalSeparator">Блок с целой частью числа</param>
-        /// <param name="FrationPartTerm">Блок с дробной частью числа</param>
+        /// <param name="FractionPartTerm">Блок с дробной частью числа</param>
         /// <returns>Истина, если действие совершено успешно. Ложь, если в последующих блоках не содержится нужной информации</returns>
-        public static bool TryAddFractionPart(ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FrationPartTerm)
+        public static bool TryAddFractionPart(ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FractionPartTerm)
         {
             if(!(node is ConstValueNode value)) throw new ArgumentException("Неверный тип узла дерева");
             if(!(SeparatorTerm is CharTerm separator) || separator.Value != DecimalSeparator) return false;
-            if(!(FrationPartTerm is NumberTerm fraction)) return false;
+            if(!(FractionPartTerm is NumberTerm fraction)) return false;
 
             var v_value = fraction.Value;
             if(v_value == 0) return true;

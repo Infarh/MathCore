@@ -13,7 +13,7 @@ namespace MathCore.MathParser
         [NotNull]
         private readonly List<Functional> _Operators = new List<Functional>();
 
-        /// <summary>Ссылка на математическое выражение, с которым связана поллекция</summary>
+        /// <summary>Ссылка на математическое выражение, с которым связана коллекция</summary>
         [NotNull]
         private readonly MathExpression _Expression;
 

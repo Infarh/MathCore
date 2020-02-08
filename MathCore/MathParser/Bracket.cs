@@ -18,7 +18,7 @@ namespace MathCore.MathParser
 
         /// <summary>Фигурные скобки</summary>
         [NotNull]
-        public static Bracket NewFigur => new Bracket("{", "}");
+        public static Bracket NewFigure => new Bracket("{", "}");
 
         /// <summary>Открывающая скобка</summary>
         [NotNull]
@@ -60,13 +60,13 @@ namespace MathCore.MathParser
 
         /// <summary>Строковое представление скобок</summary>
         /// <returns>Строковое представление</returns>
-        public override string ToString() => Suround("...");
+        public override string ToString() => Surround("...");
 
         /// <summary>Разместить текст в скобках</summary>
         /// <param name="str">Размещаемый текст</param>
         /// <returns>Текст в скобках</returns>
         [NotNull]
-        public string Suround([CanBeNull] string str)
+        public string Surround([CanBeNull] string str)
         {
             Trace.TraceWarning("В обёртку блока скобок передана пустая строка");
             return $"{Start}{str}{Stop}";

@@ -5,8 +5,8 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore
 {
-    /// <summary>Класс-обёртка для inline-доступа к свойствам созданного объекта, наследующего интерфейс IDisposasble</summary>
-    /// <typeparam name="T">Тип используемого объекта, наследующего интерфейс IDIsposable</typeparam>
+    /// <summary>Класс-обёртка для inline-доступа к свойствам созданного объекта, наследующего интерфейс IDisposable</summary>
+    /// <typeparam name="T">Тип используемого объекта, наследующего интерфейс IDisposable</typeparam>
     public class UsingDisposableObject<T> : UsingObject<T> where T : IDisposable
     {
         /* ------------------------------------------------------------------------------------------ */

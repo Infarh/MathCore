@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.Monads.WorkFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MathCore.Tests.Monades.WorkFlow
+namespace MathCore.Tests.Monads.WorkFlow
 {
     [TestClass]
     public partial class WorkTests

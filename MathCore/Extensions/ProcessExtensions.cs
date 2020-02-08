@@ -42,6 +42,7 @@ namespace MathCore.Extensions
             public IntPtr InheritedFromUniqueProcessId;
         }
 
+        // ReSharper disable once StringLiteralTypo
         [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
         private static extern uint NtQueryInformationProcess(
             IntPtr ProcessHandle,
@@ -58,8 +59,8 @@ namespace MathCore.Extensions
         public static Process GetMotherProcess([NotNull] this Process process)
         {
             var info = new PROCESS_BASIC_INFORMATION();
-            if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var writed) != 0 
-                || writed == 0)
+            if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var written) != 0 
+                || written == 0)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             return Process.GetProcessById(info.InheritedFromUniqueProcessId.ToInt32());
         }

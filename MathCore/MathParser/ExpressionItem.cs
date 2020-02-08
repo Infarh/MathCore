@@ -10,7 +10,7 @@ namespace MathCore.MathParser
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string PeoprtyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PeoprtyName));
+        protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
 
         [NotifyPropertyChangedInvocator]
         protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string PropertyName = null)

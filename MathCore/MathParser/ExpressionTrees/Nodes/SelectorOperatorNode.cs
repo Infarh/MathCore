@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор выбора</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор выбора</summary>
     public class SelectorOperatorNode : OperatorNode
     {
         /// <summary>Инициализация нового узла оператора выбора</summary>

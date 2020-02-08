@@ -10,7 +10,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Значение узла</summary>
         private readonly double _Value;
 
-        /// <summary>Флаг возможности получения значения без выччисления. Всегда = true</summary>
+        /// <summary>Флаг возможности получения значения без вычисления. Всегда = true</summary>
         public override bool IsPrecomputable => true;
 
         /// <summary>Значение узла. Не поддерживает присвоение</summary>

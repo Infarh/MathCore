@@ -11,6 +11,7 @@ using static System.Math;
 
 namespace MathCore.Statistic.RandomNumbers
 {
+    // ReSharper disable once StringLiteralTypo
     [Copyright("Александр Самарин - Генераторы непрерывно распределенных случайных величин", url = "http://habrahabr.ru/post/263993/")]
     public class PolyformRandomGenerator
     {
@@ -27,9 +28,9 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static double UniformDistribution(double x, double a, double b) => x >= a && x <= b ? 1 / (b - a) : 0;
 
-        public static Func<double, double> GetUniformDestribution(double a, double b)
+        public static Func<double, double> GetUniformDistribution(double a, double b)
             => x => x >= a && x <= b ? 1 / (b - a) : 0;
-        public static Expression<Func<double, double>> GetUniformDestributionExpression(double a, double b)
+        public static Expression<Func<double, double>> GetUniformDistributionExpression(double a, double b)
             => x => x >= a && x <= b ? 1 / (b - a) : 0;
 
         public double Uniform(double a, double b) => a + (double)BasicRandGenerator() / RandMax * (b - a);
@@ -40,9 +41,9 @@ namespace MathCore.Statistic.RandomNumbers
         #region Normal
 
         public static double NormalDistribution(double x, double m, double s) => 1 / s / Sqrt(Consts.pi2) * Exp(-(x - m) * (x - m) / 2 / s / s);
-        public static Func<double, double> GetNormalDestribution(double m, double s) => x => 1 / s / Sqrt(Consts.pi2) * Exp(-(x - m) * (x - m) / 2 / s / s);
+        public static Func<double, double> GetNormalDistribution(double m, double s) => x => 1 / s / Sqrt(Consts.pi2) * Exp(-(x - m) * (x - m) / 2 / s / s);
 
-        public static Expression<Func<double, double>> GetNormalDestributionExpression(double m, double s)
+        public static Expression<Func<double, double>> GetNormalDistributionExpression(double m, double s)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var M = m.ToExpression();
@@ -139,9 +140,9 @@ namespace MathCore.Statistic.RandomNumbers
         #region Exponential
 
         public static double ExponentialDistribution(double x, double l, double s) => l * Exp(-l * x);
-        public static Func<double, double> GetExponentialDestribution(double l, double s) => x => l * Exp(-l * x);
+        public static Func<double, double> GetExponentialDistribution(double l, double s) => x => l * Exp(-l * x);
 
-        public static Expression<Func<double, double>> GetExponentialDestributionExpression(double l, double s)
+        public static Expression<Func<double, double>> GetExponentialDistributionExpression(double l, double s)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var body = l.ToExpression().Multiply(MathExpression.Exp(l.ToExpression().Multiply(X).Negate()));
@@ -207,9 +208,9 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static double GammaDistribution(double x, double k, double th)
             => Pow(x, k - 1) * Exp(-x / th) / (SpecialFunctions.Gamma.G(k) * Pow(th, k));
-        public static Func<double, double> GetGammaDestribution(double k, double th) => x => Pow(x, k - 1) * Exp(-x / th) / (SpecialFunctions.Gamma.G(k) * Pow(th, k));
+        public static Func<double, double> GetGammaDistribution(double k, double th) => x => Pow(x, k - 1) * Exp(-x / th) / (SpecialFunctions.Gamma.G(k) * Pow(th, k));
 
-        public static Expression<Func<double, double>> GetGammaDestributionExpression(double k, double th)
+        public static Expression<Func<double, double>> GetGammaDistributionExpression(double k, double th)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var K = k.ToExpression();
@@ -329,10 +330,10 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static double CauchyDistribution(double x, double x0, double g)
            => g / (Consts.pi * (g * g + (x - x0).Power(2)));
-        public static Func<double, double> GetCauchyDestribution(double x0, double g) =>
+        public static Func<double, double> GetCauchyDistribution(double x0, double g) =>
             x => g / (Consts.pi * (g * g + (x - x0).Power(2)));
 
-        public static Expression<Func<double, double>> GetCauchyDestributionExpression(double x0, double g)
+        public static Expression<Func<double, double>> GetCauchyDistributionExpression(double x0, double g)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var X0 = x0.ToExpression();
@@ -362,10 +363,10 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static double LaplaceDistribution(double x, double m, double b)
           => Exp(-Abs(x - m) / b) / (2 * b);
-        public static Func<double, double> GetLaplaceDestribution(double m, double b) =>
+        public static Func<double, double> GetLaplaceDistribution(double m, double b) =>
             x => Exp(-Abs(x - m) / b) / (2 * b);
 
-        public static Expression<Func<double, double>> GetLaplaceDestributionExpression(double m, double b)
+        public static Expression<Func<double, double>> GetLaplaceDistributionExpression(double m, double b)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var M = m.ToExpression();
@@ -382,10 +383,10 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static double LevyDistribution(double x, double m, double c)
             => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Power(3)));
-        public static Func<double, double> GetLevyDestribution(double m, double c) =>
+        public static Func<double, double> GetLevyDistribution(double m, double c) =>
             x => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Power(3)));
 
-        public static Expression<Func<double, double>> GetLevyDestributionExpression(double m, double c)
+        public static Expression<Func<double, double>> GetLevyDistributionExpression(double m, double c)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var M = m.ToExpression();
@@ -407,10 +408,10 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static double ChiSquaredDistribution(double x, double k)
             => Pow(x, k / 2 - 1) * Exp(-x / 2) / Pow(2, k / 2) / SpecialFunctions.Gamma.G(k / 2);
-        public static Func<double, double> GetChiSquaredDestribution(double k) =>
+        public static Func<double, double> GetChiSquaredDistribution(double k) =>
             x => Pow(x, k / 2 - 1) * Exp(-x / 2) / Pow(2, k / 2) / SpecialFunctions.Gamma.G(k / 2);
 
-        public static Expression<Func<double, double>> GetChiSquaredDestributionExpression(double k)
+        public static Expression<Func<double, double>> GetChiSquaredDistributionExpression(double k)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var K05 = k.ToExpression().Divide(2);
@@ -435,10 +436,10 @@ namespace MathCore.Statistic.RandomNumbers
         public static double LogNormalDistribution(double x, double m, double s)
             => Exp(Log(x - m).Power(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
 
-        public static Func<double, double> GetLogNormalDestribution(double m, double s) =>
+        public static Func<double, double> GetLogNormalDistribution(double m, double s) =>
             x => Exp(Log(x - m).Power(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
 
-        public static Expression<Func<double, double>> GetLogNormalDestributionExpression(double m, double s)
+        public static Expression<Func<double, double>> GetLogNormalDistributionExpression(double m, double s)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var M = m.ToExpression();
@@ -459,10 +460,10 @@ namespace MathCore.Statistic.RandomNumbers
         public static double LogisticDistribution(double x, double m, double s)
             => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Power(2);
 
-        public static Func<double, double> GetLogisticDestribution(double m, double s) =>
+        public static Func<double, double> GetLogisticDistribution(double m, double s) =>
             x => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Power(2);
 
-        public static Expression<Func<double, double>> GetLogisticDestributionExpression(double m, double s)
+        public static Expression<Func<double, double>> GetLogisticDistributionExpression(double m, double s)
         {
             var X = Expression.Parameter(typeof(double), "x");
             var M = m.ToExpression();
@@ -478,6 +479,7 @@ namespace MathCore.Statistic.RandomNumbers
 
         public double Erlang(int k, double l) => GA1(k) / l;
 
+        // ReSharper disable once IdentifierTypo
         public double Weibull(double l, double k) => l * Pow(Exponential(1), 1.0 / k);
 
         public double Rayleigh(double sigma) => sigma * Sqrt(Exponential(0.5));
@@ -486,6 +488,7 @@ namespace MathCore.Statistic.RandomNumbers
 
         public double StudentT(int v) => v == 1 ? Cauchy(0, 1) : Normal(0, 1) / Sqrt(ChiSquared(v) / v);
 
+        // ReSharper disable once IdentifierTypo
         public double FisherSnedecor(int d1, int d2)
         {
             var numerator = d2 * ChiSquared(d1);

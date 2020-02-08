@@ -7,7 +7,7 @@ using System.Linq;
 namespace MathCore.Values
 {
     /// <summary>Объект, отслеживающий минимальное и максимальное значение входящей величины</summary>
-    public class MinMaxValue : IResetable, IFormattable
+    public class MinMaxValue : IResettable, IFormattable
     {
         /// <summary>Минимальное значение</summary>
         private double _Min;

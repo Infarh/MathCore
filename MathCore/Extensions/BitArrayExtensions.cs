@@ -111,7 +111,7 @@ namespace System.Collections
         /// <param name="bits">Битовый массив</param>
         /// <returns>Результат сложения бит массива по модулю 2</returns>
         [DST]
-        public static bool GetBitSummMod2([NotNull] this BitArray bits)
+        public static bool GetBitSumMod2([NotNull] this BitArray bits)
         {
             var result = false;
 

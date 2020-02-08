@@ -19,7 +19,7 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        public XPathCollectionEnumerator(Hashtable xpathes) => _HashEnum = xpathes.GetEnumerator();
+        public XPathCollectionEnumerator(Hashtable XPatches) => _HashEnum = XPatches.GetEnumerator();
 
         #endregion
 

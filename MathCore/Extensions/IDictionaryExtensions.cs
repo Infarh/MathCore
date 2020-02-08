@@ -169,7 +169,7 @@ namespace System.Collections.Generic
         /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
         /// <param name="dictionary">Рассматриваемый словарь</param>
         /// <param name="key">Ключ, значение для которого требуется получить</param>
-        /// <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключём, если он отсутствует</param>
+        /// <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключом, если он отсутствует</param>
         /// <typeparam name="TKey">Тип ключа</typeparam>
         /// <typeparam name="TValue">Тип значения</typeparam>
         /// <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>

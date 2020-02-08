@@ -151,9 +151,9 @@ namespace MathCore.MathParser
         /// <summary>Очистить коллекцию переменных</summary>
         public void ClearCollection() => _Variables.Clear();
 
-        /// <summary>Существует ли в коллекции переменная с указанным имененм</summary>
+        /// <summary>Существует ли в коллекции переменная с указанным именем</summary>
         /// <param name="Name">Искомое имя переменной</param>
-        /// <returns>Истина, если в коллекции пристутствует переменная с указанным именем</returns>
+        /// <returns>Истина, если в коллекции присутствует переменная с указанным именем</returns>
         public bool Exist([NotNull] string Name) => Exist(v => v.Name == Name);
 
         /// <summary>Проверка на существование переменной в коллекции</summary>

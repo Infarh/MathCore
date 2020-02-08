@@ -15,6 +15,6 @@ namespace MathCore.Evaluations
         /// <summary>Инициализация нового вычисления свойства объекта</summary>
         /// <param name="obj">Вычисление объекта, свойство которого надо получить</param>
         /// <param name="PropertyName">Имя свойства объекта</param>
-        public PropertyValueEvaluation(Evulation<TObject> obj, string PropertyName) : base(e => Ex.Property(e, PropertyName), obj) { }
+        public PropertyValueEvaluation(Evaluation<TObject> obj, string PropertyName) : base(e => Ex.Property(e, PropertyName), obj) { }
     }
 }

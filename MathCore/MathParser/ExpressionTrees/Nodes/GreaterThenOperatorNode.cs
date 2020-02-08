@@ -2,7 +2,7 @@
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор больше</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор больше</summary>
     // todo: добавить логику разбора конструкций типа 5>x>-5
     public class GreaterThenOperatorNode : LogicOperatorNode
     {

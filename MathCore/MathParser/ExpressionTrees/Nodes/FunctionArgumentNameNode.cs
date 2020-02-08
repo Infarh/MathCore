@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения, содержащий сведенья об аргументе функции</summary>
+    /// <summary>Узел дерева выражения, содержащий сведения об аргументе функции</summary>
     public class FunctionArgumentNameNode : OperatorNode
     {
         /// <summary>Узел аргумента</summary>

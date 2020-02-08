@@ -49,11 +49,11 @@ namespace System.Xml.XPath
 
         #region Methods
 
-        internal static AstNode NewAstNode(string parsestring)
+        internal static AstNode NewAstNode(string ParseString)
         {
             try
             {
-                return XPathParser.ParseXPathExpression(parsestring);
+                return XPathParser.ParseXPathExpression(ParseString);
             }
             catch (XPathException e)
             {

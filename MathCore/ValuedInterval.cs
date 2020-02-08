@@ -7,7 +7,7 @@ using MathCore.Annotations;
 
 namespace MathCore
 {
-    /// <summary>Интервал вещественых значений двойной точности</summary>
+    /// <summary>Интервал вещественных значений двойной точности</summary>
     [Serializable]
     public struct ValuedInterval<TValue> : IComparable<double>, IFormattable
     {
@@ -69,7 +69,7 @@ namespace MathCore
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верзняя граница интервала</param>
+        /// <param name="Max">Верхняя граница интервала</param>
         /// <param name="Value">Значение</param>
         public ValuedInterval(double Min, double Max, TValue Value) : this(Min, true, Max, true, Value) { }
 
@@ -126,7 +126,7 @@ namespace MathCore
             value = _Value;
         }
 
-        ///// <summary>Проверка на входжение в интервал</summary>
+        ///// <summary>Проверка на вхождение в интервал</summary>
         ///// <param name="X">Проверяемая величина</param>
         ///// <returns></returns>
         //public bool Check(double X)

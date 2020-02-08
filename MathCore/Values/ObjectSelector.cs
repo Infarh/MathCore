@@ -9,7 +9,7 @@ namespace MathCore.Values
     /// <summary>Система псевдопараллельного потокового доступа к значению ряда источников объектов</summary>
     /// <typeparam name="T">Тип объектов в источниках</typeparam>
     /// <example>
-    /// Прмером использования может быть способ последовательного выбора данных из ряда потоков чтения 
+    /// Примером использования может быть способ последовательного выбора данных из ряда потоков чтения 
     /// с выбором последовательности данных, выводимых в общий поток.
     /// void Test()
     /// {
@@ -18,11 +18,11 @@ namespace MathCore.Values
     ///           Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f))))  //для всех файлов C:\*.txt
     ///   {
     ///     var rnd = new Random();                                         //Генератор случайных чисел
-    ///     var oSelecter = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
+    ///     var o_selector = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
     ///                 SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
     ///                 () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
     ///                 readers.Select(r => (Func&lt;string&gt;)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
-    ///     while(oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
+    ///     while(o_selector.CanRead) Console.Write(o_selector.Value);        //Читаем всё построчно в консоль
     ///   }
     /// }
     /// </example>
@@ -32,7 +32,7 @@ namespace MathCore.Values
 
         /// <summary>Метод выбора одного из значений ряда источников объектов</summary>
         private readonly Func<T[], int> _Selector;
-        /// <summary>Массив "ленивых" значений, используемиых в качестве генераторов объектов </summary>
+        /// <summary>Массив "ленивых" значений, используемых в качестве генераторов объектов </summary>
         private readonly LazyValue<T>[] _Values;
         /// <summary>Метод, определяющий возможность чтения данных из источников</summary>
         private readonly Func<bool> _CanRead;
@@ -44,9 +44,9 @@ namespace MathCore.Values
         {
             get
             {
-                //Получить массив значений от всех "ленивых" значений обхектов
+                //Получить массив значений от всех "ленивых" значений объектов
                 var values = new T[_Values.Length].Initialize(_Values, (i, vv) => vv[i].Value);
-                //Выбрать индекс интересующего обхекта
+                //Выбрать индекс интересующего объекта
                 var index = _Selector(values);
                 //Выбрать объект из массива значений
                 var value = values[index];
@@ -91,11 +91,11 @@ namespace MathCore.Values
         //    using var readers = new DisposableGroup<StreamReader>(//Объекты чтения из потока
         //        Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f)));
         //    var rnd = new Random();                                         //Генератор случайных чисел
-        //    var oSelecter = new ObjectSelector<string>(                     //Создаём объект выбора строк
+        //    var o_selector = new ObjectSelector<string>(                     //Создаём объект выбора строк
         //        SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
         //        () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
         //        readers.Select(r => (Func<string>)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
-        //    while (oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
+        //    while (o_selector.CanRead) Console.Write(o_selector.Value);        //Читаем всё построчно в консоль
         //}
 
         /* ------------------------------------------------------------------------------------------ */

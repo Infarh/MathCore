@@ -123,8 +123,8 @@ namespace MathCore.MathParser
                                 break;
                             case '[':
                                 {
-                                    var blok_str = Str.GetBracketText(ref pos, "[", "]") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
-                                    var block = new BlockTerm("[", blok_str, "]");
+                                    var block_str = Str.GetBracketText(ref pos, "[", "]") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения");
+                                    var block = new BlockTerm("[", block_str, "]");
                                     value = new FunctionTerm((StringTerm)value, block);
                                 }
                                 break;

@@ -29,7 +29,7 @@ namespace MathCore.MathParser
         /// <summary>Индексатор функций по имени и списку параметров</summary>
         /// <param name="Name">Имя функции</param>
         /// <param name="ArgumentsCount">Количество аргументов</param>
-        /// <returns>Функция, удовлетворяющаяя заданой сигнатуре</returns>
+        /// <returns>Функция, удовлетворяющая загаданной сигнатуре</returns>
         [NotNull]
         public ExpressionFunction this[[NotNull] string Name, int ArgumentsCount]
         {
@@ -46,7 +46,7 @@ namespace MathCore.MathParser
         /// <summary>Индексатор функций по имени и списку параметров</summary>
         /// <param name="Name">Имя функции</param>
         /// <param name="Arguments">Список имён аргументов</param>
-        /// <returns>Функция, удовлетворяющаяя заданой сигнатуре</returns>
+        /// <returns>Функция, удовлетворяющая загаданной сигнатуре</returns>
         [NotNull]
         public ExpressionFunction this[[NotNull] string Name, [NotNull] params string[] Arguments]
         {

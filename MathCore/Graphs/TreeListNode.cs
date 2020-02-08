@@ -173,7 +173,7 @@ namespace MathCore.Graphs
         public TreeListNode<TValue> First => this[n => n.Prev].First(n => n.IsFirst);
         public TreeListNode<TValue> Last => this[n => n.Next].First(n => n.IsLast);
 
-        public delegate TreeListNode<TValue> NodeSelector(TreeListNode<TValue> Prev, TreeListNode<TValue> Next, TreeListNode<TValue> Chield);
+        public delegate TreeListNode<TValue> NodeSelector(TreeListNode<TValue> Prev, TreeListNode<TValue> Next, TreeListNode<TValue> Child);
 
         [ItemNotNull]
         public IEnumerable<TreeListNode<TValue>> this[NodeSelector Selector]

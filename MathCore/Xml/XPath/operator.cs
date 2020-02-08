@@ -50,7 +50,7 @@ namespace System.Xml.XPath
             "-",
             "multiply",
             "mod",
-            "divde",
+            "divide",
             "negate",
             "<",
             ">",
@@ -105,11 +105,11 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        internal Operator(Op op, AstNode opnd1, AstNode opnd2)
+        internal Operator(Op op, AstNode operand1, AstNode operand2)
         {
             OperatorType = op;
-            Operand1 = opnd1;
-            Operand2 = opnd2;
+            Operand1 = operand1;
+            Operand2 = operand2;
         }
 
         #endregion

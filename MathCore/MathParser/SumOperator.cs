@@ -9,13 +9,13 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser
 {
     /// <summary>Оператор суммы</summary>
-    public class SummOperator : Functional
+    public class SumOperator : Functional
     {
         /// <summary>Инициализация нового оператора суммы</summary>
-        public SummOperator() : this("Σ") { }
-        /// <summary>Инициализация нового обператора суммы</summary>
+        public SumOperator() : this("Σ") { }
+        /// <summary>Инициализация нового оператора суммы</summary>
         /// <param name="Name"></param>
-        public SummOperator(string Name) : base(Name) { }
+        public SumOperator(string Name) : base(Name) { }
 
         /// <summary>Инициализация оператора</summary>
         /// <param name="Parameters">Блок параметров</param>
@@ -84,29 +84,29 @@ namespace MathCore.MathParser
             Debug.Assert(interval != null, "interval != null");
             var min = ((ComputedNode)interval.Min).Compute();
             var max = ((ComputedNode)interval.Max).Compute();
-            var summ = 0.0;
+            var sum = 0.0;
             if (min < max)
                 for (int i = (int)min, Max = (int)max; i < Max; i++)
                 {
                     iterator.Value = i;
-                    summ += Function.Compute();
+                    sum += Function.Compute();
                 }
             else
                 for (int i = (int)min, Min = (int)max - 1; i >= Min; i--)
                 {
                     iterator.Value = i;
-                    summ += Function.Compute();
+                    sum += Function.Compute();
                 }
-            return summ;
+            return sum;
         }
 
-        /// <summary>Метд суммирования</summary>
+        /// <summary>Метод суммирования</summary>
         /// <param name="d">Суммируемая функция - ядро</param>
         /// <param name="Min">Начало интервала</param>
         /// <param name="Max">Конец интервала</param>
         /// <param name="Parameters">Массив параметров функции</param>
         /// <returns>Значение суммы функции</returns>
-        private delegate double SummDelegate(Delegate d, double Min, double Max, double[] Parameters);
+        private delegate double SumDelegate(Delegate d, double Min, double Max, double[] Parameters);
 
         /// <summary>Получение значения суммы</summary>
         /// <param name="d">Суммируемая функция - ядро</param>
@@ -114,7 +114,7 @@ namespace MathCore.MathParser
         /// <param name="Max">Конец интервала суммирования</param>
         /// <param name="Parameters">Массив параметров</param>
         /// <returns>Сумма функции</returns>
-        private static double GetSumm(Delegate d, double Min, double Max, double[] Parameters)
+        private static double GetSum(Delegate d, double Min, double Max, double[] Parameters)
         {
             var pp_len = Parameters.Length;
 
@@ -156,7 +156,7 @@ namespace MathCore.MathParser
                 Expression.NewArrayInit(typeof(double))
             };
 
-            return Expression.Call(new SummDelegate(GetSumm).Method, expr_p);
+            return Expression.Call(new SumDelegate(GetSum).Method, expr_p);
         }
 
         /// <summary>Скомпилировать в выражение</summary>
@@ -188,7 +188,7 @@ namespace MathCore.MathParser
                 Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray())
             };
 
-            return Expression.Call(new SummDelegate(GetSumm).Method, expr_p);
+            return Expression.Call(new SumDelegate(GetSum).Method, expr_p);
         }
     }
 }

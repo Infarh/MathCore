@@ -44,7 +44,7 @@ namespace MathCore
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верзняя граница интервала</param>
+        /// <param name="Max">Верхняя граница интервала</param>
         public TimeInterval(TimeSpan Min, TimeSpan Max) : this(Min, true, Max, true) { }
 
         /// <summary>Интервал</summary>
@@ -66,7 +66,7 @@ namespace MathCore
             _MaxInclude = MaxInclude;
         }
 
-        /// <summary>Проверка на входжение в интервал</summary>
+        /// <summary>Проверка на вхождение в интервал</summary>
         /// <param name="X">Проверяемая величина</param>
         /// <returns>Истина, если величина входит в интервал</returns>
         public bool Check(TimeSpan X) => _MinInclude && X == _Min || _MaxInclude && X == _Max || X > _Min && X < _Max;
@@ -81,7 +81,7 @@ namespace MathCore
 
         public bool Check(TimeSpan X, TimeSpan Offset) => Check(X, Offset, -Offset);
 
-        public TimeSpan Nomalize(TimeSpan X) => X > _Max ? _Max : X < _Min ? _Min : X;
+        public TimeSpan Normalize(TimeSpan X) => X > _Max ? _Max : X < _Min ? _Min : X;
 
         public bool IsExclude(TimeInterval I) => !IsInclude(I);
 
@@ -115,13 +115,13 @@ namespace MathCore
         public static implicit operator TimeSpan(TimeInterval I) => I.Length;
         public static explicit operator TimeInterval(TimeSpan V) => new TimeInterval(TimeSpan.Zero, true, V, true);
 
-        /// <summary>Оператор проверки на вхоождение величины в интервал</summary>
+        /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="x">Проверяемая величина</param>
         /// <param name="I">Интервал</param>
         /// <returns>Истина, если величина внутри интервала</returns>
         public static bool operator ^(TimeSpan x, TimeInterval I) => I.Check(x);
 
-        /// <summary>Оператор проверки на вхоождение величины в интервал</summary>
+        /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="X">Проверяемая величина</param>
         /// <param name="I">Интервал</param>
         /// <returns>Истина, если величина внутри интервала</returns>
@@ -188,7 +188,7 @@ namespace MathCore
 
         /// <summary>Интервал</summary>
         /// <param name="Min">Нижняя граница интервала</param>
-        /// <param name="Max">Верзняя граница интервала</param>
+        /// <param name="Max">Верхняя граница интервала</param>
         public DateTimeInterval(DateTime Min, DateTime Max) : this(Max) => _Min = Min;
 
         /// <summary>Интервал</summary>
@@ -210,7 +210,7 @@ namespace MathCore
         /// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
         public DateTimeInterval(DateTime Min, bool MinInclude, DateTime Max, bool MaxInclude) : this(Min, MinInclude, Max) => _MaxInclude = MaxInclude;
 
-        /// <summary>Проверка на входжение в интервал</summary>
+        /// <summary>Проверка на вхождение в интервал</summary>
         /// <param name="X">Проверяемая величина</param>
         /// <returns></returns>
         public bool Check(DateTime X) => _MinInclude && X == _Min || _MaxInclude && X == _Max || X > _Min && X < _Max;
@@ -225,7 +225,7 @@ namespace MathCore
 
         public bool Check(DateTime X, TimeSpan Offset) => Check(X, Offset, -Offset);
 
-        public DateTime Nomalize(DateTime X) => X > _Max ? _Max : X < _Min ? _Min : X;
+        public DateTime Normalize(DateTime X) => X > _Max ? _Max : X < _Min ? _Min : X;
 
         public bool IsExclude(DateTimeInterval I) => !IsInclude(I);
 
@@ -254,13 +254,13 @@ namespace MathCore
         public static implicit operator DateTime(DateTimeInterval I) => I.Length;
         public static explicit operator DateTimeInterval(DateTime V) => new DateTimeInterval(DateTime.MinValue, true, V, true);
 
-        /// <summary>Оператор проверки на вхоождение величины в интервал</summary>
+        /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="x">Проверяемая величина</param>
         /// <param name="I">Интервал</param>
         /// <returns>Истина, если величина внутри интервала</returns>
         public static bool operator ^(DateTime x, DateTimeInterval I) => I.Check(x);
 
-        /// <summary>Оператор проверки на вхоождение величины в интервал</summary>
+        /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="X">Проверяемая величина</param>
         /// <param name="I">Интервал</param>
         /// <returns>Истина, если величина внутри интервала</returns>

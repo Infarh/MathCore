@@ -92,7 +92,7 @@ namespace MathCore.Tests.Values
         }
 
         [TestMethod]
-        public void RolloingAverage_Test()
+        public void RollingAverage_Test()
         {
             const int count = 10;
             var data = Enumerable.Range(0, count).Select(n => (double)n).ToArray();

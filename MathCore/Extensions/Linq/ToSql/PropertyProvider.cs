@@ -7,7 +7,7 @@
 //    public class PropertyProvider : IQueryProvider
 //    {
 //        private readonly IQueryProvider _Provider;
-//        private PropertyVisiter _PropertyVisiter;
+//        private PropertyVisitor _PropertyVisitor;
 
 //        public PropertyProvider(IQueryProvider provider)
 //        {
@@ -16,8 +16,8 @@
 
 //        public IQueryable CreateQuery(Expression expression)
 //        {
-//            _PropertyVisiter = new PropertyVisiter();
-//            expression = _PropertyVisiter.Visit(expression);
+//            _PropertyVisitor = new PropertyVisitor();
+//            expression = _PropertyVisitor.Visit(expression);
 //            var queryable = _Provider.CreateQuery(expression);
 //            return queryable;
 //        }

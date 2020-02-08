@@ -377,9 +377,9 @@ namespace MathCore.MathParser
         public static Functional GetFunctional([NotNull] string Name) =>
             Name switch
             {
-                "sum" => (Functional)new SummOperator(Name),
-                "Sum" => new SummOperator(Name),
-                "Σ" => new SummOperator(Name),
+                "sum" => (Functional)new SumOperator(Name),
+                "Sum" => new SumOperator(Name),
+                "Σ" => new SumOperator(Name),
                 "int" => new IntegralOperator(Name),
                 "integral" => new IntegralOperator(Name),
                 "Int" => new IntegralOperator(Name),

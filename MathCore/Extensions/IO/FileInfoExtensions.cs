@@ -16,6 +16,7 @@ namespace System.IO
     {
         [CanBeNull]
         public static Process ExecuteAsAdmin([NotNull] this FileInfo File, [NotNull] string Args = "", bool UseShellExecute = true) =>
+            // ReSharper disable once StringLiteralTypo
             File.Execute(Args, UseShellExecute, "runas");
 
         [CanBeNull]

@@ -275,7 +275,7 @@ namespace System
         public static MNK GetMNKInterp([NotNull] this double[] Y, int m, double dx, double x0 = 0.0) => Y.GetMNKInterp(m, new double[Y.Length].Initialize(dx, x0, (i, Dx, X0) => i * Dx + X0));
 
         [DST, NotNull]
-        public static double[] GetMultiplyed([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] * v);
+        public static double[] GetMultiplied([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] * v);
 
         [DST, NotNull]
         public static double[] GetNormalized([NotNull] this double[] array)
@@ -285,10 +285,10 @@ namespace System
         }
 
         [DST, NotNull]
-        public static double[] Getsubtract([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] - v);
+        public static double[] GetSubtract([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] - v);
 
         [DST, NotNull]
-        public static double[] GetSumm([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] + v);
+        public static double[] GetSum([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] + v);
 
         [DST]
         public static double Max([NotNull] this double[] array)

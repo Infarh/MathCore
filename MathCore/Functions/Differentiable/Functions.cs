@@ -5,16 +5,16 @@
         public static Zero Zero => new Zero();
         public static One One => new One();
         public static Identity Identity => new Identity();
-        public static Exponenta Exponenta => new Exponenta();
+        public static Exponent Exponent => new Exponent();
 
         public static Sinus Sinus => new Sinus();
-        public static Cosinus Cosinus => new Cosinus();
-        public static Tangens Tangens => new Tangens();
-        public static Cotangens Cotangens => new Cotangens();
+        public static Cousins Cousins => new Cousins();
+        public static Tangent Tangent => new Tangent();
+        public static Cotangent Cotangent => new Cotangent();
 
-        public static HiperbolicSinus HiperbolicSinus => new HiperbolicSinus();
-        public static HiperbolicCosinus HiperbolicCosinus => new HiperbolicCosinus();
-        public static HiperbolicCotangens HiperbolicCotangens => new HiperbolicCotangens();
-        public static HiperbolicTangens HiperbolicTangens => new HiperbolicTangens();
+        public static HyperbolicSinus HyperbolicSinus => new HyperbolicSinus();
+        public static HyperbolicCosines HyperbolicCosines => new HyperbolicCosines();
+        public static HyperbolicCotangent HyperbolicCotangent => new HyperbolicCotangent();
+        public static HyperbolicTangent HyperbolicTangent => new HyperbolicTangent();
     }
 }

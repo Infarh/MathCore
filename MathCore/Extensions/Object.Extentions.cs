@@ -528,6 +528,7 @@ namespace System
         //    }
         //}
 
+        // ReSharper disable CommentTypo
         ///// <summary>Метод чтения структуры данных из массива байт</summary>
         ///// <typeparam name="T">Тип структуры</typeparam>
         ///// <param name="data">Массив байт</param>
@@ -629,6 +630,7 @@ namespace System
         //        value = __refvalue(tr, T);
         //    }
         //}
+        // ReSharper restore CommentTypo
 
         /// <summary>Преобразование объекта в вычисление</summary>
         /// <typeparam name="T">Тип исходного элемента</typeparam>

@@ -41,6 +41,7 @@ namespace System.Xml.XPath
             Gt = '>',
             Bang = '!',
             Dollar = '$',
+            // ReSharper disable once IdentifierTypo
             Apos = '\'',
             Quote = '"',
             Union = '|',
@@ -75,7 +76,7 @@ namespace System.Xml.XPath
 
         public string SourceText { get; }
 
-        private char CurerntChar { get; set; }
+        private char CurrentChar { get; set; }
 
         public LexKind Kind { get; private set; }
 
@@ -152,22 +153,22 @@ namespace System.Xml.XPath
             Debug.Assert(0 <= _XpathExprIndex && _XpathExprIndex <= SourceText.Length);
             if(_XpathExprIndex < SourceText.Length)
             {
-                CurerntChar = SourceText[_XpathExprIndex++];
+                CurrentChar = SourceText[_XpathExprIndex++];
                 return true;
             }
-            CurerntChar = '\0';
+            CurrentChar = '\0';
             return false;
         }
 
         private void SkipSpace()
         {
-            while(XmlCharType.IsWhiteSpace(CurerntChar) && NextChar()) { }
+            while(XmlCharType.IsWhiteSpace(CurrentChar) && NextChar()) { }
         }
 
         public bool NextLex()
         {
             SkipSpace();
-            switch(CurerntChar)
+            switch(CurrentChar)
             {
                 case '\0':
                     Kind = LexKind.Eof;
@@ -185,13 +186,13 @@ namespace System.Xml.XPath
                 case '=':
                 case '#':
                 case '$':
-                    Kind = (LexKind)Convert.ToInt32(CurerntChar);
+                    Kind = (LexKind)Convert.ToInt32(CurrentChar);
                     NextChar();
                     break;
                 case '<':
                     Kind = LexKind.Lt;
                     NextChar();
-                    if(CurerntChar == '=')
+                    if(CurrentChar == '=')
                     {
                         Kind = LexKind.Le;
                         NextChar();
@@ -200,7 +201,7 @@ namespace System.Xml.XPath
                 case '>':
                     Kind = LexKind.Gt;
                     NextChar();
-                    if(CurerntChar == '=')
+                    if(CurrentChar == '=')
                     {
                         Kind = LexKind.Ge;
                         NextChar();
@@ -209,7 +210,7 @@ namespace System.Xml.XPath
                 case '!':
                     Kind = LexKind.Bang;
                     NextChar();
-                    if(CurerntChar == '=')
+                    if(CurrentChar == '=')
                     {
                         Kind = LexKind.Ne;
                         NextChar();
@@ -218,12 +219,12 @@ namespace System.Xml.XPath
                 case '.':
                     Kind = LexKind.Dot;
                     NextChar();
-                    if(CurerntChar == '.')
+                    if(CurrentChar == '.')
                     {
                         Kind = LexKind.DotDot;
                         NextChar();
                     }
-                    else if(XmlCharType.IsDigit(CurerntChar))
+                    else if(XmlCharType.IsDigit(CurrentChar))
                     {
                         Kind = LexKind.Number;
                         _NumberValue = ScanFraction();
@@ -232,7 +233,7 @@ namespace System.Xml.XPath
                 case '/':
                     Kind = LexKind.Slash;
                     NextChar();
-                    if(CurerntChar == '/')
+                    if(CurrentChar == '/')
                     {
                         Kind = LexKind.SlashSlash;
                         NextChar();
@@ -244,23 +245,23 @@ namespace System.Xml.XPath
                     _StringValue = ScanString();
                     break;
                 default:
-                    if(XmlCharType.IsDigit(CurerntChar))
+                    if(XmlCharType.IsDigit(CurrentChar))
                     {
                         Kind = LexKind.Number;
                         _NumberValue = ScanNumber();
                     }
-                    else if(XmlCharType.IsStartNcNameChar(CurerntChar))
+                    else if(XmlCharType.IsStartNcNameChar(CurrentChar))
                     {
                         Kind = LexKind.Name;
                         _Name = ScanName();
                         _Prefix = string.Empty;
                         // "foo:bar" is one lexem not three because it doesn't allow spaces in between
                         // We should distinct it from "foo::" and need process "foo ::" as well
-                        if(CurerntChar == ':')
+                        if(CurrentChar == ':')
                         {
                             NextChar();
                             // can be "foo:bar" or "foo::"
-                            if(CurerntChar == ':')
+                            if(CurrentChar == ':')
                             {
                                 // "foo::"
                                 NextChar();
@@ -270,12 +271,12 @@ namespace System.Xml.XPath
                             {
                                 // "foo:*", "foo:bar" or "foo: "
                                 _Prefix = _Name;
-                                if(CurerntChar == '*')
+                                if(CurrentChar == '*')
                                 {
                                     NextChar();
                                     _Name = "*";
                                 }
-                                else if(XmlCharType.IsStartNcNameChar(CurerntChar))
+                                else if(XmlCharType.IsStartNcNameChar(CurrentChar))
                                     _Name = ScanName();
                                 else
                                     throw new XPathException($"'{SourceText}' has an invalid qualified name.");
@@ -284,11 +285,11 @@ namespace System.Xml.XPath
                         else
                         {
                             SkipSpace();
-                            if(CurerntChar == ':')
+                            if(CurrentChar == ':')
                             {
                                 NextChar();
                                 // it can be "foo ::" or just "foo :"
-                                if(CurerntChar == ':')
+                                if(CurrentChar == ':')
                                 {
                                     NextChar();
                                     Kind = LexKind.Axe;
@@ -298,7 +299,7 @@ namespace System.Xml.XPath
                             }
                         }
                         SkipSpace();
-                        _CanBeFunction = CurerntChar == '(';
+                        _CanBeFunction = CurrentChar == '(';
                     }
                     else
                         throw new XPathException($"'{SourceText}' has an invalid token.");
@@ -309,18 +310,18 @@ namespace System.Xml.XPath
 
         private double ScanNumber()
         {
-            Debug.Assert(CurerntChar == '.' || XmlCharType.IsDigit(CurerntChar));
+            Debug.Assert(CurrentChar == '.' || XmlCharType.IsDigit(CurrentChar));
             var start = _XpathExprIndex - 1;
             var len = 0;
-            while(XmlCharType.IsDigit(CurerntChar))
+            while(XmlCharType.IsDigit(CurrentChar))
             {
                 NextChar();
                 len++;
             }
-            if(CurerntChar != '.') return ToXPathDouble(SourceText.Substring(start, len));
+            if(CurrentChar != '.') return ToXPathDouble(SourceText.Substring(start, len));
             NextChar();
             len++;
-            while(XmlCharType.IsDigit(CurerntChar))
+            while(XmlCharType.IsDigit(CurrentChar))
             {
                 NextChar();
                 len++;
@@ -330,11 +331,11 @@ namespace System.Xml.XPath
 
         private double ScanFraction()
         {
-            Debug.Assert(XmlCharType.IsDigit(CurerntChar));
+            Debug.Assert(XmlCharType.IsDigit(CurrentChar));
             var start = _XpathExprIndex - 2;
             Debug.Assert(0 <= start && SourceText[start] == '.');
             var len = 1; // '.'
-            while(XmlCharType.IsDigit(CurerntChar))
+            while(XmlCharType.IsDigit(CurrentChar))
             {
                 NextChar();
                 len++;
@@ -344,27 +345,27 @@ namespace System.Xml.XPath
 
         private string ScanString()
         {
-            var lv_EndChar = CurerntChar;
+            var lv_EndChar = CurrentChar;
             NextChar();
             var start = _XpathExprIndex - 1;
             var len = 0;
-            while(CurerntChar != lv_EndChar)
+            while(CurrentChar != lv_EndChar)
             {
                 if(!NextChar())
                     throw new XPathException("This is an unclosed string.");
                 len++;
             }
-            Debug.Assert(CurerntChar == lv_EndChar);
+            Debug.Assert(CurrentChar == lv_EndChar);
             NextChar();
             return SourceText.Substring(start, len);
         }
 
         private string ScanName()
         {
-            Debug.Assert(XmlCharType.IsStartNcNameChar(CurerntChar));
+            Debug.Assert(XmlCharType.IsStartNcNameChar(CurrentChar));
             var start = _XpathExprIndex - 1;
             var len = 0;
-            while(XmlCharType.IsNcNameChar(CurerntChar))
+            while(XmlCharType.IsNcNameChar(CurrentChar))
             {
                 NextChar();
                 len++;
