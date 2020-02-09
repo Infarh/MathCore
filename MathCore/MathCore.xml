@@ -4084,9 +4084,6 @@
         <member name="T:MathCore.MathParser.ConstantsCollection">
             <summary>Коллекция констант</summary>
         </member>
-        <member name="F:MathCore.MathParser.ConstantsCollection._Expression">
-            <summary>Ссылка на выражение</summary>
-        </member>
         <member name="F:MathCore.MathParser.ConstantsCollection._Items">
             <summary>Элементы коллекции</summary>
         </member>
@@ -4097,10 +4094,6 @@
             <summary>Итератор констант по имени</summary>
             <param name="Name">Имя константы</param>
             <returns>Константа с указанным именем</returns>
-        </member>
-        <member name="M:MathCore.MathParser.ConstantsCollection.#ctor(MathCore.MathParser.MathExpression)">
-            <summary>Инициализация новой коллекции констант</summary>
-            <param name="Expression">Математическое выражение, которому принадлежит коллекция</param>
         </member>
         <member name="M:MathCore.MathParser.ConstantsCollection.Add(MathCore.MathParser.ExpressionVariable)">
             <summary>Добавить элемент в коллекцию</summary>
@@ -4180,7 +4173,7 @@
         <member name="P:MathCore.MathParser.ExpressionFunction.Arguments">
             <summary>Массив имён аргументов</summary>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionFunction.#ctor(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionFunction.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Инициализация новой функции структуры математического выражения по сигнатуре</summary>
             <param name="Name">Имя функции</param>
             <param name="Arguments">Список имён аргументов</param>
@@ -4196,7 +4189,7 @@
             <param name="ArgumentsCount">Количество аргументов</param>
             <returns>Истина, если сигнатура соответствует функции</returns>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionFunction.IsEqualSignature(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionFunction.IsEqualSignature(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Проверка на эквивалентность сигнатуре</summary>
             <param name="sName">Имя функции</param>
             <param name="Arguments">Массив имён аргументов</param>
@@ -4276,7 +4269,7 @@
         <member name="P:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.Function">
             <summary>Делегат функции, который надо использовать при её вычислении</summary>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.#ctor(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Инициализация аргумента события обнаружения функции</summary>
             <param name="Name">Имя функции</param>
             <param name="Arguments">Массив имён аргументов функции</param>
@@ -4294,7 +4287,7 @@
             <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
             <param name="Args">Аргументы события, содержащие имя функции, имена аргументов и делегат метода функции</param>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionParser.OnFunctionFind(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionParser.OnFunctionFind(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
             <param name="Name">Имя функции</param>
             <param name="Arguments">Аргументы функции</param>
@@ -4435,8 +4428,14 @@
         <member name="M:MathCore.MathParser.ExpressionTrees.ExpressionTree.GetEnumerator">
             <summary>Получить перечислитель узлов дерева по методу ЛКП</summary><returns>Перечислитель узлов дерева по методу ЛКП</returns>
         </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.ExpressionTree.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode">
             <summary>Узел дерева выражений, реализующий оператор сложения</summary>
+        </member>
+        <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.NodeName">
+            <summary>Имя узла операции "+"</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.#ctor">
             <summary>Новый оператор сложения</summary>
@@ -4451,7 +4450,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Linq.Expression.Add()</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.Clone">
@@ -4474,7 +4473,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию И</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode.Clone">
@@ -4536,7 +4535,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedBracketNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла с параметрами</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Компиляция вложенного узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedBracketNode.Clone">
@@ -4550,6 +4549,18 @@
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode">
             <summary>Вычислимый узел дерева математического выражения</summary>
         </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.LeftComputedOrNull">
+            <summary>Левый узел, приведённый к виду вычислимого узла (допускающий пустуй ссылку)</summary>
+        </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.LeftComputed">
+            <summary>Левый узел, приведённый к виду вычислимого узла</summary>
+        </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.RightComputedOrNull">
+            <summary>Правый узел, приведённый к виду вычислимого узла (допускающий пустуй ссылку)</summary>
+        </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.RightComputed">
+            <summary>Правый узел, приведённый к виду вычислимого узла</summary>
+        </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.Compute">
             <summary>Вычислить значение поддерева</summary>
             <returns>Численное значение поддерева</returns>
@@ -4560,7 +4571,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode">
@@ -4596,7 +4607,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode.Clone">
@@ -4619,7 +4630,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.DivisionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла с параметрами</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.DivisionOperatorNode.Clone">
@@ -4628,11 +4639,6 @@
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode">
             <summary>Узел дерева мат.выражения, реализующий оператор равенства</summary>
-        </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.GetAbsMethodCall(System.Linq.Expressions.Expression)">
-            <summary>Получить выражение вызова метода определения модуля числа из класса Math</summary>
-            <param name="x">Параметр выражения</param>
-            <returns>Выражение <see cref="T:System.Linq.Expressions.Expression"/>, вызывающее метод Math.Abs с параметром x</returns>
         </member>
         <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.__Epsilon">
             <summary>Точность вычисления равенства для чисел с плавающей точкой</summary>
@@ -4664,7 +4670,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Равенство</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.Clone">
@@ -4817,6 +4823,13 @@
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Dispose">
             <summary>Уничтожить узел рекуррентно с поддеревьями</summary>
         </member>
+        <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode._Disposed">
+            <summary>Объект считается уничтоженным</summary>
+        </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Dispose(System.Boolean)">
+            <summary>Уничтожить узел рекуррентно с поддеревьями</summary>
+            <param name="disposing">Выполнить освобождение управляемых ресурсов</param>
+        </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Clone">
             <summary>Клонирование поддерева</summary>
             <returns>Клон поддерева</returns>
@@ -4833,6 +4846,9 @@
             <summary>Оператор неявного преобразования строки в узел дерева</summary>
             <param name="value">Строковое значение</param>
             <returns>Строковый узел дерева</returns>
+        </member>
+        <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode">
+            <summary>Функциональный узел</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Name">
             <summary>Имя узла</summary>
@@ -4852,6 +4868,19 @@
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Operator">
             <summary>Оператор</summary>
         </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.#ctor(System.String)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode"/></summary>
+            <param name="Name">Имя функционала</param>
+        </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.#ctor(MathCore.MathParser.FunctionalTerm,MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode"/></summary>
+            <param name="term">Блок определения функционала</param>
+            <param name="Parser">Парсер выражения, конструирующий дерево</param>
+            <param name="Expression">Выражение, в которое будет включён создаваемый узел</param>
+        </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.GetVariables">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Compute">
             <summary>Вычислить значение поддерева</summary>
             <returns>Численное значение поддерева</returns>
@@ -4862,7 +4891,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.ToString">
@@ -4905,7 +4934,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла аргумента с учётом списка параметров</summary>
-            <param name="Parameters">Массив параметров процесса компиляции</param>
+            <param name="Args">Массив параметров процесса компиляции</param>
             <returns>Скомпилированное значение узла аргумента дерева выражения</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode.Clone">
@@ -4948,7 +4977,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла аргумента</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение корня поддерева аргумента</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNode.Clone">
@@ -5002,7 +5031,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode.Clone">
@@ -5040,7 +5069,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Больше</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode.Clone">
@@ -5091,7 +5120,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Меньше</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode.Clone">
@@ -5107,7 +5136,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее логику оператора</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode.Compile">
@@ -5116,7 +5145,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode">
@@ -5140,7 +5169,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode.Clone">
@@ -5179,7 +5208,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию отрицания НЕ</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode.ToString">
@@ -5243,7 +5272,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию ИЛИ</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode.Clone">
@@ -5269,7 +5298,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.PowerOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция выражения узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.PowerOperatorNode.Clone">
@@ -5297,7 +5326,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode.Clone">
@@ -5351,7 +5380,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция выражения узла</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
             <returns></returns>
         </member>
@@ -5402,7 +5431,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariableValueNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariableValueNode.Clone">
@@ -5430,7 +5459,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode.Clone">
@@ -5522,20 +5551,22 @@
         <member name="F:MathCore.MathParser.FunctionalsCollection._Operators">
             <summary>Список функционалов</summary>
         </member>
-        <member name="F:MathCore.MathParser.FunctionalsCollection._Expression">
-            <summary>Ссылка на математическое выражение, с которым связана коллекция</summary>
-        </member>
         <member name="P:MathCore.MathParser.FunctionalsCollection.Count">
             <summary>Количество функционалов в коллекции</summary>
-        </member>
-        <member name="M:MathCore.MathParser.FunctionalsCollection.#ctor(MathCore.MathParser.MathExpression)">
-            <summary>Инициализация новой коллекции функционалов</summary>
-            <param name="Expression">Математическое выражение, на которое ссылается коллекция</param>
         </member>
         <member name="M:MathCore.MathParser.FunctionalsCollection.Add(MathCore.MathParser.Functional)">
             <summary>Добавить функционал в коллекцию</summary>
             <param name="Operator">Добавляемый функционал</param>
             <returns>Истина, если добавление прошло успешно</returns>
+        </member>
+        <member name="M:MathCore.MathParser.FunctionalsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#Functional}#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MathParser.FunctionalsCollection.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MathParser.FunctionalsCollection.ToString">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MathParser.FunctionalTerm">
             <summary>Блок определения функции</summary>
@@ -5561,9 +5592,6 @@
         <member name="T:MathCore.MathParser.FunctionsCollection">
             <summary>Коллекция функций</summary>
         </member>
-        <member name="F:MathCore.MathParser.FunctionsCollection._MathExpression">
-            <summary>Ссылка на математическое выражение</summary>
-        </member>
         <member name="F:MathCore.MathParser.FunctionsCollection._Functions">
             <summary>Список функций математического выражения</summary>
         </member>
@@ -5585,26 +5613,16 @@
             <param name="Arguments">Список имён аргументов</param>
             <returns>Функция, удовлетворяющая загаданной сигнатуре</returns>
         </member>
-        <member name="M:MathCore.MathParser.FunctionsCollection.#ctor(MathCore.MathParser.MathExpression)">
-            <summary>Инициализация новой коллекции функций математического выражения</summary>
-            <param name="MathExpression">Математическое выражение, на которое ссылается создаваемая коллекция</param>
-        </member>
         <member name="M:MathCore.MathParser.FunctionsCollection.Add(MathCore.MathParser.ExpressionFunction)">
             <summary>Добавить функцию в коллекцию</summary>
             <param name="function">Функция</param>
             <returns>Истина, если функция была добавлена</returns>
         </member>
         <member name="M:MathCore.MathParser.FunctionsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#ExpressionFunction}#GetEnumerator">
-            <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции</summary>
-            <returns>
-            Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.MathParser.FunctionsCollection.System#Collections#IEnumerable#GetEnumerator">
-            <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции</summary>
-            <returns>
-            Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MathParser.FunctionTerm">
             <summary>Функциональный элемент выражения</summary>
@@ -5751,6 +5769,9 @@
         <member name="P:MathCore.MathParser.MathExpression.Tree">
             <summary>Дерево математического выражения</summary>
         </member>
+        <member name="P:MathCore.MathParser.MathExpression.VariableNodes">
+            <summary>Перечисление узлов дерева, содержащих переменные</summary>
+        </member>
         <member name="P:MathCore.MathParser.MathExpression.Variable">
             <summary>Переменные, входящие в математическое выражение</summary>
         </member>
@@ -5777,8 +5798,12 @@
             <param name="StrExpression">Строковое представление выражения</param>
             <param name="Parser">Ссылка на парсер</param>
         </member>
-        <member name="M:MathCore.MathParser.MathExpression.System#IDisposable#Dispose">
+        <member name="M:MathCore.MathParser.MathExpression.Dispose">
             <summary>Уничтожить математическое выражение</summary>
+        </member>
+        <member name="M:MathCore.MathParser.MathExpression.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов выражения</summary>
+            <param name="disposing">Требуется ли выполнить освобождение управляемых ресурсов?</param>
         </member>
         <member name="M:MathCore.MathParser.MathExpression.Compute">
             <summary>Вычисление математического выражения</summary>

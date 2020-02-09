@@ -1,26 +1,10 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using MathCore.Annotations;
+﻿using MathCore.ViewModels;
 
 namespace MathCore.MathParser
 {
     /// <summary>Элемент математического выражения</summary>
-    public abstract class ExpressionItem : INotifyPropertyChanged
+    public abstract class ExpressionItem : ViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string PropertyName = null)
-        {
-            if (Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(PropertyName);
-            return true;
-        }
-
         private string _Name;
 
         /// <summary>Имя</summary>

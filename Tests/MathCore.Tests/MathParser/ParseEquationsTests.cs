@@ -293,7 +293,7 @@ namespace MathCore.Tests.MathParser
             AreEqual("cos", ((FunctionNode)node).Function.Name);
             AreEqual(1, ((FunctionNode)node).ArgumentsNames.Length);
             AreEqual("arg", ((FunctionNode)node).ArgumentsNames[0]);
-            AreEqual(1, ((FunctionNode)node).Function.Arguments.Length);
+            AreEqual(1, ((FunctionNode)node).Function.Arguments.Count);
             AreEqual("arg", ((FunctionNode)node).Function.Arguments[0]);
 
             node = node.Right;
@@ -491,7 +491,7 @@ namespace MathCore.Tests.MathParser
             IsNull(node.Left); IsNotNull(node.Right);
             AreEqual("atan2", ((FunctionNode)node).Name);
             AreEqual("atan2", ((FunctionNode)node).Function.Name);
-            AreEqual(2, ((FunctionNode)node).Function.Arguments.Length);
+            AreEqual(2, ((FunctionNode)node).Function.Arguments.Count);
             AreEqual("y", ((FunctionNode)node).Function.Arguments[0]);
             AreEqual("x", ((FunctionNode)node).Function.Arguments[1]);
             IsInstanceOfType(node.Right, typeof(FunctionArgumentNode));

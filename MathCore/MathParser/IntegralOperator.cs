@@ -88,11 +88,12 @@ namespace MathCore.MathParser
             var x_node = ParametersExpression.Tree
                         .OfType<VariableValueNode>()
                         .First(n => ReferenceEquals(x, n.Variable));
-            var interval = (IntervalNode)x_node.Parent.Right;
-            Debug.Assert(interval?.Left != null, "interval?.Left != null");
-            var min = ((ComputedNode)interval.Left).Compute();
-            Debug.Assert(interval.Right != null, "interval?.Right != null");
-            var max = ((ComputedNode)interval.Right).Compute();
+            var interval = (IntervalNode)x_node.Parent.Right ?? throw new InvalidOperationException("Правый узел дерева не определён - невозможно рассчитать интервал значений интегрирования");
+            var min_node = (ComputedNode)interval.Left ?? throw new InvalidOperationException("В левом поддереве интервала значений отсутствует элемент - невозможно определить минимальное значение интервала");
+            var max_node = (ComputedNode)interval.Right ?? throw new InvalidOperationException("В правом поддереве интервала значений отсутствует элемент - невозможно определить максимальное значение интервала"); ;
+
+            var min = min_node.Compute();
+            var max = max_node.Compute();
 
             Func<double, double> f = xx =>
             {
@@ -107,8 +108,8 @@ namespace MathCore.MathParser
             var dx_node = ParametersExpression.Tree
                         .OfType<VariableValueNode>()
                         .First(n => ReferenceEquals(dx, n.Variable));
-            Debug.Assert(dx_node.Parent.Right != null, "dx_node.Parent.Right != null");
-            dx.Value = ((ConstValueNode)dx_node.Parent.Right).Value;
+            var dx_value_node = (ConstValueNode)dx_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского элемента dx - невозможно рассчитать шаг интегрирования");
+            dx.Value = dx_value_node.Value;
             return f.GetIntegralValue(min, max, dx.GetValue());
         }
 
@@ -189,12 +190,12 @@ namespace MathCore.MathParser
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
             var parameters = new[] { iterator_parameter };
             var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
-            var expr = Expression.Lambda(body, parameters).Compile();
+            var function = Expression.Lambda(body, parameters).Compile();
 
             if(_IsAdaptive)
                 return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
                 {
-                    Expression.Constant(expr), min, max,
+                    function.ToExpression(), min, max,
                     Expression.NewArrayInit(typeof(double))
                 });
 
@@ -207,7 +208,7 @@ namespace MathCore.MathParser
 
             return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
             {
-                Expression.Constant(expr), min, max,
+                function.ToExpression(), min, max,
                 Expression.NewArrayInit(typeof(double)),
                 dx
             });
@@ -240,12 +241,12 @@ namespace MathCore.MathParser
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
             var parameters = new[] { iterator_parameter };
             var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
-            var expr = Expression.Lambda(body, parameters).Compile();
+            var function = Expression.Lambda(body, parameters).Compile();
 
             if(_IsAdaptive)
                 return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
                 {
-                    Expression.Constant(expr), min, max,
+                    function.ToExpression(), min, max,
                     Expression.NewArrayInit(typeof(double))
                 });
 
@@ -258,7 +259,7 @@ namespace MathCore.MathParser
 
             return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
             {
-                Expression.Constant(expr), min, max,
+                function.ToExpression(), min, max,
                 Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray()),
                 dx
             });

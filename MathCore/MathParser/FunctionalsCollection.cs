@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using MathCore.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable ClassCanBeSealed.Global
 
@@ -13,16 +14,8 @@ namespace MathCore.MathParser
         [NotNull]
         private readonly List<Functional> _Operators = new List<Functional>();
 
-        /// <summary>Ссылка на математическое выражение, с которым связана коллекция</summary>
-        [NotNull]
-        private readonly MathExpression _Expression;
-
         /// <summary>Количество функционалов в коллекции</summary>
         public int Count => _Operators.Count;
-
-        /// <summary>Инициализация новой коллекции функционалов</summary>
-        /// <param name="Expression">Математическое выражение, на которое ссылается коллекция</param>
-        public FunctionalsCollection([NotNull] MathExpression Expression) => _Expression = Expression;
 
         /// <summary>Добавить функционал в коллекцию</summary>
         /// <param name="Operator">Добавляемый функционал</param>
@@ -34,10 +27,13 @@ namespace MathCore.MathParser
             return true;
         }
 
+        /// <inheritdoc />
         IEnumerator<Functional> IEnumerable<Functional>.GetEnumerator() => _Operators.GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Operators).GetEnumerator();
 
-        public override string ToString() => $"Complex operator collection > count = {Count}";
+        /// <inheritdoc />
+        [NotNull] public override string ToString() => $"Complex operator collection > count = {Count}";
     }
 }

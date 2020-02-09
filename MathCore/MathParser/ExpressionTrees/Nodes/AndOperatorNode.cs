@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
 
