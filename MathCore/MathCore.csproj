@@ -6,8 +6,8 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.20</Version>
-    <PackageReleaseNotes>Методы-расширения для IEnumerable, вычисляющие дисперсию</PackageReleaseNotes>
+    <Version>0.0.20.1</Version>
+    <PackageReleaseNotes>Комментарии, немного рефакторинга</PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
