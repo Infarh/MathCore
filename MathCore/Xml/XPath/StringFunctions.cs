@@ -50,10 +50,10 @@ namespace System.Xml.XPath
             {
                 FT.FuncString => toString(reader),
                 FT.FuncConcat => Concat(reader),
-                FT.FuncStartsWith => Startswith(reader),
+                FT.FuncStartsWith => StartsWith(reader),
                 FT.FuncContains => Contains(reader),
-                FT.FuncSubstringBefore => Substringbefore(reader),
-                FT.FuncSubstringAfter => Substringafter(reader),
+                FT.FuncSubstringBefore => SubstringBefore(reader),
+                FT.FuncSubstringAfter => SubstringAfter(reader),
                 FT.FuncSubstring => Substring(reader),
                 FT.FuncStringLength => StringLength(reader),
                 FT.FuncNormalize => Normalize(reader),
@@ -82,7 +82,7 @@ namespace System.Xml.XPath
         // number: NaN -> "NaN"
         //         +0->"0", -0->"0",
         //         +infinity -> "Infinity" -infinity -> "Infinity"
-        // boolean: true -> "ture" false -> "false"
+        // boolean: true -> "true" false -> "false"
         //
         // Example: <Root><e a1='1' a2='2'/>text1</e>
         //                <e a='12'> text2</e>
@@ -104,7 +104,7 @@ namespace System.Xml.XPath
             return s.ToString();
         }
 
-        private bool Startswith(XPathReader reader)
+        private bool StartsWith(XPathReader reader)
         {
             var str1 = ((Query)_ArgList[0]).GetValue(reader).ToString();
             var str2 = ((Query)_ArgList[1]).GetValue(reader).ToString();
@@ -119,7 +119,7 @@ namespace System.Xml.XPath
             return str1.IndexOf(str2, StringComparison.Ordinal) != -1;
         }
 
-        private string Substringbefore(XPathReader reader)
+        private string SubstringBefore(XPathReader reader)
         {
             var str1 = ((Query)_ArgList[0]).GetValue(reader).ToString();
             var str2 = ((Query)_ArgList[1]).GetValue(reader).ToString();
@@ -127,7 +127,7 @@ namespace System.Xml.XPath
             return index != -1 ? str1.Substring(0, index) : string.Empty;
         }
 
-        private string Substringafter(XPathReader reader)
+        private string SubstringAfter(XPathReader reader)
         {
             var str1 = ((Query)_ArgList[0]).GetValue(reader).ToString();
             var str2 = ((Query)_ArgList[1]).GetValue(reader).ToString();

@@ -64,13 +64,13 @@ namespace System.Xml.XPath
         #region Fields
 
         internal AstNode _Input;
-        internal string _name;
-        internal string _prefix;
-        internal bool AbbrAxis;
+        internal string _Name;
+        internal string _Prefix;
+        internal bool _AbbrAxis;
 
-        internal AxisType Axistype;
+        internal AxisType _AxisType;
         internal string _Urn = string.Empty;
-        internal XPathNodeType Nodetype;
+        internal XPathNodeType _NodeType;
 
         #endregion
 
@@ -84,21 +84,21 @@ namespace System.Xml.XPath
 
         internal string Urn => _Urn;
 
-        internal string Prefix => _prefix;
+        internal string Prefix => _Prefix;
 
-        internal string Name => _name;
+        internal string Name => _Name;
 
-        internal XPathNodeType Type => Nodetype;
+        internal XPathNodeType Type => _NodeType;
 
-        internal AxisType TypeOfAxis => Axistype;
+        internal AxisType TypeOfAxis => _AxisType;
 
-        internal string AxisName => Str[(int)Axistype];
+        internal string AxisName => Str[(int)_AxisType];
 
         internal override double DefaultPriority => _Input != null
             ? 0.5
-            : Axistype != AxisType.Child && Axistype != AxisType.Attribute
+            : _AxisType != AxisType.Child && _AxisType != AxisType.Attribute
                 ? 0.5
-                : !string.IsNullOrEmpty(_name) ? 0 : (!string.IsNullOrEmpty(_prefix) ? -0.25 : -0.5);
+                : !string.IsNullOrEmpty(_Name) ? 0 : (!string.IsNullOrEmpty(_Prefix) ? -0.25 : -0.5);
 
         #endregion
 
@@ -106,28 +106,28 @@ namespace System.Xml.XPath
 
         // constructor
         internal Axis(
-            AxisType axistype,
+            AxisType AxisType,
             AstNode input,
             string prefix,
             string name,
-            XPathNodeType nodetype)
+            XPathNodeType NodeType)
         {
-            Axistype = axistype;
+            _AxisType = AxisType;
             _Input = input;
-            _prefix = prefix;
-            _name = name;
-            Nodetype = nodetype;
+            _Prefix = prefix;
+            _Name = name;
+            this._NodeType = NodeType;
         }
 
         // constructor
-        internal Axis(AxisType axistype, AstNode input)
+        internal Axis(AxisType AxisType, AstNode input)
         {
-            Axistype = axistype;
+            _AxisType = AxisType;
             _Input = input;
-            _prefix = string.Empty;
-            _name = string.Empty;
-            Nodetype = XPathNodeType.All;
-            AbbrAxis = true;
+            _Prefix = string.Empty;
+            _Name = string.Empty;
+            _NodeType = XPathNodeType.All;
+            _AbbrAxis = true;
         }
 
         internal Axis() { }

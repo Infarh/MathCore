@@ -2,7 +2,7 @@
 
 namespace MathCore
 {
-    public class LamdaStateMashine<TState, TValue>
+    public class LambdaStateMachine<TState, TValue>
     {
         public delegate TState Rule(TState State, TValue Value);
 
@@ -56,7 +56,7 @@ namespace MathCore
             }
         }
 
-        public LamdaStateMashine(TState State = default) => _State = State;
+        public LambdaStateMachine(TState State = default) => _State = State;
 
         public void Add(TValue Value)
         {

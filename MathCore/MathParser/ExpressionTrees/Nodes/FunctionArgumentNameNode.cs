@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Linq.Expressions;
+using MathCore.Annotations;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева выражения, содержащий сведенья об аргументе функции</summary>
+    /// <summary>Узел дерева выражения, содержащий сведения об аргументе функции</summary>
     public class FunctionArgumentNameNode : OperatorNode
     {
         /// <summary>Узел аргумента</summary>
+        [CanBeNull]
         public ExpressionTreeNode ArgumentNode => Right;
 
         /// <summary>Узел имени аргумента</summary>
+        [CanBeNull]
         public string ArgumentName => ((StringNode)Left)?.Value;
 
         /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
@@ -23,7 +26,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Инициализация узла дерева информации об аргументе функции</summary>
         /// <param name="Name">Имя</param>
         /// <param name="Expression">Выражение узла</param>
-        public FunctionArgumentNameNode(StringNode Name, ExpressionTreeNode Expression)
+        public FunctionArgumentNameNode([NotNull] StringNode Name, ExpressionTreeNode Expression)
             : this()
         {
             if(!Name.Value.IsNullOrEmpty())
@@ -40,9 +43,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression Compile() => ((ComputedNode)ArgumentNode).Compile();
 
         /// <summary>Компиляция узла аргумента с учётом списка параметров</summary>
-        /// <param name="Parameters">Массив параметров процесса компиляции</param>
+        /// <param name="Args">Массив параметров процесса компиляции</param>
         /// <returns>Скомпилированное значение узла аргумента дерева выражения</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)ArgumentNode).Compile(Parameters);
+        public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode)ArgumentNode).Compile(Args);
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

@@ -23,7 +23,7 @@ namespace MathCore.Extensions.Expressions
         public static MethodCallExpression Floor(Expression x) => ((Func<double, double>)Math.Floor).GetCallExpression(x);
         public static MethodCallExpression Round(Expression x) => ((Func<double, double>)Math.Round).GetCallExpression(x);
         public static MethodCallExpression Round(Expression x, Expression n) => ((Func<double, int, double>)Math.Round).GetCallExpression(x, n);
-        public static MethodCallExpression Turncate(Expression x) => ((Func<double, double>)Math.Truncate).GetCallExpression(x);
+        public static MethodCallExpression Truncate(Expression x) => ((Func<double, double>)Math.Truncate).GetCallExpression(x);
         public static MethodCallExpression Min(Expression a, Expression b) => ((Func<double, double, double>)Math.Min).GetCallExpression(a, b);
         public static MethodCallExpression Max(Expression a, Expression b) => ((Func<double, double, double>)Math.Max).GetCallExpression(a, b);
         public static MethodCallExpression Sqrt(Expression x) => ((Func<double, double>)Math.Sqrt).GetCallExpression(x);

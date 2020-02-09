@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор умножения "*"</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор умножения "*"</summary>
     public class MultiplicationOperatorNode : OperatorNode
     {
         public const string NodeName = "·";
@@ -23,19 +23,16 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>Произведение значений корней правого и левого поддеревьев</returns>
-        public override double Compute() => (((ComputedNode) Left)?.Compute() ?? 1) * ((ComputedNode)Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compute();
+        public override double Compute() => LeftCompute(1) * RightCompute();
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile() => Expression.Multiply(((ComputedNode) Left)?.Compile() ?? Expression.Constant(1.0), ((ComputedNode)Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compile());
+        public override Expression Compile() => LeftCompile(1).Multiply(RightCompile());
 
         /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <param name="Args">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile(params ParameterExpression[] Parameters) =>
-            Expression.Multiply(
-                ((ComputedNode) Left)?.Compile(Parameters) ?? Expression.Constant(1.0),
-                ((ComputedNode) Right ?? throw new InvalidOperationException("Отсутствует правое поддерево")).Compile(Parameters));
+        public override Expression Compile(params ParameterExpression[] Args) => LeftCompile(Args, 1).Multiply(RightCompile(Args));
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

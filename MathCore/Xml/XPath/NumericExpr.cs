@@ -6,8 +6,8 @@ namespace System.Xml.XPath
         #region Fields
 
         internal Operator.Op Op;
-        internal Query Opnd1;
-        internal Query Opnd2;
+        internal Query Operand1;
+        internal Query Operand2;
 
         #endregion
 
@@ -16,14 +16,14 @@ namespace System.Xml.XPath
         //
         // The operand needs to use the number function
         // to covert to numbers
-        internal NumericExpr(Operator.Op op, Query opnd1, Query opnd2)
+        internal NumericExpr(Operator.Op op, Query operand1, Query operand2)
         {
-            Opnd1 = opnd1.ReturnType() != XPathResultType.Number ? new NumberFunctions(opnd1) : opnd1;
+            Operand1 = operand1.ReturnType() != XPathResultType.Number ? new NumberFunctions(operand1) : operand1;
 
-            if(opnd2 != null && (opnd2.ReturnType() != XPathResultType.Number))
-                Opnd2 = new NumberFunctions(opnd2);
+            if(operand2 != null && (operand2.ReturnType() != XPathResultType.Number))
+                Operand2 = new NumberFunctions(operand2);
             else
-                Opnd2 = opnd2;
+                Operand2 = operand2;
 
             Op = op;
         }
@@ -34,11 +34,11 @@ namespace System.Xml.XPath
 
         internal override object GetValue(XPathReader reader)
         {
-            var n1 = Convert.ToDouble(Opnd1.GetValue(reader));
+            var n1 = Convert.ToDouble(Operand1.GetValue(reader));
 
             var n2 = 0d;
             if(Op != Operator.Op.Negate)
-                n2 = Convert.ToDouble(Opnd2.GetValue(reader));
+                n2 = Convert.ToDouble(Operand2.GetValue(reader));
 
             return Op switch
             {

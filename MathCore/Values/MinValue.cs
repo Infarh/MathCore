@@ -4,7 +4,7 @@ using System.Globalization;
 namespace MathCore.Values
 {
     /// <summary>Минимальное значение</summary>
-    public class MinValue : IValue<double>, IResetable, IFormattable
+    public class MinValue : IValue<double>, IResettable, IFormattable
     {
         /// <summary>Минимальное значение</summary>
         public double Value { get; set; }

@@ -15,7 +15,7 @@ namespace MathCore.MathParser.ExpressionTrees
         /// <summary>Метод обхода дерева</summary>
         public enum BypassingType
         {
-            /// <summary>Левое поддерево, правое подерево, корень</summary>
+            /// <summary>Левое поддерево, правое поддерево, корень</summary>
             LeftRightRoot,
             /// <summary>Левое поддерево, корень, правое поддерево</summary>
             LeftRootRight,
@@ -82,7 +82,7 @@ namespace MathCore.MathParser.ExpressionTrees
                         return;
                     }
 
-                    Root = left;    // корнем дерева нзначается левое поддерево удаляемого узла
+                    Root = left;    // корнем дерева назначается левое поддерево удаляемого узла
                     //Выбираем в левом поддереве самый правый узел
                     left.LastRightChild
                         .Right = right; // и в его правое поддерево записываем правое поддерево удаляемого узла
@@ -192,14 +192,12 @@ namespace MathCore.MathParser.ExpressionTrees
         public ExpressionTree Clone() => new ExpressionTree(Root.Clone());
 
         /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
-        [NotNull]
         object ICloneable.Clone() => Clone();
 
         /// <summary>Получить перечислитель узлов дерева по методу ЛКП</summary><returns>Перечислитель узлов дерева по методу ЛКП</returns>
-        [NotNull]
         public IEnumerator<ExpressionTreeNode> GetEnumerator() => Bypass().GetEnumerator();
 
-        [NotNull]
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

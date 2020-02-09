@@ -62,21 +62,21 @@ namespace MathCore.Tests
             Assert.AreEqual("qwe", "\r\nqwe\r\n".ClearSystemSymbolsAtBeginAndEnd());
         }
 
-        ///// <summary>A test for ClerSymbolsAtBegin</summary>
+        ///// <summary>A test for ClearSymbolsAtBegin</summary>
         //[TestMethod, Ignore]
-        //public void ClerSymbolsAtBeginTest()
+        //public void ClearSymbolsAtBeginTest()
         //{
         //    var str = string.Empty; // TODO: Initialize to an appropriate value
         //    char[] symbols = null; // TODO: Initialize to an appropriate value
         //    var expected = string.Empty; // TODO: Initialize to an appropriate value
-        //    var actual = str.ClerSymbolsAtBegin(symbols);
+        //    var actual = str.ClearSymbolsAtBegin(symbols);
         //    Assert.AreEqual(expected, actual);
         //    Assert.Inconclusive("Verify the correctness of this test method.");
         //}
 
-        /// <summary>A test for ClerSymbolsAtEnd</summary>
+        /// <summary>A test for ClearSymbolsAtEnd</summary>
         [TestMethod]
-        public void ClerSymbolsAtEndTest()
+        public void ClearSymbolsAtEndTest()
         {
             Assert.AreEqual(string.Empty, string.Empty.ClearSymbolsAtEnd('\r', '\n', ' '));
             Assert.AreEqual(string.Empty, " ".ClearSymbolsAtEnd('\r', '\n', ' '));

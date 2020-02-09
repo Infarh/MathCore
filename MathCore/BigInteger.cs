@@ -1,4 +1,5 @@
-﻿//************************************************************************************
+﻿// ReSharper disable CommentTypo
+//************************************************************************************
 // BigInteger Class Version 1.03
 //
 // Copyright (c) 2002 Chew Keong TAN
@@ -100,7 +101,6 @@
 //    - Initial Release.
 //
 //
-// ReSharper disable CommentTypo
 // References
 // [1] D. E. Knuth, "Seminumerical Algorithms", The Art of Computer Programming Vol. 2,
 //     3rd Edition, Addison-Wesley, 1998.
@@ -128,9 +128,9 @@
 //
 // [9] M. Joye and J.-J. Quisquater, "Efficient computation of full Lucas sequences",
 //     Electronics Letters, 32(6), 1996, pp 537-538.
-// ReSharper restore CommentTypo
 //
 //************************************************************************************
+// ReSharper restore CommentTypo
 
 using System;
 using System.Linq;
@@ -574,7 +574,7 @@ namespace MathCore
                 result._DataLength = MaxLength;
             }
 
-            // fixed in v1.03 to give correct datalength for a - (-b)
+            // fixed in v1.03 to give correct data length for a - (-b)
             while (result._DataLength > 1 && result._Data[result._DataLength - 1] == 0)
                 result._DataLength--;
 
@@ -701,7 +701,7 @@ namespace MathCore
                 return x_neg != y_neg ? -result : result;
 
             if (x_neg == y_neg || result._Data[last_pos] != 0x80000000)
-                throw new ArithmeticException("Multipycation overflow.");
+                throw new ArithmeticException("Multiplication overflow.");
             // handle the special case where multiplication produces
             // a max negative number in 2's complement.
 
@@ -713,7 +713,7 @@ namespace MathCore
 
             if (is_max_neg) return result;
 
-            throw new ArithmeticException("Multipycation overflow.");
+            throw new ArithmeticException("Multiplication overflow.");
         }
 
 
@@ -1958,7 +1958,7 @@ namespace MathCore
 
         private static bool LucasStrongTestHelper([NotNull] BigInteger thisVal)
         {
-            // Do the test (selects D based on Selfridge)
+            // Do the test (selects D based on Self ridge)
             // Let D be the first element of the sequence
             // 5, -7, 9, -11, 13, ... for which J(D,n) = -1
             // Let P = 1, Q = (1-D) / 4
@@ -2960,7 +2960,8 @@ namespace MathCore
         ////todo: Перенести в модульные тесты
         //public static void Main(string[] args)
         //{
-        //    // Known problem -> these two pseudoprimes passes my implementation of
+        //    // Known problem -> these two pseudo primes passes my implementation of
+        // ReSharper disable once CommentTypo
         //    // primality test but failed in JDK's IsProbablePrime test.
 
         //    byte[] pseudo_prime1 =

@@ -6,27 +6,50 @@
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    /// <summary>Статический класс для работы с типизированными массивами</summary>
+    /// <typeparam name="T">Тип элементов массива</typeparam>
     public static class Array<T>
     {
+        /// <summary>Создать генератор массивов для указанной длины</summary>
+        /// <param name="Length">Требуемая длина массива</param>
+        /// <returns>Генератор массивов, создающий массивы указанной длины</returns>
         [NotNull] public static Creator Length(int Length) => new Creator(Length);
 
+        /// <summary>Создать генератор массивов для указанной длины</summary>
+        /// <param name="Length">Требуемая длина массива</param>
+        /// <param name="Initializer">Функция инициализации элементов массива</param>
+        /// <returns>Генератор массивов, создающий массивы указанной длины</returns>
         [NotNull] public static Creator Length(int Length, [CanBeNull] Func<int, T> Initializer) => new Creator(Length, Initializer);
 
+        /// <summary>Объект, позволяющий создавать массивы и инициализировать их элементами</summary>
         public class Creator
         {
+            /// <summary>Длина создаваемого массива</summary>
             private readonly int _Length;
+
+            /// <summary>Функция инициализации элементов массива</summary>
             [CanBeNull] private Func<int, T> _Initializer;
+
+            /// <summary>Функция обновления значений элементов массива</summary>
             [CanBeNull] private Func<int, T, T> _Updater;
 
+            /// <summary>Устанавливать значения ячеек массива в значение по умолчанию</summary>
             private bool _SetDefaultValue;
+
+            /// <summary>Значение по умолчанию для элементов массива</summary>
             private T _DefaultValue;
 
+            /// <summary>Инициализация нового экземпляра <see cref="Creator"/></summary>
+            /// <param name="Length">Длина массива, создаваемого объектом</param>
             public Creator(int Length)
             {
                 if (Length < 0) throw new ArgumentOutOfRangeException(nameof(Length), Length, "Длина массива должна быть неотрицательной");
                 _Length = Length;
             }
 
+            /// <summary>Инициализация нового экземпляра <see cref="Creator"/></summary>
+            /// <param name="Length">Длина массива, создаваемого объектом</param>
+            /// <param name="Initializer">Функция инициализации ячеек массива</param>
             public Creator(int Length, Func<int, T> Initializer)
             {
                 if (Length < 0) throw new ArgumentOutOfRangeException(nameof(Length), Length, "Длина массива должна быть неотрицательной");
@@ -34,6 +57,9 @@ namespace System
                 _Initializer = Initializer;
             }
 
+            /// <summary>Установить значение по умолчанию для ячеек массива</summary>
+            /// <param name="DefaultValue">Значение по умолчанию для ячеек массива</param>
+            /// <returns>Исходный экземпляр <see cref="Creator"/></returns>
             [NotNull]
             public Creator Default(T DefaultValue)
             {
@@ -42,6 +68,8 @@ namespace System
                 return this;
             }
 
+            /// <summary>Сбросить значение по умолчанию</summary>
+            /// <returns>Исходный экземпляр <see cref="Creator"/></returns>
             [NotNull]
             public Creator ResetDefault()
             {
@@ -50,6 +78,9 @@ namespace System
                 return this;
             }
 
+            /// <summary>Задать функцию инициализации ячеек массива</summary>
+            /// <param name="Initializer">Функция, генерирующая значение ячейки массива по её индексу</param>
+            /// <returns>Исходный экземпляр <see cref="Creator"/></returns>
             [NotNull]
             public Creator Init([CanBeNull] Func<int, T> Initializer)
             {
@@ -57,6 +88,12 @@ namespace System
                 return this;
             }
 
+            /// <summary>Задать функцию обновления значений ячеек массива</summary>
+            /// <param name="Updater">
+            /// Функция, принимающая в качестве параметром индекс ячейки и её значение,
+            /// результат вызова этой функции будет размещён в ячейке массива с указанным индексом
+            /// </param>
+            /// <returns>Исходный экземпляр <see cref="Creator"/></returns>
             [NotNull]
             public Creator Update([CanBeNull] Func<int, T, T> Updater)
             {
@@ -64,6 +101,8 @@ namespace System
                 return this;
             }
 
+            /// <summary>Создать массив с заданными в объекте параметрами</summary>
+            /// <returns>Новый массив, длина и ячейки которого определяются объектом инициализации</returns>
             [NotNull]
             public T[] Create()
             {
@@ -92,6 +131,8 @@ namespace System
                 return result;
             }
 
+            /// <summary>Оператор неявного преобразования <see cref="Creator"/> к типу массива</summary>
+            /// <param name="creator">Объект инициализации массива</param>
             [CanBeNull] public static implicit operator T[]([CanBeNull] Creator creator) => creator?.Create();
         }
     }

@@ -24,11 +24,11 @@ namespace System.Xml.XPath
 
         internal override XPathResultType ReturnType => XPathResultType.Error;
 
-        internal string Name => Prefix != string.Empty ? $"{Prefix}:{Localname}" : Localname;
+        internal string Name => Prefix != string.Empty ? $"{Prefix}:{LocalName}" : LocalName;
 
-        internal string Localname { get; }
+        internal string LocalName { get; }
 
-        internal string Prefix { get; } = string.Empty;
+        internal string Prefix { get; }
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace System.Xml.XPath
 
         internal Variable(string name, string prefix)
         {
-            Localname = name;
+            LocalName = name;
             Prefix = prefix;
         }
 

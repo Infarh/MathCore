@@ -1,8 +1,9 @@
 ﻿using System.Linq.Expressions;
+using MathCore.Annotations;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    /// <summary>Узел дерева мат.выражения, реазлиующий оператор больше</summary>
+    /// <summary>Узел дерева мат.выражения, реализующий оператор больше</summary>
     // todo: добавить логику разбора конструкций типа 5>x>-5
     public class GreaterThenOperatorNode : LogicOperatorNode
     {
@@ -31,12 +32,14 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Больше</returns>
+        [NotNull]
         public override Expression LogicCompile() => Expression.GreaterThan(((ComputedNode)Left).Compile(), ((ComputedNode)Right).Compile());
 
         /// <summary>Компиляция логики узла</summary>
-        /// <param name="Parameters">Параметры компиляции</param>
+        /// <param name="Args">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Больше</returns>
-        public override Expression LogicCompile(ParameterExpression[] Parameters) => Expression.GreaterThan(((ComputedNode)Left).Compile(Parameters), ((ComputedNode)Right).Compile(Parameters));
+        [NotNull]
+        public override Expression LogicCompile(ParameterExpression[] Args) => Expression.GreaterThan(((ComputedNode)Left).Compile(Args), ((ComputedNode)Right).Compile(Args));
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

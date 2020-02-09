@@ -168,9 +168,9 @@ namespace System
         [DST, NotNull]
         public static T Create<T>(BindingFlags Flags, Binder binder, params object[] Params) => (T)CreateObject(typeof(T), Flags, binder, Params);
 
-        public static void AddConvreter([NotNull] this Type type, [NotNull] Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
+        public static void AddConverter([NotNull] this Type type, [NotNull] Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
 
-        public static void AddConvreter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) => 
+        public static void AddConverter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) => 
             TypeDescriptor.AddAttributes(type, ConverterTypes.Select(t => new TypeConverterAttribute(t)).Cast<Attribute>().ToArray());
 
         [NotNull]

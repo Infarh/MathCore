@@ -155,6 +155,7 @@ namespace MathCore.Annotations
         public string ParameterName { get; }
     }
 
+    // ReSharper disable CommentTypo
     /// <summary>
     /// Describes dependency between method input and output
     /// </summary>
@@ -197,6 +198,7 @@ namespace MathCore.Annotations
     /// public bool TryParse(string s, out Person result)
     /// </code></item>
     /// </list></examples>
+    // ReSharper restore CommentTypo
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class ContractAnnotationAttribute : Attribute
     {
@@ -516,7 +518,7 @@ namespace MathCore.Annotations
     /// for MVC views within a class or a method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class AspMvcSupressViewErrorAttribute : Attribute { }
+    public sealed class AspMvcPressuresViewErrorAttribute : Attribute { }
 
     /// <summary>
     /// ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.

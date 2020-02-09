@@ -9,14 +9,10 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 namespace MathCore.MathParser
 {
     /// <summary>Коллекция констант</summary>
-    [System.Diagnostics.DebuggerDisplay("Колличество зафиксированных констант = {" + nameof(Count) + "}"), DST]
+    [System.Diagnostics.DebuggerDisplay("Количество зафиксированных констант = {" + nameof(Count) + "}"), DST]
     public sealed class ConstantsCollection : IEnumerable<ExpressionVariable>
     {
-        /// <summary>Ссылка на выражение</summary>
-        [NotNull]
-        private readonly MathExpression _Expression;
-
-        /// <summary>Элементы коллекци</summary>
+        /// <summary>Элементы коллекции</summary>
         [NotNull]
         private readonly List<ExpressionVariable> _Items = new List<ExpressionVariable>();
 
@@ -39,10 +35,6 @@ namespace MathCore.MathParser
             }
         }
 
-        /// <summary>Инициализация новой коллекции констант</summary>
-        /// <param name="Expression">Математическое выражение, которому принадлежит коллекция</param>
-        public ConstantsCollection([NotNull] MathExpression Expression) => _Expression = Expression;
-
         /// <summary>Добавить элемент в коллекцию</summary>
         /// <param name="Constant">Добавляемое значение, как константа</param>
         public bool Add([NotNull] ExpressionVariable Constant)
@@ -58,12 +50,12 @@ namespace MathCore.MathParser
         [NotNull]
         public IEnumerable<string> GetNames() => _Items.Select(v => v.Name);
 
-        /// <summary>Получить перечислитеь констант коллекци</summary>
+        /// <summary>Получить перечислитеь констант коллекции</summary>
         /// <returns>Перечислитель констант</returns>
         [NotNull]
         IEnumerator<ExpressionVariable> IEnumerable<ExpressionVariable>.GetEnumerator() => _Items.GetEnumerator();
 
-        /// <summary>Получить перечислитеь констант коллекци</summary>
+        /// <summary>Получить перечислитеь констант коллекции</summary>
         /// <returns>Перечислитель констант</returns>
         [NotNull]
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ExpressionVariable>)this).GetEnumerator();

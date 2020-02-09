@@ -495,7 +495,7 @@ namespace MathCore.Vectors
 
         /// <inheritdoc />
         [DST]
-        public override bool Equals(object obj) => obj is { } && obj is SpaceAngle a && Equals(a);
+        public override bool Equals(object obj) => obj != null && obj is SpaceAngle a && Equals(a);
 
         /* -------------------------------------------------------------------------------------------- */
 

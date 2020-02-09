@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using MathCore.Annotations;
+using MathCore.Extensions.Expressions;
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 // ReSharper disable UnusedMember.Global
 
@@ -9,14 +11,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
     /// <summary>Узел дерева мат.выражения, реализующий оператор равенства</summary>
     public class EqualityOperatorNode : LogicOperatorNode
     {
-        /// <summary>Получить выражение вызова метода определения модуля числа из класса Math</summary>
-        /// <param name="x">Параметр выражения</param>
-        /// <returns>Выражение <see cref="System.Linq.Expressions.Expression"/>, вызывающее метод Math.Abs с параметром x</returns>
-        [NotNull]
-        public static Expression GetAbsMethodCall([NotNull] Expression x) => Expression.Call(((Func<double, double>)Math.Abs).Method, x);
-
         /// <summary>Точность вычисления равенства для чисел с плавающей точкой</summary>
-        internal static double __Epsilon = 1e-12;
+        private static double __Epsilon = 1e-12;
 
         /// <summary>Точность вычисления равенства для чисел с плавающей точкой</summary>
         public static double Epsilon { get => __Epsilon; set => __Epsilon = value; }
@@ -42,40 +38,24 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>0 - если разность между x и y по модулю меньше Epsilon и 1 во всех остальных случаях</returns>
-        public override double Compute() => Comparer(((ComputedNode)Left).Compute(), ((ComputedNode)Right).Compute());
+        public override double Compute() => Comparer(LeftCompute(), RightCompute());
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Равенство</returns>
         [NotNull]
         public override Expression LogicCompile() => 
             Left is LogicOperatorNode left_node && Right is LogicOperatorNode right_node
-                ? Expression.Equal(left_node.LogicCompile(), right_node.LogicCompile())
-                : Expression.LessThan
-                (
-                    GetAbsMethodCall(Expression.Subtract
-                        (
-                            ((ComputedNode)Left).Compile(),
-                            ((ComputedNode)Right).Compile())
-                    ),
-                    Expression.Constant(__Epsilon)
-                );
+                ? left_node.LogicCompile().IsEqual(right_node.LogicCompile())
+                : LeftCompile().Subtract(RightCompile()).GetAbs().IsLessThan(__Epsilon);
 
         /// <summary>Компиляция логики узла</summary>
-        /// <param name="Parameters">Параметры компиляции</param>
+        /// <param name="Args">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Равенство</returns>
         [NotNull]
-        public override Expression LogicCompile(ParameterExpression[] Parameters) => 
+        public override Expression LogicCompile(params ParameterExpression[] Args) => 
             Left is LogicOperatorNode left_node && Right is LogicOperatorNode right_node
-                ? Expression.Equal(left_node.LogicCompile(Parameters), right_node.LogicCompile(Parameters))
-                : Expression.LessThan
-                (
-                    GetAbsMethodCall(Expression.Subtract
-                        (
-                            ((ComputedNode)Left).Compile(Parameters),
-                            ((ComputedNode)Right).Compile(Parameters))
-                    ),
-                    Expression.Constant(__Epsilon)
-                );
+                ? left_node.LogicCompile(Args).IsEqual(right_node.LogicCompile(Args))
+                : LeftCompile(Args).Subtract(RightCompile(Args)).GetAbs().IsLessThan(__Epsilon);
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

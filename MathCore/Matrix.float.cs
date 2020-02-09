@@ -561,7 +561,7 @@ namespace MathCore
         /* -------------------------------------------------------------------------------------------- */
 
         public static bool operator ==([CanBeNull] MatrixFloat A, [CanBeNull] MatrixFloat B) => A is null && (B is null)
-                   || A is { } && B is { } && A.Equals(B);
+                   || A != null && B != null && A.Equals(B);
 
         public static bool operator !=([CanBeNull] MatrixFloat A, [CanBeNull] MatrixFloat B) => !(A == B);
 
@@ -793,7 +793,7 @@ namespace MathCore
         #region IEquatable<MatrixFloat> Members
 
         public bool Equals([CanBeNull] MatrixFloat other) =>
-            other is { }
+            other != null
             && (ReferenceEquals(this, other)
                 || other._N == _N
                 && other._M == _M
@@ -806,7 +806,7 @@ namespace MathCore
 
         /// <inheritdoc />
         public override bool Equals(object obj) =>
-            obj is { }
+            obj != null
             && (ReferenceEquals(this, obj)
                 || obj.GetType() == typeof(MatrixFloat)
                 && Equals((MatrixFloat)obj));

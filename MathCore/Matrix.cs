@@ -347,7 +347,7 @@ namespace MathCore
 
         /// <summary>Оператор равенства двух матриц</summary>
         /// <returns>Истина, если матрицы совпадают по размеру и поэлементно</returns>
-        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] Matrix B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] Matrix B) => A is null && B is null || !(A is null) && !(B is null) && A.Equals(B);
 
         /// <summary>Оператор неравенства двух матриц</summary>
         /// <returns>Истина, если матрицы не совпадают по размеру или поэлементно</returns>
@@ -359,7 +359,7 @@ namespace MathCore
 
         /// <summary>Оператор равенства матрицы и двумерного массива</summary>
         /// <returns>Истина, если матрица и двумерный массив совпадают по размеру и поэлементно</returns>
-        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] double[,] B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] Matrix A, [CanBeNull] double[,] B) => A is null && B is null || !(A is null) && !(B is null) && A.Equals(B);
 
         /// <summary>Оператор неравенства матрицы и двумерного массива</summary>
         /// <returns>Истина, если матрица и двумерный массив не совпадают по размеру или поэлементно</returns>
@@ -489,15 +489,15 @@ namespace MathCore
         #region IEquatable Members
 
         /// <inheritdoc/>
-        [DST] public bool Equals(double[,] other) => other is { } && Array.AreEquals(_Data, other);
+        [DST] public bool Equals(double[,] other) => other != null && Array.AreEquals(_Data, other);
 
         /// <inheritdoc/>
-        [DST] public bool Equals(Matrix other) => other is { } && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
+        [DST] public bool Equals(Matrix other) => !(other is null) && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
 
         #endregion
 
         /// <inheritdoc/>
-        [DST] public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || Equals(obj as Matrix) || Equals(obj as double[,]));
+        [DST] public override bool Equals(object obj) => obj != null && (ReferenceEquals(this, obj) || Equals(obj as Matrix) || Equals(obj as double[,]));
 
         /// <inheritdoc/>
         [DST]

@@ -2,7 +2,7 @@
 using MathCore.Monads;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MathCore.Tests.Monades
+namespace MathCore.Tests.Monads
 {
     [TestClass]
     public class MaybeTests

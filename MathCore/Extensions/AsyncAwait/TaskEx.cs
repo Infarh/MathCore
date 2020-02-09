@@ -445,7 +445,7 @@ namespace System.Threading.Tasks
         }
 
         /// <summary>Propagates any exceptions that occurred on the specified tasks.</summary>
-        /// <param name="tasks">The Tassk whose exceptions are to be propagated.</param>
+        /// <param name="tasks">The Task whose exceptions are to be propagated.</param>
         public static void PropagateExceptions([NotNull, ItemCanBeNull] this Task[] tasks)
         {
             if (tasks is null) throw new ArgumentNullException(nameof(tasks));

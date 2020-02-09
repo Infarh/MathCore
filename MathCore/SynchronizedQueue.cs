@@ -9,7 +9,7 @@ using MathCore.Annotations;
 
 namespace MathCore
 {
-    public class SyncronizedQueue<T> : IDisposable
+    public class SynchronizedQueue<T> : IDisposable
     {
         [NotNull] private readonly Queue<T> _Queue;
         [NotNull] private readonly AutoResetEvent _Event = new AutoResetEvent(false);
@@ -17,9 +17,9 @@ namespace MathCore
         // ReSharper disable once InconsistentlySynchronizedField
         public int Count => _Queue.Count;
 
-        public SyncronizedQueue() => _Queue = new Queue<T>();
+        public SynchronizedQueue() => _Queue = new Queue<T>();
 
-        public SyncronizedQueue(int Capacity) => _Queue = new Queue<T>(Capacity);
+        public SynchronizedQueue(int Capacity) => _Queue = new Queue<T>(Capacity);
 
         public void Add(T value)
         {
@@ -56,32 +56,32 @@ namespace MathCore
         public void Dispose() => _Event.Dispose();
     }
 
-    public class SyncronizedItemsProcessor<T> : IDisposable
+    public class SynchronizedItemsProcessor<T> : IDisposable
     {
-        private readonly SyncronizedQueue<T> _Queue = new SyncronizedQueue<T>();
+        private readonly SynchronizedQueue<T> _Queue = new SynchronizedQueue<T>();
         private readonly Task[] _Tasks;
-        private readonly CancellationTokenSource _Cancelation;
+        private readonly CancellationTokenSource _Cancellation;
 
-        public SyncronizedItemsProcessor(Action<T> action, int ThreadCount = 1)
+        public SynchronizedItemsProcessor(Action<T> action, int ThreadCount = 1)
         {
-            _Cancelation = new CancellationTokenSource();
-            var cancelation_token = _Cancelation.Token;
+            _Cancellation = new CancellationTokenSource();
+            var cancellation_token = _Cancellation.Token;
             _Tasks = Enumerable.Range(0, ThreadCount)
                 .Select(i => Task.Factory.StartNew(() =>
                 {
-                    while(!cancelation_token.IsCancellationRequested)
+                    while(!cancellation_token.IsCancellationRequested)
                         action(_Queue.Get());
-                }, cancelation_token))
+                }, cancellation_token))
                 .ToArray();
         }
 
-        public SyncronizedItemsProcessor(Action<T> action, Action<T, Exception> Catch, int ThreadCount = 1)
+        public SynchronizedItemsProcessor(Action<T> action, Action<T, Exception> Catch, int ThreadCount = 1)
         {
-            _Cancelation = new CancellationTokenSource();
+            _Cancellation = new CancellationTokenSource();
             _Tasks = Enumerable.Range(0, ThreadCount)
                 .Select(i => Task.Factory.StartNew(() =>
                 {
-                    while(!_Cancelation.IsCancellationRequested)
+                    while(!_Cancellation.IsCancellationRequested)
                     {
                         var t = _Queue.Get();
                         try
@@ -93,7 +93,7 @@ namespace MathCore
                             Catch(t, e);
                         }
                     }
-                }, _Cancelation.Token))
+                }, _Cancellation.Token))
                 .ToArray();
         }
 
@@ -101,9 +101,9 @@ namespace MathCore
 
         public void Dispose()
         {
-            _Cancelation.Cancel();
+            _Cancellation.Cancel();
             _Queue.Dispose();
-            _Cancelation.Dispose();
+            _Cancellation.Dispose();
         }
     }
 }

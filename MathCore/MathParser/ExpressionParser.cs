@@ -87,17 +87,17 @@ namespace MathCore.MathParser
             /// <summary>Имя обнаруженной функции</summary>
             public string Name { get; }
             /// <summary>Массив имён аргументов функции</summary>
-            public string[] Arguments { get; }
+            public IReadOnlyList<string> Arguments { get; }
 
             /// <summary>Количество аргументов функции</summary>
-            public int ArgumentCount => Arguments.Length;
+            public int ArgumentCount => Arguments.Count;
 
             /// <summary>Делегат функции, который надо использовать при её вычислении</summary>
             public Delegate Function { get; set; }
             /// <summary>Инициализация аргумента события обнаружения функции</summary>
             /// <param name="Name">Имя функции</param>
             /// <param name="Arguments">Массив имён аргументов функции</param>
-            public FindFunctionEventArgs([NotNull] string Name, [NotNull] string[] Arguments)
+            public FindFunctionEventArgs([NotNull] string Name, [NotNull] IReadOnlyList<string> Arguments)
             {
                 this.Name = Name;
                 this.Arguments = Arguments;
@@ -121,7 +121,7 @@ namespace MathCore.MathParser
         /// <param name="Name">Имя функции</param>
         /// <param name="Arguments">Аргументы функции</param>
         /// <returns>Делегат функции</returns>
-        private Delegate OnFunctionFind([NotNull] string Name, [NotNull] string[] Arguments)
+        private Delegate OnFunctionFind([NotNull] string Name, [NotNull] IReadOnlyList<string> Arguments)
         {
             var args = new FindFunctionEventArgs(Name, Arguments);
             OnFindFunction(args);
@@ -236,7 +236,7 @@ namespace MathCore.MathParser
                 if (string.IsNullOrEmpty(function.Name))
                     throw new InvalidOperationException("Пустая строка с именем функции");
 
-                switch (function.Arguments.Length)
+                switch (function.Arguments.Count)
                 {
                     case 1:
                         switch (function.Name)
@@ -377,9 +377,9 @@ namespace MathCore.MathParser
         public static Functional GetFunctional([NotNull] string Name) =>
             Name switch
             {
-                "sum" => (Functional)new SummOperator(Name),
-                "Sum" => new SummOperator(Name),
-                "Σ" => new SummOperator(Name),
+                "sum" => (Functional)new SumOperator(Name),
+                "Sum" => new SumOperator(Name),
+                "Σ" => new SumOperator(Name),
                 "int" => new IntegralOperator(Name),
                 "integral" => new IntegralOperator(Name),
                 "Int" => new IntegralOperator(Name),

@@ -390,7 +390,7 @@ namespace System.Xml.XPath
                     var node_type = axis_type == Axis.AxisType.Attribute
                         ? XPathNodeType.Attribute
                         :
-                          // axisType == Axis.AxisType.Namespace ? XPathNodeType.Namespace : // No Idea why it's this way but othervise Axes doesn't work
+                          // axisType == Axis.AxisType.Namespace ? XPathNodeType.Namespace : // No Idea why it's this way but otherwise Axes doesn't work
                           /* default: */
                           XPathNodeType.Element;
 
@@ -537,7 +537,7 @@ namespace System.Xml.XPath
                 if (pi.MaxArgs < arg_count)
                     throw new XPathException($"Function '{name}' in '{_Scanner.SourceText}' has invalid number of arguments.");
                 if (pi.ArgTypes.Length < arg_count)
-                    arg_count = pi.ArgTypes.Length; // argument we have the type specified (can be < pi.Minargs)
+                    arg_count = pi.ArgTypes.Length; // argument we have the type specified (can be < pi.MinArgs)
                 for (var i = 0; i < arg_count; i++)
                 {
                     var arg = (AstNode)arg_list[i];
@@ -794,10 +794,10 @@ namespace System.Xml.XPath
             return table;
         }
 
-        private Axis.AxisType GetAxis([NotNull] XPathScanner scaner)
+        private Axis.AxisType GetAxis([NotNull] XPathScanner Scanner)
         {
-            Debug.Assert(scaner.Kind == XPathScanner.LexKind.Axe);
-            var axis = __AxesTable[scaner.Name];
+            Debug.Assert(Scanner.Kind == XPathScanner.LexKind.Axe);
+            var axis = __AxesTable[Scanner.Name];
             if (axis is null) throw new XPathException($"'{_Scanner.SourceText}' has an invalid token.");
             return (Axis.AxisType)axis;
         }

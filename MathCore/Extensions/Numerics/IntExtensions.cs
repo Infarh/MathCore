@@ -63,7 +63,7 @@ namespace System
             }
         }
 
-        /// <summary>Разложение числа на простые множетили</summary>
+        /// <summary>Разложение числа на простые множители</summary>
         /// <param name="n">Раскладываемое число</param>
         /// <returns>Массив простых множителей</returns>
         //[Copyright("Alexandr A Alexeev 2011", url = "http://eax.me")]
@@ -162,7 +162,7 @@ namespace System
         [DST]
         public static int BitCount(this int n) => n.GetNumberOfDigits(2);
 
-        /// <summary>Получить число разрядов в указаной системе счисления</summary>
+        /// <summary>Получить число разрядов в указанной системе счисления</summary>
         /// <param name="n">Рассматриваемое число</param>
         /// <param name="Base">Основание системы счисления. По умолчанию = 10</param>
         /// <returns>Количество разрядов в указанной системе счисления</returns>
@@ -213,7 +213,7 @@ namespace System
         /// <param name="y">Делитель</param>
         /// <returns>Истина, если остаток от целочисленного деления равен 0</returns>
         [DST]
-        public static bool IsDevidedTo(this int x, int y) => x % y == 0;
+        public static bool IsDeviatedTo(this int x, int y) => x % y == 0;
 
         /// <summary>Положительный остаток от деления</summary>
         /// <param name="x">Делимое</param>
@@ -249,7 +249,7 @@ namespace System
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
         [DST]
-        public static bool IsEven(this int x) => x.IsDevidedTo(2);
+        public static bool IsEven(this int x) => x.IsDeviatedTo(2);
 
         /// <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
         /// <param name="n">Исходное число</param>
@@ -262,17 +262,17 @@ namespace System
             if(n > 40)
             {
                 var sqrt = Math.Sqrt(Consts.pi2 * n);
-                var trunc = Math.Pow(n / Math.E, n);
+                var truncate = Math.Pow(n / Math.E, n);
 
                 var r1 = new[]
-                        {
-                            1,
-                            1d / (12 * n),
-                            1d / (288 * n * n),
-                            139d / (51840 * n * n * n)
-                        };
+                {
+                    1,
+                    1d / (12 * n),
+                    1d / (288 * n * n),
+                    139d / (51840 * n * n * n)
+                };
 
-                return (long)(sqrt * trunc * (r1[0] + r1[1] + r1[2] + r1[3]));
+                return (long)(sqrt * truncate * (r1[0] + r1[1] + r1[2] + r1[3]));
             }
 
             long result = n == 0 ? 1 : n;

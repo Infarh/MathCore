@@ -260,7 +260,7 @@ namespace MathCore.Tests.MathParser
 
         /// <summary>Тестирование оператора больше</summary>
         [TestMethod, Description("Тестирование оператора больше")]
-        public void MathExpression_OperatorGtraterThen_SimpleTest()
+        public void MathExpression_OperatorGraterThen_SimpleTest()
         {
             var parser = new ExpressionParser();
             var expr = parser.Parse("4 > 2");
@@ -875,7 +875,7 @@ namespace MathCore.Tests.MathParser
 
         /// <summary>Тестирование оператора умножения двух выражений</summary>
         [TestMethod, Description("Тестирование оператора умножения двух выражений")]
-        public void MathExpression_Operator_Multiplycation_SimpleTest()
+        public void MathExpression_Operator_Multiplication_SimpleTest()
         {
             var parser = new ExpressionParser();
             var A = parser.Parse("5");
@@ -925,7 +925,7 @@ namespace MathCore.Tests.MathParser
         }
 
         //[TestMethod]
-        //public void ExpressionParser_Mathematic_Test()
+        //public void ExpressionParser_Mathematics_Test()
         //{
         //    var parser = new ExpressionParser();
         //    var expression_str = "sqrt(sin(3x))*cos(2x)^(3x)+tan(cos(sin(x)))";
@@ -934,15 +934,15 @@ namespace MathCore.Tests.MathParser
         //}
 
         [TestMethod]
-        public void MathExpression_ComplexOperator_Summ_Test()
+        public void MathExpression_ComplexOperator_Sum_Test()
         {
             var parser = new ExpressionParser();
 
             var polynom = new Polynom(1, 3, 5, 7, 9, 11);
 
-            var CoreFunctionFinded = false;
+            var CoreFunctionFunded = false;
             var CoreFunctionExecuted = false;
-            var LimitFunctionFinded = false;
+            var LimitFunctionFunded = false;
             var LimitFunctionExecuted = false;
 
             var a_list = new List<(double index, double value)>(6);
@@ -957,22 +957,22 @@ namespace MathCore.Tests.MathParser
                         a_list.Add((i, a));
                         return a;
                     });
-                    CoreFunctionFinded = true;
+                    CoreFunctionFunded = true;
                 }
                 else if (e.SignatureEqual("Length", 1))
                 {
                     e.Function = new Func<double, double>(y => { LimitFunctionExecuted = true; return polynom.Length; });
-                    LimitFunctionFinded = true;
+                    LimitFunctionFunded = true;
                 }
             };
 
             var expr = parser.Parse("Sum[i=0..Length(a)]{a(i)*x^i}");
-            Assert.IsTrue(LimitFunctionFinded);
-            Assert.IsTrue(CoreFunctionFinded);
+            Assert.IsTrue(LimitFunctionFunded);
+            Assert.IsTrue(CoreFunctionFunded);
 
             var root = Assert.That.Value(expr.Tree.Root)
                .As<FunctionalNode>()
-               .Where(node => node.Operator).Check(@operator => @operator.Is<SummOperator>())
+               .Where(node => node.Operator).Check(@operator => @operator.Is<SumOperator>())
                .ActualValue;
 
             {

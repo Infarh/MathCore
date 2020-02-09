@@ -10,7 +10,7 @@ namespace MathCore.Values
 {
     /// <summary>Скользящее среднее</summary>
     [Serializable]
-    public class AverageValue : ISerializable, IValue<double>, IResetable
+    public class AverageValue : ISerializable, IValue<double>, IResettable
     {
         /* --------------------------------------------------------------------------------------------- */
 
@@ -162,7 +162,7 @@ namespace MathCore.Values
 
         /// <summary>Получить состояние объекта</summary>
         /// <param name="info">Объект сериализации</param>
-        /// <param name="context">Конекст операции сериализации</param>
+        /// <param name="context">Контекст операции сериализации</param>
         /// <exception cref="ArgumentNullException">Если <paramref name="info"/> is null</exception>
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         // ReSharper disable once UnusedParameter.Global

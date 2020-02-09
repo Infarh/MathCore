@@ -105,7 +105,7 @@ namespace MathCore.Extensions.Expressions
                 throw new FormatException("Количество аргументов подстановки не равно 1");
             var SubstituteParameter = substitute_parameters[0];
             if (!parameters.Contains(p => p.Name == SubstituteParameter.Name && p.Type == SubstituteParameter.Type))
-                throw new FormatException("Во входном выражении отсутсвуте подставляемый параметр");
+                throw new FormatException("Во входном выражении отсутствие подставляемый параметр");
 
             var visitor = new SubstitutionVisitor(Substitution);
             var result = visitor.Visit(Expr);
@@ -1849,5 +1849,7 @@ namespace MathCore.Extensions.Expressions
                 return null;
             }
         }
+
+        [NotNull] public static MethodCallExpression GetAbs([NotNull] this Ex x) => Ex.Call(((Func<double, double>)Math.Abs).Method, x);
     }
 }

@@ -62,7 +62,7 @@ namespace System.Xml.XPath
 
         //
         // predicate could be result in two results type
-        // 1). Number: postion query
+        // 1). Number: position query
         // 2). Boolean
         //
         internal override bool MatchNode(XPathReader reader)
@@ -73,7 +73,7 @@ namespace System.Xml.XPath
             {
                 ++_MatchCount;
                 //
-                // send postion information down to the prdicates
+                // send position information down to the predicates
                 //
                 _Predicate.PositionCount = _MatchCount;
             }
@@ -84,7 +84,7 @@ namespace System.Xml.XPath
             else if(obj is double && Convert.ToDouble(obj).Equals(_MatchCount))
                 ret = true; //we need to know how many this axis has been evaluated
             else if(obj != null && !(obj is double || obj is bool))
-                ret = true; //object is nodeset
+                ret = true; //object is node set
             return ret;
         }
 

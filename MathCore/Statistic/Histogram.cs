@@ -14,7 +14,7 @@ namespace MathCore.Statistic
         public readonly double[] Argument;
         private readonly Interval[] _Intervals;
         private readonly Interval _Interval;
-        private readonly double _Normalizator;
+        private readonly double _Normalizer;
         public double Max => _Interval.Max;
         public double Min => _Interval.Min;
         public readonly int N;
@@ -46,21 +46,22 @@ namespace MathCore.Statistic
 
             x_values.Foreach(AddValue);
             Percent = new double[Values.Length].Initialize(Values, N, (i, values, n) => values[i] / n);
-            Values.Divide(_Normalizator = Values.GetIntegral(Argument));
+            Values.Divide(_Normalizer = Values.GetIntegral(Argument));
         }
 
-        public bool CheckDestribution(Func<double, double> F, double p, double alpha = 0.05)
+        public bool CheckDistribution(Func<double, double> F, double p, double alpha = 0.05)
         {
-            var p_theor = new double[Values.Length].Initialize(_Intervals, F, (i, intervals, f) =>
+            // ReSharper disable once IdentifierTypo
+            var p_teor = new double[Values.Length].Initialize(_Intervals, F, (i, intervals, f) =>
             {
                 var interval = intervals[i];
                 return f.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
             });
 
             var stat = Values
-                .GetMultiplyed(_Normalizator / N)
-                .Select((t, i) => p_theor[i] - t)
-                .Select((delta, i) => delta * delta / p_theor[i])
+                .GetMultiplied(_Normalizer / N)
+                .Select((t, i) => p_teor[i] - t)
+                .Select((delta, i) => delta * delta / p_teor[i])
                 .Sum();
             var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, 2);
             Console.WriteLine(stat < quantile);

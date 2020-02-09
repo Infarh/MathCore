@@ -6,13 +6,13 @@ namespace System.Xml.XPath
         #region Fields
 
         private readonly Function.FunctionType _FuncType;
-        //private Query _Opnd;
+        //private Query _Operand;
 
         #endregion
 
         #region Constructors
 
-        internal MethodOperand(Query opnd, Function.FunctionType FuncType) => _FuncType = FuncType;//_Opnd = opnd;
+        internal MethodOperand(Query Operand, Function.FunctionType FuncType) => _FuncType = FuncType;//_Operand = operand;
 
         #endregion
 
@@ -22,6 +22,7 @@ namespace System.Xml.XPath
         // The function context node has to be the axis selected node
         //  <E a='1' xmlns='test'> <E1/> </E>
         //
+        // ReSharper disable once CommentTypo
         //  /E/E1[namespaceuri(../E)= 'test']
         internal override object GetValue(XPathReader reader) =>
             _FuncType switch

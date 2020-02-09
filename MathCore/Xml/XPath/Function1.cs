@@ -59,6 +59,7 @@ namespace System.Xml.XPath
 
         #region Static
 
+        // ReSharper disable StringLiteralTypo
         private static readonly string[] _Str =
         {
             "last()",
@@ -89,6 +90,7 @@ namespace System.Xml.XPath
             "celing()",
             "round()"
         };
+        // ReSharper restore StringLiteralTypo
 
         #endregion
 
@@ -148,9 +150,9 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        internal Function(FunctionType ftype, ArrayList argumentList)
+        internal Function(FunctionType FType, ArrayList argumentList)
         {
-            TypeOfFunction = ftype;
+            TypeOfFunction = FType;
             ArgumentList = new ArrayList(argumentList);
         }
 
@@ -162,11 +164,11 @@ namespace System.Xml.XPath
             ArgumentList = new ArrayList(argumentList);
         }
 
-        internal Function(FunctionType ftype) => TypeOfFunction = ftype;
+        internal Function(FunctionType FType) => TypeOfFunction = FType;
 
-        internal Function(FunctionType ftype, AstNode arg)
+        internal Function(FunctionType FType, AstNode arg)
         {
-            TypeOfFunction = ftype;
+            TypeOfFunction = FType;
             ArgumentList = new ArrayList { arg };
         }
 

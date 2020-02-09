@@ -8,7 +8,7 @@ namespace MathCore.MathParser
     {
         /// <summary>Параметры оператора</summary>
         [NotNull]
-        public BlockTerm Parameters { get; set; }
+        public BlockTerm Parameters { get; }
 
         /// <summary>Инициализация блока комплексного оператора</summary>
         /// <param name="Header">Заголовок блока</param>

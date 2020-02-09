@@ -5,7 +5,7 @@ namespace MathCore.Values
 {
     ///<summary>"Ленивое" значение</summary>
     ///<typeparam name="T">Тип значения</typeparam>
-    public class LazyValue<T> : IInitializable, IInitializable<Func<T>>, IValueRead<T>, IResetable
+    public class LazyValue<T> : IInitializable, IInitializable<Func<T>>, IValueRead<T>, IResettable
     {
         /* ------------------------------------------------------------------------------------------ */
 

@@ -146,7 +146,7 @@ namespace MathCore.Tests
             var Q = new Polynom(9, 8, 15, 23);
             var Z = new Polynom(12, 13, 22, 23);
 
-            Assert.IsTrue((P + Q).Equals(Z), "Сумма детерминированных тестовых полиномов расчитана неверно: " +
+            Assert.IsTrue((P + Q).Equals(Z), "Сумма детерминированных тестовых полиномов рассчитана неверно: " +
                                              "{0} + {1} == {2}", P, Q, Z);
 
             P = GetRandomPolynom();

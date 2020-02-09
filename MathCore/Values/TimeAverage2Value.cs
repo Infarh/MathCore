@@ -7,6 +7,7 @@ namespace MathCore.Values
     {
         /* ------------------------------------------------------------------------------------------ */
 
+        // ReSharper disable once IdentifierTypo
         protected double _LastdVf;
         protected double _LastV1;
         //private readonly object _Locker = new object();
@@ -27,30 +28,30 @@ namespace MathCore.Values
             //lock(_Locker)
             //{
             var tau = Tau;
-            var lv_CurrentTime = DateTime.Now;
+            var current_time = DateTime.Now;
             if(!Initialized || Math.Abs(tau) < double.Epsilon)
             {
                 Value = value;
                 _LastV1 = 0;
                 _LastdVf = 0;
-                _LastTime = lv_CurrentTime;
+                _LastTime = current_time;
                 Initialized = true;
                 return value;
             }
 
-            var dt = (lv_CurrentTime - _LastTime).TotalSeconds;
+            var dt = (current_time - _LastTime).TotalSeconds;
             if(Math.Abs(dt) < double.Epsilon) return Value;
 
-            var lv_LastV1 = _LastV1;
-            var lv_LastdVf = _LastdVf;
+            var last_V1 = _LastV1;
+            var last_dVf = _LastdVf;
 
-            var dV = (value - lv_LastV1) / tau;
-            var dVdt = lv_LastV1 + dV * dt;
-            var d2V = (dV - lv_LastdVf) / tau;
-            var d2Vdt = lv_LastdVf + d2V * dt;
+            var dV = (value - last_V1) / tau;
+            var dVdt = last_V1 + dV * dt;
+            var d2V = (dV - last_dVf) / tau;
+            var d2Vdt = last_dVf + d2V * dt;
             var result = dVdt + (d2Vdt * tau);
 
-            _LastTime = lv_CurrentTime;
+            _LastTime = current_time;
             _LastV1 = dVdt;
             Value = result;
             _LastdVf = d2Vdt;

@@ -29,6 +29,6 @@ namespace MathCore.MathParser
         /// <summary>Преобразование в строковую форму</summary>
         /// <returns>Строковое представление элемента</returns>
         [NotNull]
-        public override string ToString() => $"{Name}{Block.ToString() ?? string.Empty}";
+        public override string ToString() => $"{Name}{Block.ToString()}";
     }
 }

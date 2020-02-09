@@ -6,7 +6,7 @@ namespace MathCore.Values
 {
     /// <summary>Усредняемая по времени величина</summary>
     [Serializable]
-    public class TimeAverageValue : IValue<double>, IResetable
+    public class TimeAverageValue : IValue<double>, IResettable
     {
         /* ------------------------------------------------------------------------------------------ */
 

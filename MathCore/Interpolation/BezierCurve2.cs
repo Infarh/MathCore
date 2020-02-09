@@ -15,7 +15,7 @@ namespace MathCore.Interpolation
             if(n < 0) throw new Exception("n is less than 0");
             if(n > 32) return n.Factorial();
 
-            return _FactorialLookup[n]; /* returns the value n! as a SUMORealing point number */
+            return _FactorialLookup[n];
         }
 
         // create lookup table for fast Factorial calculation
@@ -67,33 +67,33 @@ namespace MathCore.Interpolation
             return Ni(n, i) * ti * tni;
         }
 
-        public void Bezier2D([NotNull]double[] b, int cpts, [NotNull]double[] p)
+        public void Bezier2D([NotNull]double[] b, int CPts, [NotNull]double[] p)
         {
-            var npts = b.Length / 2;
+            var n_pts = b.Length / 2;
 
             // Calculate points on curve
 
-            var icount = 0;
+            var i_count = 0;
             var t = 0d;
-            var step = 1d / (cpts - 1);
+            var step = 1d / (CPts - 1);
 
-            for(var i1 = 0; i1 != cpts; i1++)
+            for(var i1 = 0; i1 != CPts; i1++)
             {
                 if(1.0 - t < 5e-6)
                     t = 1.0;
 
-                var jcount = 0;
-                p[icount] = 0.0;
-                p[icount + 1] = 0.0;
-                for(var i = 0; i != npts; i++)
+                var j_count = 0;
+                p[i_count] = 0.0;
+                p[i_count + 1] = 0.0;
+                for(var i = 0; i != n_pts; i++)
                 {
-                    var basis = Bernstein(npts - 1, i, t);
-                    p[icount] += basis * b[jcount];
-                    p[icount + 1] += basis * b[jcount + 1];
-                    jcount += 2;
+                    var basis = Bernstein(n_pts - 1, i, t);
+                    p[i_count] += basis * b[j_count];
+                    p[i_count + 1] += basis * b[j_count + 1];
+                    j_count += 2;
                 }
 
-                icount += 2;
+                i_count += 2;
                 t += step;
             }
         }

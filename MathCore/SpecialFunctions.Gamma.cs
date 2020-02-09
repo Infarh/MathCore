@@ -13,7 +13,7 @@ namespace MathCore
             public static double G(double x)
             {
                 double z;
-                var sgngam = 1;
+                var sgn_gam = 1;
                 var q = Math.Abs(x);
                 if (q > 33)
                 {
@@ -22,14 +22,14 @@ namespace MathCore
                     {
                         double p = (int)Math.Floor(q);
                         var i = (int)Math.Round(p);
-                        if (i % 2 == 0) sgngam = -1;
+                        if (i % 2 == 0) sgn_gam = -1;
                         z = q - p;
                         if (z > .5) z = q - ++p;
                         z = q * Math.Sin(Consts.pi * z);
                         z = Math.Abs(z);
                         z = Math.PI / (z * GStir(q));
                     }
-                    return sgngam * z;
+                    return sgn_gam * z;
                 }
                 z = 1;
 
@@ -99,7 +99,7 @@ namespace MathCore
                 double q;
                 double z;
                 sign = 1;
-                const double logpi = 1.14472988584940017414;
+                const double log_pi = 1.14472988584940017414;
                 const double lc_Ls2Pi = .91893853320467274178;
                 if (x < -34)
                 {
@@ -110,7 +110,7 @@ namespace MathCore
                     sign = i % 2 == 0 ? -1 : 1;
                     z = q - p;
                     if (z > .5) z = ++p - q;
-                    return logpi - Math.Log(q * Math.Sin(Consts.pi * z)) - w;
+                    return log_pi - Math.Log(q * Math.Sin(Consts.pi * z)) - w;
                 }
                 if (x < 13)
                 {
@@ -427,9 +427,9 @@ namespace MathCore
 
                     if (q != 0)
                     {
-                        var nextans = p / q;
-                        error = Math.Abs((ans - nextans) / nextans);
-                        ans = nextans;
+                        var next_ans = p / q;
+                        error = Math.Abs((ans - next_ans) / next_ans);
+                        ans = next_ans;
                     }
                     else
                         // zero div, skip

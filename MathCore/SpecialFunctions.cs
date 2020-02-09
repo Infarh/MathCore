@@ -14,20 +14,20 @@ namespace MathCore
         private const double __LogMaxRealNumber = -690.77552789821368;
 
         [DST]
-        public static int Fibonachi(int n)
+        public static int Fibonacci(int n)
         {
             var phi_n = Consts.GoldenRatio.Power(n);
             return (int)(Consts.sqrt_5_inv * (phi_n - Math.Cos(Consts.pi * n) / phi_n));
         }
 
         [DST]
-        public static int Fibonachi(Complex z)
+        public static int Fibonacci(Complex z)
         {
             var phi_z = Consts.GoldenRatio.Power(z);
             return (int)(Consts.sqrt_5_inv * (phi_z - Complex.Trigonometry.Cos(Consts.pi * z) / phi_z));
         }
 
-        public static int Fibonachi2(int n) => (int)(Consts.sqrt_5_inv * Consts.GoldenRatio.Power(n) + 0.5);
+        public static int Fibonacci2(int n) => (int)(Consts.sqrt_5_inv * Consts.GoldenRatio.Power(n) + 0.5);
 
         /// <summary>Биномиальный коэффициент</summary>
         /// <param name="n">Показатель степени бинома</param>

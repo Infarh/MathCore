@@ -23,7 +23,7 @@ namespace System.Xml.XPath
         // There are two situations to match the attributes
         // 1). user has moved the reader to an attribute in the current element context
         // 2). user still in the element context, since it's an attribute query, we
-        //     need to move to the attribute ourself.
+        //     need to move to the attribute our self.
 
         internal override bool MatchNode(XPathReader reader)
         {

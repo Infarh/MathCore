@@ -60,12 +60,12 @@ namespace MathCore.Graphs
         [DST]
         public static bool operator !=([CanBeNull] LambdaGraphNode<TValue, TWeight> left, [CanBeNull] LambdaGraphNode<TValue, TWeight> right) => !Equals(left, right);
 
-        public override bool Equals(object obj) => obj is { } &&
+        public override bool Equals(object obj) => obj != null &&
                                                    (ReferenceEquals(this, obj) ||
                                                     obj.GetType() == GetType() &&
                                                     Equals((LambdaGraphNode<TValue, TWeight>)obj));
 
-        public bool Equals(LambdaGraphNode<TValue, TWeight> other) => other is { }
+        public bool Equals(LambdaGraphNode<TValue, TWeight> other) => other != null
             && (ReferenceEquals(this, other) 
             || Equals(_GetChilds, other._GetChilds) 
             && Equals(_GetWeight, other._GetWeight) 
@@ -118,7 +118,7 @@ namespace MathCore.Graphs
         public override string ToString() => $"λ:{Value}";
 
         /// <inheritdoc />
-        public bool Equals(LambdaGraphNode<V> other) => other is { }
+        public bool Equals(LambdaGraphNode<V> other) => other != null
                                                         && (ReferenceEquals(this, other) 
                                                             || EqualityComparer<V>.Default.Equals(Value, other.Value));
 

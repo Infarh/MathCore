@@ -25,6 +25,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public ExpressionTreeNode ArgumentSubtree => Left is FunctionArgumentNameNode ? Left.Right : Left;
 
         /// <summary>Имя аргумента - левое поддерево</summary>
+        [CanBeNull]
         public string ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : string.Empty;
 
         /// <summary>Инициализация узла-аргумента</summary>
@@ -49,9 +50,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression Compile() => ((ComputedNode)ArgumentSubtree).Compile();
 
         /// <summary>Компиляция узла аргумента</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
+        /// <param name="Args">Список параметров выражения</param>
         /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)ArgumentSubtree).Compile(Parameters);
+        public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode)ArgumentSubtree).Compile(Args);
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клонирование узла</returns>

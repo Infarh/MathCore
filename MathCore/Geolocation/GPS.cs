@@ -44,6 +44,7 @@ namespace MathCore.Geolocation
         /// <param name="latitude2">Широта второй точки в градусах</param>
         /// <param name="longitude2">Долгота второй точки в градусах</param>
         /// <returns>Длина дуги на поверхности Земли, начинающейся в первой точке и заканчивающейся во второй точке</returns>
+        // ReSharper disable once StringLiteralTypo
         [Copyright("Chris Veness 2002-2017", url = "https://www.movable-type.co.uk/scripts/latlong.html")]
         public static double LengthBetween(double latitude1, double longitude1, double latitude2, double longitude2)
         {
@@ -105,10 +106,10 @@ namespace MathCore.Geolocation
         }
 
         /// <summary>Определение курса по координатам начальной и конечной точки</summary>
-        /// <param name="latitude1">Широта первой иходной точки</param>
-        /// <param name="longitude1">Долгота первой иходной точки</param>
-        /// <param name="latitude2">Широта второй иходной точки</param>
-        /// <param name="longitude2">Долгота второй иходной точки</param>
+        /// <param name="latitude1">Широта первой исходной точки</param>
+        /// <param name="longitude1">Долгота первой исходной точки</param>
+        /// <param name="latitude2">Широта второй исходной точки</param>
+        /// <param name="longitude2">Долгота второй исходной точки</param>
         /// <returns>Курс в градусах</returns>
         public static double Heading(double latitude1, double longitude1, double latitude2, double longitude2)
         {
@@ -130,10 +131,10 @@ namespace MathCore.Geolocation
         public static double Heading(Vector2D begin, Vector2D end) => Heading(begin.Y, begin.X, end.Y, end.X);
 
         /// <summary>Определение точки на середине отрезка, заданного двумя точками</summary>
-        /// <param name="latitude1">Широта первой иходной точки</param>
-        /// <param name="longitude1">Долгота первой иходной точки</param>
-        /// <param name="latitude2">Широта второй иходной точки</param>
-        /// <param name="longitude2">Долгота второй иходной точки</param>
+        /// <param name="latitude1">Широта первой исходной точки</param>
+        /// <param name="longitude1">Долгота первой исходной точки</param>
+        /// <param name="latitude2">Широта второй исходной точки</param>
+        /// <param name="longitude2">Долгота второй исходной точки</param>
         /// <returns>Точка в середине отрезка</returns>
         public static Vector2D HalfWayPoint(double latitude1, double longitude1, double latitude2, double longitude2)
         {
@@ -160,8 +161,8 @@ namespace MathCore.Geolocation
 
         /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
         /// <param name="latitude">Широта исходной точки</param>
-        /// <param name="longitude">Долгота исхоной точки</param>
-        /// <param name="heading">Курс на точкуу назначения</param>
+        /// <param name="longitude">Долгота исходной точки</param>
+        /// <param name="heading">Курс на точку назначения</param>
         /// <param name="distance">Пройденная дистанция в метрах</param>
         /// <returns>Точка назначения</returns>
         public static Vector2D DestinationPoint(double latitude, double longitude, double heading, double distance)
@@ -191,8 +192,8 @@ namespace MathCore.Geolocation
 
         /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
         /// <param name="latitude">Широта исходной точки</param>
-        /// <param name="longitude">Долгота исхоной точки</param>
-        /// <param name="heading">Курс на точкуу назначения</param>
+        /// <param name="longitude">Долгота исходной точки</param>
+        /// <param name="heading">Курс на точку назначения</param>
         /// <param name="distance">Пройденная дистанция в метрах</param>
         /// <param name="final_heading">Курс из точки назначения на исходную точку</param>
         /// <returns>Точка назначения</returns>
@@ -207,12 +208,12 @@ namespace MathCore.Geolocation
             DestinationPoint(point.Y, point.X, heading, distance, out final_heading);
 
 
-        /// <summary>Определение точки персечения двух курсов, каждый из которых задан исходной точкой</summary>
-        /// <param name="latitude1">Широта первой иходной точки</param>
-        /// <param name="longitude1">Долгота первой иходной точки</param>
-        /// <param name="heading1">Курс из первой иходной точки</param>
-        /// <param name="latitude2">Широта второй иходной точки</param>
-        /// <param name="longitude2">Долгота второй иходной точки</param>
+        /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
+        /// <param name="latitude1">Широта первой исходной точки</param>
+        /// <param name="longitude1">Долгота первой исходной точки</param>
+        /// <param name="heading1">Курс из первой исходной точки</param>
+        /// <param name="latitude2">Широта второй исходной точки</param>
+        /// <param name="longitude2">Долгота второй исходной точки</param>
         /// <param name="heading2">Курс второй исходной точки</param>
         /// <returns>Точка пересечения двух курсов</returns>
         public static Vector2D Intersection

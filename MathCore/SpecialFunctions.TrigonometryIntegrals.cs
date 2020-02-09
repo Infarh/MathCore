@@ -1,5 +1,6 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable IdentifierTypo
 
 namespace MathCore
 {
@@ -7,6 +8,7 @@ namespace MathCore
     {
         public class TrigonometryIntegrals
         {
+            // ReSharper disable CommentTypo
             /*************************************************************************
             Sine and cosine integrals
 
@@ -46,6 +48,7 @@ namespace MathCore
             Cephes Math Library Release 2.1:  January, 1989
             Copyright 1984, 1987, 1989 by Stephen L. Moshier
             *************************************************************************/
+            // ReSharper restore CommentTypo
 
             [DST]
             public static void SineCosineIntegrals(double x, out double si, out double ci)
@@ -213,6 +216,7 @@ namespace MathCore
             }
 
 
+            // ReSharper disable CommentTypo
             /*************************************************************************
             Hyperbolic sine and cosine integrals
 
@@ -253,6 +257,7 @@ namespace MathCore
             Cephes Math Library Release 2.8:  June, 2000
             Copyright 1984, 1987, 2000 by Stephen L. Moshier
             *************************************************************************/
+            // ReSharper restore CommentTypo
 
             [DST]
             public static void HyperbolicSineCosineIntegrals(double x, out double shi, out double chi)

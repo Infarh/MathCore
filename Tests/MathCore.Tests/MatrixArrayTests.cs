@@ -868,7 +868,7 @@ namespace MathCore.Tests
         }
 
         [TestMethod]
-        public void TrySolve_Exceptons()
+        public void TrySolve_Exceptions()
         {
             double[,] m = null;
             double[,] b = null;
@@ -967,12 +967,12 @@ namespace MathCore.Tests
             };
             // Истина, если решение найдено
             Assert.IsTrue(Matrix.Array.TrySolve(m, ref b, out var p), "В результате решения СЛАУ метод определил, что матрица вырождена");
-            // Сравниваем полученый (b) результат с требуемым (b0)
+            // Сравниваем полученный (b) результат с требуемым (b0)
             CollectionAssert.AreEqual(b0, b);
             // Матрица перестановок должна быть (точно) равна единичной матрице
             Assert.IsTrue(Matrix.Array.AreEquals(I, p), "Матрица перестановок не равна единичной матрице");
 
-            // Подстановка решения в систему. Долны молучить матрицу правой части системы
+            // Подстановка решения в систему. Должны получить матрицу правой части системы
             var x = Matrix.Array.Operator.Multiply(m, b);
             // Проверяем соответствие результата подстановки решения в СЛАУ с исходной правой частью
             CollectionAssert.AreEqual(b1, x);
@@ -1238,7 +1238,7 @@ namespace MathCore.Tests
         public void GetDeterminant_ArgumentNullException_Test() => Matrix.Array.GetDeterminant(null);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void GetDeterminant_NotrectangularMatrix_ArgumentException_Test() => Matrix.Array.GetDeterminant(new double[3, 5]);
+        public void GetDeterminant_RectangularMatrix_ArgumentException_Test() => Matrix.Array.GetDeterminant(new double[3, 5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void Inverse_ArgumentNullException_Test() => Matrix.Array.Inverse(null, out _);
@@ -1675,23 +1675,23 @@ namespace MathCore.Tests
         [TestMethod]
         public void IsMatrixSingular_Test()
         {
-            double[,] sungular =
+            double[,] singular =
             {
                 { 1,2,3 },
                 { 4,5,6 },
                 { 7,8,9 }
             };
-            double[,] not_sungular =
+            double[,] not_singular =
             {
                 {1, 2, 3},
                 {4, 5, 6},
                 {7, 8, 0}
             };
 
-            var is_singular_matrix_sungular = Matrix.Array.IsMatrixSingular(sungular);
-            var is_not_singular_matrix_singular = Matrix.Array.IsMatrixSingular(not_sungular);
+            var is_singular_matrix_singular = Matrix.Array.IsMatrixSingular(singular);
+            var is_not_singular_matrix_singular = Matrix.Array.IsMatrixSingular(not_singular);
 
-            Assert.IsTrue(is_singular_matrix_sungular);
+            Assert.IsTrue(is_singular_matrix_singular);
             Assert.IsFalse(is_not_singular_matrix_singular);
         }
 
@@ -1702,7 +1702,7 @@ namespace MathCore.Tests
         public void IsMatrixSingular_EmptyMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSingular(new double[0, 0]);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void IsMatrixSingular_NotrectangularMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSingular(new double[3, 5]);
+        public void IsMatrixSingular_RectangularMatrix_ArgumentException_Test() => Matrix.Array.IsMatrixSingular(new double[3, 5]);
 
         [TestMethod]
         public void Rank_Test()
@@ -1781,9 +1781,9 @@ namespace MathCore.Tests
         public void GetMatrixShadow_ArgumentNullException_Test() => Matrix.Array.GetMatrixShadow(null);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void GetMatrixShadow_ArgumentlException_Test1() => Matrix.Array.GetMatrixShadow(new double[5, 0]);
+        public void GetMatrixShadow_ArgumentException_Test1() => Matrix.Array.GetMatrixShadow(new double[5, 0]);
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void GetMatrixShadow_ArgumentlException_Test2() => Matrix.Array.GetMatrixShadow(new double[0, 5]);
+        public void GetMatrixShadow_ArgumentException_Test2() => Matrix.Array.GetMatrixShadow(new double[0, 5]);
 
         [TestMethod]
         public void EnumerateMatrixShadow_Test()
@@ -1804,13 +1804,13 @@ namespace MathCore.Tests
         public void EnumerateMatrixShadow_ArgumentNullException_Test() => Matrix.Array.EnumerateMatrixShadow(null).ToArray();
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void EnumerateMatrixShadow_ArgumentlException_Test1() => Matrix.Array.EnumerateMatrixShadow(new double[5, 0]).ToArray();
+        public void EnumerateMatrixShadow_ArgumentException_Test1() => Matrix.Array.EnumerateMatrixShadow(new double[5, 0]).ToArray();
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void EnumerateMatrixShadow_ArgumentlException_Test2() => Matrix.Array.EnumerateMatrixShadow(new double[0, 5]).ToArray();
+        public void EnumerateMatrixShadow_ArgumentException_Test2() => Matrix.Array.EnumerateMatrixShadow(new double[0, 5]).ToArray();
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void EnumerateMatrixShadow_ArgumentlException_Test3() => Matrix.Array.EnumerateMatrixShadow(new double[0, 0]).ToArray();
+        public void EnumerateMatrixShadow_ArgumentException_Test3() => Matrix.Array.EnumerateMatrixShadow(new double[0, 0]).ToArray();
 
         [TestMethod]
         public void CreateColArray_Test()
@@ -1918,13 +1918,13 @@ namespace MathCore.Tests
         public void Transvection_MatrixArgumentNullException_Test() => Matrix.Array.Transvection(null, 0, new double[5, 5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Transvection_MatrixNonRectanglArgumentException_Test() => Matrix.Array.Transvection(new double[5, 7], 0, new double[5, 7]);
+        public void Transvection_MatrixNonRectangularArgumentException_Test() => Matrix.Array.Transvection(new double[5, 7], 0, new double[5, 7]);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Transvection_ResultNonRectanglArgumentException_Test1() => Matrix.Array.Transvection(new double[5, 5], 0, new double[5, 7]);
+        public void Transvection_ResultNonRectangularArgumentException_Test1() => Matrix.Array.Transvection(new double[5, 5], 0, new double[5, 7]);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Transvection_ResultNonRectanglArgumentException_Test2() => Matrix.Array.Transvection(new double[5, 5], 0, new double[7, 5]);
+        public void Transvection_ResultNonRectangularArgumentException_Test2() => Matrix.Array.Transvection(new double[5, 5], 0, new double[7, 5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void Transvection_ArgumentException_Test1() => Matrix.Array.Transvection(new double[5, 5], -1, new double[5, 5]);
@@ -1989,16 +1989,16 @@ namespace MathCore.Tests
         public void GetCol_Array_ArgumentException_Test2() => Matrix.Array.GetCol_Array(new double[3, 3], 1, new double[5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetCol_Array_ArgumentAoutOfRangeException_Test11() => Matrix.Array.GetCol_Array(new double[3, 3], -1);
+        public void GetCol_Array_Argument_A_OutOfRangeException_Test11() => Matrix.Array.GetCol_Array(new double[3, 3], -1);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetCol_Array_ArgumentAoutOfRangeException_Test12() => Matrix.Array.GetCol_Array(new double[3, 3], 3);
+        public void GetCol_Array_Argument_A_OutOfRangeException_Test12() => Matrix.Array.GetCol_Array(new double[3, 3], 3);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetCol_Array_ArgumentAoutOfRangeException_Test21() => Matrix.Array.GetCol_Array(new double[3, 3], -1, new double[3]);
+        public void GetCol_Array_Argument_A_OutOfRangeException_Test21() => Matrix.Array.GetCol_Array(new double[3, 3], -1, new double[3]);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetCol_Array_ArgumentAoutOfRangeException_Test22() => Matrix.Array.GetCol_Array(new double[3, 3], 3, new double[3]);
+        public void GetCol_Array_Argument_A_OutOfRangeException_Test22() => Matrix.Array.GetCol_Array(new double[3, 3], 3, new double[3]);
 
         [TestMethod]
         public void GetCol_Array_Test1()
@@ -2057,16 +2057,16 @@ namespace MathCore.Tests
         public void GetRow_Array_ArgumentException_Test2() => Matrix.Array.GetRow_Array(new double[3, 3], 1, new double[5]);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetRow_Array_ArgumentAoutOfRangeException_Test11() => Matrix.Array.GetRow_Array(new double[3, 3], -1);
+        public void GetRow_Array_Argument_A_OutOfRangeException_Test11() => Matrix.Array.GetRow_Array(new double[3, 3], -1);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetRow_Array_ArgumentAoutOfRangeException_Test12() => Matrix.Array.GetRow_Array(new double[3, 3], -3);
+        public void GetRow_Array_Argument_A_OutOfRangeException_Test12() => Matrix.Array.GetRow_Array(new double[3, 3], -3);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetRow_Array_ArgumentAoutOfRangeException_Test21() => Matrix.Array.GetRow_Array(new double[3, 3], -1, new double[3]);
+        public void GetRow_Array_Argument_A_OutOfRangeException_Test21() => Matrix.Array.GetRow_Array(new double[3, 3], -1, new double[3]);
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetRow_Array_ArgumentAoutOfRangeException_Test22() => Matrix.Array.GetRow_Array(new double[3, 3], -3, new double[3]);
+        public void GetRow_Array_Argument_A_OutOfRangeException_Test22() => Matrix.Array.GetRow_Array(new double[3, 3], -3, new double[3]);
 
         [TestMethod]
         public void GetRow_Array_Test1()
@@ -2853,16 +2853,16 @@ namespace MathCore.Tests
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void Operator_BilinearMultiplyAuto_Vector_ArgumentNullException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto((double[])null, new double[5, 5]);
+        public void Operator_BiliniarMultiplyAuto_Vector_ArgumentNullException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto((double[])null, new double[5, 5]);
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void Operator_BilinearMultiplyAuto_Vector_ArgumentNullException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[5], null);
+        public void Operator_BiliniarMultiplyAuto_Vector_ArgumentNullException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[5], null);
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Operator_BilinearMultiplyAuto_Vector_ArgumentException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[5], new double[3, 5]);
+        public void Operator_BiliniarMultiplyAuto_Vector_ArgumentException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[5], new double[3, 5]);
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Operator_BilinearMultiplyAuto_Vector_ArgumentException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[7], new double[5, 5]);
+        public void Operator_BiliniarMultiplyAuto_Vector_ArgumentException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[7], new double[5, 5]);
 
         [TestMethod]
-        public void Operator_BilinearMultiplyAuto_Vector_Test()
+        public void Operator_BiliniarMultiplyAuto_Vector_Test()
         {
             double[] x = { 1, 2, 3, 4, 5 };
 
@@ -2888,16 +2888,16 @@ namespace MathCore.Tests
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void Operator_BilinearMultiplyAuto_ArgumentNullException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto((double[,])null, new double[5, 5]);
+        public void Operator_BiliniarMultiplyAuto_ArgumentNullException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto((double[,])null, new double[5, 5]);
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-        public void Operator_BilinearMultiplyAuto_ArgumentNullException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[3, 5], null);
+        public void Operator_BiliniarMultiplyAuto_ArgumentNullException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[3, 5], null);
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Operator_BilinearMultiplyAuto_ArgumentException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[3, 5], new double[3, 5]);
+        public void Operator_BiliniarMultiplyAuto_ArgumentException_a_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[3, 5], new double[3, 5]);
         [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void Operator_BilinearMultiplyAuto_ArgumentException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[3, 7], new double[5, 5]);
+        public void Operator_BiliniarMultiplyAuto_ArgumentException_x_Test() => Matrix.Array.Operator.BiliniarMultiplyAuto(new double[3, 7], new double[5, 5]);
 
         [TestMethod]
-        public void Operator_BilinearMultiplyAuto_Test()
+        public void Operator_BiliniarMultiplyAuto_Test()
         {
             double[,] x =
             {

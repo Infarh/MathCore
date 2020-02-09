@@ -34,9 +34,9 @@ namespace System.Xml.XPath
     {
         #region Fields
 
-        private readonly Hashtable _XPathes;
+        private readonly Hashtable _XPatches;
 
-        private int _Key; // number of xpathes added into collection as keys
+        private int _Key; // number of XPatches added into collection as keys
         private XPathReader _Reader;
 
         #endregion
@@ -49,9 +49,9 @@ namespace System.Xml.XPath
 
         public XmlNamespaceManager NamespaceManager { set; get; }
 
-        public XPathQuery this[int index] => (XPathQuery)_XPathes[index];
+        public XPathQuery this[int index] => (XPathQuery)_XPatches[index];
 
-        public int Count => _XPathes.Count;
+        public int Count => _XPatches.Count;
 
         public object SyncRoot => this;
 
@@ -66,7 +66,7 @@ namespace System.Xml.XPath
 
         #region Constructors
 
-        public XPathCollection() => _XPathes = new Hashtable();
+        public XPathCollection() => _XPatches = new Hashtable();
 
         public XPathCollection(XmlNamespaceManager NsManager) : this() => NamespaceManager = NsManager;
 
@@ -139,48 +139,48 @@ namespace System.Xml.XPath
         //
         // check if a expression contains in the collection
         //
-        public bool Contains(XPathQuery expr) => _XPathes.ContainsValue(expr);
+        public bool Contains(XPathQuery expr) => _XPatches.ContainsValue(expr);
 
-        public bool Contains(string xpath) => _XPathes.Cast<XPathQuery>().Any(expr => expr.ToString() == xpath);
+        public bool Contains(string xpath) => _XPatches.Cast<XPathQuery>().Any(expr => expr.ToString() == xpath);
 
         public XPathQuery Add(string expression)
         {
-            XPathQuery xpathexpr;
+            XPathQuery xpath_expr;
 
             if(_Reader is null)
-                xpathexpr = new XPathQuery(expression);
+                xpath_expr = new XPathQuery(expression);
             else
             {
-                xpathexpr = new XPathQuery(expression, _Reader.Depth);
+                xpath_expr = new XPathQuery(expression, _Reader.Depth);
                 if(_Reader.ReadState == ReadState.Interactive)
-                    xpathexpr.Advance(_Reader);
+                    xpath_expr.Advance(_Reader);
             }
 
-            xpathexpr.Key = _Key;
+            xpath_expr.Key = _Key;
 
-            _XPathes.Add(_Key++, xpathexpr);
+            _XPatches.Add(_Key++, xpath_expr);
 
-            return xpathexpr;
+            return xpath_expr;
         }
 
-        public int Add(XPathQuery xpathexpr)
+        public int Add(XPathQuery XPathExpr)
         {
-            xpathexpr.Key = _Key;
-            _XPathes.Add(_Key++, xpathexpr);
+            XPathExpr.Key = _Key;
+            _XPatches.Add(_Key++, XPathExpr);
             return _Key - 1;
         }
 
-        public void Clear() => _XPathes.Clear();
+        public void Clear() => _XPatches.Clear();
 
-        public void Remove(XPathQuery xpathexpr) => _XPathes.Remove(xpathexpr.Key);
+        public void Remove(XPathQuery XPathExpr) => _XPatches.Remove(XPathExpr.Key);
 
-        public void Remove(string xpath) => _XPathes
+        public void Remove(string xpath) => _XPatches
             .Cast<XPathQuery>()
-            .Where(xpathexpr => xpathexpr.ToString() == xpath)
+            .Where(expr => expr.ToString() == xpath)
             .Select(p => p.Key)
             .Foreach(Remove);
 
-        public void Remove(int index) => _XPathes.Remove(index);
+        public void Remove(int index) => _XPatches.Remove(index);
 
         #endregion
 
@@ -189,7 +189,7 @@ namespace System.Xml.XPath
         public void CopyTo(Array array, int index) { }
 
         //IEnumerable interface
-        public IEnumerator GetEnumerator() => new XPathCollectionEnumerator(_XPathes);
+        public IEnumerator GetEnumerator() => new XPathCollectionEnumerator(_XPatches);
 
         #endregion
     }

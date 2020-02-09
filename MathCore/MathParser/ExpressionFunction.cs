@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using MathCore.Annotations;
 
 namespace MathCore.MathParser
 {
@@ -12,34 +14,34 @@ namespace MathCore.MathParser
         public Delegate Delegate { get => _Delegate; set => Set(ref _Delegate, value); }
 
         /// <summary>Массив имён аргументов</summary>
-        public string[] Arguments { get; }
+        public IReadOnlyList<string> Arguments { get; }
 
         /// <summary>Инициализация новой функции структуры математического выражения по сигнатуре</summary>
         /// <param name="Name">Имя функции</param>
-        /// <param name="Arguments">списко имён аргументов</param>
-        public ExpressionFunction(string Name, string[] Arguments) : base(Name) => this.Arguments = Arguments;
+        /// <param name="Arguments">Список имён аргументов</param>
+        public ExpressionFunction(string Name, IReadOnlyList<string> Arguments) : base(Name) => this.Arguments = Arguments;
 
         /// <summary>Метод получения значения функции по массиву значений её аргументов</summary>
         /// <param name="arguments">Массив аргументов функции</param>
         /// <returns>Значение функции</returns>
-        public double GetValue(double[] arguments) => (double)Delegate.DynamicInvoke(arguments.Cast<object>().ToArray());
+        public double GetValue([NotNull] double[] arguments) => (double)Delegate.DynamicInvoke(arguments.Cast<object>().ToArray());
 
         /// <summary>Проверка на эквивалентность сигнатуре</summary>
         /// <param name="sName">Имя функции</param>
         /// <param name="ArgumentsCount">Количество аргументов</param>
         /// <returns>Истина, если сигнатура соответствует функции</returns>
-        public bool IsEqualSignature(string sName, int ArgumentsCount) => Name == sName && Arguments.Length == ArgumentsCount;
+        public bool IsEqualSignature(string sName, int ArgumentsCount) => Name == sName && Arguments.Count == ArgumentsCount;
 
         /// <summary>Проверка на эквивалентность сигнатуре</summary>
         /// <param name="sName">Имя функции</param>
         /// <param name="Arguments">Массив имён аргументов</param>
         /// <returns>Истина, если сигнатура соответствует функции</returns>
-        public bool IsEqualSignature(string sName, string[] Arguments)
+        public bool IsEqualSignature(string sName, IReadOnlyList<string> Arguments)
         {
             if(!string.Equals(Name, sName, StringComparison.CurrentCulture)) return false;
             var args = this.Arguments;
-            if(args.Length != Arguments.Length) return false;
-            for(int i = 0, N = args.Length; i < N; i++)
+            if(args.Count != Arguments.Count) return false;
+            for(int i = 0, N = args.Count; i < N; i++)
             {
                 var arg_null = args[i] is null;
                 var Arg_null = Arguments[i] is null;
@@ -57,6 +59,7 @@ namespace MathCore.MathParser
 
         /// <summary>Клонирование функции</summary>
         /// <returns>Клон функции</returns>
+        [NotNull]
         public ExpressionFunction Clone() => new ExpressionFunction(Name, Arguments) { Delegate = (Delegate)Delegate.Clone() };
 
         object ICloneable.Clone() => Clone();

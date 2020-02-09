@@ -2008,7 +2008,7 @@
             <summary>Дескриптор свойства источника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.DestinationProperty">
-            <summary>Дескриптор свойства примника данных</summary>
+            <summary>Дескриптор свойства приёмника данных</summary>
         </member>
         <member name="P:MathCore.Data.PropertyLink`2.SourceType">
             <summary>Источник данных</summary>
@@ -2165,167 +2165,167 @@
             </returns>
             <filterpriority>2</filterpriority>
         </member>
-        <member name="T:MathCore.Evaluations.AdditionEvulation`1">
+        <member name="T:MathCore.Evaluations.AdditionEvaluation`1">
             <summary>Вычисление суммы двух вычислений</summary>
             <typeparam name="T">Тип значения вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.AdditionEvulation`1.#ctor">
+        <member name="M:MathCore.Evaluations.AdditionEvaluation`1.#ctor">
             <summary>Инициализация нового вычисления суммы двух вычислений</summary>
         </member>
-        <member name="M:MathCore.Evaluations.AdditionEvulation`1.#ctor(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.AdditionEvaluation`1.#ctor(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового вычисления суммы двух вычислений</summary>
             <param name="a">Вычисление первого слагаемого</param>
             <param name="b">Вычисление второго слагаемого</param>
         </member>
-        <member name="T:MathCore.Evaluations.BinaryFunctionOperationEvulation`1">
-            <summary>Вычисление бинарной опирации между двумя вычислениями</summary>
+        <member name="T:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1">
+            <summary>Вычисление бинарной операции между двумя вычислениями</summary>
             <typeparam name="T">Тип значения вычисления</typeparam>
         </member>
-        <member name="P:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.A">
+        <member name="P:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.A">
             <summary>Первый операнд вычисления</summary>
         </member>
-        <member name="P:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.B">
+        <member name="P:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.B">
             <summary>Второй операнд вычисления</summary>
         </member>
-        <member name="P:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.Operation">
+        <member name="P:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.Operation">
             <summary>Метод вычисления значения вычисления</summary>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.#ctor">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.#ctor">
             <summary>Инициализация нового бинарного вычисления</summary>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.#ctor(System.Func{`0,`0,`0})">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.#ctor(System.Func{`0,`0,`0})">
             <summary>Инициализация нового бинарного вычисления</summary>
             <param name="Operation">Метод вычисления результата вычисления на основе результатов вычисления значений операндов</param>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.#ctor(System.Func{`0,`0,`0},MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.#ctor(System.Func{`0,`0,`0},MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового бинарного вычисления</summary>
             <param name="Operation">Метод вычисления результата вычисления на основе результатов вычисления значений операндов</param>
             <param name="A">Первый операнд вычисления</param>
             <param name="B">Второй операнд вычисления</param>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.GetValue">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.GetValue">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvulation`1.GetExpression">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperationEvaluation`1.GetExpression">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Evaluations.BinaryFunctionOperatorEvulation`1">
+        <member name="T:MathCore.Evaluations.BinaryFunctionOperatorEvaluation`1">
             <summary>Вычисление функционального бинарного оператора между двумя вычислениями</summary>
             <typeparam name="T">Тип значения вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvulation`1.GetOperatorFunction(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.BinaryExpression})">
-            <summary>Метод получения функции, расчитывающей значение оператора для двух известных значений вычислений</summary>
-            <param name="OP">Функция, преобразующая два выражения в бинарный оператор, позволящий расчитать значение операции между двумя значениями операндов</param>
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvaluation`1.GetOperatorFunction(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.BinaryExpression})">
+            <summary>Метод получения функции, рассчитывающей значение оператора для двух известных значений вычислений</summary>
+            <param name="OP">Функция, преобразующая два выражения в бинарный оператор, позволяющий рассчитать значение операции между двумя значениями операндов</param>
             <returns>Метод вычисления значения оператора на основе значений двух его операндов</returns>
         </member>
-        <member name="F:MathCore.Evaluations.BinaryFunctionOperatorEvulation`1._Operator">
-            <summary>Функция объекдинения двух выражений в бинарный оператор расчёта значения</summary>
+        <member name="F:MathCore.Evaluations.BinaryFunctionOperatorEvaluation`1._Operator">
+            <summary>Функция объединения двух выражений в бинарный оператор расчёта значения</summary>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvulation`1.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.BinaryExpression})">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvaluation`1.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.BinaryExpression})">
             <summary>Инициализация нового функционального бинарного оператора вычисления</summary>
-            <param name="Operator">Функция, определяющая как объекдинить два выражения операндов в бинарный оператор</param>
+            <param name="Operator">Функция, определяющая как объединить два выражения операндов в бинарный оператор</param>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvulation`1.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.BinaryExpression},MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvaluation`1.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.BinaryExpression},MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового функционального бинарного оператора на основе функции генерации бинарного оператора и двух вычислений операндов</summary>
-            <param name="Operator">Функция, определяющая как объекдинить два выражения операндов в бинарный оператор</param>
+            <param name="Operator">Функция, определяющая как объединить два выражения операндов в бинарный оператор</param>
             <param name="a">Вычисление первого операнда</param>
-            <param name="b">Вычисление аоторого операнда</param>
+            <param name="b">Вычисление второго операнда</param>
         </member>
-        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvulation`1.GetExpression">
+        <member name="M:MathCore.Evaluations.BinaryFunctionOperatorEvaluation`1.GetExpression">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Evaluations.ConvertEvulation`2">
+        <member name="T:MathCore.Evaluations.ConvertEvaluation`2">
             <summary>Вычисление преобразования типов</summary>
             <typeparam name="TInput">Тип входного значения</typeparam>
             <typeparam name="TOutput">Тип выходного значения</typeparam>
         </member>
-        <member name="P:MathCore.Evaluations.ConvertEvulation`2.InputEvulation">
+        <member name="P:MathCore.Evaluations.ConvertEvaluation`2.InputEvaluation">
             <summary>Вычисление входного значения</summary>
         </member>
-        <member name="P:MathCore.Evaluations.ConvertEvulation`2.Converter">
+        <member name="P:MathCore.Evaluations.ConvertEvaluation`2.Converter">
             <summary>Функция-преобразователь типов входного в выходное значение</summary>
         </member>
-        <member name="M:MathCore.Evaluations.ConvertEvulation`2.#ctor">
+        <member name="M:MathCore.Evaluations.ConvertEvaluation`2.#ctor">
             <summary>Инициализация нового вычисления преобразования типов</summary>
         </member>
-        <member name="M:MathCore.Evaluations.ConvertEvulation`2.#ctor(System.Func{`0,`1})">
+        <member name="M:MathCore.Evaluations.ConvertEvaluation`2.#ctor(System.Func{`0,`1})">
             <summary>Инициализация нового вычисления преобразования типов</summary>
             <param name="Converter">Метод преобразования входного значения в выходное</param>
         </member>
-        <member name="M:MathCore.Evaluations.ConvertEvulation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.Func{`0,`1})">
+        <member name="M:MathCore.Evaluations.ConvertEvaluation`2.#ctor(MathCore.Evaluations.Evaluation{`0},System.Func{`0,`1})">
             <summary>Инициализация нового вычисления преобразования типов</summary>
-            <param name="InputEvulation">Вычисление входного значения</param>
+            <param name="InputEvaluation">Вычисление входного значения</param>
             <param name="Converter">Метод преобразования входного значения в выходное</param>
         </member>
-        <member name="M:MathCore.Evaluations.ConvertEvulation`2.GetValue">
+        <member name="M:MathCore.Evaluations.ConvertEvaluation`2.GetValue">
             <inheritdoc />
         </member>
-        <member name="M:MathCore.Evaluations.ConvertEvulation`2.GetExpression">
+        <member name="M:MathCore.Evaluations.ConvertEvaluation`2.GetExpression">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Evaluations.DivideEvulation`1">
+        <member name="T:MathCore.Evaluations.DivideEvaluation`1">
             <summary>Вычисление деления двух вычислений</summary>
             <typeparam name="T">Тип значения вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.DivideEvulation`1.#ctor">
+        <member name="M:MathCore.Evaluations.DivideEvaluation`1.#ctor">
             <summary>Инициализация нового вычисления деления</summary>
         </member>
-        <member name="M:MathCore.Evaluations.DivideEvulation`1.#ctor(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.DivideEvaluation`1.#ctor(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового вычисления деления</summary>
             <param name="a">Вычисление делимого</param>
             <param name="b">Вычисление делителя</param>
         </member>
-        <member name="T:MathCore.Evaluations.Evulation">
+        <member name="T:MathCore.Evaluations.Evaluation">
             <summary>Вычисление</summary>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation.GetExpression">
+        <member name="M:MathCore.Evaluations.Evaluation.GetExpression">
             <summary>Получить выражение вычисления</summary>
             <returns>Возвращает выражение, соответствующее данному вычислению</returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation.op_Implicit(MathCore.Evaluations.Evulation)~System.Linq.Expressions.Expression">
+        <member name="M:MathCore.Evaluations.Evaluation.op_Implicit(MathCore.Evaluations.Evaluation)~System.Linq.Expressions.Expression">
             <summary>Оператор неявного преобразования вычисления в выражение</summary>
-            <param name="evulation">Преобразвуемое вычисление</param>
+            <param name="Evaluation">Преобразуемое вычисление</param>
         </member>
-        <member name="T:MathCore.Evaluations.Evulation`1">
+        <member name="T:MathCore.Evaluations.Evaluation`1">
             <summary>Вычисление с результатом типа <typeparamref name="T"/></summary>
             <typeparam name="T">Тип результата вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.GetValue">
+        <member name="M:MathCore.Evaluations.Evaluation`1.GetValue">
             <summary>Получить значение</summary>
             <returns></returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.GetExpression">
+        <member name="M:MathCore.Evaluations.Evaluation`1.GetExpression">
             <summary>Получить выражение вычисления</summary>
             <returns>Выражение, определяющие вычисление</returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.op_Implicit(MathCore.Evaluations.Evulation{`0})~`0">
+        <member name="M:MathCore.Evaluations.Evaluation`1.op_Implicit(MathCore.Evaluations.Evaluation{`0})~`0">
             <summary>Оператор неявного преобразования вычисления в выражение</summary>
-            <param name="evulation">Преобразвуемое вычисление</param>
+            <param name="Evaluation">Преобразуемое вычисление</param>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.op_Addition(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.Evaluation`1.op_Addition(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Оператор сложения двух вычислений</summary>
             <param name="x">Первое слагаемое</param>
             <param name="y">Второе слагаемое</param>
             <returns>Вычисление суммы двух вычислений</returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.op_Subtraction(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.Evaluation`1.op_Subtraction(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Вычисление разности двух вычислений</summary>
             <param name="x">Уменьшаемое</param>
             <param name="y">Вычитаемое</param>
             <returns>Вычисление разности двух вычислений</returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.op_UnaryNegation(MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.Evaluation`1.op_UnaryNegation(MathCore.Evaluations.Evaluation{`0})">
             <summary>Оператор получения отрицательного значения на основе вычисления</summary>
             <param name="x">Вычисление значения оператора</param>
             <returns>Оператор получения отрицательного значения</returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.op_Multiply(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.Evaluation`1.op_Multiply(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Вычисление произведения двух вычислений</summary>
             <param name="x">Первый сомножитель</param>
             <param name="y">Второй сомножитель</param>
             <returns>Вычисление произведения двух вычислений</returns>
         </member>
-        <member name="M:MathCore.Evaluations.Evulation`1.op_Division(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.Evaluation`1.op_Division(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Вычисление частного двух вычислений</summary>
             <param name="x">Делимое</param>
             <param name="y">Делитель</param>
@@ -2340,7 +2340,7 @@
             <summary>Инициализация нового вычисления значения поля объекта</summary>
             <param name="PropertyName">Имя поля</param>
         </member>
-        <member name="M:MathCore.Evaluations.FieldValueEvaluation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
+        <member name="M:MathCore.Evaluations.FieldValueEvaluation`2.#ctor(MathCore.Evaluations.Evaluation{`0},System.String)">
             <summary>Инициализация нового вычисления поля объекта</summary>
             <param name="obj">Вычисление объекта, поле которого надо получить</param>
             <param name="FieldName">Имя поля объекта</param>
@@ -2372,14 +2372,14 @@
             <summary>Оператор неявного преобразования типа функции к типу вычисления функции</summary>
             <param name="Function">Оборачиваемая функция</param>
         </member>
-        <member name="T:MathCore.Evaluations.MultiplyEvulation`1">
+        <member name="T:MathCore.Evaluations.MultiplyEvaluation`1">
             <summary>Вычисление произведения двух вычислений</summary>
             <typeparam name="T">Тип значения вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.MultiplyEvulation`1.#ctor">
+        <member name="M:MathCore.Evaluations.MultiplyEvaluation`1.#ctor">
             <summary>Инициализация нового вычисления произведения</summary>
         </member>
-        <member name="M:MathCore.Evaluations.MultiplyEvulation`1.#ctor(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.MultiplyEvaluation`1.#ctor(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового вычисления произведения</summary>
             <param name="a">Вычисление первого сомножителя</param>
             <param name="b">Вычисление второго сомножителя</param>
@@ -2440,9 +2440,9 @@
             <typeparam name="T">Тип значения параметра</typeparam>
         </member>
         <member name="M:MathCore.Evaluations.NegateOperatorEvaluation`1.#ctor">
-            <summary>Инициализация нового вычисления отризацания</summary>
+            <summary>Инициализация нового вычисления отрицания</summary>
         </member>
-        <member name="M:MathCore.Evaluations.NegateOperatorEvaluation`1.#ctor(MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.NegateOperatorEvaluation`1.#ctor(MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового вычисления отрицания</summary>
             <param name="value">Вычисление значения операнда</param>
         </member>
@@ -2455,19 +2455,19 @@
             <summary>Инициализация нового вычисления значения свойства объекта</summary>
             <param name="PropertyName">Имя свойства</param>
         </member>
-        <member name="M:MathCore.Evaluations.PropertyValueEvaluation`2.#ctor(MathCore.Evaluations.Evulation{`0},System.String)">
+        <member name="M:MathCore.Evaluations.PropertyValueEvaluation`2.#ctor(MathCore.Evaluations.Evaluation{`0},System.String)">
             <summary>Инициализация нового вычисления свойства объекта</summary>
             <param name="obj">Вычисление объекта, свойство которого надо получить</param>
             <param name="PropertyName">Имя свойства объекта</param>
         </member>
-        <member name="T:MathCore.Evaluations.SubtractEvulation`1">
+        <member name="T:MathCore.Evaluations.SubtractEvaluation`1">
             <summary>Вычисление разности двух вычислений</summary>
             <typeparam name="T">Тип значения вычисления</typeparam>
         </member>
-        <member name="M:MathCore.Evaluations.SubtractEvulation`1.#ctor">
+        <member name="M:MathCore.Evaluations.SubtractEvaluation`1.#ctor">
             <summary>Инициализация нового вычисления разности</summary>
         </member>
-        <member name="M:MathCore.Evaluations.SubtractEvulation`1.#ctor(MathCore.Evaluations.Evulation{`0},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.SubtractEvaluation`1.#ctor(MathCore.Evaluations.Evaluation{`0},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового вычисления разности</summary>
             <param name="a">Вычисление первого сомножителя</param>
             <param name="b">Вычисление второго сомножителя</param>
@@ -2489,7 +2489,7 @@
             <summary>Инициализация нового унарного вычисления</summary>
             <param name="Operator">Оператор преобразования выражения операнда в выражение вычисления</param>
         </member>
-        <member name="M:MathCore.Evaluations.UnaryOperatorEvaluation`2.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression},MathCore.Evaluations.Evulation{`0})">
+        <member name="M:MathCore.Evaluations.UnaryOperatorEvaluation`2.#ctor(System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression},MathCore.Evaluations.Evaluation{`0})">
             <summary>Инициализация нового унарного вычисления</summary>
             <param name="Operator">Оператор преобразования выражения операнда в выражение вычисления</param>
             <param name="value">Вычисление операнда</param>
@@ -2553,7 +2553,7 @@
             <param name="c"></param><returns></returns>
         </member>
         <member name="M:MathCore.Extensions.String.WordWrap.GetSymbType(System.Char)">
-            <summary>Возвращает тип символа: согласный, гласный, разделитель, неопределен</summary>
+            <summary>Возвращает тип символа: согласный, гласный, разделитель, не определён</summary>
             <param name="c"></param><returns></returns>
         </member>
         <member name="M:MathCore.Extensions.String.WordWrap.isSlogMore(MathCore.Extensions.String.WordWrap.SymbType[],System.Int32)">
@@ -2607,6 +2607,16 @@
         </member>
         <member name="M:MathCore.IFactory`1.Create">
             <summary>Создать новый объект</summary>
+            <returns>Новый объект типа <typeparamref name="T"/></returns>
+        </member>
+        <member name="T:MathCore.IFactory`2">
+            <summary>Фабрика объектов</summary>
+            <typeparam name="T">Тип объектов, порождаемых фабрикой</typeparam>
+            <typeparam name="TParameter">Тип параметра процесса создания нового объекта</typeparam>
+        </member>
+        <member name="M:MathCore.IFactory`2.Create(`1)">
+            <summary>Создать новый объект</summary>
+            <param name="Parameter">Параметр процесса создания объекта</param>
             <returns>Новый объект типа <typeparamref name="T"/></returns>
         </member>
         <member name="T:MathCore.Factory`1">
@@ -2880,44 +2890,44 @@
         </member>
         <member name="M:MathCore.Geolocation.GPS.Heading(System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение курса по координатам начальной и конечной точки</summary>
-            <param name="latitude1">Широта первой иходной точки</param>
-            <param name="longitude1">Долгота первой иходной точки</param>
-            <param name="latitude2">Широта второй иходной точки</param>
-            <param name="longitude2">Долгота второй иходной точки</param>
+            <param name="latitude1">Широта первой исходной точки</param>
+            <param name="longitude1">Долгота первой исходной точки</param>
+            <param name="latitude2">Широта второй исходной точки</param>
+            <param name="longitude2">Долгота второй исходной точки</param>
             <returns>Курс в градусах</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.HalfWayPoint(System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение точки на середине отрезка, заданного двумя точками</summary>
-            <param name="latitude1">Широта первой иходной точки</param>
-            <param name="longitude1">Долгота первой иходной точки</param>
-            <param name="latitude2">Широта второй иходной точки</param>
-            <param name="longitude2">Долгота второй иходной точки</param>
+            <param name="latitude1">Широта первой исходной точки</param>
+            <param name="longitude1">Долгота первой исходной точки</param>
+            <param name="latitude2">Широта второй исходной точки</param>
+            <param name="longitude2">Долгота второй исходной точки</param>
             <returns>Точка в середине отрезка</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.DestinationPoint(System.Double,System.Double,System.Double,System.Double)">
             <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
             <param name="latitude">Широта исходной точки</param>
-            <param name="longitude">Долгота исхоной точки</param>
-            <param name="heading">Курс на точкуу назначения</param>
+            <param name="longitude">Долгота исходной точки</param>
+            <param name="heading">Курс на точку назначения</param>
             <param name="distance">Пройденная дистанция в метрах</param>
             <returns>Точка назначения</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.DestinationPoint(System.Double,System.Double,System.Double,System.Double,System.Double@)">
             <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
             <param name="latitude">Широта исходной точки</param>
-            <param name="longitude">Долгота исхоной точки</param>
-            <param name="heading">Курс на точкуу назначения</param>
+            <param name="longitude">Долгота исходной точки</param>
+            <param name="heading">Курс на точку назначения</param>
             <param name="distance">Пройденная дистанция в метрах</param>
             <param name="final_heading">Курс из точки назначения на исходную точку</param>
             <returns>Точка назначения</returns>
         </member>
         <member name="M:MathCore.Geolocation.GPS.Intersection(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
-            <summary>Определение точки персечения двух курсов, каждый из которых задан исходной точкой</summary>
-            <param name="latitude1">Широта первой иходной точки</param>
-            <param name="longitude1">Долгота первой иходной точки</param>
-            <param name="heading1">Курс из первой иходной точки</param>
-            <param name="latitude2">Широта второй иходной точки</param>
-            <param name="longitude2">Долгота второй иходной точки</param>
+            <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
+            <param name="latitude1">Широта первой исходной точки</param>
+            <param name="longitude1">Долгота первой исходной точки</param>
+            <param name="heading1">Курс из первой исходной точки</param>
+            <param name="latitude2">Широта второй исходной точки</param>
+            <param name="longitude2">Долгота второй исходной точки</param>
             <param name="heading2">Курс второй исходной точки</param>
             <returns>Точка пересечения двух курсов</returns>
         </member>
@@ -3253,6 +3263,22 @@
         <member name="T:MathCore.IIndexable`1">
             <summary>Объект индексируемый с целочисленным индексом</summary>
             <typeparam name="TValue">Тип элементов</typeparam>
+        </member>
+        <member name="T:MathCore.IIndexableRef`1">
+            <summary>Объект, индексируемый целочисленным индексом по ссылке</summary>
+            <typeparam name="TValue">Тип элементов</typeparam>
+        </member>
+        <member name="P:MathCore.IIndexableRef`1.Item(System.Int32)">
+            <summary>Ссылка на значение, доступное внутри объекта по индексу</summary>
+            <param name="index">Индекс значения</param>
+        </member>
+        <member name="T:MathCore.IIndexableReadonlyRef`1">
+            <summary>Объект, индексируемый целочисленным индексом по ссылке только для чтения</summary>
+            <typeparam name="TValue">Тип элементов</typeparam>
+        </member>
+        <member name="P:MathCore.IIndexableReadonlyRef`1.Item(System.Int32)">
+            <summary>Ссылка только для чтения на значение, доступное внутри объекта по индексу</summary>
+            <param name="index">Индекс значения</param>
         </member>
         <member name="T:MathCore.INamedRead">
             <summary>Объект, обладающий именем</summary>
@@ -3998,7 +4024,7 @@
         <member name="P:MathCore.MathParser.Bracket.NewRect">
             <summary>Квадратные скобки</summary>
         </member>
-        <member name="P:MathCore.MathParser.Bracket.NewFigur">
+        <member name="P:MathCore.MathParser.Bracket.NewFigure">
             <summary>Фигурные скобки</summary>
         </member>
         <member name="P:MathCore.MathParser.Bracket.Start">
@@ -4034,7 +4060,7 @@
             <summary>Строковое представление скобок</summary>
             <returns>Строковое представление</returns>
         </member>
-        <member name="M:MathCore.MathParser.Bracket.Suround(System.String)">
+        <member name="M:MathCore.MathParser.Bracket.Surround(System.String)">
             <summary>Разместить текст в скобках</summary>
             <param name="str">Размещаемый текст</param>
             <returns>Текст в скобках</returns>
@@ -4058,11 +4084,8 @@
         <member name="T:MathCore.MathParser.ConstantsCollection">
             <summary>Коллекция констант</summary>
         </member>
-        <member name="F:MathCore.MathParser.ConstantsCollection._Expression">
-            <summary>Ссылка на выражение</summary>
-        </member>
         <member name="F:MathCore.MathParser.ConstantsCollection._Items">
-            <summary>Элементы коллекци</summary>
+            <summary>Элементы коллекции</summary>
         </member>
         <member name="P:MathCore.MathParser.ConstantsCollection.Count">
             <summary>Количество элементов коллекции</summary>
@@ -4071,10 +4094,6 @@
             <summary>Итератор констант по имени</summary>
             <param name="Name">Имя константы</param>
             <returns>Константа с указанным именем</returns>
-        </member>
-        <member name="M:MathCore.MathParser.ConstantsCollection.#ctor(MathCore.MathParser.MathExpression)">
-            <summary>Инициализация новой коллекции констант</summary>
-            <param name="Expression">Математическое выражение, которому принадлежит коллекция</param>
         </member>
         <member name="M:MathCore.MathParser.ConstantsCollection.Add(MathCore.MathParser.ExpressionVariable)">
             <summary>Добавить элемент в коллекцию</summary>
@@ -4085,11 +4104,11 @@
             <returns>Перечисление имён констант коллекции</returns>
         </member>
         <member name="M:MathCore.MathParser.ConstantsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#ExpressionVariable}#GetEnumerator">
-            <summary>Получить перечислитеь констант коллекци</summary>
+            <summary>Получить перечислитеь констант коллекции</summary>
             <returns>Перечислитель констант</returns>
         </member>
         <member name="M:MathCore.MathParser.ConstantsCollection.System#Collections#IEnumerable#GetEnumerator">
-            <summary>Получить перечислитеь констант коллекци</summary>
+            <summary>Получить перечислитеь констант коллекции</summary>
             <returns>Перечислитель констант</returns>
         </member>
         <member name="M:MathCore.MathParser.DifferentialOperator.#ctor">
@@ -4154,10 +4173,10 @@
         <member name="P:MathCore.MathParser.ExpressionFunction.Arguments">
             <summary>Массив имён аргументов</summary>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionFunction.#ctor(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionFunction.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Инициализация новой функции структуры математического выражения по сигнатуре</summary>
             <param name="Name">Имя функции</param>
-            <param name="Arguments">списко имён аргументов</param>
+            <param name="Arguments">Список имён аргументов</param>
         </member>
         <member name="M:MathCore.MathParser.ExpressionFunction.GetValue(System.Double[])">
             <summary>Метод получения значения функции по массиву значений её аргументов</summary>
@@ -4170,7 +4189,7 @@
             <param name="ArgumentsCount">Количество аргументов</param>
             <returns>Истина, если сигнатура соответствует функции</returns>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionFunction.IsEqualSignature(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionFunction.IsEqualSignature(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Проверка на эквивалентность сигнатуре</summary>
             <param name="sName">Имя функции</param>
             <param name="Arguments">Массив имён аргументов</param>
@@ -4250,7 +4269,7 @@
         <member name="P:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.Function">
             <summary>Делегат функции, который надо использовать при её вычислении</summary>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.#ctor(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionParser.FindFunctionEventArgs.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Инициализация аргумента события обнаружения функции</summary>
             <param name="Name">Имя функции</param>
             <param name="Arguments">Массив имён аргументов функции</param>
@@ -4268,7 +4287,7 @@
             <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
             <param name="Args">Аргументы события, содержащие имя функции, имена аргументов и делегат метода функции</param>
         </member>
-        <member name="M:MathCore.MathParser.ExpressionParser.OnFunctionFind(System.String,System.String[])">
+        <member name="M:MathCore.MathParser.ExpressionParser.OnFunctionFind(System.String,System.Collections.Generic.IReadOnlyList{System.String})">
             <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
             <param name="Name">Имя функции</param>
             <param name="Arguments">Аргументы функции</param>
@@ -4352,7 +4371,7 @@
             <summary>Метод обхода дерева</summary>
         </member>
         <member name="F:MathCore.MathParser.ExpressionTrees.ExpressionTree.BypassingType.LeftRightRoot">
-            <summary>Левое поддерево, правое подерево, корень</summary>
+            <summary>Левое поддерево, правое поддерево, корень</summary>
         </member>
         <member name="F:MathCore.MathParser.ExpressionTrees.ExpressionTree.BypassingType.LeftRootRight">
             <summary>Левое поддерево, корень, правое поддерево</summary>
@@ -4409,8 +4428,14 @@
         <member name="M:MathCore.MathParser.ExpressionTrees.ExpressionTree.GetEnumerator">
             <summary>Получить перечислитель узлов дерева по методу ЛКП</summary><returns>Перечислитель узлов дерева по методу ЛКП</returns>
         </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.ExpressionTree.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode">
             <summary>Узел дерева выражений, реализующий оператор сложения</summary>
+        </member>
+        <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.NodeName">
+            <summary>Имя узла операции "+"</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.#ctor">
             <summary>Новый оператор сложения</summary>
@@ -4425,7 +4450,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Linq.Expression.Add()</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AdditionOperatorNode.Clone">
@@ -4433,7 +4458,7 @@
             <returns>Полный клон узла с клонами поддеревьев</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор ленивого И</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор ленивого И</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора ленивого И</summary>
@@ -4448,7 +4473,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию И</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.AndOperatorNode.Clone">
@@ -4510,7 +4535,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedBracketNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла с параметрами</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Компиляция вложенного узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedBracketNode.Clone">
@@ -4524,6 +4549,18 @@
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode">
             <summary>Вычислимый узел дерева математического выражения</summary>
         </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.LeftComputedOrNull">
+            <summary>Левый узел, приведённый к виду вычислимого узла (допускающий пустуй ссылку)</summary>
+        </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.LeftComputed">
+            <summary>Левый узел, приведённый к виду вычислимого узла</summary>
+        </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.RightComputedOrNull">
+            <summary>Правый узел, приведённый к виду вычислимого узла (допускающий пустуй ссылку)</summary>
+        </member>
+        <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.RightComputed">
+            <summary>Правый узел, приведённый к виду вычислимого узла</summary>
+        </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.Compute">
             <summary>Вычислить значение поддерева</summary>
             <returns>Численное значение поддерева</returns>
@@ -4534,7 +4571,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ComputedNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode">
@@ -4544,7 +4581,7 @@
             <summary>Значение узла</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode.IsPrecomputable">
-            <summary>Флаг возможности получения значения без выччисления. Всегда = true</summary>
+            <summary>Флаг возможности получения значения без вычисления. Всегда = true</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode.Value">
             <summary>Значение узла. Не поддерживает присвоение</summary>
@@ -4570,7 +4607,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ConstValueNode.Clone">
@@ -4593,7 +4630,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.DivisionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла с параметрами</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.DivisionOperatorNode.Clone">
@@ -4602,11 +4639,6 @@
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode">
             <summary>Узел дерева мат.выражения, реализующий оператор равенства</summary>
-        </member>
-        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.GetAbsMethodCall(System.Linq.Expressions.Expression)">
-            <summary>Получить выражение вызова метода определения модуля числа из класса Math</summary>
-            <param name="x">Параметр выражения</param>
-            <returns>Выражение <see cref="T:System.Linq.Expressions.Expression"/>, вызывающее метод Math.Abs с параметром x</returns>
         </member>
         <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.__Epsilon">
             <summary>Точность вычисления равенства для чисел с плавающей точкой</summary>
@@ -4638,7 +4670,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Равенство</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.EqualityOperatorNode.Clone">
@@ -4791,6 +4823,13 @@
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Dispose">
             <summary>Уничтожить узел рекуррентно с поддеревьями</summary>
         </member>
+        <member name="F:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode._Disposed">
+            <summary>Объект считается уничтоженным</summary>
+        </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Dispose(System.Boolean)">
+            <summary>Уничтожить узел рекуррентно с поддеревьями</summary>
+            <param name="disposing">Выполнить освобождение управляемых ресурсов</param>
+        </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.ExpressionTreeNode.Clone">
             <summary>Клонирование поддерева</summary>
             <returns>Клон поддерева</returns>
@@ -4807,6 +4846,9 @@
             <summary>Оператор неявного преобразования строки в узел дерева</summary>
             <param name="value">Строковое значение</param>
             <returns>Строковый узел дерева</returns>
+        </member>
+        <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode">
+            <summary>Функциональный узел</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Name">
             <summary>Имя узла</summary>
@@ -4826,6 +4868,19 @@
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Operator">
             <summary>Оператор</summary>
         </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.#ctor(System.String)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode"/></summary>
+            <param name="Name">Имя функционала</param>
+        </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.#ctor(MathCore.MathParser.FunctionalTerm,MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode"/></summary>
+            <param name="term">Блок определения функционала</param>
+            <param name="Parser">Парсер выражения, конструирующий дерево</param>
+            <param name="Expression">Выражение, в которое будет включён создаваемый узел</param>
+        </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.GetVariables">
+            <inheritdoc />
+        </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Compute">
             <summary>Вычислить значение поддерева</summary>
             <returns>Численное значение поддерева</returns>
@@ -4836,7 +4891,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.ToString">
@@ -4848,7 +4903,7 @@
             <returns>Клон поддерева</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode">
-            <summary>Узел дерева выражения, содержащий сведенья об аргументе функции</summary>
+            <summary>Узел дерева выражения, содержащий сведения об аргументе функции</summary>
         </member>
         <member name="P:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode.ArgumentNode">
             <summary>Узел аргумента</summary>
@@ -4879,7 +4934,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла аргумента с учётом списка параметров</summary>
-            <param name="Parameters">Массив параметров процесса компиляции</param>
+            <param name="Args">Массив параметров процесса компиляции</param>
             <returns>Скомпилированное значение узла аргумента дерева выражения</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode.Clone">
@@ -4922,7 +4977,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла аргумента</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение корня поддерева аргумента</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNode.Clone">
@@ -4976,7 +5031,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionNode.Clone">
@@ -4988,7 +5043,7 @@
             <returns>Строковое представление узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор больше</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор больше</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора больше</summary>
@@ -5014,7 +5069,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Больше</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.GreaterThenOperatorNode.Clone">
@@ -5039,7 +5094,7 @@
             <returns>Строковое представление узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор меньше</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор меньше</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора меньше</summary>
@@ -5065,7 +5120,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Меньше</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LessThenOperatorNode.Clone">
@@ -5081,7 +5136,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее логику оператора</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode.Compile">
@@ -5090,11 +5145,11 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.LogicOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор умножения "*"</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор умножения "*"</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора произведения</summary>
@@ -5114,7 +5169,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.MultiplicationOperatorNode.Clone">
@@ -5122,7 +5177,7 @@
             <returns>Клон узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор отрицания</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор отрицания</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора меньше</summary>
@@ -5153,7 +5208,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию отрицания НЕ</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.NotOperatorNode.ToString">
@@ -5202,7 +5257,7 @@
             <returns>Строковое представление узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор ленивого ИЛИ</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор ленивого ИЛИ</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора ленивого ИЛИ</summary>
@@ -5217,7 +5272,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode.LogicCompile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция логики узла</summary>
-            <param name="Parameters">Параметры компиляции</param>
+            <param name="Args">Параметры компиляции</param>
             <returns>Скомпилированное логическое выражение, реализующее операцию ИЛИ</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.OrOperatorNode.Clone">
@@ -5243,7 +5298,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.PowerOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция выражения узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.PowerOperatorNode.Clone">
@@ -5251,7 +5306,7 @@
             <returns>Клон узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор выбора</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор выбора</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора выбора</summary>
@@ -5271,7 +5326,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.SelectorOperatorNode.Clone">
@@ -5310,7 +5365,7 @@
             <returns>Значение строкового узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode">
-            <summary>Узел дерева выражения, релизующий оператор вычитания</summary>
+            <summary>Узел дерева выражения, реализующий оператор вычитания</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.#ctor">
             <summary>Инициализация нового оператора вычитания</summary>
@@ -5325,7 +5380,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.subtractionOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция выражения узла</summary>
-            <param name="Parameters">Список параметров выражения</param>
+            <param name="Args">Список параметров выражения</param>
             <returns>Скомпилированное выражение узла</returns>
             <returns></returns>
         </member>
@@ -5376,7 +5431,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariableValueNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
-            <param name="Parameters">Массив параметров</param>
+            <param name="Args">Массив параметров</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariableValueNode.Clone">
@@ -5384,7 +5439,7 @@
             <returns>Клон узла</returns>
         </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode">
-            <summary>Узел дерева мат.выражения, реазлиующий оператор определения вариантов</summary>
+            <summary>Узел дерева мат.выражения, реализующий оператор определения вариантов</summary>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode.#ctor">
             <summary>Инициализация нового узла оператора определения вариантов</summary>
@@ -5404,7 +5459,7 @@
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode.Compile(System.Linq.Expressions.ParameterExpression[])">
             <summary>Компиляция узла</summary>
-            <param name="Parameters">Массив параметров выражения</param>
+            <param name="Args">Массив параметров выражения</param>
             <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         </member>
         <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.VariantOperatorNode.Clone">
@@ -5496,20 +5551,22 @@
         <member name="F:MathCore.MathParser.FunctionalsCollection._Operators">
             <summary>Список функционалов</summary>
         </member>
-        <member name="F:MathCore.MathParser.FunctionalsCollection._Expression">
-            <summary>Ссылка на математическое выражение, с которым связана поллекция</summary>
-        </member>
         <member name="P:MathCore.MathParser.FunctionalsCollection.Count">
             <summary>Количество функционалов в коллекции</summary>
-        </member>
-        <member name="M:MathCore.MathParser.FunctionalsCollection.#ctor(MathCore.MathParser.MathExpression)">
-            <summary>Инициализация новой коллекции функционалов</summary>
-            <param name="Expression">Математическое выражение, на которое ссылается коллекция</param>
         </member>
         <member name="M:MathCore.MathParser.FunctionalsCollection.Add(MathCore.MathParser.Functional)">
             <summary>Добавить функционал в коллекцию</summary>
             <param name="Operator">Добавляемый функционал</param>
             <returns>Истина, если добавление прошло успешно</returns>
+        </member>
+        <member name="M:MathCore.MathParser.FunctionalsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#Functional}#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MathParser.FunctionalsCollection.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.MathParser.FunctionalsCollection.ToString">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MathParser.FunctionalTerm">
             <summary>Блок определения функции</summary>
@@ -5535,9 +5592,6 @@
         <member name="T:MathCore.MathParser.FunctionsCollection">
             <summary>Коллекция функций</summary>
         </member>
-        <member name="F:MathCore.MathParser.FunctionsCollection._MathExpression">
-            <summary>Ссылка на математическое выражение</summary>
-        </member>
         <member name="F:MathCore.MathParser.FunctionsCollection._Functions">
             <summary>Список функций математического выражения</summary>
         </member>
@@ -5551,17 +5605,13 @@
             <summary>Индексатор функций по имени и списку параметров</summary>
             <param name="Name">Имя функции</param>
             <param name="ArgumentsCount">Количество аргументов</param>
-            <returns>Функция, удовлетворяющаяя заданой сигнатуре</returns>
+            <returns>Функция, удовлетворяющая загаданной сигнатуре</returns>
         </member>
         <member name="P:MathCore.MathParser.FunctionsCollection.Item(System.String,System.String[])">
             <summary>Индексатор функций по имени и списку параметров</summary>
             <param name="Name">Имя функции</param>
             <param name="Arguments">Список имён аргументов</param>
-            <returns>Функция, удовлетворяющаяя заданой сигнатуре</returns>
-        </member>
-        <member name="M:MathCore.MathParser.FunctionsCollection.#ctor(MathCore.MathParser.MathExpression)">
-            <summary>Инициализация новой коллекции функций математического выражения</summary>
-            <param name="MathExpression">Математическое выражение, на которое ссылается создаваемая коллекция</param>
+            <returns>Функция, удовлетворяющая загаданной сигнатуре</returns>
         </member>
         <member name="M:MathCore.MathParser.FunctionsCollection.Add(MathCore.MathParser.ExpressionFunction)">
             <summary>Добавить функцию в коллекцию</summary>
@@ -5569,16 +5619,10 @@
             <returns>Истина, если функция была добавлена</returns>
         </member>
         <member name="M:MathCore.MathParser.FunctionsCollection.System#Collections#Generic#IEnumerable{MathCore#MathParser#ExpressionFunction}#GetEnumerator">
-            <summary>Возвращает перечислитель, выполняющий перебор элементов в коллекции</summary>
-            <returns>
-            Интерфейс <see cref="T:System.Collections.Generic.IEnumerator`1"/>, который может использоваться для перебора элементов коллекции.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="M:MathCore.MathParser.FunctionsCollection.System#Collections#IEnumerable#GetEnumerator">
-            <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции</summary>
-            <returns>
-            Объект <see cref="T:System.Collections.IEnumerator"/>, который может использоваться для перебора элементов коллекции.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="T:MathCore.MathParser.FunctionTerm">
             <summary>Функциональный элемент выражения</summary>
@@ -5605,10 +5649,10 @@
             <summary>Комплексный оператор интегрирования</summary>
         </member>
         <member name="M:MathCore.MathParser.IntegralOperator.#ctor">
-            <summary>Создание нового комплексного интегритора интегрирования</summary>
+            <summary>Создание нового комплексного интегратора интегрирования</summary>
         </member>
         <member name="M:MathCore.MathParser.IntegralOperator.#ctor(System.String)">
-            <summary>Создание нового комплексного интегритора интегрирования</summary>
+            <summary>Создание нового комплексного интегратора интегрирования</summary>
             <param name="Name">Имя оператора</param>
         </member>
         <member name="M:MathCore.MathParser.IntegralOperator.Initialize(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression,MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
@@ -5624,9 +5668,9 @@
         </member>
         <member name="T:MathCore.MathParser.IntegralOperator.AdaptiveIntegralDelegate">
             <summary>Делегат адаптивного интегрирования</summary>
-            <param name="d">Делегат интегрируемой функци</param>
+            <param name="d">Делегат интегрируемой функции</param>
             <param name="Min">Начальное значение интервала интегрирования</param>
-            <param name="Max">Коненое значение интервала интегрирования</param>
+            <param name="Max">Конечное значение интервала интегрирования</param>
             <param name="Parameters">Массив параметров интегрируемой функции</param>
             <returns>Значение интеграла</returns>
         </member>
@@ -5634,7 +5678,7 @@
             <summary>Получить численное значение интеграла адаптивным методом</summary>
             <param name="d">Делегат интегрируемой функции</param>
             <param name="Min">Начальное значение интервала интегрирования</param>
-            <param name="Max">Коненое значение интервала интегрирования</param>
+            <param name="Max">Конечное значение интервала интегрирования</param>
             <param name="Parameters">Массив параметров интегрируемой функции</param>
             <returns>Значение интеграла</returns>
         </member>
@@ -5642,18 +5686,18 @@
             <summary>Получить численное значение интеграла методом трапеций</summary>
             <param name="d">Делегат интегрируемой функции</param>
             <param name="Min">Начальное значение интервала интегрирования</param>
-            <param name="Max">Коненое значение интервала интегрирования</param>
+            <param name="Max">Конечное значение интервала интегрирования</param>
             <param name="Parameters">Массив параметров интегрируемой функции</param>
-            <param name="dx">Шаг интерирования</param>
+            <param name="dx">Шаг интерполяции</param>
             <returns>Значение интеграла</returns>
         </member>
         <member name="M:MathCore.MathParser.IntegralOperator.GetIntegral(System.Delegate,System.Double,System.Double,System.Double[],System.Double)">
             <summary>Получить численное значение интеграла методом трапеций</summary>
             <param name="d">Делегат интегрируемой функции</param>
             <param name="Min">Начальное значение интервала интегрирования</param>
-            <param name="Max">Коненое значение интервала интегрирования</param>
+            <param name="Max">Конечное значение интервала интегрирования</param>
             <param name="Parameters">Массив параметров интегрируемой функции</param>
-            <param name="dx">Шаг интерирования</param>
+            <param name="dx">Шаг интерполяции</param>
             <returns>Значение интеграла</returns>
         </member>
         <member name="M:MathCore.MathParser.IntegralOperator.Compile(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
@@ -5725,6 +5769,9 @@
         <member name="P:MathCore.MathParser.MathExpression.Tree">
             <summary>Дерево математического выражения</summary>
         </member>
+        <member name="P:MathCore.MathParser.MathExpression.VariableNodes">
+            <summary>Перечисление узлов дерева, содержащих переменные</summary>
+        </member>
         <member name="P:MathCore.MathParser.MathExpression.Variable">
             <summary>Переменные, входящие в математическое выражение</summary>
         </member>
@@ -5751,8 +5798,12 @@
             <param name="StrExpression">Строковое представление выражения</param>
             <param name="Parser">Ссылка на парсер</param>
         </member>
-        <member name="M:MathCore.MathParser.MathExpression.System#IDisposable#Dispose">
+        <member name="M:MathCore.MathParser.MathExpression.Dispose">
             <summary>Уничтожить математическое выражение</summary>
+        </member>
+        <member name="M:MathCore.MathParser.MathExpression.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов выражения</summary>
+            <param name="disposing">Требуется ли выполнить освобождение управляемых ресурсов?</param>
         </member>
         <member name="M:MathCore.MathParser.MathExpression.Compute">
             <summary>Вычисление математического выражения</summary>
@@ -5887,7 +5938,7 @@
             <param name="Str">Строковое значение элемента</param>
         </member>
         <member name="M:MathCore.MathParser.NumberTerm.GetSubTree(MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
-            <summary>Извлеч поддерево</summary>
+            <summary>Извлечь поддерево</summary>
             <param name="Parser">Парсер</param>
             <param name="Expression">Математическое выражение</param>
             <returns>Узел константного значения</returns>
@@ -5897,7 +5948,7 @@
             <param name="node">Узел выражения</param>
             <param name="SeparatorTerm">Блок разделитель</param>
             <param name="DecimalSeparator">Блок с целой частью числа</param>
-            <param name="FrationPartTerm">Блок с дробной частью числа</param>
+            <param name="FractionPartTerm">Блок с дробной частью числа</param>
             <returns>Истина, если действие совершено успешно. Ложь, если в последующих блоках не содержится нужной информации</returns>
         </member>
         <member name="T:MathCore.MathParser.StringTerm">
@@ -5916,36 +5967,36 @@
             <param name="Expression">Математическое выражение</param>
             <returns>Узел дерева с переменной, полученной из Expression.Variable[Name]</returns>
         </member>
-        <member name="T:MathCore.MathParser.SummOperator">
+        <member name="T:MathCore.MathParser.SumOperator">
             <summary>Оператор суммы</summary>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.#ctor">
+        <member name="M:MathCore.MathParser.SumOperator.#ctor">
             <summary>Инициализация нового оператора суммы</summary>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.#ctor(System.String)">
-            <summary>Инициализация нового обператора суммы</summary>
+        <member name="M:MathCore.MathParser.SumOperator.#ctor(System.String)">
+            <summary>Инициализация нового оператора суммы</summary>
             <param name="Name"></param>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.Initialize(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression,MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
+        <member name="M:MathCore.MathParser.SumOperator.Initialize(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression,MathCore.MathParser.ExpressionParser,MathCore.MathParser.MathExpression)">
             <summary>Инициализация оператора</summary>
             <param name="Parameters">Блок параметров</param>
             <param name="Function">Блок ядра функции</param>
             <param name="Parser">Парсер мат.выражения</param>
             <param name="Expression">Внешнее мат.выражение</param>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.GetValue(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
+        <member name="M:MathCore.MathParser.SumOperator.GetValue(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
             <summary>Метод определения значения</summary>
             <returns>Численное значение элемента выражения</returns>
         </member>
-        <member name="T:MathCore.MathParser.SummOperator.SummDelegate">
-            <summary>Метд суммирования</summary>
+        <member name="T:MathCore.MathParser.SumOperator.SumDelegate">
+            <summary>Метод суммирования</summary>
             <param name="d">Суммируемая функция - ядро</param>
             <param name="Min">Начало интервала</param>
             <param name="Max">Конец интервала</param>
             <param name="Parameters">Массив параметров функции</param>
             <returns>Значение суммы функции</returns>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.GetSumm(System.Delegate,System.Double,System.Double,System.Double[])">
+        <member name="M:MathCore.MathParser.SumOperator.GetSum(System.Delegate,System.Double,System.Double,System.Double[])">
             <summary>Получение значения суммы</summary>
             <param name="d">Суммируемая функция - ядро</param>
             <param name="Min">Начало интервала суммирования</param>
@@ -5953,13 +6004,13 @@
             <param name="Parameters">Массив параметров</param>
             <returns>Сумма функции</returns>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.Compile(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
+        <member name="M:MathCore.MathParser.SumOperator.Compile(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression)">
             <summary>Скомпилировать в выражение</summary>
             <param name="ParametersExpression">Выражение блока параметров</param>
             <param name="Function">Выражение блока ядра оператора - функции</param>
             <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         </member>
-        <member name="M:MathCore.MathParser.SummOperator.Compile(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression,System.Linq.Expressions.ParameterExpression[])">
+        <member name="M:MathCore.MathParser.SumOperator.Compile(MathCore.MathParser.MathExpression,MathCore.MathParser.MathExpression,System.Linq.Expressions.ParameterExpression[])">
             <summary>Скомпилировать в выражение</summary>
             <param name="Function">Ядро функции</param>
             <param name="Parameters">Массив параметров</param>
@@ -6041,9 +6092,9 @@
             <summary>Очистить коллекцию переменных</summary>
         </member>
         <member name="M:MathCore.MathParser.VariablesCollection.Exist(System.String)">
-            <summary>Существует ли в коллекции переменная с указанным имененм</summary>
+            <summary>Существует ли в коллекции переменная с указанным именем</summary>
             <param name="Name">Искомое имя переменной</param>
-            <returns>Истина, если в коллекции пристутствует переменная с указанным именем</returns>
+            <returns>Истина, если в коллекции присутствует переменная с указанным именем</returns>
         </member>
         <member name="M:MathCore.MathParser.VariablesCollection.Exist(MathCore.MathParser.ExpressionVariable)">
             <summary>Проверка на существование переменной в коллекции</summary>
@@ -9975,6 +10026,85 @@
             <param name="n">Предельное значение до которого (включительно) осуществляется поиск</param>
             <returns>Перечисление найденных простых чисел</returns>
         </member>
+        <member name="T:MathCore.Reflection.AnimatedDoubleProperty`1">
+            <summary>Анимация вещественного свойства</summary>
+            <typeparam name="TObject">Тип объекта, анимацию свойства которого требуется выполнить</typeparam>
+        </member>
+        <member name="M:MathCore.Reflection.AnimatedDoubleProperty`1.#ctor(`0,System.String,System.Int32,System.Int32,System.Func{System.Int32,System.Int32,System.Double},System.Boolean)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Reflection.AnimatedDoubleProperty`1"/></summary>
+            <param name="o">Объект, свойство которого анимируется</param>
+            <param name="Name">Имя анимируемого свойства</param>
+            <param name="Samples">Число шагов анимации</param>
+            <param name="Timeout">Временной интервал анимации</param>
+            <param name="Translator">Функция, вычисляющая очередное значение свойства на основе номера шага анимации и числа шагов</param>
+            <param name="Private">Искать приватное свойство?</param>
+        </member>
+        <member name="T:MathCore.Reflection.AnimatedIntProperty`1">
+            <summary>Анимация целочисленного свойства</summary>
+            <typeparam name="TObject">Тип объекта, анимацию свойства которого требуется выполнить</typeparam>
+        </member>
+        <member name="M:MathCore.Reflection.AnimatedIntProperty`1.#ctor(`0,System.String,System.Int32,System.Int32,System.Func{System.Int32,System.Int32,System.Int32},System.Boolean)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Reflection.AnimatedIntProperty`1"/></summary>
+            <param name="o">Объект, свойство которого анимируется</param>
+            <param name="Name">Имя анимируемого свойства</param>
+            <param name="Samples">Число шагов анимации</param>
+            <param name="Timeout">Временной интервал анимации</param>
+            <param name="Translator">Функция, вычисляющая очередное значение свойства на основе номера шага анимации и числа шагов</param>
+            <param name="Private">Искать приватное свойство?</param>
+        </member>
+        <member name="T:MathCore.Reflection.AnimatedProperty`2">
+            <summary>Анимированное свойство</summary>
+            <typeparam name="TObject">Тип объекта, свойство которого требуется анимировать</typeparam>
+            <typeparam name="TValue">Тип значения анимируемого свойства</typeparam>
+        </member>
+        <member name="F:MathCore.Reflection.AnimatedProperty`2._Samples">
+            <summary>Число шагов анимации</summary>
+        </member>
+        <member name="F:MathCore.Reflection.AnimatedProperty`2._Timeout">
+            <summary>Интервал времени анимации в секундах</summary>
+        </member>
+        <member name="F:MathCore.Reflection.AnimatedProperty`2._Translator">
+            <summary>Функция, вычисляющая очередное значение свойства на основе номера шага анимации и числа шагов</summary>
+        </member>
+        <member name="F:MathCore.Reflection.AnimatedProperty`2._Enabled">
+            <summary>Признак активности анимации</summary>
+        </member>
+        <member name="F:MathCore.Reflection.AnimatedProperty`2._Thread">
+            <summary>поток в котором будет происходить изменение значений свойства</summary>
+        </member>
+        <member name="F:MathCore.Reflection.AnimatedProperty`2._Priority">
+            <summary>Приоритет потока анимации</summary>
+        </member>
+        <member name="P:MathCore.Reflection.AnimatedProperty`2.Enable">
+            <summary>Анимация включена</summary>
+        </member>
+        <member name="P:MathCore.Reflection.AnimatedProperty`2.Priority">
+            <summary>Приоритет потока анимации</summary>
+        </member>
+        <member name="P:MathCore.Reflection.AnimatedProperty`2.Repeat">
+            <summary>Повторять анимацию в цикле?</summary>
+        </member>
+        <member name="P:MathCore.Reflection.AnimatedProperty`2.AutoReverse">
+            <summary>По завершении прямого хода анимации выполнять обратный</summary>
+        </member>
+        <member name="M:MathCore.Reflection.AnimatedProperty`2.#ctor(`0,System.String,System.Int32,System.Int32,System.Func{System.Int32,System.Int32,`1},System.Boolean)">
+            <summary>Инициализация нового экземпляра <see cref="T:MathCore.Reflection.AnimatedIntProperty`1"/></summary>
+            <param name="o">Объект, свойство которого анимируется</param>
+            <param name="Name">Имя анимируемого свойства</param>
+            <param name="Samples">Число шагов анимации</param>
+            <param name="Timeout">Временной интервал анимации</param>
+            <param name="Translator">Функция, вычисляющая очередное значение свойства на основе номера шага анимации и числа шагов</param>
+            <param name="Private">Искать приватное свойство?</param>
+        </member>
+        <member name="M:MathCore.Reflection.AnimatedProperty`2.Start">
+            <summary>Запуск анимации</summary>
+        </member>
+        <member name="M:MathCore.Reflection.AnimatedProperty`2.Stop">
+            <summary>Остановка анимации</summary>
+        </member>
+        <member name="M:MathCore.Reflection.AnimatedProperty`2.Do">
+            <summary>Метод, Выполняющий анимацию свойства</summary>
+        </member>
         <member name="T:MathCore.Annotations.CanBeNullAttribute">
             <summary>
             Indicates that the value of the marked element could be <c>null</c> sometimes,
@@ -10300,7 +10430,7 @@
             <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
             </summary>
         </member>
-        <member name="T:MathCore.Annotations.AspMvcSupressViewErrorAttribute">
+        <member name="T:MathCore.Annotations.AspMvcPressuresViewErrorAttribute">
             <summary>
             ASP.NET MVC attribute. Allows disabling all inspections
             for MVC views within a class or a method.
@@ -10597,7 +10727,7 @@
         <member name="M:MathCore.TimeInterval.#ctor(System.TimeSpan,System.TimeSpan)">
             <summary>Интервал</summary>
             <param name="Min">Нижняя граница интервала</param>
-            <param name="Max">Верзняя граница интервала</param>
+            <param name="Max">Верхняя граница интервала</param>
         </member>
         <member name="M:MathCore.TimeInterval.#ctor(System.TimeSpan,System.TimeSpan,System.Boolean)">
             <summary>Интервал</summary>
@@ -10613,7 +10743,7 @@
             <param name="MaxInclude">Включена ли верхняя граница интервала</param>
         </member>
         <member name="M:MathCore.TimeInterval.Check(System.TimeSpan)">
-            <summary>Проверка на входжение в интервал</summary>
+            <summary>Проверка на вхождение в интервал</summary>
             <param name="X">Проверяемая величина</param>
             <returns>Истина, если величина входит в интервал</returns>
         </member>
@@ -10630,13 +10760,13 @@
             <returns>Предикат от вещественного типа двойной точности</returns>
         </member>
         <member name="M:MathCore.TimeInterval.op_ExclusiveOr(System.TimeSpan,MathCore.TimeInterval)">
-            <summary>Оператор проверки на вхоождение величины в интервал</summary>
+            <summary>Оператор проверки на вхождение величины в интервал</summary>
             <param name="x">Проверяемая величина</param>
             <param name="I">Интервал</param>
             <returns>Истина, если величина внутри интервала</returns>
         </member>
         <member name="M:MathCore.TimeInterval.op_ExclusiveOr(MathCore.TimeInterval,System.TimeSpan)">
-            <summary>Оператор проверки на вхоождение величины в интервал</summary>
+            <summary>Оператор проверки на вхождение величины в интервал</summary>
             <param name="X">Проверяемая величина</param>
             <param name="I">Интервал</param>
             <returns>Истина, если величина внутри интервала</returns>
@@ -10678,7 +10808,7 @@
         <member name="M:MathCore.DateTimeInterval.#ctor(System.DateTime,System.DateTime)">
             <summary>Интервал</summary>
             <param name="Min">Нижняя граница интервала</param>
-            <param name="Max">Верзняя граница интервала</param>
+            <param name="Max">Верхняя граница интервала</param>
         </member>
         <member name="M:MathCore.DateTimeInterval.#ctor(System.DateTime,System.DateTime,System.Boolean)">
             <summary>Интервал</summary>
@@ -10700,7 +10830,7 @@
             <param name="MaxInclude">Включена ли верхняя граница интервала</param>
         </member>
         <member name="M:MathCore.DateTimeInterval.Check(System.DateTime)">
-            <summary>Проверка на входжение в интервал</summary>
+            <summary>Проверка на вхождение в интервал</summary>
             <param name="X">Проверяемая величина</param>
             <returns></returns>
         </member>
@@ -10710,13 +10840,13 @@
             <returns>Предикат от вещественного типа двойной точности</returns>
         </member>
         <member name="M:MathCore.DateTimeInterval.op_ExclusiveOr(System.DateTime,MathCore.DateTimeInterval)">
-            <summary>Оператор проверки на вхоождение величины в интервал</summary>
+            <summary>Оператор проверки на вхождение величины в интервал</summary>
             <param name="x">Проверяемая величина</param>
             <param name="I">Интервал</param>
             <returns>Истина, если величина внутри интервала</returns>
         </member>
         <member name="M:MathCore.DateTimeInterval.op_ExclusiveOr(MathCore.DateTimeInterval,System.DateTime)">
-            <summary>Оператор проверки на вхоождение величины в интервал</summary>
+            <summary>Оператор проверки на вхождение величины в интервал</summary>
             <param name="X">Проверяемая величина</param>
             <param name="I">Интервал</param>
             <returns>Истина, если величина внутри интервала</returns>
@@ -10729,7 +10859,7 @@
             <summary>Метод подписки на событие</summary>
             <param name="Timeout">Таймаут</param>
             <param name="OnTimeout">Метод обработки первичного вызова события</param>
-            <param name="OnInvoke">Метод обраобтки вторичного события</param>
+            <param name="OnInvoke">Метод обработки вторичного события</param>
             <returns>Обработчик исходного события</returns>
         </member>
         <member name="F:MathCore.TimeoutEvent`1.__Infinite">
@@ -10742,7 +10872,7 @@
             <summary>Источник сходного события</summary>
         </member>
         <member name="P:MathCore.TimeoutEvent`1.Info.E">
-            <summary>Акргумент исходного события</summary>
+            <summary>Аргумент исходного события</summary>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.Info.#ctor(System.Object,`0)">
             <summary>Аргумент события</summary>
@@ -10750,17 +10880,17 @@
             <param name="e">Аргумент исходного события</param>
         </member>
         <member name="E:MathCore.TimeoutEvent`1.Invoked">
-            <summary>Первычная генерация события</summary>
+            <summary>Первичная генерация события</summary>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.OnInvoked(MathCore.TimeoutEvent{`0}.Info)">
             <summary>Метод первичной генерации события <see cref="E:MathCore.TimeoutEvent`1.Invoked"/></summary>
             <param name="e">Аргумент первичного вызова события</param>
         </member>
-        <member name="E:MathCore.TimeoutEvent`1.Timeouted">
+        <member name="E:MathCore.TimeoutEvent`1.AfterTimeout">
             <summary>Событие, возникающее после последнего вызова метода <see cref="M:MathCore.TimeoutEvent`1.Invoke(System.Object,`0)"/> через период времени <see cref="P:MathCore.TimeoutEvent`1.Timeout"/></summary>
         </member>
-        <member name="M:MathCore.TimeoutEvent`1.OnTimeouted(MathCore.TimeoutEvent{`0}.Info)">
-            <summary>Мeтод генерации события <see cref="E:MathCore.TimeoutEvent`1.Timeouted"/></summary>
+        <member name="M:MathCore.TimeoutEvent`1.OnAfterTimeout(MathCore.TimeoutEvent{`0}.Info)">
+            <summary>Метод генерации события <see cref="E:MathCore.TimeoutEvent`1.AfterTimeout"/></summary>
             <param name="e">Аргумент события</param>
         </member>
         <member name="F:MathCore.TimeoutEvent`1._Timer">
@@ -10776,40 +10906,40 @@
             <summary>Признак ожидания таймаута события</summary>
         </member>
         <member name="F:MathCore.TimeoutEvent`1._LastEventArgs">
-            <summary>Аргумент последнего выхова метода <see cref="M:MathCore.TimeoutEvent`1.Invoke(System.Object,`0)"/></summary>
+            <summary>Аргумент последнего вызова метода <see cref="M:MathCore.TimeoutEvent`1.Invoke(System.Object,`0)"/></summary>
         </member>
         <member name="F:MathCore.TimeoutEvent`1._NeedAbort">
-            <summary>Признак ожидания отмены генерации события <see cref="E:MathCore.TimeoutEvent`1.Timeouted"/></summary>
+            <summary>Признак ожидания отмены генерации события <see cref="E:MathCore.TimeoutEvent`1.AfterTimeout"/></summary>
         </member>
         <member name="P:MathCore.TimeoutEvent`1.Timeout">
-            <summary>Задейржка во времени генерации события <see cref="E:MathCore.TimeoutEvent`1.Timeouted"/> в миллисекундах</summary>
+            <summary>Задержка во времени генерации события <see cref="E:MathCore.TimeoutEvent`1.AfterTimeout"/> в миллисекундах</summary>
         </member>
         <member name="P:MathCore.TimeoutEvent`1.LastCallTime">
-            <summary>Время последнего выхова метода <see cref="M:MathCore.TimeoutEvent`1.Invoke(System.Object,`0)"/></summary>
+            <summary>Время последнего вызова метода <see cref="M:MathCore.TimeoutEvent`1.Invoke(System.Object,`0)"/></summary>
         </member>
         <member name="P:MathCore.TimeoutEvent`1.InProcess">
             <summary>Признак ожидания генерации события <see cref="E:MathCore.TimeoutEvent`1.Invoked"/></summary>
         </member>
         <member name="P:MathCore.TimeoutEvent`1.NeedAbort">
-            <summary>Признак отмены генерации собития <see cref="E:MathCore.TimeoutEvent`1.Timeouted"/></summary>
+            <summary>Признак отмены генерации соития <see cref="E:MathCore.TimeoutEvent`1.AfterTimeout"/></summary>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.#ctor(System.Int32)">
-            <summary>Инициализация нового объекта задержки генерации соытия</summary>
+            <summary>Инициализация нового объекта задержки генерации события</summary>
             <param name="Timeout">Временная задержка в миллисекундах</param>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.#ctor(System.Int32,System.EventHandler{`0})">
-            <summary>Инициализация нового объекта задержки генерации соытия</summary>
+            <summary>Инициализация нового объекта задержки генерации события</summary>
             <param name="Timeout">Временная задержка в миллисекундах</param>
             <param name="OnTimeout">Метод вторичной обработки события</param>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.#ctor(System.Int32,System.EventHandler{`0},System.EventHandler{`0})">
-            <summary>Инициализация нового объекта задержки генерации соытия</summary>
+            <summary>Инициализация нового объекта задержки генерации события</summary>
             <param name="Timeout">Временная задержка в миллисекундах</param>
             <param name="OnTimeout">Метод вторичной обработки события</param>
             <param name="OnInvoke">Метод первичной обработки события</param>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.OnTimer(System.Object)">
-            <summary>Метод оброботки события таймера</summary>
+            <summary>Метод обработки события таймера</summary>
             <param name="State">Состояние таймера</param>
         </member>
         <member name="M:MathCore.TimeoutEvent`1.Invoke(System.Object,`0)">
@@ -10982,8 +11112,8 @@
             <inheritdoc />
         </member>
         <member name="T:MathCore.UsingDisposableObject`1">
-            <summary>Класс-обёртка для inline-доступа к свойствам созданного объекта, наследующего интерфейс IDisposasble</summary>
-            <typeparam name="T">Тип используемого объекта, наследующего интерфейс IDIsposable</typeparam>
+            <summary>Класс-обёртка для inline-доступа к свойствам созданного объекта, наследующего интерфейс IDisposable</summary>
+            <typeparam name="T">Тип используемого объекта, наследующего интерфейс IDisposable</typeparam>
         </member>
         <member name="M:MathCore.UsingDisposableObject`1.#ctor(`0)">
             <summary>Новая обёртка для используемого объекта</summary>
@@ -10996,14 +11126,14 @@
             <returns>Значение, полученное от объекта указанным методом</returns>
         </member>
         <member name="T:MathCore.UsingObject`1">
-            <summary>Оболочка, обеспечивающая освобождение ресурсов указаннцм методом для указанного объекта</summary>
+            <summary>Оболочка, обеспечивающая освобождение ресурсов указанным методом для указанного объекта</summary>
             <typeparam name="T">Тип объекта, с которым работает оболочка</typeparam>
         </member>
         <member name="F:MathCore.UsingObject`1._Obj">
             <summary>Используемый объект</summary>
         </member>
         <member name="F:MathCore.UsingObject`1._Disposer">
-            <summary>МЕтод освобождения ресурсов</summary>
+            <summary>Метод освобождения ресурсов</summary>
         </member>
         <member name="P:MathCore.UsingObject`1.Object">
             <summary>Используемый объект</summary>
@@ -11014,15 +11144,15 @@
             <param name="Disposer">Метод освобождения ресурсов</param>
         </member>
         <member name="M:MathCore.UsingObject`1.Dispose">
-            <summary>Разрушение обёртки, влекущее разрушение исопльзуемого объекта</summary>
+            <summary>Разрушение обёртки, влекущее разрушение используемого объекта</summary>
         </member>
         <member name="M:MathCore.UsingObject`1.op_Implicit(MathCore.UsingObject{`0})~`0">
             <summary>Оператор неявного приведения типов</summary>
-            <param name="obj">ОБъект-оболочка</param>
+            <param name="obj">Объект-оболочка</param>
             <returns>Внутренний объект</returns>
         </member>
         <member name="T:MathCore.ValuedInterval`1">
-            <summary>Интервал вещественых значений двойной точности</summary>
+            <summary>Интервал вещественных значений двойной точности</summary>
         </member>
         <member name="M:MathCore.ValuedInterval`1.Comparer_Length(MathCore.ValuedInterval{`0},MathCore.ValuedInterval{`0})">
             <summary>Метод сравнения двух интервалов</summary>
@@ -11063,7 +11193,7 @@
         <member name="M:MathCore.ValuedInterval`1.#ctor(System.Double,System.Double,`0)">
             <summary>Интервал</summary>
             <param name="Min">Нижняя граница интервала</param>
-            <param name="Max">Верзняя граница интервала</param>
+            <param name="Max">Верхняя граница интервала</param>
             <param name="Value">Значение</param>
         </member>
         <member name="M:MathCore.ValuedInterval`1.#ctor(System.Double,System.Double,System.Boolean,`0)">
@@ -11209,7 +11339,7 @@
         <member name="M:MathCore.Values.AverageValue.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>Получить состояние объекта</summary>
             <param name="info">Объект сериализации</param>
-            <param name="context">Конекст операции сериализации</param>
+            <param name="context">Контекст операции сериализации</param>
             <exception cref="T:System.ArgumentNullException">Если <paramref name="info"/> is null</exception>
         </member>
         <member name="T:MathCore.Values.CSV">
@@ -11284,10 +11414,10 @@
         <member name="M:MathCore.Values.CSV.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc />
         </member>
-        <member name="T:MathCore.Values.IResetable">
+        <member name="T:MathCore.Values.IResettable">
             <summary>Объект, позволяющий осуществлять сброс своего состояния</summary>
         </member>
-        <member name="M:MathCore.Values.IResetable.Reset">
+        <member name="M:MathCore.Values.IResettable.Reset">
             <summary>Сброс состояния</summary>
         </member>
         <member name="T:MathCore.Values.IValue`1">
@@ -11477,7 +11607,7 @@
             <summary>Система псевдопараллельного потокового доступа к значению ряда источников объектов</summary>
             <typeparam name="T">Тип объектов в источниках</typeparam>
             <example>
-            Прмером использования может быть способ последовательного выбора данных из ряда потоков чтения 
+            Примером использования может быть способ последовательного выбора данных из ряда потоков чтения 
             с выбором последовательности данных, выводимых в общий поток.
             void Test()
             {
@@ -11486,11 +11616,11 @@
                       Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f))))  //для всех файлов C:\*.txt
               {
                 var rnd = new Random();                                         //Генератор случайных чисел
-                var oSelecter = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
+                var o_selector = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
                             SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
                             () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
                             readers.Select(r => (Func&lt;string&gt;)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
-                while(oSelecter.CanRead) Console.Write(oSelecter.Value);        //Читаем всё построчно в консль
+                while(o_selector.CanRead) Console.Write(o_selector.Value);        //Читаем всё построчно в консоль
               }
             }
             </example>
@@ -11499,7 +11629,7 @@
             <summary>Метод выбора одного из значений ряда источников объектов</summary>
         </member>
         <member name="F:MathCore.Values.ObjectSelector`1._Values">
-            <summary>Массив "ленивых" значений, используемиых в качестве генераторов объектов </summary>
+            <summary>Массив "ленивых" значений, используемых в качестве генераторов объектов </summary>
         </member>
         <member name="F:MathCore.Values.ObjectSelector`1._CanRead">
             <summary>Метод, определяющий возможность чтения данных из источников</summary>
@@ -11742,12 +11872,12 @@
             <summary>Постоянная времени усреднения </summary>
         </member>
         <member name="P:MathCore.Values.StreamDataSpeedValue.SpeedCheckTimeout">
-            <summary>Минимально домустимый интервал времени проверки скорости</summary>
+            <summary>Минимально допустимый интервал времени проверки скорости</summary>
         </member>
         <member name="M:MathCore.Values.StreamDataSpeedValue.#ctor(System.IO.Stream)">
             <summary>Новый измеритель скорости потока данных</summary>
             <param name="DataStream">Поток данных для измерения</param>
-            <exception cref="T:System.ArgumentNullException">Исключение возникает при нуливой ссылке на поток данных</exception>
+            <exception cref="T:System.ArgumentNullException">Исключение возникает при нулевой ссылке на поток данных</exception>
         </member>
         <member name="M:MathCore.Values.StreamDataSpeedValue.Reset">
             <summary>Сброс измерителя: установка стартового значения положения в потоке, сброс усреднителя</summary>
@@ -11759,7 +11889,7 @@
         <member name="M:MathCore.Values.StreamDataSpeedValue.op_Implicit(MathCore.Values.StreamDataSpeedValue)~System.Double">
             <summary>Неявное преобразование измерителя скорости к значению скорости (усреднённому)</summary>
             <param name="speed">Измеритель скорости</param>
-            <returns>Значение скосроти</returns>
+            <returns>Значение скорости</returns>
         </member>
         <member name="M:MathCore.Values.TimeAverage2Value.Add(System.Double)">
             <summary>Добавить значение</summary><param name="value">Значение</param>
@@ -14105,7 +14235,7 @@
         </member>
         <member name="M:System.NotImplementedAttribute.#ctor(System.String)">
             <summary>Новый атрибут нереализованности</summary>
-            <param name="Message">Сообщение (почему не раелизовано?)</param>
+            <param name="Message">Сообщение (почему не реализовано?)</param>
         </member>
         <member name="M:System.NotImplementedAttribute.IsDefaultAttribute">
             <summary>Признак атрибута "по умолчанию"</summary>
@@ -14135,16 +14265,16 @@
             <summary>Значение должно быть в диапазоне значений</summary>
         </member>
         <member name="F:System.ValueBetweenAttribute._Min">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="F:System.ValueBetweenAttribute._Max">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="P:System.ValueBetweenAttribute.Min">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="P:System.ValueBetweenAttribute.Max">
-            <summary>Инжнее пороговое значение</summary>
+            <summary>Нижнее пороговое значение</summary>
         </member>
         <member name="M:System.ValueBetweenAttribute.#ctor">
             <summary>Инициализация нового экземпляра <see cref="T:System.GreaterOrEqualAttribute"/></summary>
@@ -15154,7 +15284,7 @@
         <member name="E:System.Linq.Expressions.ExpressionRebuilder.ConditionalVisited">
             <summary>Событие возникает при посещении узла условного оператора</summary>
         </member>
-        <member name="E:System.Linq.Expressions.ExpressionRebuilder.ConstantlVisited">
+        <member name="E:System.Linq.Expressions.ExpressionRebuilder.ConsonantVisited">
             <summary>Событие возникает при посещении узла константы</summary>
         </member>
         <member name="E:System.Linq.Expressions.ExpressionRebuilder.ElementInitializerVisited">
@@ -15368,6 +15498,27 @@
         </member>
         <member name="T:System.Linq.IEnumerableExtensions">
             <summary>Класс методов-расширений для интерфейса перечисления</summary>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Dispersion(System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Дисперсия значений</summary>
+            <param name="enumerable">Объект-источник данных</param>
+            <returns>Дисперсия значений</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Dispersion(System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>Дисперсия значений</summary>
+            <param name="enumerable">Объект-источник данных</param>
+            <returns>Дисперсия значений</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Dispersion(System.Collections.Generic.IEnumerable{System.Int64})">
+            <summary>Дисперсия значений</summary>
+            <param name="enumerable">Объект-источник данных</param>
+            <returns>Дисперсия значений</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Dispersion``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Double})">
+            <summary>Дисперсия значений</summary>
+            <param name="enumerable">Объект-источник данных</param>
+            <param name="Selector">Метод получения вещественного значения</param>
+            <returns>Дисперсия значений</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.InsertBefore``1(System.Collections.Generic.IEnumerable{``0},``0[])">
             <summary>Добавить элемент в начало последовательности</summary>
@@ -17454,7 +17605,7 @@
         </member>
         <member name="M:System.Threading.Tasks.TaskEx.PropagateExceptions(System.Threading.Tasks.Task[])">
             <summary>Propagates any exceptions that occurred on the specified tasks.</summary>
-            <param name="tasks">The Tassk whose exceptions are to be propagated.</param>
+            <param name="tasks">The Task whose exceptions are to be propagated.</param>
         </member>
         <member name="M:System.Threading.Tasks.TaskEx.ToObservable``1(System.Threading.Tasks.Task{``0})">
             <summary>Creates an IObservable that represents the completion of a Task.</summary>
@@ -17666,7 +17817,7 @@
             <param name="PartyBit">Бит чётности</param>
             <returns>Истина, если сумма бит по модулю 2 и бита чётности равна 0</returns>
         </member>
-        <member name="M:System.Collections.BitArrayExtensions.GetBitSummMod2(System.Collections.BitArray)">
+        <member name="M:System.Collections.BitArrayExtensions.GetBitSumMod2(System.Collections.BitArray)">
             <summary>Сумма бит по модулю 2</summary>
             <param name="bits">Битовый массив</param>
             <returns>Результат сложения бит массива по модулю 2</returns>
@@ -17757,7 +17908,7 @@
             <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
             <param name="dictionary">Рассматриваемый словарь</param>
             <param name="key">Ключ, значение для которого требуется получить</param>
-            <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключём, если он отсутствует</param>
+            <param name="DefaultValue">Значение по-умолчанию, которое будет добавлено в словарь с указанным ключом, если он отсутствует</param>
             <typeparam name="TKey">Тип ключа</typeparam>
             <typeparam name="TValue">Тип значения</typeparam>
             <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
@@ -18022,7 +18173,7 @@
             <returns>
             Значение true, если объект, реализующий <see cref="T:System.Collections.Generic.IDictionary`2"/>, содержит элемент с указанным ключом, в противном случае — значение false.
             </returns>
-            <param name="key">Ключ, значение которого необходимо получить.</param><param name="value">Этот метод возвращает значение, связанное с указанным ключом, если он найден; в противном случае — значение по умолчанию для данного типа параметра <paramref name="value"/>. Этот параметр передается неинициализированным.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception>
+            <param name="key">Ключ, значение которого необходимо получить.</param><param name="value">Этот метод возвращает значение, связанное с указанным ключом, если он найден; в противном случае — значение по умолчанию для данного типа параметра <paramref name="value"/>. Этот параметр передается не инициализированным.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception>
         </member>
         <member name="P:System.Collections.Generic.DictionaryReadOnly`2.Item(`0)">
             <summary>
@@ -19203,7 +19354,7 @@
             <exception cref="T:System.Xml.XPath.XPathReaderException">Can't get the child value</exception>
         </member>
         <member name="M:System.Xml.XPath.DescendantQuery.GetValue(System.Xml.XPath.XPathReader)">
-            <exception cref="T:System.Xml.XPath.XPathReaderException">Can't get the decendent nodes value</exception>
+            <exception cref="T:System.Xml.XPath.XPathReaderException">Can't get the decedent nodes value</exception>
         </member>
         <member name="M:System.Xml.XPath.FilterQuery.GetValue(System.Xml.XPath.XPathReader)">
             <exception cref="T:System.Xml.XPath.XPathReaderException">Can't get value</exception>
@@ -19637,8 +19788,8 @@
         <member name="M:System.ByteExtensions.BitReversing(System.Byte,System.Int32)">
             <summary>Реверсирование бит числа</summary>
             <param name="x">исходное число</param>
-            <param name="N">Число реверсируемых бит [ = 16 ]</param>
-            <returns>Реверсированное число</returns>
+            <param name="N">Число резервируемых бит [ = 16 ]</param>
+            <returns>Инверсированное число</returns>
         </member>
         <member name="M:System.ByteExtensions.IsOdd(System.Byte)">
             <summary>Является ли число нечётным</summary>
@@ -19686,6 +19837,11 @@
             <summary>Усреднить значения всех массивов</summary>
             <param name="array">Усредняемые массивы</param>
             <returns>Массив средних значений</returns>
+        </member>
+        <member name="M:System.DoubleArrayExtensions.Dispersion(System.Double[])">
+            <summary>Рассчитать дисперсию массива как M{X^2} - M{X}^2</summary>
+            <param name="array">Массив, дисперсию элементов которого требуется рассчитать</param>
+            <returns>Если длина 0, то NaN, если длина 1, то 0, иначе - дисперсия элементов массива</returns>
         </member>
         <member name="T:System.DoubleExtensions">
             <summary>Расширения для чисел двойной точности</summary>
@@ -19806,7 +19962,7 @@
             <returns>Последовательность простых чисел составляющих раскладываемое число</returns>
         </member>
         <member name="M:System.IntExtensions.FactorizationList(System.Int32)">
-            <summary>Разложение числа на простые множетили</summary>
+            <summary>Разложение числа на простые множители</summary>
             <param name="n">Раскладываемое число</param>
             <returns>Массив простых множителей</returns>
         </member>
@@ -19831,7 +19987,7 @@
             <returns>Число бит числа</returns>
         </member>
         <member name="M:System.IntExtensions.GetNumberOfDigits(System.Int32,System.Int32)">
-            <summary>Получить число разрядов в указаной системе счисления</summary>
+            <summary>Получить число разрядов в указанной системе счисления</summary>
             <param name="n">Рассматриваемое число</param>
             <param name="Base">Основание системы счисления. По умолчанию = 10</param>
             <returns>Количество разрядов в указанной системе счисления</returns>
@@ -19853,7 +20009,7 @@
             <param name="x">исходное число</param>
             <returns>Реверсированное число</returns>
         </member>
-        <member name="M:System.IntExtensions.IsDevidedTo(System.Int32,System.Int32)">
+        <member name="M:System.IntExtensions.IsDeviatedTo(System.Int32,System.Int32)">
             <summary>Проверка делимости числа на делитель</summary>
             <param name="x">Делимое</param>
             <param name="y">Делитель</param>
@@ -20582,7 +20738,7 @@
         <member name="M:System.StringExtensions.DecompressAsString(System.Byte[])">
             <summary>Разархивировать последовательность байт в строку</summary>
             <param name="bytes">Сжатая последовательность бай, содержащая строку</param>
-            <returns>Разжатая последовательность байт в строковом представлении</returns>
+            <returns>Распакованная последовательность байт в строковом представлении</returns>
         </member>
         <member name="M:System.StringExtensions.FindBlock(System.String,System.String)">
             <summary>Перечисление подстрок, разделяемых указанным строковым шаблоном</summary>
@@ -20593,12 +20749,12 @@
         <member name="M:System.StringExtensions.GetBracketText(System.String,System.Int32@,System.String,System.String)">
             <summary>Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения</summary>
             <param name="Str">Входная строка</param>
-            <param name="Offset">Смещеине во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска</param>
+            <param name="Offset">Смещение во входной строке начала поиска - в конце работы метода соответствует месту окончания поиска</param>
             <param name="Open">Шаблон начала подстроки</param>
             <param name="Close">Шаблон окончания подстроки</param>
             <returns>Подстрока, заключённая между указанными шаблонами начала и окончания</returns>
             <exception cref="T:System.FormatException">
-            Если шаблон завершения строки на нейден, либо если количество шаблонов начала строки превышает 
+            Если шаблон завершения строки на найден, либо если количество шаблонов начала строки превышает 
             количество шаблонов окончания во входной строке
             </exception>
         </member>
@@ -20955,6 +21111,77 @@
             <summary>Освобождение ресурсов</summary>
             <param name="disposing">Признак того, что требуется выполнить освобождение управляемых ресурсов</param>
         </member>
+        <member name="T:System.Reflection.Constructor`1">
+            <summary>Управление конструктором класса</summary>
+            <typeparam name="T">Тип объектов, порождаемых конструктором</typeparam>
+        </member>
+        <member name="F:System.Reflection.Constructor`1._Info">
+            <summary>Информация о конструкторе</summary>
+        </member>
+        <member name="F:System.Reflection.Constructor`1._ObjectType">
+            <summary>Тип объекта, конструктор которого требуется контролировать</summary>
+        </member>
+        <member name="F:System.Reflection.Constructor`1._Private">
+            <summary>Искать приватный конструктор?</summary>
+        </member>
+        <member name="F:System.Reflection.Constructor`1._ArgumentTypes">
+            <summary>Массив типов параметров конструктора</summary>
+        </member>
+        <member name="P:System.Reflection.Constructor`1.IsExist">
+            <summary>Конструктор найден</summary>
+        </member>
+        <member name="P:System.Reflection.Constructor`1.ObjectType">
+            <summary>Тип объекта, конструктор которого требуется контролировать</summary>
+        </member>
+        <member name="P:System.Reflection.Constructor`1.Private">
+            <summary>Искать приватный конструктор?</summary>
+        </member>
+        <member name="P:System.Reflection.Constructor`1.ArgumentTypes">
+            <summary>Массив типов параметров конструктора</summary>
+        </member>
+        <member name="M:System.Reflection.Constructor`1.#ctor(`0,System.Boolean,System.Type[])">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Reflection.Constructor`1"/></summary>
+            <param name="o">Объект, Конструктор которого используется</param>
+            <param name="Private">Искать приватный конструктор?</param>
+            <param name="ArgumentTypes">Массив типов параметров конструктора</param>
+        </member>
+        <member name="M:System.Reflection.Constructor`1.#ctor(System.Type,System.Boolean,System.Type[])">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Reflection.Constructor`1"/></summary>
+            <param name="type">Тип, из которого извлекается конструктор</param>
+            <param name="Private">Искать приватный конструктор?</param>
+            <param name="ArgumentTypes">Массив типов параметров конструктора</param>
+        </member>
+        <member name="M:System.Reflection.Constructor`1.Initialize(System.Type,System.Type[],System.Boolean)">
+            <summary>Инициализация контроля конструктора</summary>
+            <param name="Type">Тип из которого извлекается конструктор</param>
+            <param name="Types">Массив типов аргументов конструктора</param>
+            <param name="IsPrivate">Искать приватный конструктор?</param>
+        </member>
+        <member name="M:System.Reflection.Constructor`1.Create">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Reflection.Constructor`1.Create(System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="T:System.Reflection.ConstructorExtensions">
+            <summary>Класс методов-расширений для взаимодействия с конструкторами классов по средствам рефлексии</summary>
+        </member>
+        <member name="M:System.Reflection.ConstructorExtensions.GetObjectConstructor``1(``0,System.Boolean,System.Type[])">
+            <summary>Получить конструктор для объекта</summary>
+            <param name="o">Объект, конструктор класса которого требуется получить</param>
+            <param name="Private">Искать приватный конструктор?</param>
+            <param name="ArgumentTypes">Перечисление типов параметров искомого конструктора</param>
+            <typeparam name="TObject">Тип объекта, для которого извлекается конструктор</typeparam>
+            <returns>Объект, управляющий конструктором класса объекта</returns>
+        </member>
+        <member name="M:System.Reflection.ConstructorExtensions.GetTypeConstructor``1(System.Type,System.Boolean,System.Type[])">
+            <summary>Получить конструктор для объекта</summary>
+            <param name="type">Тип, из которого требуется извлечь конструктор</param>
+            <param name="Private">Искать приватный конструктор?</param>
+            <param name="ArgumentTypes">Перечисление типов параметров искомого конструктора</param>
+            <typeparam name="TObject">Тип объекта, для которого извлекается конструктор</typeparam>
+            <returns>Объект, управляющий конструктором класса объекта</returns>
+        </member>
         <member name="T:System.Reflection.Event`2">
             <summary>Событие</summary>
             <typeparam name="TObject">Тип объекта-источника события</typeparam>
@@ -20975,10 +21202,81 @@
             <param name="Name">Название события</param>
             <param name="Private">Приватность описания события в классе объекта</param>
         </member>
+        <member name="T:System.Reflection.Field`2">
+            <summary>Объект управления полем</summary>
+            <typeparam name="TObject">Тип объекта, в котором определено управляемое полек</typeparam>
+            <typeparam name="TValue">Тип поля</typeparam>
+        </member>
+        <member name="F:System.Reflection.Field`2._FieldInfo">
+            <summary>Информация о поле</summary>
+        </member>
+        <member name="F:System.Reflection.Field`2._Name">
+            <summary>Имя поля</summary>
+        </member>
+        <member name="F:System.Reflection.Field`2._Object">
+            <summary>Объект, в котором определено поле</summary>
+        </member>
+        <member name="F:System.Reflection.Field`2._Private">
+            <summary>Поле является приватным?</summary>
+        </member>
+        <member name="P:System.Reflection.Field`2.IsExist">
+            <summary>Поле найдено и может быть управляемо</summary>
+        </member>
+        <member name="P:System.Reflection.Field`2.Name">
+            <summary>Имя поля</summary>
+        </member>
+        <member name="P:System.Reflection.Field`2.Object">
+            <summary>Объект, в котором определено поле</summary>
+        </member>
+        <member name="P:System.Reflection.Field`2.Private">
+            <summary>Поле является приватным?</summary>
+        </member>
+        <member name="P:System.Reflection.Field`2.Value">
+            <summary>Значение поля</summary>
+        </member>
+        <member name="M:System.Reflection.Field`2.#ctor(`0,System.String,System.Boolean)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Reflection.Field`2"/></summary>
+            <param name="o">Объект, в котором определено поле</param>
+            <param name="Name">Имя поля</param>
+            <param name="Private">Поле является приватным?</param>
+        </member>
+        <member name="M:System.Reflection.Field`2.Initialize(`0,System.String,System.Boolean)">
+            <summary> Инициализация состояния <see cref="T:System.Reflection.Field`2"/></summary>
+            <param name="o">Объект, в котором определено поле</param>
+            <param name="FieldName">Имя поля</param>
+            <param name="IsPrivate">Поле является приватным?</param>
+        </member>
+        <member name="T:System.Reflection.FieldExtensions">
+            <summary>Класс методов-расширений для полей класса</summary>
+        </member>
+        <member name="M:System.Reflection.FieldExtensions.GetField``2(``0,System.String,System.Boolean)">
+            <summary>Получить объект контроля поля объекта</summary>
+            <typeparam name="TObject">Тип объекта, поле которого требуется контролировать</typeparam>
+            <typeparam name="TValue">Тип значения поля</typeparam>
+            <param name="o">Объект, поле которого требуется контролировать</param>
+            <param name="Name">Имя контролируемого поля</param>
+            <param name="Private">Искать приватное поле?</param>
+            <returns>Объект, осуществляющий контроль поля</returns>
+        </member>
         <member name="T:System.Reflection.Method`2">
             <summary>Объект, осуществляющий контроль метода объекта <typeparamref name="TObject"/></summary>
             <typeparam name="TObject">Тип объекта, метод которого требуется контролировать</typeparam>
             <typeparam name="TResult">Тип значения метода</typeparam>
+        </member>
+        <member name="F:System.Reflection.Method`2._MethodInfo">
+            <summary>Информация о контролируемом методе</summary>
+        </member>
+        <member name="F:System.Reflection.Method`2._Name">
+            <summary>Имя метод</summary>
+        </member>
+        <member name="F:System.Reflection.Method`2._Object">
+            <summary>Объект, метод которого контролируется</summary>
+        </member>
+        <member name="F:System.Reflection.Method`2._Private">
+            <summary>Метод не является публичным?</summary>
+        </member>
+        <member name="F:System.Reflection.Method`2._Method">
+            <summary>Функция, вычисляющая результат вызова метода</summary>
         </member>
         <member name="P:System.Reflection.Method`2.Name">
             <summary>Имя контролируемого метода</summary>
@@ -20995,9 +21293,20 @@
             <param name="Name">Имя контролируемого метода</param>
             <param name="Private">Метод не является публичным?</param>
         </member>
+        <member name="M:System.Reflection.Method`2.Initialize(`0,System.String,System.Boolean)">
+            <summary>Инициализация <see cref="T:System.Reflection.Method`2"/></summary>
+            <param name="obj">Объект, метод которого контролируется</param>
+            <param name="MethodName">Имя контролируемого метода</param>
+            <param name="IsPrivate">Метод не является публичным?</param>
+        </member>
         <member name="M:System.Reflection.Method`2.Invoke(System.Object[])">
             <summary>Вызвать метод</summary>
             <param name="Args">Набор параметров, передаваемый методу</param>
+            <returns>Результат вызова метода</returns>
+        </member>
+        <member name="M:System.Reflection.Method`2.PrivateInvoke(System.Object[])">
+            <summary>Внутренний метод, осуществляющий вызов метода</summary>
+            <param name="Args">Параметры вызова метода</param>
             <returns>Результат вызова метода</returns>
         </member>
         <member name="T:System.Reflection.MethodExtensions">
@@ -21035,6 +21344,15 @@
         </member>
         <member name="F:System.Reflection.Property`2._Private">
             <summary>Флаг приватности свойства</summary>
+        </member>
+        <member name="F:System.Reflection.Property`2._SetMethod">
+            <summary>Действие, осуществляющее установку значения свойства</summary>
+        </member>
+        <member name="F:System.Reflection.Property`2._GetMethod">
+            <summary>Функция, вычисляющая значение свойства</summary>
+        </member>
+        <member name="F:System.Reflection.Property`2._Descriptor">
+            <summary>Описание свойства</summary>
         </member>
         <member name="P:System.Reflection.Property`2.PropertyType">
             <summary>Тип значения свойства</summary>
@@ -21091,6 +21409,19 @@
             <param name="o">Объект, свойство которого требуется контролировать</param>
             <param name="PropertyName">Имя запрашиваемого свойства</param>
             <param name="IsPrivate">Искать непубличные свойства</param>
+        </member>
+        <member name="M:System.Reflection.Property`2.PropertyValueChanged(System.Object,System.EventArgs)">
+            <summary>Обработчик события изменения значения свойства</summary>
+            <param name="Sender">Источник события - объект, свойство которого контролируется</param>
+            <param name="Args">Аргумент события</param>
+        </member>
+        <member name="M:System.Reflection.Property`2.SetValue(`1)">
+            <summary>Метод, позволяющий установить значение свойства</summary>
+            <param name="value">Устанавливаемое значение свойства</param>
+        </member>
+        <member name="M:System.Reflection.Property`2.GetValue">
+            <summary>Метод, позволяющий получить значение свойства</summary>
+            <returns>Значение свойства</returns>
         </member>
         <member name="M:System.Reflection.Property`2.ToString">
             <inheritdoc />

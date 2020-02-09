@@ -16,18 +16,18 @@ namespace System
             {
                 aggregator[i++] = value;
                 if(i < length) continue;
-                var summ = 0d;
+                var sum = 0d;
                 for(var j = 0; j < length; j++)
-                    summ += aggregator[j];
-                yield return summ / length;
+                    sum += aggregator[j];
+                yield return sum / length;
                 i = 0;
             }
             if(i > 0)
             {
-                var summ = 0d;
+                var sum = 0d;
                 for(var j = 0; j < i; j++)
-                    summ += aggregator[j];
-                yield return summ / i;
+                    sum += aggregator[j];
+                yield return sum / i;
             }
         }
 
@@ -46,18 +46,18 @@ namespace System
             {
                 aggregator[i++] = value;
                 if(i < length) continue;
-                var summ = 0d;
+                var sum = 0d;
                 for(var j = 0; j < length; j++)
-                    summ += aggregator[j];
-                yield return (float)(summ / length);
+                    sum += aggregator[j];
+                yield return (float)(sum / length);
                 i = 0;
             }
             if(i > 0)
             {
-                var summ = 0d;
+                var sum = 0d;
                 for(var j = 0; j < i; j++)
-                    summ += aggregator[j];
-                yield return (float)(summ / i);
+                    sum += aggregator[j];
+                yield return (float)(sum / i);
             }
         }
 
@@ -76,18 +76,18 @@ namespace System
             {
                 aggregator[i++] = value;
                 if(i < length) continue;
-                var summ = 0d;
+                var sum = 0d;
                 for(var j = 0; j < length; j++)
-                    summ += aggregator[j];
-                yield return summ / length;
+                    sum += aggregator[j];
+                yield return sum / length;
                 i = 0;
             }
             if(i > 0)
             {
-                var summ = 0d;
+                var sum = 0d;
                 for(var j = 0; j < i; j++)
-                    summ += aggregator[j];
-                yield return summ / i;
+                    sum += aggregator[j];
+                yield return sum / i;
             }
         }
 

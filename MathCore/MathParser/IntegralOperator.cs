@@ -14,10 +14,10 @@ namespace MathCore.MathParser
         //Использовать адаптивный метод интегрирования
         private bool _IsAdaptive;
 
-        /// <summary>Создание нового комплексного интегритора интегрирования</summary>
+        /// <summary>Создание нового комплексного интегратора интегрирования</summary>
         public IntegralOperator() : this("∫") { }
 
-        /// <summary>Создание нового комплексного интегритора интегрирования</summary>
+        /// <summary>Создание нового комплексного интегратора интегрирования</summary>
         /// <param name="Name">Имя оператора</param>
         public IntegralOperator([NotNull] string Name) : base(Name) { }
 
@@ -88,11 +88,12 @@ namespace MathCore.MathParser
             var x_node = ParametersExpression.Tree
                         .OfType<VariableValueNode>()
                         .First(n => ReferenceEquals(x, n.Variable));
-            var interval = (IntervalNode)x_node.Parent.Right;
-            Debug.Assert(interval?.Left != null, "interval?.Left != null");
-            var min = ((ComputedNode)interval.Left).Compute();
-            Debug.Assert(interval.Right != null, "interval?.Right != null");
-            var max = ((ComputedNode)interval.Right).Compute();
+            var interval = (IntervalNode)x_node.Parent.Right ?? throw new InvalidOperationException("Правый узел дерева не определён - невозможно рассчитать интервал значений интегрирования");
+            var min_node = (ComputedNode)interval.Left ?? throw new InvalidOperationException("В левом поддереве интервала значений отсутствует элемент - невозможно определить минимальное значение интервала");
+            var max_node = (ComputedNode)interval.Right ?? throw new InvalidOperationException("В правом поддереве интервала значений отсутствует элемент - невозможно определить максимальное значение интервала"); ;
+
+            var min = min_node.Compute();
+            var max = max_node.Compute();
 
             Func<double, double> f = xx =>
             {
@@ -107,15 +108,15 @@ namespace MathCore.MathParser
             var dx_node = ParametersExpression.Tree
                         .OfType<VariableValueNode>()
                         .First(n => ReferenceEquals(dx, n.Variable));
-            Debug.Assert(dx_node.Parent.Right != null, "dx_node.Parent.Right != null");
-            dx.Value = ((ConstValueNode)dx_node.Parent.Right).Value;
+            var dx_value_node = (ConstValueNode)dx_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского элемента dx - невозможно рассчитать шаг интегрирования");
+            dx.Value = dx_value_node.Value;
             return f.GetIntegralValue(min, max, dx.GetValue());
         }
 
         /// <summary>Делегат адаптивного интегрирования</summary>
-        /// <param name="d">Делегат интегрируемой функци</param>
+        /// <param name="d">Делегат интегрируемой функции</param>
         /// <param name="Min">Начальное значение интервала интегрирования</param>
-        /// <param name="Max">Коненое значение интервала интегрирования</param>
+        /// <param name="Max">Конечное значение интервала интегрирования</param>
         /// <param name="Parameters">Массив параметров интегрируемой функции</param>
         /// <returns>Значение интеграла</returns>
         private delegate double AdaptiveIntegralDelegate([NotNull] Delegate d, double Min, double Max, [NotNull] double[] Parameters);
@@ -123,7 +124,7 @@ namespace MathCore.MathParser
         /// <summary>Получить численное значение интеграла адаптивным методом</summary>
         /// <param name="d">Делегат интегрируемой функции</param>
         /// <param name="Min">Начальное значение интервала интегрирования</param>
-        /// <param name="Max">Коненое значение интервала интегрирования</param>
+        /// <param name="Max">Конечное значение интервала интегрирования</param>
         /// <param name="Parameters">Массив параметров интегрируемой функции</param>
         /// <returns>Значение интеграла</returns>
         private static double GetAdaptiveIntegral([NotNull] Delegate d, double Min, double Max, [NotNull] double[] Parameters)
@@ -143,18 +144,18 @@ namespace MathCore.MathParser
         /// <summary>Получить численное значение интеграла методом трапеций</summary>
         /// <param name="d">Делегат интегрируемой функции</param>
         /// <param name="Min">Начальное значение интервала интегрирования</param>
-        /// <param name="Max">Коненое значение интервала интегрирования</param>
+        /// <param name="Max">Конечное значение интервала интегрирования</param>
         /// <param name="Parameters">Массив параметров интегрируемой функции</param>
-        /// <param name="dx">Шаг интерирования</param>
+        /// <param name="dx">Шаг интерполяции</param>
         /// <returns>Значение интеграла</returns>
         private delegate double IntegralDelegate([NotNull] Delegate d, double Min, double Max, [NotNull] double[] Parameters, double dx);
 
         /// <summary>Получить численное значение интеграла методом трапеций</summary>
         /// <param name="d">Делегат интегрируемой функции</param>
         /// <param name="Min">Начальное значение интервала интегрирования</param>
-        /// <param name="Max">Коненое значение интервала интегрирования</param>
+        /// <param name="Max">Конечное значение интервала интегрирования</param>
         /// <param name="Parameters">Массив параметров интегрируемой функции</param>
-        /// <param name="dx">Шаг интерирования</param>
+        /// <param name="dx">Шаг интерполяции</param>
         /// <returns>Значение интеграла</returns>
         private static double GetIntegral([NotNull] Delegate d, double Min, double Max, [NotNull] double[] Parameters, double dx)
         {
@@ -181,7 +182,7 @@ namespace MathCore.MathParser
                         .First(n => ReferenceEquals(iterator, n.Variable));
 
             var interval = (IntervalNode)x_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
-            var interval_left = (ComputedNode)interval.Left ?? throw new InvalidOperationException("Отсуствует левое поддерево");
+            var interval_left = (ComputedNode)interval.Left ?? throw new InvalidOperationException("Отсутствует левое поддерево");
             var interval_right = (ComputedNode)interval.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево");
             var min = interval_left.Compile();
             var max = interval_right.Compile();
@@ -189,12 +190,12 @@ namespace MathCore.MathParser
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
             var parameters = new[] { iterator_parameter };
             var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
-            var expr = Expression.Lambda(body, parameters).Compile();
+            var function = Expression.Lambda(body, parameters).Compile();
 
             if(_IsAdaptive)
                 return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
                 {
-                    Expression.Constant(expr), min, max,
+                    function.ToExpression(), min, max,
                     Expression.NewArrayInit(typeof(double))
                 });
 
@@ -207,7 +208,7 @@ namespace MathCore.MathParser
 
             return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
             {
-                Expression.Constant(expr), min, max,
+                function.ToExpression(), min, max,
                 Expression.NewArrayInit(typeof(double)),
                 dx
             });
@@ -232,7 +233,7 @@ namespace MathCore.MathParser
                         .First(n => ReferenceEquals(iterator, n.Variable));
 
             var interval = (IntervalNode)x_node.Parent.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево у родительского узла");
-            var interval_left = (ComputedNode)interval.Left ?? throw new InvalidOperationException("Отсуствует левое поддерево");
+            var interval_left = (ComputedNode)interval.Left ?? throw new InvalidOperationException("Отсутствует левое поддерево");
             var interval_right = (ComputedNode)interval.Right ?? throw new InvalidOperationException("Отсутствует правое поддерево");
             var min = interval_left.Compile();
             var max = interval_right.Compile();
@@ -240,12 +241,12 @@ namespace MathCore.MathParser
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
             var parameters = new[] { iterator_parameter };
             var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
-            var expr = Expression.Lambda(body, parameters).Compile();
+            var function = Expression.Lambda(body, parameters).Compile();
 
             if(_IsAdaptive)
                 return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
                 {
-                    Expression.Constant(expr), min, max,
+                    function.ToExpression(), min, max,
                     Expression.NewArrayInit(typeof(double))
                 });
 
@@ -258,7 +259,7 @@ namespace MathCore.MathParser
 
             return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
             {
-                Expression.Constant(expr), min, max,
+                function.ToExpression(), min, max,
                 Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray()),
                 dx
             });

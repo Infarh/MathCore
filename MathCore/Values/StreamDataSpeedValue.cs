@@ -76,7 +76,7 @@ namespace MathCore.Values
             [DST] set => _AverageValue.Tau = value;
         }
 
-        /// <summary>Минимально домустимый интервал времени проверки скорости</summary>
+        /// <summary>Минимально допустимый интервал времени проверки скорости</summary>
         public double SpeedCheckTimeout
         {
             [DST]
@@ -89,7 +89,7 @@ namespace MathCore.Values
 
         /// <summary>Новый измеритель скорости потока данных</summary>
         /// <param name="DataStream">Поток данных для измерения</param>
-        /// <exception cref="ArgumentNullException">Исключение возникает при нуливой ссылке на поток данных</exception>
+        /// <exception cref="ArgumentNullException">Исключение возникает при нулевой ссылке на поток данных</exception>
         public StreamDataSpeedValue(Stream DataStream)
         {
             _DataStream = DataStream;
@@ -135,7 +135,7 @@ namespace MathCore.Values
 
         /// <summary>Неявное преобразование измерителя скорости к значению скорости (усреднённому)</summary>
         /// <param name="speed">Измеритель скорости</param>
-        /// <returns>Значение скосроти</returns>
+        /// <returns>Значение скорости</returns>
         public static implicit operator double(StreamDataSpeedValue speed) => speed.AverageValue;
 
         /* ------------------------------------------------------------------------------------------ */

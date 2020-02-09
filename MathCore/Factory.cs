@@ -19,6 +19,17 @@ namespace MathCore
         [DST] T Create();
     }
 
+    /// <summary>Фабрика объектов</summary>
+    /// <typeparam name="T">Тип объектов, порождаемых фабрикой</typeparam>
+    /// <typeparam name="TParameter">Тип параметра процесса создания нового объекта</typeparam>
+    public interface IFactory<out T, in TParameter>
+    {
+        /// <summary>Создать новый объект</summary>
+        /// <param name="Parameter">Параметр процесса создания объекта</param>
+        /// <returns>Новый объект типа <typeparamref name="T"/></returns>
+        [DST] T Create(TParameter Parameter);
+    }
+
     /// <summary>Генератор объектов типа <typeparamref name="T"/></summary>
     /// <typeparam name="T">Тип генерируемых объектов</typeparam>
     public class Factory<T> : INotifyPropertyChanged, IFactory<T>

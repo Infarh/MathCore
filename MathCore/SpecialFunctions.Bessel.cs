@@ -1,15 +1,17 @@
 ﻿using System;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable IdentifierTypo
 
 namespace MathCore
 {
     public static partial class SpecialFunctions
     {
         /// <summary>Класс функций Бесселя</summary>
+        // ReSharper disable once CommentTypo
         //[Copyright("1984, 1987, 1989, 2000 by Stephen L. Moshier")]
         public static class Bessel
         {
-            private static void BesselAsympt0(double x, out double P, out double Q)
+            private static void BesselAsymptote0(double x, out double P, out double Q)
             {
                 var xsq = 64 / (x * x);
                 var p2 = .0;
@@ -44,7 +46,7 @@ namespace MathCore
                 Q = 8 * p3 / q3 / x;
             }
 
-            private static void BesselAsympt1(double x, out double P, out double Q)
+            private static void BesselAsymptote1(double x, out double P, out double Q)
             {
                 var xsq = 64 / (x * x);
                 var p2 = -1611.616644324610116477412898;
@@ -109,7 +111,7 @@ namespace MathCore
 
                 if(x > 8)
                 {
-                    BesselAsympt0(x, out var p0, out var q0);
+                    BesselAsymptote0(x, out var p0, out var q0);
                     var nn = x - Consts.pi / 4;
                     return Math.Sqrt(2 / Consts.pi / x) * (p0 * Math.Cos(nn) - q0 * Math.Sin(nn));
                 }
@@ -151,7 +153,7 @@ namespace MathCore
 
                 if(x > 8)
                 {
-                    BesselAsympt1(x, out var p0, out var q0);
+                    BesselAsymptote1(x, out var p0, out var q0);
                     var nn = x - 3 * Math.PI / 4;
                     var result = Math.Sqrt(2 / Consts.pi / x) * (p0 * Math.Cos(nn) - q0 * Math.Sin(nn));
                     if(s < 0) result = -result;
@@ -251,7 +253,7 @@ namespace MathCore
             {
                 if(x > 8)
                 {
-                    BesselAsympt0(x, out var p0, out var q0);
+                    BesselAsymptote0(x, out var p0, out var q0);
                     var nn = x - Math.PI / 4;
                     return Math.Sqrt(2 / Consts.pi / x) * (p0 * Math.Sin(nn) + q0 * Math.Cos(nn));
                 }
@@ -289,7 +291,7 @@ namespace MathCore
             {
                 if(x > 8)
                 {
-                    BesselAsympt1(x, out var p0, out var q0);
+                    BesselAsymptote1(x, out var p0, out var q0);
                     var nn = x - 3 * Consts.pi / 4;
                     return Math.Sqrt(2 / Consts.pi / x) * (p0 * Math.Sin(nn) + q0 * Math.Cos(nn));
                 }

@@ -6,11 +6,11 @@ namespace MathCore.Evaluations
     /// <typeparam name="T">Тип значения параметра</typeparam>
     public class NegateOperatorEvaluation<T> : UnaryOperatorEvaluation<T, T>
     {
-        /// <summary>Инициализация нового вычисления отризацания</summary>
+        /// <summary>Инициализация нового вычисления отрицания</summary>
         public NegateOperatorEvaluation() : base(Ex.Negate) { }
 
         /// <summary>Инициализация нового вычисления отрицания</summary>
         /// <param name="value">Вычисление значения операнда</param>
-        public NegateOperatorEvaluation(Evulation<T> value) : base(Ex.Negate, value) { }
+        public NegateOperatorEvaluation(Evaluation<T> value) : base(Ex.Negate, value) { }
     }
 }

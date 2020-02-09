@@ -14,6 +14,8 @@
 //------------------------------------------------------------------------------
 
 using System.Linq;
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.XPath

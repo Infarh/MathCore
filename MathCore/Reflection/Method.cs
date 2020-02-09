@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+
 using MathCore.Annotations;
 
 // ReSharper disable UnusedMember.Global
@@ -10,11 +11,19 @@ namespace System.Reflection
     /// <typeparam name="TResult">Тип значения метода</typeparam>
     public class Method<TObject, TResult>
     {
+        /// <summary>Информация о контролируемом методе</summary>
         private MethodInfo _MethodInfo;
+
+        /// <summary>Имя метод</summary>
         private string _Name;
+
+        /// <summary>Объект, метод которого контролируется</summary>
         private TObject _Object;
+
+        /// <summary>Метод не является публичным?</summary>
         private bool _Private;
 
+        /// <summary>Функция, вычисляющая результат вызова метода</summary>
         private Func<object[], TResult> _Method;
 
         /// <summary>Имя контролируемого метода</summary>
@@ -32,13 +41,17 @@ namespace System.Reflection
         /// <param name="Private">Метод не является публичным?</param>
         public Method(TObject o, string Name, bool Private = false) => Initialize(_Object = o, _Name = Name, _Private = Private);
 
+        /// <summary>Инициализация <see cref="Method{TObject,TResult}"/></summary>
+        /// <param name="obj">Объект, метод которого контролируется</param>
+        /// <param name="MethodName">Имя контролируемого метода</param>
+        /// <param name="IsPrivate">Метод не является публичным?</param>
         private void Initialize([CanBeNull] TObject obj, [NotNull] string MethodName, bool IsPrivate)
         {
             var IsPublic = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
             var IsStatic = obj is null ? BindingFlags.Static : BindingFlags.Instance;
 
             var type = typeof(TObject);
-            if(type == typeof(object) && obj != null)
+            if (type == typeof(object) && obj != null)
                 type = obj.GetType();
 
             _MethodInfo = type.GetMethod(MethodName, IsStatic | IsPublic);
@@ -53,6 +66,9 @@ namespace System.Reflection
         /// <returns>Результат вызова метода</returns>
         public TResult Invoke(params object[] Args) => _Method(Args);
 
+        /// <summary>Внутренний метод, осуществляющий вызов метода</summary>
+        /// <param name="Args">Параметры вызова метода</param>
+        /// <returns>Результат вызова метода</returns>
         private TResult PrivateInvoke(params object[] Args) => (TResult)_MethodInfo.Invoke(_Object, Args);
     }
 }

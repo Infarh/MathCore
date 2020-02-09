@@ -375,7 +375,7 @@ namespace MathCore
             public static Complex[,] GetTransvection([NotNull] Complex[,] A, int i0)
             {
                 GetRowsCount(A, out var N);
-                if (N != A.GetLength(1)) throw new ArgumentException(@"Трансвенция неквадратной матрицы невозможна", nameof(A));
+                if (N != A.GetLength(1)) throw new ArgumentException(@"Трансвекция неквадратной матрицы невозможна", nameof(A));
                 if (i0 < 0 || i0 > N) throw new ArgumentException(@"Номер опорной строки выходит за пределы индексов строк матрицы", nameof(i0));
 
                 var result = GetUnitaryArrayMatrix(N);
@@ -396,7 +396,7 @@ namespace MathCore
             {
                 if (result is null) throw new ArgumentNullException(nameof(result));
                 GetRowsCount(A, out var N);
-                if (N != A.GetLength(1)) throw new ArgumentException(@"Трансвенция неквадратной матрицы невозможна", nameof(A));
+                if (N != A.GetLength(1)) throw new ArgumentException(@"Трансвекция неквадратной матрицы невозможна", nameof(A));
                 if (N != result.GetLength(0) || A.GetLength(1) != result.GetLength(1))
                     throw new ArgumentException(@"Размер матрицы результата не соответствует размеру исходной матрицы", nameof(result));
                 if (j < 0 || j > N) throw new ArgumentException(@"Номер опорного столбца выходит за пределы индексов столбцов матрицы", nameof(j));
@@ -659,8 +659,8 @@ namespace MathCore
             {
                 GetLength(matrix, out var N, out var M);
                 if (result is null) throw new ArgumentNullException(nameof(result));
-                if (result.GetLength(0) != M) throw new ArgumentException(@"Число строк матрицы результата не равно чису столбцов исходной матрицы", nameof(result));
-                if (result.GetLength(1) != N) throw new ArgumentException(@"Число столбцов матрицы результата не равно чису строк исходной матрицы", nameof(result));
+                if (result.GetLength(0) != M) throw new ArgumentException(@"Число строк матрицы результата не равно числу столбцов исходной матрицы", nameof(result));
+                if (result.GetLength(1) != N) throw new ArgumentException(@"Число столбцов матрицы результата не равно числу строк исходной матрицы", nameof(result));
 
                 for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) result[j, i] = matrix[i, j];
             }

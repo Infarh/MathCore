@@ -116,7 +116,7 @@ namespace System.Collections.Generic
         /// <returns>
         /// Значение true, если объект, реализующий <see cref="T:System.Collections.Generic.IDictionary`2"/>, содержит элемент с указанным ключом, в противном случае — значение false.
         /// </returns>
-        /// <param name="key">Ключ, значение которого необходимо получить.</param><param name="value">Этот метод возвращает значение, связанное с указанным ключом, если он найден; в противном случае — значение по умолчанию для данного типа параметра <paramref name="value"/>. Этот параметр передается неинициализированным.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception>
+        /// <param name="key">Ключ, значение которого необходимо получить.</param><param name="value">Этот метод возвращает значение, связанное с указанным ключом, если он найден; в противном случае — значение по умолчанию для данного типа параметра <paramref name="value"/>. Этот параметр передается не инициализированным.</param><exception cref="T:System.ArgumentNullException">Параметр <paramref name="key"/> имеет значение null.</exception>
         public bool TryGetValue(TKey key, out TValue value) => _Dictionary.TryGetValue(key, out value);
 
         /// <summary>

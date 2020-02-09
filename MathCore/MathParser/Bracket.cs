@@ -18,7 +18,7 @@ namespace MathCore.MathParser
 
         /// <summary>Фигурные скобки</summary>
         [NotNull]
-        public static Bracket NewFigur => new Bracket("{", "}");
+        public static Bracket NewFigure => new Bracket("{", "}");
 
         /// <summary>Открывающая скобка</summary>
         [NotNull]
@@ -40,33 +40,34 @@ namespace MathCore.MathParser
         /// <summary>Проверка на эквивалентность другим скобкам</summary>
         /// <param name="other">Проверяемые на эквивалентность скобки</param>
         /// <returns>Истина, если проверяемые скобки эквивалентны данным</returns>
-        public bool Equals(Bracket other) => other is { } && (ReferenceEquals(this, other) || string.Equals(Start, other.Start) && string.Equals(Stop, other.Stop));
+        public bool Equals(Bracket other) => other != null && (ReferenceEquals(this, other) || string.Equals(Start, other.Start) && string.Equals(Stop, other.Stop));
 
         /// <summary>Проверка на эквивалентность</summary>
         /// <param name="obj">Проверяемый объект</param>
         /// <returns>Истина, если объект - скобки и вид скобок совпадает</returns>
-        public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Bracket)obj));
+        public override bool Equals(object obj) => obj != null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Bracket)obj));
 
         /// <summary>Получить хэш-код</summary>
         /// <returns>Хэш-код</returns>
-        public override int GetHashCode() { unchecked { return ((Start?.GetHashCode() ?? 0) * 397) ^ (Stop?.GetHashCode() ?? 0); } }
+        public override int GetHashCode() => unchecked(Start.GetHashCode() * 397 ^ Stop.GetHashCode());
 
         object ICloneable.Clone() => Clone();
 
         /// <summary>Клонирование скобок</summary>
         /// <returns>Клон скобок</returns>
         [NotNull]
-        public virtual Bracket Clone() => new Bracket(Start, Stop);
+        public Bracket Clone() => new Bracket(Start, Stop);
 
         /// <summary>Строковое представление скобок</summary>
         /// <returns>Строковое представление</returns>
-        public override string ToString() => Suround("...");
+        [NotNull]
+        public override string ToString() => Surround("...");
 
         /// <summary>Разместить текст в скобках</summary>
         /// <param name="str">Размещаемый текст</param>
         /// <returns>Текст в скобках</returns>
         [NotNull]
-        public string Suround([CanBeNull] string str)
+        public string Surround([CanBeNull] string str)
         {
             Trace.TraceWarning("В обёртку блока скобок передана пустая строка");
             return $"{Start}{str}{Stop}";

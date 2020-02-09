@@ -14,6 +14,6 @@ namespace System.Reflection
         /// <typeparam name="TObject">Тип объекта, свойство которого запрашивается</typeparam>
         /// <typeparam name="TValue">Тип значения свойства</typeparam>
         /// <returns>Объект контроля свойства объекта</returns>
-        [NotNull] public static Property<TObject, TValue> GetProperty<TObject, TValue>(this TObject o, string Name, bool Private = false) => new Property<TObject, TValue>(o, Name, Private);
+        [NotNull] public static Property<TObject, TValue> GetProperty<TObject, TValue>(this TObject o, [NotNull] string Name, bool Private = false) => new Property<TObject, TValue>(o, Name, Private);
     }
 }

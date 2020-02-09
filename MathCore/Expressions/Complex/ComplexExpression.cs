@@ -54,25 +54,25 @@ namespace MathCore.Expressions.Complex
         #region Static public methods
 
         [NotNull, PublicAPI]
-        public static CopmlexConstantExpression Mod(MathCore.Complex Z) => Mod(Z.Re, Z.Im);
+        public static ComplexConstantExpression Mod(MathCore.Complex Z) => Mod(Z.Re, Z.Im);
         [NotNull]
-        public static CopmlexConstantExpression Mod(double Re, double Im = 0) => new CopmlexConstantExpression(Re, Im);
+        public static ComplexConstantExpression Mod(double Re, double Im = 0) => new ComplexConstantExpression(Re, Im);
         [NotNull]
-        public static CopmlexConstantExpression Mod(Expression Re) => new CopmlexConstantExpression(Re, Constant(0d));
+        public static ComplexConstantExpression Mod(Expression Re) => new ComplexConstantExpression(Re, Constant(0d));
         [NotNull, PublicAPI]
-        public static CopmlexConstantExpression Mod(Expression Re, Expression Im) => new CopmlexConstantExpression(Re, Im);
-
-        [NotNull, PublicAPI]
-        public static CopmlexConstantExpression Exp(double Abs, double Arg) => Exp(Constant(Abs), Constant(Arg));
-
-        [NotNull]
-        public static CopmlexConstantExpression Exp([NotNull] Expression Abs, [NotNull] Expression Arg) => new CopmlexConstantExpression(Multiply(Abs, GetCos(Arg)), Multiply(Abs, GetSin(Arg)));
+        public static ComplexConstantExpression Mod(Expression Re, Expression Im) => new ComplexConstantExpression(Re, Im);
 
         [NotNull, PublicAPI]
-        public static CopmlexConstantExpression Exp(double Arg) => Exp(Constant(Arg));
+        public static ComplexConstantExpression Exp(double Abs, double Arg) => Exp(Constant(Abs), Constant(Arg));
 
         [NotNull]
-        public static CopmlexConstantExpression Exp([NotNull] Expression Arg) => new CopmlexConstantExpression(GetCos(Arg), GetSin(Arg));
+        public static ComplexConstantExpression Exp([NotNull] Expression Abs, [NotNull] Expression Arg) => new ComplexConstantExpression(Multiply(Abs, GetCos(Arg)), Multiply(Abs, GetSin(Arg)));
+
+        [NotNull, PublicAPI]
+        public static ComplexConstantExpression Exp(double Arg) => Exp(Constant(Arg));
+
+        [NotNull]
+        public static ComplexConstantExpression Exp([NotNull] Expression Arg) => new ComplexConstantExpression(GetCos(Arg), GetSin(Arg));
 
         #endregion
 

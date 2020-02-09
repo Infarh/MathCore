@@ -10,7 +10,7 @@ namespace MathCore.Evaluations
 {
     /// <summary>Вычисление функции без переменных</summary>
     /// <typeparam name="T"></typeparam>
-    public class FunctionEvaluation<T> : Evulation<T>
+    public class FunctionEvaluation<T> : Evaluation<T>
     {
         /// <summary>Вычисляемая функция</summary>
         public Func<T> Function { get; set; }

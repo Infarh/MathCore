@@ -5,17 +5,17 @@ namespace System.Xml.XPath
     {
         #region Fields
 
-        private readonly BooleanFunctions _Opnd1;
-        private readonly BooleanFunctions _Opnd2;
+        private readonly BooleanFunctions _Operand1;
+        private readonly BooleanFunctions _Operand2;
 
         #endregion
 
         #region Constructors
 
-        internal OrExpr(Query opnd1, Query opnd2)
+        internal OrExpr(Query operand1, Query operand2)
         {
-            _Opnd1 = new BooleanFunctions(opnd1);
-            _Opnd2 = new BooleanFunctions(opnd2);
+            _Operand1 = new BooleanFunctions(operand1);
+            _Operand2 = new BooleanFunctions(operand2);
         }
 
         #endregion
@@ -24,10 +24,10 @@ namespace System.Xml.XPath
 
         internal override object GetValue(XPathReader reader)
         {
-            var ret = _Opnd1.GetValue(reader);
+            var ret = _Operand1.GetValue(reader);
 
             if(!Convert.ToBoolean(ret))
-                ret = _Opnd2.GetValue(reader);
+                ret = _Operand2.GetValue(reader);
 #if DEBUG1
             Console.WriteLine("OrExpr: {0}", ret);
 #endif

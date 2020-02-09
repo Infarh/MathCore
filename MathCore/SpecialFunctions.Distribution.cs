@@ -9,6 +9,7 @@ namespace MathCore
         public static class Distribution
         {
             /// <summary>Нормальное распределение</summary>
+            // ReSharper disable once CommentTypo
             //[Copyright("1984, 1987, 1988, 1992, 2000 by Stephen L. Moshier")]
             public static class Normal
             {
@@ -20,7 +21,7 @@ namespace MathCore
                 {
                     var s = Math.Sign(x);
                     x = Math.Abs(x);
-                    if (x >= .5) return x >= 10 ? s : s * (1 - ErrorFunctionComform(x));
+                    if (x >= .5) return x >= 10 ? s : s * (1 - ErrorFunctionConform(x));
 
                     var xsq = x * x;
                     var p = .007547728033418631287834;
@@ -42,9 +43,9 @@ namespace MathCore
                 }
 
                 [DST]
-                public static double ErrorFunctionComform(double x)
+                public static double ErrorFunctionConform(double x)
                 {
-                    if (x < 0) return 2 - ErrorFunctionComform(-x);
+                    if (x < 0) return 2 - ErrorFunctionConform(-x);
                     if (x < .5) return 1 - ErrorFunction(x);
                     if (x >= 10) return 0;
 
@@ -79,8 +80,8 @@ namespace MathCore
                 [DST]
                 public static double NormalDistributionInversed(double y0)
                 {
-                    const double expm2 = .13533528323661269189;
-                    const double lc_S2Pi = 2.50662827463100050242;
+                    const double exp_m2 = .13533528323661269189;
+                    const double lc_s2pi = 2.50662827463100050242;
 
                     if (y0 <= 0)
                         return -__MaxRealNumber;
@@ -90,13 +91,13 @@ namespace MathCore
 
                     var code = 1;
                     var y = y0;
-                    if (y > 1 - expm2)
+                    if (y > 1 - exp_m2)
                     {
                         y = 1 - y;
                         code = 0;
                     }
 
-                    if (y > expm2)
+                    if (y > exp_m2)
                     {
                         y -= .5;
                         var y2 = y * y;
@@ -115,7 +116,7 @@ namespace MathCore
                         q0 *= -82.0372256168333339912 + y2;
                         q0 *= 15.9056225126211695515 + y2;
                         q0 *= -1.18331621121330003142 + y2;
-                        return (y + y * y2 * p0 / q0) * lc_S2Pi;
+                        return (y + y * y2 * p0 / q0) * lc_s2pi;
                     }
 
                     var x = Math.Sqrt(-2 * Math.Log(y));
@@ -176,7 +177,7 @@ namespace MathCore
             public static class Student
             {
                 [DST]
-                public static double StudenttDistribution(int k, double t)
+                public static double StudentDistribution(int k, double t)
                 {
                     if (Math.Abs(t - 0) < Eps) return .5;
                     if (t < -2)
@@ -192,8 +193,8 @@ namespace MathCore
                     int j;
                     if (k % 2 != 0)
                     {
-                        var xsqk = x / Math.Sqrt(rk);
-                        p = Math.Atan(xsqk);
+                        var x_sqk = x / Math.Sqrt(rk);
+                        p = Math.Atan(x_sqk);
                         if (k > 1)
                         {
                             f = 1;
@@ -205,7 +206,7 @@ namespace MathCore
                                 f += tz;
                                 j += 2;
                             }
-                            p += f * xsqk / z;
+                            p += f * x_sqk / z;
                         }
                         p *= 2 / Consts.pi;
                     }
@@ -239,15 +240,15 @@ namespace MathCore
                         return p < 0 ? -t : t;
                     }
 
-                    var rflg = -1;
+                    var r_flg = -1;
                     if (p >= .5)
                     {
                         p = 1 - p;
-                        rflg = 1;
+                        r_flg = 1;
                     }
 
                     z = IncompleteBeta.IncompleteBetaInversed(.5 * rk, .5, 2 * p);
-                    return __MaxRealNumber * z < rk ? rflg * __MaxRealNumber : rflg * Math.Sqrt(rk / z - rk);
+                    return __MaxRealNumber * z < rk ? r_flg * __MaxRealNumber : r_flg * Math.Sqrt(rk / z - rk);
                 }
 
                 /// <summary>Квантиль Хи-квадрат</summary>
@@ -256,12 +257,14 @@ namespace MathCore
                 /// <returns>Квантиль</returns>
                 public static double QuantileHi2(double alpha, int n) => Gamma.LowerRegularizedInv(n / 2d, alpha) / 0.5;
 
+                // ReSharper disable CommentTypo
                 /// <summary>Квантиль Хи-квадрат (Аппроксимация Корниша-Фишера)</summary>
                 /// <remarks>http://ru.wikipedia.org/wiki/Квантили_распределения_хи-квадрат</remarks>
                 /// <remarks>https://projecteuclid.org/download/pdf_1/euclid.aoms/1177730982</remarks>
                 /// <param name="alpha">Квантиль [0..1]</param>
                 /// <param name="n">Число степеней свободы</param>
                 /// <returns>Квантиль</returns>
+                // ReSharper restore CommentTypo
                 public static double QuantileHi2Approximation(double alpha, int n)
                 {
                     if (alpha < .001 || alpha > .999)

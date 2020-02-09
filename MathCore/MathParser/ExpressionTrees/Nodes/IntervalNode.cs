@@ -1,12 +1,16 @@
-﻿namespace MathCore.MathParser.ExpressionTrees.Nodes
+﻿using MathCore.Annotations;
+
+namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
     /// <summary>Узел интервального значения</summary>
     public class IntervalNode : ParsedNode
     {
         /// <summary>Минимальное значение</summary>
+        [CanBeNull]
         public ExpressionTreeNode Min { get => Left; set => Left = value; }
 
         /// <summary>Максимальное значение</summary>
+        [CanBeNull]
         public ExpressionTreeNode Max { get => Right; set => Right = value; }
 
         public IntervalNode(double Min, double Max) : this(new ConstValueNode(Min), new ConstValueNode(Max)) { }

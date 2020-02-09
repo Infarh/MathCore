@@ -9,7 +9,7 @@ using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
 // ReSharper disable MemberCanBePrivate.Local
 
-namespace MathCore.Tests.Monades.WorkFlow
+namespace MathCore.Tests.Monads.WorkFlow
 {
     public partial class WorkTests
     {

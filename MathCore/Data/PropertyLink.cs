@@ -44,7 +44,7 @@ namespace MathCore.Data
         /// <summary>Дескриптор свойства источника данных</summary>
         public PropertyDescriptor SourceProperty => _SourcePropertyDescriptor;
 
-        /// <summary>Дескриптор свойства примника данных</summary>
+        /// <summary>Дескриптор свойства приёмника данных</summary>
         public PropertyDescriptor DestinationProperty => _DestinationPropertyDescriptor;
 
         /// <summary>Источник данных</summary>
@@ -129,7 +129,7 @@ namespace MathCore.Data
         //    // получаем новое значение свойства элемента управления
         //    var lv_ControlPropertyValue = _DestinationPropertyDescriptor.GetValue(_Destination);
 
-        //    // Дразу присвоить свойству источника данных новое значение нельзя, т.к. типы свойств могут не совпадать.
+        //    // Сразу присвоить свойству источника данных новое значение нельзя, т.к. типы свойств могут не совпадать.
         //    // Для этого воспользуемся TypeConverter-ами, которые являются частью класса PropertyDescriptor
 
         //    Debug.Assert(_SourcePropertyDescriptor.Converter != null,

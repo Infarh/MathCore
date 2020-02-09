@@ -57,7 +57,8 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            var name = node.Member.Name.Split('.').Last();
+            var strings = node.Member.Name.Split('.');
+            var name = strings[strings.Length - 1];
             _Result.Append(name);
             return node;
         }
@@ -71,7 +72,8 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            _Result.Append(node.Name.Split('.').Last());
+            var strings = node.Name.Split('.');
+            _Result.Append(strings[strings.Length - 1]);
             return node;
         }
 
@@ -139,6 +141,7 @@ namespace System.Linq.Expressions
         }
 
 
+        // ReSharper disable once CommentTypo
         /// <summary>
         /// Оператор деления \fract требует иного порядка аргументов:
         /// \frac{arg1}{arg2} 

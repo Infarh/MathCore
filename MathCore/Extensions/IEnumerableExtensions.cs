@@ -273,7 +273,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> WhereNotNull<T>([NN] this IEnumerable<T> enumerable)
             where T : class
-            => enumerable.Where(i => i is { });
+            => enumerable.Where(i => i != null);
 
         /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
         /// <param name="strings">Последовательность строк</param>
@@ -1532,7 +1532,7 @@ namespace System.Linq
                 var next_b = b.MoveNext();
                 while (next_a && next_b)
                 {
-                    if (a.Current is null && b.Current is { }) return false;
+                    if (a.Current is null && b.Current != null) return false;
                     if (a.Current is null || !a.Current.Equals(b.Current)) return false;
                     next_a = a.MoveNext();
                     next_b = b.MoveNext();
@@ -1666,7 +1666,7 @@ namespace System.Linq
             if (collection != null && !(collection is T[] array && array.Length == 0))
                 foreach (var value in collection)
                     yield return value;
-            if (obj is { })
+            if (obj != null)
                 yield return obj;
         }
 
@@ -1698,7 +1698,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AppendFirst<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
-            if (obj is { }) yield return obj;
+            if (obj != null) yield return obj;
             if (collection is null || collection is T[] items && items.Length == 0) yield break;
             foreach (var value in collection)
                 yield return value;

@@ -5,7 +5,7 @@ using MathCore.Annotations;
 namespace MathCore.Values
 {
     /// <summary>Максимальное значение</summary>
-    public class MaxValue : IValue<double>, IResetable, IFormattable
+    public class MaxValue : IValue<double>, IResettable, IFormattable
     {
         /// <summary>Минимальное значение</summary>
         public double Value { get; set; }

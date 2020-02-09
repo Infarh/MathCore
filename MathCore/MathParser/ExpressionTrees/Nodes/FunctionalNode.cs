@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 using System.Linq.Expressions;
+using MathCore.Annotations;
+// ReSharper disable ConvertToAutoPropertyWhenPossible
+
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
+    /// <summary>Функциональный узел</summary>
     public class FunctionalNode : ComputedNode
     {
         /// <summary>Имя узла</summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>Выражение параметров</summary>
         private readonly MathExpression _ParametersExpression = new MathExpression("Param");
@@ -26,10 +32,16 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Оператор</summary>
         public Functional Operator { get; set; }
 
+        /// <summary>Инициализация нового экземпляра <see cref="FunctionNode"/></summary>
+        /// <param name="Name">Имя функционала</param>
         [DST]
         public FunctionalNode(string Name) => this.Name = Name;
 
-        internal FunctionalNode(FunctionalTerm term, ExpressionParser Parser, MathExpression Expression)
+        /// <summary>Инициализация нового экземпляра <see cref="FunctionNode"/></summary>
+        /// <param name="term">Блок определения функционала</param>
+        /// <param name="Parser">Парсер выражения, конструирующий дерево</param>
+        /// <param name="Expression">Выражение, в которое будет включён создаваемый узел</param>
+        internal FunctionalNode([NotNull] FunctionalTerm term, [NotNull] ExpressionParser Parser, [NotNull] MathExpression Expression)
             : this(term.Name)
         {
             // Расшифровка блока ядра функции
@@ -61,6 +73,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             Operator.Initialize(_ParametersExpression, _CoreExpression, Parser, Expression);
         }
 
+        /// <inheritdoc />
         public override IEnumerable<ExpressionVariable> GetVariables()
         {
             ExpressionVariable iterator = null;
@@ -81,10 +94,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression Compile() => Operator.Compile(_ParametersExpression, _CoreExpression);
 
         /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
+        /// <param name="Args">Массив параметров</param>
         /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         [DST]
-        public override Expression Compile(params ParameterExpression[] Parameters) => Operator.Compile(_ParametersExpression, _CoreExpression, Parameters);
+        public override Expression Compile(params ParameterExpression[] Args) => Operator.Compile(_ParametersExpression, _CoreExpression, Args);
 
         /// <summary>Преобразование узла в строку</summary>
         /// <returns>Строковое представление узла</returns>

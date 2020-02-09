@@ -31,9 +31,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression Compile() => ((ComputedNode)Left).Compile();
 
         /// <summary>Компиляция узла с параметрами</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
+        /// <param name="Args">Список параметров выражения</param>
         /// <returns>Компиляция вложенного узла</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)Left).Compile(Parameters);
+        public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode)Left).Compile(Args);
 
         /// <summary>Клон узла</summary>
         /// <returns>Клон узла</returns>
@@ -46,6 +46,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление узла</returns>
         public override string ToString() => 
-            $"{_Bracket.Suround((Left ?? throw new InvalidOperationException()).ToString())}{Right?.ToString() ?? string.Empty}";
+            $"{_Bracket.Surround((Left ?? throw new InvalidOperationException()).ToString())}{Right?.ToString() ?? string.Empty}";
     }
 }

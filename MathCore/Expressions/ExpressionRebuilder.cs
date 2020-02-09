@@ -64,8 +64,8 @@ namespace System.Linq.Expressions
         protected override Expression VisitConditional(ConditionalExpression c) => InvokeEvent(ConditionalVisited, c, base.VisitConditional);
 
         /// <summary>Событие возникает при посещении узла константы</summary>
-        public event EventHandlerReturn<EventArgs<ConstantExpression>, Expression> ConstantlVisited;
-        protected override Expression VisitConstant(ConstantExpression c) => InvokeEvent(ConstantlVisited, c, base.VisitConstant);
+        public event EventHandlerReturn<EventArgs<ConstantExpression>, Expression> ConsonantVisited;
+        protected override Expression VisitConstant(ConstantExpression c) => InvokeEvent(ConsonantVisited, c, base.VisitConstant);
 
         /// <summary>Событие возникает при посещении узла инициализатора объекта</summary>
         public event EventHandlerReturn<EventArgs<ElementInit>, ElementInit> ElementInitializerVisited;

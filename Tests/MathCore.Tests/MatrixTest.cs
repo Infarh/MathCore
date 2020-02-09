@@ -165,7 +165,7 @@ namespace MathCore.Tests
 
         /// <summary>Тест оператора сложения двух матриц</summary>
         [TestMethod, Priority(1), Description("Тест оператора сложения двух матриц")]
-        public void Operatorsubtract_Matrix_Matrix_Test()
+        public void OperatorSubtract_Matrix_Matrix_Test()
         {
             double[,] a =
             {
