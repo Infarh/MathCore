@@ -101,7 +101,7 @@ namespace MathCore
 
         /// <inheritdoc />
         public override bool Equals(object obj) =>
-            obj is { }
+            obj != null
             && (ReferenceEquals(this, obj)
                 || obj.GetType() == typeof(LambdaProperty<T>)
                 && Equals((LambdaProperty<T>)obj));
@@ -110,7 +110,7 @@ namespace MathCore
         /// <returns>true, если текущий объект равен параметру <paramref name="other"/>, в противном случае — false.</returns>
         /// <param name="other">Объект, который требуется сравнить с данным объектом.</param>
         public bool Equals(LambdaProperty<T> other) =>
-            other is { }
+            other != null
             && (ReferenceEquals(this, other)
                 || Equals(other._GetMethod, _GetMethod)
                 && Equals(other._SetMethod, _SetMethod));

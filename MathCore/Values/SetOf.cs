@@ -56,7 +56,7 @@ namespace MathCore.Values
         public SetOf<T> Clone() => new SetOf<T>(this);
 
         /// <inheritdoc />
-        public bool Equals(SetOf<T> other) => other is { }
+        public bool Equals(SetOf<T> other) => other != null
                                               && (other.Power == Power
                                                   && (!this.Any(other.NotContains)
                                                       && !other.Any(NotContains)));

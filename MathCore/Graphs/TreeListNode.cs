@@ -21,7 +21,7 @@ namespace MathCore.Graphs
             set
             {
                 var last = _Prev;
-                if (last is { })
+                if (last != null)
                 {
                     if (ReferenceEquals(last.Next, this)) last._Next = null;
                     else if (ReferenceEquals(last.Child, this)) last._Child = null;
@@ -36,7 +36,7 @@ namespace MathCore.Graphs
             set
             {
                 var last = _Next;
-                if (last is { }) last.Prev = null;
+                if (last != null) last.Prev = null;
                 _Next = value;
                 value.Prev = this;
             }
@@ -48,7 +48,7 @@ namespace MathCore.Graphs
             set
             {
                 var last = _Child;
-                if (last is { }) last.Prev = null;
+                if (last != null) last.Prev = null;
                 _Child = value;
                 value.Prev = this;
             }
@@ -81,7 +81,7 @@ namespace MathCore.Graphs
         {
             var index = 0;
             var find = false;
-            if (item is { })
+            if (item != null)
                 for (var node = this; node != null && !(find = Equals(item, node.Value)); node = node.Next)
                     index++;
             else

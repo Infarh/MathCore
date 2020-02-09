@@ -350,13 +350,13 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] MatrixComplex B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] MatrixComplex B) => A is null && B is null || !(A is null) && !(B is null) && A.Equals(B);
 
         [DST] public static bool operator !=([CanBeNull] MatrixComplex A, [CanBeNull] MatrixComplex B) => !(A == B);
 
         [DST] public static bool operator ==([CanBeNull] Complex[,] A, [CanBeNull] MatrixComplex B) => B == A;
 
-        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] Complex[,] B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
+        [DST] public static bool operator ==([CanBeNull] MatrixComplex A, [CanBeNull] Complex[,] B) => A is null && B is null || !(A is null) && !(B is null) && A.Equals(B);
 
         [DST] public static bool operator !=([CanBeNull] Complex[,] A, [CanBeNull] MatrixComplex B) => !(A == B);
 
@@ -446,15 +446,15 @@ namespace MathCore
         #region IEquatable Members
 
         /// <inheritdoc/>
-        [DST] public bool Equals(Complex[,] other) => other is { } && Array.AreEquals(_Data, other);
+        [DST] public bool Equals(Complex[,] other) => other != null && Array.AreEquals(_Data, other);
 
         /// <inheritdoc/>
-        [DST] public bool Equals(MatrixComplex other) => other is { } && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
+        [DST] public bool Equals(MatrixComplex other) => !(other is null) && (ReferenceEquals(this, other) || Array.AreEquals(_Data, other._Data));
 
         #endregion
 
         /// <inheritdoc/>
-        [DST] public override bool Equals(object obj) => obj is { } && (ReferenceEquals(this, obj) || Equals(obj as MatrixComplex) || Equals(obj as Complex[,]));
+        [DST] public override bool Equals(object obj) => obj != null && (ReferenceEquals(this, obj) || Equals(obj as MatrixComplex) || Equals(obj as Complex[,]));
 
         /// <inheritdoc/>
         [DST]

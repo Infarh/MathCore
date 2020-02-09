@@ -30,7 +30,7 @@ namespace System.Reflection
             _Object = o;
 
             var type = typeof(TObject);
-            if(type == typeof(object) && o is { })
+            if (type == typeof(object) && o != null)
                 type = o.GetType();
 
             var is_private = Private ? BindingFlags.NonPublic : BindingFlags.Public;

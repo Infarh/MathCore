@@ -37,9 +37,13 @@ namespace System.Reflection
         /// <summary>Флаг приватности свойства</summary>
         private bool _Private;
 
+        /// <summary>Действие, осуществляющее установку значения свойства</summary>
         private Action<TValue> _SetMethod;
+
+        /// <summary>Функция, вычисляющая значение свойства</summary>
         private Func<TValue> _GetMethod;
 
+        /// <summary>Описание свойства</summary>
         private PropertyDescriptor _Descriptor;
 
         /* ------------------------------------------------------------------------------------------ */
@@ -106,7 +110,7 @@ namespace System.Reflection
         private void Initialize([CanBeNull] TObject o, [NotNull] string PropertyName, bool IsPrivate)
         {
             if (_Descriptor != null
-                && _Object is { }
+                && _Object != null
                 && !ReferenceEquals(o, _Object)
                 && _Name != PropertyName)
                 _Descriptor.RemoveValueChanged(o.IsNotNull(), PropertyValueChanged);
@@ -118,7 +122,7 @@ namespace System.Reflection
             _Descriptor = _Object != null
                 ? TypeDescriptor.GetProperties(_Object).Find(PropertyName, true)
                 : TypeDescriptor.GetProperties(typeof(TObject)).Find(PropertyName, true);
-            if (_Descriptor != null && _Object is { } && _Descriptor.SupportsChangeEvents)
+            if (_Descriptor != null && _Object != null && _Descriptor.SupportsChangeEvents)
                 _Descriptor.AddValueChanged(_Object, PropertyValueChanged);
 
 
@@ -126,7 +130,7 @@ namespace System.Reflection
             _SetMethod = SetValue;
 
             var type = typeof(TObject);
-            if (type == typeof(object) && o is { })
+            if (type == typeof(object) && o != null)
                 type = o.GetType();
 
             var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
@@ -163,10 +167,17 @@ namespace System.Reflection
         //    DisplayName = name_attributes.Length > 0 ? ((DisplayNameAttribute)name_attributes[0]).DisplayName : Name;
         //}
 
+        /// <summary>Обработчик события изменения значения свойства</summary>
+        /// <param name="Sender">Источник события - объект, свойство которого контролируется</param>
+        /// <param name="Args">Аргумент события</param>
         private void PropertyValueChanged(object Sender, EventArgs Args) => OnValueChanged(EventArgs.Empty);
 
+        /// <summary>Метод, позволяющий установить значение свойства</summary>
+        /// <param name="value">Устанавливаемое значение свойства</param>
         private void SetValue(TValue value) { if (CanWrite) _PropertyInfo.SetValue(_Object, value, null); }
 
+        /// <summary>Метод, позволяющий получить значение свойства</summary>
+        /// <returns>Значение свойства</returns>
         [CanBeNull]
         private TValue GetValue() => CanRead ? (TValue)_PropertyInfo.GetValue(_Object, null) : default;
 

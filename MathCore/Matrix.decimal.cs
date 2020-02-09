@@ -563,7 +563,7 @@ namespace MathCore
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static bool operator ==([CanBeNull] MatrixDecimal A, [CanBeNull] MatrixDecimal B) => A is null && B is null || A is { } && B is { } && A.Equals(B);
+        public static bool operator ==([CanBeNull] MatrixDecimal A, [CanBeNull] MatrixDecimal B) => A is null && B is null || A != null && B != null && A.Equals(B);
 
         public static bool operator !=([CanBeNull] MatrixDecimal A, [CanBeNull] MatrixDecimal B) => !(A == B);
 
@@ -803,7 +803,7 @@ namespace MathCore
         #region IEquatable<MatrixDecimal> Members
 
         public bool Equals([CanBeNull] MatrixDecimal other) =>
-            other is { }
+            other != null
             && (ReferenceEquals(this, other)
                 || other._N == _N
                 && other._M == _M
@@ -817,7 +817,7 @@ namespace MathCore
 
         /// <inheritdoc />
         public override bool Equals(object obj) =>
-            obj is { }
+            obj != null
             && (ReferenceEquals(this, obj)
                 || obj.GetType() == typeof(MatrixDecimal)
                 && Equals((MatrixDecimal)obj));

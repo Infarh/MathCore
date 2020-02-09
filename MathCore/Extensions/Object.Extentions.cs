@@ -184,7 +184,7 @@ namespace System
         /// <param name="o">Проверяемый объект</param>
         /// <returns>Истина, если проверяемый объект не null</returns>
         [DST]
-        public static bool IsNotNull([CanBeNull] this object o) => o is { };
+        public static bool IsNotNull([CanBeNull] this object o) => o != null;
 
         /// <summary>Ссылка на объект равна null</summary>
         /// <param name="o">Проверяемый объект</param>
@@ -234,7 +234,7 @@ namespace System
             [CanBeNull]Action<T> Initializer
         ) where T : class
         {
-            if (obj is { })
+            if (obj != null)
                 Initializer?.Invoke(obj);
             return obj;
         }
@@ -254,7 +254,7 @@ namespace System
             [CanBeNull]Action<T, TP> Initializer
         ) where T : class
         {
-            if (obj is { })
+            if (obj != null)
                 Initializer?.Invoke(obj, parameter);
             return obj;
         }
@@ -277,7 +277,7 @@ namespace System
             [CanBeNull]Action<T, TP1, TP2> Initializer
         ) where T : class
         {
-            if (obj is { })
+            if (obj != null)
                 Initializer?.Invoke(obj, parameter1, parameter2);
             return obj;
         }
@@ -303,7 +303,7 @@ namespace System
             [CanBeNull]Action<T, TP1, TP2, TP3> Initializer
         ) where T : class
         {
-            if (obj is { })
+            if (obj != null)
                 Initializer?.Invoke(obj, parameter1, parameter2, parameter3);
             return obj;
         }
@@ -319,7 +319,7 @@ namespace System
             [CanBeNull] this T obj,
             [CanBeNull]Func<T, T> Initializer
         ) where T : class =>
-            Initializer != null && obj is { } ? Initializer(obj) : obj;
+            Initializer != null && obj != null ? Initializer(obj) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -335,7 +335,7 @@ namespace System
             [CanBeNull] TP parameter,
             [CanBeNull]Func<T, TP, T> Initializer
         ) where T : class =>
-            Initializer != null && obj is { } ? Initializer(obj, parameter) : obj;
+            Initializer != null && obj != null ? Initializer(obj, parameter) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -357,7 +357,7 @@ namespace System
             [CanBeNull] TP3 parameter3,
             [CanBeNull]Func<T, TP1, TP2, TP3, T> Initializer
         ) where T : class =>
-            Initializer != null && obj is { } ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
+            Initializer != null && obj != null ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -376,7 +376,7 @@ namespace System
             [CanBeNull] TP2 parameter2,
             [CanBeNull]Func<T, TP1, TP2, T> Initializer
         ) where T : class =>
-            Initializer != null && obj is { } ? Initializer(obj, parameter1, parameter2) : obj;
+            Initializer != null && obj != null ? Initializer(obj, parameter1, parameter2) : obj;
 
         /// <summary>Печать объекта на консоли без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
