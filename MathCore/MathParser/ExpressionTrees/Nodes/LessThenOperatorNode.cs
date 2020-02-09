@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using MathCore.Annotations;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -26,16 +28,18 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>0 - если разность между x и y по модулю меньше Epsilon и 1 во всех остальных случаях</returns>
-        public override double Compute() => Comparer(((ComputedNode)Left).Compute(), ((ComputedNode)Right).Compute());
+        public override double Compute() => Comparer(LeftCompute(), RightCompute());
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Меньше</returns>
-        public override Expression LogicCompile() => Expression.LessThan(((ComputedNode)Left).Compile(), ((ComputedNode)Right).Compile());
+        [NotNull]
+        public override Expression LogicCompile() => LeftCompile().IsLessThan(RightCompile());
 
         /// <summary>Компиляция логики узла</summary>
-        /// <param name="Parameters">Параметры компиляции</param>
+        /// <param name="Args">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию сравнения Меньше</returns>
-        public override Expression LogicCompile(ParameterExpression[] Parameters) => Expression.LessThan(((ComputedNode)Left).Compile(Parameters), ((ComputedNode)Right).Compile(Parameters));
+        [NotNull]
+        public override Expression LogicCompile(params ParameterExpression[] Args) => LeftCompile(Args).IsLessThan(RightCompile(Args));
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

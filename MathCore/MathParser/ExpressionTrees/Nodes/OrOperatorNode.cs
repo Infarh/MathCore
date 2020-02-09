@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using MathCore.Annotations;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -10,45 +12,38 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычислить значение поддерева</summary>
         /// <returns>Численное значение поддерева</returns>
-        public override double Compute() => (((ComputedNode)Left).Compute() > 0) || (((ComputedNode)Right).Compute() > 0) ? 1 : 0;
+        public override double Compute() => LeftCompute() > 0 || RightCompute() > 0 ? 1 : 0;
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию ИЛИ</returns>
+        [NotNull]
         public override Expression LogicCompile()
         {
-            Expression left;
-            if (Left is LogicOperatorNode left_operation)
-                left = left_operation.LogicCompile();
-            else
-            {
-                var value = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile());
-                left = Expression.GreaterThan(value, Expression.Constant(0.0));
-            }
+            var left = Left is LogicOperatorNode left_operation 
+                ? left_operation.LogicCompile()
+                : LeftCompile().GetAbs().IsGreaterThan(0d);
 
-            Expression right;
-            if (Right is LogicOperatorNode right_operation)
-                right = right_operation.LogicCompile();
-            else
-            {
-                var value = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile());
-                right = Expression.GreaterThan(value, Expression.Constant(0.0));
-            }
+            var right = Right is LogicOperatorNode right_operation 
+                ? right_operation.LogicCompile() 
+                : RightCompile().GetAbs().IsGreaterThan(0d);
 
-            return Expression.OrElse(left, right);
+            return left.OrLazy(right);
         }
 
         /// <summary>Компиляция логики узла</summary>
-        /// <param name="Parameters">Параметры компиляции</param>
+        /// <param name="Args">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию ИЛИ</returns>
-        public override Expression LogicCompile(ParameterExpression[] Parameters)
+        [NotNull]
+        public override Expression LogicCompile(params ParameterExpression[] Args)
         {
             var left = Left is LogicOperatorNode left_operation
-                        ? left_operation.LogicCompile(Parameters)
-                        : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile(Parameters)), Expression.Constant(0.0));
+                        ? left_operation.LogicCompile(Args)
+                        : LeftCompile(Args).GetAbs().IsGreaterThan(0d);
             var right = Right is LogicOperatorNode right_operation
-                        ? right_operation.LogicCompile(Parameters)
-                        : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile(Parameters)), Expression.Constant(0.0));
-            return Expression.OrElse(left, right);
+                        ? right_operation.LogicCompile(Args)
+                        : RightCompile(Args).GetAbs().IsGreaterThan(0d);
+
+            return left.OrLazy(right);
         }
 
         /// <summary>Клонирование поддерева</summary>

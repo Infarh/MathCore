@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MathCore.Annotations;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -12,6 +13,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public string Name { get; }
 
         /// <summary>Массив имён аргументов функции</summary>
+        [NotNull]
         public string[] ArgumentsNames => Arguments.Select(a => a.Key).ToArray();
 
         /// <summary>Перечисление аргументов функции</summary>
@@ -29,13 +31,13 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Инициализация нового функционального узла</summary>
         /// <param name="Name">Имя функции</param>
-        internal FunctionNode(StringNode Name) : this(Name.Value) { }
+        internal FunctionNode([NotNull] StringNode Name) : this(Name.Value) { }
 
         /// <summary>Инициализация нового функционального узла</summary>
         /// <param name="Term">Выражение функции</param>
         /// <param name="Parser">Парсер выражения</param>
         /// <param name="Expression">Математическое выражение</param>
-        internal FunctionNode(FunctionTerm Term, ExpressionParser Parser, MathExpression Expression)
+        internal FunctionNode([NotNull] FunctionTerm Term, [NotNull] ExpressionParser Parser, [NotNull] MathExpression Expression)
             : this(Term.Name)
         {
 
@@ -60,7 +62,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Получить перечисление аргументов функции</summary>
         /// <param name="FunctionNode">Узел функции</param>
         /// <returns>Перечисление аргументов функции</returns>
-        private static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> GetFunctionArgumentNodes(ExpressionTreeNode FunctionNode) => 
+        private static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> GetFunctionArgumentNodes([NotNull] ExpressionTreeNode FunctionNode) => 
             FunctionNode.Right is FunctionArgumentNode node
                 ? FunctionArgumentNode.EnumArguments(node)
                 : throw new FormatException();
@@ -73,12 +75,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                     Arguments.Select(a => ((ComputedNode)a.Value).Compile()));
 
         /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
+        /// <param name="Args">Список параметров выражения</param>
         /// <returns>Скомпилированное выражение узла</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) =>
+        public override Expression Compile(ParameterExpression[] Args) =>
             Expression.Call(Function.Delegate.Target != null ? Expression.Constant(Function.Delegate.Target) : null,
                     Function.Delegate.Method,
-                    Arguments.Select(a => ((ComputedNode)a.Value).Compile(Parameters)));
+                    Arguments.Select(a => ((ComputedNode)a.Value).Compile(Args)));
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

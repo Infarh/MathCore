@@ -7,6 +7,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
     /// <summary>Узел дерева выражений, реализующий оператор сложения</summary>
     public class AdditionOperatorNode : OperatorNode
     {
+        /// <summary>Имя узла операции "+"</summary>
         public const string NodeName = "+";
 
         /// <summary>Новый оператор сложения</summary>
@@ -14,20 +15,16 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление узла</summary>
         /// <returns>Сумма поддеревьев</returns>
-        public override double Compute() => (((ComputedNode)Left)?.Compute() ?? 0) + ((ComputedNode)Right)?.Compute() ?? 0;
+        public override double Compute() => LeftCompute(0) + RightCompute(0);
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Linq.Expression.Add()</returns>
-        public override Expression Compile() =>
-            (((ComputedNode)Left)?.Compile() ?? 0d.ToExpression())
-                .Add(((ComputedNode)Right)?.Compile() ?? 0d.ToExpression());
+        public override Expression Compile() => LeftCompile(0).Add(RightCompile(0));
 
         /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <param name="Args">Массив параметров выражения</param>
         /// <returns>Linq.Expression.Add()</returns>
-        public override Expression Compile(params ParameterExpression[] Parameters) =>
-            (((ComputedNode)Left)?.Compile(Parameters) ?? 0d.ToExpression())
-                .Add(((ComputedNode)Right)?.Compile(Parameters) ?? 0d.ToExpression());
+        public override Expression Compile(params ParameterExpression[] Args) => LeftCompile(Args, 0).Add(RightCompile(Args, 0));
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Полный клон узла с клонами поддеревьев</returns>

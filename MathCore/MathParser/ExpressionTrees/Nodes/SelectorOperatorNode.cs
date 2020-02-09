@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
+using MathCore.Annotations;
+using MathCore.Extensions.Expressions;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
@@ -7,6 +10,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
     /// <summary>Узел дерева мат.выражения, реализующий оператор выбора</summary>
     public class SelectorOperatorNode : OperatorNode
     {
+        [NotNull] public VariantOperatorNode Variants => (VariantOperatorNode)Right ?? throw new InvalidOperationException("Узел вариантов (правое поддерево) не определён");
+
         /// <summary>Инициализация нового узла оператора выбора</summary>
         public SelectorOperatorNode() : base("?", -17) { }
 
@@ -22,45 +27,41 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns></returns>
-        public override double Compute()
-        {
-            var variants = (VariantOperatorNode)Right;
-            return Math.Abs(((ComputedNode)Left).Compute()) > 0
-                        ? ((ComputedNode)variants.Left).Compute()
-                        : ((ComputedNode)variants.Right).Compute();
-        }
+        public override double Compute() => Math.Abs(LeftCompute()) > 0 
+            ? Variants.LeftCompute() 
+            : Variants.RightCompute();
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         public override Expression Compile()
         {
-            var variants = (VariantOperatorNode)Right;
-            Expression condition;
+            var variants = Variants;
+            Expression selector;
             if(Left is LogicOperatorNode node)
-                condition = node.LogicCompile();
+                selector = node.LogicCompile();
             else
             {
-                var comparer = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile());
-                condition = Expression.GreaterThan(comparer, Expression.Constant(0.0));
+                var comparer = LeftCompile().GetAbs();
+                selector = comparer.IsGreaterThan(0d);
             }
-            return Expression.Condition(condition, ((ComputedNode)variants.Left).Compile(), ((ComputedNode)variants.Right).Compile());
+            return selector.Condition(variants.LeftCompile(), variants.RightCompile());
         }
 
         /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <param name="Args">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile(ParameterExpression[] Parameters)
+        public override Expression Compile(ParameterExpression[] Args)
         {
-            var variants = (VariantOperatorNode)Right;
-            Expression condition;
+            var variants = Variants;
+            Expression selector;
             if(Left is LogicOperatorNode node)
-                condition = node.LogicCompile(Parameters);
+                selector = node.LogicCompile(Args);
             else
             {
-                var comparer = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile(Parameters));
-                condition = Expression.GreaterThan(comparer, Expression.Constant(0.0));
+                var comparer = LeftCompile(Args).GetAbs();
+                selector = comparer.IsGreaterThan(0d);
             }
-            return Expression.Condition(condition, ((ComputedNode)variants.Left).Compile(Parameters), ((ComputedNode)variants.Right).Compile(Parameters));
+            return selector.Condition(variants.LeftCompile(Args), variants.RightCompile(Args));
         }
 
         /// <summary>Клонирование узла</summary>

@@ -41,9 +41,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression Compile() => _Value.ToExpression();
 
         /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
+        /// <param name="Args">Массив параметров</param>
         /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
-        public override Expression Compile(params ParameterExpression[] Parameters) => Compile();
+        public override Expression Compile(params ParameterExpression[] Args) => Compile();
 
         /// <summary>Клонирование поддерева</summary>
         /// <returns>Клон поддерева</returns>
