@@ -30,7 +30,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 get
                 {
                     var Parent = Node.Parent;
-                    for(var j = 0; j < i && Parent != null; j++)
+                    for (var j = 0; j < i && Parent != null; j++)
                         Parent = Parent.Parent;
                     return Parent;
                 }
@@ -54,7 +54,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             [ItemNotNull]
             private IEnumerable<ExpressionTreeNode> GetParentsEnumerable()
             {
-                for(var node = Node; node.Parent != null; node = node.Parent)
+                for (var node = Node; node.Parent != null; node = node.Parent)
                     yield return node.Parent;
             }
 
@@ -92,12 +92,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             get => _Left;
             set
             {
-                if(_Left != null) _Left.Parent = null;
+                if (_Left != null) _Left.Parent = null;
                 _Left = value;
-                if(value is null) return;
-                if(value.IsLeftSubtree)
+                if (value is null) return;
+                if (value.IsLeftSubtree)
                     value.Parent.Left = null;
-                else if(value.IsRightSubtree)
+                else if (value.IsRightSubtree)
                     value.Parent.Right = null;
                 value.Parent = this;
             }
@@ -111,12 +111,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             get => _Right;
             set
             {
-                if(_Right != null) _Right.Parent = null;
+                if (_Right != null) _Right.Parent = null;
                 _Right = value;
-                if(value is null) return;
-                if(value.IsLeftSubtree)
+                if (value is null) return;
+                if (value.IsLeftSubtree)
                     value.Parent.Left = null;
-                else if(value.IsRightSubtree)
+                else if (value.IsRightSubtree)
                     value.Parent.Right = null;
                 value.Parent = this;
             }
@@ -165,7 +165,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             {
                 var node = this;
                 var elements = path.ToLower().Split('/', '\\');
-                for(var i = 0; i < elements.Length; i++)
+                for (var i = 0; i < elements.Length; i++)
                 {
                     node = elements[i] switch
                     {
@@ -176,7 +176,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                         _ => throw new FormatException($"Неверный параметр в пути узла {path} -> {elements[i]}",
                             new ArgumentException(nameof(path)))
                     };
-                    if(node is null) return null;
+                    if (node is null) return null;
                 }
                 return node;
             }
@@ -191,7 +191,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             get
             {
                 yield return this;
-                for(var node = ChildSelector(Left, Right); node != null; node = ChildSelector(node.Left, node.Right))
+                for (var node = ChildSelector(Left, Right); node != null; node = ChildSelector(node.Left, node.Right))
                     yield return node;
             }
         }
@@ -205,7 +205,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             get
             {
                 yield return this;
-                for(var node = Selector(this); node != null; node = Selector(node))
+                for (var node = Selector(this); node != null; node = Selector(node))
                     yield return node;
             }
         }
@@ -222,37 +222,37 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         [NotNull]
         public IEnumerable<ExpressionTreeNode> Bypassing(ExpressionTree.BypassingType type)
         {
-            switch(type)
+            switch (type)
             {
                 case ExpressionTree.BypassingType.RootRightLeft:
                     yield return this;
-                    if(Right != null) foreach(var node in Right.Bypassing(type)) yield return node;
-                    if(Left != null) foreach(var node in Left.Bypassing(type)) yield return node;
+                    if (Right != null) foreach (var node in Right.Bypassing(type)) yield return node;
+                    if (Left != null) foreach (var node in Left.Bypassing(type)) yield return node;
                     break;
                 case ExpressionTree.BypassingType.RightLeftRoot:
-                    if(Right != null) foreach(var node in Right.Bypassing(type)) yield return node;
-                    if(Left != null) foreach(var node in Left.Bypassing(type)) yield return node;
+                    if (Right != null) foreach (var node in Right.Bypassing(type)) yield return node;
+                    if (Left != null) foreach (var node in Left.Bypassing(type)) yield return node;
                     yield return this;
                     break;
                 case ExpressionTree.BypassingType.RootLeftRight:
                     yield return this;
-                    if(Left != null) foreach(var node in Left.Bypassing(type)) yield return node;
-                    if(Right != null) foreach(var node in Right.Bypassing(type)) yield return node;
+                    if (Left != null) foreach (var node in Left.Bypassing(type)) yield return node;
+                    if (Right != null) foreach (var node in Right.Bypassing(type)) yield return node;
                     break;
                 case ExpressionTree.BypassingType.LeftRootRight:
-                    if(Left != null) foreach(var node in Left.Bypassing(type)) yield return node;
+                    if (Left != null) foreach (var node in Left.Bypassing(type)) yield return node;
                     yield return this;
-                    if(Right != null) foreach(var node in Right.Bypassing(type)) yield return node;
+                    if (Right != null) foreach (var node in Right.Bypassing(type)) yield return node;
                     break;
                 case ExpressionTree.BypassingType.LeftRightRoot:
-                    if(Left != null) foreach(var node in Left.Bypassing(type)) yield return node;
-                    if(Right != null) foreach(var node in Right.Bypassing(type)) yield return node;
+                    if (Left != null) foreach (var node in Left.Bypassing(type)) yield return node;
+                    if (Right != null) foreach (var node in Right.Bypassing(type)) yield return node;
                     yield return this;
                     break;
                 case ExpressionTree.BypassingType.RightRootLeft:
-                    if(Right != null) foreach(var node in Right.Bypassing(type)) yield return node;
+                    if (Right != null) foreach (var node in Right.Bypassing(type)) yield return node;
                     yield return this;
-                    if(Left != null) foreach(var node in Left.Bypassing(type)) yield return node;
+                    if (Left != null) foreach (var node in Left.Bypassing(type)) yield return node;
                     break;
                 default:
                     throw new NotSupportedException($"Тип обхода дерева {type} не поддерживается");
@@ -277,24 +277,24 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             var child_left = Child.Left;
             var child_right = Child.Right;
 
-            if(child_left != null)
+            if (child_left != null)
                 child_left.Parent = null;
-            if(child_right != null)
+            if (child_right != null)
                 child_right.Parent = null;
 
             Child.Parent = null;
 
-            if(Parent.Left == Child)
+            if (Parent.Left == Child)
             {
                 var parent_right = Parent.Right;
                 Parent.Right = null;
-                if(parent_right != null)
+                if (parent_right != null)
                     parent_right.Parent = null;
 
                 Parent.Left = null;
 
-                if(parent_parent != null)
-                    if(is_parent_left)
+                if (parent_parent != null)
+                    if (is_parent_left)
                         parent_parent.Left = Child;
                     else
                         parent_parent.Right = Child;
@@ -308,13 +308,13 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             {
                 var parent_left = Parent.Left;
                 Parent.Left = null;
-                if(parent_left != null)
+                if (parent_left != null)
                     parent_left.Parent = null;
 
                 Parent.Right = null;
 
-                if(parent_parent != null)
-                    if(is_parent_left)
+                if (parent_parent != null)
+                    if (is_parent_left)
                         parent_parent.Left = Child;
                     else
                         parent_parent.Right = Child;
@@ -332,8 +332,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <param name="B">Подменяемый узел</param>
         public static void Swap([NotNull] ExpressionTreeNode A, [NotNull] ExpressionTreeNode B)
         {
-            if(B.Left == A || B.Right == A) { SwapToChild(B, A); return; }
-            if(A.Left == B || A.Right == B) { SwapToChild(A, B); return; }
+            if (B.Left == A || B.Right == A) { SwapToChild(B, A); return; }
+            if (A.Left == B || A.Right == B) { SwapToChild(A, B); return; }
 
             var a_parent = A.Parent;
             var b_parent = B.Parent;
@@ -347,15 +347,15 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             var b_is_left = B.IsLeftSubtree;
 
             A.Parent = null;
-            if(a_parent != null)
-                if(a_is_left)
+            if (a_parent != null)
+                if (a_is_left)
                     a_parent.Left = null;
                 else
                     a_parent.Right = null;
 
             B.Parent = null;
-            if(b_parent != null)
-                if(b_is_left)
+            if (b_parent != null)
+                if (b_is_left)
                     b_parent.Left = null;
                 else
                     b_parent.Right = null;
@@ -365,14 +365,14 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             B.Left = null;
             B.Right = null;
 
-            if(b_parent != null)
-                if(b_is_left)
+            if (b_parent != null)
+                if (b_is_left)
                     b_parent.Left = A;
                 else
                     b_parent.Right = A;
 
-            if(a_parent != null)
-                if(a_is_left)
+            if (a_parent != null)
+                if (a_is_left)
                     a_parent.Left = B;
                 else
                     a_parent.Right = B;
@@ -389,33 +389,56 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Удалить узел с перекоммутацией ссылок</summary>
         /// <returns>Если удаляется корень, то левое поддерево, иначе ссылка не предка узла</returns>
-        [NotNull]
+        [CanBeNull]
         public ExpressionTreeNode Remove()
         {
-            var parent = Parent;
-            var left = Left;
-            var right = Right;
+            // Запоминаем что было в качестве
+            var parent = Parent; // - родительского узла
+            var left = Left;     // - узла левого поддерева
+            var right = Right;   // - узла правого поддерева
 
-            //   |        |
-            //   *    ->  L
-            //  / \        \
-            // L   R        R
-            if(parent is null) // Если узел является корнем 
+            // Если родительский узел есть, то удаляя текущий узел надо заменить его узлом левого поддерева
+            // При этом, всё левое поддерево левого поддерева станет левым поддеревом текущего узла,
+            // А правое поддерево левого поддерева удаляемого узла должно быть перемещено в левое поддерево
+            // самого правого листа правого поддерева текущего удаляемого узла
+            //       root            root       root - родительский узел
+            //        |               |         *    - текущий узел
+            //      _-*-_     ->    _-L-_       L    - узел корня левого поддерева
+            //     /     \         /     \      R    - узел корня правого поддерева
+            //    L       R      Ll       R     Ll   - левый дочерний узел левого поддерева
+            //   / \     / \             / \    Lr   - правый дочерний узел левого поддерева
+            // Ll   Lr Rl   Rr         Rl   Rr  Rl   - левый дочерний узел правого поддерева
+            //                        /         Rr   - правый дочерний узел правого поддерева
+            //                      Lr
+            if (parent is null) // Если родительского узла нет и текущий узел - это корень всего дерева...
             {
+                // Отсоединяем пддеревья  - так как удаляемый узел корень и дерево разваливается
                 Left = null;
                 Right = null;
-                if(left is null) // Если нет левого поддерева
+
+                // Проверяем случаи когда есть лишь одно из поддеревьев
+                if (left is null) // Если левого поддерева не было...
                 {
-                    if(right != null) // Если есть правое поддерево
-                        right.Parent = null; // обнулить ссылку на корень
-                    return right;
+                    if (right != null)       // и при этом правое поддерево есть, то...
+                        right.Parent = null; //    у правого поддерева убираем ссылку на корень (на текущий узел)
+                    return right;            // В любом случае результатом будет правое поддерево что бы там не было.
                 }
-                if(right is null) // Если нет правого поддерева
+                if (right is null) // Если правого поддерева не было...
                 {
-                    left.Parent = null; // Обнулить ссылку у левого поддерева на корень
-                    return left;
+                    if (left != null)       // и при этом левое поддерево есть, то...
+                        left.Parent = null; //    у левого поддерева убираем ссылку на текущий узел (его корень)
+                    return left;            // и всё что есть в левом поддереве возвращаем в качестве результата.
                 }
 
+                //        |             |          *    - текущий узел
+                //      _-*-_     ->    L          L    - узел корня левого поддерева
+                //     /     \         / \         R    - узел корня правого поддерева
+                //    L       R      Ll   Lr       Ll   - левый дочерний узел левого поддерева
+                //   / \     / \            \      Lr   - правый дочерний узел левого поддерева
+                // Ll   Lr Rl   Rr           R     Rl   - левый дочерний узел правого поддерева
+                //                          / \    Rr   - правый дочерний узел правого поддерева
+                //                        Rl   Rr
+                // Если есть оба поддерева, то берём левое поддерево и в самый правый его узел в его левое поддерево записываем текущее правое поддерево
                 // Для всех узлов левого поддерева взять правое поддерево
                 //left[node => node.Right]
                 //    .TakeWhile(RightSubtreeNode => RightSubtreeNode != null) // до тех пор, пока есть узлы
@@ -425,30 +448,61 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 return left;
             }
 
-            //     P             P
-            //    / \           / \
-            //   *   ...  ->   L   ...
-            //  / \           / \  
-            // L    R      ...   R    
-            if(IsLeftSubtree) // Узел является левым поддеревом
+            //          root                root
+            //         /    \              /    \
+            //      _-*-_   ...   ->    _-L-_   ...
+            //     /     \             /     \
+            //    L       R          Ll       Lr
+            //   / \     / \        /  \     /  \
+            // Ll   Lr Rl   Rr    ...  ...  R   ...
+            //                             / \
+            //                           Rl   Rr
+            if (IsLeftSubtree) // Если удаляемый узел является левым поддеревом у родительского узла, то
             {
-                if(left is null) // Если левого поддерева нет
-                    parent.Left = right; // то левым поддеревом родительского узла будет правое поддерево
+                // на место удаляемого узла должен встать левый дочерний узел
+                // Всё правое поддерево левого дочернего узла должно быть перемещено в левый дочерний элемент
+                // самого правого листа правого поддерева текущего элемента
+                // Правый дочерний элемент текущего узла должен стать правым элементом текущего
+                // левого дочернего элемента
+
+                //         root             root
+                //        /    \           /    \
+                //     _-*-_   ...   ->   R     ...
+                //    /     \            / \
+                //           R         Rl   Rr
+                //          / \
+                //        Rl   Rr
+                if (left is null) // Если левого поддерева нет
+                    parent.Left = right; // то левым поддеревом родительского узла будет правое поддерево удаляемого элемента
                 else
-                {   //иначе - левое поддерево
+                {   // иначе - если левое поддерево есть, то назначаем левым дочерним элементом
+                    // текущего родительского узла то, что было в левом дочернем элементе
                     parent.Left = left;
                     // в самый правый дочерний узел левого поддерева записать правое
+                    //          root                root
+                    //         /    \              /    \
+                    //      _-*-_   ...   ->    _-L-_   ...
+                    //     /     \             /     \
+                    //    L       R          Ll       Lr
+                    //   / \     / \        /  \     /  \
+                    // Ll   Lr Rl   Rr    ...  ...  R   ...
+                    //                             / \
+                    //                           Rl   Rr
                     left.LastRightChild.Right = right; //[node => node.Right].Last().Right = right;
                 }
             }
-            //     P                P
-            //    / \              / \
-            // ...   *     ->   ...   R
-            //      / \              / \
-            //     L   R            L   ...
+            //     root                  root
+            //    /    \                /    \
+            // ...    _-*-_     ->   ...    _-R-_
+            //       /     \               /     \
+            //      L       R            Rl       Rr
+            //     / \     / \          /  \     /  \
+            //   Ll   Lr Rl   Rr       L   ... ...  ...
+            //                        / \
+            //                      Ll   Lr
             else // Узел является правым поддеревом
             {
-                if(right is null) // Если правого поддерева нет
+                if (right is null) // Если правого поддерева нет
                     parent.Right = left; // то правым поддеревом родительского узла будет левое поддерево
                 else
                 {   //иначе - правое поддерево
@@ -468,13 +522,13 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         [CanBeNull]
         public ExpressionTreeNode GetNextLeft()
         {
-            if(Left != null) return Left;
-            if(Right != null) return Right;
+            if (Left != null) return Left;
+            if (Right != null) return Right;
             var is_left = IsLeftSubtree;
             var node = Parent;
-            while(node != null)
+            while (node != null)
             {
-                if(is_left && node.Right != null)
+                if (is_left && node.Right != null)
                     return node.Right;
                 is_left = node.IsLeftSubtree;
                 node = node.Parent;
@@ -487,15 +541,15 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         [CanBeNull]
         public ExpressionTreeNode GetNextRight()
         {
-            if(Left != null) return Left;
-            if(Right != null) return Right;
+            if (Left != null) return Left;
+            if (Right != null) return Right;
             var node = this;
             ExpressionTreeNode last;
             do
             {
                 last = node;
                 node = node.Parent;
-            } while(!(node is null || node.Right == last));
+            } while (!(node is null || node.Right == last));
 
             return node?.Left;
         }
@@ -506,7 +560,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public virtual IEnumerable<ExpressionVariable> GetVariables()
         {
             IEnumerable<ExpressionVariable> variables = null;
-            if(_Left != null)
+            if (_Left != null)
                 variables = _Left.GetVariables();
             return _Right != null
                 ? variables.AppendLast(_Right.GetVariables()).Distinct()
@@ -519,7 +573,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public virtual IEnumerable<ExpressionFunction> GetFunctions()
         {
             IEnumerable<ExpressionFunction> functions = null;
-            if(_Left != null)
+            if (_Left != null)
                 functions = _Left.GetFunctions();
             return _Right != null
                 ? functions.AppendLast(_Right.GetFunctions()).Distinct()
@@ -532,15 +586,36 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public virtual IEnumerable<Functional> GetFunctionals()
         {
             IEnumerable<Functional> operators = null;
-            if(_Left != null)
+            if (_Left != null)
                 operators = _Left.GetFunctionals();
             return _Right != null
                 ? operators.AppendLast(_Right.GetFunctionals()).Distinct()
                 : Enumerable.Empty<Functional>();
         }
 
+        #region IDisposable
+
         /// <summary>Уничтожить узел рекуррентно с поддеревьями</summary>
-        public void Dispose() { Left?.Dispose(); Right?.Dispose(); }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>Объект считается уничтоженным</summary>
+        private bool _Disposed;
+
+        /// <summary>Уничтожить узел рекуррентно с поддеревьями</summary>
+        /// <param name="disposing">Выполнить освобождение управляемых ресурсов</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_Disposed || !disposing) return;
+            _Disposed = true;
+            Left?.Dispose();
+            Right?.Dispose();
+        } 
+
+        #endregion
 
         /// <summary>Клонирование поддерева</summary>
         /// <returns>Клон поддерева</returns>

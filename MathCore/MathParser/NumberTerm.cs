@@ -2,6 +2,7 @@
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.MathParser
 {
@@ -41,7 +42,7 @@ namespace MathCore.MathParser
         /// <param name="DecimalSeparator">Блок с целой частью числа</param>
         /// <param name="FractionPartTerm">Блок с дробной частью числа</param>
         /// <returns>Истина, если действие совершено успешно. Ложь, если в последующих блоках не содержится нужной информации</returns>
-        public static bool TryAddFractionPart(ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FractionPartTerm)
+        public static bool TryAddFractionPart([NotNull] ref ExpressionTreeNode node, Term SeparatorTerm, char DecimalSeparator, Term FractionPartTerm)
         {
             if(!(node is ConstValueNode value)) throw new ArgumentException("Неверный тип узла дерева");
             if(!(SeparatorTerm is CharTerm separator) || separator.Value != DecimalSeparator) return false;

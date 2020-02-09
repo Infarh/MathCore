@@ -48,9 +48,9 @@ namespace MathCore.MathParser
             get => _Name;
             set
             {
-                if(value is null)
+                if (value is null)
                     throw new ArgumentNullException(nameof(value), @"Не указано имя функции");
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     throw new ArgumentException(@"Указано пустое имя функции", nameof(value));
                 _Name = value;
             }
@@ -62,6 +62,10 @@ namespace MathCore.MathParser
         /// <summary>Дерево математического выражения</summary>
         [NotNull]
         public ExpressionTree Tree { [DST] get => _ExpressionTree; [DST] set => _ExpressionTree = value; }
+
+        /// <summary>Перечисление узлов дерева, содержащих переменные</summary>
+        [NotNull]
+        public IEnumerable<VariableValueNode> VariableNodes => _ExpressionTree.OfType<VariableValueNode>();
 
         /// <summary>Переменные, входящие в математическое выражение</summary>
         [NotNull]
@@ -85,9 +89,9 @@ namespace MathCore.MathParser
         {
             _Name = Name;
             _Variables = new VariablesCollection(this);     // Коллекция переменных
-            _Constants = new ConstantsCollection(this);     // Коллекция констант
-            _Functions = new FunctionsCollection(this);     // Коллекция функций
-            _Functionals = new FunctionalsCollection(this); // Коллекция функционалов
+            _Constants = new ConstantsCollection();     // Коллекция констант
+            _Functions = new FunctionsCollection();     // Коллекция функций
+            _Functionals = new FunctionalsCollection(); // Коллекция функционалов
         }
 
         /// <summary>Инициализация нового математического выражения</summary>
@@ -98,7 +102,7 @@ namespace MathCore.MathParser
         {
             _ExpressionTree = Tree; //Сохраняем ссылку на корень дерева
 
-            foreach(var tree_node in Tree) // обходим все элементы дерева
+            foreach (var tree_node in Tree) // обходим все элементы дерева
                 switch (tree_node)
                 {
                     case VariableValueNode value_node:
@@ -125,8 +129,27 @@ namespace MathCore.MathParser
             _ExpressionTree = new ExpressionTree(root); // Создать дерево выражения из корня
         }
 
+        #region IDisposable
+
         /// <summary>Уничтожить математическое выражение</summary>
-        void IDisposable.Dispose() => _ExpressionTree.Dispose();
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _Disposed;
+
+        /// <summary>Освобождение ресурсов выражения</summary>
+        /// <param name="disposing">Требуется ли выполнить освобождение управляемых ресурсов?</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_Disposed || !disposing) return;
+            _Disposed = true;
+            _ExpressionTree.Dispose();
+        } 
+
+        #endregion
 
         /// <summary>Вычисление математического выражения</summary>
         /// <returns>Значение выражения</returns>
@@ -136,7 +159,7 @@ namespace MathCore.MathParser
         /// <returns>Значение выражения</returns>
         public double Compute([NotNull] params double[] arg)
         {
-            for(int i = 0, arg_count = arg.Length, var_count = Variable.Count; i < arg_count && i < var_count; i++)
+            for (int i = 0, arg_count = arg.Length, var_count = Variable.Count; i < arg_count && i < var_count; i++)
                 Variable[i].Value = arg[i];
             return ((ComputedNode)_ExpressionTree.Root).Compute();
         }
@@ -165,7 +188,7 @@ namespace MathCore.MathParser
         /// <param name="ArgumentName">Список имён параметров</param>
         /// <returns>Делегат скомпилированного выражения</returns>
         [NotNull]
-        public Delegate Compile([NotNull] params string[] ArgumentName) => 
+        public Delegate Compile([NotNull] params string[] ArgumentName) =>
             Expression.Lambda(GetExpression(out var vars, ArgumentName), vars).Compile();
 
         /// <summary>Многопараметрическая компиляция мат.выражения</summary>
@@ -183,7 +206,7 @@ namespace MathCore.MathParser
             var compilation = GetExpression(out _, ArgumentName);
 
             // Если массив имён компилируемых входных переменных не пуст
-            if((ArgumentName.Length) > 0)
+            if (ArgumentName.Length > 0)
                 ArgumentName.Foreach(var_dictionary.Add); // то заполняем словарь индексов
             else // Если массив переменных не указан, то создаём функцию по всем переменным
                 Variable.Select(v => v.Name).Foreach(var_dictionary.Add);
@@ -210,12 +233,12 @@ namespace MathCore.MathParser
             {
                 var call = e.Argument; // Извлекаем ссылку на узел
                 //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 
-                if(!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariable))
+                if (!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariable))
                     return call; // пропускаем узел
                 //Извлекаем из узла переменную дерева
                 var v = (ExpressionVariable)((ConstantExpression)call.Object).Value;
                 //Если переменная дерева - константа, либо если её имя отсутствует в словаре компилируемых переменных
-                if(v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // то пропускаем узел
+                if (v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // то пропускаем узел
                 var index = var_dictionary[v.Name]; // Запрашиваем индекс переменной
                 var indexer = GetIndexedParameter(index); // Извлекаем индексатор из пула по указанному индексу
                 return indexer; // заменяем текущий узел индексатором
@@ -261,13 +284,13 @@ namespace MathCore.MathParser
         {
             var t = typeof(TDelegate);
             vars = null;
-            if(ArgumentName.Length == 0)
+            if (ArgumentName.Length == 0)
             {
                 var args = t.GetGenericArguments();
-                if(args.Length > 1)
+                if (args.Length > 1)
                 {
                     vars = new ParameterExpression[Math.Min(args.Length - 1, Variable.Count)];
-                    for(var i = 0; i < vars.Length; i++)
+                    for (var i = 0; i < vars.Length; i++)
                         vars[i] = Expression.Parameter(typeof(double), Variable[i].Name);
                 }
             }
@@ -315,9 +338,9 @@ namespace MathCore.MathParser
             var x_tree = x.Tree.Clone();
             var y_tree = y.Tree.Clone();
 
-            if(x_tree.Root is OperatorNode x_operator_node && x_operator_node.Priority < node.Priority)
+            if (x_tree.Root is OperatorNode x_operator_node && x_operator_node.Priority < node.Priority)
                 x_tree.Root = new ComputedBracketNode(Bracket.NewRound, x_operator_node);
-            if(y_tree.Root is OperatorNode y_operator_node_root && y_operator_node_root.Priority < node.Priority)
+            if (y_tree.Root is OperatorNode y_operator_node_root && y_operator_node_root.Priority < node.Priority)
                 y_tree.Root = new ComputedBracketNode(Bracket.NewRound, y_operator_node_root);
 
             node.Left = x_tree.Root;

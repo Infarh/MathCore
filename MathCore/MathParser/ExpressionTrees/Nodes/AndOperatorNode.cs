@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using MathCore.Annotations;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -10,45 +12,39 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычислить значение поддерева</summary>
         /// <returns>Численное значение поддерева</returns>
-        public override double Compute() => (((ComputedNode)Left).Compute() > 0) && (((ComputedNode)Right).Compute() > 0) ? 1 : 0;
+        public override double Compute() => (LeftCompute() > 0) && (RightCompute() > 0) ? 1 : 0;
 
         /// <summary>Компиляция логики узла</summary>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию И</returns>
+        [NotNull]
         public override Expression LogicCompile()
         {
-            Expression left;
-            if (Left is LogicOperatorNode left_node)
-                left = left_node.LogicCompile();
-            else
-            {
-                var value = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile());
-                left = Expression.GreaterThan(value, Expression.Constant(0.0));
-            }
+            var left = Left is LogicOperatorNode left_node
+                ? left_node.LogicCompile()
+                : LeftCompile().GetAbs().IsGreaterThan(0d);
 
-            Expression right;
-            if (Right is LogicOperatorNode right_node)
-                right = right_node.LogicCompile();
-            else
-            {
-                var value = EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile());
-                right = Expression.GreaterThan(value, Expression.Constant(0.0));
-            }
+            var right = Right is LogicOperatorNode right_node
+                ? right_node.LogicCompile()
+                : RightCompile().GetAbs().IsGreaterThan(0d);
 
-            return Expression.AndAlso(left, right);
+            return left.AndLazy(right);
         }
 
         /// <summary>Компиляция логики узла</summary>
-        /// <param name="Parameters">Параметры компиляции</param>
+        /// <param name="Args">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее операцию И</returns>
-        public override Expression LogicCompile(params ParameterExpression[] Parameters)
+        [NotNull]
+        public override Expression LogicCompile(params ParameterExpression[] Args)
         {
             var left = Left is LogicOperatorNode left_node
-                        ? left_node.LogicCompile(Parameters)
-                        : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Left).Compile(Parameters)), Expression.Constant(0.0));
+                ? left_node.LogicCompile(Args)
+                : LeftComputed.Compile(Args).GetAbs().IsGreaterThan(0d);
+
             var right = Right is LogicOperatorNode right_node
-                        ? right_node.LogicCompile(Parameters)
-                        : Expression.GreaterThan(EqualityOperatorNode.GetAbsMethodCall(((ComputedNode)Right).Compile(Parameters)), Expression.Constant(0.0));
-            return Expression.AndAlso(left, right);
+                ? right_node.LogicCompile(Args)
+                : RightComputed.Compile(Args).GetAbs().IsGreaterThan(0d);
+
+            return left.AndLazy(right);
         }
 
         /// <summary>Клонирование поддерева</summary>

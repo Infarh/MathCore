@@ -40,7 +40,7 @@ namespace MathCore.MathParser
         /// <param name="Str">Строковое значение блока</param>
         /// <param name="CloseBracket">Закрывающаяся скобка</param>
         public BlockTerm([NotNull] string OpenBracket, [NotNull] string Str, [NotNull] string CloseBracket)
-            : base(string.Format("{0}{2}{1}", OpenBracket, CloseBracket ?? string.Empty, Str))
+            : base(string.Format("{0}{2}{1}", OpenBracket, CloseBracket, Str))
         {
             _OpenBracket = OpenBracket;
             _CloseBracket = CloseBracket;

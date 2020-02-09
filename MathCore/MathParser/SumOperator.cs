@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassCanBeSealed.Global
@@ -15,7 +16,7 @@ namespace MathCore.MathParser
         public SumOperator() : this("Σ") { }
         /// <summary>Инициализация нового оператора суммы</summary>
         /// <param name="Name"></param>
-        public SumOperator(string Name) : base(Name) { }
+        public SumOperator([NotNull] string Name) : base(Name) { }
 
         /// <summary>Инициализация оператора</summary>
         /// <param name="Parameters">Блок параметров</param>
@@ -78,12 +79,15 @@ namespace MathCore.MathParser
         public override double GetValue(MathExpression ParametersExpression, MathExpression Function)
         {
             var parameters_root = ParametersExpression.Tree.Root;
-            var iterator = ((VariableValueNode)parameters_root.Left)?.Variable;
-            Debug.Assert(iterator != null, "iterator != null");
-            var interval = (IntervalNode)parameters_root.Right;
-            Debug.Assert(interval != null, "interval != null");
-            var min = ((ComputedNode)interval.Min).Compute();
-            var max = ((ComputedNode)interval.Max).Compute();
+            var iterator = ((VariableValueNode)parameters_root.Left)?.Variable ?? throw new InvalidOperationException("Не определён узел дерева с итератором суммы");
+            
+            var interval = (IntervalNode)parameters_root.Right ?? throw new InvalidOperationException("Не определён узел дерева с интервалом значений суммы");
+            var min_node = (ComputedNode)interval.Min ?? throw new InvalidOperationException("Не определён узел дерева с минимальным значением интервала суммы");
+            var max_node = (ComputedNode)interval.Max ?? throw new InvalidOperationException("Не определён узел дерева с максимальным значением интервала суммы"); ;
+
+            var min = min_node.Compute();
+            var max = max_node.Compute();
+            
             var sum = 0.0;
             if (min < max)
                 for (int i = (int)min, Max = (int)max; i < Max; i++)
@@ -114,7 +118,7 @@ namespace MathCore.MathParser
         /// <param name="Max">Конец интервала суммирования</param>
         /// <param name="Parameters">Массив параметров</param>
         /// <returns>Сумма функции</returns>
-        private static double GetSum(Delegate d, double Min, double Max, double[] Parameters)
+        private static double GetSum(Delegate d, double Min, double Max, [NotNull] double[] Parameters)
         {
             var pp_len = Parameters.Length;
 
@@ -137,13 +141,14 @@ namespace MathCore.MathParser
         public override Expression Compile(MathExpression ParametersExpression, MathExpression Function)
         {
             var parameters_root = ParametersExpression.Tree.Root;
-            var iterator = ((VariableValueNode)parameters_root.Left)?.Variable;
-            Debug.Assert(iterator != null, "iterator != null");
-            var interval_node = parameters_root.Right;
-            var min = ((ComputedNode)interval_node?.Left)?.Compile();
-            Debug.Assert(min != null, "min != null");
-            var max = ((ComputedNode)interval_node?.Right)?.Compile();
-            Debug.Assert(max != null, "max != null");
+            var iterator = ((VariableValueNode)parameters_root.Left)?.Variable ?? throw new InvalidOperationException("Не определён узел дерева с итератором суммы");
+            
+            var interval_node = parameters_root.Right ?? throw new InvalidOperationException("Не определён узел дерева с интервалом суммы");
+            var min_node = (ComputedNode)interval_node.Left ?? throw new InvalidOperationException("Не определён узел дерева с минимумом интервала суммы");
+            var max_node = (ComputedNode)interval_node.Right ?? throw new InvalidOperationException("Не определён узел дерева с минимумом интервала суммы");
+
+            var min = min_node.Compile();
+            var max = max_node.Compile();
 
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
             var parameters = new[] { iterator_parameter };
@@ -167,17 +172,16 @@ namespace MathCore.MathParser
         public override Expression Compile(MathExpression ParametersExpression, MathExpression Function, ParameterExpression[] Parameters)
         {
             var parameters_root = ParametersExpression.Tree.Root;
-            var iterator = ((VariableValueNode)parameters_root.Left)?.Variable;
-            Debug.Assert(iterator != null, "iterator != null");
-            var interval_node = parameters_root.Right;
-            var min = ((ComputedNode)interval_node?.Left)?.Compile(Parameters);
-            Debug.Assert(min != null, "min != null");
-            var max = ((ComputedNode)interval_node?.Right)?.Compile(Parameters);
-            Debug.Assert(max != null, "max != null");
+            var iterator = ((VariableValueNode)parameters_root.Left)?.Variable ?? throw new InvalidOperationException("Не определён узел дерева с итератором суммы");
+
+            var interval_node = parameters_root.Right ?? throw new InvalidOperationException("Не определён узел дерева с интервалом суммы");
+            var min_node = (ComputedNode)interval_node.Left ?? throw new InvalidOperationException("Не определён узел дерева с минимумом интервала суммы");
+            var max_node = (ComputedNode)interval_node.Right ?? throw new InvalidOperationException("Не определён узел дерева с минимумом интервала суммы");
+
+            var min = min_node.Compile();
+            var max = max_node.Compile();
 
             var iterator_parameter = Expression.Parameter(typeof(double), iterator.Name);
-            Debug.Assert(iterator_parameter != null, "iterator_parameter != null");
-            Debug.Assert(Parameters != null, "Parameters != null");
             var parameters = Parameters.AppendFirst(iterator_parameter).ToArray();
             var body = ((ComputedNode)Function.Tree.Root).Compile(parameters);
             var expr = Expression.Lambda(body, parameters).Compile();

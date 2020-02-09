@@ -1849,5 +1849,7 @@ namespace MathCore.Extensions.Expressions
                 return null;
             }
         }
+
+        [NotNull] public static MethodCallExpression GetAbs([NotNull] this Ex x) => Ex.Call(((Func<double, double>)Math.Abs).Method, x);
     }
 }

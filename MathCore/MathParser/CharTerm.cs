@@ -16,6 +16,7 @@ namespace MathCore.MathParser
         /// <param name="Parser">Парсер мат.выражения</param>
         /// <param name="Expression">Математическое выражение</param>
         /// <returns>Результат вызова метода Parser.GetOperatorNode(Value)</returns>
-        public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression) => Parser.GetOperatorNode(Value);
+        public override ExpressionTreeNode GetSubTree(ExpressionParser Parser, MathExpression Expression) => 
+            Parser.GetOperatorNode(Value);
     }
 }

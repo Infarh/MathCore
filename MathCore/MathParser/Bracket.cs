@@ -49,17 +49,18 @@ namespace MathCore.MathParser
 
         /// <summary>Получить хэш-код</summary>
         /// <returns>Хэш-код</returns>
-        public override int GetHashCode() { unchecked { return ((Start?.GetHashCode() ?? 0) * 397) ^ (Stop?.GetHashCode() ?? 0); } }
+        public override int GetHashCode() => unchecked(Start.GetHashCode() * 397 ^ Stop.GetHashCode());
 
         object ICloneable.Clone() => Clone();
 
         /// <summary>Клонирование скобок</summary>
         /// <returns>Клон скобок</returns>
         [NotNull]
-        public virtual Bracket Clone() => new Bracket(Start, Stop);
+        public Bracket Clone() => new Bracket(Start, Stop);
 
         /// <summary>Строковое представление скобок</summary>
         /// <returns>Строковое представление</returns>
+        [NotNull]
         public override string ToString() => Surround("...");
 
         /// <summary>Разместить текст в скобках</summary>

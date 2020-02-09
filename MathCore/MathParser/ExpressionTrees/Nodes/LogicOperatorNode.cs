@@ -14,9 +14,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public abstract Expression LogicCompile();
 
         /// <summary>Компиляция логики узла</summary>
-        /// <param name="Parameters">Параметры компиляции</param>
+        /// <param name="Args">Параметры компиляции</param>
         /// <returns>Скомпилированное логическое выражение, реализующее логику оператора</returns>
-        public abstract Expression LogicCompile([NotNull] params ParameterExpression[] Parameters);
+        public abstract Expression LogicCompile([NotNull] params ParameterExpression[] Args);
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
@@ -24,9 +24,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression Compile() => LogicCompile().ConditionWithResult(1d, 0d);
 
         /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <param name="Args">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
         [NotNull]
-        public override Expression Compile(ParameterExpression[] Parameters) => LogicCompile(Parameters).ConditionWithResult(1d, 0d);
+        public override Expression Compile(params ParameterExpression[] Args) => LogicCompile(Args).ConditionWithResult(1d, 0d);
     }
 }

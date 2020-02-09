@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using MathCore.Annotations;
 
 namespace MathCore.MathParser
 {
@@ -12,7 +13,7 @@ namespace MathCore.MathParser
 
         public DifferentialTransformationVisitor() => throw new NotImplementedException();
 
-        public Expression Differentiate<TDelegate>(Expression<TDelegate> expression, string ParameterName)
+        public Expression Differentiate<TDelegate>([NotNull] Expression<TDelegate> expression, string ParameterName)
         {
             var parameter = (from p in expression.Parameters where p.Name == ParameterName select p).FirstOrDefault();
             if(parameter is null)
@@ -25,11 +26,11 @@ namespace MathCore.MathParser
             }
         }
 
-        protected override Expression VisitConstant(ConstantExpression c) => Expression.Constant(0);
+        [NotNull] protected override Expression VisitConstant(ConstantExpression c) => Expression.Constant(0);
 
         //protected override Expression VisitParameter(ParameterExpression p) => base.VisitParameter(p);
 
-        protected override Expression VisitBinary(BinaryExpression b)
+        protected override Expression VisitBinary([NotNull] BinaryExpression b)
         {
             switch(b.NodeType)
             {

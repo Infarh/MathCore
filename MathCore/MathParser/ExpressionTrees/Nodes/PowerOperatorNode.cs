@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -11,17 +12,16 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление узла выражения</summary>
         /// <returns>Возведение значения корня левого поддерева в степень значения корня правого поддерева</returns>
-        public override double Compute() => Math.Pow(((ComputedNode)Left).Compute(), ((ComputedNode)Right).Compute());
+        public override double Compute() => Math.Pow(LeftCompute(), RightCompute());
 
         /// <summary>Компиляция выражения узла</summary>
         /// <returns>Скомпилированное выражение узла</returns>
-        public override Expression Compile() => Expression.Power(((ComputedNode)Left).Compile(), ((ComputedNode)Right).Compile());
+        public override Expression Compile() => LeftCompile().Power(RightCompile());
 
         /// <summary>Компиляция выражения узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <param name="Args">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение узла</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => 
-            Expression.Power(((ComputedNode)Left).Compile(Parameters), ((ComputedNode)Right).Compile(Parameters));
+        public override Expression Compile(params ParameterExpression[] Args) => LeftCompile(Args).Power(RightCompile(Args));
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

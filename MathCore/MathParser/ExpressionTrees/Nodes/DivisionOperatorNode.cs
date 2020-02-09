@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using MathCore.Extensions.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
@@ -12,16 +13,17 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns>Значение узла</returns>
-        public override double Compute() => (((ComputedNode) Left)?.Compute() ?? 1) / ((ComputedNode)Right).Compute();
+        public override double Compute() => LeftCompute(1) / RightCompute();
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение узла</returns>
-        public override Expression Compile() => Expression.Divide(((ComputedNode) Left)?.Compile() ?? Expression.Constant(1.0), ((ComputedNode)Right).Compile());
+        public override Expression Compile() =>
+            LeftCompile(1).Divide(RightCompile());
 
         /// <summary>Компиляция узла с параметрами</summary>
-        /// <param name="Parameters">Список параметров выражения</param>
+        /// <param name="Args">Список параметров выражения</param>
         /// <returns>Скомпилированное выражение узла</returns>
-        public override Expression Compile(params ParameterExpression[] Parameters) => Expression.Divide(((ComputedNode) Left)?.Compile(Parameters) ?? Expression.Constant(1.0), ((ComputedNode)Right).Compile(Parameters));
+        public override Expression Compile(params ParameterExpression[] Args) => LeftCompile(Args, 1).Divide(RightCompile(Args));
 
         /// <summary>Строковое представление узла</summary>
         /// <returns>Строковое представление</returns>

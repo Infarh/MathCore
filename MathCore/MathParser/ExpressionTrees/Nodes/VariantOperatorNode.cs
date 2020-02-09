@@ -21,16 +21,16 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Вычисление значения узла</summary>
         /// <returns></returns>
-        public override double Compute() => ((ComputedNode)Left).Compute();
+        public override double Compute() => LeftCompute();
 
         /// <summary>Компиляция узла</summary>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile() => ((ComputedNode)Left).Compile();
+        public override Expression Compile() => LeftCompile();
 
         /// <summary>Компиляция узла</summary>
-        /// <param name="Parameters">Массив параметров выражения</param>
+        /// <param name="Args">Массив параметров выражения</param>
         /// <returns>Скомпилированное выражение произведения узлов поддеревьев</returns>
-        public override Expression Compile(ParameterExpression[] Parameters) => ((ComputedNode)Left).Compile(Parameters);
+        public override Expression Compile(params ParameterExpression[] Args) => LeftCompile(Args);
 
         /// <summary>Клонирование узла</summary>
         /// <returns>Клон узла</returns>

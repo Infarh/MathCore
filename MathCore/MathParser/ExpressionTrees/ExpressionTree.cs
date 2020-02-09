@@ -192,14 +192,12 @@ namespace MathCore.MathParser.ExpressionTrees
         public ExpressionTree Clone() => new ExpressionTree(Root.Clone());
 
         /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
-        [NotNull]
         object ICloneable.Clone() => Clone();
 
         /// <summary>Получить перечислитель узлов дерева по методу ЛКП</summary><returns>Перечислитель узлов дерева по методу ЛКП</returns>
-        [NotNull]
         public IEnumerator<ExpressionTreeNode> GetEnumerator() => Bypass().GetEnumerator();
 
-        [NotNull]
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

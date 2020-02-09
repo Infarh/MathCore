@@ -43,14 +43,15 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
         public override Expression Compile() => Expression.Call
         (
-            Expression.Constant(_Variable),
-            Variable.GetType().GetMethod("GetValue", Array.Empty<Type>()) ?? throw new InvalidOperationException("Метод GetValue не найден")
+            _Variable.ToExpression(),
+            Variable.GetType().GetMethod(nameof(ExpressionVariable.GetValue), Array.Empty<Type>())
+                ?? throw new InvalidOperationException("Метод GetValue не найден")
         );
 
         /// <summary>Скомпилировать в выражение</summary>
-        /// <param name="Parameters">Массив параметров</param>
+        /// <param name="Args">Массив параметров</param>
         /// <returns>Скомпилированное выражение System.Linq.Expressions</returns>
-        public override Expression Compile(params ParameterExpression[] Parameters) => Parameters.Find(p => p.Name == Name) ?? Compile();
+        public override Expression Compile(params ParameterExpression[] Args) => Args.Find(p => p.Name == Name) ?? Compile();
 
         public override IEnumerable<ExpressionVariable> GetVariables() => base.GetVariables().AppendFirst(_Variable);
 
