@@ -4,6 +4,7 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.Collections.Generic
 {
+    /// <summary>Класс методов-расширений для интерфейса <see cref="ICloneable"/></summary>
     [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
     public static class ICloneableExtensions
     {
