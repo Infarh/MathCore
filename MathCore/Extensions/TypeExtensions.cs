@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,66 +19,39 @@ namespace System
         /// <returns>Истина, если значение проверяемого типа допускают возможность пустой ссылки</returns>
         public static bool IsCanBeNullRef(this Type type) => type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-        private sealed class PairOfTypes
-        {
-            private readonly Type _First;
-            private readonly Type _Second;
-            public PairOfTypes(Type first, Type second)
-            {
-                _First = first;
-                _Second = second;
-            }
-            public override int GetHashCode() => 31 * _First.GetHashCode() + _Second.GetHashCode();
-
-            public override bool Equals(object obj) =>
-                ReferenceEquals(obj, this) ||
-                obj is PairOfTypes other && _First == other._First && _Second == other._Second;
-        }
-
-        private static readonly IDictionary<PairOfTypes, Func<object, object>> __CastersDictionary = new Dictionary<PairOfTypes, Func<object, object>>();
+        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __CastersDictionary = new ConcurrentDictionary<(Type, Type), Func<object, object>>();
 
         private static readonly ParameterExpression __ConvParameter = Expression.Parameter(typeof(object), "value");
 
         private static Func<object, object> GetCasterFrom([NotNull]Type TargetType, [CanBeNull]object Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
 
         public static Func<object, object> GetCasterTo([NotNull] this Type SourceType, [NotNull]Type TargetType) => TargetType.GetCasterFrom(SourceType);
-        public static Func<object, object> GetCasterFrom([NotNull] this Type TargetType, [NotNull]Type SourceType)
-        {
-            Func<object, object> res;
-            var key = new PairOfTypes(SourceType, TargetType);
-            lock (__CastersDictionary) if(!__CastersDictionary.TryGetValue(key, out res))
+        public static Func<object, object> GetCasterFrom([NotNull] this Type TargetType, [NotNull]Type SourceType) =>
+            __CastersDictionary.GetOrAdd((SourceType, TargetType), tt =>
             {
                 var object_2_source = Expression.Convert(__ConvParameter, SourceType);
                 var source_2_target = Expression.Convert(object_2_source, TargetType);
                 var target_2_object = Expression.Convert(source_2_target, typeof(object));
-                res = Expression.Lambda<Func<object, object>>(target_2_object, __ConvParameter).Compile();
-                __CastersDictionary.Add(key, res);
-            }
-            return res;
-        }
+                return Expression.Lambda<Func<object, object>>(target_2_object, __ConvParameter).Compile();
+            });
 
         public static object Cast([NotNull] this Type type, object obj) => GetCasterFrom(type, obj)(obj);
 
-        private static readonly IDictionary<PairOfTypes, Func<object, object>> __ConvertersDictionary = new Dictionary<PairOfTypes, Func<object, object>>();
+        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __ConvertersDictionary = new ConcurrentDictionary<(Type, Type), Func<object, object>>();
 
         public static Func<object, object> GetConverterTo([NotNull] this Type SourceType, [NotNull] Type TargetType)
             => TargetType.GetConverterFrom(SourceType);
 
-        public static Func<object, object> GetConverterFrom([NotNull] this Type TargetType, [NotNull] Type SourceType)
-        {
-            Func<object, object> res;
-            var key = new PairOfTypes(SourceType, TargetType);
-            lock (__ConvertersDictionary)
-                if(!__ConvertersDictionary.TryGetValue(key, out res))
-                    __ConvertersDictionary.Add(key, res = SourceType.GetConvertExpression_Object(TargetType).Compile());
-            return res;
-        }
-
+        public static Func<object, object> GetConverterFrom([NotNull] this Type TargetType, [NotNull] Type SourceType) =>
+            __ConvertersDictionary.GetOrAdd(
+                (SourceType, TargetType),
+                tt => tt.SourceType.GetConvertExpression_Object(tt.TargetType).Compile());
 
         [NotNull]
         public static Expression GetCastExpression([NotNull] this Type FromType, [NotNull] Type ToType, [NotNull] ref ParameterExpression parameter)
         {
-            if(parameter is null) parameter = Expression.Parameter(typeof(object), "value");
+            // ReSharper disable once HeuristicUnreachableCode
+            if (parameter is null) parameter = Expression.Parameter(typeof(object), "value");
             return Expression.Convert(Expression.Convert(Expression.Convert(__ConvParameter, FromType), ToType), typeof(object));
         }
 
@@ -86,7 +60,7 @@ namespace System
         {
             var c = FromType.GetTypeConverter();
             TypeConverter c_to = null;
-            if(!c.CanConvertTo(ToType) && !(c_to = ToType.GetTypeConverter()).CanConvertFrom(FromType))
+            if (!c.CanConvertTo(ToType) && !(c_to = ToType.GetTypeConverter()).CanConvertFrom(FromType))
                 throw new NotSupportedException($"Преобразование из {FromType} в {ToType} не поддерживается");
             var expr_pFrom = Expression.Parameter(FromType, "pFrom");
             var expr_tFrom2tObject = Expression.Convert(expr_pFrom, typeof(object));
@@ -108,7 +82,7 @@ namespace System
         {
             var c = FromType.GetTypeConverter();
             TypeConverter c_to = null;
-            if(!c.CanConvertTo(ToType) && !(c_to = ToType.GetTypeConverter()).CanConvertFrom(FromType))
+            if (!c.CanConvertTo(ToType) && !(c_to = ToType.GetTypeConverter()).CanConvertFrom(FromType))
                 throw new NotSupportedException($"Преобразование из {FromType} в {ToType} не поддерживается");
             var expr_pFrom = Expression.Parameter(typeof(object), "pFrom");
             var expr_cConverter = Expression.Constant(c_to ?? c);
@@ -176,7 +150,7 @@ namespace System
 
         public static void AddConverter([NotNull] this Type type, [NotNull] Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
 
-        public static void AddConverter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) => 
+        public static void AddConverter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) =>
             TypeDescriptor.AddAttributes(type, ConverterTypes.Select(t => new TypeConverterAttribute(t)).Cast<Attribute>().ToArray());
 
         [NotNull]
