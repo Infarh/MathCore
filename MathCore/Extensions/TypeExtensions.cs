@@ -10,8 +10,14 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    /// <summary>Класс методов-расширений для <see cref="Type"/></summary>
     public static class TypeExtensions
     {
+        /// <summary>Значение данного типа допускают <see langword="null"/></summary>
+        /// <param name="type">Проверяемый тип</param>
+        /// <returns>Истина, если значение проверяемого типа допускают возможность пустой ссылки</returns>
+        public static bool IsCanBeNullRef(this Type type) => type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
         private sealed class PairOfTypes
         {
             private readonly Type _First;

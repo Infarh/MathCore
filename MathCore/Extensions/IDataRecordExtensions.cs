@@ -5,29 +5,36 @@
 // ReSharper disable once CheckNamespace
 namespace System.Data
 {
+    /// <summary>Класс методов-расширений для <see cref="IDataRecord"/></summary>
     public static class IDataRecordExtensions
     {
-        public static T Field<T>([NotNull] this IDataRecord record, int i)
-        {
-            if(!record.IsDBNull(i))
-                return (T)record.GetValue(i);
-            var type = typeof(T);
-            if(type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                return default;
-            throw new NullReferenceException();
-        }
+        /// <summary>Извлечение поля данных из записи по индексу поля</summary>
+        /// <typeparam name="T">Тип значения</typeparam>
+        /// <param name="record">Запись с данными</param>
+        /// <param name="index">Индекс поля с данными в записи</param>
+        /// <exception cref="NullReferenceException">Если запись с указанным индексом отсутствует, а тип данных не является ссылочным</exception>
+        /// <returns>Значение поля, если в записи с указанным индексом оно есть, либо значение по умолчанию</returns>
+        public static T Field<T>([NotNull] this IDataRecord record, int index) => 
+            !record.IsDBNull(index) 
+                ? (T)record.GetValue(index) 
+                : typeof(T).IsCanBeNullRef() 
+                    ? (T)default 
+                    : throw new InvalidOperationException($"Поле с индексом {index} отсутствует в записи");
 
+        /// <summary>Извлечение поля данных из записи по имени поля</summary>
+        /// <typeparam name="T">Тип значения</typeparam>
+        /// <param name="record">Запись с данными</param>
+        /// <param name="ColumnName">Имя колонки</param>
+        /// <exception cref="NullReferenceException">Если запись с указанным именем отсутствует, а тип данных не является ссылочным</exception>
+        /// <returns>Значение поля, если в записи с указанным индексом оно есть, либо значение по умолчанию</returns>
         public static T Field<T>([NotNull] this IDataRecord record, [NotNull] string ColumnName)
         {
-            var ordinal = record.GetOrdinal(ColumnName);
-
-            if(!record.IsDBNull(ordinal))
-                return (T)record.GetValue(ordinal);
-            var type = typeof(T);
-
-            if(type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                return default;
-            throw new NullReferenceException();
+            var index = record.GetOrdinal(ColumnName);
+            return !record.IsDBNull(index) 
+                ? (T)record.GetValue(index) 
+                : typeof(T).IsCanBeNullRef() 
+                    ? (T)default 
+                    : throw new NullReferenceException();
         }
     }
 }
