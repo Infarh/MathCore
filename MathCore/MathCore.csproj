@@ -6,7 +6,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.20.1</Version>
+    <Version>0.0.20.2</Version>
     <PackageReleaseNotes>Комментарии, немного рефакторинга</PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
