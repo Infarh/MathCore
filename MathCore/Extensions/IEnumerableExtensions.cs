@@ -18,6 +18,8 @@ using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Local
 // ReSharper disable LoopCanBeConvertedToQuery
+// ReSharper disable InvertIf
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq
@@ -150,28 +152,69 @@ namespace System.Linq
             if (enumerable != null) foreach (var v in enumerable) yield return v;
         }
 
-        public static T FirstOrDefault<T, TP>([NN] this IEnumerable<T> enumerable, TP p, Func<T, TP, bool> Selector)
+        /// <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="enumerable">Перечисление элементов</param>
+        /// <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
+        /// <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
+        /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
+        public static T FirstOrDefault<T>([NN] this IEnumerable<T> enumerable, Func<T, bool> Selector, in T DefaultValue = default)
+        {
+            foreach (var item in enumerable)
+                if (Selector(item))
+                    return item;
+            return DefaultValue;
+        }
+
+        /// <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <typeparam name="TP">Тип параметра</typeparam>
+        /// <param name="enumerable">Перечисление элементов</param>
+        /// <param name="p">Параметр, передаваемый в критерий, необходимый для устранения замыкания</param>
+        /// <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
+        /// <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
+        /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
+        public static T FirstOrDefault<T, TP>([NN] this IEnumerable<T> enumerable, in TP p, Func<T, TP, bool> Selector, in T DefaultValue = default)
         {
             foreach (var item in enumerable)
                 if (Selector(item, p))
                     return item;
-            return default;
+            return DefaultValue;
         }
 
+        /// <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <typeparam name="TP1">Тип параметра 1</typeparam>
+        /// <typeparam name="TP2">Тип параметра 2</typeparam>
+        /// <param name="enumerable">Перечисление элементов</param>
+        /// <param name="p1">Параметр 1, передаваемый в критерий, необходимый для устранения замыкания</param>
+        /// <param name="p2">Параметр 2, передаваемый в критерий, необходимый для устранения замыкания</param>
+        /// <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
+        /// <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
+        /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
         public static T FirstOrDefault<T, TP1, TP2>(
             [NN] this IEnumerable<T> enumerable,
-            TP1 p1,
-            TP2 p2,
-            Func<T, TP1, TP2, bool> Selector)
+            in TP1 p1,
+            in TP2 p2,
+            Func<T, TP1, TP2, bool> Selector, 
+            in T DefaultValue = default)
         {
             foreach (var item in enumerable)
                 if (Selector(item, p1, p2))
                     return item;
-            return default;
+            return DefaultValue;
         }
 
+        /// <summary>Сделать перечисление плоским (линейным)</summary>
+        /// <param name="enumerable">Перечисление перечислений элементов</param>
+        /// <typeparam name="TSource">Тип перечисления первого уровня</typeparam>
+        /// <typeparam name="TSubSource">Тип перечисления второго уровня</typeparam>
+        /// <typeparam name="TItem">Тип перечисления результатов</typeparam>
+        /// <returns>Перечисление вложенных элементов</returns>
         [NN]
-        public static IEnumerable<T> SelectMany<T>([CN] this IEnumerable<IEnumerable<T>> enumerable)
+        public static IEnumerable<TItem> SelectMany<TSource, TSubSource, TItem>([CN] this TSource enumerable)
+            where TSource : IEnumerable<TSubSource>
+            where TSubSource : IEnumerable<TItem>
         {
             if (enumerable is null) yield break;
             foreach (var items in enumerable)
@@ -180,19 +223,29 @@ namespace System.Linq
                         yield return item;
         }
 
+        /// <summary>Блочный перечислитель элементов</summary>
+        /// <typeparam name="T">Тип перечисляемых элементов</typeparam>
         private class BlockEnumerator<T> : IEnumerable<T>
         {
+            /// <summary>Перечисление элементов, которые требуется перечислить в рамках текущего блока</summary>
             [NN] private readonly IEnumerator<T> _Source;
+
+            /// <summary>Размер блока - число элементов, выбираемое из перечисления</summary>
             private readonly int _Size;
 
+            /// <summary>Признак, что перечисление завершено</summary>
             public bool Complete { get; private set; }
 
+            /// <summary>Инициализация нового экземпляра <see cref="BlockEnumerator{T}"/></summary>
+            /// <param name="source">Исходное перечисление элементов</param>
+            /// <param name="Size">Размер блока</param>
             public BlockEnumerator([NN] IEnumerator<T> source, int Size)
             {
                 _Source = source;
                 _Size = Size;
             }
 
+            /// <inheritdoc />
             public IEnumerator<T> GetEnumerator()
             {
                 for (var i = 0; i < _Size; i++)
@@ -203,9 +256,15 @@ namespace System.Linq
                 Complete = true;
             }
 
+            /// <inheritdoc />
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
+        /// <summary>Сформировать блочный перечислитель элементов</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="enumerable">Перечисление элементов, которое требуется разбить на блоки</param>
+        /// <param name="BlockSize">Размер блоков, не которые будет разбито исходное перечисление</param>
+        /// <returns>Перечисление блоков элементов</returns>
         [NN, InN]
         public static IEnumerable<IEnumerable<T>> AsBlockEnumerable<T>([NN, IcN] this IEnumerable<T> enumerable, int BlockSize)
         {
@@ -221,6 +280,11 @@ namespace System.Linq
             } while (block.Complete);
         }
 
+        /// <summary>Перечисление элементов за исключением указанного</summary>
+        /// <param name="enumerable">Исходное перечисление</param>
+        /// <param name="item">Элемент, исключаемый из перечисления</param>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <returns>Перечисление элементов за исключением указанного</returns>
         [NN]
         public static IEnumerable<T> Except<T>([NN] this IEnumerable<T> enumerable, T item)
         {
@@ -229,7 +293,12 @@ namespace System.Linq
                     yield return i;
         }
 
-        public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] T item)
+        /// <summary>Индекс первого найденного элемента</summary>
+        /// <typeparam name="T">Тип искомого элемента</typeparam>
+        /// <param name="enumerable">Перечисление элементов, в котором требуется найти заданный</param>
+        /// <param name="item">Искомый элемент</param>
+        /// <returns>Индекс первого вхождения элемента в перечисление, либо -1 в случае, если он в ней отсутствует</returns>
+        public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] in T item)
         {
             var index = -1;
             foreach (var element in enumerable)
@@ -240,7 +309,12 @@ namespace System.Linq
             return index;
         }
 
-        public static int LastIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] T item)
+        /// <summary>Индекс последнего найденного элемента</summary>
+        /// <typeparam name="T">Тип искомого элемента</typeparam>
+        /// <param name="enumerable">Перечисление элементов, в котором требуется найти заданный</param>
+        /// <param name="item">Искомый элемент</param>
+        /// <returns>Индекс последнего вхождения элемента в перечисление, либо -1 в случае, если он в ней отсутствует</returns>
+        public static int LastIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] in T item)
         {
             var i = 0;
             var index = -1;
@@ -252,6 +326,10 @@ namespace System.Linq
             return index;
         }
 
+        /// <summary>Объединение двух перечислений</summary>
+        /// <param name="source">Первое перечисление элементов</param>
+        /// <param name="other">Второе перечисление элементов</param>
+        /// <returns>Перечисление элементов, составленное из элементов первого и второго перечисления</returns>
         public static IEnumerable Concat([NN] this IEnumerable source, [CN] IEnumerable other)
         {
             if (source != null) foreach (var src in source) yield return src;
@@ -270,6 +348,10 @@ namespace System.Linq
             Func<TObject, IEnumerable<TValue>> Creator)
             => new LambdaEnumerable<TValue>(() => Creator(obj));
 
+        /// <summary>Исключение пустых ссылок из перечисления</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="enumerable">Перечисление элементов</param>
+        /// <returns>Перечисление, составленное из элементов исходного перечисления, за исключением пустых ссылок</returns>
         [NN]
         public static IEnumerable<T> WhereNotNull<T>([NN] this IEnumerable<T> enumerable)
             where T : class
@@ -490,6 +572,13 @@ namespace System.Linq
             }
         }
 
+        /// <summary>Преобразование перечисления в словарь с отбрасыванием повторяющихся значений ключей</summary>
+        /// <param name="enumerable">Перечисление элементов</param>
+        /// <param name="KeySelector">Метод формирования ключа словаря</param>
+        /// <param name="OverloadValues">Перезаписывать значения в словаре?</param>
+        /// <typeparam name="T">Тип элементов коллекции</typeparam>
+        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
+        /// <returns>Словарь, составленный из элементов перечисления без повторений</returns>
         [NN]
         public static Dictionary<TKey, T> ToDictionaryDistinctKeys<T, TKey>(
             [NN] this IEnumerable<T> enumerable,
@@ -513,6 +602,15 @@ namespace System.Linq
             return dic;
         }
 
+        /// <summary>Преобразование перечисления в словарь с отбрасыванием повторяющихся значений ключей</summary>
+        /// <param name="enumerable">Перечисление элементов</param>
+        /// <param name="KeySelector">Метод формирования ключа словаря</param>
+        /// <param name="ValueSelector">Метод вычисления значения словаря</param>
+        /// <param name="OverloadValues">Перезаписывать значения в словаре?</param>
+        /// <typeparam name="T">Тип элементов коллекции</typeparam>
+        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
+        /// <typeparam name="TValue">Тип значения записи словаря</typeparam>
+        /// <returns>Словарь, составленный из элементов перечисления без повторений</returns>
         [NN]
         public static Dictionary<TKey, TValue> ToDictionaryDistinctKeys<T, TKey, TValue>(
             [NN] this IEnumerable<T> enumerable,
@@ -1120,6 +1218,11 @@ namespace System.Linq
         [DST]
         public static Complex Sum([NN] this IEnumerable<Complex> collection) => collection.Aggregate((Z, z) => Z + z);
 
+        /// <summary>Комплексная сумма последовательности элементов</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Последовательность элементов</param>
+        /// <param name="selector">Метод формирования комплексного значения на основе очередного элемента последовательности</param>
+        /// <returns>Комплексное число, являющееся суммой последовательности комплексных чисел</returns>
         [DST]
         public static Complex Sum<T>([NN] this IEnumerable<T> collection, [NN] Func<T, Complex> selector) => collection.Select(selector).Aggregate((Z, z) => Z + z);
 

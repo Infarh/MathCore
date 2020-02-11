@@ -2524,6 +2524,30 @@
             <summary>Оператор неявного преобразования типа значения в тип вычисления этого значения</summary>
             <param name="Value">Оборачиваемое значение</param>
         </member>
+        <member name="T:MathCore.ComplexArrayExtensions">
+            <summary>Класс методов-расширений для массивов комплексных чисел</summary>
+        </member>
+        <member name="M:MathCore.ComplexArrayExtensions.Deconstruct(MathCore.Complex[],System.Double[]@,System.Double[]@)">
+            <summary>Метод деконструкции значения массива, позволяющий получить массив действительных и мнимых частей</summary>
+            <param name="ComplexArray">Массив комплексных чисел</param>
+            <param name="Re">Массив действительных частей</param>
+            <param name="Im">Массив мнимых частей</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:MathCore.ComplexArrayExtensions.ToAbsArg(MathCore.Complex[],System.Double[]@,System.Double[]@)">
+            <summary>Метод расчёта массивов модулей и аргументов массива комплексных чисел</summary>
+            <param name="ComplexArray">Массив комплексных чисел</param>
+            <param name="Abs">Массив модулей комплексных чисел исходного массива</param>
+            <param name="Arg">Массив аргументов комплексных чисел исходного массива</param>
+            <exception cref="T:System.ArgumentNullException">Если ссылка на исходный массив комплексных чисел пуста</exception>
+        </member>
+        <member name="M:MathCore.ComplexArrayExtensions.ToAbsArgDeg(MathCore.Complex[],System.Double[]@,System.Double[]@)">
+            <summary>Метод расчёта массивов модулей и аргументов (в градусах) массива комплексных чисел</summary>
+            <param name="ComplexArray">Массив комплексных чисел</param>
+            <param name="Abs">Массив модулей комплексных чисел исходного массива</param>
+            <param name="Arg">Массив аргументов комплексных чисел исходного массива в градусах</param>
+            <exception cref="T:System.ArgumentNullException">Если ссылка на исходный массив комплексных чисел пуста</exception>
+        </member>
         <member name="M:MathCore.Extensions.Expressions.ExpressionExtensions.Substitute(System.Linq.Expressions.LambdaExpression,System.Linq.Expressions.LambdaExpression)">
             <exception cref="T:System.FormatException">Количество аргументов подстановки не равно 1, или во входном выражении отсутствие подставляемый параметр</exception>
         </member>
@@ -16599,6 +16623,78 @@
             <summary>Returns a string representation of the current Unit value</summary>
             <returns>String representation of the current Unit value</returns>
         </member>
+        <member name="T:System.Array`1">
+            <summary>Статический класс для работы с типизированными массивами</summary>
+            <typeparam name="T">Тип элементов массива</typeparam>
+        </member>
+        <member name="M:System.Array`1.Length(System.Int32)">
+            <summary>Создать генератор массивов для указанной длины</summary>
+            <param name="Length">Требуемая длина массива</param>
+            <returns>Генератор массивов, создающий массивы указанной длины</returns>
+        </member>
+        <member name="M:System.Array`1.Length(System.Int32,System.Func{System.Int32,`0})">
+            <summary>Создать генератор массивов для указанной длины</summary>
+            <param name="Length">Требуемая длина массива</param>
+            <param name="Initializer">Функция инициализации элементов массива</param>
+            <returns>Генератор массивов, создающий массивы указанной длины</returns>
+        </member>
+        <member name="T:System.Array`1.Creator">
+            <summary>Объект, позволяющий создавать массивы и инициализировать их элементами</summary>
+        </member>
+        <member name="F:System.Array`1.Creator._Length">
+            <summary>Длина создаваемого массива</summary>
+        </member>
+        <member name="F:System.Array`1.Creator._Initializer">
+            <summary>Функция инициализации элементов массива</summary>
+        </member>
+        <member name="F:System.Array`1.Creator._Updater">
+            <summary>Функция обновления значений элементов массива</summary>
+        </member>
+        <member name="F:System.Array`1.Creator._SetDefaultValue">
+            <summary>Устанавливать значения ячеек массива в значение по умолчанию</summary>
+        </member>
+        <member name="F:System.Array`1.Creator._DefaultValue">
+            <summary>Значение по умолчанию для элементов массива</summary>
+        </member>
+        <member name="M:System.Array`1.Creator.#ctor(System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Array`1.Creator"/></summary>
+            <param name="Length">Длина массива, создаваемого объектом</param>
+        </member>
+        <member name="M:System.Array`1.Creator.#ctor(System.Int32,System.Func{System.Int32,`0})">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Array`1.Creator"/></summary>
+            <param name="Length">Длина массива, создаваемого объектом</param>
+            <param name="Initializer">Функция инициализации ячеек массива</param>
+        </member>
+        <member name="M:System.Array`1.Creator.Default(`0)">
+            <summary>Установить значение по умолчанию для ячеек массива</summary>
+            <param name="DefaultValue">Значение по умолчанию для ячеек массива</param>
+            <returns>Исходный экземпляр <see cref="T:System.Array`1.Creator"/></returns>
+        </member>
+        <member name="M:System.Array`1.Creator.ResetDefault">
+            <summary>Сбросить значение по умолчанию</summary>
+            <returns>Исходный экземпляр <see cref="T:System.Array`1.Creator"/></returns>
+        </member>
+        <member name="M:System.Array`1.Creator.Init(System.Func{System.Int32,`0})">
+            <summary>Задать функцию инициализации ячеек массива</summary>
+            <param name="Initializer">Функция, генерирующая значение ячейки массива по её индексу</param>
+            <returns>Исходный экземпляр <see cref="T:System.Array`1.Creator"/></returns>
+        </member>
+        <member name="M:System.Array`1.Creator.Update(System.Func{System.Int32,`0,`0})">
+            <summary>Задать функцию обновления значений ячеек массива</summary>
+            <param name="Updater">
+            Функция, принимающая в качестве параметром индекс ячейки и её значение,
+            результат вызова этой функции будет размещён в ячейке массива с указанным индексом
+            </param>
+            <returns>Исходный экземпляр <see cref="T:System.Array`1.Creator"/></returns>
+        </member>
+        <member name="M:System.Array`1.Creator.Create">
+            <summary>Создать массив с заданными в объекте параметрами</summary>
+            <returns>Новый массив, длина и ячейки которого определяются объектом инициализации</returns>
+        </member>
+        <member name="M:System.Array`1.Creator.op_Implicit(System.Array{`0}.Creator)~`0[]">
+            <summary>Оператор неявного преобразования <see cref="T:System.Array`1.Creator"/> к типу массива</summary>
+            <param name="creator">Объект инициализации массива</param>
+        </member>
         <member name="T:System.ArrayExtensions">
             <summary>Методы расширения для массивов</summary>
         </member>
@@ -17695,6 +17791,27 @@
             <param name="next">The function that produces the second task based on the result of the first.</param>
             <returns>The task that represents the completion of both the first and second task.</returns>
         </member>
+        <member name="T:System.ComponentModel.BindingListExtensions">
+            <summary>Класс методов-расширений для <see cref="T:System.ComponentModel.BindingList`1"/></summary>
+        </member>
+        <member name="M:System.ComponentModel.BindingListExtensions.Initialize``1(System.ComponentModel.BindingList{``0},System.Int32,System.Func{System.Int32,``0})">
+            <summary>Инициализация нового экземпляра <see cref="T:System.ComponentModel.BindingList`1"/> с помощью функции</summary>
+            <typeparam name="T">Тип элементов списка</typeparam>
+            <param name="list">Инициализируемый <see cref="T:System.ComponentModel.BindingList`1"/></param>
+            <param name="ElementsCount">Число добавляемых элементов</param>
+            <param name="Initializer">Функция генерации новых элементов списка</param>
+            <returns>Инициализируемый <see cref="T:System.ComponentModel.BindingList`1"/></returns>
+        </member>
+        <member name="M:System.ComponentModel.BindingListExtensions.Initialize``2(System.ComponentModel.BindingList{``0},System.Int32,``1,System.Func{System.Int32,``1,``0})">
+            <summary>Инициализация нового экземпляра <see cref="T:System.ComponentModel.BindingList`1"/> с помощью функции</summary>
+            <typeparam name="T">Тип элементов списка</typeparam>
+            <typeparam name="TParameter">Тип параметра инициализации</typeparam>
+            <param name="list">Инициализируемый <see cref="T:System.ComponentModel.BindingList`1"/></param>
+            <param name="ElementsCount">Число добавляемых элементов</param>
+            <param name="parameter">Параметр процесса инициализации, передаваемый в функцию</param>
+            <param name="Initializer">Функция генерации новых элементов списка</param>
+            <returns>Инициализируемый <see cref="T:System.ComponentModel.BindingList`1"/></returns>
+        </member>
         <member name="T:System.ComponentModel.INotifyPropertyChangedExtensions">
             <summary>Класс методов-расширений интерфейса <see cref="T:System.ComponentModel.INotifyPropertyChanged"/></summary>
         </member>
@@ -17811,6 +17928,51 @@
             <param name="PropertyName">Имя отслеживаемого свойства</param>
             <param name="Handler">Обработчик события</param>
         </member>
+        <member name="T:System.Collections.BitArrayExtensions">
+            <summary>Класс методов-расширений для <see cref="T:System.Collections.BitArray"/></summary>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.Set(System.Collections.BitArray,System.Int32)">
+            <summary>Установить значение бита с указанным индексом</summary>
+            <param name="A">Массив бит</param>
+            <param name="Value">Устанавливаемое состояние бита</param>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.GetInt8(System.Collections.BitArray)">
+            <summary>Получить 8-битовое слово из массива бит</summary>
+            <param name="A">Массив бит - источник данных</param>
+            <returns>Байт, сформированный из массива бит</returns>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.GetInt16(System.Collections.BitArray)">
+            <summary>Получить 16-битовое слово из массива бит</summary>
+            <param name="A">Массив бит - источник данных</param>
+            <returns>Двухбайтовое целое со знаком, сформированный из массива бит</returns>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.GetInt32(System.Collections.BitArray)">
+            <summary>Получить 32-битовое слово из массива бит</summary>
+            <param name="A">Массив бит - источник данных</param>
+            <returns>Четырёхбайтное целое со знаком, сформированный из массива бит</returns>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.GetInt64(System.Collections.BitArray)">
+            <summary>Получить 64-битовое слово из массива бит</summary>
+            <param name="A">Массив бит - источник данных</param>
+            <returns>Восьмибайтное целое со знаком, сформированный из массива бит</returns>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.ToBoolArray(System.Collections.BitArray)">
+            <summary>Преобразовать массив бит в массив логических значений</summary>
+            <param name="A">Массив бит - источник данных</param>
+            <returns>Массив <see cref="T:System.Boolean"/></returns>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.Inverse(System.Collections.BitArray)">
+            <summary>Инвертировать состояние бит массива</summary>
+            <param name="A">Массив бит - источник данных</param>
+        </member>
+        <member name="M:System.Collections.BitArrayExtensions.GetInversed(System.Collections.BitArray)">
+            <summary>
+            Сформировать новый массив бит,
+            состояние каждого бита нового массива будет инвертированным по отношению к исходному массиву
+            </summary>
+            <param name="A">Массив бит - источник данных</param>
+            <returns>Новый битовый массив, состояние бит которого обратно к состоянию бит исходного массива</returns>
+        </member>
         <member name="M:System.Collections.BitArrayExtensions.IsPartyCorrect(System.Collections.BitArray,System.Boolean)">
             <summary>Проверка корректности чётности</summary>
             <param name="bits">Битовый массив</param>
@@ -17821,6 +17983,82 @@
             <summary>Сумма бит по модулю 2</summary>
             <param name="bits">Битовый массив</param>
             <returns>Результат сложения бит массива по модулю 2</returns>
+        </member>
+        <member name="T:System.Collections.Generic.ICloneableExtensions">
+            <summary>Класс методов-расширений для интерфейса <see cref="T:System.ICloneable"/></summary>
+        </member>
+        <member name="M:System.Collections.Generic.ICloneableExtensions.CloneObject``1(``0)">
+            <summary>
+            Клонировать объект <typeparamref name="T"/>
+            (с возможностью последующей инициализации <see cref="T:System.IInitializable"/>, если интерфейс поддерживается)
+            </summary>
+            <typeparam name="T">Тип клонируемого объекта</typeparam>
+            <param name="obj">Клонируемый объект</param>
+            <returns>Клонированный объект</returns>
+        </member>
+        <member name="M:System.Collections.Generic.ICloneableExtensions.CloneObject``1(``0,System.Action{``0})">
+            <summary>
+            Клонировать объект <typeparamref name="T"/>
+            (с возможностью последующей инициализации <see cref="T:System.IInitializable"/>, если интерфейс поддерживается)
+            </summary>
+            <typeparam name="T">Тип клонируемого объекта</typeparam>
+            <param name="obj">Клонируемый объект</param>
+            <param name="Initializer">Метод, вызываемый для клонированного объекта для его инициализации</param>
+            <returns>Клонированный объект</returns>
+        </member>
+        <member name="M:System.Collections.Generic.ICloneableExtensions.CloneObject``2(``0,System.Action{``0,``1},``1)">
+            <summary>
+            Клонировать объект <typeparamref name="T"/>
+            (с возможностью последующей инициализации <see cref="T:System.IInitializable"/>, либо <see cref="T:System.IInitializable`1"/>
+            если интерфейсы поддерживается)
+            </summary>
+            <typeparam name="T">Тип клонируемого объекта</typeparam>
+            <typeparam name="TParameter">Тип параметра процесса инициализации</typeparam>
+            <param name="obj">Клонируемый объект</param>
+            <param name="Initializer">Метод, вызываемый для клонированного объекта для его инициализации</param>
+            <param name="parameter">Параметр процесса инициализации</param>
+            <returns>Клонированный объект</returns>
+        </member>
+        <member name="M:System.Collections.Generic.ICloneableExtensions.CloneObject``2(``0,``1)">
+            <summary>
+            Клонировать объект <typeparamref name="T"/> 
+            с последующей инициализацией <see cref="T:System.IInitializable"/>, либо <see cref="T:System.IInitializable`1"/>
+            </summary>
+            <typeparam name="T">Тип клонируемого объекта</typeparam>
+            <typeparam name="TParameter">Тип параметра процесса инициализации</typeparam>
+            <param name="obj">Клонируемый объект</param>
+            <param name="parameter">Параметр процесса инициализации</param>
+            <returns>Клонированный объект</returns>
+        </member>
+        <member name="T:System.Collections.Generic.ICollectionExtensions">
+            <summary>Класс методов-расширений для интерфейса коллекции <see cref="T:System.Collections.Generic.ICollection`1"/></summary>
+        </member>
+        <member name="M:System.Collections.Generic.ICollectionExtensions.AddItems``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>Пакетное добавление элементов в коллекцию</summary>
+            <typeparam name="T">Тип добавляемых элементов</typeparam>
+            <param name="collection">Коллекция, в которую надо добавить перечисленных элементы</param>
+            <param name="items">Перечисление добавляемых элементов</param>
+        </member>
+        <member name="M:System.Collections.Generic.ICollectionExtensions.RemoveItemsLazy``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>Пакетное ленивое удаление элементов из коллекции. Элементы будут удалены лишь при перечислении результатов удаления</summary>
+            <typeparam name="T">Тип удаляемых элементов</typeparam>
+            <param name="collection">Коллекция, из которой требуется удалить перечисленные элементы</param>
+            <param name="items">Перечисление удаляемых из коллекции элементов</param>
+            <returns>Перечисление результатов удаления элементов</returns>
+        </member>
+        <member name="M:System.Collections.Generic.ICollectionExtensions.RemoveItemsWithResults``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>Пакетное удаление элементов из коллекции</summary>
+            <typeparam name="T">Тип удаляемых элементов</typeparam>
+            <param name="collection">Коллекция, из которой требуется удалить перечисленные элементы</param>
+            <param name="items">Перечисление удаляемых из коллекции элементов</param>
+            <returns>Перечисление результатов удаления элементов</returns>
+        </member>
+        <member name="M:System.Collections.Generic.ICollectionExtensions.RemoveItems``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>Пакетное удаление элементов из коллекции</summary>
+            <typeparam name="T">Тип удаляемых элементов</typeparam>
+            <param name="collection">Коллекция, из которой требуется удалить перечисленные элементы</param>
+            <param name="items">Перечисление удаляемых из коллекции элементов</param>
+            <returns>Перечисление результатов удаления элементов</returns>
         </member>
         <member name="T:System.Collections.Generic.IDictionaryExtensions">
             <summary>Класс методов-расширений для интерфейса <see cref="T:System.Collections.Generic.IDictionary`2"/></summary>
@@ -18199,6 +18437,128 @@
             <returns>
             Интерфейс <see cref="T:System.Collections.Generic.ICollection`1"/>, содержащий значения объекта, который реализует <see cref="T:System.Collections.Generic.IDictionary`2"/>.
             </returns>
+        </member>
+        <member name="T:System.BoolExtensions">
+            <summary>Методы-расширения для логических значений</summary>
+        </member>
+        <member name="M:System.BoolExtensions.And(System.Collections.Generic.IEnumerable{System.Boolean})">
+            <summary>
+            Вычислить поэлементную операцию И со всеми элементами перечисления.
+            Все элементы перечисления будут перебраны в обязательном порядке
+            </summary>
+            <param name="items">Перечисление логических значений</param>
+            <returns>Результат вычисления логического И для всех значений перечисления</returns>
+        </member>
+        <member name="M:System.BoolExtensions.AndLazy(System.Collections.Generic.IEnumerable{System.Boolean})">
+            <summary>
+            Вычислить поэлементную операцию (ленивое) И со всеми элементами перечисления.
+            Перебор элементов перечисления производится до появления первого значения <see langword="false"/>
+            </summary>
+            <param name="items">Перечисление логических значений</param>
+            <returns>Результат вычисления логического И для значений перечисления</returns>
+        </member>
+        <member name="M:System.BoolExtensions.Or(System.Collections.Generic.IEnumerable{System.Boolean})">
+            <summary>
+            Вычислить поэлементную операцию ИЛИ со всеми элементами перечисления.
+            Все элементы перечисления будут перебраны в обязательном порядке
+            </summary>
+            <param name="items">Перечисление логических значений</param>
+            <returns>Результат вычисления логического ИЛИ для всех значений перечисления</returns>
+        </member>
+        <member name="M:System.BoolExtensions.OrLazy(System.Collections.Generic.IEnumerable{System.Boolean})">
+            <summary>
+            Вычислить поэлементную операцию (ленивое) ИЛИ со всеми элементами перечисления.
+            Перебор элементов перечисления производится до появления первого значения <see langword="false"/>
+            </summary>
+            <param name="items">Перечисление логических значений</param>
+            <returns>Результат вычисления логического ИЛИ для значений перечисления</returns>
+        </member>
+        <member name="T:System.ByteArrayExtensions">
+            <summary>Класс методов-расширений для массивов байт</summary>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ComputeSHA256(System.Byte[])">
+            <summary>Вычислить контрольную сумму массива с применением алгоритма SHA256</summary>
+            <param name="bytes">Массив байт для которого производится вычисление суммы SHA256</param>
+            <returns>Массив байт рассчитанной суммы SHA256</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ComputeSHA256(System.Byte[],System.Int32,System.Int32)">
+            <summary>Вычислить контрольную сумму массива с применением алгоритма SHA256</summary>
+            <param name="bytes">Массив байт для которого производится вычисление суммы SHA256</param>
+            <param name="offset">Индекс элемента массива с которого требуется вычислить контрольную суммы</param>
+            <param name="count">Число элементов массива, участвующих в расчёте суммы</param>
+            <returns>Массив байт рассчитанной суммы SHA256</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ComputeMD5(System.Byte[])">
+            <summary>Вычислить контрольную сумму массива с применением алгоритма MD5</summary>
+            <param name="bytes">Массив байт для которого производится вычисление суммы MD5</param>
+            <returns>Массив байт рассчитанной суммы MD5</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ComputeMD5(System.Byte[],System.Int32,System.Int32)">
+            <summary>Вычислить контрольную сумму массива с применением алгоритма MD5</summary>
+            <param name="bytes">Массив байт для которого производится вычисление суммы MD5</param>
+            <param name="offset">Индекс элемента массива с которого требуется вычислить контрольную суммы</param>
+            <param name="count">Число элементов массива, участвующих в расчёте суммы</param>
+            <returns>Массив байт рассчитанной суммы MD5</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToInt16Array(System.Byte[],System.Int16[])">
+            <summary>Преобразовать массив байт в массив целых чисел длиной два байта каждое</summary>
+            <param name="array">Массив байт чётной</param>
+            <param name="Destination">Массив двухбайтовых целых чисел, на который осуществляется проекция в памяти массива байт</param>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToInt16Array(System.Byte[])">
+            <summary>Преобразовать массив байт в массив целых чисел длиной два байта каждое</summary>
+            <param name="array">Массив байт чётной</param>
+            <returns>Новый массив двухбайтовых целых чисел, на который осуществляется проекция в памяти массива байт</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToInt32Array(System.Byte[],System.Int32[])">
+            <summary>Преобразовать массив байт в массив целых чисел длиной четыре байта каждое</summary>
+            <param name="array">Массив байт чётной</param>
+            <param name="Destination">Массив четырёхбайтных целых чисел, на который осуществляется проекция в памяти массива байт</param>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToInt32Array(System.Byte[])">
+            <summary>Преобразовать массив байт в массив целых чисел длиной четыре байта каждое</summary>
+            <param name="array">Массив байт чётной</param>
+            <returns>Новый массив четырёхбайтных целых чисел, на который осуществляется проекция в памяти массива байт</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToInt(System.Byte[])">
+            <summary>Рассчитать четырёхбайтную сумму массива байт с переполнением</summary>
+            <param name="array">Массив байт, сумму которого требуется рассчитать</param>
+            <returns>Целое четырёхбайтное со знаком, сверяющиеся результатом вычисления суммы байт исходного массива с переполнением</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToUInt(System.Byte[])">
+            <summary>Рассчитать четырёхбайтную (без знака) сумму массива байт с переполнением</summary>
+            <param name="array">Массив байт, сумму которого требуется рассчитать</param>
+            <returns>Целое четырёхбайтное без знака, сверяющиеся результатом вычисления суммы байт исходного массива с переполнением</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToLong(System.Byte[])">
+            <summary>Рассчитать восьмибайтную сумму массива байт с переполнением</summary>
+            <param name="array">Массив байт, сумму которого требуется рассчитать</param>
+            <returns>Целое восьмибайтное со знаком, сверяющиеся результатом вычисления суммы байт исходного массива с переполнением</returns>
+        </member>
+        <member name="M:System.ByteArrayExtensions.ToULong(System.Byte[])">
+            <summary>Рассчитать восьмибайтную (без знака) сумму массива байт с переполнением</summary>
+            <param name="array">Массив байт, сумму которого требуется рассчитать</param>
+            <returns>Целое восьмибайтное без знака, сверяющиеся результатом вычисления суммы байт исходного массива с переполнением</returns>
+        </member>
+        <member name="T:System.DateTimeExtensions">
+            <summary>Класс методов-расширений для даты-времени <see cref="T:System.DateTime"/></summary>
+        </member>
+        <member name="M:System.DateTimeExtensions.ToBytArray(System.DateTime)">
+            <summary>Преобразование структуры <see cref="T:System.DateTime"/> в массив байт</summary>
+            <param name="Time">Дата/время</param>
+            <returns>Массив</returns>
+        </member>
+        <member name="M:System.DateTimeExtensions.ToByteArray(System.DateTime,System.Byte[],System.Int32)">
+            <summary>Копирование значения структуры даты-времени в массив байт с заданным смещением</summary>
+            <param name="Time">Структура даты-времени</param>
+            <param name="Data">Массив байт, куда требуется записать значение</param>
+            <param name="Offset">Смещение в массиве байт</param>
+        </member>
+        <member name="M:System.DateTimeExtensions.FromBytArray(System.Byte[],System.Int32)">
+            <summary>Преобразование массива байт в <see cref="T:System.DateTime"/></summary>
+            <param name="Data">Массив байт</param>
+            <param name="Offset">Смещение в массиве</param>
+            <returns>Структура <see cref="T:System.DateTime"/></returns>
         </member>
         <member name="T:System.FuncExtensions">
             <summary>Класс методов-расширений для функции</summary>
@@ -19007,15 +19367,41 @@
             <param name="Eps">Требуемая точность</param>
             <returns>Результаты дискретизации</returns>
         </member>
-        <member name="M:System.EnumExtensions.GetValueAttribute``1(System.Enum)">
-            <exception cref="T:System.TypeLoadException">A custom attribute type cannot be loaded. </exception>
-            <exception cref="T:System.InvalidOperationException">This member belongs to a type that is loaded into the reflection-only context. See How to: Load Assemblies into the Reflection-Only Context.</exception>
+        <member name="T:System.EnumExtensions">
+            <summary>Класс методов-расширений для перечислений <see cref="T:System.Enum"/></summary>
         </member>
-        <member name="M:System.EnumExtensions.GetValueDescription(System.Enum)">
-            <exception cref="T:System.TypeLoadException">A custom attribute type cannot be loaded. </exception>
+        <member name="M:System.EnumExtensions.GetValueAttribute``1(System.Enum)">
+            <summary>Получить описание поля - значение атрибута <see cref="T:System.ComponentModel.DescriptionAttribute"/></summary>
+            <exception cref="T:System.TypeLoadException">Если невозможно загрузить атрибуты типа</exception>
+            <exception cref="T:System.InvalidOperationException">
+            Если этот член принадлежит типу, который загружается в контекст только для отражения.
+            Смотрите раздел Как загрузить сборки в контекст только для отражения.
+            </exception>
+        </member>
+        <member name="M:System.EnumExtensions.GetDescription(System.Enum)">
+            <summary>Получить описание поля - значение атрибута <see cref="T:System.ComponentModel.DescriptionAttribute"/></summary>
+            <exception cref="T:System.TypeLoadException">Если невозможно загрузить атрибуты типа</exception>
+        </member>
+        <member name="M:System.EnumExtensions.GetDisplayName(System.Enum)">
+            <summary>Получить описание поля - значение атрибута <see cref="T:System.ComponentModel.DisplayNameAttribute"/></summary>
+            <exception cref="T:System.TypeLoadException">Если невозможно загрузить атрибуты типа</exception>
         </member>
         <member name="T:System.EventHandlerExtension">
             <summary>Класс методов расширений для обработчиков событий</summary>
+        </member>
+        <member name="M:System.EventHandlerExtension.InvokeAsync(System.EventHandler,System.Object,System.EventArgs)">
+            <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
+            <param name="handler">Запускаемый обработчик события</param>
+            <param name="sender">Источник события</param>
+            <param name="e">Аргументы события</param>
+            <returns>Задача асинхронного выполнения обработчика события</returns>
+        </member>
+        <member name="M:System.EventHandlerExtension.InvokeAsync``1(System.EventHandler{``0},System.Object,``0)">
+            <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
+            <param name="handler">Запускаемый обработчик события</param>
+            <param name="sender">Источник события</param>
+            <param name="e">Аргументы события</param>
+            <returns>Задача асинхронного выполнения обработчика события</returns>
         </member>
         <member name="M:System.EventHandlerExtension.Start(System.Collections.Specialized.NotifyCollectionChangedEventHandler,System.Object,System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
             <summary>Потоко-безопасная генерация события</summary>
@@ -19098,6 +19484,13 @@
             <typeparam name="TResult">Тип результата обработки события</typeparam>
             <typeparam name="TSender">Тип источника события</typeparam>
             <returns>Массив результатов обработки события</returns>
+        </member>
+        <member name="T:System.EventHandlerReturn`2">
+            <summary>Тип обработчика события, подразумевающий возможность возврата значения</summary>
+            <param name="Sender">Объект-источник события</param>
+            <param name="args">Аргумент события</param>
+            <typeparam name="TEventArgs">Тип аргумента события</typeparam>
+            <typeparam name="TReturn">Тип возвращаемого значения</typeparam>
         </member>
         <member name="T:System.EventHandlerTyped1Extension">
             <summary>Класс методов расширений для обработчиков событий</summary>
@@ -19184,7 +19577,7 @@
             <param name="e">Аргументы события</param>
         </member>
         <member name="T:System.IComparableExtensions">
-            <summary>Класс методов-расширений для сравнимых объектов</summary>
+            <summary>Класс методов-расширений для объектов, поддерживающий интерфейс <see cref="T:System.IComparable`1"/></summary>
         </member>
         <member name="M:System.IComparableExtensions.Search``1(``0[],System.Int32,System.Int32,``0)">
             <summary>Метод поиска элемента в упорядоченной коллекции половинным делением</summary>
@@ -19194,6 +19587,59 @@
             <param name="To">Конечный индекс поиска</param>
             <param name="Item">Искомый элемент</param>
             <returns>Индекс элемента в массиве</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.Max``1(``0,``0)">
+            <summary>Возвращает максимальный элемент из текущего и, элемента, переданного в качестве параметра</summary>
+            <typeparam name="T">Тип сравниваемых элементов</typeparam>
+            <param name="x">Текущий элемент в процессе сравнения</param>
+            <param name="y">Сравниваемый элемент в процессе сравнения</param>
+            <returns>Максимальный из элементов</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.Min``1(``0,``0)">
+            <summary>Возвращает минимальный элемент из текущего и, элемента, переданного в качестве параметра</summary>
+            <typeparam name="T">Тип сравниваемых элементов</typeparam>
+            <param name="x">Текущий элемент в процессе сравнения</param>
+            <param name="y">Сравниваемый элемент в процессе сравнения</param>
+            <returns>Минимальный из элементов</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.IsGreater``1(``0,``0)">
+            <summary>Является ли текущий элемент элементом больше, чем элемент, переданный в параметре</summary>
+            <typeparam name="T">Тип сравниваемых элементов</typeparam>
+            <param name="a">Текущий элемент в процессе сравнения</param>
+            <param name="b">Сравниваемый элемент в процессе сравнения</param>
+            <returns>Истина, если текущий элемент больше, чем элемент, с которым производится сравнение</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.IsLess``1(``0,``0)">
+            <summary>Является ли текущий элемент элементом меньше, чем элемент, переданный в параметре</summary>
+            <typeparam name="T">Тип сравниваемых элементов</typeparam>
+            <param name="a">Текущий элемент в процессе сравнения</param>
+            <param name="b">Сравниваемый элемент в процессе сравнения</param>
+            <returns>Истина, если текущий элемент меньше, чем элемент, с которым производится сравнение</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.IsGreaterEqual``1(``0,``0)">
+            <summary>Является ли текущий элемент элементом больше, либо равен элементу, переданному в параметре</summary>
+            <typeparam name="T">Тип сравниваемых элементов</typeparam>
+            <param name="a">Текущий элемент в процессе сравнения</param>
+            <param name="b">Сравниваемый элемент в процессе сравнения</param>
+            <returns>Истина, если текущий элемент больше, либо равен элементу, переданному в параметре</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.IsLessEqual``1(``0,``0)">
+            <summary>Является ли текущий элемент элементом меньше, либо равен элементу, переданному в параметре</summary>
+            <typeparam name="T">Тип сравниваемых элементов</typeparam>
+            <param name="a">Текущий элемент в процессе сравнения</param>
+            <param name="b">Сравниваемый элемент в процессе сравнения</param>
+            <returns>Истина, если текущий элемент меньше, либо равен элементу, переданному в параметре</returns>
+        </member>
+        <member name="M:System.IComparableExtensions.Between``1(``0,``0,``0)">
+            <summary>
+            Возвращает значение <paramref name="x"/>, если оно находится в интервале между <paramref name="min"/> и
+            <paramref name="max"/>, либо соответствующую границу интервала
+            </summary>
+            <typeparam name="T">Тип значения</typeparam>
+            <param name="x">Проверяемое значение</param>
+            <param name="min">Нижняя граница интервала</param>
+            <param name="max">Верхняя граница интервала</param>
+            <returns>Значение из интервала</returns>
         </member>
         <member name="M:System.IO.BinaryReaderExtensions.IsEOF(System.IO.BinaryReader)">
             <summary>Признак конца потока</summary>

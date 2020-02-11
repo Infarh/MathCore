@@ -106,5 +106,14 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Клонирование поддерева</summary>
         /// <returns>Клон поддерева</returns>
         public override ExpressionTreeNode Clone() => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing) return;
+            _ParametersExpression.Dispose();
+            _CoreExpression.Dispose();
+        }
     }
 }

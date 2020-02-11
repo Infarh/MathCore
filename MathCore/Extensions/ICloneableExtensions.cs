@@ -1,12 +1,21 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Collections.Generic
 {
+    /// <summary>Класс методов-расширений для интерфейса <see cref="ICloneable"/></summary>
     [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
     public static class ICloneableExtensions
     {
+        /// <summary>
+        /// Клонировать объект <typeparamref name="T"/>
+        /// (с возможностью последующей инициализации <see cref="IInitializable"/>, если интерфейс поддерживается)
+        /// </summary>
+        /// <typeparam name="T">Тип клонируемого объекта</typeparam>
+        /// <param name="obj">Клонируемый объект</param>
+        /// <returns>Клонированный объект</returns>
         [NotNull]
         public static T CloneObject<T>([NotNull] this T obj) where T : ICloneable
         {
@@ -15,6 +24,14 @@ namespace System.Collections.Generic
             return result;
         }
 
+        /// <summary>
+        /// Клонировать объект <typeparamref name="T"/>
+        /// (с возможностью последующей инициализации <see cref="IInitializable"/>, если интерфейс поддерживается)
+        /// </summary>
+        /// <typeparam name="T">Тип клонируемого объекта</typeparam>
+        /// <param name="obj">Клонируемый объект</param>
+        /// <param name="Initializer">Метод, вызываемый для клонированного объекта для его инициализации</param>
+        /// <returns>Клонированный объект</returns>
         [NotNull]
         public static T CloneObject<T>([NotNull] this T obj, [NotNull] Action<T> Initializer) where T : ICloneable
         {
@@ -24,6 +41,17 @@ namespace System.Collections.Generic
             return result;
         }
 
+        /// <summary>
+        /// Клонировать объект <typeparamref name="T"/>
+        /// (с возможностью последующей инициализации <see cref="IInitializable"/>, либо <see cref="IInitializable{TParameter}"/>
+        /// если интерфейсы поддерживается)
+        /// </summary>
+        /// <typeparam name="T">Тип клонируемого объекта</typeparam>
+        /// <typeparam name="TParameter">Тип параметра процесса инициализации</typeparam>
+        /// <param name="obj">Клонируемый объект</param>
+        /// <param name="Initializer">Метод, вызываемый для клонированного объекта для его инициализации</param>
+        /// <param name="parameter">Параметр процесса инициализации</param>
+        /// <returns>Клонированный объект</returns>
         [NotNull]
         public static T CloneObject<T, TParameter>([NotNull] this T obj, [NotNull] Action<T, TParameter> Initializer, TParameter parameter)
             where T : ICloneable
@@ -35,6 +63,15 @@ namespace System.Collections.Generic
             return result;
         }
 
+        /// <summary>
+        /// Клонировать объект <typeparamref name="T"/> 
+        /// с последующей инициализацией <see cref="IInitializable"/>, либо <see cref="IInitializable{TParameter}"/>
+        /// </summary>
+        /// <typeparam name="T">Тип клонируемого объекта</typeparam>
+        /// <typeparam name="TParameter">Тип параметра процесса инициализации</typeparam>
+        /// <param name="obj">Клонируемый объект</param>
+        /// <param name="parameter">Параметр процесса инициализации</param>
+        /// <returns>Клонированный объект</returns>
         [NotNull]
         public static T CloneObject<T, TParameter>([NotNull] this T obj, TParameter parameter)
             where T : ICloneable, IInitializable<TParameter>

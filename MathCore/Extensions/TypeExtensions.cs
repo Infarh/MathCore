@@ -1,121 +1,160 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+using MathCore.Extensions.Expressions;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable AnnotateNotNullParameter
 
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    /// <summary>Класс методов-расширений для <see cref="Type"/></summary>
     public static class TypeExtensions
     {
-        private sealed class PairOfTypes
-        {
-            private readonly Type _First;
-            private readonly Type _Second;
-            public PairOfTypes(Type first, Type second)
-            {
-                _First = first;
-                _Second = second;
-            }
-            public override int GetHashCode() => 31 * _First.GetHashCode() + _Second.GetHashCode();
+        /// <summary>Значение данного типа допускают <see langword="null"/></summary>
+        /// <param name="type">Проверяемый тип</param>
+        /// <returns>Истина, если значение проверяемого типа допускают возможность пустой ссылки</returns>
+        public static bool IsCanBeNullRef(this Type type) => type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-            public override bool Equals(object obj) =>
-                ReferenceEquals(obj, this) ||
-                obj is PairOfTypes other && _First == other._First && _Second == other._Second;
-        }
+        /// <summary>Функция, ничего не делающая</summary>
+        private static readonly Func<object, object> __NoChangeTypeFunction = o => o;
 
-        private static readonly IDictionary<PairOfTypes, Func<object, object>> __CastersDictionary = new Dictionary<PairOfTypes, Func<object, object>>();
+        #region Приведение типов
 
+        /// <summary>Пул методов приведения типов</summary>
+        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __CastersDictionary = new ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>>();
+
+        /// <summary>Выражение параметра конструируемой функции</summary>
         private static readonly ParameterExpression __ConvParameter = Expression.Parameter(typeof(object), "value");
 
-        private static Func<object, object> GetCasterFrom([NotNull]Type TargetType, [CanBeNull]object Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
+        /// <summary>Сформировать функцию, осуществляющую приведение типов</summary>
+        /// <param name="TargetType">Целевой тип значения</param>
+        /// <param name="Source">Объект, тип которого требуется привести</param>
+        /// <returns>Функция, осуществляющая приведение типа объекта к целевому типу данных</returns>
+        private static Func<object, object> GetCasterFrom<T>([NotNull]Type TargetType, [CanBeNull]T Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
 
+        /// <summary>Сформировать функцию, осуществляющую приведение типа значения к указанному типу данных</summary>
+        /// <param name="SourceType">Тип исходных данных</param>
+        /// <param name="TargetType">Тип, к которому требуется выполнить приведение</param>
+        /// <returns>Функция, осуществляющая приведение типа значения</returns>
         public static Func<object, object> GetCasterTo([NotNull] this Type SourceType, [NotNull]Type TargetType) => TargetType.GetCasterFrom(SourceType);
-        public static Func<object, object> GetCasterFrom([NotNull] this Type TargetType, [NotNull]Type SourceType)
-        {
-            Func<object, object> res;
-            var key = new PairOfTypes(SourceType, TargetType);
-            lock (__CastersDictionary) if(!__CastersDictionary.TryGetValue(key, out res))
-            {
-                var object_2_source = Expression.Convert(__ConvParameter, SourceType);
-                var source_2_target = Expression.Convert(object_2_source, TargetType);
-                var target_2_object = Expression.Convert(source_2_target, typeof(object));
-                res = Expression.Lambda<Func<object, object>>(target_2_object, __ConvParameter).Compile();
-                __CastersDictionary.Add(key, res);
-            }
-            return res;
-        }
 
-        public static object Cast([NotNull] this Type type, object obj) => GetCasterFrom(type, obj)(obj);
+        /// <summary>Сформировать функцию, осуществляющую приведение типа значения из указанного типа данных</summary>
+        /// <param name="SourceType">Тип исходных данных</param>
+        /// <param name="TargetType">Тип, к которому требуется выполнить приведение</param>
+        /// <returns>Функция, осуществляющая приведение типа значения</returns>
+        public static Func<object, object> GetCasterFrom([NotNull] this Type TargetType, [NotNull]Type SourceType) =>
+            SourceType == TargetType 
+                ? __NoChangeTypeFunction
+                : __CastersDictionary.GetOrAdd((SourceType, TargetType), types =>
+                {
+                    var (source_type, target_type) = types;
+                    var object_2_source = Expression.Convert(__ConvParameter, source_type);
+                    var source_2_target = Expression.Convert(object_2_source, target_type);
+                    var target_2_object = Expression.Convert(source_2_target, typeof(object));
+                    return Expression.Lambda<Func<object, object>>(target_2_object, __ConvParameter).Compile();
+                });
 
-        private static readonly IDictionary<PairOfTypes, Func<object, object>> __ConvertersDictionary = new Dictionary<PairOfTypes, Func<object, object>>();
+        /// <summary>Выполнить приведение типа значения объекта</summary>
+        /// <param name="type">Целевой тип данных</param>
+        /// <param name="obj">Приводимое значение</param>
+        /// <returns>Объект-значение, приведённое к целевому типу данных</returns>
+        public static object Cast<T>([NotNull] this Type type, T obj) => GetCasterFrom(type, obj)(obj);
 
+        #endregion
+
+        /// <summary>Выражение параметра конструируемой функции</summary>
+        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __ConvertersDictionary = new ConcurrentDictionary<(Type, Type), Func<object, object>>();
+
+        /// <summary>Сформировать функцию, осуществляющую преобразование типа в указанный тип данных</summary>
+        /// <param name="SourceType">Тип исходного значения</param>
+        /// <param name="TargetType">Целевой тип данных</param>
+        /// <returns>Функция, осуществляющая преобразование исходного значение в значение целевого типа данных</returns>
         public static Func<object, object> GetConverterTo([NotNull] this Type SourceType, [NotNull] Type TargetType)
-            => TargetType.GetConverterFrom(SourceType);
+            => SourceType == TargetType ? o => o : TargetType.GetConverterFrom(SourceType);
 
-        public static Func<object, object> GetConverterFrom([NotNull] this Type TargetType, [NotNull] Type SourceType)
+        /// <summary>Сформировать функцию, осуществляющую преобразование типа в указанный тип данных</summary>
+        /// <param name="SourceType">Тип исходного значения</param>
+        /// <param name="TargetType">Целевой тип данных</param>
+        /// <returns>Функция, осуществляющая преобразование исходного значение в значение целевого типа данных</returns>
+        public static Func<object, object> GetConverterFrom([NotNull] this Type TargetType, [NotNull] Type SourceType) =>
+            SourceType == TargetType
+                ? __NoChangeTypeFunction
+                : __ConvertersDictionary.GetOrAdd(
+                    (SourceType, TargetType),
+                    tt => tt.SourceType.GetConvertExpression_Object(tt.TargetType).Compile());
+
+        /// <summary>Сформировать выражение, осуществляющее приведение типа к указанному типу данных</summary>
+        /// <param name="SourceType">Тип исходного значения</param>
+        /// <param name="TargetType">Целевой тип данных</param>
+        /// <returns>Выражение, осуществляющее приведение исходного значение к целевому типу данных</returns>
+        [NotNull]
+        public static Expression GetCastExpression([NotNull] this Type SourceType, [NotNull] Type TargetType, [NotNull] ref ParameterExpression parameter)
         {
-            Func<object, object> res;
-            var key = new PairOfTypes(SourceType, TargetType);
-            lock (__ConvertersDictionary)
-                if(!__ConvertersDictionary.TryGetValue(key, out res))
-                    __ConvertersDictionary.Add(key, res = SourceType.GetConvertExpression_Object(TargetType).Compile());
-            return res;
+            if (SourceType == TargetType) return parameter;
+            Expression source = parameter;
+            // ReSharper disable once HeuristicUnreachableCode
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (source is null) source = __ConvParameter;
+            else if (source.Type != SourceType) source = source.ConvertTo(SourceType);
+            return source.ConvertTo(TargetType).ConvertTo(typeof(object));
         }
 
-
+        /// <summary>Сформировать выражение, осуществляющее преобразование типа данных</summary>
+        /// <param name="SourceType">Тип исходного значения</param>
+        /// <param name="TargetType">Целевой тип данных</param>
+        /// <returns>Выражение, осуществляющее преобразование типа данных</returns>
+        /// <exception cref="NotSupportedException">Если преобразование невозможно в виду отсутствия определённых конвертеров типов</exception>
         [NotNull]
-        public static Expression GetCastExpression([NotNull] this Type FromType, [NotNull] Type ToType, [NotNull] ref ParameterExpression parameter)
+        public static LambdaExpression GetConvertExpression([NotNull] this Type SourceType, [NotNull] Type TargetType)
         {
-            if(parameter is null) parameter = Expression.Parameter(typeof(object), "value");
-            return Expression.Convert(Expression.Convert(Expression.Convert(__ConvParameter, FromType), ToType), typeof(object));
+            var converter = SourceType.GetTypeConverter();
+            TypeConverter converter_to = null;
+            if (!converter.CanConvertTo(TargetType) && !(converter_to = TargetType.GetTypeConverter()).CanConvertFrom(SourceType))
+                throw new NotSupportedException($"Преобразование из {SourceType} в {TargetType} не поддерживается");
+            var parameter_source = Expression.Parameter(SourceType, "pFrom");
+            var source_to_object = parameter_source.ConvertTo(typeof(object));
+            var converter_expression = (converter_to ?? converter).ToExpression();
+            var converter_delegate = converter_to is null
+                    ? (Delegate)(Func<object, Type, object>)converter.ConvertTo
+                    : (Func<object, object>)converter_to.ConvertFrom;
+            var converter_args = converter_to is null
+                ? new Expression[] { source_to_object, TargetType.ToExpression() }
+                : new Expression[] { source_to_object };
+            var expr_conversation = Expression.Call(converter_expression, converter_delegate.Method, converter_args);
+
+            return Expression.Lambda(expr_conversation.ConvertTo(TargetType), parameter_source);
         }
 
+        /// <summary>Сформировать лямбда-выражение для конвертации значения</summary>
+        /// <param name="SourceType">Тип исходного значения</param>
+        /// <param name="TargetType">Целевой тип данных</param>
+        /// <exception cref="NotSupportedException">Если конвертация из <paramref name="SourceType"/> в <paramref name="TargetType"/> не реализована</exception>
+        /// <returns>Лямбда-выражение, осуществляющее конвертацию значения</returns>
         [NotNull]
-        public static LambdaExpression GetConvertExpression([NotNull] this Type FromType, [NotNull] Type ToType)
+        public static Expression<Func<object, object>> GetConvertExpression_Object(this Type SourceType, [NotNull] Type TargetType)
         {
-            var c = FromType.GetTypeConverter();
-            TypeConverter c_to = null;
-            if(!c.CanConvertTo(ToType) && !(c_to = ToType.GetTypeConverter()).CanConvertFrom(FromType))
-                throw new NotSupportedException($"Преобразование из {FromType} в {ToType} не поддерживается");
-            var expr_pFrom = Expression.Parameter(FromType, "pFrom");
-            var expr_tFrom2tObject = Expression.Convert(expr_pFrom, typeof(object));
-            var expr_cConverter = Expression.Constant(c_to ?? c);
-            var method = (c_to is null
-                            ? (Delegate)(Func<object, Type, object>)c.ConvertTo
-                            : (Func<object, object>)c_to.ConvertFrom)
-                            .Method;
-            var exprs_pConverter = c_to is null
-                ? new Expression[] { expr_tFrom2tObject, Expression.Constant(ToType) }
-                : new Expression[] { expr_tFrom2tObject };
-            var expr_conversation = Expression.Call(expr_cConverter, method, exprs_pConverter);
+            var converter = SourceType.GetTypeConverter();
+            TypeConverter converter_to = null;
+            if (!converter.CanConvertTo(TargetType) && !(converter_to = TargetType.GetTypeConverter()).CanConvertFrom(SourceType))
+                throw new NotSupportedException($"Преобразование из {SourceType} в {TargetType} не поддерживается");
+            var parameter_source = Expression.Parameter(typeof(object), "pFrom");
+            var converter_expression = (converter_to ?? converter).ToExpression();
+            var converter_delegate = converter_to is null
+                    ? (Delegate)(Func<object, Type, object>)converter.ConvertTo
+                    : (Func<object, object>)converter_to.ConvertFrom
+                            ;
+            var converter_args = converter_to is null
+                ? new Expression[] { parameter_source, Expression.Constant(TargetType) }
+                : new Expression[] { parameter_source };
+            var expr_conversation = Expression.Call(converter_expression, converter_delegate.Method, converter_args);
 
-            return Expression.Lambda(Expression.Convert(expr_conversation, ToType), expr_pFrom);
-        }
-
-        [NotNull]
-        public static Expression<Func<object, object>> GetConvertExpression_Object(this Type FromType, [NotNull] Type ToType)
-        {
-            var c = FromType.GetTypeConverter();
-            TypeConverter c_to = null;
-            if(!c.CanConvertTo(ToType) && !(c_to = ToType.GetTypeConverter()).CanConvertFrom(FromType))
-                throw new NotSupportedException($"Преобразование из {FromType} в {ToType} не поддерживается");
-            var expr_pFrom = Expression.Parameter(typeof(object), "pFrom");
-            var expr_cConverter = Expression.Constant(c_to ?? c);
-            var method = (c_to is null
-                            ? (Delegate)(Func<object, Type, object>)c.ConvertTo
-                            : (Func<object, object>)c_to.ConvertFrom)
-                            .Method;
-            var exprs_pConverter = c_to is null
-                ? new Expression[] { expr_pFrom, Expression.Constant(ToType) }
-                : new Expression[] { expr_pFrom };
-            var expr_Conversation = Expression.Call(expr_cConverter, method, exprs_pConverter);
-
-            return Expression.Lambda<Func<object, object>>(Expression.Convert(expr_Conversation, typeof(object)), expr_pFrom);
+            return Expression.Lambda<Func<object, object>>(Expression.Convert(expr_conversation, typeof(object)), parameter_source);
         }
 
         /// <summary>Получить конвертер значений для указанного типа данных</summary>
@@ -143,39 +182,91 @@ namespace System
         public static TAttribute[] GetCustomAttributes<TAttribute>(this Type T)
             where TAttribute : Attribute => GetCustomAttributes<TAttribute>(T, false);
 
+        /// <summary>Получить атрибуты типа</summary>
+        /// <typeparam name="TAttribute">Тип необходимых атрибутов</typeparam>
+        /// <param name="T">Тип, из которого требуется получить атрибуты</param>
+        /// <param name="Inherited">Искать атрибуты в базовых классах типа</param>
+        /// <returns>Массив найденных атрибутов</returns>
         [DST, NotNull]
         public static TAttribute[] GetCustomAttributes<TAttribute>([NotNull] this Type T, bool Inherited)
              where TAttribute : Attribute => T.GetCustomAttributes(typeof(TAttribute), Inherited).OfType<TAttribute>().ToArray();
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <param name="type">Тип создаваемого объекта</param>
+        /// <returns>Созданный объект</returns>
         [DST, NotNull]
         public static object CreateObject([NotNull] this Type type) => Activator.CreateInstance(type);
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <typeparam name="T">Тип необходимого объекта</typeparam>
+        /// <param name="type">Тип создаваемого объекта</param>
+        /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
         [DST, NotNull]
         public static T Create<T>([NotNull] this Type type) => (T)type.CreateObject();
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <typeparam name="T">Тип необходимого объекта</typeparam>
+        /// <param name="type">Тип создаваемого объекта</param>
+        /// <param name="Params">Параметры конструктора</param>
+        /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
         [DST]
         public static T Create<T>(this Type type, params object[] Params) => (T)type.CreateObject(Params);
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <param name="type">Тип создаваемого объекта</param>
+        /// <param name="Params">Параметры конструктора</param>
+        /// <returns>Созданный объект</returns>
         [DST, NotNull]
-        public static object CreateObject([NotNull] this Type type, params object[] Params) => Activator.CreateInstance(type, Params);
+        public static object CreateObject([NotNull] this Type type, params object[] Params) => 
+            Activator.CreateInstance(type, Params);
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <param name="type">Тип создаваемого объекта</param>
+        /// <param name="Flags">Флаги, определяющие метод поиска конструктора</param>
+        /// <param name="binder">Объект, определяющий способ поиска конструктора</param>
+        /// <param name="Params">Параметры конструктора</param>
+        /// <returns>Созданный объект</returns>
         [DST, NotNull]
-        public static object CreateObject([NotNull] this Type type, BindingFlags Flags, Binder binder, params object[] Params) => Activator.CreateInstance(type, Flags, binder, Params);
+        public static object CreateObject([NotNull] this Type type, BindingFlags Flags, Binder binder, params object[] Params) =>
+            Activator.CreateInstance(type, Flags, binder, Params);
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <param name="Params">Параметры конструктора</param>
+        /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
         [DST, NotNull]
         public static T Create<T>(params object[] Params) => (T)CreateObject(typeof(T), Params);
 
+        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <typeparam name="T">Тип необходимого объекта</typeparam>
+        /// <param name="Flags">Флаги, определяющие метод поиска конструктора</param>
+        /// <param name="binder">Объект, определяющий способ поиска конструктора</param>
+        /// <param name="Params">Параметры конструктора</param>
+        /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
         [DST, NotNull]
-        public static T Create<T>(BindingFlags Flags, Binder binder, params object[] Params) => (T)CreateObject(typeof(T), Flags, binder, Params);
+        public static T Create<T>(BindingFlags Flags, Binder binder, params object[] Params) =>
+            (T)CreateObject(typeof(T), Flags, binder, Params);
 
-        public static void AddConverter([NotNull] this Type type, [NotNull] Type ConverterType) => TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
+        /// <summary>Добавить конвертер к типу</summary>
+        /// <param name="type">Тип, к которому требуется добавить конвертер</param>
+        /// <param name="ConverterType">Тип конвертера, который надо добавить к описанию типа</param>
+        public static void AddConverter([NotNull] this Type type, [NotNull] Type ConverterType) =>
+            TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(ConverterType));
 
-        public static void AddConverter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) => 
+        /// <summary>Добавить конвертер к типу</summary>
+        /// <param name="type">Тип, к которому требуется добавить конвертер</param>
+        /// <param name="ConverterTypes">Типы конвертеров, которые требуется добавить к описанию типа</param>
+        public static void AddConverter([NotNull] this Type type, [NotNull] params Type[] ConverterTypes) =>
             TypeDescriptor.AddAttributes(type, ConverterTypes.Select(t => new TypeConverterAttribute(t)).Cast<Attribute>().ToArray());
 
+        /// <summary>Получить объект-описатель типа <see cref="TypeDescriptionProvider"/></summary>
+        /// <param name="type">Исследуемый тип</param>
+        /// <returns>Объект, определяющий информацию о типе - <see cref="TypeDescriptionProvider"/></returns>
         [NotNull]
         public static TypeDescriptionProvider GetProvider([NotNull] this Type type) => TypeDescriptor.GetProvider(type);
 
+        /// <summary>Добавить описатель типа - <see cref="TypeDescriptionProvider"/></summary>
+        /// <param name="type">Тип, к которому требуется добавить описатель</param>
+        /// <param name="provider">Добавляемый описатель типа <see cref="TypeDescriptionProvider"/></param>
         public static void AddProvider([NotNull] this Type type, [NotNull] TypeDescriptionProvider provider) => TypeDescriptor.AddProvider(provider, type);
     }
 }

@@ -14,18 +14,24 @@ namespace System
     /// <summary>Класс методов расширений для обработчиков событий</summary>
     public static class EventHandlerExtension
     {
-        public static async Task InvokeAsync([CanBeNull] this EventHandler handler, object sender, EventArgs e)
-        {
-            if (handler is null) return;
-            await Task.Factory.FromAsync(handler.BeginInvoke, handler.EndInvoke, sender, e, null);
-        }
+        /// <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
+        /// <param name="handler">Запускаемый обработчик события</param>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Аргументы события</param>
+        /// <returns>Задача асинхронного выполнения обработчика события</returns>
+        [NotNull]
+        public static Task InvokeAsync([CanBeNull] this EventHandler handler, object sender, EventArgs e) => 
+            handler is null ? Task.CompletedTask : Task.Run(() => handler(sender, e));
 
-        public static async Task InvokeAsync<TEventArgs>([CanBeNull] this EventHandler<TEventArgs> handler, object sender, TEventArgs e)
-            where TEventArgs : EventArgs
-        {
-            if (handler is null) return;
-            await Task.Factory.FromAsync(handler.BeginInvoke, handler.EndInvoke, sender, e, null);
-        }
+        /// <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
+        /// <param name="handler">Запускаемый обработчик события</param>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Аргументы события</param>
+        /// <returns>Задача асинхронного выполнения обработчика события</returns>
+        [NotNull]
+        public static Task InvokeAsync<TEventArgs>([CanBeNull] this EventHandler<TEventArgs> handler, object sender, TEventArgs e)
+            where TEventArgs : EventArgs =>
+            handler is null ? Task.CompletedTask : Task.Run(() => handler(sender, e));
 
         /// <summary>Потоко-безопасная генерация события</summary>
         /// <param name="Handler">Обработчик события</param>

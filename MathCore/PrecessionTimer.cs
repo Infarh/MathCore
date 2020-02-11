@@ -43,7 +43,7 @@ namespace MathCore
             {
                 DisposeCheck();
                 _Mode = value;
-                if(!IsRunning) return;
+                if (!IsRunning) return;
                 Stop();
                 Start();
             }
@@ -59,10 +59,10 @@ namespace MathCore
             set
             {
                 DisposeCheck();
-                if(value < Capabilities.PeriodMin || value > Capabilities.PeriodMax)
+                if (value < Capabilities.PeriodMin || value > Capabilities.PeriodMax)
                     throw new ArgumentOutOfRangeException(nameof(value), value, "Multimedia Timer period out of range.");
                 _Period = value;
-                if(!IsRunning) return;
+                if (!IsRunning) return;
                 Stop();
                 Start();
             }
@@ -78,10 +78,10 @@ namespace MathCore
             set
             {
                 DisposeCheck();
-                if(value < 0)
+                if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value), value, "timer resolution out of range.");
                 _Resolution = value;
-                if(!IsRunning) return;
+                if (!IsRunning) return;
                 Stop();
                 Start();
             }
@@ -107,21 +107,35 @@ namespace MathCore
 
         public event EventHandler Tick;
 
+        /// <inheritdoc />
         public void Dispose()
         {
-            if(_Disposed) return;
-            if(IsRunning) Stop();
-            _Disposed = true;
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private void DisposeCheck() { if(_Disposed) throw new ObjectDisposedException("Timer"); }
+        /// <summary>Освобождение ресурсов и остановка таймера</summary>
+        /// <param name="disposing">Требуется выполнить освобождение управляемых ресурсов</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                if (IsRunning) TimeKillEvent(_TimerId);
+            }
+            else if (_Disposed) return;
 
-        ~PrecisionTimer() { if(IsRunning) TimeKillEvent(_TimerId); }
+            _Disposed = true;
+            if (IsRunning) Stop();
+        }
+
+        private void DisposeCheck() { if (_Disposed) throw new ObjectDisposedException("Timer"); }
+
+        ~PrecisionTimer() => Dispose(false);
 
         /// <exception cref="PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
         private void Initialize()
         {
-            if(Environment.OSVersion.Platform != PlatformID.Win32NT)
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
                 throw new PlatformNotSupportedException($"Платформа {Environment.OSVersion.Platform} не поддерживается");
             _Mode = PrecisionTimerMode.Periodic;
             _Period = Capabilities.PeriodMin;
@@ -141,14 +155,14 @@ namespace MathCore
         public void Start()
         {
             DisposeCheck();
-            if(IsRunning) return;
+            if (IsRunning) return;
             _TimerId = TimeSetEvent(Period, Resolution,
                                      Mode == PrecisionTimerMode.Periodic ? _TimeProcPeriodic : _TimeProcOneShot,
                                      0, Mode);
-            if(_TimerId == 0)
+            if (_TimerId == 0)
                 throw new TimerException("Unable to start timer.");
             IsRunning = true;
-            if(SynchronizingObject?.InvokeRequired == true)
+            if (SynchronizingObject?.InvokeRequired == true)
                 SynchronizingObject.BeginInvoke(new EventRaiser(OnStarted), new object[] { EventArgs.Empty });
             else
                 OnStarted(EventArgs.Empty);
@@ -157,10 +171,10 @@ namespace MathCore
         public void Stop()
         {
             DisposeCheck();
-            if(!IsRunning) return;
+            if (!IsRunning) return;
             TimeKillEvent(_TimerId);
             IsRunning = false;
-            if(SynchronizingObject?.InvokeRequired == true)
+            if (SynchronizingObject?.InvokeRequired == true)
                 SynchronizingObject.BeginInvoke(new EventRaiser(OnStopped), new object[] { EventArgs.Empty });
             else
                 OnStopped(EventArgs.Empty);
@@ -176,7 +190,7 @@ namespace MathCore
 
         private void TimerOneShotEventCallback(int id, int msg, int user, int param1, int param2)
         {
-            if(_SynchronizingObject != null)
+            if (_SynchronizingObject != null)
             {
                 _SynchronizingObject.BeginInvoke(_TickRaiser, new object[] { EventArgs.Empty });
                 Stop();
@@ -190,7 +204,7 @@ namespace MathCore
 
         private void TimerPeriodicEventCallback(int id, int msg, int user, int param1, int param2)
         {
-            if(_SynchronizingObject != null)
+            if (_SynchronizingObject != null)
                 _SynchronizingObject.BeginInvoke(_TickRaiser, new object[] { EventArgs.Empty });
             else
                 OnTick(EventArgs.Empty);
