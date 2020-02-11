@@ -144,7 +144,7 @@ namespace MathCore.Values
         /// <summary>Новая усредняемая величина</summary>
         /// <param name="info">Сериализационная информация</param>
         /// <param name="context">Контекст сериализации</param>
-        private AverageValue([NotNull] SerializationInfo info, StreamingContext context)
+        protected AverageValue([NotNull] SerializationInfo info, StreamingContext context)
         {
             if (info is null) throw new ArgumentNullException(nameof(info));
             _Value = info.GetDouble("Value");

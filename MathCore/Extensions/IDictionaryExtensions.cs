@@ -11,6 +11,12 @@ namespace System.Collections.Generic
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class IDictionaryExtensions
     {
+        /// <summary>Деконструктор пары ключ-значение на составляющие</summary>
+        /// <typeparam name="TKey">Тип ключа</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
+        /// <param name="item">Деконструируемое значение</param>
+        /// <param name="key">Значение ключа</param>
+        /// <param name="value">Значение значения</param>
         public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> item, out TKey key, out TValue value)
         {
             key = item.Key;
@@ -343,6 +349,12 @@ namespace System.Collections.Generic
             return to_remove;
         }
 
+        /// <summary>Удалить записи с перечисленными ключами</summary>
+        /// <typeparam name="TKey">Тип ключа</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
+        /// <param name="dictionary">Словарь, из которого требуется удалить данные</param>
+        /// <param name="keys">Перечисление удаляемых ключей</param>
+        /// <returns>Массив удалённых значений</returns>
         [NotNull]
         public static TValue[] RemoveItems<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> dictionary, [NotNull] IEnumerable<TKey> keys)
         {

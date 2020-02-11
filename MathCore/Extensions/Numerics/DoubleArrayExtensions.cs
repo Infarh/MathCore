@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using MathCore;
 using MathCore.Annotations;
-using MathCore.Evaluations;
 using MathCore.Interpolation;
 using MathCore.Statistic;
 using MathCore.Values;

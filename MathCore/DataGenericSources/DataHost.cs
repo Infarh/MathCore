@@ -53,6 +53,13 @@ namespace MathCore.DataGenericSources
 
         #endregion
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing) return;
+            _ObservableObject.Dispose();
+        }
+
         /* -------------------------------------------------------------------------------- */
     }
 }

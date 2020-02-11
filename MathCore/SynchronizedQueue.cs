@@ -53,7 +53,23 @@ namespace MathCore
 
         public void Clear() { lock (_Queue) _Queue.Clear(); }
 
-        public void Dispose() => _Event.Dispose();
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _Disposed;
+
+        /// <summary>Освобождение ресурсов</summary>
+        /// <param name="disposing">Требуется выполнить освобождение управляемых ресурсов</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _Disposed) return;
+            _Disposed = true;
+            _Event.Dispose();
+        }
     }
 
     public class SynchronizedItemsProcessor<T> : IDisposable
@@ -99,8 +115,21 @@ namespace MathCore
 
         public void Add(T Value) => _Queue.Add(Value);
 
+        /// <inheritdoc />
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _Disposed;
+
+        /// <summary>Освобождение ресурсов</summary>
+        /// <param name="disposing">Требуется выполнить освобождение управляемых ресурсов</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _Disposed) return;
+            _Disposed = true;
             _Cancellation.Cancel();
             _Queue.Dispose();
             _Cancellation.Dispose();

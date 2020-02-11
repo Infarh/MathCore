@@ -1,6 +1,7 @@
 ﻿using System;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace MathCore
 {
@@ -38,7 +39,22 @@ namespace MathCore
 
         /// <summary>Разрушение обёртки, влекущее разрушение используемого объекта</summary>
         [DST]
-        public void Dispose() => _Disposer(_Obj);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>Объект разрушен</summary>
+        private bool _Disposed;
+
+        /// <summary>Разрушение обёртки, влекущее разрушение используемого объекта</summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _Disposed) return;
+            _Disposed = true;
+            _Disposer(_Obj);
+        }
 
         /* ------------------------------------------------------------------------------------------ */
 
