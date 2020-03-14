@@ -28,6 +28,15 @@ namespace System.Linq
     [PublicAPI]
     public static class IEnumerableExtensions
     {
+        /// <summary>Перечисление без повторений значений, определяемых лямбда-выражением</summary>
+        /// <typeparam name="T">Тип перечисляемых объектов</typeparam>
+        /// <typeparam name="TKey">Тип ключа значения</typeparam>
+        /// <param name="enumerable">Исходное перечисление объектов</param>
+        /// <param name="KeySelector">Критерий определения повторения значения</param>
+        /// <returns>Перечисление, из которого исключены повторения по указанному критерию</returns>
+        [NN] public static IEnumerable<T> Distinct<T, TKey>([NN] this IEnumerable<T> enumerable, [NN] Func<T, TKey> KeySelector) =>
+            enumerable.Distinct(PropertyEqualityComparer.Create(KeySelector));
+
         /// <summary>Дисперсия значений</summary>
         /// <param name="enumerable">Объект-источник данных</param>
         /// <returns>Дисперсия значений</returns>
