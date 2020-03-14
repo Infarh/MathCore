@@ -204,11 +204,11 @@ namespace MathCore.Tests
         [TestMethod]
         public void GetCoefficients_Complex_Exceptions_Test()
         {
-            Assert.That.Method(Polynom.Array.GetCoefficients, (Complex[])null)
+            Assert.That.Method((Complex[])null, Polynom.Array.GetCoefficients)
                .Throw<ArgumentNullException>()
                .Where(e => e.ParamName).IsEqual("Root");
            
-            Assert.That.Method(Polynom.Array.GetCoefficients, Array.Empty<Complex>())
+            Assert.That.Method(Array.Empty<Complex>(), Polynom.Array.GetCoefficients)
                .Throw<ArgumentException>()
                .Where(e => e.ParamName).IsEqual("Root");
         }

@@ -17,9 +17,9 @@ namespace MathCore
                 set
                 {
                     if (index < 0 || index >= _Indexes.Length)
-                        throw new ArgumentOutOfRangeException(nameof(index));
+                        throw new ArgumentOutOfRangeException(nameof(index), index, "Индекс выходит за рамки массива");
                     if (value < 0 || value >= _Indexes.Length)
-                        throw new ArgumentOutOfRangeException(nameof(value));
+                        throw new ArgumentOutOfRangeException(nameof(value), value, "Устанавливаемый индекс выходит за рамки массива");
                     _Indexes[index] = value;
                 }
             }
@@ -37,12 +37,16 @@ namespace MathCore
 
         public int Length => _Array.Length;
 
+        public T[] Source => _Array;
+
         /// <inheritdoc />
         int IReadOnlyCollection<T>.Count => _Array.Length;
 
         public ref T this[int index] => ref _Array[_Indexes[index]];
 
         T IReadOnlyList<T>.this[int index] => this[index];
+
+        public RefArrayView(int Length) : this(new T[Length]) { }
 
         public RefArrayView([NotNull] T[] array)
         {
