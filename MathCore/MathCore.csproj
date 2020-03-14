@@ -6,8 +6,11 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.20.2</Version>
-    <PackageReleaseNotes>Комментарии, немного рефакторинга</PackageReleaseNotes>
+    <Version>0.0.21</Version>
+    <PackageReleaseNotes>
+      Добавлен метод-расширение для IEnumerable, позволяющий отбрасывать повторения по задаваемому критерию 
+      и добавлен объект, позволяющий создать ссылочное представление элементов массива
+    </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
