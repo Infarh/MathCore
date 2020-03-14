@@ -4926,6 +4926,9 @@
             <summary>Клонирование поддерева</summary>
             <returns>Клон поддерева</returns>
         </member>
+        <member name="M:MathCore.MathParser.ExpressionTrees.Nodes.FunctionalNode.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
         <member name="T:MathCore.MathParser.ExpressionTrees.Nodes.FunctionArgumentNameNode">
             <summary>Узел дерева выражения, содержащий сведения об аргументе функции</summary>
         </member>
@@ -10039,6 +10042,13 @@
         <member name="M:MathCore.PrecisionTimer.#ctor">
             <exception cref="T:System.PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
         </member>
+        <member name="M:MathCore.PrecisionTimer.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.PrecisionTimer.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов и остановка таймера</summary>
+            <param name="disposing">Требуется выполнить освобождение управляемых ресурсов</param>
+        </member>
         <member name="M:MathCore.PrecisionTimer.Initialize">
             <exception cref="T:System.PlatformNotSupportedException">В случае если платформа не Win32NT</exception>
         </member>
@@ -10049,6 +10059,27 @@
             <summary>Поиск простых чисел с использованием алгоритма "Решето Эратосфен"</summary>
             <param name="n">Предельное значение до которого (включительно) осуществляется поиск</param>
             <returns>Перечисление найденных простых чисел</returns>
+        </member>
+        <member name="P:MathCore.RefArrayView`1.System#Collections#Generic#IReadOnlyCollection{T}#Count">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.RefArrayView`1.System#Collections#ICollection#IsSynchronized">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.RefArrayView`1.System#Collections#ICollection#SyncRoot">
+            <inheritdoc />
+        </member>
+        <member name="P:MathCore.RefArrayView`1.System#Collections#ICollection#Count">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.RefArrayView`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.RefArrayView`1.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.RefArrayView`1.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
         </member>
         <member name="T:MathCore.Reflection.AnimatedDoubleProperty`1">
             <summary>Анимация вещественного свойства</summary>
@@ -10693,6 +10724,20 @@
         <member name="T:MathCore.Statistic.RandomNumbers.UniformRandomGenerator">
             <summary>Генератор случайных чисел с равномерным распределением</summary>
         </member>
+        <member name="M:MathCore.SynchronizedQueue`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.SynchronizedQueue`1.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов</summary>
+            <param name="disposing">Требуется выполнить освобождение управляемых ресурсов</param>
+        </member>
+        <member name="M:MathCore.SynchronizedItemsProcessor`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MathCore.SynchronizedItemsProcessor`1.Dispose(System.Boolean)">
+            <summary>Освобождение ресурсов</summary>
+            <param name="disposing">Требуется выполнить освобождение управляемых ресурсов</param>
+        </member>
         <member name="T:MathCore.Threading.MaxConcurrencySynchronizationContext">
             <summary>Контекст синхронизации с максимально допустимой степенью параллелизма</summary>
         </member>
@@ -11168,6 +11213,12 @@
             <param name="Disposer">Метод освобождения ресурсов</param>
         </member>
         <member name="M:MathCore.UsingObject`1.Dispose">
+            <summary>Разрушение обёртки, влекущее разрушение используемого объекта</summary>
+        </member>
+        <member name="F:MathCore.UsingObject`1._Disposed">
+            <summary>Объект разрушен</summary>
+        </member>
+        <member name="M:MathCore.UsingObject`1.Dispose(System.Boolean)">
             <summary>Разрушение обёртки, влекущее разрушение используемого объекта</summary>
         </member>
         <member name="M:MathCore.UsingObject`1.op_Implicit(MathCore.UsingObject{`0})~`0">
@@ -15558,6 +15609,102 @@
             <param name="values">Добавляемый элемент</param>
             <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на первом месте</returns>
         </member>
+        <member name="M:System.Linq.IEnumerableExtensions.FirstOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},``0@)">
+            <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="enumerable">Перечисление элементов</param>
+            <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
+            <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
+            <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.FirstOrDefault``2(System.Collections.Generic.IEnumerable{``0},``1@,System.Func{``0,``1,System.Boolean},``0@)">
+            <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <typeparam name="TP">Тип параметра</typeparam>
+            <param name="enumerable">Перечисление элементов</param>
+            <param name="p">Параметр, передаваемый в критерий, необходимый для устранения замыкания</param>
+            <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
+            <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
+            <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.FirstOrDefault``3(System.Collections.Generic.IEnumerable{``0},``1@,``2@,System.Func{``0,``1,``2,System.Boolean},``0@)">
+            <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <typeparam name="TP1">Тип параметра 1</typeparam>
+            <typeparam name="TP2">Тип параметра 2</typeparam>
+            <param name="enumerable">Перечисление элементов</param>
+            <param name="p1">Параметр 1, передаваемый в критерий, необходимый для устранения замыкания</param>
+            <param name="p2">Параметр 2, передаваемый в критерий, необходимый для устранения замыкания</param>
+            <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
+            <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
+            <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.SelectMany``3(``0)">
+            <summary>Сделать перечисление плоским (линейным)</summary>
+            <param name="enumerable">Перечисление перечислений элементов</param>
+            <typeparam name="TSource">Тип перечисления первого уровня</typeparam>
+            <typeparam name="TSubSource">Тип перечисления второго уровня</typeparam>
+            <typeparam name="TItem">Тип перечисления результатов</typeparam>
+            <returns>Перечисление вложенных элементов</returns>
+        </member>
+        <member name="T:System.Linq.IEnumerableExtensions.BlockEnumerator`1">
+            <summary>Блочный перечислитель элементов</summary>
+            <typeparam name="T">Тип перечисляемых элементов</typeparam>
+        </member>
+        <member name="F:System.Linq.IEnumerableExtensions.BlockEnumerator`1._Source">
+            <summary>Перечисление элементов, которые требуется перечислить в рамках текущего блока</summary>
+        </member>
+        <member name="F:System.Linq.IEnumerableExtensions.BlockEnumerator`1._Size">
+            <summary>Размер блока - число элементов, выбираемое из перечисления</summary>
+        </member>
+        <member name="P:System.Linq.IEnumerableExtensions.BlockEnumerator`1.Complete">
+            <summary>Признак, что перечисление завершено</summary>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.BlockEnumerator`1.#ctor(System.Collections.Generic.IEnumerator{`0},System.Int32)">
+            <summary>Инициализация нового экземпляра <see cref="T:System.Linq.IEnumerableExtensions.BlockEnumerator`1"/></summary>
+            <param name="source">Исходное перечисление элементов</param>
+            <param name="Size">Размер блока</param>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.BlockEnumerator`1.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.BlockEnumerator`1.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.AsBlockEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>Сформировать блочный перечислитель элементов</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="enumerable">Перечисление элементов, которое требуется разбить на блоки</param>
+            <param name="BlockSize">Размер блоков, не которые будет разбито исходное перечисление</param>
+            <returns>Перечисление блоков элементов</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Except``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>Перечисление элементов за исключением указанного</summary>
+            <param name="enumerable">Исходное перечисление</param>
+            <param name="item">Элемент, исключаемый из перечисления</param>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <returns>Перечисление элементов за исключением указанного</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.FirstIndexOf``1(System.Collections.Generic.IEnumerable{``0},``0@)">
+            <summary>Индекс первого найденного элемента</summary>
+            <typeparam name="T">Тип искомого элемента</typeparam>
+            <param name="enumerable">Перечисление элементов, в котором требуется найти заданный</param>
+            <param name="item">Искомый элемент</param>
+            <returns>Индекс первого вхождения элемента в перечисление, либо -1 в случае, если он в ней отсутствует</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.LastIndexOf``1(System.Collections.Generic.IEnumerable{``0},``0@)">
+            <summary>Индекс последнего найденного элемента</summary>
+            <typeparam name="T">Тип искомого элемента</typeparam>
+            <param name="enumerable">Перечисление элементов, в котором требуется найти заданный</param>
+            <param name="item">Искомый элемент</param>
+            <returns>Индекс последнего вхождения элемента в перечисление, либо -1 в случае, если он в ней отсутствует</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Concat(System.Collections.IEnumerable,System.Collections.IEnumerable)">
+            <summary>Объединение двух перечислений</summary>
+            <param name="source">Первое перечисление элементов</param>
+            <param name="other">Второе перечисление элементов</param>
+            <returns>Перечисление элементов, составленное из элементов первого и второго перечисления</returns>
+        </member>
         <member name="M:System.Linq.IEnumerableExtensions.GetLambdaEnumerable``2(``0,System.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
             <summary>Преобразовать объект в перечисление</summary>
             <param name="obj">Объект-источник элементов</param>
@@ -15565,6 +15712,12 @@
             <typeparam name="TObject">Тип объекта</typeparam>
             <typeparam name="TValue">Тип дочерних элементов</typeparam>
             <returns>Перечисление дочерних элементов</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.WhereNotNull``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>Исключение пустых ссылок из перечисления</summary>
+            <typeparam name="T">Тип элементов перечисления</typeparam>
+            <param name="enumerable">Перечисление элементов</param>
+            <returns>Перечисление, составленное из элементов исходного перечисления, за исключением пустых ссылок</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Where(System.Collections.Generic.IEnumerable{System.String},System.Text.RegularExpressions.Regex)">
             <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
@@ -15648,6 +15801,26 @@
             иначе
                 пустая ссылка на список
             </returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.ToDictionaryDistinctKeys``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Boolean)">
+            <summary>Преобразование перечисления в словарь с отбрасыванием повторяющихся значений ключей</summary>
+            <param name="enumerable">Перечисление элементов</param>
+            <param name="KeySelector">Метод формирования ключа словаря</param>
+            <param name="OverloadValues">Перезаписывать значения в словаре?</param>
+            <typeparam name="T">Тип элементов коллекции</typeparam>
+            <typeparam name="TKey">Тип ключа словаря</typeparam>
+            <returns>Словарь, составленный из элементов перечисления без повторений</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.ToDictionaryDistinctKeys``3(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Func{``0,``2},System.Boolean)">
+            <summary>Преобразование перечисления в словарь с отбрасыванием повторяющихся значений ключей</summary>
+            <param name="enumerable">Перечисление элементов</param>
+            <param name="KeySelector">Метод формирования ключа словаря</param>
+            <param name="ValueSelector">Метод вычисления значения словаря</param>
+            <param name="OverloadValues">Перезаписывать значения в словаре?</param>
+            <typeparam name="T">Тип элементов коллекции</typeparam>
+            <typeparam name="TKey">Тип ключа словаря</typeparam>
+            <typeparam name="TValue">Тип значения записи словаря</typeparam>
+            <returns>Словарь, составленный из элементов перечисления без повторений</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Aggregate(System.Collections.Generic.IEnumerable{System.String})">
             <summary>Объединение перечисления строк в единую строку с разделителем - переносом строки</summary>
@@ -15889,6 +16062,13 @@
         <member name="M:System.Linq.IEnumerableExtensions.Sum(System.Collections.Generic.IEnumerable{MathCore.Complex})">
             <summary>Сумма последовательности комплексных чисел</summary>
             <param name="collection">Последовательность комплексных чисел</param>
+            <returns>Комплексное число, являющееся суммой последовательности комплексных чисел</returns>
+        </member>
+        <member name="M:System.Linq.IEnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,MathCore.Complex})">
+            <summary>Комплексная сумма последовательности элементов</summary>
+            <typeparam name="T">Тип элементов последовательности</typeparam>
+            <param name="collection">Последовательность элементов</param>
+            <param name="selector">Метод формирования комплексного значения на основе очередного элемента последовательности</param>
             <returns>Комплексное число, являющееся суммой последовательности комплексных чисел</returns>
         </member>
         <member name="M:System.Linq.IEnumerableExtensions.Aggregate``2(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,System.Int32,``1},System.Int32)">
@@ -18063,6 +18243,14 @@
         <member name="T:System.Collections.Generic.IDictionaryExtensions">
             <summary>Класс методов-расширений для интерфейса <see cref="T:System.Collections.Generic.IDictionary`2"/></summary>
         </member>
+        <member name="M:System.Collections.Generic.IDictionaryExtensions.Deconstruct``2(System.Collections.Generic.KeyValuePair{``0,``1},``0@,``1@)">
+            <summary>Деконструктор пары ключ-значение на составляющие</summary>
+            <typeparam name="TKey">Тип ключа</typeparam>
+            <typeparam name="TValue">Тип значения</typeparam>
+            <param name="item">Деконструируемое значение</param>
+            <param name="key">Значение ключа</param>
+            <param name="value">Значение значения</param>
+        </member>
         <member name="M:System.Collections.Generic.IDictionaryExtensions.AddValue``2(System.Collections.Generic.IDictionary{``0,System.Collections.Generic.IList{``1}},``0,``1)">
             <summary>Метод добавления значения в словарь списков значений</summary>
             <param name="dictionary">Словарь списков <see cref="T:System.Collections.Generic.IList`1"/> значений типа <typeparamref name="TValue"/></param>
@@ -18226,8 +18414,21 @@
             <typeparam name="TValue">Тип значения</typeparam>
             <returns>Массив удалённых пар ключ-значение</returns>
         </member>
+        <member name="M:System.Collections.Generic.IDictionaryExtensions.RemoveItems``2(System.Collections.Generic.IDictionary{``0,``1},System.Collections.Generic.IEnumerable{``0})">
+            <summary>Удалить записи с перечисленными ключами</summary>
+            <typeparam name="TKey">Тип ключа</typeparam>
+            <typeparam name="TValue">Тип значения</typeparam>
+            <param name="dictionary">Словарь, из которого требуется удалить данные</param>
+            <param name="keys">Перечисление удаляемых ключей</param>
+            <returns>Массив удалённых значений</returns>
+        </member>
         <member name="T:System.Collections.Generic.IListExtensions">
-            <summary>Методы расширения для интерфейса списка</summary>
+            <summary>Методы расширения для интерфейса <see cref="T:System.Collections.Generic.IList`1"/></summary>
+        </member>
+        <member name="M:System.Collections.Generic.IListExtensions.IsNullOrEmpty(System.Collections.IList)">
+            <summary>Ссылка на список пуста, либо список не содержит элементов</summary>
+            <param name="list">Проверяемый список</param>
+            <returns>Истина, если не задана ссылка на список, либо список пуст</returns>
         </member>
         <member name="M:System.Collections.Generic.IListExtensions.Initialize``1(System.Collections.Generic.IList{``0},System.Int32,System.Func{System.Int32,``0},System.Boolean)">
             <summary>Метод расширения для инициализации списка</summary>
@@ -18238,7 +18439,7 @@
             <typeparam name="T">Тип элементов списка</typeparam>
             <returns>Инициализированный список</returns>
         </member>
-        <member name="M:System.Collections.Generic.IListExtensions.Initialize``2(System.Collections.Generic.IList{``0},System.Int32,``1,System.Func{System.Int32,``1,``0},System.Boolean)">
+        <member name="M:System.Collections.Generic.IListExtensions.Initialize``2(System.Collections.Generic.IList{``0},System.Int32,``1@,System.Func{System.Int32,``1,``0},System.Boolean)">
             <summary>Метод расширения для инициализации списка</summary>
             <param name="list">Инициализируемый объект</param>
             <param name="Count">Требуемое число элементов</param>
@@ -19579,14 +19780,14 @@
         <member name="T:System.IComparableExtensions">
             <summary>Класс методов-расширений для объектов, поддерживающий интерфейс <see cref="T:System.IComparable`1"/></summary>
         </member>
-        <member name="M:System.IComparableExtensions.Search``1(``0[],System.Int32,System.Int32,``0)">
-            <summary>Метод поиска элемента в упорядоченной коллекции половинным делением</summary>
-            <typeparam name="T">Тип элементов коллекции</typeparam>
-            <param name="Collection">Массив элементов, упорядоченный по возрастанию</param>
+        <member name="M:System.IComparableExtensions.SearchBinary``1(System.Collections.Generic.IReadOnlyList{``0},System.Int32,System.Int32,``0)">
+            <summary>Метод поиска элемента в списке половинным делением</summary>
+            <typeparam name="T">Тип элементов</typeparam>
+            <param name="list">Список, упорядоченный по возрастанию</param>
             <param name="From">Начальный индекс поиска</param>
             <param name="To">Конечный индекс поиска</param>
             <param name="Item">Искомый элемент</param>
-            <returns>Индекс элемента в массиве</returns>
+            <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
         </member>
         <member name="M:System.IComparableExtensions.Max``1(``0,``0)">
             <summary>Возвращает максимальный элемент из текущего и, элемента, переданного в качестве параметра</summary>
@@ -19640,6 +19841,121 @@
             <param name="min">Нижняя граница интервала</param>
             <param name="max">Верхняя граница интервала</param>
             <returns>Значение из интервала</returns>
+        </member>
+        <member name="T:System.Data.IDataReaderExtensions">
+            <summary>Класс методов-расширений для <see cref="T:System.Data.IDataReader"/></summary>
+        </member>
+        <member name="M:System.Data.IDataReaderExtensions.ReadToEnd``1(System.Data.IDataReader,System.Func{System.Data.IDataRecord,``0})">
+            <summary>Прочитать источник данных до конца</summary>
+            <typeparam name="T">Тип читаемых данных</typeparam>
+            <param name="Reader">Объект чтения данных</param>
+            <param name="Read">Метод преобразования читаемых данных из <see cref="T:System.Data.IDataRecord"/> в <typeparamref name="T"/></param>
+            <returns>Список прочитанных данных</returns>
+        </member>
+        <member name="M:System.Data.IDataReaderExtensions.AsEnumerable``1(System.Data.IDataReader,System.Func{System.Data.IDataRecord,``0})">
+            <summary>Представление <see cref="T:System.Data.IDataReader"/> в виде перечисление значений</summary>
+            <param name="Reader">Объект чтения данных</param>
+            <param name="Read">Метод преобразования читаемых данных из <see cref="T:System.Data.IDataRecord"/> в <typeparamref name="T"/></param>
+            <typeparam name="T">Тип результата (элементы данных)</typeparam>
+            <returns>Перечисление читаемых данных</returns>
+        </member>
+        <member name="T:System.Data.IDataRecordExtensions">
+            <summary>Класс методов-расширений для <see cref="T:System.Data.IDataRecord"/></summary>
+        </member>
+        <member name="M:System.Data.IDataRecordExtensions.Field``1(System.Data.IDataRecord,System.Int32)">
+            <summary>Извлечение поля данных из записи по индексу поля</summary>
+            <typeparam name="T">Тип значения</typeparam>
+            <param name="record">Запись с данными</param>
+            <param name="index">Индекс поля с данными в записи</param>
+            <exception cref="T:System.NullReferenceException">Если запись с указанным индексом отсутствует, а тип данных не является ссылочным</exception>
+            <returns>Значение поля, если в записи с указанным индексом оно есть, либо значение по умолчанию</returns>
+        </member>
+        <member name="M:System.Data.IDataRecordExtensions.Field``1(System.Data.IDataRecord,System.String)">
+            <summary>Извлечение поля данных из записи по имени поля</summary>
+            <typeparam name="T">Тип значения</typeparam>
+            <param name="record">Запись с данными</param>
+            <param name="ColumnName">Имя колонки</param>
+            <exception cref="T:System.NullReferenceException">Если запись с указанным именем отсутствует, а тип данных не является ссылочным</exception>
+            <returns>Значение поля, если в записи с указанным индексом оно есть, либо значение по умолчанию</returns>
+        </member>
+        <member name="T:System.IDisposableExtensions">
+            <summary>Методы-расширения для интерфейса <see cref="T:System.IDisposable"/></summary>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``1(``0,System.Action{``0})">
+            <summary>Выполнить действие, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="action">Выполняемое над объектом действие</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``2(``0,``1@,System.Action{``0,``1})">
+            <summary>Выполнить действие, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TP">Тип параметра действия</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="p">Параметр, передаваемый в действие, чтобы избежать замыкания</param>
+            <param name="action">Выполняемое над объектом действие</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``3(``0,``1@,``2@,System.Action{``0,``1,``2})">
+            <summary>Выполнить действие, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TP1">Тип параметра 1 действия</typeparam>
+            <typeparam name="TP2">Тип параметра 2 действия</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="p1">Параметр 1, передаваемый в действие, чтобы избежать замыкания</param>
+            <param name="p2">Параметр 2, передаваемый в действие, чтобы избежать замыкания</param>
+            <param name="action">Выполняемое над объектом действие</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``4(``0,``1@,``2@,``3@,System.Action{``0,``1,``2,``3})">
+            <summary>Выполнить действие, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TP1">Тип параметра 1 действия</typeparam>
+            <typeparam name="TP2">Тип параметра 2 действия</typeparam>
+            <typeparam name="TP3">Тип параметра 3 действия</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="p1">Параметр 1, передаваемый в действие, чтобы избежать замыкания</param>
+            <param name="p2">Параметр 2, передаваемый в действие, чтобы избежать замыкания</param>
+            <param name="p3">Параметр 3, передаваемый в действие, чтобы избежать замыкания</param>
+            <param name="action">Выполняемое над объектом действие</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``2(``0,System.Func{``0,``1})">
+            <summary>Выполнить действие и получить результат, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TResult">Тип вычисляемого результата</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="func">Функция, вычисляющая результат на основе переданного ей значения</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``3(``0,``1@,System.Func{``0,``1,``2})">
+            <summary>Выполнить действие и получить результат, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TP">Тип параметра действия</typeparam>
+            <typeparam name="TResult">Тип вычисляемого результата</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="p">Параметр, передаваемый в функцию, чтобы избежать замыкания</param>
+            <param name="func">Функция, вычисляющая результат на основе переданного ей значения</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``4(``0,``1@,``2@,System.Func{``0,``1,``2,``3})">
+            <summary>Выполнить действие и получить результат, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TP1">Тип параметра 1 действия</typeparam>
+            <typeparam name="TP2">Тип параметра 2 действия</typeparam>
+            <typeparam name="TResult">Тип вычисляемого результата</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="p1">Параметр 1, передаваемый в функцию, чтобы избежать замыкания</param>
+            <param name="p2">Параметр 2, передаваемый в функцию, чтобы избежать замыкания</param>
+            <param name="func">Функция, вычисляющая результат на основе переданного ей значения</param>
+        </member>
+        <member name="M:System.IDisposableExtensions.DisposeAfter``5(``0,``1@,``2@,``3@,System.Func{``0,``1,``2,``3,``4})">
+            <summary>Выполнить действие и получить результат, после чего освободить ресурсы</summary>
+            <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
+            <typeparam name="TP1">Тип параметра 1 действия</typeparam>
+            <typeparam name="TP2">Тип параметра 2 действия</typeparam>
+            <typeparam name="TP3">Тип параметра 3 действия</typeparam>
+            <typeparam name="TResult">Тип вычисляемого результата</typeparam>
+            <param name="obj">Объект, действие над которым требуется выполнить</param>
+            <param name="p1">Параметр 1, передаваемый в функцию, чтобы избежать замыкания</param>
+            <param name="p2">Параметр 2, передаваемый в функцию, чтобы избежать замыкания</param>
+            <param name="p3">Параметр 3, передаваемый в функцию, чтобы избежать замыкания</param>
+            <param name="func">Функция, вычисляющая результат на основе переданного ей значения</param>
         </member>
         <member name="M:System.IO.BinaryReaderExtensions.IsEOF(System.IO.BinaryReader)">
             <summary>Признак конца потока</summary>
@@ -21262,6 +21578,82 @@
             <param name="DefaultString">Значение по умолчанию</param>
             <returns>Результат поиска, либо значение по умолчанию</returns>
         </member>
+        <member name="T:System.TypeExtensions">
+            <summary>Класс методов-расширений для <see cref="T:System.Type"/></summary>
+        </member>
+        <member name="M:System.TypeExtensions.IsCanBeNullRef(System.Type)">
+            <summary>Значение данного типа допускают <see langword="null"/></summary>
+            <param name="type">Проверяемый тип</param>
+            <returns>Истина, если значение проверяемого типа допускают возможность пустой ссылки</returns>
+        </member>
+        <member name="F:System.TypeExtensions.__NoChangeTypeFunction">
+            <summary>Функция, ничего не делающая</summary>
+        </member>
+        <member name="F:System.TypeExtensions.__CastersDictionary">
+            <summary>Пул методов приведения типов</summary>
+        </member>
+        <member name="F:System.TypeExtensions.__ConvParameter">
+            <summary>Выражение параметра конструируемой функции</summary>
+        </member>
+        <member name="M:System.TypeExtensions.GetCasterFrom``1(System.Type,``0)">
+            <summary>Сформировать функцию, осуществляющую приведение типов</summary>
+            <param name="TargetType">Целевой тип значения</param>
+            <param name="Source">Объект, тип которого требуется привести</param>
+            <returns>Функция, осуществляющая приведение типа объекта к целевому типу данных</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetCasterTo(System.Type,System.Type)">
+            <summary>Сформировать функцию, осуществляющую приведение типа значения к указанному типу данных</summary>
+            <param name="SourceType">Тип исходных данных</param>
+            <param name="TargetType">Тип, к которому требуется выполнить приведение</param>
+            <returns>Функция, осуществляющая приведение типа значения</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetCasterFrom(System.Type,System.Type)">
+            <summary>Сформировать функцию, осуществляющую приведение типа значения из указанного типа данных</summary>
+            <param name="SourceType">Тип исходных данных</param>
+            <param name="TargetType">Тип, к которому требуется выполнить приведение</param>
+            <returns>Функция, осуществляющая приведение типа значения</returns>
+        </member>
+        <member name="M:System.TypeExtensions.Cast``1(System.Type,``0)">
+            <summary>Выполнить приведение типа значения объекта</summary>
+            <param name="type">Целевой тип данных</param>
+            <param name="obj">Приводимое значение</param>
+            <returns>Объект-значение, приведённое к целевому типу данных</returns>
+        </member>
+        <member name="F:System.TypeExtensions.__ConvertersDictionary">
+            <summary>Выражение параметра конструируемой функции</summary>
+        </member>
+        <member name="M:System.TypeExtensions.GetConverterTo(System.Type,System.Type)">
+            <summary>Сформировать функцию, осуществляющую преобразование типа в указанный тип данных</summary>
+            <param name="SourceType">Тип исходного значения</param>
+            <param name="TargetType">Целевой тип данных</param>
+            <returns>Функция, осуществляющая преобразование исходного значение в значение целевого типа данных</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetConverterFrom(System.Type,System.Type)">
+            <summary>Сформировать функцию, осуществляющую преобразование типа в указанный тип данных</summary>
+            <param name="SourceType">Тип исходного значения</param>
+            <param name="TargetType">Целевой тип данных</param>
+            <returns>Функция, осуществляющая преобразование исходного значение в значение целевого типа данных</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetCastExpression(System.Type,System.Type,System.Linq.Expressions.ParameterExpression@)">
+            <summary>Сформировать выражение, осуществляющее приведение типа к указанному типу данных</summary>
+            <param name="SourceType">Тип исходного значения</param>
+            <param name="TargetType">Целевой тип данных</param>
+            <returns>Выражение, осуществляющее приведение исходного значение к целевому типу данных</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetConvertExpression(System.Type,System.Type)">
+            <summary>Сформировать выражение, осуществляющее преобразование типа данных</summary>
+            <param name="SourceType">Тип исходного значения</param>
+            <param name="TargetType">Целевой тип данных</param>
+            <returns>Выражение, осуществляющее преобразование типа данных</returns>
+            <exception cref="T:System.NotSupportedException">Если преобразование невозможно в виду отсутствия определённых конвертеров типов</exception>
+        </member>
+        <member name="M:System.TypeExtensions.GetConvertExpression_Object(System.Type,System.Type)">
+            <summary>Сформировать лямбда-выражение для конвертации значения</summary>
+            <param name="SourceType">Тип исходного значения</param>
+            <param name="TargetType">Целевой тип данных</param>
+            <exception cref="T:System.NotSupportedException">Если конвертация из <paramref name="SourceType"/> в <paramref name="TargetType"/> не реализована</exception>
+            <returns>Лямбда-выражение, осуществляющее конвертацию значения</returns>
+        </member>
         <member name="M:System.TypeExtensions.GetTypeConverter(System.Type)">
             <summary>Получить конвертер значений для указанного типа данных</summary>
             <param name="type">Тип, для которого требуется получить конвертер</param>
@@ -21277,6 +21669,78 @@
             <typeparam name="TAttribute">Тип требуемых атрибутов</typeparam>
             <param name="T">Тип, атрибуты которого требуется получить</param>
             <returns>Массив атрибутов типа указанного типа</returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetCustomAttributes``1(System.Type,System.Boolean)">
+            <summary>Получить атрибуты типа</summary>
+            <typeparam name="TAttribute">Тип необходимых атрибутов</typeparam>
+            <param name="T">Тип, из которого требуется получить атрибуты</param>
+            <param name="Inherited">Искать атрибуты в базовых классах типа</param>
+            <returns>Массив найденных атрибутов</returns>
+        </member>
+        <member name="M:System.TypeExtensions.CreateObject(System.Type)">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <param name="type">Тип создаваемого объекта</param>
+            <returns>Созданный объект</returns>
+        </member>
+        <member name="M:System.TypeExtensions.Create``1(System.Type)">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <typeparam name="T">Тип необходимого объекта</typeparam>
+            <param name="type">Тип создаваемого объекта</param>
+            <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:System.TypeExtensions.Create``1(System.Type,System.Object[])">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <typeparam name="T">Тип необходимого объекта</typeparam>
+            <param name="type">Тип создаваемого объекта</param>
+            <param name="Params">Параметры конструктора</param>
+            <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:System.TypeExtensions.CreateObject(System.Type,System.Object[])">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <param name="type">Тип создаваемого объекта</param>
+            <param name="Params">Параметры конструктора</param>
+            <returns>Созданный объект</returns>
+        </member>
+        <member name="M:System.TypeExtensions.CreateObject(System.Type,System.Reflection.BindingFlags,System.Reflection.Binder,System.Object[])">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <param name="type">Тип создаваемого объекта</param>
+            <param name="Flags">Флаги, определяющие метод поиска конструктора</param>
+            <param name="binder">Объект, определяющий способ поиска конструктора</param>
+            <param name="Params">Параметры конструктора</param>
+            <returns>Созданный объект</returns>
+        </member>
+        <member name="M:System.TypeExtensions.Create``1(System.Object[])">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <param name="Params">Параметры конструктора</param>
+            <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:System.TypeExtensions.Create``1(System.Reflection.BindingFlags,System.Reflection.Binder,System.Object[])">
+            <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+            <typeparam name="T">Тип необходимого объекта</typeparam>
+            <param name="Flags">Флаги, определяющие метод поиска конструктора</param>
+            <param name="binder">Объект, определяющий способ поиска конструктора</param>
+            <param name="Params">Параметры конструктора</param>
+            <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:System.TypeExtensions.AddConverter(System.Type,System.Type)">
+            <summary>Добавить конвертер к типу</summary>
+            <param name="type">Тип, к которому требуется добавить конвертер</param>
+            <param name="ConverterType">Тип конвертера, который надо добавить к описанию типа</param>
+        </member>
+        <member name="M:System.TypeExtensions.AddConverter(System.Type,System.Type[])">
+            <summary>Добавить конвертер к типу</summary>
+            <param name="type">Тип, к которому требуется добавить конвертер</param>
+            <param name="ConverterTypes">Типы конвертеров, которые требуется добавить к описанию типа</param>
+        </member>
+        <member name="M:System.TypeExtensions.GetProvider(System.Type)">
+            <summary>Получить объект-описатель типа <see cref="T:System.ComponentModel.TypeDescriptionProvider"/></summary>
+            <param name="type">Исследуемый тип</param>
+            <returns>Объект, определяющий информацию о типе - <see cref="T:System.ComponentModel.TypeDescriptionProvider"/></returns>
+        </member>
+        <member name="M:System.TypeExtensions.AddProvider(System.Type,System.ComponentModel.TypeDescriptionProvider)">
+            <summary>Добавить описатель типа - <see cref="T:System.ComponentModel.TypeDescriptionProvider"/></summary>
+            <param name="type">Тип, к которому требуется добавить описатель</param>
+            <param name="provider">Добавляемый описатель типа <see cref="T:System.ComponentModel.TypeDescriptionProvider"/></param>
         </member>
         <member name="T:System.IInitializable">
             <summary>Объект, поддерживающий инициализацию</summary>
@@ -21925,6 +22389,9 @@
             <inheritdoc />
         </member>
         <member name="M:System.StreamingObjectReader`1.Subscribe(System.IObserver{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:System.StreamingObjectReader`1.Dispose(System.Boolean)">
             <inheritdoc />
         </member>
         <member name="T:System.StreamWrapper">
