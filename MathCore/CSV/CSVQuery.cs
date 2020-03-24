@@ -37,6 +37,7 @@ namespace MathCore.CSV
             _SkipRowsAfterHeader,
             _ValuesSeparator,
             _TakeRows);
+
         public CSVQuery SkipAfterHeader(int RowsCount) => new CSVQuery(
             _File, 
             _SkipRows, 
@@ -45,7 +46,7 @@ namespace MathCore.CSV
             _ValuesSeparator,
             _TakeRows);
 
-        public CSVQuery ReadHeader(bool IsExist) => new CSVQuery(
+        public CSVQuery ReadHeader(bool IsExist = true) => new CSVQuery(
             _File, 
             _SkipRows, 
             IsExist,
@@ -109,26 +110,5 @@ namespace MathCore.CSV
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
-    public readonly struct CSVQueryRow
-    {
-        private readonly string[] _Items;
-        private readonly IReadOnlyDictionary<string, int> _Header;
-
-        public int ItemsCount => _Items.Length;
-
-        public int Index { get; }
-
-        public ref string this[int ValueIndex] => ref _Items[ValueIndex];
-
-        public ref string this[string ValueName] => ref _Items[_Header[ValueName]];
-
-        public CSVQueryRow(int Index, string[] Items, IReadOnlyDictionary<string, int> Header)
-        {
-            this.Index = Index;
-            _Items = Items;
-            _Header = Header;
-        }
     }
 }
