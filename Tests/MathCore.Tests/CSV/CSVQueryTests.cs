@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
+using MathCore.Annotations;
 using MathCore.CSV;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,6 +29,8 @@ namespace MathCore.Tests.CSV
         private const string __LineDelimiter = "------------------------------------------";
         private const char __ValuesSeparator = ';';
 
+        private static readonly string[] __Headers = {"Id", "Name", "SurName", "Birthday", "Rating", "GroupId"};
+
         [ClassInitialize]
         public static void ClassInitialize(TestContext Context)
         {
@@ -46,7 +51,7 @@ namespace MathCore.Tests.CSV
             for(var i = 0; i < __BeforeLinesCount; i++)
                 writer.WriteLine(__LineDelimiter);
 
-            writer.WriteLine(string.Join(__ValuesSeparator, "Id", "Name", "SurName", "Birthday", "Rating", "GroupId"));
+            writer.WriteLine(string.Join(__ValuesSeparator, __Headers));
 
             for (var i = 0; i < __BeforeLinesCount; i++)
                 writer.WriteLine(__LineDelimiter);
@@ -68,14 +73,15 @@ namespace MathCore.Tests.CSV
                 File.Delete(__DataFileName);
         }
 
+        [NotNull] private static FileInfo DataFile => new FileInfo(__DataFileName);
+
         [TestMethod]
         public void ReadDataTest()
         {
-            var file = new FileInfo(__DataFileName);
-            var query = file.OpenCSV()
+            var query = DataFile.OpenCSV()
                .ValuesSeparator(__ValuesSeparator)
                .Skip(__BeforeLinesCount)
-               .ReadHeader()
+               .WithHeader()
                .SkipAfterHeader(__AfterLinesCount);
 
             var students = query.Select(line => new Student
@@ -90,7 +96,27 @@ namespace MathCore.Tests.CSV
 
             var students_array = students.Take(5).ToArray();
 
-            Assert.That.Collection(students_array).All(student => student.IsNull());
+            Assert.That.Collection(students_array)
+               .AllItems((student, i) => student
+                   .Where(s => s.Id).Check(id => id.IsEqual(i + 1))
+                   .Where(s => s.Name).Check(Name => Name.IsEqual($"Name-{i + 1}"))
+                   .Where(s => s.SurName).Check(SurName => SurName.IsEqual($"SurName-{i + 1}"))
+                );
+        }
+
+        [TestMethod]
+        public void GetHeaderTest()
+        {
+            var header = DataFile
+               .OpenCSV()
+               .Skip(__BeforeLinesCount)
+               .WithHeader()
+               .GetHeader();
+
+            var expected_headers = new SortedList<string, int>(__Headers.Select((h, i) => (h, i)).ToDictionary(h => h.h, h => h.i));
+
+            Assert.That.Collection(header.Keys).IsEqualTo(expected_headers.Keys);
+            Assert.That.Collection(header).IsEqualTo(expected_headers);
         }
     }
 }
