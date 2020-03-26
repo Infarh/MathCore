@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using MathCore.Annotations;
 using MathCore.CSV;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,54 +9,31 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MathCore.Tests.CSV
 {
     [TestClass]
-    public class CSVQueryTests
+    public class CSVQueryTests : CSVTests
     {
-        private class Student
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string SurName { get; set; }
-            public DateTime Birthday { get; set; }
-            public double Rating { get; set; }
-            public int GroupId { get; set; }
-        }
-
         private const string __DataFileName = "CSVQueryTests_Students.csv";
-        private const int __DataRowsCount = 10000;
         private const int __BeforeLinesCount = 3;
         private const int __AfterLinesCount = 3;
-        private const string __LineDelimiter = "------------------------------------------";
-        private const char __ValuesSeparator = ';';
 
         private static readonly string[] __Headers = {"Id", "Name", "SurName", "Birthday", "Rating", "GroupId"};
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext Context)
         {
-            var now = DateTime.Now;
-            var rnd = new Random((int)now.TimeOfDay.Ticks);
-            var students = Enumerable.Range(1, __DataRowsCount)
-               .Select(i => new Student
-                {
-                    Id = i,
-                    Name = $"Name-{i}",
-                    SurName = $"SurName-{i}",
-                    Birthday = now.Subtract(TimeSpan.FromDays(365 * 10 * i / __DataRowsCount + 16)),
-                    Rating = rnd.NextDouble() * 100,
-                    GroupId = rnd.Next(1, 21),
-                });
+            var seed = (int)DateTime.Now.Ticks;
+            var students = GetStudents(new Random(seed));
             using var writer = File.CreateText(__DataFileName);
 
             for(var i = 0; i < __BeforeLinesCount; i++)
-                writer.WriteLine(__LineDelimiter);
+                writer.WriteLine(LineDelimiter);
 
-            writer.WriteLine(string.Join(__ValuesSeparator, __Headers));
+            writer.WriteLine(string.Join(ValuesSeparator, __Headers));
 
             for (var i = 0; i < __BeforeLinesCount; i++)
-                writer.WriteLine(__LineDelimiter);
+                writer.WriteLine(LineDelimiter);
 
             foreach (var student in students)
-                writer.WriteLine(string.Join(__ValuesSeparator,
+                writer.WriteLine(string.Join(ValuesSeparator,
                     student.Id,
                     student.Name,
                     student.SurName,
@@ -79,7 +55,7 @@ namespace MathCore.Tests.CSV
         public void ReadDataTest()
         {
             var query = DataFile.OpenCSV()
-               .ValuesSeparator(__ValuesSeparator)
+               .ValuesSeparator(ValuesSeparator)
                .Skip(__BeforeLinesCount)
                .WithHeader()
                .SkipAfterHeader(__AfterLinesCount);
