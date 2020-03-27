@@ -164,7 +164,7 @@ namespace MathCore.Extensions.Expressions
             return (lEx)visitor.Visit(Lambda(MainEx.Body, pars));
         }
 
-        [NotNull] public static mEx GetProperty(this Ex obj, [NotNull] PropertyInfo Info) => Expression.Property(obj, Info);
+        [NotNull] public static mEx GetProperty(this Ex obj, [NotNull] PropertyInfo Info) => Property(obj, Info);
 
         [NotNull] public static mEx GetProperty([NotNull] this Ex obj, [NotNull] string PropertyName) => Property(obj, PropertyName);
 
@@ -511,6 +511,7 @@ namespace MathCore.Extensions.Expressions
 
         [NotNull] public static uEx ArrayLength([NotNull] this Ex d) => Ex.ArrayLength(d);
         [NotNull] public static uEx ConvertTo([NotNull] this Ex d, [NotNull] Type type) => Convert(d, type);
+        [NotNull] public static uEx ConvertTo<T>([NotNull] this Ex d) => Convert(d, typeof(T));
         [NotNull] public static uEx Increment([NotNull] this Ex d) => Ex.Increment(d);
 
         [NotNull] public static bEx Inverse([NotNull] this Ex expr) => 1.ToExpression().Divide(expr);
@@ -534,8 +535,10 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static uEx MakeUnary([NotNull] this Ex d, ExpressionType UType, Type type) => Ex.MakeUnary(UType, d, type);
         [NotNull] public static bEx MakeUnary([NotNull] this Ex left, [NotNull] Ex right, ExpressionType UType) => MakeBinary(UType, left, right);
 
-        [NotNull] public static Expression<TDelegate> CreateLambda<TDelegate>([NotNull] this Ex body, params pEx[] p) => Lambda<TDelegate>(body, p);
-        [NotNull] public static lEx CreateLambda([NotNull] this Ex body, params pEx[] p) => Lambda(body, p);
+        [NotNull] public static Expression<TDelegate> CreateLambda<TDelegate>([NotNull] this Ex body, [NotNull] params pEx[] p) => Lambda<TDelegate>(body, p);
+        [NotNull] public static lEx CreateLambda([NotNull] this Ex body, [NotNull] params pEx[] p) => Lambda(body, p);
+
+        [NotNull] public static TDelegate CompileTo<TDelegate>([NotNull] this Ex body, [NotNull] params pEx[] p) => body.CreateLambda<TDelegate>(p).Compile();
 
         public static Ex CloneExpression(this Ex expr)
         {
