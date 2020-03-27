@@ -6,10 +6,9 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.21</Version>
+    <Version>0.0.22</Version>
     <PackageReleaseNotes>
-      Добавлен метод-расширение для IEnumerable, позволяющий отбрасывать повторения по задаваемому критерию 
-      и добавлен объект, позволяющий создать ссылочное представление элементов массива
+      Инструменты для работы с CSV-файлами в формате LINQ
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
