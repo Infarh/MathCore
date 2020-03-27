@@ -30,10 +30,10 @@ namespace MathCore.CSV
 
         [NotNull] public IEnumerable<string> Headers => GetOrdered(_Selectors).Select(s => s.Key);
 
-        public CSVWriter([NotNull] IEnumerable<T> items)
+        public CSVWriter([NotNull] IEnumerable<T> items, char Separator)
             : this(
-                items: items,
-                Separator: ',',
+                items,
+                Separator,
                 WriteHeaders: true,
                 Selectors: null)
         { }

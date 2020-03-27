@@ -15,8 +15,6 @@ namespace MathCore.Tests.CSV
         private const int __BeforeLinesCount = 3;
         private const int __AfterLinesCount = 3;
 
-        private static readonly string[] __Headers = {"Id", "Name", "SurName", "Birthday", "Rating", "GroupId"};
-
         [ClassInitialize]
         public static void ClassInitialize(TestContext Context)
         {
@@ -27,7 +25,7 @@ namespace MathCore.Tests.CSV
             for(var i = 0; i < __BeforeLinesCount; i++)
                 writer.WriteLine(LineDelimiter);
 
-            writer.WriteLine(string.Join(ValuesSeparator, __Headers));
+            writer.WriteLine(string.Join(ValuesSeparator, Headers));
 
             for (var i = 0; i < __BeforeLinesCount; i++)
                 writer.WriteLine(LineDelimiter);
@@ -89,7 +87,7 @@ namespace MathCore.Tests.CSV
                .WithHeader()
                .GetHeader();
 
-            var expected_headers = new SortedList<string, int>(__Headers.Select((h, i) => (h, i)).ToDictionary(h => h.h, h => h.i));
+            var expected_headers = new SortedList<string, int>(Headers.Select((h, i) => (h, i)).ToDictionary(h => h.h, h => h.i));
 
             Assert.That.Collection(header.Keys).IsEqualTo(expected_headers.Keys);
             Assert.That.Collection(header).IsEqualTo(expected_headers);

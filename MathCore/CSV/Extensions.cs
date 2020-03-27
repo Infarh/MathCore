@@ -9,6 +9,6 @@ namespace MathCore.CSV
     {
         public static CSVQuery OpenCSV([NotNull] this FileInfo file) => new CSVQuery(file);
 
-        public static CSVWriter<T> AsCSV<T>([NotNull] this IEnumerable<T> items) => new CSVWriter<T>(items);
+        public static CSVWriter<T> AsCSV<T>([NotNull] this IEnumerable<T> items, char Separator = ',') => new CSVWriter<T>(items, Separator);
     }
 }
