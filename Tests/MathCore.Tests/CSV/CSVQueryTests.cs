@@ -87,7 +87,13 @@ namespace MathCore.Tests.CSV
                .WithHeader()
                .GetHeader();
 
-            var expected_headers = new SortedList<string, int>(Headers.Select((h, i) => (h, i)).ToDictionary(h => h.h, h => h.i));
+            var header_columns = Headers
+               .Select((Name, Index) => (Name, Index))
+               .ToDictionary(
+                    HeaderColumn => HeaderColumn.Name, 
+                    HeaderColumn => HeaderColumn.Index);
+
+            var expected_headers = new SortedList<string, int>(header_columns);
 
             Assert.That.Collection(header.Keys).IsEqualTo(expected_headers.Keys);
             Assert.That.Collection(header).IsEqualTo(expected_headers);
