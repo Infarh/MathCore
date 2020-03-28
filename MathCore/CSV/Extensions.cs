@@ -8,8 +8,9 @@ namespace MathCore.CSV
     {
         /// <summary>Открыть файл для чтения данных в формате CSV</summary>
         /// <param name="file">Информация о файле данных</param>
+        /// <param name="Separator">Символ-разделитель значений</param>
         /// <returns>Объект, осуществляющий извлечение данных из файла</returns>
-        public static CSVQuery OpenCSV([NotNull] this FileInfo file) => new CSVQuery(file.OpenText);
+        public static CSVQuery OpenCSV([NotNull] this FileInfo file, char Separator = ',') => new CSVQuery(file.OpenText, Separator);
 
         /// <summary>Представить перечисление в виде объекта записи данных в формате CSV</summary>
         /// <typeparam name="T">Тип элементов перечисления</typeparam>

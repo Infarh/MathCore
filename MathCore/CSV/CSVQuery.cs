@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -51,7 +52,9 @@ namespace MathCore.CSV
 
         /// <summary>Инициализация нового экземпляра <see cref="CSVQuery"/></summary>
         /// <param name="ReaderFactory">Метод-фабрика объектов чтения данных</param>
-        public CSVQuery([NotNull] Func<TextReader> ReaderFactory) : this(ReaderFactory, 0, false, 0, ';', -1, null) { }
+        /// <param name="Separator">Символ-разделитель значений</param>
+        public CSVQuery([NotNull] Func<TextReader> ReaderFactory, char Separator = ',')
+            : this(ReaderFactory, 0, false, 0, Separator, -1, null) { }
 
         /// <summary>Инициализация нового экземпляра <see cref="CSVQuery"/></summary>
         private CSVQuery(
@@ -182,6 +185,64 @@ namespace MathCore.CSV
             _TakeRows,
             Merge(_Header, Header)
         );
+
+        /// <summary>Добавить колонку в считываемый заголовок</summary>
+        /// <param name="AliasName">Новый псевдоним колонки</param>
+        /// <param name="Index">Индекс колонки</param>
+        /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
+        public CSVQuery AddColumn([NotNull] string AliasName, int Index) => MergeHeader(new Dictionary<string, int> { { AliasName, Index } });
+
+        /// <summary>Добавить колонки в считываемый заголовок</summary>
+        /// <param name="Columns">Новые псевдонимы колонок</param>
+        /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
+        public CSVQuery AddColumns([NotNull] params (string AliasName, int Index)[] Columns) => MergeHeader(Columns.ToDictionary(c => c.AliasName, c => c.Index));
+
+        /// <summary>Удалить колонку по указанному имени</summary>
+        /// <param name="ColumnName">Имя удаляемой колонки</param>
+        /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
+        public CSVQuery RemoveColumn(string ColumnName)
+        {
+            var header = _Header;
+            if (header != null)
+            {
+                header = new Dictionary<string, int>(header);
+                header.Remove(ColumnName);
+            }
+
+            return new CSVQuery(
+                _ReaderFactory,
+                _SkipRows,
+                _ContainsHeader,
+                _SkipRowsAfterHeader,
+                _ValuesSeparator,
+                _TakeRows,
+                header
+            );
+        }
+
+        /// <summary>Удалить колонку по указанному индексу</summary>
+        /// <param name="ColumnIndex">Индекс удаляемой колонки</param>
+        /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
+        public CSVQuery RemoveColumn(int ColumnIndex)
+        {
+            var header = _Header;
+            if (header != null)
+            {
+                header = new Dictionary<string, int>(header);
+                foreach (var column in _Header.Where(v => v.Value == ColumnIndex).Select(v => v.Key))
+                    header.Remove(column);
+            }
+
+            return new CSVQuery(
+                _ReaderFactory,
+                _SkipRows,
+                _ContainsHeader,
+                _SkipRowsAfterHeader,
+                _ValuesSeparator,
+                _TakeRows,
+                header
+            );
+        }
 
         /// <summary>Считать заголовок данных</summary>
         /// <param name="MergeWithDefault"></param>
