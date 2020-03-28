@@ -367,5 +367,13 @@ namespace System.Collections.Generic
                 }
             return result.ToArray();
         }
+
+        /// <summary>Преобразование перечисления кортежей двух элементов в словарь</summary>
+        /// <typeparam name="TKey">Тип первого элемента кортежа - тип ключа</typeparam>
+        /// <typeparam name="TValue">Тип второго элемента кортежа - тип значения</typeparam>
+        /// <param name="items">Перечисление кортежей двух элементов</param>
+        /// <returns>Словарь, составленный из ключей - первых элементов кортежа и значений - вторых элементов</returns>
+        [NotNull] public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>([NotNull] this IEnumerable<(TKey, TValue)> items) =>
+            items.ToDictionary(value => value.Item1, value => value.Item2);
     }
 }

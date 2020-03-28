@@ -205,7 +205,7 @@ namespace MathCore.CSV
             var header = _Header;
             if (header != null)
             {
-                header = new Dictionary<string, int>(header);
+                header = Merge(header);
                 header.Remove(ColumnName);
             }
 
@@ -228,7 +228,7 @@ namespace MathCore.CSV
             var header = _Header;
             if (header != null)
             {
-                header = new Dictionary<string, int>(header);
+                header = Merge(header);
                 foreach (var column in _Header.Where(v => v.Value == ColumnIndex).Select(v => v.Key))
                     header.Remove(column);
             }
@@ -300,7 +300,6 @@ namespace MathCore.CSV
                 if (!string.IsNullOrWhiteSpace(header_line))
                 {
                     var headers = header_line.Split(separator);
-                    header = new SortedList<string, int>();
                     for (var i = 0; i < headers.Length; i++)
                         header[headers[i]] = i;
                 }
