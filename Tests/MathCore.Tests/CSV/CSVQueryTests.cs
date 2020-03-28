@@ -82,7 +82,7 @@ namespace MathCore.Tests.CSV
         public void GetHeaderTest()
         {
             var header = DataFile
-               .OpenCSV()
+               .OpenCSV(';')
                .Skip(__BeforeLinesCount)
                .WithHeader()
                .GetHeader();

@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.22</Version>
+    <Version>0.0.22.1</Version>
     <PackageReleaseNotes>
       Инструменты для работы с CSV-файлами в формате LINQ
+      Доработка интерфейса работы с CSV
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
