@@ -6,7 +6,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.22.1</Version>
+    <Version>0.0.22.2</Version>
     <PackageReleaseNotes>
       Инструменты для работы с CSV-файлами в формате LINQ
       Доработка интерфейса работы с CSV
