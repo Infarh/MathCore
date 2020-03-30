@@ -1934,5 +1934,22 @@ namespace System.Linq
             if (first_taken)
                 yield return last;
         }
+
+        /// <summary>Разбить перечисление на страницы</summary>
+        /// <typeparam name="T">Тип элемента перечисления</typeparam>
+        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
+        /// <returns>Перечисление страниц</returns>
+        [NotNull] public static IEnumerable<IEnumerable<T>> WithPages<T>([NotNull] this IEnumerable<T> items, int PageItemsCount) =>
+            items.AsBlockEnumerable(PageItemsCount);
+
+        /// <summary>Получить элементы перечисления для заданной страницы</summary>
+        /// <typeparam name="T">Тип элемента перечисления</typeparam>
+        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="PageNumber">Номер требуемой страницы</param>
+        /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
+        /// <returns>ПЕречисление элементов из указанной страницы</returns>
+        [NotNull] public static IEnumerable<T> Page<T>([NotNull] this IEnumerable<T> items, int PageNumber, int PageItemsCount) =>
+            items.Skip(PageItemsCount * PageNumber).Take(PageItemsCount);
     }
 }
