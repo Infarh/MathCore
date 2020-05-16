@@ -6,10 +6,9 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.22.2</Version>
+    <Version>0.0.23</Version>
     <PackageReleaseNotes>
-      Инструменты для работы с CSV-файлами в формате LINQ
-      Доработка интерфейса работы с CSV
+      Добавлены инструменты для формирования запросов к IQueryable с постраничным разбиением
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
