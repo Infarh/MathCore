@@ -6,9 +6,9 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.23</Version>
+    <Version>0.0.24</Version>
     <PackageReleaseNotes>
-      Добавлены инструменты для формирования запросов к IQueryable с постраничным разбиением
+      ObservableLinkedList перенесён из MathCore.WPF
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
