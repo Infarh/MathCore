@@ -1,12 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using MathCore.CSV;
-using Microsoft.Data.Analysis;
 
 namespace ConsoleTest
 {
@@ -14,72 +11,46 @@ namespace ConsoleTest
     {
         private static void Main()
         {
-            const string base_url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/";
-            const string confirmed_file = "time_series_covid19_confirmed_global.csv";
+            const string request_uri = @"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+            static string Request(string address) => new HttpClient()
+               .GetAsync(request_uri, HttpCompletionOption.ResponseHeadersRead)
+               .Result
+               .Content
+               .ReadAsStringAsync()
+               .Result;
 
-            static async Task<TextReader> GetReaderAsync(string address)
+            static IEnumerable<string> GetLines(string str)
             {
-                var client = new HttpClient { BaseAddress = new Uri(base_url) };
-                var response = await client.GetAsync(address);
-                return new StreamReader(await response.EnsureSuccessStatusCode().Content.ReadAsStreamAsync());
+                var reader = new StringReader(str);
+                while (true)
+                {
+                    var line = reader.ReadLine();
+                    if (line == null) break;
+                    yield return line;
+                }
             }
 
-            var confirmed = new CSVQuery(() => GetReaderAsync(confirmed_file).Result)
-                .WithHeader()
-                .AddColumn("Province", 0)
-                .AddColumn("Name", 1);
+            static IEnumerable<string> GetData(string address) => GetLines(Request(address));
 
-
-            var countries = confirmed.Select(country => (Country: country["Name"], Count: country.LastValue<int>()));
-
-            //foreach (var country in countries.OrderByDescending(c => c.Count))
-            //    Console.WriteLine(country);
-
-            var countries_v = confirmed.Select(country => (
-                    name: country["Name"].Trim('"', '*'),
-                    province: country["Province"],
-                    values: country
-                       .Skip(6)
-                       .Select(value => (
-                            date: DateTime.Parse(value.Header, CultureInfo.InvariantCulture),
-                            count: double.Parse(value.Value, CultureInfo.InvariantCulture)
-                            )
-                        )
-                       .ToArray()))
-               .GroupBy(c => c.name, c => (c.province, c.values))
-               .Select(c => (
-                    name: c.Key,
-                    count: c.Sum(p => p.values.Sum(x => x.count)),
-                    delta: c.Sum(p => p.values[p.values.Length - 1].count - p.values[p.values.Length - 2].count),
-                    provinces: c.ToArray()
-                    )
-                )
-               .OrderByDescending(c => c.delta).ThenBy(c => c.name)
+            var times = GetData(request_uri)
+               .First()
+               .Split(',')
+               .Skip(4)
+               .Select(s => DateTime.Parse(s, CultureInfo.InvariantCulture))
                .ToArray();
 
-            var index = 1;
-            foreach (var (name, count, delta, _) in countries_v)
-                Console.WriteLine("{3, 3}{0, 35}:{1}({2})", name, count, delta, index++);
-
-
-            Console.ReadLine();
-
-            ////                        3222 2222 2222 1111 1111 1             
-            ////                        1098 7654 3210 9876 5432 1098 7654 3210
-            //var res = (int)Math.Log(0b0000_0001_1000_0000_0000_0001_0000_0000, 2); //24
-
-            //var times = new PrimitiveDataFrameColumn<DateTime>("Date");
-            //times.Append(DateTime.Now.Subtract(TimeSpan.FromDays(2)));
-            //times.Append(DateTime.Now.Subtract(TimeSpan.FromDays(1)));
-            //times.Append(DateTime.Now);
-
-            //var ints = new PrimitiveDataFrameColumn<int>("ints", 3);
-            //var strs = new StringDataFrameColumn("strings", 3);
-
-            //var data = new DataFrame(times, ints, strs) {[0, 1] = 10};
-
-
-            //Console.ReadLine();
+            var countries_data = GetData(request_uri)
+               .Skip(1)
+               .Select(line => line.Split(','))
+               .Select(values => new
+                {
+                    Country = values[1],
+                    Counts = values
+                       .Skip(4)
+                       .Select(S => double.Parse(S, CultureInfo.InvariantCulture))
+                       .ToArray()
+                })
+               .ToArray();
         }
     }
 }

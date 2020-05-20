@@ -6,10 +6,9 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.22.2</Version>
+    <Version>0.0.24</Version>
     <PackageReleaseNotes>
-      Инструменты для работы с CSV-файлами в формате LINQ
-      Доработка интерфейса работы с CSV
+      ObservableLinkedList перенесён из MathCore.WPF
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
