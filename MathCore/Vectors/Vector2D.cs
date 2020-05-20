@@ -29,20 +29,11 @@ namespace MathCore.Vectors
 
         /// <summary>Радиус (длина) вектора</summary>
         [XmlIgnore]
-        public double R => Math.Sqrt(_X * _X + _Y * _Y);
+        public double R => Numeric.Radius(_X, _Y);
 
         /// <summary>Угол к оси X в радианах</summary>
         [XmlIgnore]
-        public double Angle =>
-            _X.Equals(0)
-                ? _Y.Equals(0)
-                    ? 0
-                    : Math.Sign(_Y) * Consts.pi05
-                : _Y.Equals(0)
-                    ? Math.Sign(_X) > 0
-                        ? 0
-                        : Consts.pi
-                    : Math.Atan2(_Y, _X);
+        public double Angle => Numeric.Angle(_X, _Y);
 
         /// <summary>Инициализация двумерного вектора</summary>
         /// <param name="X">Координата X</param>
