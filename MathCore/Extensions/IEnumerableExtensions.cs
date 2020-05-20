@@ -1951,5 +1951,29 @@ namespace System.Linq
         /// <returns>ПЕречисление элементов из указанной страницы</returns>
         [NotNull] public static IEnumerable<T> Page<T>([NotNull] this IEnumerable<T> items, int PageNumber, int PageItemsCount) =>
             items.Skip(PageItemsCount * PageNumber).Take(PageItemsCount);
+
+        /// <summary>Заменить указанный элемент в перечислении</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="items">Исходное перечисление</param>
+        /// <param name="ItemToReplase">Элемент, Который требуется заменить</param>
+        /// <param name="NewItem">Новый элемент</param>
+        /// <returns>Модифицированная последовательность</returns>
+        public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, T ItemToReplase, T NewItem)
+        {
+            foreach (var item in items)
+                yield return Equals(ItemToReplase, item) ? NewItem : item;
+        }
+
+        /// <summary>Заменить указанный элемент в перечислении</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="items">Исходное перечисление</param>
+        /// <param name="Selector">Метод оценки необходимости выполнить замену</param>
+        /// <param name="NewItem">Новый элемент</param>
+        /// <returns>Модифицированная последовательность</returns>
+        public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, Func<T, bool> Selector, T NewItem)
+        {
+            foreach (var item in items)
+                yield return Selector(item) ? NewItem : item;
+        }
     }
 }
