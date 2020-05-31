@@ -273,44 +273,11 @@ namespace MathCore
 
         /// <summary>Модуль</summary>
         [XmlIgnore]
-        public double Abs
-        {
-            get
-            {
-                if (double.IsInfinity(_Re) || double.IsInfinity(_Im))
-                    return double.PositiveInfinity;
-
-                // |value| == sqrt(a^2 + b^2)
-                // sqrt(a^2 + b^2) == a/a * sqrt(a^2 + b^2) = a * sqrt(a^2/a^2 + b^2/a^2) = a * sqrt(1 + b^2/a^2)
-                // Using the above we can factor out the square of the larger component to dodge overflow.
-
-
-                var re = Math.Abs(_Re);
-                var im = Math.Abs(_Im);
-
-                if (re > im)
-                {
-                    var ir = im / re;
-                    return re * Math.Sqrt(1d + ir * ir);
-                }
-                if (im.Equals(0.0))
-                    return re; // re is either 0.0 or NaN
-                var r = re / im;
-                return im * Math.Sqrt(1d + r * r);
-            }
-        }
+        public double Abs => Numeric.Radius(_Re, Im);
 
         /// <summary>Аргумент</summary>
         [XmlIgnore]
-        public double Arg => _Re.Equals(0)
-                    ? (_Im.Equals(0) // Re == 0
-                        ? 0 //  Im == 0 => 0
-                        : Math.Sign(_Im) * Consts.pi05) //  Im != 0 => pi/2 * sign(Im)
-                    : (_Im.Equals(0) // Re != 0
-                        ? (Math.Sign(_Re) > 0
-                            ? 0
-                            : Consts.pi)
-                        : Math.Atan2(_Im, _Re)); //  Im != 0 => atan(Im/Re)
+        public double Arg => Numeric.Angle(_Re, _Im);
 
         /// <summary>Комплексно сопряжённое число</summary>
         [XmlIgnore]
