@@ -5,7 +5,7 @@ namespace MathCore.Trees
 {
     /// <summary>Элемент двусвязного дерева</summary>
     /// <typeparam name="T">Тип узла дерева</typeparam>
-    public interface ITreeItem<out T> where T : class, ITreeItem<T>
+    public interface ITreeNode<out T> where T : class, ITreeNode<T>
     {
         /// <summary>Родительский узел</summary>
         [CanBeNull]
@@ -19,8 +19,8 @@ namespace MathCore.Trees
     /// <summary>Элемент двусвязного дерева</summary>
     /// <typeparam name="T">Тип узла дерева</typeparam>
     /// <typeparam name="TItem">Тип значения</typeparam>
-    public interface ITreeItem<out T, out TItem> : ITreeItem<T> where T : class, ITreeItem<T, TItem>
+    public interface ITreeNode<out T, out TItem> : ITreeNode<T> where T : class, ITreeNode<T, TItem>
     {
-        [NotNull] TItem Item { get; }
+        [NotNull] TItem Value { get; }
     }
 }

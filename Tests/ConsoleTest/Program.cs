@@ -14,7 +14,7 @@ namespace ConsoleTest
         {
             var dir = new DirectoryInfo(".");
 
-            var dir_tree = dir.ToTreeItem(d => d.EnumerateDirectories(), d => d.Parent);
+            var dir_tree = dir.AsTreeNode(d => d.EnumerateDirectories(), d => d.Parent);
 
             char b = 'B', c = '\x64', d = '\uffff';
             Console.WriteLine("{0}, {1}, {2}", b, c, d);
