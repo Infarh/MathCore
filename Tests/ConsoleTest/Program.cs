@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using MathCore.Trees;
 
 namespace ConsoleTest
 {
@@ -11,6 +12,17 @@ namespace ConsoleTest
     {
         private static void Main()
         {
+            var dir = new DirectoryInfo(".");
+
+            var dir_tree = dir.ToTreeItem(d => d.EnumerateDirectories(), d => d.Parent);
+
+            char b = 'B', c = '\x64', d = '\uffff';
+            Console.WriteLine("{0}, {1}, {2}", b, c, d);
+            Console.WriteLine("{0}, {1}, {2}", char.ToLower(b), char.ToUpper(c), char.GetNumericValue(d));
+
+            Console.ReadLine();
+
+
             const string request_uri = @"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
             static string Request(string address) => new HttpClient()
                .GetAsync(request_uri, HttpCompletionOption.ResponseHeadersRead)

@@ -73,5 +73,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MathCore\MathCore.csproj">
+      <Project>{AFA60C84-107F-4582-8EED-2273957E89C5}</Project>
+      <Name>MathCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

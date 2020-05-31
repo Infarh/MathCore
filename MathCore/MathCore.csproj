@@ -6,9 +6,9 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <Version>0.0.24</Version>
+    <Version>0.0.25.0</Version>
     <PackageReleaseNotes>
-      ObservableLinkedList перенесён из MathCore.WPF
+      Переделан интерфейс ITreeItem
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>

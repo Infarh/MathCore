@@ -1,19 +1,26 @@
-﻿namespace MathCore.Trees
+﻿using System.Collections.Generic;
+using MathCore.Annotations;
+
+namespace MathCore.Trees
 {
     /// <summary>Элемент двусвязного дерева</summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ITreeItem<T> where T : class, ITreeItem<T>
+    /// <typeparam name="T">Тип узла дерева</typeparam>
+    public interface ITreeItem<out T> where T : class, ITreeItem<T>
     {
         /// <summary>Родительский узел</summary>
-        T Parent { get; set; }
+        [CanBeNull]
+        T Parent { get; }
 
-        /// <summary>Дочерний узел</summary>
-        T Child { get; set; }
+        /// <summary>Дочерние узлы</summary>
+        [CanBeNull]
+        IEnumerable<T> Childs { get; }
+    }
 
-        /// <summary>Предыдущий узел уровня</summary>
-        T Prev { get; set; }
-
-        /// <summary>Следующий узел дерева</summary>
-        T Next { get; set; }
+    /// <summary>Элемент двусвязного дерева</summary>
+    /// <typeparam name="T">Тип узла дерева</typeparam>
+    /// <typeparam name="TItem">Тип значения</typeparam>
+    public interface ITreeItem<out T, out TItem> : ITreeItem<T> where T : class, ITreeItem<T, TItem>
+    {
+        [NotNull] TItem Item { get; }
     }
 }
