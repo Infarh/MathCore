@@ -8,7 +8,7 @@
   <PropertyGroup>
     <Version>0.0.25.0</Version>
     <PackageReleaseNotes>
-      Переделан интерфейс ITreeItem
+      Переделан интерфейс ITreeItem в ITreeNode
     </PackageReleaseNotes>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
