@@ -12,15 +12,16 @@ namespace MathCore.Trees
         T Parent { get; }
 
         /// <summary>Дочерние узлы</summary>
-        [CanBeNull]
+        [NotNull, ItemNotNull]
         IEnumerable<T> Childs { get; }
     }
 
     /// <summary>Элемент двусвязного дерева</summary>
     /// <typeparam name="T">Тип узла дерева</typeparam>
-    /// <typeparam name="TItem">Тип значения</typeparam>
-    public interface ITreeNode<out T, out TItem> : ITreeNode<T> where T : class, ITreeNode<T, TItem>
+    /// <typeparam name="TValue">Тип значения</typeparam>
+    public interface ITreeNode<out T, out TValue> : ITreeNode<T> where T : class, ITreeNode<T, TValue>
     {
-        [NotNull] TItem Value { get; }
+        /// <summary>Значение узла</summary>
+        [NotNull] TValue Value { get; }
     }
 }
