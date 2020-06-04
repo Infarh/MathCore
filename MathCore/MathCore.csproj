@@ -4,12 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <Version>0.0.25.0</Version>
     <PackageReleaseNotes>
       Переделан интерфейс ITreeItem в ITreeNode
     </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
