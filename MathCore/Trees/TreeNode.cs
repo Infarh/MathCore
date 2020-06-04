@@ -6,7 +6,7 @@ namespace MathCore.Trees
 {
     public class TreeNode<T> : ITreeNode<TreeNode<T>, T>
     {
-        [NotNull] private readonly Func<T, T> _ParentSelector;
+        [CanBeNull] private readonly Func<T, T> _ParentSelector;
         [CanBeNull] private readonly Func<T, IEnumerable<T>> _ChildsSelector;
 
         public T Value { get; }
@@ -15,6 +15,7 @@ namespace MathCore.Trees
         {
             get
             {
+                if (_ParentSelector is null) return null;
                 var parent_item = _ParentSelector.Invoke(Value);
                 return parent_item is null ? null : new TreeNode<T>(parent_item, _ParentSelector, _ChildsSelector);
             }
@@ -31,7 +32,7 @@ namespace MathCore.Trees
             }
         }
 
-        public TreeNode([NotNull] T Value, [NotNull] Func<T, T> ParentSelector, [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector)
+        public TreeNode([NotNull] T Value, [CanBeNull] Func<T, T> ParentSelector, [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector)
         {
             this.Value = Value;
             _ParentSelector = ParentSelector;

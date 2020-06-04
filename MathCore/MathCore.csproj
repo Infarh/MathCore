@@ -4,12 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
+
   <PropertyGroup>
-    <Version>0.0.25.0</Version>
+    <Version>0.0.26</Version>
     <PackageReleaseNotes>
-      Переделан интерфейс ITreeItem в ITreeNode
+      Добавлены алгоритмы обхода дерева и добавлена проекция Меркатора в класс GPS
     </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>

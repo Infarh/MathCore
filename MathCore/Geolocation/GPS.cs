@@ -9,7 +9,14 @@ namespace MathCore.Geolocation
     /// <summary>Класс сервисных функций работы с координатами</summary>
     public static class GPS
     {
-        private const double __ToRad = PI / 180d;
+        // ReSharper disable InconsistentNaming
+        /// <summary>PI / 180</summary>
+        private const double ToRad = MathCore.Consts.ToRad;
+        /// <summary>180 / PI</summary>
+        private const double ToDeg = MathCore.Consts.ToDeg;
+        /// <summary>PI / 2</summary>
+        private const double PI05 = MathCore.Consts.pi05;
+        // ReSharper restore InconsistentNaming
 
         /// <summary>Константы размеров</summary>
         public static class Consts
@@ -45,7 +52,13 @@ namespace MathCore.Geolocation
             public const double ParallelEquator1RadianLength = ParallelEquatorLength / PI;
 
             /// <summary>Радиус Земли (в метрах)</summary>
-            public const double EarthRadius = 6_371_000D;
+            public const double EarthRadius = 6_378_137d;
+
+            public const double Flattening = 1d / 298.257223563;
+
+            public static readonly double Eccentricity = Sqrt((2 - Flattening) * Flattening);
+
+            public const double MetersPerDegree = EarthRadius * PI / 180d;
 
             /// <summary>Градус широты в метрах на экваторе (в метрах)</summary>
             public const double LatitudeDegreeLength = 111.321377778;
@@ -66,7 +79,7 @@ namespace MathCore.Geolocation
             public const double LongitudeSecondLength = 0.0308707947531;
         }
 
-        public static double ParallelLength(double latitude) => Consts.ParallelEquatorLength * Cos(latitude * __ToRad);
+        public static double ParallelLength(double latitude) => Consts.ParallelEquatorLength * Cos(latitude * ToRad);
 
         public static double Degree(int degrees, int minutes, double seconds = 0d) => degrees + minutes / 60d + seconds / 3600d;
 
@@ -83,10 +96,10 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
                 return double.NaN;
 
-            latitude1 *= __ToRad;
-            latitude2 *= __ToRad;
-            longitude1 *= __ToRad;
-            longitude2 *= __ToRad;
+            latitude1 *= ToRad;
+            latitude2 *= ToRad;
+            longitude1 *= ToRad;
+            longitude2 *= ToRad;
 
             var d_latitude = latitude2 - latitude1;
             var d_longitude = longitude2 - longitude1;
@@ -110,10 +123,10 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
                 return double.NaN;
 
-            latitude1 *= __ToRad;
-            latitude2 *= __ToRad;
-            longitude1 *= __ToRad;
-            longitude2 *= __ToRad;
+            latitude1 *= ToRad;
+            latitude2 *= ToRad;
+            longitude1 *= ToRad;
+            longitude2 *= ToRad;
 
             //var x = (longitude2 - longitude1) * Cos((latitude1 + latitude2) / 2);
             //var y = latitude2 - latitude1;
@@ -129,10 +142,10 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
                 return double.NaN;
 
-            latitude1 *= __ToRad;
-            latitude2 *= __ToRad;
-            longitude1 *= __ToRad;
-            longitude2 *= __ToRad;
+            latitude1 *= ToRad;
+            latitude2 *= ToRad;
+            longitude1 *= ToRad;
+            longitude2 *= ToRad;
 
             return Acos(Sin(latitude1) * Sin(latitude2) + Cos(latitude1) * Cos(latitude2) * Cos(longitude2 - longitude1)) * Consts.EarthRadius;
         }
@@ -148,16 +161,16 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
                 return double.NaN;
 
-            latitude1 *= __ToRad;
-            latitude2 *= __ToRad;
-            longitude1 *= __ToRad;
-            longitude2 *= __ToRad;
+            latitude1 *= ToRad;
+            latitude2 *= ToRad;
+            longitude1 *= ToRad;
+            longitude2 *= ToRad;
 
             var d_lon = longitude2 - longitude1;
             var y = Sin(d_lon) * Cos(latitude2);
             var x = Cos(latitude1) * Sin(latitude2)
                    - Sin(latitude1) * Cos(latitude2) * Cos(d_lon);
-            return (Atan2(y, x) / __ToRad + 360) % 360;
+            return (Atan2(y, x) / ToRad + 360) % 360;
         }
 
         public static double Heading(Vector2D begin, Vector2D end) => Heading(begin.Y, begin.X, end.Y, end.X);
@@ -173,10 +186,10 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
                 return new Vector2D(double.NaN, double.NaN);
 
-            latitude1 *= __ToRad;
-            latitude2 *= __ToRad;
-            longitude1 *= __ToRad;
-            longitude2 *= __ToRad;
+            latitude1 *= ToRad;
+            latitude2 *= ToRad;
+            longitude1 *= ToRad;
+            longitude2 *= ToRad;
 
             var d_lon = longitude2 - longitude1;
             var cos_lat1 = Cos(latitude1);
@@ -186,7 +199,7 @@ namespace MathCore.Geolocation
             var by = cos_lat2 * Sin(d_lon);
             var latitude_05 = Atan2(Sin(latitude1) + Sin(latitude2), Sqrt((cos_lat1 + bx) * (cos_lat1 + bx) + by * by));
             var longitude_05 = longitude1 + Atan2(by, cos_lat1 + bx);
-            return new Vector2D(longitude_05 / __ToRad, latitude_05 / __ToRad);
+            return new Vector2D(longitude_05 / ToRad, latitude_05 / ToRad);
         }
 
         public static Vector2D HalfWayPoint(Vector2D begin, Vector2D end) => HalfWayPoint(begin.Y, begin.X, end.Y, end.X);
@@ -202,10 +215,10 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude) || double.IsNaN(longitude) || double.IsNaN(heading) || double.IsNaN(distance))
                 return new Vector2D(double.NaN, double.NaN);
 
-            latitude *= __ToRad;
-            longitude *= __ToRad;
+            latitude *= ToRad;
+            longitude *= ToRad;
             if (heading < 0 || heading > 360) heading = (heading + 360) % 360;
-            heading *= __ToRad;
+            heading *= ToRad;
 
             distance /= Consts.EarthRadius;
 
@@ -216,7 +229,7 @@ namespace MathCore.Geolocation
 
             var sin_latitude2 = sin_lat * cos_d + cos_lat * sin_d * Cos(heading);
             var longitude2 = longitude + Atan2(Sin(heading) * sin_d * cos_lat, cos_d - sin_lat * sin_latitude2);
-            return new Vector2D((longitude2 / __ToRad + 540) % 360 - 180, Asin(sin_latitude2) / __ToRad);
+            return new Vector2D((longitude2 / ToRad + 540) % 360 - 180, Asin(sin_latitude2) / ToRad);
         }
 
         public static Vector2D DestinationPoint(Vector2D point, double heading, double distance) =>
@@ -259,12 +272,12 @@ namespace MathCore.Geolocation
                 || double.IsNaN(heading1) || double.IsNaN(heading2))
                 return double.NaN;
 
-            latitude1 *= __ToRad;
-            latitude2 *= __ToRad;
-            longitude1 *= __ToRad;
-            longitude2 *= __ToRad;
-            heading1 *= __ToRad;
-            heading2 *= __ToRad;
+            latitude1 *= ToRad;
+            latitude2 *= ToRad;
+            longitude1 *= ToRad;
+            longitude2 *= ToRad;
+            heading1 *= ToRad;
+            heading2 *= ToRad;
 
             var d_lat = latitude2 - latitude1;
             var d_lon = longitude2 - longitude1;
@@ -314,10 +327,58 @@ namespace MathCore.Geolocation
             var latitude3 = Asin(sin_lat1 * cos_angular_distance_p1_p2 + cos_lat1 * sin_angular_distance_p1_p2 * Cos(heading1));
             var d_lon_13 = Atan2(Sin(heading1) * sin_angular_distance_p1_p2 * cos_lat1, cos_angular_distance_p1_p2 - sin_lat1 * Sin(latitude3));
             var longitude3 = longitude1 + d_lon_13;
-            return new Vector2D((longitude3 / __ToRad + 540) % 360 - 180, latitude3 / __ToRad);
+            return new Vector2D((longitude3 / ToRad + 540) % 360 - 180, latitude3 / ToRad);
         }
 
         public static Vector2D Intersection(Vector2D point1, double heading1, Vector2D point2, double heading2) =>
             Intersection(point1.Y, point1.X, heading1, point2.Y, point2.X, heading2);
+
+        public static class MercatorProjection
+        {
+            public static double LatitudeToY(double Lat)
+            {
+                if (Lat <= -90)
+                    return double.NegativeInfinity;
+                if (Lat >= 90)
+                    return double.PositiveInfinity;
+
+                var lat = Lat * ToRad;
+                return Log(Tan(lat / 2 + PI / 4) * ConformalFactor(lat)) * ToDeg;
+            }
+
+            private static double ConformalFactor(double lat)
+            {
+                var sin_lat = Consts.Eccentricity * Sin(lat);
+                return Pow((1 - sin_lat) / (1 + sin_lat), Consts.Eccentricity / 2d);
+            }
+
+            public static double YToLatitude(double y)
+            {
+                var t = Exp(-y * ToRad);
+                var lat = PI05 - 2 * Atan(t);
+                var delta = 1d;
+
+                const int max_iterations = 10;
+                const double eps = 1e-6;
+                for (var i = 0; i < max_iterations && delta > eps; i++)
+                {
+                    var new_lat = PI05 - 2 * Atan(t * ConformalFactor(lat));
+                    delta = Abs(1 - new_lat / lat);
+                    lat = new_lat;
+                }
+
+                return lat * ToDeg;
+            }
+
+            public static Vector2D ToXY(Vector2D LongitudeLatitude) => new Vector2D(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
+
+            public static Vector2D FromXY(Vector2D Point) => new Vector2D(Point.X, YToLatitude(Point.Y));
+
+            public static (double X, double Y) ToXY(double Longitude, double Latitude) => (Longitude, LatitudeToY(Latitude));
+            public static (double X, double Y) ToXY((double Longitude, double Latitude) Point) => (Point.Longitude, LatitudeToY(Point.Latitude));
+
+            public static (double Longitude, double Latitude) FromXY(double X, double Y) => (X, YToLatitude(Y));
+            public static (double Longitude, double Latitude) FromXY((double X, double Y) Point) => (Point.X, YToLatitude(Point.Y));
+        }
     }
 }
