@@ -68,10 +68,12 @@ namespace ConsoleTest
             //   .ToArray();
 
 
-            var dirs_tree = new DirectoryInfo("c:\\123")
-               .AsTreeNode(d => d.EnumerateDirectories(), d => d.Parent);
+            new DirectoryInfo("c:\\")
+               .AsTreeNode(d => d.Try(v => v.EnumerateDirectories(), (d, e) => Console.WriteLine(d.FullName)), d => d.Parent)
+               .EnumerateChildValues(n => n.Level <= 3)
+               .Count()
+               .ToConsoleLN("Count:{0}");
 
-            var cc = dirs_tree.EnumerateChildValues(n => n.Level <= 5);
 
              
             //static Func<T, T> Y<T>(Func<Func<T, T>, Func<T, T>> F) => t => F(Y(F))(t);
@@ -90,6 +92,8 @@ namespace ConsoleTest
             ////   .EnumerateChilds()
             ////   .TakeWhile(d => d.Level <= 5)
             ////   .Foreach(d => Console.WriteLine(d.Value.FullName));
+
+            Console.ReadLine();
         }
     }
 
