@@ -4,14 +4,14 @@ using MathCore.Annotations;
 
 namespace MathCore.Trees
 {
-    public class TreeNode<T> : ITreeNode<TreeNode<T>, T>
+    public class TreeNode<T> : ITreeValuedNode<T>
     {
         [CanBeNull] private readonly Func<T, T> _ParentSelector;
         [CanBeNull] private readonly Func<T, IEnumerable<T>> _ChildsSelector;
 
         public T Value { get; }
 
-        public TreeNode<T> Parent
+        public ITreeValuedNode<T> Parent
         {
             get
             {
@@ -21,7 +21,7 @@ namespace MathCore.Trees
             }
         }
 
-        public IEnumerable<TreeNode<T>> Childs
+        public IEnumerable<ITreeValuedNode<T>> Childs
         {
             get
             {
