@@ -11,13 +11,15 @@ namespace MathCore.Trees
 
         public T Value { get; }
 
+        public int Level { get; }
+
         public ITreeValuedNode<T> Parent
         {
             get
             {
                 if (_ParentSelector is null) return null;
                 var parent_item = _ParentSelector.Invoke(Value);
-                return parent_item is null ? null : new TreeNode<T>(parent_item, _ParentSelector, _ChildsSelector);
+                return parent_item is null ? null : new TreeNode<T>(parent_item, _ParentSelector, _ChildsSelector, Level - 1);
             }
         }
 
@@ -27,16 +29,28 @@ namespace MathCore.Trees
             {
                 var childs = _ChildsSelector?.Invoke(Value);
                 if(childs is null) yield break;
+                var child_level = Level + 1;
                 foreach (var child in childs)
-                    yield return new TreeNode<T>(child, _ParentSelector, _ChildsSelector);
+                    yield return new TreeNode<T>(child, _ParentSelector, _ChildsSelector, child_level);
             }
         }
 
-        public TreeNode([NotNull] T Value, [CanBeNull] Func<T, T> ParentSelector, [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector)
+        public TreeNode(
+            [NotNull] T Value, 
+            [CanBeNull] Func<T, T> ParentSelector, 
+            [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector)
         {
             this.Value = Value;
             _ParentSelector = ParentSelector;
             _ChildsSelector = ChildsSelector;
         }
+
+        private TreeNode(
+            [NotNull] T Value,
+            [CanBeNull] Func<T, T> ParentSelector,
+            [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector,
+            int Level)
+            : this(Value, ParentSelector, ChildsSelector)
+            => this.Level = Level;
     }
 }
