@@ -18,6 +18,72 @@ namespace System
     /// <summary>Класс методов-расширений для объекта</summary>
     public static class ObjectExtensions
     {
+        /// <summary>Вызов к объекту с обработкой ошибок</summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <param name="obj">Объект, вызов к которому надо выполнить</param>
+        /// <param name="action">Выполняемое над объектом действие, ошибки в котором требуется перехватить</param>
+        /// <param name="OnError">Метод обработки исключения</param>
+        public static void Try<T>(this T obj, Action<T> action, [NotNull] Action<T, Exception> OnError)
+        {
+            if (OnError is null) throw new ArgumentNullException(nameof(OnError));
+            try
+            {
+                action(obj);
+            }
+            catch (Exception e)
+            {
+                OnError(obj, e);
+            }
+        }
+
+        /// <summary>Вычислить значение для указанного объекта с обработкой ошибок</summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <typeparam name="TResult">Тип результата</typeparam>
+        /// <param name="obj">Объект, для которого вычисляется значение</param>
+        /// <param name="func">Метод вычисления значения</param>
+        /// <param name="OnError">Функция обработки исключения, возвращающий значение в случае его возникновения</param>
+        /// <returns>Результат вызова</returns>
+        public static TResult Try<T, TResult>(
+            this T obj, 
+            [NotNull] Func<T, TResult> func, 
+            [CanBeNull] Func<T, Exception, TResult> OnError = null)
+        {
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            try
+            {
+                return func(obj);
+            }
+            catch (Exception e)
+            {
+                return OnError is null ? default : OnError(obj, e);
+            }
+        }
+
+        /// <summary>Вычислить значение для указанного объекта с обработкой ошибок</summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <typeparam name="TResult">Тип результата</typeparam>
+        /// <param name="obj">Объект, для которого вычисляется значение</param>
+        /// <param name="func">Метод вычисления значения</param>
+        /// <param name="OnError">Действие обработки исключения</param>
+        /// <param name="DefaultResult">Значение по умолчанию, возвращаемое в случае возникновения исключения</param>
+        /// <returns>Результат вызова</returns>
+        public static TResult Try<T, TResult>(
+            this T obj, [NotNull] Func<T, TResult> func, 
+            [CanBeNull] Action<T, Exception> OnError = null, 
+            TResult DefaultResult = default)
+        {
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            try
+            {
+                return func(obj);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(obj, e);
+                return DefaultResult;
+            }
+        }
+
         /// <summary>Преобразование объекта в бесконечное перечисление</summary>
         /// <typeparam name="T">Тип элементов генерируемого перечисления</typeparam>
         /// <param name="obj">Объект, на основе которого создаётся перечисление</param>
