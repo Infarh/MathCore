@@ -69,8 +69,8 @@ namespace ConsoleTest
 
 
             new DirectoryInfo("c:\\")
-               .AsTreeNode(d => d.Try(v => v.EnumerateDirectories(), (d, e) => Console.WriteLine(d.FullName)), d => d.Parent)
-               .EnumerateChildValues(n => n.Level <= 3)
+               .AsTreeNode((d, error) => Console.WriteLine("Error:{0}", d.FullName))
+               .EnumerateChildValuesWithRoot(n => n.Level <= 3)
                .Count()
                .ToConsoleLN("Count:{0}");
 

@@ -93,14 +93,14 @@ namespace MathCore.Trees
                 yield return Node;
                 if (ProcessChilds?.Invoke(Node) == false) yield break;
                 foreach (var node in Node.Childs)
-                    foreach (var child in node.EnumerateThisWithChilds(ProcessChilds, true))
+                    foreach (var child in node.EnumerateChildsWithRoot(ProcessChilds, true))
                         yield return child;
             }
             else
             {
                 if (ProcessChilds?.Invoke(Node) != false)
                     foreach (var node in Node.Childs)
-                        foreach (var child in node.EnumerateThisWithChilds(ProcessChilds, false))
+                        foreach (var child in node.EnumerateChildsWithRoot(ProcessChilds, false))
                             yield return child;
                 yield return Node;
             }
@@ -112,7 +112,7 @@ namespace MathCore.Trees
         /// <param name="ProcessChilds">Метод, определяющий необходимость обработки дочерних узлов</param>
         /// <param name="CurrentFirst">Формировать в перечислении родительский узел первым</param>
         /// <returns>Перечисление дочерних узлов поддерева</returns>
-        public static IEnumerable<T> EnumerateThisWithChilds<T>(
+        public static IEnumerable<T> EnumerateChildsWithRoot<T>(
             this T Node, 
             [CanBeNull] Func<T, bool> ProcessChilds = null, 
             bool CurrentFirst = true) 
@@ -123,14 +123,14 @@ namespace MathCore.Trees
                 yield return Node;
                 if (ProcessChilds?.Invoke(Node) == false) yield break;
                 foreach (var node in Node.Childs)
-                    foreach (var child in node.EnumerateThisWithChilds(ProcessChilds, true))
+                    foreach (var child in node.EnumerateChildsWithRoot(ProcessChilds, true))
                         yield return child;
             }
             else
             {
                 if (ProcessChilds?.Invoke(Node) != false)
                     foreach (var node in Node.Childs)
-                        foreach (var child in node.EnumerateThisWithChilds(ProcessChilds, true))
+                        foreach (var child in node.EnumerateChildsWithRoot(ProcessChilds, true))
                             yield return child;
                 yield return Node;
             }
@@ -152,14 +152,14 @@ namespace MathCore.Trees
         /// <summary>Перечисление значений всех дочерних узлов дерева вместе с текущим узлом</summary>
         /// <typeparam name="T">Тип значения узла</typeparam>
         /// <param name="Node">Текущий узел дерева</param>
-        /// <param name="CurrentFirst">Формировать в перечислении родительский узел первым</param>
         /// <param name="ProcessChilds">Метод, определяющий необходимость обработки дочерних узлов</param>
+        /// <param name="CurrentFirst">Формировать в перечислении родительский узел первым</param>
         /// <returns>Перечисление значений дочерних узлов поддерева</returns>
         [NotNull]
-        public static IEnumerable<T> EnumerateThisWithChildValues<T>(
-            [NotNull] this ITreeValuedNode<T> Node, 
-            bool CurrentFirst = true,
-            [CanBeNull] Func<ITreeValuedNode<T>, bool> ProcessChilds = null) =>
-            Node.EnumerateThisWithChilds(ProcessChilds, CurrentFirst).Select(node => node.Value);
+        public static IEnumerable<T> EnumerateChildValuesWithRoot<T>(
+            [NotNull] this ITreeValuedNode<T> Node,
+            [CanBeNull] Func<ITreeValuedNode<T>, bool> ProcessChilds = null,
+            bool CurrentFirst = true) =>
+            Node.EnumerateChildsWithRoot(ProcessChilds, CurrentFirst).Select(node => node.Value);
     }
 }
