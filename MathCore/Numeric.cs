@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MathCore.Vectors;
 
 namespace MathCore
 {
     public static class Numeric
     {
+        public static Matrix Sqr(Matrix x) => x * x;
+        public static Complex Sqr(Complex x) => x * x;
+        public static double Sqr(double x) => x * x;
+        public static float Sqr(float x) => x * x;
+        public static decimal Sqr(decimal x) => x * x;
+        public static ulong Sqr(ulong x) => x * x;
+        public static long Sqr(long x) => x * x;
+        public static uint Sqr(uint x) => x * x;
+        public static int Sqr(int x) => x * x;
+        public static ushort Sqr(ushort x) => (ushort) (x * x);
+        public static short Sqr(short x) => (short) (x * x);
+        public static sbyte Sqr(sbyte x) => (sbyte) (x * x);
+        public static byte Sqr(byte x) => (byte) (x * x);
+
         private static decimal Sqrt(decimal x, decimal eps = 0.0M)
         {
             var current = (decimal)Math.Sqrt((double)x);

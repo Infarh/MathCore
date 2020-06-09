@@ -45,6 +45,11 @@ namespace System
         /// <returns>Квадратный корень числа</returns>
         [DST] public static double Sqrt(this double x) => double.IsNaN(x) ? double.NaN : Math.Sqrt(x);
 
+        /// <summary>Квадрат y = x * x</summary>
+        /// <param name="x">Величина, возводимая в квадрат</param>
+        /// <returns>y = x * x</returns>
+        [DST] public static double Sqr(this double x) => x * x;
+
         /// <summary>Является ли число целым?</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число целое</returns>

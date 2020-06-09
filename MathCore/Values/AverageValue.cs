@@ -10,7 +10,7 @@ namespace MathCore.Values
 {
     /// <summary>Скользящее среднее</summary>
     [Serializable]
-    public class AverageValue : ISerializable, IValue<double>, IResettable
+    public class AverageValue : ISerializable, IAddValue<double>, IResettable
     {
         /* --------------------------------------------------------------------------------------------- */
 
@@ -125,6 +125,7 @@ namespace MathCore.Values
         /// <summary>Преобразование в строку с форматированием</summary>
         /// <param name="Format">Формат</param>
         /// <returns>Текстовое представление</returns>
+        [NotNull]
         public string ToString([NotNull] string Format) => _Value.ToString(Format);
 
         /* --------------------------------------------------------------------------------------------- */
@@ -135,6 +136,7 @@ namespace MathCore.Values
 
         /// <summary>Оператор неявного приведения вещественного числа к скользящему среднему</summary>
         /// <param name="Data">Вещественное число</param>
+        [NotNull]
         public static implicit operator AverageValue(double Data) => new AverageValue(Data);
 
         /* --------------------------------------------------------------------------------------------- */

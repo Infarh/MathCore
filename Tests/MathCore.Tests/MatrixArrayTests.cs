@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using MathCore.Annotations;
+using MathCore.Trees;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace MathCore.Tests
 {
