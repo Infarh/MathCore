@@ -74,7 +74,10 @@ namespace ConsoleTest
                .Count()
                .ToConsoleLN("Count:{0}");
 
-
+            "c:\\ ".AsTreeNode(Directory.EnumerateDirectories)
+               .EnumerateChildValuesWithRoot(n => n.Level <= 3)
+               .Count()
+               .ToConsoleLN("Count:{0}");
              
             //static Func<T, T> Y<T>(Func<Func<T, T>, Func<T, T>> F) => t => F(Y(F))(t);
 
