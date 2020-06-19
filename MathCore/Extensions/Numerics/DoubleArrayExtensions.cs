@@ -82,19 +82,22 @@ namespace System
         public static double Dispersion([NotNull] this double[] array)
         {
             var length = array.Length;
-            if (length == 0) return double.NaN;
-            if (length == 1) return 0;
-
-            var average = 0d;
-            var average2 = 0d;
-            for (var i = 0; i < length; i++)
+            switch (length)
             {
-                var x = array[i];
-                average += x;
-                average2 += x * x;
-            }
+                case 0: return double.NaN;
+                case 1: return 0;
+                default:
+                    var average = 0d;
+                    var average2 = 0d;
+                    for (var i = 0; i < length; i++)
+                    {
+                        var x = array[i];
+                        average += x;
+                        average2 += x * x;
+                    }
 
-            return (average2 - average * average / length) / length;
+                    return (average2 - average * average / length) / length;
+            }
         }
 
         [DST, NotNull]

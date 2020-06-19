@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -15,7 +16,7 @@ namespace MathCore.Values
         /* --------------------------------------------------------------------------------------------- */
 
         /// <summary>Номер итерации усреднения</summary>
-        private int _N;
+        private int _Count;
         /// <summary>Текущее значение усредняемой величины</summary>
         private double _Value;
 
@@ -33,7 +34,16 @@ namespace MathCore.Values
         public double StartValue => _StartValue;
 
         /// <summary>Размер окна усреднения</summary>
-        public int Length { get => _Length; set => _Length = value; }
+        public int Length
+        {
+            get => _Length;
+            set
+            {
+                if (value < 0) throw new ArgumentOutOfRangeException(nameof(Length), Length, "Размер окна должен быть неотрицательным");
+                _Length = value;
+                if (_Count > value) _Count = value;
+            }
+        }
 
         /// <summary>Текущее значение усредняемой величины</summary>
         public double Value { get => _Value; set => AddValue(value); }
@@ -42,7 +52,7 @@ namespace MathCore.Values
         public double Dispersion => _Value * _Value - _Value2;
 
         /// <summary>Количество точек усреднения</summary>
-        public int ValuesCount => _N;
+        public int ValuesCount => _Count;
 
         /* --------------------------------------------------------------------------------------------- */
 
@@ -51,7 +61,7 @@ namespace MathCore.Values
         public AverageValue(int Length = -1)
         {
             _Length = Length;
-            _N = 0;
+            _Count = 0;
             _StartValue = double.NaN;
         }
 
@@ -60,7 +70,7 @@ namespace MathCore.Values
         public AverageValue(double StartValue)
         {
             _Length = -1;
-            _N = 1;
+            _Count = 1;
             _StartValue = StartValue;
             _Value = _StartValue;
         }
@@ -71,7 +81,7 @@ namespace MathCore.Values
         public AverageValue(double StartValue, int Length)
         {
             _Length = Length;
-            _N = 1;
+            _Count = 1;
             _StartValue = StartValue;
             _Value = _StartValue;
         }
@@ -83,18 +93,18 @@ namespace MathCore.Values
         /// <param name="value">Добавляемое значение</param>
         public double AddValue(double value)
         {
-            if (_N >= 1)
+            if (_Count >= 1)
             {
                 // Если указано количество итераций усреднения
-                _Value += (value - _Value) / (_N + 1);
-                _Value2 += (value * value - _Value2) / (_N + 1);
-                if (_Length < 0 || _N < _Length) _N++;
+                _Value += (value - _Value) / (_Count + 1);
+                _Value2 += (value * value - _Value2) / (_Count + 1);
+                if (_Length < 0 || _Count < _Length) _Count++;
             }
             else
             {
                 // Если количество итераций усреднения не указано
                 _Value = value;
-                _N++;
+                _Count++;
             }
 
             return _Value;
@@ -106,12 +116,12 @@ namespace MathCore.Values
             _Value2 = 0;
             if (double.IsNaN(_StartValue))
             {
-                _N = 0;
+                _Count = 0;
                 _Value = 0;
             }
             else
             {
-                _N = 1;
+                _Count = 1;
                 _Value = _StartValue;
             }
         }
@@ -150,7 +160,7 @@ namespace MathCore.Values
         {
             if (info is null) throw new ArgumentNullException(nameof(info));
             _Value = info.GetDouble("Value");
-            _N = info.GetInt32("N");
+            _Count = info.GetInt32("N");
             Length = info.GetInt32("Length");
         }
 
@@ -173,7 +183,7 @@ namespace MathCore.Values
             if (info is null) throw new ArgumentNullException(nameof(info));
 
             info.AddValue("Value", _Value);
-            info.AddValue("N", _N);
+            info.AddValue("N", _Count);
             info.AddValue("Length", Length);
         }
 

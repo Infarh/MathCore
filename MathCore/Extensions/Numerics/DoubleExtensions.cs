@@ -1,4 +1,7 @@
-﻿using MathCore;
+﻿using System.Collections.Generic;
+
+using MathCore;
+using MathCore.Annotations;
 //using MathCore.Vectors;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
@@ -167,5 +170,40 @@ namespace System
         /// <param name="rad">Значение в радианах</param>
         /// <returns>Значение в градусах</returns>
         [DST] public static double ToDeg(this double rad) => rad * Consts.Geometry.ToDeg;
+
+        public static double StdDev(this IEnumerable<double> values) => values.Dispersion().Sqrt();
+
+        public static double Dispersion([NotNull] this IEnumerable<double> values)
+        {
+            var average = 0d;
+            var average2 = 0d;
+            var count = 0L;
+            foreach (var x in values)
+            {
+                average += x;
+                average2 += x * x;
+                count++;
+            }
+
+            return (average2 - average * average / count) / count;
+        }
+
+        public static (double mean, double variance) GetMoments([NotNull] this IEnumerable<double> values)
+        {
+            var average = 0d;
+            var average2 = 0d;
+            var count = 0L;
+            foreach (var x in values)
+            {
+                average += x;
+                average2 += x * x;
+                count++;
+            }
+
+            var mean = average / count;
+            var variance = average2 / count - mean * mean;
+
+            return (mean, variance);
+        }
     }
 }

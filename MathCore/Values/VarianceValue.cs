@@ -1,10 +1,12 @@
 ﻿using System;
+
 using MathCore.Annotations;
 
 namespace MathCore.Values
 {
     public class VarianceValue : IAddValue<double>, IResettable
     {
+        private long _Count = 1;
         private double _Variance;
         private double _Average;
 
@@ -29,19 +31,28 @@ namespace MathCore.Values
             get => _Length;
             set
             {
-                if (value <= 0) throw new ArgumentOutOfRangeException(nameof(Length), Length, "Размер окна должен быть больше 0");
+                if (value < 0) throw new ArgumentOutOfRangeException(nameof(Length), Length, "Размер окна должен быть неотрицательным");
                 _Length = value;
+                if (_Count > value) _Count = value;
             }
         }
+
+        public long Count => _Count;
+
+        public bool Completed => _Count >= _Length;
+
+        public VarianceValue() { }
 
         public VarianceValue(int Length) => this.Length = Length;
 
         public double AddValue(double value)
         {
-            var m2 = _Average * _Average;
-            var dv = (value * value - _Variance - m2) / _Length + m2;
+            if (_Count < _Length || _Length == 0) _Count++;
 
-            _Average += (value - _Average) / _Length;
+            var m2 = _Average * _Average;
+            var dv = (value * value - _Variance - m2) / _Count + m2;
+
+            _Average += (value - _Average) / _Count;
 
             return _Variance += dv - _Average * _Average;
         }
@@ -50,6 +61,7 @@ namespace MathCore.Values
         {
             _Variance = 0;
             _Average = 0;
+            _Count = 1;
         }
 
         [NotNull] public override string ToString() => $"var:{_Variance}(sgm:{Math.Sqrt(_Variance)}) avg:{_Average}";
