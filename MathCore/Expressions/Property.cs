@@ -15,7 +15,7 @@ namespace System.Linq.Expressions
 {
     /// <summary>Свойство класса</summary>
     /// <typeparam name="T">Тип значения свойства</typeparam>
-    public class Property<T> : ItemBase, INotifyPropertyChanged, IObservable<T>
+    public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     {
         [NotNull]
         public static Expression<Func<TObject, T>> GetExtractorExpression<TObject>([NotNull] string PropertyName, bool IsPublicOnly)
@@ -190,9 +190,10 @@ namespace System.Linq.Expressions
             DisplayName = name_attributes.Length > 0 ? ((DisplayNameAttribute)name_attributes[0]).DisplayName : Name;
         }
 
-        #region Implementation of IObservable<T>
+        #region Implementation of IObservableEx<T>
 
         public IDisposable Subscribe(IObserver<T> observer) => _ObservableObject.Subscribe(observer);
+        public IDisposable Subscribe(IObserverEx<T> observer) => _ObservableObject.Subscribe(observer);
 
         #endregion
     }
