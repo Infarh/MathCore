@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -18,12 +19,14 @@ namespace System
         [NotNull]
         public static byte[] Compress([NotNull] this string str)
         {
-            using var input_stream = new MemoryStream(Encoding.UTF8.GetBytes(str));
-            using var output_stream = new MemoryStream();
-            using var g_zip_stream = new GZipStream(output_stream, CompressionMode.Compress);
-            input_stream.CopyTo(g_zip_stream);
+            using var output = new MemoryStream();
+            using (var compressor = new GZipStream(output, CompressionLevel.Optimal))
+            {
+                var bytes = Encoding.UTF8.GetBytes(str);
+                compressor.Write(bytes, 0, bytes.Length);
+            }
 
-            return output_stream.ToArray();
+            return output.ToArray();
         }
 
         /// <summary>Разархивировать последовательность байт в строку</summary>
