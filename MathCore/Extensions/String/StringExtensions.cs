@@ -3,6 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
@@ -29,6 +31,23 @@ namespace System
             return output.ToArray();
         }
 
+        /// <summary>Сжать строку в последовательность байт</summary>
+        /// <param name="str">Сжимаемая строка</param>
+        /// <param name="Cancel">Отмена операции</param>
+        /// <returns>Сжатая строка в виде последовательности байт</returns>
+        [NotNull]
+        public static async Task<byte[]> CompressAsync([NotNull] this string str, CancellationToken Cancel = default)
+        {
+            using var output = new MemoryStream();
+            using (var compressor = new GZipStream(output, CompressionLevel.Optimal))
+            {
+                var bytes = Encoding.UTF8.GetBytes(str);
+                await compressor.WriteAsync(bytes, 0, bytes.Length, Cancel).ConfigureAwait(false);
+            }
+
+            return output.ToArray();
+        }
+
         /// <summary>Разархивировать последовательность байт в строку</summary>
         /// <param name="bytes">Сжатая последовательность бай, содержащая строку</param>
         /// <returns>Распакованная последовательность байт в строковом представлении</returns>
@@ -39,6 +58,21 @@ namespace System
             using var output_stream = new MemoryStream();
             using var g_zip_stream = new GZipStream(input_stream, CompressionMode.Decompress);
             g_zip_stream.CopyTo(output_stream);
+
+            return Encoding.UTF8.GetString(output_stream.ToArray());
+        }
+
+        /// <summary>Разархивировать последовательность байт в строку</summary>
+        /// <param name="bytes">Сжатая последовательность бай, содержащая строку</param>
+        /// <param name="Cancel">Отмена операции</param>
+        /// <returns>Распакованная последовательность байт в строковом представлении</returns>
+        [ItemNotNull]
+        public static async Task<string> DecompressAsStringAsync([NotNull] this byte[] bytes, CancellationToken Cancel = default)
+        {
+            using var input_stream = new MemoryStream(bytes);
+            using var output_stream = new MemoryStream();
+            using var g_zip_stream = new GZipStream(input_stream, CompressionMode.Decompress);
+            await g_zip_stream.CopyToAsync(output_stream, 102400, Cancel).ConfigureAwait(false);
 
             return Encoding.UTF8.GetString(output_stream.ToArray());
         }
@@ -61,13 +95,13 @@ namespace System
         {
             if(string.IsNullOrEmpty(Str)) yield break;
             var len = Str.Length;
-            var PatternLen = EndPattern.Length;
+            var pattern_len = EndPattern.Length;
             var pos = 0;
             do
             {
                 var index = Str.IndexOf(EndPattern, StringComparison.Ordinal);
-                yield return Str.Substring(pos, index - pos + PatternLen);
-                pos = index + PatternLen + 1;
+                yield return Str.Substring(pos, index - pos + pattern_len);
+                pos = index + pattern_len + 1;
             } while(pos < len);
         }
 
@@ -84,21 +118,21 @@ namespace System
         [CanBeNull]
         public static string GetBracketText([NotNull] this string Str, ref int Offset, [NotNull] string Open = "(", string Close = ")")
         {
-            var Start = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
-            if(Start == -1) return null;
-            var Stop = Str.IndexOf(Close, Start + 1, StringComparison.Ordinal);
-            if(Stop == -1) throw new FormatException();
-            var start = Start;
+            var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
+            if(start_index == -1) return null;
+            var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
+            if(stop_index == -1) throw new FormatException();
+            var start = start_index;
             do
             {
                 start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
-                if(start != -1 && start < Stop)
-                    Stop = Str.IndexOf(Close, Stop + 1, StringComparison.Ordinal);
-            } while(start != -1 && start < Stop);
-            if(Stop == -1 || Stop < Start) throw new FormatException();
-            Offset = Stop + Close.Length;
-            Start += Open.Length;
-            return Str.Substring(Start, Stop - Start);
+                if(start != -1 && start < stop_index)
+                    stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
+            } while(start != -1 && start < stop_index);
+            if(stop_index == -1 || stop_index < start_index) throw new FormatException();
+            Offset = stop_index + Close.Length;
+            start_index += Open.Length;
+            return Str.Substring(start_index, stop_index - start_index);
         }
 
         [CanBeNull]
@@ -112,27 +146,27 @@ namespace System
             [CanBeNull] out string TextAfter)
         {
             TextAfter = null;
-            var Start = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
-            if(Start == -1)
+            var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
+            if(start_index == -1)
             {
                 TextBefore = Str.Substring(Offset, Str.Length - Offset);
                 return null;
             }
-            var Stop = Str.IndexOf(Close, Start + 1, StringComparison.Ordinal);
-            if(Stop == -1) throw new FormatException();
-            var start = Start;
+            var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
+            if(stop_index == -1) throw new FormatException();
+            var start = start_index;
             do
             {
                 start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
-                if(start != -1 && start < Stop)
-                    Stop = Str.IndexOf(Close, Stop + 1, StringComparison.Ordinal);
-            } while(start != -1 && start < Stop);
-            if(Stop == -1 || Stop < Start) throw new FormatException();
-            TextBefore = Str.Substring(Offset, Start - Offset);
-            Offset = Stop + Close.Length;
+                if(start != -1 && start < stop_index)
+                    stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
+            } while(start != -1 && start < stop_index);
+            if(stop_index == -1 || stop_index < start_index) throw new FormatException();
+            TextBefore = Str.Substring(Offset, start_index - Offset);
+            Offset = stop_index + Close.Length;
             TextAfter = Str.Length - Offset > 0 ? Str.Substring(Offset, Str.Length - Offset) : string.Empty;
-            Start += Open.Length;
-            return Str.Substring(Start, Stop - Start);
+            start_index += Open.Length;
+            return Str.Substring(start_index, stop_index - start_index);
         }
 
         /// <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
