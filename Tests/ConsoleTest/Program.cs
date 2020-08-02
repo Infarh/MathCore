@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using Microsoft.Data.Analysis;
 
 namespace ConsoleTest
@@ -8,6 +7,9 @@ namespace ConsoleTest
     {
         private static void Main()
         {
+            var str = "Hello World 123 123 123 123 123 123 123 123 123 !!!";
+            var compressed = str.Compress();
+            var str2 = compressed.DecompressAsString();
 
             //                        3222 2222 2222 1111 1111 1             
             //                        1098 7654 3210 9876 5432 1098 7654 3210

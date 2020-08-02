@@ -1,42 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MathCore.Annotations;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.CSV
 {
-    public abstract class CSVTests
+    [TestClass]
+    public class CSVTests : CSVTestsBase
     {
-        protected static readonly string[] Headers = {"Id", "Name", "SurName", "Birthday", "Rating", "GroupId"};
-        protected const string LineDelimiter = "------------------------------------------";
-        protected const char ValuesSeparator = ';';
-        private const int __DataRowsCount = 10000;
-
-        public class Student
+        [TestMethod]
+        public void QuotesValuesTest()
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string SurName { get; set; }
-            public DateTime Birthday { get; set; }
-            public double Rating { get; set; }
-            public int GroupId { get; set; }
-        }
+            var data_str = @"X,Y,Z
+x1,y1,""z3,14""
+x2,""y2"",""z3,14""";
 
-        [NotNull]
-        protected static IEnumerable<Student> GetStudents(Random rnd = null)
-        {
-            var now = DateTime.Now;
-            rnd ??= new Random((int)now.Ticks);
-            return Enumerable.Range(1, __DataRowsCount)
-               .Select(i => new Student
-               {
-                   Id = i,
-                   Name = $"Name-{i}",
-                   SurName = $"SurName-{i}",
-                   Birthday = now.Subtract(TimeSpan.FromDays(365 * 10 * i / __DataRowsCount + 16)),
-                   Rating = rnd.NextDouble() * 100,
-                   GroupId = rnd.Next(1, 21),
-               });
         }
     }
 }
