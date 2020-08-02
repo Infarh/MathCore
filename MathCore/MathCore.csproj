@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8</LangVersion>
-    <UserSecretsId>0f1402e9-55a2-4d81-917d-eb378c2987f9</UserSecretsId>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
+
   <PropertyGroup>
-    <Version>0.0.21</Version>
+    <Version>0.0.27</Version>
     <PackageReleaseNotes>
-      Добавлен метод-расширение для IEnumerable, позволяющий отбрасывать повторения по задаваемому критерию 
-      и добавлен объект, позволяющий создать ссылочное представление элементов массива
+      Ошибки, рефакторинг
     </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>

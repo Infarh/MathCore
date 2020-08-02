@@ -76,5 +76,17 @@ namespace System.Linq.Expressions
         [NotNull]
         public static Expression<Func<TSource, bool>> IsNotNull<TSource, TKey>(
             [NotNull] this Expression<Func<TSource, TKey>> expression) => expression.Compose(key => key != null);
+
+        [NotNull]
+        public static Expression<TResultDelegate> Substitute<TDelegate, TResultDelegate, TParameter, TParameterResult>(
+            [NotNull] this Expression<TDelegate> Source,
+            string Parameter,
+            [NotNull] Expression<Func<TParameter, TParameterResult>> Converter)
+        {
+            var inpine_parameter = Source.Parameters.First(p => p.Name == Parameter);
+            return Expression.Lambda<TResultDelegate>(
+                Source.Body.Replace(inpine_parameter, Converter.Body),
+                Source.Parameters.Replace(inpine_parameter, Converter.Parameters.Single()));
+        }
     }
 }

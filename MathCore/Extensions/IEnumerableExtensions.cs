@@ -1934,5 +1934,46 @@ namespace System.Linq
             if (first_taken)
                 yield return last;
         }
+
+        /// <summary>Разбить перечисление на страницы</summary>
+        /// <typeparam name="T">Тип элемента перечисления</typeparam>
+        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
+        /// <returns>Перечисление страниц</returns>
+        [NotNull] public static IEnumerable<IEnumerable<T>> WithPages<T>([NotNull] this IEnumerable<T> items, int PageItemsCount) =>
+            items.AsBlockEnumerable(PageItemsCount);
+
+        /// <summary>Получить элементы перечисления для заданной страницы</summary>
+        /// <typeparam name="T">Тип элемента перечисления</typeparam>
+        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="PageNumber">Номер требуемой страницы</param>
+        /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
+        /// <returns>ПЕречисление элементов из указанной страницы</returns>
+        [NotNull] public static IEnumerable<T> Page<T>([NotNull] this IEnumerable<T> items, int PageNumber, int PageItemsCount) =>
+            items.Skip(PageItemsCount * PageNumber).Take(PageItemsCount);
+
+        /// <summary>Заменить указанный элемент в перечислении</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="items">Исходное перечисление</param>
+        /// <param name="ItemToReplase">Элемент, Который требуется заменить</param>
+        /// <param name="NewItem">Новый элемент</param>
+        /// <returns>Модифицированная последовательность</returns>
+        public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, T ItemToReplase, T NewItem)
+        {
+            foreach (var item in items)
+                yield return Equals(ItemToReplase, item) ? NewItem : item;
+        }
+
+        /// <summary>Заменить указанный элемент в перечислении</summary>
+        /// <typeparam name="T">Тип элементов перечисления</typeparam>
+        /// <param name="items">Исходное перечисление</param>
+        /// <param name="Selector">Метод оценки необходимости выполнить замену</param>
+        /// <param name="NewItem">Новый элемент</param>
+        /// <returns>Модифицированная последовательность</returns>
+        public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, Func<T, bool> Selector, T NewItem)
+        {
+            foreach (var item in items)
+                yield return Selector(item) ? NewItem : item;
+        }
     }
 }

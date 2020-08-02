@@ -35,7 +35,7 @@ namespace System
         /// <param name="str">Сжимаемая строка</param>
         /// <param name="Cancel">Отмена операции</param>
         /// <returns>Сжатая строка в виде последовательности байт</returns>
-        [NotNull]
+        [ItemNotNull]
         public static async Task<byte[]> CompressAsync([NotNull] this string str, CancellationToken Cancel = default)
         {
             using var output = new MemoryStream();
