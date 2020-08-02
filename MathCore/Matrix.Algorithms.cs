@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
@@ -288,7 +290,7 @@ namespace MathCore
             public static double[,] Create(int N, int M, Func<int, int, double> Creator)
             {
                 var result = new double[N, M];
-                for(var n = 0; n < N; n++)
+                for (var n = 0; n < N; n++)
                     for (var m = 0; m < M; m++)
                         result[n, m] = Creator(n, m);
                 return result;
@@ -343,6 +345,20 @@ namespace MathCore
 
                 N = matrix.GetLength(0);
                 M = matrix.GetLength(1);
+            }
+
+            /// <summary>Определение размера квадратной матрицы</summary>
+            /// <param name="matrix">Квадратная матрица, размер которой надо определить</param>
+            /// <returns>Возвращает число строк матрицы</returns>
+            /// <exception cref="ArgumentNullException">Если передана пустая ссылка на массив</exception>
+            /// <exception cref="InvalidOperationException">Если матрица не является квадратной</exception>
+            public static int GetSquareLength([NotNull] double[,] matrix)
+            {
+                if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+                var n = matrix.GetLength(0);
+                var m = matrix.GetLength(1);
+                if (m != n) throw new InvalidOperationException($"Матрица [{n}x{m}] не является квадратной");
+                return n;
             }
 
             /// <summary>Получить число строк массива матрицы</summary>
@@ -2827,6 +2843,67 @@ namespace MathCore
                         }
 
                     return result;
+                }
+
+                private static void ExecuteAXAt([NotNull] double[,] A, [NotNull] double[,] X, [NotNull] double[,] Y, int N, int M)
+                {
+                    for (var n = 0; n < N; n++)
+                        for (var m = 0; m < N; m++)
+                        {
+                            Y[n, m] = 0;
+                            for (var i = 0; i < M; i++)
+                            {
+                                var s = 0d;
+                                for (var j = 0; j < M; j++)
+                                {
+                                    var x = X[i, j];
+                                    var a = A[m, j];
+                                    s += x * a;
+                                }
+
+                                Y[n, m] += s * A[n, i];
+                            }
+                        }
+                }
+
+                /// <summary>Оператор вида Y = A * X * A^T</summary>
+                public static void AXAt([NotNull] double[,] A, [NotNull] double[,] X, [NotNull] double[,] Y)
+                {
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (X is null) throw new ArgumentNullException(nameof(X));
+                    if (Y is null) throw new ArgumentNullException(nameof(Y));
+
+                    var rows_x = GetSquareLength(X);
+                    var rows_y = GetSquareLength(Y);
+
+                    GetLength(A, out var N, out var M);
+
+                    if (M != X.GetLength(0)) throw new ArgumentException("Число столбцов матриц не совпадает", nameof(X));
+                    if (M != rows_x) throw new ArgumentException("Число столбцов матриц не совпадает", nameof(X));
+                    if (N != rows_y) throw new ArgumentException("Размерность матрицы результата не равна числу строк матрицы A", nameof(Y));
+
+                    ExecuteAXAt(A, X, Y, N, M);
+                }
+
+                /// <summary>Оператор вида Y = A * X * A^T</summary>
+                [NotNull]
+                public static double[,] AXAt([NotNull] double[,] A, [NotNull] double[,] X)
+                {
+                    if (A is null) throw new ArgumentNullException(nameof(A));
+                    if (X is null) throw new ArgumentNullException(nameof(X));
+
+                    var rows_x = GetSquareLength(X);
+
+                    GetLength(A, out var N, out var M);
+
+                    if (M != X.GetLength(0)) throw new ArgumentException("Число столбцов матриц не совпадает", nameof(X));
+                    if (M != rows_x) throw new ArgumentException("Число столбцов матриц не совпадает", nameof(X));
+
+                    var Y = new double[N, N];
+
+                    ExecuteAXAt(A, X, Y, N, M);
+
+                    return Y;
                 }
             }
         }

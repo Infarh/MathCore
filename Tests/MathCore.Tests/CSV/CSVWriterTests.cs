@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MathCore.Tests.CSV
 {
     [TestClass]
-    public class CSVWriterTests : CSVTests
+    public class CsvWriterTests : CSVTestsBase
     {
         [TestMethod]
         public void WriteTest()

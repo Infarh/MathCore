@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using MathCore.Annotations;
@@ -50,7 +51,7 @@ namespace MathCore.Tests
         #region DebugPrint
 
         [CanBeNull]
-        public static string ToArrayFormat(double[,] array, [NotNull] string format = "g") =>
+        public static string ToArrayFormat(double[,] array, [MathCore.Annotations.NotNull] string format = "g") =>
             array.ToStringFormatView(format, ", ")
                 ?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => $"\t\t\t\t{{ {s} }}")
@@ -105,7 +106,7 @@ namespace MathCore.Tests
         //    return matrix;
         //}
 
-        [DebuggerStepThrough, NotNull]
+        [DebuggerStepThrough, MathCore.Annotations.NotNull]
         private static double[,] GetUnitaryArrayMatrix(int n) => Matrix.Array.GetUnitaryArrayMatrix(n);
 
         /* ------------------------------------------------------------------------------------------ */
@@ -2958,6 +2959,42 @@ namespace MathCore.Tests
             Assert.AreEqual(x.GetLength(0), b.GetLength(0));
             Assert.AreEqual(x.GetLength(0), b.GetLength(1));
             CollectionAssert.AreEqual(new double[0, 0], b);
+        }
+
+        [TestMethod, SuppressMessage("ReSharper", "InconsistentNaming")]
+        public void AXAt_Test()
+        {
+            double[,] A =
+            {
+                { 1, 2, 3 },
+                { 3, 2, 1 },
+            };
+
+            double[,] X =
+            {
+                { 3, 2, 1 },
+                { 4, 5, 6 },
+                { 9, 8, 7 },
+            };
+
+            double[,] expected_Y0 =
+            {
+                { 212, 220 },
+                { 140, 148 }
+            };
+
+            var At = Matrix.Array.Transpose(A);
+
+            var actual_Y = Matrix.Array.Operator.AXAt(A, X);
+            var expected_Y = Matrix.Array.Operator.Multiply(A, Matrix.Array.Operator.Multiply(X, At));
+
+            Assert.That.Value(actual_Y)
+               .Where(y => y.GetLength(0)).CheckEquals(expected_Y.GetLength(0))
+               .Where(y => y.GetLength(1)).CheckEquals(expected_Y.GetLength(1));
+
+            CollectionAssert.That.Collection(actual_Y)
+               .IsEqualTo(expected_Y)
+               .IsEqualTo(expected_Y0);
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using MathCore.Annotations;
+using MathCore.Trees;
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -10,7 +12,18 @@ namespace System.IO
 {
     /// <summary>Класс методов-расширений для объектов класса System.IO.DirectoryInfo</summary>
     public static class DirectoryInfoExtensions
-    {  
+    {
+        /// <summary>Представить директорию в виде узла дерева</summary>
+        /// <param name="dir">Преобразуемая директория</param>
+        /// <returns>Узел дерева каталогов</returns>
+        [NotNull] public static TreeNode<DirectoryInfo> AsTreeNode([NotNull] this DirectoryInfo dir) => dir.AsTreeNode(d => d.EnumerateDirectories(), d => d.Parent);
+
+        /// <summary>Представить директорию в виде узла дерева</summary>
+        /// <param name="dir">Преобразуемая директория</param>
+        /// <param name="OnError">Метод обработки ошибок доступа</param>
+        /// <returns>Узел дерева каталогов</returns>
+        [NotNull] public static TreeNode<DirectoryInfo> AsTreeNode([NotNull] this DirectoryInfo dir, [CanBeNull] Action<DirectoryInfo, Exception> OnError) => dir.AsTreeNode(d => d.Try(v => v.EnumerateDirectories(), OnError), d => d.Parent);
+
         [NotNull]
         public static Process ShowInFileExplorer([NotNull] this FileSystemInfo dir) => Process.Start("explorer", $"/select,\"{dir.FullName}\"") ?? throw new InvalidOperationException();
 
