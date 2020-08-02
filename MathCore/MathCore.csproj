@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.26</Version>
+    <Version>0.0.27</Version>
     <PackageReleaseNotes>
-      Добавлены алгоритмы обхода дерева и добавлена проекция Меркатора в класс GPS
+      Ошибки, рефакторинг
     </PackageReleaseNotes>
   </PropertyGroup>
 
