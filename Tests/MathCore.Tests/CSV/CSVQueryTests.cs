@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MathCore.Tests.CSV
 {
     [TestClass]
-    public class CSVQueryTests : CSVTests
+    public class CsvQueryTests : CSVTestsBase
     {
         private const string __DataFileName = "CSVQueryTests_Students.csv";
         private const int __BeforeLinesCount = 3;

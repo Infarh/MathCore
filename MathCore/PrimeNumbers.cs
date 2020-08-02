@@ -62,5 +62,124 @@ namespace MathCore
         //        //.Where(v => v != 0)
         //        .ToArray();
         //}
+
+        ///<remarks>
+        /// <code>
+        ///     long N = 100_000_000_000L;
+        ///     var wheel = new Wheel235(N);
+        ///     wheel.Save("./primes.dat");
+        ///
+        ///     ...
+        /// 
+        ///     var start = DateTime.UtcNow;
+        ///     var loaded = new Wheel235("./primes.dat");
+        ///     var end = DateTime.UtcNow;
+        ///     Console.WriteLine($"Database of prime numbers up to {loaded.Length:N0} loaded from file to memory  in {end - start}");
+        ///     var number = 98_000_000_093L;
+        ///     Console.WriteLine($"{number:N0} is {(loaded.IsPrime(number) ? "prime" : "not prime")}!");
+        /// </code>
+        /// </remarks>
+        [Copyright("Oleg T lightln2@HabarHabar:\"База данных простых чисел до ста миллиардов на коленке\"", url = "https://habr.com/ru/post/504598/")]
+        private class Wheel235
+        {
+            private class LongArray
+            {
+                private const long __MaxChunkLength = 2_000_000_000L;
+                private readonly byte[] _FirstBuffer;
+                private readonly byte[] _SecondBuffer;
+
+                public LongArray(long length)
+                {
+                    _FirstBuffer = new byte[Math.Min(__MaxChunkLength, length)];
+                    if (length > __MaxChunkLength) _SecondBuffer = new byte[length - __MaxChunkLength];
+                }
+
+                public LongArray(string FileName)
+                {
+                    using var file = System.IO.File.OpenRead(FileName);
+                    var length = file.Length;
+                    _FirstBuffer = new byte[Math.Min(__MaxChunkLength, length)];
+                    if (length > __MaxChunkLength) _SecondBuffer = new byte[length - __MaxChunkLength];
+                    file.Read(_FirstBuffer, 0, _FirstBuffer.Length);
+                    if (_SecondBuffer != null) file.Read(_SecondBuffer, 0, _SecondBuffer.Length);
+                }
+
+                public long Length => _FirstBuffer.LongLength + (_SecondBuffer?.LongLength ?? 0);
+
+                public byte this[long index]
+                {
+                    get => index < __MaxChunkLength ? _FirstBuffer[index] : _SecondBuffer[index - __MaxChunkLength];
+                    set
+                    {
+                        if (index < __MaxChunkLength) 
+                            _FirstBuffer[index] = value;
+                        else 
+                            _SecondBuffer[index - __MaxChunkLength] = value;
+                    }
+                }
+
+                public void Save(string FileName)
+                {
+                    using var file = System.IO.File.OpenWrite(FileName);
+                    file.Write(_FirstBuffer, 0, _FirstBuffer.Length);
+                    if (_SecondBuffer != null)
+                        file.Write(_SecondBuffer, 0, _SecondBuffer.Length);
+                }
+            }
+
+            private static readonly int[] __BitToIndex = { 1, 7, 11, 13, 17, 19, 23, 29 };
+
+            private static readonly int[] __IndexToBit = {
+                -1, 0,
+                -1, -1, -1, -1, -1, 1,
+                -1, -1, -1, 2,
+                -1, 3,
+                -1, -1, -1, 4,
+                -1, 5,
+                -1, -1, -1, 6,
+                -1, -1, -1, -1, -1, 7,
+            };
+
+            private readonly LongArray _Data;
+
+            public Wheel235(long length)
+            {
+                // ensure length divides by 30
+                length = (length + 29) / 30 * 30;
+                _Data = new LongArray(length / 30);
+                for (long i = 0; i < _Data.Length; i++) 
+                    _Data[i] = byte.MaxValue;
+
+                for (long i = 7; i * i < Length; i++)
+                {
+                    if (!IsPrime(i)) continue;
+                    for (var d = i * i; d < Length; d += i) 
+                        ClearPrime(d);
+                }
+            }
+
+            public Wheel235(string file) => _Data = new LongArray(file);
+
+            public void Save(string file) => _Data.Save(file);
+
+            public long Length => _Data.Length * 30L;
+
+            public bool IsPrime(long n)
+            {
+                if (n >= Length) throw new ArgumentException("Number too big");
+                if (n <= 5) return n == 2 || n == 3 || n == 5;
+                var bit = __IndexToBit[n % 30];
+                return bit >= 0 && (_Data[n / 30] & (1 << bit)) != 0;
+            }
+
+            private void ClearPrime(long n)
+            {
+                var bit = __IndexToBit[n % 30];
+                if (bit < 0) 
+                    return;
+                _Data[n / 30] &= (byte)~(1 << bit);
+            }
+
+        }
     }
 }
