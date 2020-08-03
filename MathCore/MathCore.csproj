@@ -6,9 +6,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.27</Version>
+    <Version>0.0.29</Version>
     <PackageReleaseNotes>
-      Ошибки, рефакторинг
+      await Task.Yield().ConfigureAwait(false)
+      await Task.Yield().ConfigureAwait(Scheduler.Default)
     </PackageReleaseNotes>
   </PropertyGroup>
 

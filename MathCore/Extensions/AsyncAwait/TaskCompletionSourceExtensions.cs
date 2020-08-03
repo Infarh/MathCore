@@ -1,4 +1,4 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
 
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks
@@ -10,12 +10,12 @@ namespace System.Threading.Tasks
         /// <typeparam name="TResult">Specifies the type of the result.</typeparam>
         /// <param name="ResultSetter">The TaskCompletionSource.</param>
         /// <param name="task">The task whose completion results should be transferred.</param>
-        public static void SetFromTask<TResult>([NotNull] this TaskCompletionSource<TResult> ResultSetter, [NotNull] Task task)
+        public static void SetFromTask<TResult>(this TaskCompletionSource<TResult> ResultSetter, Task task)
         {
             switch (task.Status)
             {
-                case TaskStatus.RanToCompletion: ResultSetter.SetResult(task is Task<TResult> t ? t.Result : default); break;
-                case TaskStatus.Faulted: ResultSetter.SetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException()); break;
+                case TaskStatus.RanToCompletion: ResultSetter.SetResult((task is Task<TResult> t ? t.Result : default)!); break;
+                case TaskStatus.Faulted: ResultSetter.SetException(task.Exception!.InnerExceptions); break;
                 case TaskStatus.Canceled: ResultSetter.SetCanceled(); break;
                 default: throw new InvalidOperationException("The task was not completed.");
             }
@@ -25,18 +25,18 @@ namespace System.Threading.Tasks
         /// <typeparam name="TResult">Specifies the type of the result.</typeparam>
         /// <param name="ResultSetter">The TaskCompletionSource.</param>
         /// <param name="task">The task whose completion results should be transferred.</param>
-        public static void SetFromTask<TResult>([NotNull] this TaskCompletionSource<TResult> ResultSetter, [NotNull] Task<TResult> task) => SetFromTask(ResultSetter, (Task)task);
+        public static void SetFromTask<TResult>(this TaskCompletionSource<TResult> ResultSetter, Task<TResult> task) => SetFromTask(ResultSetter, (Task)task);
 
         /// <summary>Attempts to transfer the result of a Task to the TaskCompletionSource.</summary>
         /// <typeparam name="TResult">Specifies the type of the result.</typeparam>
         /// <param name="ResultSetter">The TaskCompletionSource.</param>
         /// <param name="task">The task whose completion results should be transferred.</param>
         /// <returns>Whether the transfer could be completed.</returns>
-        public static bool TrySetFromTask<TResult>([NotNull] this TaskCompletionSource<TResult> ResultSetter, [NotNull] Task task) =>
+        public static bool TrySetFromTask<TResult>(this TaskCompletionSource<TResult> ResultSetter, Task task) =>
             task.Status switch
             {
-                TaskStatus.RanToCompletion => ResultSetter.TrySetResult(task is Task<TResult> t ? t.Result : default),
-                TaskStatus.Faulted => ResultSetter.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException()),
+                TaskStatus.RanToCompletion => ResultSetter.TrySetResult((task is Task<TResult> t ? t.Result : default)!),
+                TaskStatus.Faulted => ResultSetter.TrySetException(task.Exception!.InnerExceptions),
                 TaskStatus.Canceled => ResultSetter.TrySetCanceled(),
                 _ => throw new InvalidOperationException("The task was not completed.")
             };
@@ -46,6 +46,6 @@ namespace System.Threading.Tasks
         /// <param name="ResultSetter">The TaskCompletionSource.</param>
         /// <param name="task">The task whose completion results should be transferred.</param>
         /// <returns>Whether the transfer could be completed.</returns>
-        public static bool TrySetFromTask<TResult>([NotNull] this TaskCompletionSource<TResult> ResultSetter, [NotNull, ItemCanBeNull] Task<TResult> task) => TrySetFromTask(ResultSetter, (Task)task);
+        public static bool TrySetFromTask<TResult>(this TaskCompletionSource<TResult> ResultSetter, Task<TResult> task) => TrySetFromTask(ResultSetter, (Task)task);
     }
 }
