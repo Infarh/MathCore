@@ -1,30 +1,32 @@
-﻿using System.Diagnostics;
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Diagnostics;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks
 {
+    // ReSharper disable once UnusedType.Global
     public static class ProcessExtensions
     {
-        //public static TaskAwaiter<int> GetAwaiter([NotNull] this Process process)
+        //public static TaskAwaiter<int> GetAwaiter(this Process process)
         //{
-        //    var tcs = new TaskCompletionSource<int>();
+        //    var result = new TaskCompletionSource<int>();
         //    process.EnableRaisingEvents = true;
-        //    process.Exited += (s, e) => tcs.TrySetResult(process.ExitCode);
+        //    process.Exited += (s, e) => result.TrySetResult(process.ExitCode);
         //    if(process.HasExited)
-        //        tcs.TrySetResult(process.ExitCode);
-        //    return tcs.Task.GetAwaiter();
+        //        result.TrySetResult(process.ExitCode);
+        //    return result.Task.GetAwaiter();
         //}
-        public static Task<int> WaitForExitAsync([NotNull] this Process process)
+
+        public static Task<int> WaitForExitAsync(this Process process)
         {
             if (process.HasExited) return Task.FromResult(process.ExitCode);
-            var tcs = new TaskCompletionSource<int>();
+            var result = new TaskCompletionSource<int>();
             process.EnableRaisingEvents = true;
-            process.Exited += (s, e) => tcs.TrySetResult(process.ExitCode);
+            process.Exited += (s, e) => result.TrySetResult(process.ExitCode);
             if (process.HasExited)
-                tcs.TrySetResult(process.ExitCode);
-            return tcs.Task;
+                result.TrySetResult(process.ExitCode);
+            return result.Task;
         }
     }
 }
