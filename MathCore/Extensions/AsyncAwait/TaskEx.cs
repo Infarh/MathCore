@@ -12,6 +12,15 @@ namespace System.Threading.Tasks
 {
     public static class TaskEx
     {
+        private static async Task<int> Test()
+        {
+            return await Task.Run(() => 42).ConfigureAwait(TaskScheduler.Current);
+        }
+
+        public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable(ContinuationScheduler, task);
+
+        public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable<T>(ContinuationScheduler, task);
+
         /// <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
         public static YieldAsyncAwaitable YieldAsync() => new YieldAsyncAwaitable();
 
@@ -29,7 +38,7 @@ namespace System.Threading.Tasks
 
         /// <summary>Переключиться в контекст планировщика потоков</summary>
         /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
-        public static TaskSchedulerAwaiter SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaiter(scheduler);
+        public static TaskSchedulerAwaitable.TaskSchedulerAwaiter SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaitable.TaskSchedulerAwaiter(scheduler);
 
         public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
         public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);

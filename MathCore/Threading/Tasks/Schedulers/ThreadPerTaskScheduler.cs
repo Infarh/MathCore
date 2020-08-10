@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,21 +8,30 @@ using System.Threading.Tasks;
 
 namespace MathCore.Threading.Tasks.Schedulers
 {
-    /// <summary>Provides a task scheduler that dedicates a thread per task.</summary>
+    /// <summary>Планировщик обеспечивает создание отдельного потока на каждую выполняемою задачу</summary>
     public class ThreadPerTaskScheduler : TaskScheduler
     {
-        /// <summary>Gets the tasks currently scheduled to this scheduler.</summary>
-        /// <remarks>This will always return an empty enumerable, as tasks are launched as soon as they're queued.</remarks>
+        private readonly Action<Thread>? _ThreadInitializer;
+
+        public ThreadPerTaskScheduler(Action<Thread>? ThreadInitializer = null) => _ThreadInitializer = ThreadInitializer;
+
+        /// <summary>Получить перечень запланированных задач в данном планировщике (всегда возвращает пустое перечисление)</summary>
+        /// <remarks>Данный планировщик не задерживает задачи, а исполняет их по мере поступления</remarks>
         protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
 
-        /// <summary>Starts a new thread to process the provided task.</summary>
-        /// <param name="task">The task to be executed.</param>
-        protected override void QueueTask(Task task) => new Thread(() => TryExecuteTask(task)) { IsBackground = true }.Start();
+        /// <summary>Запускает новый поток для выполнения задачи</summary>
+        protected override void QueueTask(Task task)
+        {
+            //var thread = new Thread(() => TryExecuteTask(task)) {IsBackground = true};
+            var thread = new Thread(p => ((ThreadPerTaskScheduler)p).TryExecuteTask(task)) { IsBackground = true };
+            _ThreadInitializer?.Invoke(thread);
+            thread.Start(this);
+        }
 
-        /// <summary>Runs the provided task on the current thread.</summary>
-        /// <param name="task">The task to be executed.</param>
-        /// <param name="TaskWasPreviouslyQueued">Ignored.</param>
-        /// <returns>Whether the task could be executed on the current thread.</returns>
+        /// <summary>Выполняет задачу в текущем потоке</summary>
+        /// <param name="task">Выполняемая задача</param>
+        /// <param name="TaskWasPreviouslyQueued">Параметр игнорируется</param>
+        /// <returns>Истина, если задача выполнена успешно</returns>
         protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) => TryExecuteTask(task);
     }
 }

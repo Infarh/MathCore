@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Threading;
 
 namespace MathCore.Threading.Tasks.Schedulers
@@ -8,12 +9,12 @@ namespace MathCore.Threading.Tasks.Schedulers
     internal class WorkStealingQueue<T> where T : class
     {
         private const int __InitialSize = 32;
-        private T[] _Array = new T[__InitialSize];
+        private T?[] _Array = new T[__InitialSize];
         private int _Mask = __InitialSize - 1;
         private volatile int _HeadIndex;
         private volatile int _TailIndex;
 
-        private readonly object _ForeignLock = new object();
+        private readonly object _SyncRoot = new object();
 
         internal void LocalPush(T obj)
         {
@@ -27,7 +28,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             }
             else
                 // We need to contend with foreign pops, so we lock.
-                lock (_ForeignLock)
+                lock (_SyncRoot)
                 {
                     var head = _HeadIndex;
                     var count = _TailIndex - _HeadIndex;
@@ -52,7 +53,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                 }
         }
 
-        internal bool LocalPop(ref T obj)
+        internal bool LocalPop(out T? obj)
         {
             while (true)
             {
@@ -82,7 +83,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                     return true;
                 }
 
-                lock (_ForeignLock)
+                lock (_SyncRoot)
                     if (_HeadIndex <= tail)
                     {
                         // Element still available. Take it.
@@ -105,7 +106,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             }
         }
 
-        internal bool TrySteal(ref T obj)
+        internal bool TrySteal(out T? obj)
         {
             obj = null;
 
@@ -114,7 +115,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                 if (_HeadIndex >= _TailIndex)
                     return false;
 
-                lock (_ForeignLock)
+                lock (_SyncRoot)
                 {
                     // Increment head, and ensure read of tail doesn't move before it (fence).
                     var head = _HeadIndex;
@@ -157,7 +158,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             for (var i = _TailIndex - 1; i >= _HeadIndex; i--)
                 if (_Array[i & _Mask] == obj)
                     // If we found the element, block out steals to avoid interference.
-                    lock (_ForeignLock)
+                    lock (_SyncRoot)
                     {
                         // If we lost the race, bail.
                         if (_Array[i & _Mask] == null) return false;

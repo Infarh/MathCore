@@ -2,27 +2,27 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Threading.Tasks.Schedulers
 {
-    /// <summary>Provides a work-stealing scheduler.</summary>
+    /// <summary>Планировщик с собственным пулом потоков</summary>
     public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
     {
+        [ThreadStatic] private static WorkStealingQueue<Task> __ThreadTaskQueue;
+
         private readonly int _ConcurrencyLevel;
         private readonly Queue<Task> _Queue = new Queue<Task>();
-        private WorkStealingQueue<Task>[] _WsQueues = new WorkStealingQueue<Task>[Environment.ProcessorCount];
+        private WorkStealingQueue<Task>[] _TaskQueues = new WorkStealingQueue<Task>[Environment.ProcessorCount];
         private readonly Lazy<Thread[]> _Threads;
         private int _ThreadsWaiting;
         private bool _Shutdown;
-        [ThreadStatic]
-        private static WorkStealingQueue<Task> __Wsq;
 
-        /// <summary>Initializes a new instance of the WorkStealingTaskScheduler class.</summary>
-        /// <remarks>This constructors defaults to using twice as many threads as there are processors.</remarks>
+        /// <summary>Инициализация нового планировщика с числом потоков, равным удвоенному числу процессоров в системе</summary>
         public WorkStealingTaskScheduler() : this(Environment.ProcessorCount * 2) { }
 
-        /// <summary>Initializes a new instance of the WorkStealingTaskScheduler class.</summary>
-        /// <param name="ConcurrencyLevel">The number of threads to use in the scheduler.</param>
+        /// <summary>Инициализация нового планировщика с указанным числом потоков</summary>
+        /// <param name="ConcurrencyLevel">Число потоков, доступных планировщику</param>
         public WorkStealingTaskScheduler(int ConcurrencyLevel)
         {
             // Store the concurrency level
@@ -42,8 +42,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             });
         }
 
-        /// <summary>Queues a task to the scheduler.</summary>
-        /// <param name="task">The task to be scheduled.</param>
+        /// <summary>Добавление задачи в очередь к планировщику</summary>
         protected override void QueueTask(Task task)
         {
             // Make sure the pool is started, e.g. that all threads have been created.
@@ -58,7 +57,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                 // Otherwise, insert the work item into a queue, possibly waking a thread.
                 // If there's a local queue and the task does not prefer to be in the global queue,
                 // add it to the local queue.
-                var wsq = __Wsq;
+                var wsq = __ThreadTaskQueue;
                 if (wsq != null && ((task.CreationOptions & TaskCreationOptions.PreferFairness) == 0))
                 {
                     // Add to the local queue and notify any waiting threads that work is available.
@@ -91,8 +90,8 @@ namespace MathCore.Threading.Tasks.Schedulers
         // // benignly leave a task in the queue that's already been executed), we
         // // can search the current work-stealing queue and remove the task,
         // // executing it inline only if it's found.
-        // WorkStealingQueue<Task> wsq = _wsq;
-        // return wsq != null && wsq.TryFindAndPop(task) && TryExecuteTask(task);
+        // WorkStealingQueue<Task> queue = __ThreadTaskQueue;
+        // return queue != null && queue.TryFindAndPop(task) && TryExecuteTask(task);
         /// <summary>Gets the maximum concurrency level supported by this scheduler.</summary>
         public override int MaximumConcurrencyLevel => _ConcurrencyLevel;
 
@@ -118,7 +117,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             }
 
             // Now get all of the tasks from the work-stealing queues
-            var queues = _WsQueues;
+            var queues = _TaskQueues;
             for (var i = 0; i < queues.Length; i++)
             {
                 var wsq = queues[i];
@@ -130,18 +129,18 @@ namespace MathCore.Threading.Tasks.Schedulers
         }
 
         /// <summary>Adds a work-stealing queue to the set of queues.</summary>
-        /// <param name="wsq">The queue to be added.</param>
-        private void AddWsq(WorkStealingQueue<Task> wsq)
+        /// <param name="queue">The queue to be added.</param>
+        private void AddQueue(WorkStealingQueue<Task> queue)
         {
-            lock (_WsQueues)
+            lock (_TaskQueues)
             {
                 // Find the next open slot in the array. If we find one,
                 // store the queue and we're done.
                 int i;
-                for (i = 0; i < _WsQueues.Length; i++)
-                    if (_WsQueues[i] is null)
+                for (i = 0; i < _TaskQueues.Length; i++)
+                    if (_TaskQueues[i] is null)
                     {
-                        _WsQueues[i] = wsq;
+                        _TaskQueues[i] = queue;
                         return;
                     }
 
@@ -149,9 +148,9 @@ namespace MathCore.Threading.Tasks.Schedulers
                 // of the array by creating a new one, copying over,
                 // and storing the new one. Here, i == _wsQueues.Length.
                 var queues = new WorkStealingQueue<Task>[i * 2];
-                Array.Copy(_WsQueues, queues, i);
-                queues[i] = wsq;
-                _WsQueues = queues;
+                Array.Copy(_TaskQueues, queues, i);
+                queues[i] = queue;
+                _TaskQueues = queues;
             }
         }
 
@@ -159,11 +158,11 @@ namespace MathCore.Threading.Tasks.Schedulers
         /// <param name="wsq">The work-stealing queue to remove.</param>
         private void RemoveWsq(WorkStealingQueue<Task> wsq)
         {
-            lock (_WsQueues)
+            lock (_TaskQueues)
                 // Find the queue, and if/when we find it, null out its array slot
-                for (var i = 0; i < _WsQueues.Length; i++)
-                    if (_WsQueues[i] == wsq)
-                        _WsQueues[i] = null;
+                for (var i = 0; i < _TaskQueues.Length; i++)
+                    if (_TaskQueues[i] == wsq)
+                        _TaskQueues[i] = null;
         }
 
         /// <summary>
@@ -173,19 +172,17 @@ namespace MathCore.Threading.Tasks.Schedulers
         {
             // Create a new queue for this thread, store it in TLS for later retrieval,
             // and add it to the set of queues for this scheduler.
-            var wsq = new WorkStealingQueue<Task>();
-            __Wsq = wsq;
-            AddWsq(wsq);
+            var queue = new WorkStealingQueue<Task>();
+            __ThreadTaskQueue = queue;
+            AddQueue(queue);
 
             try
             {
                 // Until there's no more work to do...
                 while (true)
                 {
-                    Task wi = null;
-
                     // Search order: (1) local WSQ, (2) global Q, (3) steals from other queues.
-                    if (!wsq.LocalPop(ref wi))
+                    if (!queue.LocalPop(out var task))
                     {
                         // We weren't able to get a task from the local WSQ
                         var searched_for_steals = false;
@@ -201,7 +198,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                                 if (_Queue.Count != 0)
                                 {
                                     // We found a work item! Grab it ...
-                                    wi = _Queue.Dequeue();
+                                    task = _Queue.Dequeue();
                                     break;
                                 }
 
@@ -221,12 +218,12 @@ namespace MathCore.Threading.Tasks.Schedulers
                             }
 
                             // (3) try to steal.
-                            var ws_queues = _WsQueues;
+                            var ws_queues = _TaskQueues;
                             int i;
                             for (i = 0; i < ws_queues.Length; i++)
                             {
                                 var q = ws_queues[i];
-                                if (q != null && q != wsq && q.TrySteal(ref wi)) break;
+                                if (q != null && q != queue && q.TrySteal(out task)) break;
                             }
 
                             if (i != ws_queues.Length) break;
@@ -236,12 +233,12 @@ namespace MathCore.Threading.Tasks.Schedulers
                     }
 
                     // ...and Invoke it.
-                    TryExecuteTask(wi);
+                    TryExecuteTask(task!);
                 }
             }
             finally
             {
-                RemoveWsq(wsq);
+                RemoveWsq(queue);
             }
         }
 

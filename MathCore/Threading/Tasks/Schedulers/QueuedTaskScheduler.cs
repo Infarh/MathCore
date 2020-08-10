@@ -12,9 +12,7 @@ using System.Threading.Tasks;
 
 namespace MathCore.Threading.Tasks.Schedulers
 {
-    /// <summary>
-    /// Provides a TaskScheduler that provides control over priorities, fairness, and the underlying threads utilized.
-    /// </summary>
+    /// <summary>Планировщик обеспечивает постановку задач в очередь с приоритетами</summary>
     [DebuggerTypeProxy(typeof(QueuedTaskSchedulerDebugView))]
     [DebuggerDisplay("Id={Id}, Queues={DebugQueueCount}, ScheduledTasks = {DebugTaskCount}")]
     public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
@@ -34,8 +32,8 @@ namespace MathCore.Threading.Tasks.Schedulers
             {
                 get
                 {
-                    var tasks = _Scheduler._TargetScheduler is null 
-                        ? (IEnumerable<Task>)_Scheduler._BlockingTaskQueue : 
+                    var tasks = _Scheduler._TargetScheduler is null
+                        ? (IEnumerable<Task>)_Scheduler._BlockingTaskQueue :
                         _Scheduler._NonthreadsafeTaskQueue;
                     return tasks.Where(t => t != null).ToArray();
                 }
@@ -154,7 +152,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             }
 
             // Start all of the threads
-            foreach (var thread in _Threads) 
+            foreach (var thread in _Threads)
                 thread.Start();
         }
 
@@ -189,7 +187,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                                     FindNextTask_NeedsLock(out target_task!, out queue_for_target_task!);
 
                                 // ... and if we found one, run it
-                                if (target_task != null) 
+                                if (target_task != null)
                                     queue_for_target_task!.ExecuteTask(target_task);
                             }
                     }
@@ -198,7 +196,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                         // If we received a thread abort, and that thread abort was due to shutting down
                         // or unloading, let it pass through.  Otherwise, reset the abort so we can
                         // continue processing work items.
-                        if (!Environment.HasShutdownStarted && !AppDomain.CurrentDomain.IsFinalizingForUnload()) 
+                        if (!Environment.HasShutdownStarted && !AppDomain.CurrentDomain.IsFinalizingForUnload())
                             Thread.ResetAbort();
                     }
             }
@@ -241,7 +239,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                     var items = QueueForTargetTask.WorkItems;
                     if (items.Count == 0) continue;
                     TargetTask = items.Dequeue();
-                    if (QueueForTargetTask.Disposed && items.Count == 0) 
+                    if (QueueForTargetTask.Disposed && items.Count == 0)
                         RemoveQueue_NeedsLock(QueueForTargetTask);
                     queues.NextQueueIndex = (queues.NextQueueIndex + 1) % queues.Count;
                     return;
@@ -254,7 +252,7 @@ namespace MathCore.Threading.Tasks.Schedulers
         protected override void QueueTask(Task task)
         {
             // If we've been disposed, no one should be queueing
-            if (_DisposeCancellation.IsCancellationRequested) 
+            if (_DisposeCancellation.IsCancellationRequested)
                 throw new ObjectDisposedException(GetType().Name);
 
             // If the target scheduler is null (meaning we're using our own threads),
@@ -281,7 +279,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                 }
 
                 // If necessary, start processing asynchronously
-                if (launch_task) 
+                if (launch_task)
                     Task.Factory.StartNew(ProcessPrioritizedAndBatchedTasks, CancellationToken.None, TaskCreationOptions.None, _TargetScheduler);
             }
         }
@@ -315,7 +313,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                         // Find the next one that should be processed.
                         QueuedTaskSchedulerQueue? queue_for_target_task = null;
                         if (target_task is null)
-                            lock (_QueueGroups) 
+                            lock (_QueueGroups)
                                 FindNextTask_NeedsLock(out target_task, out queue_for_target_task);
 
                         // Now if we finally have a task, run it.  If the task
@@ -361,8 +359,8 @@ namespace MathCore.Threading.Tasks.Schedulers
         {
             // If we're running on our own threads, get the tasks from the blocking queue...
             if (_TargetScheduler is null)
-            // Get all of the tasks, filtering out nulls, which are just placeholders
-            // for tasks in other sub-schedulers
+                // Get all of the tasks, filtering out nulls, which are just placeholders
+                // for tasks in other sub-schedulers
                 return _BlockingTaskQueue.Where(t => t != null).ToList();
             // otherwise get them from the non-blocking queue...
 
@@ -520,10 +518,10 @@ namespace MathCore.Threading.Tasks.Schedulers
             {
                 if (Disposed) return;
                 lock (_Pool._QueueGroups)
-                // We only remove the queue if it's empty.  If it's not empty,
-                // we still mark it as disposed, and the associated QueuedTaskScheduler
-                // will remove the queue when its count hits 0 and its _disposed is true.
-                    if (WorkItems.Count == 0) 
+                    // We only remove the queue if it's empty.  If it's not empty,
+                    // we still mark it as disposed, and the associated QueuedTaskScheduler
+                    // will remove the queue when its count hits 0 and its _disposed is true.
+                    if (WorkItems.Count == 0)
                         _Pool.RemoveQueue_NeedsLock(this);
                 Disposed = true;
             }

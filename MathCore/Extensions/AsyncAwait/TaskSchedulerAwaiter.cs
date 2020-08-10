@@ -5,20 +5,67 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks
 {
-#pragma warning disable CA1822 // Mark members as static
-    public class TaskSchedulerAwaiter : INotifyCompletion
+    public readonly ref struct TaskSchedulerAwaitable
     {
         private readonly TaskScheduler _Scheduler;
+        private readonly Task _Task;
 
-        public bool IsCompleted => false;
+        public TaskSchedulerAwaitable(TaskScheduler Scheduler, Task Task = null)
+        {
+            _Scheduler = Scheduler;
+            _Task = Task;
+        }
 
-        public TaskSchedulerAwaiter(TaskScheduler Scheduler) => _Scheduler = Scheduler;
+        public TaskSchedulerAwaiter GetAwaiter() => new TaskSchedulerAwaiter(_Scheduler, _Task);
 
-        public void OnCompleted([NotNull] Action continuation) => Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
+        public readonly struct TaskSchedulerAwaiter : INotifyCompletion
+        {
+            private readonly Task _Task;
+            private readonly TaskScheduler _Scheduler;
 
-        public void GetResult() { }
+            public bool IsCompleted => _Task?.IsCompleted ?? false;
 
-        [NotNull] public TaskSchedulerAwaiter GetAwaiter() => this;
+            public TaskSchedulerAwaiter(TaskScheduler Scheduler, Task Task = null)
+            {
+                _Task = Task;
+                _Scheduler = Scheduler;
+            }
+
+            public void OnCompleted([NotNull] Action continuation) => Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
+
+            public void GetResult() => _Task?.Wait();
+        }
     }
-#pragma warning restore CA1822 // Mark members as static
+
+    public readonly ref struct TaskSchedulerAwaitable<T>
+    {
+        private readonly Task<T> _Task;
+        private readonly TaskScheduler _Scheduler;
+
+        public TaskSchedulerAwaitable(TaskScheduler Scheduler, Task<T> Task)
+        {
+            _Task = Task;
+            _Scheduler = Scheduler;
+        }
+
+        public TaskSchedulerAwaiter<T> GetAwaiter() => new TaskSchedulerAwaiter<T>(_Scheduler, _Task);
+
+        public readonly struct TaskSchedulerAwaiter<TResult> : INotifyCompletion
+        {
+            private readonly TaskScheduler _Scheduler;
+            private readonly Task<TResult> _Task;
+
+            public bool IsCompleted => _Task.IsCompleted;
+
+            public TaskSchedulerAwaiter(TaskScheduler Scheduler, Task<TResult> Task)
+            {
+                _Scheduler = Scheduler;
+                _Task = Task;
+            }
+
+            public void OnCompleted([NotNull] Action continuation) => Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
+
+            public TResult GetResult() => _Task.Result;
+        }
+    }
 }
