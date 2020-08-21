@@ -164,6 +164,10 @@ namespace MathCore.Extensions.Expressions
             return (lEx)visitor.Visit(Lambda(MainEx.Body, pars));
         }
 
+        public static NewExpression NewExpression(this ConstructorInfo constructor) => New(constructor);
+
+        public static NewExpression NewExpression(this ConstructorInfo constructor, IEnumerable<Expression> arguments) => New(constructor, arguments);
+
         [NotNull] public static mEx GetProperty(this Ex obj, [NotNull] PropertyInfo Info) => Property(obj, Info);
 
         [NotNull] public static mEx GetProperty([NotNull] this Ex obj, [NotNull] string PropertyName) => Property(obj, PropertyName);
