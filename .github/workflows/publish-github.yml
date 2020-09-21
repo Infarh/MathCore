@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.402
+          source-url: https://nuget.pkg.github.com/<organization>/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
         
       - name: Building
         run: |
@@ -31,9 +34,6 @@ jobs:
         
       - name: Packing
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
-       
-      - name: Add source
-        run: dotnet nuget add source https://nuget.pkg.github.com/Infarh/index.json -n github -u Infarh -p ${{ secrets.GITHUB_TOKEN }}
-      
+            
       - name: Push package
-        run: dotnet nuget push .\**\*.nupkg --source "github" --skip-duplicate
+        run: dotnet nuget push .\**\*.nupkg --skip-duplicate
