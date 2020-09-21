@@ -15,25 +15,29 @@ jobs:
       
       - name: Checkout repository
         uses: actions/checkout@v1
+        with:
+          submodules: true
         
       - name: Use .NET 3.1.402
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.402
-          source-url: https://nuget.pkg.github.com/Infarh/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
+  
+      - uses: warrenbuckley/Setup-Nuget@v1  
         
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj --nologo
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+          dotnet build MathCore/MathCore.csproj -с Release
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj -с Release
         
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj -с Release
         
       - name: Packing
-        run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
-            
+        run: dotnet pack MathCore/MathCore.csproj -c Release -v m       
+       
+      - name: Add source
+        run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/Infarh/index.json" -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Push package
-        run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{secrets.GITHUB_TOKEN}}
+        run: nuget push **/*.nupkg -Source "GitHub" -SkipDuplicate
