@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 
 using MathCore.Annotations;
+using MathCore.Extensions.AsyncAwait;
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -12,6 +14,13 @@ namespace System.Threading.Tasks
 {
     public static class TaskEx
     {
+        public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable(BeforeAction, task, LockContext);
+        public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable<T>(BeforeAction, task, LockContext);
+
+        public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable(ContinuationScheduler, task);
+
+        public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable<T>(ContinuationScheduler, task);
+
         /// <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
         public static YieldAsyncAwaitable YieldAsync() => new YieldAsyncAwaitable();
 
@@ -29,7 +38,7 @@ namespace System.Threading.Tasks
 
         /// <summary>Переключиться в контекст планировщика потоков</summary>
         /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
-        public static TaskSchedulerAwaiter SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaiter(scheduler);
+        public static TaskSchedulerAwaitable.TaskSchedulerAwaiter SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaitable.TaskSchedulerAwaiter(scheduler);
 
         public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
         public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
@@ -257,8 +266,8 @@ namespace System.Threading.Tasks
         /// <typeparam name="TElement">The type of the element.</typeparam>
         private class OneElementGrouping<TKey, TElement> : IGrouping<TKey, TElement>
         {
-            public TKey Key { get; internal set; }
-            internal TElement Element { get; set; }
+            public TKey Key { get; internal set; } = default!;
+            internal TElement Element { get; set; } = default!;
             public IEnumerator<TElement> GetEnumerator() { yield return Element; }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }

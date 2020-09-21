@@ -7,25 +7,25 @@ using MathCore.Annotations;
 
 namespace MathCore.Threading.Tasks.Schedulers
 {
-    /// <summary>Provides a task scheduler that runs tasks on the current thread.</summary>
+    /// <summary>Планировщик выполняет задачи синхронно в текущем потоке</summary>
     public sealed class CurrentThreadTaskScheduler : TaskScheduler
     {
-        /// <summary>Runs the provided Task synchronously on the current thread.</summary>
-        /// <param name="task">The task to be executed.</param>
+        /// <summary>Максимальное число параллельно выполняемых задач в данном планировщике всегда равно 1</summary>
+        public override int MaximumConcurrencyLevel => 1;
+
+        /// <summary>Планирует выполнение задачи в текущем потоке</summary>
+        /// <param name="task">Задача, которую необходимо выполнить</param>
         protected override void QueueTask(Task task) => TryExecuteTask(task);
 
-        /// <summary>Runs the provided Task synchronously on the current thread.</summary>
-        /// <param name="task">The task to be executed.</param>
-        /// <param name="TaskWasPreviouslyQueued">Whether the Task was previously queued to the scheduler.</param>
-        /// <returns>True if the Task was successfully executed; otherwise, false.</returns>
+        /// <summary>Выполняет задачу синхронно в текущем потоке</summary>
+        /// <param name="task">Задача, которую необходимо выполнить</param>
+        /// <param name="TaskWasPreviouslyQueued">Задача была изначально в очереди данного планировщике</param>
+        /// <returns>Задача была успешно выполнена</returns>
         protected override bool TryExecuteTaskInline(Task task, bool TaskWasPreviouslyQueued) => TryExecuteTask(task);
 
-        /// <summary>Gets the Tasks currently scheduled to this scheduler.</summary>
-        /// <returns>An empty enumerable, as Tasks are never queued, only executed.</returns>
+        /// <summary>Перечень задач, которые должны запланированы на выполнение в текущем планировщике</summary>
+        /// <returns>Всегда возвращает пустое перечисление - задачи выполняются немедленно без планирования</returns>
         [NotNull]
         protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
-
-        /// <summary>Gets the maximum degree of parallelism for this scheduler.</summary>
-        public override int MaximumConcurrencyLevel => 1;
     }
 }

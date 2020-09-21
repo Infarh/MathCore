@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MathCore.Threading.Tasks.Schedulers
 {
-    /// <summary>Планировщик, обеспечивающий выполнение задач в ограниченном по числу потоков пуле</summary>
+    /// <summary>Планировщик, способный выполнять не более указанного числа задач параллельно</summary>
     public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     {
         /// <summary>Флаг, определяющий что текущий поток осуществляет выполнение задачи</summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 
 namespace MathCore.Text
@@ -16,7 +17,7 @@ namespace MathCore.Text
         /// <param name="PrefixLength">Размер префикса</param>
         /// <param name="CharComparer">Объект сравнения символов строки</param>
         /// <returns>Расстояние между в пространстве строк (0 - строки совпадают, 1 - строки не совпадают)</returns>
-        public static double Distance(string Str1, string Str2, double WeightThreshold = 0.7, int PrefixLength = 4, IEqualityComparer<char> CharComparer = null) =>
+        public static double Distance(string Str1, string Str2, double WeightThreshold = 0.7, int PrefixLength = 4, IEqualityComparer<char>? CharComparer = null) =>
             1.0 - Proximity(Str1, Str2, WeightThreshold, PrefixLength, CharComparer);
 
         /// <summary>Вычисление сходства двух строк на основе метрики Джаро — Винклера</summary>
@@ -26,7 +27,7 @@ namespace MathCore.Text
         /// <param name="PrefixLength">Размер префикса</param>
         /// <param name="CharComparer">Объект сравнения символов строки</param>
         /// <returns>Значение от 0 до 1: 0 - строки не совпадают, 1 - строки совпадают</returns>
-        public static double Proximity(string Str1, string Str2, double WeightThreshold = 0.7, int PrefixLength = 4, IEqualityComparer<char> CharComparer = null)
+        public static double Proximity(string Str1, string Str2, double WeightThreshold = 0.7, int PrefixLength = 4, IEqualityComparer<char>? CharComparer = null)
         {
             CharComparer ??= EqualityComparer<char>.Default;
 
