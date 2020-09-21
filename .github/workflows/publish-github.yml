@@ -40,4 +40,4 @@ jobs:
         run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/Infarh/index.json" -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
       
       - name: Push package
-        run: uget push **/*.nupkg -Source "GitHub" -SkipDuplicate
+        run: nuget push **/*.nupkg -Source "GitHub" -SkipDuplicate
