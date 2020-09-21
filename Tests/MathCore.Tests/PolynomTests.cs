@@ -77,7 +77,7 @@ namespace MathCore.Tests
             }
 
             foreach (var x in X)
-                Assert.That.Value(p.Value(x)).IsEqual(P(x), 2.0e-15);
+                Assert.That.Value(p.Value(x)).IsEqual(P(x), 3.56e-015);
         }
 
         /// <summary>Тест клонирования</summary>
