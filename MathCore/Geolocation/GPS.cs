@@ -377,8 +377,14 @@ namespace MathCore.Geolocation
             public static (double X, double Y) ToXY(double Longitude, double Latitude) => (Longitude, LatitudeToY(Latitude));
             public static (double X, double Y) ToXY((double Longitude, double Latitude) Point) => (Point.Longitude, LatitudeToY(Point.Latitude));
 
+            public static (double X, double Y) ToXYInMeters(double Longitude, double Latitude) => (Longitude * Consts.MetersPerDegree, LatitudeToY(Latitude) * Consts.MetersPerDegree);
+            public static (double X, double Y) ToXYInMeters((double Longitude, double Latitude) Point) => (Point.Longitude * Consts.MetersPerDegree, LatitudeToY(Point.Latitude) * Consts.MetersPerDegree);
+
             public static (double Longitude, double Latitude) FromXY(double X, double Y) => (X, YToLatitude(Y));
             public static (double Longitude, double Latitude) FromXY((double X, double Y) Point) => (Point.X, YToLatitude(Point.Y));
+
+            public static (double Longitude, double Latitude) FromXYInMeters(double X, double Y) => (X / Consts.MetersPerDegree, YToLatitude(Y) / Consts.MetersPerDegree);
+            public static (double Longitude, double Latitude) FromXYInMeters((double X, double Y) Point) => (Point.X / Consts.MetersPerDegree, YToLatitude(Point.Y) / Consts.MetersPerDegree);
         }
     }
 }
