@@ -36,4 +36,4 @@ jobs:
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
             
       - name: Push package
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate -k ${{secrets.GITHUB_TOKEN}}
+        run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{secrets.GITHUB_TOKEN}}
