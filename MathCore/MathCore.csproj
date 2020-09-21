@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.31</Version>
+    <Version>0.0.32</Version>
     <PackageReleaseNotes>
-      Убран неупрвляемый код, добавлено преобразование GPS-координат в декартову систему в метрах 
+      Расстояние Левенштейна
+      Преобразование GPS-координат в декартову систему
     </PackageReleaseNotes>
   </PropertyGroup>
 
