@@ -13,7 +13,6 @@ namespace System.Threading.Tasks
 
         public Awaiter GetAwaiter() => new Awaiter(_LockContext);
 
-        [Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Вложенные типы не должны быть видимыми")]
         public readonly struct Awaiter : ICriticalNotifyCompletion, IEquatable<Awaiter>
         {
             private readonly bool _LockContext;
@@ -22,10 +21,8 @@ namespace System.Threading.Tasks
 
             public Awaiter(in bool LockContext) => _LockContext = LockContext;
 
-            [Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Пометьте члены как статические")]
             public bool IsCompleted => false;
 
-            [Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Пометьте члены как статические")]
             public void GetResult() { }
 
             private static void RunAction(object? State) => ((Action)State!).Invoke();

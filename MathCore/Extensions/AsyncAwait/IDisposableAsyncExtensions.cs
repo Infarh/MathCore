@@ -10,7 +10,7 @@ namespace System.Threading.Tasks
         public static async Task DisposeAfterAsync<T>(this T obj, [NN] Action<T> action, CancellationToken Cancel = default)
             where T : IDisposable
         {
-            if(action is null) throw new ArgumentNullException(nameof(action));
+            if (action is null) throw new ArgumentNullException(nameof(action));
 
             using (obj) await obj.Async(action, Cancel).ConfigureAwait(false);
         } 

@@ -28,11 +28,7 @@ namespace System.IO
             });
 
         [NotNull]
-        public static FileInfo ThrowIfNotFound([NotNull] this FileInfo file, [CanBeNull] string Message = null)
-        {
-            if (!file.Exists) throw new FileNotFoundException(Message ?? $"Файл {file} не найден");
-            return file;
-        }
+        public static FileInfo ThrowIfNotFound([NotNull] this FileInfo file, [CanBeNull] string Message = null) => file.Exists ? file : throw new FileNotFoundException(Message ?? $"Файл {file} не найден");
 
         [NotNull]
         public static byte[] ComputeSHA256([NotNull] this FileInfo file)

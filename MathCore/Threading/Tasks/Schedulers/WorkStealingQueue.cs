@@ -37,7 +37,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                     if (count >= _Mask)
                     {
                         // We're full; expand the queue by doubling its size.
-                        var new_array = new T[_Array.Length << 1];
+                        var new_array = new T?[_Array.Length << 1];
                         for (var i = 0; i < _Array.Length; i++)
                             new_array[i] = _Array[(i + head) & _Mask];
 

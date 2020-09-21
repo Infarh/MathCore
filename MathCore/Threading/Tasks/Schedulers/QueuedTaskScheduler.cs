@@ -17,44 +17,48 @@ namespace MathCore.Threading.Tasks.Schedulers
     [DebuggerDisplay("Id={Id}, Queues={DebugQueueCount}, ScheduledTasks = {DebugTaskCount}")]
     public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     {
-        /// <summary>Debug view for the QueuedTaskScheduler.</summary>
+        /// <summary>Отладочное представление</summary>
         private class QueuedTaskSchedulerDebugView
         {
             /// <summary>The scheduler.</summary>
             private readonly QueuedTaskScheduler _Scheduler;
 
-            /// <summary>Initializes the debug view.</summary>
-            /// <param name="scheduler">The scheduler.</param>
+            /// <summary>Инициализация отладочного представления для планировщика</summary>
+            /// <param name="scheduler">Рассматриваемый планировщик</param>
             public QueuedTaskSchedulerDebugView(QueuedTaskScheduler scheduler) => _Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
 
-            /// <summary>Gets all of the Tasks queued to the scheduler directly.</summary>
+            /// <summary>Извлечение всех задач, запланированных непосредственно в планировщике</summary>
             public IEnumerable<Task> ScheduledTasks
             {
                 get
                 {
                     var tasks = _Scheduler._TargetScheduler is null
-                        ? (IEnumerable<Task>)_Scheduler._BlockingTaskQueue :
-                        _Scheduler._NonthreadsafeTaskQueue;
+                        ? (IEnumerable<Task>)_Scheduler._BlockingTaskQueue! 
+                        : _Scheduler._NonThreadSafeTaskQueue!;
                     return tasks.Where(t => t != null).ToArray();
                 }
             }
 
-            /// <summary>Gets the prioritized and fair queues.</summary>
-            public IEnumerable<TaskScheduler> Queues => _Scheduler._QueueGroups.SelectMany(group => group.Value).ToArray();
+            /// <summary>Все очереди задач</summary>
+            public IEnumerable<TaskScheduler> Queues => _Scheduler._QueueGroups.SelectMany(group => group.Value);
         }
 
         /// <summary>
-        /// A sorted list of round-robin queue lists.  Tasks with the smallest priority value
-        /// are preferred.  Priority groups are round-robin'd through in order of priority.
+        /// Отсортированный список циклических списков.
+        /// Задачи с малыми приоритетами являются предпочтительными.
+        /// Группы приоритетов являются циклическими в пределах одного уровня приоритета.
         /// </summary>
         private readonly SortedList<int, QueueGroup> _QueueGroups = new SortedList<int, QueueGroup>();
-        /// <summary>Cancellation token used for disposal.</summary>
+
+        /// <summary>Система отмены задач в случае вызова метода <see cref="Dispose"/></summary>
         private readonly CancellationTokenSource _DisposeCancellation = new CancellationTokenSource();
+
         /// <summary>
-        /// The maximum allowed concurrency level of this scheduler.  If custom threads are
-        /// used, this represents the number of created threads.
+        /// Максимально допустимый уровень конкурентности для текущего планировщика.
+        /// Если используются вручную создаваемые потоки, то данное поле отображает число создаваемых потоков.
         /// </summary>
         private readonly int _ConcurrencyLevel;
+
         /// <summary>Whether we're processing tasks on the current thread.</summary>
         private static readonly ThreadLocal<bool> __TaskProcessingThread = new ThreadLocal<bool>();
 
@@ -63,9 +67,11 @@ namespace MathCore.Threading.Tasks.Schedulers
         // ***
 
         /// <summary>The scheduler onto which actual work is scheduled.</summary>
-        private readonly TaskScheduler _TargetScheduler;
+        private readonly TaskScheduler? _TargetScheduler;
+
         /// <summary>The queue of tasks to process when using an underlying target scheduler.</summary>
-        private readonly Queue<Task> _NonthreadsafeTaskQueue;
+        private readonly Queue<Task?>? _NonThreadSafeTaskQueue;
+
         /// <summary>The number of Tasks that have been queued or that are running whiel using an underlying scheduler.</summary>
         private int _DelegatesQueuedOrRunning;
 
@@ -73,24 +79,18 @@ namespace MathCore.Threading.Tasks.Schedulers
         // *** For when using our own threads
         // ***
 
-        /// <summary>The threads used by the scheduler to process work.</summary>
-        private readonly Thread[] _Threads;
         /// <summary>The collection of tasks to be executed on our custom threads.</summary>
-        private readonly BlockingCollection<Task> _BlockingTaskQueue;
+        private readonly BlockingCollection<Task?>? _BlockingTaskQueue;
 
         // ***
 
         /// <summary>Initializes the scheduler.</summary>
-        public QueuedTaskScheduler() : this(Default, 0) { }
-
-        /// <summary>Initializes the scheduler.</summary>
-        /// <param name="TargetScheduler">The target underlying scheduler onto which this sceduler's work is queued.</param>
-        public QueuedTaskScheduler(TaskScheduler TargetScheduler) : this(TargetScheduler, 0) { }
+        public QueuedTaskScheduler() : this(Default) { }
 
         /// <summary>Initializes the scheduler.</summary>
         /// <param name="TargetScheduler">The target underlying scheduler onto which this sceduler's work is queued.</param>
         /// <param name="MaxConcurrencyLevel">The maximum degree of concurrency allowed for this scheduler's work.</param>
-        public QueuedTaskScheduler(TaskScheduler TargetScheduler, int MaxConcurrencyLevel)
+        public QueuedTaskScheduler(TaskScheduler TargetScheduler, int MaxConcurrencyLevel = 0)
         {
             // Validate arguments
             if (MaxConcurrencyLevel < 0) throw new ArgumentOutOfRangeException(nameof(MaxConcurrencyLevel));
@@ -98,7 +98,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             // Initialize only those fields relevant to use an underlying scheduler.  We don't
             // initialize the fields relevant to using our own custom threads.
             _TargetScheduler = TargetScheduler ?? throw new ArgumentNullException(nameof(TargetScheduler));
-            _NonthreadsafeTaskQueue = new Queue<Task>();
+            _NonThreadSafeTaskQueue = new Queue<Task?>();
 
             // If 0, use the number of logical processors.  But make sure whatever value we pick
             // is not greater than the degree of parallelism allowed by the underlying scheduler.
@@ -130,29 +130,39 @@ namespace MathCore.Threading.Tasks.Schedulers
             Action? ThreadInit = null,
             Action? ThreadFinally = null)
         {
-            // Validates arguments (some validation is left up to the Thread type itself).
-            // If the thread count is 0, default to the number of logical processors.
-            if (ThreadCount < 0) throw new ArgumentOutOfRangeException(nameof(ThreadCount));
-            _ConcurrencyLevel = ThreadCount == 0 ? Environment.ProcessorCount : ThreadCount;
+            _ConcurrencyLevel = ThreadCount switch
+            {
+                > 0 => ThreadCount,
+                0 => Environment.ProcessorCount,
+                _ => throw new ArgumentOutOfRangeException(nameof(ThreadCount))
+            };
+
+            //// Validates arguments (some validation is left up to the Thread type itself).
+            //// If the thread count is 0, default to the number of logical processors.
+            //if (ThreadCount < 0) throw new ArgumentOutOfRangeException(nameof(ThreadCount));
+
+            //_ConcurrencyLevel = ThreadCount == 0 
+            //    ? Environment.ProcessorCount 
+            //    : ThreadCount;
 
             // Initialize the queue used for storing tasks
-            _BlockingTaskQueue = new BlockingCollection<Task>();
+            _BlockingTaskQueue = new BlockingCollection<Task?>();
 
             // Create all of the threads
-            _Threads = new Thread[ThreadCount];
+            var threads = new Thread[ThreadCount];
             for (var i = 0; i < ThreadCount; i++)
             {
-                _Threads[i] = new Thread(() => ThreadBasedDispatchLoop(ThreadInit, ThreadFinally), ThreadMaxStackSize)
+                threads[i] = new Thread(() => ThreadBasedDispatchLoop(ThreadInit, ThreadFinally), ThreadMaxStackSize)
                 {
                     Priority = ThreadPriority,
                     IsBackground = !UseForegroundThreads,
                 };
-                if (ThreadName != null) _Threads[i].Name = $"{ThreadName} ({i})";
-                _Threads[i].SetApartmentState(ThreadApartmentState);
+                if (ThreadName != null) threads[i].Name = $"{ThreadName} ({i})";
+                threads[i].SetApartmentState(ThreadApartmentState);
             }
 
             // Start all of the threads
-            foreach (var thread in _Threads)
+            foreach (var thread in threads)
                 thread.Start();
         }
 
@@ -170,7 +180,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                     try
                     {
                         // For each task queued to the scheduler, try to execute it.
-                        foreach (var task in _BlockingTaskQueue.GetConsumingEnumerable(_DisposeCancellation.Token))
+                        foreach (var task in _BlockingTaskQueue!.GetConsumingEnumerable(_DisposeCancellation.Token))
                             // If the task is not null, that means it was queued to this scheduler directly.
                             // Run it.
                             if (task != null)
@@ -193,6 +203,7 @@ namespace MathCore.Threading.Tasks.Schedulers
                     }
                     catch (ThreadAbortException)
                     {
+                        // Если вызвана отмена работы потока в ходе завершения работы системы, или выгрузки домена
                         // If we received a thread abort, and that thread abort was due to shutting down
                         // or unloading, let it pass through.  Otherwise, reset the abort so we can
                         // continue processing work items.
@@ -213,7 +224,7 @@ namespace MathCore.Threading.Tasks.Schedulers
         private int DebugQueueCount => _QueueGroups.Sum(group => group.Value.Count);
 
         /// <summary>Gets the number of tasks currently scheduled.</summary>
-        private int DebugTaskCount => (_TargetScheduler is null ? (IEnumerable<Task>)_BlockingTaskQueue : _NonthreadsafeTaskQueue).Count(t => t != null);
+        private int DebugTaskCount => ((_TargetScheduler is null ? (IEnumerable<Task>)_BlockingTaskQueue! : _NonThreadSafeTaskQueue!)!).Count(t => t != null);
 
         /// <summary>Find the next task that should be executed, based on priorities and fairness and the like.</summary>
         /// <param name="TargetTask">The found task, or null if none was found.</param>
@@ -249,7 +260,7 @@ namespace MathCore.Threading.Tasks.Schedulers
 
         /// <summary>Queues a task to the scheduler.</summary>
         /// <param name="task">The task to be queued.</param>
-        protected override void QueueTask(Task task)
+        protected override void QueueTask(Task? task)
         {
             // If we've been disposed, no one should be queueing
             if (_DisposeCancellation.IsCancellationRequested)
@@ -258,7 +269,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             // If the target scheduler is null (meaning we're using our own threads),
             // add the task to the blocking queue
             if (_TargetScheduler == null)
-                _BlockingTaskQueue.Add(task);
+                _BlockingTaskQueue!.Add(task);
             // Otherwise, add the task to the non-blocking queue,
             // and if there isn't already an executing processing task,
             // start one up
@@ -268,9 +279,9 @@ namespace MathCore.Threading.Tasks.Schedulers
                 // task (noting it if we do, so that other threads don't result
                 // in queueing up too many).
                 var launch_task = false;
-                lock (_NonthreadsafeTaskQueue)
+                lock (_NonThreadSafeTaskQueue!)
                 {
-                    _NonthreadsafeTaskQueue.Enqueue(task);
+                    _NonThreadSafeTaskQueue.Enqueue(task);
                     if (_DelegatesQueuedOrRunning < _ConcurrencyLevel)
                     {
                         _DelegatesQueuedOrRunning++;
@@ -303,10 +314,10 @@ namespace MathCore.Threading.Tasks.Schedulers
                     {
                         // Try to get the next task.  If there aren't any more, we're done.
                         Task? target_task;
-                        lock (_NonthreadsafeTaskQueue)
+                        lock (_NonThreadSafeTaskQueue!)
                         {
-                            if (_NonthreadsafeTaskQueue.Count == 0) break;
-                            target_task = _NonthreadsafeTaskQueue.Dequeue();
+                            if (_NonThreadSafeTaskQueue.Count == 0) break;
+                            target_task = _NonThreadSafeTaskQueue.Dequeue();
                         }
 
                         // If the task is null, it's a placeholder for a task in the round-robin queues.
@@ -331,8 +342,8 @@ namespace MathCore.Threading.Tasks.Schedulers
                     // Now that we think we're done, verify that there really is
                     // no more work to do.  If there's not, highlight
                     // that we're now less parallel than we were a moment ago.
-                    lock (_NonthreadsafeTaskQueue)
-                        if (_NonthreadsafeTaskQueue.Count == 0)
+                    lock (_NonThreadSafeTaskQueue!)
+                        if (_NonThreadSafeTaskQueue.Count == 0)
                         {
                             _DelegatesQueuedOrRunning--;
                             continue_processing = false;
@@ -361,10 +372,10 @@ namespace MathCore.Threading.Tasks.Schedulers
             if (_TargetScheduler is null)
                 // Get all of the tasks, filtering out nulls, which are just placeholders
                 // for tasks in other sub-schedulers
-                return _BlockingTaskQueue.Where(t => t != null).ToList();
+                return _BlockingTaskQueue!.Where(t => t != null).ToArray()!;
             // otherwise get them from the non-blocking queue...
 
-            return _NonthreadsafeTaskQueue.Where(t => t != null).ToList();
+            return _NonThreadSafeTaskQueue!.Where(t => t != null).ToArray()!;
         }
 
         /// <summary>Gets the maximum concurrency level to use when processing tasks.</summary>

@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 
 using MathCore.Annotations;
+using MathCore.Extensions.AsyncAwait;
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -12,10 +14,8 @@ namespace System.Threading.Tasks
 {
     public static class TaskEx
     {
-        private static async Task<int> Test()
-        {
-            return await Task.Run(() => 42).ConfigureAwait(TaskScheduler.Current);
-        }
+        public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable(BeforeAction, task, LockContext);
+        public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable<T>(BeforeAction, task, LockContext);
 
         public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable(ContinuationScheduler, task);
 
@@ -266,8 +266,8 @@ namespace System.Threading.Tasks
         /// <typeparam name="TElement">The type of the element.</typeparam>
         private class OneElementGrouping<TKey, TElement> : IGrouping<TKey, TElement>
         {
-            public TKey Key { get; internal set; }
-            internal TElement Element { get; set; }
+            public TKey Key { get; internal set; } = default!;
+            internal TElement Element { get; set; } = default!;
             public IEnumerator<TElement> GetEnumerator() { yield return Element; }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
