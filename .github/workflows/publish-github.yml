@@ -27,11 +27,11 @@ jobs:
         
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj -с Release
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj -с Release
+          dotnet build MathCore/MathCore.csproj --nologo
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
         
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj -с Release
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
         
       - name: Packing
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m       
