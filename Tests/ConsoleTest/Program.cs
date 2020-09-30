@@ -15,6 +15,11 @@ namespace ConsoleTest
     {
         private static void Main()
         {
+            //SchedulersTests.Start();
+
+            //Console.ReadLine();
+            //return;
+
             var str = "Hello World 123 123 123 123 123 123 123 123 123 !!!";
             var compressed = str.Compress();
             var str2 = compressed.DecompressAsString();
