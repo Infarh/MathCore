@@ -15,30 +15,29 @@ jobs:
       
       - name: Checkout repository
         uses: actions/checkout@v1
+        with:
+          submodules: true
         
       - name: Use .NET 3.1.402
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.402
+  
+      - uses: warrenbuckley/Setup-Nuget@v1  
         
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj --nologo
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+          dotnet build MathCore/MathCore.csproj -с Release
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj -с Release
         
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj -с Release
         
       - name: Packing
-        run: dotnet pack MathCore/MathCore.csproj -c Release -v m
-          
-      - name: Install NuGet
-        uses: NuGet/setup-nuget@v1.0.1
-        
-      - name: Add rigistry
-        run: |
-            nuget setapikey ${{ secrets.GITHUB_TOKEN }} -source https://nuget.pkg.github.com/Infarh
-            nuget sources add -name "MathCore" -Source https://nuget.pkg.github.com/Infarh/index.json -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet pack MathCore/MathCore.csproj -c Release -v m       
+       
+      - name: Add source
+        run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/Infarh/index.json" -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
       
       - name: Push package
-        run: nuget push .\**\*.nupkg -Source "MathCore" -SkipDuplicate
+        run: nuget push **/*.nupkg -Source "GitHub" -SkipDuplicate
