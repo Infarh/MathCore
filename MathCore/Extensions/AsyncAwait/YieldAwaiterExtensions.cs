@@ -8,6 +8,6 @@ namespace System.Threading.Tasks
     {
         public static YieldAwaitableThreadPool ConfigureAwait(this YieldAwaitable _, bool LockContext) => new YieldAwaitableThreadPool(LockContext);
 
-        public static TaskSchedulerAwaitable.TaskSchedulerAwaiter ConfigureAwait(this YieldAwaitable _, TaskScheduler Scheduler) => new TaskSchedulerAwaitable.TaskSchedulerAwaiter(Scheduler);
+        public static TaskSchedulerAwaitable ConfigureAwait(this YieldAwaitable _, TaskScheduler Scheduler) => new TaskSchedulerAwaitable(Scheduler);
     }
 }

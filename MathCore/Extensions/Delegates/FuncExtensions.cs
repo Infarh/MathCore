@@ -375,7 +375,7 @@ namespace System
                     ? f.ArgumentShift(b)
                     : (b.Equals(0)
                         ? (Function)(x => f(k * x))
-                        : x => f(k * x + b)));
+                        : (double x) => f(k * x + b)));
 
         /// <summary>Деление функции на число g(x) = f(x) / a</summary>
         /// <param name="f">Делимая функция</param>
@@ -391,7 +391,7 @@ namespace System
                 ? f
                 : (a.Equals(0)
                     ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN))
-                    : x => f(x) / a);
+                    : (double x) => f(x) / a);
 
         /// <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
         /// <param name="f1">Функция - делимое</param>
@@ -1030,7 +1030,7 @@ namespace System
             a.Equals(1d)
                 ? f
                 : (a.Equals(0d)
-                    ? (x => 1)
+                    ? ((double x) => 1)
                     : (Function)(x => Math.Pow(f(x), a)));
 
         /// <summary>Получение отрицательной функции</summary>

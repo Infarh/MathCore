@@ -38,7 +38,7 @@ namespace System.Threading.Tasks
 
         /// <summary>Переключиться в контекст планировщика потоков</summary>
         /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
-        public static TaskSchedulerAwaitable.TaskSchedulerAwaiter SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaitable.TaskSchedulerAwaiter(scheduler);
+        public static TaskSchedulerAwaitable SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaitable(scheduler);
 
         public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
         public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
