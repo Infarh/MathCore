@@ -41,7 +41,7 @@ namespace System.Threading.Tasks
                 else
                 {
                     var scheduler = TaskScheduler.Current;
-                    if (scheduler == TaskScheduler.Default)
+                    if (!LockContext || scheduler == TaskScheduler.Default)
                     {
                         if (FlowContext)
                             ThreadPool.QueueUserWorkItem(__WaitCallbackRunAction, Continuation);

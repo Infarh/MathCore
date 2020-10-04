@@ -7,11 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.32.1</Version>
+    <Version>0.0.33</Version>
     <PackageReleaseNotes>
-      Расстояние Левенштейна
-      Преобразование GPS-координат в декартову систему
-      Исправлена ошибка с TaskScheduler.SwitchContext и c Task.Yield().ConfigureAwait(context)
+      Доработка методов переключения контекста для задач
     </PackageReleaseNotes>
   </PropertyGroup>
 
