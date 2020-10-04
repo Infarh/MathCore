@@ -28,25 +28,18 @@ namespace WPFTest
         {
             var scheduler = SynchronizationContextScheduler.CurrentContext;
 
-            var ui_thread_id = Thread.CurrentThread.ManagedThreadId;
-
             await Task.Yield().ConfigureAwait(false);
 
-            var thread_pool_id = Thread.CurrentThread.ManagedThreadId;
+            var thread_pool_thread_id = Thread.CurrentThread.ManagedThreadId;
 
-            await scheduler.SwitchContext();
+            var result = await Task.Run(async () =>
+                {
+                    await Task.Delay(10).ConfigureAwait(false);
+                    return 42;
+                })
+               .ConfigureAwait(scheduler);
 
-            var scheduler_thread_id = Thread.CurrentThread.ManagedThreadId;
-
-            await Task.Yield().ConfigureAwait(false);
-
-            var async_thread_id3 = Thread.CurrentThread.ManagedThreadId;
-
-            await Task.Yield().ConfigureAwait(scheduler);
-
-            var scheduler_thread_id2 = Thread.CurrentThread.ManagedThreadId;
-
-            await scheduler.SwitchContext();
+            var id = Thread.CurrentThread.ManagedThreadId;
 
             var host = Host;
             base.OnStartup(e);

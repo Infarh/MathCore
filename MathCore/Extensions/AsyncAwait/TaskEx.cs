@@ -15,11 +15,16 @@ namespace System.Threading.Tasks
     public static class TaskEx
     {
         public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable(BeforeAction, task, LockContext);
+
         public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable<T>(BeforeAction, task, LockContext);
 
         public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable(ContinuationScheduler, task);
 
+        public static SynchronizationContextAwaitable ConfigureAwait(this Task task, SynchronizationContext Context) => new SynchronizationContextAwaitable(Context, task);
+
         public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable<T>(ContinuationScheduler, task);
+
+        public static SynchronizationContextAwaitable<T> ConfigureAwait<T>(this Task<T> task, SynchronizationContext Context) => new SynchronizationContextAwaitable<T>(Context, task);
 
         /// <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
         public static YieldAsyncAwaitable YieldAsync() => new YieldAsyncAwaitable();
