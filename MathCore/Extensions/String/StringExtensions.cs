@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -243,5 +244,89 @@ namespace System
 
         [NotNull]
         public static string NotNull([CanBeNull] this string str, [CanBeNull] string Message = null) => str ?? throw new InvalidOperationException(Message ?? "Отсутствует ссылка на объект");
+
+        /// <summary>Зашифровать строку</summary>
+        /// <param name="str">Шифруемая строка</param>
+        /// <param name="password">Пароль шифрования</param>
+        /// <returns>Зашифрованная строка</returns>
+        public static string Ecrypt(this string str, string password) => str.Ecrypt(password, SALT);
+
+        /// <summary>Зашифровать строку</summary>
+        /// <param name="str">Шифруемая строка</param>
+        /// <param name="password">Пароль шифрования</param>
+        /// <returns>Зашифрованная строка</returns>
+        public static string Ecrypt(this string str, string password, byte[] Salt) => Convert.ToBase64String(str.Compress().Ecrypt(password, Salt));
+
+        /// <summary>Зашифровать массив байт</summary>
+        /// <param name="data">Шифруемая последовательность байт</param>
+        /// <param name="password">Ключ шифрования</param>
+        /// <returns>Зашифрованная последовательность байт</returns>
+        public static byte[] Ecrypt(this byte[] data, string password) => data.Ecrypt(password, SALT);
+
+    
+        public static byte[] Ecrypt(this byte[] data, string password, byte[] Salt)
+        {
+            var algorithm = GetAlgorithm(password, Salt);
+            using var stream = new MemoryStream();
+            using var crypto_stream = new CryptoStream(stream, algorithm, CryptoStreamMode.Write);
+            crypto_stream.Write(data, 0, data.Length);
+            crypto_stream.FlushFinalBlock();
+            return stream.ToArray();
+        }
+
+        /// <summary>Расшифровать последовательность байт</summary>
+        /// <param name="data">Расшифровываемая последовательность байт</param>
+        /// <param name="password">Пароль шифрования</param>
+        /// <returns>Расшифрованная последовательность байт</returns>
+        public static byte[] Decrypt(this byte[] data, string password)
+        {
+            var algorithm = GetInverseAlgorithm(password);
+            using var stream = new MemoryStream();
+            using var crypto_stream = new CryptoStream(stream, algorithm, CryptoStreamMode.Write);
+            crypto_stream.Write(data, 0, data.Length);
+            crypto_stream.FlushFinalBlock();
+            return stream.ToArray();
+        }
+
+        /// <summary>Расшифровать строку</summary>
+        /// <param name="str">Зашифрованная строка</param>
+        /// <param name="password">Пароль шифрования</param>
+        /// <returns>Расшифрованная строка</returns>
+        public static string Decrypt(this string str, string password) => Convert.FromBase64String(str).Decrypt(password).DecompressAsString();
+
+        /// <summary>
+        /// Массив байт - "соль" алгоритма шифрования Rfc2898
+        /// </summary>
+        private static readonly byte[] SALT =
+        {
+            0x26, 0xdc, 0xff, 0x00,
+            0xad, 0xed, 0x7a, 0xee,
+            0xc5, 0xfe, 0x07, 0xaf,
+            0x4d, 0x08, 0x22, 0x3c
+        };
+
+        /// <summary>Получить алгоритм шифрования с указанным паролем</summary>
+        /// <param name="password">Пароль шифрования</param>
+        /// <returns>Алгоритм шифрования</returns>
+        private static ICryptoTransform GetAlgorithm(string password, byte[] Salt)
+        {
+            var pdb = new Rfc2898DeriveBytes(password, Salt);
+            var algorithm = Rijndael.Create();
+            algorithm.Key = pdb.GetBytes(32);
+            algorithm.IV = pdb.GetBytes(16);
+            return algorithm.CreateEncryptor();
+        }
+
+        /// <summary>Получить алгоритм для расшифровки</summary>
+        /// <param name="password">Пароль</param>
+        /// <returns>Алгоритм расшифровки</returns>
+        private static ICryptoTransform GetInverseAlgorithm(string password)
+        {
+            var pdb = new Rfc2898DeriveBytes(password, Array.Empty<byte>());
+            var algorithm = Rijndael.Create();
+            algorithm.Key = pdb.GetBytes(32);
+            algorithm.IV = pdb.GetBytes(16);
+            return algorithm.CreateDecryptor();
+        }
     }
 }

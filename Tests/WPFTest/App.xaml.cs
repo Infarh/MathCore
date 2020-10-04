@@ -26,6 +26,28 @@ namespace WPFTest
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            var scheduler = SynchronizationContextScheduler.CurrentContext;
+
+            var ui_thread_id = Thread.CurrentThread.ManagedThreadId;
+
+            await Task.Yield().ConfigureAwait(false);
+
+            var thread_pool_id = Thread.CurrentThread.ManagedThreadId;
+
+            await scheduler.SwitchContext();
+
+            var scheduler_thread_id = Thread.CurrentThread.ManagedThreadId;
+
+            await Task.Yield().ConfigureAwait(false);
+
+            var async_thread_id3 = Thread.CurrentThread.ManagedThreadId;
+
+            await Task.Yield().ConfigureAwait(scheduler);
+
+            var scheduler_thread_id2 = Thread.CurrentThread.ManagedThreadId;
+
+            await scheduler.SwitchContext();
+
             var host = Host;
             base.OnStartup(e);
             await host.StartAsync();

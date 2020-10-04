@@ -22,7 +22,7 @@ namespace System.Threading.Tasks
 
             public bool IsCompleted => false;
 
-            private static void RunAction([NotNull] object state) => ((Action)state)();
+            private static void RunAction([NotNull] object action) => ((Action)action)();
 
             [SecurityCritical]
             private static void QueueContinuation([NotNull] Action continuation, bool FlowContext)

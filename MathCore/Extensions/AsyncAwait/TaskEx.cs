@@ -40,9 +40,10 @@ namespace System.Threading.Tasks
         /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
         public static TaskSchedulerAwaitable SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaitable(scheduler);
 
+        public static SynchronizationContextAwaitable SwitchContext(this SynchronizationContext context) => new SynchronizationContextAwaitable(context);
+
         public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
         public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
-
 
         public static Task WhenAll(this IEnumerable<Task> tasks) => Task.WhenAll(tasks);
         public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAll(tasks);
