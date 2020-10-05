@@ -6,6 +6,7 @@ namespace WPFTest.ViewModels
     {
         public static IServiceCollection AddViews(this IServiceCollection Services) => Services
            .AddSingleton<MainWindowViewModel>()
+           .AddSingleton<SecondViewModel>()
         ;
     }
 }

@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.33</Version>
+    <Version>0.0.34</Version>
     <PackageReleaseNotes>
-      Доработка методов переключения контекста для задач
+      Реализация шаблона Посредник - MathCore.Mediator.Messenger : MathCore.Mediator.IMessenger
     </PackageReleaseNotes>
   </PropertyGroup>
 
