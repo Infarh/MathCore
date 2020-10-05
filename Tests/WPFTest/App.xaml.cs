@@ -5,6 +5,7 @@ using System.Windows;
 using MathCore.Threading.Tasks.Schedulers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using WPFTest.Services;
 using WPFTest.ViewModels;
 
 namespace WPFTest
@@ -19,6 +20,7 @@ namespace WPFTest
                .AddJsonFile("appsettings.json", true, true)
             )
            .ConfigureServices((host, services) => services
+               .AddServices()
                .AddViews()
            )
            .Build()

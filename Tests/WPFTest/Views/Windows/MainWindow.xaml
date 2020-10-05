@@ -9,8 +9,12 @@
         WindowStartupLocation="CenterScreen"
         Width="200" Height="100">
     <Grid>
+        <Border DataContext="{Binding SecondModel, Source={StaticResource Locator}}"></Border>
         <Button VerticalAlignment="Center" HorizontalAlignment="Center" 
                 Content="Test" Padding="30,10"
-                Click="OnTestButtonClick"/>
+                Command="{Binding SendMessageCommand}"/>
+        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
+                   DataContext="{Binding Get.MainWindowViewModel, Source={StaticResource Locator}}"
+                   Text="{Binding Title}"/>
     </Grid>
 </Window>
