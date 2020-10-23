@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Reactive;
-using System.Text;
-using System.Threading;
 using MathCore.Annotations;
 using MathCore.CommandProcessor;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
