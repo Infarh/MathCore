@@ -14,6 +14,10 @@ namespace System
     /// <summary>Класс методов-расширений для класса целых 4-х-байтовых чисел со знаком</summary>
     public static class IntExtensions
     {
+        public static int HiBit(this int x) => Numeric.HiBit(x);
+
+        public static int Log2(this int x) => Numeric.Log2(x);
+
         /// <summary>Возведение целого числа в целую степень</summary>
         /// <param name="x">Целое основание</param>
         /// <param name="N">Целый показатель степени</param>
@@ -102,6 +106,7 @@ namespace System
         public static Dictionary<int, int> Factorization(this int n)
         {
             var result = new Dictionary<int, int>();
+
             if(n <= 1) return result;
 
             result.Add(2, 0);
@@ -156,9 +161,9 @@ namespace System
             return (n & (n - 1)) == 0 || n == 1;
         }
 
-        /// <summary>Число бит числа</summary>
-        /// <param name="n">Значащее число</param>
-        /// <returns>Число бит числа</returns>
+        /// <summary>Определяет номер старшего бита в числе (индексация с 1)</summary>
+        /// <param name="n">Исходное число</param>
+        /// <returns>Число бит всех числа (включая нули)</returns>
         [DST]
         public static int BitCount(this int n) => n.GetNumberOfDigits(2);
 
@@ -343,17 +348,17 @@ namespace System
             return result;
         }
 
-        [Obsolete("Используйте метод ToBase(Base:10)"), DST, NotNull]
-        public static int[] GetDigits(this int x)
-        {
-            var result = new List<int>(20);
-            while(x != 0)
-            {
-                result.Add(x % 10);
-                x /= 10;
-            }
-            return result.ToArray();
-        }
+        //[Obsolete("Используйте метод ToBase(Base:10)"), DST, NotNull]
+        //public static int[] GetDigits(this int x)
+        //{
+        //    var result = new List<int>(20);
+        //    while(x != 0)
+        //    {
+        //        result.Add(x % 10);
+        //        x /= 10;
+        //    }
+        //    return result.ToArray();
+        //}
 
         [DST]
         public static int GetFlags(this int Value, int Mask) => Value & Mask;

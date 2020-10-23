@@ -14,11 +14,82 @@ namespace System.IO
     /// <summary>Класс методов расширений для объектов класса System.IO.FileInfo</summary>
     public static class FileInfoExtensions
     {
+        /// <summary>Создать двоичный файл</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <returns>Объект для записи данных в двоичный файл</returns>
+        [NotNull]
+        public static BinaryWriter CreateBinary([NotNull] this FileInfo File) => new BinaryWriter(File.Create());
+
+        /// <summary>Создать двоичный файл</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <param name="BufferLength">Размер буфера записи</param>
+        /// <returns>Объект для записи данных в двоичный файл</returns>
+        [NotNull]
+        public static BinaryWriter CreateBinary([NotNull] this FileInfo File, int BufferLength) =>
+            new BinaryWriter(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength));
+
+        /// <summary>Создать двоичный файл</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <param name="Encoding">Кодировка</param>
+        /// <returns>Объект для записи данных в двоичный файл</returns>
+        [NotNull]
+        public static BinaryWriter CreateBinary([NotNull] this FileInfo File, Encoding Encoding) => 
+            new BinaryWriter(File.Create(), Encoding);
+
+        /// <summary>Создать двоичный файл</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <param name="BufferLength">Размер буфера записи</param>
+        /// <param name="Encoding">Кодировка</param>
+        /// <returns>Объект для записи данных в двоичный файл</returns>
+        [NotNull]
+        public static BinaryWriter CreateBinary([NotNull] this FileInfo File, int BufferLength, Encoding Encoding) =>
+            new BinaryWriter(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength), Encoding);
+
+        /// <summary>Открыть двоичный файл для чтения</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <returns>Объект для чтения данных из двоичного файла</returns>
+        public static BinaryReader OpenBinary([NotNull] this FileInfo File) => new BinaryReader(File.OpenRead());
+
+        /// <summary>Открыть двоичный файл для чтения</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <param name="BufferLength">Размер буфера чтения</param>
+        /// <returns>Объект для чтения данных из двоичного файла</returns>
+        [NotNull]
+        public static BinaryReader OpenBinary([NotNull] this FileInfo File, int BufferLength) => 
+            new BinaryReader(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength));
+
+        /// <summary>Открыть двоичный файл для чтения</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <param name="Encoding">Кодировка</param>
+        /// <returns>Объект для чтения данных из двоичного файла</returns>
+        [NotNull]
+        public static BinaryReader OpenBinary([NotNull] this FileInfo File, Encoding Encoding) =>
+            new BinaryReader(File.OpenRead(), Encoding);
+
+        /// <summary>Открыть двоичный файл для чтения</summary>
+        /// <param name="File">Информация о создаваемом файле</param>
+        /// <param name="BufferLength">Размер буфера чтения</param>
+        /// <param name="Encoding">Кодировка</param>
+        /// <returns>Объект для чтения данных из двоичного файла</returns>
+        [NotNull]
+        public static BinaryReader OpenBinary([NotNull] this FileInfo File, int BufferLength, Encoding Encoding) =>
+            new BinaryReader(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength), Encoding);
+
+        /// <summary>Выполнить файл с правами администратора</summary>
+        /// <param name="File">Исполняемый файл</param>
+        /// <param name="Args">Аргументы командной строки</param>
+        /// <param name="UseShellExecute">Использовать интерпретацию файла операционной системой</param>
+        /// <returns>Созданный процесс</returns>
         [CanBeNull]
         public static Process ExecuteAsAdmin([NotNull] this FileInfo File, [NotNull] string Args = "", bool UseShellExecute = true) =>
             // ReSharper disable once StringLiteralTypo
             File.Execute(Args, UseShellExecute, "runas");
 
+        /// <summary>Выполнить файл</summary>
+        /// <param name="File">Исполняемый файл</param>
+        /// <param name="Args">Аргументы командной строки</param>
+        /// <param name="UseShellExecute">Использовать интерпретацию файла операционной системой</param>
+        /// <returns>Созданный процесс</returns>
         [CanBeNull]
         public static Process Execute([NotNull] this FileInfo File, [NotNull] string Args, bool UseShellExecute, string Verb) =>
             Process.Start(new ProcessStartInfo(File.FullName, Args)
@@ -27,9 +98,21 @@ namespace System.IO
                 Verb = Verb
             });
 
+        /// <summary>Проверка на существование файла. Если файл не существует, то генерируется исключение</summary>
+        /// <param name="file">Проверяемый файл</param>
+        /// <param name="Message">Сообщение, добавляемое в исключение</param>
+        /// <returns>Информация о файле</returns>
+        /// <exception cref="FileNotFoundException">если файл не существует</exception>
         [NotNull]
-        public static FileInfo ThrowIfNotFound([NotNull] this FileInfo file, [CanBeNull] string Message = null) => file.Exists ? file : throw new FileNotFoundException(Message ?? $"Файл {file} не найден");
+        public static FileInfo ThrowIfNotFound([NotNull] this FileInfo file, [CanBeNull] string Message = null)
+        {
+            file.Refresh();
+            return file.Exists ? file : throw new FileNotFoundException(Message ?? $"Файл {file} не найден");
+        }
 
+        /// <summary>Вычислить хеш-сумму SHA256</summary>
+        /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+        /// <returns>Массив байт контрольной суммы</returns>
         [NotNull]
         public static byte[] ComputeSHA256([NotNull] this FileInfo file)
         {

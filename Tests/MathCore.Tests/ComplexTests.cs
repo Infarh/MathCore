@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using MathCore.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global

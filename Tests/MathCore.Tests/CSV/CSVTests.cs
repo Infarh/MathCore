@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace MathCore.Tests.CSV
+﻿namespace MathCore.Tests.CSV
 {
 //    [TestClass]
 //    public class CSVTests : CSVTestsBase

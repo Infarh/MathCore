@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.34</Version>
+    <Version>0.0.35</Version>
     <PackageReleaseNotes>
-      Реализация шаблона Посредник - MathCore.Mediator.Messenger : MathCore.Mediator.IMessenger
+      Методы создания и открытия двоичного файла
     </PackageReleaseNotes>
   </PropertyGroup>
 
