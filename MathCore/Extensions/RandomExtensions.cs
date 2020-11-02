@@ -11,6 +11,20 @@ namespace System
     /// <summary>Методы-расширения для генератора случайных чисел</summary>
     public static class RandomExtensions
     {
+        /// <summary>Случайный элемент из указанного набора вариантов (ссылка на элемент)</summary>
+        /// <typeparam name="T">Тип элементов</typeparam>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="items">Массив вариантов</param>
+        /// <returns>Ссылка на случайный элемент массива</returns>
+        public static ref T NextItem<T>(this Random rnd, params T[] items) => ref items[rnd.Next(items.Length)]; 
+
+        /// <summary>Случайных элемент из списка</summary>
+        /// <typeparam name="T">Тип элементов для выбора</typeparam>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="items">Список элементов для выбора</param>
+        /// <returns>Случайный элемент из списка</returns>
+        public static T NextItem<T>(this Random rnd, IList<T> items) => items[rnd.Next(items.Count)]; 
+
         /// <summary>Массив случайных чисел с равномерным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="Count">Размер массива</param>

@@ -1,4 +1,6 @@
-﻿using MathCore.Annotations;
+﻿using System.Threading.Tasks;
+
+using MathCore.Annotations;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 // ReSharper disable UnusedMember.Global
@@ -59,5 +61,12 @@ namespace System.Xml
             var str = reader.GetAttribute(name);
             return str is null ? Default : XmlConvert.ToTimeSpan(str);
         }
+
+
+        public static async Task<T> ReadElementContentAsTypeAsync<T>([NotNull] this XmlReader reader) => (T)await reader.ReadContentAsAsync(typeof(T), null).ConfigureAwait(false);
+        public static Task<int> ReadElementContentAsIntAsync([NotNull] this XmlReader reader) => reader.ReadElementContentAsTypeAsync<int>();
+        public static Task<double> ReadElementContentAsDoubleAsync([NotNull] this XmlReader reader) => reader.ReadElementContentAsTypeAsync<double>();
+        public static Task<bool> ReadElementContentAsBooleanAsync([NotNull] this XmlReader reader) => reader.ReadElementContentAsTypeAsync<bool>();
+
     }
 }

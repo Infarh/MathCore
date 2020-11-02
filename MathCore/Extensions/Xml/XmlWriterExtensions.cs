@@ -12,5 +12,8 @@ namespace System.Xml
         public static Task WriteStartElementAsync([NotNull] this XmlWriter writer, [NotNull] string name) => writer.WriteStartElementAsync(null, name, null);
 
         public static Task WriteAttributeString([NotNull] this XmlWriter writer, [NotNull] string name, [NotNull] string value) => writer.WriteAttributeStringAsync(null, name, null, value);
+
+        public static Task WriteAttributeStringAsync(this XmlWriter writer, string name, string value) => writer.WriteAttributeStringAsync(null, name, null, value);
+
     }
 }

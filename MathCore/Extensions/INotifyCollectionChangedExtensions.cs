@@ -10,35 +10,35 @@ namespace System.ComponentModel
 {
     public static class INotifyCollectionChangedExtensions
     {
-        public abstract class Subscriber
+        public abstract class CollectionChangesSubscriber
         {
-            private event NotifyCollectionChangedEventHandler OnCollectionChangedEventHandlers;
+            private event NotifyCollectionChangedEventHandler _OnCollectionChangedEvent;
 
             public event NotifyCollectionChangedEventHandler OnCollectionChangedEvent
             {
                 add
                 {
                     if (IsEmpty) Subscribe();
-                    OnCollectionChangedEventHandlers += value;
+                    _OnCollectionChangedEvent += value;
                 }
                 remove
                 {
-                    OnCollectionChangedEventHandlers -= value;
+                    _OnCollectionChangedEvent -= value;
                     if (IsEmpty) Unsubscribe();
                 }
             }
 
-            private event Action<NotifyCollectionChangedAction> OnCollectionChangedHandlers;
-            public event Action<NotifyCollectionChangedAction> OnPCollectionChanged   //todo: разобраться с событиями!
+            private event Action<NotifyCollectionChangedAction> _CollectionChanged;
+            public event Action<NotifyCollectionChangedAction> CollectionChanged   //todo: разобраться с событиями!
             {
                 add
                 {
                     if (IsEmpty) Subscribe();
-                    OnCollectionChangedHandlers += value;
+                    _CollectionChanged += value;
                 }
                 remove
                 {
-                    OnCollectionChangedHandlers -= value;
+                    _CollectionChanged -= value;
                     if (IsEmpty) Unsubscribe();
                 }
             }
@@ -63,12 +63,12 @@ namespace System.ComponentModel
 
             private readonly NotifyCollectionChangedAction _ChangeType;
 
-            public virtual bool IsEmpty => OnCollectionChangedEventHandlers is null && OnCollectionChangedHandlers is null && ValueChangeEventHandlers is null;
+            public virtual bool IsEmpty => _OnCollectionChangedEvent is null && _CollectionChanged is null && ValueChangeEventHandlers is null;
 
             [NotNull]
             public INotifyCollectionChanged Collection => _Collection;
 
-            protected Subscriber([NotNull] INotifyCollectionChanged Obj, NotifyCollectionChangedAction ChangeType)
+            protected CollectionChangesSubscriber([NotNull] INotifyCollectionChanged Obj, NotifyCollectionChangedAction ChangeType)
             {
                 _ChangeType = ChangeType;
                 _Collection = Obj;
@@ -82,8 +82,8 @@ namespace System.ComponentModel
 
             protected virtual void OnCollectionChanged([CanBeNull] object Sender, [NotNull] NotifyCollectionChangedEventArgs E)
             {
-                OnCollectionChangedEventHandlers?.Invoke(Sender, E);
-                OnCollectionChangedHandlers?.Invoke(E.Action);
+                _OnCollectionChangedEvent?.Invoke(Sender, E);
+                _CollectionChanged?.Invoke(E.Action);
                 ValueChangeEventHandlers?.Invoke();
             }
 
@@ -92,13 +92,13 @@ namespace System.ComponentModel
 
             internal virtual void ClearHandlers()
             {
-                OnCollectionChangedEventHandlers = null;
-                OnCollectionChangedHandlers = null;
+                _OnCollectionChangedEvent = null;
+                _CollectionChanged = null;
                 ValueChangeEventHandlers = null;
             }
         }
 
-        public sealed class Subscriber<TCollection, TItem> : Subscriber
+        public sealed class CollectionChangesSubscriber<TCollection, TItem> : CollectionChangesSubscriber
             where TCollection : ICollection<TItem>, INotifyCollectionChanged
         {
             private event Action<ICollection<TItem>> OnCollectionChangedEventHandlers;
@@ -118,7 +118,7 @@ namespace System.ComponentModel
 
             public override bool IsEmpty => base.IsEmpty && OnCollectionChangedEventHandlers is null;
 
-            internal Subscriber([NotNull] TCollection Obj, NotifyCollectionChangedAction ChangeType) : base(Obj, ChangeType) { }
+            internal CollectionChangesSubscriber([NotNull] TCollection Obj, NotifyCollectionChangedAction ChangeType) : base(Obj, ChangeType) { }
 
             protected override void OnCollectionChanged(object Sender, NotifyCollectionChangedEventArgs E)
             {
@@ -145,7 +145,7 @@ namespace System.ComponentModel
         }
 
         [NotNull]
-        private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, Subscriber>> __Subscribers = new Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, Subscriber>>();
+        private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>> __Subscribers = new Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>>();
 
         [NotNull]
         public static IDisposable UsingSubscribeToProperty<T, TItem>(
@@ -166,8 +166,8 @@ namespace System.ComponentModel
         {
             lock (__Subscribers)
             {
-                var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new Dictionary<NotifyCollectionChangedAction, Subscriber>()) ?? throw new InvalidOperationException();
-                var object_subscriber = object_subscribers.GetValueOrAddNew(ChangeType, () => new Subscriber<T, TItem>(obj, ChangeType)) ?? throw new InvalidOperationException();
+                var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>()) ?? throw new InvalidOperationException();
+                var object_subscriber = object_subscribers.GetValueOrAddNew(ChangeType, () => new CollectionChangesSubscriber<T, TItem>(obj, ChangeType)) ?? throw new InvalidOperationException();
                 object_subscriber.OnCollectionChangedEvent += Handler;
             }
         }
@@ -191,15 +191,15 @@ namespace System.ComponentModel
         }
 
         [NotNull]
-        public static Subscriber<T, TItem> SubscribeCollectionTo<T, TItem>(
+        public static CollectionChangesSubscriber<T, TItem> SubscribeCollectionTo<T, TItem>(
             [NotNull] this T obj,
             NotifyCollectionChangedAction ChangeType)
             where T : ICollection<TItem>, INotifyCollectionChanged
         {
             lock (__Subscribers)
             {
-                var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new Dictionary<NotifyCollectionChangedAction, Subscriber>()) ?? throw new InvalidOperationException();
-                return (Subscriber<T, TItem>)object_subscribers.GetValueOrAddNew(ChangeType, () => new Subscriber<T, TItem>(obj, ChangeType)) ?? throw new InvalidOperationException();
+                var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>()) ?? throw new InvalidOperationException();
+                return (CollectionChangesSubscriber<T, TItem>)object_subscribers.GetValueOrAddNew(ChangeType, () => new CollectionChangesSubscriber<T, TItem>(obj, ChangeType)) ?? throw new InvalidOperationException();
             }
         }
 
@@ -257,5 +257,70 @@ namespace System.ComponentModel
 
             private void OnCollectionChanged([CanBeNull] object Sender, [NotNull] NotifyCollectionChangedEventArgs e) => _Events.Add(e);
         }
+
+        class CollectionItemPropertyChangedSubscriber<TCollection, TItem> : IDisposable
+            where TCollection : INotifyCollectionChanged, IEnumerable<TItem>
+            where TItem : INotifyPropertyChanged
+        {
+            [NotNull] private readonly TCollection _Collection;
+            private readonly string _PropertyName;
+            [NotNull] private readonly EventHandler _OnPropertyChanged;
+
+            public CollectionItemPropertyChangedSubscriber([NotNull] TCollection Collection, string PropertyName, [NotNull] EventHandler OnPropertyChanged)
+            {
+                _Collection = Collection;
+                _PropertyName = PropertyName;
+                _OnPropertyChanged = OnPropertyChanged;
+                Collection.CollectionChanged += OnCollectionChanged;
+            }
+
+            private void OnCollectionChanged(object Sender, NotifyCollectionChangedEventArgs E)
+            {
+                switch (E.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        foreach (INotifyPropertyChanged item in E.NewItems) 
+                            item.PropertyChanged += OnItemPropertyChanged;
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        foreach (INotifyPropertyChanged item in E.OldItems) 
+                            item.PropertyChanged -= OnItemPropertyChanged;
+                        break;
+                }
+            }
+
+            private void OnItemPropertyChanged(object Sender, PropertyChangedEventArgs E)
+            {
+                if (E.PropertyName != _PropertyName) return;
+                _OnPropertyChanged(Sender, EventArgs.Empty);
+            }
+
+            public void Dispose()
+            {
+                OnCollectionChanged(_Collection, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, _Collection));
+                _Collection.CollectionChanged -= OnCollectionChanged;
+            }
+        }
+
+        [NotNull]
+        public static IDisposable SubscribeToItemPropertyChanges<TCollection, TItem>(
+            [NotNull] this TCollection collection, 
+            string PropertyName,
+            [NotNull] EventHandler OnPropertyChanged)
+            where TCollection : INotifyCollectionChanged, IEnumerable<TItem> 
+            where TItem : INotifyPropertyChanged =>
+            new CollectionItemPropertyChangedSubscriber<TCollection, TItem>(collection, PropertyName, OnPropertyChanged);
+
+        //public static void OnItemPropertyChanged<TCollection, TItem>(
+        //    [NotNull] this TCollection collection,
+        //    string PropertyName,
+        //    [NotNull] EventHandler OnPropertyChanged)
+        //    where TCollection : INotifyCollectionChanged, IEnumerable<TItem>
+        //    where TItem : INotifyPropertyChanged
+        //{
+        //    foreach (var item in collection)
+        //        item.PropertyChanged += OnPropertyChanged;
+
+        //}
     }
 }
