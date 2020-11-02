@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.36</Version>
     <PackageReleaseNotes>
-      Методы создания и открытия двоичного файла
+      Добавлены методы-расширения для XmlReader/Writer и Random
     </PackageReleaseNotes>
   </PropertyGroup>
 
