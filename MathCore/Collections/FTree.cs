@@ -121,12 +121,6 @@ namespace MathCore.Collections
             if(!Right.IsEmpty) nodes.Push(Right);
             if(!Left.IsEmpty) nodes.Push(Left);
 
-            FTree<T> node = null;
-            while (nodes.Count > 0)
-            {
-
-            }
-
             if (!Left.IsEmpty)
                 foreach (var item in Left.EnumLeftRootRight())
                     yield return item;

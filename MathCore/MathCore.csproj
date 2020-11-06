@@ -20,7 +20,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Authors>Shmachilin P.A.</Authors>
     <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
-    <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
+    <RepositoryUrl>https://github.com/infarh/mathcore.git</RepositoryUrl>
     <Description>Библиотека прикладных алгоритмов</Description>
     <PackageTags>Mathematic, Logiс</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
