@@ -1,4 +1,5 @@
-﻿using MathCore.Annotations;
+﻿using MathCore;
+using MathCore.Annotations;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
@@ -8,6 +9,13 @@ namespace System.Collections.Generic
     /// <summary>Методы расширения для интерфейса <see cref="IList{T}"/></summary>
     public static class IListExtensions
     {
+        /// <summary>Создать генератор случных элементов</summary>
+        /// <typeparam name="T">Тип элементов списка</typeparam>
+        /// <param name="Items">Список элементов, на основе которого надо создать генератор</param>
+        /// <param name="Random">Датчик случайных чисел</param>
+        /// <returns>Генератор случайного значения из элементов списка</returns>
+        public static Randomizer<T> GetRandomizer<T>(this IList<T> Items, Random Random = null) => new(Items, Random);
+        
         /// <summary>Ссылка на список пуста, либо список не содержит элементов</summary>
         /// <param name="list">Проверяемый список</param>
         /// <returns>Истина, если не задана ссылка на список, либо список пуст</returns>

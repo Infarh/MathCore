@@ -57,7 +57,7 @@ namespace System.Linq.Expressions
         {
             var @base = base.VisitUnary(u);
             return @base is UnaryExpression
-                ? !(u.Operand is ConstantExpression operand)
+                ? u.Operand is not ConstantExpression operand
                     ? @base
                     : IsNumerical(operand.Value)
                         ? @base.NodeType switch
@@ -74,7 +74,7 @@ namespace System.Linq.Expressions
         {
             var @base = base.VisitMethodCall(m);
 
-            if(!(@base is MethodCallExpression call) || call.Object != null && !(call.Object is ConstantExpression)) return @base;
+            if(@base is not MethodCallExpression call || call.Object != null && call.Object is not ConstantExpression) return @base;
             var method = call.Method;
             var obj = (ConstantExpression)call.Object;
 

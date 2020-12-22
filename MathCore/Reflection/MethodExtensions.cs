@@ -14,6 +14,6 @@ namespace System.Reflection
         /// <typeparam name="TObject">Тип объекта</typeparam>
         /// <typeparam name="TValue">Тип значения метода</typeparam>
         /// <returns>Объект контроля метода</returns>
-        [NotNull] public static Method<TObject, TValue> GetMethod<TObject, TValue>(this TObject o, string Name, bool Private = false) => new Method<TObject, TValue>(o, Name, Private);
+        [NotNull] public static Method<TObject, TValue> GetMethod<TObject, TValue>(this TObject o, string Name, bool Private = false) => new(o, Name, Private);
     }
 }

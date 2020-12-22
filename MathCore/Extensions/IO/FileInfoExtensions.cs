@@ -18,7 +18,7 @@ namespace System.IO
         /// <param name="File">Информация о создаваемом файле</param>
         /// <returns>Объект для записи данных в двоичный файл</returns>
         [NotNull]
-        public static BinaryWriter CreateBinary([NotNull] this FileInfo File) => new BinaryWriter(File.Create());
+        public static BinaryWriter CreateBinary([NotNull] this FileInfo File) => new(File.Create());
 
         /// <summary>Создать двоичный файл</summary>
         /// <param name="File">Информация о создаваемом файле</param>
@@ -26,7 +26,7 @@ namespace System.IO
         /// <returns>Объект для записи данных в двоичный файл</returns>
         [NotNull]
         public static BinaryWriter CreateBinary([NotNull] this FileInfo File, int BufferLength) =>
-            new BinaryWriter(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength));
+            new(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength));
 
         /// <summary>Создать двоичный файл</summary>
         /// <param name="File">Информация о создаваемом файле</param>
@@ -34,7 +34,7 @@ namespace System.IO
         /// <returns>Объект для записи данных в двоичный файл</returns>
         [NotNull]
         public static BinaryWriter CreateBinary([NotNull] this FileInfo File, Encoding Encoding) => 
-            new BinaryWriter(File.Create(), Encoding);
+            new(File.Create(), Encoding);
 
         /// <summary>Создать двоичный файл</summary>
         /// <param name="File">Информация о создаваемом файле</param>
@@ -43,12 +43,12 @@ namespace System.IO
         /// <returns>Объект для записи данных в двоичный файл</returns>
         [NotNull]
         public static BinaryWriter CreateBinary([NotNull] this FileInfo File, int BufferLength, Encoding Encoding) =>
-            new BinaryWriter(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength), Encoding);
+            new(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength), Encoding);
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <returns>Объект для чтения данных из двоичного файла</returns>
-        public static BinaryReader OpenBinary([NotNull] this FileInfo File) => new BinaryReader(File.OpenRead());
+        public static BinaryReader OpenBinary([NotNull] this FileInfo File) => new(File.OpenRead());
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
@@ -56,7 +56,7 @@ namespace System.IO
         /// <returns>Объект для чтения данных из двоичного файла</returns>
         [NotNull]
         public static BinaryReader OpenBinary([NotNull] this FileInfo File, int BufferLength) => 
-            new BinaryReader(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength));
+            new(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength));
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
@@ -64,7 +64,7 @@ namespace System.IO
         /// <returns>Объект для чтения данных из двоичного файла</returns>
         [NotNull]
         public static BinaryReader OpenBinary([NotNull] this FileInfo File, Encoding Encoding) =>
-            new BinaryReader(File.OpenRead(), Encoding);
+            new(File.OpenRead(), Encoding);
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
@@ -73,7 +73,7 @@ namespace System.IO
         /// <returns>Объект для чтения данных из двоичного файла</returns>
         [NotNull]
         public static BinaryReader OpenBinary([NotNull] this FileInfo File, int BufferLength, Encoding Encoding) =>
-            new BinaryReader(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength), Encoding);
+            new(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength), Encoding);
 
         /// <summary>Выполнить файл с правами администратора</summary>
         /// <param name="File">Исполняемый файл</param>
@@ -348,7 +348,7 @@ namespace System.IO
             throw new InvalidOperationException($"Файл {File.FullName} заблокирован другим процессом");
         }
 
-        [NotNull] public static FileInfo ChangeExtension([NotNull] this FileInfo File, string NewExtension) => new FileInfo(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
+        [NotNull] public static FileInfo ChangeExtension([NotNull] this FileInfo File, string NewExtension) => new(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
 
         [NotNull]
         public static FileInfo Zip([NotNull] this FileInfo File, string ArchiveFileName = null, bool Override = true)

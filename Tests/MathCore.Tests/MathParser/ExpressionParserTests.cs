@@ -718,29 +718,21 @@ namespace MathCore.Tests.MathParser
 
             parser.FindFunction += (s, e) =>
             {
-                switch (e.Name)
+                e.Function = e.Name switch
                 {
-                    case "test":
-                        switch (e.ArgumentCount)
-                        {
-                            case 3:
-                                e.Function = (Func<double, double, double, double>)((a, b, c) => a + b * c);
-                                break;
-                        }
-                        break;
-                    case "average":
-                        switch (e.ArgumentCount)
-                        {
-                            case 2:
-                                e.Function = (Func<double, double, double>)((a, b) => (a + b) / 2);
-                                break;
-                            case 3:
-                                e.Function = (Func<double, double, double, double>)((a, b, c) => (a + b + c) / 3);
-                                break;
-                        }
-
-                        break;
-                }
+                    "test" => e.ArgumentCount switch
+                    {
+                        3 => (Func<double, double, double, double>)((a, b, c) => a + b * c),
+                        _ => e.Function
+                    },
+                    "average" => e.ArgumentCount switch
+                    {
+                        2 => (Func<double, double, double>)((a, b) => (a + b) / 2),
+                        3 => (Func<double, double, double, double>)((a, b, c) => (a + b + c) / 3),
+                        _ => e.Function
+                    },
+                    _ => e.Function
+                };
             };
 
             var test_expr = parser.Parse("test(2,3,4)");

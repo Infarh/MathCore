@@ -35,7 +35,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <param name="value">Строковое значение</param>
         /// <returns>Символьный узел</returns>
         [NotNull]
-        public static implicit operator CharNode(char value) => new CharNode(value);
+        public static implicit operator CharNode(char value) => new(value);
 
         /// <summary>Оператор неявного преобразования строкового узла к символьному типу</summary>
         /// <param name="node">Символьный узел</param>

@@ -27,7 +27,7 @@ namespace System
         #region Приведение типов
 
         /// <summary>Пул методов приведения типов</summary>
-        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __CastersDictionary = new ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>>();
+        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __CastersDictionary = new();
 
         /// <summary>Выражение параметра конструируемой функции</summary>
         private static readonly ParameterExpression __ConvParameter = Expression.Parameter(typeof(object), "value");
@@ -69,7 +69,7 @@ namespace System
         #endregion
 
         /// <summary>Выражение параметра конструируемой функции</summary>
-        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __ConvertersDictionary = new ConcurrentDictionary<(Type, Type), Func<object, object>>();
+        private static readonly ConcurrentDictionary<(Type SourceType, Type TargetType), Func<object, object>> __ConvertersDictionary = new();
 
         /// <summary>Сформировать функцию, осуществляющую преобразование типа в указанный тип данных</summary>
         /// <param name="SourceType">Тип исходного значения</param>

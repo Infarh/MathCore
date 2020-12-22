@@ -29,7 +29,7 @@ namespace System.Collections.Generic
         /// <typeparam name="T">Тип элементов стека</typeparam>
         /// <param name="stack">Преобразуемый стек</param>
         /// <returns>Очередь из элементов стека</returns>
-        [NotNull] public static Queue<T> ToQueue<T>([NotNull] this Stack<T> stack) => new Queue<T>(stack);
+        [NotNull] public static Queue<T> ToQueue<T>([NotNull] this Stack<T> stack) => new(stack);
 
         /// <summary>Преобразовать стек в инвертированную очередь</summary>
         /// <typeparam name="T">Тип элементов стека</typeparam>

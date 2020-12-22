@@ -16,6 +16,6 @@ namespace System.IO
 
         [NotNull] public static IObservable<FileSystemEventArgs> ToObservable_Disposed([NotNull] this FileSystemWatcher Watcher) => Watcher.FromEvent<FileSystemEventArgs>("Disposed");
 
-        [NotNull] public static LambdaDisposableObject<FileSystemWatcher> SuspendEvents([NotNull] this FileSystemWatcher watcher) => new LambdaDisposableObject<FileSystemWatcher>(watcher.InitializeObject(w => w.EnableRaisingEvents = false), (w, s) => w.EnableRaisingEvents = (bool)s, watcher.EnableRaisingEvents);
+        [NotNull] public static LambdaDisposableObject<FileSystemWatcher> SuspendEvents([NotNull] this FileSystemWatcher watcher) => new(watcher.InitializeObject(w => w.EnableRaisingEvents = false), (w, s) => w.EnableRaisingEvents = (bool)s, watcher.EnableRaisingEvents);
     }
 }

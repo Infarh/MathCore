@@ -57,7 +57,7 @@ namespace System.Linq.Expressions
         /// <summary>Метод записи значения свойства</summary>
         private readonly Action<T> _Writer;
 
-        private readonly SimpleObservableEx<T> _ObservableObject = new SimpleObservableEx<T>();
+        private readonly SimpleObservableEx<T> _ObservableObject = new();
 
         private AttributesExtractor _Attributes;
 
@@ -224,7 +224,7 @@ namespace System.Linq.Expressions
         /// <summary>Метод записи значения свойства</summary>
         private readonly Action<object> _Writer;
 
-        private readonly SimpleObservableEx<object> _ObservableObject = new SimpleObservableEx<object>();
+        private readonly SimpleObservableEx<object> _ObservableObject = new();
 
         private AttributesExtractor _Attributes;
 

@@ -11,13 +11,13 @@ namespace MathCore
 {
     public abstract class LambdaPropertyBase
     {
-        protected static readonly PropertyChangedEventArgs ValuePropertyChanged = new PropertyChangedEventArgs("Value");
+        protected static readonly PropertyChangedEventArgs ValuePropertyChanged = new("Value");
     }
 
     /// <summary>Класс объектов-свойств, определяемых методами установки и чтения значения</summary>
     public class LambdaProperty<T> : LambdaPropertyBase, INotifyPropertyChanged, IEquatable<LambdaProperty<T>>
     {
-        private readonly object _PropertyChangedSyncRoot = new object();
+        private readonly object _PropertyChangedSyncRoot = new();
         private event PropertyChangedEventHandler _PropertyChanged;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged

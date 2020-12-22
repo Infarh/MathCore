@@ -32,7 +32,7 @@ namespace System.Linq
         /// <typeparam name="T">Тип элемента последовательности</typeparam>
         /// <param name="items">Последовательность элементов, для которой надо создать хеш-таблицу</param>
         /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
-        [NN] public static HashSet<T> ToHashSet<T>([NN] this IEnumerable<T> items) => new HashSet<T>(items);
+        [NN] public static HashSet<T> ToHashSet<T>([NN] this IEnumerable<T> items) => new(items);
 
         /// <summary>Перечисление без повторений значений, определяемых лямбда-выражением</summary>
         /// <typeparam name="T">Тип перечисляемых объектов</typeparam>
@@ -40,7 +40,8 @@ namespace System.Linq
         /// <param name="enumerable">Исходное перечисление объектов</param>
         /// <param name="KeySelector">Критерий определения повторения значения</param>
         /// <returns>Перечисление, из которого исключены повторения по указанному критерию</returns>
-        [NN] public static IEnumerable<T> Distinct<T, TKey>([NN] this IEnumerable<T> enumerable, [NN] Func<T, TKey> KeySelector) =>
+        [NN]
+        public static IEnumerable<T> Distinct<T, TKey>([NN] this IEnumerable<T> enumerable, [NN] Func<T, TKey> KeySelector) =>
             enumerable.Distinct(PropertyEqualityComparer.Create(KeySelector));
 
         /// <summary>Дисперсия значений</summary>
@@ -211,7 +212,7 @@ namespace System.Linq
             [NN] this IEnumerable<T> enumerable,
             in TP1 p1,
             in TP2 p2,
-            Func<T, TP1, TP2, bool> Selector, 
+            Func<T, TP1, TP2, bool> Selector,
             in T DefaultValue = default)
         {
             foreach (var item in enumerable)
@@ -423,7 +424,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> WhereNot<T>(
             [NN] this IEnumerable<T> enumerable,
-            [NN]Func<T, bool> NotSelector)
+            [NN] Func<T, bool> NotSelector)
             => enumerable.Where(t => !NotSelector(t));
 
         /// <summary>Возвращает цепочку элементов последовательности, удовлетворяющих указанному условию</summary>
@@ -437,7 +438,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> TakeWhileNot<T>(
             [NN] this IEnumerable<T> enumerable,
-            [NN]Func<T, bool> NotSelector)
+            [NN] Func<T, bool> NotSelector)
             => enumerable.TakeWhile(t => !NotSelector(t));
 
         /// <summary>Преобразование перечисления в массив с преобразованием элементов</summary>
@@ -826,7 +827,7 @@ namespace System.Linq
 
             /// <summary>Объект-наблюдения за историей</summary>
             [NN]
-            private readonly SimpleObservableEx<T> _ObservableObject = new SimpleObservableEx<T>();
+            private readonly SimpleObservableEx<T> _ObservableObject = new();
 
             /// <summary>Текущий элемент перечисления</summary>
             public T Current { get; private set; }
@@ -897,8 +898,8 @@ namespace System.Linq
             [MinValue(0)] int HistoryLength
         )
         {
-            var History = new EnumerableHistory<TIn>(HistoryLength);
-            return collection.Select(item => Selector(History.Add(item)));
+            var history = new EnumerableHistory<TIn>(HistoryLength);
+            return collection.Select(item => Selector(history.Add(item)));
         }
 
         /// <summary>Оценка статистических параметров перечисления</summary>
@@ -1781,7 +1782,7 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AppendLast<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
-            if (collection != null && !(collection is T[] array && array.Length == 0))
+            if (collection != null && !(collection is T[] { Length: 0 }))
                 foreach (var value in collection)
                     yield return value;
             if (obj != null)
@@ -1800,10 +1801,10 @@ namespace System.Linq
             [CN] IEnumerable<T> last_collection
         )
         {
-            if (first_collection != null && !(first_collection is T[] first_array && first_array.Length == 0))
+            if (first_collection != null && first_collection is not T[] { Length: 0 })
                 foreach (var value in first_collection)
                     yield return value;
-            if (last_collection is null || last_collection is T[] last_array && last_array.Length == 0) yield break;
+            if (last_collection is null || last_collection is T[] { Length: 0 }) yield break;
             foreach (var value in last_collection)
                 yield return value;
         }
@@ -1817,7 +1818,7 @@ namespace System.Linq
         public static IEnumerable<T> AppendFirst<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
             if (obj != null) yield return obj;
-            if (collection is null || collection is T[] items && items.Length == 0) yield break;
+            if (collection is null || collection is T[] { Length: 0 }) yield break;
             foreach (var value in collection)
                 yield return value;
         }
@@ -1834,10 +1835,10 @@ namespace System.Linq
             [CN] IEnumerable<T> first_collection
         )
         {
-            if (first_collection != null && !(first_collection is T[] first_array && first_array.Length == 0))
+            if (first_collection != null && !(first_collection is T[] { Length: 0 }))
                 foreach (var value in first_collection)
                     yield return value;
-            if (last_collection is null || last_collection is T[] last_array && last_array.Length == 0) yield break;
+            if (last_collection is null || last_collection is T[] { Length: 0 }) yield break;
             foreach (var value in last_collection)
                 yield return value;
         }
@@ -1946,7 +1947,8 @@ namespace System.Linq
         /// <param name="items">Исходное перечисление эленметов</param>
         /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
         /// <returns>Перечисление страниц</returns>
-        [NotNull] public static IEnumerable<IEnumerable<T>> WithPages<T>([NotNull] this IEnumerable<T> items, int PageItemsCount) =>
+        [NotNull]
+        public static IEnumerable<IEnumerable<T>> WithPages<T>([NotNull] this IEnumerable<T> items, int PageItemsCount) =>
             items.AsBlockEnumerable(PageItemsCount);
 
         /// <summary>Получить элементы перечисления для заданной страницы</summary>
@@ -1955,7 +1957,8 @@ namespace System.Linq
         /// <param name="PageNumber">Номер требуемой страницы</param>
         /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
         /// <returns>ПЕречисление элементов из указанной страницы</returns>
-        [NotNull] public static IEnumerable<T> Page<T>([NotNull] this IEnumerable<T> items, int PageNumber, int PageItemsCount) =>
+        [NotNull]
+        public static IEnumerable<T> Page<T>([NotNull] this IEnumerable<T> items, int PageNumber, int PageItemsCount) =>
             items.Skip(PageItemsCount * PageNumber).Take(PageItemsCount);
 
         /// <summary>Заменить указанный элемент в перечислении</summary>

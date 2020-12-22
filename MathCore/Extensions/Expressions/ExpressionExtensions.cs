@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using MathCore.Annotations;
 using MathCore.Vectors;
+
 using static System.Linq.Expressions.Expression;
+
 using bEx = System.Linq.Expressions.BinaryExpression;
 using cEx = System.Linq.Expressions.ConstantExpression;
 using Ex = System.Linq.Expressions.Expression;
@@ -761,215 +764,218 @@ namespace MathCore.Extensions.Expressions
             private static Ex MultiplyValues(object left, object right)
             {
                 if (!IsNumeric(left) || !IsNumeric(right)) return null;
-                if (left is byte)
+                return left switch
                 {
-                    if (right is byte) return ((byte)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((byte)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((byte)left * (short)right).ToExpression();
-                    if (right is ushort) return ((byte)left * (ushort)right).ToExpression();
-                    if (right is int) return ((byte)left * (int)right).ToExpression();
-                    if (right is uint) return ((byte)left * (uint)right).ToExpression();
-                    if (right is long) return ((byte)left * (long)right).ToExpression();
-                    if (right is ulong) return ((byte)left * (ulong)right).ToExpression();
-                    if (right is float) return ((byte)left * (float)right).ToExpression();
-                    if (right is double) return ((byte)left * (double)right).ToExpression();
-                    if (right is Complex) return ((byte)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((byte)left * (Vector2D)right).ToExpression();
-                    return ((byte)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is sbyte)
-                {
-                    if (right is byte) return ((sbyte)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((sbyte)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((sbyte)left * (short)right).ToExpression();
-                    if (right is ushort) return ((sbyte)left * (ushort)right).ToExpression();
-                    if (right is int) return ((sbyte)left * (int)right).ToExpression();
-                    if (right is uint) return ((sbyte)left * (uint)right).ToExpression();
-                    if (right is long) return ((sbyte)left * (long)right).ToExpression();
-                    //if (right is ulong) return ((sbyte)left * (ulong)right).ToExpression();
-                    if (right is float) return ((sbyte)left * (float)right).ToExpression();
-                    if (right is double) return ((sbyte)left * (double)right).ToExpression();
-                    if (right is Complex) return ((sbyte)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((sbyte)left * (Vector2D)right).ToExpression();
-                    return ((sbyte)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is short)
-                {
-                    if (right is byte) return ((short)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((short)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((short)left * (short)right).ToExpression();
-                    if (right is ushort) return ((short)left * (ushort)right).ToExpression();
-                    if (right is int) return ((short)left * (int)right).ToExpression();
-                    if (right is uint) return ((short)left * (uint)right).ToExpression();
-                    if (right is long) return ((short)left * (long)right).ToExpression();
-                    //if(right is ulong) return ((short)left * (ulong)right).ToExpression();
-                    if (right is float) return ((short)left * (float)right).ToExpression();
-                    if (right is double) return ((short)left * (double)right).ToExpression();
-                    if (right is Complex) return ((short)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((short)left * (Vector2D)right).ToExpression();
-                    return ((short)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is ushort)
-                {
-                    if (right is byte) return ((ushort)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((ushort)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((ushort)left * (short)right).ToExpression();
-                    if (right is ushort) return ((ushort)left * (ushort)right).ToExpression();
-                    if (right is int) return ((ushort)left * (int)right).ToExpression();
-                    if (right is uint) return ((ushort)left * (uint)right).ToExpression();
-                    if (right is long) return ((ushort)left * (long)right).ToExpression();
-                    if (right is ulong) return ((ushort)left * (ulong)right).ToExpression();
-                    if (right is float) return ((ushort)left * (float)right).ToExpression();
-                    if (right is double) return ((ushort)left * (double)right).ToExpression();
-                    if (right is Complex) return ((ushort)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ushort)left * (Vector2D)right).ToExpression();
-                    return ((ushort)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is int)
-                {
-                    if (right is byte) return ((int)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((int)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((int)left * (short)right).ToExpression();
-                    if (right is ushort) return ((int)left * (ushort)right).ToExpression();
-                    if (right is int) return ((int)left * (int)right).ToExpression();
-                    if (right is uint) return ((int)left * (uint)right).ToExpression();
-                    if (right is long) return ((int)left * (long)right).ToExpression();
-                    //if(right is ulong) return ((int)left * (ulong)right).ToExpression();
-                    if (right is float) return ((int)left * (float)right).ToExpression();
-                    if (right is double) return ((int)left * (double)right).ToExpression();
-                    if (right is Complex) return ((int)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((int)left * (Vector2D)right).ToExpression();
-                    return ((int)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is uint)
-                {
-                    if (right is byte) return ((uint)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((uint)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((uint)left * (short)right).ToExpression();
-                    if (right is ushort) return ((uint)left * (ushort)right).ToExpression();
-                    if (right is int) return ((uint)left * (int)right).ToExpression();
-                    if (right is uint) return ((uint)left * (uint)right).ToExpression();
-                    if (right is long) return ((uint)left * (long)right).ToExpression();
-                    if (right is ulong) return ((uint)left * (ulong)right).ToExpression();
-                    if (right is float) return ((uint)left * (float)right).ToExpression();
-                    if (right is double) return ((uint)left * (double)right).ToExpression();
-                    if (right is Complex) return ((uint)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((uint)left * (Vector2D)right).ToExpression();
-                    return ((uint)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is long)
-                {
-                    if (right is byte) return ((long)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((long)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((long)left * (short)right).ToExpression();
-                    if (right is ushort) return ((long)left * (ushort)right).ToExpression();
-                    if (right is int) return ((long)left * (int)right).ToExpression();
-                    if (right is uint) return ((long)left * (uint)right).ToExpression();
-                    if (right is long) return ((long)left * (long)right).ToExpression();
-                    //if(right is ulong) return ((long)left * (ulong)right).ToExpression();
-                    if (right is float) return ((long)left * (float)right).ToExpression();
-                    if (right is double) return ((long)left * (double)right).ToExpression();
-                    if (right is Complex) return ((long)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((long)left * (Vector2D)right).ToExpression();
-                    return ((long)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is ulong)
-                {
-                    if (right is byte) return ((ulong)left * (byte)right).ToExpression();
-                    //if(right is sbyte) return ((ulong)left * (sbyte)right).ToExpression();
-                    //if(right is short) return ((ulong)left * (short)right).ToExpression();
-                    if (right is ushort) return ((ulong)left * (ushort)right).ToExpression();
-                    //if(right is int) return ((ulong)left * (int)right).ToExpression();
-                    if (right is uint) return ((ulong)left * (uint)right).ToExpression();
-                    //if(right is long) return ((ulong)left * (long)right).ToExpression();
-                    if (right is ulong) return ((ulong)left * (ulong)right).ToExpression();
-                    if (right is float) return ((ulong)left * (float)right).ToExpression();
-                    if (right is double) return ((ulong)left * (double)right).ToExpression();
-                    if (right is Complex) return ((ulong)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ulong)left * (Vector2D)right).ToExpression();
-                    return ((ulong)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is float)
-                {
-                    if (right is byte) return ((float)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((float)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((float)left * (short)right).ToExpression();
-                    if (right is ushort) return ((float)left * (ushort)right).ToExpression();
-                    if (right is int) return ((float)left * (int)right).ToExpression();
-                    if (right is uint) return ((float)left * (uint)right).ToExpression();
-                    if (right is long) return ((float)left * (long)right).ToExpression();
-                    if (right is ulong) return ((float)left * (ulong)right).ToExpression();
-                    if (right is float) return ((float)left * (float)right).ToExpression();
-                    if (right is double) return ((float)left * (double)right).ToExpression();
-                    if (right is Complex) return ((float)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((float)left * (Vector2D)right).ToExpression();
-                    return ((float)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is double)
-                {
-                    if (right is byte) return ((double)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((double)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((double)left * (short)right).ToExpression();
-                    if (right is ushort) return ((double)left * (ushort)right).ToExpression();
-                    if (right is int) return ((double)left * (int)right).ToExpression();
-                    if (right is uint) return ((double)left * (uint)right).ToExpression();
-                    if (right is long) return ((double)left * (long)right).ToExpression();
-                    if (right is ulong) return ((double)left * (ulong)right).ToExpression();
-                    if (right is float) return ((double)left * (float)right).ToExpression();
-                    if (right is double) return ((double)left * (double)right).ToExpression();
-                    if (right is Complex) return ((double)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((double)left * (Vector2D)right).ToExpression();
-                    return ((double)left * (right as Vector3D?))?.ToExpression();
-                }
-                if (left is Complex)
-                {
-                    if (right is byte) return ((Complex)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((Complex)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((Complex)left * (short)right).ToExpression();
-                    if (right is ushort) return ((Complex)left * (ushort)right).ToExpression();
-                    if (right is int) return ((Complex)left * (int)right).ToExpression();
-                    if (right is uint) return ((Complex)left * (uint)right).ToExpression();
-                    if (right is long) return ((Complex)left * (long)right).ToExpression();
-                    if (right is ulong) return ((Complex)left * (ulong)right).ToExpression();
-                    if (right is float) return ((Complex)left * (float)right).ToExpression();
-                    if (right is double) return ((Complex)left * (double)right).ToExpression();
-                    if (right is Complex) return ((Complex)left * (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Complex)left * (Vector2D)right).ToExpression();
-                    return null;
-                }
-                if (left is Vector2D)
-                {
-                    if (right is byte) return ((Vector2D)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector2D)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector2D)left * (short)right).ToExpression();
-                    if (right is ushort) return ((Vector2D)left * (ushort)right).ToExpression();
-                    if (right is int) return ((Vector2D)left * (int)right).ToExpression();
-                    if (right is uint) return ((Vector2D)left * (uint)right).ToExpression();
-                    if (right is long) return ((Vector2D)left * (long)right).ToExpression();
-                    if (right is ulong) return ((Vector2D)left * (ulong)right).ToExpression();
-                    if (right is float) return ((Vector2D)left * (float)right).ToExpression();
-                    if (right is double) return ((Vector2D)left * (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector2D)left * (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((Vector2D)left * (Vector2D)right).ToExpression();
-                    return null;
-                }
-                if (left is Vector3D)
-                {
-                    if (right is byte) return ((Vector3D)left * (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector3D)left * (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector3D)left * (short)right).ToExpression();
-                    if (right is ushort) return ((Vector3D)left * (ushort)right).ToExpression();
-                    if (right is int) return ((Vector3D)left * (int)right).ToExpression();
-                    if (right is uint) return ((Vector3D)left * (uint)right).ToExpression();
-                    if (right is long) return ((Vector3D)left * (long)right).ToExpression();
-                    if (right is ulong) return ((Vector3D)left * (ulong)right).ToExpression();
-                    if (right is float) return ((Vector3D)left * (float)right).ToExpression();
-                    if (right is double) return ((Vector3D)left * (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector3D)left * (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Vector3D)left * (Vector2D)right).ToExpression();
-                    return ((Vector3D)left * (right as Vector3D?))?.ToExpression();
-                }
-                return null;
+                    byte left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    sbyte left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        //ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    short left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        //ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    ushort left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    int left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        //ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    uint left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    long left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        //ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    ulong left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        //sbyte right1 => (left1 * right1).ToExpression(),
+                        //short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        //int i => (left1 * i).ToExpression(),
+                        //uint u => (left1 * u).ToExpression(),
+                        //long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    float left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    double left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => (left1 * (right as Vector3D?))?.ToExpression()
+                    },
+                    Complex left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        Complex complex => (left1 * complex).ToExpression(),
+                        //Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => null
+                    },
+                    Vector2D left1 => right switch
+                    {
+                        byte b => (left1 * b).ToExpression(),
+                        sbyte right1 => (left1 * right1).ToExpression(),
+                        short s => (left1 * s).ToExpression(),
+                        ushort right1 => (left1 * right1).ToExpression(),
+                        int i => (left1 * i).ToExpression(),
+                        uint u => (left1 * u).ToExpression(),
+                        long l => (left1 * l).ToExpression(),
+                        ulong right1 => (left1 * right1).ToExpression(),
+                        float f => (left1 * f).ToExpression(),
+                        double d => (left1 * d).ToExpression(),
+                        //Complex complex => (left1 * complex).ToExpression(),
+                        Vector2D vector_2d => (left1 * vector_2d).ToExpression(),
+                        _ => null
+                    },
+                    Vector3D vector_3d => right switch
+                    {
+                        byte b => (vector_3d * b).ToExpression(),
+                        sbyte right1 => (vector_3d * right1).ToExpression(),
+                        short s => (vector_3d * s).ToExpression(),
+                        ushort right1 => (vector_3d * right1).ToExpression(),
+                        int i => (vector_3d * i).ToExpression(),
+                        uint u => (vector_3d * u).ToExpression(),
+                        long l => (vector_3d * l).ToExpression(),
+                        ulong right1 => (vector_3d * right1).ToExpression(),
+                        float f => (vector_3d * f).ToExpression(),
+                        double d => (vector_3d * d).ToExpression(),
+                        Complex complex => (vector_3d * complex).ToExpression(),
+                        Vector2D vector_2d => (vector_3d * vector_2d).ToExpression(),
+                        _ => (vector_3d * (right as Vector3D?))?.ToExpression()
+                    },
+                    _ => null
+                };
             }
 
             [NotNull]
@@ -998,19 +1004,23 @@ namespace MathCore.Extensions.Expressions
                             ? float.NaN.ToExpression()
                             : ((float)right > 0 ? float.PositiveInfinity : float.NegativeInfinity).ToExpression();
                     }
-                    if (right is byte) return ((byte)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((byte)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((byte)left / (short)right).ToExpression();
-                    if (right is ushort) return ((byte)left / (ushort)right).ToExpression();
-                    if (right is int) return ((byte)left / (int)right).ToExpression();
-                    if (right is uint) return ((byte)left / (uint)right).ToExpression();
-                    if (right is long) return ((byte)left / (long)right).ToExpression();
-                    if (right is ulong) return ((byte)left / (ulong)right).ToExpression();
-                    if (right is float) return ((byte)left / (float)right).ToExpression();
-                    if (right is double) return ((byte)left / (double)right).ToExpression();
-                    if (right is Complex) return ((byte)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((byte)left / (Vector2D)right).ToExpression();
-                    return ((byte)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((byte)left / b).ToExpression(),
+                        sbyte right1 => ((byte)left / right1).ToExpression(),
+                        short s => ((byte)left / s).ToExpression(),
+                        ushort right1 => ((byte)left / right1).ToExpression(),
+                        int i => ((byte)left / i).ToExpression(),
+                        uint u => ((byte)left / u).ToExpression(),
+                        long l => ((byte)left / l).ToExpression(),
+                        ulong right1 => ((byte)left / right1).ToExpression(),
+                        float f => ((byte)left / f).ToExpression(),
+                        double d => ((byte)left / d).ToExpression(),
+                        Complex complex => ((byte)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((byte)left / vector_2d).ToExpression(),
+                        _ => ((byte)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is sbyte)
                 {
@@ -1032,19 +1042,23 @@ namespace MathCore.Extensions.Expressions
                                .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((sbyte)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((sbyte)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((sbyte)left / (short)right).ToExpression();
-                    if (right is ushort) return ((sbyte)left / (ushort)right).ToExpression();
-                    if (right is int) return ((sbyte)left / (int)right).ToExpression();
-                    if (right is uint) return ((sbyte)left / (uint)right).ToExpression();
-                    if (right is long) return ((sbyte)left / (long)right).ToExpression();
-                    //if (right is ulong) return ((sbyte)left / (ulong)right).ToExpression();
-                    if (right is float) return ((sbyte)left / (float)right).ToExpression();
-                    if (right is double) return ((sbyte)left / (double)right).ToExpression();
-                    if (right is Complex) return ((sbyte)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((sbyte)left / (Vector2D)right).ToExpression();
-                    return ((sbyte)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((sbyte)left / b).ToExpression(),
+                        sbyte right1 => ((sbyte)left / right1).ToExpression(),
+                        short s => ((sbyte)left / s).ToExpression(),
+                        ushort right1 => ((sbyte)left / right1).ToExpression(),
+                        int i => ((sbyte)left / i).ToExpression(),
+                        uint u => ((sbyte)left / u).ToExpression(),
+                        long l => ((sbyte)left / l).ToExpression(),
+                        //ulong right1 => ((sbyte)left / right1).ToExpression(),
+                        float f => ((sbyte)left / f).ToExpression(),
+                        double d => ((sbyte)left / d).ToExpression(),
+                        Complex complex => ((sbyte)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((sbyte)left / vector_2d).ToExpression(),
+                        _ => ((sbyte)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is short)
                 {
@@ -1066,19 +1080,23 @@ namespace MathCore.Extensions.Expressions
                                .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((short)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((short)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((short)left / (short)right).ToExpression();
-                    if (right is ushort) return ((short)left / (ushort)right).ToExpression();
-                    if (right is int) return ((short)left / (int)right).ToExpression();
-                    if (right is uint) return ((short)left / (uint)right).ToExpression();
-                    if (right is long) return ((short)left / (long)right).ToExpression();
-                    //if(right is ulong) return ((short)left / (ulong)right).ToExpression();
-                    if (right is float) return ((short)left / (float)right).ToExpression();
-                    if (right is double) return ((short)left / (double)right).ToExpression();
-                    if (right is Complex) return ((short)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((short)left / (Vector2D)right).ToExpression();
-                    return ((short)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((short)left / b).ToExpression(),
+                        sbyte right1 => ((short)left / right1).ToExpression(),
+                        short s => ((short)left / s).ToExpression(),
+                        ushort right1 => ((short)left / right1).ToExpression(),
+                        int i => ((short)left / i).ToExpression(),
+                        uint u => ((short)left / u).ToExpression(),
+                        long l => ((short)left / l).ToExpression(),
+                        //ulong right1 => ((short)left / right1).ToExpression(),
+                        float f => ((short)left / f).ToExpression(),
+                        double d => ((short)left / d).ToExpression(),
+                        Complex complex => ((short)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((short)left / vector_2d).ToExpression(),
+                        _ => ((short)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is ushort)
                 {
@@ -1093,19 +1111,23 @@ namespace MathCore.Extensions.Expressions
                             ? float.NaN.ToExpression()
                             : ((float)right > 0 ? float.PositiveInfinity : float.NegativeInfinity).ToExpression();
                     }
-                    if (right is byte) return ((ushort)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((ushort)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((ushort)left / (short)right).ToExpression();
-                    if (right is ushort) return ((ushort)left / (ushort)right).ToExpression();
-                    if (right is int) return ((ushort)left / (int)right).ToExpression();
-                    if (right is uint) return ((ushort)left / (uint)right).ToExpression();
-                    if (right is long) return ((ushort)left / (long)right).ToExpression();
-                    if (right is ulong) return ((ushort)left / (ulong)right).ToExpression();
-                    if (right is float) return ((ushort)left / (float)right).ToExpression();
-                    if (right is double) return ((ushort)left / (double)right).ToExpression();
-                    if (right is Complex) return ((ushort)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ushort)left / (Vector2D)right).ToExpression();
-                    return ((ushort)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((ushort)left / b).ToExpression(),
+                        sbyte right1 => ((ushort)left / right1).ToExpression(),
+                        short s => ((ushort)left / s).ToExpression(),
+                        ushort right1 => ((ushort)left / right1).ToExpression(),
+                        int i => ((ushort)left / i).ToExpression(),
+                        uint u => ((ushort)left / u).ToExpression(),
+                        long l => ((ushort)left / l).ToExpression(),
+                        ulong right1 => ((ushort)left / right1).ToExpression(),
+                        float f => ((ushort)left / f).ToExpression(),
+                        double d => ((ushort)left / d).ToExpression(),
+                        Complex complex => ((ushort)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((ushort)left / vector_2d).ToExpression(),
+                        _ => ((ushort)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is int)
                 {
@@ -1127,19 +1149,23 @@ namespace MathCore.Extensions.Expressions
                                .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((int)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((int)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((int)left / (short)right).ToExpression();
-                    if (right is ushort) return ((int)left / (ushort)right).ToExpression();
-                    if (right is int) return ((int)left / (int)right).ToExpression();
-                    if (right is uint) return ((int)left / (uint)right).ToExpression();
-                    if (right is long) return ((int)left / (long)right).ToExpression();
-                    //if(right is ulong) return ((int)left / (ulong)right).ToExpression();
-                    if (right is float) return ((int)left / (float)right).ToExpression();
-                    if (right is double) return ((int)left / (double)right).ToExpression();
-                    if (right is Complex) return ((int)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((int)left / (Vector2D)right).ToExpression();
-                    return ((int)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((int)left / b).ToExpression(),
+                        sbyte right1 => ((int)left / right1).ToExpression(),
+                        short s => ((int)left / s).ToExpression(),
+                        ushort right1 => ((int)left / right1).ToExpression(),
+                        int i => ((int)left / i).ToExpression(),
+                        uint u => ((int)left / u).ToExpression(),
+                        long l => ((int)left / l).ToExpression(),
+                        //ulong right1 => ((int)left / right1).ToExpression(),
+                        float f => ((int)left / f).ToExpression(),
+                        double d => ((int)left / d).ToExpression(),
+                        Complex complex => ((int)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((int)left / vector_2d).ToExpression(),
+                        _ => ((int)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is uint)
                 {
@@ -1157,19 +1183,23 @@ namespace MathCore.Extensions.Expressions
                         }
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((uint)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((uint)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((uint)left / (short)right).ToExpression();
-                    if (right is ushort) return ((uint)left / (ushort)right).ToExpression();
-                    if (right is int) return ((uint)left / (int)right).ToExpression();
-                    if (right is uint) return ((uint)left / (uint)right).ToExpression();
-                    if (right is long) return ((uint)left / (long)right).ToExpression();
-                    if (right is ulong) return ((uint)left / (ulong)right).ToExpression();
-                    if (right is float) return ((uint)left / (float)right).ToExpression();
-                    if (right is double) return ((uint)left / (double)right).ToExpression();
-                    if (right is Complex) return ((uint)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((uint)left / (Vector2D)right).ToExpression();
-                    return ((uint)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((uint)left / b).ToExpression(),
+                        sbyte right1 => ((uint)left / right1).ToExpression(),
+                        short s => ((uint)left / s).ToExpression(),
+                        ushort right1 => ((uint)left / right1).ToExpression(),
+                        int i => ((uint)left / i).ToExpression(),
+                        uint u => ((uint)left / u).ToExpression(),
+                        long l => ((uint)left / l).ToExpression(),
+                        ulong right1 => ((uint)left / right1).ToExpression(),
+                        float f => ((uint)left / f).ToExpression(),
+                        double d => ((uint)left / d).ToExpression(),
+                        Complex complex => ((uint)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((uint)left / vector_2d).ToExpression(),
+                        _ => ((uint)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is long)
                 {
@@ -1191,19 +1221,23 @@ namespace MathCore.Extensions.Expressions
                                .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((long)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((long)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((long)left / (short)right).ToExpression();
-                    if (right is ushort) return ((long)left / (ushort)right).ToExpression();
-                    if (right is int) return ((long)left / (int)right).ToExpression();
-                    if (right is uint) return ((long)left / (uint)right).ToExpression();
-                    if (right is long) return ((long)left / (long)right).ToExpression();
-                    //if(right is ulong) return ((long)left / (ulong)right).ToExpression();
-                    if (right is float) return ((long)left / (float)right).ToExpression();
-                    if (right is double) return ((long)left / (double)right).ToExpression();
-                    if (right is Complex) return ((long)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((long)left / (Vector2D)right).ToExpression();
-                    return ((long)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((long)left / b).ToExpression(),
+                        sbyte right1 => ((long)left / right1).ToExpression(),
+                        short s => ((long)left / s).ToExpression(),
+                        ushort right1 => ((long)left / right1).ToExpression(),
+                        int i => ((long)left / i).ToExpression(),
+                        uint u => ((long)left / u).ToExpression(),
+                        long l => ((long)left / l).ToExpression(),
+                        //ulong right1 => ((long)left / right1).ToExpression(),
+                        float f => ((long)left / f).ToExpression(),
+                        double d => ((long)left / d).ToExpression(),
+                        Complex complex => ((long)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((long)left / vector_2d).ToExpression(),
+                        _ => ((long)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is ulong)
                 {
@@ -1221,19 +1255,23 @@ namespace MathCore.Extensions.Expressions
                         }
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((ulong)left / (byte)right).ToExpression();
-                    //if(right is sbyte) return ((ulong)left / (sbyte)right).ToExpression();
-                    //if(right is short) return ((ulong)left / (short)right).ToExpression();
-                    if (right is ushort) return ((ulong)left / (ushort)right).ToExpression();
-                    //if(right is int) return ((ulong)left / (int)right).ToExpression();
-                    if (right is uint) return ((ulong)left / (uint)right).ToExpression();
-                    //if(right is long) return ((ulong)left / (long)right).ToExpression();
-                    if (right is ulong) return ((ulong)left / (ulong)right).ToExpression();
-                    if (right is float) return ((ulong)left / (float)right).ToExpression();
-                    if (right is double) return ((ulong)left / (double)right).ToExpression();
-                    if (right is Complex) return ((ulong)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ulong)left / (Vector2D)right).ToExpression();
-                    return ((ulong)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((ulong)left / b).ToExpression(),
+                        //sbyte right1 => ((ulong)left / right1).ToExpression(),
+                        //short s => ((ulong)left / s).ToExpression(),
+                        ushort right1 => ((ulong)left / right1).ToExpression(),
+                        //int i => ((ulong)left / i).ToExpression(),
+                        uint u => ((ulong)left / u).ToExpression(),
+                        //long l => ((ulong)left / l).ToExpression(),
+                        ulong right1 => ((ulong)left / right1).ToExpression(),
+                        float f => ((ulong)left / f).ToExpression(),
+                        double d => ((ulong)left / d).ToExpression(),
+                        Complex complex => ((ulong)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((ulong)left / vector_2d).ToExpression(),
+                        _ => ((ulong)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is float)
                 {
@@ -1255,19 +1293,23 @@ namespace MathCore.Extensions.Expressions
                                .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((float)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((float)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((float)left / (short)right).ToExpression();
-                    if (right is ushort) return ((float)left / (ushort)right).ToExpression();
-                    if (right is int) return ((float)left / (int)right).ToExpression();
-                    if (right is uint) return ((float)left / (uint)right).ToExpression();
-                    if (right is long) return ((float)left / (long)right).ToExpression();
-                    if (right is ulong) return ((float)left / (ulong)right).ToExpression();
-                    if (right is float) return ((float)left / (float)right).ToExpression();
-                    if (right is double) return ((float)left / (double)right).ToExpression();
-                    if (right is Complex) return ((float)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((float)left / (Vector2D)right).ToExpression();
-                    return ((float)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((float)left / b).ToExpression(),
+                        sbyte right1 => ((float)left / right1).ToExpression(),
+                        short s => ((float)left / s).ToExpression(),
+                        ushort right1 => ((float)left / right1).ToExpression(),
+                        int i => ((float)left / i).ToExpression(),
+                        uint u => ((float)left / u).ToExpression(),
+                        long l => ((float)left / l).ToExpression(),
+                        ulong right1 => ((float)left / right1).ToExpression(),
+                        float f => ((float)left / f).ToExpression(),
+                        double d => ((float)left / d).ToExpression(),
+                        Complex complex => ((float)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((float)left / vector_2d).ToExpression(),
+                        _ => ((float)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is double)
                 {
@@ -1289,72 +1331,86 @@ namespace MathCore.Extensions.Expressions
                                .ToExpression();
                         return Ex.Throw(new DivideByZeroException().ToExpression());
                     }
-                    if (right is byte) return ((double)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((double)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((double)left / (short)right).ToExpression();
-                    if (right is ushort) return ((double)left / (ushort)right).ToExpression();
-                    if (right is int) return ((double)left / (int)right).ToExpression();
-                    if (right is uint) return ((double)left / (uint)right).ToExpression();
-                    if (right is long) return ((double)left / (long)right).ToExpression();
-                    if (right is ulong) return ((double)left / (ulong)right).ToExpression();
-                    if (right is float) return ((double)left / (float)right).ToExpression();
-                    if (right is double) return ((double)left / (double)right).ToExpression();
-                    if (right is Complex) return ((double)left / (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((double)left / (Vector2D)right).ToExpression();
-                    return ((double)left / (right as Vector3D?))?.ToExpression();
+
+                    return right switch
+                    {
+                        byte b => ((double)left / b).ToExpression(),
+                        sbyte right1 => ((double)left / right1).ToExpression(),
+                        short s => ((double)left / s).ToExpression(),
+                        ushort right1 => ((double)left / right1).ToExpression(),
+                        int i => ((double)left / i).ToExpression(),
+                        uint u => ((double)left / u).ToExpression(),
+                        long l => ((double)left / l).ToExpression(),
+                        ulong right1 => ((double)left / right1).ToExpression(),
+                        float f => ((double)left / f).ToExpression(),
+                        double d => ((double)left / d).ToExpression(),
+                        Complex complex => ((double)left / complex).ToExpression(),
+                        Vector2D vector_2d => ((double)left / vector_2d).ToExpression(),
+                        _ => ((double)left / (right as Vector3D?))?.ToExpression()
+                    };
                 }
                 if (left is Complex)
                 {
                     if (IsZero(right))
                         return Ex.Throw(new DivideByZeroException().ToExpression());
-                    if (right is byte) return ((Complex)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((Complex)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((Complex)left / (short)right).ToExpression();
-                    if (right is ushort) return ((Complex)left / (ushort)right).ToExpression();
-                    if (right is int) return ((Complex)left / (int)right).ToExpression();
-                    if (right is uint) return ((Complex)left / (uint)right).ToExpression();
-                    if (right is long) return ((Complex)left / (long)right).ToExpression();
-                    if (right is ulong) return ((Complex)left / (ulong)right).ToExpression();
-                    if (right is float) return ((Complex)left / (float)right).ToExpression();
-                    if (right is double) return ((Complex)left / (double)right).ToExpression();
-                    if (right is Complex) return ((Complex)left / (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Complex)left / (Vector2D)right).ToExpression();
-                    return null;
+                    return right switch
+                    {
+                        byte b => ((Complex)left / b).ToExpression(),
+                        sbyte right1 => ((Complex)left / right1).ToExpression(),
+                        short s => ((Complex)left / s).ToExpression(),
+                        ushort right1 => ((Complex)left / right1).ToExpression(),
+                        int i => ((Complex)left / i).ToExpression(),
+                        uint u => ((Complex)left / u).ToExpression(),
+                        long l => ((Complex)left / l).ToExpression(),
+                        ulong right1 => ((Complex)left / right1).ToExpression(),
+                        float f => ((Complex)left / f).ToExpression(),
+                        double d => ((Complex)left / d).ToExpression(),
+                        Complex complex => ((Complex)left / complex).ToExpression(),
+                        //Vector2D vector_2d => ((Complex)left / vector_2d).ToExpression(),
+                        _ => null
+                    };
                 }
                 if (left is Vector2D)
                 {
                     if (IsZero(right))
                         return Ex.Throw(new DivideByZeroException().ToExpression());
-                    if (right is byte) return ((Vector2D)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector2D)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector2D)left / (short)right).ToExpression();
-                    if (right is ushort) return ((Vector2D)left / (ushort)right).ToExpression();
-                    if (right is int) return ((Vector2D)left / (int)right).ToExpression();
-                    if (right is uint) return ((Vector2D)left / (uint)right).ToExpression();
-                    if (right is long) return ((Vector2D)left / (long)right).ToExpression();
-                    if (right is ulong) return ((Vector2D)left / (ulong)right).ToExpression();
-                    if (right is float) return ((Vector2D)left / (float)right).ToExpression();
-                    return ((Vector2D)left / (right as double?))?.ToExpression();
-                    //if(right is Complex) return ((Vector2D)left / (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Vector2D)left / (Vector2D)right).ToExpression();
+                    return right switch
+                    {
+                        byte b => ((Vector2D)left / b).ToExpression(),
+                        sbyte right1 => ((Vector2D)left / right1).ToExpression(),
+                        short s => ((Vector2D)left / s).ToExpression(),
+                        ushort right1 => ((Vector2D)left / right1).ToExpression(),
+                        int i => ((Vector2D)left / i).ToExpression(),
+                        uint u => ((Vector2D)left / u).ToExpression(),
+                        long l => ((Vector2D)left / l).ToExpression(),
+                        ulong right1 => ((Vector2D)left / right1).ToExpression(),
+                        float f => ((Vector2D)left / f).ToExpression(),
+                        //Complex complex => ((Vector2D)left / complex).ToExpression(),
+                        //Vector2D vector_2d => ((Vector2D)left / vector_2d).ToExpression(),
+                        _ => ((Vector2D)left / (right as double?))?.ToExpression()
+                    };
                 }
                 if (left is Vector3D)
                 {
                     if (IsZero(right))
                         return Ex.Throw(new DivideByZeroException().ToExpression());
-                    if (right is byte) return ((Vector3D)left / (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector3D)left / (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector3D)left / (short)right).ToExpression();
-                    if (right is ushort) return ((Vector3D)left / (ushort)right).ToExpression();
-                    if (right is int) return ((Vector3D)left / (int)right).ToExpression();
-                    if (right is uint) return ((Vector3D)left / (uint)right).ToExpression();
-                    if (right is long) return ((Vector3D)left / (long)right).ToExpression();
-                    if (right is ulong) return ((Vector3D)left / (ulong)right).ToExpression();
-                    if (right is float) return ((Vector3D)left / (float)right).ToExpression();
-                    if (right is double) return ((Vector3D)left / (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector3D)left / (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Vector3D)left / (Vector2D)right).ToExpression();
-                    //return ((Vector3D)left / (right as Vector3D?))?.ToExpression();
+                    return right switch
+                    {
+                        byte b => ((Vector3D)left / b).ToExpression(),
+                        sbyte right1 => ((Vector3D)left / right1).ToExpression(),
+                        short s => ((Vector3D)left / s).ToExpression(),
+                        ushort right1 => ((Vector3D)left / right1).ToExpression(),
+                        int i => ((Vector3D)left / i).ToExpression(),
+                        uint u => ((Vector3D)left / u).ToExpression(),
+                        long l => ((Vector3D)left / l).ToExpression(),
+                        ulong right1 => ((Vector3D)left / right1).ToExpression(),
+                        float f => ((Vector3D)left / f).ToExpression(),
+                        double d => ((Vector3D)left / d).ToExpression(),
+                        //Complex complex => ((Vector3D)left / complex).ToExpression(),
+                        //Vector2D vector_2d => ((Vector3D)left / vector_2d).ToExpression(),
+                        //_ => ((Vector3D)left / (right as Vector3D?))?.ToExpression()
+                        _ => null
+                    };
                 }
                 return null;
             }
@@ -1421,215 +1477,218 @@ namespace MathCore.Extensions.Expressions
             private static Ex AddValues(object left, object right)
             {
                 if (!IsNumeric(left) || !IsNumeric(right)) return null;
-                if (left is byte)
+                return left switch
                 {
-                    if (right is byte) return ((byte)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((byte)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((byte)left + (short)right).ToExpression();
-                    if (right is ushort) return ((byte)left + (ushort)right).ToExpression();
-                    if (right is int) return ((byte)left + (int)right).ToExpression();
-                    if (right is uint) return ((byte)left + (uint)right).ToExpression();
-                    if (right is long) return ((byte)left + (long)right).ToExpression();
-                    if (right is ulong) return ((byte)left + (ulong)right).ToExpression();
-                    if (right is float) return ((byte)left + (float)right).ToExpression();
-                    if (right is double) return ((byte)left + (double)right).ToExpression();
-                    if (right is Complex) return ((byte)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((byte)left + (Vector2D)right).ToExpression();
-                    return ((byte)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is sbyte)
-                {
-                    if (right is byte) return ((sbyte)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((sbyte)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((sbyte)left + (short)right).ToExpression();
-                    if (right is ushort) return ((sbyte)left + (ushort)right).ToExpression();
-                    if (right is int) return ((sbyte)left + (int)right).ToExpression();
-                    if (right is uint) return ((sbyte)left + (uint)right).ToExpression();
-                    if (right is long) return ((sbyte)left + (long)right).ToExpression();
-                    //if(right is ulong) return ((sbyte)left + (ulong)right).ToExpression();
-                    if (right is float) return ((sbyte)left + (float)right).ToExpression();
-                    if (right is double) return ((sbyte)left + (double)right).ToExpression();
-                    if (right is Complex) return ((sbyte)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((sbyte)left + (Vector2D)right).ToExpression();
-                    return ((sbyte)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is short)
-                {
-                    if (right is byte) return ((short)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((short)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((short)left + (short)right).ToExpression();
-                    if (right is ushort) return ((short)left + (ushort)right).ToExpression();
-                    if (right is int) return ((short)left + (int)right).ToExpression();
-                    if (right is uint) return ((short)left + (uint)right).ToExpression();
-                    if (right is long) return ((short)left + (long)right).ToExpression();
-                    //if(right is ulong) return ((short)left + (ulong)right).ToExpression();
-                    if (right is float) return ((short)left + (float)right).ToExpression();
-                    if (right is double) return ((short)left + (double)right).ToExpression();
-                    if (right is Complex) return ((short)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((short)left + (Vector2D)right).ToExpression();
-                    return ((short)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is ushort)
-                {
-                    if (right is byte) return ((ushort)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((ushort)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((ushort)left + (short)right).ToExpression();
-                    if (right is ushort) return ((ushort)left + (ushort)right).ToExpression();
-                    if (right is int) return ((ushort)left + (int)right).ToExpression();
-                    if (right is uint) return ((ushort)left + (uint)right).ToExpression();
-                    if (right is long) return ((ushort)left + (long)right).ToExpression();
-                    if (right is ulong) return ((ushort)left + (ulong)right).ToExpression();
-                    if (right is float) return ((ushort)left + (float)right).ToExpression();
-                    if (right is double) return ((ushort)left + (double)right).ToExpression();
-                    if (right is Complex) return ((ushort)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ushort)left + (Vector2D)right).ToExpression();
-                    return ((ushort)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is int)
-                {
-                    if (right is byte) return ((int)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((int)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((int)left + (short)right).ToExpression();
-                    if (right is ushort) return ((int)left + (ushort)right).ToExpression();
-                    if (right is int) return ((int)left + (int)right).ToExpression();
-                    if (right is uint) return ((int)left + (uint)right).ToExpression();
-                    if (right is long) return ((int)left + (long)right).ToExpression();
-                    //if(right is ulong) return ((int)left + (ulong)right).ToExpression();
-                    if (right is float) return ((int)left + (float)right).ToExpression();
-                    if (right is double) return ((int)left + (double)right).ToExpression();
-                    if (right is Complex) return ((int)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((int)left + (Vector2D)right).ToExpression();
-                    return ((int)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is uint)
-                {
-                    if (right is byte) return ((uint)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((uint)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((uint)left + (short)right).ToExpression();
-                    if (right is ushort) return ((uint)left + (ushort)right).ToExpression();
-                    if (right is int) return ((uint)left + (int)right).ToExpression();
-                    if (right is uint) return ((uint)left + (uint)right).ToExpression();
-                    if (right is long) return ((uint)left + (long)right).ToExpression();
-                    if (right is ulong) return ((uint)left + (ulong)right).ToExpression();
-                    if (right is float) return ((uint)left + (float)right).ToExpression();
-                    if (right is double) return ((uint)left + (double)right).ToExpression();
-                    if (right is Complex) return ((uint)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((uint)left + (Vector2D)right).ToExpression();
-                    return ((uint)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is long)
-                {
-                    if (right is byte) return ((long)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((long)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((long)left + (short)right).ToExpression();
-                    if (right is ushort) return ((long)left + (ushort)right).ToExpression();
-                    if (right is int) return ((long)left + (int)right).ToExpression();
-                    if (right is uint) return ((long)left + (uint)right).ToExpression();
-                    if (right is long) return ((long)left + (long)right).ToExpression();
-                    //if(right is ulong) return ((long)left + (ulong)right).ToExpression();
-                    if (right is float) return ((long)left + (float)right).ToExpression();
-                    if (right is double) return ((long)left + (double)right).ToExpression();
-                    if (right is Complex) return ((long)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((long)left + (Vector2D)right).ToExpression();
-                    return ((long)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is ulong)
-                {
-                    if (right is byte) return ((ulong)left + (byte)right).ToExpression();
-                    //if(right is sbyte) return ((ulong)left + (sbyte)right).ToExpression();
-                    //if(right is short) return ((ulong)left + (short)right).ToExpression();
-                    if (right is ushort) return ((ulong)left + (ushort)right).ToExpression();
-                    //if(right is int) return ((ulong)left + (int)right).ToExpression();
-                    if (right is uint) return ((ulong)left + (uint)right).ToExpression();
-                    //if(right is long) return ((ulong)left + (long)right).ToExpression();
-                    if (right is ulong) return ((ulong)left + (ulong)right).ToExpression();
-                    if (right is float) return ((ulong)left + (float)right).ToExpression();
-                    if (right is double) return ((ulong)left + (double)right).ToExpression();
-                    if (right is Complex) return ((ulong)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ulong)left + (Vector2D)right).ToExpression();
-                    return ((ulong)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is float)
-                {
-                    if (right is byte) return ((float)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((float)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((float)left + (short)right).ToExpression();
-                    if (right is ushort) return ((float)left + (ushort)right).ToExpression();
-                    if (right is int) return ((float)left + (int)right).ToExpression();
-                    if (right is uint) return ((float)left + (uint)right).ToExpression();
-                    if (right is long) return ((float)left + (long)right).ToExpression();
-                    if (right is ulong) return ((float)left + (ulong)right).ToExpression();
-                    if (right is float) return ((float)left + (float)right).ToExpression();
-                    if (right is double) return ((float)left + (double)right).ToExpression();
-                    if (right is Complex) return ((float)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((float)left + (Vector2D)right).ToExpression();
-                    return ((float)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is double)
-                {
-                    if (right is byte) return ((double)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((double)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((double)left + (short)right).ToExpression();
-                    if (right is ushort) return ((double)left + (ushort)right).ToExpression();
-                    if (right is int) return ((double)left + (int)right).ToExpression();
-                    if (right is uint) return ((double)left + (uint)right).ToExpression();
-                    if (right is long) return ((double)left + (long)right).ToExpression();
-                    if (right is ulong) return ((double)left + (ulong)right).ToExpression();
-                    if (right is float) return ((double)left + (float)right).ToExpression();
-                    if (right is double) return ((double)left + (double)right).ToExpression();
-                    if (right is Complex) return ((double)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((double)left + (Vector2D)right).ToExpression();
-                    return ((double)left + (right as Vector3D?))?.ToExpression();
-                }
-                if (left is Complex)
-                {
-                    if (right is byte) return ((Complex)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((Complex)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((Complex)left + (short)right).ToExpression();
-                    if (right is ushort) return ((Complex)left + (ushort)right).ToExpression();
-                    if (right is int) return ((Complex)left + (int)right).ToExpression();
-                    if (right is uint) return ((Complex)left + (uint)right).ToExpression();
-                    if (right is long) return ((Complex)left + (long)right).ToExpression();
-                    if (right is ulong) return ((Complex)left + (ulong)right).ToExpression();
-                    if (right is float) return ((Complex)left + (float)right).ToExpression();
-                    if (right is double) return ((Complex)left + (double)right).ToExpression();
-                    if (right is Complex) return ((Complex)left + (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Complex)left + (Vector2D)right).ToExpression();
-                    return null;
-                }
-                if (left is Vector2D)
-                {
-                    if (right is byte) return ((Vector2D)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector2D)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector2D)left + (short)right).ToExpression();
-                    if (right is ushort) return ((Vector2D)left + (ushort)right).ToExpression();
-                    if (right is int) return ((Vector2D)left + (int)right).ToExpression();
-                    if (right is uint) return ((Vector2D)left + (uint)right).ToExpression();
-                    if (right is long) return ((Vector2D)left + (long)right).ToExpression();
-                    if (right is ulong) return ((Vector2D)left + (ulong)right).ToExpression();
-                    if (right is float) return ((Vector2D)left + (float)right).ToExpression();
-                    if (right is double) return ((Vector2D)left + (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector2D)left + (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((Vector2D)left + (Vector2D)right).ToExpression();
-                    return null;
-                }
-                if (left is Vector3D)
-                {
-                    if (right is byte) return ((Vector3D)left + (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector3D)left + (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector3D)left + (short)right).ToExpression();
-                    if (right is ushort) return ((Vector3D)left + (ushort)right).ToExpression();
-                    if (right is int) return ((Vector3D)left + (int)right).ToExpression();
-                    if (right is uint) return ((Vector3D)left + (uint)right).ToExpression();
-                    if (right is long) return ((Vector3D)left + (long)right).ToExpression();
-                    if (right is ulong) return ((Vector3D)left + (ulong)right).ToExpression();
-                    if (right is float) return ((Vector3D)left + (float)right).ToExpression();
-                    if (right is double) return ((Vector3D)left + (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector3D)left + (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Vector3D)left + (Vector2D)right).ToExpression();
-                    return ((Vector3D)left + (right as Vector3D?))?.ToExpression();
-                }
-                return null;
+                    byte left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    sbyte left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        //ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    short left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        //ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    ushort left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    int left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        //ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    uint left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    long left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        //ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    ulong left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        //sbyte right1 => (left1 + right1).ToExpression(),
+                        //short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        //int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        //long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    float left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    double left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => (left1 + (right as Vector3D?))?.ToExpression()
+                    },
+                    Complex left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        Complex complex => (left1 + complex).ToExpression(),
+                        //Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => null
+                    },
+                    Vector2D left1 => right switch
+                    {
+                        byte b => (left1 + b).ToExpression(),
+                        sbyte right1 => (left1 + right1).ToExpression(),
+                        short s => (left1 + s).ToExpression(),
+                        ushort right1 => (left1 + right1).ToExpression(),
+                        int i => (left1 + i).ToExpression(),
+                        uint u => (left1 + u).ToExpression(),
+                        long l => (left1 + l).ToExpression(),
+                        ulong right1 => (left1 + right1).ToExpression(),
+                        float f => (left1 + f).ToExpression(),
+                        double d => (left1 + d).ToExpression(),
+                        //Complex complex => (left1 + complex).ToExpression(),
+                        Vector2D vector_2d => (left1 + vector_2d).ToExpression(),
+                        _ => null
+                    },
+                    Vector3D vector_3d => right switch
+                    {
+                        byte b => (vector_3d + b).ToExpression(),
+                        sbyte right1 => (vector_3d + right1).ToExpression(),
+                        short s => (vector_3d + s).ToExpression(),
+                        ushort right1 => (vector_3d + right1).ToExpression(),
+                        int i => (vector_3d + i).ToExpression(),
+                        uint u => (vector_3d + u).ToExpression(),
+                        long l => (vector_3d + l).ToExpression(),
+                        ulong right1 => (vector_3d + right1).ToExpression(),
+                        float f => (vector_3d + f).ToExpression(),
+                        double d => (vector_3d + d).ToExpression(),
+                        Complex complex => (vector_3d + complex).ToExpression(),
+                        Vector2D vector_2d => (vector_3d + vector_2d).ToExpression(),
+                        _ => (vector_3d + (right as Vector3D?))?.ToExpression()
+                    },
+                    _ => null
+                };
             }
 
             [NotNull]
@@ -1645,218 +1704,221 @@ namespace MathCore.Extensions.Expressions
             private static Ex subtractValues(object left, object right)
             {
                 if (!IsNumeric(left) || !IsNumeric(right)) return null;
-                if (left is byte)
+                return left switch
                 {
-                    if (right is byte) return ((byte)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((byte)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((byte)left - (short)right).ToExpression();
-                    if (right is ushort) return ((byte)left - (ushort)right).ToExpression();
-                    if (right is int) return ((byte)left - (int)right).ToExpression();
-                    if (right is uint) return ((byte)left - (uint)right).ToExpression();
-                    if (right is long) return ((byte)left - (long)right).ToExpression();
-                    if (right is ulong) return ((byte)left - (ulong)right).ToExpression();
-                    if (right is float) return ((byte)left - (float)right).ToExpression();
-                    if (right is double) return ((byte)left - (double)right).ToExpression();
-                    if (right is Complex) return ((byte)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((byte)left - (Vector2D)right).ToExpression();
-                    return ((byte)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is sbyte)
-                {
-                    if (right is byte) return ((sbyte)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((sbyte)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((sbyte)left - (short)right).ToExpression();
-                    if (right is ushort) return ((sbyte)left - (ushort)right).ToExpression();
-                    if (right is int) return ((sbyte)left - (int)right).ToExpression();
-                    if (right is uint) return ((sbyte)left - (uint)right).ToExpression();
-                    if (right is long) return ((sbyte)left - (long)right).ToExpression();
-                    //if(right is ulong) return ((sbyte)left - (ulong)right).ToExpression();
-                    if (right is float) return ((sbyte)left - (float)right).ToExpression();
-                    if (right is double) return ((sbyte)left - (double)right).ToExpression();
-                    if (right is Complex) return ((sbyte)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((sbyte)left - (Vector2D)right).ToExpression();
-                    return ((sbyte)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is short)
-                {
-                    if (right is byte) return ((short)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((short)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((short)left - (short)right).ToExpression();
-                    if (right is ushort) return ((short)left - (ushort)right).ToExpression();
-                    if (right is int) return ((short)left - (int)right).ToExpression();
-                    if (right is uint) return ((short)left - (uint)right).ToExpression();
-                    if (right is long) return ((short)left - (long)right).ToExpression();
-                    //if(right is ulong) return ((short)left - (ulong)right).ToExpression();
-                    if (right is float) return ((short)left - (float)right).ToExpression();
-                    if (right is double) return ((short)left - (double)right).ToExpression();
-                    if (right is Complex) return ((short)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((short)left - (Vector2D)right).ToExpression();
-                    return ((short)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is ushort)
-                {
-                    if (right is byte) return ((ushort)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((ushort)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((ushort)left - (short)right).ToExpression();
-                    if (right is ushort) return ((ushort)left - (ushort)right).ToExpression();
-                    if (right is int) return ((ushort)left - (int)right).ToExpression();
-                    if (right is uint) return ((ushort)left - (uint)right).ToExpression();
-                    if (right is long) return ((ushort)left - (long)right).ToExpression();
-                    if (right is ulong) return ((ushort)left - (ulong)right).ToExpression();
-                    if (right is float) return ((ushort)left - (float)right).ToExpression();
-                    if (right is double) return ((ushort)left - (double)right).ToExpression();
-                    if (right is Complex) return ((ushort)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ushort)left - (Vector2D)right).ToExpression();
-                    return ((ushort)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is int)
-                {
-                    if (right is byte) return ((int)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((int)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((int)left - (short)right).ToExpression();
-                    if (right is ushort) return ((int)left - (ushort)right).ToExpression();
-                    if (right is int) return ((int)left - (int)right).ToExpression();
-                    if (right is uint) return ((int)left - (uint)right).ToExpression();
-                    if (right is long) return ((int)left - (long)right).ToExpression();
-                    //if(right is ulong) return ((int)left - (ulong)right).ToExpression();
-                    if (right is float) return ((int)left - (float)right).ToExpression();
-                    if (right is double) return ((int)left - (double)right).ToExpression();
-                    if (right is Complex) return ((int)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((int)left - (Vector2D)right).ToExpression();
-                    return ((int)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is uint)
-                {
-                    if (right is byte) return ((uint)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((uint)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((uint)left - (short)right).ToExpression();
-                    if (right is ushort) return ((uint)left - (ushort)right).ToExpression();
-                    if (right is int) return ((uint)left - (int)right).ToExpression();
-                    if (right is uint) return ((uint)left - (uint)right).ToExpression();
-                    if (right is long) return ((uint)left - (long)right).ToExpression();
-                    if (right is ulong) return ((uint)left - (ulong)right).ToExpression();
-                    if (right is float) return ((uint)left - (float)right).ToExpression();
-                    if (right is double) return ((uint)left - (double)right).ToExpression();
-                    if (right is Complex) return ((uint)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((uint)left - (Vector2D)right).ToExpression();
-                    return ((uint)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is long)
-                {
-                    if (right is byte) return ((long)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((long)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((long)left - (short)right).ToExpression();
-                    if (right is ushort) return ((long)left - (ushort)right).ToExpression();
-                    if (right is int) return ((long)left - (int)right).ToExpression();
-                    if (right is uint) return ((long)left - (uint)right).ToExpression();
-                    if (right is long) return ((long)left - (long)right).ToExpression();
-                    //if(right is ulong) return ((long)left - (ulong)right).ToExpression();
-                    if (right is float) return ((long)left - (float)right).ToExpression();
-                    if (right is double) return ((long)left - (double)right).ToExpression();
-                    if (right is Complex) return ((long)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((long)left - (Vector2D)right).ToExpression();
-                    return ((long)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is ulong)
-                {
-                    if (right is byte) return ((ulong)left - (byte)right).ToExpression();
-                    //if(right is sbyte) return ((ulong)left - (sbyte)right).ToExpression();
-                    //if(right is short) return ((ulong)left - (short)right).ToExpression();
-                    if (right is ushort) return ((ulong)left - (ushort)right).ToExpression();
-                    //if(right is int) return ((ulong)left - (int)right).ToExpression();
-                    if (right is uint) return ((ulong)left - (uint)right).ToExpression();
-                    //if(right is long) return ((ulong)left - (long)right).ToExpression();
-                    if (right is ulong) return ((ulong)left - (ulong)right).ToExpression();
-                    if (right is float) return ((ulong)left - (float)right).ToExpression();
-                    if (right is double) return ((ulong)left - (double)right).ToExpression();
-                    if (right is Complex) return ((ulong)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((ulong)left - (Vector2D)right).ToExpression();
-                    return ((ulong)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is float)
-                {
-                    if (right is byte) return ((float)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((float)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((float)left - (short)right).ToExpression();
-                    if (right is ushort) return ((float)left - (ushort)right).ToExpression();
-                    if (right is int) return ((float)left - (int)right).ToExpression();
-                    if (right is uint) return ((float)left - (uint)right).ToExpression();
-                    if (right is long) return ((float)left - (long)right).ToExpression();
-                    if (right is ulong) return ((float)left - (ulong)right).ToExpression();
-                    if (right is float) return ((float)left - (float)right).ToExpression();
-                    if (right is double) return ((float)left - (double)right).ToExpression();
-                    if (right is Complex) return ((float)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((float)left - (Vector2D)right).ToExpression();
-                    return ((float)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is double)
-                {
-                    if (right is byte) return ((double)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((double)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((double)left - (short)right).ToExpression();
-                    if (right is ushort) return ((double)left - (ushort)right).ToExpression();
-                    if (right is int) return ((double)left - (int)right).ToExpression();
-                    if (right is uint) return ((double)left - (uint)right).ToExpression();
-                    if (right is long) return ((double)left - (long)right).ToExpression();
-                    if (right is ulong) return ((double)left - (ulong)right).ToExpression();
-                    if (right is float) return ((double)left - (float)right).ToExpression();
-                    if (right is double) return ((double)left - (double)right).ToExpression();
-                    if (right is Complex) return ((double)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((double)left - (Vector2D)right).ToExpression();
-                    return ((double)left - (right as Vector3D?))?.ToExpression();
-                }
-                if (left is Complex)
-                {
-                    if (right is byte) return ((Complex)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((Complex)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((Complex)left - (short)right).ToExpression();
-                    if (right is ushort) return ((Complex)left - (ushort)right).ToExpression();
-                    if (right is int) return ((Complex)left - (int)right).ToExpression();
-                    if (right is uint) return ((Complex)left - (uint)right).ToExpression();
-                    if (right is long) return ((Complex)left - (long)right).ToExpression();
-                    if (right is ulong) return ((Complex)left - (ulong)right).ToExpression();
-                    if (right is float) return ((Complex)left - (float)right).ToExpression();
-                    if (right is double) return ((Complex)left - (double)right).ToExpression();
-                    if (right is Complex) return ((Complex)left - (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Complex)left - (Vector2D)right).ToExpression();
-                    return null;
-                }
-                if (left is Vector2D)
-                {
-                    if (right is byte) return ((Vector2D)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector2D)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector2D)left - (short)right).ToExpression();
-                    if (right is ushort) return ((Vector2D)left - (ushort)right).ToExpression();
-                    if (right is int) return ((Vector2D)left - (int)right).ToExpression();
-                    if (right is uint) return ((Vector2D)left - (uint)right).ToExpression();
-                    if (right is long) return ((Vector2D)left - (long)right).ToExpression();
-                    if (right is ulong) return ((Vector2D)left - (ulong)right).ToExpression();
-                    if (right is float) return ((Vector2D)left - (float)right).ToExpression();
-                    if (right is double) return ((Vector2D)left - (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector2D)left - (Complex)right).ToExpression();
-                    if (right is Vector2D) return ((Vector2D)left - (Vector2D)right).ToExpression();
-                    return null;
-                }
-                if (left is Vector3D)
-                {
-                    if (right is byte) return ((Vector3D)left - (byte)right).ToExpression();
-                    if (right is sbyte) return ((Vector3D)left - (sbyte)right).ToExpression();
-                    if (right is short) return ((Vector3D)left - (short)right).ToExpression();
-                    if (right is ushort) return ((Vector3D)left - (ushort)right).ToExpression();
-                    if (right is int) return ((Vector3D)left - (int)right).ToExpression();
-                    if (right is uint) return ((Vector3D)left - (uint)right).ToExpression();
-                    if (right is long) return ((Vector3D)left - (long)right).ToExpression();
-                    if (right is ulong) return ((Vector3D)left - (ulong)right).ToExpression();
-                    if (right is float) return ((Vector3D)left - (float)right).ToExpression();
-                    if (right is double) return ((Vector3D)left - (double)right).ToExpression();
-                    //if(right is Complex) return ((Vector3D)left - (Complex)right).ToExpression();
-                    //if(right is Vector2D) return ((Vector3D)left - (Vector2D)right).ToExpression();
-                    return ((Vector3D)left - (right as Vector3D?))?.ToExpression();
-                }
-                return null;
+                    byte left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    sbyte left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        //ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    short left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        //ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    ushort left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    int left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        //ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    uint left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    long left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        //ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    ulong left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        //sbyte right1 => (left1 - right1).ToExpression(),
+                        //short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        //int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        //long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    float left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    double left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => (left1 - (right as Vector3D?))?.ToExpression()
+                    },
+                    Complex left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        Complex complex => (left1 - complex).ToExpression(),
+                        //Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => null
+                    },
+                    Vector2D left1 => right switch
+                    {
+                        byte b => (left1 - b).ToExpression(),
+                        sbyte right1 => (left1 - right1).ToExpression(),
+                        short s => (left1 - s).ToExpression(),
+                        ushort right1 => (left1 - right1).ToExpression(),
+                        int i => (left1 - i).ToExpression(),
+                        uint u => (left1 - u).ToExpression(),
+                        long l => (left1 - l).ToExpression(),
+                        ulong right1 => (left1 - right1).ToExpression(),
+                        float f => (left1 - f).ToExpression(),
+                        double d => (left1 - d).ToExpression(),
+                        //Complex complex => (left1 - complex).ToExpression(),
+                        Vector2D vector_2d => (left1 - vector_2d).ToExpression(),
+                        _ => null
+                    },
+                    Vector3D vector_3d => right switch
+                    {
+                        byte b => (vector_3d - b).ToExpression(),
+                        sbyte right1 => (vector_3d - right1).ToExpression(),
+                        short s => (vector_3d - s).ToExpression(),
+                        ushort right1 => (vector_3d - right1).ToExpression(),
+                        int i => (vector_3d - i).ToExpression(),
+                        uint u => (vector_3d - u).ToExpression(),
+                        long l => (vector_3d - l).ToExpression(),
+                        ulong right1 => (vector_3d - right1).ToExpression(),
+                        float f => (vector_3d - f).ToExpression(),
+                        double d => (vector_3d - d).ToExpression(),
+                        Complex complex => (vector_3d - complex).ToExpression(),
+                        Vector2D vector_2d => (vector_3d - vector_2d).ToExpression(),
+                        _ => (vector_3d - (right as Vector3D?))?.ToExpression()
+                    },
+                    _ => null
+                };
             }
         }
 
-        [NotNull] public static MethodCallExpression GetAbs([NotNull] this Ex x) => Ex.Call(((Func<double, double>)Math.Abs).Method, x);
+        [NotNull] public static MethodCallExpression GetAbs([NotNull] this Ex x) => Call(((Func<double, double>)Math.Abs).Method, x);
     }
 }

@@ -25,7 +25,7 @@ namespace System.Threading.Tasks
             }
         }
 
-        public PauseToken Token => new PauseToken(this);
+        public PauseToken Token => new(this);
 
         public Task WaitWhilePausedAsync() => _Paused.Task;
     }

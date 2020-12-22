@@ -9,7 +9,7 @@ namespace MathCore.CommandProcessor
     /// <summary>Список обработчиков команды</summary>
     public class CommandHandlersList : List<CommandHandler>
     {
-        [NotNull] private readonly Dictionary<int, CommandHandler> _Handlers = new Dictionary<int, CommandHandler>();
+        [NotNull] private readonly Dictionary<int, CommandHandler> _Handlers = new();
 
         /// <summary>Оператор добавления команды к списку</summary>
         /// <param name="list">Список обработчиков команды</param>
@@ -109,7 +109,7 @@ namespace MathCore.CommandProcessor
         }
 
         /// <summary>Словарь обработчиков команд (ключ - имя команды, значение - список обработчиков)</summary>
-        [NotNull] private readonly Dictionary<string, CommandArgHandlersList> _CommandHandlers = new Dictionary<string, CommandArgHandlersList>();
+        [NotNull] private readonly Dictionary<string, CommandArgHandlersList> _CommandHandlers = new();
 
         /// <summary>Обращение к списку обработчиков команды по её имени (индексатор)</summary>
         /// <param name="CommandName">Имя команды</param>

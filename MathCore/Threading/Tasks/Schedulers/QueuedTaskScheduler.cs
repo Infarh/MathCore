@@ -48,10 +48,10 @@ namespace MathCore.Threading.Tasks.Schedulers
         /// Задачи с малыми приоритетами являются предпочтительными.
         /// Группы приоритетов являются циклическими в пределах одного уровня приоритета.
         /// </summary>
-        private readonly SortedList<int, QueueGroup> _QueueGroups = new SortedList<int, QueueGroup>();
+        private readonly SortedList<int, QueueGroup> _QueueGroups = new();
 
         /// <summary>Система отмены задач в случае вызова метода <see cref="Dispose"/></summary>
-        private readonly CancellationTokenSource _DisposeCancellation = new CancellationTokenSource();
+        private readonly CancellationTokenSource _DisposeCancellation = new();
 
         /// <summary>
         /// Максимально допустимый уровень конкурентности для текущего планировщика.
@@ -60,7 +60,7 @@ namespace MathCore.Threading.Tasks.Schedulers
         private readonly int _ConcurrencyLevel;
 
         /// <summary>Whether we're processing tasks on the current thread.</summary>
-        private static readonly ThreadLocal<bool> __TaskProcessingThread = new ThreadLocal<bool>();
+        private static readonly ThreadLocal<bool> __TaskProcessingThread = new();
 
         // ***
         // *** For when using a target scheduler

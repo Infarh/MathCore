@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
@@ -13,7 +14,7 @@ namespace MathCore.ViewModels
     {
         /// <summary>Объект, отвечающий за управление процессом установки значения свойства при статическом вызове метода Set</summary>
         /// <typeparam name="T">Тип значения свойства</typeparam>
-        public readonly struct SetStaticValueResult<T>
+        public readonly ref struct SetStaticValueResult<T>
         {
             /// <summary>Было ли значение свойства обновлено</summary>
             private readonly bool _Result;
@@ -174,26 +175,34 @@ namespace MathCore.ViewModels
                 && _OnPropertyChanged.Equals(other._OnPropertyChanged);
 
             /// <inheritdoc />
-            public override bool Equals(object obj) => obj is SetStaticValueResult<T> setter && Equals(setter);
+            //[Obsolete("Нельзя вызвать метод Equals у ref struct типа")]
+            [EditorBrowsable(EditorBrowsableState.Never)]
+            public override bool Equals(object obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
 
             /// <inheritdoc />
             public override int GetHashCode()
             {
+                
                 unchecked
                 {
                     var hash_code = _Result.GetHashCode();
-                    hash_code = (hash_code * 397) ^ EqualityComparer<T>.Default.GetHashCode(_OldValue);
-                    hash_code = (hash_code * 397) ^ EqualityComparer<T>.Default.GetHashCode(_NewValue);
+                    var equality_comparer = EqualityComparer<T>.Default;
+                    hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue);
+                    hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue);
                     hash_code = (hash_code * 397) ^ _OnPropertyChanged.GetHashCode();
                     return hash_code;
                 }
             }
 
             /// <summary>Оператор равенства двух значений</summary>
-            public static bool operator ==(in SetStaticValueResult<T> left, in SetStaticValueResult<T> right) => left.Equals(right);
+            public static bool operator ==(in SetStaticValueResult<T> left, in SetStaticValueResult<T> right) =>
+                ReferenceEquals(left._OnPropertyChanged, right._OnPropertyChanged)
+                && left._Result == right._Result
+                && Equals(left._OldValue, right._OldValue)
+                && Equals(left._NewValue, right._NewValue);
 
             /// <summary>Оператор неравенства двух значений</summary>
-            public static bool operator !=(in SetStaticValueResult<T> left, in SetStaticValueResult<T> right) => !left.Equals(right);
+            public static bool operator !=(in SetStaticValueResult<T> left, in SetStaticValueResult<T> right) => !(left == right);
 
         }
 
@@ -210,7 +219,9 @@ namespace MathCore.ViewModels
             [NotNull] in Action<string> OnPropertyChanged, 
             [NotNull, CallerMemberName] in string PropertyName = null)
         {
-            if (Equals(field, value)) return new SetStaticValueResult<T>(false, field, field, OnPropertyChanged);
+            if (Equals(field, value)) 
+                return new SetStaticValueResult<T>(false, field, field, OnPropertyChanged);
+
             var old_value = field;
             field = value;
             OnPropertyChanged(PropertyName);
@@ -232,7 +243,9 @@ namespace MathCore.ViewModels
             [NotNull] in Action<string> OnPropertyChanged, 
             [NotNull, CallerMemberName] in string PropertyName = null)
         {
-            if (Equals(field, value) || !Validator(value)) return new SetStaticValueResult<T>(false, field, value, OnPropertyChanged);
+            if (Equals(field, value) || !Validator(value)) 
+                return new SetStaticValueResult<T>(false, field, value, OnPropertyChanged);
+
             var old_value = field;
             field = value;
             OnPropertyChanged(PropertyName);

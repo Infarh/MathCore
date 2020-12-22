@@ -42,7 +42,7 @@ namespace MathCore.Queries
             (IsDescending ? __OrderByDescending : __OrderBy).MakeGenericMethod(ItemsType, SortingKeyType);
 
         /// <summary>Пулл методов упорядочивания элементов</summary>
-        [NotNull] private static readonly ConcurrentDictionary<(Type Source, Type Result, bool Descending), Delegate> __Selectors = new ConcurrentDictionary<(Type Source, Type Result, bool Descending), Delegate>();
+        [NotNull] private static readonly ConcurrentDictionary<(Type Source, Type Result, bool Descending), Delegate> __Selectors = new();
 
         /// <summary>Получить метод, формирующий запрос с упорядочиванием элементов</summary>
         /// <typeparam name="TItems">Тип упорядочиваемых элементов</typeparam>

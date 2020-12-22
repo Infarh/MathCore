@@ -16,9 +16,9 @@ namespace MathCore
 {
     /// <summary>Комплексное число</summary>
     [Serializable, TypeConverter(typeof(ComplexConverter))]
-    public readonly partial struct Complex : ICloneable<Complex>, IFormattable, 
-                                             IEquatable<Complex>, IEquatable<float>, IEquatable<double>, 
-                                             IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>, 
+    public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
+                                             IEquatable<Complex>, IEquatable<float>, IEquatable<double>,
+                                             IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>,
                                              IEquatable<ushort>, IEquatable<int>, IEquatable<uint>,
                                              IEquatable<long>, IEquatable<ulong>, IEquatable<(double Re, double Im)>
     {
@@ -144,18 +144,18 @@ namespace MathCore
         /// <param name="Im">Комплексный аргумент</param>
         /// <returns>Значение логарифма</returns>
         public static Complex Ln(double Im)
-            => new Complex(Math.Log(Im), Math.Abs(Im).Equals(0d) ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
+            => new(Math.Log(Im), Math.Abs(Im).Equals(0d) ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
 
         ///<summary>Натуральный логогриф комплексного числа</summary>
         ///<param name="z">Комплексное число</param>
         ///<returns>Натуральный логарифм</returns>
-        public static Complex Ln(in Complex z) => new Complex(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im), z.Arg);
+        public static Complex Ln(in Complex z) => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im), z.Arg);
 
         ///<summary>Логогриф мнимого числа по действительному основанию</summary>
         ///<param name="Im">Мнимое число</param>
         ///<param name="b">Действительное основание логарифма</param>
         ///<returns>Логарифм мнимого числа по действительному основанию</returns>
-        public static Complex Log(double Im, double b) => new Complex(
+        public static Complex Log(double Im, double b) => new(
             Math.Log(Im, b),
             Math.Abs(Im) < double.Epsilon
                 ? 0
@@ -168,18 +168,18 @@ namespace MathCore
         /// <param name="b">Действительное основание логарифма</param>
         /// <returns>Логарифм комплексного числа по действительному основанию</returns>
         public static Complex Log(in Complex z, double b)
-            => new Complex(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(Math.E, b));
+            => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(Math.E, b));
 
         /// <summary>Экспоненциальная форма числа Z = e^j*Arg</summary>
         /// <param name="Arg">Аргумент</param>
         /// <returns>Комплексное число в экспоненциальной форме записи</returns>
-        public static Complex Exp(double Arg) => new Complex(Math.Cos(Arg), Math.Sin(Arg));
+        public static Complex Exp(double Arg) => new(Math.Cos(Arg), Math.Sin(Arg));
 
         /// <summary>Экспоненциальная форма числа Z = Abs * e^j*Arg</summary>
         /// <param name="Abs">Модуль числа</param>
         /// <param name="Arg">Аргумент числа</param>
         /// <returns>Комплексное число в экспоненциальной форме</returns>
-        public static Complex Exp(double Abs, double Arg) => new Complex(Abs * Math.Cos(Arg), Abs * Math.Sin(Arg));
+        public static Complex Exp(double Abs, double Arg) => new(Abs * Math.Cos(Arg), Abs * Math.Sin(Arg));
 
         /// <summary>Экспонента с комплексным показателем Z = e^(re + j*im) = e^re * [cos(im) + j*sin(im)]</summary>
         /// <param name="z">Комплексный показатель степени экспоненты</param>
@@ -200,34 +200,37 @@ namespace MathCore
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(double Re, double Im = 0) => new Complex(Re, Im);
+        public static Complex Mod(double Re, double Im = 0) => new(Re, Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(double Re, in Complex Im) => new Complex(Re + Im.Re, Im.Im);
+        public static Complex Mod(double Re, in Complex Im) => new(Re + Im.Re, Im.Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(in Complex Re, in Complex Im) => new Complex(Re.Re + Im.Re, Re.Im + Im.Im);
+        public static Complex Mod(in Complex Re, in Complex Im) => new(Re.Re + Im.Re, Re.Im + Im.Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(in Complex Re, double Im) => new Complex(Re.Re, Re.Im + Im);
+        public static Complex Mod(in Complex Re, double Im) => new(Re.Re, Re.Im + Im);
+
+        public static Complex ReValue(double re) => new(re);
+        public static Complex ImValue(double im) => new(0, im);
 
         /// <summary>Действительное "комплексное" число</summary>
-        public static readonly Complex Real = new Complex(1);
+        public static readonly Complex Real = new(1);
 
         /// <summary>Не-число</summary>
-        public static readonly Complex NaN = new Complex(double.NaN, double.NaN);
+        public static readonly Complex NaN = new(double.NaN, double.NaN);
 
         /// <summary>Мнимая единица</summary>
-        public static readonly Complex i = new Complex(0, 1);
+        public static readonly Complex i = new(0, 1);
 
         /// <summary>Создать массив комплексных чисел</summary>
         /// <param name="Re">Массив действительных чисел</param>
@@ -281,7 +284,7 @@ namespace MathCore
 
         /// <summary>Комплексно сопряжённое число</summary>
         [XmlIgnore]
-        public Complex ComplexConjugate => new Complex(Re, -Im);
+        public Complex ComplexConjugate => new(Re, -Im);
 
         /// <summary>Обратное значение 1/Z</summary>
         public Complex Reciprocal => _Re.Equals(0d) && _Im.Equals(0d)
@@ -386,7 +389,7 @@ namespace MathCore
         /// <summary>Получение клона</summary>
         /// <returns>Клон числа</returns>
         [DST]
-        public Complex Clone() => new Complex(_Re, _Im);
+        public Complex Clone() => new(_Re, _Im);
 
         /// <summary>Получение клона</summary>
         /// <returns>Клон числа</returns>
@@ -556,7 +559,7 @@ namespace MathCore
         /// <summary>Округление числа</summary>
         /// <param name="DigitsCount">Число разрядов</param>
         /// <returns>Округлённое число</returns>
-        public Complex Round(int DigitsCount = 0) => new Complex(Math.Round(_Re, DigitsCount), Math.Round(_Im, DigitsCount));
+        public Complex Round(int DigitsCount = 0) => new(Math.Round(_Re, DigitsCount), Math.Round(_Im, DigitsCount));
 
         /// <summary>Вычисление квадратного корня числа</summary>
         /// <returns>Квадратный корень числа</returns>

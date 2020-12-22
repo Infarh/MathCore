@@ -10,7 +10,7 @@ namespace System.Linq.Reactive
         private readonly TimeSpan _Interval;
         private readonly bool _Async;
         private volatile bool _Work;
-        private readonly object _SyncObject = new object();
+        private readonly object _SyncObject = new();
         private Thread _Thread;
 
         public TimeIntervalObservable(TimeSpan interval, bool Start = false, bool Async = false)

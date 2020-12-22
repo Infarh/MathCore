@@ -31,7 +31,7 @@ namespace MathCore.Mediator
     public class Messenger : IMessenger
     {
         private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, List<Delegate>>> _Handlers =
-            new ConcurrentDictionary<Type, ConcurrentDictionary<string, List<Delegate>>>();
+            new();
 
         public TaskScheduler TaskScheduler { get; set; } = TaskScheduler.Default;
 

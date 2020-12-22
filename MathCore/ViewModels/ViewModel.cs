@@ -145,7 +145,7 @@ namespace MathCore.ViewModels
             PropertyChangedEvent?.GetInvocationList().Where(i => i.Target is T).Cast<PropertyChangedEventHandler>() ?? Enumerable.Empty<PropertyChangedEventHandler>();
 
 
-        [NotNull] private readonly object _PropertiesDependenciesSyncRoot = new object();
+        [NotNull] private readonly object _PropertiesDependenciesSyncRoot = new();
         /// <summary>Словарь графа зависимости изменений свойств</summary>
         [CanBeNull] private Dictionary<string, List<string>> _PropertiesDependenciesDictionary;
 
@@ -272,7 +272,7 @@ namespace MathCore.ViewModels
         }
 
         /// <summary>Словарь, хранящий время последней генерации события изменения указанного свойства в асинхронном режиме</summary>
-        [NotNull] private readonly Dictionary<string, DateTime> _PropertyAsyncInvokeTime = new Dictionary<string, DateTime>();
+        [NotNull] private readonly Dictionary<string, DateTime> _PropertyAsyncInvokeTime = new();
 
         /// <summary>Асинхронная генерация события изменения свойства с возможностью указания таймаута ожидания повторных изменений</summary>
         /// <param name="PropertyName">Имя свойства</param>

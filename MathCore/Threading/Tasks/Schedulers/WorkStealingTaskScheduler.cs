@@ -12,7 +12,7 @@ namespace MathCore.Threading.Tasks.Schedulers
         [ThreadStatic] private static WorkStealingQueue<Task> __ThreadTaskQueue;
 
         private readonly int _ConcurrencyLevel;
-        private readonly Queue<Task> _Queue = new Queue<Task>();
+        private readonly Queue<Task> _Queue = new();
         private WorkStealingQueue<Task>[] _TaskQueues = new WorkStealingQueue<Task>[Environment.ProcessorCount];
         private readonly Lazy<Thread[]> _Threads;
         private int _ThreadsWaiting;

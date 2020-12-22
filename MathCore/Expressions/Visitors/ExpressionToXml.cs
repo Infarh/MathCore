@@ -13,7 +13,7 @@ namespace MathCore.Expressions.Visitors
         // Закрытые поля
         //----------------------------------------------------------------------------------------//
         // Сюда мы будет сохранять "пройденные" части выражения
-        private readonly StringBuilder _Result = new StringBuilder();
+        private readonly StringBuilder _Result = new();
 
         //----------------------------------------------------------------------------------------//
         // Конструкторы
@@ -115,20 +115,13 @@ namespace MathCore.Expressions.Visitors
 
             Visit(node.Left);
 
-            switch (node.NodeType)
+            _Result.Append(node.NodeType switch
             {
-                case ExpressionType.Multiply:
-                    _Result.Append("*");
-                    break;
-                case ExpressionType.Add:
-                    _Result.Append("+");
-                    break;
-                case ExpressionType.Subtract:
-                    _Result.Append("-");
-                    break;
-                default:
-                    throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported");
-            }
+                ExpressionType.Multiply => "*",
+                ExpressionType.Add => "+",
+                ExpressionType.Subtract => "-",
+                _ => throw new NotSupportedException($"The binary operator '{node.NodeType}' is not supported")
+            });
 
             Visit(node.Right);
 

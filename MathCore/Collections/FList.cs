@@ -38,7 +38,7 @@ namespace MathCore.Collections
     {
         /// <summary>Пустой список</summary>
         /// <remarks>Свойство содержит единственный для всего приложения экземпляр пустого списка</remarks>
-        public static FList<T> Empty { get; } = new FList<T>();
+        public static FList<T> Empty { get; } = new();
 
         /// <summary>Признак того, что текущий список является пустым</summary>
         public bool IsEmpty => ReferenceEquals(this, Empty);
@@ -80,7 +80,7 @@ namespace MathCore.Collections
         /// <param name="Head">Головной элемент списка</param>
         /// <param name="Tail">Хвост списка. Если не указан, то используется пустой список <see cref="Empty"/></param>
         /// <returns></returns>
-        public static FList<T> New(T Head, FList<T>? Tail = null) => new FList<T>(Head, Tail ?? Empty);
+        public static FList<T> New(T Head, FList<T>? Tail = null) => new(Head, Tail ?? Empty);
 
         /// <summary>Создание нового списка на основе указанного перечисления элементов</summary>
         /// <param name="Items">Перечисление элементов создаваемого списка</param>

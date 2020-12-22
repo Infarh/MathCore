@@ -10,7 +10,7 @@ namespace MathCore.Threading.Tasks.Schedulers
     /// <summary>Enables the creation of a group of schedulers that support round-robin scheduling for fairness.</summary>
     public sealed class RoundRobinSchedulerGroup
     {
-        private readonly List<RoundRobinTaskSchedulerQueue> _Queues = new List<RoundRobinTaskSchedulerQueue>();
+        private readonly List<RoundRobinTaskSchedulerQueue> _Queues = new();
         private int _NextQueue;
 
         /// <summary>Creates a new scheduler as part of this group.</summary>
@@ -75,7 +75,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             internal RoundRobinTaskSchedulerQueue(RoundRobinSchedulerGroup pool) => _Pool = pool;
 
             private readonly RoundRobinSchedulerGroup _Pool;
-            internal readonly Queue<Task> WorkItems = new Queue<Task>();
+            internal readonly Queue<Task> WorkItems = new();
             internal bool Disposed;
 
             protected override IEnumerable<Task> GetScheduledTasks()

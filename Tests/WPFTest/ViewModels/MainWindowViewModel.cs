@@ -35,6 +35,9 @@ namespace WPFTest.ViewModels
 
         #endregion
 
-        public MainWindowViewModel(IMessenger Messenger) => _Messenger = Messenger;
+        public MainWindowViewModel(IMessenger Messenger)
+        {
+            _Messenger = Messenger;
+        }
     }
 }

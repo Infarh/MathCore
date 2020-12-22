@@ -775,13 +775,13 @@ namespace MathCore
         /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull]
-        public static implicit operator MatrixInt(int X) => new MatrixInt(1, 1) { [0, 0] = X };
+        public static implicit operator MatrixInt(int X) => new(1, 1) { [0, 0] = X };
 
         [DST, NotNull]  public static explicit operator int[,]([NotNull] MatrixInt M) => (int[,])M._Data.Clone();
 
-        [DST, NotNull]  public static explicit operator MatrixInt([NotNull] int[,] Data) => new MatrixInt(Data);
+        [DST, NotNull]  public static explicit operator MatrixInt([NotNull] int[,] Data) => new(Data);
 
-        [DST, NotNull]  public static explicit operator MatrixInt([NotNull] int[] Data) => new MatrixInt(Data);
+        [DST, NotNull]  public static explicit operator MatrixInt([NotNull] int[] Data) => new(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 

@@ -51,7 +51,7 @@ namespace MathCore
         /// <param name="Arguments">Массив строковых значений аргументов</param>
         /// <returns>Экземпляр <see cref="ArgumentsString"/></returns>
         [NotNull]
-        public static implicit operator ArgumentsString(string[] Arguments) => new ArgumentsString(Arguments);
+        public static implicit operator ArgumentsString(string[] Arguments) => new(Arguments);
 
         /// <summary>Оператор неявного приведения <see cref="ArgumentsString"/> к типу массива строк</summary>
         /// <param name="Arguments">Экземпляр <see cref="ArgumentsString"/></param>

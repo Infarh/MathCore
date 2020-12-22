@@ -40,16 +40,16 @@ namespace MathCore
         /// <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
         /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
         /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        [NotNull] public static MatrixComplex CreateCol([NotNull] params Complex[] data) => new MatrixComplex(Array.CreateColArray(data));
+        [NotNull] public static MatrixComplex CreateCol([NotNull] params Complex[] data) => new(Array.CreateColArray(data));
 
         /// <summary>Создать матрицу-строку</summary><param name="data">Элементы строки</param><returns>Матрица-строка</returns>
         /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
         /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
-        [NotNull] public static MatrixComplex CreateRow([NotNull] params Complex[] data) => new MatrixComplex(Array.CreateRowArray(data));
+        [NotNull] public static MatrixComplex CreateRow([NotNull] params Complex[] data) => new(Array.CreateRowArray(data));
 
         /// <summary>Создать диагональную матрицу</summary><param name="elements">Элементы диагональной матрицы</param>
         /// <returns>Диагональная матрица</returns>
-        [NotNull] public static MatrixComplex CreateDiagonalMatrixComplex([NotNull] params Complex[] elements) => new MatrixComplex(Array.CreateDiagonal(elements));
+        [NotNull] public static MatrixComplex CreateDiagonalMatrixComplex([NotNull] params Complex[] elements) => new(Array.CreateDiagonal(elements));
 
         /// <summary>Операции над двумерными массивами</summary>
         public static partial class Array
@@ -62,12 +62,12 @@ namespace MathCore
         /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         [DST]
         [NotNull]
-        public static MatrixComplex GetUnitaryMatrix(int N) => new MatrixComplex(Array.GetUnitaryArrayMatrix(N));
+        public static MatrixComplex GetUnitaryMatrix(int N) => new(Array.GetUnitaryArrayMatrix(N));
 
         /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
         /// <returns>Трансвекция матрицы А</returns>
         [NotNull]
-        public static MatrixComplex GetTransvection([NotNull] MatrixComplex A, int j) => new MatrixComplex(Array.GetTransvection(A._Data, j));
+        public static MatrixComplex GetTransvection([NotNull] MatrixComplex A, int j) => new(Array.GetTransvection(A._Data, j));
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -207,12 +207,12 @@ namespace MathCore
         /// <summary>Получить столбец матрицы</summary>
         /// <param name="j">Номер столбца</param>
         /// <returns>Столбец матрицы номер j</returns>
-        [DST, NotNull] public MatrixComplex GetCol(int j) => new MatrixComplex(Array.GetCol(_Data, j));
+        [DST, NotNull] public MatrixComplex GetCol(int j) => new(Array.GetCol(_Data, j));
 
         /// <summary>Получить строку матрицы</summary>
         /// <param name="i">Номер строки</param>
         /// <returns>Строка матрицы номер i</returns>
-        [DST, NotNull] public MatrixComplex GetRow(int i) => new MatrixComplex(Array.GetRow(_Data, i));
+        [DST, NotNull] public MatrixComplex GetRow(int i) => new(Array.GetRow(_Data, i));
 
         /// <summary>Приведение матрицы к ступенчатому виду методом Гаусса</summary>
         /// <param name="P">Матрица перестановок</param>
@@ -271,7 +271,7 @@ namespace MathCore
 
         /// <summary>Транспонирование матрицы</summary>
         /// <returns>Транспонированная матрица</returns>
-        [DST, NotNull] public MatrixComplex GetTranspose() => new MatrixComplex(Array.Transpose(_Data));
+        [DST, NotNull] public MatrixComplex GetTranspose() => new(Array.Transpose(_Data));
 
         /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
         /// <param name="n">Номер столбца</param>
@@ -283,7 +283,7 @@ namespace MathCore
         /// <param name="n">Номер столбца</param>
         /// <param name="m">Номер строки</param>
         /// <returns>Минор элемента матрицы [n,m]</returns>
-        [NotNull] public MatrixComplex GetMinor(int n, int m) => new MatrixComplex(Array.GetMinor(_Data, n, m));
+        [NotNull] public MatrixComplex GetMinor(int n, int m) => new(Array.GetMinor(_Data, n, m));
 
         /// <summary>Определитель матрицы</summary>
         public Complex GetDeterminant() => Array.GetDeterminant(_Data);
@@ -344,7 +344,7 @@ namespace MathCore
         [DST, NotNull] Complex[,] ICloneable<Complex[,]>.Clone() => _Data.CloneObject();
 
         /// <inheritdoc/>
-        [DST, NotNull] public MatrixComplex Clone() => new MatrixComplex(_Data, true);
+        [DST, NotNull] public MatrixComplex Clone() => new(_Data, true);
 
         #endregion
 
@@ -362,31 +362,31 @@ namespace MathCore
 
         [DST] public static bool operator !=([CanBeNull] MatrixComplex A, [CanBeNull] Complex[,] B) => !(A == B);
 
-        [DST, NotNull] public static MatrixComplex operator +([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Add(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator +([NotNull] MatrixComplex M, Complex x) => new(Add(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator +(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Add(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator +(Complex x, [NotNull] MatrixComplex M) => new(Add(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Subtract(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M, Complex x) => new(Subtract(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M) => new MatrixComplex(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex M) => new(new Complex[M._N, M._M].Initialize(M._Data, (i, j, data) => -data[i, j]));
 
-        [DST, NotNull] public static MatrixComplex operator -(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Subtract(x, M._Data));
+        [DST, NotNull] public static MatrixComplex operator -(Complex x, [NotNull] MatrixComplex M) => new(Subtract(x, M._Data));
 
-        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Multiply(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex M, Complex x) => new(Multiply(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator *(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Multiply(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator *(Complex x, [NotNull] MatrixComplex M) => new(Multiply(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator *([NotNull] Complex[,] A, [NotNull] MatrixComplex B) => new MatrixComplex(Multiply(A, B._Data));
+        [DST, NotNull] public static MatrixComplex operator *([NotNull] Complex[,] A, [NotNull] MatrixComplex B) => new(Multiply(A, B._Data));
 
-        [DST, NotNull] public static MatrixComplex operator *([NotNull] Complex[] A, [NotNull] MatrixComplex B) => new MatrixComplex(Multiply(Array.CreateColArray(A), B._Data));
+        [DST, NotNull] public static MatrixComplex operator *([NotNull] Complex[] A, [NotNull] MatrixComplex B) => new(Multiply(Array.CreateColArray(A), B._Data));
 
-        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] Complex[] B) => new MatrixComplex(Multiply(A._Data, Array.CreateColArray(B)));
+        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] Complex[] B) => new(Multiply(A._Data, Array.CreateColArray(B)));
 
-        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] Complex[,] B) => new MatrixComplex(Multiply(A._Data, B));
+        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] Complex[,] B) => new(Multiply(A._Data, B));
 
-        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex M, Complex x) => new MatrixComplex(Divide(M._Data, x));
+        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex M, Complex x) => new(Divide(M._Data, x));
 
-        [DST, NotNull] public static MatrixComplex operator /(Complex x, [NotNull] MatrixComplex M) => new MatrixComplex(Divide(x, M._Data));
+        [DST, NotNull] public static MatrixComplex operator /(Complex x, [NotNull] MatrixComplex M) => new(Divide(x, M._Data));
 
         [DST, NotNull]
         public static MatrixComplex operator ^([NotNull] MatrixComplex M, int n)
@@ -411,35 +411,35 @@ namespace MathCore
 
         /// <summary>Оператор сложения двух матриц</summary>
         /// <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Сумма двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator +([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Add(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator +([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new(Add(A._Data, B._Data));
 
         /// <summary>Оператор разности двух матриц</summary>
         /// <param name="A">Уменьшаемое</param><param name="B">Вычитаемое</param><returns>Разность двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Subtract(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator -([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new(Subtract(A._Data, B._Data));
 
         /// <summary>Оператор произведения двух матриц</summary>
         /// <param name="A">Первый сомножитель</param><param name="B">Второй сомножитель</param><returns>Произведение двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Multiply(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator *([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new(Multiply(A._Data, B._Data));
 
         /// <summary>Оператор деления двух матриц</summary>
         /// <param name="A">Делимое</param><param name="B">Делитель</param><returns>Частное двух матриц</returns>
-        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Divide(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator /([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new(Divide(A._Data, B._Data));
 
         /// <summary>Конкатенация двух матриц (либо по строкам, либо по столбцам)</summary>
         /// <param name="A">Первое слагаемое</param><param name="B">Второе слагаемое</param><returns>Объединённая матрица</returns>
-        [DST, NotNull] public static MatrixComplex operator |([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new MatrixComplex(Concatenate(A._Data, B._Data));
+        [DST, NotNull] public static MatrixComplex operator |([NotNull] MatrixComplex A, [NotNull] MatrixComplex B) => new(Concatenate(A._Data, B._Data));
 
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
-        [DST, NotNull] public static implicit operator MatrixComplex(Complex X) => new MatrixComplex(1, 1) { [0, 0] = X };
+        [DST, NotNull] public static implicit operator MatrixComplex(Complex X) => new(1, 1) { [0, 0] = X };
 
         [DST, NotNull] public static explicit operator Complex[,]([NotNull] MatrixComplex M) => M._Data;
 
-        [DST, NotNull] public static explicit operator MatrixComplex([NotNull] Complex[,] Data) => new MatrixComplex(Data);
+        [DST, NotNull] public static explicit operator MatrixComplex([NotNull] Complex[,] Data) => new(Data);
 
-        [DST, NotNull] public static explicit operator MatrixComplex([NotNull] Complex[] Data) => new MatrixComplex(Data);
+        [DST, NotNull] public static explicit operator MatrixComplex([NotNull] Complex[] Data) => new(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 

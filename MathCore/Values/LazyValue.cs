@@ -16,7 +16,7 @@ namespace MathCore.Values
         private object _Value;
 
         /// <summary>Объект кросспоточной блокировки</summary>
-        private readonly object _LockObject = new object();
+        private readonly object _LockObject = new();
 
         /// <summary>Флаг инициализации</summary>
         private bool _Initialized;
@@ -87,7 +87,7 @@ namespace MathCore.Values
         ///<param name="Initializer">Метод инициализации "ленивого" значения</param>
         ///<returns>"Ленивое" значение с указанным методом инициализации</returns>
         [NotNull]
-        public static implicit operator LazyValue<T>(Func<T> Initializer) => new LazyValue<T>(Initializer);
+        public static implicit operator LazyValue<T>(Func<T> Initializer) => new(Initializer);
 
         /* ------------------------------------------------------------------------------------------ */
     }

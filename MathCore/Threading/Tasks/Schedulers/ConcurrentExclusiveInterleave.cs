@@ -203,7 +203,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             /// <summary>The maximum concurrency level for the scheduler.</summary>
             private readonly int _MaximumConcurrencyLevel;
             /// <summary>Whether a Task is currently being processed on this thread.</summary>
-            private readonly ThreadLocal<bool> _ProcessingTaskOnCurrentThread = new ThreadLocal<bool>();
+            private readonly ThreadLocal<bool> _ProcessingTaskOnCurrentThread = new();
 
             /// <summary>Initializes the scheduler.</summary>
             /// <param name="interleave">The parent interleave.</param>

@@ -36,6 +36,6 @@ namespace MathCore
     {
         [NotNull]
         public static LambdaEqualityComparer<T> Create<T>(this Func<T, T, bool> Comparer, [CanBeNull] Func<T, int> HashFunction = null) 
-            => new LambdaEqualityComparer<T>(Comparer, HashFunction);
+            => new(Comparer, HashFunction);
     }
 }

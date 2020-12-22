@@ -113,7 +113,7 @@ namespace MathCore
         public static implicit operator Predicate<TimeSpan>(TimeInterval I) => I.Check;
 
         public static implicit operator TimeSpan(TimeInterval I) => I.Length;
-        public static explicit operator TimeInterval(TimeSpan V) => new TimeInterval(TimeSpan.Zero, true, V, true);
+        public static explicit operator TimeInterval(TimeSpan V) => new(TimeSpan.Zero, true, V, true);
 
         /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="x">Проверяемая величина</param>
@@ -161,7 +161,7 @@ namespace MathCore
         /// <summary>Протяжённость интервала</summary>
         public DateTime Length
         {
-            get => new DateTime(_Max.Ticks - _Min.Ticks);
+            get => new(_Max.Ticks - _Min.Ticks);
             set
             {
                 var middle = Middle;
@@ -173,7 +173,7 @@ namespace MathCore
 
         public DateTime Middle
         {
-            get => new DateTime((_Min.Ticks + _Max.Ticks) / 2);
+            get => new((_Min.Ticks + _Max.Ticks) / 2);
             set
             {
                 var half_length = Length.Ticks / 2;
@@ -252,7 +252,7 @@ namespace MathCore
         public static implicit operator Predicate<DateTime>(DateTimeInterval I) => I.Check;
 
         public static implicit operator DateTime(DateTimeInterval I) => I.Length;
-        public static explicit operator DateTimeInterval(DateTime V) => new DateTimeInterval(DateTime.MinValue, true, V, true);
+        public static explicit operator DateTimeInterval(DateTime V) => new(DateTime.MinValue, true, V, true);
 
         /// <summary>Оператор проверки на вхождение величины в интервал</summary>
         /// <param name="x">Проверяемая величина</param>

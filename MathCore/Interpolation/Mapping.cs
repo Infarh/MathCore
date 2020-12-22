@@ -30,9 +30,9 @@ namespace MathCore.Interpolation
 
         public double Y2 { get; set; }
 
-        public Vector2D P1 { get => new Vector2D(X1, Y1); set => (X1, Y1) = value; }
+        public Vector2D P1 { get => new(X1, Y1); set => (X1, Y1) = value; }
 
-        public Vector2D P2 { get => new Vector2D(X2, Y2); set => (X2, Y2) = value; }
+        public Vector2D P2 { get => new(X2, Y2); set => (X2, Y2) = value; }
 
         public double this[double x] => Value(x);
 

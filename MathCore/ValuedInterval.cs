@@ -101,17 +101,17 @@ namespace MathCore
 
         #region Интервальные функции
 
-        public ValuedInterval<TValue> IncludeMax(bool Include) => new ValuedInterval<TValue>(_Min, _MinInclude, _Max, Include, _Value);
-        public ValuedInterval<TValue> IncludeMin(bool Include) => new ValuedInterval<TValue>(_Min, Include, _Max, _MaxInclude, _Value);
-        public ValuedInterval<TValue> Include(bool IncludeMin, bool IncludeMax) => new ValuedInterval<TValue>(_Min, IncludeMin, _Max, IncludeMax, _Value);
-        public ValuedInterval<TValue> Include(bool Include) => new ValuedInterval<TValue>(_Min, Include, _Max, Include, _Value);
+        public ValuedInterval<TValue> IncludeMax(bool Include) => new(_Min, _MinInclude, _Max, Include, _Value);
+        public ValuedInterval<TValue> IncludeMin(bool Include) => new(_Min, Include, _Max, _MaxInclude, _Value);
+        public ValuedInterval<TValue> Include(bool IncludeMin, bool IncludeMax) => new(_Min, IncludeMin, _Max, IncludeMax, _Value);
+        public ValuedInterval<TValue> Include(bool Include) => new(_Min, Include, _Max, Include, _Value);
 
-        public ValuedInterval<TValue> SetMin(double value) => new ValuedInterval<TValue>(value, _MinInclude, _Max, _MaxInclude, _Value);
-        public ValuedInterval<TValue> SetMin(double value, bool IncludeMin) => new ValuedInterval<TValue>(value, IncludeMin, _Max, _MaxInclude, _Value);
-        public ValuedInterval<TValue> SetMax(double value) => new ValuedInterval<TValue>(_Min, _MinInclude, value, _MaxInclude, _Value);
-        public ValuedInterval<TValue> SetMax(double value, bool IncludeMax) => new ValuedInterval<TValue>(_Min, _MinInclude, value, IncludeMax, _Value);
+        public ValuedInterval<TValue> SetMin(double value) => new(value, _MinInclude, _Max, _MaxInclude, _Value);
+        public ValuedInterval<TValue> SetMin(double value, bool IncludeMin) => new(value, IncludeMin, _Max, _MaxInclude, _Value);
+        public ValuedInterval<TValue> SetMax(double value) => new(_Min, _MinInclude, value, _MaxInclude, _Value);
+        public ValuedInterval<TValue> SetMax(double value, bool IncludeMax) => new(_Min, _MinInclude, value, IncludeMax, _Value);
 
-        public ValuedInterval<TValue> SetValue(TValue value) => new ValuedInterval<TValue>(_Min, _MinInclude, _Max, _MaxInclude, value);
+        public ValuedInterval<TValue> SetValue(TValue value) => new(_Min, _MinInclude, _Max, _MaxInclude, value);
 
         public void Deconstruct(out double min, out double max)
         {
@@ -246,7 +246,7 @@ namespace MathCore
                 yield return min + i * dx;
         }
 
-        public ValuedInterval<TValue> GetInvertedInterval() => new ValuedInterval<TValue>(_Max, _MaxInclude, _Min, _MinInclude, _Value);
+        public ValuedInterval<TValue> GetInvertedInterval() => new(_Max, _MaxInclude, _Min, _MinInclude, _Value);
 
         public IEnumerable<double> GetValues(double Step)
         {
@@ -300,15 +300,15 @@ namespace MathCore
 
         public static implicit operator double(ValuedInterval<TValue> I) => I.Length;
 
-        public static explicit operator ValuedInterval<TValue>(double V) => new ValuedInterval<TValue>(0, true, V, true, default);
+        public static explicit operator ValuedInterval<TValue>(double V) => new(0, true, V, true, default);
 
-        public static ValuedInterval<TValue> operator +(ValuedInterval<TValue> I, double x) => new ValuedInterval<TValue>(I._Min + x, I._MinInclude, I._Max + x, I._MaxInclude, I._Value);
+        public static ValuedInterval<TValue> operator +(ValuedInterval<TValue> I, double x) => new(I._Min + x, I._MinInclude, I._Max + x, I._MaxInclude, I._Value);
 
-        public static ValuedInterval<TValue> operator -(ValuedInterval<TValue> I, double x) => new ValuedInterval<TValue>(I._Min - x, I._MinInclude, I._Max - x, I._MaxInclude, I._Value);
+        public static ValuedInterval<TValue> operator -(ValuedInterval<TValue> I, double x) => new(I._Min - x, I._MinInclude, I._Max - x, I._MaxInclude, I._Value);
 
-        public static ValuedInterval<TValue> operator *(ValuedInterval<TValue> I, double x) => new ValuedInterval<TValue>(I._Min * x, I._MinInclude, I._Max * x, I._MaxInclude, I._Value);
+        public static ValuedInterval<TValue> operator *(ValuedInterval<TValue> I, double x) => new(I._Min * x, I._MinInclude, I._Max * x, I._MaxInclude, I._Value);
 
-        public static ValuedInterval<TValue> operator /(ValuedInterval<TValue> I, double x) => new ValuedInterval<TValue>(I._Min / x, I._MinInclude, I._Max / x, I._MaxInclude, I._Value);
+        public static ValuedInterval<TValue> operator /(ValuedInterval<TValue> I, double x) => new(I._Min / x, I._MinInclude, I._Max / x, I._MaxInclude, I._Value);
 
         /* ------------------------------------------------------------------------------------------ */
     }

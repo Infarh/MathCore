@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+
 using MathCore.Annotations;
 
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -9,12 +10,12 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.Collections.Generic
 {
-    public class ObservableLinkedList<T> : 
-        ICollection, 
-        ISerializable, 
+    public class ObservableLinkedList<T> :
+        ICollection,
+        ISerializable,
         IDeserializationCallback,
         IList<T>,
-        INotifyCollectionChanged, 
+        INotifyCollectionChanged,
         INotifyPropertyChanged
     {
         private const string IndexerName = "Item[]";
@@ -34,7 +35,7 @@ namespace System.Collections.Generic
                 var o = d.Target;
                 switch (o)
                 {
-                    case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
+                    case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
                         synchronize_invoke.Invoke(d, args);
                         break;
                     default:

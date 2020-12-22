@@ -1,3 +1,4 @@
+  
 name: Publish GitHub.com/packages
 
 on:
@@ -15,15 +16,11 @@ jobs:
       
       - name: Checkout repository
         uses: actions/checkout@v1
-        with:
-          submodules: true
         
-      - name: Use .NET 3.1.402
+      - name: Use .NET 5.0.100
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.402
-  
-      - uses: warrenbuckley/Setup-Nuget@v1  
+          dotnet-version: 5.0.100
         
       - name: Building
         run: |
@@ -34,10 +31,10 @@ jobs:
         run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
         
       - name: Packing
-        run: dotnet pack MathCore/MathCore.csproj -c Release -v m       
-       
-      - name: Add source
-        run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/Infarh/index.json" -UserName Infarh -Password ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
       
+      - name: Add Source
+        run: dotnet nuget add source https://nuget.pkg.github.com/Infarh/index.json -n github -u Infarh -p ${{secrets.GITHUB_TOKEN}} 
+            
       - name: Push package
-        run: nuget push **/*.nupkg -Source "GitHub" -SkipDuplicate
+        run: dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/Infarh/index.json -k ${{secrets.GITHUB_TOKEN}}

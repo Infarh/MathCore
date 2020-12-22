@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -18,10 +20,10 @@ namespace System
         public static void Start<TS, TE>(this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e)
         {
             var handler = Handler;
-            if(handler is null) return;
+            if (handler is null) return;
             var invocations = handler.GetInvocationList();
             foreach (var invocation in invocations)
-                if(invocation.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired)
+                if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
                     invoke.Invoke(invocation, new object[] { Sender, e });
                 else
                     invocation.DynamicInvoke(Sender, e);

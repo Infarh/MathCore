@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿#nullable enable
+using System.Windows;
 using MathCore.Mediator;
 using MathCore.ViewModels;
 using WPFTest.Models;

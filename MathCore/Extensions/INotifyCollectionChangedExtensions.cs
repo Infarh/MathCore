@@ -145,7 +145,7 @@ namespace System.ComponentModel
         }
 
         [NotNull]
-        private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>> __Subscribers = new Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>>();
+        private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>> __Subscribers = new();
 
         [NotNull]
         public static IDisposable UsingSubscribeToProperty<T, TItem>(
@@ -237,7 +237,7 @@ namespace System.ComponentModel
         {
             [NotNull] private readonly INotifyCollectionChanged _Collection;
             [NotNull] private readonly NotifyCollectionChangedEventHandler _EventHandler;
-            [NotNull, ItemNotNull] private readonly List<NotifyCollectionChangedEventArgs> _Events = new List<NotifyCollectionChangedEventArgs>(1000);
+            [NotNull, ItemNotNull] private readonly List<NotifyCollectionChangedEventArgs> _Events = new(1000);
 
             public CollectionEventDeferer([NotNull] INotifyCollectionChanged collection, [NotNull] NotifyCollectionChangedEventHandler EventHandler)
             {

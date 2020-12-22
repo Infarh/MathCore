@@ -38,6 +38,6 @@ namespace MathCore.Evaluations
         /// <summary>Оператор неявного преобразования типа функции к типу вычисления функции</summary>
         /// <param name="Function">Оборачиваемая функция</param>
         [NotNull]
-        public static implicit operator FunctionEvaluation<T>(Func<T> Function) => new FunctionEvaluation<T>(Function);
+        public static implicit operator FunctionEvaluation<T>(Func<T> Function) => new(Function);
     }
 }

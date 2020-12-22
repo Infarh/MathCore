@@ -28,7 +28,7 @@ namespace MathCore.Logging
         private string _Message;
         private object _Data;
         private LogType _Type;
-        [NotNull, ItemNotNull] private readonly List<LogItem> _Items = new List<LogItem>();
+        [NotNull, ItemNotNull] private readonly List<LogItem> _Items = new();
         private bool _Initialized;
 
         public int ItemsCount => _Items.Count;

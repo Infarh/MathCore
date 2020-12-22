@@ -449,16 +449,16 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static implicit operator BigInteger(long value) => new BigInteger(value);
+        public static implicit operator BigInteger(long value) => new(value);
 
         [NotNull]
-        public static implicit operator BigInteger(ulong value) => new BigInteger(value);
+        public static implicit operator BigInteger(ulong value) => new(value);
 
         [NotNull]
-        public static implicit operator BigInteger(int value) => new BigInteger(value);
+        public static implicit operator BigInteger(int value) => new(value);
 
         [NotNull]
-        public static implicit operator BigInteger(uint value) => new BigInteger((ulong)value);
+        public static implicit operator BigInteger(uint value) => new((ulong)value);
 
 
         //***********************************************************************

@@ -13,7 +13,7 @@ namespace MathCore.Logging
     {
         public class LogPool
         {
-            private readonly Dictionary<string, Log> _LogDictionary = new Dictionary<string, Log>();
+            private readonly Dictionary<string, Log> _LogDictionary = new();
 
             public Log this[[NotNull] string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new Log(name));
 
@@ -35,13 +35,13 @@ namespace MathCore.Logging
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs Args) => CollectionChanged.Start(this, Args);
 
-        private static readonly LogPool __LogPool = new LogPool();
+        private static readonly LogPool __LogPool = new();
 
         public static LogPool Pool => __LogPool;
 
         private readonly string _Name;
         private LogType _Type;
-        private readonly List<LogItem> _Items = new List<LogItem>();
+        private readonly List<LogItem> _Items = new();
 
         public int ItemsCount => _Items.Count;
 

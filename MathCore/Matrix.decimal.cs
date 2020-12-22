@@ -790,13 +790,13 @@ namespace MathCore
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST]
         [NotNull]
-        public static implicit operator MatrixDecimal(decimal X) => new MatrixDecimal(1, 1) { [0, 0] = X };
+        public static implicit operator MatrixDecimal(decimal X) => new(1, 1) { [0, 0] = X };
 
         [DST] [NotNull] public static explicit operator decimal[,]([NotNull] MatrixDecimal M) => (decimal[,])M._Data.Clone();
 
-        [DST] [NotNull] public static explicit operator MatrixDecimal([NotNull] decimal[,] Data) => new MatrixDecimal(Data);
+        [DST] [NotNull] public static explicit operator MatrixDecimal([NotNull] decimal[,] Data) => new(Data);
 
-        [DST] [NotNull] public static explicit operator MatrixDecimal([NotNull] decimal[] Data) => new MatrixDecimal(Data);
+        [DST] [NotNull] public static explicit operator MatrixDecimal([NotNull] decimal[] Data) => new(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 

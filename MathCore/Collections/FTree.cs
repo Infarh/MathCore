@@ -6,7 +6,7 @@ namespace MathCore.Collections
 {
     public class FTree<T>
     {
-        public static FTree<T> Empty { get; } = new FTree<T>();
+        public static FTree<T> Empty { get; } = new();
 
         public bool IsEmpty => ReferenceEquals(this, Empty);
 
@@ -34,11 +34,11 @@ namespace MathCore.Collections
             this.Right = Right ?? Empty;
         }
 
-        public static FTree<T> New(T root, FTree<T>? left = null, FTree<T>? right = null) => new FTree<T>(root, left, right);
+        public static FTree<T> New(T root, FTree<T>? left = null, FTree<T>? right = null) => new(root, left, right);
 
-        public FTree<T> AddLeft(T root, FTree<T>? right = null) => new FTree<T>(root, this, right);
+        public FTree<T> AddLeft(T root, FTree<T>? right = null) => new(root, this, right);
 
-        public FTree<T> AddRight(T root, FTree<T>? left = null) => new FTree<T>(root, left, this);
+        public FTree<T> AddRight(T root, FTree<T>? left = null) => new(root, left, this);
 
         public IEnumerable<T> EnumLeftRootRight()
         {
@@ -120,12 +120,6 @@ namespace MathCore.Collections
             var nodes = new Stack<FTree<T>> { this };
             if(!Right.IsEmpty) nodes.Push(Right);
             if(!Left.IsEmpty) nodes.Push(Left);
-
-            FTree<T> node = null;
-            while (nodes.Count > 0)
-            {
-
-            }
 
             if (!Left.IsEmpty)
                 foreach (var item in Left.EnumLeftRootRight())

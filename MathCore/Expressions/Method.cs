@@ -16,7 +16,7 @@ namespace System.Linq.Expressions
         }
 
         private static readonly Dictionary<MethodInfo, Delegate> __InvokersDictionary =
-            new Dictionary<MethodInfo, Delegate>();
+            new();
 
         public static Func<TObject, TResult> GetInvoker<TObject>(MethodInfo method) =>
             (Func<TObject, TResult>)__InvokersDictionary.GetValueOrAddNew(method,

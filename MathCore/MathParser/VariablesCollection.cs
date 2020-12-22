@@ -21,7 +21,7 @@ namespace MathCore.MathParser
         private readonly MathExpression _Expression;
 
         [NotNull]
-        private readonly List<ExpressionVariable> _Variables = new List<ExpressionVariable>();
+        private readonly List<ExpressionVariable> _Variables = new();
 
         /// <summary>Количество переменных в коллекции</summary>
         public int Count => _Variables.Count;

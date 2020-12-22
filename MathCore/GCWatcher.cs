@@ -60,9 +60,9 @@ namespace MathCore
         private static void OnComplete() => __Complete.BeginInvoke(__GcWatcher, EventArgs.Empty, null, null);
 
         /// <summary>Объект-наблюдатель за сборщиком мусора</summary>
-        private static readonly GCWatcher __GcWatcher = new GCWatcher();
+        private static readonly GCWatcher __GcWatcher = new();
         /// <summary>Объект синхронизации потоков управления наблюдателем</summary>
-        private static readonly object __SyncRoot = new object();
+        private static readonly object __SyncRoot = new();
         /// <summary>Поток наблюдения с сборщиком мусора</summary>
         private static Thread _WatcherThread;
         /// <summary>Признак активности наблюдателя</summary>

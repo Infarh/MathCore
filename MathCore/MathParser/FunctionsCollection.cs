@@ -14,7 +14,7 @@ namespace MathCore.MathParser
     {
         /// <summary>Список функций математического выражения</summary>
         [NotNull]
-        private readonly List<ExpressionFunction> _Functions = new List<ExpressionFunction>();
+        private readonly List<ExpressionFunction> _Functions = new();
 
         /// <summary>Имена функций</summary>
         [NotNull]

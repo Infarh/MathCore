@@ -21,6 +21,6 @@ namespace System
 
         /// <summary>Оператор неявного приведения типа <see cref="HyperlinkAttribute"/> к <see cref="Uri"/></summary>
         /// <param name="A">Атрибут ссылки, преобразуемый в <see cref="Uri"/></param>
-        public static implicit operator Uri(HyperlinkAttribute A) => new Uri(A.Link);
+        public static implicit operator Uri(HyperlinkAttribute A) => new(A.Link);
     }
 }

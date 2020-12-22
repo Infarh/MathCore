@@ -17,7 +17,7 @@ namespace System.Linq.Reactive
 
         /// <summary>Словарь связей</summary>
         [NotNull]
-        private static readonly ConcurrentDictionary<int, ObserverLink<T>> __Links = new ConcurrentDictionary<int, ObserverLink<T>>();
+        private static readonly ConcurrentDictionary<int, ObserverLink<T>> __Links = new();
 
         /// <summary>Получить связь между наблюдателем и списком наблюдателей</summary>
         /// <param name="Observers">Коллекция наблюдателей</param>
@@ -32,7 +32,7 @@ namespace System.Linq.Reactive
         private ICollection<IObserver<T>> _Observers;
         /// <summary>Объект межпотоковой синхронизации</summary>
         [NotNull]
-        private readonly object _SyncRoot = new object();
+        private readonly object _SyncRoot = new();
 
         /// <summary>Инициализация новой связи между списком наблюдателей и отслеживаемым наблюдателем</summary>
         /// <param name="Observers">Список наблюдателей</param>

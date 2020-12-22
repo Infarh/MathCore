@@ -46,8 +46,8 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 arg = arg switch
                 {
                     FunctionArgumentNameNode name => new FunctionArgumentNode(name),
-                    VariableValueNode _ => new FunctionArgumentNode(null, arg),
-                    VariantOperatorNode _ when arg.Left is VariableValueNode => new FunctionArgumentNode(
+                    VariableValueNode => new FunctionArgumentNode(null, arg),
+                    VariantOperatorNode when arg.Left is VariableValueNode => new FunctionArgumentNode(
                         ((VariableValueNode) arg.Left).Name, arg.Right),
                     _ => new FunctionArgumentNode(null, arg)
                 };

@@ -14,7 +14,7 @@ namespace MathCore.Threading.Tasks.Schedulers
         private static bool __CurrentThreadIsProcessingItems;
 
         /// <summary>Список задач, требующих исполнения</summary>
-        private readonly LinkedList<Task> _Tasks = new LinkedList<Task>(); // protected by lock(_tasks)
+        private readonly LinkedList<Task> _Tasks = new(); // protected by lock(_tasks)
 
         /// <summary>Максимальный уровень параллелизма, определённый для данного планировщика</summary>
         private readonly int _MaximumConcurrencyLevel;

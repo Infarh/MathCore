@@ -13,7 +13,7 @@ namespace MathCore.IoC
                 return mode switch
                 {
                     ServiceRegistrationMode.Singleton =>
-                    (ServiceRegistration<TServiceType>)RegisterSingleton<TServiceType>(),
+                    RegisterSingleton<TServiceType>(),
                     ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceType>(),
                     ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceType>(),
                     _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
@@ -28,8 +28,7 @@ namespace MathCore.IoC
             lock (_SyncRoot)
                 return mode switch
                 {
-                    ServiceRegistrationMode.Singleton => (ServiceRegistration<TService>)
-                    RegisterSingleton<TServiceInterface, TService>(),
+                    ServiceRegistrationMode.Singleton => RegisterSingleton<TServiceInterface, TService>(),
                     ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceInterface, TService>(),
                     ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceInterface, TService>(),
                     _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
@@ -42,8 +41,7 @@ namespace MathCore.IoC
             lock (_SyncRoot)
                 return mode switch
                 {
-                    ServiceRegistrationMode.Singleton => (ServiceRegistration<TService>)RegisterSingleton(
-                        FactoryMethod),
+                    ServiceRegistrationMode.Singleton => RegisterSingleton(FactoryMethod),
                     ServiceRegistrationMode.SingleCall => RegisterSingleCall(FactoryMethod),
                     ServiceRegistrationMode.SingleThread => RegisterSingleThread(FactoryMethod),
                     _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)

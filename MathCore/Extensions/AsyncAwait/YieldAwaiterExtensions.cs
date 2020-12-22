@@ -6,8 +6,16 @@ namespace System.Threading.Tasks
     // ReSharper disable once UnusedType.Global
     public static class YieldAwaiterExtensions
     {
-        public static YieldAwaitableThreadPool ConfigureAwait(this YieldAwaitable _, bool LockContext) => new YieldAwaitableThreadPool(LockContext);
+        /// <summary>Продолжить в пуле потоков</summary>
+        /// <param name="LockContext">Если истина, то продолжение будет выполнено в том же потоке, если ложь - то в пуле потоков</param>
+        public static YieldAwaitableThreadPool ConfigureAwait(this YieldAwaitable _, bool LockContext) => new(LockContext);
 
-        public static TaskSchedulerAwaitable ConfigureAwait(this YieldAwaitable _, TaskScheduler Scheduler) => new TaskSchedulerAwaitable(Scheduler);
+        /// <summary>Выполнить продолжение в указанном планировщике</summary>
+        /// <param name="Scheduler">Планировщик, в котором требуется выполнить продолжение</param>
+        public static TaskSchedulerAwaitable ConfigureAwait(this YieldAwaitable _, TaskScheduler Scheduler) => new(Scheduler);
+
+        /// <summary>Выполнить продолжение в указанном контексте синхронизации</summary>
+        /// <param name="context">Контекст синхронизации, в котором требуется выполнить продолжение</param>
+        public static SynchronizationContextAwaitable ConfigureAwait(this YieldAwaitable _, SynchronizationContext context) => new(context);
     }
 }

@@ -28,10 +28,10 @@ namespace System.IO
         /// <param name="BufferSize">Размер буфера (по умолчанию 4096 байта)</param>
         /// <returns>Буферизованный поток данных</returns>
         [DST, NotNull]
-        public static BufferedStream GetBufferedStream([NotNull] this Stream DataStream, int BufferSize = 4096) => new BufferedStream(DataStream, BufferSize);
+        public static BufferedStream GetBufferedStream([NotNull] this Stream DataStream, int BufferSize = 4096) => new(DataStream, BufferSize);
 
         [DST, NotNull]
-        public static StreamWrapper GetWrapper([NotNull] this Stream BaseStream) => new StreamWrapper(BaseStream);
+        public static StreamWrapper GetWrapper([NotNull] this Stream BaseStream) => new(BaseStream);
 
         [DST]
         public static T ReadStructure<T>([NotNull] this Stream stream)

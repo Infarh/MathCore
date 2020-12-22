@@ -130,9 +130,7 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitBinary([NotNull] BinaryExpression b)
         {
-            //return base.VisitBinary(b);
-            var NodeType = b.NodeType;
-            switch(NodeType)
+            switch(b.NodeType)
             {
                 case ExpressionType.Add:
                 case ExpressionType.AddChecked:
