@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.36</Version>
+    <Version>0.0.37</Version>
     <PackageReleaseNotes>
-      Добавлены методы-расширения для XmlReader/Writer и Random
+      Исправление метода GetDescription для Enum; добавлен генератор случайных значений для списков
     </PackageReleaseNotes>
   </PropertyGroup>
 
