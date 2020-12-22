@@ -11,6 +11,20 @@ namespace System
     /// <summary>Методы-расширения для генератора случайных чисел</summary>
     public static class RandomExtensions
     {
+        /// <summary>Создать генератор случных элементов</summary>
+        /// <typeparam name="T">Тип элементов списка</typeparam>
+        /// <param name="Random">Датчик случайных чисел</param>
+        /// <param name="Items">Список элементов, на основе которого надо создать генератор</param>
+        /// <returns>Генератор случайного значения из элементов списка</returns>
+        public static Randomizer<T> GetRandomizer<T>(this Random Random, IList<T> Items) => new(Items, Random);
+
+        /// <summary>Создать генератор случных элементов</summary>
+        /// <typeparam name="T">Тип элементов списка</typeparam>
+        /// <param name="Random">Датчик случайных чисел</param>
+        /// <param name="Items">Элементы, на основе которых надо создать генератор</param>
+        /// <returns>Генератор случайного значения из элементов списка</returns>
+        public static Randomizer<T> GetRandomizer<T>(this Random Random, params T[] Items) => new(Items, Random);
+
         /// <summary>Случайный элемент из указанного набора вариантов (ссылка на элемент)</summary>
         /// <typeparam name="T">Тип элементов</typeparam>
         /// <param name="rnd">Генератор случайных чисел</param>
