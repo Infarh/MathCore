@@ -103,9 +103,9 @@ namespace System.ComponentModel
         }
 
         /// <summary>Перечень слабых ссылок на отслеживаемые объекты</summary>
-        private static readonly HashSet<WeakReference> __ObjectsSet = new HashSet<WeakReference>();
+        private static readonly HashSet<WeakReference> __ObjectsSet = new();
         /// <summary>Словарь описаний связей между свойствами типов</summary>
-        private static readonly Dictionary<Type, RegistratorInfo> __RegistrationPool = new Dictionary<Type, RegistratorInfo>();
+        private static readonly Dictionary<Type, RegistratorInfo> __RegistrationPool = new();
         /// <summary>Информация о связях между свойствами типов</summary>
         private sealed class RegistratorInfo
         {
@@ -372,7 +372,7 @@ namespace System.ComponentModel
 
         [NotNull]
         private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers =
-            new Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>>();
+            new();
 
 
         [NotNull]

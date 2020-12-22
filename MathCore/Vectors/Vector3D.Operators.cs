@@ -8,100 +8,100 @@ namespace MathCore.Vectors
 
         /// <summary>Оператор суммы вектора и числа</summary>
         /// <returns>Вектор, координаты которого увеличены на значения числа</returns>
-        public static Vector3D operator +(Vector3D V, double x) => new Vector3D(V._X + x, V._Y + x, V._Z + x);
+        public static Vector3D operator +(Vector3D V, double x) => new(V._X + x, V._Y + x, V._Z + x);
 
         /// <summary>Оператор суммы вектора и числа</summary>
         /// <returns>Вектор, координаты которого увеличены на значения числа</returns>
-        public static Vector3D operator +(double x, Vector3D V) => new Vector3D(V._X + x, V._Y + x, V._Z + x);
+        public static Vector3D operator +(double x, Vector3D V) => new(V._X + x, V._Y + x, V._Z + x);
 
         /// <summary>Оператор разности вектора и числа</summary>
         /// <returns>Вектор, координаты которого уменьшены на значения числа</returns>
-        public static Vector3D operator -(Vector3D V, double x) => new Vector3D(V._X - x, V._Y - x, V._Z - x);
+        public static Vector3D operator -(Vector3D V, double x) => new(V._X - x, V._Y - x, V._Z - x);
 
         /// <summary>Оператор суммы числа и вектора</summary>
         /// <returns>Вектор, координаты которого равны разности числа и координат исходного вектора</returns>
-        public static Vector3D operator -(double x, Vector3D V) => new Vector3D(x - V._X, x - V._Y, x - V._Z);
+        public static Vector3D operator -(double x, Vector3D V) => new(x - V._X, x - V._Y, x - V._Z);
 
         /// <summary>Оператор произведения вектора и числа</summary>
         /// <returns>Вектор, координаты которого умножены на значения числа</returns>
-        public static Vector3D operator *(Vector3D V, double x) => new Vector3D(V._X * x, V._Y * x, V._Z * x);
+        public static Vector3D operator *(Vector3D V, double x) => new(V._X * x, V._Y * x, V._Z * x);
 
         /// <summary>Оператор произведения вектора и числа</summary>
         /// <returns>Вектор, координаты которого умножены на значения числа</returns>
-        public static Vector3D operator *(double x, Vector3D V) => new Vector3D(V._X * x, V._Y * x, V._Z * x);
+        public static Vector3D operator *(double x, Vector3D V) => new(V._X * x, V._Y * x, V._Z * x);
 
         /// <summary>Оператор деления вектора на число</summary>
         /// <returns>Вектор, координаты которого разделены на значения числа</returns>
-        public static Vector3D operator /(Vector3D V, double x) => new Vector3D(V._X / x, V._Y / x, V._Z / x);
+        public static Vector3D operator /(Vector3D V, double x) => new(V._X / x, V._Y / x, V._Z / x);
 
         /// <summary>Оператор деления числа на вектор</summary>
         /// <returns>Вектор, координаты которого являются результатом деления числа на координаты исходного вектора</returns>
-        public static Vector3D operator /(double x, Vector3D V) => new Vector3D(x / V._X, x / V._Y, x / V._Z);
+        public static Vector3D operator /(double x, Vector3D V) => new(x / V._X, x / V._Y, x / V._Z);
 
 
         /// <summary>Оператор суммы вектора и числа одинарной точности</summary>
         /// <returns>Вектор, координаты которого увеличены на значения числа одинарной точности</returns>
-        public static Vector3D operator +(Vector3D V, float x) => new Vector3D(V._X + x, V._Y + x, V._Z + x);
+        public static Vector3D operator +(Vector3D V, float x) => new(V._X + x, V._Y + x, V._Z + x);
 
         /// <summary>Оператор суммы вектора и числа одинарной точности</summary>
-        public static Vector3D operator +(float x, Vector3D V) => new Vector3D(V._X + x, V._Y + x, V._Z + x);
+        public static Vector3D operator +(float x, Vector3D V) => new(V._X + x, V._Y + x, V._Z + x);
 
         /// <summary>Оператор разности вектора и числа одинарной точности</summary>
         /// <returns>Вектор, координаты которого уменьшены на значения числа одинарной точности</returns>
-        public static Vector3D operator -(Vector3D V, float x) => new Vector3D(V._X - x, V._Y - x, V._Z - x);
+        public static Vector3D operator -(Vector3D V, float x) => new(V._X - x, V._Y - x, V._Z - x);
 
         /// <summary>Оператор суммы числа одинарной точности и вектора</summary>
         /// <returns>Вектор, координаты которого равны разности числа одинарной точности и координат исходного вектора</returns>
-        public static Vector3D operator -(float x, Vector3D V) => new Vector3D(x - V._X, x - V._Y, x - V._Z);
+        public static Vector3D operator -(float x, Vector3D V) => new(x - V._X, x - V._Y, x - V._Z);
 
         /// <summary>Оператор произведения вектора и числа одинарной точности</summary>
         /// <returns>Вектор, координаты которого умножены на значения числа одинарной точности</returns>
-        public static Vector3D operator *(Vector3D V, float x) => new Vector3D(V._X * x, V._Y * x, V._Z * x);
+        public static Vector3D operator *(Vector3D V, float x) => new(V._X * x, V._Y * x, V._Z * x);
 
         /// <summary>Оператор произведения вектора и числа одинарной точности</summary>
         /// <returns>Вектор, координаты которого умножены на значения числа одинарной точности</returns>
-        public static Vector3D operator *(float x, Vector3D V) => new Vector3D(V._X * x, V._Y * x, V._Z * x);
+        public static Vector3D operator *(float x, Vector3D V) => new(V._X * x, V._Y * x, V._Z * x);
 
         /// <summary>Оператор деления вектора на число одинарной точности</summary>
         /// <returns>Вектор, координаты которого разделены на значения числа одинарной точности</returns>
-        public static Vector3D operator /(Vector3D V, float x) => new Vector3D(V._X / x, V._Y / x, V._Z / x);
+        public static Vector3D operator /(Vector3D V, float x) => new(V._X / x, V._Y / x, V._Z / x);
 
         /// <summary>Оператор деления числа одинарной точности на вектор</summary>
         /// <returns>Вектор, координаты которого являются результатом деления числа одинарной точности на координаты исходного вектора</returns>
-        public static Vector3D operator /(float x, Vector3D V) => new Vector3D(x / V._X, x / V._Y, x / V._Z);
+        public static Vector3D operator /(float x, Vector3D V) => new(x / V._X, x / V._Y, x / V._Z);
 
 
         /// <summary>Оператор суммы вектора и целого числа</summary>
         /// <returns>Вектор, координаты которого увеличены на значения целого числа</returns>
-        public static Vector3D operator +(Vector3D V, int x) => new Vector3D(V._X + x, V._Y + x, V._Z + x);
+        public static Vector3D operator +(Vector3D V, int x) => new(V._X + x, V._Y + x, V._Z + x);
 
         /// <summary>Оператор суммы вектора и целого числа</summary>
         /// <returns>Вектор, координаты которого увеличены на значения целого числа</returns>
-        public static Vector3D operator +(int x, Vector3D V) => new Vector3D(V._X + x, V._Y + x, V._Z + x);
+        public static Vector3D operator +(int x, Vector3D V) => new(V._X + x, V._Y + x, V._Z + x);
 
         /// <summary>Оператор разности вектора и целого числа</summary>
         /// <returns>Вектор, координаты которого уменьшены на значения целого числа</returns>
-        public static Vector3D operator -(Vector3D V, int x) => new Vector3D(V._X - x, V._Y - x, V._Z - x);
+        public static Vector3D operator -(Vector3D V, int x) => new(V._X - x, V._Y - x, V._Z - x);
 
         /// <summary>Оператор суммы целого числа и вектора</summary>
         /// <returns>Вектор, координаты которого равны разности целого числа и координат исходного вектора</returns>
-        public static Vector3D operator -(int x, Vector3D V) => new Vector3D(x - V._X, x - V._Y, x - V._Z);
+        public static Vector3D operator -(int x, Vector3D V) => new(x - V._X, x - V._Y, x - V._Z);
 
         /// <summary>Оператор произведения вектора и целого числа</summary>
         /// <returns>Вектор, координаты которого умножены на значения целого числа</returns>
-        public static Vector3D operator *(Vector3D V, int x) => new Vector3D(V._X * x, V._Y * x, V._Z * x);
+        public static Vector3D operator *(Vector3D V, int x) => new(V._X * x, V._Y * x, V._Z * x);
 
         /// <summary>Оператор произведения вектора и целого числа</summary>
         /// <returns>Вектор, координаты которого умножены на значения целого числа</returns>
-        public static Vector3D operator *(int x, Vector3D V) => new Vector3D(V._X * x, V._Y * x, V._Z * x);
+        public static Vector3D operator *(int x, Vector3D V) => new(V._X * x, V._Y * x, V._Z * x);
 
         /// <summary>Оператор деления вектора на целое число</summary>
         /// <returns>Вектор, координаты которого разделены на значения целое числа</returns>
-        public static Vector3D operator /(Vector3D V, int x) => new Vector3D(V._X / x, V._Y / x, V._Z / x);
+        public static Vector3D operator /(Vector3D V, int x) => new(V._X / x, V._Y / x, V._Z / x);
 
         /// <summary>Оператор деления целого числа на вектор</summary>
         /// <returns>Вектор, координаты которого являются результатом деления целого числа на координаты исходного вектора</returns>
-        public static Vector3D operator /(int x, Vector3D V) => new Vector3D(x / V._X, x / V._Y, x / V._Z);
+        public static Vector3D operator /(int x, Vector3D V) => new(x / V._X, x / V._Y, x / V._Z);
 
         #endregion
 
@@ -198,11 +198,11 @@ namespace MathCore.Vectors
 
         /// <summary>Оператор суммы двух векторов</summary>
         /// <returns>Вектор, координаты которого равны сумме координат двух исходных векторов</returns>
-        public static Vector3D operator +(Vector3D A, Vector3D B) => new Vector3D(A._X + B._X, A._Y + B._Y, A._Z + B._Z);
+        public static Vector3D operator +(Vector3D A, Vector3D B) => new(A._X + B._X, A._Y + B._Y, A._Z + B._Z);
 
         /// <summary>Оператор разности двух векторов</summary>
         /// <returns>Вектор, координаты которого равны разности координат двух исходных векторов</returns>
-        public static Vector3D operator -(Vector3D A, Vector3D B) => new Vector3D(A._X - B._X, A._Y - B._Y, A._Z - B._Z);
+        public static Vector3D operator -(Vector3D A, Vector3D B) => new(A._X - B._X, A._Y - B._Y, A._Z - B._Z);
 
         /// <summary>Скалярное произведение векторов</summary>
         /// <param name="A">Первый вектор-множитель</param>
@@ -260,11 +260,11 @@ namespace MathCore.Vectors
 
         /// <summary>Оператор неявного приведения <see cref="SpaceAngle"/> к <see cref="Vector3D"/>, результатом которого является единичный вектор, ориентированный в пространстве</summary>
         /// <param name="Angle">Пространственный угол</param>
-        public static explicit operator Vector3D(SpaceAngle Angle) => new Vector3D(1, Angle);
+        public static explicit operator Vector3D(SpaceAngle Angle) => new(1, Angle);
 
         /// <summary>Оператор явного приведения типа <see cref="double"/> к <see cref="Vector3D"/>, результатом которого является вектор, с равными координатами, длина которого равна указанному числу</summary>
         /// <param name="V">Длина вектора</param>
-        public static explicit operator Vector3D(double V) => new Vector3D(V / Consts.sqrt_3, V / Consts.sqrt_3, V / Consts.sqrt_3);
+        public static explicit operator Vector3D(double V) => new(V / Consts.sqrt_3, V / Consts.sqrt_3, V / Consts.sqrt_3);
 
         #endregion
     }

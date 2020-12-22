@@ -32,7 +32,7 @@ namespace MathCore
         /// <summary>Создание нового полинома из массива его коэффициентов</summary>
         /// <param name="a">Массив коэффициентов полинома</param>
         /// <returns>Полином, созданный на основе массива его коэффициентов</returns>
-        [NotNull] public static Polynom FromCoefficients([NotNull] params double[] a) => new Polynom(a);
+        [NotNull] public static Polynom FromCoefficients([NotNull] params double[] a) => new(a);
 
         /// <summary>Создание нового полинома на основе его корней</summary>
         /// <param name="roots">Корни полинома</param>
@@ -43,7 +43,7 @@ namespace MathCore
         /// <param name="Root">Корни полинома</param>
         /// <returns>Полином с указанными корнями</returns>
         [NotNull]
-        public static Polynom FromRoots([NotNull] params double[] Root) => new Polynom(Array.GetCoefficients(Root));
+        public static Polynom FromRoots([NotNull] params double[] Root) => new(Array.GetCoefficients(Root));
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -158,12 +158,12 @@ namespace MathCore
         /// <param name="Order">Порядок дифференциала</param>
         /// <returns>Полином - результат дифференцирования</returns>
         [NotNull]
-        public Polynom GetDifferential(int Order = 1) => new Polynom(Array.GetDifferential(_a, Order));
+        public Polynom GetDifferential(int Order = 1) => new(Array.GetDifferential(_a, Order));
 
         /// <summary>Интегрирование полинома</summary>
         /// <param name="C">Константа интегрирования</param>
         /// <returns>Полином - результат интегрирования полинома</returns>
-        [NotNull] public Polynom GetIntegral(double C = 0) => new Polynom(Array.GetIntegral(_a, C));
+        [NotNull] public Polynom GetIntegral(double C = 0) => new(Array.GetIntegral(_a, C));
 
         /// <summary>Вычислить обратный полином</summary>
         /// <returns>Полином, являющийся обратным к текущим</returns>
@@ -174,7 +174,7 @@ namespace MathCore
             return new Polynom(result);
         }
 
-        /// <summary>Масштабирование полинома</summary>
+        /// <summary>Масштабирование полинома Q(x) = P(x * c)</summary>
         /// <param name="c">Коэффициент масштабирования полинома</param>
         /// <returns>Отмасштабированный полином</returns>
         [NotNull]
@@ -228,7 +228,7 @@ namespace MathCore
         }
 
         /// <inheritdoc />
-        [NotNull] public Polynom Clone() => new Polynom((double[])_a.Clone());
+        [NotNull] public Polynom Clone() => new((double[])_a.Clone());
 
         /// <inheritdoc />
         object ICloneable.Clone() => Clone();

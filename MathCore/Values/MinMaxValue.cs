@@ -21,7 +21,7 @@ namespace MathCore.Values
         public double Max => _Max;
 
         /// <summary>Интервал значений</summary>
-        public Interval Interval => new Interval(_Min, _Max, true);
+        public Interval Interval => new(_Min, _Max, true);
 
         public MinMaxValue()
         {

@@ -189,7 +189,7 @@ namespace MathCore.MathParser.ExpressionTrees
 
         /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
         [NotNull]
-        public ExpressionTree Clone() => new ExpressionTree(Root.Clone());
+        public ExpressionTree Clone() => new(Root.Clone());
 
         /// <summary>Клонировать дерево</summary><returns>Клон дерева</returns>
         object ICloneable.Clone() => Clone();

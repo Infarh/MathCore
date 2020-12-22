@@ -1081,7 +1081,7 @@ namespace System
         {
             /// <summary>Объект синхронизации потоков при доступе к параметрам интегратора</summary>
             [NotNull]
-            private readonly object _LockObject = new object();
+            private readonly object _LockObject = new();
             /// <summary>Константа интегрирования</summary>
             public double C { get; private set; }
             /// <summary>Начальное положение интегратора</summary>
@@ -1356,7 +1356,7 @@ namespace System
         /// <returns>Результат дискретизации вещественной функции</returns>
         [NotNull]
         public static SimpleSamplingResult SamplingAdaptive([NotNull] this Function f, double x1, double x2, double Eps)
-            => new SimpleSamplingResult(f, Math.Min(x1, x2), Math.Max(x1, x2), Eps);
+            => new(f, Math.Min(x1, x2), Math.Max(x1, x2), Eps);
 
         /// <summary>Адаптивный метод дискретизации функции</summary>
         /// <param name="f">Дискретизируемая функция</param>
@@ -1373,7 +1373,7 @@ namespace System
             double x1,
             double x2,
             double Eps
-        ) => new AdaptiveSamplingResult<T>(f, converter, x1, x2, Eps);
+        ) => new(f, converter, x1, x2, Eps);
 
         /// <summary>Результат адаптивной дискретизации</summary>
         /// <typeparam name="T">Тип значения дискретизируемой функции</typeparam>

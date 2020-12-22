@@ -56,7 +56,7 @@ namespace MathCore.Vectors
         /// <param name="type">Тип значения угла</param>
         /// <returns>Пространственный угол</returns>
         [DST]
-        public static SpaceAngle Value(double theta, double phi, in AngleType type = AngleType.Rad) => new SpaceAngle(theta, phi, type);
+        public static SpaceAngle Value(double theta, double phi, in AngleType type = AngleType.Rad) => new(theta, phi, type);
 
         /// <summary>Создать угол на основе направляющего вектора</summary>
         /// <param name="r">Вектор направления</param>
@@ -68,24 +68,24 @@ namespace MathCore.Vectors
         /// <returns>Угол вектора направления</returns>
         [DST]
         public static SpaceAngle Direction(double x, double y, double z = 0)
-            => new SpaceAngle(Atan2(Sqrt(x * x + y * y), z), Atan2(y, x));
+            => new(Atan2(Sqrt(x * x + y * y), z), Atan2(y, x));
 
         // ReSharper disable InconsistentNaming
 
         /// <summary>Орта оси OX</summary>
-        public static readonly SpaceAngle i = new SpaceAngle(Theta: Consts.pi05, Phi: 0);
+        public static readonly SpaceAngle i = new(Theta: Consts.pi05, Phi: 0);
         /// <summary>Отрицательная орта оси OX</summary>
-        public static readonly SpaceAngle i_negative = new SpaceAngle(Theta: Consts.pi05, Phi: Consts.pi);
+        public static readonly SpaceAngle i_negative = new(Theta: Consts.pi05, Phi: Consts.pi);
 
         /// <summary>Орта оси OY</summary>
-        public static readonly SpaceAngle j = new SpaceAngle(Theta: Consts.pi05, Phi: Consts.pi05);
+        public static readonly SpaceAngle j = new(Theta: Consts.pi05, Phi: Consts.pi05);
         /// <summary>Отрицательная орта оси OY</summary>
-        public static readonly SpaceAngle j_negative = new SpaceAngle(Theta: Consts.pi05, Phi: -Consts.pi05);
+        public static readonly SpaceAngle j_negative = new(Theta: Consts.pi05, Phi: -Consts.pi05);
 
         /// <summary>Орта оси OZ</summary>
-        public static readonly SpaceAngle k = new SpaceAngle(Theta: 0, Phi: 0);
+        public static readonly SpaceAngle k = new(Theta: 0, Phi: 0);
         /// <summary>Отрицательная орта оси OZ</summary>
-        public static readonly SpaceAngle k_negative = new SpaceAngle(Theta: Consts.pi, Phi: 0);
+        public static readonly SpaceAngle k_negative = new(Theta: Consts.pi, Phi: 0);
 
         // ReSharper restore InconsistentNaming
 
@@ -153,7 +153,7 @@ namespace MathCore.Vectors
             };
 
         /// <summary>Направляющий вектор</summary>
-        public Vector3D DirectionalVector => new Vector3D(this);
+        public Vector3D DirectionalVector => new(this);
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -518,15 +518,15 @@ namespace MathCore.Vectors
         /// <summary>Оператор отрицания значения пространственного угла</summary>
         /// <param name="a">Исходный пространственный угол</param>
         /// <returns>Пространственный угол у которого значения угла места и азимута имеют обратный знак по отношению к исходному значению</returns>
-        public static SpaceAngle operator -(in SpaceAngle a) => new SpaceAngle(-a._Theta, -a._Phi, a._AngleType);
+        public static SpaceAngle operator -(in SpaceAngle a) => new(-a._Theta, -a._Phi, a._AngleType);
 
-        public static SpaceAngle operator /(in SpaceAngle a, double x) => new SpaceAngle(a.Theta / x, a.Phi / x, a.AngleType);
+        public static SpaceAngle operator /(in SpaceAngle a, double x) => new(a.Theta / x, a.Phi / x, a.AngleType);
 
         public static bool operator ==(in SpaceAngle A, in SpaceAngle B) => A.Equals(B);
 
         public static bool operator !=(in SpaceAngle A, in SpaceAngle B) => !(A == B);
 
-        public static implicit operator Vector3D(in SpaceAngle a) => new Vector3D(a);
+        public static implicit operator Vector3D(in SpaceAngle a) => new(a);
 
         public static explicit operator SpaceAngle(in Vector3D v) => v.Angle;
 

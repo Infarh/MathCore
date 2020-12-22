@@ -42,14 +42,14 @@ namespace System.Xml.Linq
             var str = element.ValueOrDefault();
             switch (str)
             {
-                case T _: return (T)(object)str;
+                case T: return (T)(object)str;
                 case null: return Default;
             }
 
             var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (!converter.CanConvertFrom(typeof(string)))
-                throw new InvalidOperationException($"Невозможно преобразовать тип {typeof(string)} к типу {typeof(T)}");
-            return (T)converter.ConvertFrom(str);
+            return !converter.CanConvertFrom(typeof(string))
+                ? throw new InvalidOperationException($"Невозможно преобразовать тип {typeof(string)} к типу {typeof(T)}")
+                : (T)converter.ConvertFrom(str);
         }
 
         [CanBeNull]
@@ -166,9 +166,9 @@ namespace System.Xml.Linq
         [CanBeNull] private static string GetXPathNoParent([NotNull] XObject XObj) =>
             XObj switch
             {
-                XDocument _ => ".",
+                XDocument => ".",
                 XElement element => $"/{NameWithPredicate(element)}",
-                XText _ => null,
+                XText => null,
                 XComment comment => $"/{(comment.Document?.Nodes().OfType<XComment>().Count() != 1 ? $"comment()[{comment.NodesBeforeSelf().OfType<XComment>().Count() + 1}]" : "comment()")}",
                 XProcessingInstruction instruction => $"/{(instruction.Document?.Nodes().OfType<XProcessingInstruction>().Count() != 1 ? $"processing-instruction()[{instruction.NodesBeforeSelf().OfType<XProcessingInstruction>().Count() + 1}]" : "processing-instruction()")}",
                 _ => null

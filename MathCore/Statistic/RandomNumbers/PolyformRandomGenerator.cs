@@ -16,7 +16,7 @@ namespace MathCore.Statistic.RandomNumbers
     public class PolyformRandomGenerator
     {
         //todo: http://habrahabr.ru/post/265321/
-        private readonly Random _RND = new Random();
+        private readonly Random _RND = new();
         private ulong _LastRND;
         public const ulong RandMax = ulong.MaxValue;
         public PolyformRandomGenerator() => _LastRND = (ulong)_RND.Next();
@@ -58,7 +58,7 @@ namespace MathCore.Statistic.RandomNumbers
         private static double[] __NormalStairWidth;
         private static double[] __NormalStairHeight;
         private static bool __NormalInitialized;
-        private static readonly object __NormalInitializationSyncRoot = new object();
+        private static readonly object __NormalInitializationSyncRoot = new();
         private const double __Normal_x1 = 3.6541528853610088;
 
         /// <summary>area under rectangle</summary>
@@ -152,7 +152,7 @@ namespace MathCore.Statistic.RandomNumbers
         private static double[] __Exponential_StairWidth;
         private static double[] __Exponential_StairHeight;
         private static bool __Exponential_Initialized;
-        private static readonly object __Exponential_Initialization_SyncRoot = new object();
+        private static readonly object __Exponential_Initialization_SyncRoot = new();
         private const double x1 = 7.69711747013104972;
 
         /// <summary>area under rectangle</summary>

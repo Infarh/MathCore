@@ -35,14 +35,13 @@ namespace System.Xml.Linq
                 ? null
                 : node switch
                 {
-                    XElement element => (XObject) element,
+                    XElement element => element,
                     XAttribute attribute => attribute,
                     _ => throw new InvalidOperationException(
                         $"Непредвиденный тип {node.GetType()} элемента в результате вычисления {path}")
                 };
         }
 
-        [CanBeNull]
         public static void XPathSetValue([NotNull] this XContainer xml, [NotNull] string path, [NotNull] object Value)
         {
             if (xml is null) throw new ArgumentNullException(nameof(xml));

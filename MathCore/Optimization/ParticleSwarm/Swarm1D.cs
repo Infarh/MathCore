@@ -66,7 +66,7 @@ namespace MathCore.Optimization.ParticleSwarm
             }
         }
 
-        private static readonly Random __Random = new Random();
+        private static readonly Random __Random = new();
 
         private readonly int _ParticleCount;
 

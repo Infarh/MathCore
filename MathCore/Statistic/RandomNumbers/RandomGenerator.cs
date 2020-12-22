@@ -9,7 +9,7 @@ namespace MathCore.Statistic.RandomNumbers
     public abstract class RandomGenerator : IValueRead<double>
     {
         /// <summary>Датчик случайных чисел с равномерным распределением</summary>
-        protected static readonly LazyValue<Random> SystemRandomGenerator = new LazyValue<Random>(() => new Random(DateTime.Now.TimeOfDay.Milliseconds));
+        protected static readonly LazyValue<Random> SystemRandomGenerator = new(() => new Random(DateTime.Now.TimeOfDay.Milliseconds));
 
         /* ------------------------------------------------------------------------------------------ */
 

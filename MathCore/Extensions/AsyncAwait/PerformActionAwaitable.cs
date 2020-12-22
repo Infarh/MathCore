@@ -19,7 +19,7 @@ namespace MathCore.Extensions.AsyncAwait
             _LockContext = LockContext;
         }
 
-        public Awaiter GetAwaiter() => new Awaiter(_Method, _Task, _LockContext);
+        public Awaiter GetAwaiter() => new(_Method, _Task, _LockContext);
 
         public readonly struct Awaiter : ICriticalNotifyCompletion
         {
@@ -105,7 +105,7 @@ namespace MathCore.Extensions.AsyncAwait
             _LockContext = LockContext;
         }
 
-        public Awaiter GetAwaiter() => new Awaiter(_Method, _Task, _LockContext);
+        public Awaiter GetAwaiter() => new(_Method, _Task, _LockContext);
 
         public readonly struct Awaiter : ICriticalNotifyCompletion
         {

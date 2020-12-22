@@ -11,7 +11,7 @@ namespace System.Threading.Tasks
 
         public YieldAwaitableThreadPool(in bool LockContext) => _LockContext = LockContext;
 
-        public Awaiter GetAwaiter() => new Awaiter(_LockContext);
+        public Awaiter GetAwaiter() => new(_LockContext);
 
         public readonly struct Awaiter : ICriticalNotifyCompletion, IEquatable<Awaiter>
         {

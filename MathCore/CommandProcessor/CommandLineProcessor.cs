@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Linq.Reactive;
+
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -26,8 +27,8 @@ namespace MathCore.CommandProcessor
         /// <param name="ConsoleReader">Ввод с консоли (если не указано, то используется <see cref="Console"/>.<see cref="Console.In"/>)</param>
         /// <returns>Сформированное перечисление команд запроса</returns>
         public static IEnumerable<Command> ParseConsole(
-            string Prompt = ">", 
-            [CanBeNull] Action<CommandLineProcessor> Initializer = null, 
+            string Prompt = ">",
+            [CanBeNull] Action<CommandLineProcessor> Initializer = null,
             TextWriter ConsoleWriter = null,
             TextReader ConsoleReader = null)
         {
@@ -36,17 +37,17 @@ namespace MathCore.CommandProcessor
 
             var work = true;
             var processor = new CommandLineProcessor();
-            processor["exit"] += delegate() { work = false; };
-            processor["help"] += delegate() { processor.GetRegisteredCommands().Foreach(ConsoleWriter.WriteLine); };
+            processor["exit"] += () => work = false;
+            processor["help"] += () => processor.GetRegisteredCommands().Foreach(ConsoleWriter.WriteLine);
             var set = processor["set"];
-            set["prompt"] += (_, __, ___, arg) => Prompt = arg.Value;
-            set["work"] += (_, __, ___, arg) => { if(bool.TryParse(arg.Value, out var can_work)) work = can_work; };
+            set["prompt"] += (_, _, _, arg) => Prompt = arg.Value;
+            set["work"] += (_, _, _, arg) => { if (bool.TryParse(arg.Value, out var can_work)) work = can_work; };
 
             Initializer?.Invoke(processor);
-            while(work)
+            while (work)
             {
                 Console.Write(Prompt);
-                foreach(var command in processor.Process(ConsoleReader.ReadLine()))
+                foreach (var command in processor.Process(ConsoleReader.ReadLine()))
                     yield return command;
             }
         }
@@ -58,19 +59,19 @@ namespace MathCore.CommandProcessor
         /// <param name="Arg">Аргумент, содержащий сведения о команде</param>
         protected virtual void OnCommandProcess([NotNull] CommandEventArgs Arg)
         {
-            if(IsRegisteredCommand(Arg.Command.Name))
+            if (IsRegisteredCommand(Arg.Command.Name))
             {
-                this[Arg.Command.Name].Foreach(Arg, (action, i, arg) => action.Invoke(arg.Command, arg.Index, arg.Commands));
+                this[Arg.Command.Name].Foreach(Arg, (action, _, arg) => action.Invoke(arg.Command, arg.Index, arg.Commands));
                 Arg.Handled = true;
             }
 
             var handler = CommandProcess;
-            if(handler is null) return;
+            if (handler is null) return;
             var invocations = handler.GetInvocationList();
-            for(var i = 0; !Arg.Handled && i < invocations.Length; i++)
+            for (var i = 0; !Arg.Handled && i < invocations.Length; i++)
             {
                 var I = invocations[i];
-                if(I.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired)
+                if (I.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
                     invoke.Invoke(I, new object[] { this, Arg });
                 else
                     I.DynamicInvoke(this, Arg);
@@ -86,7 +87,7 @@ namespace MathCore.CommandProcessor
         {
             var arg = new CommandEventArgs(command, index, commands);
             OnCommandProcess(arg);
-            if(!arg.Handled) OnUnhandledCommand(arg);
+            if (!arg.Handled) OnUnhandledCommand(arg);
         }
 
         /// <summary>Событие появления необработанной команды</summary>
@@ -97,12 +98,12 @@ namespace MathCore.CommandProcessor
         protected virtual void OnUnhandledCommand(CommandEventArgs Arg)
         {
             var handlers = UnhandledCommand;
-            if(handlers is null) return;
+            if (handlers is null) return;
             var invocations = handlers.GetInvocationList();
-            for(var i = 0; i < invocations.Length; i++)
+            for (var i = 0; i < invocations.Length; i++)
             {
                 var I = invocations[i];
-                if(I.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired)
+                if (I.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
                     invoke.Invoke(I, new object[] { this, Arg });
                 else
                     I.DynamicInvoke(this, Arg);
@@ -110,10 +111,9 @@ namespace MathCore.CommandProcessor
         }
 
         /// <summary>Словарь списков обработчиков команд</summary>
-        private readonly Dictionary<string, CommandHandlersList> _CommandHandlers =
-                    new Dictionary<string, CommandHandlersList>();
+        private readonly Dictionary<string, CommandHandlersList> _CommandHandlers = new();
 
-        private readonly SimpleObservableEx<CommandEventArgs> _ObservableObject = new SimpleObservableEx<CommandEventArgs>();
+        private readonly SimpleObservableEx<CommandEventArgs> _ObservableObject = new();
 
         /// <summary>Команды, обрабатываемые процессором</summary>
         public IObservable<CommandEventArgs> Commands => _ObservableObject;
@@ -137,20 +137,18 @@ namespace MathCore.CommandProcessor
         {
             get
             {
-                if(!_CommandHandlers.TryGetValue(CommandName, out var result))
+                if (!_CommandHandlers.TryGetValue(CommandName, out var result))
                     _CommandHandlers.Add(CommandName, result = new CommandHandlersList());
                 return result;
             }
             set
             {
-                if(IsRegisteredCommand(CommandName))
-                {
-                    if(value != null)
+                if (IsRegisteredCommand(CommandName))
+                    if (value != null)
                         _CommandHandlers[CommandName] = value;
                     else
                         ClearCommandHandlers(CommandName);
-                }
-                else if(value != null)
+                else if (value != null)
                     _CommandHandlers.Add(CommandName, value);
             }
         }
@@ -160,8 +158,11 @@ namespace MathCore.CommandProcessor
         /// <param name="CommandParameterSplitter">Разделитель имени команды и её параметра</param>
         /// <param name="ArgSplitter">Разделитель аргументов</param>
         /// <param name="ValueSplitter">Разделитель имени аргумента и его значения</param>
-        public CommandLineProcessor(char CommandSplitter = ';', char CommandParameterSplitter = ':',
-            char ArgSplitter = ' ', char ValueSplitter = '=')
+        public CommandLineProcessor(
+            char CommandSplitter = ';',
+            char CommandParameterSplitter = ':',
+            char ArgSplitter = ' ',
+            char ValueSplitter = '=')
         {
             this.CommandSplitter = CommandSplitter;
             this.CommandParameterSplitter = CommandParameterSplitter;
@@ -211,7 +212,7 @@ namespace MathCore.CommandProcessor
         /// <summary>Проверка - имеет ли команда обработчики</summary>
         /// <param name="CommandName">Проверяемая команда</param>
         /// <returns>Истина, если указаны обработчики команды</returns>
-        public bool IsRegisteredCommand([NotNull] string CommandName) => 
+        public bool IsRegisteredCommand([NotNull] string CommandName) =>
             _CommandHandlers.ContainsKey(CommandName) && this[CommandName].IsRegisteredCommand(CommandName);
     }
 }

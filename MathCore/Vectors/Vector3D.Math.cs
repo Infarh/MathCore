@@ -11,7 +11,7 @@ namespace MathCore.Vectors
     {
         /// <summary>Получить вектор, координаты которого являются обратными к координатам текущего вектора</summary>
         /// <returns>Вектор с обратными координатами</returns>
-        public Vector3D GetInverse() => new Vector3D(1 / _X, 1 / _Y, 1 / _Z);
+        public Vector3D GetInverse() => new(1 / _X, 1 / _Y, 1 / _Z);
 
         /// <summary>Скалярное произведение векторов</summary>
         /// <param name="Vector">Вектор, на который умножается текущий вектор</param>
@@ -56,7 +56,7 @@ namespace MathCore.Vectors
         /// <param name="Vector">Векторный сомножитель</param>
         /// <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
         public Vector3D Product_Component(Vector3D Vector)
-            => new Vector3D(_X * Vector._X, _Y * Vector._Y, _Z * Vector._Z);
+            => new(_X * Vector._X, _Y * Vector._Y, _Z * Vector._Z);
 
         /// <summary>Угол между векторами</summary>
         /// <param name="Vector">Вектор, к которому вычисляется угол</param>

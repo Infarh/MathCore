@@ -110,7 +110,7 @@ namespace MathCore
 
         #endregion
 
-        [NotNull] public static implicit operator RefArrayView<T>([NotNull] T[] array) => new RefArrayView<T>(array);
+        [NotNull] public static implicit operator RefArrayView<T>([NotNull] T[] array) => new(array);
 
         [NotNull]
         public static implicit operator T[]([NotNull] RefArrayView<T> view)

@@ -11,7 +11,7 @@ namespace System.Threading.Tasks
     [StructLayout(LayoutKind.Sequential, Size = 1)]
     public struct YieldAsyncAwaitable
     {
-        public YieldAsyncAwaiter GetAwaiter() => new YieldAsyncAwaiter();
+        public YieldAsyncAwaiter GetAwaiter() => new();
 
         [StructLayout(LayoutKind.Sequential, Size = 1)]
         //[HostProtection(SecurityAction.LinkDemand, ExternalThreading = true, Synchronization = true)]

@@ -22,7 +22,7 @@ namespace MathCore.JSON
 
     internal static class JSONTest
     {
-        [NotNull] public static JSONObjectCreator<T> GetJSON<T>(this T obj) => new JSONObjectCreator<T>(obj);
+        [NotNull] public static JSONObjectCreator<T> GetJSON<T>(this T obj) => new(obj);
     }
 
     /// <summary>Генератор JSON-объекта по объекту-прототипу</summary>
@@ -32,7 +32,7 @@ namespace MathCore.JSON
         /// <summary>Объект-прототип</summary>
         private readonly T _Obj;
         /// <summary>Список именованных методов получения JSON-объектов - полей из объекта-прототипа</summary>
-        private readonly List<KeyValuePair<string, Func<T, object>>> _FieldsDescriptions = new List<KeyValuePair<string, Func<T, object>>>();
+        private readonly List<KeyValuePair<string, Func<T, object>>> _FieldsDescriptions = new();
 
         /// <summary>Инициализация нового генератора JSON-объектов</summary>
         /// <param name="obj"></param>

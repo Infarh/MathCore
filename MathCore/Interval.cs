@@ -21,7 +21,7 @@ namespace MathCore
         /// <param name="Max">Максимальное значение</param>
         /// <param name="IncludeLimits">Границы интервала входят?</param>
         /// <returns>Новый интервал в указанных границах</returns>
-        public static Interval<T> Value(T Min, T Max, bool IncludeLimits = true) => new Interval<T>(Min, Max, IncludeLimits);
+        public static Interval<T> Value(T Min, T Max, bool IncludeLimits = true) => new(Min, Max, IncludeLimits);
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -91,15 +91,15 @@ namespace MathCore
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public Interval<T> IncludeMax(bool Include) => new Interval<T>(_Min, _MinInclude, _Max, Include);
-        public Interval<T> IncludeMin(bool Include) => new Interval<T>(_Min, Include, _Max, _MaxInclude);
-        public Interval<T> Include(bool IncludeMin, bool IncludeMax) => new Interval<T>(_Min, IncludeMin, _Max, IncludeMax);
-        public Interval<T> Include(bool Include) => new Interval<T>(_Min, Include, _Max, Include);
+        public Interval<T> IncludeMax(bool Include) => new(_Min, _MinInclude, _Max, Include);
+        public Interval<T> IncludeMin(bool Include) => new(_Min, Include, _Max, _MaxInclude);
+        public Interval<T> Include(bool IncludeMin, bool IncludeMax) => new(_Min, IncludeMin, _Max, IncludeMax);
+        public Interval<T> Include(bool Include) => new(_Min, Include, _Max, Include);
 
-        public Interval<T> SetMin(T Value) => new Interval<T>(Value, _MinInclude, _Max, _MaxInclude);
-        public Interval<T> SetMin(T Value, bool IncludeMin) => new Interval<T>(Value, IncludeMin, _Max, _MaxInclude);
-        public Interval<T> SetMax(T Value) => new Interval<T>(_Min, _MinInclude, Value, _MaxInclude);
-        public Interval<T> SetMax(T Value, bool IncludeMax) => new Interval<T>(_Min, _MinInclude, Value, IncludeMax);
+        public Interval<T> SetMin(T Value) => new(Value, _MinInclude, _Max, _MaxInclude);
+        public Interval<T> SetMin(T Value, bool IncludeMin) => new(Value, IncludeMin, _Max, _MaxInclude);
+        public Interval<T> SetMax(T Value) => new(_Min, _MinInclude, Value, _MaxInclude);
+        public Interval<T> SetMax(T Value, bool IncludeMax) => new(_Min, _MinInclude, Value, IncludeMax);
 
         /// <summary>
         /// Метод возвращает указанное значение, если оно находится внутри интервала,
@@ -159,7 +159,7 @@ namespace MathCore
             throw new NotSupportedException($"Ошибка реализации метода проверки на пересечение интервалов {this}|{I}");
         }
 
-        public Interval<T> GetInvertedInterval() => new Interval<T>(Max, MaxInclude, Min, MinInclude);
+        public Interval<T> GetInvertedInterval() => new(Max, MaxInclude, Min, MinInclude);
 
         public void WhileInInterval(T start, Action<T> Do, Func<T, T> Pos)
         {
@@ -230,7 +230,7 @@ namespace MathCore
         object ICloneable.Clone() => Clone();
 
         /// <inheritdoc />
-        public Interval<T> Clone() => new Interval<T>(_Min, _MinInclude, _Max, _MaxInclude);
+        public Interval<T> Clone() => new(_Min, _MinInclude, _Max, _MaxInclude);
 
         /// <inheritdoc />
         [DST]
@@ -400,15 +400,15 @@ namespace MathCore
 
         #region Интервальные функции
 
-        public Interval IncludeMax(bool Include) => new Interval(_Min, _MinInclude, _Max, Include);
-        public Interval IncludeMin(bool Include) => new Interval(_Min, Include, _Max, _MaxInclude);
-        public Interval Include(bool IncludeMin, bool IncludeMax) => new Interval(_Min, IncludeMin, _Max, IncludeMax);
-        public Interval Include(bool Include) => new Interval(_Min, Include, _Max, Include);
+        public Interval IncludeMax(bool Include) => new(_Min, _MinInclude, _Max, Include);
+        public Interval IncludeMin(bool Include) => new(_Min, Include, _Max, _MaxInclude);
+        public Interval Include(bool IncludeMin, bool IncludeMax) => new(_Min, IncludeMin, _Max, IncludeMax);
+        public Interval Include(bool Include) => new(_Min, Include, _Max, Include);
 
-        public Interval SetMin(double Value) => new Interval(Value, _MinInclude, _Max, _MaxInclude);
-        public Interval SetMin(double Value, bool IncludeMin) => new Interval(Value, IncludeMin, _Max, _MaxInclude);
-        public Interval SetMax(double Value) => new Interval(_Min, _MinInclude, Value, _MaxInclude);
-        public Interval SetMax(double Value, bool IncludeMax) => new Interval(_Min, _MinInclude, Value, IncludeMax);
+        public Interval SetMin(double Value) => new(Value, _MinInclude, _Max, _MaxInclude);
+        public Interval SetMin(double Value, bool IncludeMin) => new(Value, IncludeMin, _Max, _MaxInclude);
+        public Interval SetMax(double Value) => new(_Min, _MinInclude, Value, _MaxInclude);
+        public Interval SetMax(double Value, bool IncludeMax) => new(_Min, _MinInclude, Value, IncludeMax);
 
         public void Deconstruct(out double min, out double max)
         {
@@ -539,7 +539,7 @@ namespace MathCore
                 yield return min + i * dx;
         }
 
-        public Interval GetInvertedInterval() => new Interval(_Max, _MaxInclude, _Min, _MinInclude);
+        public Interval GetInvertedInterval() => new(_Max, _MaxInclude, _Min, _MinInclude);
 
         public IEnumerable<double> GetValues(double Step)
         {
@@ -618,25 +618,25 @@ namespace MathCore
 
         public static implicit operator (double Min, double Max)(Interval I) => (I.Min, I.Max);
 
-        public static implicit operator Interval((double, double) V) => new Interval(V.Item1, V.Item2);
+        public static implicit operator Interval((double, double) V) => new(V.Item1, V.Item2);
 
-        public static implicit operator Interval((double, double, bool) V) => new Interval(V.Item1, V.Item2, V.Item3);
+        public static implicit operator Interval((double, double, bool) V) => new(V.Item1, V.Item2, V.Item3);
 
-        public static implicit operator Interval((double, bool, double) V) => new Interval(V.Item1, V.Item2, V.Item3, false);
+        public static implicit operator Interval((double, bool, double) V) => new(V.Item1, V.Item2, V.Item3, false);
 
-        public static implicit operator Interval((double, bool, double, bool) V) => new Interval(V.Item1, V.Item2, V.Item3, V.Item4);
+        public static implicit operator Interval((double, bool, double, bool) V) => new(V.Item1, V.Item2, V.Item3, V.Item4);
 
         public static implicit operator double(Interval I) => I.Length;
 
-        public static explicit operator Interval(double V) => new Interval(0, true, V, true);
+        public static explicit operator Interval(double V) => new(0, true, V, true);
 
-        public static Interval operator +(Interval I, double x) => new Interval(I._Min + x, I._MinInclude, I._Max + x, I._MaxInclude);
+        public static Interval operator +(Interval I, double x) => new(I._Min + x, I._MinInclude, I._Max + x, I._MaxInclude);
 
-        public static Interval operator -(Interval I, double x) => new Interval(I._Min - x, I._MinInclude, I._Max - x, I._MaxInclude);
+        public static Interval operator -(Interval I, double x) => new(I._Min - x, I._MinInclude, I._Max - x, I._MaxInclude);
 
-        public static Interval operator *(Interval I, double x) => new Interval(I._Min * x, I._MinInclude, I._Max * x, I._MaxInclude);
+        public static Interval operator *(Interval I, double x) => new(I._Min * x, I._MinInclude, I._Max * x, I._MaxInclude);
 
-        public static Interval operator /(Interval I, double x) => new Interval(I._Min / x, I._MinInclude, I._Max / x, I._MaxInclude);
+        public static Interval operator /(Interval I, double x) => new(I._Min / x, I._MinInclude, I._Max / x, I._MaxInclude);
 
         /* ------------------------------------------------------------------------------------------ */
     }

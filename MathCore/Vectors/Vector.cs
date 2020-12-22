@@ -46,7 +46,7 @@ namespace MathCore.Vectors
 
         /// <inheritdoc />
         [NotNull]
-        public Vector<T> Clone() => new Vector<T>(_Elements);
+        public Vector<T> Clone() => new(_Elements);
 
         /// <inheritdoc />
         object ICloneable.Clone() => Clone();
@@ -59,9 +59,9 @@ namespace MathCore.Vectors
 
         /* ------------------------------------------------------------------------------------------ */
 
-        [NotNull] public static implicit operator Vector<T>([NotNull] T[] e) => new Vector<T>(e);
+        [NotNull] public static implicit operator Vector<T>([NotNull] T[] e) => new(e);
 
-        [NotNull] public static implicit operator Vector<T>([NotNull] List<T> e) => new Vector<T>(e);
+        [NotNull] public static implicit operator Vector<T>([NotNull] List<T> e) => new(e);
 
         /* ------------------------------------------------------------------------------------------ */
     }

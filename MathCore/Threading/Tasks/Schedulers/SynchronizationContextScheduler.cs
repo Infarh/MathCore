@@ -8,7 +8,7 @@ namespace MathCore.Threading.Tasks.Schedulers
 {
     public class SynchronizationContextScheduler : TaskScheduler
     {
-        public static SynchronizationContextScheduler CurrentContext => new SynchronizationContextScheduler(SynchronizationContext.Current);
+        public static SynchronizationContextScheduler CurrentContext => new(SynchronizationContext.Current);
 
         private readonly SynchronizationContext _Context;
         private readonly SendOrPostCallback _Execute;

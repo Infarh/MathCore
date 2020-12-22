@@ -6,7 +6,7 @@ namespace MathCore.Statistic.RandomNumbers
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private readonly Random _RND = new Random(DateTime.Now.Millisecond);
+        private readonly Random _RND = new(DateTime.Now.Millisecond);
         private double? _Value;
 
         /* ------------------------------------------------------------------------------------------ */

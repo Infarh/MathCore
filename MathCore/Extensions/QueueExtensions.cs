@@ -28,7 +28,7 @@ namespace System.Collections.Generic
         /// <typeparam name="T">Тип элементов очереди</typeparam>
         /// <param name="queue">Преобразуемая очередь</param>
         /// <returns>Стек из элементов очереди</returns>
-        [NotNull] public static Stack<T> ToStack<T>([NotNull] this Queue<T> queue) => new Stack<T>(queue);
+        [NotNull] public static Stack<T> ToStack<T>([NotNull] this Queue<T> queue) => new(queue);
 
         /// <summary>Преобразовать очередь в стек в обратном порядке</summary>
         /// <typeparam name="T">Тип элементов очереди</typeparam>

@@ -1,7 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
@@ -18,7 +19,7 @@ namespace MathCore
             /// <param name="x">Аргумент полинома</param>
             /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Значение полинома</returns>
-            public static double GetValue(double x, [NotNull] params double[] A)
+            public static double GetValue(double x, params double[] A)
             {
                 var length = A.Length;
                 if (length == 0) return double.NaN;
@@ -33,7 +34,7 @@ namespace MathCore
             /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Комплексное значение полинома</returns>
             [DST]
-            public static Complex GetValue(Complex z, [NotNull] params double[] A)
+            public static Complex GetValue(Complex z, params double[] A)
             {
                 var length = A.Length;
                 if (length == 0)
@@ -49,7 +50,7 @@ namespace MathCore
             /// <param name="Z">Массив комплексных коэффициентов полинома</param>
             /// <returns>Комплексное значение полинома</returns>
             [DST]
-            public static Complex GetValue(Complex z, [NotNull] params Complex[] Z)
+            public static Complex GetValue(Complex z, params Complex[] Z)
             {
                 var length = Z.Length;
                 if (length == 0) return 0;
@@ -63,7 +64,7 @@ namespace MathCore
             /// <param name="x">Аргумент полинома</param>
             /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Значение полинома</returns>
-            public static double GetValue(double x, [NotNull] IEnumerable<double> A)
+            public static double GetValue(double x, IEnumerable<double> A)
             {
                 if (A is null)
                     throw new ArgumentNullException(nameof(A));
@@ -87,7 +88,7 @@ namespace MathCore
             /// <param name="z">Аргумент полинома</param>
             /// <param name="A">Массив коэффициентов полинома</param>
             /// <returns>Комплексное значение полинома</returns>
-            public static Complex GetValue(Complex z, [NotNull] IEnumerable<double> A)
+            public static Complex GetValue(Complex z, IEnumerable<double> A)
             {
                 if (A is null)
                     throw new ArgumentNullException(nameof(A));
@@ -110,8 +111,8 @@ namespace MathCore
             /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при степенях</returns>
-            [NotNull]
-            public static double[] GetCoefficients([NotNull] params double[] Root)
+
+            public static double[] GetCoefficients(params double[] Root)
             {
                 if (Root is null)
                     throw new ArgumentNullException(nameof(Root));
@@ -140,8 +141,8 @@ namespace MathCore
             /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при обратных степенях</returns>
-            [NotNull]
-            public static double[] GetCoefficientsInverted([NotNull] params double[] Root)
+
+            public static double[] GetCoefficientsInverted(params double[] Root)
             {
                 if (Root is null)
                     throw new ArgumentNullException(nameof(Root));
@@ -170,8 +171,8 @@ namespace MathCore
             /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при степенях</returns>
-            [NotNull]
-            public static Complex[] GetCoefficients([NotNull] params Complex[] Root)
+
+            public static Complex[] GetCoefficients(params Complex[] Root)
             {
                 if (Root is null)
                     throw new ArgumentNullException(nameof(Root));
@@ -201,8 +202,8 @@ namespace MathCore
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при обратных степенях</returns>
 
-            [NotNull]
-            public static Complex[] GetCoefficientsInverted([NotNull] params Complex[] Root)
+
+            public static Complex[] GetCoefficientsInverted(params Complex[] Root)
             {
                 if (Root is null)
                     throw new ArgumentNullException(nameof(Root));
@@ -234,8 +235,8 @@ namespace MathCore
             /// <param name="p">Массив коэффициентов полинома</param>
             /// <param name="Order">Порядок дифференцирования</param>
             /// <returns>Массив коэффициентов полинома - дифференциала</returns>
-            [NotNull]
-            public static double[] GetDifferential([NotNull] double[] p, int Order = 1)
+
+            public static double[] GetDifferential(double[] p, int Order = 1)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -258,8 +259,8 @@ namespace MathCore
             /// <param name="p">Массив комплексных коэффициентов полинома</param>
             /// <param name="Order">Порядок дифференцирования</param>
             /// <returns>Массив комплексных коэффициентов полинома - дифференциала</returns>
-            [NotNull]
-            public static Complex[] GetDifferential([NotNull] Complex[] p, int Order = 1)
+
+            public static Complex[] GetDifferential(Complex[] p, int Order = 1)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -282,8 +283,8 @@ namespace MathCore
             /// <param name="p">Массив коэффициентов полинома</param>
             /// <param name="C">Константа интегрирования</param>
             /// <returns>Массив коэффициентов полинома - интеграла</returns>
-            [NotNull]
-            public static double[] GetIntegral([NotNull] double[] p, double C = 0)
+
+            public static double[] GetIntegral(double[] p, double C = 0)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -299,8 +300,8 @@ namespace MathCore
             /// <param name="p">Массив комплексных коэффициентов полинома</param>
             /// <param name="C">Константа интегрирования</param>
             /// <returns>Массив комплексных коэффициентов полинома - интеграла</returns>
-            [NotNull]
-            public static Complex[] GetIntegral([NotNull] Complex[] p, Complex C = default)
+
+            public static Complex[] GetIntegral(Complex[] p, Complex C = default)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -320,8 +321,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома - первого слагаемого</param>
             /// <param name="q">Коэффициенты полинома - первого слагаемого</param>
             /// <returns>Коэффициенты полинома - суммы</returns>
-            [NotNull]
-            public static double[] Sum([NotNull] double[] p, [NotNull] double[] q)
+
+            public static double[] Sum(double[] p, double[] q)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -350,8 +351,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома - первого уменьшаемого</param>
             /// <param name="q">Коэффициенты полинома - первого вычитаемого</param>
             /// <returns>Коэффициенты полинома - разности</returns>
-            [NotNull]
-            public static double[] Subtract([NotNull] double[] p, [NotNull] double[] q)
+
+            public static double[] Subtract(double[] p, double[] q)
             {
                 if (p is null)
                     throw new ArgumentNullException(nameof(p));
@@ -387,7 +388,7 @@ namespace MathCore
             /// <returns>Коэффициенты полинома - частное</returns>
             // ReSharper disable once EmptyString
             [Copyright("", url = "http://losev-al.blogspot.ru/2012/09/blog-post_14.htm")]
-            public static void Divide([NotNull] double[] dividend, [NotNull] double[] divisor, [NotNull] out double[] quotient, [NotNull] out double[] remainder)
+            public static void Divide(double[] dividend, double[] divisor, out double[] quotient, out double[] remainder)
             {
                 if (dividend[dividend.Length - 1].Equals(0)) throw new ArithmeticException("Старший член многочлена делимого не может быть 0");
                 if (divisor[divisor.Length - 1].Equals(0)) throw new ArithmeticException("Старший член многочлена делителя не может быть 0");
@@ -407,7 +408,7 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома - первый сомножитель</param>
             /// <param name="q">Коэффициенты полинома - второй сомножитель</param>
             /// <returns>Коэффициенты полинома - произведение</returns>
-            public static double[] Multiply([NotNull] double[] p, [NotNull] double[] q)
+            public static double[] Multiply(double[] p, double[] q)
             {
                 var length = p.Length + q.Length;
                 var a = new double[length + 1];
@@ -431,8 +432,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома</param>
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - суммы</returns>
-            [NotNull]
-            public static double[] Add([NotNull] double[] p, double x)
+
+            public static double[] Add(double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -446,8 +447,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома</param>
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - разности</returns>
-            [NotNull]
-            public static double[] Subtract([NotNull] double[] p, double x)
+
+            public static double[] Subtract(double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -461,8 +462,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома</param>
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - разности</returns>
-            [NotNull]
-            public static double[] Subtract(double x, [NotNull] double[] p)
+
+            public static double[] Subtract(double x, double[] p)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -475,8 +476,8 @@ namespace MathCore
             /// <summary>Отрицание полинома</summary>
             /// <param name="p">Коэффициенты полинома</param>
             /// <returns>Коэффициенты полинома Q(x) = 0 - P(x)</returns>
-            [NotNull]
-            public static double[] Negate([NotNull] double[] p)
+
+            public static double[] Negate(double[] p)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -490,8 +491,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома</param>
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - произведения</returns>
-            [NotNull]
-            public static double[] Multiply([NotNull] double[] p, double x)
+
+            public static double[] Multiply(double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -505,8 +506,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома</param>
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - частного</returns>
-            [NotNull]
-            public static double[] Divide([NotNull] double[] p, double x)
+
+            public static double[] Divide(double[] p, double x)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -520,8 +521,8 @@ namespace MathCore
             /// <param name="p">Коэффициенты полинома</param>
             /// <param name="x">Вещественное число</param>
             /// <returns>Коэффициенты полинома - частного</returns>
-            [NotNull]
-            public static double[] DivideScalar(double x, [NotNull] double[] p)
+
+            public static double[] DivideScalar(double x, double[] p)
             {
                 if (p is null) throw new ArgumentNullException(nameof(p));
 
@@ -564,11 +565,11 @@ namespace MathCore
 
             /// <summary>Получить функцию</summary>
             /// <returns>Функция вычисления значения результата деления полиномов</returns>
-            [NotNull]
+
             public Func<double, double> GetFunction() => Value;
 
             /// <inheritdoc />
-            [NotNull] public override string ToString() => $"({Result.ToMathString()}) + ({Remainder.ToMathString()}) / ({Divisor.ToMathString()})";
+            public override string ToString() => $"({Result.ToMathString()}) + ({Remainder.ToMathString()}) / ({Divisor.ToMathString()})";
 
             /// <summary>Оператор неявного преобразования результата деления полиномов в полином результата</summary>
             /// <param name="Result">Результат деления полиномов</param>
@@ -581,7 +582,7 @@ namespace MathCore
         /// <param name="Ma">Математическое ожидание коэффициентов полинома</param>
         /// <param name="Da">Дисперсия коэффициентов полинома</param>
         /// <returns>Случайный полином</returns>
-        [NotNull]
+
         public static Polynom Random(int Power = 3, double Ma = 0, double Da = 1)
         {
             var rnd = new Random();
@@ -591,9 +592,9 @@ namespace MathCore
             return new Polynom(a);
         }
 
-        [NotNull] public static Polynom RandomPower(int MaxPower = 5, double Ma = 0, double Da = 1) => Random(new Random().Next(MaxPower), Ma, Da);
+        public static Polynom RandomPower(int MaxPower = 5, double Ma = 0, double Da = 1) => Random(new Random().Next(MaxPower), Ma, Da);
 
-        [NotNull]
+
         public static Polynom RandomWithIntCoefficients(int Power, int Ma = 0, int Da = 10)
         {
             var rnd = new Random();
@@ -603,8 +604,8 @@ namespace MathCore
             return new Polynom(a);
         }
 
-        [NotNull] public static Polynom RandomWithIntCoefficients_P(int MaxPower = 5, int Ma = 0, int Da = 10) => RandomWithIntCoefficients(new Random().Next(MaxPower), Ma, Da);
+        public static Polynom RandomWithIntCoefficients_P(int MaxPower = 5, int Ma = 0, int Da = 10) => RandomWithIntCoefficients(new Random().Next(MaxPower), Ma, Da);
 
-        [NotNull] public static Polynom PolynomCoefficients([NotNull] params double[] Coefficients) => new Polynom(Coefficients.FilterNullValuesFromEnd());
+        public static Polynom PolynomCoefficients(params double[] Coefficients) => new(Coefficients.FilterNullValuesFromEnd());
     }
 }

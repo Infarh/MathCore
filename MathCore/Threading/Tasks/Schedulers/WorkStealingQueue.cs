@@ -14,7 +14,7 @@ namespace MathCore.Threading.Tasks.Schedulers
         private volatile int _HeadIndex;
         private volatile int _TailIndex;
 
-        private readonly object _SyncRoot = new object();
+        private readonly object _SyncRoot = new();
 
         internal void LocalPush(T obj)
         {

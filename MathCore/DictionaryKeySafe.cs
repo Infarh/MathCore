@@ -48,8 +48,8 @@ namespace MathCore
 
         IEnumerator IEnumerable.GetEnumerator() => _Dictionary.GetEnumerator();
 
-        public static implicit operator DictionaryKeySafe<TKey, TValue>(Dictionary<TKey, TValue> d) => new DictionaryKeySafe<TKey, TValue>(d);
+        public static implicit operator DictionaryKeySafe<TKey, TValue>(Dictionary<TKey, TValue> d) => new(d);
 
-        public static implicit operator Dictionary<TKey, TValue>(DictionaryKeySafe<TKey, TValue> d) => new Dictionary<TKey, TValue>(d._Dictionary);
+        public static implicit operator Dictionary<TKey, TValue>(DictionaryKeySafe<TKey, TValue> d) => new(d._Dictionary);
     }
 }

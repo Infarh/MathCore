@@ -14,6 +14,6 @@ namespace System.Reflection
         /// <param name="Name">Имя контролируемого поля</param>
         /// <param name="Private">Искать приватное поле?</param>
         /// <returns>Объект, осуществляющий контроль поля</returns>
-        [NotNull] public static Field<TObject, TValue> GetField<TObject, TValue>(this TObject o, string Name, bool Private = false) => new Field<TObject, TValue>(o, Name, Private);
+        [NotNull] public static Field<TObject, TValue> GetField<TObject, TValue>(this TObject o, string Name, bool Private = false) => new(o, Name, Private);
     }
 }

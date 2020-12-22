@@ -23,7 +23,7 @@ namespace MathCore.Vectors
         /// <param name="R">Длина вектора</param>
         /// <returns>Трёхмерный вектор</returns>
         [DST]
-        public static Vector3D ThetaPhiRadius(double Theta, double Phi, double R = 1) => new Vector3D(R, new SpaceAngle(Theta, Phi));
+        public static Vector3D ThetaPhiRadius(double Theta, double Phi, double R = 1) => new(R, new SpaceAngle(Theta, Phi));
 
         /// <summary>Преобразовать координаты декартовой системы в вектор</summary>
         /// <param name="X">Координата X</param>
@@ -31,7 +31,7 @@ namespace MathCore.Vectors
         /// <param name="Z">Координата Z</param>
         /// <returns>Вектор с заданными координатами</returns>
         [DST]
-        public static Vector3D XYZ(double X, double Y, double Z) => new Vector3D(X, Y, Z);
+        public static Vector3D XYZ(double X, double Y, double Z) => new(X, Y, Z);
 
         /// <summary>Вектор со случайными координатами (с равномерным распределением)</summary>
         /// <param name="min">Минимальное значение</param>
@@ -50,19 +50,19 @@ namespace MathCore.Vectors
         // ReSharper disable InconsistentNaming
 
         /// <summary>Базисный вектор k</summary>
-        public static readonly Vector3D k = new Vector3D(0, 0, 1);
+        public static readonly Vector3D k = new(0, 0, 1);
 
         /// <summary>Вектор нулевой длины в начале координат</summary>
-        public static readonly Vector3D Empty = new Vector3D();
+        public static readonly Vector3D Empty = new();
 
         /// <summary>Единичный базисный вектор</summary>
-        public static readonly Vector3D BasisUnitVector = new Vector3D(1, 1, 1);
+        public static readonly Vector3D BasisUnitVector = new(1, 1, 1);
 
         /// <summary>Базисный вектор i</summary>
-        public static readonly Vector3D i = new Vector3D(1, 0, 0);
+        public static readonly Vector3D i = new(1, 0, 0);
 
         /// <summary>Базисный вектор j</summary>
-        public static readonly Vector3D j = new Vector3D(0, 1, 0);
+        public static readonly Vector3D j = new(0, 1, 0);
 
         // ReSharper restore InconsistentNaming
         /* -------------------------------------------------------------------------------------------- */
@@ -137,16 +137,16 @@ namespace MathCore.Vectors
 
         /// <summary>Пространственный угол</summary>
         [XmlIgnore]
-        public SpaceAngle Angle => new SpaceAngle(Theta, Phi);
+        public SpaceAngle Angle => new(Theta, Phi);
 
         /// <summary>Двумерный вектор - проекция в плоскости XOY</summary>
-        public Vector2D VectorXOY => new Vector2D(_X, _Y);
+        public Vector2D VectorXOY => new(_X, _Y);
 
         /// <summary>Двумерный вектор - проекция в плоскости XOZ (X->X; Z->Y)</summary>
-        public Vector2D VectorXOZ => new Vector2D(_X, _Z);
+        public Vector2D VectorXOZ => new(_X, _Z);
 
         /// <summary>Двумерный вектор - проекция в плоскости YOZ (Y->X; Z->Y)</summary>
-        public Vector2D VectorYOZ => new Vector2D(_Y, _Z);
+        public Vector2D VectorYOZ => new(_Y, _Z);
 
         /// <summary>Длина в плоскости XOY</summary>
         public double R_XOY => Sqrt(_X * _X + _Y * _Y);
@@ -158,10 +158,10 @@ namespace MathCore.Vectors
         public double R_YOZ => Sqrt(_Y * _Y + _Z * _Z);
 
         /// <summary>Длина вектора</summary>
-        public Vector3D Abs => new Vector3D(Abs(_X), Abs(_Y), Abs(_Z));
+        public Vector3D Abs => new(Abs(_X), Abs(_Y), Abs(_Z));
 
         /// <summary>Вектор знаков координат текущего вектора</summary>
-        public Vector3D Sign => new Vector3D(Sign(_X), Sign(_Y), Sign(_Z));
+        public Vector3D Sign => new(Sign(_X), Sign(_Y), Sign(_Z));
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -215,7 +215,7 @@ namespace MathCore.Vectors
         /// <summary>Представление вектора в базисе</summary>
         /// <param name="b">Новый базис вектора</param>
         /// <returns>Вектор в указанном базисе</returns>
-        public Vector3D InBasis(in Basis3D b) => new Vector3D(
+        public Vector3D InBasis(in Basis3D b) => new(
             b.xx * _X + b.xy * _Y + b.xz * _Z,
             b.yx * _X + b.yy * _Y + b.yz * _Z,
             b.zx * _X + b.zy * _Y + b.zz * _Z);
@@ -225,66 +225,66 @@ namespace MathCore.Vectors
         /// <param name="dy">Величина приращения координаты Y</param>
         /// <param name="dz">Величина приращения координаты Z</param>
         /// <returns>Вектор с новыми координатами</returns>
-        public Vector3D Inc(double dx, double dy, double dz) => new Vector3D(_X + dx, _Y + dy, _Z + dz);
+        public Vector3D Inc(double dx, double dy, double dz) => new(_X + dx, _Y + dy, _Z + dz);
 
         /// <summary>Инкрементировать координату X</summary>
         /// <param name="dx">Величина приращения координаты X</param>
         /// <returns>Вектор с обновлённой координатой X</returns>
-        public Vector3D IncX(double dx) => new Vector3D(_X + dx, _Y, _Z);
+        public Vector3D IncX(double dx) => new(_X + dx, _Y, _Z);
 
         /// <summary>Инкрементировать координату Y</summary>
         /// <param name="dy">Величина приращения координаты Y</param>
         /// <returns>Вектор с обновлённой координатой Y</returns>
-        public Vector3D IncY(double dy) => new Vector3D(_X, _Y + dy, _Z);
+        public Vector3D IncY(double dy) => new(_X, _Y + dy, _Z);
 
         /// <summary>Инкрементировать координату Z</summary>
         /// <param name="dz">Величина приращения координаты Z</param>
         /// <returns>Вектор с обновлённой координатой Z</returns>
-        public Vector3D IncZ(double dz) => new Vector3D(_X, _Y, _Z + dz);
+        public Vector3D IncZ(double dz) => new(_X, _Y, _Z + dz);
 
         /// <summary>Декрементация координат вектора</summary>
         /// <param name="dx">Величина приращения координаты X</param>
         /// <param name="dy">Величина приращения координаты Y</param>
         /// <param name="dz">Величина приращения координаты Z</param>
         /// <returns>Вектор с новыми координатами</returns>
-        public Vector3D Dec(double dx, double dy, double dz) => new Vector3D(_X - dx, _Y - dy, _Z - dz);
+        public Vector3D Dec(double dx, double dy, double dz) => new(_X - dx, _Y - dy, _Z - dz);
 
         /// <summary>Декрементировать координату X</summary>
         /// <param name="dx">Величина приращения координаты X</param>
         /// <returns>Вектор с обновлённой координатой X</returns>
-        public Vector3D DecX(double dx) => new Vector3D(_X - dx, _Y, _Z);
+        public Vector3D DecX(double dx) => new(_X - dx, _Y, _Z);
 
         /// <summary>Декрементировать координату Y</summary>
         /// <param name="dy">Величина приращения координаты Y</param>
         /// <returns>Вектор с обновлённой координатой Y</returns>
-        public Vector3D DecY(double dy) => new Vector3D(_X, _Y - dy, _Z);
+        public Vector3D DecY(double dy) => new(_X, _Y - dy, _Z);
 
         /// <summary>Декрементировать координату Z</summary>
         /// <param name="dz">Величина приращения координаты Z</param>
         /// <returns>Вектор с обновлённой координатой Z</returns>
-        public Vector3D DecZ(double dz) => new Vector3D(_X, _Y, _Z - dz);
+        public Vector3D DecZ(double dz) => new(_X, _Y, _Z - dz);
 
         /// <summary>Выполнить масштабирование вектора по координатам</summary>
         /// <param name="kx">Коэффициент масштабирования координаты X</param>
         /// <param name="ky">Коэффициент масштабирования координаты Y</param>
         /// <param name="kz">Коэффициент масштабирования координаты Z</param>
         /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
-        public Vector3D Scale(double kx, double ky, double kz) => new Vector3D(_X * kx, _Y * ky, _Z * kz);
+        public Vector3D Scale(double kx, double ky, double kz) => new(_X * kx, _Y * ky, _Z * kz);
 
         /// <summary>Выполнить масштабирование вектора по оси OX</summary>
         /// <param name="kx">Коэффициент масштабирования координаты X</param>
         /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
-        public Vector3D ScaleX(double kx) => new Vector3D(_X * kx, _Y, _Z);
+        public Vector3D ScaleX(double kx) => new(_X * kx, _Y, _Z);
 
         /// <summary>Выполнить масштабирование вектора по оси OY</summary>
         /// <param name="ky">Коэффициент масштабирования координаты Y</param>
         /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
-        public Vector3D ScaleY(double ky) => new Vector3D(_X, _Y * ky, _Z);
+        public Vector3D ScaleY(double ky) => new(_X, _Y * ky, _Z);
 
         /// <summary>Выполнить масштабирование вектора по оси OZ</summary>
         /// <param name="kz">Коэффициент масштабирования координаты Z</param>
         /// <returns>Вектор, координаты которого умножены на соответствующие значения</returns>
-        public Vector3D ScaleZ(double kz) => new Vector3D(_X, _Y, _Z * kz);
+        public Vector3D ScaleZ(double kz) => new(_X, _Y, _Z * kz);
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -312,7 +312,7 @@ namespace MathCore.Vectors
 
         /// <inheritdoc />
         [DST]
-        public Vector3D Clone() => new Vector3D(this);
+        public Vector3D Clone() => new(this);
 
         /// <inheritdoc />
         [DST]

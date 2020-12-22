@@ -9,7 +9,7 @@ namespace MathCore.Time
         private bool _Started;
 
         /// <summary>Объект межпотоковой синхронизации</summary>
-        private readonly object _LockObject = new object();
+        private readonly object _LockObject = new();
 
         //private readonly List<TimeEvent> _Events = new List<TimeEvent>();
         private TimeSpan _StartTime;

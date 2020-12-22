@@ -16,7 +16,7 @@ namespace System.Threading.Tasks
             _Task = Task;
         }
 
-        public SynchronizationContextAwaiter GetAwaiter() => new SynchronizationContextAwaiter(_Context, _Task);
+        public SynchronizationContextAwaiter GetAwaiter() => new(_Context, _Task);
 
         public readonly struct SynchronizationContextAwaiter : ICriticalNotifyCompletion, INotifyCompletion
         {
@@ -51,7 +51,7 @@ namespace System.Threading.Tasks
             _Task = Task;
         }
 
-        public SynchronizationContextAwaiter GetAwaiter() => new SynchronizationContextAwaiter(_Context, _Task);
+        public SynchronizationContextAwaiter GetAwaiter() => new(_Context, _Task);
 
         public readonly struct SynchronizationContextAwaiter : ICriticalNotifyCompletion, INotifyCompletion
         {

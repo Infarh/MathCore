@@ -8,7 +8,7 @@ namespace MathCore.MathParser
     [NotImplemented]
     public class DifferentialTransformationVisitor : ExpressionVisitorEx
     {
-        private readonly object _Differentiate_LockObject = new object();
+        private readonly object _Differentiate_LockObject = new();
         private ParameterExpression _Differential_Parameter;
 
         public DifferentialTransformationVisitor() => throw new NotImplementedException();

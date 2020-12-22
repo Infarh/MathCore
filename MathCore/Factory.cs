@@ -55,7 +55,7 @@ namespace MathCore
         private Func<T> _FactoryMethod;
 
         private T _Last;
-        private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new PropertyChangedEventArgs(nameof(Last));
+        private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new(nameof(Last));
 
         /// <summary>Генерировать события изменения свойств</summary>
         protected bool _RaiseLastChangedEvents = true;

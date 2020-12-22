@@ -12,7 +12,7 @@ namespace System.Xml.Serialization
     public static class XmlSerializerExtensions
     {
         /// <summary>Словарь типов - сериализаторов</summary>
-        [NotNull] private static readonly ConcurrentDictionary<Type, XmlSerializer> __XmlSerializersPool = new ConcurrentDictionary<Type, XmlSerializer>();
+        [NotNull] private static readonly ConcurrentDictionary<Type, XmlSerializer> __XmlSerializersPool = new();
 
         /// <summary>Получить XML-сериализатор по указанному типу</summary>
         /// <param name="type">Тип XML-сериализатора</param>

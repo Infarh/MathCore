@@ -93,7 +93,7 @@ namespace MathCore.CSV
         /// <param name="separator">Новый символ-разделитель</param>
         /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
         public CSVWriter<T> Separator(char separator) =>
-            new CSVWriter<T>(
+            new(
                 _Items,
                 separator,
                 _WriteHeaders,
@@ -104,7 +104,7 @@ namespace MathCore.CSV
         /// <param name="write">Истина, если заголовок требуется записать</param>
         /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
         public CSVWriter<T> WriteHeader(bool write = true) =>
-            new CSVWriter<T>(
+            new(
                 _Items,
                 _Separator,
                 write,
@@ -114,7 +114,7 @@ namespace MathCore.CSV
         /// <summary>Добавить колонки по умолчанию - на основе имён свойств <typeparamref name="T"/></summary>
         /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
         public CSVWriter<T> AddDefaultHeaders() =>
-            new CSVWriter<T>(
+            new(
                 _Items,
                 _Separator,
                 _WriteHeaders,
@@ -167,7 +167,7 @@ namespace MathCore.CSV
         /// <param name="NewColumnValueSelector">Метод извлечения значения для новой колонки</param>
         /// <returns>Модифицированный <see cref="CSVWriter{T}"/></returns>
         public CSVWriter<T> AddColumn(string NewColumnName, Func<T, object> NewColumnValueSelector) =>
-            new CSVWriter<T>(
+            new(
                 _Items,
                 _Separator,
                 _WriteHeaders,

@@ -25,7 +25,7 @@ namespace MathCore.Functions.Differentiable
         public Constant(double c) => _C = c;
         public override double Value(double x) => _C;
         [NotNull] public override Function Derivative() => new Zero();
-        [NotNull] public static implicit operator Constant(double c) => new Constant(c);
+        [NotNull] public static implicit operator Constant(double c) => new(c);
         public static implicit operator double([NotNull] Constant c) => c._C;
     }
 

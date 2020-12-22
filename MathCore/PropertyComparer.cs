@@ -16,7 +16,7 @@ namespace MathCore
 
     public class PropertyComparer : IComparer
     {
-        [NotNull] public static PropertyComparer<T, TValue> Create<T, TValue>([NotNull] Func<T, TValue> Selector) => new PropertyComparer<T, TValue>(Selector);
+        [NotNull] public static PropertyComparer<T, TValue> Create<T, TValue>([NotNull] Func<T, TValue> Selector) => new(Selector);
 
         [NotNull] private readonly Func<object, object> _Selector;
 

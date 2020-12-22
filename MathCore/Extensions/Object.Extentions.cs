@@ -703,7 +703,7 @@ namespace System
         /// <param name="obj">Оборачиваемый объект</param>
         /// <returns>Вычисление, возвращающее указанный объект</returns>
         [NotNull, DST]
-        public static ValueEvaluation<T> ToEvaluation<T>([CanBeNull] this T obj) => new ValueEvaluation<T>(obj);
+        public static ValueEvaluation<T> ToEvaluation<T>([CanBeNull] this T obj) => new(obj);
 
         /// <summary>Преобразование объекта в именованное вычисление</summary>
         /// <typeparam name="T">Тип исходного элемента</typeparam>
@@ -781,7 +781,7 @@ namespace System.Tags
         private static class TagPool
         {
             /// <summary>Объект межпотоковой синхронизации</summary>
-            [NotNull] private static readonly object __Lock = new object();
+            [NotNull] private static readonly object __Lock = new();
             /// <summary>Словарь меток</summary>
             [CanBeNull] private static Dictionary<WeakReference, Dictionary<Type, object>> __Tags;
 

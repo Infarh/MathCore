@@ -23,7 +23,7 @@ namespace MathCore.Trees
             [NotNull] this T Value,
             [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector,
             [CanBeNull] Func<T, T> ParentSelector = null) =>
-            new TreeNode<T>(Value, ParentSelector, ChildsSelector);
+            new(Value, ParentSelector, ChildsSelector);
 
         /// <summary>Определение корня дерева</summary>
         /// <typeparam name="T">Тип элемента, являющегося классом и определяющего интерфейс элемента дерева</typeparam>

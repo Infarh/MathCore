@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -18,10 +20,10 @@ namespace System
         public static void Start<TS, TE1, TE2>(this EventHandler<TS, TE1, TE2> Handler, TS Sender, EventArgs<TE1, TE2> e)
         {
             var handler = Handler;
-            if(handler is null) return;
+            if (handler is null) return;
             var invocations = handler.GetInvocationList();
             foreach (var invocation in invocations)
-                if(invocation.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired)
+                if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
                     invoke.Invoke(invocation, new object[] { Sender, e });
                 else
                     invocation.DynamicInvoke(Sender, e);
@@ -35,10 +37,10 @@ namespace System
         /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
         [DST]
         public static void StartAsync<TSender, TEventArgs1, TEventArgs2>(
-            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, 
+            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler,
             TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e,
-            AsyncCallback CallBack = null, 
-            object State = null) 
+            AsyncCallback CallBack = null,
+            object State = null)
             => Handler?.BeginInvoke(Sender, e, CallBack, State);
 
         /// <summary>Быстрая генерация события</summary>
@@ -46,8 +48,8 @@ namespace System
         /// <param name="Sender">Источник события</param>
         [DST]
         public static void FastStart<TSender, TEventArgs1, TEventArgs2>(
-            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, 
-            TSender Sender) 
+            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler,
+            TSender Sender)
             => Handler?.Invoke(Sender, default);
 
         /// <summary>Быстрая генерация события</summary>
@@ -56,7 +58,7 @@ namespace System
         /// <param name="e">Аргументы события</param>
         [DST]
         public static void FastStart<TSender, TEventArgs1, TEventArgs2>(
-            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler, 
+            [CanBeNull] this EventHandler<TSender, TEventArgs1, TEventArgs2> Handler,
             TSender Sender, EventArgs<TEventArgs1, TEventArgs2> e)
             => Handler?.Invoke(Sender, e);
 

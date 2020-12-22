@@ -36,7 +36,7 @@ namespace System
             for (var i = 0; i < invocations.Length; i++)
             {
                 var invocation = invocations[i];
-                if (invocation.Target is ISynchronizeInvoke invocation_target && invocation_target.InvokeRequired)
+                if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invocation_target)
                     invocation_target.Invoke(invocation, new[] { Sender, e });
                 else
                     invocation.DynamicInvoke(Sender, e);
@@ -58,7 +58,7 @@ namespace System
             AsyncCallback CallBack,
             object State)
             where TException : Exception =>
-            Handler?.BeginInvoke(Sender, e, CallBack, State);
+            Handler.BeginInvoke(Sender, e, CallBack, State);
 
         /// <summary>Быстрый запуск события без учёта многопоточных компонентов</summary>
         /// <param name="Handler">Обработчики события</param>
@@ -66,7 +66,9 @@ namespace System
         /// <param name="e">Аргументы события</param>
         /// <typeparam name="TException">Тип события</typeparam>
         [DST]
-        public static void FastStart<TException>([CanBeNull] this ExceptionEventHandler<TException> Handler, object Sender,
+        public static void FastStart<TException>(
+            [CanBeNull] this ExceptionEventHandler<TException> Handler, 
+            object Sender,
             ExceptionEventHandlerArgs<TException> e)
             where TException : Exception =>
             Handler?.Invoke(Sender, e);

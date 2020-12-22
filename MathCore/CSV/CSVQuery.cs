@@ -79,7 +79,7 @@ namespace MathCore.CSV
         /// <summary>Установить число пропускаемых строк в начале файла</summary>
         /// <param name="RowsCount">Количество пропускаемых строк в начале файла</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery Skip(int RowsCount) => new CSVQuery(
+        public CSVQuery Skip(int RowsCount) => new(
             _ReaderFactory,
             RowsCount,
             _ContainsHeader,
@@ -92,7 +92,7 @@ namespace MathCore.CSV
         /// <summary>Установить число строк, пропускаемых после заголовка</summary>
         /// <param name="RowsCount">Новое значение числа строк, пропускаемых после заголовка</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery SkipAfterHeader(int RowsCount) => new CSVQuery(
+        public CSVQuery SkipAfterHeader(int RowsCount) => new(
             _ReaderFactory,
             _SkipRows,
             _ContainsHeader,
@@ -105,7 +105,7 @@ namespace MathCore.CSV
         /// <summary>Данные содержат заголовок?</summary>
         /// <param name="IsExist">Истина - заголовок будет учитываться при чтении</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery WithHeader(bool IsExist = true) => new CSVQuery(
+        public CSVQuery WithHeader(bool IsExist = true) => new(
             _ReaderFactory,
             _SkipRows,
             IsExist,
@@ -118,7 +118,7 @@ namespace MathCore.CSV
         /// <summary>Установить символ-разделитель значений в строке</summary>
         /// <param name="NewSeparator">Новый символ-разделитель значений строки</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery ValuesSeparator(char NewSeparator) => new CSVQuery(
+        public CSVQuery ValuesSeparator(char NewSeparator) => new(
             _ReaderFactory,
             _SkipRows,
             _ContainsHeader,
@@ -131,7 +131,7 @@ namespace MathCore.CSV
         /// <summary>Установить число читаемых строк</summary>
         /// <param name="RowsCount">Число читаемых строк области данных (если -1, то читать всё)</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery TakeRows(int RowsCount) => new CSVQuery(
+        public CSVQuery TakeRows(int RowsCount) => new(
             _ReaderFactory,
             _SkipRows,
             _ContainsHeader,
@@ -144,7 +144,7 @@ namespace MathCore.CSV
         /// <summary>Установить заголовок</summary>
         /// <param name="Header">Новый заголовок данных - словарь соответствия имени колонки и её индекса</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery Header(IDictionary<string, int> Header) => new CSVQuery(
+        public CSVQuery Header(IDictionary<string, int> Header) => new(
             _ReaderFactory,
             _SkipRows,
             _ContainsHeader,
@@ -176,7 +176,7 @@ namespace MathCore.CSV
         /// <summary>Добавить в заголовок набор колонок</summary>
         /// <param name="Header">Добавляемые в заголовок колонки</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery MergeHeader(IDictionary<string, int> Header) => new CSVQuery(
+        public CSVQuery MergeHeader(IDictionary<string, int> Header) => new(
             _ReaderFactory,
             _SkipRows,
             _ContainsHeader,

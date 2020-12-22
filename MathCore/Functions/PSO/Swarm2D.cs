@@ -47,7 +47,7 @@ namespace MathCore.Functions.PSO
             }
         }
 
-        private static readonly Random __Random = new Random();
+        private static readonly Random __Random = new();
 
         /// <summary>Размер роя</summary>
         private readonly int _ParticleCount;

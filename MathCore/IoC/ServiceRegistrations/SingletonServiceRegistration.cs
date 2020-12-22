@@ -13,7 +13,7 @@ namespace MathCore.IoC.ServiceRegistrations
     {
         private bool _Created;
         private readonly bool _InstanceService;
-        private readonly object _SyncRoot = new object();
+        private readonly object _SyncRoot = new();
 
         public TimeSpan? InstanceActualityTime
         {
@@ -63,7 +63,7 @@ namespace MathCore.IoC.ServiceRegistrations
 
         private DateTime _InstanceLastAccessTime;
         private TimeSpan? _InstanceActualityTime;
-        private CancellationTokenSource _InstanceActualityCheckCancel = new CancellationTokenSource();
+        private CancellationTokenSource _InstanceActualityCheckCancel = new();
 
         private async void CheckInstanceActualityTimeAsync()
         {

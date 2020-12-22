@@ -370,9 +370,9 @@ namespace MathCore.Geolocation
                 return lat * ToDeg;
             }
 
-            public static Vector2D ToXY(Vector2D LongitudeLatitude) => new Vector2D(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
+            public static Vector2D ToXY(Vector2D LongitudeLatitude) => new(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
 
-            public static Vector2D FromXY(Vector2D Point) => new Vector2D(Point.X, YToLatitude(Point.Y));
+            public static Vector2D FromXY(Vector2D Point) => new(Point.X, YToLatitude(Point.Y));
 
             public static (double X, double Y) ToXY(double Longitude, double Latitude) => (Longitude, LatitudeToY(Latitude));
             public static (double X, double Y) ToXY((double Longitude, double Latitude) Point) => (Point.Longitude, LatitudeToY(Point.Latitude));

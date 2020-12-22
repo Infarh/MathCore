@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -31,7 +32,7 @@ namespace System.Collections.Generic
         /// <param name="items">Перечисление удаляемых из коллекции элементов</param>
         /// <returns>Перечисление результатов удаления элементов</returns>
         [NotNull]
-        public static IEnumerable<(T, bool)> RemoveItemsLazy<T>([NotNull] this ICollection<T> collection, [NotNull] IEnumerable<T> items) => 
+        public static IEnumerable<(T, bool)> RemoveItemsLazy<T>([NotNull] this ICollection<T> collection, [NotNull] IEnumerable<T> items) =>
             items.Select(item => (item, collection.Remove(item)));
 
         /// <summary>Пакетное удаление элементов из коллекции</summary>

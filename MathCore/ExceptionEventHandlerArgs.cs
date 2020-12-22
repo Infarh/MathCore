@@ -47,7 +47,7 @@ namespace System
         public static implicit operator TException(ExceptionEventHandlerArgs<TException> arg) => arg.Argument;
 
         [DST]
-        public static implicit operator ExceptionEventHandlerArgs<TException>(TException exception) => new ExceptionEventHandlerArgs<TException>(exception);
+        public static implicit operator ExceptionEventHandlerArgs<TException>(TException exception) => new(exception);
 
         /* ------------------------------------------------------------------------------------------ */
     }

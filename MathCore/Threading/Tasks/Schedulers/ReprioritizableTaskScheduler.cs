@@ -10,7 +10,7 @@ namespace MathCore.Threading.Tasks.Schedulers
     /// <summary>Provides a task scheduler that supports reprioritizing previously queued tasks.</summary>
     public sealed class ReprioritizableTaskScheduler : TaskScheduler
     {
-        private readonly LinkedList<Task> _Tasks = new LinkedList<Task>(); // protected by lock(_tasks)
+        private readonly LinkedList<Task> _Tasks = new(); // protected by lock(_tasks)
 
         /// <summary>Queues a task to the scheduler.</summary>
         /// <param name="task">The task to be queued.</param>

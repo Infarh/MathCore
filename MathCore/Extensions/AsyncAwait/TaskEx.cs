@@ -14,20 +14,20 @@ namespace System.Threading.Tasks
 {
     public static class TaskEx
     {
-        public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable(BeforeAction, task, LockContext);
+        public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
 
-        public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new PerformActionAwaitable<T>(BeforeAction, task, LockContext);
+        public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
 
-        public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable(ContinuationScheduler, task);
+        public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new(ContinuationScheduler, task);
 
-        public static SynchronizationContextAwaitable ConfigureAwait(this Task task, SynchronizationContext Context) => new SynchronizationContextAwaitable(Context, task);
+        public static SynchronizationContextAwaitable ConfigureAwait(this Task task, SynchronizationContext Context) => new(Context, task);
 
-        public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new TaskSchedulerAwaitable<T>(ContinuationScheduler, task);
+        public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new(ContinuationScheduler, task);
 
-        public static SynchronizationContextAwaitable<T> ConfigureAwait<T>(this Task<T> task, SynchronizationContext Context) => new SynchronizationContextAwaitable<T>(Context, task);
+        public static SynchronizationContextAwaitable<T> ConfigureAwait<T>(this Task<T> task, SynchronizationContext Context) => new(Context, task);
 
         /// <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
-        public static YieldAsyncAwaitable YieldAsync() => new YieldAsyncAwaitable();
+        public static YieldAsyncAwaitable YieldAsync() => new();
 
         public static Task<T> ToTask<T>(this T value) => Task.FromResult(value);
 
@@ -43,9 +43,9 @@ namespace System.Threading.Tasks
 
         /// <summary>Переключиться в контекст планировщика потоков</summary>
         /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
-        public static TaskSchedulerAwaitable SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaitable(scheduler);
+        public static TaskSchedulerAwaitable SwitchContext(this TaskScheduler scheduler) => new(scheduler);
 
-        public static SynchronizationContextAwaitable SwitchContext(this SynchronizationContext context) => new SynchronizationContextAwaitable(context);
+        public static SynchronizationContextAwaitable SwitchContext(this SynchronizationContext context) => new(context);
 
         public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
         public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
@@ -63,7 +63,7 @@ namespace System.Threading.Tasks
                     ? Task.FromCanceled<T>(cancel)
                     : task.CreateCancellation(cancel);
 
-        private static readonly Action<object> __CancellationRegistration = 
+        private static readonly Action<object> __CancellationRegistration =
             s => ((TaskCompletionSource<bool>)s).TrySetResult(default);
 
         private static async Task<T> CreateCancellation<T>(this Task<T> task, CancellationToken cancel)

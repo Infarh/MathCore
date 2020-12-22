@@ -18,10 +18,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public string Name { get; }
 
         /// <summary>Выражение параметров</summary>
-        private readonly MathExpression _ParametersExpression = new MathExpression("Param");
+        private readonly MathExpression _ParametersExpression = new("Param");
 
         /// <summary>Выражение ядра функции</summary>
-        private readonly MathExpression _CoreExpression = new MathExpression(nameof(Core));
+        private readonly MathExpression _CoreExpression = new(nameof(Core));
 
         /// <summary>Выражение параметров</summary>
         public MathExpression Parameters => _ParametersExpression;

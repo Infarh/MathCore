@@ -35,7 +35,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <param name="value">Строковое значение</param>
         /// <returns>Строковый узел</returns>
         [NotNull]
-        public static implicit operator StringNode(string value) => new StringNode(value);
+        public static implicit operator StringNode(string value) => new(value);
 
         /// <summary>Оператор неявного преобразования строкового узла к строковому типу</summary>
         /// <param name="node">Строковый узел</param>

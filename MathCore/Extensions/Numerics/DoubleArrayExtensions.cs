@@ -4,6 +4,7 @@ using MathCore.Annotations;
 using MathCore.Interpolation;
 using MathCore.Statistic;
 using MathCore.Values;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable CompareOfFloatsByEqualityOperator
@@ -203,7 +204,7 @@ namespace System
         }
 
         [DST, NotNull]
-        public static CubicSpline GetCubicSpline([NotNull] this double[] Y, [NotNull] double[] X) => new CubicSpline(X, Y);
+        public static CubicSpline GetCubicSpline([NotNull] this double[] Y, [NotNull] double[] X) => new(X, Y);
 
         [DST, NotNull]
         public static CubicSpline GetCubicSpline([NotNull] this double[] Y, double dx, double x0 = 0.0) => new double[Y.Length].Initialize(dx, x0, (i, Dx, X0) => i * Dx + X0).GetCubicSpline(Y);
@@ -212,7 +213,7 @@ namespace System
         public static double[] GetDivided([NotNull] this double[] array, double value) => new double[array.Length].Initialize(array, value, (i, a, v) => a[i] / v);
 
         [DST, NotNull]
-        public static Histogram GetHistogram([NotNull] this double[] X, int IntervalsCount) => new Histogram(X, IntervalsCount);
+        public static Histogram GetHistogram([NotNull] this double[] X, int IntervalsCount) => new(X, IntervalsCount);
 
         [DST]
         public static double GetIntegral([NotNull] this double[] Y, double dx)
@@ -268,7 +269,7 @@ namespace System
         }
 
         [DST, NotNull]
-        public static MNK GetMNKInterp([NotNull] this double[] Y, int m, [NotNull] double[] X) => new MNK(X, Y, m);
+        public static MNK GetMNKInterp([NotNull] this double[] Y, int m, [NotNull] double[] X) => new(X, Y, m);
 
         [DST, NotNull]
         public static MNK GetMNKInterp([NotNull] this double[] Y, int m, double dx, double x0 = 0.0) => Y.GetMNKInterp(m, new double[Y.Length].Initialize(dx, x0, (i, Dx, X0) => i * Dx + X0));

@@ -18,7 +18,7 @@ namespace MathCore
 
     public class PropertyEqualityComparer : IEqualityComparer
     {
-        [NotNull] public static PropertyEqualityComparer<T, TValue> Create<T, TValue>([NotNull] Func<T, TValue> Selector) => new PropertyEqualityComparer<T, TValue>(Selector);
+        [NotNull] public static PropertyEqualityComparer<T, TValue> Create<T, TValue>([NotNull] Func<T, TValue> Selector) => new(Selector);
 
         [NotNull] private readonly Func<object, object> _Selector;
 

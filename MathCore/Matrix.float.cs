@@ -777,16 +777,16 @@ namespace MathCore
         /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull]
-        public static implicit operator MatrixFloat(float X) => new MatrixFloat(1, 1) { [0, 0] = X };
+        public static implicit operator MatrixFloat(float X) => new(1, 1) { [0, 0] = X };
 
         [DST, NotNull]
         public static explicit operator float[,]([NotNull] MatrixFloat M) => (float[,])M._Data.Clone();
 
         [DST, NotNull]
-        public static explicit operator MatrixFloat([NotNull] float[,] Data) => new MatrixFloat(Data);
+        public static explicit operator MatrixFloat([NotNull] float[,] Data) => new(Data);
 
         [DST, NotNull]
-        public static explicit operator MatrixFloat([NotNull] float[] Data) => new MatrixFloat(Data);
+        public static explicit operator MatrixFloat([NotNull] float[] Data) => new(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 

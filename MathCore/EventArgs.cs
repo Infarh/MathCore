@@ -45,7 +45,7 @@ namespace System
         /// <param name="Argument">Объект аргумента события</param>
         /// <returns>Аргумент события</returns>
         [NotNull]
-        public static implicit operator EventArgs<TArgument>(TArgument Argument) => new EventArgs<TArgument>(Argument);
+        public static implicit operator EventArgs<TArgument>(TArgument Argument) => new(Argument);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -105,7 +105,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2>
             ((TArgument1 Arg1, TArgument2 Arg2) Args)
-            => new EventArgs<TArgument1, TArgument2>(Args.Arg1, Args.Arg2);
+            => new(Args.Arg1, Args.Arg2);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -164,7 +164,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3>(Args.Arg1, Args.Arg2, Args.Arg3);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -227,7 +227,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -294,7 +294,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -365,7 +365,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -440,7 +440,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -519,7 +519,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -602,7 +602,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8, TArgument9 Arg9) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8, Args.Arg9);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8, Args.Arg9);
 
         /* ------------------------------------------------------------------------------------------ */
     }
@@ -689,7 +689,7 @@ namespace System
         [NotNull]
         public static implicit operator EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10>
             ((TArgument1 Arg1, TArgument2 Arg2, TArgument3 Arg3, TArgument4 Arg4, TArgument5 Arg5, TArgument6 Arg6, TArgument7 Arg7, TArgument8 Arg8, TArgument9 Arg9, TArgument10 Arg10) Args)
-            => new EventArgs<TArgument1, TArgument2, TArgument3, TArgument4, TArgument5, TArgument6, TArgument7, TArgument8, TArgument9, TArgument10>(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8, Args.Arg9, Args.Arg10);
+            => new(Args.Arg1, Args.Arg2, Args.Arg3, Args.Arg4, Args.Arg5, Args.Arg6, Args.Arg7, Args.Arg8, Args.Arg9, Args.Arg10);
 
         /* ------------------------------------------------------------------------------------------ */
     }

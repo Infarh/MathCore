@@ -16,7 +16,7 @@ namespace System.Threading.Tasks
             _Task = Task;
         }
 
-        public TaskSchedulerAwaiter GetAwaiter() => new TaskSchedulerAwaiter(_Scheduler, _Task);
+        public TaskSchedulerAwaiter GetAwaiter() => new(_Scheduler, _Task);
 
         public readonly struct TaskSchedulerAwaiter : ICriticalNotifyCompletion, INotifyCompletion
         {
@@ -31,11 +31,8 @@ namespace System.Threading.Tasks
                 _Scheduler = Scheduler;
             }
 
-            public void OnCompleted([NotNull] Action continuation)
-            {
-                //new TaskFactory(_Scheduler).StartNew(continuation);
+            public void OnCompleted([NotNull] Action continuation) => 
                 Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
-            }
 
             public void UnsafeOnCompleted(Action continuation) => OnCompleted(continuation);
 
@@ -54,7 +51,7 @@ namespace System.Threading.Tasks
             _Scheduler = Scheduler;
         }
 
-        public TaskSchedulerAwaiter<T> GetAwaiter() => new TaskSchedulerAwaiter<T>(_Scheduler, _Task);
+        public TaskSchedulerAwaiter<T> GetAwaiter() => new(_Scheduler, _Task);
 
         public readonly struct TaskSchedulerAwaiter<TResult> : INotifyCompletion
         {
@@ -69,7 +66,8 @@ namespace System.Threading.Tasks
                 _Task = Task;
             }
 
-            public void OnCompleted([NotNull] Action continuation) => Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
+            public void OnCompleted([NotNull] Action continuation) => 
+                Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
 
             public TResult GetResult() => _Task.Result;
         }

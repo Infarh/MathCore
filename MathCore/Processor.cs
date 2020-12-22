@@ -86,7 +86,7 @@ namespace System
         protected volatile bool _Enabled;
 
         /// <summary>Объект синхронизации запуска/остановки процессора - только для чтения</summary>
-        protected readonly object _StartStopSectionLocker = new object();
+        protected readonly object _StartStopSectionLocker = new();
 
         /// <summary>Основной поток работы процессора</summary>
         protected Thread _MainWorkThread;
@@ -98,7 +98,7 @@ namespace System
         private DateTime? _StopTime;
 
         /// <summary>Объект-наблюдатель за состоянием процессора</summary>
-        private readonly ProgressMonitor _Monitor = new ProgressMonitor("Ожидание");
+        private readonly ProgressMonitor _Monitor = new("Ожидание");
 
         /// <summary>Базовый приоритет потока процессора</summary>
         private ThreadPriority _Priority = ThreadPriority.Normal;

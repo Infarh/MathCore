@@ -56,23 +56,23 @@ namespace MathCore.Expressions.Complex
         [NotNull, PublicAPI]
         public static ComplexConstantExpression Mod(MathCore.Complex Z) => Mod(Z.Re, Z.Im);
         [NotNull]
-        public static ComplexConstantExpression Mod(double Re, double Im = 0) => new ComplexConstantExpression(Re, Im);
+        public static ComplexConstantExpression Mod(double Re, double Im = 0) => new(Re, Im);
         [NotNull]
-        public static ComplexConstantExpression Mod(Expression Re) => new ComplexConstantExpression(Re, Constant(0d));
+        public static ComplexConstantExpression Mod(Expression Re) => new(Re, Constant(0d));
         [NotNull, PublicAPI]
-        public static ComplexConstantExpression Mod(Expression Re, Expression Im) => new ComplexConstantExpression(Re, Im);
+        public static ComplexConstantExpression Mod(Expression Re, Expression Im) => new(Re, Im);
 
         [NotNull, PublicAPI]
         public static ComplexConstantExpression Exp(double Abs, double Arg) => Exp(Constant(Abs), Constant(Arg));
 
         [NotNull]
-        public static ComplexConstantExpression Exp([NotNull] Expression Abs, [NotNull] Expression Arg) => new ComplexConstantExpression(Multiply(Abs, GetCos(Arg)), Multiply(Abs, GetSin(Arg)));
+        public static ComplexConstantExpression Exp([NotNull] Expression Abs, [NotNull] Expression Arg) => new(Multiply(Abs, GetCos(Arg)), Multiply(Abs, GetSin(Arg)));
 
         [NotNull, PublicAPI]
         public static ComplexConstantExpression Exp(double Arg) => Exp(Constant(Arg));
 
         [NotNull]
-        public static ComplexConstantExpression Exp([NotNull] Expression Arg) => new ComplexConstantExpression(GetCos(Arg), GetSin(Arg));
+        public static ComplexConstantExpression Exp([NotNull] Expression Arg) => new(GetCos(Arg), GetSin(Arg));
 
         #endregion
 

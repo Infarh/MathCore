@@ -11,7 +11,7 @@ namespace System.Xml.Linq
     internal class DynamicNumber : DynamicObject
     {
         // The inner dictionary to store field names and values.
-        private readonly Dictionary<string, object> _Dictionary = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _Dictionary = new();
 
         // Get the property value.
         public override bool TryGetMember(GetMemberBinder binder, [CanBeNull] out object result) =>
