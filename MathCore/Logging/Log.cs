@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Logging
 {
@@ -35,9 +36,7 @@ namespace MathCore.Logging
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs Args) => CollectionChanged.Start(this, Args);
 
-        private static readonly LogPool __LogPool = new();
-
-        public static LogPool Pool => __LogPool;
+        public static LogPool Pool { get; } = new();
 
         private readonly string _Name;
         private LogType _Type;

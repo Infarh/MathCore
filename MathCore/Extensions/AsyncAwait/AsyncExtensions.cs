@@ -100,18 +100,17 @@ namespace System.Threading.Tasks
         }
 
         [NN]
-        public static Task Async<T, TP>(this T obj, TP p, [NN] Action<T, TP> action, CancellationToken Cancel = default)
-        {
-            if (action is null) throw new ArgumentNullException(nameof(action));
-
-            return Task.Factory.StartNew(pp =>
-            {
-                var method = (Action<T, TP>) ((object[]) pp)[0];
-                var arg = (T) ((object[]) pp)[1];
-                var pp1 = (TP) ((object[]) pp)[2];
-                method(arg, pp1);
-            }, new object[] {action, obj, p}, Cancel);
-        }
+        public static Task Async<T, TP>(this T obj, TP p, [NN] Action<T, TP> action, CancellationToken Cancel = default) =>
+            action is null
+                ? throw new ArgumentNullException(nameof(action))
+                : Task.Factory.StartNew(
+                    pp =>
+                    {
+                        var method = (Action<T, TP>)((object[])pp)[0];
+                        var arg = (T)((object[])pp)[1];
+                        var pp1 = (TP)((object[])pp)[2];
+                        method(arg, pp1);
+                    }, new object[] {action, obj, p}, Cancel);
 
         [NN]
         public static Task Async<T, TP1, TP2>(this T obj, TP1 p1, TP2 p2, [NN] Action<T, TP1, TP2> action, CancellationToken Cancel = default)
@@ -187,7 +186,13 @@ namespace System.Threading.Tasks
         }
 
         [NN, IcN]
-        public static Task<TResult> Async<T, TP1, TP2, TP3, TResult>(this T obj, TP1 p1, TP2 p2, TP3 p3, [NN] Func<T, TP1, TP2, TP3, TResult> func, CancellationToken Cancel = default)
+        public static Task<TResult> Async<T, TP1, TP2, TP3, TResult>(
+            this T obj, 
+            TP1 p1, 
+            TP2 p2, 
+            TP3 p3, 
+            [NN] Func<T, TP1, TP2, TP3, TResult> func, 
+            CancellationToken Cancel = default)
         {
             if (func is null) throw new ArgumentNullException(nameof(func));
 

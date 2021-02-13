@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MathCore.Annotations;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+
+using MathCore;
+
+// ReSharper disable UnusedType.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -17,23 +22,20 @@ namespace System.IO
         /// <summary>Создать двоичный файл</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <returns>Объект для записи данных в двоичный файл</returns>
-        [NotNull]
-        public static BinaryWriter CreateBinary([NotNull] this FileInfo File) => new(File.Create());
+        public static BinaryWriter CreateBinary(this FileInfo File) => new(File.Create());
 
         /// <summary>Создать двоичный файл</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <param name="BufferLength">Размер буфера записи</param>
         /// <returns>Объект для записи данных в двоичный файл</returns>
-        [NotNull]
-        public static BinaryWriter CreateBinary([NotNull] this FileInfo File, int BufferLength) =>
+        public static BinaryWriter CreateBinary(this FileInfo File, int BufferLength) =>
             new(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength));
 
         /// <summary>Создать двоичный файл</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <param name="Encoding">Кодировка</param>
         /// <returns>Объект для записи данных в двоичный файл</returns>
-        [NotNull]
-        public static BinaryWriter CreateBinary([NotNull] this FileInfo File, Encoding Encoding) => 
+        public static BinaryWriter CreateBinary(this FileInfo File, Encoding Encoding) =>
             new(File.Create(), Encoding);
 
         /// <summary>Создать двоичный файл</summary>
@@ -41,29 +43,26 @@ namespace System.IO
         /// <param name="BufferLength">Размер буфера записи</param>
         /// <param name="Encoding">Кодировка</param>
         /// <returns>Объект для записи данных в двоичный файл</returns>
-        [NotNull]
-        public static BinaryWriter CreateBinary([NotNull] this FileInfo File, int BufferLength, Encoding Encoding) =>
+        public static BinaryWriter CreateBinary(this FileInfo File, int BufferLength, Encoding Encoding) =>
             new(new FileStream(File.FullName, FileMode.Create, FileAccess.Write, FileShare.None, BufferLength), Encoding);
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <returns>Объект для чтения данных из двоичного файла</returns>
-        public static BinaryReader OpenBinary([NotNull] this FileInfo File) => new(File.OpenRead());
+        public static BinaryReader OpenBinary(this FileInfo File) => new(File.OpenRead());
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <param name="BufferLength">Размер буфера чтения</param>
         /// <returns>Объект для чтения данных из двоичного файла</returns>
-        [NotNull]
-        public static BinaryReader OpenBinary([NotNull] this FileInfo File, int BufferLength) => 
+        public static BinaryReader OpenBinary(this FileInfo File, int BufferLength) =>
             new(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength));
 
         /// <summary>Открыть двоичный файл для чтения</summary>
         /// <param name="File">Информация о создаваемом файле</param>
         /// <param name="Encoding">Кодировка</param>
         /// <returns>Объект для чтения данных из двоичного файла</returns>
-        [NotNull]
-        public static BinaryReader OpenBinary([NotNull] this FileInfo File, Encoding Encoding) =>
+        public static BinaryReader OpenBinary(this FileInfo File, Encoding Encoding) =>
             new(File.OpenRead(), Encoding);
 
         /// <summary>Открыть двоичный файл для чтения</summary>
@@ -71,8 +70,7 @@ namespace System.IO
         /// <param name="BufferLength">Размер буфера чтения</param>
         /// <param name="Encoding">Кодировка</param>
         /// <returns>Объект для чтения данных из двоичного файла</returns>
-        [NotNull]
-        public static BinaryReader OpenBinary([NotNull] this FileInfo File, int BufferLength, Encoding Encoding) =>
+        public static BinaryReader OpenBinary(this FileInfo File, int BufferLength, Encoding Encoding) =>
             new(new FileStream(File.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, BufferLength), Encoding);
 
         /// <summary>Выполнить файл с правами администратора</summary>
@@ -80,8 +78,7 @@ namespace System.IO
         /// <param name="Args">Аргументы командной строки</param>
         /// <param name="UseShellExecute">Использовать интерпретацию файла операционной системой</param>
         /// <returns>Созданный процесс</returns>
-        [CanBeNull]
-        public static Process ExecuteAsAdmin([NotNull] this FileInfo File, [NotNull] string Args = "", bool UseShellExecute = true) =>
+        public static Process? ExecuteAsAdmin(this FileInfo File, string Args = "", bool UseShellExecute = true) =>
             // ReSharper disable once StringLiteralTypo
             File.Execute(Args, UseShellExecute, "runas");
 
@@ -90,8 +87,7 @@ namespace System.IO
         /// <param name="Args">Аргументы командной строки</param>
         /// <param name="UseShellExecute">Использовать интерпретацию файла операционной системой</param>
         /// <returns>Созданный процесс</returns>
-        [CanBeNull]
-        public static Process Execute([NotNull] this FileInfo File, [NotNull] string Args, bool UseShellExecute, string Verb) =>
+        public static Process? Execute(this FileInfo File, string Args, bool UseShellExecute, string Verb) =>
             Process.Start(new ProcessStartInfo(File.FullName, Args)
             {
                 UseShellExecute = UseShellExecute,
@@ -103,8 +99,7 @@ namespace System.IO
         /// <param name="Message">Сообщение, добавляемое в исключение</param>
         /// <returns>Информация о файле</returns>
         /// <exception cref="FileNotFoundException">если файл не существует</exception>
-        [NotNull]
-        public static FileInfo ThrowIfNotFound([NotNull] this FileInfo file, [CanBeNull] string Message = null)
+        public static FileInfo ThrowIfNotFound(this FileInfo file, string? Message = null)
         {
             file.Refresh();
             return file.Exists ? file : throw new FileNotFoundException(Message ?? $"Файл {file} не найден");
@@ -113,8 +108,7 @@ namespace System.IO
         /// <summary>Вычислить хеш-сумму SHA256</summary>
         /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
         /// <returns>Массив байт контрольной суммы</returns>
-        [NotNull]
-        public static byte[] ComputeSHA256([NotNull] this FileInfo file)
+        public static byte[] ComputeSHA256(this FileInfo file)
         {
             if (file is null) throw new ArgumentNullException(nameof(file));
             using var stream = file.ThrowIfNotFound().OpenRead();
@@ -122,16 +116,14 @@ namespace System.IO
             return md5.ComputeHash(stream);
         }
 
-        [NotNull]
-        public static byte[] ComputeMD5([NotNull] this FileInfo file)
+        public static byte[] ComputeMD5(this FileInfo file)
         {
             if (file is null) throw new ArgumentNullException(nameof(file));
             using var stream = file.ThrowIfNotFound().OpenRead();
             using var md5 = new Security.Cryptography.MD5CryptoServiceProvider();
             return md5.ComputeHash(stream);
         }
-
-        public static IEnumerable<byte> ReadBytes([NotNull] this FileInfo file)
+        public static IEnumerable<byte> ReadBytes(this FileInfo file)
         {
             using var stream = file.ThrowIfNotFound().OpenRead();
             using var reader = new BinaryReader(stream);
@@ -139,8 +131,7 @@ namespace System.IO
                 yield return reader.ReadByte();
         }
 
-        [ItemNotNull]
-        public static IEnumerable<byte[]> ReadBytes([NotNull] this FileInfo file, int Length)
+        public static IEnumerable<byte[]>? ReadBytes(this FileInfo file, int Length)
         {
             using var stream = file.ThrowIfNotFound().OpenRead();
             using var reader = new BinaryReader(stream);
@@ -148,25 +139,30 @@ namespace System.IO
                 yield return reader.ReadBytes(Length);
         }
 
-        [ItemCanBeNull]
-        public static IEnumerable<string> ReadLines([NotNull] this FileInfo file)
+        public static IEnumerable<string?> ReadLines(this FileInfo file)
         {
             using var reader = file.ThrowIfNotFound().OpenText();
             while (!reader.EndOfStream)
                 yield return reader.ReadLine();
         }
 
-        [ItemCanBeNull]
-        public static IEnumerable<string> ReadLines([NotNull] this FileInfo file, [CanBeNull] Action<StreamReader> initializer)
+        public static IEnumerable<string?> ReadLines(
+            this FileInfo file, 
+            Action<StreamReader>? initializer, 
+            int BufferSize = 3 * Consts.DataLength.Bytes.MB)
         {
-            using var reader = new StreamReader(new BufferedStream(file.ThrowIfNotFound().Open(FileMode.Open, FileAccess.Read, FileShare.Read), 1024 * 1024 * 3));
+            using var reader = new StreamReader(
+                new BufferedStream(file.ThrowIfNotFound().Open(
+                    FileMode.Open, 
+                    FileAccess.Read,
+                    FileShare.Read), 
+                    BufferSize));
             initializer?.Invoke(reader);
             while (!reader.EndOfStream)
                 yield return reader.ReadLine();
         }
 
-        [CanBeNull]
-        public static string ReadAllText([NotNull] this FileInfo file, bool ThrowNotExist = true)
+        public static string? ReadAllText(this FileInfo file, bool ThrowNotExist = true)
         {
             if (!file.Exists && !ThrowNotExist) return null;
             using var reader = file.OpenText();
@@ -177,68 +173,56 @@ namespace System.IO
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationDirectory">Директория назначения</param>
         /// <returns>Файл копия</returns>
-        [DST]
-        [NotNull]
-        public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory) => SourceFile.CopyTo($@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}");
+        public static FileInfo CopyTo(this FileInfo SourceFile, DirectoryInfo DestinationDirectory) => 
+            SourceFile.CopyTo(Path.Combine(DestinationDirectory.FullName, Path.GetFileName(SourceFile.Name)));
 
         /// <summary>Скопировать файл в директорию</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationDirectory">Директория назначения</param>
         /// <param name="Overwrite">Перезаписать в случае наличия файла</param>
         /// <returns>Файл копия</returns>
-        [DST]
-        [NotNull]
-        public static FileInfo CopyTo([NotNull] this FileInfo SourceFile, [NotNull] DirectoryInfo DestinationDirectory, bool Overwrite)
+        public static FileInfo CopyTo(this FileInfo SourceFile, DirectoryInfo DestinationDirectory, bool Overwrite)
         {
-            var new_file = $@"{DestinationDirectory.FullName}\{Path.GetFileName(SourceFile.Name)}";
+            var new_file = Path.Combine(DestinationDirectory.FullName, Path.GetFileName(SourceFile.Name));
             return !Overwrite && File.Exists(new_file) ? new FileInfo(new_file) : SourceFile.CopyTo(new_file, true);
         }
 
         /// <summary>Скопировать файл</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationFile">Файл копия</param>
-        [DST]
-        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile) => 
+        public static void CopyTo(this FileInfo SourceFile, FileInfo DestinationFile) =>
             SourceFile.CopyTo(DestinationFile.FullName);
 
         /// <summary>Скопировать файл</summary>
         /// <param name="SourceFile">Файл источник</param>
         /// <param name="DestinationFile">Файл копия</param>
         /// <param name="Overwrite">Перезаписать в случае наличия файла</param>
-        [DST]
-        public static void CopyTo([NotNull] this FileInfo SourceFile, [NotNull] FileInfo DestinationFile, bool Overwrite) => 
+        public static void CopyTo(this FileInfo SourceFile, FileInfo DestinationFile, bool Overwrite) =>
             SourceFile.CopyTo(DestinationFile.FullName, Overwrite);
 
         /// <summary>Получить имя файла без расширения</summary>
         /// <param name="file">Файл</param>
         /// <returns>Имя файла без расширения</returns>
-        [DST]
-        [NotNull]
-        public static string GetFileNameWithoutExtension([NotNull] this FileInfo file) => Path.GetFileNameWithoutExtension(file.Name);
+        public static string GetFileNameWithoutExtension(this FileInfo file) => Path.GetFileNameWithoutExtension(file.Name);
 
         /// <summary>Получить имя файла без расширения</summary>
         /// <param name="file">Файл</param>
         /// <returns>Имя файла без расширения</returns>
-        [DST]
-        [NotNull]
-        public static string GetFullFileNameWithoutExtension([NotNull] this FileInfo file) => 
-            $"{Path.GetDirectoryName(file.FullName)}\\{Path.GetFileNameWithoutExtension(file.Name)}";
+        public static string GetFullFileNameWithoutExtension(this FileInfo file) =>
+            Path.Combine(file.Directory!.FullName, file.GetFileNameWithoutExtension());
 
         /// <summary>Получить имя файла c новым расширением</summary>
         /// <param name="file">Файл</param>
         /// <param name="NewExt">Новое расширение файла в формате ".exe"</param>
         /// <returns>Имя файла без расширения</returns>
-        [DST]
-        [NotNull]
-        public static string GetFullFileNameWithNewExtension([NotNull] this FileInfo file, string NewExt) => 
-            Path.Combine(Path.GetDirectoryName(file.FullName).NotNull(), $"{Path.GetFileNameWithoutExtension(file.Name)}{NewExt}");
+        public static string GetFullFileNameWithNewExtension(this FileInfo file, string NewExt) =>
+            Path.ChangeExtension(file.FullName, NewExt);
 
         /// <summary>Записать массив байт в файл</summary>
         /// <param name="file">Файл данных</param>
         /// <param name="Data">Данные</param>
         /// <param name="Append">Если истина, то данные будут добавлены в конец файла</param>
-        [DST]
-        public static void WriteAllBytes([NotNull] this FileInfo file, [NotNull] byte[] Data, bool Append = false)
+        public static void WriteAllBytes(this FileInfo file, byte[] Data, bool Append = false)
         {
             using var stream = new FileStream(file.FullName, Append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
             stream.Write(Data, 0, Data.Length);
@@ -255,14 +239,13 @@ namespace System.IO
         /// Должен вернуть истину, что бы данные были переданы в файл и процесс был продолжен.
         /// </param>
         /// <param name="OnComplete">Обработчик события завершения процесса записи данных</param>
-        [DST]
         public static void WriteAllBytes(
-            [NotNull] this FileInfo file,
-            [NotNull] Stream DataStream,
+             this FileInfo file,
+             Stream DataStream,
             int BufferSize = 1024,
             bool Append = false,
-            [CanBeNull] Func<long, byte[], bool> CompleteHandler = null,
-            [CanBeNull] EventHandler<EventArgs<FileInfo, Stream>> OnComplete = null)
+            Func<long, byte[], bool>? CompleteHandler = null,
+            EventHandler<EventArgs<FileInfo, Stream>>? OnComplete = null)
         {
             var buffer = new byte[BufferSize];
             var write = true;
@@ -280,56 +263,50 @@ namespace System.IO
         /// <summary>Получить объект наблюдения за файлом</summary>
         /// <param name="file">Наблюдаемый файл</param>
         /// <returns>Объект наблюдатель</returns>
-        [DST, CanBeNull]
-        public static FileSystemWatcher GetWatcher([CanBeNull] this FileInfo file) => file is null ? null : new FileSystemWatcher(file.Directory.NotNull().FullName, file.Name);
+        public static FileSystemWatcher GetWatcher(this FileInfo file) => new(file.Directory.NotNull().FullName, file.Name);
 
-        [NotNull]
-        public static Process Execute([NotNull] string File, [NotNull] string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute }).NotNull();
+        public static Process Execute(string File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute }).NotNull();
 
-        [NotNull]
-        public static Process Execute([NotNull] this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute }).NotNull();
+        public static Process Execute(this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute }).NotNull();
 
 
-        [CanBeNull]
-        public static Process ShowInExplorer([NotNull] this FileSystemInfo File) => Process.Start("explorer", $"/select,\"{File.FullName}\"");
+        public static Process? ShowInExplorer(this FileSystemInfo File) => Process.Start("explorer", $"/select,\"{File.FullName}\"");
 
-        [ItemCanBeNull]
-        public static IEnumerable<string> GetStringLines([NotNull] this FileInfo File)
+        public static IEnumerable<string?> GetStringLines(this FileInfo File)
         {
             using var reader = File.OpenText();
             while (!reader.EndOfStream)
                 yield return reader.ReadLine();
         }
 
-        [ItemCanBeNull]
-        public static IEnumerable<string> GetStringLines([NotNull] this FileInfo File, [NotNull] Encoding encoding)
+        public static IEnumerable<string?> GetStringLines(this FileInfo File, Encoding encoding)
         {
             using var reader = new StreamReader(File.FullName, encoding);
             while (!reader.EndOfStream)
                 yield return reader.ReadLine();
         }
 
-        public static void Append([NotNull] this FileInfo file, string Text)
+        public static void Append(this FileInfo file, string Text)
         {
             using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read));
             writer.Write(Text);
         }
 
-        public static void AppendLine([NotNull] this FileInfo file, string Text)
+        public static void AppendLine(this FileInfo file, string Text)
         {
             using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read));
             writer.WriteLine(Text);
         }
 
-        public static void Append([NotNull] this FileInfo file, byte[] buffer)
+        public static void Append(this FileInfo file, byte[] buffer)
         {
             using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read));
             writer.Write(buffer);
         }
 
-        [NotNull] public static FileStream Append([NotNull] this FileInfo File) => File.Open(FileMode.Append, FileAccess.Write);
+        public static FileStream Append(this FileInfo File) => File.Open(FileMode.Append, FileAccess.Write);
 
-        public static async Task CheckFileAccessAsync([NotNull] this FileInfo File, int Timeout = 1000, int IterationCount = 100, CancellationToken Cancel = default)
+        public static async Task CheckFileAccessAsync(this FileInfo File, int Timeout = 1000, int IterationCount = 100, CancellationToken Cancel = default)
         {
             if (File is null) throw new ArgumentNullException(nameof(File));
             File.ThrowIfNotFound();
@@ -348,15 +325,14 @@ namespace System.IO
             throw new InvalidOperationException($"Файл {File.FullName} заблокирован другим процессом");
         }
 
-        [NotNull] public static FileInfo ChangeExtension([NotNull] this FileInfo File, string NewExtension) => new(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
+        public static FileInfo ChangeExtension(this FileInfo File, string NewExtension) => new(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
 
-        [NotNull]
-        public static FileInfo Zip([NotNull] this FileInfo File, string ArchiveFileName = null, bool Override = true)
+        public static FileInfo Zip(this FileInfo File, string? ArchiveFileName = null, bool Override = true)
         {
             if (File is null) throw new ArgumentNullException(nameof(File));
             File.ThrowIfNotFound();
 
-            if (ArchiveFileName is null) ArchiveFileName = File.FullName + ".zip";
+            if (ArchiveFileName is null) ArchiveFileName = $"{File.FullName}.zip";
             else if (!Path.IsPathRooted(ArchiveFileName))
                 ArchiveFileName = (File.Directory ?? throw new InvalidOperationException($"Не удалось получить директорию файла {File}")).CreateFileInfo(ArchiveFileName).FullName;
             using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
@@ -371,6 +347,41 @@ namespace System.IO
             using var file_entry_stream = zip.CreateEntry(File.Name).Open();
             using var file_stream = File.OpenRead();
             file_stream.CopyTo(file_entry_stream);
+
+            return new FileInfo(ArchiveFileName);
+        }
+
+        public static async Task<FileInfo> ZipAsync(
+            this FileInfo File, 
+            byte[] Buffer, 
+            string? ArchiveFileName = null, 
+            bool Override = true,
+            IProgress<double>? Progress = null,
+            CancellationToken Cancel = default)
+        {
+            if (File is null) throw new ArgumentNullException(nameof(File));
+            File.ThrowIfNotFound();
+            Cancel.ThrowIfCancellationRequested();
+
+            if (ArchiveFileName is null)
+                ArchiveFileName = $"{File.FullName}.zip";
+            else if (!Path.IsPathRooted(ArchiveFileName))
+                ArchiveFileName = (File.Directory ?? throw new InvalidOperationException($"Не удалось получить директорию файла {File}")).CreateFileInfo(ArchiveFileName).FullName;
+            using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
+            using var zip = new ZipArchive(zip_stream);
+            var file_entry = zip.GetEntry(File.Name);
+            if (file_entry != null)
+            {
+                if (!Override) return new FileInfo(ArchiveFileName);
+                file_entry.Delete();
+            }
+
+            using var file_entry_stream = zip.CreateEntry(File.Name).Open();
+            using var file_stream = File.OpenRead();
+            if (Progress is null)
+                await file_stream.CopyToAsync(file_entry_stream, Buffer, Cancel).ConfigureAwait(false);
+            else
+                await file_stream.CopyToAsync(file_entry_stream, Buffer, file_stream.Length, Progress, Cancel).ConfigureAwait(false);
 
             return new FileInfo(ArchiveFileName);
         }
