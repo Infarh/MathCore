@@ -1,12 +1,15 @@
 ﻿// ReSharper disable UnusedMember.Global
+
+using System;
+
 namespace MathCore.Statistic.RandomNumbers
 {
     /// <summary>Генератор случайных чисел с равномерным распределением</summary>
     public class UniformRandomGenerator : RandomGenerator
     {
-        public UniformRandomGenerator() { }
-        public UniformRandomGenerator(double Sigma) : base(Sigma) { }
-        public UniformRandomGenerator(double Sigma, double mu) : base(Sigma, mu) { }
+        public UniformRandomGenerator(Random rnd = null) : base(rnd) { }
+        public UniformRandomGenerator(double Sigma, Random rnd = null) : base(Sigma, rnd) { }
+        public UniformRandomGenerator(double Sigma, double mu, Random rnd = null) : base(Sigma, mu, rnd) { }
 
         public override double Distribution(double x)
         {
@@ -14,6 +17,6 @@ namespace MathCore.Statistic.RandomNumbers
             return Distributions.Uniform(x, Mu - sigma2, Mu + sigma2);
         }
 
-        protected override double GetNextValue() => SystemRandomGenerator.Value.NextDouble() - 0.5;
+        protected override double GetNextValue() => _Random.NextDouble() - 0.5;
     }
 }

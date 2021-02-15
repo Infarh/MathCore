@@ -129,11 +129,10 @@ namespace MathCore.Statistic.RandomNumbers
             throw new CalculationsException();
         }
 
-        public double Normal(double mu, double sigma)
-        {
-            if(__NormalInitialized || InitializeNormal()) return mu + NormalZiggurat() * sigma;
-            throw new CalculationsException();
-        }
+        public double Normal(double mu, double sigma) => 
+            __NormalInitialized || InitializeNormal()
+                ? mu + NormalZiggurat() * sigma 
+                : throw new CalculationsException();
 
         #endregion
 
@@ -144,40 +143,40 @@ namespace MathCore.Statistic.RandomNumbers
 
         public static Expression<Func<double, double>> GetExponentialDistributionExpression(double l, double s)
         {
-            var X = Expression.Parameter(typeof(double), "x");
-            var body = l.ToExpression().Multiply(MathExpression.Exp(l.ToExpression().Multiply(X).Negate()));
-            return Expression.Lambda<Func<double, double>>(body, X);
+            var x = Expression.Parameter(typeof(double), "x");
+            var body = l.ToExpression().Multiply(MathExpression.Exp(l.ToExpression().Multiply(x).Negate()));
+            return Expression.Lambda<Func<double, double>>(body, x);
         }
 
-        private static double[] __Exponential_StairWidth;
-        private static double[] __Exponential_StairHeight;
-        private static bool __Exponential_Initialized;
-        private static readonly object __Exponential_Initialization_SyncRoot = new();
-        private const double x1 = 7.69711747013104972;
+        private static double[] __ExponentialStairWidth;
+        private static double[] __ExponentialStairHeight;
+        private static bool __ExponentialInitialized;
+        private static readonly object __ExponentialInitializationSyncRoot = new();
+        private const double __X1 = 7.69711747013104972;
 
         /// <summary>area under rectangle</summary>
-        private const double A = 3.9496598225815571993e-3;
+        private const double __A = 3.9496598225815571993e-3;
 
         private static bool InitializeExponential()
         {
-            if(__Exponential_Initialized) return true;
-            lock (__Exponential_Initialization_SyncRoot)
+            if(__ExponentialInitialized) return true;
+            lock (__ExponentialInitializationSyncRoot)
             {
-                if(__Exponential_Initialized) return true;
-                __Exponential_StairWidth = new double[257];
-                __Exponential_StairHeight = new double[256];
+                if(__ExponentialInitialized) return true;
+                __ExponentialStairWidth = new double[257];
+                __ExponentialStairHeight = new double[256];
                 // coordinates of the implicit rectangle in base layer
-                __Exponential_StairHeight[0] = Exp(-x1);
-                __Exponential_StairWidth[0] = A / __Exponential_StairHeight[0];
+                __ExponentialStairHeight[0] = Exp(-__X1);
+                __ExponentialStairWidth[0] = __A / __ExponentialStairHeight[0];
                 // implicit value for the top layer
-                __Exponential_StairWidth[256] = 0;
+                __ExponentialStairWidth[256] = 0;
                 for(var i = 1; i <= 255; ++i)
                 {
                     // such x_i that f(x_i) = y_{i-1}
-                    __Exponential_StairWidth[i] = -Log(__Exponential_StairHeight[i - 1]);
-                    __Exponential_StairHeight[i] = __Exponential_StairHeight[i - 1] + A / __Exponential_StairWidth[i];
+                    __ExponentialStairWidth[i] = -Log(__ExponentialStairHeight[i - 1]);
+                    __ExponentialStairHeight[i] = __ExponentialStairHeight[i - 1] + __A / __ExponentialStairWidth[i];
                 }
-                return __Exponential_Initialized = true;
+                return __ExponentialInitialized = true;
             }
         }
 
@@ -186,13 +185,13 @@ namespace MathCore.Statistic.RandomNumbers
             var iter = 0;
             do
             {
-                var stairId = (int)(BasicRandGenerator() & 255);
-                var x = Uniform(0, __Exponential_StairWidth[stairId]); // get horizontal coordinate
-                if(x < __Exponential_StairWidth[stairId + 1]) // if we are under the upper stair - accept
+                var stair_id = (int)(BasicRandGenerator() & 255);
+                var x = Uniform(0, __ExponentialStairWidth[stair_id]); // get horizontal coordinate
+                if(x < __ExponentialStairWidth[stair_id + 1]) // if we are under the upper stair - accept
                     return x;
-                if(stairId == 0) // if we catch the tail
-                    return x1 + ExpZiggurat();
-                if(Uniform(__Exponential_StairHeight[stairId - 1], __Exponential_StairHeight[stairId]) < Exp(-x))
+                if(stair_id == 0) // if we catch the tail
+                    return __X1 + ExpZiggurat();
+                if(Uniform(__ExponentialStairHeight[stair_id - 1], __ExponentialStairHeight[stair_id]) < Exp(-x))
                     // if we are under the curve - accept
                     return x;
                 // rejection - go back
@@ -240,23 +239,23 @@ namespace MathCore.Statistic.RandomNumbers
         public double GS(double k)
         {
             // Assume that k < 1
-            double x;
             var iter = 0;
             do
             {
                 // M_E is base of natural logarithm
-                var U = Uniform(0, 1 + k / Consts.e);
-                var W = Exponential(1);
-                if(U <= 1)
+                var u = Uniform(0, 1 + k / Consts.e);
+                var w = Exponential(1);
+                double x;
+                if(u <= 1)
                 {
-                    x = Pow(U, 1.0 / k);
-                    if(x <= W)
+                    x = Pow(u, 1.0 / k);
+                    if(x <= w)
                         return x;
                 }
                 else
                 {
-                    x = -Log((1 - U) / k + 1.0 / Consts.e);
-                    if((1 - k) * Log(x) <= W)
+                    x = -Log((1 - u) / k + 1.0 / Consts.e);
+                    if((1 - k) * Log(x) <= w)
                         return x;
                 }
             } while(++iter < 1e9); // excessive maximum number of rejections
@@ -266,58 +265,58 @@ namespace MathCore.Statistic.RandomNumbers
         public double GF(double k)
         {
             // Assume that 1 < k < 3
-            double E1, E2;
+            double e1, e2;
             do
             {
-                E1 = Exponential(1);
-                E2 = Exponential(1);
-            } while(E2 < (k - 1) * (E1 - Log(E1) - 1));
-            return k * E1;
+                e1 = Exponential(1);
+                e2 = Exponential(1);
+            } while(e2 < (k - 1) * (e1 - Log(e1) - 1));
+            return k * e1;
         }
 
         private double GO(double k)
         {
             // Assume that k > 3
             var m = k - 1;
-            var s_2 = Sqrt(8.0 * k / 3) + k;
-            var s = Sqrt(s_2);
-            var d = Consts.sqrt_2 * Consts.sqrt_3 * s_2;
+            var s2 = Sqrt(8 * k / 3) + k;
+            var sqrt_s2 = Sqrt(s2);
+            var d = Consts.sqrt_2 * Consts.sqrt_3 * s2;
             var b = d + m;
-            var w = s_2 / (m - 1);
-            var v = (s_2 + s_2) / (m * Sqrt(k));
-            var c = b + Log(s * d / b) - m - m - 3.7203285;
+            var w = s2 / (m - 1);
+            var v = (s2 + s2) / (m * Sqrt(k));
+            var c = b + Log(sqrt_s2 * d / b) - m - m - 3.7203285;
 
-            double x;
             var iter = 0;
             do
             {
-                var U = Uniform(0, 1);
-                if(U <= 0.0095722652)
+                var u = Uniform(0, 1);
+                double x;
+                if(u <= 0.0095722652)
                 {
-                    var E1 = Exponential(1);
-                    var E2 = Exponential(1);
-                    x = b * (1 + E1 / d);
-                    if(m * (x / b - Log(x / m)) + c <= E2)
+                    var e1 = Exponential(1);
+                    var e2 = Exponential(1);
+                    x = b * (1 + e1 / d);
+                    if(m * (x / b - Log(x / m)) + c <= e2)
                         return x;
                 }
                 else
                 {
-                    double N;
+                    double n;
                     do
                     {
-                        N = Normal(0, 1);
-                        x = s * N + m; // ~ Normal(m, s)
+                        n = Normal(0, 1);
+                        x = sqrt_s2 * n + m; // ~ Normal(m, s)
                     } while(x < 0 || x > b);
-                    U = Uniform(0, 1);
-                    var S = 0.5 * N * N;
-                    if(N > 0)
+                    u = Uniform(0, 1);
+                    var s = 0.5 * n * n;
+                    if(n > 0)
                     {
-                        if(U < 1 - w * S)
+                        if(u < 1 - w * s)
                             return x;
                     }
-                    else if(U < 1 + S * (v * N - w))
+                    else if(u < 1 + s * (v * n - w))
                         return x;
-                    if(Log(U) < m * Log(x / m) + m - x + S)
+                    if(Log(u) < m * Log(x / m) + m - x + s)
                         return x;
                 }
             } while(++iter < 1e9);
@@ -463,14 +462,14 @@ namespace MathCore.Statistic.RandomNumbers
         public static Func<double, double> GetLogisticDistribution(double m, double s) =>
             x => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Power(2);
 
-        public static Expression<Func<double, double>> GetLogisticDistributionExpression(double m, double s)
+        public static Expression<Func<double, double>> GetLogisticDistributionExpression(double M, double S)
         {
-            var X = Expression.Parameter(typeof(double), "x");
-            var M = m.ToExpression();
-            var S = s.ToExpression();
-            var E = MathExpression.Exp(X.Subtract(M).Divide(S).Negate());
-            var body = E.Divide(S.Multiply(1.ToExpression().Add(E)).Power(2));
-            return Expression.Lambda<Func<double, double>>(body, X);
+            var x = Expression.Parameter(typeof(double), "x");
+            var m = M.ToExpression();
+            var s = S.ToExpression();
+            var e = MathExpression.Exp(x.Subtract(m).Divide(s).Negate());
+            var body = e.Divide(s.Multiply(1.ToExpression().Add(e)).Power(2));
+            return Expression.Lambda<Func<double, double>>(body, x);
         }
 
         public double Logistic(double mu, double s) => mu + s * Log(1.0 / Uniform(0, 1) - 1);

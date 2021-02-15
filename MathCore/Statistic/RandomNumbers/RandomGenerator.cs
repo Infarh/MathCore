@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using MathCore.Values;
 // ReSharper disable UnusedMember.Global
 
@@ -8,15 +11,14 @@ namespace MathCore.Statistic.RandomNumbers
     [Serializable]
     public abstract class RandomGenerator : IValueRead<double>
     {
-        /// <summary>Датчик случайных чисел с равномерным распределением</summary>
-        protected static readonly LazyValue<Random> SystemRandomGenerator = new(() => new Random(DateTime.Now.TimeOfDay.Milliseconds));
-
         /* ------------------------------------------------------------------------------------------ */
 
         /// <summary>Дисперсия</summary>
         protected double _Sigma = 1;
         /// <summary>Математическое ожидание</summary>
         protected double _Mu;
+
+        protected readonly Random _Random;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -31,11 +33,11 @@ namespace MathCore.Statistic.RandomNumbers
 
         /* ------------------------------------------------------------------------------------------ */
 
-        protected RandomGenerator() { }
+        protected RandomGenerator(Random rnd = null) => _Random = rnd ?? new();
 
-        protected RandomGenerator(double sigma) => _Sigma = sigma;
+        protected RandomGenerator(double sigma, Random rnd = null) : this(rnd) => _Sigma = sigma;
 
-        protected RandomGenerator(double sigma, double mu) { _Sigma = sigma; _Mu = mu; }
+        protected RandomGenerator(double sigma, double mu, Random rnd = null) : this(sigma, rnd) => _Mu = mu;
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -47,6 +49,33 @@ namespace MathCore.Statistic.RandomNumbers
         public double GetValue(double sigma, double m) => GetNextValue() * sigma + m;
 
         protected abstract double GetNextValue();
+
+        public double[] GetValues(int count)
+        {
+            var values = new double[count];
+            for (var i = 0; i < count; i++)
+                values[i] = GetValue();
+            return values;
+        }
+
+        public void FillValues(double[] values)
+        {
+            for (var i = 0; i < values.Length; i++)
+                values[i] = GetValue();
+        }
+
+        public void FillValues(double[] values, int index, int count)
+        {
+            for (var i = index; i - index < count && i < values.Length; i++)
+                values[i] = GetValue();
+        }
+
+        public IEnumerable<double> EnumValues()
+        {
+            while (true) yield return GetValue();
+        }
+
+        public IEnumerable<double> EnumValues(int count) => EnumValues().Take(count);
 
         /* ------------------------------------------------------------------------------------------ */
 
