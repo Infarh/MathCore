@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
@@ -94,7 +98,7 @@ namespace System
         [ItemNotNull]
         public static IEnumerable<string> FindBlock([CanBeNull] this string Str, string EndPattern)
         {
-            if(string.IsNullOrEmpty(Str)) yield break;
+            if (string.IsNullOrEmpty(Str)) yield break;
             var len = Str.Length;
             var pattern_len = EndPattern.Length;
             var pos = 0;
@@ -103,7 +107,7 @@ namespace System
                 var index = Str.IndexOf(EndPattern, StringComparison.Ordinal);
                 yield return Str.Substring(pos, index - pos + pattern_len);
                 pos = index + pattern_len + 1;
-            } while(pos < len);
+            } while (pos < len);
         }
 
         /// <summary>Выделение подстроки, ограниченной шаблоном начала и шаблоном окончания строки начиная с указанного смещения</summary>
@@ -120,17 +124,17 @@ namespace System
         public static string GetBracketText([NotNull] this string Str, ref int Offset, [NotNull] string Open = "(", string Close = ")")
         {
             var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
-            if(start_index == -1) return null;
+            if (start_index == -1) return null;
             var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
-            if(stop_index == -1) throw new FormatException();
+            if (stop_index == -1) throw new FormatException();
             var start = start_index;
             do
             {
                 start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
-                if(start != -1 && start < stop_index)
+                if (start != -1 && start < stop_index)
                     stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
-            } while(start != -1 && start < stop_index);
-            if(stop_index == -1 || stop_index < start_index) throw new FormatException();
+            } while (start != -1 && start < stop_index);
+            if (stop_index == -1 || stop_index < start_index) throw new FormatException();
             Offset = stop_index + Close.Length;
             start_index += Open.Length;
             return Str.Substring(start_index, stop_index - start_index);
@@ -138,31 +142,31 @@ namespace System
 
         [CanBeNull]
         public static string GetBracketText(
-            [NotNull] this string Str, 
+            [NotNull] this string Str,
             ref int Offset,
             [NotNull]
-            string Open, 
+            string Open,
             string Close,
-            [NotNull] out string TextBefore, 
+            [NotNull] out string TextBefore,
             [CanBeNull] out string TextAfter)
         {
             TextAfter = null;
             var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
-            if(start_index == -1)
+            if (start_index == -1)
             {
                 TextBefore = Str.Substring(Offset, Str.Length - Offset);
                 return null;
             }
             var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
-            if(stop_index == -1) throw new FormatException();
+            if (stop_index == -1) throw new FormatException();
             var start = start_index;
             do
             {
                 start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
-                if(start != -1 && start < stop_index)
+                if (start != -1 && start < stop_index)
                     stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
-            } while(start != -1 && start < stop_index);
-            if(stop_index == -1 || stop_index < start_index) throw new FormatException();
+            } while (start != -1 && start < stop_index);
+            if (stop_index == -1 || stop_index < start_index) throw new FormatException();
             TextBefore = Str.Substring(Offset, start_index - Offset);
             Offset = stop_index + Close.Length;
             TextAfter = Str.Length - Offset > 0 ? Str.Substring(Offset, Str.Length - Offset) : string.Empty;
@@ -197,7 +201,7 @@ namespace System
         {
             var i = 0;
             var len = str.Length;
-            while(i < len && symbols.IsContains(str[i])) i++;
+            while (i < len && symbols.IsContains(str[i])) i++;
 
             return i == 0 || len == 0 ? str : str.Substring(i, len - i);
         }
@@ -211,7 +215,7 @@ namespace System
         {
             var len = str.Length;
             var i = 0;
-            while(i < len && symbols.IsContains(str[len - i - 1])) i++;
+            while (i < len && symbols.IsContains(str[len - i - 1])) i++;
 
             return len == 0 || i == 0 ? str : str.Substring(0, len - i);
         }
@@ -263,7 +267,7 @@ namespace System
         /// <returns>Зашифрованная последовательность байт</returns>
         public static byte[] Ecrypt(this byte[] data, string password) => data.Ecrypt(password, SALT);
 
-    
+
         public static byte[] Ecrypt(this byte[] data, string password, byte[] Salt)
         {
             var algorithm = GetAlgorithm(password, Salt);
@@ -327,6 +331,56 @@ namespace System
             algorithm.Key = pdb.GetBytes(32);
             algorithm.IV = pdb.GetBytes(16);
             return algorithm.CreateDecryptor();
+        }
+
+        public static Match MatchRegEx(this string str, Regex expr) => expr.Match(str);
+
+        public static int ToInt(this string str) => int.Parse(str);
+        public static int ToInt(this string str, IFormatProvider provider) => int.Parse(str, provider);
+        public static int ToInt(this string str, NumberStyles style, IFormatProvider provider) => int.Parse(str, style, provider);
+        public static int ToInt(this string str, NumberStyles style) => int.Parse(str, style);
+        public static int? ToIntNull(this string str) => int.TryParse(str, out var v) ? v : null;
+        public static int? ToIntNull(this string str, NumberStyles style, IFormatProvider provider) => int.TryParse(str, style, provider, out var v) ? v : null;
+        public static bool TryParseInt(this string str, out int value) => int.TryParse(str, out value);
+        public static bool TryParseInt(this string str, NumberStyles style, IFormatProvider provider, out int value) => int.TryParse(str, style, provider, out value);
+
+        public static double ToDouble(this string str) => double.Parse(str);
+        public static double ToDouble(this string str, IFormatProvider provider) => double.Parse(str, provider);
+        public static double ToDouble(this string str, NumberStyles style, IFormatProvider provider) => double.Parse(str, style, provider);
+        public static double ToDouble(this string str, NumberStyles style) => double.Parse(str, style);
+        public static double? ToDoubleNull(this string str) => double.TryParse(str, out var v) ? v : null;
+        public static double? ToDoubleNull(this string str, NumberStyles style, IFormatProvider provider) => double.TryParse(str, style, provider, out var v) ? v : null;
+        public static bool TryParseDouble(this string str, out double value) => double.TryParse(str, out value);
+        public static bool TryParseDouble(this string str, NumberStyles style, IFormatProvider provider, out double value) => double.TryParse(str, style, provider, out value);
+
+        public static bool IsInt(this string str)
+        {
+            if (str is not { Length: > 0 }) return false;
+            for (var i = 0; i < str.Length; i++)
+                if (!char.IsDigit(str, i))
+                    return false;
+            return true;
+        }
+
+        public static bool IsDouble(this string str)
+        {
+            if (str is not { Length: > 0 } || str[str.Length - 1] is '.' or ',')
+                return false;
+
+            var is_fraction = false;
+            for (var i = 0; i < str.Length; i++)
+                if (!is_fraction)
+                {
+                    if (char.IsDigit(str, i)) continue;
+                    if (str[i] is '.' or ',')
+                        is_fraction = true;
+                    else
+                        return false;
+                }
+                else if (!char.IsDigit(str, i))
+                    return false;
+
+            return true;
         }
     }
 }
