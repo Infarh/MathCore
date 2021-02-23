@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using MathCore.Annotations;
 
 namespace MathCore.Statistic
@@ -32,16 +33,20 @@ namespace MathCore.Statistic
         public static Func<double, double> NormalGauss(double sigma = 1, double mu = 0) =>
             x =>
             {
-                x -= mu;
-                return Math.Exp(-(x * x) / (2 * sigma * sigma)) / (Consts.sqrt_pi2 * sigma);
+                var xx = (x - mu) / sigma;
+                return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
             };
 
         public static double NormalGauss(double x, double sigma, double mu)
         {
-            sigma *= 2 * sigma;
-            x -= mu;
-            x *= x;
-            return Math.Exp(-x / sigma) / (Consts.pi * sigma);
+            var xx = (x - mu) / sigma;
+            return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
+        }
+
+        public static double NormalDestribution(double x, double sigma = 1, double mu = 0)
+        {
+            var z = (x - mu) / (sigma * Consts.sqrt_2);
+            return 0.5 * (1 + SpecialFunctions.Erf.Value(z));
         }
 
         /// <summary>Равномерное распределение</summary>
@@ -80,12 +85,13 @@ namespace MathCore.Statistic
         private static Func<double, double> HistogramKey(double Max, double Min, double dx) =>
             x => (Math.Floor((Math.Min(x, Max - dx / 2) - Min) / dx) + 0.5) * dx + Min;
 
-        public static double GetPirsonsCriteria([NotNull] double[] Samples, [NotNull] Func<double, double> f, out int FreedomDegree)
+        public static double GetPirsonsCriteria([NotNull] this IList<double> Samples, [NotNull] Func<double, double> f, out int FreedomDegree)
         {
             if (Samples is null) throw new ArgumentNullException(nameof(Samples));
 
-            var count = Samples.Length;
+            var count = Samples.Count;
             if (count == 0) throw new ArgumentException("Массы выборки пуст", nameof(Samples));
+
             Samples.GetMinMax(out var min, out var max);
             var interval = max - min;
 
@@ -95,8 +101,8 @@ namespace MathCore.Statistic
 
             var histogram = Samples
                .GroupBy(HistogramKey(max, min, histogram_dx))
-               .ToDictionary(g => g.Key, g => g.Count())
                .OrderBy(x => x.Key)
+               .Select(g => new KeyValuePair<double, double>(g.Key, g.Count()))
                .ToArray();
 
             var xn = histogram.Select(v => v.Key * v.Value);
@@ -128,7 +134,7 @@ namespace MathCore.Statistic
         public static bool CheckDistribution([NotNull] this double[] Samples, [NotNull] Func<double, double> f, double TrustLevel = 0.95)
         {
             var pirsons_criteria = GetPirsonsCriteria(Samples, f, out var number_of_degrees_of_freedom);
-             var hi_theoretical = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(TrustLevel, number_of_degrees_of_freedom);
+            var hi_theoretical = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(TrustLevel, number_of_degrees_of_freedom);
 
             return pirsons_criteria < hi_theoretical;
         }

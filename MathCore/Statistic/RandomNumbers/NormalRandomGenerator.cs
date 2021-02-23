@@ -6,14 +6,13 @@ namespace MathCore.Statistic.RandomNumbers
     {
         /* ------------------------------------------------------------------------------------------ */
 
-        private readonly Random _RND = new(DateTime.Now.Millisecond);
         private double? _Value;
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public NormalRandomGenerator() { }
-        public NormalRandomGenerator(double sigma) : base(sigma) { }
-        public NormalRandomGenerator(double sigma, double mu) : base(sigma, mu) { }
+        public NormalRandomGenerator(Random rnd = null) : base(rnd) { }
+        public NormalRandomGenerator(double sigma, Random rnd = null) : base(sigma, rnd) { }
+        public NormalRandomGenerator(double sigma, double mu, Random rnd = null) : base(sigma, mu, rnd) { }
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -49,23 +48,27 @@ namespace MathCore.Statistic.RandomNumbers
 
         protected override double GetNextValue()
         {
-            if(_Value.HasValue)
+            if(_Value is { } value)
             {
-                var num = _Value.Value;
                 _Value = null;
-                return num;
+                return value;
             }
-            var a = 0d;
-            var b = 0d;
-            var d = 0d;
-            while(Math.Abs(d) < double.Epsilon || d > 1)
+
+            double x, y, r;
+            do
             {
-                a = _RND.NextDouble() * 2 - 1;
-                b = _RND.NextDouble() * 2 - 1;
-                d = (a * a) + (b * b);
+                x = _Random.NextDouble() * 2 - 1;
+                y = _Random.NextDouble() * 2 - 1;
+                r = x * x + y * y;
             }
-            _Value = b * Math.Sqrt(-2 * Math.Log(d) / d);
-            return a * Math.Sqrt(-2 * Math.Log(d) / d);
+            while (Math.Abs(r) < double.Epsilon || r > 1);
+
+            var sqrt_log_r = Math.Sqrt(-2 * Math.Log(r) / r);
+            _Value = y * sqrt_log_r;
+            return x * sqrt_log_r;
+
+            //_Value = y * Math.Sqrt(-2 * Math.Log(r) / r);
+            //return x * Math.Sqrt(-2 * Math.Log(r) / r);
         }
 
         /* ------------------------------------------------------------------------------------------ */
