@@ -232,21 +232,21 @@ namespace MathCore.JSON
         [CanBeNull]
         public static string GetText([NotNull] string Str, ref int Offset, [NotNull] string Open, string Close)
         {
-            var Start = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
-            if (Start == -1) return null;
-            var Stop = Str.IndexOf(Close, Start + 1, StringComparison.Ordinal);
-            if (Stop == -1) throw new FormatException();
-            var start = Start;
+            var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
+            if (start_index == -1) return null;
+            var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
+            if (stop_index == -1) throw new FormatException();
+            var start = start_index;
             do
             {
                 start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
-                if (start != -1 && start < Stop)
-                    Stop = Str.IndexOf(Close, Stop + 1, StringComparison.Ordinal);
-            } while (start != -1 && start < Stop);
-            if (Stop == -1 || Stop < Start) throw new FormatException();
-            Offset = Stop + Close.Length;
-            Start += Open.Length;
-            return Str.Substring(Start, Stop - Start);
+                if (start != -1 && start < stop_index)
+                    stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
+            } while (start != -1 && start < stop_index);
+            if (stop_index == -1 || stop_index < start_index) throw new FormatException();
+            Offset = stop_index + Close.Length;
+            start_index += Open.Length;
+            return Str.Substring(start_index, stop_index - start_index);
         }
 
         IEnumerator<JSONObject> IEnumerable<JSONObject>.GetEnumerator() => (_Fields ?? Enumerable.Empty<JSONObject>()).GetEnumerator();

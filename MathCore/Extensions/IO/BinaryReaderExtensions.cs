@@ -30,6 +30,24 @@ namespace System.IO
             }
         }
 
+        /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
+        /// <param name="reader">Объект чтения потока данных</param>
+        /// <param name="Buffer">Буфер чтения</param>
+        /// <returns>Перечислитель</returns>
+        [ItemNotNull]
+        public static IEnumerable<byte[]> GetByteBuffer([NotNull] this BinaryReader reader, byte[] Buffer)
+        {
+            if (Buffer is null) throw new ArgumentNullException(nameof(Buffer));
+            if (Buffer.Length == 0) throw new ArgumentException("Размер буфера должен быть больше 0", nameof(Buffer));
+
+            var buffer_size = Buffer.Length;
+            while (!reader.IsEOF())
+            {
+                reader.Read(Buffer, 0, buffer_size);
+                yield return Buffer;
+            }
+        }
+
         [ItemNotNull]
         public static IEnumerable<char[]> GetCharBuffer([NotNull] this BinaryReader reader, int BufferSize)
         {

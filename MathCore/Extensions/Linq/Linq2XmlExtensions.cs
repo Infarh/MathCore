@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.XPath;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq
@@ -13,23 +14,23 @@ namespace System.Xml.Linq
     public static class Linq2XmlExtensions
     {
         [CanBeNull]
-        public static string Attribute([NotNull] this XElement element, XName Name, [CanBeNull] string DefaultValue = null)
-            => element.Attribute(Name).ValueOrDefault(DefaultValue);
+        public static string Attribute([NotNull] this XElement element, XName Name, [CanBeNull] string DefaultValue = null) =>
+            element.Attribute(Name).ValueOrDefault(DefaultValue);
 
-        public static bool AttributeBool([NotNull] this XElement element, XName Name, bool DefaultValue = false)
-            => element.Attribute(Name).ValueBoolOrDefault(DefaultValue);
+        public static bool AttributeBool([NotNull] this XElement element, XName Name, bool DefaultValue = false) =>
+            element.Attribute(Name).ValueBoolOrDefault(DefaultValue);
 
-        public static int AttributeInt([NotNull] this XElement element, XName Name, int DefaultValue = 0)
-            => element.Attribute(Name).ValueIntOrDefault(DefaultValue);
+        public static int AttributeInt([NotNull] this XElement element, XName Name, int DefaultValue = 0) =>
+            element.Attribute(Name).ValueIntOrDefault(DefaultValue);
 
-        public static int? AttributeIntOrNull([NotNull] this XElement element, XName Name)
-            => element.Attribute(Name).ValueIntOrNull();
+        public static int? AttributeIntOrNull([NotNull] this XElement element, XName Name) =>
+            element.Attribute(Name).ValueIntOrNull();
 
-        public static int AttributeIntHex([NotNull] this XElement element, XName Name, int DefaultValue = 0)
-            => element.Attribute(Name).ValueIntHexOrDefault(DefaultValue);
+        public static int AttributeIntHex([NotNull] this XElement element, XName Name, int DefaultValue = 0) =>
+            element.Attribute(Name).ValueIntHexOrDefault(DefaultValue);
 
-        public static double AttributeDouble([NotNull] this XElement element, XName Name, double DefaultValue = 0)
-            => element.Attribute(Name).ValueDoubleOrDefault(DefaultValue);
+        public static double AttributeDouble([NotNull] this XElement element, XName Name, double DefaultValue = 0) =>
+            element.Attribute(Name).ValueDoubleOrDefault(DefaultValue);
 
         public static T AttributeValueOrDefault<T>([NotNull] this XElement element, XName Name, T Default = default) =>
             element.Attribute(Name).ValueOrDefault(Default);

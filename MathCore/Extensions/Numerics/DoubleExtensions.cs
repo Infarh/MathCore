@@ -32,6 +32,15 @@ namespace System
         [DST] public static double Pow(this double value, double p) => double.IsNaN(value) ? double.NaN : double.IsNaN(p) ? double.NaN : Math.Pow(value, p);
 
         [DST] public static double Pow2(this double value) => value * value;
+        [DST] public static float Pow2(this float value) => value * value;
+        [DST] public static int Pow2(this int value) => value * value;
+        [DST] public static uint Pow2(this uint value) => value * value;
+        [DST] public static long Pow2(this long value) => value * value;
+        [DST] public static ulong Pow2(this ulong value) => value * value;
+        [DST] public static short Pow2(this short value) => (short) (value * value);
+        [DST] public static ushort Pow2(this ushort value) => (ushort) (value * value);
+        [DST] public static byte Pow2(this byte value) => (byte) (value * value);
+        [DST] public static byte Pow2(this sbyte value) => (byte)(value * value);
 
         [DST]
         public static Complex Pow2(in this Complex value)
@@ -162,5 +171,8 @@ namespace System
         /// <param name="rad">Значение в радианах</param>
         /// <returns>Значение в градусах</returns>
         [DST] public static double ToDeg(this double rad) => rad * Consts.Geometry.ToDeg;
+
+        public static long ToIntBits(this double x) => BitConverter.DoubleToInt64Bits(x);
+        public static double ToDoubleBits(this long x) => BitConverter.Int64BitsToDouble(x);
     }
 }

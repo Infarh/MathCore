@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿#nullable enable
+using System.Runtime.CompilerServices;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -8,9 +9,9 @@ namespace System.Threading.Tasks
     public readonly ref struct TaskSchedulerAwaitable
     {
         private readonly TaskScheduler _Scheduler;
-        private readonly Task _Task;
+        private readonly Task? _Task;
 
-        public TaskSchedulerAwaitable(TaskScheduler Scheduler, Task Task = null)
+        public TaskSchedulerAwaitable(TaskScheduler Scheduler, Task? Task = null)
         {
             _Scheduler = Scheduler;
             _Task = Task;
@@ -20,12 +21,12 @@ namespace System.Threading.Tasks
 
         public readonly struct TaskSchedulerAwaiter : ICriticalNotifyCompletion, INotifyCompletion
         {
-            private readonly Task _Task;
+            private readonly Task? _Task;
             private readonly TaskScheduler _Scheduler;
 
             public bool IsCompleted => _Task?.IsCompleted ?? false;
 
-            public TaskSchedulerAwaiter(TaskScheduler Scheduler, Task Task = null)
+            public TaskSchedulerAwaiter(TaskScheduler Scheduler, Task? Task = null)
             {
                 _Task = Task;
                 _Scheduler = Scheduler;
@@ -36,6 +37,7 @@ namespace System.Threading.Tasks
 
             public void UnsafeOnCompleted(Action continuation) => OnCompleted(continuation);
 
+            // ReSharper disable once AsyncConverter.AsyncWait
             public void GetResult() => _Task?.Wait();
         }
     }
@@ -69,6 +71,7 @@ namespace System.Threading.Tasks
             public void OnCompleted([NotNull] Action continuation) => 
                 Task.Factory.StartNew(continuation, CancellationToken.None, TaskCreationOptions.None, _Scheduler);
 
+            // ReSharper disable once AsyncConverter.AsyncWait
             public TResult GetResult() => _Task.Result;
         }
     }

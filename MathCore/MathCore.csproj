@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.37</Version>
+    <Version>0.0.38</Version>
     <PackageReleaseNotes>
-      Исправление метода GetDescription для Enum; добавлен генератор случайных значений для списков
+      Исправления в методах-расширениях для деревьев Linq
+      Метод-расширения для Task.Yield для перехода в новый поток
     </PackageReleaseNotes>
   </PropertyGroup>
 

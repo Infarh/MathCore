@@ -95,8 +95,7 @@ namespace System
             double x0,
             int MaxIterations,
             double Eps = 1e-5
-        ) =>
-            Task.Factory.StartNew(() => f.GetRoot_NewtonsMethod(df, x0, MaxIterations, Eps));
+        ) => Task.Run(() => f.GetRoot_NewtonsMethod(df, x0, MaxIterations, Eps));
 
         /// <summary> Поиск нуля функции методом бисекции</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -293,7 +292,7 @@ namespace System
             double x2,
             int MaxIterations,
             double Eps = 0.0001
-        ) => Task.Factory.StartNew(() => f.GetRoot_FalsePositionMethod(x1, x2, MaxIterations, Eps));
+        ) => Task.Run(() => f.GetRoot_FalsePositionMethod(x1, x2, MaxIterations, Eps));
 
         /// <summary> Поиск нуля функции методом хорд</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -324,7 +323,7 @@ namespace System
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
         public static Task<double> GetRoot_MethodOfChordsAsync([NotNull] this Function f, double x1, double x2, double Eps = 0.0001) =>
-            Task.Factory.StartNew(() => f.GetRoot_MethodOfChords(x1, x2, Eps));
+            Task.Run(() => f.GetRoot_MethodOfChords(x1, x2, Eps));
 
         /// <summary>Каррирование функции двух параметров</summary>
         /// <typeparam name="TArg1">Тип значение первого параметра функции</typeparam>

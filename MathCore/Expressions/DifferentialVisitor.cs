@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using MathCore.Annotations;
+// ReSharper disable InconsistentNaming
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 

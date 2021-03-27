@@ -29,5 +29,8 @@ namespace System.Threading.Tasks
             else cancel.Register(s => ((TaskCompletionSource<bool>)s).SetResult(true), result);
             return task.GetAwaiter();
         }
+
+        public static CancellationTokenSource LinkWith(this in CancellationToken Source, in CancellationToken Cancel) =>
+            CancellationTokenSource.CreateLinkedTokenSource(Source, Cancel);
     }
 }

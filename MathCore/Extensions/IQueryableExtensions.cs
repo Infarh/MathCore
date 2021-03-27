@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -28,16 +30,15 @@ namespace System.Linq
 
         /// <summary>Получить элементы перечисления для заданной страницы</summary>
         /// <typeparam name="T">Тип элемента перечисления</typeparam>
-        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="items">Исходное перечисление элементов</param>
         /// <param name="PageNumber">Номер требуемой страницы</param>
         /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
-        /// <returns>ПЕречисление элементов из указанной страницы</returns>
+        /// <returns>Перечисление элементов из указанной страницы</returns>
         [NotNull]
         public static IQueryable<T> Page<T>([NotNull] this IQueryable<T> items, int PageNumber, int PageItemsCount) =>
             items.Skip(PageItemsCount * PageNumber).Take(PageItemsCount);
 
         public static double Dispersion([NotNull] this IQueryable<double> query) => query.Average(x => x * x - query.Average() * query.Average());
-
         
         [NotNull]
         public static IQueryable<TResult> LeftOuterJoin<T1, T2, TKey, TResult>(
