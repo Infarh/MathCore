@@ -185,7 +185,10 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static uEx Negate([NotNull] this Ex obj) => Ex.Negate(obj);
 
         [NotNull] public static bEx AddAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.AddAssign(left, right);
-        [NotNull] public static bEx AddAssign<T>([NotNull] this Ex left, T right) => Ex.AddAssign(left, right.ToExpression());
+        [NotNull]
+        public static bEx AddAssign<T>([NotNull] this Ex left, T right) => right is Ex ex
+            ? left.AddAssign(ex)
+            : Ex.AddAssign(left, right.ToExpression());
 
         private static bool IsNumeric([NotNull] this Ex ex) => ex.Type.IsNumeric();
 
@@ -237,7 +240,10 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static bEx Add([NotNull] this Ex left, double right) => left.AddWithConversion(right.ToExpression());
         [NotNull] public static bEx Add([NotNull] this Ex left, decimal right) => left.AddWithConversion(right.ToExpression());
         [NotNull] public static bEx Add([NotNull] this Ex left, string right) => left.Add(right.ToExpression());
-        [NotNull] public static bEx Add<T>([NotNull] this Ex left, T right) => Ex.Add(left, right.ToExpression());
+        [NotNull]
+        public static bEx Add<T>([NotNull] this Ex left, T right) => right is Ex ex
+            ? left.Add(ex)
+            : Ex.Add(left, right.ToExpression());
 
         [CanBeNull]
         public static bEx Add<T>([CanBeNull] this Ex left, [CanBeNull] params T[] right)
@@ -253,7 +259,10 @@ namespace MathCore.Extensions.Expressions
         }
 
         [NotNull] public static bEx SubtractAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.SubtractAssign(left, right);
-        [NotNull] public static bEx SubtractAssign<T>([NotNull] this Ex left, T right) => Ex.SubtractAssign(left, right.ToExpression());
+        [NotNull]
+        public static bEx SubtractAssign<T>([NotNull] this Ex left, T right) => right is Ex ex
+            ? left.SubtractAssign(ex)
+            : Ex.SubtractAssign(left, right.ToExpression());
 
         [NotNull]
         public static bEx SubtractWithConversion([NotNull] this Ex left, Ex right) =>
@@ -266,10 +275,10 @@ namespace MathCore.Extensions.Expressions
         [NotNull] public static bEx Subtract([NotNull] this Ex left, int right) => left.SubtractWithConversion(right.ToExpression());
         [NotNull] public static bEx Subtract([NotNull] this Ex left, double right) => left.SubtractWithConversion(right.ToExpression());
         [NotNull] public static bEx Subtract([NotNull] this Ex left, decimal right) => left.SubtractWithConversion(right.ToExpression());
-        [NotNull] public static bEx Subtract<T>([NotNull] this Ex left, T right) => Ex.Subtract(left, right.ToExpression());
+        [NotNull] public static bEx Subtract<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.Subtract(ex) : Ex.Subtract(left, right.ToExpression());
 
         [NotNull] public static bEx MultiplyAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.MultiplyAssign(left, right);
-        [NotNull] public static bEx MultiplyAssign<T>([NotNull] this Ex left, T right) => Ex.MultiplyAssign(left, right.ToExpression());
+        [NotNull] public static bEx MultiplyAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.MultiplyAssign(ex) : Ex.MultiplyAssign(left, right.ToExpression());
 
         public static bEx MultiplyWithConversion([NotNull] this Ex left, Ex right) =>
             !left.IsNumeric() || !right.IsNumeric() || left.Type == right.Type
@@ -287,7 +296,7 @@ namespace MathCore.Extensions.Expressions
             if (left != null) l = left;
             else if (right is null || right.Length == i) return null;
             else l = right[i++];
-            while (i < right.Length)
+            while (i < right?.Length)
                 l = l.MultiplyWithConversion(right[i++]);
             return (bEx)l;
         }
@@ -299,13 +308,13 @@ namespace MathCore.Extensions.Expressions
             if (left != null) l = left;
             else if (right is null || right.Length == i) return null;
             else l = right[i++].ToExpression();
-            while (i < right.Length)
+            while (i < right?.Length)
                 l = l.MultiplyWithConversion(right[i++].ToExpression());
             return (bEx)l;
         }
 
         [NotNull] public static bEx DivideAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.DivideAssign(left, right);
-        [NotNull] public static bEx DivideAssign<T>([NotNull] this Ex left, T right) => Ex.DivideAssign(left, right.ToExpression());
+        [NotNull] public static bEx DivideAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.DivideAssign(ex) : Ex.DivideAssign(left, right.ToExpression());
 
         [NotNull]
         public static bEx DivideWithConversion([NotNull] this Ex left, Ex right)
@@ -315,13 +324,13 @@ namespace MathCore.Extensions.Expressions
         }
 
         [NotNull] public static bEx Divide([NotNull] this Ex left, [NotNull] Ex right) => Ex.Divide(left, right);
-        [NotNull] public static bEx Divide<T>([NotNull] this Ex left, T right) => Ex.Divide(left, right.ToExpression());
+        [NotNull] public static bEx Divide<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.Divide(ex) : Ex.Divide(left, right.ToExpression());
         [NotNull] public static bEx Divide([NotNull] this Ex left, Ex right, bool conversion) => conversion ? left.DivideWithConversion(right) : Ex.Divide(left, right);
         [NotNull] public static bEx Divide([NotNull] this Ex left, int right) => left.DivideWithConversion(right.ToExpression());
         [NotNull] public static bEx Divide([NotNull] this Ex left, double right) => left.DivideWithConversion(right.ToExpression());
 
         [NotNull] public static bEx PowerAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.PowerAssign(left, right);
-        [NotNull] public static bEx PowerAssign<T>([NotNull] this Ex left, T right) => Ex.PowerAssign(left, right.ToExpression());
+        [NotNull] public static bEx PowerAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.PowerAssign(ex) : Ex.PowerAssign(left, right.ToExpression());
 
         [NotNull]
         public static bEx PowerWithConversion([NotNull] this Ex left, Ex right)
@@ -337,10 +346,10 @@ namespace MathCore.Extensions.Expressions
         }
 
         [NotNull] public static bEx Power([NotNull] this Ex left, [NotNull] Ex right) => Ex.Power(left, right);
-        [NotNull] public static bEx Power<T>([NotNull] this Ex left, T right) => Ex.Power(left, right.ToExpression());
+        [NotNull] public static bEx Power<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.Power(ex) : Ex.Power(left, right.ToExpression());
         [NotNull] public static bEx Power([NotNull] this Ex left, Ex right, bool conversion) => conversion ? left.PowerWithConversion(right) : Ex.Power(left, right);
         [NotNull] public static bEx PowerOf([NotNull] this Ex left, [NotNull] Ex right) => Ex.Power(right, left);
-        [NotNull] public static bEx PowerOf<T>([NotNull] this Ex left, T right) => Ex.Power(right.ToExpression(), left);
+        [NotNull] public static bEx PowerOf<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.PowerOf(right) : Ex.Power(right.ToExpression(), left);
         [NotNull] public static bEx PowerOf(this Ex left, [NotNull] Ex right, bool conversion) => conversion ? left.PowerOfWithConversion(right) : Ex.Power(right, left);
         [NotNull] public static bEx Power([NotNull] this Ex left, int right) => left.PowerWithConversion(right.ToExpression());
         [NotNull] public static bEx PowerOf(this Ex left, int right) => right.ToExpression().PowerWithConversion(left);
@@ -350,47 +359,47 @@ namespace MathCore.Extensions.Expressions
         public static mcEx Sqrt(this Ex expr) => MathExpression.Sqrt(expr);
         public static bEx SqrtPower(this Ex expr) => MathExpression.SqrtPower(expr);
         public static bEx SqrtPower(this Ex expr, Ex power) => MathExpression.SqrtPower(expr, power);
-        public static bEx SqrtPower<T>(this Ex expr, T power) => MathExpression.SqrtPower(expr, power.ToExpression());
+        public static bEx SqrtPower<T>(this Ex expr, T power) => power is Ex ex ? expr.SqrtPower(ex) : MathExpression.SqrtPower(expr, power.ToExpression());
 
         [NotNull] public static bEx IsEqual([NotNull] this Ex left, [NotNull] Ex right) => Equal(left, right);
-        [NotNull] public static bEx IsEqual<T>([NotNull] this Ex left, T right) => Equal(left, right.ToExpression());
+        [NotNull] public static bEx IsEqual<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsEqual(ex) : Equal(left, right.ToExpression());
 
         [NotNull] public static bEx IsNotEqual([NotNull] this Ex left, [NotNull] Ex right) => NotEqual(left, right);
-        [NotNull] public static bEx IsNotEqual<T>([NotNull] this Ex left, T right) => NotEqual(left, right.ToExpression());
+        [NotNull] public static bEx IsNotEqual<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsNotEqual(ex) : NotEqual(left, right.ToExpression());
 
         [NotNull] public static bEx IsGreaterThan([NotNull] this Ex left, [NotNull] Ex right) => GreaterThan(left, right);
-        [NotNull] public static bEx IsGreaterThan<T>([NotNull] this Ex left, T right) => GreaterThan(left, right.ToExpression());
+        [NotNull] public static bEx IsGreaterThan<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsGreaterThan(ex) : GreaterThan(left, right.ToExpression());
 
         [NotNull] public static bEx IsGreaterThanOrEqual([NotNull] this Ex left, [NotNull] Ex right) => GreaterThanOrEqual(left, right);
-        [NotNull] public static bEx IsGreaterThanOrEqual<T>([NotNull] this Ex left, T right) => GreaterThanOrEqual(left, right.ToExpression());
+        [NotNull] public static bEx IsGreaterThanOrEqual<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsGreaterThanOrEqual(ex) : GreaterThanOrEqual(left, right.ToExpression());
 
         [NotNull] public static bEx IsLessThan([NotNull] this Ex left, [NotNull] Ex right) => LessThan(left, right);
-        [NotNull] public static bEx IsLessThan<T>([NotNull] this Ex left, T right) => LessThan(left, right.ToExpression());
+        [NotNull] public static bEx IsLessThan<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsLessThan(ex) : LessThan(left, right.ToExpression());
 
         [NotNull] public static bEx IsLessThanOrEqual([NotNull] this Ex left, [NotNull] Ex right) => LessThanOrEqual(left, right);
-        [NotNull] public static bEx IsLessThanOrEqual<T>([NotNull] this Ex left, T right) => LessThanOrEqual(left, right.ToExpression());
+        [NotNull] public static bEx IsLessThanOrEqual<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsLessThanOrEqual(ex) : LessThanOrEqual(left, right.ToExpression());
 
         [NotNull] public static bEx And([NotNull] this Ex left, [NotNull] Ex right) => Ex.And(left, right);
-        [NotNull] public static bEx And<T>([NotNull] this Ex left, T right) => Ex.And(left, right.ToExpression());
+        [NotNull] public static bEx And<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.And(ex) : Ex.And(left, right.ToExpression());
 
         [NotNull] public static bEx AndAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.AndAssign(left, right);
-        [NotNull] public static bEx AndAssign<T>([NotNull] this Ex left, T right) => Ex.AndAssign(left, right.ToExpression());
+        [NotNull] public static bEx AndAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.AndAssign(ex) : Ex.AndAssign(left, right.ToExpression());
 
         [NotNull] public static bEx OrAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.OrAssign(left, right);
-        [NotNull] public static bEx OrAssign<T>([NotNull] this Ex left, T right) => Ex.OrAssign(left, right.ToExpression());
+        [NotNull] public static bEx OrAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.OrAssign(ex) : Ex.OrAssign(left, right.ToExpression());
 
         [NotNull] public static bEx Or([NotNull] this Ex left, [NotNull] Ex right) => Ex.Or(left, right);
-        [NotNull] public static bEx Or<T>([NotNull] this Ex left, T right) => Ex.Or(left, right.ToExpression());
+        [NotNull] public static bEx Or<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.Or(ex) : Ex.Or(left, right.ToExpression());
         [NotNull] public static uEx Not([NotNull] this Ex d) => Ex.Not(d);
 
         [NotNull] public static bEx AndLazy([NotNull] this Ex left, [NotNull] Ex right) => AndAlso(left, right);
-        [NotNull] public static bEx AndLazy<T>([NotNull] this Ex left, T right) => AndAlso(left, right.ToExpression());
+        [NotNull] public static bEx AndLazy<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.AndLazy(ex) : AndAlso(left, right.ToExpression());
 
         [NotNull] public static bEx OrLazy([NotNull] this Ex left, [NotNull] Ex right) => OrElse(left, right);
-        [NotNull] public static bEx OrLazy<T>([NotNull] this Ex left, T right) => OrElse(left, right.ToExpression());
+        [NotNull] public static bEx OrLazy<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.OrLazy(ex) : OrElse(left, right.ToExpression());
 
         [NotNull] public static bEx Coalesce([NotNull] this Ex first, [NotNull] Ex second) => Ex.Coalesce(first, second);
-        [NotNull] public static bEx Coalesce<T>([NotNull] this Ex first, T second) => Ex.Coalesce(first, second.ToExpression());
+        [NotNull] public static bEx Coalesce<T>([NotNull] this Ex first, T second) => second is Ex ex ? first.Coalesce(ex) : Ex.Coalesce(first, second.ToExpression());
 
         public static bEx Coalesce([CanBeNull] this Ex left, [CanBeNull] params Ex[] right)
         {
@@ -399,7 +408,7 @@ namespace MathCore.Extensions.Expressions
             if (left != null) l = left;
             else if (right is null || right.Length == i) return null;
             else l = right[i++];
-            while (i < right.Length)
+            while (i < right?.Length)
                 l = l.Coalesce(right[i++]);
             return (bEx)l;
         }
@@ -412,16 +421,16 @@ namespace MathCore.Extensions.Expressions
             if (left != null) l = left;
             else if (right is null || right.Length == i) return null;
             else l = right[i++].ToExpression();
-            while (i < right.Length)
+            while (i < right?.Length)
                 l = l.Coalesce(right[i++]);
             return (bEx)l;
         }
 
         [NotNull] public static bEx XORAssign([NotNull] this Ex left, [NotNull] Ex right) => ExclusiveOrAssign(left, right);
-        [NotNull] public static bEx XORAssign<T>([NotNull] this Ex left, T right) => ExclusiveOrAssign(left, right.ToExpression());
+        [NotNull] public static bEx XORAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.XORAssign(ex) : ExclusiveOrAssign(left, right.ToExpression());
 
         [NotNull] public static bEx XOR([NotNull] this Ex left, [NotNull] Ex right) => ExclusiveOr(left, right);
-        [NotNull] public static bEx XOR<T>([NotNull] this Ex left, T right) => ExclusiveOr(left, right.ToExpression());
+        [NotNull] public static bEx XOR<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.XOR(ex) : ExclusiveOr(left, right.ToExpression());
 
         public static bEx XOR([CanBeNull] this Ex left, [CanBeNull] params Ex[] right)
         {
@@ -431,7 +440,7 @@ namespace MathCore.Extensions.Expressions
             if (right is null) return null;
             if (right.Length == i) return null;
             l = right[i++];
-            while (i < right.Length)
+            while (i < right?.Length)
                 l = l.XOR(right[i++]);
             return (bEx)l;
         }
@@ -445,37 +454,37 @@ namespace MathCore.Extensions.Expressions
             if (right is null) return null;
             if (right.Length == i) return null;
             l = right[i++].ToExpression();
-            while (i < right.Length)
+            while (i < right?.Length)
                 l = l.XOR(right[i++]);
             return (bEx)l;
         }
 
         [NotNull] public static bEx ModuloAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.ModuloAssign(left, right);
-        [NotNull] public static bEx ModuloAssign<T>([NotNull] this Ex left, Ex right) => Ex.ModuloAssign(left, right.ToExpression());
+        [NotNull] public static bEx ModuloAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.ModuloAssign(ex) : Ex.ModuloAssign(left, right.ToExpression());
 
         [NotNull] public static bEx Modulo([NotNull] this Ex left, [NotNull] Ex right) => Ex.Modulo(left, right);
-        [NotNull] public static bEx Modulo<T>([NotNull] this Ex left, Ex right) => Ex.Modulo(left, right.ToExpression());
+        [NotNull] public static bEx Modulo<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.Modulo(ex) : Ex.Modulo(left, right.ToExpression());
 
         [NotNull] public static bEx LeftShiftAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.LeftShiftAssign(left, right);
-        [NotNull] public static bEx LeftShiftAssign<T>([NotNull] this Ex left, T right) => Ex.LeftShiftAssign(left, right.ToExpression());
+        [NotNull] public static bEx LeftShiftAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.LeftShiftAssign(ex) : Ex.LeftShiftAssign(left, right.ToExpression());
 
         [NotNull] public static bEx LeftShift([NotNull] this Ex left, [NotNull] Ex right) => Ex.LeftShift(left, right);
-        [NotNull] public static bEx LeftShift<T>([NotNull] this Ex left, T right) => Ex.LeftShift(left, right.ToExpression());
+        [NotNull] public static bEx LeftShift<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.LeftShift(ex) : Ex.LeftShift(left, right.ToExpression());
 
         [NotNull] public static bEx RightShiftAssign([NotNull] this Ex left, [NotNull] Ex right) => Ex.RightShiftAssign(left, right);
-        [NotNull] public static bEx RightShiftAssign<T>([NotNull] this Ex left, T right) => Ex.RightShiftAssign(left, right.ToExpression());
+        [NotNull] public static bEx RightShiftAssign<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.RightShiftAssign(ex) : Ex.RightShiftAssign(left, right.ToExpression());
 
         [NotNull] public static bEx RightShift([NotNull] this Ex left, [NotNull] Ex right) => Ex.RightShift(left, right);
-        [NotNull] public static bEx RightShift<T>([NotNull] this Ex left, T right) => Ex.RightShift(left, right.ToExpression());
+        [NotNull] public static bEx RightShift<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.RightShift(ex) : Ex.RightShift(left, right.ToExpression());
 
         [NotNull] public static bEx IsRefEqual([NotNull] this Ex left, [NotNull] Ex right) => ReferenceEqual(left, right);
-        [NotNull] public static bEx IsRefEqual<T>([NotNull] this Ex left, T right) => ReferenceEqual(left, right.ToExpression());
+        [NotNull] public static bEx IsRefEqual<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsRefEqual(ex) : ReferenceEqual(left, right.ToExpression());
 
         [NotNull] public static bEx IsIsRefEqual([NotNull] this Ex left, [NotNull] Ex right) => ReferenceNotEqual(left, right);
-        [NotNull] public static bEx IsIsRefEqual<T>([NotNull] this Ex left, T right) => ReferenceNotEqual(left, right.ToExpression());
+        [NotNull] public static bEx IsIsRefEqual<T>([NotNull] this Ex left, T right) => right is Ex ex ? left.IsIsRefEqual(ex) : ReferenceNotEqual(left, right.ToExpression());
 
         [NotNull] public static Ex Condition([NotNull] this Ex Condition, [NotNull] Ex Then, [NotNull] Ex Else) => Ex.Condition(Condition, Then, Else);
-        [NotNull] public static Ex ConditionWithResult<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then.ToExpression(), Else.ToExpression());
+        [NotNull] public static Ex ConditionWithResult<T>([NotNull] this Ex Condition, T Then, T Else) => Ex.Condition(Condition, Then as Ex ?? Then.ToExpression(), Then as Ex ?? Then.ToExpression());
 
         [NotNull] public static Ex ToNewExpression([NotNull] this Type type) => New(type.GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException());
 
