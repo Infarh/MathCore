@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.38</Version>
+    <Version>0.0.39</Version>
     <PackageReleaseNotes>
-      Исправления в методах-расширениях для деревьев Linq
-      Метод-расширения для Task.Yield для перехода в новый поток
+      Добавлены асинхронные методы-расширения для BinaryReader, BinaryWriter
     </PackageReleaseNotes>
   </PropertyGroup>
 
