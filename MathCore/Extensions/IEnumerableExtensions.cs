@@ -168,6 +168,28 @@ namespace System.Linq
             if (enumerable != null) foreach (var v in enumerable) yield return v;
         }
 
+        /// <summary>Добавить элемент в конец последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Исходная последовательность элементов</param>
+        /// <param name="values">Добавляемый элемент</param>
+        /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на последнем месте</returns>
+        public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T> collection, params T[] values)
+        {
+            if (collection != null) foreach (var v in collection) yield return v;
+            if (values != null) foreach (var v in values) yield return v;
+        }
+
+        /// <summary>Добавить элемент в конец последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Исходная последовательность элементов</param>
+        /// <param name="values">Добавляемый элемент</param>
+        /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на последнем месте</returns>
+        public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T> collection, IEnumerable<T> values)
+        {
+            if (collection != null) foreach (var v in collection) yield return v;
+            if (values != null) foreach (var v in values) yield return v;
+        }
+
         /// <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
         /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="enumerable">Перечисление элементов</param>
