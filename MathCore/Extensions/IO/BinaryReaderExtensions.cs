@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -86,6 +89,46 @@ namespace System.IO
                 g_lock.Free(); // снять фиксацию
             }
             writer.Write(buffer);
+        }
+
+        public static async Task<double> ReadDoubleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+        {
+            const int size = 8;
+            var buffer = new byte[8];
+            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+            return BitConverter.ToDouble(buffer, 0);
+        }
+
+        public static async Task<float> ReadSingleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+        {
+            const int size = 4;
+            var buffer = new byte[size];
+            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+            return BitConverter.ToSingle(buffer, 0);
+        }
+
+        public static async Task<long> ReadInt64Async(this BinaryReader Reader, CancellationToken Cancel = default)
+        {
+            const int size = 8;
+            var buffer = new byte[8];
+            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+            return BitConverter.ToInt64(buffer, 0);
+        }
+
+        public static async Task<int> ReadInt32Async(this BinaryReader Reader, CancellationToken Cancel = default)
+        {
+            const int size = 4;
+            var buffer = new byte[size];
+            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+            return BitConverter.ToInt32(buffer, 0);
+        }
+
+        public static async Task<bool> ReadBooleanAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+        {
+            const int size = 1;
+            var buffer = new byte[size];
+            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+            return BitConverter.ToBoolean(buffer, 0);
         }
     }
 }
