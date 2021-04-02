@@ -39,7 +39,7 @@ namespace MathCore
                 : n < 0
                     ? BinomialCoefficient(-n + k - 1, k) * (k.IsOdd() ? -1 : 1)
                     : n > 20
-                        ? (n.FactorialBigInt() / (k.FactorialBigInt() * (n - k).FactorialBigInt())).LongValue()
+                        ? (long)(n.FactorialBigInt() / (k.FactorialBigInt() * (n - k).FactorialBigInt()))
                         : n.Factorial() / (k.Factorial() * (n - k).Factorial());
 
         /// <summary>Символ Кронекера δ(i,j) = 1 - если i = j, и = 0 - если i ≠ j</summary>

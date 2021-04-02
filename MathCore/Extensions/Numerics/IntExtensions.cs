@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+
 using MathCore;
 using MathCore.Annotations;
-using BigInteger = MathCore.BigInteger;
+
 using Complex = MathCore.Complex;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
@@ -295,7 +297,7 @@ namespace System
 
             if (n <= 20) return n.Factorial();
 
-            BigInteger result = n == 0 ? 1 : n;
+            var result = n == 0 ? 1 : n;
             while (n > 1) result *= --n;
             return result;
         }

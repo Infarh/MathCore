@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+
+using MathCore;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -375,5 +377,9 @@ namespace System.Collections.Generic
         /// <returns>Словарь, составленный из ключей - первых элементов кортежа и значений - вторых элементов</returns>
         [NotNull] public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>([NotNull] this IEnumerable<(TKey, TValue)> items) =>
             items.ToDictionary(value => value.Item1, value => value.Item2);
+
+        [NotNull]
+        public static DictionaryKeySafe<TKey, TValue> ToSaveDictionary<TKey, TValue>([NotNull] this Dictionary<TKey, TValue> Dictionary) =>
+            new (Dictionary);
     }
 }
