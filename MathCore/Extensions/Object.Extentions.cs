@@ -523,6 +523,29 @@ namespace System
             }
         }
 
+        [NotNull]
+        public static T[] ToStructArray<T>([NotNull] this byte[] data) where T : struct
+        {
+            var type = typeof(T);
+            var length = Marshal.SizeOf(type);
+            var count = data.Length / length;
+            var ptr = Marshal.AllocHGlobal(length * count);
+            try
+            {
+                var result = new T[count];
+                for (var i = 0; i < count; i++)
+                {
+                    Marshal.Copy(data, length * i, ptr, length);
+                    result[i] = (T)Marshal.PtrToStructure(ptr, type);
+                }
+                return result;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+
         /// <summary>Выбор действия для объекта</summary>
         /// <param name="obj">Объект, на котором выполняется выбор действия</param>
         /// <param name="actions">Словарь возможных действий над объектом</param>
