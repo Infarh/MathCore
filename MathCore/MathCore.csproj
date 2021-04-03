@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.39</Version>
+    <Version>0.0.40</Version>
     <PackageReleaseNotes>
-      Добавлены асинхронные методы-расширения для BinaryReader, BinaryWriter
+      Многомерный массив вещественных чисел (многомерная матрица) и алгебра к ней
     </PackageReleaseNotes>
   </PropertyGroup>
 
