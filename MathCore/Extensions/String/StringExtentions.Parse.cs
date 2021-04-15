@@ -45,9 +45,9 @@ namespace System
         [DST]
         public static double? AsDouble(this string s, double? Default = null)
         {
-            var FormatInfo = NumberFormatInfo.CurrentInfo;
+            var format_info = NumberFormatInfo.CurrentInfo;
 
-            s = s.Replace('.', FormatInfo.PercentDecimalSeparator[0]);
+            s = s.Replace('.', format_info.PercentDecimalSeparator[0]);
 
             var result = double.TryParse(s, out var i);
 
