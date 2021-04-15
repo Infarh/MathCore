@@ -35,6 +35,8 @@ namespace MathCore
     {
         /* -------------------------------------------------------------------------------------------- */
 
+        public static Matrix Create(int N, int M, Func<int, int, double> Initializer) => new(N, M, (i, j) => Initializer(i, j));
+
         /// <summary>Создать матрицу-столбец</summary><param name="data">Элементы столбца</param><returns>Матрица-столбец</returns>
         /// <exception cref="ArgumentNullException">Если массив <paramref name="data"/> не определён</exception>
         /// <exception cref="ArgumentException">Если массив <paramref name="data"/> имеет длину 0</exception>
@@ -47,7 +49,7 @@ namespace MathCore
 
         /// <summary>Создать диагональную матрицу</summary><param name="elements">Элементы диагональной матрицы</param>
         /// <returns>Диагональная матрица</returns>
-        [NotNull] public static Matrix CreateDiagonalMatrix([NotNull] params double[] elements) => new(Array.CreateDiagonal(elements));
+        [NotNull] public static Matrix CreateDiagonal([NotNull] params double[] elements) => new(Array.CreateDiagonal(elements));
 
         /// <summary>Операции над двумерными массивами</summary>
         public static partial class Array
@@ -59,10 +61,21 @@ namespace MathCore
         /// <summary>Получить единичную матрицу размерности NxN</summary>
         /// <param name="N">Размерность матрицы</param><returns>Единичная матрица размерности NxN с 1 на главной диагонали</returns>
         [DST, NotNull]
-        public static Matrix GetUnitaryMatrix(int N) => new(Array.GetUnitaryArrayMatrix(N));
+        public static Matrix GetUnitary(int N) => new(Array.GetUnitaryArrayMatrix(N));
+
+        public static Matrix GetOnes(int N, int M)
+        {
+            var result = new double[N, M];
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < N; j++)
+                    result[i, j] = 1;
+            return new Matrix(result);
+        }
+
+        public static Matrix GetZeros(int N, int M) => new(N, M);
 
         /// <summary>Трансвекция матрицы</summary><param name="A">Трансвецируемая матрица</param><param name="j">Опорный столбец</param>
-        /// <returns>Трансвекция матрицы А</returns>                    
+        /// <returns>Трансвекция матрицы А</returns>
         [NotNull]
         public static Matrix GetTransvection([NotNull] Matrix A, int j) => new(Array.GetTransvection(A._Data, j));
 

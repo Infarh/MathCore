@@ -2926,7 +2926,7 @@ namespace MathCore
         public void SVD([NotNull] out Matrix U, [NotNull] out Matrix S, [NotNull] out Matrix V)
         {
             SVD(out U, out double[] w, out V);
-            S = CreateDiagonalMatrix(w);
+            S = CreateDiagonal(w);
         }
     }
 }
