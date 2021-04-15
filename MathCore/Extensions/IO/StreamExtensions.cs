@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -167,6 +168,28 @@ namespace System.IO
             var array = new byte[stream.Length];
             await stream.ReadAsync(array, 0, array.Length, Cancel).ConfigureAwait(false);
             return array;
+        }
+
+        public static Task<string> ReadToEndAsStringAsync(this Stream stream) => new StreamReader(stream).ReadToEndAsync();
+        public static Task<string> ReadToEndAsStringAsync(this Stream stream, Encoding encoding) => 
+            new StreamReader(stream, encoding).ReadToEndAsync();
+
+        public static async Task<string> ReadToEndAsStringAsync(this Stream stream, CancellationToken cancel)
+        {
+            cancel.ThrowIfCancellationRequested();
+
+            using var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true);
+            cancel.Register(r => ((StreamReader)r).Dispose(), reader);
+            try
+            {
+                return await reader.ReadToEndAsync();
+            }
+            catch (ObjectDisposedException) when(cancel.IsCancellationRequested)
+            {
+                cancel.ThrowIfCancellationRequested();
+            }
+
+            throw new InvalidOperationException("Что-то пошло не так");
         }
     }
 }

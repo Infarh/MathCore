@@ -74,7 +74,7 @@ namespace System
         public static TResult? Try<T, TResult>(
             this T obj, Func<T, TResult> func,
             Action<T, Exception>? OnError = null,
-            TResult DefaultResult = default)
+            TResult? DefaultResult = default)
         {
             if (func is null) throw new ArgumentNullException(nameof(func));
             try

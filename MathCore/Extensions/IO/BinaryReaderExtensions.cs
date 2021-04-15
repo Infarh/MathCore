@@ -25,7 +25,7 @@ namespace System.IO
         [ItemNotNull]
         public static IEnumerable<byte[]> GetByteBuffer([NotNull] this BinaryReader reader, int BufferSize)
         {
-            while(!reader.IsEOF())
+            while (!reader.IsEOF())
             {
                 var buffer = new byte[BufferSize];
                 reader.Read(buffer, 0, BufferSize);
@@ -54,7 +54,7 @@ namespace System.IO
         [ItemNotNull]
         public static IEnumerable<char[]> GetCharBuffer([NotNull] this BinaryReader reader, int BufferSize)
         {
-            while(!reader.IsEOF())
+            while (!reader.IsEOF())
             {
                 var buffer = new char[BufferSize];
                 reader.Read(buffer, 0, BufferSize);
@@ -70,7 +70,8 @@ namespace System.IO
             {
                 var ptr = gch.AddrOfPinnedObject();
                 return (T)Marshal.PtrToStructure(ptr, typeof(T));
-            } finally
+            }
+            finally
             {
                 gch.Free();
             }
@@ -84,11 +85,12 @@ namespace System.IO
             {
                 var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
                 Marshal.StructureToPtr(value, p, true); // копировать в массив
-            } finally
+                writer.Write(buffer);
+            }
+            finally
             {
                 g_lock.Free(); // снять фиксацию
             }
-            writer.Write(buffer);
         }
 
         public static async Task<double> ReadDoubleAsync(this BinaryReader Reader, CancellationToken Cancel = default)

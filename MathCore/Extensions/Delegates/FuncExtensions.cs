@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+
 using MathCore;
 using MathCore.Annotations;
 using MathCore.DifferentialEquations.Numerical;
@@ -779,7 +781,7 @@ namespace System
             double x1,
             double x2,
             int N = 2,
-            double Eps = 0.000001
+            double Eps = 1e-6
         )
         {
             if (x1.Equals(x2)) return 0;
@@ -791,6 +793,39 @@ namespace System
             var t1 = f.GetIntegralValue_AdaptiveAsync(x1, .5 * (x1 + x2), N, Eps);
             var t2 = f.GetIntegralValue_AdaptiveAsync(.5 * (x1 + x2), x2, N, Eps);
             return (await Task.WhenAll(t1, t2).ConfigureAwait(false)).Sum();
+        }
+
+        public static double GetIntegralValue_AdaptiveTrap(
+            this Function f,
+            double x1,
+            double x2,
+            double Eps = 1e-6,
+            double K = 25)
+        {
+            var dx = x2 - x1;
+            if (dx is 0d) return 0;
+
+            var s0 = dx * (f(x1) + f(x2)) / 2;
+            var m = 1;
+            var result = 0d;
+            for (var k = 1; k < K; k++)
+            {
+                var x = x1 + dx / 2;
+                var s = 0d;
+                for (var i = 0; i < m; i++)
+                {
+                    s += f(x);
+                    x += dx;
+                }
+
+                result = (s0 + s * dx) / 2;
+                if(k > 1 && Math.Abs(result - s0) < Eps) break;
+                s0 = result;
+                m *= 2;
+                dx /= 2;
+            }
+
+            return result;
         }
 
         //public static double GetIntegralValue_InfiniteIntervals(this Function f, double x1, double x2, int N = 2, double Eps = 0.000001)
