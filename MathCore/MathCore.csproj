@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.41</Version>
+    <Version>0.0.42</Version>
     <PackageReleaseNotes>
-      Многомерный массив вещественных чисел (многомерная матрица) и алгебра к ней
-      Асинхронные методы-расширения для объектов чтения данных
+      Метод-расширения для объединения перечисления в DisposableGroup
     </PackageReleaseNotes>
   </PropertyGroup>
 
