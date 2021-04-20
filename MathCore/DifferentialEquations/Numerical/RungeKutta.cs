@@ -221,7 +221,7 @@ namespace MathCore.DifferentialEquations.Numerical
                 var k3 = f(t + dt2, GetKY(y, yi, k2, dt2, M));
                 var k4 = f(t + dt, GetKY(y, yi, k3, dt, M));
 
-                for(var j = 0; j < M; j++)
+                for (var j = 0; j < M; j++)
                     y[j] = yi[j] + dt * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j]) / 6;
                 Y[i] = y;
             }
@@ -396,6 +396,88 @@ namespace MathCore.DifferentialEquations.Numerical
             }
 
             return (T, Y, err);
+        }
+
+        //public static (double[] T, double[][] Y) Solve45(
+        //    Func<double, IReadOnlyList<double>, double[]> f,
+        //    double dt,
+        //    double Tmax,
+        //    double[] y0,
+        //    double t0 = 0)
+        //{
+        //    var M = y0.Length;
+        //    var N = (int)((Tmax - t0) / dt);
+        //    var T = new double[N];
+        //    var Y = new double[N][];
+        //    var err = new double[N][];
+
+        //    T[0] = t0;
+        //    Y[0] = y0;
+        //    err[0] = new double[y0.Length];
+
+        //    for (var i = 1; i < N; i++)
+        //    {
+        //        var t = i * dt + t0;
+
+        //        var yi = Y[i - 1];
+        //        var y = (double[])yi.Clone();
+
+        //        static double[] GetKYY(double[] Y, double[] YY, double dt, int M, params (double[] K, double k)[] kk)
+        //        {
+        //            for (int i = 0, mm = kk.Length; i < M; i++)
+        //            {
+        //                var yy = 0d;
+        //                for (var j = 0; j < mm; j++)
+        //                    yy += kk[j].K[i] * kk[j].k;
+        //                Y[i] = YY[i] + dt * yy;
+        //            }
+        //            return Y;
+        //        }
+
+        //        var k1 = f(t, y);
+
+        //        //var k2 = f(t + dt * 1 / 5, y + dt * (k1 * 1 / 5));
+        //        var k2 = f(t + dt * 1 / 5, GetKYY(y, Y[i - 1], dt, M, (k1, 1 / 5d)));
+                
+        //        //var k3 = f(t + dt * 3 / 10, y + dt * (k1 * 3 / 40 + k2 * 9 / 40));
+        //        var k3 = f(t + dt * 3 / 10, GetKYY(y, Y[i - 1], dt, M, (k1, 3 / 40d), (k2, 9 / 40d)));
+
+        //        //var k4 = f(t + dt * 4 / 5, y + dt * (k1 * 44 / 45 - k2 * 56 / 15 + k3 * 32 / 9));
+        //        var k4 = f(t + dt * 4 / 5, GetKYY(y, Y[i - 1], dt, M, (k1, 44 / 45d), (k2, -56 / 15d), (k3, 32 / 9d)));
+
+        //        //var k5 = f(t + dt * 8 / 9, y + dt * (k1 * 19372 / 6561 - k2 * 25360 / 2187 + k3 * 64448 / 6561 - k4 * 212 / 729));
+        //        var k5 = f(t + dt * 8 / 9, GetKYY(y, Y[i - 1], dt, M, (k1, 19372 / 6561d), (k2, -25360 / 2187d), (k3, 64448 / 6561d), (k4, -212 / 729d)));
+
+        //        //var k6 = f(t + dt, y + dt * (k1 * 9017 / 3168 - k2 * 355 / 33 + k3 * 46732 / 5247 + k4 * 49 / 176 - k5 * 5103 / 18656));
+        //        var k6 = f(t + dt,
+        //            GetKYY(y, Y[i - 1], dt, M, (k1, 9017 / 3168d), (k2, -355 / 33d), (k3, 46732 / 5247d), (k4, 49 / 176d), (k5, -5103 / 18656d)));
+
+        //        //var v5 = k1 * 35 / 384 + k3 * 500 / 1113 - k4 * 125 / 192 - k5 * 2187 / 6784 + k6 * 11 / 84;
+        //        var v5 = GetV(y, M, (k1, 35 / 384d), (k3, 500 / 1113d), (k4, -125 / 192d), (k5, -2187 / 6784d), (k6, 11 / 84d));
+
+        //        //var k7 = f(t + dt, y + dt * v5);
+        //        var k7 = f(t + dt, GetKY(y, Y[i - 1], v5, dt, M));
+        //        //var v4 = k1 * 5179 / 57600 + k3 * 7571 / 16695 + k4 * 393 / 640 - k5 * 92097 / 339200 + k6 * 187 / 2100 + k7 * 1 / 40;
+        //        var v4 = GetV(y, M, (k1, 5179 / 57600d), (k3, 7571 / 16695d), (k4, 393 / 640d), (k5, 92097 / 339200d), (k6, 187 / 2100d), (k7, 1 / 40d));
+
+        //        Y[i] = v4;
+        //        err[i] = v5 - v4;
+        //    }
+
+        //    return (T, Y, err);
+        //}
+
+        private static double[] GetV(double[] Y, int M, params (double[] K, double k)[] kk)
+        {
+            for (int i = 0, mm = kk.Length; i < M; i++)
+            {
+                var y = 0d;
+                for (var j = 0; j < mm; j++) 
+                    y += kk[j].K[i] * kk[j].k;
+                Y[i] = y;
+            }
+
+            return Y;
         }
     }
 }
