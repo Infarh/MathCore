@@ -561,6 +561,15 @@ namespace MathCore
                 .Select(v => new Interval(last, v, true));
         }
 
+        /// <inheritdoc />
+        [DST]
+        [NotNull]
+        public override string ToString() => string.Format(
+            "{0}{2};{3}{1}",
+            _MinInclude ? "[" : "(",
+            _MaxInclude ? "]" : ")",
+            _Min, _Max);
+
         [NotNull]
         public string ToString(string Format) => string.Format(
             "{0}{2};{3}{1}",

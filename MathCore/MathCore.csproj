@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.42</Version>
+    <Version>0.0.43</Version>
     <PackageReleaseNotes>
-      Метод-расширения для объединения перечисления в DisposableGroup
+      Переработан метод Рунге-Кутта
+      Исправлено поведение Interval.ToString()
     </PackageReleaseNotes>
   </PropertyGroup>
 
