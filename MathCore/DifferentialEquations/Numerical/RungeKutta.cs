@@ -35,7 +35,7 @@ namespace MathCore.DifferentialEquations.Numerical
             double y0 = 0,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new double[N];
 
@@ -77,7 +77,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (double y1, double y2) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (double y1, double y2)[N];
 
@@ -120,7 +120,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (double y1, double y2, double y3) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (double y1, double y2, double y3)[N];
 
@@ -162,7 +162,7 @@ namespace MathCore.DifferentialEquations.Numerical
             double[] y0,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new double[N][];
 
@@ -178,23 +178,24 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y);
         }
 
+        //https://ru.qaz.wiki/wiki/Dormand–Prince_method
         public static (double y, double err) Step45(
             Func<double, double, double> f,
             double t, double dt, double y)
         {
             var k1 = f(t, y);
-            var k2 = f(t + dt * 1 / 5, y + dt * (k1 * 1 / 5));
-            var k3 = f(t + dt * 3 / 10, y + dt * (k1 * 3 / 40 + k2 * 9 / 40));
-            var k4 = f(t + dt * 4 / 5, y + dt * (k1 * 44 / 45 - k2 * 56 / 15 + k3 * 32 / 9));
-            var k5 = f(t + dt * 8 / 9, y + dt * (k1 * 19372 / 6561 - k2 * 25360 / 2187 + k3 * 64448 / 6561 - k4 * 212 / 729));
-            var k6 = f(t + dt, y + dt * (k1 * 9017 / 3168 - k2 * 355 / 33 + k3 * 46732 / 5247 + k4 * 49 / 176 - k5 * 5103 / 18656));
+            var k2 = f(t + dt * 1 / 5,  y + dt * (k1 * 1 / 5));
+            var k3 = f(t + dt * 3 / 10, y + dt * (k1 * 3 / 40       + k2 * 9 / 40));
+            var k4 = f(t + dt * 4 / 5,  y + dt * (k1 * 44 / 45      - k2 * 56 / 15      + k3 * 32 / 9));
+            var k5 = f(t + dt * 8 / 9,  y + dt * (k1 * 19372 / 6561 - k2 * 25360 / 2187 + k3 * 64448 / 6561 - k4 * 212 / 729));
+            var k6 = f(t + dt,          y + dt * (k1 * 9017 / 3168  - k2 * 355 / 33     + k3 * 46732 / 5247 + k4 * 49 / 176 - k5 * 5103 / 18656));
 
             var v5 = k1 * 35 / 384 + k3 * 500 / 1113 + k4 * 125 / 192 - k5 * 2187 / 6784 + k6 * 11 / 84;
 
             var k7 = f(t + dt, y + dt * v5);
             var v4 = k1 * 5179 / 57600 + k3 * 7571 / 16695 + k4 * 393 / 640 - k5 * 92097 / 339200 + k6 * 187 / 2100 + k7 * 1 / 40;
 
-            return (v5, v5 - v4);
+            return (y + dt * v5, v5 - v4);
         }
 
         public static (double[] T, double[] Y, double[] eps) Solve45(
@@ -204,7 +205,7 @@ namespace MathCore.DifferentialEquations.Numerical
             double y0 = 0,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new double[N];
             var err = new double[N];
@@ -259,7 +260,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var v41 = k1_y1 * 5179 / 57600 + k3_y1 * 7571 / 16695 + k4_y1 * 393 / 640 - k5_y1 * 92097 / 339200 + k6_y1 * 187 / 2100 + k7_y1 * 1 / 40;
             var v42 = k1_y2 * 5179 / 57600 + k3_y2 * 7571 / 16695 + k4_y2 * 393 / 640 - k5_y2 * 92097 / 339200 + k6_y2 * 187 / 2100 + k7_y2 * 1 / 40;
 
-            return ((v51, v52), (v51 - v41, v52 - v42));
+            return ((y1 + dt * v51, y2 + dt * v52), (v51 - v41, v52 - v42));
         }
 
         public static (double[] T, (double y1, double y2)[] Y, (double e1, double e2)[] err) Solve45(
@@ -269,7 +270,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (double y1, double y2) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (double y1, double y2)[N];
             var err = new (double e1, double e2)[N];
@@ -332,7 +333,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var v42 = k1_y2 * 5179 / 57600 + k3_y2 * 7571 / 16695 + k4_y2 * 393 / 640 - k5_y2 * 92097 / 339200 + k6_y2 * 187 / 2100 + k7_y2 * 1 / 40;
             var v43 = k1_y3 * 5179 / 57600 + k3_y3 * 7571 / 16695 + k4_y3 * 393 / 640 - k5_y3 * 92097 / 339200 + k6_y3 * 187 / 2100 + k7_y3 * 1 / 40;
 
-            return ((v51, v52, v53), (v51 - v41, v52 - v42, v53 - v43));
+            return ((y1 + dt * v51, y2 + dt * v52, y3 + dt * v53), (v51 - v41, v52 - v42, v53 - v43));
         }
 
         public static (double[] T, (double y1, double y2, double y3)[] Y, (double e1, double e2, double e3)[] eps) Solve45(
@@ -342,7 +343,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (double y1, double y2, double y3) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (double y1, double y2, double y3)[N];
             var err = new (double e1, double e2, double e3)[N];
@@ -438,13 +439,12 @@ namespace MathCore.DifferentialEquations.Numerical
                 (k6, 187 / 2100d),
                 (k7, 1 / 40d));
 
-            return (v5, GetDelta(yt, m, v5, v4));
-            static double[] GetDelta(double[] Err, int M, double[] V5, double[] V4)
+            for (var i = 0; i < m; i++)
             {
-                for (var i = 0; i < M; i++)
-                    Err[i] = V5[i] - V4[i];
-                return Err;
+                yt[i] = v5[i] - v4[i];
+                v5[i] = y[i] + dt * v5[i];
             }
+            return (v5, yt);
         }
         
         public static (double[] T, double[][] Y, double[][] Error) Solve45(
@@ -454,7 +454,7 @@ namespace MathCore.DifferentialEquations.Numerical
             double[] y0,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new double[N][];
             var err = new double[N][];

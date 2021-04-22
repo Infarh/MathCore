@@ -1,14 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MathCore.DifferentialEquations.Numerical
 {
-    public static class Euler
+    public static class EulerModified
     {
         public static double Step(
             Func<double, double, double> f,
-            double t, double dt, double y) =>
-            y + dt * f(t, y);
+            double t, double dt, double y)
+        {
+            var dy = f(t, y);
+            var yy = y + dt * dy;
+            return y + .5 * dt * (dy + f(t + dt, yy));
+        }
 
         public static (double[] T, double[] Y) Solve(
             Func<double, double, double> f,
@@ -37,8 +42,13 @@ namespace MathCore.DifferentialEquations.Numerical
             Func<double, (double y1, double y2), (double y1, double y2)> f,
             double t, double dt, (double y1, double y2) y)
         {
+            var (y1, y2) = y;
             var (dy1, dy2) = f(t, y);
-            return (y.y1 + dt * dy1, y.y2 * dt * dy2);
+            var yy = (y1 + dt * dy1, y2 + dt * dy2);
+            var (dyy1, dyy2) = f(t + dt, yy);
+            return (
+                y1 + .5 * dt * (dy1 + dyy1),
+                y2 + .5 * dt * (dy1 + dyy2));
         }
 
         public static (double[] T, (double y1, double y2)[] Y) Solve(
@@ -68,8 +78,14 @@ namespace MathCore.DifferentialEquations.Numerical
             Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
             double t, double dt, (double y1, double y2, double y3) y)
         {
+            var (y1, y2, y3) = y;
             var (dy1, dy2, dy3) = f(t, y);
-            return (y.y1 + dt * dy1, y.y2 * dt * dy2, y.y3 * dt * dy3);
+            var yy = (y1 + dt * dy1, y2 + dt * dy2, y3 + dt * dy3);
+            var (dyy1, dyy2, dyy3) = f(t + dt, yy);
+            return (
+                y1 + .5 * dt * (dy1 + dyy1),
+                y2 + .5 * dt * (dy1 + dyy2),
+                y3 + .5 * dt * (dy1 + dyy3));
         }
 
         public static (double[] T, (double y1, double y2, double y3)[] Y) Solve(
@@ -95,15 +111,44 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y);
         }
 
+        private readonly struct AddMulList : IReadOnlyList<double>
+        {
+            private readonly double[] _X;
+            private readonly IReadOnlyList<double> _Y;
+            private readonly double _K;
+
+            public int Count => _X.Length;
+
+            public double this[int i] => _Y[i] + _K * _X[i];
+
+            public AddMulList(IReadOnlyList<double> Y, double K, double[] X)
+            {
+                _Y = Y;
+                _K = K;
+                _X = X;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            public IEnumerator<double> GetEnumerator()
+            {
+                for (var (i, count) = (0, Count); i < count; i++)
+                    yield return this[i];
+            }
+        }
+
         public static double[] Step(
             Func<double, IReadOnlyList<double>, double[]> f,
             int M,
             double t, double dt, IReadOnlyList<double> y)
         {
-            var result = f(t, y);
-            for (var i = 0; i < M; i++)
-                result[i] = y[i] + dt * result[i];
-            return result;
+            var dy = f(t, y);
+            var dy2 = f(t + dt, new AddMulList(y, dt, dy));
+
+            for (var (i, count) = (0, dy.Length); i < count; i++)
+                dy[i] = y[i] + 0.5 * dt * (dy[i] + dy2[i]);
+
+            return dy;
         }
 
         public static (double[] T, double[][] Y) Solve(

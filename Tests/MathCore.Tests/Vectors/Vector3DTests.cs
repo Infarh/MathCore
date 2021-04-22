@@ -295,7 +295,7 @@ namespace MathCore.Tests.Vectors
             b = Basis3D.RotateOZ(angle);
             var y = x.InBasis(b);
 
-            var actual_angle = (y.AngleXOY - x.AngleXOY + 2 * pi).GetAbsMod(2 * pi);
+            var actual_angle = (y.AngleXOY - x.AngleXOY + 2 * pi).AbsMod(2 * pi);
             Assert.AreEqual(angle, actual_angle, eps,
                 "\r\n\t|(y.AngleXOY - x.AngleXOY) - angle| = {0:E}" +
                 "\r\n\tangle = {1}·π" +

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.DifferentialEquations.Numerical
 {
@@ -35,7 +36,7 @@ namespace MathCore.DifferentialEquations.Numerical
             Complex y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new Complex[N];
 
@@ -77,7 +78,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (Complex y1, Complex y2) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (Complex y1, Complex y2)[N];
 
@@ -120,7 +121,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (Complex y1, Complex y2, Complex y3) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (Complex y1, Complex y2, Complex y3)[N];
 
@@ -162,7 +163,7 @@ namespace MathCore.DifferentialEquations.Numerical
             Complex[] y0,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new Complex[N][];
 
@@ -194,7 +195,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var k7 = f(t + dt, y + dt * v5);
             var v4 = k1 * 5179 / 57600 + k3 * 7571 / 16695 + k4 * 393 / 640 - k5 * 92097 / 339200 + k6 * 187 / 2100 + k7 * 1 / 40;
 
-            return (v5, v5 - v4);
+            return (y + dt * v5, v5 - v4);
         }
 
         public static (double[] T, Complex[] Y, Complex[] eps) Solve45(
@@ -204,7 +205,7 @@ namespace MathCore.DifferentialEquations.Numerical
             Complex y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new Complex[N];
             var err = new Complex[N];
@@ -259,7 +260,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var v41 = k1_y1 * 5179 / 57600 + k3_y1 * 7571 / 16695 + k4_y1 * 393 / 640 - k5_y1 * 92097 / 339200 + k6_y1 * 187 / 2100 + k7_y1 * 1 / 40;
             var v42 = k1_y2 * 5179 / 57600 + k3_y2 * 7571 / 16695 + k4_y2 * 393 / 640 - k5_y2 * 92097 / 339200 + k6_y2 * 187 / 2100 + k7_y2 * 1 / 40;
 
-            return ((v51, v52), (v51 - v41, v52 - v42));
+            return ((y1 + dt * v51, y2 + dt * v52), (v51 - v41, v52 - v42));
         }
 
         public static (double[] T, (Complex y1, Complex y2)[] Y, (Complex e1, Complex e2)[] err) Solve45(
@@ -269,7 +270,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (Complex y1, Complex y2) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (Complex y1, Complex y2)[N];
             var err = new (Complex e1, Complex e2)[N];
@@ -332,7 +333,7 @@ namespace MathCore.DifferentialEquations.Numerical
             var v42 = k1_y2 * 5179 / 57600 + k3_y2 * 7571 / 16695 + k4_y2 * 393 / 640 - k5_y2 * 92097 / 339200 + k6_y2 * 187 / 2100 + k7_y2 * 1 / 40;
             var v43 = k1_y3 * 5179 / 57600 + k3_y3 * 7571 / 16695 + k4_y3 * 393 / 640 - k5_y3 * 92097 / 339200 + k6_y3 * 187 / 2100 + k7_y3 * 1 / 40;
 
-            return ((v51, v52, v53), (v51 - v41, v52 - v42, v53 - v43));
+            return ((y1 + dt * v51, y2 + dt * v52, y3 + dt * v53), (v51 - v41, v52 - v42, v53 - v43));
         }
 
         public static (double[] T, (Complex y1, Complex y2, Complex y3)[] Y, (Complex e1, Complex e2, Complex e3)[] eps) Solve45(
@@ -342,7 +343,7 @@ namespace MathCore.DifferentialEquations.Numerical
             (Complex y1, Complex y2, Complex y3) y0 = default,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new (Complex y1, Complex y2, Complex y3)[N];
             var err = new (Complex e1, Complex e2, Complex e3)[N];
@@ -438,13 +439,12 @@ namespace MathCore.DifferentialEquations.Numerical
                 (k6, 187 / 2100d),
                 (k7, 1 / 40d));
 
-            return (v5, GetDelta(yt, m, v5, v4));
-            static Complex[] GetDelta(Complex[] Err, int M, Complex[] V5, Complex[] V4)
+            for (var i = 0; i < m; i++)
             {
-                for (var i = 0; i < M; i++)
-                    Err[i] = V5[i] - V4[i];
-                return Err;
+                yt[i] = v5[i] - v4[i];
+                v5[i] = y[i] + dt * v5[i];
             }
+            return (v5, yt);
         }
 
         public static (double[] T, Complex[][] Y, Complex[][] Error) Solve45(
@@ -454,7 +454,7 @@ namespace MathCore.DifferentialEquations.Numerical
             Complex[] y0,
             double t0 = 0)
         {
-            var N = (int)((Tmax - t0) / dt);
+            var N = (int)((Tmax - t0) / dt) + 1;
             var T = new double[N];
             var Y = new Complex[N][];
             var err = new Complex[N][];
