@@ -14,7 +14,7 @@ namespace MathCore.DifferentialEquations.Numerical
     public class Euler  //todo: Почему в комментарии указан метод Рунге-Кутты, а имя класса Эйлер?
     // ReSharper restore CommentTypo
     {
-        private readonly DifferentialEquationsSystem _System;
+        private readonly DiffEqs _System;
 
         private readonly int _N;
 
@@ -37,7 +37,7 @@ namespace MathCore.DifferentialEquations.Numerical
         /// <param name="N">Размерность</param>
         /// <param name="System">Решаемая система</param>
         // ReSharper restore CommentTypo
-        protected Euler(int N, DifferentialEquationsSystem System)
+        protected Euler(int N, DiffEqs System)
         {
             if (N < 1) throw new ArgumentOutOfRangeException(nameof(N), "Размерность системы - величина положительная");
 

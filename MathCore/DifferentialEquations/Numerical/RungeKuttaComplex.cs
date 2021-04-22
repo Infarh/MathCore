@@ -1,24 +1,24 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
-// ReSharper disable InconsistentNaming
-// ReSharper disable UnusedType.Global
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MathCore.DifferentialEquations.Numerical
 {
     /// <summary>Метод Рунге-Кутты</summary>
-    public static class RungeKutta
+    public static class RungeKuttaComplex
     {
-        private static double[] GetKY(double[] YY, IReadOnlyList<double> Y, double[] k, double dt, int Count)
+        private static Complex[] GetKY(Complex[] YY, IReadOnlyList<Complex> Y, Complex[] k, double dt, int Count)
         {
             for (var i = 0; i < Count; i++)
                 YY[i] = Y[i] + k[i] * dt;
             return YY;
         }
 
-        public static double Step4(
-            Func<double, double, double> f,
-            double t, double dt, double y)
+        public static Complex Step4(
+            Func<double, Complex, Complex> f,
+            double t, double dt, Complex y)
         {
             var dt2 = dt / 2;
             var k1 = f(t, y);
@@ -28,16 +28,16 @@ namespace MathCore.DifferentialEquations.Numerical
             return y + dt * (k1 + 2 * k2 + 2 * k3 + k4) / 6;
         }
 
-        public static (double[] T, double[] Y) Solve4(
-            Func<double, double, double> f,
+        public static (double[] T, Complex[] Y) Solve4(
+            Func<double, Complex, Complex> f,
             double dt,
             double Tmax,
-            double y0 = 0,
+            Complex y0 = default,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new double[N];
+            var Y = new Complex[N];
 
             T[0] = t0;
             Y[0] = y0;
@@ -51,11 +51,11 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y);
         }
 
-        public static (double y1, double y2) Step4(
-            Func<double, (double y1, double y2), (double y1, double y2)> f,
+        public static (Complex y1, Complex y2) Step4(
+            Func<double, (Complex y1, Complex y2), (Complex y1, Complex y2)> f,
             double t,
             double dt,
-            (double y1, double y2) y)
+            (Complex y1, Complex y2) y)
         {
             var dt2 = dt / 2;
             var (y1, y2) = y;
@@ -70,16 +70,16 @@ namespace MathCore.DifferentialEquations.Numerical
             );
         }
 
-        public static (double[] T, (double y1, double y2)[] Y) Solve4(
-            Func<double, (double y1, double y2), (double y1, double y2)> f,
+        public static (double[] T, (Complex y1, Complex y2)[] Y) Solve4(
+            Func<double, (Complex y1, Complex y2), (Complex y1, Complex y2)> f,
             double dt,
             double Tmax,
-            (double y1, double y2) y0 = default,
+            (Complex y1, Complex y2) y0 = default,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new (double y1, double y2)[N];
+            var Y = new (Complex y1, Complex y2)[N];
 
             T[0] = t0;
             Y[0] = y0;
@@ -93,11 +93,11 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y);
         }
 
-        public static (double y1, double y2, double y3) Step4(
-            Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
+        public static (Complex y1, Complex y2, Complex y3) Step4(
+            Func<double, (Complex y1, Complex y2, Complex y3), (Complex y1, Complex y2, Complex y3)> f,
             double t,
             double dt,
-            (double y1, double y2, double y3) y)
+            (Complex y1, Complex y2, Complex y3) y)
         {
             var dt2 = dt / 2;
             var (y1, y2, y3) = y;
@@ -113,16 +113,16 @@ namespace MathCore.DifferentialEquations.Numerical
             );
         }
 
-        public static (double[] T, (double y1, double y2, double y3)[] Y) Solve4(
-            Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
+        public static (double[] T, (Complex y1, Complex y2, Complex y3)[] Y) Solve4(
+            Func<double, (Complex y1, Complex y2, Complex y3), (Complex y1, Complex y2, Complex y3)> f,
             double dt,
             double Tmax,
-            (double y1, double y2, double y3) y0 = default,
+            (Complex y1, Complex y2, Complex y3) y0 = default,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new (double y1, double y2, double y3)[N];
+            var Y = new (Complex y1, Complex y2, Complex y3)[N];
 
             T[0] = t0;
             Y[0] = y0;
@@ -136,18 +136,18 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y);
         }
 
-        public static double[] Step4(
-            Func<double, IReadOnlyList<double>, double[]> f,
-            double t, double dt, IReadOnlyList<double> y)
+        public static Complex[] Step4(
+            Func<double, IReadOnlyList<Complex>, Complex[]> f,
+            double t, double dt, IReadOnlyList<Complex> y)
         {
             var m = y.Count;
             var dt2 = dt / 2;
-            var yt = new double[m];
+            var yt = new Complex[m];
 
             var k1 = f(t, y);
             var k2 = f(t + dt2, GetKY(yt, y, k1, dt2, m));
             var k3 = f(t + dt2, GetKY(yt, y, k2, dt2, m));
-            var k4 = f(t + dt,  GetKY(yt, y, k3, dt,  m));
+            var k4 = f(t + dt, GetKY(yt, y, k3, dt, m));
 
             for (var i = 0; i < m; i++)
                 yt[i] = y[i] + dt * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]) / 6;
@@ -155,16 +155,16 @@ namespace MathCore.DifferentialEquations.Numerical
             return yt;
         }
 
-        public static (double[] T, double[][] Y) Solve4(
-            Func<double, IReadOnlyList<double>, double[]> f,
+        public static (double[] T, Complex[][] Y) Solve4(
+            Func<double, IReadOnlyList<Complex>, Complex[]> f,
             double dt,
             double Tmax,
-            double[] y0,
+            Complex[] y0,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new double[N][];
+            var Y = new Complex[N][];
 
             T[0] = t0;
             Y[0] = y0;
@@ -178,9 +178,9 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y);
         }
 
-        public static (double y, double err) Step45(
-            Func<double, double, double> f,
-            double t, double dt, double y)
+        public static (Complex y, Complex err) Step45(
+            Func<double, Complex, Complex> f,
+            double t, double dt, Complex y)
         {
             var k1 = f(t, y);
             var k2 = f(t + dt * 1 / 5, y + dt * (k1 * 1 / 5));
@@ -197,17 +197,17 @@ namespace MathCore.DifferentialEquations.Numerical
             return (v5, v5 - v4);
         }
 
-        public static (double[] T, double[] Y, double[] eps) Solve45(
-            Func<double, double, double> f,
+        public static (double[] T, Complex[] Y, Complex[] eps) Solve45(
+            Func<double, Complex, Complex> f,
             double dt,
             double Tmax,
-            double y0 = 0,
+            Complex y0 = default,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new double[N];
-            var err = new double[N];
+            var Y = new Complex[N];
+            var err = new Complex[N];
 
             T[0] = t0;
             Y[0] = y0;
@@ -221,9 +221,9 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y, err);
         }
 
-        public static ((double y1, double y2) y, (double e1, double e2) err) Step45(
-            Func<double, (double y1, double y2), (double y1, double y2)> f,
-            double t, double dt, (double y1, double y2) y)
+        public static ((Complex y1, Complex y2) y, (Complex e1, Complex e2) err) Step45(
+            Func<double, (Complex y1, Complex y2), (Complex y1, Complex y2)> f,
+            double t, double dt, (Complex y1, Complex y2) y)
         {
             var (y1, y2) = y;
 
@@ -262,17 +262,17 @@ namespace MathCore.DifferentialEquations.Numerical
             return ((v51, v52), (v51 - v41, v52 - v42));
         }
 
-        public static (double[] T, (double y1, double y2)[] Y, (double e1, double e2)[] err) Solve45(
-            Func<double, (double y1, double y2), (double y1, double y2)> f,
+        public static (double[] T, (Complex y1, Complex y2)[] Y, (Complex e1, Complex e2)[] err) Solve45(
+            Func<double, (Complex y1, Complex y2), (Complex y1, Complex y2)> f,
             double dt,
             double Tmax,
-            (double y1, double y2) y0 = default,
+            (Complex y1, Complex y2) y0 = default,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new (double y1, double y2)[N];
-            var err = new (double e1, double e2)[N];
+            var Y = new (Complex y1, Complex y2)[N];
+            var err = new (Complex e1, Complex e2)[N];
 
             T[0] = t0;
             Y[0] = y0;
@@ -286,9 +286,9 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y, err);
         }
 
-        public static ((double y1, double y2, double y3) y, (double e1, double e2, double e3) err) Step45(
-            Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
-            double t, double dt, (double y1, double y2, double y3) y)
+        public static ((Complex y1, Complex y2, Complex y3) y, (Complex e1, Complex e2, Complex e3) err) Step45(
+            Func<double, (Complex y1, Complex y2, Complex y3), (Complex y1, Complex y2, Complex y3)> f,
+            double t, double dt, (Complex y1, Complex y2, Complex y3) y)
         {
             var (y1, y2, y3) = y;
 
@@ -335,17 +335,17 @@ namespace MathCore.DifferentialEquations.Numerical
             return ((v51, v52, v53), (v51 - v41, v52 - v42, v53 - v43));
         }
 
-        public static (double[] T, (double y1, double y2, double y3)[] Y, (double e1, double e2, double e3)[] eps) Solve45(
-            Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
+        public static (double[] T, (Complex y1, Complex y2, Complex y3)[] Y, (Complex e1, Complex e2, Complex e3)[] eps) Solve45(
+            Func<double, (Complex y1, Complex y2, Complex y3), (Complex y1, Complex y2, Complex y3)> f,
             double dt,
             double Tmax,
-            (double y1, double y2, double y3) y0 = default,
+            (Complex y1, Complex y2, Complex y3) y0 = default,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new (double y1, double y2, double y3)[N];
-            var err = new (double e1, double e2, double e3)[N];
+            var Y = new (Complex y1, Complex y2, Complex y3)[N];
+            var err = new (Complex e1, Complex e2, Complex e3)[N];
 
             T[0] = t0;
             Y[0] = y0;
@@ -359,20 +359,20 @@ namespace MathCore.DifferentialEquations.Numerical
             return (T, Y, err);
         }
 
-        public static (double[] Y, double[] Error) Step45(
-            Func<double, IReadOnlyList<double>, double[]> f,
-            double t, double dt, IReadOnlyList<double> y)
+        public static (Complex[] Y, Complex[] Error) Step45(
+            Func<double, IReadOnlyList<Complex>, Complex[]> f,
+            double t, double dt, IReadOnlyList<Complex> y)
         {
             var m = y.Count;
-            var yt = new double[m];
+            var yt = new Complex[m];
 
             var k1 = f(t, y);
 
-            static double[] GetY(double[] Y, IReadOnlyList<double> YY, double dt, int M, params (double[] K, double k)[] kk)
+            static Complex[] GetY(Complex[] Y, IReadOnlyList<Complex> YY, double dt, int M, params (Complex[] K, double k)[] kk)
             {
                 for (int i = 0, mm = kk.Length; i < M; i++)
                 {
-                    var yy = 0d;
+                    Complex yy = default;
                     for (var j = 0; j < mm; j++)
                         yy += kk[j].K[i] * kk[j].k;
                     Y[i] = YY[i] + dt * yy;
@@ -410,11 +410,11 @@ namespace MathCore.DifferentialEquations.Numerical
                     (k4, 49 / 176d),
                     (k5, -5103 / 18656d)));
 
-            static double[] GetV(double[] Y, int M, params (double[] K, double k)[] kk)
+            static Complex[] GetV(Complex[] Y, int M, params (Complex[] K, double k)[] kk)
             {
                 for (int i = 0, mm = kk.Length; i < M; i++)
                 {
-                    var y = 0d;
+                    Complex y = default;
                     for (var j = 0; j < mm; j++)
                         y += kk[j].K[i] * kk[j].k;
                     Y[i] = y;
@@ -429,7 +429,7 @@ namespace MathCore.DifferentialEquations.Numerical
                 (k5, -2187 / 6784d),
                 (k6, 11 / 84d));
 
-            var k7 = f(t + dt, GetKY(yt = new double[yt.Length], y, v5, dt, m));
+            var k7 = f(t + dt, GetKY(yt = new Complex[yt.Length], y, v5, dt, m));
             var v4 = GetV(yt, m,
                 (k1, 5179 / 57600d),
                 (k3, 7571 / 16695d),
@@ -439,29 +439,29 @@ namespace MathCore.DifferentialEquations.Numerical
                 (k7, 1 / 40d));
 
             return (v5, GetDelta(yt, m, v5, v4));
-            static double[] GetDelta(double[] Err, int M, double[] V5, double[] V4)
+            static Complex[] GetDelta(Complex[] Err, int M, Complex[] V5, Complex[] V4)
             {
                 for (var i = 0; i < M; i++)
                     Err[i] = V5[i] - V4[i];
                 return Err;
             }
         }
-        
-        public static (double[] T, double[][] Y, double[][] Error) Solve45(
-            Func<double, IReadOnlyList<double>, double[]> f,
+
+        public static (double[] T, Complex[][] Y, Complex[][] Error) Solve45(
+            Func<double, IReadOnlyList<Complex>, Complex[]> f,
             double dt,
             double Tmax,
-            double[] y0,
+            Complex[] y0,
             double t0 = 0)
         {
             var N = (int)((Tmax - t0) / dt);
             var T = new double[N];
-            var Y = new double[N][];
-            var err = new double[N][];
+            var Y = new Complex[N][];
+            var err = new Complex[N][];
 
             T[0] = t0;
             Y[0] = y0;
-            err[0] = new double[y0.Length];
+            err[0] = new Complex[y0.Length];
 
             for (var (i, t) = (1, t0 + dt); i < N; i++, t += dt)
             {
