@@ -24,14 +24,23 @@ namespace ConsoleTest
 
         private static void Main()
         {
-            var date_time = DateTime.Now;
-            var time = date_time.TimeOfDay;
-            var day = date_time.Date;
+            //var date_time = DateTime.Now;
+            //var time = date_time.TimeOfDay;
+            //var day = date_time.Date;
 
-            var result = TailRecursion.Execute(() => Factorial(8, 1));
-            var v = (long)result;
-            var s = result.ToString();
-            var len = s.Length;
+            //var result = TailRecursion.Execute(() => Factorial(8, 1));
+            //var v = (long)result;
+            //var s = result.ToString();
+            //var len = s.Length;
+
+            var a_ch = 'a';
+            var n_ch = 'n';
+
+            var a_code = (int)a_ch;
+            var n_code = (int)n_ch;
+
+            var result = (char)(a_ch + n_ch);
+            Console.WriteLine(result);
         }
     }
 

@@ -8,45 +8,40 @@ using MathCore.Vectors;
 
 namespace MathCore.DifferentialEquations.Numerical
 {
-    public delegate double[] DifferentialEquationSystem(double x, double[] Y);
-    public delegate Complex[] DifferentialEquationSystem_Complex(double x, Complex[] Y);
-    public delegate Vector2D[] DifferentialEquationSystem_Vector2D(double x, Vector2D[] Y);
-    public delegate Vector3D[] DifferentialEquationSystem_Vector3D(double x, Vector3D[] Y);
-
     public static class EquationSystemMethods
     {
-        public readonly struct SystemResultItem<TValue> : IEquatable<SystemResultItem<TValue>>
-        {
-            public readonly double x;
-            public readonly ReadOnlyCollection<TValue> y;
+        //public readonly struct SystemResultItem<TValue> : IEquatable<SystemResultItem<TValue>>
+        //{
+        //    public double t { get; }
+        //    public IReadOnlyCollection<TValue> X { get; }
 
-            public SystemResultItem(double x, [NotNull] TValue[] y)
-            {
-                this.x = x;
-                this.y = new ReadOnlyCollection<TValue>(y);
-            }
+        //    public SystemResultItem(double t, IReadOnlyCollection<TValue> X)
+        //    {
+        //        this.t = t;
+        //        this.X = X;
+        //    }
 
-            /// <inheritdoc />
-            [NotNull] public override string ToString() => $"{x}:{{{string.Join(",", y)}}}";
+        //    /// <inheritdoc />
+        //    [NotNull] public override string ToString() => $"{t}:{{{string.Join(",", X)}}}";
 
-            /// <inheritdoc />
-            public bool Equals(SystemResultItem<TValue> other) => x.Equals(other.x) && Equals(y, other.y);
+        //    /// <inheritdoc />
+        //    public bool Equals(SystemResultItem<TValue> other) => t.Equals(other.t) && Equals(X, other.X);
 
-            /// <inheritdoc />
-            public override bool Equals(object obj) => obj is SystemResultItem<TValue> other && Equals(other);
+        //    /// <inheritdoc />
+        //    public override bool Equals(object obj) => obj is SystemResultItem<TValue> other && Equals(other);
 
-            /// <inheritdoc />
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return (x.GetHashCode() * 397) ^ (y != null ? y.GetHashCode() : 0);
-                }
-            }
+        //    /// <inheritdoc />
+        //    public override int GetHashCode()
+        //    {
+        //        unchecked
+        //        {
+        //            return (t.GetHashCode() * 397) ^ (X != null ? X.GetHashCode() : 0);
+        //        }
+        //    }
 
-            public static bool operator ==(SystemResultItem<TValue> left, SystemResultItem<TValue> right) => left.Equals(right);
-            public static bool operator !=(SystemResultItem<TValue> left, SystemResultItem<TValue> right) => !left.Equals(right);
-        }
+        //    public static bool operator ==(SystemResultItem<TValue> left, SystemResultItem<TValue> right) => left.Equals(right);
+        //    public static bool operator !=(SystemResultItem<TValue> left, SystemResultItem<TValue> right) => !left.Equals(right);
+        //}
 
         [NotNull]
         private static double[] Add([NotNull] this double[] X, double[] Y, double k = 1)
@@ -128,79 +123,79 @@ namespace MathCore.DifferentialEquations.Numerical
             return K1;
         }
 
-        public static IEnumerable<SystemResultItem<double>> Compute_RungeKutta(this DifferentialEquationSystem system, double x0, double x1, double dx, double[] Y0)
+        public static IEnumerable<(double t, IReadOnlyList<double> X)> Compute_RungeKutta(this DiffEqs system, double x0, double x1, double dx, double[] Y0)
         {
             var x = x0;
-            var Y = Y0;
-            yield return new SystemResultItem<double>(x, Y);
+            var y = Y0;
+            yield return (x, y);
             var dx2 = dx / 2;
 
             while(x <= x1)
             {
-                var K1 = system(x, Y);
-                var K2 = system(x + dx2, Y.Add(K1, dx2));
-                var K3 = system(x + dx2, Y.Add(K2, dx2));
-                var K4 = system(x + dx, Y.Add(K3, dx));
-                Y = Y.GetRungeKuttaResult(K1, K2, K3, K4, dx);
+                var k1 = system(x, y);
+                var k2 = system(x + dx2, y.Add(k1, dx2));
+                var k3 = system(x + dx2, y.Add(k2, dx2));
+                var k4 = system(x + dx, y.Add(k3, dx));
+                y = y.GetRungeKuttaResult(k1, k2, k3, k4, dx);
                 x += dx;
-                yield return new SystemResultItem<double>(x, Y);
+                yield return (x, y);
             }
         }
 
-        public static IEnumerable<SystemResultItem<Complex>> Compute_RungeKutta(this DifferentialEquationSystem_Complex system, double x0, double x1, double dx, Complex[] Y0)
+        public static IEnumerable<(double t, IReadOnlyList<Complex> X)> Compute_RungeKutta(this DiffEqsComplex system, double x0, double x1, double dx, Complex[] Y0)
         {
             var x = x0;
-            var Y = Y0;
-            yield return new SystemResultItem<Complex>(x, Y);
+            var y = Y0;
+            yield return (x, y);
             var dx2 = dx / 2;
 
             while(x <= x1)
             {
-                var K1 = system(x, Y);
-                var K2 = system(x + dx2, Y.Add(K1, dx2));
-                var K3 = system(x + dx2, Y.Add(K2, dx2));
-                var K4 = system(x + dx, Y.Add(K3, dx));
-                Y = Y.GetRungeKuttaResult(K1, K2, K3, K4, dx);
+                var k1 = system(x, y);
+                var k2 = system(x + dx2, y.Add(k1, dx2));
+                var k3 = system(x + dx2, y.Add(k2, dx2));
+                var k4 = system(x + dx, y.Add(k3, dx));
+                y = y.GetRungeKuttaResult(k1, k2, k3, k4, dx);
                 x += dx;
-                yield return new SystemResultItem<Complex>(x, Y);
+                yield return (x, y);
             }
         }
 
-        public static IEnumerable<SystemResultItem<Vector2D>> Compute_RungeKutta(this DifferentialEquationSystem_Vector2D system, double x0, double x1, double dx, Vector2D[] Y0)
+        public static IEnumerable<(double t, IReadOnlyList<Vector2D> X)> Compute_RungeKutta(this DiffEqsVector2D system, double x0, double x1, double dx, Vector2D[] Y0)
         {
             var x = x0;
-            var Y = Y0;
-            yield return new SystemResultItem<Vector2D>(x, Y);
+            var y = Y0;
+            yield return (x, y);
             var dx2 = dx / 2;
 
             while(x <= x1)
             {
-                var K1 = system(x, Y);
-                var K2 = system(x + dx2, Y.Add(K1, dx2));
-                var K3 = system(x + dx2, Y.Add(K2, dx2));
-                var K4 = system(x + dx, Y.Add(K3, dx));
-                Y = Y.GetRungeKuttaResult(K1, K2, K3, K4, dx);
+                var k1 = system(x, y);
+                var k2 = system(x + dx2, y.Add(k1, dx2));
+                var k3 = system(x + dx2, y.Add(k2, dx2));
+                var k4 = system(x + dx, y.Add(k3, dx));
+                y = y.GetRungeKuttaResult(k1, k2, k3, k4, dx);
                 x += dx;
-                yield return new SystemResultItem<Vector2D>(x, Y);
+                yield return (x, y);
             }
         }
 
-        public static IEnumerable<SystemResultItem<Vector3D>> Compute_RungeKutta(this DifferentialEquationSystem_Vector3D system, double x0, double x1, double dx, Vector3D[] Y0)
+        public static IEnumerable<(double t, IReadOnlyList<Vector3D> X)> Compute_RungeKutta(this DiffEqsVector3D system, double x0, double x1, double dx, Vector3D[] Y0)
         {
             var x = x0;
-            var Y = Y0;
-            yield return new SystemResultItem<Vector3D>(x, Y);
+            var y = Y0;
+            yield return (x, y);
             var dx2 = dx / 2;
 
             while(x <= x1)
             {
-                var K1 = system(x, Y);
-                var K2 = system(x + dx2, Y.Add(K1, dx2));
-                var K3 = system(x + dx2, Y.Add(K2, dx2));
-                var K4 = system(x + dx, Y.Add(K3, dx));
-                Y = Y.GetRungeKuttaResult(K1, K2, K3, K4, dx);
+                var k1 = system(x, y);
+                var k2 = system(x + dx2, y.Add(k1, dx2));
+                var k3 = system(x + dx2, y.Add(k2, dx2));
+                var k4 = system(x + dx, y.Add(k3, dx));
+                y = y.GetRungeKuttaResult(k1, k2, k3, k4, dx);
                 x += dx;
-                yield return new SystemResultItem<Vector3D>(x, Y);
+                yield return (x, y);
             }
         }
     }

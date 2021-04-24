@@ -502,6 +502,48 @@ namespace System
             }
         }
 
+        [NotNull]
+        public static byte[] ListToByteArray<T>(this IReadOnlyList<T> values) where T : struct
+        {
+            if (values.Count == 0) return Array.Empty<byte>();
+
+            var size = Marshal.SizeOf(typeof(T));
+            var buffer = new byte[size * values.Count]; // создать массив
+            var g_lock = default(GCHandle);
+            try
+            {
+                g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
+                for (var i = 0; i < values.Count; i++)
+                {
+                    var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, i * size); // и взять его адрес
+                    Marshal.StructureToPtr(values[i], p, true); // копировать в массив 
+                }
+            }
+            finally
+            {
+                g_lock.Free(); // снять фиксацию
+            }
+            return buffer;
+        }
+
+        [NotNull]
+        public static byte[] ArrayToByteArray<T>(this T[] values) where T : struct
+        {
+            var buffer = new byte[Marshal.SizeOf(typeof(T)) * values.Length]; // создать массив
+            var g_lock = default(GCHandle);
+            try
+            {
+                g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
+                var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
+                Marshal.StructureToPtr(values, p, true); // копировать в массив
+            }
+            finally
+            {
+                g_lock.Free(); // снять фиксацию
+            }
+            return buffer;
+        }
+
         /// <summary>Преобразование массива байт в структуру</summary>
         /// <typeparam name="T">Тип структуры</typeparam>
         /// <param name="data">Массив байт</param>

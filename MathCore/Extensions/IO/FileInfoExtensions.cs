@@ -325,7 +325,7 @@ namespace System.IO
             throw new InvalidOperationException($"Файл {File.FullName} заблокирован другим процессом");
         }
 
-        public static FileInfo ChangeExtension(this FileInfo File, string NewExtension) => new(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
+        public static FileInfo ChangeExtension(this FileInfo File, string? NewExtension) => new(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
 
         public static FileInfo Zip(this FileInfo File, string? ArchiveFileName = null, bool Override = true)
         {

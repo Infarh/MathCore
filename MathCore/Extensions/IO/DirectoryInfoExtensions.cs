@@ -143,8 +143,13 @@ namespace System.IO
         /// <param name="target">Дочерняя директория</param>
         /// <param name="parent">Родительская директория</param>
         /// <returns>Истина, если путь к директории, заявленной как дочерняя является вложенным в путь к директории, заявленной как родительская</returns>
-        public static bool IsSubDirectoryOf([CanBeNull] this DirectoryInfo target, [CanBeNull] DirectoryInfo parent) => 
-            !(target is null || parent is null) && target.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
+        public static bool IsSubDirectoryOf([CanBeNull] this DirectoryInfo target, [CanBeNull] DirectoryInfo parent)
+        {
+            if (target?.FullName is not { } target_path) return false;
+            if (parent?.FullName is not { } parent_path) return false;
+            const StringComparison comp = StringComparison.InvariantCultureIgnoreCase;
+            return target_path.Length > parent_path.Length && target_path.StartsWith(parent_path, comp);
+        }
 
         /// <summary>Создать объект с информацией о вложенном файле</summary>
         /// <param name="directory">Родительская директория</param>
@@ -244,10 +249,8 @@ namespace System.IO
         public static bool ContainsFile([NotNull] this DirectoryInfo directory, [NotNull] string file) => File.Exists(Path.Combine(directory.FullName, file));
 
         public static bool ContainsFileMask([NotNull] this DirectoryInfo directory, [NotNull] string mask) => directory.EnumerateFiles(mask).Any();
-
-        public static bool IsSubdirectoriesOf([NotNull] this DirectoryInfo directory, [NotNull] DirectoryInfo parent) => directory.FullName.StartsWith(parent.FullName, StringComparison.InvariantCultureIgnoreCase);
-
-        public static bool IsParentOf([NotNull] this DirectoryInfo parent, [NotNull] DirectoryInfo directory) => directory.IsSubdirectoriesOf(parent);
+        
+        public static bool IsParentOf([NotNull] this DirectoryInfo parent, [NotNull] DirectoryInfo directory) => directory.IsSubDirectoryOf(parent);
 
         [NotNull, ItemNotNull] public static IEnumerable<FileInfo> FindFiles([NotNull] this DirectoryInfo dir, [NotNull] string mask) => dir.EnumerateDirectories().SelectMany(d => d.FindFiles(mask)).InsertBefore(dir.EnumerateFiles(mask));
 
