@@ -9,11 +9,15 @@ using MathCore.Annotations;
 
 namespace MathCore
 {
+    /// <summary>Безопасный для доступа к ключам словарь</summary>
+    /// <typeparam name="TKey">Тип ключа</typeparam>
+    /// <typeparam name="TValue">Тип значения</typeparam>
     [Serializable, XmlRoot("Dictionary")]
     public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSerializable
     {
         #region Поля
 
+        /// <summary>Исходный словарь</summary>
         [NotNull]
         private readonly IDictionary<TKey, TValue> _Dictionary;
 
@@ -21,10 +25,18 @@ namespace MathCore
 
         #region Свойства
 
+        /// <summary>Число элементов словаря</summary>
         public int Count => _Dictionary.Count;
+
+        /// <summary>Ключи словаря</summary>
         public ICollection<TKey> Keys => _Dictionary.Keys;
+
+        /// <summary>Значения словаря</summary>
         public ICollection<TValue> Values => _Dictionary.Values;
 
+        /// <summary>Элемент словаря, либо default, если ключ отсутствует</summary>
+        /// <param name="key">Ключ требуемого значения</param>
+        /// <returns>Значение словаря по указанному ключу, либо default</returns>
         public TValue this[TKey key]
         {
             get => _Dictionary.TryGetValue(key, out var v) ? v : default;
@@ -37,35 +49,59 @@ namespace MathCore
 
         #region Конструктор
 
+        /// <summary>инициализация нового пустого безопасного словаря</summary>
         public DictionaryKeySafe() => _Dictionary = new Dictionary<TKey, TValue>();
 
+        /// <summary>инициализация нового пустого безопасного словаря</summary>
+        /// <param name="Capacity">Базовая ёмкость</param>
         public DictionaryKeySafe(int Capacity) => _Dictionary = new Dictionary<TKey, TValue>(Capacity);
 
+        /// <summary>инициализация нового пустого безопасного словаря</summary>
+        /// <param name="Comparer">Объект сравнения ключей</param>
         public DictionaryKeySafe(IEqualityComparer<TKey> Comparer) => _Dictionary = new Dictionary<TKey, TValue>(Comparer);
 
+        /// <summary>инициализация нового пустого безопасного словаря</summary>
+        /// <param name="Dictionary">Исходный словарь</param>
         public DictionaryKeySafe([NotNull] IDictionary<TKey, TValue> Dictionary) => _Dictionary = Dictionary;
 
         #endregion
 
         #region Методы
 
+        /// <inheritdoc />
         public void Add(TKey key, TValue value) => _Dictionary.Add(key, value);
+
+        /// <inheritdoc />
         public void Add(KeyValuePair<TKey, TValue> item) => _Dictionary.Add(item);
+
+        /// <inheritdoc />
         public bool Remove(KeyValuePair<TKey, TValue> item) => _Dictionary.Remove(item);
 
+        /// <inheritdoc />
         public bool Remove(TKey key) => _Dictionary.Remove(key);
+
+        /// <inheritdoc />
         public bool Contains(KeyValuePair<TKey, TValue> item) => _Dictionary.Contains(item);
+
+        /// <inheritdoc />
         public bool ContainsKey(TKey key) => _Dictionary.ContainsKey(key);
 
+        /// <inheritdoc />
         public bool TryGetValue(TKey key, out TValue value) => _Dictionary.TryGetValue(key, out value);
+
+        /// <inheritdoc />
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => _Dictionary.CopyTo(array, arrayIndex);
+
+        /// <inheritdoc />
         public void Clear() => _Dictionary.Clear();
 
         #endregion
 
         #region IEnumerable
 
+        /// <inheritdoc />
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _Dictionary.GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_Dictionary).GetEnumerator();
 
         #endregion

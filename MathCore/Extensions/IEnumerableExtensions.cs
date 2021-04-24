@@ -1831,6 +1831,11 @@ namespace System.Linq
                 yield return value;
         }
 
+        public static IEnumerable<T> AppendLast<T>(
+            [CN] this IEnumerable<T> first_collection,
+            [NN] params T[] last) => 
+            first_collection.AppendLast((IEnumerable<T>)last);
+
         /// <summary>Добавить объект в начало перечисления</summary>
         /// <typeparam name="T">Тип объектов перечисления</typeparam>
         /// <param name="collection">Основное перечисление</param>
@@ -1864,6 +1869,11 @@ namespace System.Linq
             foreach (var value in last_collection)
                 yield return value;
         }
+
+        public static IEnumerable<T> AppendFirst<T>(
+            [CN] this IEnumerable<T> last_collection,
+            [NN] params T[] first) =>
+            last_collection.AppendFirst((IEnumerable<T>)first);
 
         /// <summary>Вставить элемент в указанное положение в последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
@@ -2006,5 +2016,26 @@ namespace System.Linq
             foreach (var item in items)
                 yield return Selector(item) ? NewItem : item;
         }
+
+        /// <summary>Перебрать последовательно значения из нескольких перечислений</summary>
+        /// <typeparam name="T">Тип элементов перечислений</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
+        /// <param name="Source">Источник данных</param>
+        /// <param name="Selector">Метод определения источников данных</param>
+        /// <returns>Последовательное перечисление всех элементов данных</returns>
+        [NN]
+        public static IEnumerable<TValue> SelectSequential<T, TValue>([NN] this IEnumerable<T> Source, [NN] Func<T, IEnumerable<TValue>> Selector) =>
+            new SequentialEnumerable<TValue>(Source.Select(Selector));
+
+        /// <summary>Перебрать последовательно значения из нескольких перечислений</summary>
+        /// <typeparam name="T">Тип элементов перечислений</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
+        /// <param name="Source">Источник данных</param>
+        /// <param name="Selector">Метод определения источников данных</param>
+        /// <param name="Comparer">Объект сравнения</param>
+        /// <returns>Последовательное перечисление всех элементов данных</returns>
+        [NN]
+        public static IEnumerable<TValue> SelectSequential<T, TValue>([NN] this IEnumerable<T> Source, [NN] Func<T, IEnumerable<TValue>> Selector, [NN] IComparer<TValue> Comparer) =>
+            new SequentialEnumerable<TValue>(Comparer, Source.Select(Selector));
     }
 }

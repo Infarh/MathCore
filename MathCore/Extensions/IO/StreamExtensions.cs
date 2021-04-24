@@ -170,8 +170,10 @@ namespace System.IO
             return array;
         }
 
+        public static string ReadToEndAsString(this Stream stream) => new StreamReader(stream).ReadToEnd();
+
         public static Task<string> ReadToEndAsStringAsync(this Stream stream) => new StreamReader(stream).ReadToEndAsync();
-        public static Task<string> ReadToEndAsStringAsync(this Stream stream, Encoding encoding) => 
+        public static Task<string> ReadToEndAsStringAsync(this Stream stream, Encoding encoding) =>
             new StreamReader(stream, encoding).ReadToEndAsync();
 
         public static async Task<string> ReadToEndAsStringAsync(this Stream stream, CancellationToken cancel)
@@ -179,15 +181,15 @@ namespace System.IO
             cancel.ThrowIfCancellationRequested();
 
             using var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true);
-            cancel.Register(r => ((StreamReader)r).Dispose(), reader);
-            try
-            {
-                return await reader.ReadToEndAsync();
-            }
-            catch (ObjectDisposedException) when(cancel.IsCancellationRequested)
-            {
-                cancel.ThrowIfCancellationRequested();
-            }
+            using (cancel.Register(r => ((StreamReader)r).Dispose(), reader))
+                try
+                {
+                    return await reader.ReadToEndAsync();
+                }
+                catch (ObjectDisposedException) when (cancel.IsCancellationRequested)
+                {
+                    cancel.ThrowIfCancellationRequested();
+                }
 
             throw new InvalidOperationException("Что-то пошло не так");
         }
