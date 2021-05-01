@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Update package
     
     steps:
@@ -17,10 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v1
         
-      - name: Use .NET 5.0.100
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 5.0.x
         
       - name: Building
         run: |
@@ -28,13 +28,11 @@ jobs:
           dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
         
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo --no-restore
         
       - name: Packing
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
       
-      - name: Add Source
-        run: dotnet nuget add source https://nuget.pkg.github.com/Infarh/index.json -n github -u Infarh -p ${{secrets.GITHUB_TOKEN}} 
-            
       - name: Push package
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/Infarh/index.json -k ${{secrets.GITHUB_TOKEN}}
+        run: dotnet nuget push "**/*.nupkg" --skip-duplicate -s https://nuget.pkg.github.com/SCAC-Irkut/index.json -k ${{secrets.GITHUB_TOKEN}}
+        
