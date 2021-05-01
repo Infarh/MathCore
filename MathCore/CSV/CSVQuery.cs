@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -281,7 +282,7 @@ namespace MathCore.CSV
         public IEnumerator<CSVQueryRow> GetEnumerator()
         {
             using var reader = _ReaderFactory();
-            var position = 0l;
+            var position = 0L;
 
             var index = _SkipRows;
             while (index-- > 0)
@@ -304,7 +305,13 @@ namespace MathCore.CSV
                 {
                     var headers = header_line.Split(separator);
                     for (var i = 0; i < headers.Length; i++)
-                        header[headers[i]] = i;
+                    {
+                        var key = headers[i];
+                        if (key.Length > 2 && key[0] == '"' && key[^1] == '"')
+                            header[key.Trim('"')] = i;
+                        else
+                            header[key] = i;
+                    }
                 }
             }
 
@@ -325,7 +332,12 @@ namespace MathCore.CSV
 
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 var items = line.Split(separator);
-                yield return new CSVQueryRow(index, items, header, position - line.Length, position);
+
+                for (var i = 0; i < items.Length; i++)
+                    if (items[i] is { Length: > 2 } item && item[0] == '"' && item[^1] == '"')
+                        items[i] = item.Trim('"');
+
+                yield return new(index, items, header, position - line.Length, position);
                 index++;
             }
             while (index != _TakeRows);
