@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
@@ -282,6 +283,9 @@ namespace MathCore.CSV
         public IEnumerator<CSVQueryRow> GetEnumerator()
         {
             using var reader = _ReaderFactory();
+
+            var splitter = new Regex($@"(?<=(?:{_ValuesSeparator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{_ValuesSeparator}\n]*|(?:\n|$))", RegexOptions.Compiled);
+
             var position = 0L;
 
             var index = _SkipRows;
@@ -297,13 +301,15 @@ namespace MathCore.CSV
             var header = Merge(_Header);
             if (_ContainsHeader)
             {
-                var header_line = reader.ReadLine();
-                if (header_line is null) yield break;
-                position += header_line.Length;
+                var line = reader.ReadLine();
+                if (line is null) yield break;
+                position += line.Length;
 
-                if (!string.IsNullOrWhiteSpace(header_line))
+                if (!string.IsNullOrWhiteSpace(line))
                 {
-                    var headers = header_line.Split(separator);
+                    //var headers = line.Split(separator);
+                    var headers = splitter.Matches(line).Cast<Match>().ToArray(m => m.Value.Trim('"'));
+
                     for (var i = 0; i < headers.Length; i++)
                     {
                         var key = headers[i];
@@ -331,11 +337,12 @@ namespace MathCore.CSV
                 position += line.Length;
 
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                var items = line.Split(separator);
+                var items = splitter.Matches(line).Cast<Match>().ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
+                //var items = line.Split(separator);
 
-                for (var i = 0; i < items.Length; i++)
-                    if (items[i] is { Length: > 2 } item && item[0] == '"' && item[^1] == '"')
-                        items[i] = item.Trim('"');
+                //for (var i = 0; i < items.Length; i++)
+                //    if (items[i] is { Length: > 2 } item && item[0] == '"' && item[^1] == '"')
+                //        items[i] = item.Trim('"');
 
                 yield return new(index, items, header, position - line.Length, position);
                 index++;
