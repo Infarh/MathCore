@@ -24,10 +24,10 @@ namespace MathCore.CSV
         public int Index { get; }
 
         /// <summary>Начальное положение в источнике</summary>
-        private long StartPos { get; }
+        public long StartPos { get; }
 
         /// <summary>Конечное положение в источнике</summary>
-        private long EndPos { get; }
+        public long EndPos { get; }
 
         /// <summary>Заголовки строки</summary>
         [NotNull] public IReadOnlyDictionary<string, int> Headers => new ReadOnlyDictionary<string, int>(_Header);
