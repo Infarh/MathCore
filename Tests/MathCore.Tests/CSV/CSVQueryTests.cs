@@ -56,9 +56,9 @@ namespace MathCore.Tests.CSV
         {
             var query = DataFile.OpenCSV()
                .ValuesSeparator(ValuesSeparator)
-               .Skip(__BeforeLinesCount)
+               .SkipRowsBeforeHeader(__BeforeLinesCount)
                .WithHeader()
-               .SkipAfterHeader(__AfterLinesCount);
+               .SkipRowsAfterHeader(__AfterLinesCount);
 
             var students = query.Select(line => new Student
             {
@@ -85,7 +85,7 @@ namespace MathCore.Tests.CSV
         {
             var header = DataFile
                .OpenCSV(';')
-               .Skip(__BeforeLinesCount)
+               .SkipRowsBeforeHeader(__BeforeLinesCount)
                .WithHeader()
                .GetHeader();
 
