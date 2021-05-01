@@ -33,8 +33,5 @@ jobs:
       - name: Packing
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
       
-      - name: Add Source
-        run: dotnet nuget add source https://nuget.pkg.github.com/Infarh/index.json -n github -u Infarh -p ${{secrets.GITHUB_TOKEN}} 
-            
       - name: Push package
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/Infarh/index.json -k ${{secrets.GITHUB_TOKEN}}
+        run: dotnet nuget push "**/*.nupkg" --skip-duplicate -s https://nuget.pkg.github.com/SCAC-Irkut/index.json -k ${{secrets.GITHUB_TOKEN}}
