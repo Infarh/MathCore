@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using MathCore.Annotations;
@@ -19,44 +20,32 @@ namespace MathCore.CSV
         [NotNull]
         private readonly Func<TextReader> _ReaderFactory;
 
-        /// <summary>Число пропускаемых строк в начале файла</summary>
-        private readonly int _SkipRows;
-
-        /// <summary>Содержит ли файл строку заголовка?</summary>
-        private readonly bool _ContainsHeader;
-
-        /// <summary>Число пропускаемых строк после строки заголовка</summary>
-        private readonly int _SkipRowsAfterHeader;
-
-        /// <summary>Символ-разделитель значений в строке</summary>
-        private readonly char _ValuesSeparator;
-
-        /// <summary>Число считываемых строк</summary>
-        private readonly int _TakeRows;
-
-        /// <summary>Информация о заголовке файла - имена колонок : номера колонок</summary>
-        private readonly IDictionary<string, int> _Header;
-
         /// <summary>Число строк, пропускаемых в начале файла</summary>
-        public int SkipRowsCount => _SkipRows;
+        public int SkipRowsCount { get; init; }
 
         /// <summary>Число строк, пропускаемых в начале файла после строки заголовка (даже при её отсутствии)</summary>
-        public int SkipRowsAfterHeaderCount => _SkipRowsAfterHeader;
+        public int SkipRowsAfterHeaderCount { get; init; }
 
         /// <summary>Число строк, извлекаемых из области данных</summary>
-        public int TakeRowsCount => _TakeRows;
+        public int TakeRowsCount { get; init; }
 
         /// <summary>В процессе чтения данных будет учитываться наличие строки заголовка</summary>
-        public bool ContainsHeader => _ContainsHeader;
+        public bool ContainsHeader { get; init; }
 
         /// <summary>Символ-разделитель значений строки</summary>
-        public char Separator => _ValuesSeparator;
+        public char Separator { get; init; }
+
+        /// <summary>Формат конца строки для расчёта положения в потоке</summary>
+        public string EoL { get; init; }
+
+        /// <summary>Информация о заголовке файла - имена колонок : номера колонок</summary>
+        private IDictionary<string, int> Headers { get; init; }
 
         /// <summary>Инициализация нового экземпляра <see cref="CSVQuery"/></summary>
         /// <param name="ReaderFactory">Метод-фабрика объектов чтения данных</param>
         /// <param name="Separator">Символ-разделитель значений</param>
         public CSVQuery([NotNull] Func<TextReader> ReaderFactory, char Separator = ',')
-            : this(ReaderFactory, 0, false, 0, Separator, -1, null) { }
+            : this(ReaderFactory, 0, false, 0, Separator, -1, null, null) { }
 
         /// <summary>Инициализация нового экземпляра <see cref="CSVQuery"/></summary>
         private CSVQuery(
@@ -66,95 +55,61 @@ namespace MathCore.CSV
             int SkipRowsAfterHeader,
             char ValuesSeparator,
             int TakeRows,
-            IDictionary<string, int> Header
+            IDictionary<string, int> Headers,
+            string EoL
             )
         {
             _ReaderFactory = ReaderFactory ?? throw new ArgumentNullException(nameof(ReaderFactory));
-            _SkipRows = SkipRows;
-            _ContainsHeader = ContainsHeader;
-            _SkipRowsAfterHeader = SkipRowsAfterHeader;
-            _ValuesSeparator = ValuesSeparator;
-            _TakeRows = TakeRows;
-            _Header = Header;
+            SkipRowsCount = SkipRows;
+            this.ContainsHeader = ContainsHeader;
+            SkipRowsAfterHeaderCount = SkipRowsAfterHeader;
+            Separator = ValuesSeparator;
+            TakeRowsCount = TakeRows;
+            this.Headers = Headers;
+            this.EoL = EoL;
+        }
+
+        private CSVQuery(in CSVQuery query)
+        {
+            _ReaderFactory = query._ReaderFactory;
+            SkipRowsCount = query.SkipRowsCount;
+            ContainsHeader = query.ContainsHeader;
+            SkipRowsAfterHeaderCount = query.SkipRowsAfterHeaderCount;
+            Separator = query.Separator;
+            TakeRowsCount = query.TakeRowsCount;
+            Headers = query.Headers;
+            EoL = query.EoL;
         }
 
         /// <summary>Установить число пропускаемых строк в начале файла</summary>
         /// <param name="RowsCount">Количество пропускаемых строк в начале файла</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery Skip(int RowsCount) => new(
-            _ReaderFactory,
-            RowsCount,
-            _ContainsHeader,
-            _SkipRowsAfterHeader,
-            _ValuesSeparator,
-            _TakeRows,
-            _Header
-            );
+        public CSVQuery SkipRowsBeforeHeader(int RowsCount) => new(this) { SkipRowsCount = RowsCount };
 
         /// <summary>Установить число строк, пропускаемых после заголовка</summary>
         /// <param name="RowsCount">Новое значение числа строк, пропускаемых после заголовка</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery SkipAfterHeader(int RowsCount) => new(
-            _ReaderFactory,
-            _SkipRows,
-            _ContainsHeader,
-            RowsCount,
-            _ValuesSeparator,
-            _TakeRows,
-            _Header
-        );
+        public CSVQuery SkipRowsAfterHeader(int RowsCount) => new(this) { SkipRowsAfterHeaderCount = RowsCount };
 
         /// <summary>Данные содержат заголовок?</summary>
         /// <param name="IsExist">Истина - заголовок будет учитываться при чтении</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery WithHeader(bool IsExist = true) => new(
-            _ReaderFactory,
-            _SkipRows,
-            IsExist,
-            _SkipRowsAfterHeader,
-            _ValuesSeparator,
-            _TakeRows,
-            _Header
-        );
+        public CSVQuery WithHeader(bool IsExist = true) => new(this) { ContainsHeader = IsExist };
 
         /// <summary>Установить символ-разделитель значений в строке</summary>
         /// <param name="NewSeparator">Новый символ-разделитель значений строки</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery ValuesSeparator(char NewSeparator) => new(
-            _ReaderFactory,
-            _SkipRows,
-            _ContainsHeader,
-            _SkipRowsAfterHeader,
-            NewSeparator,
-            _TakeRows,
-            _Header
-        );
+        public CSVQuery ValuesSeparator(char NewSeparator) => new(this) { Separator = NewSeparator };
 
         /// <summary>Установить число читаемых строк</summary>
         /// <param name="RowsCount">Число читаемых строк области данных (если -1, то читать всё)</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery TakeRows(int RowsCount) => new(
-            _ReaderFactory,
-            _SkipRows,
-            _ContainsHeader,
-            _SkipRowsAfterHeader,
-            _ValuesSeparator,
-            RowsCount,
-            _Header
-        );
+        public CSVQuery TakeRows(int RowsCount) => new(this) { TakeRowsCount = RowsCount };
 
         /// <summary>Установить заголовок</summary>
         /// <param name="Header">Новый заголовок данных - словарь соответствия имени колонки и её индекса</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery Header(IDictionary<string, int> Header) => new(
-            _ReaderFactory,
-            _SkipRows,
-            _ContainsHeader,
-            _SkipRowsAfterHeader,
-            _ValuesSeparator,
-            _TakeRows,
-            Header
-        );
+        public CSVQuery Header(IDictionary<string, int> Header) => new(this) { Headers = { } };
 
         /// <summary>Объединить словари заголовков</summary>
         /// <param name="Source">Исходный словарь значений</param>
@@ -178,15 +133,7 @@ namespace MathCore.CSV
         /// <summary>Добавить в заголовок набор колонок</summary>
         /// <param name="Header">Добавляемые в заголовок колонки</param>
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
-        public CSVQuery MergeHeader(IDictionary<string, int> Header) => new(
-            _ReaderFactory,
-            _SkipRows,
-            _ContainsHeader,
-            _SkipRowsAfterHeader,
-            _ValuesSeparator,
-            _TakeRows,
-            Merge(_Header, Header)
-        );
+        public CSVQuery MergeHeader(IDictionary<string, int> Header) => new(this) { Headers = Merge(Headers, Header) };
 
         /// <summary>Добавить колонку в считываемый заголовок</summary>
         /// <param name="AliasName">Новый псевдоним колонки</param>
@@ -204,22 +151,11 @@ namespace MathCore.CSV
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
         public CSVQuery RemoveColumn(string ColumnName)
         {
-            var header = _Header;
-            if (header != null)
-            {
-                header = Merge(header);
-                header.Remove(ColumnName);
-            }
+            if (Headers is not { Count: > 0 } header) return this;
+            header = Merge(header);
+            header.Remove(ColumnName);
 
-            return new CSVQuery(
-                _ReaderFactory,
-                _SkipRows,
-                _ContainsHeader,
-                _SkipRowsAfterHeader,
-                _ValuesSeparator,
-                _TakeRows,
-                header
-            );
+            return new(this) { Headers = header };
         }
 
         /// <summary>Удалить колонку по указанному индексу</summary>
@@ -227,24 +163,17 @@ namespace MathCore.CSV
         /// <returns>Модифицированных новый экземпляр <see cref="CSVQuery"/></returns>
         public CSVQuery RemoveColumn(int ColumnIndex)
         {
-            var header = _Header;
-            if (header != null)
-            {
-                header = Merge(header);
-                foreach (var column in _Header.Where(v => v.Value == ColumnIndex).Select(v => v.Key))
-                    header.Remove(column);
-            }
+            if (Headers is not { Count: > 0 } header) return this;
 
-            return new CSVQuery(
-                _ReaderFactory,
-                _SkipRows,
-                _ContainsHeader,
-                _SkipRowsAfterHeader,
-                _ValuesSeparator,
-                _TakeRows,
-                header
-            );
+            header = Merge(header);
+            foreach (var column in Headers.Where(v => v.Value == ColumnIndex).Select(v => v.Key))
+                header.Remove(column);
+            return new(this) { Headers = header };
         }
+
+        /// <summary>Установка символа конца строки для файла для корректного подсчёта положения в нём</summary>
+        /// <param name="eol">Символ конца строки (по умолчанию \r\n)</param>
+        public CSVQuery WithEoL(string eol) => new(this) { EoL = eol};
 
         /// <summary>Считать заголовок данных</summary>
         /// <param name="MergeWithDefault"></param>
@@ -254,21 +183,21 @@ namespace MathCore.CSV
         {
             using var reader = _ReaderFactory();
 
-            var count = _SkipRows;
+            var count = SkipRowsCount;
             while (count-- > 0)
                 if (reader.ReadLine() is null) break;
 
             if (count > 0)
                 throw new FormatException("Неожиданный конец потока");
 
-            char[] separator = { _ValuesSeparator };
+            char[] separator = { Separator };
             var header_line = reader.ReadLine();
 
             if (string.IsNullOrWhiteSpace(header_line))
                 throw new FormatException("Пустая строка заголовка");
 
-            var header = MergeWithDefault && _Header != null
-                ? new SortedList<string, int>(_Header)
+            var header = MergeWithDefault && Headers != null
+                ? new SortedList<string, int>(Headers)
                 : new SortedList<string, int>();
 
             var headers = header_line.Split(separator);
@@ -284,49 +213,50 @@ namespace MathCore.CSV
         {
             using var reader = _ReaderFactory();
 
-            var splitter = new Regex($@"(?<=(?:{_ValuesSeparator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{_ValuesSeparator}\n]*|(?:\n|$))", RegexOptions.Compiled);
+            if (reader is not StreamReader { CurrentEncoding: var encoding }) encoding = Encoding.Default;
+
+            var eol = EoL is { Length: > 0 } s_eol ? encoding.GetByteCount(s_eol) : 0;
+
+            var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
 
             var position = 0L;
 
-            var index = _SkipRows;
+            var index = SkipRowsCount;
             while (index-- > 0)
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
-                position += line.Length;
+                position += encoding.GetByteCount(line) + eol;
             }
 
-            char[] separator = { _ValuesSeparator };
+            //char[] separator = { _ValuesSeparator };
 
-            var header = Merge(_Header);
-            if (_ContainsHeader)
+            var header = Merge(Headers);
+            if (ContainsHeader)
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
-                position += line.Length;
+                position += encoding.GetByteCount(line) + eol;
 
                 if (!string.IsNullOrWhiteSpace(line))
                 {
                     //var headers = line.Split(separator);
-                    var headers = splitter.Matches(line).Cast<Match>().ToArray(m => m.Value.Trim('"'));
+                    var headers = splitter
+                       .Matches(line)
+                       .Cast<Match>()
+                       .ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
 
                     for (var i = 0; i < headers.Length; i++)
-                    {
-                        var key = headers[i];
-                        if (key.Length > 2 && key[0] == '"' && key[^1] == '"')
-                            header[key.Trim('"')] = i;
-                        else
-                            header[key] = i;
-                    }
+                        header[headers[i]] = i;
                 }
             }
 
-            index = _SkipRowsAfterHeader;
+            index = SkipRowsAfterHeaderCount;
             while (index-- > 0)
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
-                position += line.Length;
+                position += encoding.GetByteCount(line) + eol;
             }
 
             index = 0;
@@ -334,7 +264,7 @@ namespace MathCore.CSV
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
-                position += line.Length;
+                var line_length = encoding.GetByteCount(line);
 
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 var items = splitter.Matches(line).Cast<Match>().ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
@@ -344,10 +274,10 @@ namespace MathCore.CSV
                 //    if (items[i] is { Length: > 2 } item && item[0] == '"' && item[^1] == '"')
                 //        items[i] = item.Trim('"');
 
-                yield return new(index, items, header, position - line.Length, position);
+                yield return new(line, index, items, header, position, (position += line_length + eol) - 1);
                 index++;
             }
-            while (index != _TakeRows);
+            while (index != TakeRowsCount);
         }
 
         /// <inheritdoc />
@@ -356,24 +286,24 @@ namespace MathCore.CSV
         public bool Equals(object other, IEqualityComparer comparer) =>
             other is CSVQuery query
             && comparer.Equals(_ReaderFactory, query._ReaderFactory)
-            && comparer.Equals(_SkipRows, query._SkipRows)
-            && comparer.Equals(_ContainsHeader, query._ContainsHeader)
-            && comparer.Equals(_SkipRowsAfterHeader, query._SkipRowsAfterHeader)
-            && comparer.Equals(_ValuesSeparator, query._ValuesSeparator)
-            && comparer.Equals(_TakeRows, query._TakeRows)
-            && comparer.Equals(_Header, query._Header);
+            && comparer.Equals(SkipRowsCount, query.SkipRowsCount)
+            && comparer.Equals(ContainsHeader, query.ContainsHeader)
+            && comparer.Equals(SkipRowsAfterHeaderCount, query.SkipRowsAfterHeaderCount)
+            && comparer.Equals(Separator, query.Separator)
+            && comparer.Equals(TakeRowsCount, query.TakeRowsCount)
+            && comparer.Equals(Headers, query.Headers);
 
         public int GetHashCode(IEqualityComparer comparer)
         {
             unchecked
             {
                 var hash_code = comparer.GetHashCode(_ReaderFactory);
-                hash_code = (hash_code * 397) ^ comparer.GetHashCode(_SkipRows);
-                hash_code = (hash_code * 397) ^ comparer.GetHashCode(_ContainsHeader.GetHashCode());
-                hash_code = (hash_code * 397) ^ comparer.GetHashCode(_SkipRowsAfterHeader);
-                hash_code = (hash_code * 397) ^ comparer.GetHashCode(_ValuesSeparator);
-                hash_code = (hash_code * 397) ^ comparer.GetHashCode(_TakeRows);
-                hash_code = (hash_code * 397) ^ (_Header != null ? comparer.GetHashCode(_Header) : 0);
+                hash_code = (hash_code * 397) ^ comparer.GetHashCode(SkipRowsCount);
+                hash_code = (hash_code * 397) ^ comparer.GetHashCode(ContainsHeader.GetHashCode());
+                hash_code = (hash_code * 397) ^ comparer.GetHashCode(SkipRowsAfterHeaderCount);
+                hash_code = (hash_code * 397) ^ comparer.GetHashCode(Separator);
+                hash_code = (hash_code * 397) ^ comparer.GetHashCode(TakeRowsCount);
+                hash_code = (hash_code * 397) ^ (Headers != null ? comparer.GetHashCode(Headers) : 0);
                 return hash_code;
             }
         }
@@ -385,12 +315,12 @@ namespace MathCore.CSV
             unchecked
             {
                 var hash_code = _ReaderFactory.GetHashCode();
-                hash_code = (hash_code * 397) ^ _SkipRows;
-                hash_code = (hash_code * 397) ^ _ContainsHeader.GetHashCode();
-                hash_code = (hash_code * 397) ^ _SkipRowsAfterHeader;
-                hash_code = (hash_code * 397) ^ _ValuesSeparator.GetHashCode();
-                hash_code = (hash_code * 397) ^ _TakeRows;
-                hash_code = (hash_code * 397) ^ (_Header != null ? _Header.GetHashCode() : 0);
+                hash_code = (hash_code * 397) ^ SkipRowsCount;
+                hash_code = (hash_code * 397) ^ ContainsHeader.GetHashCode();
+                hash_code = (hash_code * 397) ^ SkipRowsAfterHeaderCount;
+                hash_code = (hash_code * 397) ^ Separator.GetHashCode();
+                hash_code = (hash_code * 397) ^ TakeRowsCount;
+                hash_code = (hash_code * 397) ^ (Headers != null ? Headers.GetHashCode() : 0);
                 return hash_code;
             }
         }
@@ -401,11 +331,11 @@ namespace MathCore.CSV
 
         public bool Equals(CSVQuery other) =>
             _ReaderFactory.Equals(other._ReaderFactory)
-            && _SkipRows == other._SkipRows
-            && _ContainsHeader == other._ContainsHeader
-            && _SkipRowsAfterHeader == other._SkipRowsAfterHeader
-            && _ValuesSeparator == other._ValuesSeparator
-            && _TakeRows == other._TakeRows
-            && Equals(_Header, other._Header);
+            && SkipRowsCount == other.SkipRowsCount
+            && ContainsHeader == other.ContainsHeader
+            && SkipRowsAfterHeaderCount == other.SkipRowsAfterHeaderCount
+            && Separator == other.Separator
+            && TakeRowsCount == other.TakeRowsCount
+            && Equals(Headers, other.Headers);
     }
 }

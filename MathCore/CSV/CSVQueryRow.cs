@@ -29,6 +29,8 @@ namespace MathCore.CSV
         /// <summary>Конечное положение в источнике</summary>
         public long EndPos { get; }
 
+        public string SourceLine { get; }
+
         /// <summary>Заголовки строки</summary>
         [NotNull] public IReadOnlyDictionary<string, int> Headers => new ReadOnlyDictionary<string, int>(_Header);
 
@@ -45,13 +47,15 @@ namespace MathCore.CSV
         public ref string this[[NotNull] string ValueName] => ref _Items[_Header[ValueName]];
 
         /// <summary>Инициализация нового экземпляра строки данных <see cref="CSVQueryRow"/></summary>
+        /// <param name="SourceLine">Исходная строка</param>
         /// <param name="Index">Индекс строки</param>
         /// <param name="Items">Массив строковых значений</param>
         /// <param name="Header">Словарь заголовков</param>
         /// <param name="StartPos">Начальное положение в источнике</param>
         /// <param name="EndPos">Конечное положение в источнике</param>
-        public CSVQueryRow(int Index, string[] Items, IDictionary<string, int> Header, long StartPos, long EndPos)
+        public CSVQueryRow(string SourceLine, int Index, string[] Items, IDictionary<string, int> Header, long StartPos, long EndPos)
         {
+            this.SourceLine = SourceLine;
             this.Index = Index;
             this.StartPos = StartPos;
             this.EndPos = EndPos;
