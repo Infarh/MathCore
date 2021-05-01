@@ -281,12 +281,14 @@ namespace MathCore.CSV
         public IEnumerator<CSVQueryRow> GetEnumerator()
         {
             using var reader = _ReaderFactory();
+            var position = 0l;
 
             var index = _SkipRows;
             while (index-- > 0)
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
+                position += line.Length;
             }
 
             char[] separator = { _ValuesSeparator };
@@ -296,6 +298,7 @@ namespace MathCore.CSV
             {
                 var header_line = reader.ReadLine();
                 if (header_line is null) yield break;
+                position += header_line.Length;
 
                 if (!string.IsNullOrWhiteSpace(header_line))
                 {
@@ -310,6 +313,7 @@ namespace MathCore.CSV
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
+                position += line.Length;
             }
 
             index = 0;
@@ -317,10 +321,11 @@ namespace MathCore.CSV
             {
                 var line = reader.ReadLine();
                 if (line is null) yield break;
+                position += line.Length;
 
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 var items = line.Split(separator);
-                yield return new CSVQueryRow(index, items, header);
+                yield return new CSVQueryRow(index, items, header, position - line.Length, position);
                 index++;
             }
             while (index != _TakeRows);

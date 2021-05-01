@@ -39,6 +39,8 @@ namespace MathCore
 
         public char ProgressChar { get; init; } = '█'; //'#';
 
+        public char EmptyChar { get; init; } = '-';
+
         public string PercentFormat { get; init; } = "f0";
 
         public char? PercentSymbol { get; init; } = '%';
@@ -78,7 +80,7 @@ namespace MathCore
 
                 var filled_part = new string(ProgressChar, progress_block_count);
                 var empty_blocks_count = _BlockCount - progress_block_count - (gradient_set is { Length: > 0 } ? 2 : 1);
-                var empty_part = new string('-', Math.Max(0, empty_blocks_count));
+                var empty_part = new string(EmptyChar, Math.Max(0, empty_blocks_count));
                 var animation = __Animation[_AnimationIndex++ % __Animation.Length];
 
                 var gradient_index = (int)(_CurrentProgress * _BlockCount * gradient_set.Length) % gradient_set.Length;

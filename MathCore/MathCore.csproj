@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.43.1</Version>
+    <Version>0.0.44</Version>
     <PackageReleaseNotes>
-      Переработан метод Рунге-Кутта
-      Исправлено поведение Interval.ToString()
+      Console progress bar
     </PackageReleaseNotes>
   </PropertyGroup>
 
