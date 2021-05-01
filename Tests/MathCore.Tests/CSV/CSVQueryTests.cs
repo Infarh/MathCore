@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 using MathCore.Annotations;
 using MathCore.CSV;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,7 +49,7 @@ namespace MathCore.Tests.CSV
                 File.Delete(__DataFileName);
         }
 
-        [NotNull] private static FileInfo DataFile => new FileInfo(__DataFileName);
+        [NotNull] private static FileInfo DataFile => new(__DataFileName);
 
         [TestMethod]
         public void ReadDataTest()
@@ -97,6 +99,16 @@ namespace MathCore.Tests.CSV
 
             Assert.That.Collection(header.Keys).IsEqualTo(expected_headers.Keys);
             Assert.That.Collection(header).IsEqualTo(expected_headers);
+        }
+
+        [TestMethod]
+        public void RegExValues()
+        {
+            const string test_data = @"6734,""03OI"",""heliport"",""Cleveland Clinic, Marymount Hospital Heliport"",41.420312,-81.599552,890,""NA"",""US"",""US-OH"",""Garfield Heights"",""no"",""03OI"",,""03OI"",,,";
+
+            var regex = new Regex(@"(?<=(?:,|\n|^))(""(?:(?:"""")*[^""]*)*""|[^"",\n]*|(?:\n|$))");
+
+            var values = regex.Matches(test_data).Select(m => m.Value is { Length: > 2 } v && v[0] == '"' && v[^1] == '"' ? v[1..^1] : m.Value).ToArray();
         }
     }
 }

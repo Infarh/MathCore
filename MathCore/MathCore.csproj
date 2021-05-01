@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.44.2</Version>
+    <Version>0.0.44.3</Version>
     <PackageReleaseNotes>
-      Console progress bar
+      Коррекция работы CSV-парсера
     </PackageReleaseNotes>
   </PropertyGroup>
 
