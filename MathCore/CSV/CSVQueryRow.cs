@@ -23,6 +23,12 @@ namespace MathCore.CSV
         /// <summary>Индекс (номер) строки (отсчёт от 0)</summary>
         public int Index { get; }
 
+        /// <summary>Начальное положение в источнике</summary>
+        private long StartPos { get; }
+
+        /// <summary>Конечное положение в источнике</summary>
+        private long EndPos { get; }
+
         /// <summary>Заголовки строки</summary>
         [NotNull] public IReadOnlyDictionary<string, int> Headers => new ReadOnlyDictionary<string, int>(_Header);
 
@@ -42,9 +48,13 @@ namespace MathCore.CSV
         /// <param name="Index">Индекс строки</param>
         /// <param name="Items">Массив строковых значений</param>
         /// <param name="Header">Словарь заголовков</param>
-        public CSVQueryRow(int Index, string[] Items, IDictionary<string, int> Header)
+        /// <param name="StartPos">Начальное положение в источнике</param>
+        /// <param name="EndPos">Конечное положение в источнике</param>
+        public CSVQueryRow(int Index, string[] Items, IDictionary<string, int> Header, long StartPos, long EndPos)
         {
             this.Index = Index;
+            this.StartPos = StartPos;
+            this.EndPos = EndPos;
             _Items = Items;
             _Header = Header;
         }
