@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,8 @@ namespace MathCore.CSV
         /// <summary>Формат конца строки для расчёта положения в потоке</summary>
         public string EoL { get; init; }
 
+        public CultureInfo Culture { get; init; }
+
         /// <summary>Информация о заголовке файла - имена колонок : номера колонок</summary>
         private IDictionary<string, int> Headers { get; init; }
 
@@ -45,7 +48,7 @@ namespace MathCore.CSV
         /// <param name="ReaderFactory">Метод-фабрика объектов чтения данных</param>
         /// <param name="Separator">Символ-разделитель значений</param>
         public CSVQuery([NotNull] Func<TextReader> ReaderFactory, char Separator = ',')
-            : this(ReaderFactory, 0, false, 0, Separator, -1, null, null) { }
+            : this(ReaderFactory, 0, false, 0, Separator, -1, null, null, null) { }
 
         /// <summary>Инициализация нового экземпляра <see cref="CSVQuery"/></summary>
         private CSVQuery(
@@ -56,7 +59,8 @@ namespace MathCore.CSV
             char ValuesSeparator,
             int TakeRows,
             IDictionary<string, int> Headers,
-            string EoL
+            string EoL,
+            CultureInfo Culture
             )
         {
             _ReaderFactory = ReaderFactory ?? throw new ArgumentNullException(nameof(ReaderFactory));
@@ -67,6 +71,7 @@ namespace MathCore.CSV
             TakeRowsCount = TakeRows;
             this.Headers = Headers;
             this.EoL = EoL;
+            this.Culture = Culture;
         }
 
         private CSVQuery(in CSVQuery query)
@@ -79,6 +84,7 @@ namespace MathCore.CSV
             TakeRowsCount = query.TakeRowsCount;
             Headers = query.Headers;
             EoL = query.EoL;
+            Culture = query.Culture;
         }
 
         /// <summary>Установить число пропускаемых строк в начале файла</summary>
@@ -173,7 +179,11 @@ namespace MathCore.CSV
 
         /// <summary>Установка символа конца строки для файла для корректного подсчёта положения в нём</summary>
         /// <param name="eol">Символ конца строки (по умолчанию \r\n)</param>
-        public CSVQuery WithEoL(string eol) => new(this) { EoL = eol};
+        public CSVQuery WithEoL(string eol) => new(this) { EoL = eol };
+
+        /// <summary>Установка культуры преобразвоания строк в базовые типы данных</summary>
+        /// <param name="culture">Устанавливаемая культура</param>
+        public CSVQuery WithCulture(CultureInfo culture = null) => new(this) { Culture = culture };
 
         /// <summary>Считать заголовок данных</summary>
         /// <param name="MergeWithDefault"></param>
@@ -260,6 +270,7 @@ namespace MathCore.CSV
             }
 
             index = 0;
+            var culture = Culture ?? CultureInfo.CurrentCulture;
             do
             {
                 var line = reader.ReadLine();
@@ -274,7 +285,7 @@ namespace MathCore.CSV
                 //    if (items[i] is { Length: > 2 } item && item[0] == '"' && item[^1] == '"')
                 //        items[i] = item.Trim('"');
 
-                yield return new(line, index, items, header, position, (position += line_length + eol) - 1);
+                yield return new(line, index, items, header, position, (position += line_length + eol) - 1, culture);
                 index++;
             }
             while (index != TakeRowsCount);
