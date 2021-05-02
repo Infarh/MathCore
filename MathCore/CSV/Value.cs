@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Globalization;
 
 namespace MathCore.CSV
@@ -24,6 +25,25 @@ namespace MathCore.CSV
         public decimal DecimalValue => decimal.Parse(_Value, _Culture);
 
         public bool BoolValue => bool.Parse(_Value);
+
+        /* ------------------------------------------------------------------------------------------------------------- */
+
+        public byte? Int8NullValue => byte.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public sbyte? SInt8NullValue => sbyte.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public short? Int16NullValue => short.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public ushort? UInt16NullValue => ushort.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public int? Int32NullValue => int.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public uint? UInt32NullValue => uint.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public long? Int64NullValue => long.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public ulong? UInt64NullValue => ulong.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+
+        public float? FloatNullValue => float.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public double? DoubleNullValue => double.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+        public decimal? DecimalNullValue => decimal.TryParse(_Value, NumberStyles.Any, _Culture, out var v) ? v : null;
+
+        public bool? BoolNullValue => bool.TryParse(_Value, out var v) ? v : null;
+
+        /* ------------------------------------------------------------------------------------------------------------- */
 
         public Value(string value, CultureInfo Culture)
         {
@@ -138,6 +158,14 @@ namespace MathCore.CSV
         public bool? AsBoolOrNull() => bool.TryParse(_Value, out var v) ? v : null;
         public bool AsBoolOrDefault(bool Default) => bool.TryParse(_Value, out var v) ? v : Default;
 
+        public T AsEnum<T>() where T : Enum => (T)Enum.Parse(typeof(T), _Value);
+        public T AsEnum<T>(bool IgnoreCase) where T : struct, Enum => (T)Enum.Parse(typeof(T), _Value, IgnoreCase);
+
+        public T? AsEnumOrNull<T>() where T : struct, Enum => Enum.TryParse(_Value, out T v) ? v : null;
+        public T? AsEnumOrNull<T>(bool IgnoreCase) where T : struct, Enum => Enum.TryParse(_Value, IgnoreCase, out T v) ? v : null;
+
+        public T As<T>() => (T)Convert.ChangeType(_Value, typeof(T));
+
         /* ------------------------------------------------------------------------------------------------------------- */
 
         public static implicit operator string(in Value value) => value.StringValue;
@@ -157,17 +185,17 @@ namespace MathCore.CSV
         public static implicit operator double(in Value value) => value.DoubleValue;
         public static implicit operator decimal(in Value value) => value.DecimalValue;
 
-        public static implicit operator byte?(in Value value) => value.AsInt8OrNull();
-        public static implicit operator sbyte?(in Value value) => value.AsSInt8OrNull();
-        public static implicit operator short?(in Value value) => value.AsInt16OrNull();
-        public static implicit operator ushort?(in Value value) => value.AsUInt16OrNull();
-        public static implicit operator int?(in Value value) => value.AsInt32OrNull();
-        public static implicit operator uint?(in Value value) => value.AsUInt32OrNull();
-        public static implicit operator long?(in Value value) => value.AsInt64OrNull();
-        public static implicit operator ulong?(in Value value) => value.AsUInt64OrNull();
+        public static implicit operator byte?(in Value value) => value.Int8NullValue;
+        public static implicit operator sbyte?(in Value value) => value.SInt8NullValue;
+        public static implicit operator short?(in Value value) => value.Int16NullValue;
+        public static implicit operator ushort?(in Value value) => value.UInt16NullValue;
+        public static implicit operator int?(in Value value) => value.Int32NullValue;
+        public static implicit operator uint?(in Value value) => value.UInt32NullValue;
+        public static implicit operator long?(in Value value) => value.Int64NullValue;
+        public static implicit operator ulong?(in Value value) => value.UInt64NullValue;
 
-        public static implicit operator float?(in Value value) => value.AsFloatOrNull();
-        public static implicit operator double?(in Value value) => value.AsDoubleOrNull();
-        public static implicit operator decimal?(in Value value) => value.AsDecimalOrNull();
+        public static implicit operator float?(in Value value) => value.FloatNullValue;
+        public static implicit operator double?(in Value value) => value.DoubleNullValue;
+        public static implicit operator decimal?(in Value value) => value.DecimalNullValue;
     }
 }
