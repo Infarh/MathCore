@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.44.7</Version>
+    <Version>0.0.44.8</Version>
     <PackageReleaseNotes>
       Коррекция работы CSV-парсера
       Автоматическая конвертация строк
