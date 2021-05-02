@@ -28,18 +28,8 @@ namespace ConsoleTest
         {
             var ff = new FileInfo(@"C:\Users\shmac\src\ГСС\RRJ\Data\Airports\Airports\Data\airports.csv");
 
-            var first = ff.OpenCSV().WithHeader().WithEoL(" ").Skip(5).First();
+            var first = ff.OpenCSV().WithHeader().GetHeader();
 
-            string str;
-            using (var f = ff.OpenText())
-            {
-                f.BaseStream.Position = first.StartPos;
-                var cc = new char[(int)(first.EndPos - first.StartPos)];
-                f.Read(cc.AsSpan());
-                str = new string(cc);
-            }
-
-            Console.ReadLine();
 
             //var date_time = DateTime.Now;
             //var time = date_time.TimeOfDay;
