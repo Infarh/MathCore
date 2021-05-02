@@ -141,6 +141,8 @@ namespace MathCore.CSV
         /* ------------------------------------------------------------------------------------------------------------- */
 
         public static implicit operator string(in Value value) => value.StringValue;
+        public static implicit operator bool(in Value value) => value.BoolValue;
+        public static implicit operator bool?(in Value value) => value.AsBoolOrNull();
 
         public static implicit operator byte(in Value value) => value.Int8Value;
         public static implicit operator sbyte(in Value value) => value.SInt8Value;
@@ -154,5 +156,18 @@ namespace MathCore.CSV
         public static implicit operator float(in Value value) => value.FloatValue;
         public static implicit operator double(in Value value) => value.DoubleValue;
         public static implicit operator decimal(in Value value) => value.DecimalValue;
+
+        public static implicit operator byte?(in Value value) => value.AsInt8OrNull();
+        public static implicit operator sbyte?(in Value value) => value.AsSInt8OrNull();
+        public static implicit operator short?(in Value value) => value.AsInt16OrNull();
+        public static implicit operator ushort?(in Value value) => value.AsUInt16OrNull();
+        public static implicit operator int?(in Value value) => value.AsInt32OrNull();
+        public static implicit operator uint?(in Value value) => value.AsUInt32OrNull();
+        public static implicit operator long?(in Value value) => value.AsInt64OrNull();
+        public static implicit operator ulong?(in Value value) => value.AsUInt64OrNull();
+
+        public static implicit operator float?(in Value value) => value.AsFloatOrNull();
+        public static implicit operator double?(in Value value) => value.AsDoubleOrNull();
+        public static implicit operator decimal?(in Value value) => value.AsDecimalOrNull();
     }
 }

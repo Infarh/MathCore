@@ -10,7 +10,7 @@ using MathCore.Annotations;
 namespace MathCore.CSV
 {
     /// <summary>Строка данных</summary>
-    public readonly struct CSVQueryRow : IEnumerable<(string Header, string Value)>
+    public readonly struct CSVQueryRow : IEnumerable<KeyValuePair<string, string>>
     {
         /// <summary>Массив элементов данных строки</summary>
         private readonly string[] _Items;
@@ -109,10 +109,10 @@ namespace MathCore.CSV
             return _Header.ToDictionary(h => h.Key, h => values[h.Value]);
         }
 
-        public IEnumerator<(string Header, string Value)> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
             foreach (var (header, index) in _Header.OrderBy(h => h.Value).ThenBy(h => h.Key))
-                yield return (header, _Items[index]);
+                yield return new(header, _Items[index]);
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

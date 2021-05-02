@@ -201,16 +201,21 @@ namespace MathCore.CSV
                 throw new FormatException("Неожиданный конец потока");
 
             char[] separator = { Separator };
-            var header_line = reader.ReadLine();
+            var line = reader.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(header_line))
+            if (string.IsNullOrWhiteSpace(line))
                 throw new FormatException("Пустая строка заголовка");
 
             var header = MergeWithDefault && Headers != null
                 ? new SortedList<string, int>(Headers)
                 : new SortedList<string, int>();
 
-            var headers = header_line.Split(separator);
+            var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
+            var headers = splitter
+               .Matches(line)
+               .Cast<Match>()
+               .ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
+
             for (var i = 0; i < headers.Length; i++)
                 header[headers[i]] = i;
 
