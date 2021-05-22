@@ -7,12 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.44.8</Version>
+    <Version>0.0.45</Version>
     <PackageReleaseNotes>
-      Коррекция работы CSV-парсера
-      Автоматическая конвертация строк
-      Методы преобразования строк
-      Упрощения присвоения значений для CSV запросов в моделях
+      Парсер аргументов командной строки
     </PackageReleaseNotes>
   </PropertyGroup>
 
