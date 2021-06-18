@@ -177,6 +177,7 @@ namespace ConsoleTest
             _Pointer = Marshal.AllocHGlobal(length);
         }
 
+        /// <inheritdoc />
         ~NativeMemoryManager()
         {
             Debug.WriteLine($"{nameof(NativeMemoryManager)} being finalized");
