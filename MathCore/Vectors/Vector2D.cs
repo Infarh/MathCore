@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+
 using MathCore.Annotations;
 
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -13,6 +14,10 @@ namespace MathCore.Vectors
     [TypeConverter(typeof(Vector2DConverter))]
     public readonly struct Vector2D : IEquatable<Vector2D>, ICloneable<Vector2D>
     {
+        public static readonly Vector2D Zero = new();
+
+        public static readonly Vector2D NaN = new(double.NaN, double.NaN);
+
         /// <summary>Координата X</summary>
         private readonly double _X;
 

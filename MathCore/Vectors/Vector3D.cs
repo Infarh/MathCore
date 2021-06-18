@@ -15,6 +15,11 @@ namespace MathCore.Vectors
     [TypeConverter(typeof(Vector3DConverter))]
     public readonly partial struct Vector3D : IEquatable<Vector3D>, ICloneable<Vector3D>, IFormattable
     {
+
+        public static readonly Vector3D Zero = new();
+
+        public static readonly Vector3D NaN = new(double.NaN, double.NaN, double.NaN);
+
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Создать вектор по сферической системе координат</summary>

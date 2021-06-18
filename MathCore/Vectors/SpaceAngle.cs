@@ -17,6 +17,10 @@ namespace MathCore.Vectors
     [TypeConverter(typeof(SpaceAngleConverter))]
     public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     {
+        public static readonly SpaceAngle Zero = new ();
+
+        public static readonly SpaceAngle NaN = new (double.NaN, double.NaN);
+
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Константа преобразования угла в радианах в градусы</summary>
