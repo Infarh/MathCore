@@ -220,7 +220,14 @@ namespace MathCore
         /// <returns>Комплексное число в алгебраической форме записи</returns>
         public static Complex Mod(in Complex Re, double Im) => new(Re.Re, Re.Im + Im);
 
+        /// <summary>Действительное число</summary>
+        /// <param name="re">Значение действительной части числа</param>
+        /// <returns>Комплексное число Re + j0</returns>
         public static Complex ReValue(double re) => new(re);
+
+        /// <summary>Мнимое число</summary>
+        /// <param name="im">Значение мнимой части числа</param>
+        /// <returns>Комплексное число 0 + jIm</returns>
         public static Complex ImValue(double im) => new(0, im);
 
         /// <summary>Действительное "комплексное" число</summary>
@@ -231,6 +238,9 @@ namespace MathCore
 
         /// <summary>Мнимая единица</summary>
         public static readonly Complex i = new(0, 1);
+
+        /// <summary>Ноль</summary>
+        public static readonly Complex Zero = new();
 
         /// <summary>Создать массив комплексных чисел</summary>
         /// <param name="Re">Массив действительных чисел</param>
