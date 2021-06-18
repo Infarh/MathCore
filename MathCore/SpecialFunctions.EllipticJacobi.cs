@@ -36,12 +36,26 @@ namespace MathCore
                 return kk.ToArray();
             }
 
-            private static double CalculateEllipticIntegral(double[] kk) => kk.Aggregate(PI / 2, (K, k) => K * (1 + k));
+            private static IEnumerable<double> EnumKValues(double k)
+            {
+                if (k < 0) throw new ArgumentOutOfRangeException(nameof(k), k, "Значение параметра k меньше 0!");
+                if (k > 1) throw new ArgumentOutOfRangeException(nameof(k), k, "Значение параметра k больше 1!");
+
+                var ki = k;
+                do
+                {
+                    k = ki;
+                    ki = GetKi(k);
+                    yield return ki;
+                } while (Abs(ki - k) > 0);
+            }
+
+            private static double CalculateEllipticIntegral(IEnumerable<double> kk) => kk.Aggregate(PI / 2, (K, k) => K * (1 + k));
 
             /// <summary>Полный эллиптический интеграл</summary>
             /// <param name="k">Параметр интегрирования от 0 до 1</param>
             /// <returns>Значение полного эллиптического интеграла</returns>
-            public static double FullEllipticIntegral(double k) => CalculateEllipticIntegral(GetKValues(k));
+            public static double FullEllipticIntegral(double k) => CalculateEllipticIntegral(EnumKValues(k));
 
             /// <summary>Полный комплиментарного эллиптический интеграл</summary>
             /// <param name="k">Параметр интегрирования от 0 до 1</param>

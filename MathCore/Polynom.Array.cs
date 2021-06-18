@@ -201,8 +201,6 @@ namespace MathCore
             /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при обратных степенях</returns>
-
-
             public static Complex[] GetCoefficientsInverted(params Complex[] Root)
             {
                 if (Root is null)

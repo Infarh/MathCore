@@ -220,7 +220,14 @@ namespace MathCore
         /// <returns>Комплексное число в алгебраической форме записи</returns>
         public static Complex Mod(in Complex Re, double Im) => new(Re.Re, Re.Im + Im);
 
+        /// <summary>Действительное число</summary>
+        /// <param name="re">Значение действительной части числа</param>
+        /// <returns>Комплексное число Re + j0</returns>
         public static Complex ReValue(double re) => new(re);
+
+        /// <summary>Мнимое число</summary>
+        /// <param name="im">Значение мнимой части числа</param>
+        /// <returns>Комплексное число 0 + jIm</returns>
         public static Complex ImValue(double im) => new(0, im);
 
         /// <summary>Действительное "комплексное" число</summary>
@@ -231,6 +238,9 @@ namespace MathCore
 
         /// <summary>Мнимая единица</summary>
         public static readonly Complex i = new(0, 1);
+
+        /// <summary>Ноль</summary>
+        public static readonly Complex Zero = new();
 
         /// <summary>Создать массив комплексных чисел</summary>
         /// <param name="Re">Массив действительных чисел</param>
@@ -361,6 +371,16 @@ namespace MathCore
             if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
             var re = Re.ToString(Format);
             var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(Format) : string.Empty)}i";
+            if (Im < 0) im = $"-{im}";
+            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
+        }
+
+        [DST]
+        public string ToString(IFormatProvider FormatProvider)
+        {
+            if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
+            var re = Re.ToString(FormatProvider);
+            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(FormatProvider) : string.Empty)}i";
             if (Im < 0) im = $"-{im}";
             return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
         }
@@ -559,20 +579,24 @@ namespace MathCore
         /// <summary>Округление числа</summary>
         /// <param name="DigitsCount">Число разрядов</param>
         /// <returns>Округлённое число</returns>
+        [DST]
         public Complex Round(int DigitsCount = 0) => new(Math.Round(_Re, DigitsCount), Math.Round(_Im, DigitsCount));
 
         /// <summary>Вычисление квадратного корня числа</summary>
         /// <returns>Квадратный корень числа</returns>
+        [DST]
         public Complex Sqrt() => this ^ 0.5;
 
         /// <summary>Вычисление корня комплексной степени</summary>
         /// <param name="z">Комплексная степень корня</param>
         /// <returns>Комплексный результат вычисления корня комплексной степени от комплексного числа</returns>
+        [DST]
         public static Complex Sqrt(in Complex z) => z.Sqrt();
 
         /// <summary>Вычисление корня действительной степени</summary>
         /// <param name="x">Действительная степень корня</param>
         /// <returns>Комплексный результат вычисления корня действительной степени от комплексного числа</returns>
+        [DST]
         public static Complex Sqrt(double x) => x >= 0 ? new Complex(Math.Sqrt(x)) : new Complex(0, Math.Sqrt(-x));
     }
 }

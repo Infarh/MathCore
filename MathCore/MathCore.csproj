@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.45</Version>
+    <Version>0.0.46</Version>
     <PackageReleaseNotes>
-      Парсер аргументов командной строки
+      Мелкие исправления
     </PackageReleaseNotes>
   </PropertyGroup>
 
