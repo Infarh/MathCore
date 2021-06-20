@@ -18,29 +18,23 @@ namespace MathCore.Vectors
                 return base.ConvertFrom(Context, Info, value);
 
             //Убираем все начальные и конечные скобки, ковычки и апострофы
-            while(ss[0] == '{' && ss[ss.Length - 1] == '}')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '[' && ss[ss.Length - 1] == ']')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '(' && ss[ss.Length - 1] == ')')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '\'' && ss[ss.Length - 1] == '\'')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '"' && ss[ss.Length - 1] == '"')
-                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '{' && ss[^1] == '}') ss = ss[1..^1];
+            while(ss[0] == '[' && ss[^1] == ']') ss = ss[1..^1];
+            while(ss[0] == '(' && ss[^1] == ')') ss = ss[1..^1];
+            while(ss[0] == '\'' && ss[^1] == '\'') ss = ss[1..^1];
+            while(ss[0] == '"' && ss[^1] == '"') ss = ss[1..^1];
 
-            ss = ss.Replace(" ", string.Empty);
-            var V = ss.Split(',', ';');
+            var values = ss.Replace(" ", string.Empty).Split(',', ';');
 
             var theta = 0d;
             var phi = 0d;
             bool th_set = false, ph_set = false;
             var type = AngleType.Deg;
-            for(var i = 0; i < V.Length; i++)
+            for(var i = 0; i < values.Length; i++)
             {
-                var v = V[i].Split('=');
+                var v = values[i].Split('=');
                 var name_str = v[0];
-                var value_str = v[v.Length - 1];
+                var value_str = v[^1];
                 if(value_str.IsNullOrWhiteSpace()) continue;
                 if(name_str.Equals("type", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -48,20 +42,20 @@ namespace MathCore.Vectors
                         type = AngleType.Rad;
                     continue;
                 }
-                else
-                    switch(name_str.ToLower()[0])
-                    {
-                        case 't':
-                            double.TryParse(value_str, out theta);
-                            th_set = true;
-                            continue;
-                        case 'p':
-                            double.TryParse(value_str, out phi);
-                            ph_set = true;
-                            continue;
-                    }
 
-                var vv = V[i].AsDouble();
+                switch(name_str.ToLower()[0])
+                {
+                    case 't':
+                        double.TryParse(value_str, out theta);
+                        th_set = true;
+                        continue;
+                    case 'p':
+                        double.TryParse(value_str, out phi);
+                        ph_set = true;
+                        continue;
+                }
+
+                var vv = values[i].AsDouble();
                 if(vv is null) continue;
                 if(!th_set)
                 {
