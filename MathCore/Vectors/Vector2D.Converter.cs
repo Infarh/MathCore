@@ -20,25 +20,15 @@ namespace MathCore.Vectors
                 return base.ConvertFrom(Context, Info, value);
 
             //Убираем все начальные и конечные скобки, ковычки и апострофы
-            while(ss[0] == '{' && ss[ss.Length - 1] == '}')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '[' && ss[ss.Length - 1] == ']')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '(' && ss[ss.Length - 1] == ')')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '\'' && ss[ss.Length - 1] == '\'')
-                ss = ss.Substring(1, ss.Length - 2);
-            while(ss[0] == '"' && ss[ss.Length - 1] == '"')
-                ss = ss.Substring(1, ss.Length - 2);
+            while(ss[0] == '{' && ss[^1] == '}') ss = ss[1..^1];
+            while(ss[0] == '[' && ss[^1] == ']') ss = ss[1..^1];
+            while(ss[0] == '(' && ss[^1] == ')') ss = ss[1..^1];
+            while(ss[0] == '\'' && ss[^1] == '\'') ss = ss[1..^1];
+            while(ss[0] == '"' && ss[^1] == '"') ss = ss[1..^1];
 
-            ss = ss.Replace(" ", string.Empty);
-
-            var val = ss.Split(';', ':', '|').ConvertTo(s => double.Parse(s));
-
-            if(val.Length != 2)
-                throw new ArgumentNullException(nameof(value));
-
-            return new Vector2D(val[0], val[1]);
+            return ss.Replace(" ", string.Empty).Split(';', ':', '|').ConvertTo(double.Parse) is { Length: 2 } val
+                ? new Vector2D(val[0], val[1]) 
+                : throw new ArgumentNullException(nameof(value));
         }
     }
 }
