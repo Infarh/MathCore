@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.47</Version>
+    <Version>0.0.48</Version>
     <PackageReleaseNotes>
-      Исправление поведения механизма чтения числовых данных из потока CSV - обрезка пробелов и кавычек в начале и конце строк
+      Методы усреднения перечислений векторов
     </PackageReleaseNotes>
   </PropertyGroup>
 
