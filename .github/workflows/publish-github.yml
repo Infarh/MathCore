@@ -15,7 +15,7 @@ jobs:
     steps:
       
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -24,11 +24,11 @@ jobs:
         
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj --nologo
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+          dotnet build MathCore/MathCore.csproj -c Release --nologo
+          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj -c Release --nologo
         
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo --no-restore
+        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj -c Release --nologo --no-build
         
       - name: Packing
         run: dotnet pack MathCore/MathCore.csproj -c Release -v m          
