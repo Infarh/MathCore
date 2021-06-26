@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.48</Version>
+    <Version>0.0.49</Version>
     <PackageReleaseNotes>
-      Методы усреднения перечислений векторов
+      Новый алгоритм расчёта биномиальных коэффициентов в том числе с помощью BigInt и без факториалов
     </PackageReleaseNotes>
   </PropertyGroup>
 

@@ -1,16 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
 
 using MathCore;
-using MathCore.CSV;
-using MathCore.Statistic;
-using MathCore.Statistic.RandomNumbers;
-
-using Microsoft.Data.Analysis;
 
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable DoubleEquals
@@ -19,35 +11,45 @@ namespace ConsoleTest
 {
     internal static class Program
     {
-        private static RecursionResult<BigInteger> Factorial(int n, BigInteger product) => 
-            n < 2 
-                ? TailRecursion.Return(product) 
+        private static RecursionResult<BigInteger> Factorial(int n, BigInteger product) =>
+            n < 2
+                ? TailRecursion.Return(product)
                 : TailRecursion.Next(() => Factorial(n - 1, n * product));
 
         private static void Main()
         {
-            var ff = new FileInfo(@"C:\Users\shmac\src\ГСС\RRJ\Data\Airports\Airports\Data\airports.csv");
+            ulong n = 68;
+            ulong k = 34;
 
-            var first = ff.OpenCSV().WithHeader().GetHeader();
+            var r = SpecialFunctions.BinomialCoefficientBigInt(n, k);
+
+            if (k > n / 2) k = n - k;
+
+            var b = SpecialFunctions.BinomialCoefficient(n, k);
+            //var b = SpecialFunctions.BCR((int)n, (int)k);
+            //var vv = SpecialFunctions.BCRCache.OrderBy(v => v.Key).ThenBy(v => v.Value).ToArray();
+            // n! / (k!*(n-k)!)
 
 
-            //var date_time = DateTime.Now;
-            //var time = date_time.TimeOfDay;
-            //var day = date_time.Date;
+            var nn = 1ul;
+            var kk = 1ul;
+            var i = 0ul;
+            while (i < k)
+            {
+                var n0 = n - i;
+                i++;
+                var k0 = i;
 
-            //var result = TailRecursion.Execute(() => Factorial(8, 1));
-            //var v = (long)result;
-            //var s = result.ToString();
-            //var len = s.Length;
+                if (!Fraction.Simplify(ref nn, ref k0) || k0 > 1) kk *= k0;
+                Fraction.Simplify(ref n0, ref kk);
 
-            var a_ch = 'a';
-            var n_ch = 'n';
+                nn *= n0;
+            }
 
-            var a_code = (int)a_ch;
-            var n_code = (int)n_ch;
+            Console.WriteLine(nn);
+            Console.WriteLine();
 
-            var result = (char)(a_ch + n_ch);
-            Console.WriteLine(result);
+            //Console.WriteLine();
         }
     }
 

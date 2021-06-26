@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -10,13 +12,94 @@ namespace MathCore
     public readonly struct Fraction
     {
         /// <summary>Наибольшее общее кратное двух чисел</summary>
-        private static int GCD(int a, int b)
+        public static int GCD(int a, int b)
         {
+            if (a == 1 || b == 1) return 1;
             while (a != b)
+            {
+                //if (a > b)
+                //    a -= b;
+                //else
+                //    b -= a;
                 if (a > b)
-                    a -= b;
+                {
+                    a %= b;
+                    if (a == 0)
+                        return b;
+                }
                 else
-                    b -= a;
+                {
+                    b %= a;
+                    if (b == 0)
+                        return a;
+                }
+            }
+            return a;
+        }
+
+        /// <summary>Наибольшее общее кратное двух чисел</summary>
+        public static long GCD(long a, long b)
+        {
+            if (a == 1 || b == 1) return 1;
+            while (a != b)
+            {
+                if (a > b)
+                {
+                    a %= b;
+                    if (a == 0)
+                        return b;
+                }
+                else
+                {
+                    b %= a;
+                    if (b == 0)
+                        return a;
+                }
+            }
+            return a;
+        }
+
+        /// <summary>Наибольшее общее кратное двух чисел</summary>
+        public static ulong GCD(ulong a, ulong b)
+        {
+            if (a == 1 || b == 1) return 1;
+            while (a != b)
+            {
+                if (a > b)
+                {
+                    a %= b;
+                    if (a == 0)
+                        return b;
+                }
+                else
+                {
+                    b %= a;
+                    if (b == 0)
+                        return a;
+                }
+            }
+            return a;
+        }
+
+        /// <summary>Наибольшее общее кратное двух чисел</summary>
+        public static BigInt GCD(BigInt a, BigInt b)
+        {
+            if (a == 1 || b == 1) return 1;
+            while (a != b)
+            {
+                if (a > b)
+                {
+                    a %= b;
+                    if (a == 0)
+                        return b;
+                }
+                else
+                {
+                    b %= a;
+                    if (b == 0)
+                        return a;
+                }
+            }
             return a;
         }
 
@@ -24,9 +107,48 @@ namespace MathCore
         /// <param name="Numerator">Числитель</param>
         /// <param name="Denominator">Знаменатель</param>
         /// <returns>Истина, если дробь можно упростить</returns>
-        private static bool Simplify(ref int Numerator, ref int Denominator)
+        public static bool Simplify(ref int Numerator, ref int Denominator)
         {
             var gcd = GCD(Numerator, Denominator);
+            if (gcd == 1) return false;
+            Numerator /= gcd;
+            Denominator /= gcd;
+            return true;
+        }
+
+        /// <summary>Упрощение дроби</summary>
+        /// <param name="Numerator">Числитель</param>
+        /// <param name="Denominator">Знаменатель</param>
+        /// <returns>Истина, если дробь можно упростить</returns>
+        public static bool Simplify(ref long Numerator, ref long Denominator)
+        {
+            var gcd = GCD(Numerator, Denominator);
+            if (gcd == 1) return false;
+            Numerator /= gcd;
+            Denominator /= gcd;
+            return true;
+        }
+
+        /// <summary>Упрощение дроби</summary>
+        /// <param name="Numerator">Числитель</param>
+        /// <param name="Denominator">Знаменатель</param>
+        /// <returns>Истина, если дробь можно упростить</returns>
+        public static bool Simplify(ref ulong Numerator, ref ulong Denominator)
+        {
+            var gcd = GCD(Numerator, Denominator);
+            if (gcd == 1) return false;
+            Numerator /= gcd;
+            Denominator /= gcd;
+            return true;
+        }
+
+        /// <summary>Упрощение дроби</summary>
+        /// <param name="Numerator">Числитель</param>
+        /// <param name="Denominator">Знаменатель</param>
+        /// <returns>Истина, если дробь можно упростить</returns>
+        public static bool Simplify(ref BigInt Numerator, ref BigInt Denominator)
+        {
+            var gcd = Numerator.Gcd(Denominator);
             if (gcd == 1) return false;
             Numerator /= gcd;
             Denominator /= gcd;
