@@ -18,6 +18,13 @@ namespace ConsoleTest
 
         private static void Main()
         {
+            const int count = 1000;
+            var items = Enumerable.Range(1, count).ToArray();
+
+            var rnd = new Random();
+
+            var r2 = items.Shuffle(rnd).ToArray();
+
             ulong n = 68;
             ulong k = 34;
 
