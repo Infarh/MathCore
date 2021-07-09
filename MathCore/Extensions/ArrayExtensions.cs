@@ -3,7 +3,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable UnusedMember.Global
@@ -16,6 +18,29 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
+        /// <summary>Перемешать элементы массива</summary>
+        /// <typeparam name="T">Тип элементов массива</typeparam>
+        /// <param name="items">Перемешиваемый массив</param>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <returns>Перечисление элементов массива в случайном порядке без повторений</returns>
+        public static IEnumerable<T> Shuffle<T>(this T[] items, Random rnd = null)
+        {
+            if (items.Length is not (> 0 and var length))
+                yield break;
+            rnd ??= new Random();
+            var index = new int[length];
+            for (var i = 0; i < length; i++)
+            {
+                var j = rnd.Next(i, length);
+                yield return index[j] > 0 
+                    ? items[index[j] - 1] 
+                    : items[j];
+                index[j] = index[i] > 0
+                    ? index[i]
+                    : i + 1;
+            }
+        }
+
         /// <summary>Деконструктор двумерного массива на размеры по первому и второму измерению</summary>
         /// <param name="array">Деконструируемый массив</param>
         /// <param name="N">Число строк (первое измерение)</param>
@@ -1063,7 +1088,7 @@ namespace System
         /// <paramref name="array"/>, либо меньше 0
         /// </exception>
         [DST]
-        public static void SetRow<TArray>([NotNull] this TArray[,] array, [NotNull]  TArray[] Row, int n = 0)
+        public static void SetRow<TArray>([NotNull] this TArray[,] array, [NotNull] TArray[] Row, int n = 0)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var N = array.GetLength(0);
@@ -1971,7 +1996,7 @@ namespace System
         /// <returns>Перечисление значений, сформированное на основе элементов двумерного массива</returns>
         [DST, NotNull]
         public static IEnumerable<TValue> Select<TItem, TValue>(
-            [NotNull] this TItem[,] array, 
+            [NotNull] this TItem[,] array,
             [NotNull] Func<TItem, TValue> selector)
         {
             var N = array.GetLength(0);
@@ -1993,7 +2018,7 @@ namespace System
         /// <returns>Перечисление значений, сформированное на основе элементов двумерного массива</returns>
         [DST, NotNull]
         public static IEnumerable<TValue> Select<TItem, TValue>(
-            [NotNull] this TItem[,] array, 
+            [NotNull] this TItem[,] array,
             [NotNull] Func<int, int, TItem, TValue> selector)
         {
             var I = array.GetLength(0);
