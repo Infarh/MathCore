@@ -56,15 +56,19 @@ namespace MathCore
         /// <returns>Биномиальный коэффициент (n, k)</returns>
         public static long BinomialCoefficient(int n, int k)
         {
-            if (n >= 0 && k > n || k <= 0) return 0;
+            if (n >= 0 && k > n || k < 0) return 0;
             if (k > n / 2) k = n - k;
-            if (k == 1) return n;
-
-            if (n < 0) return BinomialCoefficient(-n + k - 1, k) * (k.IsOdd() ? -1 : 1);
-
-            if (n > 20)
-                return (long)(n.FactorialBigInt() / (k.FactorialBigInt() * (n - k).FactorialBigInt()));
-            return n.Factorial() / (k.Factorial() * (n - k).Factorial());
+            return k switch
+            {
+                0 => 1,
+                1 => n,
+                _ => n switch
+                {
+                    < 0 => BinomialCoefficient(-n + k - 1, k) * (k.IsOdd() ? -1 : 1),
+                    > 20 => (long)(n.FactorialBigInt() / (k.FactorialBigInt() * (n - k).FactorialBigInt())),
+                    _ => n.Factorial() / (k.Factorial() * (n - k).Factorial())
+                }
+            };
         }
 
         /// <summary>Биномиальный коэффициент</summary>
@@ -73,8 +77,9 @@ namespace MathCore
         /// <returns>Биномиальный коэффициент (n, k)</returns>
         public static ulong BinomialCoefficient(ulong n, ulong k)
         {
-            if (k > n || k == 0) return 0;
+            if (k > n) return 0;
             if (k > n / 2) k = n - k;
+            if (k == 0) return 1;
             if (k == 1) return n;
 
             var nn = 1ul;
@@ -101,8 +106,9 @@ namespace MathCore
         /// <returns>Биномиальный коэффициент (n, k)</returns>
         public static BigInt BinomialCoefficientBigInt(ulong n, ulong k)
         {
-            if (k > n || k == 0) return 0;
+            if (k > n) return 0;
             if (k > n / 2) k = n - k;
+            if (k == 0) return 1;
             if (k == 1) return n;
 
             BigInt nn = 1ul;
