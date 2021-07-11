@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.50.1</Version>
+    <Version>0.0.51</Version>
     <PackageReleaseNotes>
-      Добавлен способ децимации вызовов в информаторе проегресса IProgress по времени и числу вызовов
-      Исправление Биномиальных коэффициентов
+      Добавлен процессор преобразования шаблонов строк PatternString
     </PackageReleaseNotes>
   </PropertyGroup>
 
