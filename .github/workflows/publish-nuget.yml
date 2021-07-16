@@ -21,14 +21,14 @@ jobs:
 
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj -c Release --nologo
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj -c Release --nologo
+          dotnet build MathCore -c Release --nologo
+          dotnet build Tests/MathCore.Tests -c Release --nologo
 
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj -c Release --no-build --nologo
+        run: dotnet test Tests/MathCore.Tests -c Release --no-build --nologo
 
       - name: Packing
-        run: dotnet pack MathCore/MathCore.csproj -c Release --no-build -v m
+        run: dotnet pack MathCore -c Release --no-build -v m
          
       - name: Publishing
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.NuGetApiKey }} --skip-duplicate -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetApiKey }} --skip-duplicate -s https://api.nuget.org/v3/index.json
