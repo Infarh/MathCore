@@ -20,6 +20,7 @@ using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable InvertIf
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
+// ReSharper disable InconsistentNaming
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq
@@ -32,7 +33,7 @@ namespace System.Linq
         /// <typeparam name="T">Тип элемента последовательности</typeparam>
         /// <param name="items">Последовательность элементов, для которой надо создать хеш-таблицу</param>
         /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
-        [NN] public static HashSet<T> ToHashSet<T>([NN] this IEnumerable<T> items) => new(items);
+        [NN] public static HashSet<T> GetHashSet<T>([NN] this IEnumerable<T> items) => new(items);
 
         /// <summary>Перечисление без повторений значений, определяемых лямбда-выражением</summary>
         /// <typeparam name="T">Тип перечисляемых объектов</typeparam>
