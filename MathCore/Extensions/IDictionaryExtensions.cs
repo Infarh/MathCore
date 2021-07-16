@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using MathCore;
 using MathCore.Annotations;
@@ -400,5 +402,24 @@ namespace System.Collections.Generic
             dictionary.Add(key, value);
             return true;
         }
+
+        /// <summary>Преобразование словаря значений в строку по заданному шаблону</summary>
+        /// <typeparam name="TValue">Тип значений словаря</typeparam>
+        /// <param name="dictionary">Словарь с данными для заполнения шаблона</param>
+        /// <param name="Pattern">Шаблон строки</param>
+        /// <param name="FormatProvider">Формат</param>
+        /// <returns>Строка по заданному шаблону</returns>
+        public static string ToPatternString<TValue>(this IDictionary<string, TValue> dictionary, string Pattern, IFormatProvider FormatProvider = null) =>
+            dictionary is null 
+                ? throw new ArgumentNullException(nameof(dictionary)) 
+                : Regex.Replace(
+                    Pattern ?? throw new ArgumentNullException(nameof(Pattern)),
+                    @"{(?<name>\w+)(?::(?<format>.+?))}",
+                    Match => !dictionary.TryGetValue(Match.Groups["name"].Value, out var value)
+                        ? Match.Value
+                        : value is IFormattable formattable_value && Match.Groups["format"].Success
+                            ? formattable_value.ToString(Match.Groups["format"].Value, FormatProvider ?? CultureInfo.CurrentCulture)
+                            : value?.ToString()
+            );
     }
 }

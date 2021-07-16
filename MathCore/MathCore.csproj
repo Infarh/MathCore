@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.51</Version>
+    <Version>0.0.52</Version>
     <PackageReleaseNotes>
-      Добавлен процессор преобразования шаблонов строк PatternString
+      Метод ToHashSet переименован в метод GetHashSet для устранения конфликта имён в .NET5
     </PackageReleaseNotes>
   </PropertyGroup>
 
