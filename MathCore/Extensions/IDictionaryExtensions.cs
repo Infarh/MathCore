@@ -414,7 +414,7 @@ namespace System.Collections.Generic
                 ? throw new ArgumentNullException(nameof(dictionary)) 
                 : Regex.Replace(
                     Pattern ?? throw new ArgumentNullException(nameof(Pattern)),
-                    @"{(?<name>\w+)(?::(?<format>.+?))}",
+                    @"{(?<name>\w+)(?::(?<format>.+?))?}",
                     Match => !dictionary.TryGetValue(Match.Groups["name"].Value, out var value)
                         ? Match.Value
                         : value is IFormattable formattable_value && Match.Groups["format"].Success
