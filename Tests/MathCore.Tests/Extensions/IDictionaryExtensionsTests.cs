@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -210,6 +211,30 @@ namespace MathCore.Tests.Extensions
                 .Initialize(10, i => new KeyValuePair<int, string>(i, i.ToString()));
             dictionary.RemoveWhere(kv => kv.Key % 2 != 0);
             Assert.IsFalse(dictionary.Any(kv => kv.Key % 2 != 0));
+        }
+
+        [TestMethod]
+        public void ToPatternString_Test()
+        {
+            const string pattern_string = "{var1:000}-{var2:f3}[{date:yy-MM-ddTHH-mm-ss}].{str}";
+            const int var1 = 10;
+            const double var2 = Math.PI;
+            var date = DateTime.Now;
+            const string str = "Hello!";
+
+            var expected_string = $"{var1:000}-{var2:f3}[{date:yy-MM-ddTHH-mm-ss}].{str}";
+
+            var dict = new Dictionary<string, object>
+            {
+                { "var1", var1 },
+                { "var2", var2 },
+                { "date", date },
+                { "str", str }
+            };
+
+            var actual_string = dict.ToPatternString(pattern_string);
+
+            Assert.That.Value(actual_string).IsEqual(expected_string);
         }
     }
 }
