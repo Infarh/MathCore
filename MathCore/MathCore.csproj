@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.52.1</Version>
+    <Version>0.0.53</Version>
     <PackageReleaseNotes>
-      Метод ToHashSet переименован в метод GetHashSet для устранения конфликта имён в .NET5
+      SelectableCollection, ObservableHashSet
     </PackageReleaseNotes>
   </PropertyGroup>
 
