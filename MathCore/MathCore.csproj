@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.53</Version>
+    <Version>0.0.54</Version>
     <PackageReleaseNotes>
-      SelectableCollection, ObservableHashSet
+      Добавлена возможноость пропуска событий в модели-представления с помощью PropertyChangedEventsSuppressor
     </PackageReleaseNotes>
   </PropertyGroup>
 

@@ -253,6 +253,13 @@ namespace MathCore.ViewModels
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([NotNull, CallerMemberName] string PropertyName = null)
         {
+            if (PropertyName is null) return; // Если имя свойства не указано, то выход
+            if (_PropertyChangedEventsSuppressor != null)
+            {
+                _PropertyChangedEventsSuppressor.RegisterEvent(PropertyName);
+                return;
+            }
+
             var handlers = PropertyChangedEvent;
             handlers.Start(this, PropertyName);
             if (PropertyName is null) return;
@@ -286,6 +293,14 @@ namespace MathCore.ViewModels
                 OnPropertyChanged(PropertyName);
                 return;
             }
+
+            if (PropertyName is null) return; // Если имя свойства не указано, то выход
+            if (_PropertyChangedEventsSuppressor != null)
+            {
+                _PropertyChangedEventsSuppressor.RegisterEvent(PropertyName);
+                return;
+            }
+
             var now = DateTime.Now;
             if (_PropertyAsyncInvokeTime.TryGetValue(PropertyName, out var last_call_time) && (now - last_call_time).TotalMilliseconds < Timeout)
             {
