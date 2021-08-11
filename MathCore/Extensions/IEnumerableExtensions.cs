@@ -345,7 +345,7 @@ namespace System.Linq
                 index++;
                 if (Equals(element, item)) return index;
             }
-            return index;
+            return -1;
         }
 
         /// <summary>Индекс последнего найденного элемента</summary>
