@@ -717,14 +717,14 @@ namespace MathCore
         /// <param name="X">Приводимое число</param>
         /// <returns>Матрица порядка 1х1</returns>
         [NotNull]
-        public static implicit operator MatrixLong(long X) => new MatrixLong(1, 1) { [0, 0] = X };
+        public static implicit operator MatrixLong(long X) => new(1, 1) { [0, 0] = X };
 
         [NotNull] public static explicit operator long[,]([NotNull] MatrixLong M) => (long[,])M._Data.Clone();
 
         //[CLSCompliant(false)]
-        [NotNull] public static explicit operator MatrixLong([NotNull] long[,] Data) => new MatrixLong(Data);
+        [NotNull] public static explicit operator MatrixLong([NotNull] long[,] Data) => new(Data);
 
-        [NotNull] public static explicit operator MatrixLong([NotNull] long[] Data) => new MatrixLong(Data);
+        [NotNull] public static explicit operator MatrixLong([NotNull] long[] Data) => new(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 

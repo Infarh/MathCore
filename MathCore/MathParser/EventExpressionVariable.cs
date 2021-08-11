@@ -20,7 +20,7 @@ namespace MathCore.MathParser
         protected virtual void OnCall(EventArgs<double> Args) => Call?.Invoke(this, Args);
 
         /// <summary>Аргумент события</summary>
-        private readonly EventArgs<double> _EventArg = new EventArgs<double>(0);
+        private readonly EventArgs<double> _EventArg = new(0);
 
         /// <summary>Флаг предварительной очистки значения аргумента события</summary>
         private bool _ClearAtCall;

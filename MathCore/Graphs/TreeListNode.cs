@@ -353,6 +353,6 @@ namespace MathCore.Graphs
 
         public static implicit operator TValue([NotNull] TreeListNode<TValue> Node) => Node.Value;
         [NotNull]
-        public static implicit operator TreeListNode<TValue>(TValue Value) => new TreeListNode<TValue>(Value);
+        public static implicit operator TreeListNode<TValue>(TValue Value) => new(Value);
     }
 }

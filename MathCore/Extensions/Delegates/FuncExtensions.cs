@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+
 using MathCore;
 using MathCore.Annotations;
 using MathCore.DifferentialEquations.Numerical;
@@ -95,8 +97,7 @@ namespace System
             double x0,
             int MaxIterations,
             double Eps = 1e-5
-        ) =>
-            Task.Factory.StartNew(() => f.GetRoot_NewtonsMethod(df, x0, MaxIterations, Eps));
+        ) => Task.Run(() => f.GetRoot_NewtonsMethod(df, x0, MaxIterations, Eps));
 
         /// <summary> Поиск нуля функции методом бисекции</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -293,7 +294,7 @@ namespace System
             double x2,
             int MaxIterations,
             double Eps = 0.0001
-        ) => Task.Factory.StartNew(() => f.GetRoot_FalsePositionMethod(x1, x2, MaxIterations, Eps));
+        ) => Task.Run(() => f.GetRoot_FalsePositionMethod(x1, x2, MaxIterations, Eps));
 
         /// <summary> Поиск нуля функции методом хорд</summary>
         /// <param name="f">Исследуемая функция</param>
@@ -324,7 +325,7 @@ namespace System
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         [NotNull]
         public static Task<double> GetRoot_MethodOfChordsAsync([NotNull] this Function f, double x1, double x2, double Eps = 0.0001) =>
-            Task.Factory.StartNew(() => f.GetRoot_MethodOfChords(x1, x2, Eps));
+            Task.Run(() => f.GetRoot_MethodOfChords(x1, x2, Eps));
 
         /// <summary>Каррирование функции двух параметров</summary>
         /// <typeparam name="TArg1">Тип значение первого параметра функции</typeparam>
@@ -375,7 +376,7 @@ namespace System
                     ? f.ArgumentShift(b)
                     : (b.Equals(0)
                         ? (Function)(x => f(k * x))
-                        : x => f(k * x + b)));
+                        : (double x) => f(k * x + b)));
 
         /// <summary>Деление функции на число g(x) = f(x) / a</summary>
         /// <param name="f">Делимая функция</param>
@@ -391,7 +392,7 @@ namespace System
                 ? f
                 : (a.Equals(0)
                     ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN))
-                    : x => f(x) / a);
+                    : (double x) => f(x) / a);
 
         /// <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
         /// <param name="f1">Функция - делимое</param>
@@ -780,7 +781,7 @@ namespace System
             double x1,
             double x2,
             int N = 2,
-            double Eps = 0.000001
+            double Eps = 1e-6
         )
         {
             if (x1.Equals(x2)) return 0;
@@ -792,6 +793,39 @@ namespace System
             var t1 = f.GetIntegralValue_AdaptiveAsync(x1, .5 * (x1 + x2), N, Eps);
             var t2 = f.GetIntegralValue_AdaptiveAsync(.5 * (x1 + x2), x2, N, Eps);
             return (await Task.WhenAll(t1, t2).ConfigureAwait(false)).Sum();
+        }
+
+        public static double GetIntegralValue_AdaptiveTrap(
+            this Function f,
+            double x1,
+            double x2,
+            double Eps = 1e-6,
+            double K = 25)
+        {
+            var dx = x2 - x1;
+            if (dx is 0d) return 0;
+
+            var s0 = dx * (f(x1) + f(x2)) / 2;
+            var m = 1;
+            var result = 0d;
+            for (var k = 1; k < K; k++)
+            {
+                var x = x1 + dx / 2;
+                var s = 0d;
+                for (var i = 0; i < m; i++)
+                {
+                    s += f(x);
+                    x += dx;
+                }
+
+                result = (s0 + s * dx) / 2;
+                if(k > 1 && Math.Abs(result - s0) < Eps) break;
+                s0 = result;
+                m *= 2;
+                dx /= 2;
+            }
+
+            return result;
         }
 
         //public static double GetIntegralValue_InfiniteIntervals(this Function f, double x1, double x2, int N = 2, double Eps = 0.000001)
@@ -1030,7 +1064,7 @@ namespace System
             a.Equals(1d)
                 ? f
                 : (a.Equals(0d)
-                    ? (x => 1)
+                    ? ((double x) => 1)
                     : (Function)(x => Math.Pow(f(x), a)));
 
         /// <summary>Получение отрицательной функции</summary>
@@ -1081,7 +1115,7 @@ namespace System
         {
             /// <summary>Объект синхронизации потоков при доступе к параметрам интегратора</summary>
             [NotNull]
-            private readonly object _LockObject = new object();
+            private readonly object _LockObject = new();
             /// <summary>Константа интегрирования</summary>
             public double C { get; private set; }
             /// <summary>Начальное положение интегратора</summary>
@@ -1356,7 +1390,7 @@ namespace System
         /// <returns>Результат дискретизации вещественной функции</returns>
         [NotNull]
         public static SimpleSamplingResult SamplingAdaptive([NotNull] this Function f, double x1, double x2, double Eps)
-            => new SimpleSamplingResult(f, Math.Min(x1, x2), Math.Max(x1, x2), Eps);
+            => new(f, Math.Min(x1, x2), Math.Max(x1, x2), Eps);
 
         /// <summary>Адаптивный метод дискретизации функции</summary>
         /// <param name="f">Дискретизируемая функция</param>
@@ -1373,7 +1407,7 @@ namespace System
             double x1,
             double x2,
             double Eps
-        ) => new AdaptiveSamplingResult<T>(f, converter, x1, x2, Eps);
+        ) => new(f, converter, x1, x2, Eps);
 
         /// <summary>Результат адаптивной дискретизации</summary>
         /// <typeparam name="T">Тип значения дискретизируемой функции</typeparam>

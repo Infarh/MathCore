@@ -32,7 +32,7 @@ namespace MathCore.Functions.PSO
             }
         }
 
-        private static readonly Random __Random = new Random();
+        private static readonly Random __Random = new();
 
         private readonly int _ParticleCount;
 

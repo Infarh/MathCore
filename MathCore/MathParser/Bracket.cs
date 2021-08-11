@@ -10,15 +10,15 @@ namespace MathCore.MathParser
     {
         /// <summary>Круглые скобки</summary>
         [NotNull]
-        public static Bracket NewRound => new Bracket("(", ")");
+        public static Bracket NewRound => new("(", ")");
 
         /// <summary>Квадратные скобки</summary>
         [NotNull]
-        public static Bracket NewRect => new Bracket("[", "]");
+        public static Bracket NewRect => new("[", "]");
 
         /// <summary>Фигурные скобки</summary>
         [NotNull]
-        public static Bracket NewFigure => new Bracket("{", "}");
+        public static Bracket NewFigure => new("{", "}");
 
         /// <summary>Открывающая скобка</summary>
         [NotNull]
@@ -56,7 +56,7 @@ namespace MathCore.MathParser
         /// <summary>Клонирование скобок</summary>
         /// <returns>Клон скобок</returns>
         [NotNull]
-        public Bracket Clone() => new Bracket(Start, Stop);
+        public Bracket Clone() => new(Start, Stop);
 
         /// <summary>Строковое представление скобок</summary>
         /// <returns>Строковое представление</returns>

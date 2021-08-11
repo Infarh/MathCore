@@ -12,7 +12,7 @@ namespace MathCore
     public class SynchronizedQueue<T> : IDisposable
     {
         [NotNull] private readonly Queue<T> _Queue;
-        [NotNull] private readonly AutoResetEvent _Event = new AutoResetEvent(false);
+        [NotNull] private readonly AutoResetEvent _Event = new(false);
 
         // ReSharper disable once InconsistentlySynchronizedField
         public int Count => _Queue.Count;
@@ -74,7 +74,7 @@ namespace MathCore
 
     public class SynchronizedItemsProcessor<T> : IDisposable
     {
-        private readonly SynchronizedQueue<T> _Queue = new SynchronizedQueue<T>();
+        private readonly SynchronizedQueue<T> _Queue = new();
         private readonly Task[] _Tasks;
         private readonly CancellationTokenSource _Cancellation;
 

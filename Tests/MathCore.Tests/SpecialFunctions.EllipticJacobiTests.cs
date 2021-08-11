@@ -1,5 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using EllipticJacobi = MathCore.SpecialFunctions.EllipticJacobi;
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests
 {
@@ -9,12 +13,24 @@ namespace MathCore.Tests
         [TestMethod]
         public void FullEllipticIntegral_Iterative_Test()
         {
-            const double k = 0.93;
-            const double expected_K = 2.437457556775147;
+            double[] K =
+            {
+                0.93,
+                0.666667,
+                0.0028615,
+            };
 
-            var actual_K = EllipticJacobi.FullEllipticIntegral(k);
+            double[] expected_K =
+            {
+                2.437457556775147,
+                1.8097,
+                1.5708,
+            };
 
-            Assert.That.Value(actual_K).IsEqual(expected_K, 4.45e-16);
+            const double eps = 3.22e-5;
+            var actual = K.ToArray(EllipticJacobi.FullEllipticIntegral);
+            
+            Assert.That.Collection(actual).IsEqualTo(expected_K, eps);
         }
 
         [TestMethod]

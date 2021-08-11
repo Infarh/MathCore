@@ -14,7 +14,7 @@ namespace MathCore.MathParser
     {
         /// <summary>Элементы коллекции</summary>
         [NotNull]
-        private readonly List<ExpressionVariable> _Items = new List<ExpressionVariable>();
+        private readonly List<ExpressionVariable> _Items = new();
 
         /// <summary>Количество элементов коллекции</summary>
         public int Count => _Items.Count;

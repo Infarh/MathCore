@@ -10,7 +10,7 @@ namespace MathCore.Vectors
     public readonly struct Basis3D : IEquatable<Basis3D>
     {
         /// <summary>Базис Евклидова пространства</summary>
-        public static readonly Basis3D Euclid = new Basis3D(
+        public static readonly Basis3D Euclid = new(
             1, 0, 0,
             0, 1, 0,
             0, 0, 1);
@@ -21,7 +21,7 @@ namespace MathCore.Vectors
         /// <param name="kz">Коэффициент масштабирования вдоль оси OZ</param>
         /// <returns>Базис масштабирования вдоль основных осей</returns>
         public static Basis3D Scale(double kx, double ky, double kz) =>
-            new Basis3D(
+            new(
                 kx, 0, 0,
                 0, ky, 0,
                 0, 0, kz);
@@ -31,7 +31,7 @@ namespace MathCore.Vectors
         /// <param name="Positive">Направление - по часовой стрелке</param>
         /// <returns>Базис поворота вокруг оси OX</returns>
         public static Basis3D RotateOX(double Angle, bool Positive = true) =>
-            new Basis3D(
+            new(
                 1, 0, 0,
                 0, Math.Cos(Angle), (Positive ? -1 : 1) * Math.Sin(Angle),
                 0, (Positive ? 1 : -1) * Math.Sin(Angle), Math.Cos(Angle));
@@ -41,7 +41,7 @@ namespace MathCore.Vectors
         /// <param name="Positive">Направление - по часовой стрелке</param>
         /// <returns>Базис поворота вокруг оси OY</returns>
         public static Basis3D RotateOY(double Angle, bool Positive = true) =>
-            new Basis3D(
+            new(
                 Math.Cos(Angle), 0, (Positive ? -1 : 1) * Math.Sin(Angle),
                 0, 1, 0,
                 (Positive ? 1 : -1) * Math.Sin(Angle), 0, Math.Cos(Angle));
@@ -51,7 +51,7 @@ namespace MathCore.Vectors
         /// <param name="Positive">Направление - по часовой стрелке</param>
         /// <returns>Базис поворота вокруг оси OZ</returns>
         public static Basis3D RotateOZ(double Angle, bool Positive = true) =>
-            new Basis3D(
+            new(
                 Math.Cos(Angle), (Positive ? -1 : 1) * Math.Sin(Angle), 0,
                 (Positive ? 1 : -1) * Math.Sin(Angle), Math.Cos(Angle), 0,
                 0, 0, 1);
@@ -167,7 +167,7 @@ namespace MathCore.Vectors
         /// <summary>Оператор неявного преобразования базиса в матрицу 3х3</summary>
         [NotNull]
         public static implicit operator Matrix(in Basis3D b) =>
-            new Matrix(new[,]
+            new(new[,]
             {
                 { b._xx, b._xy, b._xz },
                 { b._yx, b._yy, b._yz },
@@ -176,7 +176,7 @@ namespace MathCore.Vectors
 
         /// <summary>Оператор явного преобразования матрицы 2х2 в двумерный базис</summary>
         public static explicit operator Basis3D([NotNull] Matrix M) =>
-            new Basis3D(
+            new(
                 M[0, 0], M[0, 1], M[0, 2],
                 M[1, 0], M[1, 1], M[1, 2],
                 M[2, 0], M[2, 1], M[2, 2]);

@@ -1,4 +1,6 @@
-﻿// ReSharper disable once CheckNamespace
+﻿using MathCore.Annotations;
+
+// ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive
 {
     /// <summary>Обозреваемый объект</summary>
@@ -8,6 +10,6 @@ namespace System.Linq.Reactive
         /// <summary>Метод получения наблюдателя</summary>
         /// <param name="observer">Наблюдатель объекта</param>
         /// <returns>Объект, реализующий возможность разрушения связи с наблюдаемым объектом</returns>
-        IDisposable Subscribe(IObserverEx<T> observer);
+        [NotNull] IDisposable Subscribe([NotNull] IObserverEx<T> observer);
     }
 }

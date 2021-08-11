@@ -3,6 +3,7 @@ using MathCore.Annotations;
 using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace MathCore.Evaluations
 {
@@ -33,6 +34,6 @@ namespace MathCore.Evaluations
         /// <summary>Оператор неявного преобразования типа значения в тип вычисления этого значения</summary>
         /// <param name="Value">Оборачиваемое значение</param>
         [NotNull]
-        public static implicit operator ValueEvaluation<T>(T Value) => new ValueEvaluation<T>(Value);
+        public static implicit operator ValueEvaluation<T>(T Value) => new(Value);
     }
 }

@@ -31,7 +31,7 @@ namespace MathCore.MathParser
         /// <summary>Клонирование переменной</summary>
         /// <returns>Новый экземпляр переменной с тем же именем и тем же значением</returns>
         [NotNull]
-        public virtual ExpressionVariable Clone() => new ExpressionVariable(Name) { Value = Value };
+        public virtual ExpressionVariable Clone() => new(Name) { Value = Value };
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление переменной</returns>
@@ -45,7 +45,7 @@ namespace MathCore.MathParser
         /// <returns>Безымянная переменная, хранящая указанное число</returns>
         [NotNull]
         public static implicit operator ExpressionVariable(double x) =>
-            new ExpressionVariable(string.Empty) { _Value = x };
+            new(string.Empty) { _Value = x };
 
         /// <summary>Оператор неявного привидения к типу вещественного числа</summary>
         /// <param name="variable">Приводимая переменная</param>

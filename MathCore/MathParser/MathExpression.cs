@@ -89,9 +89,9 @@ namespace MathCore.MathParser
         {
             _Name = Name;
             _Variables = new VariablesCollection(this);     // Коллекция переменных
-            _Constants = new ConstantsCollection();     // Коллекция констант
-            _Functions = new FunctionsCollection();     // Коллекция функций
-            _Functionals = new FunctionalsCollection(); // Коллекция функционалов
+            _Constants = new ConstantsCollection();         // Коллекция констант
+            _Functions = new FunctionsCollection();         // Коллекция функций
+            _Functionals = new FunctionalsCollection();     // Коллекция функционалов
         }
 
         /// <summary>Инициализация нового математического выражения</summary>
@@ -147,7 +147,7 @@ namespace MathCore.MathParser
             if (_Disposed || !disposing) return;
             _Disposed = true;
             _ExpressionTree.Dispose();
-        } 
+        }
 
         #endregion
 
@@ -233,7 +233,7 @@ namespace MathCore.MathParser
             {
                 var call = e.Argument; // Извлекаем ссылку на узел
                 //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 
-                if (!(call.Object is ConstantExpression constant && constant.Value is ExpressionVariable))
+                if (!(call.Object is ConstantExpression { Value: ExpressionVariable } constant))
                     return call; // пропускаем узел
                 //Извлекаем из узла переменную дерева
                 var v = (ExpressionVariable)((ConstantExpression)call.Object).Value;
@@ -397,7 +397,7 @@ namespace MathCore.MathParser
         /// <param name="Tree">Дерево математического выражения</param>
         /// <returns>Математическое выражение, содержащее указанное дерево</returns>
         [NotNull]
-        public static implicit operator MathExpression([NotNull] ExpressionTree Tree) => new MathExpression(Tree);
+        public static implicit operator MathExpression([NotNull] ExpressionTree Tree) => new(Tree);
 
         /// <summary>Оператор неявного приведения типов математического выражения к типу делегата функции double Func(void)</summary>
         /// <param name="expr">Математическое выражения</param>

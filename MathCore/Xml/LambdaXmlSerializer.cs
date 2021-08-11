@@ -18,7 +18,7 @@ namespace MathCore.Xml
         /// <typeparam name="T">Тип сериализуемого класса</typeparam>
         /// <param name="RootName">Имя корневого элемента (если не указано, то будет использовано имя класса)</param>
         /// <returns>Сериализатор</returns>
-        [NN] public static LambdaXmlSerializer<T> Create<T>([CN] string RootName = null) => new LambdaXmlSerializer<T>(RootName ?? typeof(T).Name);
+        [NN] public static LambdaXmlSerializer<T> Create<T>([CN] string RootName = null) => new(RootName ?? typeof(T).Name);
     }
 
     /// <summary>Настраиваемый сериализатор объектов в XML</summary>
@@ -36,10 +36,10 @@ namespace MathCore.Xml
         [CN] private readonly string _ElementName;
 
         /// <summary>Список методов формирования атрибутов элемента</summary>
-        [NN] private readonly List<Func<T, object>> _Attributes = new List<Func<T, object>>();
+        [NN] private readonly List<Func<T, object>> _Attributes = new();
 
         /// <summary>Список методов формирования дочерних элементов</summary>
-        [NN] private readonly List<Func<T, object>> _Elements = new List<Func<T, object>>();
+        [NN] private readonly List<Func<T, object>> _Elements = new();
 
         /// <summary>Инициализация нового настраиваемого сериализатора</summary>
         /// <param name="ElementName">Название корневого элемента</param>
@@ -48,13 +48,13 @@ namespace MathCore.Xml
         /// <summary>Выполнение процесса сериализации</summary>
         /// <param name="value">Сериализуемый объект</param>
         /// <returns>xml-представление сериализуемого объекта</returns>
-        [NN] public XElement Serialize(T value) => new XElement(_ElementName ?? __EmptyName, Content(value).ToArray());
+        [NN] public XElement Serialize(T value) => new(_ElementName ?? __EmptyName, Content(value).ToArray());
 
         /// <summary>Выполнение процесса сериализации</summary>
         /// <param name="Name">Название корневого элемента</param>
         /// <param name="value">Сериализуемый объект</param>
         /// <returns>xml-представление сериализуемого объекта</returns>
-        [NN] public XElement Serialize([CN] string Name, T value) => new XElement(Name ?? _ElementName ?? __EmptyName, Content(value).ToArray());
+        [NN] public XElement Serialize([CN] string Name, T value) => new(Name ?? _ElementName ?? __EmptyName, Content(value).ToArray());
 
         /// <summary>Формирование содержимого элемента</summary>
         /// <remarks>Выполнение списков методов вычисления значений атрибутов, затем - дочерних элементов</remarks>

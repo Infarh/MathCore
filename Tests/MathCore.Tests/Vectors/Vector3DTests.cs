@@ -274,7 +274,9 @@ namespace MathCore.Tests.Vectors
         [TestMethod, Priority(4), Description("Тестирование метода преобразования вектора в базисе")]
         public void InBasis_Test()
         {
-            var x = Vector3D.Random();
+            var seed = -1212098950;
+            //var seed = (int)DateTime.Now.Ticks;
+            var x = Vector3D.Random(rnd: new Random(seed));
             var b = new Basis3D(1, 0, 0,
                                 0, 1, 0,
                                 0, 0, 1);
@@ -287,23 +289,26 @@ namespace MathCore.Tests.Vectors
                             0, 0, 1);
             Test(new Vector3D(x.Y, x.X, x.Z));
 
-            const double eps = 3e-16;
+            const double eps = 1e-15;
             const double pi = Consts.pi;
             const double angle = Consts.pi / 3;
             b = Basis3D.RotateOZ(angle);
             var y = x.InBasis(b);
 
-            Assert.AreEqual(angle, (y.AngleXOY - x.AngleXOY).GetAbsMod(2 * pi), eps,
-                "\r\n|(y.AngleXOY - x.AngleXOY) - angle| = {0:E}" +
-                "\r\nangle = {1}·π" +
-                "\r\nx.AngleXOY = {2}·π - {3}" +
-                "\r\nx.AngleXOY = {4}·π - {5}" +
-                "\r\ny.AngleXOY - x.AngleXOY = {6}·π",
+            var actual_angle = (y.AngleXOY - x.AngleXOY + 2 * pi).AbsMod(2 * pi);
+            Assert.AreEqual(angle, actual_angle, eps,
+                "\r\n\t|(y.AngleXOY - x.AngleXOY) - angle| = {0:E}" +
+                "\r\n\tangle = {1}·π" +
+                "\r\n\tx.AngleXOY = {2}·π - {3}" +
+                "\r\n\ty.AngleXOY = {4}·π - {5}" +
+                "\r\n\ty.AngleXOY - x.AngleXOY = {6}·π"+
+                "\r\n\tseed = {7}",
                 Abs(y.AngleXOY - x.AngleXOY - angle),
                 angle / Consts.pi,
                 x.AngleXOY / pi, x,
                 y.AngleXOY / pi, y,
-                (y.AngleXOY - x.AngleXOY) / pi);
+                (y.AngleXOY - x.AngleXOY) / pi,
+                seed);
         }
 
         /// <summary>Тестирование метода определения проекции вектора на вектор</summary>

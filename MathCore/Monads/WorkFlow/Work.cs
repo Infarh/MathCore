@@ -120,7 +120,7 @@ namespace MathCore.Monads.WorkFlow
         /// <typeparam name="TResult">Тип результата работы</typeparam>
         /// <param name="function">Функция, выполняемая в рамках работы над параметром, получаемым от предыдущей работы</param>
         /// <returns>Работа по получению результата</returns>
-        [NN] public Work<T, TResult> Get<TResult>([NN] Func<T, TResult> function) => new Work<T, TResult>(function, this);
+        [NN] public Work<T, TResult> Get<TResult>([NN] Func<T, TResult> function) => new(function, this);
 
         /// <summary>Выполнение преобразования в случае если предыдущая работа выполнена успешно</summary>
         /// <typeparam name="TResult">Результат преобразования</typeparam>
@@ -271,13 +271,13 @@ namespace MathCore.Monads.WorkFlow
         /// <summary>Начало работы на основе делегата действия</summary>
         /// <param name="WorkAction">Делегат, на основе которого формируется работа</param>
         /// <returns>Работа, выполняющая указанный делегат</returns>
-        [NN] public static ActionWork BeginInvoke([NN] Action WorkAction) => new ActionWork(WorkAction);
+        [NN] public static ActionWork BeginInvoke([NN] Action WorkAction) => new(WorkAction);
 
         /// <summary>Начало работы с указанной функцией</summary>
         /// <typeparam name="T">Тип значения, возвращаемого функцией</typeparam>
         /// <param name="WorkFunction">Функция, выполняемая работой</param>
         /// <returns>Работа, выполняющая указанную функцию, возвращающую значение</returns>
-        [NN] public static FunctionWork<T> BeginGet<T>([NN] Func<T> WorkFunction) => new FunctionWork<T>(WorkFunction);
+        [NN] public static FunctionWork<T> BeginGet<T>([NN] Func<T> WorkFunction) => new(WorkFunction);
 
         /// <summary>Фиксированное исходное значение для начала работы</summary>
         /// <typeparam name="T">Тип значения</typeparam>

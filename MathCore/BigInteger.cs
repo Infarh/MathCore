@@ -142,7 +142,7 @@ using MathCore.Annotations;
 namespace MathCore
 {
     /// <summary> Целочисленная арифметика с большими числами  </summary>
-    public class BigInteger
+    public class BigInt
     {
         // maximum length of the BigInteger in uint (4 bytes)
         // change this to suit the required level of precision.
@@ -182,16 +182,16 @@ namespace MathCore
 
         /* ---------------------------------------------------------------------------- */
 
-        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
-        public BigInteger()
+        /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
+        public BigInt()
         {
             _Data = new uint[MaxLength];
             _DataLength = 1;
         }
 
-        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
         /// <param name="Value">Исходное значение числа</param>
-        public BigInteger(long Value)
+        public BigInt(long Value)
         {
             _Data = new uint[MaxLength];
             var temp_val = Value;
@@ -219,9 +219,9 @@ namespace MathCore
             if (_DataLength == 0) _DataLength = 1;
         }
 
-        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
         /// <param name="Value">Исходное значение числа</param>
-        public BigInteger(ulong Value)
+        public BigInt(ulong Value)
         {
             _Data = new uint[MaxLength];
 
@@ -242,9 +242,9 @@ namespace MathCore
             if (_DataLength == 0) _DataLength = 1;
         }
 
-        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
+        /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
         /// <param name="Value">Исходное значение числа</param>
-        public BigInteger([NotNull] BigInteger Value)
+        public BigInt([NotNull] BigInt Value)
         {
             _Data = new uint[MaxLength];
 
@@ -279,15 +279,15 @@ namespace MathCore
         //
         //***********************************************************************
 
-        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
-        /// <param name="StringValue">Строковая форма записи <see cref="BigInteger"/></param>
+        /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
+        /// <param name="StringValue">Строковая форма записи <see cref="BigInt"/></param>
         /// <param name="Base">Основание системы счисления</param>
         /// <exception cref="ArithmeticException">Если очередной символ в строке больше, либо равен <paramref name="Base"/></exception>
         /// <exception cref="OverflowException">При переполнении разрядной сетки</exception>
-        public BigInteger(string StringValue, int Base = 10)
+        public BigInt(string StringValue, int Base = 10)
         {
-            var multiplier = new BigInteger(1);
-            var result = new BigInteger();
+            var multiplier = new BigInt(1);
+            var result = new BigInt();
             StringValue = StringValue.ToUpper().Trim();
             var limit = 0;
 
@@ -346,10 +346,10 @@ namespace MathCore
         //
         //***********************************************************************
 
-        /// <summary>Инициализация нового пустого <see cref="BigInteger"/> = 0</summary>
-        /// <param name="Data">Байты данных <see cref="BigInteger"/></param>
+        /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
+        /// <param name="Data">Байты данных <see cref="BigInt"/></param>
         /// <exception cref="OverflowException">При переполнении разрядной сетки</exception>
-        public BigInteger([NotNull] byte[] Data)
+        public BigInt([NotNull] byte[] Data)
         {
             _DataLength = Data.Length >> 2;
 
@@ -384,7 +384,7 @@ namespace MathCore
         // specified length.)
         //***********************************************************************
 
-        public BigInteger([NotNull] byte[] Data, int Length)
+        public BigInt([NotNull] byte[] Data, int Length)
         {
             _DataLength = Length >> 2;
 
@@ -424,7 +424,7 @@ namespace MathCore
         // Constructor (Default value provided by an array of unsigned integers)
         //*********************************************************************
 
-        public BigInteger([NotNull] uint[] UintWords)
+        public BigInt([NotNull] uint[] UintWords)
         {
             _DataLength = UintWords.Length;
 
@@ -449,16 +449,16 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static implicit operator BigInteger(long value) => new BigInteger(value);
+        public static implicit operator BigInt(long value) => new(value);
 
         [NotNull]
-        public static implicit operator BigInteger(ulong value) => new BigInteger(value);
+        public static implicit operator BigInt(ulong value) => new(value);
 
         [NotNull]
-        public static implicit operator BigInteger(int value) => new BigInteger(value);
+        public static implicit operator BigInt(int value) => new(value);
 
         [NotNull]
-        public static implicit operator BigInteger(uint value) => new BigInteger((ulong)value);
+        public static implicit operator BigInt(uint value) => new((ulong)value);
 
 
         //***********************************************************************
@@ -466,9 +466,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator +([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static BigInt operator +([NotNull] BigInt x, [NotNull] BigInt y)
         {
-            var result = new BigInteger
+            var result = new BigInt
             {
                 _DataLength = x._DataLength > y._DataLength
                     ? x._DataLength
@@ -508,9 +508,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator ++([NotNull] BigInteger x)
+        public static BigInt operator ++([NotNull] BigInt x)
         {
-            var result = new BigInteger(x);
+            var result = new BigInt(x);
 
             long carry = 1;
             var index = 0;
@@ -548,9 +548,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator -([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static BigInt operator -([NotNull] BigInt x, [NotNull] BigInt y)
         {
-            var result = new BigInteger
+            var result = new BigInt
             {
                 _DataLength = x._DataLength > y._DataLength
                     ? x._DataLength
@@ -594,9 +594,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator --([NotNull] BigInteger x)
+        public static BigInt operator --([NotNull] BigInt x)
         {
-            var result = new BigInteger(x);
+            var result = new BigInt(x);
 
             var carry_in = true;
             var index = 0;
@@ -634,7 +634,7 @@ namespace MathCore
         /// <summary>Overloading of multiplication operator</summary>
         /// <exception cref="ArithmeticException">Multiplication overflow</exception>
         [NotNull]
-        public static BigInteger operator *(BigInteger x, BigInteger y)
+        public static BigInt operator *(BigInt x, BigInt y)
         {
             const int last_pos = MaxLength - 1;
             var x_neg = false;
@@ -661,7 +661,7 @@ namespace MathCore
             }
 #pragma warning restore CA1031 // Do not catch general exception types
 
-            var result = new BigInteger();
+            var result = new BigInt();
 
             // multiply the absolute values
             try
@@ -723,9 +723,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator <<([NotNull] BigInteger x, int ShiftVal)
+        public static BigInt operator <<([NotNull] BigInt x, int ShiftVal)
         {
-            var result = new BigInteger(x);
+            var result = new BigInt(x);
             result._DataLength = ShiftLeft(result._Data, ShiftVal);
             return result;
         }
@@ -766,9 +766,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator >>([NotNull] BigInteger x, int ShiftVal)
+        public static BigInt operator >>([NotNull] BigInt x, int ShiftVal)
         {
-            var result = new BigInteger(x);
+            var result = new BigInt(x);
             result._DataLength = ShiftRight(result._Data, ShiftVal);
 
             if ((x._Data[MaxLength - 1] & 0x80000000) == 0) return result;
@@ -829,9 +829,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator ~([NotNull] BigInteger x)
+        public static BigInt operator ~([NotNull] BigInt x)
         {
-            var result = new BigInteger(x);
+            var result = new BigInt(x);
 
             for (var i = 0; i < MaxLength; i++)
                 result._Data[i] = ~x._Data[i];
@@ -850,15 +850,15 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator -([NotNull] BigInteger x)
+        public static BigInt operator -([NotNull] BigInt x)
         {
             // handle neg of zero separately since it'll cause an overflow
             // if we proceed.
 
             if (x._DataLength == 1 && x._Data[0] == 0)
-                return new BigInteger();
+                return new BigInt();
 
-            var result = new BigInteger(x);
+            var result = new BigInt(x);
 
             // 1's complement
             for (var i = 0; i < MaxLength; i++)
@@ -894,16 +894,16 @@ namespace MathCore
         // Overloading of equality operator
         //***********************************************************************
 
-        public static bool operator ==([CanBeNull] BigInteger x, [CanBeNull] BigInteger y) => Equals(x, null) && Equals(y, null) || !Equals(x, null) && x.Equals(y);
+        public static bool operator ==([CanBeNull] BigInt x, [CanBeNull] BigInt y) => Equals(x, null) && Equals(y, null) || !Equals(x, null) && x.Equals(y);
 
 
-        public static bool operator !=([CanBeNull] BigInteger x, [CanBeNull] BigInteger y) => !(x == y);
+        public static bool operator !=([CanBeNull] BigInt x, [CanBeNull] BigInt y) => !(x == y);
 
 
         /// <inheritdoc />
-        public override bool Equals(object o) => Equals(o as BigInteger);
+        public override bool Equals(object o) => Equals(o as BigInt);
 
-        public bool Equals([CanBeNull] BigInteger x)
+        public bool Equals([CanBeNull] BigInt x)
         {
             if (_DataLength != x?._DataLength) return false;
 
@@ -921,7 +921,7 @@ namespace MathCore
         //***********************************************************************
         // Overloading of inequality operator
         //***********************************************************************
-        public static bool operator >([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static bool operator >([NotNull] BigInt x, [NotNull] BigInt y)
         {
             var pos = MaxLength - 1;
 
@@ -941,7 +941,7 @@ namespace MathCore
         }
 
 
-        public static bool operator <([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static bool operator <([NotNull] BigInt x, [NotNull] BigInt y)
         {
             var pos = MaxLength - 1;
 
@@ -961,10 +961,10 @@ namespace MathCore
         }
 
 
-        public static bool operator >=(BigInteger x, BigInteger y) => x == y || x > y;
+        public static bool operator >=(BigInt x, BigInt y) => x == y || x > y;
 
 
-        public static bool operator <=(BigInteger x, BigInteger y) => x == y || x < y;
+        public static bool operator <=(BigInt x, BigInt y) => x == y || x < y;
 
 
         //***********************************************************************
@@ -975,10 +975,10 @@ namespace MathCore
         //***********************************************************************
 
         private static void MultiByteDivide(
-            [NotNull] BigInteger X,
-            [NotNull] BigInteger Y,
-            [NotNull] BigInteger OutQuotient,
-            [NotNull] BigInteger OutRemainder)
+            [NotNull] BigInt X,
+            [NotNull] BigInt Y,
+            [NotNull] BigInt OutQuotient,
+            [NotNull] BigInt OutRemainder)
         {
             var result = new uint[MaxLength];
 
@@ -1032,7 +1032,7 @@ namespace MathCore
                 for (var h = 0; h < divisor_len; h++)
                     dividend_part[h] = remainder[pos - h];
 
-                var kk = new BigInteger(dividend_part);
+                var kk = new BigInt(dividend_part);
                 var ss = Y * (long)q_hat;
 
                 while (ss > kk)
@@ -1075,10 +1075,10 @@ namespace MathCore
         //***********************************************************************
 
         private static void SingleByteDivide(
-            [NotNull] BigInteger x,
-            [NotNull] BigInteger y,
-            [NotNull] BigInteger OutQuotient,
-            [NotNull] BigInteger OutRemainder)
+            [NotNull] BigInt x,
+            [NotNull] BigInt y,
+            [NotNull] BigInt OutQuotient,
+            [NotNull] BigInt OutRemainder)
         {
             var result = new uint[MaxLength];
             var result_pos = 0;
@@ -1136,10 +1136,10 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator /(BigInteger x, BigInteger y)
+        public static BigInt operator /(BigInt x, BigInt y)
         {
-            var quotient = new BigInteger();
-            var remainder = new BigInteger();
+            var quotient = new BigInt();
+            var remainder = new BigInt();
 
             const int lc_LastPos = MaxLength - 1;
             bool divisor_neg = false, dividend_neg = false;
@@ -1170,10 +1170,10 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator %(BigInteger x, BigInteger y)
+        public static BigInt operator %(BigInt x, BigInt y)
         {
-            var quotient = new BigInteger();
-            var remainder = new BigInteger(x);
+            var quotient = new BigInt();
+            var remainder = new BigInt(x);
 
             const int last_pos = MaxLength - 1;
             var dividend_neg = false;
@@ -1201,9 +1201,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator &([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static BigInt operator &([NotNull] BigInt x, [NotNull] BigInt y)
         {
-            var result = new BigInteger();
+            var result = new BigInt();
 
             var len = x._DataLength > y._DataLength ? x._DataLength : y._DataLength;
 
@@ -1224,9 +1224,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator |([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static BigInt operator |([NotNull] BigInt x, [NotNull] BigInt y)
         {
-            var result = new BigInteger();
+            var result = new BigInt();
 
             var len = x._DataLength > y._DataLength ? x._DataLength : y._DataLength;
 
@@ -1247,9 +1247,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger operator ^([NotNull] BigInteger x, [NotNull] BigInteger y)
+        public static BigInt operator ^([NotNull] BigInt x, [NotNull] BigInt y)
         {
-            var result = new BigInteger();
+            var result = new BigInt();
 
             var len = x._DataLength > y._DataLength ? x._DataLength : y._DataLength;
 
@@ -1273,7 +1273,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger Max(BigInteger x) => this > x ? new BigInteger(this) : new BigInteger(x);
+        public BigInt Max(BigInt x) => this > x ? new BigInt(this) : new BigInt(x);
 
 
         //***********************************************************************
@@ -1281,7 +1281,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger Min(BigInteger x) => this < x ? new BigInteger(this) : new BigInteger(x);
+        public BigInt Min(BigInt x) => this < x ? new BigInt(this) : new BigInt(x);
 
 
         //***********************************************************************
@@ -1289,7 +1289,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger Abs() => (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : new BigInteger(this);
+        public BigInt Abs() => (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : new BigInt(this);
 
 
         //***********************************************************************
@@ -1336,9 +1336,9 @@ namespace MathCore
 #pragma warning restore CA1031 // Do not catch general exception types
             }
 
-            var quotient = new BigInteger();
-            var remainder = new BigInteger();
-            var x_radix = new BigInteger(radix);
+            var quotient = new BigInt();
+            var remainder = new BigInt();
+            var x_radix = new BigInt(radix);
 
             if (a._DataLength == 1 && a._Data[0] == 0)
                 result = "0";
@@ -1377,8 +1377,8 @@ namespace MathCore
         //***********************************************************************
         // ReSharper restore CommentTypo
 
-        /// <summary>Представление <see cref="BigInteger"/> в шестнадцатеричной системе счисления</summary>
-        /// <returns>Строка шестнадцатеричного представления числа <see cref="BigInteger"/></returns>
+        /// <summary>Представление <see cref="BigInt"/> в шестнадцатеричной системе счисления</summary>
+        /// <returns>Строка шестнадцатеричного представления числа <see cref="BigInt"/></returns>
         public string ToHexString()
         {
             var result = _Data[_DataLength - 1].ToString("X");
@@ -1395,13 +1395,13 @@ namespace MathCore
         // Modulo Exponentiation
         //***********************************************************************
 
-        public BigInteger ModPow([NotNull] BigInteger exp, BigInteger n)
+        public BigInt ModPow([NotNull] BigInt exp, BigInt n)
         {
             if ((exp._Data[MaxLength - 1] & 0x80000000) != 0)
                 throw new ArithmeticException("Positive exponents only.");
 
-            BigInteger result_num = 1;
-            BigInteger temp_num;
+            BigInt result_num = 1;
+            BigInt temp_num;
             var this_negative = false;
 
             if ((_Data[MaxLength - 1] & 0x80000000) != 0)   // negative this
@@ -1416,7 +1416,7 @@ namespace MathCore
                 n = -n;
 
             // calculate constant = b^(2k) / m
-            var constant = new BigInteger();
+            var constant = new BigInt();
 
             var i = n._DataLength << 1;
             constant._Data[i] = 0x00000001;
@@ -1460,13 +1460,13 @@ namespace MathCore
         /// В этом случае база соответствует 2^32 (uint).
         /// </remarks>
         [NotNull]
-        private static BigInteger BarrettReduction([NotNull] BigInteger x, [NotNull] BigInteger n, BigInteger constant)
+        private static BigInt BarrettReduction([NotNull] BigInt x, [NotNull] BigInt n, BigInt constant)
         {
             var k = n._DataLength;
             var k_plus_one = k + 1;
             var k_minus_one = k - 1;
 
-            var q1 = new BigInteger();
+            var q1 = new BigInt();
 
             // q1 = x / b^(k-1)
             for (int i = k_minus_one, j = 0; i < x._DataLength; i++, j++)
@@ -1477,7 +1477,7 @@ namespace MathCore
 
 
             var q2 = q1 * constant;
-            var q3 = new BigInteger();
+            var q3 = new BigInt();
 
             // q3 = q2 / b^(k+1)
             for (int i = k_plus_one, j = 0; i < q2._DataLength; i++, j++)
@@ -1489,7 +1489,7 @@ namespace MathCore
 
             // r1 = x mod b^(k+1)
             // i.e. keep the lowest (k+1) words
-            var r1 = new BigInteger();
+            var r1 = new BigInt();
             var length_to_copy = x._DataLength > k_plus_one ? k_plus_one : x._DataLength;
             for (var i = 0; i < length_to_copy; i++)
                 r1._Data[i] = x._Data[i];
@@ -1499,7 +1499,7 @@ namespace MathCore
             // r2 = (q3 * n) mod b^(k+1)
             // partial multiplication of q3 and n
 
-            var r2 = new BigInteger();
+            var r2 = new BigInt();
             for (var i = 0; i < q3._DataLength; i++)
             {
                 if (q3._Data[i] == 0) continue;
@@ -1525,7 +1525,7 @@ namespace MathCore
             r1 -= r2;
             if ((r1._Data[MaxLength - 1] & 0x80000000) != 0)        // negative
             {
-                var val = new BigInteger();
+                var val = new BigInt();
                 val._Data[k_plus_one] = 0x00000001;
                 val._DataLength = k_plus_one + 1;
                 r1 += val;
@@ -1544,7 +1544,7 @@ namespace MathCore
 
         /// <summary>Наибольший общий делитель</summary>
         [NotNull]
-        public BigInteger Gcd([NotNull] BigInteger X)
+        public BigInt Gcd([NotNull] BigInt X)
         {
             var x = (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : this;
 
@@ -1676,8 +1676,8 @@ namespace MathCore
                 return false;
 
             var bits = this_val.BitCount;
-            var a = new BigInteger();
-            var p_sub1 = this_val - new BigInteger(1);
+            var a = new BigInt();
+            var p_sub1 = this_val - new BigInt(1);
             var rand = new Random();
 
             for (var round = 0; round < confidence; round++)
@@ -1763,7 +1763,7 @@ namespace MathCore
 
 
             // calculate values of s and t
-            var p_sub1 = this_val - new BigInteger(1);
+            var p_sub1 = this_val - new BigInt(1);
             var s = 0;
 
             for (var index = 0; index < p_sub1._DataLength; index++)
@@ -1781,7 +1781,7 @@ namespace MathCore
             var t = p_sub1 >> s;
 
             var bits = this_val.BitCount;
-            var a = new BigInteger();
+            var a = new BigInt();
             var rand = new Random();
 
             for (var round = 0; round < confidence; round++)
@@ -1868,7 +1868,7 @@ namespace MathCore
 
 
             var bits = this_val.BitCount;
-            var a = new BigInteger();
+            var a = new BigInt();
             var p_sub1 = this_val - 1;
             var p_sub1_shift = p_sub1 >> 1;
 
@@ -1907,7 +1907,7 @@ namespace MathCore
                     exp_result = -1;
 
                 // calculate Jacobi symbol
-                BigInteger jacob = Jacobi(a, this_val);
+                BigInt jacob = Jacobi(a, this_val);
 
                 //Console.WriteLine("a = " + a.ToString(10) + " b = " + thisVal.ToString(10));
                 //Console.WriteLine("expResult = " + expResult.ToString(10) + " Jacob = " + jacob.ToString(10));
@@ -1956,7 +1956,7 @@ namespace MathCore
         }
 
 
-        private static bool LucasStrongTestHelper([NotNull] BigInteger thisVal)
+        private static bool LucasStrongTestHelper([NotNull] BigInt thisVal)
         {
             // Do the test (selects D based on Self ridge)
             // Let D be the first element of the sequence
@@ -2019,7 +2019,7 @@ namespace MathCore
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            var constant = new BigInteger();
+            var constant = new BigInt();
 
             var n_len = thisVal._DataLength << 1;
             constant._Data[n_len] = 0x00000001;
@@ -2082,7 +2082,7 @@ namespace MathCore
 
             // test for divisibility by primes < 2000
             return PrimesBelow2000
-                    .Select(i => new BigInteger(i))
+                    .Select(i => new BigInt(i))
                     .TakeWhile(divisor => divisor < this_val)
                     .All(divisor => (this_val % divisor).IntValue() != 0)
                 && this_val.RabinMillerTest(confidence);
@@ -2133,7 +2133,7 @@ namespace MathCore
 
             // test for divisibility by primes < 2000
             if (PrimesBelow2000
-               .Select(i => new BigInteger(i))
+               .Select(i => new BigInt(i))
                .TakeWhile(divisor => divisor < this_val)
                .Select(divisor => this_val % divisor)
                .Any(ResultNum => ResultNum.IntValue() == 0))
@@ -2142,7 +2142,7 @@ namespace MathCore
             // Perform BASE 2 Rabin-Miller Test
 
             // calculate values of s and t
-            var p_sub1 = this_val - new BigInteger(1);
+            var p_sub1 = this_val - new BigInt(1);
             var s = 0;
 
             for (var index = 0; index < p_sub1._DataLength; index++)
@@ -2160,7 +2160,7 @@ namespace MathCore
             var t = p_sub1 >> s;
 
             //        thisVal.bitCount();
-            BigInteger a = 2;
+            BigInt a = 2;
 
             // b = a^t mod p
             var b = a.ModPow(t, this_val);
@@ -2179,11 +2179,11 @@ namespace MathCore
 
 
 
-        /// <summary>Последние 4 байта значения числа <see cref="BigInteger"/></summary>
+        /// <summary>Последние 4 байта значения числа <see cref="BigInt"/></summary>
         public int IntValue() => (int)_Data[0];
 
 
-        /// <summary>Последние 8 байт значения числа <see cref="BigInteger"/></summary>
+        /// <summary>Последние 8 байт значения числа <see cref="BigInt"/></summary>
         public long LongValue()
         {
             long val = _Data[0];
@@ -2206,7 +2206,7 @@ namespace MathCore
         // Algorithm adapted from [3] and [4] with some optimizations
         //***********************************************************************
 
-        public static int Jacobi(BigInteger a, [NotNull] BigInteger b)
+        public static int Jacobi(BigInt a, [NotNull] BigInt b)
         {
             // Jacobi defined only for odd integers
             if ((b._Data[0] & 0x1) == 0)
@@ -2256,9 +2256,9 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger GetPseudoPrime(int bits, int confidence, Random rand)
+        public static BigInt GetPseudoPrime(int bits, int confidence, Random rand)
         {
-            var result = new BigInteger();
+            var result = new BigInt();
             var done = false;
 
             while (!done)
@@ -2279,10 +2279,10 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger GenCoPrime(int bits, Random rand)
+        public BigInt GenCoPrime(int bits, Random rand)
         {
             var done = false;
-            var result = new BigInteger();
+            var result = new BigInt();
 
             while (!done)
             {
@@ -2304,11 +2304,11 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger ModInverse(BigInteger modulus)
+        public BigInt ModInverse(BigInt modulus)
         {
-            BigInteger[] p = { 0, 1 };
-            var q = new BigInteger[2];    // quotients
-            BigInteger[] r = { 0, 0 };    // remainders
+            BigInt[] p = { 0, 1 };
+            var q = new BigInt[2];    // quotients
+            BigInt[] r = { 0, 0 };    // remainders
 
             var step = 0;
 
@@ -2317,8 +2317,8 @@ namespace MathCore
 
             while (b._DataLength > 1 || b._DataLength == 1 && b._Data[0] != 0)
             {
-                var quotient = new BigInteger();
-                var remainder = new BigInteger();
+                var quotient = new BigInt();
+                var remainder = new BigInt();
 
                 if (step > 1)
                 {
@@ -2449,7 +2449,7 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public BigInteger Sqrt()
+        public BigInt Sqrt()
         {
             var num_bits = (uint)BitCount;
 
@@ -2463,7 +2463,7 @@ namespace MathCore
 
             uint mask;
 
-            var result = new BigInteger();
+            var result = new BigInt();
             if (bit_pos == 0)
                 mask = 0x80000000;
             else
@@ -2525,15 +2525,15 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        public static BigInteger[] LucasSequence(
-            [NotNull] BigInteger P,
-            [NotNull] BigInteger Q,
-            [NotNull] BigInteger k,
-            BigInteger n)
+        public static BigInt[] LucasSequence(
+            [NotNull] BigInt P,
+            [NotNull] BigInt Q,
+            [NotNull] BigInt k,
+            BigInt n)
         {
             if (k._DataLength == 1 && k._Data[0] == 0)
             {
-                var result = new BigInteger[3];
+                var result = new BigInt[3];
 
                 result[0] = 0; result[1] = 2 % n; result[2] = 1 % n;
                 return result;
@@ -2541,7 +2541,7 @@ namespace MathCore
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            var constant = new BigInteger();
+            var constant = new BigInt();
 
             var n_len = n._DataLength << 1;
             constant._Data[n_len] = 0x00000001;
@@ -2576,15 +2576,15 @@ namespace MathCore
         //***********************************************************************
 
         [NotNull]
-        private static BigInteger[] LucasSequenceHelper(
-            [NotNull] BigInteger P,
-            [NotNull] BigInteger Q,
-            [NotNull] BigInteger k,
-            [NotNull] BigInteger n,
-            [NotNull] BigInteger constant,
+        private static BigInt[] LucasSequenceHelper(
+            [NotNull] BigInt P,
+            [NotNull] BigInt Q,
+            [NotNull] BigInt k,
+            [NotNull] BigInt n,
+            [NotNull] BigInt constant,
             int s)
         {
-            var result = new BigInteger[3];
+            var result = new BigInt[3];
 
             if ((k._Data[0] & 0x00000001) == 0)
                 throw new ArgumentException("Argument k must be odd.");

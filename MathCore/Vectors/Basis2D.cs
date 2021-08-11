@@ -14,7 +14,7 @@ namespace MathCore.Vectors
     public readonly struct Basis2D : IEquatable<Basis2D>
     {
         /// <summary>Базис Евклидова пространства</summary>
-        public static readonly Basis2D Euclid = new Basis2D(
+        public static readonly Basis2D Euclid = new(
             1, 0,
             0, 1);
 
@@ -23,7 +23,7 @@ namespace MathCore.Vectors
         /// <param name="Positive">Направление поворота по часовой стрелке</param>
         /// <returns>Базис, осуществляющий поворот вектора в пространстве на указанный угол</returns>
         public static Basis2D Rotate(double Angle, bool Positive = true) =>
-            new Basis2D(
+            new(
                 Cos(Angle), (Positive ? -1 : 1) * Sin(Angle),
                 (Positive ? 1 : -1) * Sin(Angle), Cos(Angle));
 
@@ -32,7 +32,7 @@ namespace MathCore.Vectors
         /// <param name="ky">Коэффициент масштабирования вдоль оси OY</param>
         /// <returns>Базис, осуществляющий масштабирования вектора по осям</returns>
         public static Basis2D Scale(double kx, double ky) =>
-            new Basis2D(
+            new(
                 kx, 0,
                 0, ky);
 
@@ -78,10 +78,10 @@ namespace MathCore.Vectors
         }
 
         /// <summary>Оператор неявного преобразования базиса в матрицу 2х2</summary>
-        [NotNull] public static implicit operator Matrix(in Basis2D b) => new Matrix(new[,] { { b._xx, b._xy }, { b._yx, b._yy } });
+        [NotNull] public static implicit operator Matrix(in Basis2D b) => new(new[,] { { b._xx, b._xy }, { b._yx, b._yy } });
 
         /// <summary>Оператор явного преобразования матрицы 2х2 в двумерный базис</summary>
-        public static explicit operator Basis2D([NotNull] in Matrix M) => new Basis2D(M[0, 0], M[0, 1], M[1, 0], M[1, 1]);
+        public static explicit operator Basis2D([NotNull] in Matrix M) => new(M[0, 0], M[0, 1], M[1, 0], M[1, 1]);
 
         /// <inheritdoc />
         public bool Equals(Basis2D other) => _xx.Equals(other._xx) && _xy.Equals(other._xy) && _yx.Equals(other._yx) && _yy.Equals(other._yy);

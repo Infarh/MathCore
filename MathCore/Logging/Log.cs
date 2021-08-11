@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using MathCore.Annotations;
+// ReSharper disable UnusedMember.Global
 
 namespace MathCore.Logging
 {
@@ -13,7 +14,7 @@ namespace MathCore.Logging
     {
         public class LogPool
         {
-            private readonly Dictionary<string, Log> _LogDictionary = new Dictionary<string, Log>();
+            private readonly Dictionary<string, Log> _LogDictionary = new();
 
             public Log this[[NotNull] string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new Log(name));
 
@@ -35,13 +36,11 @@ namespace MathCore.Logging
 
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs Args) => CollectionChanged.Start(this, Args);
 
-        private static readonly LogPool __LogPool = new LogPool();
-
-        public static LogPool Pool => __LogPool;
+        public static LogPool Pool { get; } = new();
 
         private readonly string _Name;
         private LogType _Type;
-        private readonly List<LogItem> _Items = new List<LogItem>();
+        private readonly List<LogItem> _Items = new();
 
         public int ItemsCount => _Items.Count;
 

@@ -11,6 +11,34 @@ namespace System
     /// <summary>Методы-расширения для генератора случайных чисел</summary>
     public static class RandomExtensions
     {
+        /// <summary>Создать генератор случных элементов</summary>
+        /// <typeparam name="T">Тип элементов списка</typeparam>
+        /// <param name="Random">Датчик случайных чисел</param>
+        /// <param name="Items">Список элементов, на основе которого надо создать генератор</param>
+        /// <returns>Генератор случайного значения из элементов списка</returns>
+        public static Randomizer<T> GetRandomizer<T>(this Random Random, IList<T> Items) => new(Items, Random);
+
+        /// <summary>Создать генератор случных элементов</summary>
+        /// <typeparam name="T">Тип элементов списка</typeparam>
+        /// <param name="Random">Датчик случайных чисел</param>
+        /// <param name="Items">Элементы, на основе которых надо создать генератор</param>
+        /// <returns>Генератор случайного значения из элементов списка</returns>
+        public static Randomizer<T> GetRandomizer<T>(this Random Random, params T[] Items) => new(Items, Random);
+
+        /// <summary>Случайный элемент из указанного набора вариантов (ссылка на элемент)</summary>
+        /// <typeparam name="T">Тип элементов</typeparam>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="items">Массив вариантов</param>
+        /// <returns>Ссылка на случайный элемент массива</returns>
+        public static ref T NextItem<T>(this Random rnd, params T[] items) => ref items[rnd.Next(items.Length)]; 
+
+        /// <summary>Случайных элемент из списка</summary>
+        /// <typeparam name="T">Тип элементов для выбора</typeparam>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="items">Список элементов для выбора</param>
+        /// <returns>Случайный элемент из списка</returns>
+        public static T NextItem<T>(this Random rnd, IList<T> items) => items[rnd.Next(items.Count)]; 
+
         /// <summary>Массив случайных чисел с равномерным распределением</summary>
         /// <param name="rnd">Датчик случайных чисел</param>
         /// <param name="Count">Размер массива</param>

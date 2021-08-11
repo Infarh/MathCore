@@ -1,11 +1,23 @@
-﻿using NN = MathCore.Annotations.NotNullAttribute;
+﻿using System.Collections.Generic;
+
+using MathCore;
+
+using NN = MathCore.Annotations.NotNullAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace System
 {
     /// <summary>Методы-расширения для интерфейса <see cref="IDisposable"/></summary>
+    // ReSharper disable once InconsistentNaming
     public static class IDisposableExtensions
     {
+        /// <summary>Представить в виде группы элементов, поддерживающих освобождение ресурсов</summary>
+        /// <typeparam name="T">Тип элемента, поддерживающий <see cref="IDisposable"/></typeparam>
+        /// <param name="items">Элементы, поддерживающие <see cref="IDisposable"/></param>
+        /// <returns><see cref="DisposableGroup{T}"/></returns>
+        [NN]
+        public static DisposableGroup<T> AsDisposableGroup<T>(this IEnumerable<T> items) where T : IDisposable => new(items);
+
         /// <summary>Выполнить действие, после чего освободить ресурсы</summary>
         /// <typeparam name="T">Тип объекта, над которым требуется выполнить действие</typeparam>
         /// <param name="obj">Объект, действие над которым требуется выполнить</param>

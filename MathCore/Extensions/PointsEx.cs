@@ -14,8 +14,7 @@ namespace System.Drawing
         }
 
         private static Point ScreenPoint(Interval X, Interval Y, int Width, int Height, double ValueX, double ValueY) =>
-            new Point
-            (
+            new(
                 (int)((ValueX - X.Min) * Width / X.Length),
                 Height - (int)Math.Round((ValueY - Y.Min) * Height / Y.Length)
             );
@@ -53,8 +52,8 @@ namespace System.Drawing
             return Math.Sqrt(x * x + y * y);
         }
 
-        public static Point Add(this Point start, Point end) => new Point(start.X + end.X, start.Y + end.Y);
+        public static Point Add(this Point start, Point end) => new(start.X + end.X, start.Y + end.Y);
 
-        public static Point Subtract(this Point start, Point end) => new Point(start.X - end.X, start.Y - end.Y);
+        public static Point Subtract(this Point start, Point end) => new(start.X - end.X, start.Y - end.Y);
     }
 }

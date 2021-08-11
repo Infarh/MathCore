@@ -11,7 +11,7 @@ namespace System.Linq.Expressions
     [NotImplemented]
     internal class IntegralVisitor : ExpressionVisitorEx
     {
-        private readonly Dictionary<int, ParameterExpression> _Parameters = new Dictionary<int, ParameterExpression>();
+        private readonly Dictionary<int, ParameterExpression> _Parameters = new();
 
         private ParameterExpression Parameter
         {

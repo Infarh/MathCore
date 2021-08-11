@@ -398,22 +398,22 @@ namespace System.Linq.Expressions
         public static bool operator !=([CanBeNull] ExpressionMatrix A, [CanBeNull] ExpressionMatrix B) => !(A == B);
 
         [DST, NotNull]
-        public static ExpressionMatrix operator +([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].AddWithConversion(x));
+        public static ExpressionMatrix operator +([NotNull] ExpressionMatrix M, Expression x) => new(M.N, M.M, (i, j) => M[i, j].AddWithConversion(x));
 
         [DST, NotNull]
-        public static ExpressionMatrix operator +(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.AddWithConversion(M[i, j]));
+        public static ExpressionMatrix operator +(Expression x, [NotNull] ExpressionMatrix M) => new(M.N, M.M, (i, j) => x.AddWithConversion(M[i, j]));
 
         [DST, NotNull]
-        public static ExpressionMatrix operator -([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Subtract(x));
+        public static ExpressionMatrix operator -([NotNull] ExpressionMatrix M, Expression x) => new(M.N, M.M, (i, j) => M[i, j].Subtract(x));
 
         [DST, NotNull]
-        public static ExpressionMatrix operator -(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.Subtract(M[i, j]));
+        public static ExpressionMatrix operator -(Expression x, [NotNull] ExpressionMatrix M) => new(M.N, M.M, (i, j) => x.Subtract(M[i, j]));
 
         [DST, NotNull]
-        public static ExpressionMatrix operator *([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].MultiplyWithConversion(x));
+        public static ExpressionMatrix operator *([NotNull] ExpressionMatrix M, Expression x) => new(M.N, M.M, (i, j) => M[i, j].MultiplyWithConversion(x));
 
         [DST, NotNull]
-        public static ExpressionMatrix operator *(Expression x, [NotNull] ExpressionMatrix M) => new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
+        public static ExpressionMatrix operator *(Expression x, [NotNull] ExpressionMatrix M) => new(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
 
         [DST] [NotNull] public static ExpressionMatrix operator *(Expression[,] A, ExpressionMatrix B) => (ExpressionMatrix)A * B;
 
@@ -424,7 +424,7 @@ namespace System.Linq.Expressions
         [DST] [NotNull] public static ExpressionMatrix operator *(ExpressionMatrix A, Expression[,] B) => A * (ExpressionMatrix)B;
 
         [DST, NotNull]
-        public static ExpressionMatrix operator /([NotNull] ExpressionMatrix M, Expression x) => new ExpressionMatrix(M.N, M.M, (i, j) => M[i, j].Divide(x));
+        public static ExpressionMatrix operator /([NotNull] ExpressionMatrix M, Expression x) => new(M.N, M.M, (i, j) => M[i, j].Divide(x));
 
         [NotNull]
         public static ExpressionMatrix operator /(Expression x, ExpressionMatrix M)
@@ -550,16 +550,16 @@ namespace System.Linq.Expressions
         /// <summary>Оператор неявного приведения типа вещественного числа двойной точности к типу Матрица порядка 1х1</summary>
         /// <param name="X">Приводимое число</param><returns>Матрица порядка 1х1</returns>
         [DST, NotNull]
-        public static implicit operator ExpressionMatrix(Expression X) => new ExpressionMatrix(1, 1) { [0, 0] = X };
+        public static implicit operator ExpressionMatrix(Expression X) => new(1, 1) { [0, 0] = X };
 
         [DST, NotNull]
         public static explicit operator Expression[,]([NotNull] ExpressionMatrix M) => (Expression[,])M._Data.Clone();
 
         [DST, NotNull]
-        public static explicit operator ExpressionMatrix([NotNull] Expression[,] Data) => new ExpressionMatrix(Data);
+        public static explicit operator ExpressionMatrix([NotNull] Expression[,] Data) => new(Data);
 
         [DST, NotNull]
-        public static explicit operator ExpressionMatrix([NotNull] Expression[] Data) => new ExpressionMatrix(Data);
+        public static explicit operator ExpressionMatrix([NotNull] Expression[] Data) => new(Data);
 
         /* -------------------------------------------------------------------------------------------- */
 

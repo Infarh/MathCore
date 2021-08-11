@@ -145,7 +145,7 @@ namespace MathCore.ViewModels
             PropertyChangedEvent?.GetInvocationList().Where(i => i.Target is T).Cast<PropertyChangedEventHandler>() ?? Enumerable.Empty<PropertyChangedEventHandler>();
 
 
-        [NotNull] private readonly object _PropertiesDependenciesSyncRoot = new object();
+        [NotNull] private readonly object _PropertiesDependenciesSyncRoot = new();
         /// <summary>Словарь графа зависимости изменений свойств</summary>
         [CanBeNull] private Dictionary<string, List<string>> _PropertiesDependenciesDictionary;
 
@@ -253,6 +253,13 @@ namespace MathCore.ViewModels
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([NotNull, CallerMemberName] string PropertyName = null)
         {
+            if (PropertyName is null) return; // Если имя свойства не указано, то выход
+            if (_PropertyChangedEventsSuppressor != null)
+            {
+                _PropertyChangedEventsSuppressor.RegisterEvent(PropertyName);
+                return;
+            }
+
             var handlers = PropertyChangedEvent;
             handlers.Start(this, PropertyName);
             if (PropertyName is null) return;
@@ -271,14 +278,8 @@ namespace MathCore.ViewModels
                     if (dependency_handlers.TryGetValue(dependence, out handler)) handler?.Invoke();
         }
 
-        /// <summary>Ускоренная генерация события изменения свойства</summary>
-        /// <param name="PropertyName">Имя изменившегося свойства</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged_Simple([NotNull, CallerMemberName] in string PropertyName = null) => 
-            PropertyChangedEvent?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
-
         /// <summary>Словарь, хранящий время последней генерации события изменения указанного свойства в асинхронном режиме</summary>
-        [NotNull] private readonly Dictionary<string, DateTime> _PropertyAsyncInvokeTime = new Dictionary<string, DateTime>();
+        [NotNull] private readonly Dictionary<string, DateTime> _PropertyAsyncInvokeTime = new();
 
         /// <summary>Асинхронная генерация события изменения свойства с возможностью указания таймаута ожидания повторных изменений</summary>
         /// <param name="PropertyName">Имя свойства</param>
@@ -292,6 +293,14 @@ namespace MathCore.ViewModels
                 OnPropertyChanged(PropertyName);
                 return;
             }
+
+            if (PropertyName is null) return; // Если имя свойства не указано, то выход
+            if (_PropertyChangedEventsSuppressor != null)
+            {
+                _PropertyChangedEventsSuppressor.RegisterEvent(PropertyName);
+                return;
+            }
+
             var now = DateTime.Now;
             if (_PropertyAsyncInvokeTime.TryGetValue(PropertyName, out var last_call_time) && (now - last_call_time).TotalMilliseconds < Timeout)
             {
@@ -315,10 +324,10 @@ namespace MathCore.ViewModels
         #endregion
 
         /// <summary>Инициализация новой view-модели</summary>
-        /// <param name="check_dependencies">Создавать карту зависимостей на основе атрибутов</param>
-        protected ViewModel(bool check_dependencies = true)
+        /// <param name="CheckDependencies">Создавать карту зависимостей на основе атрибутов</param>
+        protected ViewModel(bool CheckDependencies = true)
         {
-            if (!check_dependencies) return;
+            if (!CheckDependencies) return;
             var type = GetType();
             foreach (var property in type.GetProperties())
             {
@@ -330,7 +339,7 @@ namespace MathCore.ViewModels
                 {
                     var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
                     if (handler is null) throw new InvalidOperationException(
-                        $"Для свойства {property.Name} определён атрибут {typeof(ChangedHandlerAttribute).Name}, но в классе {type.Name} отсутствует " +
+                        $"Для свойства {property.Name} определён атрибут {nameof(ChangedHandlerAttribute)}, но в классе {type.Name} отсутствует " +
                         $"указанный в атрибуте метод реакции на изменение значения свойства {changed_handler_attribute.MethodName}");
                     PropertyChanged_AddHandler(property.Name, (Action)Delegate.CreateDelegate(typeof(Action), this, handler));
                 }

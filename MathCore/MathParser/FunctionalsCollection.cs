@@ -12,7 +12,7 @@ namespace MathCore.MathParser
     {
         /// <summary>Список функционалов</summary>
         [NotNull]
-        private readonly List<Functional> _Operators = new List<Functional>();
+        private readonly List<Functional> _Operators = new();
 
         /// <summary>Количество функционалов в коллекции</summary>
         public int Count => _Operators.Count;

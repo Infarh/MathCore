@@ -291,7 +291,7 @@ namespace MathCore
 
         /// <summary>Набор правил</summary>
         [NotNull]
-        private readonly List<Rule> _Rules = new List<Rule>();
+        private readonly List<Rule> _Rules = new();
 
         /// <summary>Число правил инициализации</summary>
         public int Count => _Rules.Count;
@@ -303,7 +303,7 @@ namespace MathCore
 
         /// <summary>Менеджер пространств имён xml-файла</summary>
         [NotNull]
-        public XmlNamespaceManager Namespace { get; set; } = new XmlNamespaceManager(new NameTable());
+        public XmlNamespaceManager Namespace { get; set; } = new(new NameTable());
 
         /// <summary>Инициализация нового экземпляра <see cref="XmlInitializer{TObject}"/></summary>
         public XmlInitializer() { }

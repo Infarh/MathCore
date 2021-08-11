@@ -1,4 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
+using System.Linq;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -12,11 +15,46 @@ namespace MathCore
 
         #region Массивы
 
+        public static Complex[]? Add(this Complex[]? ZZ, double x)
+        {
+            if (ZZ is null) return null;
+            var result = new Complex[ZZ.Length];
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZZ[i] + x;
+            return result;
+        }
+
+        public static Complex[]? Substrat(this Complex[]? ZZ, double x)
+        {
+            if (ZZ is null) return null;
+            var result = new Complex[ZZ.Length];
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZZ[i] - x;
+            return result;
+        }
+
+        public static Complex[]? Multiply(this Complex[]? ZZ, double x)
+        {
+            if (ZZ is null) return null;
+            var result = new Complex[ZZ.Length];
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZZ[i] * x;
+            return result;
+        }
+
+        public static Complex[]? Divide(this Complex[]? ZZ, double x)
+        {
+            if (ZZ is null) return null;
+            var result = new Complex[ZZ.Length];
+            for (var i = 0; i < result.Length; i++)
+                result[i] = ZZ[i] / x;
+            return result;
+        }
+
         /// <summary>Преобразование массива комплексных чисел в массив действительных</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив действительных чисел</returns>
-        [CanBeNull]
-        public static double[] ToRe([CanBeNull] this Complex[] ZZ)
+        public static double[]? ToRe(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 
@@ -31,8 +69,7 @@ namespace MathCore
         /// <summary>Массив комплексных чисел в массив значений мнимых чисел</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив значений комплексных мнимых чисел</returns>
-        [CanBeNull]
-        public static double[] ToIm([CanBeNull] this Complex[] ZZ)
+        public static double[]? ToIm(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 
@@ -47,8 +84,7 @@ namespace MathCore
         /// <summary>Массив комплексных чисел в массив модулей</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив модулей комплексных чисел</returns>
-        [CanBeNull]
-        public static double[] ToAbs([CanBeNull] this Complex[] ZZ)
+        public static double[]? ToAbs(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 
@@ -63,8 +99,7 @@ namespace MathCore
         /// <summary>Массив комплексных чисел в массив аргументов</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив аргументов комплексных чисел</returns>
-        [CanBeNull]
-        public static double[] ToArg([CanBeNull] this Complex[] ZZ)
+        public static double[]? ToArg(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 
@@ -79,8 +114,7 @@ namespace MathCore
         /// <summary>Преобразование массива комплексных чисел в массив значений аргумента каждого из них в градусах</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив аргументов в градусах</returns>
-        [CanBeNull]
-        public static double[] ToArgDeg([CanBeNull] this Complex[] ZZ)
+        public static double[]? ToArgDeg(this Complex[]? ZZ)
         {
             if (ZZ is null) return null;
 
@@ -98,8 +132,7 @@ namespace MathCore
         /// </summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Двумерный массив вещественных и мнимых частей</returns>
-        [CanBeNull]
-        public static double[,] ToReImArray([CanBeNull] this Complex[] ZZ)
+        public static double[,]? ToReImArray(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 
@@ -117,8 +150,7 @@ namespace MathCore
         /// <summary>Массив комплексных чисел в массив кортежей действительных и мнимых частей</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив кортежей вещественных и мнимых частей</returns>
-        [CanBeNull]
-        public static (double Re, double Im)[] ToReImTuple([CanBeNull] this Complex[] ZZ)
+        public static (double Re, double Im)[]? ToReImTuple(this Complex[]? ZZ)
         {
             if (ZZ is null) return null;
 
@@ -136,8 +168,7 @@ namespace MathCore
         /// </summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Двумерный массив модулей и аргументов</returns>
-        [CanBeNull]
-        public static double[,] ToAbsArgArray([CanBeNull] this Complex[] ZZ)
+        public static double[,]? ToAbsArgArray(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 
@@ -154,8 +185,7 @@ namespace MathCore
         /// <summary>Массив комплексных чисел в массив кортежей модулей и аргументов</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив кортежей модулей и аргументов</returns>
-        [CanBeNull]
-        public static (double Abs, double Arg)[] ToAbsArgTuple([CanBeNull] this Complex[] ZZ)
+        public static (double Abs, double Arg)[]? ToAbsArgTuple(this Complex[]? ZZ)
         {
             if (ZZ is null) return null;
 
@@ -170,8 +200,7 @@ namespace MathCore
         /// <summary>Преобразовать массив действительных в массив комплексных чисел</summary>
         /// <param name="Re">Массив действительных чисел</param>
         /// <returns>Массив комплексных чисел</returns>
-        [CanBeNull]
-        public static Complex[] ToComplex([CanBeNull] this double[] Re)
+        public static Complex[]? ToComplex(this double[]? Re)
         {
             if(Re is null) return null;
 
@@ -186,8 +215,7 @@ namespace MathCore
         /// <summary>Преобразовать двумерный массив действительных в массив комплексных чисел</summary>
         /// <param name="Values">Двумерный массив действительных чисел, где Re = V[i,0], Im = V[i,1]</param>
         /// <returns>Массив комплексных чисел</returns>
-        [CanBeNull]
-        public static Complex[] ToComplex([CanBeNull] this double[,] Values)
+        public static Complex[]? ToComplex(this double[,]? Values)
         {
             if(Values is null) return null;
 
@@ -205,8 +233,7 @@ namespace MathCore
         /// <summary>Преобразование в массив модулей</summary>
         /// <param name="ZZ">Массив комплексных чисел</param>
         /// <returns>Массив модулей комплексных чисел</returns>
-        [CanBeNull]
-        public static Complex[] GetAbs([CanBeNull] this Complex[] ZZ)
+        public static Complex[]? GetAbs(this Complex[]? ZZ)
         {
             if(ZZ is null) return null;
 

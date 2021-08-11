@@ -23,11 +23,14 @@ namespace System.Threading.Tasks
 
         public static TaskAwaiter GetAwaiter(this CancellationToken cancel)
         {
-            var tcs = new TaskCompletionSource<bool>();
-            Task t = tcs.Task;
-            if (cancel.IsCancellationRequested) tcs.SetResult(true);
-            else cancel.Register(s => ((TaskCompletionSource<bool>)s).SetResult(true), tcs);
-            return t.GetAwaiter();
+            var result = new TaskCompletionSource<bool>();
+            Task task = result.Task;
+            if (cancel.IsCancellationRequested) result.SetResult(true);
+            else cancel.Register(s => ((TaskCompletionSource<bool>)s).SetResult(true), result);
+            return task.GetAwaiter();
         }
+
+        public static CancellationTokenSource LinkWith(this in CancellationToken Source, in CancellationToken Cancel) =>
+            CancellationTokenSource.CreateLinkedTokenSource(Source, Cancel);
     }
 }

@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
@@ -20,7 +22,7 @@ namespace System
         /// <param name="e">Аргументы события</param>
         /// <returns>Задача асинхронного выполнения обработчика события</returns>
         [NotNull]
-        public static Task InvokeAsync([CanBeNull] this EventHandler handler, object sender, EventArgs e) => 
+        public static Task InvokeAsync([CanBeNull] this EventHandler handler, object sender, EventArgs e) =>
             handler is null ? Task.CompletedTask : Task.Run(() => handler(sender, e));
 
         /// <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
@@ -45,7 +47,7 @@ namespace System
             foreach (var d in invocations)
                 switch (d.Target)
                 {
-                    case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
+                    case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
                         synchronize_invoke.Invoke(d, new[] { Sender, e });
                         break;
                     default:
@@ -59,7 +61,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
         public static void Start(this PropertyChangedEventHandler Handler, object Sender,
-            [CallerMemberName, CanBeNull]  string PropertyName = null)
+            [CallerMemberName, CanBeNull] string PropertyName = null)
             => Handler.Start(Sender, new PropertyChangedEventArgs(PropertyName));
 
         /// <summary>Потоко-безопасная генерация события</summary>
@@ -75,7 +77,7 @@ namespace System
             foreach (var d in Handler.GetInvocationList())
                 switch (d.Target)
                 {
-                    case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
+                    case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
                         foreach (var arg in args)
                             synchronize_invoke.Invoke(d, new[] { Sender, arg });
                         break;
@@ -97,7 +99,7 @@ namespace System
             foreach (var d in Handler.GetInvocationList())
                 switch (d.Target)
                 {
-                    case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
+                    case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
                         synchronize_invoke.Invoke(d, new[] { Sender, e });
                         break;
                     default:
@@ -118,7 +120,7 @@ namespace System
             foreach (var d in invocations)
                 switch (d.Target)
                 {
-                    case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
+                    case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
                         synchronize_invoke.Invoke(d, new[] { Sender, e });
                         break;
                     default:
@@ -173,7 +175,7 @@ namespace System
             foreach (var d in invocations)
                 switch (d.Target)
                 {
-                    case ISynchronizeInvoke synchronize_invoke when synchronize_invoke.InvokeRequired:
+                    case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
                         synchronize_invoke.Invoke(d, new[] { Sender, e });
                         break;
                     default:
@@ -220,7 +222,7 @@ namespace System
                 ? Array.Empty<TResult>()
                 : Handler
                    .GetInvocationList()
-                   .Select(d => (TResult)(d.Target is ISynchronizeInvoke invoke && invoke.InvokeRequired
+                   .Select(d => (TResult)(d.Target is ISynchronizeInvoke { InvokeRequired: true } invoke
                         ? invoke.Invoke(d, new object[] { Sender, Args })
                         : d.DynamicInvoke(Sender, Args))).ToArray();
     }

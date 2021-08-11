@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.XPath;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq
@@ -13,23 +14,23 @@ namespace System.Xml.Linq
     public static class Linq2XmlExtensions
     {
         [CanBeNull]
-        public static string Attribute([NotNull] this XElement element, XName Name, [CanBeNull] string DefaultValue = null)
-            => element.Attribute(Name).ValueOrDefault(DefaultValue);
+        public static string Attribute([NotNull] this XElement element, XName Name, [CanBeNull] string DefaultValue = null) =>
+            element.Attribute(Name).ValueOrDefault(DefaultValue);
 
-        public static bool AttributeBool([NotNull] this XElement element, XName Name, bool DefaultValue = false)
-            => element.Attribute(Name).ValueBoolOrDefault(DefaultValue);
+        public static bool AttributeBool([NotNull] this XElement element, XName Name, bool DefaultValue = false) =>
+            element.Attribute(Name).ValueBoolOrDefault(DefaultValue);
 
-        public static int AttributeInt([NotNull] this XElement element, XName Name, int DefaultValue = 0)
-            => element.Attribute(Name).ValueIntOrDefault(DefaultValue);
+        public static int AttributeInt([NotNull] this XElement element, XName Name, int DefaultValue = 0) =>
+            element.Attribute(Name).ValueIntOrDefault(DefaultValue);
 
-        public static int? AttributeIntOrNull([NotNull] this XElement element, XName Name)
-            => element.Attribute(Name).ValueIntOrNull();
+        public static int? AttributeIntOrNull([NotNull] this XElement element, XName Name) =>
+            element.Attribute(Name).ValueIntOrNull();
 
-        public static int AttributeIntHex([NotNull] this XElement element, XName Name, int DefaultValue = 0)
-            => element.Attribute(Name).ValueIntHexOrDefault(DefaultValue);
+        public static int AttributeIntHex([NotNull] this XElement element, XName Name, int DefaultValue = 0) =>
+            element.Attribute(Name).ValueIntHexOrDefault(DefaultValue);
 
-        public static double AttributeDouble([NotNull] this XElement element, XName Name, double DefaultValue = 0)
-            => element.Attribute(Name).ValueDoubleOrDefault(DefaultValue);
+        public static double AttributeDouble([NotNull] this XElement element, XName Name, double DefaultValue = 0) =>
+            element.Attribute(Name).ValueDoubleOrDefault(DefaultValue);
 
         public static T AttributeValueOrDefault<T>([NotNull] this XElement element, XName Name, T Default = default) =>
             element.Attribute(Name).ValueOrDefault(Default);
@@ -42,14 +43,14 @@ namespace System.Xml.Linq
             var str = element.ValueOrDefault();
             switch (str)
             {
-                case T _: return (T)(object)str;
+                case T: return (T)(object)str;
                 case null: return Default;
             }
 
             var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (!converter.CanConvertFrom(typeof(string)))
-                throw new InvalidOperationException($"Невозможно преобразовать тип {typeof(string)} к типу {typeof(T)}");
-            return (T)converter.ConvertFrom(str);
+            return !converter.CanConvertFrom(typeof(string))
+                ? throw new InvalidOperationException($"Невозможно преобразовать тип {typeof(string)} к типу {typeof(T)}")
+                : (T)converter.ConvertFrom(str);
         }
 
         [CanBeNull]
@@ -166,9 +167,9 @@ namespace System.Xml.Linq
         [CanBeNull] private static string GetXPathNoParent([NotNull] XObject XObj) =>
             XObj switch
             {
-                XDocument _ => ".",
+                XDocument => ".",
                 XElement element => $"/{NameWithPredicate(element)}",
-                XText _ => null,
+                XText => null,
                 XComment comment => $"/{(comment.Document?.Nodes().OfType<XComment>().Count() != 1 ? $"comment()[{comment.NodesBeforeSelf().OfType<XComment>().Count() + 1}]" : "comment()")}",
                 XProcessingInstruction instruction => $"/{(instruction.Document?.Nodes().OfType<XProcessingInstruction>().Count() != 1 ? $"processing-instruction()[{instruction.NodesBeforeSelf().OfType<XProcessingInstruction>().Count() + 1}]" : "processing-instruction()")}",
                 _ => null

@@ -21,7 +21,7 @@ namespace MathCore.Statistic
         public readonly double[] Values;
         public readonly double[] Percent;
 
-        public ValuedInterval<double> this[int i] => new ValuedInterval<double>(_Intervals[i].Min, _Interval.Max, Values[i]);
+        public ValuedInterval<double> this[int i] => new(_Intervals[i].Min, _Interval.Max, Values[i]);
 
         public Histogram(IEnumerable<double> X, int IntervalsCount)
         {

@@ -9,7 +9,7 @@ namespace MathCore.IoC
     /// <summary>Менеджер сервисов</summary>
     public sealed partial class ServiceManager : IServiceManager, IServiceRegistrations
     {
-        private static readonly object __DefaultManagerSyncRoot = new object();
+        private static readonly object __DefaultManagerSyncRoot = new();
         private static volatile ServiceManager __Default;
 
         [NotNull]
@@ -25,8 +25,8 @@ namespace MathCore.IoC
             }
         }
 
-        private readonly Dictionary<Type, ServiceRegistration> _Services = new Dictionary<Type, ServiceRegistration>();
-        private readonly object _SyncRoot = new object();
+        private readonly Dictionary<Type, ServiceRegistration> _Services = new();
+        private readonly object _SyncRoot = new();
 
         [NotNull] public IServiceRegistrations ServiceRegistrations => this;
 
@@ -58,7 +58,7 @@ namespace MathCore.IoC
             }
         }
 
-        [NotNull] public ServiceManagerAccessor<TService> ServiceAccessor<TService>() where TService : class => new ServiceManagerAccessor<TService>(this);
+        [NotNull] public ServiceManagerAccessor<TService> ServiceAccessor<TService>() where TService : class => new(this);
 
         private bool _Disposed;
         private void Dispose(bool disposing)

@@ -1,30 +1,97 @@
-﻿using System;
-using System.Runtime.Serialization;
-using Microsoft.Data.Analysis;
+using System;
+using System.Linq;
+using System.Numerics;
+
+using MathCore;
+
+// ReSharper disable ConvertToUsingDeclaration
+// ReSharper disable DoubleEquals
 
 namespace ConsoleTest
 {
-    internal class Program
+    internal static class Program
     {
+        private static RecursionResult<BigInteger> Factorial(int n, BigInteger product) =>
+            n < 2
+                ? TailRecursion.Return(product)
+                : TailRecursion.Next(() => Factorial(n - 1, n * product));
+
         private static void Main()
         {
+            const int count = 1000;
+            var items = Enumerable.Range(1, count).ToArray();
 
-            //                        3222 2222 2222 1111 1111 1             
-            //                        1098 7654 3210 9876 5432 1098 7654 3210
-            var res = (int)Math.Log(0b0000_0001_1000_0000_0000_0001_0000_0000, 2); //24
+            var rnd = new Random();
 
-            var times = new PrimitiveDataFrameColumn<DateTime>("Date");
-            times.Append(DateTime.Now.Subtract(TimeSpan.FromDays(2)));
-            times.Append(DateTime.Now.Subtract(TimeSpan.FromDays(1)));
-            times.Append(DateTime.Now);
+            var r2 = items.Shuffle(rnd).ToArray();
 
-            var ints = new PrimitiveDataFrameColumn<int>("ints", 3);
-            var strs = new StringDataFrameColumn("strings", 3);
+            ulong n = 68;
+            ulong k = 34;
 
-            var data = new DataFrame(times, ints, strs) {[0, 1] = 10};
+            var r = SpecialFunctions.BinomialCoefficientBigInt(n, k);
+
+            if (k > n / 2) k = n - k;
+
+            var b = SpecialFunctions.BinomialCoefficient(n, k);
+            //var b = SpecialFunctions.BCR((int)n, (int)k);
+            //var vv = SpecialFunctions.BCRCache.OrderBy(v => v.Key).ThenBy(v => v.Value).ToArray();
+            // n! / (k!*(n-k)!)
 
 
-            Console.ReadLine();
+            var nn = 1ul;
+            var kk = 1ul;
+            var i = 0ul;
+            while (i < k)
+            {
+                var n0 = n - i;
+                i++;
+                var k0 = i;
+
+                if (!Fraction.Simplify(ref nn, ref k0) || k0 > 1) kk *= k0;
+                Fraction.Simplify(ref n0, ref kk);
+
+                nn *= n0;
+            }
+
+            Console.WriteLine(nn);
+            Console.WriteLine();
+
+            //Console.WriteLine();
         }
+    }
+
+    public static class TailRecursion
+    {
+        public static T Execute<T>(Func<RecursionResult<T>> func)
+        {
+            while (true)
+            {
+                var recursion_result = func();
+                if (recursion_result.IsFinalResult)
+                    return recursion_result.Result;
+                func = recursion_result.NextStep;
+            }
+        }
+
+        public static RecursionResult<T> Return<T>(T result) => new(true, result, null);
+
+        public static RecursionResult<T> Next<T>(Func<RecursionResult<T>> NextStep) => new(false, default, NextStep);
+    }
+
+    public class RecursionResult<T>
+    {
+        private readonly bool _IsFinalResult;
+        private readonly T _Result;
+        private readonly Func<RecursionResult<T>> _NextStep;
+        internal RecursionResult(bool IsFinalResult, T result, Func<RecursionResult<T>> NextStep)
+        {
+            _IsFinalResult = IsFinalResult;
+            _Result = result;
+            _NextStep = NextStep;
+        }
+
+        public bool IsFinalResult => _IsFinalResult;
+        public T Result => _Result;
+        public Func<RecursionResult<T>> NextStep => _NextStep;
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -13,7 +16,7 @@ namespace MathCore.ViewModels
     {
         /// <summary>Установщик значения</summary>
         /// <typeparam name="T">Тип устанавливаемого значения</typeparam>
-        public readonly struct SetValueResult<T>
+        public readonly ref struct SetValueResult<T>
         {
             /// <summary>Результат установки значения</summary>
             private readonly bool _Result;
@@ -70,7 +73,6 @@ namespace MathCore.ViewModels
             public bool Then([NotNull] in Action<T, T> execute)
             {
                 if (_Result) execute(_OldValue, _NewValue);
-
                 return _Result;
             }
 
@@ -161,13 +163,13 @@ namespace MathCore.ViewModels
             /// <summary>Indicates whether this instance and a specified object are equal.</summary>
             /// <param name="other">The object to compare with the current instance.</param>
             public bool Equals(in SetValueResult<T> other) =>
-                _Result == other._Result 
-                && EqualityComparer<T>.Default.Equals(_OldValue, other._OldValue) 
-                && EqualityComparer<T>.Default.Equals(_NewValue, other._NewValue) 
+                _Result == other._Result
+                && EqualityComparer<T>.Default.Equals(_OldValue, other._OldValue)
+                && EqualityComparer<T>.Default.Equals(_NewValue, other._NewValue)
                 && _Model.Equals(other._Model);
 
-            /// <inheritdoc />
-            public override bool Equals(object obj) => obj is SetValueResult<T> setter && Equals(setter);
+            [EditorBrowsable(EditorBrowsableState.Never)]
+            public override bool Equals(object obj) => throw new NotSupportedException("Невозможно выполнить метод Equals()");
 
             /// <inheritdoc />
             public override int GetHashCode()
@@ -175,18 +177,23 @@ namespace MathCore.ViewModels
                 unchecked
                 {
                     var hash_code = _Result.GetHashCode();
-                    hash_code = (hash_code * 397) ^ EqualityComparer<T>.Default.GetHashCode(_OldValue);
-                    hash_code = (hash_code * 397) ^ EqualityComparer<T>.Default.GetHashCode(_NewValue);
+                    var equality_comparer = EqualityComparer<T>.Default;
+                    hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_OldValue);
+                    hash_code = (hash_code * 397) ^ equality_comparer.GetHashCode(_NewValue);
                     hash_code = (hash_code * 397) ^ _Model.GetHashCode();
                     return hash_code;
                 }
             }
 
             /// <summary>Оператор равенства двух значений</summary>
-            public static bool operator ==(in SetValueResult<T> left, in SetValueResult<T> right) => left.Equals(right);
+            public static bool operator ==(in SetValueResult<T> left, in SetValueResult<T> right) =>
+                ReferenceEquals(left._Model, right._Model)
+                && left._Result == right._Result
+                && Equals(left._OldValue, right._OldValue)
+                && Equals(left._NewValue, right._NewValue);
 
             /// <summary>Оператор неравенства двух значений</summary>
-            public static bool operator !=(in SetValueResult<T> left, in SetValueResult<T> right) => !left.Equals(right);
+            public static bool operator !=(in SetValueResult<T> left, in SetValueResult<T> right) => !(left == right);
         }
 
         /// <summary>Установить значение свойства</summary>
@@ -196,9 +203,14 @@ namespace MathCore.ViewModels
         /// <typeparam name="T">Тип значения</typeparam>
         /// <returns>Объект, отвечающий за обработку результата установки значения</returns>
         [NotifyPropertyChangedInvocator]
-        protected virtual SetValueResult<T> SetValue<T>([CanBeNull] ref T field, [CanBeNull] in T value, [NotNull, CallerMemberName] in string PropertyName = null)
+        protected virtual SetValueResult<T> SetValue<T>(
+            [CanBeNull] ref T field,
+            [CanBeNull] in T value,
+            [NotNull, CallerMemberName] in string PropertyName = null)
         {
-            if (Equals(field, value)) return new SetValueResult<T>(false, field, field, this);
+            if (Equals(field, value))
+                return new SetValueResult<T>(false, field, field, this);
+
             var old_value = field;
             field = value;
             OnPropertyChanged(PropertyName);
@@ -213,9 +225,15 @@ namespace MathCore.ViewModels
         /// <typeparam name="T">Тип значения</typeparam>
         /// <returns>Объект, отвечающий за обработку результата установки значения</returns>
         [NotifyPropertyChangedInvocator]
-        protected virtual SetValueResult<T> SetValue<T>([CanBeNull] ref T field, [CanBeNull] in T value, [NotNull] in Func<T, bool> Validator, [NotNull, CallerMemberName] in string PropertyName = null)
+        protected virtual SetValueResult<T> SetValue<T>(
+            [CanBeNull] ref T field,
+            [CanBeNull] in T value,
+            [NotNull] in Func<T, bool> Validator,
+            [NotNull, CallerMemberName] in string PropertyName = null)
         {
-            if (Equals(field, value) || !Validator(value)) return new SetValueResult<T>(false, field, value, this);
+            if (Equals(field, value) || !Validator(value))
+                return new SetValueResult<T>(false, field, value, this);
+
             var old_value = field;
             field = value;
             OnPropertyChanged(PropertyName);

@@ -10,7 +10,7 @@ namespace System.Linq.Reactive
         // ReSharper disable once NotAccessedField.Local
         private readonly IObserver<T> _Observer;
         private readonly Queue<Queue<T>> _Buffer;
-        protected readonly object _SyncRoot = new object();
+        protected readonly object _SyncRoot = new();
 
         protected BufferedObservable([NotNull] IObservable<T> ObservableObject, int QueueLength, int BufferLength = 0)
         {

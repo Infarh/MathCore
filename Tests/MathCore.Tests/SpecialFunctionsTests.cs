@@ -46,5 +46,34 @@ namespace MathCore.Tests
                 Assert.That.Value(actual_value).IsEqual(expected_value);
             }
         }
+
+        [TestMethod]
+        public void BinomialCoefficient_int()
+        {
+            const int n = 4;
+            long[] expected = { 1, 4, 6, 4, 1 };
+
+            for (var k = 0; k <= n; k++)
+            {
+                var actual = MathCore.SpecialFunctions.BinomialCoefficient(n, k);
+                Assert.That.Value(actual).IsEqual(expected[k]);
+            }
+        }
+
+        [TestMethod]
+        public void BinomialCoefficient_int_k_Less_zero_equal_0()
+        {
+            const int n = 4;
+            var actual = MathCore.SpecialFunctions.BinomialCoefficient(n, -1);
+            Assert.That.Value(actual).IsEqual(0);
+        }
+
+        [TestMethod]
+        public void BinomialCoefficient_int_k_Greater_n_equal_0()
+        {
+            const int n = 4;
+            var actual = MathCore.SpecialFunctions.BinomialCoefficient(n, n + 1);
+            Assert.That.Value(actual).IsEqual(0);
+        }
     }
 }

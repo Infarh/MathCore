@@ -54,7 +54,7 @@ namespace MathCore.Vectors
         }
 
         [NotNull]
-        public VectorND_double GetInversed() => new VectorND_double(new double[Dimension].Initialize(this, (i, v) => 1 / v[i]));
+        public VectorND_double GetInversed() => new(new double[Dimension].Initialize(this, (i, v) => 1 / v[i]));
 
         [NotNull]
         public static VectorND_double operator +([NotNull] VectorND_double a, [NotNull] VectorND_double b)
@@ -64,10 +64,10 @@ namespace MathCore.Vectors
         }
 
         [NotNull]
-        public static VectorND_double operator +([NotNull] VectorND_double a, double b) => new VectorND_double(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] + bb));
+        public static VectorND_double operator +([NotNull] VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] + bb));
 
         [NotNull]
-        public static VectorND_double operator +(double a, [NotNull] VectorND_double b) => new VectorND_double(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa + bb[i]));
+        public static VectorND_double operator +(double a, [NotNull] VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa + bb[i]));
 
         [NotNull]
         public static VectorND_double operator -([NotNull] VectorND_double a, [NotNull] VectorND_double b)
@@ -77,25 +77,25 @@ namespace MathCore.Vectors
         }
 
         [NotNull]
-        public static VectorND_double operator -([NotNull] VectorND_double a, double b) => new VectorND_double(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] - bb));
+        public static VectorND_double operator -([NotNull] VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] - bb));
 
         [NotNull]
-        public static VectorND_double operator -(double a, [NotNull] VectorND_double b) => new VectorND_double(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa - bb[i]));
+        public static VectorND_double operator -(double a, [NotNull] VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa - bb[i]));
 
         public static double operator *([NotNull] VectorND_double a, [NotNull] VectorND_double b) => a.GetScalarProduction(b);
 
         [NotNull]
-        public static VectorND_double operator *([NotNull] VectorND_double a, double b) => new VectorND_double(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] * bb));
+        public static VectorND_double operator *([NotNull] VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] * bb));
 
         [NotNull]
-        public static VectorND_double operator *(double a, [NotNull] VectorND_double b) => new VectorND_double(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa * bb[i]));
+        public static VectorND_double operator *(double a, [NotNull] VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa * bb[i]));
 
         public static double operator /(VectorND_double a, [NotNull] VectorND_double b) => a * b.GetInversed();
 
         [NotNull]
-        public static VectorND_double operator /([NotNull] VectorND_double a, double b) => new VectorND_double(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] / bb));
+        public static VectorND_double operator /([NotNull] VectorND_double a, double b) => new(new double[a.Dimension].Initialize(a, b, (i, aa, bb) => aa[i] / bb));
 
         [NotNull]
-        public static VectorND_double operator /(double a, [NotNull] VectorND_double b) => new VectorND_double(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa / bb[i]));
+        public static VectorND_double operator /(double a, [NotNull] VectorND_double b) => new(new double[b.Dimension].Initialize(a, b, (i, aa, bb) => aa / bb[i]));
     }
 }

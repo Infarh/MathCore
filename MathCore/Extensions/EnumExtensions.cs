@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel;
 using System.Text;
 using MathCore.Annotations;
@@ -46,9 +47,11 @@ namespace System
         {
             var descriptions = value.GetAttributeValues<DescriptionAttribute, string>(a => a.Description);
             return descriptions.Length > 0
-                ? descriptions.Aggregate(new StringBuilder(), (S, description) => S.AppendLine(description)).ToString()
+                ? string.Join(Environment.NewLine, descriptions)
                 : string.Empty;
         }
+
+        public static IEnumerable<string> GetDescriptions([NotNull] this Enum value) => value.GetAttributeValues<DescriptionAttribute, string>(a => a.Description);
 
         /// <summary>Получить описание поля - значение атрибута <see cref="DisplayNameAttribute"/></summary>
         /// <exception cref="TypeLoadException">Если невозможно загрузить атрибуты типа</exception>
@@ -56,9 +59,14 @@ namespace System
         public static string GetDisplayName([NotNull] this Enum value)
         {
             var descriptions = value.GetAttributeValues<DisplayNameAttribute, string>(a => a.DisplayName);
-            return descriptions?.Length > 0
-                ? descriptions.Aggregate(new StringBuilder(), (S, description) => S.AppendLine(description)).ToString()
+            return descriptions.Length > 0
+                ? string.Join(Environment.NewLine, descriptions)
                 : string.Empty;
         }
+
+        /// <summary>Получить описание поля - значение атрибута <see cref="DisplayNameAttribute"/></summary>
+        /// <exception cref="TypeLoadException">Если невозможно загрузить атрибуты типа</exception>
+        [CanBeNull]
+        public static IEnumerable<string> GetDisplayNames([NotNull] this Enum value) => value.GetAttributeValues<DisplayNameAttribute, string>(a => a.DisplayName);
     }
 }

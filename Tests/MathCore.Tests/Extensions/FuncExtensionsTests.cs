@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,7 +14,7 @@ namespace MathCore.Tests.Extensions
             const string expected_result = "Result";
             Func<string> func = () =>
             {
-                Task.Delay(2);
+                Thread.Sleep(2);
                 return expected_result;
             };
 
@@ -31,7 +30,7 @@ namespace MathCore.Tests.Extensions
             var expected_result = data_string.Length;
             Func<string, int> func = s =>
             {
-                Task.Delay(2);
+                Thread.Sleep(2);
                 return s.Length;
             };
 

@@ -1,16 +1,20 @@
-﻿using MathCore;
-using MathCore.Annotations;
+﻿#nullable enable
+using MathCore;
 using MathCore.Evaluations;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+using MathCore.Annotations;
+
 using cEx = System.Linq.Expressions.ConstantExpression;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using Ex = System.Linq.Expressions.Expression;
 using mcEx = System.Linq.Expressions.MethodCallExpression;
+// ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
 namespace System
@@ -18,14 +22,80 @@ namespace System
     /// <summary>Класс методов-расширений для объекта</summary>
     public static class ObjectExtensions
     {
+        /// <summary>Вызов к объекту с обработкой ошибок</summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <param name="obj">Объект, вызов к которому надо выполнить</param>
+        /// <param name="action">Выполняемое над объектом действие, ошибки в котором требуется перехватить</param>
+        /// <param name="OnError">Метод обработки исключения</param>
+        public static void Try<T>(this T obj, Action<T> action, Action<T, Exception> OnError)
+        {
+            if (OnError is null) throw new ArgumentNullException(nameof(OnError));
+            try
+            {
+                action(obj);
+            }
+            catch (Exception e)
+            {
+                OnError(obj, e);
+            }
+        }
+
+        /// <summary>Вычислить значение для указанного объекта с обработкой ошибок</summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <typeparam name="TResult">Тип результата</typeparam>
+        /// <param name="obj">Объект, для которого вычисляется значение</param>
+        /// <param name="func">Метод вычисления значения</param>
+        /// <param name="OnError">Функция обработки исключения, возвращающий значение в случае его возникновения</param>
+        /// <returns>Результат вызова</returns>
+        public static TResult? Try<T, TResult>(
+            this T obj,
+             Func<T, TResult> func,
+             Func<T, Exception, TResult>? OnError = null)
+        {
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            try
+            {
+                return func(obj);
+            }
+            catch (Exception e)
+            {
+                return OnError is null ? default : OnError(obj, e);
+            }
+        }
+
+        /// <summary>Вычислить значение для указанного объекта с обработкой ошибок</summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <typeparam name="TResult">Тип результата</typeparam>
+        /// <param name="obj">Объект, для которого вычисляется значение</param>
+        /// <param name="func">Метод вычисления значения</param>
+        /// <param name="OnError">Действие обработки исключения</param>
+        /// <param name="DefaultResult">Значение по умолчанию, возвращаемое в случае возникновения исключения</param>
+        /// <returns>Результат вызова</returns>
+        public static TResult? Try<T, TResult>(
+            this T obj, Func<T, TResult> func,
+            Action<T, Exception>? OnError = null,
+            TResult? DefaultResult = default)
+        {
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            try
+            {
+                return func(obj);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(obj, e);
+                return DefaultResult;
+            }
+        }
+
         /// <summary>Преобразование объекта в бесконечное перечисление</summary>
         /// <typeparam name="T">Тип элементов генерируемого перечисления</typeparam>
         /// <param name="obj">Объект, на основе которого создаётся перечисление</param>
         /// <param name="NextObject">Метод, генерирующий новый объект последовательности</param>
         /// <param name="TakeFirst">Выдать в последовательность исходный элемент</param>
         /// <returns>Бесконечная последовательность элементов, генерируемая указанным методом</returns>
-        [NotNull]
-        public static IEnumerable<T> AsEnumerable<T>([CanBeNull] this T obj, [NotNull] Func<T, T> NextObject, bool TakeFirst = false)
+
+        public static IEnumerable<T?> AsEnumerable<T>(this T? obj, Func<T?, T?> NextObject, bool TakeFirst = false)
         {
             if (TakeFirst) yield return obj;
             while (true)
@@ -45,12 +115,10 @@ namespace System
             public bool Continue { get; set; }
 
             /// <summary>Объект-источник</summary>
-            [CanBeNull]
-            public TSource Object { get; set; }
+            public TSource? Object { get; set; }
 
             /// <summary>Объект-значение</summary>
-            [CanBeNull]
-            public TResult Result { get; set; }
+            public TResult? Result { get; set; }
 
             /// <summary>Номер итерации</summary>
             public int Iteration { get; set; }
@@ -61,8 +129,7 @@ namespace System
             /// <summary>Переход к следующей итерации</summary>
             /// <param name="result">Результат итерации</param>
             /// <param name="CanContinue">Продолжать выборку</param>
-            [DST]
-            public void Next([CanBeNull] TResult result, bool CanContinue = true)
+            public void Next(TResult? result, bool CanContinue = true)
             {
                 Result = result;
                 Continue = CanContinue;
@@ -75,14 +142,9 @@ namespace System
         /// <param name="source">Источник последовательности</param>
         /// <param name="Selector">Метод выборки элементов из источника</param>
         /// <returns>Последовательность объектов, генерируемых на основе объекта-источника</returns>
-        [DST, ItemCanBeNull]
-        public static IEnumerable<TResult> SelectObj<TSource, TResult>
-        (
-            [CanBeNull] this TSource source,
-            [NotNull] Action<ObjectSelector<TSource, TResult>> Selector
-        )
+        public static IEnumerable<TResult?> SelectObj<TSource, TResult>(this TSource? source, Action<ObjectSelector<TSource, TResult?>> Selector)
         {
-            var selector = new ObjectSelector<TSource, TResult>
+            var selector = new ObjectSelector<TSource, TResult?>
             {
                 Object = source,
                 Result = default
@@ -102,24 +164,21 @@ namespace System
         /// <param name="source">Объект-источник</param>
         /// <param name="Selector">Метод генерации значения</param>
         /// <returns>Значение, определяемое на основе объекта-источника указанным методом</returns>
-        [DST]
-        public static TResult SelectObject<TSource, TResult>(this TSource source, [NotNull] Func<TSource, TResult> Selector) => Selector(source);
-
+        public static TResult SelectObject<TSource, TResult>(this TSource source, Func<TSource, TResult> Selector) => Selector(source);
 
         /// <summary>Преобразование объекта в форматированную строку</summary>
         /// <param name="obj">Преобразуемый объект</param>
         /// <param name="Format">Строка форматирования</param>
         /// <returns>Форматированная строка текстового представления объекта</returns>
-        [DST/*, StringFormatMethod("Format")*/, NotNull]
-        public static string ToFormattedString(this object obj, [NotNull] string Format = "{0}") => string.Format(Format, obj);
+        public static string ToFormattedString(this object obj, string Format = "{0}") => string.Format(Format, obj);
 
         /// <summary>Преобразование объекта в форматированную строку</summary>
         /// <param name="obj">Преобразуемый объект (идущий нулевым аргументом)</param>
         /// <param name="Format">Строка форматирования</param>
         /// <param name="args">Массив аргументов, добавляемых к объекту для создание форматированной строки</param>
         /// <returns>Форматированная строка текстового представления объекта</returns>
-        [DST, StringFormatMethod("Format"), NotNull]
-        public static string ToFormattedString(this object obj, [NotNull] string Format, [CanBeNull] params object[] args)
+        [StringFormatMethod("Format")]
+        public static string ToFormattedString(this object obj, string Format, params object[]? args)
         {
             if (args is null || args.Length == 0) return string.Format(Format, obj);
             var str_args = new object[args.ParamNotNull(nameof(args)).Length + 1];
@@ -133,20 +192,17 @@ namespace System
         /// <param name="t">Преобразуемый объект</param>
         /// <param name="converter">Метод преобразования объекта в строку</param>
         /// <returns>Сгенерированная строка указанным методом на основе указанного объекта</returns>
-        [DST]
-        public static string ToString<T>(this T t, [NotNull] Func<T, string> converter) => converter(t);
+        public static string ToString<T>(this T t, Func<T, string> converter) => converter(t);
 
         /// <summary>Расчёт хеш-кода массива объектов</summary>
         /// <param name="Objects">Массив объектов, хеш-код которых надо рассчитать</param>
         /// <returns>Хеш-код массива объектов</returns>
-        [DST]
-        public static int GetHashCode([NotNull] params object[] Objects) => Objects.GetComplexHashCode();
+        public static int GetHashCode(params object[] Objects) => Objects.GetComplexHashCode();
 
         /// <summary>Расчёт хеш-кода перечисления объектов</summary>
         /// <param name="Objects">Перечисление объектов, хеш-код которых надо рассчитать</param>
         /// <returns>Хеш-код перечисления объектов</returns>
-        [DST]
-        public static int GetComplexHashCode([NotNull] this IEnumerable<object> Objects)
+        public static int GetComplexHashCode(this IEnumerable<object> Objects)
         {
             var hash = Consts.BigPrime_int;
             foreach (var obj in Objects)
@@ -162,8 +218,7 @@ namespace System
         /// <param name="o">Объект, атрибут которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
         /// <returns>Искомый атрибут в случае его наличия, либо null, если атрибут не определён</returns>
-        [CanBeNull, DST]
-        public static TAttribute GetObjectAttribute<TAttribute>([NotNull] this object o, bool Inherited = false)
+        public static TAttribute? GetObjectAttribute<TAttribute>(this object o, bool Inherited = false)
             where TAttribute : Attribute
         {
             var object_attributes = o.GetObjectAttributes<TAttribute>(Inherited);
@@ -175,22 +230,19 @@ namespace System
         /// <param name="o">Объект, атрибуты которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
         /// <returns>Массив атрибутов указанного типа, определённых для объекта</returns>
-        [CanBeNull, DST]
-        public static TAttribute[] GetObjectAttributes<TAttribute>([CanBeNull] this object o, bool Inherited = false)
+        public static TAttribute[]? GetObjectAttributes<TAttribute>(this object? o, bool Inherited = false)
             where TAttribute : Attribute =>
             o?.GetType().GetCustomAttributes<TAttribute>(Inherited);
 
         /// <summary>Ссылка на объект не равна null</summary>
         /// <param name="o">Проверяемый объект</param>
         /// <returns>Истина, если проверяемый объект не null</returns>
-        [DST]
-        public static bool IsNotNull([CanBeNull] this object o) => o != null;
+        public static bool IsNotNull(this object? o) => o != null;
 
         /// <summary>Ссылка на объект равна null</summary>
         /// <param name="o">Проверяемый объект</param>
         /// <returns>Истина, если проверяемый объект null</returns>
-        [DST]
-        public static bool IsNull([CanBeNull] this object o) => o is null;
+        public static bool IsNull(this object? o) => o is null;
 
         /// <summary>Проверка на пустую ссылку</summary>
         /// <typeparam name="T">Тип проверяемого объекта</typeparam>
@@ -198,8 +250,8 @@ namespace System
         /// <param name="Message">Сообщение ошибки</param>
         /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
         /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
-        [NotNull]
-        public static T NotNull<T>([CanBeNull] this T obj, [CanBeNull] string Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
+
+        public static T NotNull<T>(this T? obj, string? Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
 
         /// <summary>Проверка параметра на <see langword="null"/></summary>
         /// <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
@@ -208,18 +260,17 @@ namespace System
         /// <param name="Message">Сообщение ошибки</param>
         /// <returns>Объект, гарантированно не <see langword="null"/></returns>
         /// <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
-        [NotNull]
-        public static T ParamNotNull<T>([CanBeNull] this T obj, [NotNull] string ParameterName, [CanBeNull] string Message = null) where T : class =>
+
+        public static T ParamNotNull<T>(this T? obj, string ParameterName, string? Message = null) where T : class =>
             obj ?? throw new ArgumentException(Message ?? $"Отсутствует ссылка для параметра {ParameterName}", ParameterName);
 
         /// <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
         /// <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>
         /// <typeparam name="TObject">Тип исходного объекта</typeparam>
-        /// <param name="o">Объект, атрибуты которого требуется получить</param>
+        /// <param name="_">Объект, атрибуты которого требуется получить</param>
         /// <param name="Inherited">Искать в цепочке наследования</param>
         /// <returns>Массив атрибутов указанного типа, определённых для типа объекта</returns>
-        [CanBeNull, DST]
-        public static TAttribute[] GetAttributes<TAttribute, TObject>(this TObject o, bool Inherited = false)
+        public static TAttribute[] GetAttributes<TAttribute, TObject>(this TObject _, bool Inherited = false)
             where TAttribute : Attribute => typeof(TObject).GetCustomAttributes<TAttribute>(Inherited);
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
@@ -227,12 +278,7 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull]Action<T> Initializer
-        ) where T : class
+        public static T? InitializeObject<T>(this T? obj, Action<T?>? Initializer) where T : class
         {
             if (obj != null)
                 Initializer?.Invoke(obj);
@@ -246,13 +292,7 @@ namespace System
         /// <param name="parameter">Параметр инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T, TP>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull] TP parameter,
-            [CanBeNull]Action<T, TP> Initializer
-        ) where T : class
+        public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T?, TP?>? Initializer) where T : class
         {
             if (obj != null)
                 Initializer?.Invoke(obj, parameter);
@@ -268,13 +308,7 @@ namespace System
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T, TP1, TP2>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull] TP1 parameter1,
-            [CanBeNull] TP2 parameter2,
-            [CanBeNull]Action<T, TP1, TP2> Initializer
+        public static T? InitializeObject<T, TP1, TP2>(this T? obj, TP1? parameter1, TP2? parameter2, Action<T?, TP1?, TP2?>? Initializer
         ) where T : class
         {
             if (obj != null)
@@ -293,15 +327,13 @@ namespace System
         /// <param name="parameter3">Параметр инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T, TP1, TP2, TP3>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull] TP1 parameter1,
-            [CanBeNull] TP2 parameter2,
-            [CanBeNull] TP3 parameter3,
-            [CanBeNull]Action<T, TP1, TP2, TP3> Initializer
-        ) where T : class
+        public static T? InitializeObject<T, TP1, TP2, TP3>(
+            this T? obj,
+            TP1? parameter1,
+            TP2? parameter2,
+            TP3? parameter3,
+            Action<T?, TP1?, TP2?, TP3?>? Initializer)
+            where T : class
         {
             if (obj != null)
                 Initializer?.Invoke(obj, parameter1, parameter2, parameter3);
@@ -313,12 +345,7 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull]Func<T, T> Initializer
-        ) where T : class =>
+        public static T? InitializeObject<T>(this T? obj, Func<T?, T?>? Initializer) where T : class =>
             Initializer != null && obj != null ? Initializer(obj) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
@@ -328,13 +355,7 @@ namespace System
         /// <param name="parameter">Параметр инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T, TP>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull] TP parameter,
-            [CanBeNull]Func<T, TP, T> Initializer
-        ) where T : class =>
+        public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Func<T?, TP?, T?>? Initializer) where T : class =>
             Initializer != null && obj != null ? Initializer(obj, parameter) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
@@ -348,15 +369,13 @@ namespace System
         /// <param name="parameter3">Параметр 3 инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T, TP1, TP2, TP3>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull] TP1 parameter1,
-            [CanBeNull] TP2 parameter2,
-            [CanBeNull] TP3 parameter3,
-            [CanBeNull]Func<T, TP1, TP2, TP3, T> Initializer
-        ) where T : class =>
+        public static T? InitializeObject<T, TP1, TP2, TP3>(
+            this T? obj,
+            TP1? parameter1,
+            TP2? parameter2,
+            TP3? parameter3,
+            Func<T?, TP1?, TP2?, TP3?, T?>? Initializer)
+            where T : class =>
             Initializer != null && obj != null ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
@@ -368,21 +387,18 @@ namespace System
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [DST, CanBeNull]
-        public static T InitializeObject<T, TP1, TP2>
-        (
-            [CanBeNull] this T obj,
-            [CanBeNull] TP1 parameter1,
-            [CanBeNull] TP2 parameter2,
-            [CanBeNull]Func<T, TP1, TP2, T> Initializer
-        ) where T : class =>
+        public static T? InitializeObject<T, TP1, TP2>(
+            this T? obj,
+            TP1? parameter1,
+            TP2? parameter2,
+            Func<T?, TP1?, TP2?, T?>? Initializer)
+            where T : class =>
             Initializer != null && obj != null ? Initializer(obj, parameter1, parameter2) : obj;
 
         /// <summary>Печать объекта на консоли без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
-        [DST]
-        public static void ToConsole<T>([CanBeNull] this T Obj)
+        public static void ToConsole<T>(this T? Obj)
         {
             if (Obj is null) return;
             Console.Write(Obj);
@@ -393,8 +409,8 @@ namespace System
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Format">Строка форматирования результата</param>
         /// <param name="args">Дополнительные аргументы строки форматирования</param>
-        [DST, StringFormatMethod("Format")]
-        public static void ToConsole<TObject>([CanBeNull] this TObject Obj, [NotNull] string Format, [NotNull, ItemNotNull] params object[] args)
+        [StringFormatMethod("Format")]
+        public static void ToConsole<TObject>(this TObject? Obj, string Format, params object[] args)
         {
             if (Obj is null) return;
             if (args.Length == 0)
@@ -406,8 +422,7 @@ namespace System
         /// <summary>Печать объекта на консоли с переносом строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
-        [DST]
-        public static void ToConsoleLN<T>([CanBeNull] this T Obj)
+        public static void ToConsoleLN<T>(this T? Obj)
         {
             if (Obj is null) return;
             Console.WriteLine(Obj);
@@ -418,8 +433,8 @@ namespace System
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Format">Строка форматирования результата</param>
         /// <param name="args">Дополнительные аргументы строки форматирования</param>
-        [DST, StringFormatMethod("Format")]
-        public static void ToConsoleLN<TObject>([CanBeNull] this TObject Obj, [NotNull] string Format, [NotNull, ItemNotNull] params object[] args)
+        [StringFormatMethod("Format")]
+        public static void ToConsoleLN<TObject>(this TObject? Obj, string Format, params object[] args)
         {
             if (Obj is null) return;
             if (args.Length != 0)
@@ -431,8 +446,7 @@ namespace System
         /// <summary>Печать объекта в отладочной информации без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
-        [DST]
-        public static void ToDubugOut<T>([CanBeNull] this T Obj)
+        public static void ToDubugOut<T>(this T? Obj)
         {
             if (Obj is null) return;
             Debug.Write(Obj);
@@ -442,8 +456,7 @@ namespace System
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
-        [DST]
-        public static void ToDubugOut<T>([CanBeNull] this T Obj, bool Condition)
+        public static void ToDubugOut<T>(this T? Obj, bool Condition)
         {
             if (Obj is null) return;
             Debug.WriteIf(Condition, Obj);
@@ -452,8 +465,7 @@ namespace System
         /// <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
-        [DST]
-        public static void ToDebugOutLN<T>([CanBeNull] this T Obj)
+        public static void ToDebugOutLN<T>(this T? Obj)
         {
             if (Obj is null) return;
             Debug.WriteLine(Obj);
@@ -463,8 +475,7 @@ namespace System
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
-        [DST]
-        public static void ToDebugOutLN<T>([CanBeNull] this T Obj, bool Condition)
+        public static void ToDebugOutLN<T>(this T? Obj, bool Condition)
         {
             if (Obj is null) return;
             Debug.WriteLineIf(Condition, Obj);
@@ -474,7 +485,7 @@ namespace System
         /// <typeparam name="T">Тип преобразуемой структуры</typeparam>
         /// <param name="value">Значение преобразуемой структуры</param>
         /// <returns>Массив байт, представляющий указанную структуру</returns>
-        [NotNull]
+
         public static byte[] ToByteArray<T>(this T value) where T : struct
         {
             var buffer = new byte[Marshal.SizeOf(value)]; // создать массив
@@ -491,11 +502,53 @@ namespace System
             }
         }
 
+        [NotNull]
+        public static byte[] ListToByteArray<T>(this IReadOnlyList<T> values) where T : struct
+        {
+            if (values.Count == 0) return Array.Empty<byte>();
+
+            var size = Marshal.SizeOf(typeof(T));
+            var buffer = new byte[size * values.Count]; // создать массив
+            var g_lock = default(GCHandle);
+            try
+            {
+                g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
+                for (var i = 0; i < values.Count; i++)
+                {
+                    var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, i * size); // и взять его адрес
+                    Marshal.StructureToPtr(values[i], p, true); // копировать в массив 
+                }
+            }
+            finally
+            {
+                g_lock.Free(); // снять фиксацию
+            }
+            return buffer;
+        }
+
+        [NotNull]
+        public static byte[] ArrayToByteArray<T>(this T[] values) where T : struct
+        {
+            var buffer = new byte[Marshal.SizeOf(typeof(T)) * values.Length]; // создать массив
+            var g_lock = default(GCHandle);
+            try
+            {
+                g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
+                var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
+                Marshal.StructureToPtr(values, p, true); // копировать в массив
+            }
+            finally
+            {
+                g_lock.Free(); // снять фиксацию
+            }
+            return buffer;
+        }
+
         /// <summary>Преобразование массива байт в структуру</summary>
         /// <typeparam name="T">Тип структуры</typeparam>
         /// <param name="data">Массив байт</param>
         /// <param name="offset">Смещение в массиве байт</param>
-        public static T ToStructure<T>([NotNull] this byte[] data, int offset = 0)
+        public static T ToStructure<T>(this byte[] data, int offset = 0)
             where T : struct
         {
             var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
@@ -512,11 +565,34 @@ namespace System
             }
         }
 
+        [NotNull]
+        public static T[] ToStructArray<T>([NotNull] this byte[] data) where T : struct
+        {
+            var type = typeof(T);
+            var length = Marshal.SizeOf(type);
+            var count = data.Length / length;
+            var ptr = Marshal.AllocHGlobal(length * count);
+            try
+            {
+                var result = new T[count];
+                for (var i = 0; i < count; i++)
+                {
+                    Marshal.Copy(data, length * i, ptr, length);
+                    result[i] = (T)Marshal.PtrToStructure(ptr, type);
+                }
+                return result;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+
         /// <summary>Выбор действия для объекта</summary>
         /// <param name="obj">Объект, на котором выполняется выбор действия</param>
         /// <param name="actions">Словарь возможных действий над объектом</param>
         /// <param name="Default">Действие по умолчанию</param>
-        public static void Switch([NotNull] this object obj, [NotNull] Actions actions, [CanBeNull] Action<object> Default = null)
+        public static void Switch(this object obj, Actions actions, Action<object>? Default = null)
             => actions.GetValue(obj, Default)?.Invoke(obj);
 
         //public static unsafe void ReadPointer<T>(byte[] data, int offset, out T value)
@@ -534,7 +610,7 @@ namespace System
         ///// <param name="data">Массив байт</param>
         ///// <param name="offset">Смещение в массиве байт</param>
         ///// <param name="value">Прочитанная структура</param>
-        //public delegate void StructureReader<T>([NotNull] byte[] data, int offset, [CanBeNull] out T value);
+        //public delegate void StructureReader<T>( byte[] data, int offset, [CanBeNull] out T value);
 
         //[Copyright("Генерация кода", url = "http://professorweb.ru/my/csharp/optimization/level7/7_9.php")]
         //private static class StructureReadersPool<T>
@@ -542,7 +618,7 @@ namespace System
         //    /// <summary>Делегат чтения структуры данных</summary>
         //    [CanBeNull] private static volatile StructureReader<T> __Reader;
         //    /// <summary>Делегат чтения структуры данных</summary>
-        //    [NotNull]
+        //    
         //    public static StructureReader<T> Reader
         //    {
         //        get
@@ -558,7 +634,7 @@ namespace System
 
         //    /// <summary>Создать делегат чтения структуры данных</summary>
         //    /// <returns>Делегат, читающий структуру из массива данных</returns>
-        //    [NotNull]
+        //    
         //    private static StructureReader<T> CreateDelegate()
         //    {
         //        var dm = new DynamicMethod
@@ -603,7 +679,7 @@ namespace System
         ///// <summary>Получить метод чтения структур указанного типа из массива байт</summary>
         ///// <typeparam name="T">Тип структуры данных</typeparam>
         ///// <returns>Делегат чтения структуры данных из массива байт</returns>
-        //[NotNull] public static StructureReader<T> GetStructReader<T>() => StructureReadersPool<T>.Reader;
+        // public static StructureReader<T> GetStructReader<T>() => StructureReadersPool<T>.Reader;
 
         ///// <summary>Чтение структуры данных из массива байт</summary>
         ///// <typeparam name="T">Тип структуры данных</typeparam>
@@ -611,7 +687,7 @@ namespace System
         ///// <param name="offset">Смещение в массиве байт</param>
         ///// <param name="value">Значение, прочитанное из структуры данных</param>
         //[Copyright("Генерация кода", url = "http://professorweb.ru/my/csharp/optimization/level7/7_9.php")]
-        //public static void ReadPointerLCG<T>([NotNull] byte[] data, int offset, [CanBeNull] out T value) => GetStructReader<T>()(data, offset, out value);
+        //public static void ReadPointerLCG<T>( byte[] data, int offset, [CanBeNull] out T value) => GetStructReader<T>()(data, offset, out value);
 
         //public static unsafe void ReadPointerTypedRef<T>(byte[] data, int offset, ref T value)
         //{
@@ -636,44 +712,41 @@ namespace System
         /// <typeparam name="T">Тип исходного элемента</typeparam>
         /// <param name="obj">Оборачиваемый объект</param>
         /// <returns>Вычисление, возвращающее указанный объект</returns>
-        [NotNull, DST]
-        public static ValueEvaluation<T> ToEvaluation<T>([CanBeNull] this T obj) => new ValueEvaluation<T>(obj);
+        public static ValueEvaluation<T> ToEvaluation<T>(this T? obj) => new(obj!);
 
         /// <summary>Преобразование объекта в именованное вычисление</summary>
         /// <typeparam name="T">Тип исходного элемента</typeparam>
         /// <param name="obj">Оборачиваемый объект</param>
         /// <param name="Name">Имя вычисления</param>
         /// <returns>Вычисление, возвращающее указанный объект</returns>
-        [NotNull, DST]
-        public static ValueEvaluation<T> ToEvaluation<T>([CanBeNull] this T obj, [CanBeNull] string Name) => new NamedValueEvaluation<T>(obj, Name);
+        public static ValueEvaluation<T> ToEvaluation<T>(this T? obj, string? Name) => new NamedValueEvaluation<T>(obj!, Name);
 
         /// <summary>Преобразование объекта в выражение-константу</summary>
         /// <param name="obj">Преобразуемый объект</param>
         /// <returns>Выражение-константа</returns>
-        [NotNull, DST]
-        public static cEx ToExpression([CanBeNull] this object obj) => Ex.Constant(obj);
+        public static cEx ToExpression(this object? obj) => Ex.Constant(obj);
 
         /// <summary>Получить выражение вызова метода объекта</summary>
         /// <param name="obj">Объект, метод которого надо вызвать</param>
         /// <param name="d">Делегат метода</param>
         /// <param name="p">Параметры метода</param>
         /// <returns>Выражение вызова метода</returns>
-        [NotNull] public static mcEx GetCallExpression([CanBeNull] this object obj, [NotNull] Delegate d, [NotNull, ItemNotNull] params Ex[] p) => obj.GetCallExpression(d.Method, p);
+        public static mcEx GetCallExpression(this object? obj, Delegate d, params Ex[] p) => obj.GetCallExpression(d.Method, p);
 
         /// <summary>Получить выражение вызова метода объекта</summary>
         /// <param name="obj">Объект, метод которого надо вызвать</param>
         /// <param name="d">Описание метода</param>
         /// <param name="p">Параметры метода</param>
         /// <returns>Выражение вызова метода</returns>
-        [NotNull] public static mcEx GetCallExpression([CanBeNull] this object obj, [NotNull] MethodInfo d, [NotNull, ItemNotNull] params Ex[] p) => Ex.Call(obj.ToExpression(), d, p);
+        public static mcEx GetCallExpression(this object? obj, MethodInfo d, params Ex[] p) => Ex.Call(obj.ToExpression(), d, p);
 
         /// <summary>Получить выражение вызова метода объекта</summary>
         /// <param name="obj">Объект, метод которого надо вызвать</param>
         /// <param name="MethodName">Имя метода</param>
         /// <param name="p">Параметры метода</param>
         /// <returns>Выражение вызова метода</returns>
-        [NotNull]
-        public static mcEx GetCallExpression([NotNull] this object obj, [NotNull] string MethodName, [NotNull, ItemNotNull] params Ex[] p)
+
+        public static mcEx GetCallExpression(this object obj, string MethodName, params Ex[] p)
         {
             var type = obj.GetType();
             var method = type.GetMethod(MethodName,
@@ -688,7 +761,7 @@ namespace System
 
     /// <summary>Словарь действий</summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class Actions : Dictionary<object, Action<object>> { }
+    public class Actions : Dictionary<object, Action<object>?> { }
 }
 namespace System.Tags
 {
@@ -699,15 +772,13 @@ namespace System.Tags
         /// <typeparam name="TTag">Тип объекта-метки</typeparam>
         /// <param name="o">Целевой объект</param>
         /// <returns>Объект метка, если он существует в указанном объекте</returns>
-        [CanBeNull, DST]
-        public static TTag GetTag<TTag>([NotNull] this object o) => TagPool.Tag<TTag>(o);
+        public static TTag? GetTag<TTag>(this object o) => TagPool.Tag<TTag>(o);
 
         /// <summary>Установить объект-метку для указанного объекта</summary>
         /// <typeparam name="TTag">Тип объекта-метки</typeparam>
         /// <param name="o">Целевой объект</param>
         /// <param name="Tag">Объект-метка, прикладываемый к целевому объекту</param>
-        [DST]
-        public static void SetTag<TTag>([NotNull] this object o, [CanBeNull] TTag Tag) => TagPool.SetTag(o, Tag);
+        public static void SetTag<TTag>(this object o, TTag? Tag) => TagPool.SetTag(o, Tag);
 
         #region Nested type: TagPool
 
@@ -715,28 +786,28 @@ namespace System.Tags
         private static class TagPool
         {
             /// <summary>Объект межпотоковой синхронизации</summary>
-            [NotNull] private static readonly object __Lock = new object();
+            private static readonly object __Lock = new();
             /// <summary>Словарь меток</summary>
-            [CanBeNull] private static Dictionary<WeakReference, Dictionary<Type, object>> __Tags;
+            private static Dictionary<WeakReference, Dictionary<Type, object?>>? __Tags;
 
             /// <summary>Установить метку указанному объекту</summary>
             /// <param name="o">Целевой объект</param>
             /// <param name="Tag">Добавляемая метка</param>
-            public static void SetTag([NotNull] object o, [CanBeNull] object Tag)
+            public static void SetTag(object o, object? Tag)
             {
                 lock (__Lock)
                 {
-                    var tags = __Tags ??= new Dictionary<WeakReference, Dictionary<Type, object>>();
+                    var tags = __Tags ??= new Dictionary<WeakReference, Dictionary<Type, object?>>();
 
                     tags.Keys.Where(w => !w.IsAlive).ToArray().Foreach(w => tags.Remove(w));
                     bool Selector(WeakReference w) => o.Equals(w.Target);
 
                     var reference = tags.Keys.Find(Selector);
-                    Dictionary<Type, object> dictionary;
+                    Dictionary<Type, object?> dictionary;
                     if (reference != null)
                         dictionary = tags[reference];
                     else
-                        tags.Add(new WeakReference(o), dictionary = new Dictionary<Type, object>());
+                        tags.Add(new WeakReference(o), dictionary = new Dictionary<Type, object?>());
 
                     var type = Tag?.GetType() ?? typeof(object);
 
@@ -754,8 +825,7 @@ namespace System.Tags
             /// <typeparam name="TTagType">Тип объекта-метки</typeparam>
             /// <param name="o">Целевой объект</param>
             /// <returns>Объект-метка</returns>
-            [CanBeNull]
-            public static TTagType Tag<TTagType>([NotNull] object o)
+            public static TTagType? Tag<TTagType>(object o)
             {
                 bool Selector(WeakReference w) => o.Equals(w.Target);
 
@@ -766,9 +836,9 @@ namespace System.Tags
                     var reference = tags?.Keys.Find(Selector);
                     return reference is null
                         ? default
-                        : !tags[reference].TryGetValue(typeof(TTagType), out var result)
+                        : !tags![reference].TryGetValue(typeof(TTagType), out var result)
                             ? default
-                            : (TTagType)result;
+                            : (TTagType)result!;
                 }
             }
         }

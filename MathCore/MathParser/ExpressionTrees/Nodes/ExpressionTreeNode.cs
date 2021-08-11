@@ -132,7 +132,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Перечислитель предков узла</summary>
         [NotNull]
-        public ParentsIterator Parents => new ParentsIterator(this);
+        public ParentsIterator Parents => new(this);
 
         /// <summary>Ссылка на корень дерева</summary>
         [NotNull]

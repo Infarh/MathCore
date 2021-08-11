@@ -12,7 +12,7 @@ namespace System
         /// <param name="OnDispose">Действие, выполняемое при освобождении</param>
         /// <returns>Объект <see cref="LambdaDisposable"/></returns>
         [NotNull]
-        public static LambdaDisposable OnDisposed(Action OnDispose) => new LambdaDisposable(OnDispose);
+        public static LambdaDisposable OnDisposed(Action OnDispose) => new(OnDispose);
 
         /// <summary>Действие, выполняемое при разрушении объекта</summary>
         protected readonly Action _DisposableAction;

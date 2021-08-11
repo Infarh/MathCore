@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using MathCore.Annotations;
+using MathCore.Extensions.AsyncAwait;
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -10,74 +14,114 @@ namespace System.Threading.Tasks
 {
     public static class TaskEx
     {
+        public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
+
+        public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
+
+        public static TaskSchedulerAwaitable ConfigureAwait(this Task task, TaskScheduler ContinuationScheduler) => new(ContinuationScheduler, task);
+
+        public static SynchronizationContextAwaitable ConfigureAwait(this Task task, SynchronizationContext Context) => new(Context, task);
+
+        public static TaskSchedulerAwaitable<T> ConfigureAwait<T>(this Task<T> task, TaskScheduler ContinuationScheduler) => new(ContinuationScheduler, task);
+
+        public static SynchronizationContextAwaitable<T> ConfigureAwait<T>(this Task<T> task, SynchronizationContext Context) => new(Context, task);
+
         /// <summary>Переход в асинхронную область - в новый поток из пула потоков</summary>
-        public static YieldAsyncAwaitable YieldAsync() => new YieldAsyncAwaitable();
+        public static YieldAsyncAwaitable YieldAsync() => new();
+
+        public static Task<T> ToTask<T>(this T value) => Task.FromResult(value);
+
+        public static async Task<TResult> Bind<T, TResult>(this Task<T> task, Func<T, Task<TResult>> Selector) => await Selector(await task);
+
+        //public static Task<TResult> SelectMany<T, TValue, TResult>(
+        //    this Task<T> task,
+        //    Func<T, Task<TValue>> Selector,
+        //    Func<T, TValue, TResult> Projection)
+        //{
+        //    return task.Bind(outer => Selector(outer).Bind(inner => Projection(outer, inner).ToTask()));
+        //}
 
         /// <summary>Переключиться в контекст планировщика потоков</summary>
         /// <param name="scheduler">Планировщик потоков, распределяющий процессы выполнения задач</param>
-        [NotNull] public static TaskSchedulerAwaiter SwitchContext(this TaskScheduler scheduler) => new TaskSchedulerAwaiter(scheduler);
+        public static TaskSchedulerAwaitable SwitchContext(this TaskScheduler scheduler) => new(scheduler);
 
-        [NotNull, ItemNotNull] public static Task<Task> WhenAny([NotNull, ItemNotNull] this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
-        [NotNull, ItemNotNull] public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
+        public static SynchronizationContextAwaitable SwitchContext(this SynchronizationContext context) => new(context);
 
+        public static Task<Task> WhenAny(this IEnumerable<Task> tasks) => Task.WhenAny(tasks);
+        public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAny(tasks);
 
-        [NotNull] public static Task WhenAll([NotNull, ItemNotNull] this IEnumerable<Task> tasks) => Task.WhenAll(tasks);
-        [NotNull, ItemNotNull] public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks) => Task.WhenAll(tasks);
+        public static Task WhenAll(this IEnumerable<Task> tasks) => Task.WhenAll(tasks);
+        public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks) => Task.WhenAll(tasks);
 
-        public static void AndForget<T>([NotNull, ItemCanBeNull] this Task<T> task, [CanBeNull] Action<AggregateException> OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
-        public static void AndForget([NotNull] this Task task, [CanBeNull] Action<AggregateException> OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
+        public static void AndForget<T>(this Task<T> task, Action<AggregateException>? OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
+        public static void AndForget(this Task task, Action<AggregateException>? OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
 
-        [NotNull, ItemCanBeNull]
-        public static async Task<T> WithCancellation<T>([NotNull, ItemCanBeNull] this Task<T> task, CancellationToken cancel)
+        public static Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancel) =>
+            task.IsCompleted || !cancel.CanBeCanceled
+                ? task
+                : cancel.IsCancellationRequested
+                    ? Task.FromCanceled<T>(cancel)
+                    : task.CreateCancellation(cancel);
+
+        private static readonly Action<object> __CancellationRegistration =
+            s => ((TaskCompletionSource<bool>)s).TrySetResult(default);
+
+        private static async Task<T> CreateCancellation<T>(this Task<T> task, CancellationToken cancel)
         {
-            var tcs = new TaskCompletionSource<object>();
-            using (cancel.Register(t => ((TaskCompletionSource<object>)t).TrySetResult(default), tcs))
+            var tcs = new TaskCompletionSource<object?>();
+            using (cancel.Register(__CancellationRegistration, tcs))
                 if (task != await Task.WhenAny(task, tcs.Task))
                     throw new TaskCanceledException();
             return await task;
         }
 
-        [NotNull] public static Task Catch<T>([NotNull, ItemCanBeNull] this Task<T> task, [NotNull] Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
-        [NotNull] public static Task Catch([NotNull] this Task task, [NotNull] Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
+        public static Task Catch<T>(this Task<T> task, Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
+        public static Task Catch(this Task task, Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
 
-        [NotNull] public static Task Finally<T>([NotNull, ItemNotNull] this Task<T> task, [NotNull] Action OnTaskCompleted) => task.ContinueWith(t => OnTaskCompleted(), TaskContinuationOptions.None);
-        [NotNull] public static Task Finally([NotNull] this Task task, [NotNull] Action OnTaskCompleted) => task.ContinueWith(t => OnTaskCompleted(), TaskContinuationOptions.None);
+        public static Task Finally<T>(this Task<T> task, Action OnTaskCompleted) => task.ContinueWith(t => OnTaskCompleted(), TaskContinuationOptions.None);
+        public static Task Finally(this Task task, Action OnTaskCompleted) => task.ContinueWith(t => OnTaskCompleted(), TaskContinuationOptions.None);
+
+        // ReSharper disable once InconsistentNaming
+        const TaskContinuationOptions not_on_cancel = TaskContinuationOptions.NotOnCanceled;
 
         /// https://blogs.msdn.microsoft.com/pfxteam/2010/04/04/a-tour-of-parallelextensionsextras/
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> Select<TSource, TResult>([NotNull, ItemCanBeNull] this Task<TSource> source, [NotNull] Func<TSource, TResult> selector)
+        public static Task<TResult> Select<TSource, TResult>(this Task<TSource> source, Func<TSource, TResult> selector)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             if (selector is null) throw new ArgumentNullException(nameof(selector));
 
-            return source.ContinueWith(t => selector(t.Result), TaskContinuationOptions.NotOnCanceled);
+            return source.ContinueWith(t => selector(t.Result), not_on_cancel)!;
         }
 
         [NotNull, ItemCanBeNull]
-        public static Task<TResult> SelectMany<TSource, TResult>([NotNull, ItemCanBeNull] this Task<TSource> source, [NotNull] Func<TSource, Task<TResult>> selector)
+        public static Task<TResult> SelectMany<TSource, TResult>(this Task<TSource> source, Func<TSource, Task<TResult>> selector)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             if (selector is null) throw new ArgumentNullException(nameof(selector));
 
-            return source.ContinueWith(t => selector(t.Result), TaskContinuationOptions.NotOnCanceled).Unwrap();
+            return source.ContinueWith(t => selector(t.Result), not_on_cancel).Unwrap();
         }
 
         [NotNull, ItemCanBeNull]
         public static Task<TResult> SelectMany<TSource, TCollection, TResult>
         (
-            [NotNull, ItemNotNull] this Task<TSource> source,
-            [NotNull] Func<TSource, Task<TCollection>> CollectionSelector,
-            [NotNull] Func<TSource, TCollection, TResult> ResultSelector)
+            this Task<TSource> source,
+            Func<TSource, Task<TCollection>> GetCollection,
+            Func<TSource, TCollection, TResult> GetResult)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
-            if (CollectionSelector is null) throw new ArgumentNullException(nameof(CollectionSelector));
-            if (ResultSelector is null) throw new ArgumentNullException(nameof(ResultSelector));
+            if (GetCollection is null) throw new ArgumentNullException(nameof(GetCollection));
+            if (GetResult is null) throw new ArgumentNullException(nameof(GetResult));
 
-            return source.ContinueWith(t => CollectionSelector(t.Result).ContinueWith(c => ResultSelector(t.Result, c.Result), TaskContinuationOptions.NotOnCanceled), TaskContinuationOptions.NotOnCanceled).Unwrap();
+            return source
+               .ContinueWith(
+                    t => GetCollection(t.Result).ContinueWith(c => GetResult(t.Result, c.Result), not_on_cancel),
+                    not_on_cancel)
+               .Unwrap()!;
         }
 
         [NotNull, ItemCanBeNull]
-        public static Task<TSource> Where<TSource>([NotNull, ItemCanBeNull] this Task<TSource> source, [NotNull] Func<TSource, bool> predicate)
+        public static Task<TSource> Where<TSource>(this Task<TSource> source, Func<TSource, bool> predicate)
         {
             // Validate arguments
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -91,29 +135,33 @@ namespace System.Threading.Tasks
                 var result = t.Result;
                 if (!predicate(result)) cts.CancelAndThrow();
                 return result;
-            }, cts.Token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.Default);
+            }, cts.Token, not_on_cancel, TaskScheduler.Default)!;
         }
 
-        [NotNull, ItemCanBeNull]
         public static Task<TResult> Join<TOuter, TInner, TKey, TResult>
         (
-            [NotNull, ItemCanBeNull] this Task<TOuter> Outer,
-            [NotNull, ItemCanBeNull] Task<TInner> Inner,
-            [NotNull] Func<TOuter, TKey> OuterKeySelector,
-            [NotNull] Func<TInner, TKey> InnerKeySelector,
-            [NotNull] Func<TOuter, TInner, TResult> ResultSelector
-        ) =>
-            Join(Outer, Inner, OuterKeySelector, InnerKeySelector, ResultSelector, EqualityComparer<TKey>.Default);
+            this Task<TOuter> Outer,
+            Task<TInner> Inner,
+            Func<TOuter, TKey> OuterKeySelector,
+            Func<TInner, TKey> InnerKeySelector,
+            Func<TOuter, TInner, TResult> ResultSelector
+        ) => Join(
+            Outer: Outer,
+            Inner: Inner,
+            OuterKeySelector: OuterKeySelector,
+            InnerKeySelector: InnerKeySelector,
+            ResultSelector: ResultSelector,
+            Comparer: EqualityComparer<TKey>.Default);
 
         [NotNull, ItemCanBeNull]
         public static Task<TResult> Join<TOuter, TInner, TKey, TResult>
         (
-            [NotNull, ItemCanBeNull] this Task<TOuter> Outer,
-            [NotNull, ItemCanBeNull] Task<TInner> Inner,
-            [NotNull] Func<TOuter, TKey> OuterKeySelector,
-            [NotNull] Func<TInner, TKey> InnerKeySelector,
-            [NotNull] Func<TOuter, TInner, TResult> ResultSelector,
-            [NotNull] IEqualityComparer<TKey> Comparer
+            this Task<TOuter> Outer,
+            Task<TInner> Inner,
+            Func<TOuter, TKey> OuterKeySelector,
+            Func<TInner, TKey> InnerKeySelector,
+            Func<TOuter, TInner, TResult> ResultSelector,
+            IEqualityComparer<TKey> Comparer
         )
         {
             // Validate arguments
@@ -138,31 +186,36 @@ namespace System.Threading.Tasks
                     if (Comparer.Equals(OuterKeySelector(Outer.Result), InnerKeySelector(Inner.Result)))
                         return ResultSelector(Outer.Result, Inner.Result);
                     cts.CancelAndThrow();
-                    return default; // won't be reached
-                }, cts.Token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.Default);
-            }, TaskContinuationOptions.NotOnCanceled).Unwrap();
+                    return default!; // won't be reached
+                }, cts.Token, not_on_cancel, TaskScheduler.Default);
+            }, not_on_cancel).Unwrap()!;
         }
 
         [NotNull, ItemCanBeNull]
         public static Task<TResult> GroupJoin<TOuter, TInner, TKey, TResult>
         (
-            [NotNull, ItemCanBeNull] this Task<TOuter> outer,
-            [NotNull, ItemCanBeNull] Task<TInner> inner,
-            [NotNull] Func<TOuter, TKey> OuterKeySelector,
-            [NotNull] Func<TInner, TKey> InnerKeySelector,
-            [NotNull] Func<TOuter, Task<TInner>, TResult> ResultSelector
-        ) =>
-            GroupJoin(outer, inner, OuterKeySelector, InnerKeySelector, ResultSelector, EqualityComparer<TKey>.Default);
+            this Task<TOuter> outer,
+            Task<TInner> inner,
+            Func<TOuter, TKey> OuterKeySelector,
+            Func<TInner, TKey> InnerKeySelector,
+            Func<TOuter, Task<TInner>, TResult> ResultSelector
+        ) => GroupJoin(
+            outer: outer,
+            inner: inner,
+            OuterKeySelector: OuterKeySelector,
+            InnerKeySelector: InnerKeySelector,
+            ResultSelector: ResultSelector,
+            Comparer: EqualityComparer<TKey>.Default);
 
         [NotNull, ItemCanBeNull]
         public static Task<TResult> GroupJoin<TOuter, TInner, TKey, TResult>
         (
-            [NotNull, ItemCanBeNull] this Task<TOuter> outer,
-            [NotNull, ItemCanBeNull] Task<TInner> inner,
-            [NotNull] Func<TOuter, TKey> OuterKeySelector,
-            [NotNull] Func<TInner, TKey> InnerKeySelector,
-            [NotNull] Func<TOuter, Task<TInner>, TResult> ResultSelector,
-            [NotNull] IEqualityComparer<TKey> Comparer
+            this Task<TOuter> outer,
+            Task<TInner> inner,
+            Func<TOuter, TKey> OuterKeySelector,
+            Func<TInner, TKey> InnerKeySelector,
+            Func<TOuter, Task<TInner>, TResult> ResultSelector,
+            IEqualityComparer<TKey> Comparer
             )
         {
             // Validate arguments
@@ -187,17 +240,16 @@ namespace System.Threading.Tasks
                     if (Comparer.Equals(OuterKeySelector(outer.Result), InnerKeySelector(inner.Result)))
                         return ResultSelector(outer.Result, inner);
                     cts.CancelAndThrow();
-                    return default; // won't be reached
+                    return default!; // won't be reached
                 }, cts.Token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.Default);
-            }, TaskContinuationOptions.NotOnCanceled).Unwrap();
+            }, not_on_cancel).Unwrap()!;
         }
 
-        [NotNull, ItemCanBeNull]
         public static Task<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement>
         (
-            [NotNull, ItemCanBeNull] this Task<TSource> source,
-            [NotNull] Func<TSource, TKey> KeySelector,
-            [NotNull] Func<TSource, TElement> ElementSelector
+            this Task<TSource> source,
+            Func<TSource, TKey> KeySelector,
+            Func<TSource, TElement> ElementSelector
         )
         {
             // Validate arguments
@@ -212,7 +264,7 @@ namespace System.Threading.Tasks
                 var key = KeySelector(result);
                 var element = ElementSelector(result);
                 return (IGrouping<TKey, TElement>)new OneElementGrouping<TKey, TElement> { Key = key, Element = element };
-            }, TaskContinuationOptions.NotOnCanceled);
+            }, not_on_cancel);
         }
 
         /// <summary>Represents a grouping of one element.</summary>
@@ -220,14 +272,13 @@ namespace System.Threading.Tasks
         /// <typeparam name="TElement">The type of the element.</typeparam>
         private class OneElementGrouping<TKey, TElement> : IGrouping<TKey, TElement>
         {
-            [CanBeNull] public TKey Key { get; internal set; }
-            [CanBeNull] internal TElement Element { get; set; }
+            public TKey Key { get; internal set; } = default!;
+            internal TElement Element { get; set; } = default!;
             public IEnumerator<TElement> GetEnumerator() { yield return Element; }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        [NotNull, ItemCanBeNull]
-        public static Task<TSource> OrderBy<TSource, TKey>([NotNull, ItemCanBeNull] this Task<TSource> source, Func<TSource, TKey> KeySelector)
+        public static Task<TSource> OrderBy<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey> KeySelector)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             // A single item is already in sorted order, no matter what the key selector is, so just
@@ -235,8 +286,7 @@ namespace System.Threading.Tasks
             return source;
         }
 
-        [NotNull, ItemCanBeNull]
-        public static Task<TSource> OrderByDescending<TSource, TKey>([NotNull, ItemCanBeNull] this Task<TSource> source, [CanBeNull] Func<TSource, TKey> KeySelector)
+        public static Task<TSource> OrderByDescending<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey>? KeySelector)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             // A single item is already in sorted order, no matter what the key selector is, so just
@@ -244,8 +294,7 @@ namespace System.Threading.Tasks
             return source;
         }
 
-        [NotNull, ItemCanBeNull]
-        public static Task<TSource> ThenBy<TSource, TKey>([NotNull, ItemCanBeNull] this Task<TSource> source, [CanBeNull] Func<TSource, TKey> KeySelector)
+        public static Task<TSource> ThenBy<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey>? KeySelector)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             // A single item is already in sorted order, no matter what the key selector is, so just
@@ -253,8 +302,7 @@ namespace System.Threading.Tasks
             return source;
         }
 
-        [NotNull, ItemCanBeNull]
-        public static Task<TSource> ThenByDescending<TSource, TKey>([NotNull, ItemCanBeNull] this Task<TSource> source, [CanBeNull] Func<TSource, TKey> KeySelector)
+        public static Task<TSource> ThenByDescending<TSource, TKey>(this Task<TSource> source, Func<TSource, TKey>? KeySelector)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             // A single item is already in sorted order, no matter what the key selector is, so just
@@ -262,8 +310,7 @@ namespace System.Threading.Tasks
             return source;
         }
 
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> WithTimeout<TResult>([NotNull, ItemCanBeNull] this Task<TResult> task, in TimeSpan timeout)
+        public static Task<TResult> WithTimeout<TResult>(this Task<TResult> task, in TimeSpan timeout)
         {
             var result = new TaskCompletionSource<TResult>(task.AsyncState);
             var timer = new Timer(_ => result.TrySetCanceled(), null, timeout, TimeSpan.FromMilliseconds(-1));
@@ -275,11 +322,9 @@ namespace System.Threading.Tasks
             return result.Task;
         }
 
-
-        [NotNull]
-        public static Task WithAsyncCallback([NotNull] this Task task, [CanBeNull] AsyncCallback callback, [CanBeNull] object state)
+        public static Task WithAsyncCallback(this Task task, AsyncCallback? callback, object? state)
         {
-            var tcs = new TaskCompletionSource<object>(state);
+            var tcs = new TaskCompletionSource<object?>(state);
             task.ContinueWith(_ =>
             {
                 tcs.TrySetFromTask(task);
@@ -288,8 +333,7 @@ namespace System.Threading.Tasks
             return tcs.Task;
         }
 
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> WithAsyncCallback<TResult>([NotNull, ItemCanBeNull] this Task<TResult> task, [CanBeNull] AsyncCallback callback, [CanBeNull] object state)
+        public static Task<TResult> WithAsyncCallback<TResult>(this Task<TResult> task, AsyncCallback? callback, object? state)
         {
             var tcs = new TaskCompletionSource<TResult>(state);
             task.ContinueWith(_ =>
@@ -306,8 +350,7 @@ namespace System.Threading.Tasks
         /// <param name="ContinuationAction">The continuation action.</param>
         /// <param name="factory">The TaskFactory.</param>
         /// <returns>A continuation task.</returns>
-        [NotNull]
-        public static Task ContinueWith([NotNull] this Task task, [NotNull] Action<Task> ContinuationAction, [NotNull] TaskFactory factory) =>
+        public static Task ContinueWith(this Task task, Action<Task> ContinuationAction, TaskFactory factory) =>
             task.ContinueWith(ContinuationAction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
 
         /// <summary>Creates a continuation task using the specified TaskFactory.</summary>
@@ -315,8 +358,7 @@ namespace System.Threading.Tasks
         /// <param name="ContinuationFunction">The continuation function.</param>
         /// <param name="factory">The TaskFactory.</param>
         /// <returns>A continuation task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> ContinueWith<TResult>([NotNull] this Task task, [NotNull] Func<Task, TResult> ContinuationFunction, [NotNull] TaskFactory factory) =>
+        public static Task<TResult> ContinueWith<TResult>(this Task task, Func<Task, TResult> ContinuationFunction, TaskFactory factory) =>
             task.ContinueWith(ContinuationFunction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
         #endregion
 
@@ -326,8 +368,7 @@ namespace System.Threading.Tasks
         /// <param name="ContinuationAction">The continuation action.</param>
         /// <param name="factory">The TaskFactory.</param>
         /// <returns>A continuation task.</returns>
-        [NotNull]
-        public static Task ContinueWith<TResult>([NotNull] this Task<TResult> task, [NotNull] Action<Task<TResult>> ContinuationAction, [NotNull] TaskFactory<TResult> factory) =>
+        public static Task ContinueWith<TResult>(this Task<TResult> task, Action<Task<TResult>> ContinuationAction, TaskFactory<TResult> factory) =>
             task.ContinueWith(ContinuationAction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
 
         /// <summary>Creates a continuation task using the specified TaskFactory.</summary>
@@ -335,8 +376,7 @@ namespace System.Threading.Tasks
         /// <param name="ContinuationFunction">The continuation function.</param>
         /// <param name="factory">The TaskFactory.</param>
         /// <returns>A continuation task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TNewResult> ContinueWith<TResult, TNewResult>([NotNull] this Task<TResult> task, [NotNull] Func<Task<TResult>, TNewResult> ContinuationFunction, [NotNull] TaskFactory<TResult> factory) =>
+        public static Task<TNewResult> ContinueWith<TResult, TNewResult>(this Task<TResult> task, Func<Task<TResult>, TNewResult> ContinuationFunction, TaskFactory<TResult> factory) =>
             task.ContinueWith(ContinuationFunction, factory.CancellationToken, factory.ContinuationOptions, factory.Scheduler);
 
         #endregion
@@ -350,8 +390,7 @@ namespace System.Threading.Tasks
         /// <param name="callback">The AsyncCallback to run.</param>
         /// <param name="state">The object state to use with the AsyncCallback.</param>
         /// <returns>The new task.</returns>
-        [NotNull]
-        public static Task ToAsync([NotNull] this Task task, [CanBeNull] AsyncCallback callback, [CanBeNull] object state)
+        public static Task ToAsync(this Task task, AsyncCallback? callback, object? state)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
 
@@ -372,8 +411,7 @@ namespace System.Threading.Tasks
         /// <param name="callback">The AsyncCallback to run.</param>
         /// <param name="state">The object state to use with the AsyncCallback.</param>
         /// <returns>The new task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> ToAsync<TResult>([NotNull, ItemCanBeNull] this Task<TResult> task, [CanBeNull] AsyncCallback callback, [CanBeNull] object state)
+        public static Task<TResult> ToAsync<TResult>(this Task<TResult> task, AsyncCallback? callback, object? state)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
 
@@ -391,18 +429,16 @@ namespace System.Threading.Tasks
         /// <summary>Suppresses default exception handling of a Task that would otherwise reraise the exception on the finalizer thread.</summary>
         /// <param name="task">The Task to be monitored.</param>
         /// <returns>The original Task.</returns>
-        [NotNull]
-        public static Task IgnoreExceptions([NotNull] this Task task)
+        public static Task IgnoreExceptions(this Task task)
         {
-            task.ContinueWith(t => _ = t.Exception,
+            task.ContinueWith(t => (_ = t.Exception)!,
                 CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted,
                 TaskScheduler.Default);
             return task;
         }
 
-        [NotNull]
-        public static Task TraceExceptions([NotNull] this Task task, [CanBeNull] string Message = null)
+        public static Task TraceExceptions(this Task task, string? Message = null)
         {
             task.ContinueWith(t => Trace.TraceWarning("{0}: {1}", string.IsNullOrWhiteSpace(Message) ? $"Exception in task id{t.Id}" : $"{Message}", t.Exception),
                 CancellationToken.None,
@@ -414,14 +450,12 @@ namespace System.Threading.Tasks
         /// <summary>Suppresses default exception handling of a Task that would otherwise reraise the exception on the finalizer thread.</summary>
         /// <param name="task">The Task to be monitored.</param>
         /// <returns>The original Task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<T> IgnoreExceptions<T>([NotNull, ItemCanBeNull] this Task<T> task) => (Task<T>)((Task)task).IgnoreExceptions();
+        public static Task<T> IgnoreExceptions<T>(this Task<T> task) => (Task<T>)((Task)task).IgnoreExceptions();
 
         /// <summary>Fails immediately when an exception is encountered.</summary>
         /// <param name="task">The Task to be monitored.</param>
         /// <returns>The original Task.</returns>
-        [NotNull]
-        public static Task FailFastOnException([NotNull] this Task task)
+        public static Task FailFastOnException(this Task task)
         {
             task.ContinueWith(t => Environment.FailFast("A task faulted.", t.Exception),
                 CancellationToken.None,
@@ -433,12 +467,11 @@ namespace System.Threading.Tasks
         /// <summary>Fails immediately when an exception is encountered.</summary>
         /// <param name="task">The Task to be monitored.</param>
         /// <returns>The original Task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<T> FailFastOnException<T>([NotNull, ItemCanBeNull] this Task<T> task) => (Task<T>)((Task)task).FailFastOnException();
+        public static Task<T> FailFastOnException<T>(this Task<T> task) => (Task<T>)((Task)task).FailFastOnException();
 
         /// <summary>Propagates any exceptions that occurred on the specified task.</summary>
         /// <param name="task">The Task whose exceptions are to be propagated.</param>
-        public static void PropagateExceptions([NotNull] this Task task)
+        public static void PropagateExceptions(this Task task)
         {
             if (!task.IsCompleted) throw new InvalidOperationException("The task has not completed.");
             if (task.IsFaulted) task.Wait();
@@ -446,7 +479,7 @@ namespace System.Threading.Tasks
 
         /// <summary>Propagates any exceptions that occurred on the specified tasks.</summary>
         /// <param name="tasks">The Task whose exceptions are to be propagated.</param>
-        public static void PropagateExceptions([NotNull, ItemCanBeNull] this Task[] tasks)
+        public static void PropagateExceptions(this Task[] tasks)
         {
             if (tasks is null) throw new ArgumentNullException(nameof(tasks));
             if (tasks.Any(t => t is null)) throw new ArgumentException(nameof(tasks));
@@ -460,20 +493,18 @@ namespace System.Threading.Tasks
         /// <typeparam name="TResult">Specifies the type of data returned by the Task.</typeparam>
         /// <param name="task">The Task to be represented as an IObservable.</param>
         /// <returns>An IObservable that represents the completion of the Task.</returns>
-        [NotNull]
-        public static IObservable<TResult> ToObservable<TResult>([NotNull, ItemCanBeNull] this Task<TResult> task)
-        {
-            if (task is null) throw new ArgumentNullException(nameof(task));
-            return new TaskObservable<TResult>(task);
-        }
+        public static IObservable<TResult> ToObservable<TResult>(this Task<TResult> task) =>
+            task is null
+                ? throw new ArgumentNullException(nameof(task))
+                : new TaskObservable<TResult>(task);
 
         /// <summary>An implementation of IObservable that wraps a Task.</summary>
         /// <typeparam name="TResult">The type of data returned by the task.</typeparam>
         private class TaskObservable<TResult> : IObservable<TResult>
         {
-            [NotNull, ItemCanBeNull] private readonly Task<TResult> f_ObservedTask;
+            private readonly Task<TResult> _ObservedTask;
 
-            public TaskObservable([NotNull, ItemCanBeNull] Task<TResult> ObservedTask) => f_ObservedTask = ObservedTask;
+            public TaskObservable(Task<TResult> ObservedTask) => _ObservedTask = ObservedTask;
 
             public IDisposable Subscribe(IObserver<TResult> observer)
             {
@@ -484,17 +515,17 @@ namespace System.Threading.Tasks
                 var cts = new CancellationTokenSource();
 
                 // Create a continuation to pass data along to the observer
-                f_ObservedTask.ContinueWith(t =>
+                _ObservedTask.ContinueWith(t =>
                 {
                     switch (t.Status)
                     {
                         case TaskStatus.RanToCompletion:
-                            observer.OnNext(f_ObservedTask.Result);
+                            observer.OnNext(_ObservedTask.Result);
                             observer.OnCompleted();
                             break;
 
                         case TaskStatus.Faulted:
-                            observer.OnError(f_ObservedTask.Exception ?? throw new InvalidOperationException());
+                            observer.OnError(_ObservedTask.Exception ?? throw new InvalidOperationException());
                             break;
 
                         case TaskStatus.Canceled:
@@ -511,11 +542,11 @@ namespace System.Threading.Tasks
         /// <summary>Translate a call to IDisposable.Dispose to a CancellationTokenSource.Cancel.</summary>
         private class CancelOnDispose : IDisposable
         {
-            [NotNull] private readonly CancellationTokenSource f_Source;
+            private readonly CancellationTokenSource _Source;
 
-            public CancelOnDispose([NotNull] CancellationTokenSource source) => f_Source = source;
+            public CancelOnDispose(CancellationTokenSource source) => _Source = source;
 
-            void IDisposable.Dispose() => f_Source.Cancel();
+            void IDisposable.Dispose() => _Source.Cancel();
         }
         #endregion
 
@@ -524,8 +555,7 @@ namespace System.Threading.Tasks
         /// <param name="task">The task.</param>
         /// <param name="timeout">The timeout.</param>
         /// <returns>The new Task that may time out.</returns>
-        [NotNull]
-        public static Task WithTimeout([NotNull] this Task task, in TimeSpan timeout)
+        public static Task WithTimeout(this Task task, in TimeSpan timeout)
         {
             var result = new TaskCompletionSource<object>(task.AsyncState);
             var timer = new Timer(state => ((TaskCompletionSource<object>)state).TrySetCanceled(), result, timeout, TimeSpan.FromMilliseconds(-1));
@@ -542,8 +572,7 @@ namespace System.Threading.Tasks
         /// <param name="task">The task.</param>
         /// <param name="timeout">The timeout.</param>
         /// <returns>The new Task that may time out.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> WithTimeout<TResult>([NotNull, ItemCanBeNull] this Task<TResult> task, TimeSpan timeout)
+        public static Task<TResult> WithTimeout<TResult>(this Task<TResult> task, TimeSpan timeout)
         {
             var result = new TaskCompletionSource<TResult>(task.AsyncState);
             var timer = new Timer(state => ((TaskCompletionSource<TResult>)state).TrySetCanceled(), result, timeout, TimeSpan.FromMilliseconds(-1));
@@ -563,7 +592,7 @@ namespace System.Threading.Tasks
         /// already a child task.
         /// </summary>
         /// <param name="task">The task to attach to the current task as a child.</param>
-        public static void AttachToParent([NotNull] this Task task)
+        public static void AttachToParent(this Task task)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
 
@@ -575,7 +604,7 @@ namespace System.Threading.Tasks
         ///// <summary>Waits for the task to complete execution, pumping in the meantime.</summary>
         ///// <param name="task">The task for which to wait.</param>
         ///// <remarks>This method is intended for usage with Windows Presentation Foundation.</remarks>
-        //public static void WaitWithPumping([NotNull] this Task task)
+        //public static void WaitWithPumping(this Task task)
         //{
         //    if (task is null) throw new ArgumentNullException(nameof(task));
 
@@ -589,7 +618,7 @@ namespace System.Threading.Tasks
         /// <param name="task">The task for which to wait.</param>
         /// <returns>The completion status of the task.</returns>
         /// <remarks>Unlike Wait, this method will not throw an exception if the task ends in the Faulted or Canceled state.</remarks>
-        public static TaskStatus WaitForCompletionStatus([NotNull] this Task task)
+        public static TaskStatus WaitForCompletionStatus(this Task task)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
 
@@ -603,40 +632,181 @@ namespace System.Threading.Tasks
         /// <param name="task">The task.</param>
         /// <param name="next">The action to run when the task completes.</param>
         /// <returns>The task that represents the completion of both the task and the action.</returns>
-        [NotNull]
-        public static Task Then([NotNull] this Task task, [NotNull] Action next)
+        public static Task Then(this Task task, Action next)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
             if (next is null) throw new ArgumentNullException(nameof(next));
 
-            var tcs = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object?>();
             task.ContinueWith(_ =>
             {
                 if (task.IsFaulted)
-                    tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
+                    result.TrySetException(task.Exception!.InnerExceptions);
+                else if (task.IsCanceled) result.TrySetCanceled();
                 else
                     try
                     {
                         next();
-                        tcs.TrySetResult(null);
+                        result.TrySetResult(null);
                     }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
+                    catch (Exception e)
                     {
-                        tcs.TrySetException(exc);
+                        result.TrySetException(e);
                     }
-#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
-            return tcs.Task;
+            return result.Task;
         }
 
         /// <summary>Creates a task that represents the completion of a follow-up function when a task completes.</summary>
         /// <param name="task">The task.</param>
         /// <param name="next">The function to run when the task completes.</param>
         /// <returns>The task that represents the completion of both the task and the function.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> Then<TResult>([NotNull] this Task task, [NotNull] Func<TResult> next)
+        public static Task<TResult> Then<TResult>(this Task task, Func<TResult> next)
+        {
+            if (task is null) throw new ArgumentNullException(nameof(task));
+            if (next is null) throw new ArgumentNullException(nameof(next));
+
+            var result = new TaskCompletionSource<TResult>();
+            task.ContinueWith(_ =>
+            {
+                if (task.IsFaulted) result.TrySetException(task.Exception!.InnerExceptions);
+                else if (task.IsCanceled) result.TrySetCanceled();
+                else
+                    try
+                    {
+                        result.TrySetResult(next());
+                    }
+                    catch (Exception e)
+                    {
+                        result.TrySetException(e);
+                    }
+            }, TaskScheduler.Default);
+            return result.Task;
+        }
+
+        /// <summary>Creates a task that represents the completion of a follow-up action when a task completes.</summary>
+        /// <param name="task">The task.</param>
+        /// <param name="next">The action to run when the task completes.</param>
+        /// <returns>The task that represents the completion of both the task and the action.</returns>
+        public static Task Then<TResult>(this Task<TResult> task, Action<TResult> next)
+        {
+            if (task is null) throw new ArgumentNullException(nameof(task));
+            if (next is null) throw new ArgumentNullException(nameof(next));
+
+            var result = new TaskCompletionSource<object?>();
+            task.ContinueWith(_ =>
+            {
+                if (task.IsFaulted)
+                    result.TrySetException(task.Exception!.InnerExceptions);
+                else if (task.IsCanceled) result.TrySetCanceled();
+                else
+                    try
+                    {
+                        next(task.Result);
+                        result.TrySetResult(null);
+                    }
+                    catch (Exception e)
+                    {
+                        result.TrySetException(e);
+                    }
+            }, TaskScheduler.Default);
+            return result.Task;
+        }
+
+        /// <summary>Creates a task that represents the completion of a follow-up function when a task completes.</summary>
+        /// <param name="task">The task.</param>
+        /// <param name="next">The function to run when the task completes.</param>
+        /// <returns>The task that represents the completion of both the task and the function.</returns>
+        public static Task<TResult> Then<T, TResult>(this Task<T> task, Func<T, TResult> next)
+        {
+            if (task is null) throw new ArgumentNullException(nameof(task));
+            if (next is null) throw new ArgumentNullException(nameof(next));
+
+            var result = new TaskCompletionSource<TResult>();
+            task.ContinueWith(_ =>
+            {
+                if (task.IsFaulted)
+                    result.TrySetException(task.Exception!.InnerExceptions);
+                else if (task.IsCanceled) result.TrySetCanceled();
+                else
+                    try
+                    {
+                        result.TrySetResult(next(task.Result));
+                    }
+                    catch (Exception e)
+                    {
+                        result.TrySetException(e);
+                    }
+            }, TaskScheduler.Default);
+            return result.Task;
+        }
+
+        /// <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+        /// <param name="task">The first task.</param>
+        /// <param name="next">The function that produces the second task.</param>
+        /// <returns>The task that represents the completion of both the first and second task.</returns>
+        public static Task Then(this Task task, Func<Task> next)
+        {
+            if (task is null) throw new ArgumentNullException(nameof(task));
+            if (next is null) throw new ArgumentNullException(nameof(next));
+
+            var result = new TaskCompletionSource<object>();
+            task.ContinueWith(_ =>
+            {
+                // When the first task completes, if it faulted or was canceled, bail
+                if (task.IsFaulted)
+                    result.TrySetException(task.Exception!.InnerExceptions);
+                else if (task.IsCanceled) result.TrySetCanceled();
+                else
+                    // Otherwise, get the next task.  If it's null, bail.  If not,
+                    // when it's done we'll have our result.
+                    try
+                    {
+                        next().ContinueWith(t => result.TrySetFromTask(t), TaskScheduler.Default);
+                    }
+                    catch (Exception e)
+                    {
+                        result.TrySetException(e);
+                    }
+            }, TaskScheduler.Default);
+            return result.Task;
+        }
+
+        /// <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+        /// <param name="task">The first task.</param>
+        /// <param name="next">The function that produces the second task based on the result of the first task.</param>
+        /// <returns>The task that represents the completion of both the first and second task.</returns>
+        public static Task Then<T>(this Task<T> task, Func<T, Task> next)
+        {
+            if (task is null) throw new ArgumentNullException(nameof(task));
+            if (next is null) throw new ArgumentNullException(nameof(next));
+
+            var result = new TaskCompletionSource<object>();
+            task.ContinueWith(_ =>
+            {
+                // When the first task completes, if it faulted or was canceled, bail
+                if (task.IsFaulted) result.TrySetException(task.Exception!.InnerExceptions);
+                else if (task.IsCanceled) result.TrySetCanceled();
+                else
+                    // Otherwise, get the next task.  If it's null, bail.  If not,
+                    // when it's done we'll have our result.
+                    try
+                    {
+                        next(task.Result).ContinueWith(t => result.TrySetFromTask(t), TaskScheduler.Default);
+                    }
+                    catch (Exception e)
+                    {
+                        result.TrySetException(e);
+                    }
+            }, TaskScheduler.Default);
+            return result.Task;
+        }
+
+        /// <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
+        /// <param name="task">The first task.</param>
+        /// <param name="next">The function that produces the second task.</param>
+        /// <returns>The task that represents the completion of both the first and second task.</returns>
+        public static Task<TResult> Then<TResult>(this Task task, Func<Task<TResult>> next)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
             if (next is null) throw new ArgumentNullException(nameof(next));
@@ -644,104 +814,8 @@ namespace System.Threading.Tasks
             var tcs = new TaskCompletionSource<TResult>();
             task.ContinueWith(_ =>
             {
-                if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
-                else
-                    try
-                    {
-                        var result = next();
-                        tcs.TrySetResult(result);
-                    }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
-                    {
-                        tcs.TrySetException(exc);
-                    }
-#pragma warning restore CA1031 // Do not catch general exception types
-            }, TaskScheduler.Default);
-            return tcs.Task;
-        }
-
-        /// <summary>Creates a task that represents the completion of a follow-up action when a task completes.</summary>
-        /// <param name="task">The task.</param>
-        /// <param name="next">The action to run when the task completes.</param>
-        /// <returns>The task that represents the completion of both the task and the action.</returns>
-        [NotNull]
-        public static Task Then<TResult>([NotNull, ItemCanBeNull] this Task<TResult> task, [NotNull] Action<TResult> next)
-        {
-            if (task is null) throw new ArgumentNullException(nameof(task));
-            if (next is null) throw new ArgumentNullException(nameof(next));
-
-            var tcs = new TaskCompletionSource<object>();
-            task.ContinueWith(_ =>
-            {
-                if (task.IsFaulted)
-                    tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
-                else
-                    try
-                    {
-                        next(task.Result);
-                        tcs.TrySetResult(null);
-                    }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
-                    {
-                        tcs.TrySetException(exc);
-                    }
-#pragma warning restore CA1031 // Do not catch general exception types
-            }, TaskScheduler.Default);
-            return tcs.Task;
-        }
-
-        /// <summary>Creates a task that represents the completion of a follow-up function when a task completes.</summary>
-        /// <param name="task">The task.</param>
-        /// <param name="next">The function to run when the task completes.</param>
-        /// <returns>The task that represents the completion of both the task and the function.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TNewResult> Then<TResult, TNewResult>([NotNull, ItemCanBeNull] this Task<TResult> task, [NotNull] Func<TResult, TNewResult> next)
-        {
-            if (task is null) throw new ArgumentNullException(nameof(task));
-            if (next is null) throw new ArgumentNullException(nameof(next));
-
-            var tcs = new TaskCompletionSource<TNewResult>();
-            task.ContinueWith(_ =>
-            {
-                if (task.IsFaulted)
-                    tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
-                else
-                    try
-                    {
-                        var result = next(task.Result);
-                        tcs.TrySetResult(result);
-                    }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
-                    {
-                        tcs.TrySetException(exc);
-                    }
-#pragma warning restore CA1031 // Do not catch general exception types
-            }, TaskScheduler.Default);
-            return tcs.Task;
-        }
-
-        /// <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
-        /// <param name="task">The first task.</param>
-        /// <param name="next">The function that produces the second task.</param>
-        /// <returns>The task that represents the completion of both the first and second task.</returns>
-        [NotNull]
-        public static Task Then([NotNull] this Task task, [NotNull] Func<Task> next)
-        {
-            if (task is null) throw new ArgumentNullException(nameof(task));
-            if (next is null) throw new ArgumentNullException(nameof(next));
-
-            var tcs = new TaskCompletionSource<object>();
-            task.ContinueWith(_ =>
-            {
                 // When the first task completes, if it faulted or was canceled, bail
-                if (task.IsFaulted)
-                    tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
+                if (task.IsFaulted) tcs.TrySetException(task.Exception!.InnerExceptions);
                 else if (task.IsCanceled) tcs.TrySetCanceled();
                 else
                     // Otherwise, get the next task.  If it's null, bail.  If not,
@@ -750,78 +824,10 @@ namespace System.Threading.Tasks
                     {
                         next().ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
                     }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
+                    catch (Exception e)
                     {
-                        tcs.TrySetException(exc);
+                        tcs.TrySetException(e);
                     }
-#pragma warning restore CA1031 // Do not catch general exception types
-            }, TaskScheduler.Default);
-            return tcs.Task;
-        }
-
-        /// <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
-        /// <param name="task">The first task.</param>
-        /// <param name="next">The function that produces the second task based on the result of the first task.</param>
-        /// <returns>The task that represents the completion of both the first and second task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task Then<T>([NotNull, ItemCanBeNull] this Task<T> task, [NotNull] Func<T, Task> next)
-        {
-            if (task is null) throw new ArgumentNullException(nameof(task));
-            if (next is null) throw new ArgumentNullException(nameof(next));
-
-            var tcs = new TaskCompletionSource<object>();
-            task.ContinueWith(_ =>
-            {
-                // When the first task completes, if it faulted or was canceled, bail
-                if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
-                else
-                // Otherwise, get the next task.  If it's null, bail.  If not,
-                // when it's done we'll have our result.
-                    try
-                    {
-                        next(task.Result).ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
-                    }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
-                    {
-                        tcs.TrySetException(exc);
-                    }
-#pragma warning restore CA1031 // Do not catch general exception types
-            }, TaskScheduler.Default);
-            return tcs.Task;
-        }
-
-        /// <summary>Creates a task that represents the completion of a second task when a first task completes.</summary>
-        /// <param name="task">The first task.</param>
-        /// <param name="next">The function that produces the second task.</param>
-        /// <returns>The task that represents the completion of both the first and second task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TResult> Then<TResult>([NotNull] this Task task, [NotNull] Func<Task<TResult>> next)
-        {
-            if (task is null) throw new ArgumentNullException(nameof(task));
-            if (next is null) throw new ArgumentNullException(nameof(next));
-
-            var tcs = new TaskCompletionSource<TResult>();
-            task.ContinueWith(_ =>
-            {
-                // When the first task completes, if it faulted or was canceled, bail
-                if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
-                else
-                // Otherwise, get the next task.  If it's null, bail.  If not,
-                // when it's done we'll have our result.
-                    try
-                    {
-                        next().ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
-                    }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch (Exception exc)
-                    {
-                        tcs.TrySetException(exc);
-                    }
-#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
             return tcs.Task;
         }
@@ -830,33 +836,30 @@ namespace System.Threading.Tasks
         /// <param name="task">The first task.</param>
         /// <param name="next">The function that produces the second task based on the result of the first.</param>
         /// <returns>The task that represents the completion of both the first and second task.</returns>
-        [NotNull, ItemCanBeNull]
-        public static Task<TNewResult> Then<TResult, TNewResult>([NotNull, ItemCanBeNull] this Task<TResult> task, [NotNull] Func<TResult, Task<TNewResult>> next)
+        public static Task<TNewResult> Then<TResult, TNewResult>(this Task<TResult> task, Func<TResult, Task<TNewResult>> next)
         {
             if (task is null) throw new ArgumentNullException(nameof(task));
             if (next is null) throw new ArgumentNullException(nameof(next));
 
-            var tcs = new TaskCompletionSource<TNewResult>();
+            var result = new TaskCompletionSource<TNewResult>();
             task.ContinueWith(_ =>
             {
                 // When the first task completes, if it faulted or was canceled, bail
-                if (task.IsFaulted) tcs.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
-                else if (task.IsCanceled) tcs.TrySetCanceled();
+                if (task.IsFaulted) result.TrySetException(task.Exception?.InnerExceptions ?? throw new InvalidOperationException());
+                else if (task.IsCanceled) result.TrySetCanceled();
                 else
-                // Otherwise, get the next task.  If it's null, bail.  If not,
-                // when it's done we'll have our result.
+                    // Otherwise, get the next task.  If it's null, bail.  If not,
+                    // when it's done we'll have our result.
                     try
                     {
-                        next(task.Result).ContinueWith(t => tcs.TrySetFromTask(t), TaskScheduler.Default);
+                        next(task.Result).ContinueWith(t => result.TrySetFromTask(t), TaskScheduler.Default);
                     }
-#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception exc)
                     {
-                        tcs.TrySetException(exc);
+                        result.TrySetException(exc);
                     }
-#pragma warning restore CA1031 // Do not catch general exception types
             }, TaskScheduler.Default);
-            return tcs.Task;
+            return result.Task;
         }
         #endregion
     }

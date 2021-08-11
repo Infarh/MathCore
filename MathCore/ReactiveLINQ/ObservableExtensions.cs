@@ -121,7 +121,7 @@ namespace System.Linq.Reactive
 
         [NotNull]
         public static TimeIntervalObservable Interval(this TimeSpan TimeInterval, bool Started = false) =>
-            new TimeIntervalObservable(TimeInterval, Started);
+            new(TimeInterval, Started);
 
         /// <summary>Метод получения синхронно задержанных во времени событий</summary>
         /// <typeparam name="T">Тип объектов событий</typeparam>

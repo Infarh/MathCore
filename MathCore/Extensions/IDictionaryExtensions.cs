@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
+
+using MathCore;
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
@@ -367,5 +371,55 @@ namespace System.Collections.Generic
                 }
             return result.ToArray();
         }
+
+        /// <summary>Преобразование перечисления кортежей двух элементов в словарь</summary>
+        /// <typeparam name="TKey">Тип первого элемента кортежа - тип ключа</typeparam>
+        /// <typeparam name="TValue">Тип второго элемента кортежа - тип значения</typeparam>
+        /// <param name="items">Перечисление кортежей двух элементов</param>
+        /// <returns>Словарь, составленный из ключей - первых элементов кортежа и значений - вторых элементов</returns>
+        [NotNull] public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>([NotNull] this IEnumerable<(TKey Key, TValue Value)> items) =>
+            items.ToDictionary(value => value.Key, value => value.Value);
+
+        /// <summary>Преобразовать в безопасный для ключей словарь</summary>
+        /// <typeparam name="TKey">Тип ключа словаря</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
+        /// <param name="Dictionary">Исходный словарь</param>
+        /// <returns></returns>
+        [NotNull]
+        public static DictionaryKeySafe<TKey, TValue> ToSafeDictionary<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> Dictionary) =>
+            Dictionary as DictionaryKeySafe<TKey, TValue> ?? new(Dictionary);
+
+        /// <summary>Добавить значение в словарь, если ключ отсутствует</summary>
+        /// <typeparam name="TKey">Тип ключа</typeparam>
+        /// <typeparam name="TValue">Тип значения</typeparam>
+        /// <param name="dictionary">Словарь</param>
+        /// <param name="key">Ключ</param>
+        /// <param name="value">Значение</param>
+        /// <returns>Истина, если значение было добавлено</returns>
+        public static bool AddIfNotExists<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            if (dictionary.ContainsKey(key)) return false;
+            dictionary.Add(key, value);
+            return true;
+        }
+
+        /// <summary>Преобразование словаря значений в строку по заданному шаблону</summary>
+        /// <typeparam name="TValue">Тип значений словаря</typeparam>
+        /// <param name="dictionary">Словарь с данными для заполнения шаблона</param>
+        /// <param name="Pattern">Шаблон строки</param>
+        /// <param name="FormatProvider">Формат</param>
+        /// <returns>Строка по заданному шаблону</returns>
+        public static string ToPatternString<TValue>(this IDictionary<string, TValue> dictionary, string Pattern, IFormatProvider FormatProvider = null) =>
+            dictionary is null 
+                ? throw new ArgumentNullException(nameof(dictionary)) 
+                : Regex.Replace(
+                    Pattern ?? throw new ArgumentNullException(nameof(Pattern)),
+                    @"{(?<name>\w+)(?::(?<format>.+?))?}",
+                    Match => !dictionary.TryGetValue(Match.Groups["name"].Value, out var value)
+                        ? Match.Value
+                        : value is IFormattable formattable_value && Match.Groups["format"].Success
+                            ? formattable_value.ToString(Match.Groups["format"].Value, FormatProvider ?? CultureInfo.CurrentCulture)
+                            : value?.ToString()
+            );
     }
 }

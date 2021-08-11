@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+
 using MathCore.Annotations;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -46,21 +47,18 @@ namespace MathCore.MathParser
                     {
                         switch (char_node.Value)
                         {
-                            case '.':
-                                if (NewNode.Parent is CharNode c && c.Value == '.')
-                                {
-                                    var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left is null);
-                                    (NewNode["./."] ?? throw new InvalidOperationException("NewNode/. is null")).Right = null;
-                                    var parent = value_node.Parent;
-                                    var interval_node = new IntervalNode(value_node);
-                                    if (parent != null) parent.Right = interval_node;
-                                    NewNode = interval_node;
-                                }
+                            case '.' when NewNode.Parent is CharNode { Value: '.' }:
+                                var value_node = NewNode[n => n.Parent].Last(n => !(n is OperatorNode) || n.Left is null);
+                                (NewNode["./."] ?? throw new InvalidOperationException("NewNode/. is null")).Right = null;
+                                var parent = value_node.Parent;
+                                var interval_node = new IntervalNode(value_node);
+                                if (parent != null) parent.Right = interval_node;
+                                NewNode = interval_node;
                                 break;
                         }
                         break;
                     }
-                case OperatorNode _:
+                case OperatorNode:
                     break;
             }
         }
@@ -141,11 +139,11 @@ namespace MathCore.MathParser
 
         /// <summary>Множество запрещённых символов</summary>
         [NotNull]
-        private readonly HashSet<char> _ExcludeCharsSet = new HashSet<char>(" \r\n");
+        private readonly HashSet<char> _ExcludeCharsSet = new(" \r\n");
 
         /// <summary>Словарь констант</summary>
         [NotNull]
-        private readonly Dictionary<string, double> _Constants = new Dictionary<string, double>();
+        private readonly Dictionary<string, double> _Constants = new();
 
         /// <summary>Множество запрещённых символов</summary>
         [NotNull]
@@ -337,8 +335,8 @@ namespace MathCore.MathParser
                 }
 
                 if (function.Delegate is null)
-                    function.Delegate = 
-                        OnFunctionFind(function.Name, function.Arguments) 
+                    function.Delegate =
+                        OnFunctionFind(function.Name, function.Arguments)
                         ?? throw new InvalidOperationException($"Не удалось определить делегат для функции {function.Name}, либо функция не поддерживается");
             }
         }
@@ -377,7 +375,7 @@ namespace MathCore.MathParser
         public static Functional GetFunctional([NotNull] string Name) =>
             Name switch
             {
-                "sum" => (Functional)new SumOperator(Name),
+                "sum" => new SumOperator(Name),
                 "Sum" => new SumOperator(Name),
                 "Σ" => new SumOperator(Name),
                 "int" => new IntegralOperator(Name),
@@ -492,7 +490,7 @@ namespace MathCore.MathParser
                                     operator_node.Left = parent_operator;
                                 // todo: проверить достижимость следующего блока
                                 else // если оператор в корне дерева имеет меньший приоритет, чем приоритет текущего оператора
-                                //  то вставить текущий оператор в правое поддерево родителя предыдущего оператора
+                                     //  то вставить текущий оператор в правое поддерево родителя предыдущего оператора
                                     throw new NotImplementedException("!!!");
                             //var right = parent_operator.Right; // сохранить правое поддерево предыдущего оператора
                             //parent_operator.Right = Node; // У предыдущего оператора в правое поддерево внести текущий оператор
@@ -509,7 +507,7 @@ namespace MathCore.MathParser
                             // то надо спускаться в правое поддерево до тех пор
                             parent_operator = (OperatorNode)parent_operator.RightNodes
                                         // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
-                                        .TakeWhile(n => n is OperatorNode node && node.Left != null && node.Priority < priority)
+                                        .TakeWhile(n => n is OperatorNode { Left: { } } node && node.Priority < priority)
                                         // взять последний из последовательности
                                         .LastOrDefault() ?? parent_operator;  // если вернулась пустая ссылка, то взять предыдущий оператор
 

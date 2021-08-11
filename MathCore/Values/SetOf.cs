@@ -53,7 +53,7 @@ namespace MathCore.Values
         /// <summary>Клонирование множества элементов</summary>
         /// <returns></returns>
         [NotNull]
-        public SetOf<T> Clone() => new SetOf<T>(this);
+        public SetOf<T> Clone() => new(this);
 
         /// <inheritdoc />
         public bool Equals(SetOf<T> other) => other != null

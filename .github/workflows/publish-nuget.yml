@@ -12,23 +12,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
-      - name: User .NET 3.1.100
+      - name: Setup .NET 5.0.x
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.100
+          dotnet-version: 5.0.x
 
       - name: Building
         run: |
-          dotnet build MathCore/MathCore.csproj --nologo
-          dotnet build Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+          dotnet build MathCore -c Release --nologo
+          dotnet build Tests/MathCore.Tests -c Release --nologo
 
       - name: Testing
-        run: dotnet test Tests/MathCore.Tests/MathCore.Tests.csproj --nologo
+        run: dotnet test Tests/MathCore.Tests -c Release --no-build --nologo
 
       - name: Packing
-        run: dotnet pack MathCore/MathCore.csproj -c Release -v m
+        run: dotnet pack MathCore -c Release --no-build -v m
          
       - name: Publishing
-        run: dotnet nuget push MathCore/bin/Release/*.nupkg -k ${{ secrets.NuGetApiKey }} --skip-duplicate -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.NuGetApiKey }} --skip-duplicate -s https://api.nuget.org/v3/index.json

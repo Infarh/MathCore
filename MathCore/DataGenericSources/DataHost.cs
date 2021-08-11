@@ -47,7 +47,7 @@ namespace MathCore.DataGenericSources
 
         #region Implementation of IObservable<T>
 
-        private readonly SimpleObservableEx<T> _ObservableObject = new SimpleObservableEx<T>();
+        private readonly SimpleObservableEx<T> _ObservableObject = new();
 
         public IDisposable Subscribe(IObserver<T> observer) => _ObservableObject.Subscribe(observer);
 

@@ -13,13 +13,13 @@ namespace System
         /// <summary>Создать генератор массивов для указанной длины</summary>
         /// <param name="Length">Требуемая длина массива</param>
         /// <returns>Генератор массивов, создающий массивы указанной длины</returns>
-        [NotNull] public static Creator Length(int Length) => new Creator(Length);
+        [NotNull] public static Creator Length(int Length) => new(Length);
 
         /// <summary>Создать генератор массивов для указанной длины</summary>
         /// <param name="Length">Требуемая длина массива</param>
         /// <param name="Initializer">Функция инициализации элементов массива</param>
         /// <returns>Генератор массивов, создающий массивы указанной длины</returns>
-        [NotNull] public static Creator Length(int Length, [CanBeNull] Func<int, T> Initializer) => new Creator(Length, Initializer);
+        [NotNull] public static Creator Length(int Length, [CanBeNull] Func<int, T> Initializer) => new(Length, Initializer);
 
         /// <summary>Объект, позволяющий создавать массивы и инициализировать их элементами</summary>
         public class Creator

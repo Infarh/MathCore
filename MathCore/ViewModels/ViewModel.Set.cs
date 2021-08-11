@@ -20,7 +20,8 @@ namespace MathCore.ViewModels
         {
             if (Equals(field, value) || OnPropertyChanging(field, ref value, PropertyName)) return false;
             field = value;
-            if (!string.IsNullOrWhiteSpace(PropertyName)) OnPropertyChanged(PropertyName);
+            if (!string.IsNullOrWhiteSpace(PropertyName))
+                OnPropertyChanged(PropertyName);
             return true;
         }
 
@@ -51,10 +52,28 @@ namespace MathCore.ViewModels
             [CanBeNull] in T value,
             [NotNull] in string ErrorMessage,
             [NotNull] in Func<T, bool> Validator,
-            [NotNull, CallerMemberName] in string PropertyName = null)
+            [NotNull, CallerMemberName] in string PropertyName = null) =>
+            Validator(value) 
+                ? Set(ref field, value, PropertyName) 
+                : throw new ArgumentOutOfRangeException(nameof(value), ErrorMessage);
+
+        /// <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
+        /// <typeparam name="T">Тип значения поля</typeparam>
+        /// <param name="value">Значение, устанавливаемое для поля</param>
+        /// <param name="OldValue">Старое значение свойства</param>
+        /// <param name="Setter">Метод установки значения свойства</param>
+        /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
+        /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
+        protected bool Set<T>(
+            T value,
+            in T OldValue,
+            Action<T> Setter,
+            [CallerMemberName] string PropertyName = null)
         {
-            if (!Validator(value)) throw new ArgumentOutOfRangeException(nameof(value), ErrorMessage);
-            return Set(ref field, value, PropertyName);
+            if (Equals(value, OldValue)) return false;
+            Setter(value);
+            OnPropertyChanged(PropertyName);
+            return true;
         }
 
         /// <summary>Метод установки значения свойства, осуществляющий генерацию события изменения свойства</summary>

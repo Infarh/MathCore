@@ -205,9 +205,9 @@ namespace MathCore.MathParser
             {
                 var arg = root switch
                 {
-                    FunctionArgumentNode _ => root,
+                    FunctionArgumentNode => root,
                     FunctionArgumentNameNode name_node => new FunctionArgumentNode(name_node),
-                    VariantOperatorNode _ when root.Left is VariableValueNode value_node => new FunctionArgumentNode(value_node.Name, root.Right),
+                    VariantOperatorNode when root.Left is VariableValueNode value_node => new FunctionArgumentNode(value_node.Name, root.Right),
                     _ => new FunctionArgumentNode(string.Empty, root)
                 };
 

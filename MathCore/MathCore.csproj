@@ -2,19 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8</LangVersion>
+    <LangVersion>preview</LangVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
-  
+
   <PropertyGroup>
-    <Version>0.0.20.2</Version>
-    <PackageReleaseNotes>Комментарии, немного рефакторинга</PackageReleaseNotes>
+    <Version>0.0.54</Version>
+    <PackageReleaseNotes>
+      Добавлена возможность пропуска событий в модели-представления с помощью PropertyChangedEventsSuppressor
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Authors>Shmachilin P.A.</Authors>
     <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
-    <RepositoryUrl>github.com/infarh/mathcore</RepositoryUrl>
+    <RepositoryUrl>https://github.com/infarh/mathcore.git</RepositoryUrl>
     <Description>Библиотека прикладных алгоритмов</Description>
     <PackageTags>Mathematic, Logiс</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

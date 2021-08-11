@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,6 +16,12 @@ namespace MathCore.Values
         /// <summary>Элемент данных</summary>
         public class Item : IEnumerable<KeyValuePair<string, string>>
         {
+            /// <summary>Начальное положение</summary>
+            public long FileStartPos { get; }
+
+            /// <summary>Конечное положение в файле</summary>
+            public long FileEndPos { get; }
+
             /// <summary>Элементы заголовка</summary>
             private readonly string[] _Header;
             /// <summary>Элементы данных</summary>
@@ -40,8 +45,12 @@ namespace MathCore.Values
             /// <summary>Новый элемент данных</summary>
             /// <param name="Header">Названия столбцов</param>
             /// <param name="Items">Элементы данных</param>
-            public Item(string[] Header, string[] Items)
+            /// <param name="FileStartPos">Начальное положение</param>
+            /// <param name="FileEndPos">Конечное положение в файле</param>
+            public Item(string[] Header, string[] Items, long FileStartPos, long FileEndPos)
             {
+                this.FileStartPos = FileStartPos;
+                this.FileEndPos = FileEndPos;
                 _Header = Header;
                 _Items = Items;
             }
@@ -109,10 +118,11 @@ namespace MathCore.Values
 
             while (!reader.EndOfStream)
             {
+                var file_pos = reader.BaseStream.Position;
                 var item_line = reader.ReadLine()?.Split(separator);
                 if (item_line is null) continue;
                 if (_SkipEmptyLines && item_line.All(string.IsNullOrWhiteSpace)) continue;
-                yield return new Item(header, item_line);
+                yield return new Item(header, item_line, file_pos, reader.BaseStream.Position);
             }
         }
 

@@ -1,111 +1,133 @@
 ﻿using System;
-using MathCore.Annotations;
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-// ReSharper disable UnusedMember.Global
-// ReSharper disable InconsistentNaming
-// ReSharper disable ConvertToAutoPropertyWhenPossible
+using System.Collections.Generic;
 
 namespace MathCore.DifferentialEquations.Numerical
 {
-    // ReSharper disable CommentTypo
-    /// <summary>Метод Рунге-Кутты</summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE1006:Стили именования", Justification = "<Ожидание>")]
-    public class Euler  //todo: Почему в комментарии указан метод Рунге-Кутты, а имя класса Эйлер?
-    // ReSharper restore CommentTypo
+    public static class Euler
     {
-        private readonly DifferentialEquationsSystem _System;
-        private readonly ArgumentFunction _X;
+        public static double Step(
+            Func<double, double, double> f,
+            double t, double dt, double y) =>
+            y + dt * f(t, y);
 
-        private readonly int _N;
-
-        private double _t; // текущее время 
-
-        private double[] _Y;
-
-        //private readonly double[] _Yy; // внутренние переменные 
-        //private double[] Y1; // внутренние переменные 
-        //private double[] Y2; // внутренние переменные 
-        //private double[] Y3; // внутренние переменные 
-        //private double[] Y4; // внутренние переменные
-
-        /// <summary>Размерность системы</summary>
-        public int N => _N;
-
-        /// <summary>Искомые решения</summary>
-        public double[] Y => _Y;
-
-
-        /// <summary>Текущее время</summary>
-        public double t => _t;
-
-        // ReSharper disable CommentTypo
-        /// <summary>Метод Рунге-Кутты</summary>
-        /// <param name="N">Размерность</param>
-        /// <param name="System">Решаемая система</param>
-        /// <param name="X">Производящая функция аргумента</param>
-        // ReSharper restore CommentTypo
-        protected Euler(int N, DifferentialEquationsSystem System, ArgumentFunction X)
+        public static (double[] T, double[] Y) Solve(
+            Func<double, double, double> f,
+            double dt,
+            double Tmax,
+            double y0 = 0,
+            double t0 = 0)
         {
-            _X = X;
-            _System = System;
+            var N = (int)((Tmax - t0) / dt) + 1;
+            var T = new double[N];
+            var Y = new double[N];
 
-            _N = N; // сохранить размерность системы
+            T[0] = t0;
+            Y[0] = y0;
 
-            if (N < 1)
-                throw new ArgumentOutOfRangeException(nameof(N), "Размерность системы - величина положительная");
+            for (var (i, t) = (1, t0 + dt); i < N; i++, t += dt)
+            {
+                Y[i] = Step(f, t, dt, Y[i - 1]);
+                T[i] = t;
+            }
 
-
-            _Y = new double[N]; // создать вектор решения
-            //_Yy = new double[N]; // и внутренних решений
-            //Y1 = new double[N];
-            //Y2 = new double[N];
-            //Y3 = new double[N];
-            //Y4 = new double[N];
+            return (T, Y);
         }
 
-        /// <summary>Начальные условия</summary>
-        /// <param name="t0">Начальное время</param>
-        /// <param name="Y0">Начальные условия</param>
-        public void Initialize(double t0, [NotNull] params double[] Y0)
+        public static (double y1, double y2) Step(
+            Func<double, (double y1, double y2), (double y1, double y2)> f,
+            double t, double dt, (double y1, double y2) y)
         {
-            if (Y0.Length != _N)
-                throw new ArgumentOutOfRangeException(nameof(Y0), "Размер вектора начальных значений не соответствует размерности решения метода");
-
-            _t = t0;
-            Array.Copy(Y0, _Y, Y0.Length);
+            var (dy1, dy2) = f(t, y);
+            return (y.y1 + dt * dy1, y.y2 * dt * dy2);
         }
 
-        //public abstract void F(double t, double[] Y, ref double[] dY); // правые части системы.
-
-        /// <summary>Расчёт решения</summary>
-        /// <param name="dt">Шаг</param>
-        [NotNull]
-        public double[] NextStep(double dt)
+        public static (double[] T, (double y1, double y2)[] Y) Solve(
+            Func<double, (double y1, double y2), (double y1, double y2)> f,
+            double dt,
+            double Tmax,
+            (double y1, double y2) y0 = default,
+            double t0 = 0)
         {
-            if (dt <= 0)
-                throw new ArgumentOutOfRangeException(nameof(dt), "Шаг должен быть больше нуля");
+            var N = (int)((Tmax - t0) / dt) + 1;
+            var T = new double[N];
+            var Y = new (double y1, double y2)[N];
 
-            var dt2 = dt / 2;
+            T[0] = t0;
+            Y[0] = y0;
 
-            var X = _X(t);
-            var X2 = _X(t + dt / 2);
-            var X3 = _X(t + dt);
+            for (var (i, t) = (1, t0 + dt); i < N; i++, t += dt)
+            {
+                Y[i] = Step(f, t, dt, Y[i - 1]);
+                T[i] = t;
+            }
 
-            if (X.Length != _N || X2.Length != _N || X3.Length != _N)
-                throw new ArgumentException("Функция определения аргумента вернула вектор аргумента размера, не соответствующего размерности системы");
+            return (T, Y);
+        }
 
-            var lv_Y = (double[])_Y.Clone();
+        public static (double y1, double y2, double y3) Step(
+            Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
+            double t, double dt, (double y1, double y2, double y3) y)
+        {
+            var (dy1, dy2, dy3) = f(t, y);
+            return (y.y1 + dt * dy1, y.y2 * dt * dy2, y.y3 * dt * dy3);
+        }
 
-            var dY = _System(X, lv_Y);
+        public static (double[] T, (double y1, double y2, double y3)[] Y) Solve(
+            Func<double, (double y1, double y2, double y3), (double y1, double y2, double y3)> f,
+            double dt,
+            double Tmax,
+            (double y1, double y2, double y3) y0 = default,
+            double t0 = 0)
+        {
+            var N = (int)((Tmax - t0) / dt) + 1;
+            var T = new double[N];
+            var Y = new (double y1, double y2, double y3)[N];
 
-            for (var i = 0; i < lv_Y.Length; i++)
-                lv_Y[i] += dt * dY[i];
+            T[0] = t0;
+            Y[0] = y0;
 
-            // увеличить шаг
-            _t += dt;
+            for (var (i, t) = (1, t0 + dt); i < N; i++, t += dt)
+            {
+                Y[i] = Step(f, t, dt, Y[i - 1]);
+                T[i] = t;
+            }
 
-            return _Y = lv_Y;
+            return (T, Y);
+        }
+
+        public static double[] Step(
+            Func<double, IReadOnlyList<double>, double[]> f,
+            int M,
+            double t, double dt, IReadOnlyList<double> y)
+        {
+            var result = f(t, y);
+            for (var i = 0; i < M; i++)
+                result[i] = y[i] + dt * result[i];
+            return result;
+        }
+
+        public static (double[] T, double[][] Y) Solve(
+            Func<double, IReadOnlyList<double>, double[]> f,
+            double dt,
+            double Tmax,
+            double[] y0,
+            double t0 = 0)
+        {
+            var m = y0.Length;
+            var N = (int)((Tmax - t0) / dt) + 1;
+            var T = new double[N];
+            var Y = new double[N][];
+
+            T[0] = t0;
+            Y[0] = y0;
+
+            for (var (i, t) = (1, t0 + dt); i < N; i++, t += dt)
+            {
+                Y[i] = Step(f, m, t, dt, Y[i - 1]);
+                T[i] = t;
+            }
+
+            return (T, Y);
         }
     }
 }
