@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.54.1</Version>
+    <Version>0.0.55</Version>
     <PackageReleaseNotes>
-      Добавлена возможность пропуска событий в модели-представления с помощью PropertyChangedEventsSuppressor
+      Добавлено GeoLocation
     </PackageReleaseNotes>
   </PropertyGroup>
 
