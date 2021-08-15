@@ -1,5 +1,7 @@
 ﻿using System;
+
 using MathCore.Vectors;
+
 using static System.Math;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -109,7 +111,15 @@ namespace MathCore.Geolocation
             return 2 * Atan2(Sqrt(a), Sqrt(1 - a)) * Consts.EarthRadius;
         }
 
-        public static double LengthBetween(Vector2D begin, Vector2D end) => LengthBetween(begin.Y, begin.X, end.Y, end.X);
+        /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
+        /// <param name="begin">Начало</param>
+        /// <param name="end">Конец</param>
+        public static double LengthBetween(in Vector2D begin, in Vector2D end) => LengthBetween(begin.Y, begin.X, end.Y, end.X);
+
+        /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
+        /// <param name="begin">Начало</param>
+        /// <param name="end">Конец</param>
+        public static double LengthBetween(in GeoLocation begin, in GeoLocation end) => LengthBetween(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
 
         /// <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекции), заданными своими координатами</summary>
         /// <param name="latitude1">Широта первой точки в градусах</param>
@@ -173,7 +183,15 @@ namespace MathCore.Geolocation
             return (Atan2(y, x) / ToRad + 360) % 360;
         }
 
-        public static double Heading(Vector2D begin, Vector2D end) => Heading(begin.Y, begin.X, end.Y, end.X);
+        /// <summary>Определение курса по координатам начальной и конечной точки</summary>
+        /// <param name="begin">Исходная точка</param>
+        /// <param name="end">Конечная точка</param>
+        public static double Heading(in Vector2D begin, in Vector2D end) => Heading(begin.Y, begin.X, end.Y, end.X);
+
+        /// <summary>Определение курса по координатам начальной и конечной точки</summary>
+        /// <param name="begin">Исходная точка</param>
+        /// <param name="end">Конечная точка</param>
+        public static double Heading(in GeoLocation begin, in GeoLocation end) => Heading(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
 
         /// <summary>Определение точки на середине отрезка, заданного двумя точками</summary>
         /// <param name="latitude1">Широта первой исходной точки</param>
@@ -181,10 +199,10 @@ namespace MathCore.Geolocation
         /// <param name="latitude2">Широта второй исходной точки</param>
         /// <param name="longitude2">Долгота второй исходной точки</param>
         /// <returns>Точка в середине отрезка</returns>
-        public static Vector2D HalfWayPoint(double latitude1, double longitude1, double latitude2, double longitude2)
+        public static GeoLocation HalfWayPoint(double latitude1, double longitude1, double latitude2, double longitude2)
         {
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1) || double.IsNaN(latitude2) || double.IsNaN(longitude2))
-                return new Vector2D(double.NaN, double.NaN);
+                return new(double.NaN, double.NaN);
 
             latitude1 *= ToRad;
             latitude2 *= ToRad;
@@ -199,10 +217,18 @@ namespace MathCore.Geolocation
             var by = cos_lat2 * Sin(d_lon);
             var latitude_05 = Atan2(Sin(latitude1) + Sin(latitude2), Sqrt((cos_lat1 + bx) * (cos_lat1 + bx) + by * by));
             var longitude_05 = longitude1 + Atan2(by, cos_lat1 + bx);
-            return new Vector2D(longitude_05 / ToRad, latitude_05 / ToRad);
+            return new(latitude_05 / ToRad, longitude_05 / ToRad);
         }
 
-        public static Vector2D HalfWayPoint(Vector2D begin, Vector2D end) => HalfWayPoint(begin.Y, begin.X, end.Y, end.X);
+        /// <summary>Определение курса по координатам начальной и конечной точки</summary>
+        /// <param name="begin">Исходная точка</param>
+        /// <param name="end">Конечная точка</param>
+        public static GeoLocation HalfWayPoint(in Vector2D begin, in Vector2D end) => HalfWayPoint(begin.Y, begin.X, end.Y, end.X);
+
+        /// <summary>Определение курса по координатам начальной и конечной точки</summary>
+        /// <param name="begin">Исходная точка</param>
+        /// <param name="end">Конечная точка</param>
+        public static GeoLocation HalfWayPoint(in GeoLocation begin, in GeoLocation end) => HalfWayPoint(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
 
         /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
         /// <param name="latitude">Широта исходной точки</param>
@@ -210,14 +236,14 @@ namespace MathCore.Geolocation
         /// <param name="heading">Курс на точку назначения</param>
         /// <param name="distance">Пройденная дистанция в метрах</param>
         /// <returns>Точка назначения</returns>
-        public static Vector2D DestinationPoint(double latitude, double longitude, double heading, double distance)
+        public static GeoLocation DestinationPoint(double latitude, double longitude, double heading, double distance)
         {
             if (double.IsNaN(latitude) || double.IsNaN(longitude) || double.IsNaN(heading) || double.IsNaN(distance))
-                return new Vector2D(double.NaN, double.NaN);
+                return new(double.NaN, double.NaN);
 
             latitude *= ToRad;
             longitude *= ToRad;
-            if (heading < 0 || heading > 360) heading = (heading + 360) % 360;
+            if (heading is < 0 or > 360) heading = (heading + 360) % 360;
             heading *= ToRad;
 
             distance /= Consts.EarthRadius;
@@ -229,11 +255,22 @@ namespace MathCore.Geolocation
 
             var sin_latitude2 = sin_lat * cos_d + cos_lat * sin_d * Cos(heading);
             var longitude2 = longitude + Atan2(Sin(heading) * sin_d * cos_lat, cos_d - sin_lat * sin_latitude2);
-            return new Vector2D((longitude2 / ToRad + 540) % 360 - 180, Asin(sin_latitude2) / ToRad);
+            return new(Asin(sin_latitude2) / ToRad, (longitude2 / ToRad + 540) % 360 - 180);
         }
 
-        public static Vector2D DestinationPoint(Vector2D point, double heading, double distance) =>
+        /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
+        /// <param name="point">Исходная точка</param>
+        /// <param name="heading">Курс в градусах</param>
+        /// <param name="distance">Расстояние в метрах</param>
+        public static GeoLocation DestinationPoint(in Vector2D point, double heading, double distance) =>
             DestinationPoint(point.Y, point.X, heading, distance);
+
+        /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
+        /// <param name="point">Исходная точка</param>
+        /// <param name="heading">Курс в градусах</param>
+        /// <param name="distance">Расстояние в метрах</param>
+        public static GeoLocation DestinationPoint(in GeoLocation point, double heading, double distance) =>
+            DestinationPoint(point.Latitude, point.Longitude, heading, distance);
 
         /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
         /// <param name="latitude">Широта исходной точки</param>
@@ -242,16 +279,20 @@ namespace MathCore.Geolocation
         /// <param name="distance">Пройденная дистанция в метрах</param>
         /// <param name="final_heading">Курс из точки назначения на исходную точку</param>
         /// <returns>Точка назначения</returns>
-        public static Vector2D DestinationPoint(double latitude, double longitude, double heading, double distance, out double final_heading)
+        public static GeoLocation DestinationPoint(double latitude, double longitude, double heading, double distance, out double final_heading)
         {
             var result = DestinationPoint(latitude, longitude, heading, distance);
-            final_heading = (Heading(result.Y, result.X, latitude, longitude) + 180) % 360;
+            final_heading = (Heading(result.Latitude, result.Longitude, latitude, longitude) + 180) % 360;
             return result;
         }
 
-        public static Vector2D DestinationPoint(Vector2D point, double heading, double distance, out double final_heading) =>
+        /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
+        /// <param name="point">Исходная точка</param>
+        /// <param name="heading">Курс в градусах</param>
+        /// <param name="distance">Расстояние</param>
+        /// <param name="final_heading">Курс в конечной точке</param>
+        public static GeoLocation DestinationPoint(in Vector2D point, double heading, double distance, out double final_heading) =>
             DestinationPoint(point.Y, point.X, heading, distance, out final_heading);
-
 
         /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
         /// <param name="latitude1">Широта первой исходной точки</param>
@@ -261,7 +302,7 @@ namespace MathCore.Geolocation
         /// <param name="longitude2">Долгота второй исходной точки</param>
         /// <param name="heading2">Курс второй исходной точки</param>
         /// <returns>Точка пересечения двух курсов</returns>
-        public static Vector2D Intersection
+        public static GeoLocation Intersection
         (
             double latitude1, double longitude1, double heading1,
             double latitude2, double longitude2, double heading2
@@ -270,7 +311,7 @@ namespace MathCore.Geolocation
             if (double.IsNaN(latitude1) || double.IsNaN(longitude1)
                 || double.IsNaN(latitude2) || double.IsNaN(longitude2)
                 || double.IsNaN(heading1) || double.IsNaN(heading2))
-                return double.NaN;
+                return new(double.NaN, double.NaN);
 
             latitude1 *= ToRad;
             latitude2 *= ToRad;
@@ -317,7 +358,7 @@ namespace MathCore.Geolocation
             var cos_a2 = Cos(a2);
 
             if (sin_a1.Equals(0d) && sin_a2.Equals(0d) || sin_a1 * sin_a2 < 0)
-                return new Vector2D(double.NaN, double.NaN);
+                return new(double.NaN, double.NaN);
 
             var a3 = Acos(-cos_a1 * cos_a2 + sin_a1 * sin_a2 * cos_angular_distance);
             var cos_a3 = Cos(a3);
@@ -327,23 +368,39 @@ namespace MathCore.Geolocation
             var latitude3 = Asin(sin_lat1 * cos_angular_distance_p1_p2 + cos_lat1 * sin_angular_distance_p1_p2 * Cos(heading1));
             var d_lon_13 = Atan2(Sin(heading1) * sin_angular_distance_p1_p2 * cos_lat1, cos_angular_distance_p1_p2 - sin_lat1 * Sin(latitude3));
             var longitude3 = longitude1 + d_lon_13;
-            return new Vector2D((longitude3 / ToRad + 540) % 360 - 180, latitude3 / ToRad);
+            return new(latitude3 / ToRad, (longitude3 / ToRad + 540) % 360 - 180);
         }
 
-        public static Vector2D Intersection(Vector2D point1, double heading1, Vector2D point2, double heading2) =>
+        /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
+        /// <param name="point1">Первая точка</param>
+        /// <param name="heading1">Курс в первой точке</param>
+        /// <param name="point2">Вторая точка</param>
+        /// <param name="heading2">Курс во второй точке</param>
+        public static GeoLocation Intersection(in Vector2D point1, double heading1, in Vector2D point2, double heading2) =>
             Intersection(point1.Y, point1.X, heading1, point2.Y, point2.X, heading2);
+
+        /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
+        /// <param name="point1">Первая точка</param>
+        /// <param name="heading1">Курс в первой точке</param>
+        /// <param name="point2">Вторая точка</param>
+        /// <param name="heading2">Курс во второй точке</param>
+        public static GeoLocation Intersection(in GeoLocation point1, double heading1, in GeoLocation point2, double heading2) =>
+            Intersection(point1.Latitude, point1.Longitude, heading1, point2.Latitude, point2.Longitude, heading2);
 
         public static class MercatorProjection
         {
             public static double LatitudeToY(double Lat)
             {
-                if (Lat <= -90)
-                    return double.NegativeInfinity;
-                if (Lat >= 90)
-                    return double.PositiveInfinity;
-
-                var lat = Lat * ToRad;
-                return Log(Tan(lat / 2 + PI / 4) * ConformalFactor(lat)) * ToDeg;
+                switch (Lat)
+                {
+                    case <= -90: return double.NegativeInfinity;
+                    case >= 90: return double.PositiveInfinity;
+                    default:
+                    {
+                        var lat = Lat * ToRad;
+                        return Log(Tan(lat / 2 + PI / 4) * ConformalFactor(lat)) * ToDeg;
+                    }
+                }
             }
 
             private static double ConformalFactor(double lat)
@@ -370,21 +427,22 @@ namespace MathCore.Geolocation
                 return lat * ToDeg;
             }
 
-            public static Vector2D ToXY(Vector2D LongitudeLatitude) => new(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
+            public static Vector2D ToXY(in Vector2D LongitudeLatitude) => new(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
+            public static Vector2D ToXY(in GeoLocation Location) => new(Location.Longitude, LatitudeToY(Location.Latitude));
 
-            public static Vector2D FromXY(Vector2D Point) => new(Point.X, YToLatitude(Point.Y));
+            public static GeoLocation FromXY(in Vector2D Point) => new(YToLatitude(Point.Y), Point.X);
 
             public static (double X, double Y) ToXY(double Longitude, double Latitude) => (Longitude, LatitudeToY(Latitude));
-            public static (double X, double Y) ToXY((double Longitude, double Latitude) Point) => (Point.Longitude, LatitudeToY(Point.Latitude));
+            public static (double X, double Y) ToXY(in (double Longitude, double Latitude) Point) => (Point.Longitude, LatitudeToY(Point.Latitude));
 
             public static (double X, double Y) ToXYInMeters(double Longitude, double Latitude) => (Longitude * Consts.MetersPerDegree, LatitudeToY(Latitude) * Consts.MetersPerDegree);
-            public static (double X, double Y) ToXYInMeters((double Longitude, double Latitude) Point) => (Point.Longitude * Consts.MetersPerDegree, LatitudeToY(Point.Latitude) * Consts.MetersPerDegree);
+            public static (double X, double Y) ToXYInMeters(in (double Longitude, double Latitude) Point) => (Point.Longitude * Consts.MetersPerDegree, LatitudeToY(Point.Latitude) * Consts.MetersPerDegree);
 
             public static (double Longitude, double Latitude) FromXY(double X, double Y) => (X, YToLatitude(Y));
-            public static (double Longitude, double Latitude) FromXY((double X, double Y) Point) => (Point.X, YToLatitude(Point.Y));
+            public static (double Longitude, double Latitude) FromXY(in (double X, double Y) Point) => (Point.X, YToLatitude(Point.Y));
 
             public static (double Longitude, double Latitude) FromXYInMeters(double X, double Y) => (X / Consts.MetersPerDegree, YToLatitude(Y) / Consts.MetersPerDegree);
-            public static (double Longitude, double Latitude) FromXYInMeters((double X, double Y) Point) => (Point.X / Consts.MetersPerDegree, YToLatitude(Point.Y) / Consts.MetersPerDegree);
+            public static (double Longitude, double Latitude) FromXYInMeters(in (double X, double Y) Point) => (Point.X / Consts.MetersPerDegree, YToLatitude(Point.Y) / Consts.MetersPerDegree);
         }
     }
 }
