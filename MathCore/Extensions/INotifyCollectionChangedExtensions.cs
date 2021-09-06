@@ -59,19 +59,22 @@ namespace System.ComponentModel
             }
 
             [NotNull]
-            protected readonly INotifyCollectionChanged _Collection;
+            protected readonly WeakReference<INotifyCollectionChanged> _Collection;
 
             private readonly NotifyCollectionChangedAction _ChangeType;
 
             public virtual bool IsEmpty => _OnCollectionChangedEvent is null && _CollectionChanged is null && ValueChangeEventHandlers is null;
 
             [NotNull]
-            public INotifyCollectionChanged Collection => _Collection;
+            public INotifyCollectionChanged Collection => 
+                _Collection.TryGetTarget(out var collection)
+                    ? collection
+                    : throw new InvalidOperationException("Попытка доступа к объекту, который был удалён из памяти");
 
             protected CollectionChangesSubscriber([NotNull] INotifyCollectionChanged Obj, NotifyCollectionChangedAction ChangeType)
             {
                 _ChangeType = ChangeType;
-                _Collection = Obj;
+                _Collection = new(Obj);
             }
 
             private void OnCollectionChangedHandler([CanBeNull] object Sender, [NotNull] NotifyCollectionChangedEventArgs E)
@@ -87,8 +90,8 @@ namespace System.ComponentModel
                 ValueChangeEventHandlers?.Invoke();
             }
 
-            protected void Subscribe() => _Collection.CollectionChanged += OnCollectionChangedHandler;
-            protected void Unsubscribe() => _Collection.CollectionChanged -= OnCollectionChangedHandler;
+            protected void Subscribe() => Collection.CollectionChanged += OnCollectionChangedHandler;
+            protected void Unsubscribe() => Collection.CollectionChanged -= OnCollectionChangedHandler;
 
             internal virtual void ClearHandlers()
             {
