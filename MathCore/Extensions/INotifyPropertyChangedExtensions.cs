@@ -45,7 +45,6 @@ namespace System.ComponentModel
         public static void RegisterPropertyChangedHandler([NotNull] this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
             => obj.PropertyChanged += (s, e) => { if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e); };
 
-
         /// <summary>Подписка на событие изменения указанных свойств</summary>
         /// <param name="obj">Объект, реализующий интерфейс <see cref="INotifyPropertyChanged"/></param>
         /// <param name="handler">Обработчик события <see cref="INotifyPropertyChanged.PropertyChanged"/> типа <see cref="PropertyChangedEventHandler"/></param>
@@ -297,7 +296,7 @@ namespace System.ComponentModel
             }
 
             [NotNull]
-            protected readonly INotifyPropertyChanged _NotifyPropertyChangedObject;
+            protected readonly WeakReference<INotifyPropertyChanged> _NotifyPropertyChangedObject;
 
             [NotNull]
             private readonly string _PropertyName;
@@ -305,12 +304,15 @@ namespace System.ComponentModel
             public virtual bool IsEmpty => OnPropertyChangedEventHandlers is null && OnPropertyChangedHandlers is null && ValueChangeEventHandlers is null;
 
             [NotNull]
-            public INotifyPropertyChanged NotifyPropertyChangedObject => _NotifyPropertyChangedObject;
+            public INotifyPropertyChanged NotifyPropertyChangedObject => 
+                _NotifyPropertyChangedObject.TryGetTarget(out var obj) 
+                    ? obj 
+                    : throw new InvalidOperationException("Объект, для которого производится попытка доступа, удалён");
 
             protected Subscriber([NotNull] INotifyPropertyChanged Obj, [NotNull] string PropertyName)
             {
                 _PropertyName = PropertyName;
-                _NotifyPropertyChangedObject = Obj;
+                _NotifyPropertyChangedObject = new(Obj);
             }
 
             private void OnPropertyChangedHandler([CanBeNull] object Sender, [NotNull] PropertyChangedEventArgs E)
@@ -326,8 +328,8 @@ namespace System.ComponentModel
                 ValueChangeEventHandlers?.Invoke();
             }
 
-            protected void Subscribe() => _NotifyPropertyChangedObject.PropertyChanged += OnPropertyChangedHandler;
-            protected void Unsubscribe() => _NotifyPropertyChangedObject.PropertyChanged -= OnPropertyChangedHandler;
+            protected void Subscribe() => NotifyPropertyChangedObject.PropertyChanged += OnPropertyChangedHandler;
+            protected void Unsubscribe() => NotifyPropertyChangedObject.PropertyChanged -= OnPropertyChangedHandler;
 
             internal virtual void ClearHandlers()
             {
@@ -357,7 +359,7 @@ namespace System.ComponentModel
 
             internal Subscriber([NotNull] INotifyPropertyChanged Obj, [NotNull] string PropertyName) : base(Obj, PropertyName) { }
 
-            protected override void OnObjectPropertyChanged(object Sender, [NotNull] PropertyChangedEventArgs E)
+            protected override void OnObjectPropertyChanged(object Sender, PropertyChangedEventArgs E)
             {
                 base.OnObjectPropertyChanged(Sender, E);
                 OnObjectValueChangedHandlers?.Invoke((T)Sender);
@@ -373,7 +375,6 @@ namespace System.ComponentModel
         [NotNull]
         private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers =
             new();
-
 
         [NotNull]
         public static IDisposable UsingSubscribeToProperty(
