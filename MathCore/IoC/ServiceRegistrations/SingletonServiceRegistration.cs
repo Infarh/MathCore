@@ -45,14 +45,14 @@ namespace MathCore.IoC.ServiceRegistrations
             _InstanceService = true;
         }
 
-        public override object GetService()
+        public override object GetService(params object[] parameters)
         {
             if (!_Created)
                 lock (_SyncRoot)
                 {
                     if (_Created) return CurrentInstance;
                     _Created = true;
-                    CurrentInstance = (TService)CreateNewService();
+                    CurrentInstance = (TService)CreateNewService(parameters);
                 }
 
             CheckInstanceActualityTimeAsync();

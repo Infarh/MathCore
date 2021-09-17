@@ -14,18 +14,44 @@ namespace MathCore.IoC.ServiceRegistrations
             private readonly ConstructorInfo _Constructor;
             private ParameterInfo[] _Parameters;
 
-            [NotNull] public IReadOnlyCollection<ParameterInfo> Parameters => _Parameters ??= _Constructor.GetParameters();
+            [NotNull] public IReadOnlyList<ParameterInfo> Parameters => _Parameters ??= _Constructor.GetParameters();
             [NotNull] public IEnumerable<Type> ParameterTypes => Parameters.Select(p => p.ParameterType);
 
             public bool IsDefault => Parameters.Count == 0;
 
             public ServiceConstructorInfo(ConstructorInfo constructor) => _Constructor = constructor;
 
-            [NotNull] public object[] GetParametersValues([NotNull] Func<Type, object> ParameterSelector) => ParameterTypes.ToArray(ParameterSelector);
+            [NotNull]
+            public object[] GetParametersValues([NotNull] Func<Type, object> ParameterSelector, [NotNull] object[] InputParameters)
+            {
+                var parameters = Parameters;
+                var result = new object[parameters.Count];
+                var j = 0;
+                for (var i = 0; i < result.Length; i++)
+                {
+                    var parameter_type = parameters[i].ParameterType;
+                    object obj = null;
+                    if (j < InputParameters.Length)
+                    {
+                        var parameter = InputParameters[j];
+                        if (parameter == null)
+                            ++j;
+                        else if (parameter_type.IsInstanceOfType(parameter))
+                        {
+                            obj = parameter;
+                            ++j;
+                        }
+                    }
+                    result[i] = obj ?? ParameterSelector(parameter_type);
+                    if (result[i] == null && parameters[i].GetCustomAttribute(typeof(NotNullAttribute)) != null)
+                        throw new InvalidOperationException($"Ошибка в процессе создания объекта - не найден параметр конструктора c индексом {i} типа {parameter_type} с именем {parameters[i].Name} помеченный аттрибутом [NotNull]");
+                }
+                return result;
+            }
 
             public object CreateInstance(object[] parameters) => _Constructor.Invoke(parameters);
 
-            public object CreateInstance([NotNull] Func<Type, object> ParameterSelector) => CreateInstance(GetParametersValues(ParameterSelector));
+            public object CreateInstance([NotNull] Func<Type, object> ParameterSelector, params object[] parameters) => CreateInstance(GetParametersValues(ParameterSelector, parameters));
         }
     }
 }

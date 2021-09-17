@@ -4,11 +4,32 @@ using System.Numerics;
 
 using MathCore;
 
+using Microsoft.Extensions.DependencyInjection;
+
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable DoubleEquals
 
 namespace ConsoleTest
 {
+    public interface IService1 { }
+
+    public interface IService2 { }
+
+    public class Service1 : IService1
+    {
+
+    }
+
+    public class Service2 : IService2
+    {
+        private readonly IService1 _Service1;
+
+        public Service2(IService1 Service1)
+        {
+            _Service1 = Service1;
+        }
+    }
+
     internal static class Program
     {
         private static RecursionResult<BigInteger> Factorial(int n, BigInteger product) =>
@@ -16,8 +37,21 @@ namespace ConsoleTest
                 ? TailRecursion.Return(product)
                 : TailRecursion.Next(() => Factorial(n - 1, n * product));
 
+        
+
         private static void Main()
         {
+            var services = new ServiceCollection()
+               .AddScoped<IService1, Service1>()
+               .AddTransient<IService2, Service2>()
+               .BuildServiceProvider(true);
+
+            using (var scope = services.CreateScope())
+            {
+                var service2 = scope.ServiceProvider.GetRequiredService<IService2>();
+            }
+
+
             const int count = 1000;
             var items = Enumerable.Range(1, count).ToArray();
 

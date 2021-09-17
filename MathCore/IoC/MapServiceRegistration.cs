@@ -9,9 +9,9 @@ namespace MathCore.IoC
         private readonly ServiceRegistration _BaseServiceRegistration;
         public MapServiceRegistration(IServiceManager Manager, Type MapServiceType, ServiceRegistration BaseServiceRegistration) : base(Manager, MapServiceType) => _BaseServiceRegistration = BaseServiceRegistration;
 
-        protected override object CreateServiceInstance() => _BaseServiceRegistration.CreateNewService();
+        protected override object CreateServiceInstance(params object[] parameters) => _BaseServiceRegistration.CreateNewService(parameters);
 
-        public override object GetService() => _BaseServiceRegistration.GetService();
+        public override object GetService(params object[] parameters) => _BaseServiceRegistration.GetService(parameters);
 
         [NotNull] internal override ServiceRegistration CloneFor([NotNull] IServiceManager manager) => new MapServiceRegistration(manager, ServiceType, manager.ServiceRegistrations[_BaseServiceRegistration.ServiceType]);
     }

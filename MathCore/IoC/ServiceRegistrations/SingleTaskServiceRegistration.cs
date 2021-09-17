@@ -25,7 +25,7 @@ namespace MathCore.IoC.ServiceRegistrations
 
         public SingleTaskServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType, FactoryMethod) => ResetAll();
 
-        public override object GetService() => throw new NotImplementedException();
+        public override object GetService(params object[] parameters) => throw new NotImplementedException();
 
         public void ResetAll()
         {
