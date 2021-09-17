@@ -18,6 +18,26 @@ namespace MathCore.IoC
             [NotNull] Func<TService> FactoryMethod, in ServiceRegistrationMode mode = ServiceRegistrationMode.Singleton) 
             where TService : class;
 
+        /// <summary>Зарегистрировать тип сервиса</summary>
+        /// <param name="ServiceType">Тип регистрируемого сервиса</param>
+        /// <param name="mode">Режим регистрации</param>
+        /// <returns>Объект регистрации</returns>
+        [NotNull]
+        ServiceRegistration RegisterType(
+            [NotNull] Type ServiceType,
+            ServiceRegistrationMode mode = ServiceRegistrationMode.Singleton);
+
+        /// <summary>Зарегистрировать интерфейс сервиса</summary>
+        /// <param name="InterfaceType">Тип интерфейса сервиса</param>
+        /// <param name="ServiceType">Тип реализации интерфейса сервиса</param>
+        /// <param name="mode">Режим регистрации</param>
+        /// <returns>Объект регистрации</returns>
+        [NotNull]
+        ServiceRegistration RegisterType(
+            [CanBeNull] Type InterfaceType,
+            [NotNull] Type ServiceType,
+            ServiceRegistrationMode mode = ServiceRegistrationMode.Singleton);
+
         [NotNull] MapServiceRegistration Map<TService, TMapService>() where TService : class where TMapService : class;
 
         bool Unregister<TService>();
