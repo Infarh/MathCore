@@ -8,6 +8,8 @@ namespace MathCore.IoC
 
         [CanBeNull] public TService Service => _ServiceManager.Get<TService>();
 
+        [NotNull] public TService ServiceRequired => _ServiceManager.GetRequired<TService>();
+
         public ServiceManagerAccessor(ServiceManager ServiceManager) => _ServiceManager = ServiceManager;
     }
 }

@@ -9,13 +9,13 @@ namespace MathCore.IoC.ServiceRegistrations
 
         public SingleCallServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType, FactoryMethod) { }
 
-        public override object GetService() => CreateNewService();
+        public override object GetService(params object[] parameters) => CreateNewService();
 
-        public override object CreateNewService()
+        public override object CreateNewService(params object[] parameters)
         {
             try
             {
-                return CreateServiceInstance();
+                return CreateServiceInstance(parameters);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)

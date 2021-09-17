@@ -24,12 +24,12 @@ namespace MathCore.IoC.ServiceRegistrations
 
         public SingleThreadServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType, FactoryMethod) => ResetAll();
 
-        public override object GetService() => _Initializer.Value;
+        public override object GetService(params object[] parameters) => _Initializer.Value;
 
         public void ResetAll()
         {
             var last_initializer = _Initializer;
-            _Initializer = new ThreadLocal<object>(CreateNewService);
+            _Initializer = new ThreadLocal<object>(() => CreateNewService());
             _Exceptions = new ThreadLocal<Exception>();
             last_initializer?.Dispose();
         }

@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.56</Version>
+    <Version>0.0.57</Version>
     <PackageReleaseNotes>
-      Исправлено поведение подписки на интерфейсы INotifyPropertyChanged и INotifyCollectionChanged так, что бы подписчики захватывали не жёсткую ссылку на целевой объект, а создавали мягкую ссылку
+      Добавлен метод-расширение GetRequired для ServiceManager
     </PackageReleaseNotes>
   </PropertyGroup>
 

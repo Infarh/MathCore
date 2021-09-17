@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+
 using MathCore.Annotations;
+using MathCore.IoC.Exceptions;
 using MathCore.IoC.ServiceRegistrations;
 
 namespace MathCore.IoC
@@ -60,6 +63,102 @@ namespace MathCore.IoC
                 return registration;
             }
         }
+
+        public ServiceRegistration RegisterType(
+      Type ServiceType,
+      ServiceRegistrationMode mode)
+        {
+            switch (mode)
+            {
+                case ServiceRegistrationMode.Singleton:
+                    return RegisterTypeSingleton(ServiceType);
+                case ServiceRegistrationMode.SingleCall:
+                    return RegisterTypeSingleCall(ServiceType);
+                case ServiceRegistrationMode.SingleThread:
+                    return RegisterTypeSingleThread(ServiceType);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        public ServiceRegistration RegisterType(
+          Type InterfaceType,
+          Type ServiceType,
+          ServiceRegistrationMode mode)
+        {
+            switch (mode)
+            {
+                case ServiceRegistrationMode.Singleton:
+                    return RegisterTypeSingleton(InterfaceType, ServiceType);
+                case ServiceRegistrationMode.SingleCall:
+                    return RegisterTypeSingleCall(InterfaceType, ServiceType);
+                case ServiceRegistrationMode.SingleThread:
+                    return RegisterTypeSingleThread(InterfaceType, ServiceType);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        [NotNull]
+        private ServiceRegistration Register(
+          [NotNull] Type ServiceType,
+          [NotNull] Type RegistrationBaseType)
+        {
+            if (ServiceType is null)
+                throw new ArgumentNullException(nameof(ServiceType));
+            if (!ServiceType.IsClass)
+                throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не является классом");
+            var type = !ServiceType.IsAbstract ? RegistrationBaseType.MakeGenericType(ServiceType) : throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не может являться абстрактным классом");
+            lock (_SyncRoot)
+            {
+                var instance = (ServiceRegistration)Activator.CreateInstance(type, this, ServiceType);
+                _Services[ServiceType] = instance;
+                return instance;
+            }
+        }
+
+        [NotNull]
+        private ServiceRegistration Register(
+          [CanBeNull] Type InterfaceType,
+          [NotNull] Type ServiceType,
+          [NotNull] Type RegistrationBaseType)
+        {
+            if (InterfaceType is null)
+                return Register(ServiceType, RegistrationBaseType);
+            if (ServiceType is null)
+                throw new ArgumentNullException(nameof(ServiceType));
+            if (!ServiceType.IsClass)
+                throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не является классом");
+            var type = !ServiceType.IsAbstract ? RegistrationBaseType.MakeGenericType(ServiceType) : throw new ServiceRegistrationNotFoundException(ServiceType, "Регистрируемый тип сервиса не может являться абстрактным классом");
+            lock (_SyncRoot)
+            {
+                var registration = _Services.Values.FirstOrDefault(r => r.ServiceType == ServiceType) 
+                    ?? (ServiceRegistration)Activator.CreateInstance(type, this, ServiceType);
+                _Services[InterfaceType] = registration;
+                return registration;
+            }
+        }
+
+        public ServiceRegistration RegisterTypeSingleton(Type ServiceType) => Register(ServiceType, typeof(SingletonServiceRegistration<>));
+
+        public ServiceRegistration RegisterTypeSingleCall(Type ServiceType) => Register(ServiceType, typeof(SingleCallServiceRegistration<>));
+
+        public ServiceRegistration RegisterTypeSingleThread(Type ServiceType) => Register(ServiceType, typeof(SingleThreadServiceRegistration<>));
+
+        public ServiceRegistration RegisterTypeSingleton(
+            Type InterfaceType,
+            Type ServiceType) =>
+            Register(InterfaceType, ServiceType, typeof(SingletonServiceRegistration<>));
+
+        public ServiceRegistration RegisterTypeSingleCall(
+            Type InterfaceType,
+            Type ServiceType) =>
+            Register(InterfaceType, ServiceType, typeof(SingleCallServiceRegistration<>));
+
+        public ServiceRegistration RegisterTypeSingleThread(
+            Type InterfaceType,
+            Type ServiceType) =>
+            Register(InterfaceType, ServiceType, typeof(SingleThreadServiceRegistration<>));
 
         #endregion
 

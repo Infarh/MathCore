@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MathCore.Annotations;
 using MathCore.IoC.Exceptions;
@@ -32,16 +33,16 @@ namespace MathCore.IoC.ServiceRegistrations
             this.ServiceType = ServiceType;
         }
 
-        protected abstract object CreateServiceInstance();
+        protected abstract object CreateServiceInstance(params object[] parameters);
 
-        public virtual object CreateNewService()
+        public virtual object CreateNewService(params object[] parameters)
         {
             try
             {
                 var last_exception = LastException;
                 if (last_exception != null)
                     throw last_exception;
-                return CreateServiceInstance();
+                return CreateServiceInstance(parameters);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
@@ -54,7 +55,7 @@ namespace MathCore.IoC.ServiceRegistrations
             return null;
         }
 
-        public abstract object GetService();
+        public abstract object GetService(params object[] parameters);
 
         #region IDisposable
 
@@ -93,15 +94,25 @@ namespace MathCore.IoC.ServiceRegistrations
 
         #endregion
 
-        protected override object CreateServiceInstance() => _FactoryMethod is null ? CreateInstanceByReflection() : _FactoryMethod();
+        protected override object CreateServiceInstance(params object[] parameters) => _FactoryMethod is null ? CreateInstanceByReflection(parameters) : _FactoryMethod();
 
-        private object CreateInstanceByReflection()
+        private object CreateInstanceByReflection(params object[] parameters)
         {
             var service_manager = _Manager;
-            var constructor = _Constructors.FirstOrDefault(ctor => ctor.ParameterTypes.All(service_manager.ServiceRegistered))
-                           ?? throw new ServiceConstructorNotFoundException(typeof(TService));
+            return (_Constructors.FirstOrDefault(ApplicableConstructor) 
+                ?? throw new ServiceConstructorNotFoundException(typeof(TService)))
+               .CreateInstance(new Func<Type, object>(service_manager.Get), parameters);
 
-            return constructor.CreateInstance(service_manager.Get);
+            bool ApplicableConstructor(ServiceConstructorInfo ctor)
+            {
+                foreach (Type parameterType in ctor.ParameterTypes)
+                {
+                    Type type = parameterType;
+                    if (!service_manager.ServiceRegistered(type) && !parameters.Where(p => p != null).Any(p => type.IsInstanceOfType(p)))
+                        return false;
+                }
+                return true;
+            }
         }
 
         [NotNull]

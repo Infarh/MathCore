@@ -58,6 +58,20 @@ namespace MathCore.IoC
             }
         }
 
+        public TObject Create<TObject>(params object[] parameters) where TObject : class
+        {
+            if (!ServiceRegistered<TObject>())
+                return (TObject)new SingleCallServiceRegistration<TObject>(this, typeof(TObject)).GetService(parameters);
+            return Get<TObject>() ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис");
+        }
+
+        public object Create(Type ObjectType, params object[] parameters)
+        {
+            if (ServiceRegistered(ObjectType))
+                return Get(ObjectType) ?? throw new InvalidOperationException("Менеджер сервисов вернул пустую ссылку на зарегистрированный сервис");
+            return ((ServiceRegistration)Activator.CreateInstance(typeof(SingleCallServiceRegistration<>).MakeGenericType(ObjectType), (object)this, (object)ObjectType)).GetService(parameters);
+        }
+
         [NotNull] public ServiceManagerAccessor<TService> ServiceAccessor<TService>() where TService : class => new(this);
 
         private bool _Disposed;
