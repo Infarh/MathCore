@@ -15,7 +15,7 @@ namespace MathCore.IoC
     {
         private static readonly object __DefaultManagerSyncRoot = new();
 
-        private static volatile ServiceManager __Default;
+        private static volatile ServiceManager? __Default;
 
         public static ServiceManager Default
         {
@@ -65,7 +65,7 @@ namespace MathCore.IoC
 
         public bool ThrowIfNotFound { get; set; } = true;
 
-        public object this[Type ServiceType] => Get(ServiceType);
+        public object? this[Type ServiceType] => Get(ServiceType);
 
         ServiceRegistration? IServiceRegistrations.this[Type ServiceType] => _Services.TryGetValue(ServiceType, out var registration) ? registration : null;
 

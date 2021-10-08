@@ -48,12 +48,12 @@ namespace MathCore
                     yield break;
 
                 compare_results[index] = 0;
-                var value = process_enumerators[index].Current;
+                var value = process_enumerators[index]!.Current;
                 for (var i = index + 1; i < count; i++)
                 {
                     if (process_enumerators[i] is null) continue;
 
-                    var current_value = process_enumerators[i].Current;
+                    var current_value = process_enumerators[i]!.Current;
                     var compare_result = _Comparer.Compare(value, current_value);
                     if (compare_result > 0)
                     {
