@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.57.1</Version>
+    <Version>0.0.58</Version>
     <PackageReleaseNotes>
-      Добавлен метод-расширение GetRequired для ServiceManager
+      Доработка контейнера сервисов IoC
     </PackageReleaseNotes>
   </PropertyGroup>
 

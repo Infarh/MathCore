@@ -1256,16 +1256,17 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             public static int Triangulate([NotNull] double[,] matrix, [NotNull] out double[,] p, out double d)
             {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-
                 GetLength(matrix, out var N, out var M);
                 d = 1d;
+
                 var p_index = new int[N];
-                for (var i = 0; i < N; i++) p_index[i] = i;
+                for (var i = 0; i < N; i++)
+                    p_index[i] = i;
+
                 var N1 = Math.Min(N, M);
                 for (var i0 = 0; i0 < N1; i0++)
                 {
-                    if (matrix[i0, i0].Equals(0d))
+                    if (matrix[i0, i0] == 0)
                     {
                         var nonzero_index = i0 + 1;
                         while (nonzero_index < N && matrix[nonzero_index, i0].Equals(0d)) nonzero_index++;
@@ -1275,6 +1276,7 @@ namespace MathCore
                             for (var i = i0; i < N; i++)
                                 for (var j = i0; j < M; j++)
                                     matrix[i, j] = 0d;
+
                             d = 0d;
                             return i0;
                         }
@@ -1282,17 +1284,22 @@ namespace MathCore
                         Swap(ref p_index[i0], ref p_index[nonzero_index]);
                         d = -d;
                     }
+
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
+
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++)
-                        if (!matrix[i, i0].Equals(0d))
+                        if (matrix[i, i0] != 0)
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+
+                            for (var j = i0 + 1; j < M; j++)
+                                matrix[i, j] -= matrix[i0, j] * k;
                         }
                 }
+
                 p = CreatePermutationMatrix(p_index);
                 return N1;
             }
@@ -1304,46 +1311,54 @@ namespace MathCore
             /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
             public static int Triangulate([NotNull] double[,] matrix, out double d)
             {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-
                 GetLength(matrix, out var N, out var M);
                 d = 1d;
-                var N1 = Math.Min(N, M);
-                for (var i0 = 0; i0 < N1; i0++)
+                var rank = Math.Min(N, M);
+
+                for (var i0 = 0; i0 < rank; i0++)
                 {
-                    if (matrix[i0, i0].Equals(0d))
+                    if (matrix[i0, i0] == 0)
                     {
                         var max = 0d;
                         var max_index = -1;
                         for (var i1 = i0 + 1; i1 < N; i1++)
                         {
                             var abs = Math.Abs(matrix[i1, i0]);
-                            if (abs <= max) continue;
-                            max = abs;
-                            max_index = i1;
+                            if (abs > max)
+                            {
+                                max = abs;
+                                max_index = i1;
+                            }
                         }
 
-                        if (max_index < 0)
+                        if (max_index < 0) // матрица вырождена?
                         {
-                            for (var i = i0; i < N; i++) for (var j = i0; j < M; j++) matrix[i, j] = 0d;
+                            for (var i = i0; i < N; i++)
+                                for (var j = i0; j < M; j++)
+                                    matrix[i, j] = 0d;
                             d = 0d;
                             return i0;
                         }
+
                         matrix.SwapRows(i0, max_index);
                         d = -d;
                     }
+
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
+
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++)
-                        if (!matrix[i, i0].Equals(0d))
+                        if (matrix[i, i0] != 0)
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
+                            for (var j = i0 + 1; j < M; j++)
+                                matrix[i, j] -= matrix[i0, j] * k;
                         }
                 }
-                return N1;
+
+                return rank;
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
@@ -1356,26 +1371,27 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static int Triangulate([NotNull] double[,] matrix, [NotNull] double[,] b, out double d)
             {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-
                 GetLength(matrix, out var N, out var M);
                 if (b is null) throw new ArgumentNullException(nameof(b));
                 GetLength(b, out var B_N, out var B_M);
                 if (B_N != N) throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
+
                 d = 1d;
-                var N1 = Math.Min(N, M);
-                for (var i0 = 0; i0 < N1; i0++)
+                var rank = Math.Min(N, M);
+                for (var i0 = 0; i0 < rank; i0++)
                 {
-                    if (matrix[i0, i0].Equals(0d))
+                    if (matrix[i0, i0] == 0)
                     {
                         var max = 0d;
                         var max_index = -1;
                         for (var i1 = i0 + 1; i1 < N; i1++)
                         {
                             var abs = Math.Abs(matrix[i1, i0]);
-                            if (abs <= max) continue;
-                            max = abs;
-                            max_index = i1;
+                            if (abs > max)
+                            {
+                                max = abs;
+                                max_index = i1;
+                            }
                         }
 
                         if (max_index < 0)
@@ -1392,21 +1408,29 @@ namespace MathCore
                         b.SwapRows(i0, max_index);
                         d = -d;
                     }
+
                     var main = matrix[i0, i0]; // Ведущий элемент строки
                     d *= main;
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++)
-                        if (!matrix[i, i0].Equals(0d))
+                        if (matrix[i, i0] != 0)
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
-                            for (var j = i0 + 1; j < M; j++) matrix[i, j] -= matrix[i0, j] * k;
-                            for (var j = 0; j < B_M; j++) b[i, j] -= b[i0, j] * k;
+
+                            for (var j = i0 + 1; j < M; j++)
+                                matrix[i, j] -= matrix[i0, j] * k;
+                            for (var j = 0; j < B_M; j++)
+                                b[i, j] -= b[i0, j] * k;
                         }
                 }
-                if (N1 >= N) return N1;
-                for (var i = N1; i < N; i++) for (var j = 0; j < B_M; j++) b[i, j] = 0d;
-                return N1;
+                if (rank >= N)
+                    return rank;
+
+                for (var i = rank; i < N; i++)
+                    for (var j = 0; j < B_M; j++)
+                        b[i, j] = 0d;
+                return rank;
             }
 
             /// <summary>Приведение матрицы к треугольному виду</summary>
