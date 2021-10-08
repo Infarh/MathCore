@@ -38,7 +38,7 @@ namespace MathCore.Tests.IO
             Assert.That.Value(actual_source_position).IsEqual(stream_offset + expected_seek);
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void Seek_Origin_Begin_LessLimit_Throw_IOException()
         {
             var source = CreateSourceStream();
@@ -99,7 +99,7 @@ namespace MathCore.Tests.IO
             Assert.That.Value(source.Position).IsEqual(expected_source_position);
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void Seek_Origin_End_LessLimit_Throw_IOException()
         {
             var source = CreateSourceStream();

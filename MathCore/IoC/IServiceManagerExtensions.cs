@@ -11,6 +11,9 @@ namespace MathCore.IoC
         /// <typeparam name="T">Тип сервиса</typeparam>
         /// <param name="Manager">Менеджер сервисов</param>
         /// <returns>Запрошенный экземпляр сервиса</returns>
-        public static T GetRequired<T>(this IServiceManager Manager) where T : class => Manager.Get<T>() ?? throw new InvalidOperationException("Сервис не найден");
+        public static T GetRequired<T>(this IServiceManager Manager) 
+            where T : class => 
+            Manager.Get<T>() 
+            ?? throw new InvalidOperationException("Сервис не найден");
     }
 }
