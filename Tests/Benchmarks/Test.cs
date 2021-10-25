@@ -8,26 +8,57 @@ namespace Benchmarks
     [MemoryDiagnoser]
     public class Test
     {
-        private readonly string[] _Data = Enumerable.Range(1, 1).ToArray(i => i.ToString());
-
-        [Benchmark]
-        public List<int> Lambda()
+        private static void Swap<T>(ref T a, ref T b)
         {
-            var result = new List<int>(50000);
+            var tmp = a;
+            a = b;
+            b = tmp;
+        }
 
-            for (var i = 0; i < 50000; i++)
-                result.AddRange(_Data.Select(s => int.Parse(s)));
-            return result;
+        private static void Swap2<T>(ref T a, ref T b) => (a, b) = (b, a);
+
+        private static (int, int) TestSwapOld(int a, int b)
+        {
+            Swap(ref a, ref b);
+            return (a, b);
+        }
+
+        private static (int, int) TestSwapNew(int a, int b)
+        {
+            Swap2(ref a, ref b);
+            return (a, b);
+        }
+
+        private static (int, int) TestSwapInline(int a, int b)
+        {
+            var tmp = a;
+            a = b;
+            b = tmp;
+            return (a, b);
         }
 
         [Benchmark]
-        public List<int> MethodGroup()
+        public (int a, int b) SwapOld()
         {
-            var result = new List<int>(50000);
+            var a = 5;
+            var b = 7;
+            return TestSwapOld(a, b);
+        }
 
-            for (var i = 0; i < 50000; i++)
-                result.AddRange(_Data.Select(int.Parse));
-            return result;
+        [Benchmark]
+        public (int a, int b) SwapNew()
+        {
+            var a = 5;
+            var b = 7;
+            return TestSwapNew(a, b);
+        }
+
+        [Benchmark]
+        public (int a, int b) SwapInline()
+        {
+            var a = 5;
+            var b = 7;
+            return TestSwapInline(a, b);
         }
     }
 }
