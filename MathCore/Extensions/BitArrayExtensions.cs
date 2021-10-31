@@ -24,14 +24,14 @@ namespace System.Collections
         /// <returns>Байт, сформированный из массива бит</returns>
         public static byte GetInt8([NotNull] this BitArray A)
         {
-            byte Result = 0;
+            byte result = 0;
             var bit_count = A.Length;
             for(var i = 0; i < bit_count && i < 16; i++)
             {
-                Result <<= 1;
-                Result += (byte)(A[bit_count - i - 1] ? 1 : 0);
+                result <<= 1;
+                result += (byte)(A[bit_count - i - 1] ? 1 : 0);
             }
-            return Result;
+            return result;
         }
 
         /// <summary>Получить 16-битовое слово из массива бит</summary>
@@ -39,14 +39,14 @@ namespace System.Collections
         /// <returns>Двухбайтовое целое со знаком, сформированный из массива бит</returns>
         public static short GetInt16([NotNull] this BitArray A)
         {
-            short Result = 0;
+            short result = 0;
             var bit_count = A.Length;
             for(var i = 0; i < bit_count && i < 16; i++)
             {
-                Result <<= 1;
-                Result += (short)(A[bit_count - i - 1] ? 1 : 0);
+                result <<= 1;
+                result += (short)(A[bit_count - i - 1] ? 1 : 0);
             }
-            return Result;
+            return result;
         }
 
 
@@ -55,14 +55,14 @@ namespace System.Collections
         /// <returns>Четырёхбайтное целое со знаком, сформированный из массива бит</returns>
         public static int GetInt32([NotNull] this BitArray A)
         {
-            var Result = 0;
+            var result = 0;
             var bit_count = A.Length;
             for(var i = 0; i < bit_count && i < 32; i++)
             {
-                Result <<= 1;
-                Result += A[bit_count - i - 1] ? 1 : 0;
+                result <<= 1;
+                result += A[bit_count - i - 1] ? 1 : 0;
             }
-            return Result;
+            return result;
         }
 
         /// <summary>Получить 64-битовое слово из массива бит</summary>
@@ -70,14 +70,14 @@ namespace System.Collections
         /// <returns>Восьмибайтное целое со знаком, сформированный из массива бит</returns>
         public static long GetInt64([NotNull] this BitArray A)
         {
-            long Result = 0;
+            long result = 0;
             var bit_count = A.Length;
             for(var i = 0; i < bit_count && i < 64; i++)
             {
-                Result <<= 1;
-                Result += A[bit_count - i - 1] ? 1 : 0;
+                result <<= 1;
+                result += A[bit_count - i - 1] ? 1 : 0;
             }
-            return Result;
+            return result;
         }
 
         /// <summary>Преобразовать массив бит в массив логических значений</summary>
@@ -86,23 +86,23 @@ namespace System.Collections
         [NotNull]
         public static bool[] ToBoolArray([NotNull] this BitArray A)
         {
-            var Result = new bool[A.Length];
+            var result = new bool[A.Length];
 
             var i_length = A.Length;
             for(var i = 0; i < i_length; i++)
-                Result[i] = A[i];
+                result[i] = A[i];
 
-            return Result;
+            return result;
         }
 
         /// <summary>Инвертировать состояние бит массива</summary>
         /// <param name="A">Массив бит - источник данных</param>
         public static void Inverse([NotNull] this BitArray A)
         {
-            var Bits = A.ToBoolArray();
+            var bits = A.ToBoolArray();
             var bit_count = A.Length;
             for(var i = 0; i < bit_count; i++)
-                A[i] = Bits[bit_count - i - 1];
+                A[i] = bits[bit_count - i - 1];
         }
 
         /// <summary>
@@ -114,11 +114,11 @@ namespace System.Collections
         [NotNull]
         public static BitArray GetInversed([NotNull] this BitArray A)
         {
-            var B = new BitArray(A.Length);
-            var bit_count = B.Length;
+            var b = new BitArray(A.Length);
+            var bit_count = b.Length;
             for(var i = 0; i < bit_count; i++)
-                B[i] = A[bit_count - i - 1];
-            return B;
+                b[i] = A[bit_count - i - 1];
+            return b;
         }
 
         /// <summary>Проверка корректности чётности</summary>

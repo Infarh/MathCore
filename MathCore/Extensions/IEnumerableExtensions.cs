@@ -35,6 +35,15 @@ namespace System.Linq
         /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
         [NN] public static HashSet<T> GetHashSet<T>([NN] this IEnumerable<T> items) => new(items);
 
+        public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items, Func<T, T, bool> Comparer, Func<T, int> Hasher)
+        {
+            var set = new HashSet<T>(Comparer.Create(Hasher));
+            foreach (var item in items)
+                set.Add(item);
+            return set;
+
+        }
+
         /// <summary>Перечисление без повторений значений, определяемых лямбда-выражением</summary>
         /// <typeparam name="T">Тип перечисляемых объектов</typeparam>
         /// <typeparam name="TKey">Тип ключа значения</typeparam>
@@ -54,20 +63,61 @@ namespace System.Linq
 
             if (enumerable is double[] array) return DoubleArrayExtensions.Dispersion(array);
 
-            using var enumerator = enumerable.GetEnumerator();
-            if (!enumerator.MoveNext()) return double.NaN;
-
-            var sum = enumerator.Current;
-            var sum2 = sum * sum;
-            long count = 1;
-            while (enumerator.MoveNext())
+            double sum;
+            double sum2;
+            long count;
+            switch (enumerable)
             {
-                var x = enumerator.Current;
-                sum += x;
-                sum2 += x * x;
-                count++;
-            }
+                case List<double> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
 
+                        sum = 0d;
+                        sum2 = 0d;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                case IList<double> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0d;
+                        sum2 = 0d;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                default:
+                    {
+                        using var enumerator = enumerable.GetEnumerator();
+                        if (!enumerator.MoveNext()) return double.NaN;
+
+                        sum = enumerator.Current;
+                        sum2 = sum * sum;
+                        count = 1;
+                        while (enumerator.MoveNext())
+                        {
+                            var x = enumerator.Current;
+                            sum += x;
+                            sum2 += x * x;
+                            count++;
+                        }
+                        break;
+                    }
+            }
             return count == 1 ? 0 : (sum2 - sum / count) / count;
         }
 
@@ -78,20 +128,77 @@ namespace System.Linq
         {
             if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
 
-            using var enumerator = enumerable.GetEnumerator();
-            if (!enumerator.MoveNext()) return double.NaN;
-
-            long sum = enumerator.Current;
-            var sum2 = sum * sum;
-            long count = 1;
-            while (enumerator.MoveNext())
+            long sum;
+            long sum2;
+            long count;
+            switch (enumerable)
             {
-                var x = enumerator.Current;
-                sum += x;
-                sum2 += x * x;
-                count++;
-            }
+                case int[] list:
+                    {
+                        if (list.Length == 0) return double.NaN;
 
+                        sum = 0;
+                        sum2 = 0;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Length;
+                        break;
+                    }
+
+                case List<int> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0;
+                        sum2 = 0;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                case IList<int> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0;
+                        sum2 = 0;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                default:
+                    {
+                        using var enumerator = enumerable.GetEnumerator();
+                        if (!enumerator.MoveNext()) return double.NaN;
+
+                        sum = enumerator.Current;
+                        sum2 = sum * sum;
+                        count = 1;
+                        while (enumerator.MoveNext())
+                        {
+                            var x = enumerator.Current;
+                            sum += x;
+                            sum2 += x * x;
+                            count++;
+                        }
+                        break;
+                    }
+            }
             return count == 1 ? 0 : (sum2 - sum / (double)count) / count;
         }
 
@@ -102,20 +209,77 @@ namespace System.Linq
         {
             if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
 
-            using var enumerator = enumerable.GetEnumerator();
-            if (!enumerator.MoveNext()) return double.NaN;
-
-            var sum = enumerator.Current;
-            var sum2 = sum * sum;
-            long count = 1;
-            while (enumerator.MoveNext())
+            long sum;
+            long sum2;
+            long count;
+            switch (enumerable)
             {
-                var x = enumerator.Current;
-                sum += x;
-                sum2 += x * x;
-                count++;
-            }
+                case long[] list:
+                    {
+                        if (list.Length == 0) return double.NaN;
 
+                        sum = 0;
+                        sum2 = 0;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Length;
+                        break;
+                    }
+
+                case List<long> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0;
+                        sum2 = 0;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                case IList<long> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0;
+                        sum2 = 0;
+                        foreach (var x in list)
+                        {
+                            sum += x;
+                            sum2 += x * x;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                default:
+                    {
+                        using var enumerator = enumerable.GetEnumerator();
+                        if (!enumerator.MoveNext()) return double.NaN;
+
+                        sum = enumerator.Current;
+                        sum2 = sum * sum;
+                        count = 1;
+                        while (enumerator.MoveNext())
+                        {
+                            var x = enumerator.Current;
+                            sum += x;
+                            sum2 += x * x;
+                            count++;
+                        }
+                        break;
+                    }
+            }
             return count == 1 ? 0 : (sum2 - sum / (double)count) / count;
         }
 
@@ -128,20 +292,80 @@ namespace System.Linq
             if (enumerable is null) throw new ArgumentNullException(nameof(enumerable));
             if (Selector is null) throw new ArgumentNullException(nameof(Selector));
 
-            using var enumerator = enumerable.GetEnumerator();
-            if (!enumerator.MoveNext()) return double.NaN;
-
-            var sum = Selector(enumerator.Current);
-            var sum2 = sum * sum;
-            long count = 1;
-            while (enumerator.MoveNext())
+            double sum;
+            double sum2;
+            long count;
+            switch (enumerable)
             {
-                var x = Selector(enumerator.Current);
-                sum += x;
-                sum2 += x * x;
-                count++;
-            }
+                case T[] list:
+                    {
+                        if (list.Length == 0) return double.NaN;
+                        ;
+                        sum = 0d;
+                        sum2 = 0d;
+                        foreach (var x in list)
+                        {
+                            var y = Selector(x);
+                            sum += y;
+                            sum2 += y * y;
+                        }
 
+                        count = list.Length;
+                        break;
+                    }
+
+                case List<T> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0d;
+                        sum2 = 0d;
+                        foreach (var x in list)
+                        {
+                            var y = Selector(x);
+                            sum += y;
+                            sum2 += y * y;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                case IList<T> list:
+                    {
+                        if (list.Count == 0) return double.NaN;
+
+                        sum = 0d;
+                        sum2 = 0d;
+                        foreach (var x in list)
+                        {
+                            var y = Selector(x);
+                            sum += y;
+                            sum2 += y * y; ;
+                        }
+
+                        count = list.Count;
+                        break;
+                    }
+
+                default:
+                    {
+                        using var enumerator = enumerable.GetEnumerator();
+                        if (!enumerator.MoveNext()) return double.NaN;
+
+                        sum = Selector(enumerator.Current);
+                        sum2 = sum * sum;
+                        count = 1;
+                        while (enumerator.MoveNext())
+                        {
+                            var y = Selector(enumerator.Current);
+                            sum += y;
+                            sum2 += y * y;
+                            count++;
+                        }
+                        break;
+                    }
+            }
             return count == 1 ? 0 : (sum2 - sum / count) / count;
         }
 
@@ -199,10 +423,34 @@ namespace System.Linq
         /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
         public static T FirstOrDefault<T>([NN] this IEnumerable<T> enumerable, Func<T, bool> Selector, in T DefaultValue = default)
         {
-            foreach (var item in enumerable)
-                if (Selector(item))
-                    return item;
-            return DefaultValue;
+            switch (enumerable)
+            {
+                case T[] { Length: 0 }: return DefaultValue;
+                case List<T> { Count: 0 }: return DefaultValue;
+                case IList<T> { Count: 0 }: return DefaultValue;
+
+                case T[] list:
+                    {
+                        var item = list[0];
+                        return Selector(item) ? item : DefaultValue;
+                    }
+                case List<T> list:
+                    {
+                        var item = list[0];
+                        return Selector(item) ? item : DefaultValue;
+                    }
+                case IList<T> list:
+                    {
+                        var item = list[0];
+                        return Selector(item) ? item : DefaultValue;
+                    }
+
+                default:
+                    foreach (var item in enumerable)
+                        if (Selector(item))
+                            return item;
+                    return DefaultValue;
+            }
         }
 
         /// <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
@@ -215,10 +463,34 @@ namespace System.Linq
         /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
         public static T FirstOrDefault<T, TP>([NN] this IEnumerable<T> enumerable, in TP p, Func<T, TP, bool> Selector, in T DefaultValue = default)
         {
-            foreach (var item in enumerable)
-                if (Selector(item, p))
-                    return item;
-            return DefaultValue;
+            switch (enumerable)
+            {
+                case T[] { Length: 0 }: return DefaultValue;
+                case List<T> { Count: 0 }: return DefaultValue;
+                case IList<T> { Count: 0 }: return DefaultValue;
+
+                case T[] list:
+                    {
+                        var item = list[0];
+                        return Selector(item, p) ? item : DefaultValue;
+                    }
+                case List<T> list:
+                    {
+                        var item = list[0];
+                        return Selector(item, p) ? item : DefaultValue;
+                    }
+                case IList<T> list:
+                    {
+                        var item = list[0];
+                        return Selector(item, p) ? item : DefaultValue;
+                    }
+
+                default:
+                    foreach (var item in enumerable)
+                        if (Selector(item, p))
+                            return item;
+                    return DefaultValue;
+            }
         }
 
         /// <summary>Первый элемент перечисления, удовлетворяющий задаваемому критерию с параметром</summary>
@@ -238,10 +510,34 @@ namespace System.Linq
             Func<T, TP1, TP2, bool> Selector,
             in T DefaultValue = default)
         {
-            foreach (var item in enumerable)
-                if (Selector(item, p1, p2))
-                    return item;
-            return DefaultValue;
+            switch (enumerable)
+            {
+                case T[] { Length: 0 }: return DefaultValue;
+                case List<T> { Count: 0 }: return DefaultValue;
+                case IList<T> { Count: 0 }: return DefaultValue;
+
+                case T[] list:
+                    {
+                        var item = list[0];
+                        return Selector(item, p1, p2) ? item : DefaultValue;
+                    }
+                case List<T> list:
+                    {
+                        var item = list[0];
+                        return Selector(item, p1, p2) ? item : DefaultValue;
+                    }
+                case IList<T> list:
+                    {
+                        var item = list[0];
+                        return Selector(item, p1, p2) ? item : DefaultValue;
+                    }
+
+                default:
+                    foreach (var item in enumerable)
+                        if (Selector(item, p1, p2))
+                            return item;
+                    return DefaultValue;
+            }
         }
 
         /// <summary>Сделать перечисление плоским (линейным)</summary>
@@ -256,10 +552,36 @@ namespace System.Linq
             where TSubSource : IEnumerable<TItem>
         {
             if (enumerable is null) yield break;
-            foreach (var items in enumerable)
-                if (items != null)
-                    foreach (var item in items)
-                        yield return item;
+            switch (enumerable)
+            {
+                case TSubSource[] list:
+                    foreach (var items in list)
+                        if (items != null)
+                            foreach (var item in items)
+                                yield return item;
+                    break;
+
+                case List<TSubSource> list:
+                    foreach (var items in list)
+                        if (items != null)
+                            foreach (var item in items)
+                                yield return item;
+                    break;
+
+                case IList<TSubSource> list:
+                    foreach (var items in list)
+                        if (items != null)
+                            foreach (var item in items)
+                                yield return item;
+                    break;
+
+                default:
+                    foreach (var items in enumerable)
+                        if (items != null)
+                            foreach (var item in items)
+                                yield return item;
+                    break;
+            }
         }
 
         /// <summary>Блочный перечислитель элементов</summary>
@@ -327,9 +649,32 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> Except<T>([NN] this IEnumerable<T> enumerable, T item)
         {
-            foreach (var i in enumerable)
-                if (!Equals(i, item))
-                    yield return i;
+            switch (enumerable)
+            {
+                case T[] list:
+                    foreach (var i in list)
+                        if (!Equals(i, item))
+                            yield return i;
+                    break;
+
+                case List<T> list:
+                    foreach (var i in list)
+                        if (!Equals(i, item))
+                            yield return i;
+                    break;
+
+                case IList<T> list:
+                    foreach (var i in list)
+                        if (!Equals(i, item))
+                            yield return i;
+                    break;
+
+                default:
+                    foreach (var i in enumerable)
+                        if (!Equals(i, item))
+                            yield return i;
+                    break;
+            }
         }
 
         /// <summary>Индекс первого найденного элемента</summary>
@@ -340,10 +685,39 @@ namespace System.Linq
         public static int FirstIndexOf<T>([NN, IcN] this IEnumerable<T> enumerable, [CN] in T item)
         {
             var index = -1;
-            foreach (var element in enumerable)
+            switch (enumerable)
             {
-                index++;
-                if (Equals(element, item)) return index;
+                case T[] list:
+                    foreach (var element in list)
+                    {
+                        index++;
+                        if (Equals(element, item)) return index;
+                    }
+                    break;
+
+                case List<T> list:
+                    foreach (var element in list)
+                    {
+                        index++;
+                        if (Equals(element, item)) return index;
+                    }
+                    break;
+
+                case IList<T> list:
+                    foreach (var element in list)
+                    {
+                        index++;
+                        if (Equals(element, item)) return index;
+                    }
+                    break;
+
+                default:
+                    foreach (var element in enumerable)
+                    {
+                        index++;
+                        if (Equals(element, item)) return index;
+                    }
+                    break;
             }
             return -1;
         }
@@ -357,10 +731,39 @@ namespace System.Linq
         {
             var i = 0;
             var index = -1;
-            foreach (var element in enumerable)
+            switch (enumerable)
             {
-                if (Equals(element, item)) index = i;
-                i++;
+                case T[] list:
+                    foreach (var element in list)
+                    {
+                        if (Equals(element, item)) index = i;
+                        i++;
+                    }
+                    break;
+
+                case List<T> list:
+                    foreach (var element in list)
+                    {
+                        if (Equals(element, item)) index = i;
+                        i++;
+                    }
+                    break;
+
+                case IList<T> list:
+                    foreach (var element in list)
+                    {
+                        if (Equals(element, item)) index = i;
+                        i++;
+                    }
+                    break;
+
+                default:
+                    foreach (var element in enumerable)
+                    {
+                        if (Equals(element, item)) index = i;
+                        i++;
+                    }
+                    break;
             }
             return index;
         }
@@ -404,7 +807,7 @@ namespace System.Linq
         public static IEnumerable<string> Where(
             [NN] this IEnumerable<string> strings,
             [NN] Regex regex)
-            => strings.Where((Func<string, bool>)regex.IsMatch);
+            => strings.Where(str => regex.IsMatch(str));
 
         /// <summary>Фильтрация последовательности строк, которые не удовлетворяют регулярному выражению</summary>
         /// <param name="strings">Фильтруемая последовательность строк</param>
@@ -414,7 +817,7 @@ namespace System.Linq
         public static IEnumerable<string> WhereNot(
             [NN] this IEnumerable<string> strings,
             [NN] Regex regex)
-            => strings.WhereNot(regex.IsMatch);
+            => strings.WhereNot(str => regex.IsMatch(str));
 
         /// <summary>Фильтрация последовательности строк по указанному регулярному выражению</summary>
         /// <param name="strings">Последовательность строк</param>
@@ -625,19 +1028,72 @@ namespace System.Linq
             bool OverloadValues = false)
         {
             var dic = new Dictionary<TKey, T>();
-            if (OverloadValues)
-                foreach (var item in enumerable)
-                {
-                    var key = KeySelector(item);
-                    if (dic.ContainsKey(key)) continue;
-                    dic.Add(key, item);
-                }
-            else
-                foreach (var item in enumerable)
-                {
-                    var key = KeySelector(item);
-                    dic[key] = item;
-                }
+            switch (enumerable)
+            {
+                case T[] list:
+                    if (OverloadValues)
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, item);
+                        }
+                    else
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = item;
+                        }
+                    break;
+
+                case List<T> list:
+                    if (OverloadValues)
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, item);
+                        }
+                    else
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = item;
+                        }
+                    break;
+
+                case IList<T> list:
+                    if (OverloadValues)
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, item);
+                        }
+                    else
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = item;
+                        }
+                    break;
+
+                default:
+                    if (OverloadValues)
+                        foreach (var item in enumerable)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, item);
+                        }
+                    else
+                        foreach (var item in enumerable)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = item;
+                        }
+                    break;
+            }
             return dic;
         }
 
@@ -658,19 +1114,74 @@ namespace System.Linq
             bool OverloadValues = false)
         {
             var dic = new Dictionary<TKey, TValue>();
-            if (OverloadValues)
-                foreach (var item in enumerable)
-                {
-                    var key = KeySelector(item);
-                    if (dic.ContainsKey(key)) continue;
-                    dic.Add(key, ValueSelector(item));
-                }
-            else
-                foreach (var item in enumerable)
-                {
-                    var key = KeySelector(item);
-                    dic[key] = ValueSelector(item);
-                }
+
+            switch (enumerable)
+            {
+                case T[] list:
+                    if (OverloadValues)
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, ValueSelector(item));
+                        }
+                    else
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = ValueSelector(item);
+                        }
+                    break;
+
+                case List<T> list:
+                    if (OverloadValues)
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, ValueSelector(item));
+                        }
+                    else
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = ValueSelector(item);
+                        }
+                    break;
+
+                case IList<T> list:
+                    if (OverloadValues)
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, ValueSelector(item));
+                        }
+                    else
+                        foreach (var item in list)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = ValueSelector(item);
+                        }
+                    break;
+
+                default:
+                    if (OverloadValues)
+                        foreach (var item in enumerable)
+                        {
+                            var key = KeySelector(item);
+                            if (dic.ContainsKey(key)) continue;
+                            dic.Add(key, ValueSelector(item));
+                        }
+                    else
+                        foreach (var item in enumerable)
+                        {
+                            var key = KeySelector(item);
+                            dic[key] = ValueSelector(item);
+                        }
+                    break;
+            }
+
             return dic;
         }
 
@@ -679,7 +1190,36 @@ namespace System.Linq
         /// <returns>Если ссылка на перечисление пуста, то пустая ссылка на строку, иначе - объединение строк с разделителем - переносом строки</returns>
         [CN]
         public static string Aggregate([CN] this IEnumerable<string> Lines)
-            => Lines?.Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s), sb => sb.ToString());
+        {
+            if (Lines is null) return null;
+
+            var result = new StringBuilder();
+
+            switch (Lines)
+            {
+                case string[] list:
+                    foreach (var line in list)
+                        result.AppendLine(line);
+                    break;
+
+                case List<string> list:
+                    foreach (var line in list)
+                        result.AppendLine(line);
+                    break;
+
+                case IList<string> list:
+                    foreach (var line in list)
+                        result.AppendLine(line);
+                    break;
+
+                default:
+                    foreach (var line in Lines)
+                        result.AppendLine(line);
+                    break;
+            }
+
+            return result.ToString();
+        }
 
         /// <summary>Добавить элементы перечисления в коллекцию</summary>
         /// <typeparam name="T">Тип элемента</typeparam>
@@ -687,7 +1227,28 @@ namespace System.Linq
         /// <param name="collection">Коллекция-приёмник элементов</param>
         public static void AddTo<T>([NN] this IEnumerable<T> source, [NN] ICollection<T> collection)
         {
-            foreach (var item in source) collection.Add(item);
+            switch (source)
+            {
+                case T[] list:
+                    foreach (var item in list)
+                        collection.Add(item);
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        collection.Add(item);
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        collection.Add(item);
+                    break;
+
+                default:
+                    foreach (var item in source)
+                        collection.Add(item);
+                    break;
+            }
         }
 
         /// <summary>Удалить перечисление элементов из коллекции</summary>
@@ -697,7 +1258,37 @@ namespace System.Linq
         /// <returns>Перечисление результатов операций удаления для каждого из элементов исходного перечисления</returns>
         [NN]
         public static bool[] RemoveFrom<T>([NN] this IEnumerable<T> source, [NN] ICollection<T> collection)
-            => source.Select(collection.Remove).ToArray();
+        {
+            switch (source)
+            {
+                case T[] list:
+                    {
+                        var result = new bool[list.Length];
+                        for (var i = 0; i < result.Length; i++)
+                            result[i] = collection.Remove(list[i]);
+                        return result;
+                    }
+
+                case List<T> list:
+                    {
+                        var result = new bool[list.Count];
+                        for (var i = 0; i < result.Length; i++)
+                            result[i] = collection.Remove(list[i]);
+                        return result;
+                    }
+
+                case IList<T> list:
+                    {
+                        var result = new bool[list.Count];
+                        for (var i = 0; i < result.Length; i++)
+                            result[i] = collection.Remove(list[i]);
+                        return result;
+                    }
+
+                default:
+                    return source.Select(item => collection.Remove(item)).ToArray();
+            }
+        }
 
 
         /// <summary>Добавить в словарь</summary>
@@ -714,8 +1305,28 @@ namespace System.Linq
         )
         {
             if (collection is null) return;
-            foreach (var value in collection)
-                dictionary.Add(converter(value), value);
+            switch (collection)
+            {
+                case TValue[] list:
+                    foreach (var value in list)
+                        dictionary.Add(converter(value), value);
+                    break;
+
+                case List<TValue> list:
+                    foreach (var value in list)
+                        dictionary.Add(converter(value), value);
+                    break;
+
+                case IList<TValue> list:
+                    foreach (var value in list)
+                        dictionary.Add(converter(value), value);
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                        dictionary.Add(converter(value), value);
+                    break;
+            }
         }
 
         /// <summary>Преобразовать последовательность одних элементов в последовательность других элементов с использованием механизма конвертации</summary>
@@ -755,18 +1366,42 @@ namespace System.Linq
         )
         {
             if (collection is null) yield break;
-            var first = true;
-            var last = default(TItem);
-            foreach (var item in collection)
+            TItem last;
+            switch (collection)
             {
-                if (first)
-                {
-                    last = item;
-                    first = false;
-                    continue;
-                }
-                yield return converter(last, item);
-                last = item;
+                case TItem[] { Length: > 1 and var length } list:
+                    last = list[0];
+                    for (var i = 1; i < length; i++)
+                        yield return converter(last, last = list[i]);
+                    break;
+
+                case List<TItem> { Count: > 1 and var count } list:
+                    last = list[0];
+                    for (var i = 1; i < count; i++)
+                        yield return converter(last, last = list[i]);
+                    break;
+
+                case IList<TItem> { Count: > 1 and var count } list:
+                    last = list[0];
+                    for (var i = 1; i < count; i++)
+                        yield return converter(last, last = list[i]);
+                    break;
+
+                default:
+                    var first = true;
+                    last = default;
+                    foreach (var item in collection)
+                    {
+                        if (first)
+                        {
+                            last = item;
+                            first = false;
+                            continue;
+                        }
+                        yield return converter(last, item);
+                        last = item;
+                    }
+                    break;
             }
         }
 
@@ -778,16 +1413,41 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AtFirst<T>([CN] this IEnumerable<T> collection, [NN] Action<T> action)
         {
-            if (collection is null) yield break;
-            var first = true;
-            foreach (var item in collection)
+            switch (collection)
             {
-                if (first)
-                {
-                    action(item);
-                    first = false;
-                }
-                yield return item;
+                case null: yield break;
+
+                case T[] { Length: > 0 } list:
+                    action(list[0]);
+                    foreach (var item in list)
+                        yield return item;
+                    break;
+
+                case List<T> { Count: > 0 } list:
+                    action(list[0]);
+                    foreach (var item in list)
+                        yield return item;
+                    break;
+
+                case IList<T> { Count: > 0 } list:
+                    action(list[0]);
+                    foreach (var item in list)
+                        yield return item;
+                    break;
+
+                default:
+                    var first = true;
+                    foreach (var item in collection)
+                    {
+                        if (first)
+                        {
+                            action(item);
+                            first = false;
+                        }
+                        yield return item;
+                    }
+
+                    break;
             }
         }
 
@@ -799,16 +1459,40 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AtLast<T>([CN] this IEnumerable<T> collection, [NN] Action<T> action)
         {
-            if (collection is null) yield break;
-            var last = default(T);
-            var any = false;
-            foreach (var item in collection)
+            switch (collection)
             {
-                any = true;
-                last = item;
-                yield return last;
+                case null: yield break;
+
+                case T[] { Length: > 0 } list:
+                    foreach (var item in list)
+                        yield return item;
+                    action(list[^1]);
+                    break;
+
+                case List<T> { Count: > 0 } list:
+                    foreach (var item in list)
+                        yield return item;
+                    action(list[^1]);
+                    break;
+
+                case IList<T> { Count: > 0 } list:
+                    foreach (var item in list)
+                        yield return item;
+                    action(list[^1]);
+                    break;
+
+                default:
+                    var last = default(T);
+                    var any = false;
+                    foreach (var item in collection)
+                    {
+                        any = true;
+                        last = item;
+                        yield return last;
+                    }
+                    if (any) action(last);
+                    break;
             }
-            if (any) action(last);
         }
 
         /// <summary> Выполнить действие до начала перечисления последовательности</summary>
@@ -821,7 +1505,24 @@ namespace System.Linq
         {
             if (collection is null) yield break;
             ActionBefore();
-            foreach (var item in collection) yield return item;
+            switch (collection)
+            {
+                case T[] list:
+                    foreach (var item in list) yield return item;
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list) yield return item;
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list) yield return item;
+                    break;
+
+                default:
+                    foreach (var item in collection) yield return item;
+                    break;
+            }
         }
 
         /// <summary>Выполнение действия по завершению перечисления коллекции</summary>
@@ -832,8 +1533,26 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> OnComplete<T>([CN] this IEnumerable<T> collection, [NN] Action CompleteAction)
         {
-            if (collection is null) yield break;
-            foreach (var item in collection) yield return item;
+            switch (collection)
+            {
+                case null: yield break;
+
+                case T[] list:
+                    foreach (var item in list) yield return item;
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list) yield return item;
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list) yield return item;
+                    break;
+
+                default:
+                    foreach (var item in collection) yield return item;
+                    break;
+            }
             CompleteAction();
         }
 
@@ -866,7 +1585,7 @@ namespace System.Linq
             /// <summary>Доступ к элементам истории начиная с текущего</summary>
             /// <param name="i">Индекс элемента в истории, где 0 - текущий элемент</param>
             /// <returns>Элемент истории перечисления</returns>
-            public T this[[MinValue(0)] int i] => _Queue[_Queue.Count - i];
+            public T this[[MinValue(0)] int i] => _Queue[^i];
 
             /// <summary>Инициализация нового экземпляра <see cref="EnumerableHistory{T}"/></summary>
             /// <param name="HistoryLength">Длина истории</param>
@@ -950,7 +1669,7 @@ namespace System.Linq
         {
             var n = 0;
             foreach (var value in collection)
-                if (value.Equals(0)) n++;
+                if (value == 0) n++;
                 else
                 {
                     for (; n > 0; n--) yield return 0;
@@ -976,11 +1695,46 @@ namespace System.Linq
             var max = new MaxValue();
             Min = default;
             Max = default;
-            foreach (var value in collection)
+            switch (collection)
             {
-                var f = selector(value);
-                if (min.AddValue(f)) Min = value;
-                if (max.AddValue(f)) Max = value;
+                case T[] { Length: 0 }: break;
+                case T[] list:
+                    foreach (var value in list)
+                    {
+                        var f = selector(value);
+                        if (min.AddValue(f)) Min = value;
+                        if (max.AddValue(f)) Max = value;
+                    }
+                    break;
+
+                case List<T> { Count: 0 }: break;
+                case List<T> list:
+                    foreach (var value in list)
+                    {
+                        var f = selector(value);
+                        if (min.AddValue(f)) Min = value;
+                        if (max.AddValue(f)) Max = value;
+                    }
+                    break;
+
+                case IList<T> { Count: 0 }: break;
+                case IList<T> list:
+                    foreach (var value in list)
+                    {
+                        var f = selector(value);
+                        if (min.AddValue(f)) Min = value;
+                        if (max.AddValue(f)) Max = value;
+                    }
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                    {
+                        var f = selector(value);
+                        if (min.AddValue(f)) Min = value;
+                        if (max.AddValue(f)) Max = value;
+                    }
+                    break;
             }
         }
 
@@ -999,10 +1753,42 @@ namespace System.Linq
             var max = new MaxValue();
             Min = double.NaN;
             Max = double.NaN;
-            foreach (var value in collection)
+            switch (collection)
             {
-                if (min.AddValue(value)) Min = value;
-                if (max.AddValue(value)) Max = value;
+                case double[] { Length: 0 }: break;
+                case double[] list:
+                    foreach (var value in list)
+                    {
+                        if (min.AddValue(value)) Min = value;
+                        if (max.AddValue(value)) Max = value;
+                    }
+                    break;
+
+                case List<double> { Count: 0 }: break;
+                case List<double> list:
+                    foreach (var value in list)
+                    {
+                        if (min.AddValue(value)) Min = value;
+                        if (max.AddValue(value)) Max = value;
+                    }
+                    break;
+
+                case IList<double> { Count: 0 }: break;
+                case IList<double> list:
+                    foreach (var value in list)
+                    {
+                        if (min.AddValue(value)) Min = value;
+                        if (max.AddValue(value)) Max = value;
+                    }
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                    {
+                        if (min.AddValue(value)) Min = value;
+                        if (max.AddValue(value)) Max = value;
+                    }
+                    break;
             }
         }
 
@@ -1028,22 +1814,93 @@ namespace System.Linq
             var max = new MaxValue();
             Min = default;
             Max = default;
-            MinIndex = MaxIndex = -1;
-            var i = 0;
-            foreach (var item in collection)
+            MinIndex = -1;
+            MaxIndex = -1;
+            switch (collection)
             {
-                var f = selector(item);
-                if (min.AddValue(f))
-                {
-                    Min = item;
-                    MinIndex = i;
-                }
-                if (max.AddValue(f))
-                {
-                    Max = item;
-                    MaxIndex = i;
-                }
-                i++;
+                case T[] { Length: 0 }: break;
+                case T[] { Length: var count } list:
+                    {
+                        for (var i = 0; i < count; i++)
+                        {
+                            var item = list[i];
+                            var f = selector(item);
+                            if (min.AddValue(f))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(f))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                        }
+                    }
+                    break;
+
+                case List<T> { Count: 0 }: break;
+                case List<T> { Count: var count } list:
+                    {
+                        for (var i = 0; i < count; i++)
+                        {
+                            var item = list[i];
+                            var f = selector(item);
+                            if (min.AddValue(f))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(f))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                        }
+                    }
+                    break;
+
+                case IList<T> { Count: 0 }: break;
+                case IList<T> { Count: var count } list:
+                    {
+                        for (var i = 0; i < count; i++)
+                        {
+                            var item = list[i];
+                            var f = selector(item);
+                            if (min.AddValue(f))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(f))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                        }
+                    }
+                    break;
+
+                default:
+                    {
+                        var i = 0;
+                        foreach (var item in collection)
+                        {
+                            var f = selector(item);
+                            if (min.AddValue(f))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(f))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                            i++;
+                        }
+                    }
+                    break;
             }
         }
 
@@ -1066,21 +1923,89 @@ namespace System.Linq
             var max = new MaxValue();
             Min = double.NaN;
             Max = double.NaN;
-            MinIndex = MaxIndex = -1;
-            var i = 0;
-            foreach (var item in collection)
+            MinIndex = -1;
+            MaxIndex = -1;
+            switch (collection)
             {
-                if (min.AddValue(item))
-                {
-                    Min = item;
-                    MinIndex = i;
-                }
-                if (max.AddValue(item))
-                {
-                    Max = item;
-                    MaxIndex = i;
-                }
-                i++;
+                case double[] { Length: 0 }: break;
+                case double[] { Length: var count } list:
+                    {
+                        for (var i = 0; i < count; i++)
+                        {
+                            var item = list[i];
+                            if (min.AddValue(item))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(item))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                        }
+                    }
+                    break;
+
+                case List<double> { Count: 0 }: break;
+                case List<double> { Count: var count } list:
+                    {
+                        for (var i = 0; i < count; i++)
+                        {
+                            var item = list[i];
+                            if (min.AddValue(item))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(item))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                        }
+                    }
+                    break;
+
+                case IList<double> { Count: 0 }: break;
+                case IList<double> { Count: var count } list:
+                    {
+                        for (var i = 0; i < count; i++)
+                        {
+                            var item = list[i];
+                            if (min.AddValue(item))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(item))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                        }
+                    }
+                    break;
+
+                default:
+                    {
+                        var i = 0;
+                        foreach (var item in collection)
+                        {
+                            if (min.AddValue(item))
+                            {
+                                Min = item;
+                                MinIndex = i;
+                            }
+                            if (max.AddValue(item))
+                            {
+                                Max = item;
+                                MaxIndex = i;
+                            }
+                            i++;
+                        }
+                    }
+                    break;
             }
         }
 
@@ -1094,9 +2019,32 @@ namespace System.Linq
         {
             var max = new MaxValue();
             var result = default(T);
-            foreach (var v in collection)
-                if (max.AddValue(selector(v)))
-                    result = v;
+            switch (collection)
+            {
+                case T[] list:
+                    foreach (var v in list)
+                        if (max.AddValue(selector(v)))
+                            result = v;
+                    break;
+
+                case List<T> list:
+                    foreach (var v in list)
+                        if (max.AddValue(selector(v)))
+                            result = v;
+                    break;
+
+                case IList<T> list:
+                    foreach (var v in list)
+                        if (max.AddValue(selector(v)))
+                            result = v;
+                    break;
+
+                default:
+                    foreach (var v in collection)
+                        if (max.AddValue(selector(v)))
+                            result = v;
+                    break;
+            }
             return result;
         }
 
@@ -1107,8 +2055,28 @@ namespace System.Linq
         {
             var max = new MaxValue();
             var result = double.NaN;
-            foreach (var v in collection)
-                result = max.Add(v);
+            switch (collection)
+            {
+                case double[] list:
+                    foreach (var v in list)
+                        result = max.Add(v);
+                    break;
+
+                case List<double> list:
+                    foreach (var v in list)
+                        result = max.Add(v);
+                    break;
+
+                case IList<double> list:
+                    foreach (var v in list)
+                        result = max.Add(v);
+                    break;
+
+                default:
+                    foreach (var v in collection)
+                        result = max.Add(v);
+                    break;
+            }
             return result;
         }
 
@@ -1125,14 +2093,55 @@ namespace System.Linq
             var result = default(T);
             var i = 0;
             index = -1;
-            foreach (var item in collection)
+            switch (collection)
             {
-                if (max.AddValue(selector(item)))
-                {
-                    index = i;
-                    result = item;
-                }
-                i++;
+                case T[] { Length: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (max.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (max.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (max.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                    {
+                        if (max.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                        i++;
+                    }
+                    break;
             }
             return result;
         }
@@ -1147,14 +2156,56 @@ namespace System.Linq
             var result = double.NaN;
             var i = 0;
             index = -1;
-            foreach (var item in collection)
+            switch (collection)
             {
-                if (max.AddValue(item))
-                {
-                    index = i;
-                    result = item;
-                }
-                i++;
+                case double[] { Length: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (max.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case List<double> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (max.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case IList<double> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (max.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                    {
+                        if (max.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                        i++;
+                    }
+
+                    break;
             }
             return result;
         }
@@ -1169,9 +2220,31 @@ namespace System.Linq
         {
             var min = new MinValue();
             var result = default(T);
-            foreach (var v in collection)
-                if (min.AddValue(selector(v)))
-                    result = v;
+            switch (collection)
+            {
+                case T[] list:
+                    foreach (var v in list)
+                        if (min.AddValue(selector(v)))
+                            result = v;
+                    break;
+                case List<T> list:
+                    foreach (var v in list)
+                        if (min.AddValue(selector(v)))
+                            result = v;
+                    break;
+
+                case IList<T> list:
+                    foreach (var v in list)
+                        if (min.AddValue(selector(v)))
+                            result = v;
+                    break;
+
+                default:
+                    foreach (var v in collection)
+                        if (min.AddValue(selector(v)))
+                            result = v;
+                    break;
+            }
             return result;
         }
 
@@ -1182,8 +2255,28 @@ namespace System.Linq
         {
             var min = new MinValue();
             var result = double.NaN;
-            foreach (var v in collection)
-                result = min.Add(v);
+            switch (collection)
+            {
+                case double[] list:
+                    foreach (var v in list)
+                        result = min.Add(v);
+                    break;
+
+                case List<double> list:
+                    foreach (var v in list)
+                        result = min.Add(v);
+                    break;
+
+                case IList<double> list:
+                    foreach (var v in list)
+                        result = min.Add(v);
+                    break;
+
+                default:
+                    foreach (var v in collection)
+                        result = min.Add(v);
+                    break;
+            }
             return result;
         }
 
@@ -1200,14 +2293,55 @@ namespace System.Linq
             var result = default(T);
             var i = 0;
             index = -1;
-            foreach (var item in collection)
+            switch (collection)
             {
-                if (min.AddValue(selector(item)))
-                {
-                    index = i;
-                    result = item;
-                }
-                i++;
+                case T[] { Length: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (min.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (min.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (min.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                    {
+                        if (min.AddValue(selector(item)))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                        i++;
+                    }
+                    break;
             }
             return result;
         }
@@ -1222,34 +2356,65 @@ namespace System.Linq
             var result = double.NaN;
             var i = 0;
             index = -1;
-            foreach (var item in collection)
+            switch (collection)
             {
-                if (min.AddValue(item))
-                {
-                    index = i;
-                    result = item;
-                }
-                i++;
+                case double[] { Length: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (min.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case List<double> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (min.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                case IList<double> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        var item = list[i];
+                        if (min.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                    }
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                    {
+                        if (min.AddValue(item))
+                        {
+                            index = i;
+                            result = item;
+                        }
+                        i++;
+                    }
+                    break;
             }
             return result;
         }
-
-        /// <summary>Преобразование последовательности элементов в строку с указанной строкой-разделителем</summary>
-        /// <typeparam name="T">Тип элементов последовательности</typeparam>
-        /// <param name="collection">Последовательность элементов, преобразуемая в строку</param>
-        /// <param name="Separator">Строка-разделитель</param>
-        /// <returns>Строка, составленная из строковых эквивалентов элементов входного перечисления, разделённых строкой-разделителем</returns>
-        public static string ToSeparatedString<T>([NN] IEnumerable<T> collection, string Separator) =>
-            collection
-               .Select((t, i) => (s: t.ToString(), v: i == 0 ? string.Empty : Separator))
-               .Aggregate(new StringBuilder(), (sb, v) => sb.AppendFormat("{0}{1}", v.s, v.v), sb => sb.ToString());
 
         /// <summary>Быстрое преобразование последовательности в список</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="Enum">Последовательность, преобразуемая в список</param>
         /// <returns>Список элементов последовательности</returns>
         [NN]
-        public static IList<T> ToListFast<T>([NN] this IEnumerable<T> Enum) => Enum is IList<T> list ? list : Enum.ToList();
+        public static IList<T> ToListFast<T>([NN] this IEnumerable<T> Enum) => Enum as IList<T> ?? Enum.ToList();
 
         /// <summary>Сумма последовательности комплексных чисел</summary>
         /// <param name="collection">Последовательность комплексных чисел</param>
@@ -1288,24 +2453,30 @@ namespace System.Linq
         /// <param name="selector">Метод выбора</param>
         /// <returns>Истина, если выполняется предикат хотя бы на одном элементе коллекции</returns>
         [DST]
-        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
-        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
         public static bool Contains<T>([NN] this IEnumerable<T> collection, [NN] Func<T, bool> selector)
         {
-            if (collection is List<T> list1)
-                for (var i = 0; i < list1.Count; i++)
-                    if (selector(list1[i])) return true;
+            switch (collection)
+            {
+                case T[] list:
+                    foreach (var item in list)
+                        if (selector(item))
+                            return true;
+                    return false;
 
-            if (collection is IList<T> i_list)
-                for (var i = 0; i < i_list.Count; i++)
-                    if (selector(i_list[i])) return true;
+                case List<T> list:
+                    foreach (var item in list)
+                        if (selector(item))
+                            return true;
+                    return false;
 
-            // ReSharper disable once InvertIf
-            if (collection is T[] array)
-                if (array.Any(selector))
-                    return true;
+                case IList<T> list:
+                    foreach (var item in list)
+                        if (selector(item))
+                            return true;
+                    return false;
 
-            return collection.Any(selector);
+                default: return collection.Any(selector);
+            }
         }
 
         /// <summary>Найти элемент в перечислении, удовлетворяющий предикату</summary>
@@ -1316,8 +2487,32 @@ namespace System.Linq
         [DST]
         public static T Find<T>([NN] this IEnumerable<T> collection, [NN] Predicate<T> selector)
         {
-            foreach (var local in collection.Where(local => selector(local))) return local;
-            return default;
+            switch (collection)
+            {
+                case T[] list:
+                    foreach (var item in list)
+                        if (selector(item))
+                            return item;
+                    return default;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        if (selector(item))
+                            return item;
+                    return default;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        if (selector(item))
+                            return item;
+                    return default;
+
+                default:
+                    foreach (var item in collection)
+                        if (selector(item))
+                            return item;
+                    return default;
+            }
         }
 
         ///<summary>Выполнение действия для всех элементов коллекции</summary>
@@ -1329,10 +2524,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i]); break;
-                case IList<T> list_t: for (int i = 0, count = list_t.Count; i < count; i++) Action(list_t[i]); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i]); break;
-                default: foreach (var item in collection) Action(item); break;
+                case T[] list:
+                    foreach (var item in list)
+                        Action(item);
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        Action(item);
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        Action(item);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item);
+                    break;
             }
         }
 
@@ -1350,10 +2560,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], p); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], p); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], p); break;
-                default: foreach (var item in collection) Action(item, p); break;
+                case T[] list:
+                    foreach (var item in list)
+                        Action(item, p);
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        Action(item, p);
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        Action(item, p);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, p);
+                    break;
             }
         }
 
@@ -1374,10 +2599,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], p1, p2); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], p1, p2); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], p1, p2); break;
-                default: foreach (var item in collection) Action(item, p1, p2); break;
+                case T[] list:
+                    foreach (var item in list)
+                        Action(item, p1, p2);
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        Action(item, p1, p2);
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        Action(item, p1, p2);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, p1, p2);
+                    break;
             }
         }
 
@@ -1401,10 +2641,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], p1, p2, p3); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], p1, p2, p3); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], p1, p2, p3); break;
-                default: foreach (var item in collection) Action(item, p1, p2, p3); break;
+                case T[] list:
+                    foreach (var item in list)
+                        Action(item, p1, p2, p3);
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        Action(item, p1, p2, p3);
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        Action(item, p1, p2, p3);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, p1, p2, p3);
+                    break;
             }
         }
 
@@ -1418,10 +2673,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], index++); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], index++); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], index++); break;
-                default: foreach (var item in collection) Action(item, index++); break;
+                case T[] { Length: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index);
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index);
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, index++);
+                    break;
             }
         }
 
@@ -1441,10 +2711,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], index++, p); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], index++, p); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], index++, p); break;
-                default: foreach (var item in collection) Action(item, index++, p); break;
+                case T[] { Length: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p);
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p);
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, index++, p);
+                    break;
             }
         }
 
@@ -1467,10 +2752,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], index++, p1, p2); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], index++, p1, p2); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], index++, p1, p2); break;
-                default: foreach (var item in collection) Action(item, index++, p1, p2); break;
+                case T[] { Length: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p1, p2);
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p1, p2);
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p1, p2);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, index++, p1, p2);
+                    break;
             }
         }
 
@@ -1496,10 +2796,25 @@ namespace System.Linq
         {
             switch (collection)
             {
-                case T[] array: for (int i = 0, count = array.Length; i < count; i++) Action(array[i], index++, p1, p2, p3); break;
-                case IList<T> list: for (int i = 0, count = list.Count; i < count; i++) Action(list[i], index++, p1, p2, p3); break;
-                case IList list: for (int i = 0, count = list.Count; i < count; i++) Action((T)list[i], index++, p1, p2, p3); break;
-                default: foreach (var item in collection) Action(item, index++, p1, p2, p3); break;
+                case T[] { Length: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p1, p2, p3);
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p1, p2, p3);
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (var i = 0; i < count; i++)
+                        Action(list[i], i + index, p1, p2, p3);
+                    break;
+
+                default:
+                    foreach (var item in collection)
+                        Action(item, index++, p1, p2, p3);
+                    break;
             }
         }
 
@@ -1511,7 +2826,7 @@ namespace System.Linq
         public static IEnumerable<T> CastLazy<T>([NN] IEnumerable collection)
         {
             var result = collection as IEnumerable<T>;
-            return result ?? collection.Cast<object>().Where(item => item is T).Cast<T>();
+            return result ?? collection.Cast<object>().OfType<T>();
         }
 
         /// <summary>Ленивое преобразование типов элементов перечисления</summary>
@@ -1607,16 +2922,15 @@ namespace System.Linq
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="values">Исходная последовательность элементов</param>
         /// <param name="Comparer">Метод сравнения элементов</param>
+        /// <param name="Hasher">Функция вычисления хеш-кода элемента</param>
         /// <returns>Последовательность элементов, таких, что ранее они отсутствовали во входной последовательности</returns>
         [NN]
-        public static IEnumerable<T> GetUnique<T>([NN] this IEnumerable<T> values, [NN] Func<T, T, bool> Comparer)
+        public static IEnumerable<T> GetUnique<T>([NN] this IEnumerable<T> values, [NN] Func<T, T, bool> Comparer, Func<T, int> Hasher = null)
         {
-            var list = new List<T>();
-            foreach (var value in values.Where(value => !list.Exists(v => Comparer(value, v))))
-            {
-                list.Add(value);
+            var hash = new HashSet<T>(new LambdaEqualityComparer<T>(Comparer, Hasher ?? (item => item.GetHashCode())));
+
+            foreach (var value in values.Where(value => hash.Add(value)))
                 yield return value;
-            }
         }
 
         /// <summary>Последовательность уникальных элементов</summary>
@@ -1627,7 +2941,7 @@ namespace System.Linq
         public static IEnumerable<T> GetUnique<T>([NN] this IEnumerable<T> values)
         {
             var set = new HashSet<T>();
-            return values.Where(v => !set.Contains(v)).ForeachLazy(v => set.Add(v));
+            return values.Where(v => set.Add(v));
         }
 
         /// <summary>Найти элементы, которые не входят во вторую последовательность</summary>
@@ -1638,8 +2952,8 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> MissingItems<T>([NN] this IEnumerable<T> Source, [NN] IEnumerable<T> Items)
         {
-            var list = Items.ToListFast();
-            return Source.Where(t => !list.Contains(i => Equals(i, t)));
+            var set = Items.GetHashSet();
+            return Source.Where(t => !set.Contains(t));
         }
 
         /// <summary>Пересечение последовательностей</summary>
@@ -1648,16 +2962,10 @@ namespace System.Linq
         /// <param name="B">Вторая последовательность</param>
         /// <returns>Массив элементов, входящих и в первую и во вторую последовательности</returns>
         [NN]
-        public static T[] Intersection<T>([NN] this IEnumerable<T> A, [NN] IEnumerable<T> B)
+        public static IEnumerable<T> Intersection<T>([NN] this IEnumerable<T> A, [NN] IEnumerable<T> B)
         {
-            var a = A.ToListFast();
-            var b = B.ToListFast();
-
-            var result = new List<T>(a.Count + b.Count);
-            result.AddRange(a.ExistingItems(b));
-            result.AddRange(b.ExistingItems(a));
-
-            return result.ToArray();
+            var b = B.GetHashSet();
+            return A.Where(a => b.Contains(a));
         }
 
         /// <summary>Последовательности элементов поэлементно равны</summary>
@@ -1689,16 +2997,22 @@ namespace System.Linq
         /// <param name="B">Вторичная последовательность</param>
         /// <returns>Массив элементов, входящих либо в первую, либо во вторую последовательность</returns>
         [NN]
-        public static T[] NotIntersection<T>([NN] this IEnumerable<T> A, [NN] IEnumerable<T> B)
+        public static IEnumerable<T> NotIntersection<T>([NN] this IEnumerable<T> A, [NN] IEnumerable<T> B)
         {
-            var a = A.ToListFast();
-            var b = B.ToListFast();
+            var b_list = B.ToListFast();
+            var b = b_list.GetHashSet();
+            var a = new HashSet<T>();
 
-            var result = new List<T>(a.Count + b.Count);
-            result.AddRange(a.MissingItems(b));
-            result.AddRange(b.MissingItems(a));
+            foreach (var a_item in A)
+            {
+                a.Add(a_item);
+                if (!b.Contains(a_item))
+                    yield return a_item;
+            }
 
-            return result.ToArray();
+            foreach (var b_item in b_list)
+                if (!a.Contains(b_item))
+                    yield return b_item;
         }
 
         /// <summary>Нахождение пересечения элементов двух последовательностей</summary>
@@ -1741,7 +3055,7 @@ namespace System.Linq
                 for (var j = 0; j < b.Count; j++)
                 {
                     var b_item = b[j];
-                    if (!a_item.Equals(b_item)) continue;
+                    if (!Equals(a_item, b_item)) continue;
 
                     a_existing_in_b = b_existing_in_a[j] = true;
                     break;
@@ -1790,7 +3104,7 @@ namespace System.Linq
         [NN]
         // ReSharper disable once EmptyString
         public static string ToSeparatedStr<T>([NN] this IEnumerable<T> collection, [CN] string Separator = "") =>
-            string.Join(Separator, collection.Select(o => o.ToString()).ToArray());
+            string.Join(Separator, collection);
 
         /// <summary>Найти минимум и максимум последовательности вещественных чисел</summary>
         /// <param name="values">Последовательность вещественных чисел</param>
@@ -1805,9 +3119,31 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> AppendLast<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
-            if (collection != null && !(collection is T[] { Length: 0 }))
-                foreach (var value in collection)
-                    yield return value;
+            switch (collection)
+            {
+                case null: break;
+
+                case T[] list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case List<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case IList<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                        yield return value;
+                    break;
+            }
+
             if (obj != null)
                 yield return obj;
         }
@@ -1824,17 +3160,66 @@ namespace System.Linq
             [CN] IEnumerable<T> last_collection
         )
         {
-            if (first_collection != null && first_collection is not T[] { Length: 0 })
-                foreach (var value in first_collection)
-                    yield return value;
-            if (last_collection is null || last_collection is T[] { Length: 0 }) yield break;
-            foreach (var value in last_collection)
-                yield return value;
+            switch (first_collection)
+            {
+                case null: break;
+
+                case T[] { Length: 0 }: break;
+                case T[] list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case List<T> { Count: 0 }: break;
+                case List<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case IList<T> { Count: 0 }: break;
+                case IList<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                default:
+                    foreach (var value in first_collection)
+                        yield return value;
+                    break;
+            }
+
+            switch (last_collection)
+            {
+                case null: break;
+
+                case T[] { Length: 0 }: break;
+                case T[] list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case List<T> { Count: 0 }: break;
+                case List<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case IList<T> { Count: 0 }: break;
+                case IList<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                default:
+                    foreach (var value in last_collection)
+                        yield return value;
+                    break;
+            }
         }
 
         public static IEnumerable<T> AppendLast<T>(
             [CN] this IEnumerable<T> first_collection,
-            [NN] params T[] last) => 
+            [NN] params T[] last) =>
             first_collection.AppendLast((IEnumerable<T>)last);
 
         /// <summary>Добавить объект в начало перечисления</summary>
@@ -1846,9 +3231,30 @@ namespace System.Linq
         public static IEnumerable<T> AppendFirst<T>([CN] this IEnumerable<T> collection, [CN] T obj)
         {
             if (obj != null) yield return obj;
-            if (collection is null || collection is T[] { Length: 0 }) yield break;
-            foreach (var value in collection)
-                yield return value;
+            switch (collection)
+            {
+                case null: break;
+
+                case T[] list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case List<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case IList<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                        yield return value;
+                    break;
+            }
         }
 
         /// <summary>Добавить перечисление объектов в начало основного перечисления</summary>
@@ -1863,12 +3269,61 @@ namespace System.Linq
             [CN] IEnumerable<T> first_collection
         )
         {
-            if (first_collection != null && !(first_collection is T[] { Length: 0 }))
-                foreach (var value in first_collection)
-                    yield return value;
-            if (last_collection is null || last_collection is T[] { Length: 0 }) yield break;
-            foreach (var value in last_collection)
-                yield return value;
+            switch (first_collection)
+            {
+                case null: break;
+
+                case T[] { Length: 0 }: break;
+                case T[] list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case List<T> { Count: 0 }: break;
+                case List<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case IList<T> { Count: 0 }: break;
+                case IList<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                default:
+                    foreach (var value in first_collection)
+                        yield return value;
+                    break;
+            }
+
+            switch (last_collection)
+            {
+                case null: break;
+
+                case T[] { Length: 0 }: break;
+                case T[] list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case List<T> { Count: 0 }: break;
+                case List<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                case IList<T> { Count: 0 }: break;
+                case IList<T> list:
+                    foreach (var value in list)
+                        yield return value;
+                    break;
+
+                default:
+                    foreach (var value in last_collection)
+                        yield return value;
+                    break;
+            }
         }
 
         public static IEnumerable<T> AppendFirst<T>(
@@ -1886,11 +3341,87 @@ namespace System.Linq
         public static IEnumerable<T> InsertAtPos<T>([NN] this IEnumerable<T> collection, T obj, int pos)
         {
             var i = 0;
-            foreach (var value in collection)
+            switch (collection)
             {
-                if (i == pos) { yield return obj; i++; }
-                yield return value;
-                i++;
+                case T[] { Length: var count } list:
+                    for (; i < count; i++)
+                    {
+                        if (i == pos) yield return obj;
+                        yield return list[i];
+                    }
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        if (i == pos) yield return obj;
+                        yield return list[i];
+                    }
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        if (i == pos) yield return obj;
+                        yield return list[i];
+                    }
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                    {
+                        if (i == pos) yield return obj;
+                        yield return value;
+                        i++;
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>Вставить элемент после указанной позиции в последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Последовательность элементов, в которую требуется вставить новый элемент</param>
+        /// <param name="obj">Элемент, добавляемый в последовательность</param>
+        /// <param name="pos">Положение после которого требуется вставить элемент</param>
+        /// <returns>Последовательность элементов, в указанной позиции которой будет размещён указанный элемент</returns>
+        [NN]
+        public static IEnumerable<T> InsertAfterPos<T>([NN] this IEnumerable<T> collection, T obj, int pos)
+        {
+            var i = 0;
+            switch (collection)
+            {
+                case T[] { Length: var count } list:
+                    for (; i < count; i++)
+                    {
+                        yield return list[i];
+                        if (i == pos) yield return obj;
+                    }
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        yield return list[i];
+                        if (i == pos) yield return obj;
+                    }
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (; i < count; i++)
+                    {
+                        yield return list[i];
+                        if (i == pos) yield return obj;
+                    }
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                    {
+                        yield return value;
+                        if (i == pos) yield return obj;
+                        i++;
+                    }
+                    break;
             }
         }
 
@@ -1900,15 +3431,10 @@ namespace System.Linq
         /// <param name="SecondCollection">Вторичная последовательность, добавляемая в начало</param>
         /// <returns>Последовательность элементов, составленная из элементов вторичной последовательности и элементов первичной последовательности</returns>
         [NN]
-        public static IEnumerable<T> ConcatInverted<T>
-        (
+        public static IEnumerable<T> ConcatInverted<T>(
             [NN] this IEnumerable<T> FirstCollection,
             [NN] IEnumerable<T> SecondCollection
-        )
-        {
-            foreach (var value in SecondCollection) yield return value;
-            foreach (var value in FirstCollection) yield return value;
-        }
+        ) => FirstCollection.AppendFirst(SecondCollection);
 
         /// <summary>Сумма перечисления полиномов</summary>
         /// <param name="P">Перечисление полиномов, которые надо сложить</param>
@@ -1916,12 +3442,39 @@ namespace System.Linq
         [NN]
         public static Polynom Sum([NN] this IEnumerable<Polynom> P)
         {
-            Polynom result = null;
-            foreach (var p in P)
-                if (result is null) result = p;
-                else
-                    result += p;
-            return result ?? new Polynom(0);
+            Polynom result;
+            switch (P)
+            {
+                case Polynom[] { Length: 0 }: return new(0);
+                case List<Polynom> { Count: 0 }: return new(0);
+                case IList<Polynom> { Count: 0 }: return new(0);
+
+                case Polynom[] { Length: var count } pp:
+                    result = pp[0];
+                    for (var i = 1; i < count; i++)
+                        result += pp[i];
+                    return result;
+
+                case List<Polynom> { Count: var count } pp:
+                    result = pp[0];
+                    for (var i = 1; i < count; i++)
+                        result += pp[i];
+                    return result;
+
+                case IList<Polynom> { Count: var count } pp:
+                    result = pp[0];
+                    for (var i = 1; i < count; i++)
+                        result += pp[i];
+                    return result;
+
+                default:
+                    result = null;
+                    foreach (var p in P)
+                        if (result is null) result = p;
+                        else
+                            result += p;
+                    return result ?? new(0);
+            }
         }
 
         /// <summary>Произведение перечисления полиномов</summary>
@@ -1930,12 +3483,39 @@ namespace System.Linq
         [NN]
         public static Polynom Multiply([NN] this IEnumerable<Polynom> P)
         {
-            Polynom result = null;
-            foreach (var p in P)
-                if (result is null) result = p;
-                else
-                    result *= p;
-            return result ?? new Polynom(1);
+            Polynom result;
+            switch (P)
+            {
+                case Polynom[] { Length: 0 }: return new(1);
+                case List<Polynom> { Count: 0 }: return new(1);
+                case IList<Polynom> { Count: 0 }: return new(1);
+
+                case Polynom[] { Length: var count } pp:
+                    result = pp[0];
+                    for (var i = 1; i < count; i++)
+                        result *= pp[i];
+                    return result;
+
+                case List<Polynom> { Count: var count } pp:
+                    result = pp[0];
+                    for (var i = 1; i < count; i++)
+                        result *= pp[i];
+                    return result;
+
+                case IList<Polynom> { Count: var count } pp:
+                    result = pp[0];
+                    for (var i = 1; i < count; i++)
+                        result *= pp[i];
+                    return result;
+
+                default:
+                    result = null;
+                    foreach (var p in P)
+                        if (result is null) result = p;
+                        else
+                            result *= p;
+                    return result ?? new(1);
+            }
         }
 
         /// <summary>Проредить последовательность</summary>
@@ -1947,10 +3527,31 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> Decimate<T>([NN] this IEnumerable<T> collection, int N, int k = 0)
         {
-            var i = 0;
-            foreach (var v in collection)
-                if (i++ % N == k)
-                    yield return v;
+            int i;
+            switch (collection)
+            {
+                case T[] { Length: var count } list:
+                    for (i = k; i < count; i += N)
+                        yield return list[i];
+                    break;
+
+                case List<T> { Count: var count } list:
+                    for (i = k; i < count; i += N)
+                        yield return list[i];
+                    break;
+
+                case IList<T> { Count: var count } list:
+                    for (i = k; i < count; i += N)
+                        yield return list[i];
+                    break;
+
+                default:
+                    i = 0;
+                    foreach (var v in collection)
+                        if (i++ % N == k)
+                            yield return v;
+                    break;
+            }
         }
 
         /// <summary>Получить первый и последний элементы перечисления</summary>
@@ -1960,24 +3561,47 @@ namespace System.Linq
         [NN]
         public static IEnumerable<T> TakeFirstAndLast<T>([NN] this IEnumerable<T> enumerable)
         {
-            var last = default(T);
-            var first_taken = false;
-            foreach (var item in enumerable)
-                if (!first_taken)
-                {
-                    yield return item;
-                    first_taken = true;
-                }
-                else
-                    last = item;
+            switch (enumerable)
+            {
+                case T[] { Length: 0 }: yield break;
+                case T[] list:
+                    yield return list[0];
+                    yield return list[^1];
+                    break;
 
-            if (first_taken)
-                yield return last;
+                case List<T> { Count: 0 }: yield break;
+                case List<T> list:
+                    yield return list[0];
+                    yield return list[^1];
+                    break;
+
+                case IList<T> { Count: 0 }: yield break;
+                case IList<T> list:
+                    yield return list[0];
+                    yield return list[^1];
+                    break;
+
+                default:
+                    var last = default(T);
+                    var first_taken = false;
+                    foreach (var item in enumerable)
+                        if (!first_taken)
+                        {
+                            yield return item;
+                            first_taken = true;
+                        }
+                        else
+                            last = item;
+
+                    if (first_taken)
+                        yield return last;
+                    break;
+            }
         }
 
         /// <summary>Разбить перечисление на страницы</summary>
         /// <typeparam name="T">Тип элемента перечисления</typeparam>
-        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="items">Исходное перечисление элементов</param>
         /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
         /// <returns>Перечисление страниц</returns>
         [NotNull]
@@ -1986,7 +3610,7 @@ namespace System.Linq
 
         /// <summary>Получить элементы перечисления для заданной страницы</summary>
         /// <typeparam name="T">Тип элемента перечисления</typeparam>
-        /// <param name="items">Исходное перечисление эленметов</param>
+        /// <param name="items">Исходное перечисление элементов</param>
         /// <param name="PageNumber">Номер требуемой страницы</param>
         /// <param name="PageItemsCount">Количество элементов на одну страницу</param>
         /// <returns>ПЕречисление элементов из указанной страницы</returns>
@@ -1997,13 +3621,33 @@ namespace System.Linq
         /// <summary>Заменить указанный элемент в перечислении</summary>
         /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="items">Исходное перечисление</param>
-        /// <param name="ItemToReplase">Элемент, Который требуется заменить</param>
+        /// <param name="ItemToReplace">Элемент, Который требуется заменить</param>
         /// <param name="NewItem">Новый элемент</param>
         /// <returns>Модифицированная последовательность</returns>
-        public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, T ItemToReplase, T NewItem)
+        public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, T ItemToReplace, T NewItem)
         {
-            foreach (var item in items)
-                yield return Equals(ItemToReplase, item) ? NewItem : item;
+            switch (items)
+            {
+                case T[] list:
+                    foreach (var item in list)
+                        yield return Equals(ItemToReplace, item) ? NewItem : item;
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        yield return Equals(ItemToReplace, item) ? NewItem : item;
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        yield return Equals(ItemToReplace, item) ? NewItem : item;
+                    break;
+
+                default:
+                    foreach (var item in items)
+                        yield return Equals(ItemToReplace, item) ? NewItem : item;
+                    break;
+            }
         }
 
         /// <summary>Заменить указанный элемент в перечислении</summary>
@@ -2014,8 +3658,28 @@ namespace System.Linq
         /// <returns>Модифицированная последовательность</returns>
         public static IEnumerable<T> Replace<T>([NotNull] this IEnumerable<T> items, Func<T, bool> Selector, T NewItem)
         {
-            foreach (var item in items)
-                yield return Selector(item) ? NewItem : item;
+            switch (items)
+            {
+                case T[] list:
+                    foreach (var item in list)
+                        yield return Selector(item) ? NewItem : item;
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        yield return Selector(item) ? NewItem : item;
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        yield return Selector(item) ? NewItem : item;
+                    break;
+
+                default:
+                    foreach (var item in items)
+                        yield return Selector(item) ? NewItem : item;
+                    break;
+            }
         }
 
         /// <summary>Перебрать последовательно значения из нескольких перечислений</summary>

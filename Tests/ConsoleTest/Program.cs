@@ -13,6 +13,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleTest
 {
+    internal class TP : Polynom
+    {
+        public int Test()
+        {
+            return AAA;
+        }
+    }
+
     internal static class Program
     {
         private static RecursionResult<BigInteger> Factorial(int n, BigInteger product) =>
