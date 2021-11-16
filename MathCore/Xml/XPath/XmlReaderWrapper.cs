@@ -71,11 +71,11 @@ namespace System.Xml.XPath
             ? _Reader.IsDefault
             : (PeekNextNode()
                 ? _Reader.IsDefault
-                : (bool?)null);
+                : null);
 
         public override XmlNodeType NodeType => _IsInFuture ? _OldNodeType : _Reader.NodeType;
 
-        public XmlNodeType? NextNodeType => _IsInFuture ? _Reader.NodeType : PeekNextNode() ? _Reader.NodeType : (XmlNodeType?)null;
+        public XmlNodeType? NextNodeType => _IsInFuture ? _Reader.NodeType : PeekNextNode() ? _Reader.NodeType : null;
 
         public override string LocalName => _IsInFuture ? _OldLocalName : _Reader.LocalName;
 
@@ -120,14 +120,14 @@ namespace System.Xml.XPath
             ? _Reader.Depth
             : (PeekNextNode()
                 ? _Reader.Depth
-                : (int?)null);
+                : null);
 
         public override char QuoteChar => _IsInFuture ? _OldQuoteChar : _Reader.QuoteChar;
         public char? NextNodeQuoteChar => _IsInFuture
             ? _Reader.QuoteChar
             : (PeekNextNode()
                 ? _Reader.QuoteChar
-                : (char?)null);
+                : null);
 
         public override string BaseURI => _IsInFuture ? _OldBaseURI : _Reader.BaseURI;
         public string NextNodeBaseURI => _IsInFuture
@@ -141,42 +141,42 @@ namespace System.Xml.XPath
             ? _Reader.IsEmptyElement
             : (PeekNextNode()
                 ? _Reader.IsEmptyElement
-                : (bool?)null);
+                : null);
 
         public override bool HasAttributes => _IsInFuture ? _OldHasAttributes : _Reader.HasAttributes;
         public bool? NextNodeHasAttributes => _IsInFuture
             ? _Reader.HasAttributes
             : (PeekNextNode()
                 ? _Reader.HasAttributes
-                : (bool?)null);
+                : null);
 
         public override bool HasValue => _IsInFuture ? _OldHasValue : _Reader.HasValue;
         public bool? NextNodeHasValue => _IsInFuture
             ? _Reader.HasValue
             : (PeekNextNode()
                 ? _Reader.HasValue
-                : (bool?)null);
+                : null);
 
         public override int AttributeCount => _IsInFuture ? _OldAttributeCount : _Reader.AttributeCount;
         public int? NextNodeAttributeCount => _IsInFuture
             ? _Reader.AttributeCount
             : (PeekNextNode()
                 ? _Reader.AttributeCount
-                : (int?)null);
+                : null);
 
         public override bool EOF => _IsInFuture ? _OldEOF : _Reader.EOF;
         public bool? NextNodeEOF => _IsInFuture
             ? _Reader.EOF
             : (PeekNextNode()
                 ? _Reader.EOF
-                : (bool?)null);
+                : null);
 
         public override ReadState ReadState => _IsInFuture ? _OldReadState : _Reader.ReadState;
         public ReadState? NextNodeReadState => _IsInFuture
             ? _Reader.ReadState
             : (PeekNextNode()
                 ? _Reader.ReadState
-                : (ReadState?)null);
+                : null);
 
         public override XmlNameTable NameTable => _Reader.NameTable;
 

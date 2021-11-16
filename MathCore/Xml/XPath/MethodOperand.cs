@@ -27,7 +27,7 @@ namespace System.Xml.XPath
         internal override object GetValue(XPathReader reader) =>
             _FuncType switch
             {
-                Function.FunctionType.FuncCount => (object) reader.AttributeCount,
+                Function.FunctionType.FuncCount => reader.AttributeCount,
                 Function.FunctionType.FuncPosition => PositionCount,
                 Function.FunctionType.FuncNameSpaceUri => reader.NamespaceURI,
                 Function.FunctionType.FuncLocalName => reader.LocalName,

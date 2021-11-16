@@ -252,7 +252,8 @@ namespace System.IO
         
         public static bool IsParentOf([NotNull] this DirectoryInfo parent, [NotNull] DirectoryInfo directory) => directory.IsSubDirectoryOf(parent);
 
-        [NotNull, ItemNotNull] public static IEnumerable<FileInfo> FindFiles([NotNull] this DirectoryInfo dir, [NotNull] string mask) => dir.EnumerateDirectories().SelectMany(d => d.FindFiles(mask)).InsertBefore(dir.EnumerateFiles(mask));
+        [NotNull, ItemNotNull] public static IEnumerable<FileInfo> FindFiles([NotNull] this DirectoryInfo dir, [NotNull] string mask) =>
+            dir.EnumerateFiles(mask, SearchOption.AllDirectories);
 
         /// <summary>Получение поддиректории по заданному пути. Если поддиректория отсутствует, то создать новую</summary>
         /// <param name="ParentDirectory">Родительская директория</param>

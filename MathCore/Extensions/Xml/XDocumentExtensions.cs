@@ -87,7 +87,7 @@ namespace System.Xml.Linq
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
-                ? (int?) null
+                ? null
                 : node switch
                 {
                     XElement element => (int) element,
@@ -106,7 +106,7 @@ namespace System.Xml.Linq
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
-                ? (double?) null
+                ? null
                 : node switch
                 {
                     XElement element => (double) element,
@@ -125,7 +125,7 @@ namespace System.Xml.Linq
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
-                ? (DateTime?) null
+                ? null
                 : node switch
                 {
                     XElement element => (DateTime) element,
@@ -144,7 +144,7 @@ namespace System.Xml.Linq
 
             var node = ((IEnumerable<object>)root.XPathEvaluate(path)).FirstOrDefault();
             return node is null
-                ? (bool?) null
+                ? null
                 : node switch
                 {
                     XElement element => (bool) element,

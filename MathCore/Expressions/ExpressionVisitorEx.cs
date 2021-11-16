@@ -63,7 +63,7 @@ namespace System.Linq.Expressions
         protected virtual MemberBinding VisitBinding(MemberBinding binding) =>
             binding.BindingType switch
             {
-                MemberBindingType.Assignment => (MemberBinding) VisitMemberAssignment((MemberAssignment) binding),
+                MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment) binding),
                 MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding) binding),
                 MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding) binding),
                 _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'")
@@ -200,7 +200,7 @@ namespace System.Linq.Expressions
                     list.Add(init);
                 }
             }
-            return list != null ? (IEnumerable<ElementInit>)list : original;
+            return list != null ? list : original;
         }
 
         protected virtual Expression VisitLambda(LambdaExpression lambda)

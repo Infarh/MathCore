@@ -18,7 +18,7 @@ namespace System.Data
             !record.IsDBNull(index) 
                 ? (T)record.GetValue(index) 
                 : typeof(T).IsCanBeNullRef() 
-                    ? (T)default 
+                    ? default 
                     : throw new InvalidOperationException($"Поле с индексом {index} отсутствует в записи");
 
         /// <summary>Извлечение поля данных из записи по имени поля</summary>
@@ -33,7 +33,7 @@ namespace System.Data
             return !record.IsDBNull(index) 
                 ? (T)record.GetValue(index) 
                 : typeof(T).IsCanBeNullRef() 
-                    ? (T)default 
+                    ? default 
                     : throw new NullReferenceException();
         }
     }

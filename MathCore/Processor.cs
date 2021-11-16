@@ -179,7 +179,7 @@ namespace System
         public DateTime? StopTime { [DST] get => _StopTime; protected set { _StopTime = value; OnPropertyChanged(); } }
 
         /// <summary>Время, прошедшее после запуска</summary>
-        public TimeSpan? ElapsedTime { [DST] get { var start = _StartTime; return start is null ? (TimeSpan?)null : Now - start.Value; } }
+        public TimeSpan? ElapsedTime { [DST] get { var start = _StartTime; return start is null ? null : Now - start.Value; } }
 
         /// <summary>Объект-наблюдатель за состоянием процессора</summary>
         public ProgressMonitor Monitor => _Monitor;

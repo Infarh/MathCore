@@ -375,7 +375,7 @@ namespace System
                 : (k.Equals(1)
                     ? f.ArgumentShift(b)
                     : (b.Equals(0)
-                        ? (Function)(x => f(k * x))
+                        ? x => f(k * x)
                         : (double x) => f(k * x + b)));
 
         /// <summary>Деление функции на число g(x) = f(x) / a</summary>
@@ -391,7 +391,7 @@ namespace System
             a.Equals(1)
                 ? f
                 : (a.Equals(0)
-                    ? (Function)(x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN))
+                    ? x => x > 0 ? double.PositiveInfinity : (x < 0 ? double.NegativeInfinity : double.NaN)
                     : (double x) => f(x) / a);
 
         /// <summary>Деление функции на функцию g(x) = f1(x) / f2(x)</summary>
@@ -505,7 +505,7 @@ namespace System
         /// <returns>Значение результата численного интегрирования функции методом трапеций</returns>
         public static double GetIntegralValue([NotNull] this Function f, double x1, double x2, double f0 = 0, double dx = 0.0001)
         {
-            if (x1.Equals(x2)) return f0;
+            if (x1 == x2) return f0;
 
             f0 += f(x1) / 2;
             x2 -= dx;
@@ -529,7 +529,7 @@ namespace System
             double x2,
             double f0 = 0,
             double dx = 0.0001
-        ) => x1.Equals(x2)
+        ) => x1 == x2
             ? Task.FromResult(f0)
             : Task.Factory.StartNew(() => f.GetIntegralValue(x1, x2, f0, dx));
 
@@ -551,7 +551,7 @@ namespace System
             double dx = 0.0001
         )
         {
-            if (x1.Equals(x2)) return f0;
+            if (x1 == x2) return f0;
 
             var dx05 = dx * .5;
             var v = f(x1);
@@ -578,7 +578,7 @@ namespace System
             double f0 = 0,
             double dx = 0.0001
         ) =>
-            x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(x1, x2, f1, f0, dx));
+            x1 == x2 ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(x1, x2, f1, f0, dx));
 
         /// <summary>Интегрирование функции с модификацией ядра интеграла</summary>
         /// <param name="f">Подинтегральная функция f(x)</param>
@@ -598,7 +598,7 @@ namespace System
             double dx = 0.0001
         )
         {
-            if (x1.Equals(x2)) return f0;
+            if (x1 == x2) return f0;
 
             f0 += f(x1) / 2;
             x2 -= dx;
@@ -624,7 +624,7 @@ namespace System
             double x2,
             double f0 = 0,
             double dx = 0.0001
-        ) => x1.Equals(x2)
+        ) => x1 == x2
             ? Task.FromResult(f0)
             : Task.Factory.StartNew(() => f.GetIntegralValue(Core, x1, x2, dx));
 
@@ -648,7 +648,7 @@ namespace System
             double dx = 0.0001
         )
         {
-            if (x1.Equals(x2)) return f0;
+            if (x1 == x2) return f0;
 
             var dx05 = dx * .5;
             var v = Core(f(x1), x1);
@@ -675,7 +675,7 @@ namespace System
             double f0 = 0,
             double dx = 0.0001
         ) =>
-            x1.Equals(x2) ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(Core, x1, x2, dx));
+            x1 == x2 ? Task.FromResult(f0) : Task.Factory.StartNew(() => f.GetIntegral2Value(Core, x1, x2, dx));
 
         /// <summary>Численный расчёт определённого интеграла методом Симпсона</summary>
         /// <param name="f">Интегрируемая функция</param>
@@ -685,7 +685,7 @@ namespace System
         /// <returns>Интеграл функции на отрезке методом Симпсона</returns>
         public static double GetIntegralValue_Simpson([NotNull] this Function f, double x1, double x2, int N = 100)
         {
-            if (x1.Equals(x2)) return 0;
+            if (x1 == x2) return 0;
 
             var dx = Math.Abs(x2 - x1) / N;
             var dx05 = dx / 2;
@@ -716,7 +716,7 @@ namespace System
             double f0 = 0
         )
         {
-            if (x1.Equals(x2)) return 0;
+            if (x1 == x2) return 0;
 
             var dx05 = 0.5 * dx;
             var x = x1;
@@ -738,7 +738,7 @@ namespace System
         /// <returns>Интеграл функции на отрезке методом Симпсона</returns>
         [NotNull]
         public static Task<double> GetIntegralValue_SimpsonAsync([NotNull] this Function f, double x1, double x2, int N = 100) =>
-            x1.Equals(x2)
+            x1 == x2
                 ? Task.FromResult(0d)
                 : Task.Factory.StartNew(() => f.GetIntegralValue_Simpson(x1, x2, N));
 
@@ -757,14 +757,13 @@ namespace System
         /// </remarks>
         public static double GetIntegralValue_Adaptive([NotNull] this Function f, double x1, double x2, int N = 2, double Eps = 1e-6)
         {
-            if (x1.Equals(x2)) return 0;
+            if (x1 == x2) return 0;
 
-            var I1 = f.GetIntegralValue_Simpson(x1, x2, N);
-            var I2 = f.GetIntegralValue_Simpson(x1, x2, N <<= 1);
-            return Math.Abs(I1 - I2) < Eps
-                               ? I2
+            var I = f.GetIntegralValue_Simpson(x1, x2, N <<= 1);
+            return Math.Abs(f.GetIntegralValue_Simpson(x1, x2, N) - I) < Eps
+                               ? I
                                : f.GetIntegralValue_Adaptive(x1, .5 * (x1 + x2), N, Eps)
-                                 + f.GetIntegralValue_Adaptive(.5 * (x1 + x2), x2, N, Eps);
+                               + f.GetIntegralValue_Adaptive(.5 * (x1 + x2), x2, N, Eps);
         }
 
         /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения</summary>
@@ -784,12 +783,12 @@ namespace System
             double Eps = 1e-6
         )
         {
-            if (x1.Equals(x2)) return 0;
+            if (x1 == x2) return 0;
 
-            var I1 = await f.GetIntegralValue_SimpsonAsync(x1, x2, N).ConfigureAwait(false);
-            var I2 = await f.GetIntegralValue_SimpsonAsync(x1, x2, N <<= 1).ConfigureAwait(false);
+            var I = await f.GetIntegralValue_SimpsonAsync(x1, x2, N <<= 1).ConfigureAwait(false);
 
-            if (Math.Abs(I1 - I2) < Eps) return I2;
+            if (Math.Abs(await f.GetIntegralValue_SimpsonAsync(x1, x2, N).ConfigureAwait(false) - I) < Eps) 
+                return I;
             var t1 = f.GetIntegralValue_AdaptiveAsync(x1, .5 * (x1 + x2), N, Eps);
             var t2 = f.GetIntegralValue_AdaptiveAsync(.5 * (x1 + x2), x2, N, Eps);
             return (await Task.WhenAll(t1, t2).ConfigureAwait(false)).Sum();
@@ -876,7 +875,7 @@ namespace System
         [Copyright("MachineLearning.ru", url = "http://www.machinelearning.ru/wiki/index.php?title=Применение_сплайнов_для_численного_интегрирования")]
         public static double GetIntegralValue_Spline([NotNull] this Function f, double x1, double x2, int N = 1000)
         {
-            if (x1.Equals(x2)) return 0;
+            if (x1 == x2) return 0;
 
             var N1 = N - 1;
             var dx = (x2 - x1) / N;
@@ -926,7 +925,7 @@ namespace System
         /// <returns>Значение интеграла функции</returns>
         [NotNull]
         public static Task<double> GetIntegralValue_SplineAsync([NotNull] this Function f, double x1, double x2, int N = 1000) =>
-            x1.Equals(x2)
+            x1 == x2
                 ? Task.FromResult(0d)
                 : Task.Factory.StartNew(() => f.GetIntegralValue_Spline(x1, x2, N));
 
@@ -960,7 +959,7 @@ namespace System
         /// <param name="x2">Конец интервала</param>
         /// <returns>Значение интеграла от квадрата функции</returns>
         public static double GetPower([NotNull] this Function f, double x1, double x2) =>
-            x1.Equals(x2)
+            x1 == x2
                 ? 0
                 : ((Function)(x =>
                 {
@@ -1024,7 +1023,7 @@ namespace System
         [NotNull]
         public static TResult[] GetValues<TResult>([NotNull] this Func<double, TResult> f, double x1, double x2, double dx)
         {
-            if (x1.Equals(x2)) return new[] { f(x1) };
+            if (x1 == x2) return new[] { f(x1) };
             if (Math.Abs(x2 - x1) < dx) return new[] { f(x1), f(x2) };
 
             var N = (int)((x2 - x1) / dx);
@@ -1065,7 +1064,7 @@ namespace System
                 ? f
                 : (a.Equals(0d)
                     ? ((double x) => 1)
-                    : (Function)(x => Math.Pow(f(x), a)));
+                    : x => Math.Pow(f(x), a));
 
         /// <summary>Получение отрицательной функции</summary>
         /// <param name="f">Исходная функция</param>
@@ -1081,7 +1080,7 @@ namespace System
         [NotNull]
         public static Function SetParameter([NotNull] this Func<double, double, double> f, double a, bool IsFirst = false) =>
             IsFirst
-                ? (Function)(x => f(a, x))
+                ? x => f(a, x)
                 : x => f(x, a);
 
         /// <summary>Вычитание одной функции из другой g(x) = f1(x) - f2(x)</summary>
@@ -1144,7 +1143,7 @@ namespace System
             {
                 lock (_LockObject)
                 {
-                    if (x.Equals(x0)) return C;
+                    if (x == x0) return C;
                     var result = C += x > x0
                         ? f.GetIntegralValue_Adaptive(x0, x, Eps: Eps)
                         : -f.GetIntegralValue_Adaptive(x, x0, Eps: Eps);

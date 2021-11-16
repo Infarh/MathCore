@@ -22,7 +22,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <returns>Скомпилированное выражение узла</returns>
         /// <returns></returns>
         public override Expression Compile(params ParameterExpression[] Args) => Left is null
-                    ? (Expression)RightCompile(Args).Negate()
+                    ? RightCompile(Args).Negate()
                     : LeftCompile(Args).Subtract( RightCompile(Args));
 
         /// <summary>Клонирование узла</summary>

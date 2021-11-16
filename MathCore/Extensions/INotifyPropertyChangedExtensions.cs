@@ -122,26 +122,25 @@ namespace System.ComponentModel
             /// <param name="OnPropertyChanged">Метод генерации события <see cref="INotifyPropertyChanged.PropertyChanged"/> в объекте <paramref name="obj"/></param>
             public void Subscribe([NotNull] INotifyPropertyChanged obj, [NotNull] Action<PropertyChangedEventArgs> OnPropertyChanged)
             {
-                if (_Handler is null)
-                    _Handler = (s, e) =>
+                _Handler ??= (_, e) =>
+                {
+                    if (!_Dependencies.ContainsKey(e.PropertyName)) return;
+                    if (e is DependentPropertyChangedEventArgs args)
                     {
-                        if (!_Dependencies.ContainsKey(e.PropertyName)) return;
-                        if (e is DependentPropertyChangedEventArgs args)
+                        var p_stack = args.FromProperties ?? Array.Empty<string>();
+                        if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
+                        foreach (var property in _Dependencies[args.PropertyName])
                         {
-                            var p_stack = args.FromProperties ?? Array.Empty<string>();
-                            if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
-                            foreach (var property in _Dependencies[args.PropertyName])
-                            {
-                                var new_p_stack = new string[p_stack.Length + 1];
-                                new_p_stack[0] = args.PropertyName;
-                                Array.Copy(p_stack, 0, new_p_stack, 1, new_p_stack.Length);
-                                OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new_p_stack));
-                            }
+                            var new_p_stack = new string[p_stack.Length + 1];
+                            new_p_stack[0] = args.PropertyName;
+                            Array.Copy(p_stack, 0, new_p_stack, 1, new_p_stack.Length);
+                            OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new_p_stack));
                         }
-                        else
-                            foreach (var property in _Dependencies[e.PropertyName])
-                                OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new[] { e.PropertyName }));
-                    };
+                    }
+                    else
+                        foreach (var property in _Dependencies[e.PropertyName])
+                            OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new[] { e.PropertyName }));
+                };
                 obj.PropertyChanged += _Handler;
             }
 

@@ -235,7 +235,7 @@ namespace System.Xml.XPath
         private static Query ProcessAxis([NotNull] Axis root, Query QyInput) =>
             root.TypeOfAxis switch
             {
-                Axis.AxisType.Attribute => (Query) new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type),
+                Axis.AxisType.Attribute => new AttributeQuery(QyInput, root.Name, root.Prefix, root.Type),
                 Axis.AxisType.Self => new XPathSelfQuery(QyInput, root.Name, root.Prefix, root.Type),
                 Axis.AxisType.Child => new ChildQuery(QyInput, root.Name, root.Prefix, root.Type),
                 Axis.AxisType.Descendant => new DescendantQuery(QyInput, root.Name, root.Prefix, root.Type),

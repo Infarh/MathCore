@@ -48,7 +48,7 @@ namespace System.Xml.XPath
                 Operator.Op.Div => (n1 / n2),
                 Operator.Op.Mul => (n1 * n2),
                 Operator.Op.Negate => -n1,
-                _ => (object)null
+                _ => null
             };
         }
 
