@@ -57,6 +57,46 @@ namespace System.Linq.Expressions
                     ExpressionType.Invoke => VisitInvocation((InvocationExpression) Node),
                     ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression) Node),
                     ExpressionType.ListInit => VisitListInit((ListInitExpression) Node),
+                    //ExpressionType.AddAssign => expr,
+                    //ExpressionType.AddAssignChecked => expr,
+                    //ExpressionType.AndAssign => expr,
+                    //ExpressionType.Assign => expr,
+                    //ExpressionType.Block => expr,
+                    //ExpressionType.DebugInfo => expr,
+                    //ExpressionType.Decrement => expr,
+                    //ExpressionType.Default => expr,
+                    //ExpressionType.DivideAssign => expr,
+                    //ExpressionType.Dynamic => expr,
+                    //ExpressionType.ExclusiveOrAssign => expr,
+                    //ExpressionType.Extension => expr,
+                    //ExpressionType.Goto => expr,
+                    //ExpressionType.Increment => expr,
+                    //ExpressionType.Index => expr,
+                    //ExpressionType.IsFalse => expr,
+                    //ExpressionType.IsTrue => expr,
+                    //ExpressionType.Label => expr,
+                    //ExpressionType.LeftShiftAssign => expr,
+                    //ExpressionType.Loop => expr,
+                    //ExpressionType.ModuloAssign => expr,
+                    //ExpressionType.MultiplyAssign => expr,
+                    //ExpressionType.MultiplyAssignChecked => expr,
+                    //ExpressionType.OnesComplement => expr,
+                    //ExpressionType.OrAssign => expr,
+                    //ExpressionType.PostDecrementAssign => expr,
+                    //ExpressionType.PostIncrementAssign => expr,
+                    //ExpressionType.PowerAssign => expr,
+                    //ExpressionType.PreDecrementAssign => expr,
+                    //ExpressionType.PreIncrementAssign => expr,
+                    //ExpressionType.RightShiftAssign => expr,
+                    //ExpressionType.RuntimeVariables => expr,
+                    //ExpressionType.SubtractAssign => expr,
+                    //ExpressionType.SubtractAssignChecked => expr,
+                    //ExpressionType.Switch => expr,
+                    //ExpressionType.Throw => expr,
+                    //ExpressionType.Try => expr,
+                    //ExpressionType.TypeEqual => expr,
+                    //ExpressionType.UnaryPlus => expr,
+                    //ExpressionType.Unbox => expr,
                     _ => throw new Exception($"Unhandled expression type: '{Node.NodeType}'")
                 };
 
@@ -123,7 +163,7 @@ namespace System.Linq.Expressions
         {
             var obj = Visit(m.Object);
             IEnumerable<Expression> args = VisitExpressionList(m.Arguments);
-            return obj != m.Object || args != m.Arguments ? Expression.Call(obj, m.Method, args) : m;
+            return obj != m.Object || !ReferenceEquals(args, m.Arguments) ? Expression.Call(obj, m.Method, args) : m;
         }
 
         protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
@@ -179,9 +219,10 @@ namespace System.Linq.Expressions
                     list.Add(b);
                 }
             }
-            if(list != null)
-                return list;
-            return original;
+
+            return list is null 
+                ? original 
+                : list;
         }
 
         protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)

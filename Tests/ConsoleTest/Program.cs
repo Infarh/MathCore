@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -82,7 +83,7 @@ namespace ConsoleTest
                     F[i] = 1;
                 else if (i == 1)
                     F[i] = 1;
-                else F[i] = 
+                else F[i] =
                     F[i - 1] + F[i - 2];
         }
 
@@ -101,8 +102,46 @@ namespace ConsoleTest
             }
         }
 
+        private static double Multiply(double[] a, double[] b, int BOffset)
+        {
+            var result = 0d;
+            var count = 0;
+            var a_len = a.Length;
+            var b_len = b.Length;
+
+            for (var i = 0; i < b_len; i++)
+                if (i - BOffset is >= 0 and var a_index && a_index < a_len)
+                {
+                    count++;
+                    result += a[a_index] * b[i];
+                }
+
+            return count > 0 ? result / count : double.NaN;
+        }
+
         private static void Main()
         {
+            var t0 = 637713575720000000;
+            var time = DateTime.FromBinary(t0);
+            var start_time = new DateTime(2010, 1, 1, 0, 0, 0, 0);
+            var delta = time - start_time;
+            var ticks_delta = delta.Ticks;
+            var int_ticks = (int)(ticks_delta / 10000000);
+
+            var values = new List<string>();
+            foreach (var value in CSVParseTest.ParseCSVLine(CSVParseTest.SourceStr))
+                values.Add(value);
+
+            var size = 1000;
+            var arr_a = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Sin(4 * Math.PI / size * i));
+            var arr_b = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Cos(4 * Math.PI / size * i));
+
+            var correlations = new List<(int offset, double value)>(size * 2);
+            for (var offset = -size; offset <= size; offset++)
+            {
+                correlations.Add((offset, Multiply(arr_a, arr_b, offset)));
+            }
+
             var fff = SpecialFunctions.Fibonacci(7);
 
             var ff = EnumFib().ElementAt(8);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MathCore;
 using MathCore.Annotations;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -18,6 +19,27 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
+        public static int[] InitializeRange(this int[] array, int StartValue = 0, int Step = 1)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array[i] = StartValue + i * Step;
+            return array;
+        }
+
+        public static double[] InitializeRange(this double[] array, double StartValue = 0, double Step = 1)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array[i] = StartValue + i * Step;
+            return array;
+        }
+
+        public static Complex[] InitializeRange(this Complex[] array, Complex StartValue, Complex Step)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array[i] = StartValue + i * Step;
+            return array;
+        }
+
         /// <summary>Перемешать элементы массива</summary>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <param name="items">Перемешиваемый массив</param>

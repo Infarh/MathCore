@@ -12,8 +12,8 @@ namespace System.Linq.Expressions
         // Вспомогательный класс для хранения значения и типа свойств
         private sealed class TypeValuePair
         {
-            public object Value { get; set; }
-            public Type Type { get; set; }
+            public object Value { get; init; }
+            public Type Type { get; init; }
         }
 
         // Словарь для хранения значения и типа свойств по имени свойства
@@ -38,7 +38,7 @@ namespace System.Linq.Expressions
         }
 
         // "Обновленное" выражение с "подставленными" значениями свойств
-        public Expression ConvertedExpression { get; private set; }
+        public Expression ConvertedExpression { get; }
 
         // Заменяем обращение к члену на соответствующее значение
         protected override Expression VisitMember(MemberExpression MemberExpression)

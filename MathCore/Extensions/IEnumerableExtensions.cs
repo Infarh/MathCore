@@ -12,6 +12,7 @@ using NN = MathCore.Annotations.NotNullAttribute;
 using CN = MathCore.Annotations.CanBeNullAttribute;
 using InN = MathCore.Annotations.ItemNotNullAttribute;
 using IcN = MathCore.Annotations.ItemCanBeNullAttribute;
+using System.Drawing;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable UnusedMember.Local
@@ -584,61 +585,39 @@ namespace System.Linq
             }
         }
 
-        /// <summary>Блочный перечислитель элементов</summary>
-        /// <typeparam name="T">Тип перечисляемых элементов</typeparam>
-        private class BlockEnumerator<T> : IEnumerable<T>
-        {
-            /// <summary>Перечисление элементов, которые требуется перечислить в рамках текущего блока</summary>
-            [NN] private readonly IEnumerator<T> _Source;
-
-            /// <summary>Размер блока - число элементов, выбираемое из перечисления</summary>
-            private readonly int _Size;
-
-            /// <summary>Признак, что перечисление завершено</summary>
-            public bool Complete { get; private set; }
-
-            /// <summary>Инициализация нового экземпляра <see cref="BlockEnumerator{T}"/></summary>
-            /// <param name="source">Исходное перечисление элементов</param>
-            /// <param name="Size">Размер блока</param>
-            public BlockEnumerator([NN] IEnumerator<T> source, int Size)
-            {
-                _Source = source;
-                _Size = Size;
-            }
-
-            /// <inheritdoc />
-            public IEnumerator<T> GetEnumerator()
-            {
-                for (var i = 0; i < _Size; i++)
-                {
-                    if (!_Source.MoveNext()) yield break;
-                    yield return _Source.Current;
-                }
-                Complete = true;
-            }
-
-            /// <inheritdoc />
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
-
         /// <summary>Сформировать блочный перечислитель элементов</summary>
         /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="enumerable">Перечисление элементов, которое требуется разбить на блоки</param>
         /// <param name="BlockSize">Размер блоков, не которые будет разбито исходное перечисление</param>
+        /// <param name="CreateNewBlocks">Создавать новые блоки (не использовать один и тот же буфер)</param>
         /// <returns>Перечисление блоков элементов</returns>
         [NN, InN]
-        public static IEnumerable<IEnumerable<T>> AsBlockEnumerable<T>([NN, IcN] this IEnumerable<T> enumerable, int BlockSize)
+        public static IEnumerable<T[]> AsBlockEnumerable<T>([NN, IcN] this IEnumerable<T> enumerable, int BlockSize, bool CreateNewBlocks = true)
         {
             if (BlockSize <= 0)
                 throw new ArgumentOutOfRangeException(nameof(BlockSize), "Размер блока должен быть положительным значением");
 
-            using var enumerator = enumerable.GetEnumerator();
-            BlockEnumerator<T> block;
-            do
+            using var e = enumerable.GetEnumerator();
+            var block = new T[BlockSize];
+            while (e.MoveNext())
             {
-                block = new BlockEnumerator<T>(enumerator, BlockSize);
-                yield return block;
-            } while (block.Complete);
+                block[0] = e.Current;
+
+                var i = 1;
+                for (; i < block.Length && e.MoveNext(); i++) block[i] = e.Current;
+
+                if (i == block.Length)
+                    yield return block;
+                else
+                {
+                    Array.Resize(ref block, i);
+                    yield return block;
+                    yield break;
+                }
+
+                if (CreateNewBlocks)
+                    block = new T[BlockSize];
+            }
         }
 
         /// <summary>Перечисление элементов за исключением указанного</summary>
