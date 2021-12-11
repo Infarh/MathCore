@@ -9,7 +9,7 @@ namespace MathCore.Interpolation
 {
     /// <summary><see url="http://ru.wikipedia.org/wiki/Кривая_Безье">Кривая Безье</see></summary>
     [Hyperlink("http://ru.wikipedia.org/wiki/Кривая_Безье")]
-    public class BezierCurve
+    public class BezierCurve : Interpolator
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -98,7 +98,7 @@ namespace MathCore.Interpolation
 
         public Vector2D B(double t)
         {
-            if(t < 0 || t > 1)
+            if(t is < 0 or > 1)
                 throw new ArgumentOutOfRangeException(nameof(t), "t в не интервала [0;1]");
 
             var count = _Points.Length;

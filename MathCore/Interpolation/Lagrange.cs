@@ -7,7 +7,7 @@ using MathCore.Vectors;
 
 namespace MathCore.Interpolation
 {
-    public class Lagrange : IInterpolator
+    public class Lagrange : Interpolator, IInterpolator
     {
         /* ------------------------------------------------------------------------------------------ */
 

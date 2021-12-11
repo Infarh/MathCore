@@ -19,6 +19,8 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
+        public static int BinarySearch<T>(this T[] array, T value) => Array.BinarySearch(array, value);
+
         public static int[] InitializeRange(this int[] array, int StartValue = 0, int Step = 1)
         {
             for (var i = 0; i < array.Length; i++)
