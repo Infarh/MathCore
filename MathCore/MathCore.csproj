@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.58</Version>
+    <Version>0.0.59</Version>
     <PackageReleaseNotes>
-      Доработка контейнера сервисов IoC
+      Доработка механизма чтения CSV
     </PackageReleaseNotes>
   </PropertyGroup>
 
