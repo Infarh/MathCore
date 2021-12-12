@@ -1,6 +1,10 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -14,14 +18,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleTest
 {
-    internal class TP : Polynom
-    {
-        public int Test()
-        {
-            return AAA;
-        }
-    }
-
     internal static class Program
     {
         private static RecursionResult<BigInteger> Factorial(int n, BigInteger product) =>
@@ -121,16 +117,35 @@ namespace ConsoleTest
 
         private static void Main()
         {
-            var t0 = 637713575720000000;
-            var time = DateTime.FromBinary(t0);
-            var start_time = new DateTime(2010, 1, 1, 0, 0, 0, 0);
-            var delta = time - start_time;
-            var ticks_delta = delta.Ticks;
-            var int_ticks = (int)(ticks_delta / 10000000);
+            string[] lines =
+            {
+                "123.",
+                "..\"Hello,.World!,.QWE\".",
+                ".Value.",
+                "\"123,23",
+            };
 
-            var values = new List<string>();
-            foreach (var value in CSVParseTest.ParseCSVLine(CSVParseTest.SourceStr))
-                values.Add(value);
+            var line = string.Join(',', lines);
+            var line_array = line.ToCharArray().AsMemory();
+            var values = CSVParseTest.ParseLine(line_array).ToList();
+
+            var segment_start = new MemorySegment<char>(values[1]);
+            var segment_end = segment_start.Append(values[3]);
+
+            var pp = new Pipe();
+
+            Writer(pp.Writer);
+
+            static void Writer(PipeWriter writer)
+            {
+
+            }
+
+            var seq = new ReadOnlySequence<char>(segment_start, 0, segment_end, segment_end.Memory.Length);
+
+            var sss = seq.ToString();
+
+            Debug.WriteLine(sss);
 
             var size = 1000;
             var arr_a = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Sin(4 * Math.PI / size * i));

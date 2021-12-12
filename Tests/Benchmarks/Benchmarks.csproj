@@ -13,4 +13,10 @@
     <ProjectReference Include="..\..\MathCore\MathCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="data.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
