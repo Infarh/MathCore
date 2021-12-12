@@ -7,7 +7,7 @@ using MathCore.Vectors;
 namespace MathCore.Interpolation
 {
     /// <summary>Линейный интерполятор вещественного значения</summary>
-    public class Mapping : IInterpolator
+    public class Mapping : Interpolator, IInterpolator
     {
         /* ------------------------------------------------------------------------------------------ */
 

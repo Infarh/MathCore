@@ -146,7 +146,7 @@ namespace System.Linq.Expressions
         [NotNull]
         private static Expression MathMethod([NotNull] string Name, [NotNull] params Expression[] p) =>
             p.All(P => P is ConstantExpression)
-                ? (Expression) Expression.Constant(typeof(Math).GetMethod(Name, p.Select(P => P.Type).ToArray())
+                ? Expression.Constant(typeof(Math).GetMethod(Name, p.Select(P => P.Type).ToArray())
                    .Invoke(null, p.Cast<ConstantExpression>().Select(P => P.Value).ToArray()))
                 : Expression.Call(typeof(Math), Name, null, p);
 

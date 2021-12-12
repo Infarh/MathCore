@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MathCore;
 using MathCore.Annotations;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -18,6 +19,29 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
+        public static int BinarySearch<T>(this T[] array, T value) => Array.BinarySearch(array, value);
+
+        public static int[] InitializeRange(this int[] array, int StartValue = 0, int Step = 1)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array[i] = StartValue + i * Step;
+            return array;
+        }
+
+        public static double[] InitializeRange(this double[] array, double StartValue = 0, double Step = 1)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array[i] = StartValue + i * Step;
+            return array;
+        }
+
+        public static Complex[] InitializeRange(this Complex[] array, Complex StartValue, Complex Step)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array[i] = StartValue + i * Step;
+            return array;
+        }
+
         /// <summary>Перемешать элементы массива</summary>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <param name="items">Перемешиваемый массив</param>
@@ -73,7 +97,7 @@ namespace System
         [NotNull]
         public static IEnumerable<T> AsRandomEnumerable<T>([NotNull] this T[] Items, [CanBeNull] Random Rnd = null)
         {
-            if (Rnd is null) Rnd = new Random();
+            Rnd ??= new Random();
             var index = CreateSequence(Items.Length).MixRef(Rnd);
             for (var i = 0; i < Items.Length; i++)
                 yield return Items[index[i]];
@@ -380,10 +404,10 @@ namespace System
         [DST, NotNull]
         public static TArray[] Concatenate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[] B)
         {
-            var Result = new TArray[A.Length + B.Length];
-            A.CopyTo(Result, 0);
-            B.CopyTo(Result, A.Length);
-            return Result;
+            var result = new TArray[A.Length + B.Length];
+            A.CopyTo(result, 0);
+            B.CopyTo(result, A.Length);
+            return result;
         }
 
         /// <summary>Конкатенация массивов</summary>

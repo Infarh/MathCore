@@ -1,33 +1,67 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 
 using BenchmarkDotNet.Attributes;
 
-namespace Benchmarks
+namespace Benchmarks;
+
+[MemoryDiagnoser]
+public class Test
 {
-    [MemoryDiagnoser]
-    public class Test
+    private static IEnumerable<string> Lines => ReadLines("data.csv");
+
+    private static IEnumerable<string> ReadLines(string FileName)
     {
-        private readonly string[] _Data = Enumerable.Range(1, 1).ToArray(i => i.ToString());
+        if (!File.Exists(FileName)) throw new FileNotFoundException("Файл данных не найден", FileName);
+        using var reader = File.OpenText(FileName);
+        while (!reader.EndOfStream)
+            if (reader.ReadLine() is { Length: > 0 } line)
+                yield return line;
+    }
 
-        [Benchmark]
-        public List<int> Lambda()
-        {
-            var result = new List<int>(50000);
+    [Benchmark(Baseline = true)]
+    public int ParseSplit()
+    {
+        var result = 0;
+        foreach (var line in Lines)
+            result += CSVSplit.Parse(line);
+        return result;
+    }
 
-            for (var i = 0; i < 50000; i++)
-                result.AddRange(_Data.Select(s => int.Parse(s)));
-            return result;
-        }
+    [Benchmark]
+    public int ParseRegex()
+    {
+        var result = 0;
+        var parser = new CSVRegex(',');
+        foreach (var line in Lines)
+            result += parser.Parse(line);
+        return result;
+    }
 
-        [Benchmark]
-        public List<int> MethodGroup()
-        {
-            var result = new List<int>(50000);
+    [Benchmark]
+    public int ParseMemory()
+    {
+        var result = 0;
+        foreach (var line in Lines)
+            result += CSVMemory.Parse(line);
+        return result;
+    }
 
-            for (var i = 0; i < 50000; i++)
-                result.AddRange(_Data.Select(int.Parse));
-            return result;
-        }
+    [Benchmark]
+    public int ParseSpan()
+    {
+        var result = 0;
+        foreach (var line in Lines)
+            result += CSVSpan.Parse(line);
+        return result;
+    }
+
+    [Benchmark]
+    public int ParseString()
+    {
+        var result = 0;
+        foreach (var line in Lines)
+            result += CSVString.Parse(line);
+        return result;
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
+﻿using BenchmarkDotNet.Running;
 
-using BenchmarkDotNet.Running;
+namespace Benchmarks;
 
-namespace Benchmarks
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            _ = BenchmarkRunner.Run<Test>();
-        }
+        _ = BenchmarkRunner.Run<Test>();
     }
 }

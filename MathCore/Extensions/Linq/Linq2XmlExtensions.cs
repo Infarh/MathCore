@@ -60,7 +60,7 @@ namespace System.Xml.Linq
 
         public static int ValueIntOrDefault([CanBeNull] this XAttribute e, int Default = 0) => e is null || !int.TryParse(e.Value, out var v) ? Default : v;
 
-        public static int? ValueIntOrNull([CanBeNull] this XAttribute e) => e is null || !int.TryParse(e.Value, out var v) ? (int?)null : v;
+        public static int? ValueIntOrNull([CanBeNull] this XAttribute e) => e is null || !int.TryParse(e.Value, out var v) ? null : v;
 
         public static int ValueIntHexOrDefault([CanBeNull] this XElement e, int Default = 0) => e is null || !int.TryParse(e.Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var v) ? Default : v;
 

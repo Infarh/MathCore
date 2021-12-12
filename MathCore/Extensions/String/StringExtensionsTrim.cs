@@ -23,7 +23,7 @@ namespace System
             var dl2 = dl1 / 2;
             dl1 -= dl2;
 
-            var s1 = Str.Substring(0, Str.Length / 2 - dl1);
+            var s1 = Str[..(Str.Length / 2 - dl1)];
             var start = Str.Length/2 + dl2;
             var len = Str.Length - Str.Length / 2 - dl2;
             var s2 = Str.Substring(start, len);

@@ -10,7 +10,7 @@ namespace MathCore.Interpolation
     // ReSharper disable once CommentTypo
     /// <summary>Интерполирование функций естественными кубическими сплайнами</summary>
     /// <remarks>Разработчик: Назар Андриенко Email: nuzikprogrammer@gmail.com</remarks>
-    public class CubicSpline : IInterpolator
+    public class CubicSpline : Interpolator, IInterpolator
     {
         /* -------------------------------------------------------------------------------------------- */
 

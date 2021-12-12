@@ -35,11 +35,7 @@ namespace MathCore
         public double Approximate(double x) => Polynom.Array.GetValue(x, _A); //F(_A, x);
 
         [NotNull]
-        public Func<double, double> GetApproximation()
-        {
-            var a = _A;
-            return x => Polynom.Array.GetValue(x, _A);
-        }
+        public Func<double, double> GetApproximation() => x => Polynom.Array.GetValue(x, _A);
 
         private static double[,] CreateMatrix(double[] XData, int MaxPower)
         {

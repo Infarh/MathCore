@@ -69,7 +69,7 @@ namespace System
                 var length_left = length - position;
                 var time_sec = length_left / speed;
                 return double.IsNaN(time_sec) || double.IsInfinity(time_sec) 
-                    ? (TimeSpan?)null 
+                    ? null 
                     : TimeSpan.FromSeconds(time_sec);
             }
         }

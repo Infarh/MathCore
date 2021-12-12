@@ -348,7 +348,7 @@ namespace System.Linq.Expressions
                 det = det is null
                     ? (negate ? diagonal_item.Negate() : diagonal_item)
                     : (negate
-                        ? (Expression)det.MultiplyWithConversion(diagonal_item).Negate()
+                        ? det.MultiplyWithConversion(diagonal_item).Negate()
                         : det.MultiplyWithConversion(diagonal_item));
 
                 if (k >= n) continue;

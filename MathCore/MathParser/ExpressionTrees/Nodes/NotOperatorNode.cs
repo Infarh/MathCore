@@ -44,7 +44,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression LogicCompile() =>
             Left is null
                 ? Right is LogicOperatorNode node
-                    ? (Expression)node.LogicCompile().Not()
+                    ? node.LogicCompile().Not()
                     : RightCompile().GetAbs().IsLessThan(EqualityOperatorNode.Epsilon)
                 : Left is LogicOperatorNode operator_node && Right is LogicOperatorNode logic_operator_node
                     ? operator_node.LogicCompile().IsNotEqual(logic_operator_node.LogicCompile())
@@ -57,7 +57,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public override Expression LogicCompile(ParameterExpression[] Args) =>
             Left is null
                 ? Right is LogicOperatorNode node
-                    ? (Expression)node.LogicCompile(Args).Not()
+                    ? node.LogicCompile(Args).Not()
                     : RightCompile(Args).GetAbs().IsLessThan(EqualityOperatorNode.Epsilon)
                 : Left is LogicOperatorNode operator_node && Right is LogicOperatorNode logic_operator_node
                     ? operator_node.LogicCompile(Args).IsNotEqual(logic_operator_node.LogicCompile(Args))

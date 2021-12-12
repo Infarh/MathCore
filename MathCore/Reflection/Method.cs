@@ -57,7 +57,7 @@ namespace System.Reflection
             _MethodInfo = type.GetMethod(MethodName, IsStatic | IsPublic);
 
             _Method = obj != null && obj is ISynchronizeInvoke
-                ? (Func<object[], TResult>)(Args => (TResult)((ISynchronizeInvoke)obj).Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args }))
+                ? Args => (TResult)((ISynchronizeInvoke)obj).Invoke((Func<object[], TResult>)PrivateInvoke, new object[] { Args })
                 : PrivateInvoke;
         }
 

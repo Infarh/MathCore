@@ -19,15 +19,15 @@ namespace MathCore
 
         #region Операторы математики
 
-        /// <summary>Унарный оператор разности. Возвращает число -Re-jIm</summary>
-        /// <param name="z">Комплексное число</param>
-        /// <returns>Возвращает -Re-jIm</returns>
-        [DST] public static Complex operator -(in Complex z) => new(-z.Re, -z.Im);
-
         /// <summary>Унарный оператор суммы. Возвращает число Re+jIm</summary>
         /// <param name="z">Комплексное число</param>
         /// <returns>Возвращает Re+jIm</returns>
         public static Complex operator +(in Complex z) => new(z.Re, z.Im);
+
+        /// <summary>Унарный оператор разности. Возвращает число -Re-jIm</summary>
+        /// <param name="z">Комплексное число</param>
+        /// <returns>Возвращает -Re-jIm</returns>
+        [DST] public static Complex operator -(in Complex z) => new(-z.Re, -z.Im);
 
         /// <summary>Оператор комплексного сопряжения</summary>
         /// <param name="z">Комплексное число</param>

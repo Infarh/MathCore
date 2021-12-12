@@ -17,7 +17,3 @@ namespace System
         [NotNull] public static IEnumerable<string> FindAllRegEx([NotNull] this string str, [NotNull] Regex regex) => str.FindAllRegExMatch(regex).Select(m => m.Value);
     }
 }
-
-namespace System.Text.RegularExpressions
-{
-}

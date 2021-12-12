@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -210,12 +211,13 @@ namespace MathCore.CSV
                 ? new SortedList<string, int>(Headers)
                 : new SortedList<string, int>();
 
-            var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
-            var headers = splitter
-               .Matches(line)
-               .Cast<Match>()
-               .ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
+            //var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
+            //var headers = splitter
+            //   .Matches(line)
+            //   .Cast<Match>()
+            //   .ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
 
+            var headers = CSVParser.ParseLine(line, Separator, true).ToArray();
             for (var i = 0; i < headers.Length; i++)
                 header[headers[i]] = i;
 
@@ -232,7 +234,7 @@ namespace MathCore.CSV
 
             var eol = EoL is { Length: > 0 } s_eol ? encoding.GetByteCount(s_eol) : 0;
 
-            var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
+            //var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
 
             var position = 0L;
 
@@ -255,12 +257,7 @@ namespace MathCore.CSV
 
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    //var headers = line.Split(separator);
-                    var headers = splitter
-                       .Matches(line)
-                       .Cast<Match>()
-                       .ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
-
+                    var headers = CSVParser.ParseLine(line, Separator, true).ToArray();
                     for (var i = 0; i < headers.Length; i++)
                         header[headers[i]] = i;
                 }
@@ -283,13 +280,14 @@ namespace MathCore.CSV
                 var line_length = encoding.GetByteCount(line);
 
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                var items = splitter.Matches(line).Cast<Match>().ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
+                //var items = splitter.Matches(line).Cast<Match>().ToArray(m => m.Value is { Length: > 2 } v ? v.Trim('"') : m.Value);
                 //var items = line.Split(separator);
 
                 //for (var i = 0; i < items.Length; i++)
                 //    if (items[i] is { Length: > 2 } item && item[0] == '"' && item[^1] == '"')
                 //        items[i] = item.Trim('"');
 
+                var items = CSVParser.ParseLine(line, Separator).ToArray();
                 yield return new(line, index, items, header, position, (position += line_length + eol) - 1, culture);
                 index++;
             }

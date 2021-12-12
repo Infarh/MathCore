@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -137,7 +136,7 @@ namespace System
             if (stop_index == -1 || stop_index < start_index) throw new FormatException();
             Offset = stop_index + Close.Length;
             start_index += Open.Length;
-            return Str.Substring(start_index, stop_index - start_index);
+            return Str[start_index..stop_index];
         }
 
         [CanBeNull]
@@ -154,7 +153,7 @@ namespace System
             var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
             if (start_index == -1)
             {
-                TextBefore = Str.Substring(Offset, Str.Length - Offset);
+                TextBefore = Str[Offset..];
                 return null;
             }
             var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
@@ -167,11 +166,11 @@ namespace System
                     stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
             } while (start != -1 && start < stop_index);
             if (stop_index == -1 || stop_index < start_index) throw new FormatException();
-            TextBefore = Str.Substring(Offset, start_index - Offset);
+            TextBefore = Str[Offset..start_index];
             Offset = stop_index + Close.Length;
-            TextAfter = Str.Length - Offset > 0 ? Str.Substring(Offset, Str.Length - Offset) : string.Empty;
+            TextAfter = Str.Length - Offset > 0 ? Str[Offset..] : string.Empty;
             start_index += Open.Length;
-            return Str.Substring(start_index, stop_index - start_index);
+            return Str[start_index..stop_index];
         }
 
         /// <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
@@ -203,7 +202,7 @@ namespace System
             var len = str.Length;
             while (i < len && symbols.IsContains(str[i])) i++;
 
-            return i == 0 || len == 0 ? str : str.Substring(i, len - i);
+            return i == 0 || len == 0 ? str : str[i..len];
         }
 
         /// <summary>Удаление символов в конце строки</summary>
@@ -217,7 +216,7 @@ namespace System
             var i = 0;
             while (i < len && symbols.IsContains(str[len - i - 1])) i++;
 
-            return len == 0 || i == 0 ? str : str.Substring(0, len - i);
+            return len == 0 || i == 0 ? str : str[..(len - i)];
         }
 
         /// <summary>Удаление символов в начале и конце строки</summary>
@@ -253,7 +252,7 @@ namespace System
         /// <param name="str">Шифруемая строка</param>
         /// <param name="password">Пароль шифрования</param>
         /// <returns>Зашифрованная строка</returns>
-        public static string Ecrypt(this string str, string password) => str.Ecrypt(password, SALT);
+        public static string Ecrypt(this string str, string password) => str.Ecrypt(password, __Salt);
 
         /// <summary>Зашифровать строку</summary>
         /// <param name="str">Шифруемая строка</param>
@@ -265,7 +264,7 @@ namespace System
         /// <param name="data">Шифруемая последовательность байт</param>
         /// <param name="password">Ключ шифрования</param>
         /// <returns>Зашифрованная последовательность байт</returns>
-        public static byte[] Ecrypt(this byte[] data, string password) => data.Ecrypt(password, SALT);
+        public static byte[] Ecrypt(this byte[] data, string password) => data.Ecrypt(password, __Salt);
 
 
         public static byte[] Ecrypt(this byte[] data, string password, byte[] Salt)
@@ -301,7 +300,7 @@ namespace System
         /// <summary>
         /// Массив байт - "соль" алгоритма шифрования Rfc2898
         /// </summary>
-        private static readonly byte[] SALT =
+        private static readonly byte[] __Salt =
         {
             0x26, 0xdc, 0xff, 0x00,
             0xad, 0xed, 0x7a, 0xee,
@@ -364,7 +363,7 @@ namespace System
 
         public static bool IsDouble(this string str)
         {
-            if (str is not { Length: > 0 } || str[str.Length - 1] is '.' or ',')
+            if (str is not { Length: > 0 } || str[^1] is '.' or ',')
                 return false;
 
             var is_fraction = false;
@@ -382,5 +381,25 @@ namespace System
 
             return true;
         }
+
+        public static bool ContainsInvariant(this string str, string pattern) => str.IndexOf(pattern, StringComparison.InvariantCulture) >= 0;
+        public static bool ContainsInvariantIgnoreCase(this string str, string pattern) => str.IndexOf(pattern, StringComparison.InvariantCultureIgnoreCase) >= 0;
+        public static bool ContainsOrdinal(this string str, string pattern) => str.IndexOf(pattern, StringComparison.Ordinal) >= 0;
+        public static bool ContainsOrdinalIgnoreCase(this string str, string pattern) => str.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
+
+        public static bool EqualsInvariant(this string str, string other) => string.Equals(str, other, StringComparison.InvariantCulture);
+        public static bool EqualsInvariantIgnoreCase(this string str, string other) => string.Equals(str, other, StringComparison.InvariantCultureIgnoreCase);
+        public static bool EqualsOrdinal(this string str, string other) => string.Equals(str, other, StringComparison.Ordinal);
+        public static bool EqualsOrdinalIgnoreCase(this string str, string other) => string.Equals(str, other, StringComparison.OrdinalIgnoreCase);
+
+        public static bool StartWithInvariant(this string str, string other) => str.StartsWith(other, StringComparison.InvariantCulture);
+        public static bool StartWithInvariantIgnoreCase(this string str, string other) => str.StartsWith(other, StringComparison.InvariantCultureIgnoreCase);
+        public static bool StartWithOrdinal(this string str, string other) => str.StartsWith(other, StringComparison.Ordinal);
+        public static bool StartWithOrdinalIgnoreCase(this string str, string other) => str.StartsWith(other, StringComparison.OrdinalIgnoreCase);
+
+        public static bool EndWithInvariant(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCulture);
+        public static bool EndWithInvariantIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCultureIgnoreCase);
+        public static bool EndWithOrdinal(this string str, string other) => str.EndsWith(other, StringComparison.Ordinal);
+        public static bool EndWithOrdinalIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.OrdinalIgnoreCase);
     }
 }

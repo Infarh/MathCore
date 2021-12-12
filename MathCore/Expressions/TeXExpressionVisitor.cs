@@ -58,14 +58,14 @@ namespace System.Linq.Expressions
         protected override Expression VisitMember(MemberExpression node)
         {
             var strings = node.Member.Name.Split('.');
-            var name = strings[strings.Length - 1];
+            var name = strings[^1];
             _Result.Append(name);
             return node;
         }
 
         public override Expression Visit(Expression node)
         {
-            if (!(node is ConstantExpression constant)) return base.Visit(node);
+            if (node is not ConstantExpression constant) return base.Visit(node);
             _Result.Append(constant.Value);
             return Expression.Constant(constant.Value, constant.Type);
         }
@@ -73,7 +73,7 @@ namespace System.Linq.Expressions
         protected override Expression VisitParameter(ParameterExpression node)
         {
             var strings = node.Name.Split('.');
-            _Result.Append(strings[strings.Length - 1]);
+            _Result.Append(strings[^1]);
             return node;
         }
 
@@ -167,12 +167,11 @@ namespace System.Linq.Expressions
 
         // Метод, реализующий получение строкового представления полученного выражения
         [NotNull]
-        private string GenerateTeXExpressionImpl([CanBeNull] string ExpressionName, MultiplicationSign multiplicationSign)
+        private string GenerateTeXExpressionImpl([CanBeNull] string ExpressionName, MultiplicationSign MultiplicationSign)
         {
-            switch (multiplicationSign)
+            switch (MultiplicationSign)
             {
                 case MultiplicationSign.Times:
-                    // ReSharper disable once StringLiteralTypo
                     _Result.Replace("*", @" \times ");
                     break;
                 case MultiplicationSign.None:
@@ -184,11 +183,11 @@ namespace System.Linq.Expressions
 
             // Полученное выражение содержит избыточные круглые скобки, которые следует убрать
             if (tex_expression.Length > 0)
-                if (tex_expression[0] == '(' && tex_expression[tex_expression.Length - 1] == ')')
-                    tex_expression = tex_expression.Substring(1, tex_expression.Length - 2);
+                if (tex_expression[0] == '(' && tex_expression[^1] == ')')
+                    tex_expression = tex_expression[1..^1];
 
             // Добавляем "имя выражения" если оно указано
-            return !string.IsNullOrEmpty(ExpressionName)
+            return ExpressionName is { Length: > 0 }
                 ? $"{{{ExpressionName}}}{{=}}{tex_expression}"
                 : tex_expression;
         }

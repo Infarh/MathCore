@@ -18,7 +18,7 @@ namespace System.Collections.Generic
             switch (collection)
             {
                 default:
-                    items.Foreach(collection.Add);
+                    items.Foreach(item => collection.Add(item));
                     break;
                 case List<T> list:
                     list.AddRange(items);
@@ -51,8 +51,28 @@ namespace System.Collections.Generic
         /// <returns>Перечисление результатов удаления элементов</returns>
         public static void RemoveItems<T>([NotNull] this ICollection<T> collection, [NotNull] IEnumerable<T> items)
         {
-            foreach (var item in items)
-                collection.Remove(item);
+            switch (items)
+            {
+                default:
+                    foreach (var item in items)
+                        collection.Remove(item);
+                    break;
+
+                case T[] list:
+                    foreach (var item in list)
+                        collection.Remove(item);
+                    break;
+
+                case List<T> list:
+                    foreach (var item in list)
+                        collection.Remove(item);
+                    break;
+
+                case IList<T> list:
+                    foreach (var item in list)
+                        collection.Remove(item);
+                    break;
+            }
         }
     }
 }

@@ -620,9 +620,9 @@ namespace MathCore
                     throw new ArgumentException(@"Обратная матрица существует только для квадратной матрицы", nameof(matrix));
 
                 var result = GetUnitaryArrayMatrix(N);
-                if (!TrySolve(matrix, ref result, out p))
-                    throw new InvalidOperationException(@"Невозможно найти обратную матрицу для вырожденной матрицы");
-                return result;
+                return TrySolve(matrix, ref result, out p)
+                    ? result
+                    : throw new InvalidOperationException(@"Невозможно найти обратную матрицу для вырожденной матрицы");
             }
 
             /// <summary>Получить обратную матрицу</summary>
@@ -678,7 +678,6 @@ namespace MathCore
             /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
             public static void Solve([NotNull] double[,] matrix, [NotNull] ref double[,] b, [NotNull] out double[,] p, bool clone_b = false)
             {
-
                 if (!TrySolve(matrix, ref b, out p, clone_b))
                     throw new InvalidOperationException("Невозможно найти обратную матрицу для вырожденной матрицы");
             }
@@ -706,16 +705,16 @@ namespace MathCore
 
                 var temp_b = b.CloneObject();
                 Triangulate(ref matrix, ref temp_b, out p, out var d);
-                if (d.Equals(0d)) return false;
+                if (d == 0) return false;
                 GetColsCount(b, out var b_M);
 
                 GetLength(matrix, out var N, out var M);
                 for (var i0 = Math.Min(N, M) - 1; i0 >= 0; i0--)
                 {
                     var m = matrix[i0, i0];
-                    if (!m.Equals(1d)) for (var j = 0; j < b_M; j++) temp_b[i0, j] /= m;
+                    if (m != 1) for (var j = 0; j < b_M; j++) temp_b[i0, j] /= m;
                     for (var i = i0 - 1; i >= 0; i--)
-                        if (!matrix[i, i0].Equals(0d))
+                        if (matrix[i, i0] != 0)
                         {
                             var k = matrix[i, i0];
                             matrix[i, i0] = 0d;
@@ -1477,7 +1476,6 @@ namespace MathCore
                 bool clone_b = true
             )
             {
-
                 GetLength(matrix, out var N, out var M);
                 if (b is null)
                     throw new ArgumentNullException(nameof(b));
@@ -1495,17 +1493,18 @@ namespace MathCore
                 var N1 = Math.Min(N, M);
                 for (var i0 = 0; i0 < N1; i0++)
                 {
-                    if (matrix[i0, i0].Equals(0d))
+                    if (matrix[i0, i0] == 0)
                     {
                         var max = 0d;
                         var max_index = -1;
                         for (var i1 = i0 + 1; i1 < N; i1++)
                         {
                             var abs = Math.Abs(matrix[i1, i0]);
-                            if (abs <= max)
-                                continue;
-                            max = abs;
-                            max_index = i1;
+                            if (abs > max)
+                            {
+                                max = abs;
+                                max_index = i1;
+                            }
                         }
 
                         if (max_index < 0)
@@ -1531,7 +1530,7 @@ namespace MathCore
 
                     //Нормируем строку основной матрицы по первому элементу
                     for (var i = i0 + 1; i < N; i++)
-                        if (!matrix[i, i0].Equals(0d))
+                        if (matrix[i, i0] != 0)
                         {
                             var k = matrix[i, i0] / main;
                             matrix[i, i0] = 0d;
