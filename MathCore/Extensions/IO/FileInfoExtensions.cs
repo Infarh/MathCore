@@ -265,9 +265,9 @@ namespace System.IO
         /// <returns>Объект наблюдатель</returns>
         public static FileSystemWatcher GetWatcher(this FileInfo file) => new(file.Directory.NotNull().FullName, file.Name);
 
-        public static Process Execute(string File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute }).NotNull();
+        public static Process? Execute(string File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute });
 
-        public static Process Execute(this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute }).NotNull();
+        public static Process? Execute(this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute });
 
 
         public static Process? ShowInExplorer(this FileSystemInfo File) => Process.Start("explorer", $"/select,\"{File.FullName}\"");
