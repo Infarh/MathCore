@@ -1024,7 +1024,11 @@ namespace MathCore
             /// <returns>Истина, если операция выполнена успешно</returns>
             /// <exception cref="ArgumentException">Матрица не квадратная</exception>
             /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу matrix</exception>
-            public static bool GetLUPDecomposition([NotNull] double[,] matrix, [CanBeNull] out double[,] c, [CanBeNull] out double[,] p, out double d)
+            public static bool GetLUPDecomposition(
+                [NotNull] double[,] matrix,
+                [CanBeNull] out double[,] c,
+                [CanBeNull] out double[,] p, 
+                out double d)
             {
                 GetRowsCount(matrix, out var N);
                 if (N != matrix.GetLength(1))

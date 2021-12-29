@@ -265,13 +265,28 @@ namespace System.IO
         /// <returns>Объект наблюдатель</returns>
         public static FileSystemWatcher GetWatcher(this FileInfo file) => new(file.Directory.NotNull().FullName, file.Name);
 
+        /// <summary>Запустить процесс в ОС на основе указанного файла</summary>
+        /// <param name="File">Путь к запускаемому файлу</param>
+        /// <param name="Args">Аргументы командной строки</param>
+        /// <param name="UseShellExecute">Заставить ОС определить требуемый способ запуска</param>
+        /// <returns>Созданный в ОС процесс в случае успеха операции и <c>null</c> в противном случае</returns>
         public static Process? Execute(string File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(File, Args) { UseShellExecute = UseShellExecute });
 
+        /// <summary>Запустить процесс в ОС на основе указанного файла</summary>
+        /// <param name="File">Файл для запуска</param>
+        /// <param name="Args">Аргументы командной строки</param>
+        /// <param name="UseShellExecute">Заставить ОС определить требуемый способ запуска</param>
+        /// <returns>Созданный в ОС процесс в случае успеха операции и <c>null</c> в противном случае</returns>
         public static Process? Execute(this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute });
 
-
+        /// <summary>Показать файл в проводнике Windows</summary>
+        /// <param name="File">Файл для отображения</param>
+        /// <returns>Процесс проводника, отображающий файл</returns>
         public static Process? ShowInExplorer(this FileSystemInfo File) => Process.Start("explorer", $"/select,\"{File.FullName}\"");
 
+        /// <summary>Получить перечисление строк файла без его загрузки в память целиком</summary>
+        /// <param name="File">Файл, строки которого требуется прочитать</param>
+        /// <returns>Перечисление строк файла</returns>
         public static IEnumerable<string?> GetStringLines(this FileInfo File)
         {
             using var reader = File.OpenText();
@@ -279,6 +294,10 @@ namespace System.IO
                 yield return reader.ReadLine();
         }
 
+        /// <summary>Получить перечисление строк файла в указанной кодировке без его загрузки в память целиком</summary>
+        /// <param name="File">Файл, строки которого требуется прочитать</param>
+        /// <param name="encoding">Кодировка</param>
+        /// <returns>Перечисление строк файла</returns>
         public static IEnumerable<string?> GetStringLines(this FileInfo File, Encoding encoding)
         {
             using var reader = new StreamReader(File.FullName, encoding);
@@ -286,22 +305,39 @@ namespace System.IO
                 yield return reader.ReadLine();
         }
 
-        public static void Append(this FileInfo file, string Text)
+        /// <summary>Добавить текст в конец файла</summary>
+        /// <param name="file">Файл</param>
+        /// <param name="Text">Добавляемый текст</param>
+        public static FileInfo Append(this FileInfo file, string Text)
         {
             using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read));
             writer.Write(Text);
+            return file;
         }
 
-        public static void AppendLine(this FileInfo file, string Text)
+        /// <summary>Добавить текст в конец файла</summary>
+        /// <param name="file">Файл</param>
+        /// <param name="Text">Добавляемый текст</param>
+        /// <param name="encoding">Кодировка</param>
+        public static FileInfo Append(this FileInfo file, string Text, Encoding encoding)
+        {
+            using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read), encoding);
+            writer.Write(Text);
+            return file;
+        }
+
+        public static FileInfo AppendLine(this FileInfo file, string Text)
         {
             using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read));
             writer.WriteLine(Text);
+            return file;
         }
 
-        public static void Append(this FileInfo file, byte[] buffer)
+        public static FileInfo Append(this FileInfo file, byte[] buffer)
         {
             using var writer = new StreamWriter(file.Open(FileMode.Append, FileAccess.Write, FileShare.Read));
             writer.Write(buffer);
+            return file;
         }
 
         public static FileStream Append(this FileInfo File) => File.Open(FileMode.Append, FileAccess.Write);

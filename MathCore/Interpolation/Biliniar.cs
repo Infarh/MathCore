@@ -51,21 +51,66 @@ public class Biliniar : Interpolator
         var i = Array.BinarySearch(X, x);
         var j = Array.BinarySearch(Y, y);
 
-        var (i1, i2) = i > 0 ? (i, i) : (~i - 1, ~i);
-        var (j1, j2) = j > 0 ? (j, j) : (~j - 1, ~j);
+        if (i > 0)
+        {
+            if (j > 0) return Z[i, j];
 
-        var (x1, x2) = i > 0 ? (X[i], X[i]) : (X[i1], X[i2]);
-        var (y1, y2) = i > 0 ? (Y[i], Y[i]) : (Y[j1], Y[j2]);
+            var z1 = Z[i, ~j - 1];
+            var z2 = Z[i, ~j];
+
+            var y_1 = Y[~j - 1];
+            var y_2 = Y[~j];
+            return Linear(y, y_1, z1, y_2, z2);
+        }
+
+        if (j > 0)
+        {
+            var z1 = Z[~i - 1, j];
+            var z2 = Z[~i, j];
+
+            var x_1 = X[~i - 1];
+            var x_2 = X[~i];
+            return Linear(x, x_1, z1, x_2, z2);
+        }
+
+        static void Index(int v, double[] V, out int prev, out int next, out double Prev, out double Next)
+        {
+            prev = ~v - 1;
+            next = ~v;
+            Prev = V[prev];
+            Next = V[next];
+        }
+
+        Index(i, X, out var i1, out var i2, out var x1, out var x2);
+        Index(j, Y, out var j1, out var j2, out var y1, out var y2);
+        //var (i1, i2) = (~i - 1, ~i);
+        //var (j1, j2) = (~j - 1, ~j);
+        //var (x1, x2) = (X[i1], X[i2]);
+        //var (y1, y2) = (Y[j1], Y[j2]);
 
         var z11 = Z[i1, j1];
         var z12 = Z[i1, j2];
         var z21 = Z[i2, j1];
+        var z22 = Z[i2, j2];
 
-        return Surface( 
-            x, y,
-            x1, y1, z11,
-            x1, y2, z12,
-            x2, y1, z21);
+        var x21 = x2 - x1;
+        var y21 = y2 - y1;
+        var x01 = x - x1;
+        var x02 = x2 - x;
+        var y01 = y - y1;
+        var y02 = y2 - y;
+
+        return 
+            z11 / x21 / y21 * x02 * y02 + 
+            z21 / x21 / y21 * x01 * y02 + 
+            z12 / x21 / y21 * x02 * y01 + 
+            z22 / x21 / y21 * x01 * y01;
+
+        //return Surface( 
+        //    x, y,
+        //    x1, y1, z11,
+        //    x1, y2, z12,
+        //    x2, y1, z21);
     }
 
     private readonly double[] _X;
