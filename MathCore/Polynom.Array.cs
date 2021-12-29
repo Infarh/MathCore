@@ -111,7 +111,6 @@ namespace MathCore
             /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
             /// <param name="Root">Корни полинома</param>
             /// <returns>Коэффициенты при степенях</returns>
-
             public static double[] GetCoefficients(params double[] Root)
             {
                 if (Root is null)
@@ -132,10 +131,87 @@ namespace MathCore
                     a[k] = a[k - 1];
                     for (var i = k - 1; i > 0; i--)
                         a[i] = a[i - 1] - a[i] * Root[k - 1];
-                    a[0] = -a[0] * Root[k - 1];
+                    a[0] *= -Root[k - 1];
                 }
 
                 return a;
+            }
+
+            /// <summary>Преобразовать последовательность корней полинома в коэффициенты при степенях</summary>
+            /// <param name="Root">Корни полинома</param>
+            /// <returns>Коэффициенты при степенях</returns>
+            public static double[] GetCoefficients(IEnumerable<double> Root)
+            {
+                if (Root is null)
+                    throw new ArgumentNullException(nameof(Root));
+
+                using var root = Root.GetEnumerator();
+                if (!root.MoveNext())
+                    throw new ArgumentException("Длина перечисления корней полинома должна быть больше 0", nameof(Root));
+
+                var a = new List<double> { -root.Current, 1 };
+
+                while (root.MoveNext())
+                {
+                    var r = root.Current;
+                    for (var i = a.Count - 1; i > 0; i--)
+                        a[i] = a[i - 1] - a[i] * r;
+                    a[0] *= -r;
+                    a.Add(1);
+                }
+
+                return a.ToArray();
+            }
+
+            public static void GetCoefficients(IEnumerable<double> Root, IList<double> Coefficients)
+            {
+                if (Root is null)
+                    throw new ArgumentNullException(nameof(Root));
+
+                if (Coefficients.IsReadOnly)
+                    throw new ArgumentException("Список коэффициентов невозможно изменить", nameof(CommandLineArgs))
+                    {
+                        Data =
+                        {
+                            { "CoefficientsType", Coefficients.GetType() }
+                        }
+                    };
+
+                using var root = Root.GetEnumerator();
+                if (!root.MoveNext())
+                    throw new ArgumentException("Длина перечисления корней полинома должна быть больше 0", nameof(Root));
+
+                switch (Coefficients.Count)
+                {
+                    default:
+                        Coefficients.Clear();
+                        goto case 0;
+                    case 0:
+                        Coefficients.Add(-root.Current);
+                        Coefficients.Add(1);
+                        break;
+                    case 2:
+                        Coefficients[0] = -root.Current;
+                        Coefficients[1] = 1;
+                        break;
+                }
+
+                if (Coefficients.Count > 0)
+                    Coefficients.Clear();
+
+                Coefficients.Add(-root.Current);
+                Coefficients.Add(1);
+
+                while (root.MoveNext())
+                {
+
+                    var r = root.Current;
+                    for (var i = Coefficients.Count - 1; i > 0; i--)
+                        Coefficients[i] = Coefficients[i - 1] - Coefficients[i] * r;
+                    Coefficients[0] *= -r;
+
+                    Coefficients.Add(1);
+                }
             }
 
             /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
