@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable RedundantArgumentDefaultValue
 
 namespace MathCore.Tests;
 
@@ -284,9 +285,27 @@ public class PolynomArrayTests
         Assert.IsFalse(ReferenceEquals(a, actual_differential));
     }
 
+    [TestMethod]
+    public void Differential_Test()
+    {
+        double[] a = { 3, 5, 7, 9, 12 };
+
+        var actual_differential_1 = (double[])a.Clone();
+        Polynom.Array.Differential(actual_differential_1, 1);
+
+        double[] expected_differential_1 = { 5, 14, 27, 48, 0 };
+
+        Assert.That.Collection(actual_differential_1).IsEqualTo(expected_differential_1);
+
+        var actual_differential_3 = (double[])a.Clone();
+        Polynom.Array.Differential(actual_differential_3, 3);
+
+        double[] expected_differential_3 = { 54, 288, 0, 0, 0 };
+        Assert.That.Collection(actual_differential_3).IsEqualTo(expected_differential_3);
+    }
+
     [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-    public void GetDifferential_ArgumentNullException_Test() => Polynom.Array.GetDifferential((double[])null);
+    public void GetDifferential_ArgumentNullException_Test() => Polynom.Array.GetDifferential(((double[])null!)!);
 
     [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void GetDifferential_ArgumentOutOfRangeException_Test() => Polynom.Array.GetDifferential(new double[5], -1);
@@ -330,9 +349,20 @@ public class PolynomArrayTests
         CollectionAssert.AreEqual(expected_integral, integral);
     }
 
+    [TestMethod]
+    public void Integral_Test()
+    {
+        double[] a = { 18, 30, 42, 0 };
+        const int c = 17;
+
+        Polynom.Array.Integral(a, c);
+        double[] expected_integral = { c, 18, 15, 14 };
+
+        CollectionAssert.AreEqual(expected_integral, a);
+    }
+
     [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-    public void GetIntegral_Exceptions_Test() => Polynom.Array.GetIntegral((double[])null);
+    public void GetIntegral_Exceptions_Test() => Polynom.Array.GetIntegral(((double[])null)!);
 
     [TestMethod]
     public void GetIntegral_Complex_Test()

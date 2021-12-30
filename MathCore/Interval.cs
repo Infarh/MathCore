@@ -313,6 +313,27 @@ namespace MathCore
     {
         /* -------------------------------------------------------------------------------------------- */
 
+        public static IEnumerable<double> Range(double Min, double Max, double Step)
+        {
+            if (Min > Max)
+                throw new InvalidOperationException("Минимум должен быть меньше максимума");
+            if (Step == 0)
+                throw new ArgumentException("Шаг не может быть равен 0", nameof(Step));
+            if (Step < 0)
+                throw new ArgumentOutOfRangeException(nameof(Step), Step, "Шаг не может быть меньше 0");
+
+            while (Min <= Max)
+            {
+                yield return Min;
+                Min += Step;
+            }
+        }
+
+        public static IEnumerable<double> RangeN(double Min, double Max, int Count) => 
+            Range(Min, Max, (Max - Min) / (Count - 1));
+
+        /* -------------------------------------------------------------------------------------------- */
+
         /// <summary>Метод сравнения двух интервалов</summary>
         /// <param name="a">Первый сравниваемый интервал</param>
         /// <param name="b">Второй сравниваемый интервал</param>
