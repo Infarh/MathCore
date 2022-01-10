@@ -755,8 +755,6 @@ public partial class Polynom
 
         public static double GetDifferentialValue(double x, double[] p, int Order = 1)
         {
-            //var k = Order.Factorial();
-
             var k = p.Length - 1;
             for (var i = 2; i <= Order; i++) 
                 k *= p.Length - i;
@@ -764,11 +762,7 @@ public partial class Polynom
             var result = 0d;
             for (var i = p.Length - 1; i >= Order; i--)
             {
-                var a = p[i];
-                var aa = a * k;
-
-                result = result * x + aa;
-
+                result = result * x + p[i] * k;
                 k = k / i * (i - Order);
             }
 
