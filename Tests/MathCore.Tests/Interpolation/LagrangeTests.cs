@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 using MathCore.Interpolation;
@@ -26,9 +27,22 @@ public class LagrangeTests
 
         var yy = X.ToArray(polynom.Value);
 
-        var delta = Y.Zip(yy, (y0, y1) => y0 - y1).ToArray();
-        var error = delta.Sum(v => v.Pow2() / 2).Sqrt();
+        var delta = Y.Zip(yy, (y0, y1) => y0 - y1);
+        var error = delta.Sum(v => v.Pow2()) / (Y.Length + 1);
 
-        Assert.That.Value(error).LessThan(1.06e-014);
+        Assert.That.Value(error).LessThan(2.00e-4, 6.36e-007);
+    }
+
+    [TestMethod]
+    public void Integral()
+    {
+        static double f(double x) => Cos(x) * Sqrt(x);
+
+        var x = Interval.Range(0, 10, 1).ToArray();
+        var y = x.ToArray(f);
+
+        var p = Lagrange.Integral(x, y, 2, 6);
+
+        Debug.WriteLine(p);
     }
 }

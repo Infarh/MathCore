@@ -42,12 +42,12 @@ namespace System
         public static Complex Power(this int x, Complex z) => x ^ z;
 
         /// <summary>Факторизация целого числа</summary>
-        /// <param name="n">Раскладываемое число</param>
+        /// <param name="N">Раскладываемое число</param>
         /// <returns>Последовательность простых чисел составляющих раскладываемое число</returns>
-        public static IEnumerable<int> FactorizationEnum(this int n)
+        public static IEnumerable<int> FactorizationEnum(this int N)
         {
-            if(n < 0) n = -n;
-            if(n <= 1) yield break;
+            var n = Math.Abs(N);
+            if(n == 1) yield break;
 
             // пока число четное
             while((n & 1) == 0)
@@ -55,6 +55,7 @@ namespace System
                 n >>= 1;
                 yield return 2;
             }
+
             //как только кончились двойки в числе, переходим к 3 и далее по списку простых чисел
             var d = 3; // текущий делитель
             while(n != 1)
@@ -70,14 +71,14 @@ namespace System
         }
 
         /// <summary>Разложение числа на простые множители</summary>
-        /// <param name="n">Раскладываемое число</param>
+        /// <param name="N">Раскладываемое число</param>
         /// <returns>Массив простых множителей</returns>
         //[Copyright("Alexandr A Alexeev 2011", url = "http://eax.me")]
         [NotNull]
-        public static int[] FactorizationList(this int n)
+        public static int[] FactorizationList(this int N)
         {
-            if(n < 0) n = -n;
-            if(n <= 1) return Array.Empty<int>();
+            var n = Math.Abs(N);
+            if (n == 1) return Array.Empty<int>();
 
             var result = new List<int>();
             // пока число четное
@@ -102,14 +103,14 @@ namespace System
         }
 
         /// <summary>Разложение числа на простые множители</summary>
-        /// <param name="n">Раскладываемое число</param>
+        /// <param name="N">Раскладываемое число</param>
         /// <returns>Словарь с делителями числа - значение элементов словаря - кратность делителя</returns>
         [NotNull]
-        public static Dictionary<int, int> Factorization(this int n)
+        public static Dictionary<int, int> Factorization(this int N)
         {
+            var n = Math.Abs(N);
             var result = new Dictionary<int, int>();
-
-            if(n <= 1) return result;
+            if(n == 1) return result;
 
             result.Add(2, 0);
             // пока число четное
@@ -138,28 +139,29 @@ namespace System
         }
 
         /// <summary>Проверка - является ли число простым?</summary>
-        /// <param name="n">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число простое</returns>
         [DST]
-        public static bool IsPrime(this int n)
+        public static bool IsPrime(this int N)
         {
-            if(n < 0) n = -n;
-            if(n % 2 == 0) return n == 2;
+            var n = Math.Abs(N);
+            if (n % 2 == 0) return n == 2;
 
             var max = (int)Math.Sqrt(n);
 
-            for(var i = 3; i <= max; i += 2) if(n % i == 0) return false;
+            for(var i = 3; i <= max; i += 2) 
+                if(n % i == 0)
+                    return false;
             return true;
         }
 
-
         /// <summary>Является ли число степенью двойки?</summary>
-        /// <param name="n">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         [DST]
-        public static bool IsPowerOf2(this int n)
+        public static bool IsPowerOf2(this int N)
         {
-            if(n < 0) n = -n;
+            var n = Math.Abs(N);
             return (n & (n - 1)) == 0 || n == 1;
         }
 
@@ -199,14 +201,14 @@ namespace System
         [DST]
         public static int BitReversing(this int x, int N)
         {
-            var Result = 0;
+            var result = 0;
             for(var i = 0; i < N; i++)
             {
-                Result <<= 1;
-                Result += x & 1;
+                result <<= 1;
+                result += x & 1;
                 x >>= 1;
             }
-            return Result;
+            return result;
         }
 
         /// <summary>Реверсирование всех 32 бит числа</summary>
@@ -236,15 +238,32 @@ namespace System
         public static int GetAbs(this int x) => Math.Abs(x);
 
         /// <summary>Наибольший общий делитель</summary>
-        /// <param name="Y">Первое число</param>
-        /// <param name="X">Второе число</param>
+        /// <param name="a">Первое число</param>
+        /// <param name="b">Второе число</param>
         /// <returns>Наибольший общий делитель</returns>
         [DST]
-        public static int GetNOD(this int Y, int X)
-        {
-            while(X != Y) if(X < Y) Y -= X; else X -= Y;
-            return X;
-        }
+        public static int GetNOD(this int a, int b) => Fraction.GCD(a, b);
+
+        /// <summary>Наибольший общий делитель</summary>
+        /// <param name="a">Первое число</param>
+        /// <param name="b">Второе число</param>
+        /// <returns>Наибольший общий делитель</returns>
+        [DST]
+        public static long GetNOD(this long a, long b) => Fraction.GCD(a, b);
+
+        /// <summary>Наибольший общий делитель</summary>
+        /// <param name="a">Первое число</param>
+        /// <param name="b">Второе число</param>
+        /// <returns>Наибольший общий делитель</returns>
+        [DST]
+        public static ulong GetNOD(this ulong a, ulong b) => Fraction.GCD(a, b);
+
+        /// <summary>Наибольший общий делитель</summary>
+        /// <param name="a">Первое число</param>
+        /// <param name="b">Второе число</param>
+        /// <returns>Наибольший общий делитель</returns>
+        [DST]
+        public static BigInteger GetNOD(this BigInteger a, BigInteger b) => Fraction.GCD(a, b);
 
         /// <summary>Является ли число нечётным</summary>
         /// <param name="x">Проверяемое число</param>
@@ -258,47 +277,135 @@ namespace System
         [DST]
         public static bool IsEven(this int x) => x.IsDeviatedTo(2);
 
-        /// <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
-        /// <param name="n">Исходное число</param>
+        /// <summary>Факториал целого числа от 0 до 20</summary>
+        /// <param name="n">Исходное число в пределах от 0 до 20</param>
+        /// <exception cref="ArgumentOutOfRangeException">При 0 &gt; <paramref name="n"/> &gt; 20</exception>
         /// <returns>Факториал числа</returns>
         [DST]
-        public static long Factorial(this int n)
+        public static long Factorial(this int n) => n switch
         {
-            if(n < 0) return (long)SpecialFunctions.Gamma.G(n);
+            0 => 1,
+            1 => 1,
+            2 => 2,
+            3 => 6,
+            4 => 24,
+            5 => 120,
+            6 => 720,
+            7 => 5040,
+            8 => 40320,
+            9 => 362880,
+            10 => 3628800,
+            11 => 39916800,
+            12 => 479001600,
+            13 => 6227020800,
+            14 => 87178291200,
+            15 => 1307674368000,
+            16 => 20922789888000,
+            17 => 355687428096000,
+            18 => 6402373705728000,
+            19 => 121645100408832000,
+            20 => 2432902008176640000,
+            //21 => 51090942171709440000,   // <- Тут начинается переполнение long
+            //22 => 1124000727777607680000,
+            //23 => 25852016738884976640000,
+            //24 => 620448401733239439360000,
+            //25 => 15511210043330985984000000,
+            //26 => 403291461126605635584000000,
+            //27 => 10888869450418352160768000000,
+            //28 => 304888344611713860501504000000,
+            //29 => 8841761993739701954543616000000,
+            //30 => 265252859812191058636308480000000,
+            < 0 => throw new ArgumentOutOfRangeException(nameof(n), n, "Значение должно быть неотрицательным"),
+            _ => throw new ArgumentOutOfRangeException(nameof(n), n, "Вычисление факториала возможно лишь до значения n <= 20")
+        };
 
-            if(n > 40)
-            {
-                var sqrt = Math.Sqrt(Consts.pi2 * n);
-                var truncate = Math.Pow(n / Math.E, n);
+        //private static readonly long[] __Factorial =
+        //{
+        //    /*  0 */ 1,
+        //    /*  1 */ 1,
+        //    /*  2 */ 2,
+        //    /*  3 */ 6,
+        //    /*  4 */ 24,
+        //    /*  5 */ 120,
+        //    /*  6 */ 720,
+        //    /*  7 */ 5040,
+        //    /*  8 */ 40320,
+        //    /*  9 */ 362880,
+        //    /* 10 */ 3628800,
+        //    /* 11 */ 39916800,
+        //    /* 12 */ 479001600,
+        //    /* 13 */ 6227020800,
+        //    /* 14 */ 87178291200,
+        //    /* 15 */ 1307674368000,
+        //    /* 16 */ 20922789888000,
+        //    /* 17 */ 355687428096000,
+        //    /* 18 */ 6402373705728000,
+        //    /* 19 */ 121645100408832000,
+        //    /* 20 */ 2432902008176640000,
+        //    // /* 21 */ 51090942171709440000,   // <- Тут начинается переполнение long
+        //    // /* 22 */ 1124000727777607680000,
+        //    // /* 23 */ 25852016738884976640000,
+        //    // /* 24 */ 620448401733239439360000,
+        //    // /* 25 */ 15511210043330985984000000,
+        //    // /* 26 */ 403291461126605635584000000,
+        //    // /* 27 */ 10888869450418352160768000000,
+        //    // /* 28 */ 304888344611713860501504000000,
+        //    // /* 29 */ 8841761993739701954543616000000,
+        //    // /* 30 */ 265252859812191058636308480000000,
+        //};
 
-                var r1 = new[]
-                {
-                    1,
-                    1d / (12 * n),
-                    1d / (288 * n * n),
-                    139d / (51840 * n * n * n)
-                };
+        ///// <summary>Факториал целого числа от 0 до 20</summary>
+        ///// <param name="n">Исходное число в пределах от 0 до 20</param>
+        ///// <exception cref="ArgumentOutOfRangeException">При <paramref name="n"/> &lt; 0</exception>
+        ///// <exception cref="OverflowException">При <paramref name="n"/> &gt; 20</exception>
+        ///// <returns>Факториал числа</returns>
+        //[DST]
+        //public static long Factorial(this int n)
+        //{
+        //    //if(n < 0) return (long)SpecialFunctions.Gamma.G(n);
+        //    if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), "Значение должно быть неотрицательным") { Data = { { "n", n } } };
+        //    if (n < __Factorial.Length)
+        //        return __Factorial[n];
 
-                return (long)(sqrt * truncate * (r1[0] + r1[1] + r1[2] + r1[3]));
-            }
+        //    throw new OverflowException("Вычисление факториала возможно лишь до значения n == 20") { Data = { { "n", n } } };
 
-            long result = n == 0 ? 1 : n;
-            while(n > 1) result *= --n;
-            return result;
-        }
+        //    //if(n > 40)
+        //    //{
+        //    //    var sqrt = Math.Sqrt(Consts.pi2 * n);
+        //    //    var truncate = Math.Pow(n / Math.E, n);
+
+        //    //    var r1 = new[]
+        //    //    {
+        //    //        1,
+        //    //        1d / (12 * n),
+        //    //        1d / (288 * n * n),
+        //    //        139d / (51840 * n * n * n)
+        //    //    };
+
+        //    //    return (long)(sqrt * truncate * (r1[0] + r1[1] + r1[2] + r1[3]));
+        //    //}
+
+        //    //long result = n == 0 ? 1 : n;
+        //    //while(n > 1) result *= --n;
+        //    //return result;
+        //}
 
         /// <summary>Факториал целого числа >= 0 и значение Г-функции для отрицательных значений</summary>
         /// <param name="n">Исходное число</param>
+        /// <exception cref="ArgumentOutOfRangeException">При <paramref name="n"/> &lt; 0</exception>
         /// <returns>Факториал числа</returns>
         [DST]
         public static BigInteger FactorialBigInt(this int n)
         {
-            if (n < 0) return (long)SpecialFunctions.Gamma.G(n);
+            if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), "Значение должно быть неотрицательным") { Data = { { "n", n } } };
+            //if (n < 0) return (long)SpecialFunctions.Gamma.G(n);
 
             if (n <= 20) return n.Factorial();
 
-            var result = n == 0 ? 1 : n;
-            while (n > 1) result *= --n;
+            var result = new BigInteger(n);
+            for (var k = n; k > 1; k--)
+                result *= k;
+
             return result;
         }
 
@@ -309,13 +416,13 @@ namespace System
         [DST]
         public static int ToOctBase(this int n)
         {
-            var num = 0;
+            var y = 0;
             for(var i = 1; n != 0; i *= 10)
             {
-                num += (n % 8) * i;
+                y += (n % 8) * i;
                 n >>= 3;
             }
-            return num;
+            return y;
         }
 
         /// <summary>Приведение целого числа в 8 системе счисления к виду системы счисления по основанию 10</summary>
@@ -324,16 +431,16 @@ namespace System
         [DST]
         public static int FromOctalBase(this int x)
         {
-            var num = x % 10;
+            var n = x % 10;
             x /= 10;
             var b = 8;
             while(x != 0)
             {
-                num += (x % 10) * b;
+                n += (x % 10) * b;
                 b *= 8;
                 x /= 10;
             }
-            return num;
+            return n;
         }
 
         [NotNull]
@@ -349,18 +456,6 @@ namespace System
 
             return result;
         }
-
-        //[Obsolete("Используйте метод ToBase(Base:10)"), DST, NotNull]
-        //public static int[] GetDigits(this int x)
-        //{
-        //    var result = new List<int>(20);
-        //    while(x != 0)
-        //    {
-        //        result.Add(x % 10);
-        //        x /= 10;
-        //    }
-        //    return result.ToArray();
-        //}
 
         [DST]
         public static int GetFlags(this int Value, int Mask) => Value & Mask;
@@ -385,8 +480,8 @@ namespace System
             }
             else
             {
-                sign = (data[data.Length - 1] & 0x80) == 0x80;
-                for(var i = 0; (i + Offset) < data.Length; i++)
+                sign = (data[^1] & 0x80) == 0x80;
+                for(var i = 0; i + Offset < data.Length; i++)
                     result += data[i + Offset] << (i * 8);
             }
 
@@ -432,7 +527,6 @@ namespace System
                     result += data[i + Offset] << (i << 3);
                 }
 
-
             return result;
         }
 
@@ -446,14 +540,12 @@ namespace System
                     result += (uint)(data[i + Offset] << (i << 3));
                 }
 
-
             return result;
         }
 
-        [SuppressMessage("ReSharper", "ArrangeRedundantParentheses")]
         public static int FromComplementBinary(this int I, int BitCount = 16)
         {
-            var sign = (I >> (BitCount - 1)) == 1;
+            var sign = I >> (BitCount - 1) == 1;
             var mask = (1 << (BitCount - 1)) - 1;
             var x = ((~((long)(I & mask) - 1)) & mask) * (sign ? -1 : 1);
             return (int)x;

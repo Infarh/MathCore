@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System;
-using System.Drawing;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -110,6 +110,76 @@ public class Lagrange : Interpolator, IInterpolator
         }
     }
 
+    public static double Integral(double[] X, double[] Y, double a, double b)
+    {
+        var p = GetPolynom(X, Y);
+        var I = p.GetIntegral();
+        
+        var count = X.Length;
+        var c = new double[count];
+        var C = new double[count];
+
+        var ia = 0d;
+        var ib = 0d;
+
+        for (int i = 0, j = 0, k = 1; i < count; i++, j = 0, k = 1) // По всем y из Y
+        {
+            c[0] = 1;
+
+            var d = 1d;
+            var xi = X[i];
+            for (; j < i; j++, k++)
+            {
+                var x = X[j];
+                for (var n = k - 1; n > 0; n--)
+                    c[n] = c[n - 1] - c[n] * x;
+                c[0] *= -x;
+                c[k] = 1;
+                d *= xi - x;
+            }
+
+            for (j++; j < count; j++, k++)
+            {
+                var x = X[j];
+                for (var n = k - 1; n > 0; n--)
+                    c[n] = c[n - 1] - c[n] * x;
+                c[0] *= -x;
+                c[k] = 1;
+                d *= xi - x;
+            }
+
+            var q = Y[i] / d;
+            var c_c = new Polynom(c.Select(t => t * q));
+            var c_i = c_c.GetIntegral();
+
+            for (var n = 0; n < count; n++) 
+                C[n] += c[n] * q / (n + 1);
+
+            var ya = c[^1] * q;
+            var yb = ya;
+            for (var n = count - 2; n >= 0; n--)
+            {
+                var cnd = c[n] * q / (n + 1);
+                ya = ya * a + cnd;
+                yb = yb * b + cnd;
+            }
+
+            var c_v_a = c_i.Value(a);
+            var c_v_b = c_i.Value(b);
+
+            ia += ya * a;
+            ib += yb * b;
+        }
+
+        var IB = I.Value(b);
+        var IA = I.Value(a);
+
+        var r = ib - ia;
+        var result = IB - IA;
+
+        return result;
+    }
+
     /* ------------------------------------------------------------------------------------------ */
 
     public event EventHandler OnInitialized;
@@ -123,6 +193,7 @@ public class Lagrange : Interpolator, IInterpolator
 
     /* ------------------------------------------------------------------------------------------ */
 
+    // ReSharper disable once AsyncApostle.AsyncWait
     public Polynom Polynom => _PolynomTask.Result;
 
     public bool Initialized => _PolynomTask.Status == TaskStatus.RanToCompletion;

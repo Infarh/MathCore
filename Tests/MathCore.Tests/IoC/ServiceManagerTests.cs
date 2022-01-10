@@ -269,15 +269,18 @@ namespace MathCore.Tests.IoC
         }
 
         [TestMethod]
-        public void ServiceRegistration_SingletonByThread_Simple()
+        public async Task ServiceRegistration_SingletonByThread_Simple()
         {
             var service_manager = new ServiceManager();
 
             service_manager.Register<Service_GetHashCode>(ServiceRegistrationMode.SingleThread);
 
             var instance = service_manager.Get<Service_GetHashCode>();
-            Service_GetHashCode instance2 = null;
-            Task.Run(() => instance2 = service_manager.Get<Service_GetHashCode>()).Wait();
+
+            await Task.Yield().ConfigureAwait(false);
+
+            var instance2 = service_manager.Get<Service_GetHashCode>();
+
             Assert.IsNotNull(instance2);
             Assert.IsFalse(ReferenceEquals(instance, instance2));
             Assert.AreNotEqual(instance, instance2);

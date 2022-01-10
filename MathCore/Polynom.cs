@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -147,7 +149,6 @@ namespace MathCore
                     _a[0] < 0 ? string.Empty : "+",
                     _a[0]);
 
-
             return result.Length == 0 ? "0" : result.ToString();
         }
 
@@ -155,12 +156,28 @@ namespace MathCore
         /// <param name="Order">Порядок дифференциала</param>
         /// <returns>Полином - результат дифференцирования</returns>
         [NotNull]
-        public Polynom GetDifferential(int Order = 1) => new(Array.GetDifferential(_a, Order));
+        public Polynom GetDifferential(int Order = 1)
+        {
+            var coefficients = Array.GetDifferential(_a, Order);
+            var zerros = 0;
+            while (zerros < coefficients.Length)
+            {
+                if (coefficients[coefficients.Length - 1 - zerros] != 0)
+                    break;
+                zerros++;
+            }
+
+            if (zerros > 0)
+                System.Array.Resize(ref coefficients, coefficients.Length - zerros);
+
+            return new(coefficients);
+        }
 
         /// <summary>Интегрирование полинома</summary>
         /// <param name="C">Константа интегрирования</param>
+        /// <param name="Order">Кратность интеграла</param>
         /// <returns>Полином - результат интегрирования полинома</returns>
-        [NotNull] public Polynom GetIntegral(double C = 0) => new(Array.GetIntegral(_a, C));
+        [NotNull] public Polynom GetIntegral(double C = 0, int Order = 1) => new(Array.GetIntegral(_a, C, Order));
 
         /// <summary>Вычислить обратный полином</summary>
         /// <returns>Полином, являющийся обратным к текущим</returns>

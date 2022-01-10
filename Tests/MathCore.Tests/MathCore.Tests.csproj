@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="System"/>
+    <Using Include="System.Linq"/>
+    <Using Include="System.Collections.Generic"/>
+    <Using Include="System.Threading.Tasks"/>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include=".Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
