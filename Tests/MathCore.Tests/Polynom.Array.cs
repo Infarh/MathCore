@@ -43,23 +43,12 @@ public class PolynomArray
     #endregion
 
     [TestMethod, ExpectedException(typeof(ArgumentNullException))]
-    public void GetValue_Throw_ArgumentNullException()
+    public void GetValue_doubleX_doubleA_Throw_ArgumentNullException()
     {
         const double x = 0;
         double[] a = null;
         Polynom.Array.GetValue(x, a!);
     }
-
-    //[TestMethod]
-    //public void GetValue_return_NaN()
-    //{
-    //    const double x = 0;
-    //    double[] a = { };
-
-    //    var y = Polynom.Array.GetValue(x, a);
-
-    //    Assert.That.Value(y).IsNaN();
-    //}
 
     [TestMethod]
     [DataRow(2d, new double[] { }, double.NaN, DisplayName = "NaN")]
@@ -73,100 +62,417 @@ public class PolynomArray
         Assert.That.Value(y).IsEqual(ExpectedY);
     }
 
-    public void GetValue()
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_doubleA_Throw_ArgumentNullException()
     {
-        double[] a = { 3, 5, 7 };
-
-        Assert.AreEqual(3, Polynom.Array.GetValue(0, a));
-        Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(1, a));
-        Assert.AreEqual(41, Polynom.Array.GetValue(2, a));
-        Assert.AreEqual(81, Polynom.Array.GetValue(3, a));
-
-        Assert.AreEqual(double.NaN, Polynom.Array.GetValue(10, Array.Empty<double>()));
+        Complex x = 0;
+        double[] a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetValue_Enumerable()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "p(2+0j):NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "p(2+0j)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "p(2+0j)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "p(2+0j)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "p(2+0j)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_ComplexX_doubleA(double X, double[] A, double ExpectedY)
     {
-        var a = Enumerable.Range(0, 3).Select(x => x * 2 + 3d).ToArray();
+        Complex Z = X;
+        var y = Polynom.Array.GetValue(Z, A);
+        Assert.That.Value(y).IsEqual(ExpectedY);
+    }
 
-        Assert.That.Value(Polynom.Array.GetValue(0, a)).IsEqual(3);
-        Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(1, a));
-        Assert.AreEqual(41, Polynom.Array.GetValue(2, a));
-        Assert.AreEqual(81, Polynom.Array.GetValue(3, a));
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_duobleX_ComplexA_Throw_ArgumentNullException()
+    {
+        const double x = 0;
+        Complex[] a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetValue_Enumerable_Exceptions()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "p(2+0j):NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "p(2+0j)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "p(2+0j)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "p(2+0j)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "p(2+0j)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_doubleX_ComplexA(double X, double[] A, double ExpectedY)
     {
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetValue(0, ((IEnumerable<double>)null!)!));
-        Assert.That.Value(exception.ParamName).IsEqual("A");
+        var a = A.ToArray(v => (Complex)v);
+        var y = Polynom.Array.GetValue(X, a);
+        Assert.That.Value(y).IsEqual(ExpectedY);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_ComplexA_Throw_ArgumentNullException()
+    {
+        Complex x = 0;
+        Complex[] a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetComplexValue()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "Complex p(2+0j):NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "Complex p(2+0j)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "Complex p(2+0j)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "Complex p(2+0j)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "Complex p(2+0j)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_ComplexX_ComplexA(double X, double[] A, double ExpectedY)
     {
-        double[] a = { 3, 5, 7 };
+        Complex Z = X;
+        var a = A.ToArray(v => (Complex)v);
+        var y = Polynom.Array.GetValue(Z, a);
+        Assert.That.Value(y).IsEqual(ExpectedY);
+    }
 
-        Assert.AreEqual(3, Polynom.Array.GetValue(new Complex(), a));
-        Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(new Complex(1), a));
-        Assert.AreEqual(41, Polynom.Array.GetValue(new Complex(2), a));
-        Assert.AreEqual(81, Polynom.Array.GetValue(new Complex(3), a));
+    /* ---------------------------------------------------------------------------- */
 
-        Assert.AreEqual(Complex.NaN, Polynom.Array.GetValue(new Complex(), Array.Empty<double>()));
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_doubleListA_Throw_ArgumentNullException()
+    {
+        const double x = 0;
+        IList<double> a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetValue_Complex_Enumerable()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "ListPolynom NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "ListPolynom p(2)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "ListPolynom p(2)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "ListPolynom p(2)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "ListPolynom p(2)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_doubleX_doubleListA(double X, double[] A, double ExpectedY)
     {
-        var a = Enumerable.Range(0, 3).Select(x => x * 2 + 3d);
+        var y = Polynom.Array.GetValue(X, (IList<double>)A);
+        Assert.That.Value(y).IsEqual(ExpectedY);
+    }
 
-        Assert.AreEqual(3, Polynom.Array.GetValue(new Complex(), a));
-        Assert.AreEqual(a.Sum(), Polynom.Array.GetValue(new Complex(1), a));
-        Assert.AreEqual(41, Polynom.Array.GetValue(new Complex(2), a));
-        Assert.AreEqual(81, Polynom.Array.GetValue(new Complex(3), a));
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_doubleListA_Throw_ArgumentNullException()
+    {
+        Complex x = 0;
+        IList<double> a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetValue_Complex_Enumerable_Exceptions()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "ListPolynom p(2+0j)=NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "ListPolynom p(2+0j)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "p(2+0j)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "ListPolynom p(2+0j)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "ListPolynom p(2+0j)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_ComplexX_doubleListA(double X, double[] A, double ExpectedY)
     {
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetValue(new Complex(), ((IEnumerable<double>)null)!));
-        Assert.That.Value(exception.ParamName).IsEqual("A");
+        var y = Polynom.Array.GetValue((Complex)X, (IList<double>)A);
+        Assert.That.Value(y).IsEqual(ExpectedY);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_ComplexListA_Throw_ArgumentNullException()
+    {
+        const double x = 0;
+        IList<Complex> a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetValue_With_Differential()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "ListComplexPolynom NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "ListComplexPolynom p(2)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "ListComplexPolynom p(2)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "ListComplexPolynom p(2)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "ListComplexPolynom p(2)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_doubleX_ComplexListA(double X, double[] A, double ExpectedY)
     {
-        double[] a = { 1, 3, 5, 7, 9 };
+        var y = Polynom.Array.GetValue(X, A.ToList(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(ExpectedY);
+    }
 
-        const double x = 1;
-
-        var y = Polynom.Array.GetValue(x, out var dy, a);
-
-        const double expected_y = 25;
-        const double expected_dy = 70;
-
-        Assert.That.Value(y).IsEqual(expected_y);
-        Assert.That.Value(dy).IsEqual(expected_dy);
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_ComplexListA_Throw_ArgumentNullException()
+    {
+        Complex x = 0;
+        IList<Complex> a = null;
+        Polynom.Array.GetValue(x, a!);
     }
 
     [TestMethod]
-    public void GetValue_With_Differential2()
+    [DataRow(2d, new double[] { }, double.NaN, DisplayName = "ListComplexPolynom p(2+0j)=NaN")]
+    [DataRow(2d, new double[] { 1 }, 1, DisplayName = "ListComplexPolynom p(2+0j)=1")]
+    [DataRow(2d, new double[] { 1, 2 }, 1 + 2d * 2, DisplayName = "ListComplexPolynom p(2+0j)=1+2x=5")]
+    [DataRow(2d, new double[] { 1, 2, 3 }, 1 + 2d * 2 + 3d * 2 * 2, DisplayName = "ListComplexPolynom p(2+0j)=1+2x+3x2=1+4+12=17")]
+    [DataRow(2d, new double[] { 1, 2, 3, 4 }, 1 + 2d * 2 + 3d * 2 * 2 + 4d * 2 * 2 * 2, DisplayName = "ListComplexPolynom p(2+0j)=1+2x+3x2+4x3=1+4+12+32=49")]
+    public void GetValue_ComplexX_ComplexListA(double X, double[] A, double ExpectedY)
     {
-        double[] a = { 1, 3, 5, 7, 9 };
-
-        const double x = 1;
-
-        var y = Polynom.Array.GetValue(x, out var dy, out var d2y, a);
-
-        const double expected_y = 25;
-        const double expected_dy = 70;
-        const double expected_d2y = 160;
-
-        Assert.That.Value(y).IsEqual(expected_y);
-        Assert.That.Value(dy).IsEqual(expected_dy);
-        Assert.That.Value(d2y).IsEqual(expected_d2y);
+        var y = Polynom.Array.GetValue((Complex)X, A.ToList(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(ExpectedY);
     }
+
+    /* ---------------------------------------------------------------------------- */
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_doubleEnumerable_Throw_ArgumentNullException()
+    {
+        double x = 0;
+        IEnumerable<double> A = null;
+        Polynom.Array.GetValue(x, A!);
+    }
+
+    [TestMethod]
+    [DataRow(2, new double[] { }, double.NaN)]
+    [DataRow(2, new double[] { 1 }, 1)]
+    [DataRow(2, new double[] { 1, 2 }, 5)]
+    public void GetValue_doubleX_doubleEnumerable(double x, IEnumerable<double> A, double Y)
+    {
+        var y = Polynom.Array.GetValue(x, A);
+        Assert.That.Value(y).IsEqual(Y);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_doubleEnumerable_Throw_ArgumentNullException()
+    {
+        Complex x = 0;
+        IEnumerable<double> A = null;
+        Polynom.Array.GetValue(x, A!);
+    }
+
+    [TestMethod]
+    [DataRow(2, new double[] { }, double.NaN)]
+    [DataRow(2, new double[] { 1 }, 1)]
+    [DataRow(2, new double[] { 1, 2 }, 5)]
+    public void GetValue_ComplexX_doubleEnumerable(double x, IEnumerable<double> A, double Y)
+    {
+        var y = Polynom.Array.GetValue((Complex)x, A);
+        Assert.That.Value(y).IsEqual(Y);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_ComplexEnumerable_Throw_ArgumentNullException()
+    {
+        double x = 0;
+        IEnumerable<Complex> A = null;
+        Polynom.Array.GetValue(x, A!);
+    }
+
+    [TestMethod]
+    [DataRow(2, new double[] { }, double.NaN)]
+    [DataRow(2, new double[] { 1 }, 1)]
+    [DataRow(2, new double[] { 1, 2 }, 5)]
+    public void GetValue_doubleX_ComplexEnumerable(double x, IEnumerable<double> A, double Y)
+    {
+        var y = Polynom.Array.GetValue(x, A.Select(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(Y);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_ComplexEnumerable_Throw_ArgumentNullException()
+    {
+        Complex x = 0;
+        IEnumerable<Complex> A = null;
+        Polynom.Array.GetValue(x, A!);
+    }
+
+    [TestMethod]
+    [DataRow(2, new double[] { }, double.NaN)]
+    [DataRow(2, new double[] { 1 }, 1)]
+    [DataRow(2, new double[] { 1, 2 }, 5)]
+    public void GetValue_ComplexX_ComplexEnumerable(double x, IEnumerable<double> A, double Y)
+    {
+        var y = Polynom.Array.GetValue((Complex)x, A.Select(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(Y);
+    }
+
+    /* ---------------------------------------------------------------------------- */
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_doubleA_With_dy_throw_ArgumentNullException()
+    {
+        double x = 1;
+        double[] a = null;
+
+        Polynom.Array.GetValue(x, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70)]
+    public void GetValue_doubleX_doubleA_With_dy(double x, double[] A, double Y, double dY)
+    {
+        var y = Polynom.Array.GetValue(x, out var dy, A);
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_doubleA_With_dy_throw_ArgumentNullException()
+    {
+        Complex x = 1;
+        double[] a = null;
+
+        Polynom.Array.GetValue(x, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70)]
+    public void GetValue_ComplexX_doubleA_With_dy(double x, double[] A, double Y, double dY)
+    {
+        var y = Polynom.Array.GetValue((Complex)x, out var dy, A);
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_ComplexA_With_dy_throw_ArgumentNullException()
+    {
+        double x = 1;
+        Complex[] a = null;
+
+        Polynom.Array.GetValue(x, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70)]
+    public void GetValue_doubleX_ComplexA_With_dy(double x, double[] A, double Y, double dY)
+    {
+        var y = Polynom.Array.GetValue(x, out var dy, A.ToArray(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_ComplexA_With_dy_throw_ArgumentNullException()
+    {
+        Complex x = 1;
+        Complex[] a = null;
+
+        Polynom.Array.GetValue(x, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70)]
+    public void GetValue_ComplexX_ComplexA_With_dy(double x, double[] A, double Y, double dY)
+    {
+        var y = Polynom.Array.GetValue((Complex)x, out var dy, A.ToArray(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_doubleA_With_d2y_throw_ArgumentNullException()
+    {
+        double x = 1;
+        double[] a = null;
+
+        Polynom.Array.GetValue(x, out _, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3, 0)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13, 10)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70, 160)]
+    public void GetValue_doubleX_doubleA_With_d2y(double x, double[] A, double Y, double dY, double d2Y)
+    {
+        var y = Polynom.Array.GetValue(x, out var dy, out var d2y, A);
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+        Assert.That.Value(d2y).IsEqual(d2Y);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_doubleX_ComplexA_With_d2y_throw_ArgumentNullException()
+    {
+        double x = 1;
+        Complex[] a = null;
+
+        Polynom.Array.GetValue(x, out _, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3, 0)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13, 10)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70, 160)]
+    public void GetValue_doubleX_ComplexA_With_d2y(double x, double[] A, double Y, double dY, double d2Y)
+    {
+        var y = Polynom.Array.GetValue(x, out var dy, out var d2y, A.ToArray(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+        Assert.That.Value(d2y).IsEqual(d2Y);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_doubleA_With_d2y_throw_ArgumentNullException()
+    {
+        Complex x = 1;
+        double[] a = null;
+
+        Polynom.Array.GetValue(x, out _, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3, 0)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13, 10)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70, 160)]
+    public void GetValue_ComplexX_doubleA_With_d2y(double x, double[] A, double Y, double dY, double d2Y)
+    {
+        var y = Polynom.Array.GetValue((Complex)x, out var dy, out var d2y, A);
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+        Assert.That.Value(d2y).IsEqual(d2Y);
+    }
+
+    [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+    public void GetValue_ComplexX_ComplexA_With_d2y_throw_ArgumentNullException()
+    {
+        Complex x = 1;
+        Complex[] a = null;
+
+        Polynom.Array.GetValue(x, out _, out _, a!);
+    }
+
+    [TestMethod]
+    [DataRow(double.NaN, new double[] { 1 }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(1, new double[] { }, double.NaN, double.NaN, double.NaN)]
+    [DataRow(0, new double[] { 1 }, 1, 0, 0)]
+    [DataRow(1, new double[] { 1, 3 }, 4, 3, 0)]
+    [DataRow(1, new double[] { 1, 3, 5 }, 9, 13, 10)]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9 }, 25, 70, 160)]
+    public void GetValue_ComplexX_ComplexA_With_d2y(double x, double[] A, double Y, double dY, double d2Y)
+    {
+        var y = Polynom.Array.GetValue((Complex)x, out var dy, out var d2y, A.ToArray(v => (Complex)v));
+        Assert.That.Value(y).IsEqual(Y);
+        Assert.That.Value(dy).IsEqual(dY);
+        Assert.That.Value(d2y).IsEqual(d2Y);
+    }
+
+    /* ---------------------------------------------------------------------------- */
 
     private static double GetRootsValue(IEnumerable<double> X0, double x)
     {
@@ -271,6 +577,8 @@ public class PolynomArray
             Assert.That.Value(actual).IsEqual(expected);
         }
     }
+
+    /* ---------------------------------------------------------------------------- */
 
     [TestMethod]
     public void GetCoefficients()
@@ -437,17 +745,227 @@ public class PolynomArray
         Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetCoefficientsInverted(Array.Empty<Complex>()));
     }
 
+    /* ---------------------------------------------------------------------------- */
+
     [TestMethod]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 0, new double[] { 1, 3, 5, 7, 9, 12, 14 }, DisplayName = "d0{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx0 = 1+3x+5x2+7x3+9x4+12x5+14x6")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 1, new double[] { 3, 10, 21, 36, 60, 84 }, DisplayName = "d1{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx1 = 3+10x+21x2+36x3+60x4+84x5")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 2, new double[] { 10, 42, 108, 240, 420 }, DisplayName = "d2{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx2 = 10+42x+108x2+240x3+420x4")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 3, new double[] { 42, 216, 720, 1680 }, DisplayName = "d3{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx3 = 42+216x+720x2+1680x3")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 4, new double[] { 216, 1440, 5040 }, DisplayName = "d4{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx4 = 216+1440x+5040x2")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 5, new double[] { 1440, 10080 }, DisplayName = "d5{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx5 = 1440+10080x")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 6, new double[] { 10080 }, DisplayName = "d6{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx6 = 10080")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 7, new double[] { 0 }, DisplayName = "d7{ 1+3x+5x2+7x3+9x4+12x5+14x6 }dx7 = 0")]
-    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 8, new double[] { 0 }, DisplayName = "d8{ 1+3x+5x2+7x3+9x4+12x5+14x6 }dx8 = 0")]
-    public void GetDifferential(double[] a, int Order, double[] Expected)
+    public void GetDifferential_doubleArrays_Throw_ArgumentNullException_p()
+    {
+        double[] p = null;
+        double[] result = { };
+        const int order = 1;
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        Assert.That.Value(exception.ParamName).IsEqual("p");
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArrays_Throw_ArgumentNullException_Result()
+    {
+        double[] p = { };
+        double[] result = null;
+        const int order = 1;
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        Assert.That.Value(exception.ParamName).IsEqual("Result");
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArrays_Order_0_Copy_Array()
+    {
+        double[] p = { 1, 3, 5, 7, 9 };
+        var result = new double[p.Length];
+        const int order = 0;
+
+        var result_2 = Polynom.Array.GetDifferential(p, result, order);
+
+        Assert.That.Collection(p).IsEqualTo(result);
+        Assert.That.Value(result).IsReferenceEquals(result_2);
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArrays_Throw_ArgumentException_when_ResultLength_less_pLength()
+    {
+        double[] p = { 1, 3, 5, 7, 9 };
+        var result = new double[p.Length - 2];
+        const int order = 1;
+
+        var exception = Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetDifferential(p, result, order));
+        Assert.That.Value(exception.Data)
+           .Where(e => e["p.Length"]).CheckEquals(p.Length)
+           .Where(e => e["Result.Length"]).CheckEquals(result.Length)
+           .Where(e => e["Order"]).CheckEquals(order);
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArrays_ClearResult_when_ResultLength_greater_pLength()
+    {
+        double[] p = { 1, 3, 5, 7, 9 };
+        var result = Enumerable.Range(1, p.Length + 1).ToArray(v => (double)v);
+        const int order = 1;
+
+        Polynom.Array.GetDifferential(p, result, order);
+        var empty_array = result[4..];
+        Assert.That.Collection(empty_array).ElementsAreEqualTo(0);
+    }
+
+    [TestMethod]
+    [DataRow(0, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 1, 3, 5, 7, 9, 12, 14 })]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 3, 10, 21, 36, 60, 84 })]
+    [DataRow(2, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 10, 42, 108, 240, 420 })]
+    [DataRow(3, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 42, 216, 720, 1680 })]
+    [DataRow(4, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 216, 1440, 5040 })]
+    [DataRow(5, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 1440, 10080 })]
+    [DataRow(6, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 10080 })]
+    [DataRow(7, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 0 })]
+    [DataRow(8, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 0 })]
+    public void GetDifferential_doubleArrays(int Order, double[] p, double[] dp)
+    {
+        var diff = Polynom.Array.GetDifferential(p, new double[Math.Max(1, p.Length - Order)], Order);
+        Assert.That.Collection(diff).IsEqualTo(dp);
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArrays_Throw_ArgumentNullException_p()
+    {
+        Complex[] p = null;
+        Complex[] result = { };
+        const int order = 1;
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        Assert.That.Value(exception.ParamName).IsEqual("p");
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArrays_Throw_ArgumentNullException_Result()
+    {
+        Complex[] p = { };
+        Complex[] result = null;
+        const int order = 1;
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
+        Assert.That.Value(exception.ParamName).IsEqual("Result");
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArrays_Order_0_Copy_Array()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9 };
+        var result = new Complex[p.Length];
+        const int order = 0;
+
+        var result_2 = Polynom.Array.GetDifferential(p, result, order);
+
+        Assert.That.Collection(p).IsEqualTo(result);
+        Assert.That.Value(result).IsReferenceEquals(result_2);
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArrays_Throw_ArgumentException_when_ResultLength_less_pLength()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9 };
+        var result = new Complex[p.Length - 2];
+        const int order = 1;
+
+        var exception = Assert.ThrowsException<ArgumentException>(() => Polynom.Array.GetDifferential(p, result, order));
+        Assert.That.Value(exception.Data)
+           .Where(e => e["p.Length"]).CheckEquals(p.Length)
+           .Where(e => e["Result.Length"]).CheckEquals(result.Length)
+           .Where(e => e["Order"]).CheckEquals(order);
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArrays_ClearResult_when_ResultLength_greater_pLength()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9 };
+        var result = Enumerable.Range(1, p.Length + 1).ToArray(v => (Complex)v);
+        const int order = 1;
+
+        Polynom.Array.GetDifferential(p, result, order);
+        var empty_array = result[4..];
+        Assert.That.Collection(empty_array).IsEqualTo(Enumerable.Repeat(Complex.Zero, empty_array.Length));
+    }
+
+    [TestMethod]
+    [DataRow(0, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 1, 3, 5, 7, 9, 12, 14 })]
+    [DataRow(1, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 3, 10, 21, 36, 60, 84 })]
+    [DataRow(2, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 10, 42, 108, 240, 420 })]
+    [DataRow(3, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 42, 216, 720, 1680 })]
+    [DataRow(4, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 216, 1440, 5040 })]
+    [DataRow(5, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 1440, 10080 })]
+    [DataRow(6, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 10080 })]
+    [DataRow(7, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 0 })]
+    [DataRow(8, new double[] { 1, 3, 5, 7, 9, 12, 14 }, new double[] { 0 })]
+    public void GetDifferential_ComplexArrays(int Order, double[] p, double[] dp)
+    {
+        var diff = Polynom.Array.GetDifferential(p.ToArray(v => (Complex)v), new Complex[Math.Max(1, p.Length - Order)], Order);
+        Assert.That.Collection(diff).IsEqualTo(dp.Select(v => (Complex)v));
+    }
+
+    /* ---------------------------------------------------------------------------- */
+
+    [TestMethod]
+    public void GetDifferential_doubleArray_throw_ArgumentNullException_p()
+    {
+        double[] p = null;
+        const int order = 1;
+
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, order));
+        Assert.That.Value(exception.ParamName).IsEqual("p");
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArray_throw_ArgumentOutOfRangeException_Order_greater_20()
+    {
+        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        const int order = 21;
+
+        var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
+        Assert.That.Value(exception)
+           .Where(e => e.ParamName).CheckEquals("Order")
+           .Where(e => e.ActualValue).CheckEquals(order);
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArray_Return_source_array_when_Order_0()
+    {
+        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        const int order = 0;
+
+        var result = Polynom.Array.GetDifferential(p, order);
+
+        Assert.That.Value(result).IsReferenceEquals(p);
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArray_Return_last_value_mult_OrderFactorial_when_Order_eq_SourceLength_without_1()
+    {
+        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        var order = p.Length - 1;
+
+        var result = Polynom.Array.GetDifferential(p, order);
+        Assert.That.Collection(result).ValuesAreEqualTo(p[^1] * order.Factorial());
+    }
+
+    [TestMethod]
+    public void GetDifferential_doubleArray_Return_result_with_1_element_eq_0_When_Order_greater_orEqual_SourceLength()
+    {
+        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        var order = p.Length;
+
+        var result = Polynom.Array.GetDifferential(p, order);
+        Assert.That.Collection(result).ValuesAreEqualTo(0);
+
+        var result2 = Polynom.Array.GetDifferential(p, order + 1);
+        Assert.That.Collection(result2).ValuesAreEqualTo(0);
+    }
+
+    [TestMethod]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 0, new double[] { 1, 3, 5, 7, 9, 12, 14 }, DisplayName = "GetDifferential d0{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx0 = 1+3x+5x2+7x3+9x4+12x5+14x6")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 1, new double[] { 3, 10, 21, 36, 60, 84 }, DisplayName = "GetDifferential d1{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx1 = 3+10x+21x2+36x3+60x4+84x5")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 2, new double[] { 10, 42, 108, 240, 420 }, DisplayName = "GetDifferential d2{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx2 = 10+42x+108x2+240x3+420x4")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 3, new double[] { 42, 216, 720, 1680 }, DisplayName = "GetDifferential d3{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx3 = 42+216x+720x2+1680x3")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 4, new double[] { 216, 1440, 5040 }, DisplayName = "GetDifferential d4{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx4 = 216+1440x+5040x2")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 5, new double[] { 1440, 10080 }, DisplayName = "GetDifferential d5{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx5 = 1440+10080x")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 6, new double[] { 10080 }, DisplayName = "GetDifferential d6{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx6 = 10080")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 7, new double[] { 0 }, DisplayName = "GetDifferential d7{ 1+3x+5x2+7x3+9x4+12x5+14x6 }dx7 = 0")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 8, new double[] { 0 }, DisplayName = "GetDifferential d8{ 1+3x+5x2+7x3+9x4+12x5+14x6 }dx8 = 0")]
+    public void GetDifferential_doubleArray(double[] a, int Order, double[] Expected)
     {
         var actual = Polynom.Array.GetDifferential(a, Order);
 
@@ -463,12 +981,95 @@ public class PolynomArray
     }
 
     [TestMethod]
-    [DataRow(0, 225961d, DisplayName = "Order 0")]
-    [DataRow(1, 157510d, DisplayName = "Order 1")]
-    [DataRow(2, 87916d, DisplayName = "Order 2")]
-    [DataRow(3, 36834d, DisplayName = "Order 3")]
-    [DataRow(3, 36834d, DisplayName = "Order 4")]
-    [DataRow(4, 10296, DisplayName = "Order 5")]
+    public void GetDifferential_ComplexArray_throw_ArgumentNullException_p()
+    {
+        Complex[] p = null;
+        const int order = 1;
+
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, order));
+        Assert.That.Value(exception.ParamName).IsEqual("p");
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArray_throw_ArgumentOutOfRangeException_Order_greater_20()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        const int order = 21;
+
+        var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
+        Assert.That.Value(exception)
+           .Where(e => e.ParamName).CheckEquals("Order")
+           .Where(e => e.ActualValue).CheckEquals(order);
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArray_Return_source_array_when_Order_0()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        const int order = 0;
+
+        var result = Polynom.Array.GetDifferential(p, order);
+
+        Assert.That.Value(result).IsReferenceEquals(p);
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArray_Return_last_value_mult_OrderFactorial_when_Order_eq_SourceLength_without_1()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        var order = p.Length - 1;
+
+        var result = Polynom.Array.GetDifferential(p, order);
+        Assert.That.Collection(result).IsEqualTo(p[^1] * order.Factorial());
+    }
+
+    [TestMethod]
+    public void GetDifferential_ComplexArray_Return_result_with_1_element_eq_0_When_Order_greater_orEqual_SourceLength()
+    {
+        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        var order = p.Length;
+
+        var result = Polynom.Array.GetDifferential(p, order);
+        Assert.That.Collection(result).IsEqualTo(0);
+
+        var result2 = Polynom.Array.GetDifferential(p, order + 1);
+        Assert.That.Collection(result2).IsEqualTo(0);
+    }
+
+    [TestMethod]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 0, new double[] { 1, 3, 5, 7, 9, 12, 14 }, DisplayName = "GetDifferential d0{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx0 = 1+3x+5x2+7x3+9x4+12x5+14x6")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 1, new double[] { 3, 10, 21, 36, 60, 84 }, DisplayName = "GetDifferential d1{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx1 = 3+10x+21x2+36x3+60x4+84x5")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 2, new double[] { 10, 42, 108, 240, 420 }, DisplayName = "GetDifferential d2{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx2 = 10+42x+108x2+240x3+420x4")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 3, new double[] { 42, 216, 720, 1680 }, DisplayName = "GetDifferential d3{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx3 = 42+216x+720x2+1680x3")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 4, new double[] { 216, 1440, 5040 }, DisplayName = "GetDifferential d4{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx4 = 216+1440x+5040x2")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 5, new double[] { 1440, 10080 }, DisplayName = "GetDifferential d5{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx5 = 1440+10080x")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 6, new double[] { 10080 }, DisplayName = "GetDifferential d6{ 1+3x+5x2+7x3+9x4+12x5+14x6 }/dx6 = 10080")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 7, new double[] { 0 }, DisplayName = "GetDifferential d7{ 1+3x+5x2+7x3+9x4+12x5+14x6 }dx7 = 0")]
+    [DataRow(new double[] { 1, 3, 5, 7, 9, 12, 14 }, 8, new double[] { 0 }, DisplayName = "GetDifferential d8{ 1+3x+5x2+7x3+9x4+12x5+14x6 }dx8 = 0")]
+    public void GetDifferential_ComplexArray(double[] a, int Order, double[] Expected)
+    {
+        var actual = Polynom.Array.GetDifferential(a.ToArray(v => (Complex)v), Order);
+
+        try
+        {
+            Assert.That.Collection(actual).IsEqualTo(Expected.ToArray(v => (Complex)v));
+        }
+        catch (AssertFailedException)
+        {
+            Debug.WriteLine(actual.ToSeparatedStr(", "));
+            throw;
+        }
+    }
+
+    /* ---------------------------------------------------------------------------- */
+
+    [TestMethod]
+    [DataRow(0, 225961d, DisplayName = "DifferentialValue Order 0")]
+    [DataRow(1, 157510d, DisplayName = "DifferentialValue Order 1")]
+    [DataRow(2, 87916d, DisplayName = "DifferentialValue Order 2")]
+    [DataRow(3, 36834d, DisplayName = "DifferentialValue Order 3")]
+    [DataRow(3, 36834d, DisplayName = "DifferentialValue Order 4")]
+    [DataRow(4, 10296, DisplayName = "DifferentialValue Order 5")]
     public void GetDifferentialValue(int Order, double ExpectedValue)
     {
         double[] a = { 1, 3, 5, 7, 9, 12 };

@@ -186,6 +186,8 @@ public partial class Polynom
             }
         }
 
+        /* ------------------------------------------------------------------------ */
+
         /// <summary>Рассчитать значение полинома</summary>
         /// <param name="x">Аргумент полинома</param>
         /// <param name="A">Массив коэффициентов полинома</param>
@@ -194,27 +196,20 @@ public partial class Polynom
         {
             if (A is null) throw new ArgumentNullException(nameof(A));
 
-            //using var a = A.Reverse().GetEnumerator();
-            //if (!a.MoveNext())
-            //    return double.NaN;
-
-            //var y = a.Current;
-
-            //while (a.MoveNext())
-            //    y = y * x + a.Current;
-
             using var a = A.GetEnumerator();
 
             var xx = 1d;
 
             var y = 0d;
+            var any = false;
             while (a.MoveNext())
             {
                 y += a.Current * xx;
                 xx *= x;
+                any = true;
             }
 
-            return y;
+            return any ? y : double.NaN;
         }
 
         /// <summary>Рассчитать комплексное значение полинома</summary>
@@ -230,13 +225,15 @@ public partial class Polynom
             var zz = Complex.Real;
 
             var y = Complex.Zero;
+            var any = false;
             while (a.MoveNext())
             {
                 y += a.Current * zz;
                 zz *= z;
+                any = true;
             }
 
-            return y;
+            return any ? y : Complex.NaN;
         }
 
         /// <summary>Рассчитать комплексное значение полинома</summary>
@@ -252,13 +249,15 @@ public partial class Polynom
             var zz = Complex.Real;
 
             var y = Complex.Zero;
+            var any = false;
             while (a.MoveNext())
             {
                 y += a.Current * zz;
                 zz *= z;
+                any = true;
             }
 
-            return y;
+            return any ? y : Complex.NaN;
         }
 
         /// <summary>Рассчитать комплексное значение полинома с комплексными коэффициентами</summary>
@@ -274,13 +273,15 @@ public partial class Polynom
             var zz = Complex.Real;
 
             var y = Complex.Zero;
+            var any = false;
             while (a.MoveNext())
             {
                 y += a.Current * zz;
                 zz *= z;
+                any = true;
             }
 
-            return y;
+            return any ? y : Complex.NaN;
         }
 
         /* ------------------------------------------------------------------------ */
@@ -306,6 +307,180 @@ public partial class Polynom
                 case 0:
                     dy = double.NaN;
                     y = double.NaN;
+                    break;
+
+                case 1:
+                    dy = 0;
+                    y = A[0];
+                    break;
+
+                case 2:
+                    dy = A[1];
+                    y = A[0] + A[1] * x;
+                    break;
+
+                case 3:
+                    dy = A[1] + 2 * A[2] * x;
+                    y = A[0] + (A[1] + A[2] * x) * x;
+                    break;
+
+                default:
+                    y = A[^1];
+                    dy = A[^1] * (N - 1);
+
+                    for (var n = N - 2; n >= 1; n--)
+                    {
+                        var a = A[n];
+
+                        y = y * x + a;
+                        dy = dy * x + a * n;
+                    }
+
+                    y = y * x + A[0];
+                    break;
+
+            }
+
+            return y;
+        }
+
+        /// <summary>Рассчитать значение полинома</summary>
+        /// <param name="x">Аргумент полинома</param>
+        /// <param name="dy">Значение первой производной в точке</param>
+        /// <param name="A">Массив коэффициентов полинома</param>
+        /// <returns>Значение полинома</returns>
+        public static Complex GetValue(Complex x, out Complex dy, params double[] A)
+        {
+            if (A is null) throw new ArgumentNullException(nameof(A));
+            if (x.IsNaN)
+            {
+                dy = Complex.NaN;
+                return Complex.NaN;
+            }
+
+            Complex y;
+            var N = A.Length;
+            switch (N)
+            {
+                case 0:
+                    dy = Complex.NaN;
+                    y = Complex.NaN;
+                    break;
+
+                case 1:
+                    dy = 0;
+                    y = A[0];
+                    break;
+
+                case 2:
+                    dy = A[1];
+                    y = A[0] + A[1] * x;
+                    break;
+
+                case 3:
+                    dy = A[1] + 2 * A[2] * x;
+                    y = A[0] + (A[1] + A[2] * x) * x;
+                    break;
+
+                default:
+                    y = A[^1];
+                    dy = A[^1] * (N - 1);
+
+                    for (var n = N - 2; n >= 1; n--)
+                    {
+                        var a = A[n];
+
+                        y = y * x + a;
+                        dy = dy * x + a * n;
+                    }
+
+                    y = y * x + A[0];
+                    break;
+
+            }
+
+            return y;
+        }
+
+        /// <summary>Рассчитать значение полинома</summary>
+        /// <param name="x">Аргумент полинома</param>
+        /// <param name="dy">Значение первой производной в точке</param>
+        /// <param name="A">Массив коэффициентов полинома</param>
+        /// <returns>Значение полинома</returns>
+        public static Complex GetValue(double x, out Complex dy, params Complex[] A)
+        {
+            if (A is null) throw new ArgumentNullException(nameof(A));
+            if (double.IsNaN(x))
+            {
+                dy = Complex.NaN;
+                return Complex.NaN;
+            }
+
+            Complex y;
+            var N = A.Length;
+            switch (N)
+            {
+                case 0:
+                    dy = Complex.NaN;
+                    y = Complex.NaN;
+                    break;
+
+                case 1:
+                    dy = 0;
+                    y = A[0];
+                    break;
+
+                case 2:
+                    dy = A[1];
+                    y = A[0] + A[1] * x;
+                    break;
+
+                case 3:
+                    dy = A[1] + 2 * A[2] * x;
+                    y = A[0] + (A[1] + A[2] * x) * x;
+                    break;
+
+                default:
+                    y = A[^1];
+                    dy = A[^1] * (N - 1);
+
+                    for (var n = N - 2; n >= 1; n--)
+                    {
+                        var a = A[n];
+
+                        y = y * x + a;
+                        dy = dy * x + a * n;
+                    }
+
+                    y = y * x + A[0];
+                    break;
+
+            }
+
+            return y;
+        }
+
+        /// <summary>Рассчитать значение полинома</summary>
+        /// <param name="x">Аргумент полинома</param>
+        /// <param name="dy">Значение первой производной в точке</param>
+        /// <param name="A">Массив коэффициентов полинома</param>
+        /// <returns>Значение полинома</returns>
+        public static Complex GetValue(Complex x, out Complex dy, params Complex[] A)
+        {
+            if (A is null) throw new ArgumentNullException(nameof(A));
+            if (x.IsNaN)
+            {
+                dy = Complex.NaN;
+                return Complex.NaN;
+            }
+
+            Complex y;
+            var N = A.Length;
+            switch (N)
+            {
+                case 0:
+                    dy = Complex.NaN;
+                    y = Complex.NaN;
                     break;
 
                 case 1:
@@ -376,20 +551,207 @@ public partial class Polynom
                     break;
 
                 case 2:
-                    //d2y = double.NaN;
-                    //dy = A[1];
-                    //y = A[0] + A[1] * x;
-
                     d2y = 0;
                     dy = A[1];
                     y = A[0] + dy * x;
                     break;
 
                 case 3:
-                    //d2y = 2 * A[2];
-                    //dy = A[1] + 2 * A[2] * x;
-                    //y = A[0] + A[1] * x + A[2] * x * x;
+                    d2y = 2 * A[2];
+                    dy = A[1] + d2y * x;
+                    y = A[0] + (A[1] + A[2] * x) * x;
+                    break;
 
+                default:
+                    y = A[^1];
+                    dy = A[^1] * (N - 1);
+                    d2y = A[^1] * (N - 1) * (N - 2);
+
+                    for (var n = N - 2; n >= 2; n--)
+                    {
+                        var a = A[n];
+
+                        y = y * x + a;
+                        dy = dy * x + a * n;
+                        d2y = d2y * x + a * n * (n - 1);
+                    }
+
+                    y = (y * x + A[1]) * x + A[0];
+                    dy = dy * x + A[1];
+                    break;
+            }
+            return y;
+        }
+
+        /// <summary>Рассчитать значение полинома</summary>
+        /// <param name="x">Аргумент полинома</param>
+        /// <param name="dy">Значение первой производной в точке</param>
+        /// <param name="d2y">Значение второй производной в точке</param>
+        /// <param name="A">Массив коэффициентов полинома</param>
+        /// <returns>Значение полинома</returns>
+        public static Complex GetValue(double x, out Complex dy, out Complex d2y, params Complex[] A)
+        {
+            if (A is null) throw new ArgumentNullException(nameof(A));
+            if (double.IsNaN(x))
+            {
+                d2y = Complex.NaN;
+                dy = Complex.NaN;
+                return Complex.NaN;
+            }
+
+            Complex y;
+            var N = A.Length;
+            switch (N)
+            {
+                case 0:
+                    d2y = Complex.NaN;
+                    dy = Complex.NaN;
+                    y = Complex.NaN;
+                    break;
+
+                case 1:
+                    d2y = 0;
+                    dy = 0;
+                    y = A[0];
+                    break;
+
+                case 2:
+                    d2y = 0;
+                    dy = A[1];
+                    y = A[0] + dy * x;
+                    break;
+
+                case 3:
+                    d2y = 2 * A[2];
+                    dy = A[1] + d2y * x;
+                    y = A[0] + (A[1] + A[2] * x) * x;
+                    break;
+
+                default:
+                    y = A[^1];
+                    dy = A[^1] * (N - 1);
+                    d2y = A[^1] * (N - 1) * (N - 2);
+
+                    for (var n = N - 2; n >= 2; n--)
+                    {
+                        var a = A[n];
+
+                        y = y * x + a;
+                        dy = dy * x + a * n;
+                        d2y = d2y * x + a * n * (n - 1);
+                    }
+
+                    y = (y * x + A[1]) * x + A[0];
+                    dy = dy * x + A[1];
+                    break;
+            }
+            return y;
+        }
+
+        /// <summary>Рассчитать значение полинома</summary>
+        /// <param name="x">Аргумент полинома</param>
+        /// <param name="dy">Значение первой производной в точке</param>
+        /// <param name="d2y">Значение второй производной в точке</param>
+        /// <param name="A">Массив коэффициентов полинома</param>
+        /// <returns>Значение полинома</returns>
+        public static Complex GetValue(Complex x, out Complex dy, out Complex d2y, params double[] A)
+        {
+            if (A is null) throw new ArgumentNullException(nameof(A));
+            if (x.IsNaN)
+            {
+                d2y = Complex.NaN;
+                dy = Complex.NaN;
+                return Complex.NaN;
+            }
+
+            Complex y;
+            var N = A.Length;
+            switch (N)
+            {
+                case 0:
+                    d2y = Complex.NaN;
+                    dy = Complex.NaN;
+                    y = Complex.NaN;
+                    break;
+
+                case 1:
+                    d2y = 0;
+                    dy = 0;
+                    y = A[0];
+                    break;
+
+                case 2:
+                    d2y = 0;
+                    dy = A[1];
+                    y = A[0] + dy * x;
+                    break;
+
+                case 3:
+                    d2y = 2 * A[2];
+                    dy = A[1] + d2y * x;
+                    y = A[0] + (A[1] + A[2] * x) * x;
+                    break;
+
+                default:
+                    y = A[^1];
+                    dy = A[^1] * (N - 1);
+                    d2y = A[^1] * (N - 1) * (N - 2);
+
+                    for (var n = N - 2; n >= 2; n--)
+                    {
+                        var a = A[n];
+
+                        y = y * x + a;
+                        dy = dy * x + a * n;
+                        d2y = d2y * x + a * n * (n - 1);
+                    }
+
+                    y = (y * x + A[1]) * x + A[0];
+                    dy = dy * x + A[1];
+                    break;
+            }
+            return y;
+        }
+
+        /// <summary>Рассчитать значение полинома</summary>
+        /// <param name="x">Аргумент полинома</param>
+        /// <param name="dy">Значение первой производной в точке</param>
+        /// <param name="d2y">Значение второй производной в точке</param>
+        /// <param name="A">Массив коэффициентов полинома</param>
+        /// <returns>Значение полинома</returns>
+        public static Complex GetValue(Complex x, out Complex dy, out Complex d2y, params Complex[] A)
+        {
+            if (A is null) throw new ArgumentNullException(nameof(A));
+            if (x.IsNaN)
+            {
+                d2y = Complex.NaN;
+                dy = Complex.NaN;
+                return Complex.NaN;
+            }
+
+            Complex y;
+            var N = A.Length;
+            switch (N)
+            {
+                case 0:
+                    d2y = Complex.NaN;
+                    dy = Complex.NaN;
+                    y = Complex.NaN;
+                    break;
+
+                case 1:
+                    d2y = 0;
+                    dy = 0;
+                    y = A[0];
+                    break;
+
+                case 2:
+                    d2y = 0;
+                    dy = A[1];
+                    y = A[0] + dy * x;
+                    break;
+
+                case 3:
                     d2y = 2 * A[2];
                     dy = A[1] + d2y * x;
                     y = A[0] + (A[1] + A[2] * x) * x;
@@ -863,29 +1225,10 @@ public partial class Polynom
 
         #region Интегрирование/дифференцирование
 
-        /// <summary>Дифференциал полинома</summary>
-        /// <param name="p">Массив коэффициентов полинома</param>
-        /// <param name="Order">Порядок дифференцирования</param>
-        /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="Order"/> &gt; 20</exception>
-        /// <returns>Массив коэффициентов полинома - дифференциала</returns>
-        public static double[] GetDifferential(double[] p, int Order = 1) => p switch
-        {
-            null => throw new ArgumentNullException(nameof(p)),
-            _ => Order switch
-            {
-                > 20 => throw new ArgumentOutOfRangeException(nameof(Order), Order, "Значение не должно быть больше 20"),
-                < 0 => GetIntegral(p, Order: -Order),
-                0 => p,
-                var o when o == p.Length - 1 => new[] { p[^1] * Order.Factorial() },
-                var o when o >= p.Length => new[] { 0d },
-                _ => GetDifferential(p, new double[p.Length - Order], Order)
-            }
-        };
-
         public static double[] GetDifferential(double[] p, double[] Result, int Order = 1)
         {
             if (p is null) throw new ArgumentNullException(nameof(p));
-            if (Result is null) throw new ArgumentNullException(nameof(p));
+            if (Result is null) throw new ArgumentNullException(nameof(Result));
 
             if (Order == 0)
             {
@@ -894,22 +1237,25 @@ public partial class Polynom
             }
 
             var result_length = p.Length - Order;
-            switch (Result.Length - result_length)
-            {
-                case < 0:
-                    throw new ArgumentException("Длина массива результата меньше чем длина исходного массива минус порядок интегрирования - недостаточна для хранения результатов интегрирования")
+            if (Result.Length - result_length < 0)
+                throw new ArgumentException("Длина массива результата меньше чем длина исходного массива минус порядок интегрирования - недостаточна для хранения результатов интегрирования")
+                {
+                    Data =
                     {
-                        Data =
-                        {
-                            { nameof(p) + ".Length", p.Length },
-                            { nameof(Result) + ".Length", p.Length },
-                            { nameof(Order), Order },
-                        }
-                    };
-                case > 0 and var delta_length:
-                    System.Array.Clear(Result, result_length, delta_length);
-                    break;
+                        { nameof(p) + ".Length", p.Length },
+                        { nameof(Result) + ".Length", Result.Length }, 
+                        { nameof(Order), Order },
+                    }
+                };
+
+            if (Order >= p.Length)
+            {
+                System.Array.Clear(Result, 0, Result.Length);
+                return Result;
             }
+
+            if (Result.Length - result_length is > 0 and var delta_length) 
+                System.Array.Clear(Result, result_length, delta_length);
 
             switch (Order)
             {
@@ -946,6 +1292,112 @@ public partial class Polynom
             }
             return Result;
         }
+
+        public static Complex[] GetDifferential(Complex[] p, Complex[] Result, int Order = 1)
+        {
+            if (p is null) throw new ArgumentNullException(nameof(p));
+            if (Result is null) throw new ArgumentNullException(nameof(Result));
+
+            if (Order == 0)
+            {
+                p.CopyTo(Result, 0);
+                return Result;
+            }
+
+            var result_length = p.Length - Order;
+            if (Result.Length - result_length < 0)
+                throw new ArgumentException("Длина массива результата меньше чем длина исходного массива минус порядок интегрирования - недостаточна для хранения результатов интегрирования")
+                {
+                    Data =
+                    {
+                        { nameof(p) + ".Length", p.Length }, 
+                        { nameof(Result) + ".Length", Result.Length },
+                        { nameof(Order), Order },
+                    }
+                };
+
+            if (Order >= p.Length)
+            {
+                System.Array.Clear(Result, 0, Result.Length);
+                return Result;
+            }
+
+            if (Result.Length - result_length is > 0 and var delta_length)
+                System.Array.Clear(Result, result_length, delta_length);
+
+            switch (Order)
+            {
+                case 1:
+                    for (var i = 0; i < result_length; i++)
+                        Result[i] = p[i + 1] * (i + 1);
+                    break;
+                case 2:
+                    for (var i = 0; i < result_length; i++)
+                        Result[i] = p[i + 2] * ((i + 3) * i + 2); // * (i + 1) * (i + 2) // * (i*i + 3 * i + 2)
+                    break;
+                case 3:
+                    for (var i = 0; i < result_length; i++)
+                        Result[i] = p[i + 3] * (((i + 6) * i + 11) * i + 6); // * (i + 1) * (i + 2) * (i + 3) // * (i * i * i + 6 * i * i + 11 * i + 6)
+                    break;
+                case 4:
+                    for (var i = 0; i < result_length; i++)
+                        Result[i] = p[i + 4] * ((((i + 10) * i + 35) * i + 50) * i + 24); // * (i + 1) * (i + 2) * (i + 3) * (i + 4) // * (i * i * i * i + 10 * i * i * i + 35 * i * i + 50 * i + 24)
+                    break;
+                default:
+                    var k = Order.Factorial();
+                    Result[0] = p[Order] * k;
+                    for (var i = 1; i < result_length; i++)
+                    {
+                        var i0 = i + Order;
+
+                        k = k / i * i0;
+                        //k *= 1 + Order / i;
+
+                        Result[i] = p[i0] * k;
+                    }
+
+                    break;
+            }
+            return Result;
+        }
+
+        /// <summary>Дифференциал полинома</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="Order">Порядок дифференцирования</param>
+        /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="Order"/> &gt; 20</exception>
+        /// <returns>Массив коэффициентов полинома - дифференциала</returns>
+        public static double[] GetDifferential(double[] p, int Order = 1) => p switch
+        {
+            null => throw new ArgumentNullException(nameof(p)),
+            _ => Order switch
+            {
+                > 20 => throw new ArgumentOutOfRangeException(nameof(Order), Order, "Значение не должно быть больше 20"),
+                < 0 => GetIntegral(p, Order: -Order),
+                0 => p,
+                var o when o == p.Length - 1 => new[] { p[^1] * Order.Factorial() },
+                var o when o >= p.Length => new[] { 0d },
+                _ => GetDifferential(p, new double[p.Length - Order], Order)
+            }
+        };
+
+        /// <summary>Дифференциал полинома</summary>
+        /// <param name="p">Массив коэффициентов полинома</param>
+        /// <param name="Order">Порядок дифференцирования</param>
+        /// <exception cref="ArgumentOutOfRangeException">Если <paramref name="Order"/> &gt; 20</exception>
+        /// <returns>Массив коэффициентов полинома - дифференциала</returns>
+        public static Complex[] GetDifferential(Complex[] p, int Order = 1) => p switch
+        {
+            null => throw new ArgumentNullException(nameof(p)),
+            _ => Order switch
+            {
+                > 20 => throw new ArgumentOutOfRangeException(nameof(Order), Order, "Значение не должно быть больше 20"),
+                < 0 => GetIntegral(p, Order: -Order),
+                0 => p,
+                var o when o == p.Length - 1 => new[] { p[^1] * Order.Factorial() },
+                var o when o >= p.Length => new[] { Complex.Zero },
+                _ => GetDifferential(p, new Complex[p.Length - Order], Order)
+            }
+        };
 
         public static double GetDifferentialValue(double x, double[] p, int Order = 1)
         {
@@ -1004,37 +1456,6 @@ public partial class Polynom
                 for (var i = n - 1; i >= 0; i--)
                     (p[i], last) = (last * (i + 1), p[i]);
             }
-        }
-
-        /// <summary>Дифференциал полинома</summary>
-        /// <param name="p">Массив комплексных коэффициентов полинома</param>
-        /// <param name="Order">Порядок дифференцирования</param>
-        /// <returns>Массив комплексных коэффициентов полинома - дифференциала</returns>
-        public static Complex[] GetDifferential(Complex[] p, int Order = 1)
-        {
-            if (p is null) throw new ArgumentNullException(nameof(p));
-            switch (Order)
-            {
-                case < 0: return GetIntegral(p, Order: -Order);
-                case 0: return p;
-                case var o when o == p.Length - 1: return new[] { p[^1] * Order.Factorial() };
-                case var o when o >= p.Length: return new[] { Complex.Zero };
-            }
-
-            var k = Order.Factorial();
-
-            var v = new Complex[p.Length - Order];
-            v[0] = p[Order] * k;
-            for (var i = 1; i < v.Length; i++)
-            {
-                var i0 = i + Order;
-
-                k = k / i * i0;
-
-                v[i] = p[i0] * k;
-            }
-
-            return v;
         }
 
         /// <summary>Интеграл полинома</summary>
