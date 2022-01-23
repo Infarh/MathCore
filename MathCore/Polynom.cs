@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+
 using MathCore.Annotations;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -24,10 +26,6 @@ namespace MathCore
     //[DebuggerDisplay("GetPower = {GetPower}")]
     public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumerable<double>, IFormattable
     {
-        /* -------------------------------------------------------------------------------------------- */
-
-        protected internal int AAA;
-
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Создание нового полинома из массива его коэффициентов</summary>
@@ -138,19 +136,22 @@ namespace MathCore
             for (var n = _a.Length - 1; n > 0; n--)
             {
                 var a = _a[n];
-                if (a.Equals(0)) continue;
-                result.AppendFormat("{0}{1}{2}{3}{4}",
-                    result.Length > 0 && a > 0 ? "+" : string.Empty,
-                    a.Equals(1) ? string.Empty : (a.Equals(-1) ? "-" : a.ToString(CultureInfo.CurrentCulture)),
-                    n > 0 ? "x" : string.Empty,
-                    n > 1 ? "^" : string.Empty,
-                    n > 1 ? n.ToString() : string.Empty);
+                if (a == 0) continue;
+
+                if (result.Length > 0 && a > 0)
+                    result.Append("+");
+
+                if (a != 1)
+                    result.Append(a == -1 ? "-" : a.ToString(CultureInfo.CurrentCulture));
+
+                result.Append("x");
+                if (n > 1)
+                    result.AppendFormat("^{0}", n.ToString());
             }
-            if (length > 0 && !_a[0].Equals(0))
+            if (length > 0 && _a[0] != 0)
                 result.AppendFormat("{0}{1}",
                     _a[0] < 0 ? string.Empty : "+",
                     _a[0]);
-
 
             return result.Length == 0 ? "0" : result.ToString();
         }
@@ -159,12 +160,28 @@ namespace MathCore
         /// <param name="Order">Порядок дифференциала</param>
         /// <returns>Полином - результат дифференцирования</returns>
         [NotNull]
-        public Polynom GetDifferential(int Order = 1) => new(Array.GetDifferential(_a, Order));
+        public Polynom GetDifferential(int Order = 1)
+        {
+            var coefficients = Array.GetDifferential(_a, Order);
+            var zerros = 0;
+            while (zerros < coefficients.Length)
+            {
+                if (coefficients[coefficients.Length - 1 - zerros] != 0)
+                    break;
+                zerros++;
+            }
+
+            if (zerros > 0)
+                System.Array.Resize(ref coefficients, coefficients.Length - zerros);
+
+            return new(coefficients);
+        }
 
         /// <summary>Интегрирование полинома</summary>
         /// <param name="C">Константа интегрирования</param>
+        /// <param name="Order">Кратность интеграла</param>
         /// <returns>Полином - результат интегрирования полинома</returns>
-        [NotNull] public Polynom GetIntegral(double C = 0) => new(Array.GetIntegral(_a, C));
+        [NotNull] public Polynom GetIntegral(double C = 0, int Order = 1) => new(Array.GetIntegral(_a, C, Order));
 
         /// <summary>Вычислить обратный полином</summary>
         /// <returns>Полином, являющийся обратным к текущим</returns>

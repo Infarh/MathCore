@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#nullable enable
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -35,8 +36,8 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения списка значений <paramref name="value"/></typeparam>
         public static void AddValue<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
-            [NotNull] TKey key,
+            this IDictionary<TKey, IList<TValue>> dictionary,
+            [DisallowNull] TKey key,
             TValue value
         ) => dictionary.GetValueOrAddNew(key, () => new List<TValue>()).Add(value);
 
@@ -50,10 +51,10 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения списка</typeparam>
         public static void AddValue<TKey, TObject, TValue>
         (
-            [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
+            this IDictionary<TKey, IList<TValue>> dictionary,
             TObject obj,
-            [NotNull] Func<TObject, TKey> KeySelector,
-            [NotNull] Func<TObject, TValue> ValueSelector
+            Func<TObject, TKey> KeySelector,
+            Func<TObject, TValue> ValueSelector
         ) =>
             dictionary.AddValue(KeySelector(obj), ValueSelector(obj));
 
@@ -65,9 +66,9 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения списка</typeparam>
         public static void AddValue<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, IList<TValue>> dictionary,
+            this IDictionary<TKey, IList<TValue>> dictionary,
             TValue value,
-            [NotNull] Func<TValue, TKey> KeySelector
+            Func<TValue, TKey> KeySelector
         ) =>
             dictionary.AddValue(KeySelector(value), value);
 
@@ -79,9 +80,9 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         public static void AddValues<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] IEnumerable<TValue> collection,
-            [NotNull] Func<TValue, TKey> converter
+            this IDictionary<TKey, TValue> dictionary,
+            IEnumerable<TValue> collection,
+            Func<TValue, TKey> converter
         ) =>
             collection.AddToDictionary(dictionary, converter);
 
@@ -94,9 +95,9 @@ namespace System.Collections.Generic
         /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
-            [NotNull] this Dictionary<TKey, TValue> dictionary,
-            [NotNull] TKey key,
-            [NotNull] Func<TValue> creator
+            this Dictionary<TKey, TValue> dictionary,
+            [DisallowNull] TKey key,
+            Func<TValue> creator
         )
         {
             if (!dictionary.TryGetValue(key, out var value))
@@ -113,9 +114,9 @@ namespace System.Collections.Generic
         /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
-            [NotNull] this Dictionary<TKey, TValue> dictionary,
-            [NotNull] TKey key,
-            [NotNull] Func<TKey, TValue> creator
+            this Dictionary<TKey, TValue> dictionary,
+            [DisallowNull] TKey key,
+            Func<TKey, TValue> creator
         )
         {
             if (!dictionary.TryGetValue(key, out var value))
@@ -132,9 +133,9 @@ namespace System.Collections.Generic
         /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] TKey key,
-            [NotNull] Func<TValue> creator
+            this IDictionary<TKey, TValue> dictionary,
+            [DisallowNull] TKey key,
+            Func<TValue> creator
         )
         {
             if (!dictionary.TryGetValue(key, out var value))
@@ -151,9 +152,9 @@ namespace System.Collections.Generic
         /// <returns>Полученное из словаря по указанному ключу значение, либо созданное вновь и помещённое значение указанным методом</returns>
         public static TValue GetValueOrAddNew<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] TKey key,
-            [NotNull] Func<TKey, TValue> creator
+            this IDictionary<TKey, TValue> dictionary,
+            [DisallowNull] TKey key,
+            Func<TKey, TValue> creator
         )
         {
             if (!dictionary.TryGetValue(key, out var value))
@@ -170,8 +171,8 @@ namespace System.Collections.Generic
         /// <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
         public static TValue GetValue<TKey, TValue>
         (
-            [NotNull] this Dictionary<TKey, TValue> dictionary,
-            [NotNull] TKey key,
+            this Dictionary<TKey, TValue> dictionary,
+            [DisallowNull] TKey key,
             TValue DefaultValue = default
         ) =>
             dictionary.TryGetValue(key, out var v) ? v : DefaultValue;
@@ -185,8 +186,8 @@ namespace System.Collections.Generic
         /// <returns>Значение словаря для указанного ключа, либо указанное значение по-умолчанию</returns>
         public static TValue GetValue<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] TKey key,
+            this IDictionary<TKey, TValue> dictionary,
+            [DisallowNull] TKey key,
             TValue DefaultValue = default
         ) =>
             dictionary.TryGetValue(key, out var value) ? value : DefaultValue;
@@ -196,8 +197,7 @@ namespace System.Collections.Generic
         /// <param name="name">Название объекта, значение для которого требуется получить</param>
         /// <typeparam name="TValue">Тип значения</typeparam>
         /// <returns>Значение словаря для указанного ключа</returns>
-        [CanBeNull]
-        public static TValue GetValue<TValue>([NotNull] this Dictionary<string, object> dictionary, [NotNull] string name) => dictionary.TryGetValue(name, out var value) ? (TValue)value : default;
+        public static TValue? GetValue<TValue>(this Dictionary<string, object> dictionary, string name) => dictionary.TryGetValue(name, out var value) ? (TValue)value : default;
 
         /// <summary>Инициализация словаря указанным методом для указанного числа значений</summary>
         /// <param name="dictionary">Инициализируемый словарь</param>
@@ -206,12 +206,11 @@ namespace System.Collections.Generic
         /// <typeparam name="TKey">Тип ключа словаря</typeparam>
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         /// <returns>Инициализированный словарь</returns>
-        [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
+            this IDictionary<TKey, TValue> dictionary,
             int count,
-            [NotNull] Func<KeyValuePair<TKey, TValue>> initializer
+            Func<KeyValuePair<TKey, TValue>> initializer
         )
         {
             for (var i = 0; i < count; i++)
@@ -229,13 +228,12 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         /// <typeparam name="TParameter">Тип параметра</typeparam>
         /// <returns>Инициализированный словарь</returns>
-        [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue, TParameter>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
+            this IDictionary<TKey, TValue> dictionary,
             int count,
-            [CanBeNull] TParameter parameter,
-            [NotNull] Func<TParameter, KeyValuePair<TKey, TValue>> initializer
+            TParameter? parameter,
+            Func<TParameter, KeyValuePair<TKey, TValue>> initializer
         )
         {
             for (var i = 0; i < count; i++)
@@ -251,12 +249,11 @@ namespace System.Collections.Generic
         /// <typeparam name="TKey">Тип ключа словаря</typeparam>
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         /// <returns>Инициализированный словарь</returns>
-        [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
+            this IDictionary<TKey, TValue> dictionary,
             int count,
-            [NotNull] Func<int, KeyValuePair<TKey, TValue>> initializer
+            Func<int, KeyValuePair<TKey, TValue>> initializer
         )
         {
             for (var i = 0; i < count; i++)
@@ -274,13 +271,12 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         /// <typeparam name="TParameter">Тип параметра инициализации</typeparam>
         /// <returns>Инициализированный словарь</returns>
-        [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue, TParameter>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
+            this IDictionary<TKey, TValue> dictionary,
             int count,
-            [NotNull] TParameter parameter,
-            [NotNull] Func<int, TParameter, KeyValuePair<TKey, TValue>> initializer
+            [DisallowNull] TParameter parameter,
+            Func<int, TParameter, KeyValuePair<TKey, TValue>> initializer
         )
         {
             for (var i = 0; i < count; i++)
@@ -296,12 +292,11 @@ namespace System.Collections.Generic
         /// <typeparam name="TKey">Тип ключа словаря</typeparam>
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         /// <returns>Инициализированный словарь</returns>
-        [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] IEnumerable<TKey> keys,
-            [NotNull] Func<TKey, TValue> initializer
+            this IDictionary<TKey, TValue> dictionary,
+            IEnumerable<TKey> keys,
+            Func<TKey, TValue> initializer
         )
         {
             foreach (var key in keys)
@@ -319,13 +314,12 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения словаря</typeparam>
         /// <typeparam name="TParameter">Тип параметра инициализации</typeparam>
         /// <returns>Инициализированный словарь</returns>
-        [NotNull]
         public static IDictionary<TKey, TValue> Initialize<TKey, TValue, TParameter>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] IEnumerable<TKey> keys,
-            [CanBeNull] TParameter parameter,
-            [NotNull] Func<TKey, TParameter, TValue> initializer
+            this IDictionary<TKey, TValue> dictionary,
+            IEnumerable<TKey> keys,
+            TParameter? parameter,
+            Func<TKey, TParameter, TValue> initializer
         )
         {
             foreach (var key in keys)
@@ -340,11 +334,10 @@ namespace System.Collections.Generic
         /// <typeparam name="TKey">Тип ключа</typeparam>
         /// <typeparam name="TValue">Тип значения</typeparam>
         /// <returns>Массив удалённых пар ключ-значение</returns>
-        [NotNull]
         public static KeyValuePair<TKey, TValue>[] RemoveWhere<TKey, TValue>
         (
-            [NotNull] this IDictionary<TKey, TValue> dictionary,
-            [NotNull] Func<KeyValuePair<TKey, TValue>, bool> selector
+            this IDictionary<TKey, TValue> dictionary,
+            Func<KeyValuePair<TKey, TValue>, bool> selector
         )
         {
             var to_remove = dictionary.Where(selector).ToArray();
@@ -359,8 +352,7 @@ namespace System.Collections.Generic
         /// <param name="dictionary">Словарь, из которого требуется удалить данные</param>
         /// <param name="keys">Перечисление удаляемых ключей</param>
         /// <returns>Массив удалённых значений</returns>
-        [NotNull]
-        public static TValue[] RemoveItems<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> dictionary, [NotNull] IEnumerable<TKey> keys)
+        public static TValue[] RemoveItems<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IEnumerable<TKey> keys)
         {
             var result = new List<TValue>(dictionary.Count);
             foreach (var key in keys)
@@ -377,7 +369,7 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип второго элемента кортежа - тип значения</typeparam>
         /// <param name="items">Перечисление кортежей двух элементов</param>
         /// <returns>Словарь, составленный из ключей - первых элементов кортежа и значений - вторых элементов</returns>
-        [NotNull] public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>([NotNull] this IEnumerable<(TKey Key, TValue Value)> items) =>
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey Key, TValue Value)> items) =>
             items.ToDictionary(value => value.Key, value => value.Value);
 
         /// <summary>Преобразовать в безопасный для ключей словарь</summary>
@@ -385,8 +377,7 @@ namespace System.Collections.Generic
         /// <typeparam name="TValue">Тип значения</typeparam>
         /// <param name="Dictionary">Исходный словарь</param>
         /// <returns></returns>
-        [NotNull]
-        public static DictionaryKeySafe<TKey, TValue> ToSafeDictionary<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> Dictionary) =>
+        public static DictionaryKeySafe<TKey, TValue> ToSafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> Dictionary) =>
             Dictionary as DictionaryKeySafe<TKey, TValue> ?? new(Dictionary);
 
         /// <summary>Добавить значение в словарь, если ключ отсутствует</summary>

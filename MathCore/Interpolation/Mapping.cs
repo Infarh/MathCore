@@ -18,7 +18,7 @@ namespace MathCore.Interpolation
         /// <param name="x2">Аргумент второго значения</param>
         /// <param name="y2">Второе значение</param>
         /// <returns></returns>
-        public static double GetValue(double x, double x1, double y1, double x2, double y2) => (y2 - y1) / (x2 - x1) * (x - x1) + y1;
+        public static double GetValue(double x, double x1, double y1, double x2, double y2) => Interpolation.Linear.Interpolate(x, x1, y1, x2, y2);
 
         /* ------------------------------------------------------------------------------------------ */
 
@@ -56,7 +56,7 @@ namespace MathCore.Interpolation
 
         /* ------------------------------------------------------------------------------------------ */
 
-        public double Value(double x) => GetValue(x, X1, Y1, X2, Y2);
+        public double Value(double x) => Interpolation.Linear.Interpolate(x, X1, Y1, X2, Y2);
 
         [NotNull] public Func<double, double> GetFunction() => Value;
 

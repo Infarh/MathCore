@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using MathCore.Annotations;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
@@ -211,11 +210,11 @@ namespace MathCore
 
                 /// <summary>Получить имена значений количества байт с приставками "B", "kB", "MB", "GB", "TB"</summary>
                 /// <returns>"B", "kB", "MB", "GB", "TB"</returns>
-                [NotNull] public static string[] GetDataNames() => new[] { "B", "kB", "MB", "GB", "TB" };
+                [Annotations.NotNull] public static string[] GetDataNames() => new[] { "B", "kB", "MB", "GB", "TB" };
 
                 /// <summary>Получить русскоязычные имена значений количества байт с приставками "Б", "кБ", "МБ", "ГБ", "ТБ"</summary>
                 /// <returns>"Б", "кБ", "МБ", "ГБ", "ТБ"</returns>
-                [NotNull] public static string[] GetDataNamesRu() => new[] { "Б", "кБ", "МБ", "ГБ", "ТБ" };
+                [Annotations.NotNull] public static string[] GetDataNamesRu() => new[] { "Б", "кБ", "МБ", "ГБ", "ТБ" };
             }
         }
 

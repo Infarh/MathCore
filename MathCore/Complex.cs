@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Serialization;
@@ -26,13 +27,13 @@ namespace MathCore
 
         /// <summary>Метод убирает все парные символы скобок в начале и конце строки</summary>
         /// <param name="str">Очищаемая строка</param>
-        private static void ClearString([NotNull] ref string str)
+        private static void ClearString(ref string str)
         {
-            while (str[0] == '{' && str[str.Length - 1] == '}') str = str.Substring(1, str.Length - 2);
-            while (str[0] == '[' && str[str.Length - 1] == ']') str = str.Substring(1, str.Length - 2);
-            while (str[0] == '(' && str[str.Length - 1] == ')') str = str.Substring(1, str.Length - 2);
-            while (str[0] == '\'' && str[str.Length - 1] == '\'') str = str.Substring(1, str.Length - 2);
-            while (str[0] == '"' && str[str.Length - 1] == '"') str = str.Substring(1, str.Length - 2);
+            while (str[0] == '{' && str[^1] == '}') str = str.Substring(1, str.Length - 2);
+            while (str[0] == '[' && str[^1] == ']') str = str.Substring(1, str.Length - 2);
+            while (str[0] == '(' && str[^1] == ')') str = str.Substring(1, str.Length - 2);
+            while (str[0] == '\'' && str[^1] == '\'') str = str.Substring(1, str.Length - 2);
+            while (str[0] == '"' && str[^1] == '"') str = str.Substring(1, str.Length - 2);
             if (str.IndexOf(' ') != -1) str = str.Replace(" ", string.Empty);
         }
 
@@ -41,7 +42,7 @@ namespace MathCore
         /// <returns>Комплексное число, получаемое в результате разбора строки</returns>
         /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
         /// <exception cref="FormatException">В случае ошибочной строки</exception>
-        public static Complex Parse([NotNull] string str)
+        public static Complex Parse(string str)
         {
             if (str is null) throw new ArgumentNullException(nameof(str));
             // Если получили пустую строку, то это ошибка преобразования
@@ -87,10 +88,10 @@ namespace MathCore
         /// <param name="str">Разбираемая строка</param>
         /// <param name="z">Число, получаемое в результате разбора строки</param>
         /// <returns>Истина, если операция разбора строки выполнена успешно</returns>
-        public static bool TryParse([CanBeNull] string str, out Complex z)
+        public static bool TryParse(string? str, out Complex z)
         {
             // Если получили пустую строку, то это ошибка преобразования
-            if (string.IsNullOrWhiteSpace(str) || str.Length == 0)
+            if (string.IsNullOrWhiteSpace(str) || str!.Length == 0)
             {
                 z = default;
                 return false;
@@ -144,7 +145,7 @@ namespace MathCore
         /// <param name="Im">Комплексный аргумент</param>
         /// <returns>Значение логарифма</returns>
         public static Complex Ln(double Im)
-            => new(Math.Log(Im), Math.Abs(Im).Equals(0d) ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
+            => new(Math.Log(Im), Math.Abs(Im) == 0 ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
 
         ///<summary>Натуральный логогриф комплексного числа</summary>
         ///<param name="z">Комплексное число</param>
@@ -157,7 +158,7 @@ namespace MathCore
         ///<returns>Логарифм мнимого числа по действительному основанию</returns>
         public static Complex Log(double Im, double b) => new(
             Math.Log(Im, b),
-            Math.Abs(Im) < double.Epsilon
+            Im == 0
                 ? 0
                 : (Im > 0
                       ? Consts.pi05
@@ -190,11 +191,6 @@ namespace MathCore
             var e = Math.Exp(re);
             return new Complex(e * Math.Cos(im), e * Math.Sin(im));
         }
-
-        ///// <summary>Алгебраическая форма записи комплексного числа</summary>
-        ///// <param name="Re">Действительная часть числа</param>
-        ///// <returns>Комплексное число в алгебраической форме записи</returns>
-        //public static Complex Mod(double Re) { return new Complex(Re); }
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
@@ -248,15 +244,15 @@ namespace MathCore
         /// <returns>Массив комплексных чисел</returns>
         /// <exception cref="ArgumentNullException"><paramref name="Re"/> or <paramref name="Im"/> is <see langword="null"/></exception>
         /// <exception cref="InvalidOperationException">Длины массивов не совпадают</exception>
-        [NotNull]
-        public static Complex[] CreateArray([NotNull] double[] Re, [NotNull] double[] Im)
+        public static Complex[] CreateArray(double[] Re, double[] Im)
         {
             if (Re is null) throw new ArgumentNullException(nameof(Re));
             if (Im is null) throw new ArgumentNullException(nameof(Im));
             if (Re.Length != Im.Length) throw new InvalidOperationException(@"Длины массивов не совпадают");
 
             var result = new Complex[Re.Length];
-            for (var j = 0; j < result.Length; j++) result[j] = new Complex(Re[j], Im[j]);
+            for (var j = 0; j < result.Length; j++) 
+                result[j] = new Complex(Re[j], Im[j]);
             return result;
         }
 
@@ -271,7 +267,6 @@ namespace MathCore
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Преобразование комплексного числа в выражение</summary>
-        [NotNull]
         public ComplexConstantExpression Expression => ComplexExpression.Mod(_Re, _Im);
 
         /// <summary>Действительная часть</summary>
@@ -301,6 +296,8 @@ namespace MathCore
             ? new Complex(double.PositiveInfinity, double.PositiveInfinity)
             : i / this;
 
+        public bool IsNaN => double.IsNaN(_Re) || double.IsNaN(_Im);
+
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Комплексное число</summary>
@@ -317,83 +314,91 @@ namespace MathCore
 
         /// <summary>Представление комплексного числа в текстовой экспоненциальной форме</summary>
         /// <returns>Текстовое экспоненциальное представление комплексного числа</returns>
-        [NotNull, DST]
+        [DST]
         public string ToString_Exponent()
         {
             var abs = Abs;
             var arg = Arg;
-            return abs.Equals(1)
-                ? arg.Equals(0) ? "1" : $"e{{i{Arg}}}"
-                : arg.Equals(0) ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}}}";
+            return abs == 1
+                ? arg == 0 ? "1" : $"e{{i{Arg}}}"
+                : arg == 0 ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}}}";
         }
 
         /// <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента к значению pi</summary>
         /// <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента к значению pi</returns>
-        [NotNull, DST]
+        [DST]
         public string ToString_Exponent_pi()
         {
             var abs = Abs;
             var arg = Arg / Consts.pi;
-            return abs.Equals(1)
-                ? arg.Equals(0) ? "1" : $"e{{i{Arg}pi}}"
-                : arg.Equals(0) ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}pi}}";
+            return abs == 1
+                ? arg == 0 ? "1" : $"e{{i{Arg}pi}}"
+                : arg == 0 ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}pi}}";
         }
 
         /// <summary>Представление комплексного числа в текстовой экспоненциальной форме с нормировкой аргумента в градусах</summary>
         /// <returns>Текстовое экспоненциальное представление комплексного числа с нормировкой аргумента в градусах</returns>
-        [NotNull, DST]
+        [DST]
         public string ToString_Exponent_Deg()
         {
             var abs = Abs;
             var arg = Arg.ToDeg();
-            return abs.Equals(1)
-                ? arg.Equals(0) ? "1" : $"e{{i{Arg}deg}}"
-                : arg.Equals(0) ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}deg}}";
+            return abs == 1
+                ? arg == 0 ? "1" : $"e{{i{Arg}deg}}"
+                : arg == 0 ? abs.ToString(CultureInfo.CurrentCulture) : $"{Abs}e{{i{Arg}deg}}";
         }
 
         /// <summary>Строковый эквивалент</summary>
-        [DST, NotNull]
+        [DST]
         public override string ToString()
         {
-            if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
-            var re = Re.ToString(CultureInfo.CurrentCulture);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
-            if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
+            var re = Re;
+            var im = Im;
+            if (re == 0 && im == 0) return "0";
+            var re_str = re.ToString(CultureInfo.CurrentCulture);
+            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
+            if (im < 0) im_str = $"-{im_str}";
+            return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
 
         /// <summary>Преобразование в строковый формат</summary>
         /// <param name="Format">Формат преобразования</param>
         /// <returns>Строковое представление</returns>
-        [DST, NotNull]
+        [DST]
         public string ToString(string Format)
         {
-            if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
-            var re = Re.ToString(Format);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(Format) : string.Empty)}i";
-            if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
+            var re = Re;
+            var im = Im;
+            if (re == 0 && im == 0) return "0";
+            var re_str = re.ToString(Format);
+            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(Format) : string.Empty)}i";
+            if (im < 0) im_str = $"-{im_str}";
+            return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
 
         [DST]
         public string ToString(IFormatProvider FormatProvider)
         {
-            if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
-            var re = Re.ToString(FormatProvider);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(FormatProvider) : string.Empty)}i";
-            if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
+            var re = Re;
+            var im = Im;
+            if (re == 0 && im == 0) return "0";
+            var re_str = re.ToString(FormatProvider);
+            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(FormatProvider) : string.Empty)}i";
+            if (im < 0) im_str = $"-{im_str}";
+            return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
 
         /// <inheritdoc />
         [DST]
         public string ToString(string format, IFormatProvider FormatProvider)
         {
-            if (Math.Abs(Re) < double.Epsilon && Math.Abs(Im) < double.Epsilon) return "0";
-            var re = Re.ToString(format, FormatProvider);
-            var im = $"{(Math.Abs(Math.Abs(Im) - 1) > double.Epsilon ? Math.Abs(Im).ToString(format, FormatProvider) : string.Empty)}i";
-            if (Im < 0) im = $"-{im}";
-            return $"{(Math.Abs(Re) > double.Epsilon ? $"{re}{(Im > 0 ? "+" : string.Empty)}" : string.Empty)}{(Math.Abs(Im) > double.Epsilon ? im : string.Empty)}";
+            var re = Re;
+            var im = Im;
+            if (re == 0 && im == 0) return "0";
+            var re_str = re.ToString(format, FormatProvider);
+            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(format, FormatProvider) : string.Empty)}i";
+            if (im < 0) im_str = $"-{im_str}";
+            return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
 
         /// <inheritdoc />
@@ -427,7 +432,7 @@ namespace MathCore
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
         [DST]
-        public bool Equals(Complex other) => _Re.Equals(other._Re) && _Im.Equals(other._Im);
+        public bool Equals(Complex other) => (IsNaN && other.IsNaN) || _Re.Equals(other._Re) && _Im.Equals(other._Im);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
@@ -439,12 +444,12 @@ namespace MathCore
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
         [DST]
-        public bool Equals(double other) => _Re.Equals(other) && _Im.Equals(0d);
+        public bool Equals(double other) => (double.IsNaN(other) && IsNaN) || _Re.Equals(other) && _Im.Equals(0d);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
+        //[DST]
         bool IEquatable<double>.Equals(double other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
@@ -499,7 +504,7 @@ namespace MathCore
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
         [DST]
-        public bool Equals(float other) => _Re.Equals(other) && _Im.Equals(0d);
+        public bool Equals(float other) => (float.IsNaN(other) && IsNaN) || _Re.Equals(other) && _Im.Equals(0d);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
@@ -558,7 +563,9 @@ namespace MathCore
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Кортеж двух вещественных чисел</param>
         /// <returns>Истина, если действительная и мнимая части идентичны</returns>
-        bool IEquatable<(double Re, double Im)>.Equals((double Re, double Im) other) => _Re.Equals(other.Re) && _Im.Equals(other.Im);
+        bool IEquatable<(double Re, double Im)>.Equals((double Re, double Im) other) => 
+            (IsNaN && (double.IsNaN(other.Re) || double.IsNaN(other.Im))) 
+            || _Re.Equals(other.Re) && _Im.Equals(other.Im);
 
         #endregion
 

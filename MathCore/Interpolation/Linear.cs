@@ -4,6 +4,8 @@ namespace MathCore.Interpolation
 {
     public class Linear : Interpolator, IInterpolator
     {
+        public static double Interpolate(double x, double x1, double y1, double x2, double y2) => y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+
         private readonly double[] _X;
         private readonly double[] _Y;
 
@@ -24,8 +26,8 @@ namespace MathCore.Interpolation
             else
                 do
                 {
-                    if(_X[i1].Equals(x)) return _Y[i1];
-                    if(_X[i2].Equals(x)) return _Y[i2];
+                    if(_X[i1] == x) return _Y[i1];
+                    if(_X[i2] == x) return _Y[i2];
 
                     var i = (i1 + i2) / 2;
                     var xi = _X[i];

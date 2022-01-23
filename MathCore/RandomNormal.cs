@@ -16,6 +16,10 @@ namespace MathCore
         /// <summary>Математическое ожидание</summary>
         public double Mu { get => _Mu; set => _Mu = value; }
 
+        public RandomNormal() { }
+
+        public RandomNormal(int Seed) : base(Seed) { }
+
         protected override double Sample()
         {
             var r2 = 0d;

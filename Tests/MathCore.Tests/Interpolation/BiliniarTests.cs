@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
 
 using MathCore.Interpolation;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests.Interpolation;
 
@@ -33,6 +32,6 @@ public class BiliniarTests
 
         var result = interpolator.Interpolate(x0, y0);
 
-        Assert.That.Value(result).IsEqual(z0, 9.10e-004);
+        Assert.That.Value(result).IsEqual(z0, 1.75e-003);
     }
 }
