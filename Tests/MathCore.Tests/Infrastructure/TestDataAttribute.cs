@@ -63,15 +63,7 @@ public class TestDataAttribute : Attribute, ITestDataSource
 
             yield return result;
         }
-        //yield break;
     }
-
-    //public string GetDisplayName(MethodInfo TestMethod, object[] data)
-    //{
-    //    if (DisplayName is { Length: > 0 } display_name)
-    //        return display_name;
-    //    return $"{TestMethod.Name}({string.Join(", ", data)})";
-    //}
 
     public string GetDisplayName(MethodInfo TestMethod, object[] data)
     {
@@ -113,10 +105,5 @@ public class TestDataAttribute : Attribute, ITestDataSource
 
 
         return result.ToString();
-        //return string.Format(CultureInfo.CurrentCulture, "{0} ({1})", new object[]
-        //{
-        //    TestMethod.Name,
-        //    string.Join(",", data.Select(v => v is Array array ? $"{{{string.Join(", ", array.Cast<object>())}}}" : v))
-        //});
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using MathCore.Annotations;
@@ -225,8 +224,6 @@ namespace MathCore.MathParser
 
         /// <summary>Обработка функций</summary>
         /// <param name="Expression">Обрабатываемое математическое выражение</param>
-        [SuppressMessage("ReSharper", "CyclomaticComplexity")]
-        [SuppressMessage("ReSharper", "ConvertSwitchStatementToSwitchExpression")]
         internal void ProcessFunctions([NotNull] MathExpression Expression)
         {
             foreach (var function in Expression.Functions)

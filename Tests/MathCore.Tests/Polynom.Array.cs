@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests;
 
+
 [TestClass]
 public class PolynomArray
 {
@@ -1304,8 +1305,10 @@ public class PolynomArray
                 yield return (A, x, Y: GetCoefficientsValue(A, x));
     }
 
+    //[DataTestMethod, DynamicData()] //https://www.meziantou.net/mstest-v2-data-tests.htm
     [TestMethod]
     [TestData(MethodSourceName = nameof(GetValue_ComplexX_ComplexArray_DataSource))]
+    //[DataRowSource(MethodSourceName = nameof(GetValue_ComplexX_ComplexArray_DataSource))]
     public void GetValue_ComplexX_ComplexArray(Complex[] A, Complex x, Complex Y)
     {
         var y = Polynom.Array.GetValue(x, A);

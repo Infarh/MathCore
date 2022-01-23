@@ -1,5 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Diagnostics.CodeAnalysis;
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -16,8 +17,7 @@ namespace System.Collections.Generic
         /// <typeparam name="T">Тип клонируемого объекта</typeparam>
         /// <param name="obj">Клонируемый объект</param>
         /// <returns>Клонированный объект</returns>
-        [NotNull]
-        public static T CloneObject<T>([NotNull] this T obj) where T : ICloneable
+        public static T CloneObject<T>(this T obj) where T : ICloneable
         {
             var result = (T)obj.Clone();
             (result as IInitializable)?.Initialize();
@@ -32,8 +32,7 @@ namespace System.Collections.Generic
         /// <param name="obj">Клонируемый объект</param>
         /// <param name="Initializer">Метод, вызываемый для клонированного объекта для его инициализации</param>
         /// <returns>Клонированный объект</returns>
-        [NotNull]
-        public static T CloneObject<T>([NotNull] this T obj, [NotNull] Action<T> Initializer) where T : ICloneable
+        public static T CloneObject<T>(this T obj, Action<T> Initializer) where T : ICloneable
         {
             var result = (T)obj.Clone();
             (result as IInitializable)?.Initialize();
@@ -52,8 +51,7 @@ namespace System.Collections.Generic
         /// <param name="Initializer">Метод, вызываемый для клонированного объекта для его инициализации</param>
         /// <param name="parameter">Параметр процесса инициализации</param>
         /// <returns>Клонированный объект</returns>
-        [NotNull]
-        public static T CloneObject<T, TParameter>([NotNull] this T obj, [NotNull] Action<T, TParameter> Initializer, TParameter parameter)
+        public static T CloneObject<T, TParameter>(this T obj, Action<T, TParameter> Initializer, TParameter parameter)
             where T : ICloneable
         {
             var result = (T)obj.Clone();
@@ -72,8 +70,7 @@ namespace System.Collections.Generic
         /// <param name="obj">Клонируемый объект</param>
         /// <param name="parameter">Параметр процесса инициализации</param>
         /// <returns>Клонированный объект</returns>
-        [NotNull]
-        public static T CloneObject<T, TParameter>([NotNull] this T obj, TParameter parameter)
+        public static T CloneObject<T, TParameter>(this T obj, TParameter parameter)
             where T : ICloneable, IInitializable<TParameter>
         {
             var result = (T)obj.Clone();

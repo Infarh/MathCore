@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿#nullable enable
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -21,8 +22,7 @@ namespace System
         /// <param name="sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         /// <returns>Задача асинхронного выполнения обработчика события</returns>
-        [NotNull]
-        public static Task InvokeAsync([CanBeNull] this EventHandler handler, object sender, EventArgs e) =>
+        public static Task InvokeAsync(this EventHandler? handler, object sender, EventArgs e) =>
             handler is null ? Task.CompletedTask : Task.Run(() => handler(sender, e));
 
         /// <summary>Асинхронный запуск обработчика события с созданием новой задачи</summary>
@@ -30,8 +30,7 @@ namespace System
         /// <param name="sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         /// <returns>Задача асинхронного выполнения обработчика события</returns>
-        [NotNull]
-        public static Task InvokeAsync<TEventArgs>([CanBeNull] this EventHandler<TEventArgs> handler, object sender, TEventArgs e)
+        public static Task InvokeAsync<TEventArgs>(this EventHandler<TEventArgs>? handler, object sender, TEventArgs e)
             where TEventArgs : EventArgs =>
             handler is null ? Task.CompletedTask : Task.Run(() => handler(sender, e));
 
@@ -40,7 +39,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
         [DST]
-        public static void Start([CanBeNull] this NotifyCollectionChangedEventHandler Handler, object Sender, NotifyCollectionChangedEventArgs e)
+        public static void Start(this NotifyCollectionChangedEventHandler? Handler, object Sender, NotifyCollectionChangedEventArgs e)
         {
             if (Handler is null) return;
             var invocations = Handler.GetInvocationList();
@@ -61,7 +60,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
         public static void Start(this PropertyChangedEventHandler Handler, object Sender,
-            [CallerMemberName, CanBeNull] string PropertyName = null)
+            [CallerMemberName] string? PropertyName = null)
             => Handler.Start(Sender, new PropertyChangedEventArgs(PropertyName));
 
         /// <summary>Потоко-безопасная генерация события</summary>
@@ -69,7 +68,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="PropertyName">Имена изменившихся свойств</param>
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        public static void Start([CanBeNull] this PropertyChangedEventHandler Handler, object Sender, [NotNull] params string[] PropertyName)
+        public static void Start(this PropertyChangedEventHandler? Handler, object Sender, params string[] PropertyName)
         {
             if (PropertyName is null) throw new ArgumentNullException(nameof(PropertyName));
             if (Handler is null || PropertyName.Length == 0) return;
@@ -93,7 +92,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
         [DST]
-        public static void Start([CanBeNull] this PropertyChangedEventHandler Handler, object Sender, PropertyChangedEventArgs e)
+        public static void Start(this PropertyChangedEventHandler? Handler, object Sender, PropertyChangedEventArgs e)
         {
             if (Handler is null) return;
             foreach (var d in Handler.GetInvocationList())
@@ -113,7 +112,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргумент события</param>
         [DST]
-        public static void Start([CanBeNull] this EventHandler Handler, object Sender, EventArgs e)
+        public static void Start(this EventHandler? Handler, object Sender, EventArgs e)
         {
             if (Handler is null) return;
             var invocations = Handler.GetInvocationList();
@@ -135,8 +134,8 @@ namespace System
         /// <param name="e">Аргумент события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
         /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
-        [DST, CanBeNull]
-        public static IAsyncResult StartAsync([CanBeNull] this EventHandler Handler, object Sender, EventArgs e, [CanBeNull] AsyncCallback CallBack = null, [CanBeNull] object State = null) =>
+        [DST]
+        public static IAsyncResult? StartAsync(this EventHandler? Handler, object Sender, EventArgs e, AsyncCallback? CallBack = null, object? State = null) =>
             Handler is null ? null : ((Action)(() => Handler.Invoke(Sender, e))).BeginInvoke(CallBack, State);
 
         /// <summary>Быстрая генерация события</summary>
@@ -150,7 +149,7 @@ namespace System
         /// <param name="Sender">Источник события</param>
         /// <param name="e">Аргументы события</param>
         [DST]
-        public static void FastStart([CanBeNull] this EventHandler Handler, object Sender, EventArgs e) => Handler?.Invoke(Sender, e);
+        public static void FastStart(this EventHandler? Handler, object Sender, EventArgs e) => Handler?.Invoke(Sender, e);
 
         /// <summary>Быстрая генерация события</summary>
         /// <param name="Handler">Обработчик события</param>
@@ -158,7 +157,7 @@ namespace System
         /// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         /// <param name="e">Аргументы события</param>
         [DST]
-        public static void FastStart<TEventArgs>([CanBeNull] this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e) where TEventArgs : EventArgs
+        public static void FastStart<TEventArgs>(this EventHandler<TEventArgs>? Handler, object Sender, TEventArgs e) where TEventArgs : EventArgs
             => Handler?.Invoke(Sender, e);
 
         /// <summary>Потоко-безопасная генерация события</summary>
@@ -167,7 +166,7 @@ namespace System
         /// <typeparam name="TEventArgs">Тип аргумента события</typeparam>
         /// <param name="e">Аргументы события</param>
         [DST]
-        public static void Start<TEventArgs>([CanBeNull] this EventHandler<TEventArgs> Handler, object Sender, TEventArgs e)
+        public static void Start<TEventArgs>(this EventHandler<TEventArgs>? Handler, object Sender, TEventArgs e)
             where TEventArgs : EventArgs
         {
             if (Handler is null) return;
@@ -191,13 +190,13 @@ namespace System
         /// <param name="e">Аргументы события</param>
         /// <param name="CallBack">Метод завершения генерации события</param>
         /// <param name="State">Объект-состояние, передаваемый в метод завершения генерации события</param>
-        [DST, CanBeNull]
-        public static IAsyncResult StartAsync<TEventArgs>(
-            [CanBeNull] this EventHandler<TEventArgs> Handler,
+        [DST]
+        public static IAsyncResult? StartAsync<TEventArgs>(
+            this EventHandler<TEventArgs>? Handler,
             object Sender,
             TEventArgs e,
-            [CanBeNull] AsyncCallback CallBack = null,
-            [CanBeNull] object State = null)
+            AsyncCallback? CallBack = null,
+            object? State = null)
             where TEventArgs : EventArgs =>
             Handler is null
                 ? null
@@ -216,8 +215,8 @@ namespace System
         /// <typeparam name="TResult">Тип результата обработки события</typeparam>
         /// <typeparam name="TSender">Тип источника события</typeparam>
         /// <returns>Массив результатов обработки события</returns>
-        [DST, NotNull]
-        public static TResult[] Start<TResult, TSender, TArgs>([CanBeNull] this EventHandler<TResult, TSender, TArgs> Handler, TSender Sender, TArgs Args) =>
+        [DST]
+        public static TResult[] Start<TResult, TSender, TArgs>(this EventHandler<TResult, TSender, TArgs>? Handler, TSender Sender, TArgs Args) =>
             Handler is null
                 ? Array.Empty<TResult>()
                 : Handler

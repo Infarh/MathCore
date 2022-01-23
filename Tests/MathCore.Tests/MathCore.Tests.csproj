@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="System"/>
-    <Using Include="System.Linq"/>
-    <Using Include="System.Collections.Generic"/>
-    <Using Include="System.Threading.Tasks"/>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+    <Using Include="System" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MathCore.TestsExtensions" Version="0.1.32" />
+    <None Include=".Properties\test.runsettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MathCore.TestsExtensions" Version="0.1.33" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />

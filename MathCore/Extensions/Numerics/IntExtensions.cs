@@ -1,10 +1,9 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 using MathCore;
-using MathCore.Annotations;
 
 using Complex = MathCore.Complex;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -74,7 +73,6 @@ namespace System
         /// <param name="N">Раскладываемое число</param>
         /// <returns>Массив простых множителей</returns>
         //[Copyright("Alexandr A Alexeev 2011", url = "http://eax.me")]
-        [NotNull]
         public static int[] FactorizationList(this int N)
         {
             var n = Math.Abs(N);
@@ -105,7 +103,6 @@ namespace System
         /// <summary>Разложение числа на простые множители</summary>
         /// <param name="N">Раскладываемое число</param>
         /// <returns>Словарь с делителями числа - значение элементов словаря - кратность делителя</returns>
-        [NotNull]
         public static Dictionary<int, int> Factorization(this int N)
         {
             var n = Math.Abs(N);
@@ -182,7 +179,7 @@ namespace System
         /// <param name="Value">Преобразуемое число</param>
         /// <param name="Length">Длина результирующего массива бит. По умолчанию = 32 битам</param>
         /// <returns>Битовый массив числа</returns>
-        [DST, NotNull]
+        [DST]
         public static BitArray GetBitArray(this int Value, int Length = 32)
         {
             var array = new BitArray(Length);
@@ -443,7 +440,6 @@ namespace System
             return n;
         }
 
-        [NotNull]
         public static int[] ToBase(this int x, int Base = 16)
         {
             var result = new int[GetNumberOfDigits(x, Base)];
@@ -463,7 +459,7 @@ namespace System
         [DST]
         public static int SetFlag(this int Value, int Flag, int Mask) => (Value & ~Mask) | (Flag & Mask);
 
-        public static int ToInteger([NotNull] this byte[] data, int Offset = 0, bool IsMsbFirst = true)
+        public static int ToInteger(this byte[] data, int Offset = 0, bool IsMsbFirst = true)
         {
             if(data.Length == 0) return 0;
             var result = 0;
@@ -491,7 +487,7 @@ namespace System
         public static int ToInteger(this byte[] data, int Offset, int Length, bool IsMsbFirst = true) => 
             IsMsbFirst ? data.ToIntegerMSB(Offset, Length) : data.ToIntegerLSB(Offset, Length);
 
-        public static int ToIntegerMSB([NotNull] this byte[] data, int Offset, int Length)
+        public static int ToIntegerMSB(this byte[] data, int Offset, int Length)
         {
             var result = 0;
 
@@ -504,7 +500,7 @@ namespace System
             return result;
         }
 
-        public static uint ToUIntegerMSB([NotNull] this byte[] data, int Offset, int Length)
+        public static uint ToUIntegerMSB(this byte[] data, int Offset, int Length)
         {
             var result = 0u;
 
@@ -517,7 +513,7 @@ namespace System
             return result;
         }
 
-        public static int ToIntegerLSB([NotNull] this byte[] data, int Offset, int Length)
+        public static int ToIntegerLSB(this byte[] data, int Offset, int Length)
         {
             var result = 0;
 
@@ -530,7 +526,7 @@ namespace System
             return result;
         }
 
-        public static uint ToUIntegerLSB([NotNull] this byte[] data, int Offset, int Length)
+        public static uint ToUIntegerLSB(this byte[] data, int Offset, int Length)
         {
             var result = 0u;
 

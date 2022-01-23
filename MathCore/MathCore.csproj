@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.59</Version>
+    <Version>0.0.60</Version>
     <PackageReleaseNotes>
-      Доработка механизма чтения CSV
+      Рефакторинг
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -43,6 +43,10 @@
     <None Remove="MathParser\Operations.xml" />
     <None Remove="MathParser\Operations.xsd" />
   </ItemGroup>
+
+  <!--<ItemGroup>
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" PrivateAssets="All"/>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Update="ActionList.tt">

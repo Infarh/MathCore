@@ -4,8 +4,10 @@ using MathCore.Evaluations;
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -27,7 +29,8 @@ namespace System
         /// <param name="obj">Объект, вызов к которому надо выполнить</param>
         /// <param name="action">Выполняемое над объектом действие, ошибки в котором требуется перехватить</param>
         /// <param name="OnError">Метод обработки исключения</param>
-        public static void Try<T>(this T obj, Action<T> action, Action<T, Exception> OnError)
+        [return: NotNullIfNotNull("obj")]
+        public static T Try<T>(this T obj, Action<T> action, Action<T, Exception> OnError)
         {
             if (OnError is null) throw new ArgumentNullException(nameof(OnError));
             try
@@ -38,6 +41,8 @@ namespace System
             {
                 OnError(obj, e);
             }
+
+            return obj;
         }
 
         /// <summary>Вычислить значение для указанного объекта с обработкой ошибок</summary>
@@ -251,6 +256,7 @@ namespace System
         /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
         /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
 
+        [return: Diagnostics.CodeAnalysis.NotNull]
         public static T NotNull<T>(this T? obj, string? Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
 
         /// <summary>Проверка параметра на <see langword="null"/></summary>
@@ -261,6 +267,7 @@ namespace System
         /// <returns>Объект, гарантированно не <see langword="null"/></returns>
         /// <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
 
+        [return: Diagnostics.CodeAnalysis.NotNull]
         public static T ParamNotNull<T>(this T? obj, string ParameterName, string? Message = null) where T : class =>
             obj ?? throw new ArgumentException(Message ?? $"Отсутствует ссылка для параметра {ParameterName}", ParameterName);
 
@@ -292,6 +299,7 @@ namespace System
         /// <param name="parameter">Параметр инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T?, TP?>? Initializer) where T : class
         {
             if (obj != null)
@@ -308,6 +316,7 @@ namespace System
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T, TP1, TP2>(this T? obj, TP1? parameter1, TP2? parameter2, Action<T?, TP1?, TP2?>? Initializer
         ) where T : class
         {
@@ -327,6 +336,7 @@ namespace System
         /// <param name="parameter3">Параметр инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T, TP1, TP2, TP3>(
             this T? obj,
             TP1? parameter1,
@@ -345,6 +355,7 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T>(this T? obj, Func<T?, T?>? Initializer) where T : class =>
             Initializer != null && obj != null ? Initializer(obj) : obj;
 
@@ -355,6 +366,7 @@ namespace System
         /// <param name="parameter">Параметр инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Func<T?, TP?, T?>? Initializer) where T : class =>
             Initializer != null && obj != null ? Initializer(obj, parameter) : obj;
 
@@ -369,6 +381,7 @@ namespace System
         /// <param name="parameter3">Параметр 3 инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T, TP1, TP2, TP3>(
             this T? obj,
             TP1? parameter1,
@@ -387,6 +400,7 @@ namespace System
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T, TP1, TP2>(
             this T? obj,
             TP1? parameter1,
@@ -502,7 +516,6 @@ namespace System
             }
         }
 
-        [NotNull]
         public static byte[] ListToByteArray<T>(this IReadOnlyList<T> values) where T : struct
         {
             if (values.Count == 0) return Array.Empty<byte>();
@@ -526,7 +539,6 @@ namespace System
             return buffer;
         }
 
-        [NotNull]
         public static byte[] ArrayToByteArray<T>(this T[] values) where T : struct
         {
             var buffer = new byte[Marshal.SizeOf(typeof(T)) * values.Length]; // создать массив
@@ -565,8 +577,7 @@ namespace System
             }
         }
 
-        [NotNull]
-        public static T[] ToStructArray<T>([NotNull] this byte[] data) where T : struct
+        public static T[] ToStructArray<T>(this byte[] data) where T : struct
         {
             var type = typeof(T);
             var length = Marshal.SizeOf(type);
@@ -604,21 +615,20 @@ namespace System
         //    }
         //}
 
-        // ReSharper disable CommentTypo
         ///// <summary>Метод чтения структуры данных из массива байт</summary>
         ///// <typeparam name="T">Тип структуры</typeparam>
         ///// <param name="data">Массив байт</param>
         ///// <param name="offset">Смещение в массиве байт</param>
         ///// <param name="value">Прочитанная структура</param>
-        //public delegate void StructureReader<T>( byte[] data, int offset, [CanBeNull] out T value);
+        //public delegate void StructureReader<T>(byte[] data, int offset, out T? value);
 
         //[Copyright("Генерация кода", url = "http://professorweb.ru/my/csharp/optimization/level7/7_9.php")]
         //private static class StructureReadersPool<T>
         //{
         //    /// <summary>Делегат чтения структуры данных</summary>
-        //    [CanBeNull] private static volatile StructureReader<T> __Reader;
+        //    private static volatile StructureReader<T>? __Reader;
         //    /// <summary>Делегат чтения структуры данных</summary>
-        //    
+
         //    public static StructureReader<T> Reader
         //    {
         //        get
@@ -634,9 +644,10 @@ namespace System
 
         //    /// <summary>Создать делегат чтения структуры данных</summary>
         //    /// <returns>Делегат, читающий структуру из массива данных</returns>
-        //    
+
         //    private static StructureReader<T> CreateDelegate()
         //    {
+                
         //        var dm = new DynamicMethod
         //        (
         //            name: "Read",
@@ -679,7 +690,7 @@ namespace System
         ///// <summary>Получить метод чтения структур указанного типа из массива байт</summary>
         ///// <typeparam name="T">Тип структуры данных</typeparam>
         ///// <returns>Делегат чтения структуры данных из массива байт</returns>
-        // public static StructureReader<T> GetStructReader<T>() => StructureReadersPool<T>.Reader;
+        //public static StructureReader<T> GetStructReader<T>() => StructureReadersPool<T>.Reader;
 
         ///// <summary>Чтение структуры данных из массива байт</summary>
         ///// <typeparam name="T">Тип структуры данных</typeparam>
@@ -687,7 +698,7 @@ namespace System
         ///// <param name="offset">Смещение в массиве байт</param>
         ///// <param name="value">Значение, прочитанное из структуры данных</param>
         //[Copyright("Генерация кода", url = "http://professorweb.ru/my/csharp/optimization/level7/7_9.php")]
-        //public static void ReadPointerLCG<T>( byte[] data, int offset, [CanBeNull] out T value) => GetStructReader<T>()(data, offset, out value);
+        //public static void ReadPointerLCG<T>(byte[] data, int offset, [CanBeNull] out T value) => GetStructReader<T>()(data, offset, out value);
 
         //public static unsafe void ReadPointerTypedRef<T>(byte[] data, int offset, ref T value)
         //{
