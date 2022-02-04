@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.60</Version>
+    <Version>0.0.61</Version>
     <PackageReleaseNotes>
-      Рефакторинг
+      Доработка контейнера IoC
     </PackageReleaseNotes>
   </PropertyGroup>
 
