@@ -7,49 +7,62 @@ namespace System
 {
     public static class ShortExtensions
     {
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
         [DST]
-        public static bool IsPrime(this short x)
+        public static bool IsPrime(this short N)
         {
-            if(x % 2 == 0) return false;
+            var n = Math.Abs(N);
+            if (n % 2 == 0) return false;
 
-            var max = (short)Math.Sqrt(x);
+            var max = (short)Math.Sqrt(n);
 
-            for(var i = 3; i <= max; i += 2)
-                if(x % i == 0)
+            for (var i = 3; i <= max; i += 2)
+                if (n % i == 0)
                     return false;
+
             return true;
         }
 
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
         [DST]
-        public static bool IsPrime(this ushort x)
+        public static bool IsPrime(this ushort N)
         {
-            if(x % 2 == 0) return false;
+            if (N % 2 == 0) return N == 2;
 
-            var max = (short)Math.Sqrt(x);
+            var max = (short)Math.Sqrt(N);
 
-            for(var i = 3; i <= max; i += 2)
-                if(x % i == 0)
+            for (var i = 3; i <= max; i += 2)
+                if (N % i == 0)
                     return false;
+
             return true;
         }
 
         /// <summary>Является ли число степенью двойки?</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         [DST]
-        public static bool IsPowerOf2(this short x) => (x & (x - 1)) == 0 || x == 1;
+        public static bool IsPowerOf2(this short N)
+        {
+            var n = Math.Abs(N);
+            return (n & (n - 1)) == 0 || n == 1;
+        }
 
         /// <summary>Является ли число степенью двойки?</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         [DST]
-        public static bool IsPowerOf2(this ushort x) => (x & (x - 1)) == 0 || x == 1;
+        public static bool IsPowerOf2(this ushort N) => (N & (N - 1)) == 0 || N == 1;
 
         /// <summary>Число бит числа</summary>
-        /// <param name="x">Значащее число</param>
+        /// <param name="N">Значащее число</param>
         /// <returns>Число бит числа</returns>
         [DST]
-        public static int BitCount(this short x) => (int)Math.Round(Math.Log(x, 2));
+        public static int BitCount(this short N) => (int)Math.Round(Math.Log(N, 2));
 
         /// <summary>Реверсирование бит числа</summary>
         /// <param name="x">исходное число</param>
@@ -59,7 +72,7 @@ namespace System
         public static short BitReversing(this short x, int N)
         {
             short result = 0;
-            for(var i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 result <<= 1;
                 result += (short)(x & 1);
@@ -69,10 +82,10 @@ namespace System
         }
 
         /// <summary>Реверсирование всех 16 бит числа</summary>
-        /// <param name="x">исходное число</param>
+        /// <param name="N">исходное число</param>
         /// <returns>Реверсированное число</returns>
         [DST]
-        public static short BitReversing(this short x) => x.BitReversing(16);
+        public static short BitReversing(this short N) => N.BitReversing(16);
 
         [DST]
         public static bool IsDeviatedTo(this short x, short y) => x % y == 0;
@@ -81,24 +94,24 @@ namespace System
         public static short GetAbsMod(this short x, short mod) => (short)(x % mod + (x < 0 ? mod : 0));
 
         /// <summary>Является ли число нечётным</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число нечётное</returns>
         [DST]
-        public static bool IsOdd(this short x) => !x.IsEven();
+        public static bool IsOdd(this short N) => !N.IsEven();
 
         /// <summary>Является ли число чётным</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
         [DST]
-        public static bool IsEven(this short x) => x.IsDeviatedTo(2);
+        public static bool IsEven(this short N) => Math.Abs(N).IsDeviatedTo(2);
 
         [DST]
         public static short Power(this short x, int n)
         {
-            if(n > 1000 || n < -1000) return (short)Math.Pow(x, n);
-            if(n < 0) return (short)(1 / (double)x).Power(-n);
+            if (n > 1000 || n < -1000) return (short)Math.Pow(x, n);
+            if (n < 0) return (short)(1 / (double)x).Power(-n);
             var result = 1.0;
-            for(var i = 0; i < n; i++) result *= x;
+            for (var i = 0; i < n; i++) result *= x;
             return (short)result;
         }
 
