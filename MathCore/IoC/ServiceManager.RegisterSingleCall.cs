@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+
+using MathCore.Functions;
 using MathCore.IoC.ServiceRegistrations;
 
 namespace MathCore.IoC
@@ -8,12 +10,37 @@ namespace MathCore.IoC
     {
         #region Регистрация сервисов
 
+        public ServiceRegistration RegisterSingleCall(Type ServiceType)
+        {
+            lock (_SyncRoot)
+            {
+                var registration_type = typeof(SingleCallServiceRegistration<>).MakeGenericType(ServiceType);
+                var registration = (ServiceRegistration)registration_type.CreateObject(this, ServiceType);
+
+                _Services[ServiceType] = registration;
+                return registration;
+            }
+        }
+
+        public ServiceRegistration RegisterSingleCall(Type InterfaceType, Type ServiceType)
+        {
+            lock (_SyncRoot)
+            {
+                var registration_type = typeof(SingleCallServiceRegistration<>).MakeGenericType(ServiceType);
+                var registration = _Services.Values.FirstOrDefault(r => r.GetType() == registration_type)
+                    ?? (ServiceRegistration)registration_type.CreateObject(this, ServiceType);
+
+                _Services[InterfaceType] = registration;
+                return registration;
+            }
+        }
+
         public SingleCallServiceRegistration<TService> RegisterSingleCall<TService>() where TService : class
         {
             var service_type = typeof(TService);
             lock (_SyncRoot)
             {
-                var registration = new SingleCallServiceRegistration<TService>(this, typeof(TService));
+                var registration = new SingleCallServiceRegistration<TService>(this, service_type);
                 _Services[service_type] = registration;
                 return registration;
             }

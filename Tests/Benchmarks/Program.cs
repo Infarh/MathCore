@@ -1,11 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace Benchmarks;
+using Benchmarks.Interpolation;
 
-class Program
-{
-    static void Main(string[] args)
-    {
-        _ = BenchmarkRunner.Run<Test>();
-    }
-}
+_ = BenchmarkRunner.Run<Polynoms>();

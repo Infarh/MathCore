@@ -5,6 +5,22 @@ namespace System
 {
     public static class ByteExtensions
     {
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
+        [DST]
+        public static bool IsPrime(this byte N)
+        {
+            if (N % 2 == 0) return false;
+
+            var max = (byte)Math.Sqrt(N);
+
+            for (var i = 3; i <= max; i += 2)
+                if (N % i == 0)
+                    return false;
+            return true;
+        }
+
         /// <summary>Является ли число степенью двойки?</summary>
         /// <param name="x">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>

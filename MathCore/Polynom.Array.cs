@@ -1,7 +1,9 @@
 ﻿#nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -1025,6 +1027,69 @@ public partial class Polynom
             return a;
         }
 
+        //public static double GetCoefficient(double[] Root, int Power)
+        //{
+        //    if (Root is null) throw new ArgumentNullException(nameof(Root));
+        //    var root_length = Root.Length;
+        //    if (root_length == 0) throw new InvalidOperationException("Нет корней");
+
+        //    if (Power == root_length) return 1;
+        //    if (Power > root_length) return 0;
+
+        //    switch (root_length)
+        //    {
+        //        case 1: return -Root[0];
+        //        case 2: return Power == 0 ? Root[0] * Root[1] : -Root[0] + -Root[1];
+        //        case 3:
+        //            return Power switch
+        //            {
+        //                0 => -Root[0] * -Root[1] * -Root[2],
+        //                1 => Root[0] * Root[1]
+        //                    + Root[0] * Root[2]
+        //                    + Root[1] * Root[2],
+        //                2 => -Root[0] + -Root[1] + -Root[2],
+        //                _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, null)
+        //            };
+        //        case 4:
+        //            return Power switch
+        //            {
+        //                0 => -Root[0] * -Root[1] * -Root[2] * -Root[3],
+        //                1 => -Root[1] * -Root[2] * -Root[3]
+        //                    - Root[0] * Root[2] * Root[3]
+        //                    - Root[0] * Root[1] * Root[3]
+        //                    - Root[0] * Root[1] * Root[2],
+        //                2 => -Root[2] * -Root[3]
+        //                    + -Root[1] * -Root[3]
+        //                    + -Root[0] * -Root[3]
+        //                    + -Root[0] * -Root[2]
+        //                    + -Root[0] * -Root[1],
+        //                3 => -Root[0] + -Root[1] + -Root[2] + -Root[3],
+        //                _ => throw new ArgumentOutOfRangeException(nameof(Power), Power, null)
+        //            };
+        //    }
+
+        //    return ComputeCoefficient(new double[Power + 1], Root, Root.Length);
+        //    static double ComputeCoefficient(double[] A, double[] X, int RootLength)
+        //    {
+        //        var x0 = -X[RootLength - 1];
+        //        if (RootLength == 1)
+        //        {
+        //            A[0] = x0;
+        //            A[1] = 1;
+        //            return 0;
+        //        }
+
+        //        ComputeCoefficient(A, X, RootLength - 1);
+        //        for (var i = A.Length - 1; i > 0; i--) 
+        //            A[i] = A[i - 1] + A[i] * x0;
+
+        //        A[0] = x0;
+
+        //        return A[^2];
+        //    }
+
+        //}
+
         /// <summary>Преобразовать массив корней полинома в коэффициенты при обратных степенях</summary>
         /// <param name="Root">Корни полинома</param>
         /// <returns>Коэффициенты при обратных степенях</returns>
@@ -1243,7 +1308,7 @@ public partial class Polynom
                     Data =
                     {
                         { nameof(p) + ".Length", p.Length },
-                        { nameof(Result) + ".Length", Result.Length }, 
+                        { nameof(Result) + ".Length", Result.Length },
                         { nameof(Order), Order },
                     }
                 };
@@ -1254,7 +1319,7 @@ public partial class Polynom
                 return Result;
             }
 
-            if (Result.Length - result_length is > 0 and var delta_length) 
+            if (Result.Length - result_length is > 0 and var delta_length)
                 System.Array.Clear(Result, result_length, delta_length);
 
             switch (Order)
@@ -1310,7 +1375,7 @@ public partial class Polynom
                 {
                     Data =
                     {
-                        { nameof(p) + ".Length", p.Length }, 
+                        { nameof(p) + ".Length", p.Length },
                         { nameof(Result) + ".Length", Result.Length },
                         { nameof(Order), Order },
                     }

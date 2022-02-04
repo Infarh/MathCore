@@ -8,6 +8,31 @@ namespace MathCore.IoC
     {
         #region Регистрация сервисов
 
+        public ServiceRegistration RegisterSingleThread(Type ServiceType)
+        {
+            lock (_SyncRoot)
+            {
+                var registration_type = typeof(SingleThreadServiceRegistration<>).MakeGenericType(ServiceType);
+                var registration = (ServiceRegistration)registration_type.CreateObject(this, ServiceType);
+
+                _Services[ServiceType] = registration;
+                return registration;
+            }
+        }
+
+        public ServiceRegistration RegisterSingleThread(Type InterfaceType, Type ServiceType)
+        {
+            lock (_SyncRoot)
+            {
+                var registration_type = typeof(SingleThreadServiceRegistration<>).MakeGenericType(ServiceType);
+                var registration = _Services.Values.FirstOrDefault(r => r.GetType() == registration_type)
+                    ?? (ServiceRegistration)registration_type.CreateObject(this, ServiceType);
+
+                _Services[InterfaceType] = registration;
+                return registration;
+            }
+        }
+
         public SingleThreadServiceRegistration<TService> RegisterSingleThread<TService>() where TService : class
         {
             var service_type = typeof(TService);

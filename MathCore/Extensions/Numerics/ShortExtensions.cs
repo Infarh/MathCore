@@ -10,7 +10,20 @@ namespace System
         [DST]
         public static bool IsPrime(this short x)
         {
-            if(x % 2 == 0) return x == 2;
+            if(x % 2 == 0) return false;
+
+            var max = (short)Math.Sqrt(x);
+
+            for(var i = 3; i <= max; i += 2)
+                if(x % i == 0)
+                    return false;
+            return true;
+        }
+
+        [DST]
+        public static bool IsPrime(this ushort x)
+        {
+            if(x % 2 == 0) return false;
 
             var max = (short)Math.Sqrt(x);
 
@@ -26,6 +39,12 @@ namespace System
         [DST]
         public static bool IsPowerOf2(this short x) => (x & (x - 1)) == 0 || x == 1;
 
+        /// <summary>Является ли число степенью двойки?</summary>
+        /// <param name="x">Проверяемое число</param>
+        /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
+        [DST]
+        public static bool IsPowerOf2(this ushort x) => (x & (x - 1)) == 0 || x == 1;
+
         /// <summary>Число бит числа</summary>
         /// <param name="x">Значащее число</param>
         /// <returns>Число бит числа</returns>
@@ -39,14 +58,14 @@ namespace System
         [DST]
         public static short BitReversing(this short x, int N)
         {
-            short Result = 0;
+            short result = 0;
             for(var i = 0; i < N; i++)
             {
-                Result <<= 1;
-                Result += (short)(x & 1);
+                result <<= 1;
+                result += (short)(x & 1);
                 x >>= 1;
             }
-            return Result;
+            return result;
         }
 
         /// <summary>Реверсирование всех 16 бит числа</summary>

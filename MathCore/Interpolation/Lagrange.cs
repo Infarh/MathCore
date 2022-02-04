@@ -4,10 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+using MathCore.Functions.Differentiable;
 using MathCore.Vectors;
 
 namespace MathCore.Interpolation;
 
+/// <summary>Полином Лагранжа</summary>
 public class Lagrange : Interpolator, IInterpolator
 {
     /* ------------------------------------------------------------------------------------------ */
@@ -31,90 +33,109 @@ public class Lagrange : Interpolator, IInterpolator
         return result;
     }
 
-    private static Task<Polynom> GetPolynomAsync(double[] X, double[] Y) => (X, Y).Async(p => GetPolynom(p.X, p.Y));
-
     public static Polynom GetPolynom(double[] X, double[] Y) => new(GetPolynomCoefficients(X, Y));
 
-    public static double[] GetPolynomCoefficients(double[] X, double[] Y)
+    /// <summary>Рассчитать коэффициенты полинома Лагранжа для заданного набора точек</summary>
+    /// <param name="X">Массив значений на оси X</param>
+    /// <param name="Y">Массив значений на оси Y</param>
+    /// <returns>Массив коэффициентов полинома Лагранжа</returns>
+    /// <exception cref="ArgumentNullException">Если отсутствует ссылка на массив <paramref name="X"/>, или <paramref name="Y"/></exception>
+    /// <exception cref="InvalidOperationException">Если длина <paramref name="X"/> не равна <paramref name="Y"/></exception>
+    public static double[] GetPolynomCoefficients(double[] X, double[] Y) => GetPolynomCoefficients(X, Y, P: new double[X.Length]);
+
+    /// <summary>Рассчитать коэффициенты полинома Лагранжа для заданного набора точек</summary>
+    /// <param name="X">Массив значений на оси X</param>
+    /// <param name="Y">Массив значений на оси Y</param>
+    /// <param name="P">Массив, в который будут вычислены коэффициенты полинома</param>
+    /// <returns>Массив коэффициентов полинома</returns>
+    /// <exception cref="ArgumentNullException">Если отсутствует ссылка на массив <paramref name="X"/>, или <paramref name="Y"/></exception>
+    /// <exception cref="InvalidOperationException">Если длина <paramref name="X"/> не равна <paramref name="Y"/></exception>
+    /// <exception cref="ArgumentException">Если размер массива <paramref name="P"/> меньше размера массива <paramref name="X"/></exception>
+    public static double[] GetPolynomCoefficients(double[] X, double[] Y, double[] P)
     {
+        if (X is null) throw new ArgumentNullException(nameof(X));
+        if (Y is null) throw new ArgumentNullException(nameof(Y));
+        if (P is null) throw new ArgumentNullException(nameof(P));
+
+        const string x_length = nameof(X) + "." + nameof(Array.Length);
+        const string y_length = nameof(X) + "." + nameof(Array.Length);
         if (X.Length != Y.Length)
-            throw new InvalidOperationException("Размеры массивов не равны")
+            throw new InvalidOperationException("Размеры массивов не совпадают")
             {
                 Data =
                 {
-                    { "X.Length", X.Length },
-                    { "Y.Length", Y.Length }
-
+                    { x_length, X.Length },
+                    { y_length, Y.Length },
                 }
             };
 
-        var result = new double[X.Length];
-
-        GetPolynomCoefficients(X, Y, result);
-
-        return result;
-    }
-
-    public static void GetPolynomCoefficients(double[] X, double[] Y, double[] P)
-    {
-        if (X.Length != Y.Length)
-            throw new InvalidOperationException("Размеры массивов не равны")
-            {
-                Data =
-                {
-                    { "X.Length", X.Length },
-                    { "Y.Length", Y.Length },
-                }
-            };
-        if (P.Length < X.Length)
+        var length = X.Length;
+        
+        const string p_length = nameof(P) + "." + nameof(Array.Length);
+        if (P.Length < length)
             throw new ArgumentException("Размер массива результата недостаточен для записи в него коэффициентов полинома", nameof(P))
             {
                 Data =
                 {
-                    { "X.Length", X.Length },
-                    { "Y.Length", Y.Length },
-                    { "P.Length", P.Length },
+                    { x_length, X.Length },
+                    { y_length, Y.Length },
+                    { p_length , P.Length },
                 }
             };
 
-        var count = X.Length;
-        var a = new double[count];
+        if (P.Length > length)
+            Array.Clear(P, length, P.Length - length);
 
-        for (int i = 0, j = 0, k = 1; i < count; i++, j = 0, k = 1) // По всем y из Y
+        var a = new double[length];
+
+        // O(N)
+        for (var i = 0; i < length; i++) // По всем y из Y
         {
+            var j = 0;
+            var k = 1;
+
             a[0] = 1;
 
             var b = 1d;
             var xi = X[i];
+            double x;
+            int n;
             for (; j < i; j++, k++)
             {
-                var x = X[j];
-                for (var n = k - 1; n > 0; n--)
+                x = X[j];
+                for (n = k - 1; n > 0; n--)
                     a[n] = a[n - 1] - a[n] * x;
                 a[0] *= -x;
                 a[k] = 1;
                 b *= xi - x;
             }
 
-            for (j++; j < count; j++, k++)
+            for (j++; j < length; j++, k++)
             {
-                var x = X[j];
-                for (var n = k - 1; n > 0; n--)
+                x = X[j];
+                for (n = k - 1; n > 0; n--)
                     a[n] = a[n - 1] - a[n] * x;
                 a[0] *= -x;
                 a[k] = 1;
                 b *= xi - x;
             }
+            // O(N)
 
-            P.AddMultiply(a, Y[i] / b);
+            x = Y[i] / b;
+            for (j = 0; j < length; j++)
+                P[j] += a[j] * x;
         }
+
+        // O(N*(2N)) = O(2N^2)
+
+        return P;
     }
 
     public static double Integral(double[] X, double[] Y, double a, double b)
     {
         var p = GetPolynom(X, Y);
         var I = p.GetIntegral();
-        
+
         var count = X.Length;
         var c = new double[count];
         var C = new double[count];
@@ -152,7 +173,7 @@ public class Lagrange : Interpolator, IInterpolator
             var c_c = new Polynom(c.Select(t => t * q));
             var c_i = c_c.GetIntegral();
 
-            for (var n = 0; n < count; n++) 
+            for (var n = 0; n < count; n++)
                 C[n] += c[n] * q / (n + 1);
 
             var ya = c[^1] * q;
@@ -182,35 +203,31 @@ public class Lagrange : Interpolator, IInterpolator
 
     /* ------------------------------------------------------------------------------------------ */
 
-    public event EventHandler OnInitialized;
-
-    private void Invoke_OnInitialized(EventArgs Args) => OnInitialized?.Invoke(this, Args);
-    private void Invoke_OnInitialized() => Invoke_OnInitialized(EventArgs.Empty);
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    private readonly Task<Polynom> _PolynomTask;
+    private readonly Polynom _Polynom;
 
     /* ------------------------------------------------------------------------------------------ */
 
     // ReSharper disable once AsyncApostle.AsyncWait
-    public Polynom Polynom => _PolynomTask.Result;
-
-    public bool Initialized => _PolynomTask.Status == TaskStatus.RanToCompletion;
+    public Polynom Polynom => _Polynom;
 
     public double this[double x] => Value(x);
 
     /* ------------------------------------------------------------------------------------------ */
 
-    public Lagrange(double[] X, double[] Y) => _PolynomTask = GetPolynomAsync(X, Y);
+    public Lagrange(double[] X, double[] Y) : this(GetPolynomCoefficients(X, Y)) { }
+
+    private Lagrange(double[] P) => _Polynom = new Polynom(P);
 
     public Lagrange(params Vector2D[] P)
     {
-        var x = new double[P.Length];
-        var y = new double[P.Length];
-        for (var i = 0; i < P.Length; i++) { x[i] = P[i].X; y[i] = P[i].Y; }
+        var length = P.Length;
+        var x = new double[length];
+        var y = new double[length];
 
-        _PolynomTask = GetPolynomAsync(x, y);
+        for (var i = 0; i < length; i++)
+            P[i].Deconstruct(out x[i], out y[i]);
+
+        _Polynom = GetPolynom(x, y);
     }
 
     /* ------------------------------------------------------------------------------------------ */
