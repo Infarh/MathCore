@@ -11,13 +11,32 @@ namespace System
         [DST]
         public static bool IsPrime(this byte N)
         {
-            if (N % 2 == 0) return false;
+            if (N % 2 == 0) return N == 2;
 
             var max = (byte)Math.Sqrt(N);
 
             for (var i = 3; i <= max; i += 2)
                 if (N % i == 0)
                     return false;
+
+            return true;
+        }
+
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
+        [DST]
+        public static bool IsPrime(this sbyte N)
+        {
+            var n = Math.Abs(N);
+            if (n % 2 == 0) return n == 2;
+
+            var max = (byte)Math.Sqrt(n);
+
+            for (var i = 3; i <= max; i += 2)
+                if (n % i == 0)
+                    return false;
+
             return true;
         }
 

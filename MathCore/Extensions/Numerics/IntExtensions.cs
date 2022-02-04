@@ -129,12 +129,29 @@ namespace System
         public static bool IsPrime(this int N)
         {
             var n = Math.Abs(N);
-            if (n % 2 == 0) return false;
+            if (n % 2 == 0) return n == 2;
 
             var max = (int)Math.Sqrt(n);
 
             for (var i = 3; i <= max; i += 2)
                 if (n % i == 0)
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
+        [DST]
+        public static bool IsPrime(this uint N)
+        {
+            if (N % 2 == 0) return N == 2;
+
+            var max = (int)Math.Sqrt(N);
+
+            for (var i = 3; i <= max; i += 2)
+                if (N % i == 0)
                     return false;
             return true;
         }
@@ -148,6 +165,12 @@ namespace System
             var n = Math.Abs(N);
             return (n & (n - 1)) == 0 || n == 1;
         }
+
+        /// <summary>Является ли число степенью двойки?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
+        [DST]
+        public static bool IsPowerOf2(this uint N) => (N & (N - 1)) == 0 || N == 1;
 
         /// <summary>Определяет номер старшего бита в числе (индексация с 1)</summary>
         /// <param name="n">Исходное число</param>

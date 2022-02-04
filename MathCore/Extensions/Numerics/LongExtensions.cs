@@ -6,42 +6,56 @@ namespace System
 {
     public static class LongExtensions
     {
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
         [DST]
-        public static bool IsPrime(this long x)
+        public static bool IsPrime(this long N)
         {
-            if(x % 2 == 0) return false;
+            var n = Math.Abs(N);
+            if(n % 2 == 0) return n == 2;
 
-            var max = (long)Math.Sqrt(x);
+            var max = (long)Math.Sqrt(n);
 
             for(var i = 3; i <= max; i += 2)
-                if(x % i == 0)
+                if(n % i == 0)
                     return false;
+
             return true;
         }
-        [DST]
-        public static bool IsPrime(this ulong x)
-        {
-            if(x % 2 == 0) return false;
 
-            var max = (long)Math.Sqrt(x);
+        /// <summary>Проверка - является ли число простым?</summary>
+        /// <param name="N">Проверяемое число</param>
+        /// <returns>Истина, если число простое</returns>
+        [DST]
+        public static bool IsPrime(this ulong N)
+        {
+            if(N % 2 == 0) return N == 2;
+
+            var max = (long)Math.Sqrt(N);
 
             for(var i = 3u; i <= max; i += 2)
-                if(x % i == 0)
+                if(N % i == 0)
                     return false;
+
             return true;
         }
 
         /// <summary>Является ли число степенью двойки?</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         [DST]
-        public static bool IsPowerOf2(this long x) => (x & (x - 1)) == 0 || x == 1;
+        public static bool IsPowerOf2(this long N)
+        {
+            var n = Math.Abs(N);
+            return (n & (n - 1)) == 0 || n == 1;
+        }
 
         /// <summary>Является ли число степенью двойки?</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число - степень двойки 1,2,4...1024,2048...2^n</returns>
         [DST]
-        public static bool IsPowerOf2(this ulong x) => (x & (x - 1)) == 0 || x == 1;
+        public static bool IsPowerOf2(this ulong N) => (N & (N - 1)) == 0 || N == 1;
 
         /// <summary>Число бит числа</summary>
         /// <param name="x">Значащее число</param>
@@ -67,10 +81,10 @@ namespace System
         }
 
         /// <summary>Реверсирование всех 64 бит числа</summary>
-        /// <param name="x">исходное число</param>
+        /// <param name="N">исходное число</param>
         /// <returns>Реверсированное число</returns>
         [DST]
-        public static long BitReversing(this long x) => x.BitReversing(16);
+        public static long BitReversing(this long N) => N.BitReversing(16);
 
         [DST]
         public static bool IsDeviatedTo(this long x, long y) => x % y == 0;
@@ -79,16 +93,16 @@ namespace System
         public static long GetAbsMod(this long x, long mod) => x % mod + (x < 0 ? mod : 0);
 
         /// <summary>Является ли число нечётным</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число нечётное</returns>
         [DST]
-        public static bool IsOdd(this long x) => !x.IsEven();
+        public static bool IsOdd(this long N) => !N.IsEven();
 
         /// <summary>Является ли число чётным</summary>
-        /// <param name="x">Проверяемое число</param>
+        /// <param name="N">Проверяемое число</param>
         /// <returns>Истина, если число чётное</returns>
         [DST]
-        public static bool IsEven(this long x) => x.IsDeviatedTo(2);
+        public static bool IsEven(this long N) => Math.Abs(N).IsDeviatedTo(2);
 
         /// <summary>Факториал целого числа от 0 до 20</summary>
         /// <param name="n">Исходное число в пределах от 0 до 20</param>
