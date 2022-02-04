@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+using MathCore.Functions.Differentiable;
 using MathCore.Vectors;
 
 namespace MathCore.Interpolation;
@@ -54,6 +55,7 @@ public class Lagrange : Interpolator, IInterpolator
     {
         if (X is null) throw new ArgumentNullException(nameof(X));
         if (Y is null) throw new ArgumentNullException(nameof(Y));
+        if (P is null) throw new ArgumentNullException(nameof(P));
 
         const string x_length = nameof(X) + "." + nameof(Array.Length);
         const string y_length = nameof(X) + "." + nameof(Array.Length);
@@ -87,16 +89,21 @@ public class Lagrange : Interpolator, IInterpolator
         var a = new double[length];
 
         // O(N)
-        for (int i = 0, j = 0, k = 1; i < length; i++, j = 0, k = 1) // По всем y из Y
+        for (var i = 0; i < length; i++) // По всем y из Y
         {
+            var j = 0;
+            var k = 1;
+
             a[0] = 1;
 
             var b = 1d;
             var xi = X[i];
+            double x;
+            int n;
             for (; j < i; j++, k++)
             {
-                var x = X[j];
-                for (var n = k - 1; n > 0; n--)
+                x = X[j];
+                for (n = k - 1; n > 0; n--)
                     a[n] = a[n - 1] - a[n] * x;
                 a[0] *= -x;
                 a[k] = 1;
@@ -105,8 +112,8 @@ public class Lagrange : Interpolator, IInterpolator
 
             for (j++; j < length; j++, k++)
             {
-                var x = X[j];
-                for (var n = k - 1; n > 0; n--)
+                x = X[j];
+                for (n = k - 1; n > 0; n--)
                     a[n] = a[n - 1] - a[n] * x;
                 a[0] *= -x;
                 a[k] = 1;
@@ -114,7 +121,9 @@ public class Lagrange : Interpolator, IInterpolator
             }
             // O(N)
 
-            P.AddMultiply(a, Y[i] / b); // O(N)
+            x = Y[i] / b;
+            for (j = 0; j < length; j++)
+                P[j] += a[j] * x;
         }
 
         // O(N*(2N)) = O(2N^2)

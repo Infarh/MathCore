@@ -28,6 +28,7 @@ public class Newton : Interpolator, IInterpolator
     {
         if (X is null) throw new ArgumentNullException(nameof(X));
         if (Y is null) throw new ArgumentNullException(nameof(Y));
+        if (P is null) throw new ArgumentNullException(nameof(P));
 
         const string x_length = nameof(X) + "." + nameof(Array.Length);
         const string y_length = nameof(X) + "." + nameof(Array.Length);

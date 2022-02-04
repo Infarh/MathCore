@@ -199,7 +199,7 @@ namespace System
         /// <returns>Созданный объект, приведённый к типу <typeparamref name="T"/></returns>
         public static T Create<T>(this Type type, params object[] Params) => (T)type.CreateObject(Params);
 
-        /// <summary>Создать объект типа с помощью конструктора по умолчанию</summary>
+        /// <summary>Создать объект типа с помощью конструктора с заданным набором параметров</summary>
         /// <param name="type">Тип создаваемого объекта</param>
         /// <param name="Params">Параметры конструктора</param>
         /// <returns>Созданный объект</returns>

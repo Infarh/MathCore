@@ -23,9 +23,9 @@ public class Polynoms
         14.1014
     };
 
-    [Benchmark(Baseline = true)]
+    [Benchmark]
     public double[] Lagrange() => MathCore.Interpolation.Lagrange.GetPolynomCoefficients(_X, _Y);
 
-    [Benchmark]
+    [Benchmark(Baseline = true)]
     public double[] Newton() => MathCore.Interpolation.Newton.GetPolynomCoefficients(_X, _Y);
 }

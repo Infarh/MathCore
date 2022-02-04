@@ -15,6 +15,8 @@ namespace System
     /// <summary>Класс методов-расширений для класса целых 4-х-байтовых чисел со знаком</summary>
     public static class IntExtensions
     {
+        public static (int Div, int Mod) GetDivMod(this int x, int y) => (x / y, x % y);
+
         public static int HiBit(this int x) => Numeric.HiBit(x);
 
         public static int Log2(this int x) => Numeric.Log2(x);
@@ -46,27 +48,22 @@ namespace System
         public static IEnumerable<int> FactorizationEnum(this int N)
         {
             var n = Math.Abs(N);
-            if(n == 1) yield break;
+            if (n == 1) yield break;
 
             // пока число четное
-            while((n & 1) == 0)
+            while ((n & 1) == 0)
             {
                 n >>= 1;
                 yield return 2;
             }
 
             //как только кончились двойки в числе, переходим к 3 и далее по списку простых чисел
-            var d = 3; // текущий делитель
-            while(n != 1)
-            {
-                if(n % d == 0)
+            for(var d = 3; n != 1; d += 2)
+                while (n % d == 0)
                 {
                     yield return d;
                     n /= d;
-                    continue;
                 }
-                d++;
-            }
         }
 
         /// <summary>Разложение числа на простые множители</summary>
@@ -80,23 +77,19 @@ namespace System
 
             var result = new List<int>();
             // пока число четное
-            while((n & 1) == 0)
+            while ((n & 1) == 0)
             {
                 n >>= 1;
                 result.Add(2);
             }
 
-            var d = 3; // текущий делитель
-            while(n != 1)
-            {
-                if(n % d == 0)
+            for (var d = 3; n != 1; d += 2)
+                while (n % d == 0)
                 {
                     result.Add(d);
                     n /= d;
-                    continue;
                 }
-                d++;
-            }
+
             return result.ToArray();
         }
 
@@ -107,31 +100,25 @@ namespace System
         {
             var n = Math.Abs(N);
             var result = new Dictionary<int, int>();
-            if(n == 1) return result;
+            if (n == 1) return result;
 
             result.Add(2, 0);
             // пока число четное
-            while((n & 1) == 0)
+            while ((n & 1) == 0)
             {
                 n >>= 1;
                 result[2]++;
             }
 
-            var d = 3; // текущий делитель
-            while(n != 1)
-            {
-                if(n % d == 0)
+            for (var d = 3; n != 1; d += 2)
+                while (n % d == 0)
                 {
-                    if(!result.ContainsKey(d))
-                        result.Add(d, 1);
-                    else
-                        result[d]++;
-
+                    result[d] = result.TryGetValue(d, out var count) 
+                        ? count + 1 
+                        : 1;
                     n /= d;
-                    continue;
                 }
-                d++;
-            }
+
             return result;
         }
 
@@ -142,12 +129,12 @@ namespace System
         public static bool IsPrime(this int N)
         {
             var n = Math.Abs(N);
-            if (n % 2 == 0) return n == 2;
+            if (n % 2 == 0) return false;
 
             var max = (int)Math.Sqrt(n);
 
-            for(var i = 3; i <= max; i += 2) 
-                if(n % i == 0)
+            for (var i = 3; i <= max; i += 2)
+                if (n % i == 0)
                     return false;
             return true;
         }
@@ -183,7 +170,7 @@ namespace System
         public static BitArray GetBitArray(this int Value, int Length = 32)
         {
             var array = new BitArray(Length);
-            for(var i = 0; i < Length; i++)
+            for (var i = 0; i < Length; i++)
             {
                 array[i] = (Value & 1) == 1;
                 Value >>= 1;
@@ -199,7 +186,7 @@ namespace System
         public static int BitReversing(this int x, int N)
         {
             var result = 0;
-            for(var i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 result <<= 1;
                 result += x & 1;
@@ -414,7 +401,7 @@ namespace System
         public static int ToOctBase(this int n)
         {
             var y = 0;
-            for(var i = 1; n != 0; i *= 10)
+            for (var i = 1; n != 0; i *= 10)
             {
                 y += (n % 8) * i;
                 n >>= 3;
@@ -431,7 +418,7 @@ namespace System
             var n = x % 10;
             x /= 10;
             var b = 8;
-            while(x != 0)
+            while (x != 0)
             {
                 n += (x % 10) * b;
                 b *= 8;
@@ -444,7 +431,7 @@ namespace System
         {
             var result = new int[GetNumberOfDigits(x, Base)];
 
-            for(var i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
             {
                 result[i] = x % Base;
                 x /= Base;
@@ -461,14 +448,14 @@ namespace System
 
         public static int ToInteger(this byte[] data, int Offset = 0, bool IsMsbFirst = true)
         {
-            if(data.Length == 0) return 0;
+            if (data.Length == 0) return 0;
             var result = 0;
             bool sign;
 
-            if(IsMsbFirst)
+            if (IsMsbFirst)
             {
                 sign = (data[0] & 0x80) == 0x80;
-                for(var i = Offset; i < data.Length; i++)
+                for (var i = Offset; i < data.Length; i++)
                 {
                     result <<= 8;
                     result += data[i];
@@ -477,21 +464,21 @@ namespace System
             else
             {
                 sign = (data[^1] & 0x80) == 0x80;
-                for(var i = 0; i + Offset < data.Length; i++)
+                for (var i = 0; i + Offset < data.Length; i++)
                     result += data[i + Offset] << (i * 8);
             }
 
             return sign ? -(((~result) & ((1 << (8 * data.Length)) - 1)) + 1) : result;
         }
 
-        public static int ToInteger(this byte[] data, int Offset, int Length, bool IsMsbFirst = true) => 
+        public static int ToInteger(this byte[] data, int Offset, int Length, bool IsMsbFirst = true) =>
             IsMsbFirst ? data.ToIntegerMSB(Offset, Length) : data.ToIntegerLSB(Offset, Length);
 
         public static int ToIntegerMSB(this byte[] data, int Offset, int Length)
         {
             var result = 0;
 
-            for(var i = Offset; i < data.Length && i - Offset < Length; i++)
+            for (var i = Offset; i < data.Length && i - Offset < Length; i++)
                 unchecked
                 {
                     result = (result << 8) + data[i];
@@ -504,7 +491,7 @@ namespace System
         {
             var result = 0u;
 
-            for(var i = Offset; i < data.Length && i - Offset < Length; i++)
+            for (var i = Offset; i < data.Length && i - Offset < Length; i++)
                 unchecked
                 {
                     result = (result << 8) + data[i];
@@ -517,7 +504,7 @@ namespace System
         {
             var result = 0;
 
-            for(var i = 0; i + Offset < data.Length && i < Length; i++)
+            for (var i = 0; i + Offset < data.Length && i < Length; i++)
                 unchecked
                 {
                     result += data[i + Offset] << (i << 3);
@@ -530,7 +517,7 @@ namespace System
         {
             var result = 0u;
 
-            for(var i = 0; i + Offset < data.Length && i < Length; i++)
+            for (var i = 0; i + Offset < data.Length && i < Length; i++)
                 unchecked
                 {
                     result += (uint)(data[i + Offset] << (i << 3));

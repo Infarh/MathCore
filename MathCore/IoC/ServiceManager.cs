@@ -65,6 +65,10 @@ namespace MathCore.IoC
 
         public bool ThrowIfNotFound { get; set; } = true;
 
+        private List<IServiceManager>? _MerragedServiceManagers;
+
+        public ICollection<IServiceManager> MerragedServiceManagers => _MerragedServiceManagers ??= new List<IServiceManager>();
+
         public object? this[Type ServiceType] => Get(ServiceType);
 
         ServiceRegistration? IServiceRegistrations.this[Type ServiceType] => _Services.TryGetValue(ServiceType, out var registration) ? registration : null;
@@ -96,7 +100,19 @@ namespace MathCore.IoC
 
                 var base_registration = _Services.Values.Where(reg => reg.AllowInheritance)
                     .FirstOrDefault(services_value => ServiceType.IsAssignableFrom(services_value.ServiceType));
-                if (base_registration is null) return null;
+
+                if (base_registration is null)
+                {
+                    if (_MerragedServiceManagers is not { Count: > 0 } managers) 
+                        return null;
+
+                    foreach (var manager in managers)
+                        if (manager.Get(ServiceType) is { } obj)
+                            return obj;
+
+                    return null;
+                }
+
                 _Services.Add(ServiceType, new MapServiceRegistration(this, ServiceType, base_registration));
                 return base_registration.GetService();
             }
