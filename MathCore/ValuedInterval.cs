@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
+using System.Text;
+
 using MathCore.Annotations;
+using static MathCore.SpecialFunctions.Distribution;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore
 {
     /// <summary>Интервал вещественных значений двойной точности</summary>
     [Serializable]
-    public struct ValuedInterval<TValue> : IComparable<double>, IFormattable
+    public readonly struct ValuedInterval<TValue> : IComparable<double>, IFormattable
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -61,6 +64,8 @@ namespace MathCore
 
         public TValue Value => _Value;
 
+        public Interval Interval => new(_Min, _MinInclude, _Max, _MaxInclude);
+
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
@@ -95,6 +100,12 @@ namespace MathCore
             _Value = Value;
         }
 
+        public ValuedInterval(in Interval Interval, TValue Value)
+        {
+            Interval.Deconstruct(out _Min, out _MinInclude, out _Max, out _MaxInclude);
+            _Value = Value;
+        }
+
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
@@ -124,6 +135,15 @@ namespace MathCore
             min = _Min;
             max = _Max;
             value = _Value;
+        }
+
+        public void Deconstruct(out double min, out bool IncludeMin, out double max, out bool IncludeMax, out TValue value)
+        {
+            min = _Min;
+            max = _Max;
+            value = _Value;
+            IncludeMin = _MinInclude;
+            IncludeMax = _MaxInclude;
         }
 
         ///// <summary>Проверка на вхождение в интервал</summary>
@@ -175,6 +195,7 @@ namespace MathCore
 
         #endregion
 
+        /// <inheritdoc />
         public int CompareTo(double x) =>
             (x > _Min && x < _Max)
             || (_MinInclude && Math.Abs(_Min - x) < double.Epsilon)
@@ -268,6 +289,16 @@ namespace MathCore
                 .ForeachLazyLast(v => last = v)
                 .Select(v => new ValuedInterval<TValue>(last, v, true, value));
         }
+
+        public override string ToString() => new StringBuilder()
+           .Append(_MinInclude ? "[" : "(")
+           .Append(_Min)
+           .Append(";")
+           .Append(_Max)
+           .Append(_MaxInclude ? "]" : ")")
+           .Append(":")
+           .Append(_Value)
+           .ToString();
 
         public string ToString(string Format) => string.Format(
             "{0}{2};{3}{1}",

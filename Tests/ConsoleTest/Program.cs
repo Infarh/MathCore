@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 
 using MathCore;
+using MathCore.Statistic;
 
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable DoubleEquals
@@ -130,8 +131,25 @@ internal static class Program
         return count > 0 ? result / count : double.NaN;
     }
 
+    private static void TestHist()
+    {
+        var rnd = new Random(5);
+
+        const double D = 5;
+        const double m = 3;
+        var values = rnd.NextNormal(10000, D, m);
+
+        var histogram = new Histogram(values, 10);
+
+        var hist_values = histogram.ToArray();
+        var v0 = hist_values[0];
+        var v0str = v0.ToString();
+    }
+
     private static void Main()
     {
+        TestHist();
+
         string[] lines =
         {
             "123.",
