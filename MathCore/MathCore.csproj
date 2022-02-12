@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.61</Version>
+    <Version>0.0.61.1</Version>
     <PackageReleaseNotes>
-      Доработка контейнера IoC
+      Исправления в гистограмме
     </PackageReleaseNotes>
   </PropertyGroup>
 

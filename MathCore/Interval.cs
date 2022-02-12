@@ -437,6 +437,14 @@ namespace MathCore
             max = _Max;
         }
 
+        public void Deconstruct(out double min, out bool IncludeMinMin, out double max, out bool IncludeMinMax)
+        {
+            min = _Min;
+            max = _Max;
+            IncludeMinMin = _MinInclude;
+            IncludeMinMax = _MaxInclude;
+        }
+
         /// <summary>
         /// Метод возвращает указанное значение, если оно находится внутри интервала,
         /// либо соответствующую его границу, если значение входит за его пределы
