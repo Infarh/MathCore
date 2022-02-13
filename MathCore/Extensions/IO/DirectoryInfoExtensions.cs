@@ -110,7 +110,7 @@ namespace System.IO
         [NotNull] public static TreeNode<DirectoryInfo> AsTreeNode([NotNull] this DirectoryInfo dir, [CanBeNull] Action<DirectoryInfo, Exception> OnError) => dir.AsTreeNode(d => d.Try(v => v.EnumerateDirectories(), OnError), d => d.Parent);
 
         [NotNull]
-        public static Process ShowInFileExplorer([NotNull] this FileSystemInfo dir) => Process.Start("explorer", $"/select,\"{dir.FullName}\"") ?? throw new InvalidOperationException();
+        public static Process ShowInExplorer([NotNull] this FileSystemInfo dir) => Process.Start("explorer", $"/select,\"{dir.FullName}\"") ?? throw new InvalidOperationException();
 
         [NotNull]
         public static Process OpenInFileExplorer([NotNull] this DirectoryInfo dir) => Process.Start("explorer", dir.FullName) ?? throw new InvalidOperationException();

@@ -279,11 +279,6 @@ namespace System.IO
         /// <returns>Созданный в ОС процесс в случае успеха операции и <c>null</c> в противном случае</returns>
         public static Process? Execute(this FileInfo File, string Args = "", bool UseShellExecute = true) => Process.Start(new ProcessStartInfo(UseShellExecute ? File.ToString() : File.FullName, Args) { UseShellExecute = UseShellExecute });
 
-        /// <summary>Показать файл в проводнике Windows</summary>
-        /// <param name="File">Файл для отображения</param>
-        /// <returns>Процесс проводника, отображающий файл</returns>
-        public static Process? ShowInExplorer(this FileSystemInfo File) => Process.Start("explorer", $"/select,\"{File.FullName}\"");
-
         /// <summary>Получить перечисление строк файла без его загрузки в память целиком</summary>
         /// <param name="File">Файл, строки которого требуется прочитать</param>
         /// <returns>Перечисление строк файла</returns>
