@@ -39,6 +39,12 @@ public static class ProgressControlEx
     /// <param name="Cancel">Флаг отмены операции</param>
     /// <returns>Возвращает объект, упаковывающий внутри себя систему извещения о прогрессе и отмене операции</returns>
     public static IProgressControl<T> GetControl<T>(this IProgress<T>? Progress, CancellationToken Cancel = default) => new ProgressControl<T>(Progress, Cancel);
+
+    /// <summary>Сформировать объект контроля асинхронной операции</summary>
+    /// <param name="Progress">Прогресс операции</param>
+    /// <param name="Cancel">Флаг отмены операции</param>
+    /// <returns>Возвращает объект, упаковывающий внутри себя систему извещения о прогрессе и отмене операции</returns>
+    public static IProgressControl GetControl(this IProgress<double>? Progress, CancellationToken Cancel = default) => new ProgressControl(Progress, Cancel);
 }
 
 /// <summary>Реализация интерфейса контроля за асинхронной операцией</summary>
@@ -54,4 +60,10 @@ public class ProgressControl<T> : IProgressControl<T>
     public IProgress<T>? Progress { get; init; }
 
     public CancellationToken Cancel { get; init; }
+}
+
+/// <summary>Реализация интерфейса контроля за асинхронной операцией</summary>
+public class ProgressControl : ProgressControl<double>, IProgressControl
+{
+    public ProgressControl(IProgress<double>? Progress, CancellationToken Cancel) : base(Progress, Cancel) { }
 }
