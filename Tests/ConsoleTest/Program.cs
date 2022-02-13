@@ -10,8 +10,15 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
+using ConsoleTest.Extensions;
+
 using MathCore;
 using MathCore.Statistic;
+
+using OxyPlot.Axes;
+using OxyPlot.Series;
+
+using OxyPlot;
 
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable DoubleEquals
@@ -137,121 +144,162 @@ internal static class Program
 
         const double D = 5;
         const double m = 3;
-        var values = rnd.NextNormal(10000, D, m);
+        const int count = 100000;
+        var values = rnd.NextNormal(count, D, m);
 
-        var histogram = new Histogram(values, 10);
+        const int intervals_count = 100;
+        var histogram = new Histogram(values, intervals_count);
+        var interval = new Interval(histogram.Min, histogram.Max);
 
-        var hist_values = histogram.ToArray();
-        var v0 = hist_values[0];
-        var v0str = v0.ToString();
+        var hist_values = histogram.ToArray(v => (v.Middle, v.Value));
+
+        var vv = histogram.ToArray();
+
+        new string("123".Reverse().ToArray());
+
+        var gauss = Distributions.NormalGauss(D, m);
+        var model = new PlotModel
+        {
+            Title = "Histogram",
+            Axes =
+            {
+                new LinearAxis { Position = AxisPosition.Bottom },
+                new LinearAxis { Position = AxisPosition.Left },
+            },
+            Background = OxyColors.White,
+            Series =
+            {
+                new HistogramSeries
+                {
+                    FillColor = OxyColors.Green,
+                    StrokeColor = OxyColors.Black,
+                    StrokeThickness = 1,
+                    ItemsSource = histogram,
+                    Mapping = o =>
+                    {
+                        var (min, max, value) = (ValuedInterval<double>)o;
+                        return new HistogramItem(min, max, value / 2, count);
+                    },
+                },
+                new FunctionSeries(gauss, interval.Min, interval.Max, interval.Length / (intervals_count * 10))
+                {
+                    Color = OxyColors.Red
+                }
+            }
+
+        };
+
+
+        model.ToPNG("image.png").ShowInExplorer();
     }
 
     private static void Main()
     {
         TestHist();
 
-        string[] lines =
-        {
-            "123.",
-            "..\"Hello,.World!,.QWE\".",
-            ".Value.",
-            "\"123,23",
-        };
 
-        var line = string.Join(',', lines);
-        var line_array = line.ToCharArray().AsMemory();
-        var values = CSVParseTest.ParseLine(line_array).ToList();
+        //string[] lines =
+        //{
+        //    "123.",
+        //    "..\"Hello,.World!,.QWE\".",
+        //    ".Value.",
+        //    "\"123,23",
+        //};
 
-        var segment_start = new MemorySegment<char>(values[1]);
-        var segment_end = segment_start.Append(values[3]);
+        //var line = string.Join(',', lines);
+        //var line_array = line.ToCharArray().AsMemory();
+        //var values = CSVParseTest.ParseLine(line_array).ToList();
 
-        var pp = new Pipe();
+        //var segment_start = new MemorySegment<char>(values[1]);
+        //var segment_end = segment_start.Append(values[3]);
 
-        Writer(pp.Writer);
+        //var pp = new Pipe();
 
-        static void Writer(PipeWriter writer)
-        {
+        //Writer(pp.Writer);
 
-        }
+        //static void Writer(PipeWriter writer)
+        //{
 
-        var seq = new ReadOnlySequence<char>(segment_start, 0, segment_end, segment_end.Memory.Length);
+        //}
 
-        var sss = seq.ToString();
+        //var seq = new ReadOnlySequence<char>(segment_start, 0, segment_end, segment_end.Memory.Length);
 
-        Debug.WriteLine(sss);
+        //var sss = seq.ToString();
 
-        var size = 1000;
-        var arr_a = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Sin(4 * Math.PI / size * i));
-        var arr_b = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Cos(4 * Math.PI / size * i));
+        //Debug.WriteLine(sss);
 
-        var correlations = new List<(int offset, double value)>(size * 2);
-        for (var offset = -size; offset <= size; offset++)
-        {
-            correlations.Add((offset, Multiply(arr_a, arr_b, offset)));
-        }
+        //var size = 1000;
+        //var arr_a = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Sin(4 * Math.PI / size * i));
+        //var arr_b = GC.AllocateUninitializedArray<double>(size).Initialize(i => Math.Cos(4 * Math.PI / size * i));
 
-        var fff = SpecialFunctions.Fibonacci(7);
+        //var correlations = new List<(int offset, double value)>(size * 2);
+        //for (var offset = -size; offset <= size; offset++)
+        //{
+        //    correlations.Add((offset, Multiply(arr_a, arr_b, offset)));
+        //}
 
-        var ff = EnumFib().ElementAt(8);
+        //var fff = SpecialFunctions.Fibonacci(7);
 
-        var fib = new int[10];
-        for (var m = 0; m < fib.Length; m++)
-        {
-            fib[m] = Fib(m);
-        }
+        //var ff = EnumFib().ElementAt(8);
 
-        Array.Clear(fib, 0, fib.Length);
-        Fib(fib);
+        //var fib = new int[10];
+        //for (var m = 0; m < fib.Length; m++)
+        //{
+        //    fib[m] = Fib(m);
+        //}
 
-        var rnd = new Random();
+        //Array.Clear(fib, 0, fib.Length);
+        //Fib(fib);
 
-        for (var ii = 0; ii < 1000; ii++)
-        {
-            var X = Enumerable.Range(1, 100).Select(i => rnd.Next(1, 1000)).ToArray();
-            QuickSort(X);
-            for (var j = 1; j < X.Length; j++)
-                if (X[j] < X[j - 1])
-                    throw new InvalidOperationException();
-        }
+        //var rnd = new Random();
 
-
-        const int count = 1000;
-        var items = Enumerable.Range(1, count).ToArray();
-
-        var r2 = items.Shuffle(rnd).ToArray();
-
-        ulong n = 68;
-        ulong k = 34;
-
-        var r = SpecialFunctions.BinomialCoefficientBigInt(n, k);
-
-        if (k > n / 2) k = n - k;
-
-        var b = SpecialFunctions.BinomialCoefficient(n, k);
-        //var b = SpecialFunctions.BCR((int)n, (int)k);
-        //var vv = SpecialFunctions.BCRCache.OrderBy(v => v.Key).ThenBy(v => v.Value).ToArray();
-        // n! / (k!*(n-k)!)
+        //for (var ii = 0; ii < 1000; ii++)
+        //{
+        //    var X = Enumerable.Range(1, 100).Select(i => rnd.Next(1, 1000)).ToArray();
+        //    QuickSort(X);
+        //    for (var j = 1; j < X.Length; j++)
+        //        if (X[j] < X[j - 1])
+        //            throw new InvalidOperationException();
+        //}
 
 
-        var nn = 1ul;
-        var kk = 1ul;
-        var i = 0ul;
-        while (i < k)
-        {
-            var n0 = n - i;
-            i++;
-            var k0 = i;
+        //const int count = 1000;
+        //var items = Enumerable.Range(1, count).ToArray();
 
-            if (!Fraction.Simplify(ref nn, ref k0) || k0 > 1) kk *= k0;
-            Fraction.Simplify(ref n0, ref kk);
+        //var r2 = items.Shuffle(rnd).ToArray();
 
-            nn *= n0;
-        }
+        //ulong n = 68;
+        //ulong k = 34;
 
-        Console.WriteLine(nn);
-        Console.WriteLine();
+        //var r = SpecialFunctions.BinomialCoefficientBigInt(n, k);
 
+        //if (k > n / 2) k = n - k;
+
+        //var b = SpecialFunctions.BinomialCoefficient(n, k);
+        ////var b = SpecialFunctions.BCR((int)n, (int)k);
+        ////var vv = SpecialFunctions.BCRCache.OrderBy(v => v.Key).ThenBy(v => v.Value).ToArray();
+        //// n! / (k!*(n-k)!)
+
+
+        //var nn = 1ul;
+        //var kk = 1ul;
+        //var i = 0ul;
+        //while (i < k)
+        //{
+        //    var n0 = n - i;
+        //    i++;
+        //    var k0 = i;
+
+        //    if (!Fraction.Simplify(ref nn, ref k0) || k0 > 1) kk *= k0;
+        //    Fraction.Simplify(ref n0, ref kk);
+
+        //    nn *= n0;
+        //}
+
+        //Console.WriteLine(nn);
         //Console.WriteLine();
+
+        ////Console.WriteLine();
     }
 }
 
