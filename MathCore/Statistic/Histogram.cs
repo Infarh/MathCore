@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 using MathCore.Annotations;
 using MathCore.Values;
+
+using static MathCore.Statistic.Histogram;
 // ReSharper disable ArgumentsStyleOther
 // ReSharper disable ArgumentsStyleLiteral
 // ReSharper disable ArgumentsStyleNamedExpression
@@ -13,146 +16,186 @@ using MathCore.Values;
 namespace MathCore.Statistic
 {
     /// <summary>Гистограмма</summary>
-    public sealed class Histogram : IEnumerable<ValuedInterval<double>>
+    public sealed class Histogram : IEnumerable<HistogramValue>
     {
-        private readonly Interval[] _Intervals;
+        public readonly struct HistogramValue
+        {
+            public Interval Interval { get; init; }
+
+            public double Value { get; init; }
+
+            public double NormalValue { get; init; }
+
+            public int IntegralCount { get; init; }
+
+            public double IntegralValue { get; init; }
+
+            public int Count { get; init; }
+
+            public override string ToString() => $"{Interval}:{Value}({Count}):{NormalValue}";
+
+            public string ToString(string Format) => $"{Interval.ToString(Format)}:{Value.ToString(Format)}({Count}):{NormalValue.ToString(Format)}";
+
+            public void Deconstruct(out Interval Interval, out int Count) => (Interval, Count) = (this.Interval, this.Count);
+            public void Deconstruct(out Interval Interval, out int Count, out double Value) => (Interval, Count, Value) = (this.Interval, this.Count, this.Value);
+            public void Deconstruct(out Interval Interval, out int Count, out double Value, out double NormalValue) => (Interval, Count, Value, NormalValue) = (this.Interval, this.Count, this.Value, this.NormalValue);
+        }
+
+        private readonly int _IntervalsCount;
+
+        //private readonly Interval[] _Intervals;
 
         private readonly Interval _Interval;
 
+        private readonly double _dx;
+
         private readonly double _Normalizer;
 
-        private readonly double[] _Values;
+        private readonly int[] _Counts;
 
-        private readonly double[] _Percent;
+        private readonly double[] _Frequencies;
 
-        public double Max => _Interval.Max;
+        public int IntervalsCount => _IntervalsCount;
 
-        public double Min => _Interval.Min;
+        public Interval Interval => _Interval;
 
-        public int N { get; }
+        public double dx => _dx;
 
-        public IReadOnlyList<double> Argument { get; }
+        public int TotalValuesCount { get; }
 
-        public IReadOnlyList<double> Values => _Values;
+        //public IReadOnlyList<double> Argument { get; }
 
-        public IReadOnlyList<double> Percent => _Percent;
+        public IReadOnlyList<double> Frequencies => _Frequencies;
 
-        public ValuedInterval<double> this[int i]
+        public HistogramValue this[int i]
         {
             get
             {
-                var (min, max) = _Intervals[i];
-                return new(min, max, _Values[i]);
+                if (i < 0 || i >= _IntervalsCount)
+                    throw new ArgumentOutOfRangeException(nameof(i), i, "Номер интервала вне диапазона [0..IntervalsCount-1]")
+                    {
+                        Data =
+                        {
+                            { nameof(IntervalsCount), _IntervalsCount }
+                        }
+                    };
+
+                var min = i * dx + _Interval.Min;
+                return new()
+                {
+                    Interval = new Interval(min, true, min + dx, i == _IntervalsCount - 1),
+                    Value = _Frequencies[i],
+                    NormalValue = _Frequencies[i] / _Normalizer,
+                    Count = _Counts[i],
+                    IntegralValue = double.NaN,
+                    IntegralCount = 0,
+                };
             }
         }
 
         public Histogram(IEnumerable<double> X, int IntervalsCount)
         {
+            _IntervalsCount = IntervalsCount;
+
             var min_max = new MinMaxValue();
             X = X.ForeachLazy(min_max.SetValue);
 
             var x_values = X.ToArray();
-            N = x_values.Length;
+            var total_values_count = x_values.Length;
+            TotalValuesCount = total_values_count;
 
             _Interval = min_max.Interval;
 
             var dx = min_max.Interval.Length / IntervalsCount;
+            _dx = dx;
             var min = min_max.Min;
 
-            //_Intervals = new Interval[IntervalsCount].Initialize(dx, Min, (i, d, min) => new Interval(min + i * d, true, min + (i + 1) * d, false));
-            var intervals = new Interval[IntervalsCount];
-            _Intervals = intervals;
-            var argument = new double[IntervalsCount];
-            Argument = argument;
-            for (var i = 0; i < IntervalsCount; i++)
-            {
-                var interval_min = min + i * dx;
-                var interval_max = interval_min + dx;
-                intervals[i] = new Interval(
-                    Min: interval_min,
-                    MinInclude: true,
-                    Max: interval_max,
-                    MaxInclude: i == IntervalsCount - 1);
-                argument[i] = (interval_min + interval_max) / 2;
-            }
-
-            var values = new double[IntervalsCount];
-            _Values = values;
+            var values = new int[IntervalsCount];
+            _Counts = values;
 
             foreach (var value in x_values)
-                for (var i = 0; i < intervals.Length; i++)
-                    if (intervals[i].Check(value))
-                        values[i]++;
-
-
-            var percents = new double[values.Length];
-            _Percent = percents;
-            for (var i = 0; i < percents.Length; i++) 
-                percents[i] = values[i] / N;
-
-            var normalizer = values.GetIntegral(argument);
-            _Normalizer = normalizer;
-            values.Divide(normalizer);
-        }
-
-        public bool CheckDistribution(Func<double, double> F, double p, double alpha = 0.05)
-        {
-            // ReSharper disable once IdentifierTypo
-            //var p_teor = new double[_Values.Length].Initialize(_Intervals, F, (i, intervals, f) =>
-            //{
-            //    var interval = intervals[i];
-            //    return f.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
-            //});
-
-            var p_teor = new double[_Values.Length];
-            for (var i = 0; i < p_teor.Length; i++)
             {
-                var interval = _Intervals[i];
-                p_teor[i] = F.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
+                var index = Math.Min((int)((value - min) / dx), IntervalsCount - 1);
+                values[index]++;
             }
 
-            //var stat = _Values
-            //    .GetMultiplied(_Normalizer / N)
-            //    .Select((t, i) => p_teor[i] - t)
-            //    .Select((delta, i) => delta * delta / p_teor[i])
-            //    .Sum();
-            var stat = 0d;
-            var q = _Normalizer / N;
-            for (var i = 0; i < _Values.Length; i++)
+            var frequencies = new double[IntervalsCount];
+            _Frequencies = frequencies;
+            for (var i = 0; i < IntervalsCount; i++)
+                frequencies[i] = (double)values[i] / total_values_count;
+
+            _Normalizer = frequencies.GetIntegral(dx);
+        }
+
+        //public bool CheckDistribution(Func<double, double> F, double p, double alpha = 0.05)
+        //{
+        //    // ReSharper disable once IdentifierTypo
+        //    //var p_teor = new double[_Values.Length].Initialize(_Intervals, F, (i, intervals, f) =>
+        //    //{
+        //    //    var interval = intervals[i];
+        //    //    return f.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
+        //    //});
+
+        //    var p_teor = new double[_Values.Length];
+        //    for (var i = 0; i < p_teor.Length; i++)
+        //    {
+        //        var interval = _Intervals[i];
+        //        p_teor[i] = F.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
+        //    }
+
+        //    //var stat = _Values
+        //    //    .GetMultiplied(_Normalizer / N)
+        //    //    .Select((t, i) => p_teor[i] - t)
+        //    //    .Select((delta, i) => delta * delta / p_teor[i])
+        //    //    .Sum();
+        //    var stat = 0d;
+        //    var q = _Normalizer / TotalValuesCount;
+        //    for (var i = 0; i < _Values.Length; i++)
+        //    {
+        //        //var t = _Values[i] * _Normalizer / N;
+        //        //var delta = p_teor[i] - _Values[i] * q;
+        //        stat += (p_teor[i] - _Values[i] * q).Pow2() / p_teor[i];
+        //    }
+
+        //    var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, 2);
+        //    return stat < quantile;
+        //}
+
+        [NotNull]
+        private IEnumerable<HistogramValue> GetEnumerable()
+        {
+            var x0 = _Interval.Min;
+            var dx = _dx;
+            var integral_value = 0d;
+            var integral_count = 0;
+            for (var i = 0; i < _IntervalsCount; i++)
             {
-                //var t = _Values[i] * _Normalizer / N;
-                //var delta = p_teor[i] - _Values[i] * q;
-                stat += (p_teor[i] - _Values[i] * q).Pow2() / p_teor[i];
+                //yield return new ValuedInterval<double>(_Intervals[i], _Values[i]);
+                var frequency = _Frequencies[i];
+                var count = _Counts[i];
+                var min = x0 + i * dx;
+                integral_value += frequency;
+                integral_count += count;
+                yield return new HistogramValue
+                {
+                    Interval = new Interval(min, true, min + dx, i == _IntervalsCount - 1),
+                    Value = frequency,
+                    NormalValue = frequency / _Normalizer,
+                    Count = count,
+                    IntegralValue = integral_value,
+                    IntegralCount = integral_count,
+                };
             }
-
-            var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, 2);
-            return stat < quantile;
         }
 
-        [NotNull]
-        public KeyValuePair<Interval, double>[] GetValues()
-        {
-            var values = new KeyValuePair<Interval, double>[_Values.Length];
-            for (var i = 0; i < values.Length; i++) 
-                values[i] = new KeyValuePair<Interval, double>(_Intervals[i], _Values[i]);
-            return values;
-        }
-
-        [NotNull]
-        public KeyValuePair<Interval, double>[] GetPercents() =>
-            new KeyValuePair<Interval, double>[_Percent.Length].Initialize(_Intervals, _Percent,
-                (i, intervals, percent) => new KeyValuePair<Interval, double>(intervals[i], percent[i]));
-
-        [NotNull]
-        private IEnumerable<ValuedInterval<double>> GetEnumerable()
-        {
-            for (var i = 0; i < _Intervals.Length; i++) 
-                yield return new ValuedInterval<double>(_Intervals[i], _Values[i]);
-        }
-
-        public IEnumerator<ValuedInterval<double>> GetEnumerator() => GetEnumerable().GetEnumerator();
+        public IEnumerator<HistogramValue> GetEnumerator() => GetEnumerable().GetEnumerator();
 
         public override string ToString() => string.Join(" ", GetEnumerable());
+
+        public void Print(TextWriter Writer)
+        {
+
+        }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

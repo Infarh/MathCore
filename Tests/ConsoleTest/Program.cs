@@ -147,41 +147,32 @@ internal static class Program
         const int count = 100000;
         var values = rnd.NextNormal(count, D, m);
 
-        const int intervals_count = 100;
+        const int intervals_count = 50;
         var histogram = new Histogram(values, intervals_count);
-        var interval = new Interval(histogram.Min, histogram.Max);
-
-        var hist_values = histogram.ToArray(v => (v.Middle, v.Value));
+        var interval = histogram.Interval;
 
         var vv = histogram.ToArray();
 
-        new string("123".Reverse().ToArray());
-
         var gauss = Distributions.NormalGauss(D, m);
+        const int function_points_count = 1000;
         var model = new PlotModel
         {
-            Title = "Histogram",
-            Axes =
-            {
-                new LinearAxis { Position = AxisPosition.Bottom },
-                new LinearAxis { Position = AxisPosition.Left },
-            },
             Background = OxyColors.White,
             Series =
             {
                 new HistogramSeries
                 {
-                    FillColor = OxyColors.Green,
-                    StrokeColor = OxyColors.Black,
+                    FillColor = OxyColors.Blue,
+                    StrokeColor = OxyColors.DarkBlue,
                     StrokeThickness = 1,
                     ItemsSource = histogram,
                     Mapping = o =>
                     {
-                        var (min, max, value) = (ValuedInterval<double>)o;
-                        return new HistogramItem(min, max, value / 2, count);
+                        var ((min, max), n, value, normal_value) = (Histogram.HistogramValue)o;
+                        return new HistogramItem(min, max, value, 0);
                     },
                 },
-                new FunctionSeries(gauss, interval.Min, interval.Max, interval.Length / (intervals_count * 10))
+                new FunctionSeries(gauss, interval.Min, interval.Max, interval.Length / function_points_count)
                 {
                     Color = OxyColors.Red
                 }
@@ -190,7 +181,7 @@ internal static class Program
         };
 
 
-        model.ToPNG("image.png").ShowInExplorer();
+        model.ToPNG("image.png");//.ShowInExplorer();
     }
 
     private static void Main()
