@@ -1,15 +1,13 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+namespace MathCore.IoC;
 
-namespace MathCore.IoC
+public class ServiceManagerAccessor<TService> where TService : class
 {
-    public class ServiceManagerAccessor<TService> where TService : class
-    {
-        private readonly ServiceManager _ServiceManager;
+    private readonly ServiceManager _ServiceManager;
 
-        [CanBeNull] public TService Service => _ServiceManager.Get<TService>();
+    public TService? Service => _ServiceManager.Get<TService>();
 
-        [NotNull] public TService ServiceRequired => _ServiceManager.GetRequired<TService>();
+    public TService ServiceRequired => _ServiceManager.GetRequired<TService>();
 
-        public ServiceManagerAccessor(ServiceManager ServiceManager) => _ServiceManager = ServiceManager;
-    }
+    public ServiceManagerAccessor(ServiceManager ServiceManager) => _ServiceManager = ServiceManager;
 }

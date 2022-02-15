@@ -18,7 +18,7 @@ namespace MathCore.Tests.Statistic
         {
             var pirsons_criteria = Distributions.GetPirsonsCriteria(__TestData, Distributions.NormalGauss(), out var freedom_degree);
 
-            Assert.That.Value(pirsons_criteria).IsEqual(3.2763111794634741);
+            Assert.That.Value(pirsons_criteria).IsEqual(2.5513486175786118);
             Assert.That.Value(freedom_degree).IsEqual(2);
         }
 

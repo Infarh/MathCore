@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 using MathCore.Annotations;
@@ -43,7 +44,7 @@ namespace MathCore.Statistic
             return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
         }
 
-        public static double NormalDestribution(double x, double sigma = 1, double mu = 0)
+        public static double NormalDistribution(double x, double sigma = 1, double mu = 0)
         {
             var z = (x - mu) / (sigma * Consts.sqrt_2);
             return 0.5 * (1 + SpecialFunctions.Erf.Value(z));
@@ -64,6 +65,7 @@ namespace MathCore.Statistic
 
         [NotNull] public static Func<double, double> Triangular(double a, double b) => x => Triangular(x, a, b);
 
+        /// <summary>Триугольное распределение</summary>
         public static double Triangular(double x, double a, double b) => x >= a && x <= b ? 2 / (b - a) - 2 / ((b - a) * (b - a)) * Math.Abs(a + b - 2 * x) : 0;
 
         /// <summary>Распределение Рэлея http://ru.wikipedia.org/wiki/Распределение_Рэлея</summary>
@@ -81,59 +83,79 @@ namespace MathCore.Statistic
             return s * Math.Exp(-s * x / 2);
         }
 
-        [NotNull]
-        private static Func<double, double> HistogramKey(double Max, double Min, double dx) =>
-            x => (Math.Floor((Math.Min(x, Max - dx / 2) - Min) / dx) + 0.5) * dx + Min;
+        //[NotNull]
+        //private static Func<double, double> HistogramKey(double Max, double Min, double dx) =>
+        //    x => (Math.Floor((Math.Min(x, Max - dx / 2) - Min) / dx) + 0.5) * dx + Min;
 
-        public static double GetPirsonsCriteria([NotNull] this IList<double> Samples, [NotNull] Func<double, double> f, out int FreedomDegree)
+        public static double GetPirsonsCriteria([NotNull] this IReadOnlyCollection<double> Samples, [NotNull] Func<double, double> Distribution, out int FreedomDegree)
         {
             if (Samples is null) throw new ArgumentNullException(nameof(Samples));
 
-            var count = Samples.Count;
-            if (count == 0) throw new ArgumentException("Массы выборки пуст", nameof(Samples));
+            var samples_count = Samples.Count;
+            if (samples_count == 0) throw new ArgumentException("Массы выборки пуст", nameof(Samples));
 
             Samples.GetMinMax(out var min, out var max);
             var interval = max - min;
 
-            var dx = interval / (1 + 3.32 * Math.Log10(count));
-            var segments_count = Math.Floor(interval / dx);
+            var dx = interval / (1 + 3.32 * Math.Log10(samples_count)); // interval / (1 + Math.Log(count, 2));
+            var segments_count = (int)Math.Floor(interval / dx);
             var histogram_dx = interval / segments_count;
 
-            var histogram = Samples
-               .GroupBy(HistogramKey(max, min, histogram_dx))
-               .OrderBy(x => x.Key)
-               .Select(g => new KeyValuePair<double, double>(g.Key, g.Count()))
-               .ToArray();
+            var counts = new int[segments_count];
 
-            var xn = histogram.Select(v => v.Key * v.Value);
+            foreach (var sample in Samples)
+            {
+                var i = Math.Min(counts.Length - 1, (int)Math.Floor((sample - min) / dx));
+                counts[i]++;
+            }
 
-            var sample_average = xn.Sum() / count; // Среднее по совокупности
+            //var histogram = Samples
+            //   .GroupBy(HistogramKey(max, min, histogram_dx))
+            //   .OrderBy(x => x.Key)
+            //   .Select(g => (x: g.Key, count: g.Count(), values: g.ToArray()))
+            //   .ToArray();
+
+
+            var sample_average = 0d;
+
+            for (var i = 0; i < segments_count; i++) 
+                sample_average += (i + 0.5) * dx * counts[i];
+
+            sample_average /= samples_count;
 
             // Скорректированное среднее
-            var restored_variance = histogram.Sum(v =>
+            var varance = 0d;
+
+            for (var i = 0; i < segments_count; i++)
             {
-                var (key, value) = v;
-                var x = sample_average - key;
-                return x * x * value;
-            }) / (count - 1);
+                var x1 = sample_average - (i + 0.5) * dx;
+                varance += x1 * x1 * counts[i];
+            }
+
+            var restored_variance = varance / (samples_count - 1);
 
             // Восстановленное СКО
             var restored_sko = Math.Sqrt(restored_variance);
 
-            FreedomDegree = histogram.Length - 3;
-            return histogram.Sum(h =>
+            FreedomDegree = segments_count - 3;
+
+            var criteria = 0d;
+
+            for (var i = 0; i < segments_count; i++)
             {
-                var (key, value) = h;
-                var u = (key - sample_average) / restored_sko;
-                var n0 = count * histogram_dx * f(u) / restored_sko;
-                var d = value - n0;
-                return d * d / n0;
-            });
+                var x = (i + 0.5) * dx;
+                var u = (x - sample_average) / restored_sko;
+                var n0 = samples_count * histogram_dx * Distribution(u) / restored_sko;
+                var d = counts[i] - n0;
+                criteria += d * d / n0;
+            }
+
+            return criteria;
         }
 
-        public static bool CheckDistribution([NotNull] this double[] Samples, [NotNull] Func<double, double> f, double TrustLevel = 0.95)
+        public static bool CheckDistribution([NotNull] this double[] Samples, [NotNull] Func<double, double> Distribution, double TrustLevel = 0.95)
         {
-            var pirsons_criteria = GetPirsonsCriteria(Samples, f, out var number_of_degrees_of_freedom);
+            var pirsons_criteria = GetPirsonsCriteria(Samples, Distribution, out var number_of_degrees_of_freedom);
             var hi_theoretical = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(TrustLevel, number_of_degrees_of_freedom);
 
             return pirsons_criteria < hi_theoretical;

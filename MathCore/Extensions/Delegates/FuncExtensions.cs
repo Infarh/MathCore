@@ -483,6 +483,7 @@ namespace System
         public static double GetIntegralValue(this Function f, double x1, double x2, double f0 = 0, double dx = 0.0001)
         {
             if (x1 == x2) return f0;
+            if (x2 - x1 < dx) return f0 + (f(x1) + f(x2)) * (x2 - x1) * 0.5;
 
             f0 += f(x1) / 2;
             x2 -= dx;
@@ -714,7 +715,7 @@ namespace System
                 ? Task.FromResult(0d)
                 : Task.Factory.StartNew(() => f.GetIntegralValue_Simpson(x1, x2, N));
 
-        /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения</summary>
+        /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения с базовым алгоритмом Симпсона</summary>
         /// <param name="f">Интегрируемая функция</param>
         /// <param name="x1">Нижний предел интегрирования</param>
         /// <param name="x2">Верхний предел интегрирования</param>
@@ -731,11 +732,36 @@ namespace System
         {
             if (x1 == x2) return 0;
 
-            var I = f.GetIntegralValue_Simpson(x1, x2, N <<= 1);
-            return Math.Abs(f.GetIntegralValue_Simpson(x1, x2, N) - I) < Eps
-                               ? I
-                               : f.GetIntegralValue_Adaptive(x1, .5 * (x1 + x2), N, Eps)
-                               + f.GetIntegralValue_Adaptive(.5 * (x1 + x2), x2, N, Eps);
+            var I = f.GetIntegralValue_Simpson(x1, x2, N);
+            return Math.Abs(f.GetIntegralValue_Simpson(x1, x2, N <<= 1) - I) < Eps
+                   ? I
+                   : f.GetIntegralValue_Adaptive(x1, .5 * (x1 + x2), N, Eps)
+                   + f.GetIntegralValue_Adaptive(.5 * (x1 + x2), x2, N, Eps);
+        }
+
+        /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения с базовым алгоритмом Трапеций</summary>
+        /// <param name="f">Интегрируемая функция</param>
+        /// <param name="x1">Нижний предел интегрирования</param>
+        /// <param name="x2">Верхний предел интегрирования</param>
+        /// <param name="N">Начальное разбиение отрезка (по умолчанию 2 точки)</param>
+        /// <param name="Eps">Точность вычисления интеграла</param>
+        /// <returns>Адаптивный интеграл функции</returns>
+        /// <remarks>
+        /// Функция рекуррентно на каждом этапе рассчитывает два численных интеграла (методом Трапеций): для указанного числа точек и для удвоенного.
+        /// Если разница между рассчитанными интегралами меньше указанной точности, то возвращается значение интеграла для удвоенного числа точек
+        /// Иначе рекуррентно рассчитывается сумма двух интегралов (адаптивным методом) для правой и левой половины интервала интегрирования с удвоенным
+        /// числом точек для каждого из них. Для каждой половины рекуррентно повторяется проделанная процедура 
+        /// </remarks>
+        public static double GetIntegralValue_AdaptiveTrapRecursive(this Function f, double x1, double x2, int N = 2, double Eps = 1e-6)
+        {
+            if (x1 == x2) return 0;
+
+            var dx = (x2 - x1) / N;
+            var I = f.GetIntegralValue(x1, x2, dx);
+            return Math.Abs(f.GetIntegralValue(x1, x2, dx / 2) - I) < Eps
+                ? I
+                : f.GetIntegralValue_AdaptiveTrapRecursive(x1, .5 * (x1 + x2), N <<= 2, Eps)
+                + f.GetIntegralValue_AdaptiveTrapRecursive(.5 * (x1 + x2), x2, N, Eps);
         }
 
         /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения</summary>

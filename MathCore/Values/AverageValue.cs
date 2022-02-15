@@ -129,6 +129,14 @@ namespace MathCore.Values
 
         /* --------------------------------------------------------------------------------------------- */
 
+        public void Deconstruct(out double Mean, out double Variance)
+        {
+            Mean = _Value;
+            Variance = _Value2;
+        }
+
+        /* --------------------------------------------------------------------------------------------- */
+
         /// <summary>Оператор неявного приведения к типу вещественного числа</summary>
         /// <param name="Value">Усредняемое значение</param>
         public static implicit operator double([NotNull] AverageValue Value) => Value.Value;

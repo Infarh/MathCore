@@ -2806,6 +2806,19 @@ namespace System.Linq
                 return t;
             });
 
+        /// <summary>Отложенное выполнение указанного действия для каждого элемента последовательности</summary>
+        /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <param name="collection">Последовательность элементов</param>
+        /// <param name="Action">Выполняемое действие</param>
+        /// <returns>Последовательность элементов, для элементов которой выполняется отложенное действие</returns>
+        [DST]
+        public static IEnumerable<T> ForeachLazy<T, T1>(this IEnumerable<T> collection, Func<T, T1>? Action) =>
+            Action is null ? collection : collection.Select(t =>
+            {
+                Action(t);
+                return t;
+            });
+
         /// <summary>Выполнение указанного действия на каждом шаге перебора последовательности после выдачи элемента</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
         /// <param name="collection">Последовательность элементов</param>

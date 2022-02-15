@@ -230,8 +230,8 @@ namespace MathCore
                 if (double.IsNaN(a) || double.IsNaN(y0))
                     return double.NaN;
 
-                if (a < 0 || a.EqualWithAccuracy(0.0)) throw new ArgumentOutOfRangeException(nameof(a));
-                if (y0 < 0 || y0 > 1) throw new ArgumentOutOfRangeException(nameof(y0));
+                if (a < 0 || a.EqualWithAccuracy(0.0)) throw new ArgumentOutOfRangeException(nameof(a), a, "a должно быть больше 0");
+                if (y0 is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(y0), y0, "y0 должно быть в интервале [0..1]");
                 if (y0.EqualWithAccuracy(0.0)) return 0d;
                 if (y0.EqualWithAccuracy(1.0)) return double.PositiveInfinity;
 

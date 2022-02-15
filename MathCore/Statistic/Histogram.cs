@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 using MathCore.Annotations;
 using MathCore.Values;
@@ -55,6 +56,10 @@ namespace MathCore.Statistic
 
         private readonly double[] _Frequencies;
 
+        private readonly double _Mean;
+
+        private readonly double _Variance;
+
         public int IntervalsCount => _IntervalsCount;
 
         public Interval Interval => _Interval;
@@ -63,7 +68,11 @@ namespace MathCore.Statistic
 
         public int TotalValuesCount { get; }
 
-        //public IReadOnlyList<double> Argument { get; }
+        public double Mean => _Mean;
+
+        public double Variance => _Variance;
+
+        public double StandardDeviation => _Variance.Sqrt();
 
         public IReadOnlyList<double> Frequencies => _Frequencies;
 
@@ -93,18 +102,22 @@ namespace MathCore.Statistic
             }
         }
 
+        public Histogram(IReadOnlyCollection<double> X) : this(X, (int)Math.Floor(1 + Math.Log(X.Count, 2))) { }
+
         public Histogram(IEnumerable<double> X, int IntervalsCount)
         {
             _IntervalsCount = IntervalsCount;
 
             var min_max = new MinMaxValue();
-            X = X.ForeachLazy(min_max.SetValue);
+            var average_value = new AverageValue();
+            X = X.ForeachLazy(min_max.SetValue).ForeachLazy(average_value.AddValue);
 
             var x_values = X.ToArray();
             var total_values_count = x_values.Length;
             TotalValuesCount = total_values_count;
 
             _Interval = min_max.Interval;
+            (_Mean, _Variance) = average_value;
 
             var dx = min_max.Interval.Length / IntervalsCount;
             _dx = dx;
@@ -127,39 +140,35 @@ namespace MathCore.Statistic
             _Normalizer = frequencies.GetIntegral(dx);
         }
 
-        //public bool CheckDistribution(Func<double, double> F, double p, double alpha = 0.05)
-        //{
-        //    // ReSharper disable once IdentifierTypo
-        //    //var p_teor = new double[_Values.Length].Initialize(_Intervals, F, (i, intervals, f) =>
-        //    //{
-        //    //    var interval = intervals[i];
-        //    //    return f.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
-        //    //});
+        public double GetPirsonsCriteria(Func<double, double> Distribution)
+        {
+            var x0 = _Interval.Min;
+            var d = _dx;
 
-        //    var p_teor = new double[_Values.Length];
-        //    for (var i = 0; i < p_teor.Length; i++)
-        //    {
-        //        var interval = _Intervals[i];
-        //        p_teor[i] = F.GetIntegralValue(interval.Min, interval.Max, interval.Length / 20);
-        //    }
+            var stat = 0d;
+            var q = _Normalizer / TotalValuesCount;
+            for (var i = 0; i < _IntervalsCount; i++)
+            {
+                var min = x0 + i * d;
+                var max = min + d;
 
-        //    //var stat = _Values
-        //    //    .GetMultiplied(_Normalizer / N)
-        //    //    .Select((t, i) => p_teor[i] - t)
-        //    //    .Select((delta, i) => delta * delta / p_teor[i])
-        //    //    .Sum();
-        //    var stat = 0d;
-        //    var q = _Normalizer / TotalValuesCount;
-        //    for (var i = 0; i < _Values.Length; i++)
-        //    {
-        //        //var t = _Values[i] * _Normalizer / N;
-        //        //var delta = p_teor[i] - _Values[i] * q;
-        //        stat += (p_teor[i] - _Values[i] * q).Pow2() / p_teor[i];
-        //    }
+                var theor = Distribution.GetIntegralValue_AdaptiveTrapRecursive(min, max);
+                var frequency = _Frequencies[i];
+                //var count = frequency / q;
+                //var cc = _Counts[i];
+                var delta = frequency - theor;
+                stat += delta.Pow2() / theor;
+            }
 
-        //    var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, 2);
-        //    return stat < quantile;
-        //}
+            return stat * TotalValuesCount;
+        }
+
+        public bool CheckDistribution(Func<double, double> Distribution, double alpha = 0.05)
+        {
+            var stat = GetPirsonsCriteria(Distribution);
+            var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, _IntervalsCount - 3);
+            return stat < quantile;
+        }
 
         [NotNull]
         private IEnumerable<HistogramValue> GetEnumerable()
@@ -170,7 +179,6 @@ namespace MathCore.Statistic
             var integral_count = 0;
             for (var i = 0; i < _IntervalsCount; i++)
             {
-                //yield return new ValuedInterval<double>(_Intervals[i], _Values[i]);
                 var frequency = _Frequencies[i];
                 var count = _Counts[i];
                 var min = x0 + i * dx;
