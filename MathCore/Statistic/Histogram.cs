@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -200,9 +201,48 @@ namespace MathCore.Statistic
 
         public override string ToString() => string.Join(" ", GetEnumerable());
 
-        public void Print(TextWriter Writer)
+        public void Print(TextWriter Writer, int Width = 50)
         {
+            
 
+            var xx_str = new string[_IntervalsCount];
+            var dx = _dx;
+            var min = _Interval.Min;
+            for (var i = 0; i < _IntervalsCount; i++)
+            {
+                xx_str[i] = ((i + 0.5) * dx + min).ToString(" 0.00000000000000;-0.00000000000000", CultureInfo.InvariantCulture);
+            }
+
+            var max_xx_str_length = xx_str.Max(s => s.Length);
+            var offset_str = new string(' ', max_xx_str_length);
+
+            var dx_str = $"dx:{dx.ToString(CultureInfo.InvariantCulture)}";
+            Writer.Write(dx_str);
+            Writer.WriteLine($"Total count:{TotalValuesCount}".PadLeft(Width - 1 - dx_str.Length - max_xx_str_length));
+            Writer.WriteLine("{0}┌{1}►", offset_str, new string('─', Width - 4 - max_xx_str_length));
+
+            var counts_max_digits_count = (int)Math.Log10(_Counts.Max());
+            var bar_max_width = Width - 5 - counts_max_digits_count - max_xx_str_length;
+            for (var i = 0; i < _Counts.Length; i++)
+            {
+                Writer.Write("{0}│", xx_str[i].PadRight(max_xx_str_length));
+
+                var bar_width = (int)(bar_max_width * _Counts[i] / (double)_Counts.Max()) - 1;
+                for (var j = 0; j < bar_width; j++) 
+                    Writer.Write('█');
+
+                Writer.WriteLine("▌{0}", _Counts[i]);
+            }
+
+            Writer.WriteLine("{0}▼", offset_str);
+            Writer.WriteLine("{0}x", offset_str);
+        }
+
+        class Str
+        {
+            public string Value { get; set; }
+
+            public override string ToString() => Value;
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
