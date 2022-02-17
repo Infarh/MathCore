@@ -14,6 +14,8 @@ using static MathCore.Statistic.Histogram;
 // ReSharper disable ArgumentsStyleOther
 // ReSharper disable ArgumentsStyleLiteral
 // ReSharper disable ArgumentsStyleNamedExpression
+// ReSharper disable InconsistentNaming
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 namespace MathCore.Statistic
 {
@@ -201,34 +203,32 @@ namespace MathCore.Statistic
 
         public override string ToString() => string.Join(" ", GetEnumerable());
 
-        public void Print(TextWriter Writer, int Width = 50)
+        public void Print(TextWriter Writer, int Width = 50, bool PrintInfo = true)
         {
-            
+            if (Width < 40) throw new ArgumentOutOfRangeException(nameof(Width), Width, "Ширина не должна быть меньше 40");
 
             var xx_str = new string[_IntervalsCount];
             var dx = _dx;
-            var min = _Interval.Min;
+            var (min, max) = _Interval;
+            var invariant_culture = CultureInfo.InvariantCulture;
             for (var i = 0; i < _IntervalsCount; i++)
-            {
-                xx_str[i] = ((i + 0.5) * dx + min).ToString(" 0.00000000000000;-0.00000000000000", CultureInfo.InvariantCulture);
-            }
+                xx_str[i] = ((i + 0.5) * dx + min).ToString(" 0.00000000000000;-0.00000000000000", invariant_culture);
 
             var max_xx_str_length = xx_str.Max(s => s.Length);
             var offset_str = new string(' ', max_xx_str_length);
 
-            var dx_str = $"dx:{dx.ToString(CultureInfo.InvariantCulture)}";
-            Writer.Write(dx_str);
-            Writer.WriteLine($"Total count:{TotalValuesCount}".PadLeft(Width - 1 - dx_str.Length - max_xx_str_length));
-            Writer.WriteLine("{0}┌{1}►", offset_str, new string('─', Width - 4 - max_xx_str_length));
+            Writer.WriteLine($"dx:{dx.ToString(invariant_culture)}");
+            Writer.WriteLine($"min x:{min.ToString(invariant_culture)}");
+            Writer.WriteLine("{0}┌{1}►", offset_str, new string('─', Width - 2 - max_xx_str_length));
 
             var counts_max_digits_count = (int)Math.Log10(_Counts.Max());
-            var bar_max_width = Width - 5 - counts_max_digits_count - max_xx_str_length;
-            for (var i = 0; i < _Counts.Length; i++)
+            var bar_max_width = Width - 3 - counts_max_digits_count - max_xx_str_length;
+            for (var i = 0; i < _IntervalsCount; i++)
             {
                 Writer.Write("{0}│", xx_str[i].PadRight(max_xx_str_length));
 
                 var bar_width = (int)(bar_max_width * _Counts[i] / (double)_Counts.Max()) - 1;
-                for (var j = 0; j < bar_width; j++) 
+                for (var j = 0; j < bar_width; j++)
                     Writer.Write('█');
 
                 Writer.WriteLine("▌{0}", _Counts[i]);
@@ -236,6 +236,28 @@ namespace MathCore.Statistic
 
             Writer.WriteLine("{0}▼", offset_str);
             Writer.WriteLine("{0}x", offset_str);
+
+            if (!PrintInfo)
+            {
+                Writer.WriteLine($"max x : {max.ToString(invariant_culture)}");
+                return;
+            }
+
+            var sgm = StandardDeviation;
+            var mu_sgm = new Interval(_Mean - sgm, _Mean + sgm);
+            var mu_3sgm = new Interval(_Mean - 3 * sgm, _Mean + 3 * sgm);
+
+
+            Writer.WriteLine($"           min x : {min.ToString(invariant_culture)}");
+            Writer.WriteLine($"           max x : {max.ToString(invariant_culture)}");
+            Writer.WriteLine(" Intervals count : {0}", _IntervalsCount);
+            Writer.WriteLine("    Values count : {0}", TotalValuesCount);
+            Writer.WriteLine($"               μ : {_Mean.ToString(invariant_culture)}");
+            Writer.WriteLine($"               D : {_Variance.ToString(invariant_culture)}");
+            Writer.WriteLine($"               σ : {sgm.ToString(invariant_culture)}");
+            Writer.WriteLine($"            μ±σ  : {mu_sgm.ToString(invariant_culture)}");
+            Writer.WriteLine($"            μ±3σ : {mu_3sgm.ToString(invariant_culture)}");
+
         }
 
         class Str
@@ -261,10 +283,10 @@ namespace MathCore.Statistic
         public string ToString(string IntervalFormat, string ValueFormat)
         {
             var result = new StringBuilder();
-            foreach (var v in GetEnumerable())
+            foreach (var (interval, _, value) in GetEnumerable())
                 result
-                   .Append(v.Interval.ToString(IntervalFormat))
-                   .Append(v.Value.ToString(ValueFormat))
+                   .Append(interval.ToString(IntervalFormat))
+                   .Append(value.ToString(ValueFormat))
                    .Append(" ");
 
             if (result.Length > 0)

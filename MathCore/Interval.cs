@@ -607,6 +607,13 @@ namespace MathCore
             _Min.ToString(Format),
             _Max.ToString(Format));
 
+        public string ToString(IFormatProvider FormatProvider) => string.Format(
+            "{0}{2};{3}{1}",
+            _MinInclude ? "[" : "(",
+            _MaxInclude ? "]" : ")",
+            _Min.ToString(FormatProvider),
+            _Max.ToString(FormatProvider));
+
         /// <summary>Форматирует значение текущего экземпляра с использованием заданного формата.</summary>
         /// <returns>Объект <see cref="T:System.String"/> содержит значение текущего экземпляра в заданном формате.</returns>
         /// <param name="Format">
