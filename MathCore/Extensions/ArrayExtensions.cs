@@ -19,6 +19,11 @@ namespace System
     ///<summary>Методы расширения для массивов</summary>
     public static class ArrayExtensions
     {
+        public static string ToBase64(this byte[] bytes) => Convert.ToBase64String(bytes);
+        public static string ToBase64(this byte[] bytes, int offset, int length) => Convert.ToBase64String(bytes, offset, length);
+        public static string ToBase64(this byte[] bytes, Base64FormattingOptions options) => Convert.ToBase64String(bytes, options);
+        public static string ToBase64(this byte[] bytes, int offset, int length, Base64FormattingOptions options) => Convert.ToBase64String(bytes, offset, length, options);
+
         public static int BinarySearch<T>(this T[] array, T value) => Array.BinarySearch(array, value);
 
         public static int[] InitializeRange(this int[] array, int StartValue = 0, int Step = 1)

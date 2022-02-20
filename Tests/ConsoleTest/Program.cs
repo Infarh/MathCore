@@ -1,5 +1,8 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Linq.Expressions;
+
+using MathCore;
 
 // ReSharper disable ConvertToUsingDeclaration
 // ReSharper disable DoubleEquals
@@ -26,6 +29,18 @@ internal static class Program
 
     private static void Main()
     {
+        var str = "Hello world _    +123,321   _===";
+
+        var ptr = new StringPtr(str);
+        var index = ptr.IndexOf('_');
+
+        var substr = ptr.Substring(index + 1);
+        index = substr.IndexOf('_');
+        substr = substr.Substring(0, index);
+
+        var parsed = substr.TryParseDouble(out var int_value);
+
+
         HistogramTest.Run();
         HistogramTest.RunIteration();
 
