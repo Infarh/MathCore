@@ -75,7 +75,9 @@ namespace MathCore.Statistic
 
         public double Variance => _Variance;
 
-        public double StandardDeviation => _Variance.Sqrt();
+        public double StdDev => _Variance.Sqrt();
+
+        public double StdErr => StdDev / Math.Sqrt(TotalValuesCount);
 
         public IReadOnlyList<double> Frequencies => _Frequencies;
 
@@ -113,9 +115,27 @@ namespace MathCore.Statistic
 
             var min_max = new MinMaxValue();
             var average_value = new AverageValue();
-            X = X.ForeachLazy(min_max.SetValue).ForeachLazy(average_value.AddValue);
 
-            var x_values = X.ToArray();
+            if (X is double[] x_values)
+                foreach (var x in x_values)
+                {
+                    min_max.AddValue(x);
+                    average_value.AddValue(x);
+                }
+            else
+            {
+                var list = new List<double>();
+
+                foreach (var x in X)
+                {
+                    min_max.AddValue(x);
+                    average_value.AddValue(x);
+                    list.Add(x);
+                }
+
+                x_values = list.ToArray();
+            }
+
             var total_values_count = x_values.Length;
             TotalValuesCount = total_values_count;
 
@@ -146,21 +166,18 @@ namespace MathCore.Statistic
         public double GetPirsonsCriteria(Func<double, double> Distribution)
         {
             var x0 = _Interval.Min;
-            var d = _dx;
+            var dx = _dx;
 
             var stat = 0d;
-            var q = _Normalizer / TotalValuesCount;
             for (var i = 0; i < _IntervalsCount; i++)
             {
-                var min = x0 + i * d;
-                var max = min + d;
+                var min = x0 + i * dx;
+                var max = min + dx;
 
-                var theor = Distribution.GetIntegralValue_AdaptiveTrapRecursive(min, max);
-                var frequency = _Frequencies[i];
-                //var count = frequency / q;
-                //var cc = _Counts[i];
-                var delta = frequency - theor;
-                stat += delta.Pow2() / theor;
+                var p = Distribution.GetIntegralValue_AdaptiveTrapRecursive(min, max);
+                var f = _Frequencies[i];
+                var dp = p - f;
+                stat += dp * dp / p;
             }
 
             return stat * TotalValuesCount;
@@ -227,8 +244,8 @@ namespace MathCore.Statistic
             {
                 Writer.Write("{0}│", xx_str[i].PadRight(max_xx_str_length));
 
-                var bar_width = (int)(bar_max_width * _Counts[i] / (double)_Counts.Max()) - 1;
-                for (var j = 0; j < bar_width; j++)
+                var bar_width_int = (int)(bar_max_width * _Counts[i] / (double)_Counts.Max() - 1);
+                for (var j = 0; j < bar_width_int; j++)
                     Writer.Write('█');
 
                 Writer.WriteLine("▌{0}", _Counts[i]);
@@ -243,10 +260,9 @@ namespace MathCore.Statistic
                 return;
             }
 
-            var sgm = StandardDeviation;
+            var sgm = StdDev;
             var mu_sgm = new Interval(_Mean - sgm, _Mean + sgm);
             var mu_3sgm = new Interval(_Mean - 3 * sgm, _Mean + 3 * sgm);
-
 
             Writer.WriteLine($"           min x : {min.ToString(invariant_culture)}");
             Writer.WriteLine($"           max x : {max.ToString(invariant_culture)}");
@@ -255,16 +271,10 @@ namespace MathCore.Statistic
             Writer.WriteLine($"               μ : {_Mean.ToString(invariant_culture)}");
             Writer.WriteLine($"               D : {_Variance.ToString(invariant_culture)}");
             Writer.WriteLine($"               σ : {sgm.ToString(invariant_culture)}");
+            Writer.WriteLine($"             err : {StdErr.ToString(invariant_culture)}");
             Writer.WriteLine($"            μ±σ  : {mu_sgm.ToString(invariant_culture)}");
             Writer.WriteLine($"            μ±3σ : {mu_3sgm.ToString(invariant_culture)}");
 
-        }
-
-        class Str
-        {
-            public string Value { get; set; }
-
-            public override string ToString() => Value;
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

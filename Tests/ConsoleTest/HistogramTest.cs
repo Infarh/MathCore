@@ -69,7 +69,7 @@ public class HistogramTest
                 },
                 new LineAnnotation
                 {
-                    X = histogram.StandardDeviation + histogram.Mean,
+                    X = histogram.StdDev + histogram.Mean,
                     Type = LineAnnotationType.Vertical,
                     Color = OxyColors.Red,
                     StrokeThickness = 2,
@@ -78,7 +78,7 @@ public class HistogramTest
                 },
                 new LineAnnotation
                 {
-                    X = -histogram.StandardDeviation + histogram.Mean,
+                    X = -histogram.StdDev + histogram.Mean,
                     Type = LineAnnotationType.Vertical,
                     Color = OxyColors.Red,
                     StrokeThickness = 2,
@@ -87,7 +87,7 @@ public class HistogramTest
                 },
                 new LineAnnotation
                 {
-                    X = histogram.StandardDeviation * 3 + histogram.Mean,
+                    X = histogram.StdDev * 3 + histogram.Mean,
                     Type = LineAnnotationType.Vertical,
                     Color = OxyColors.Red,
                     StrokeThickness = 2,
@@ -96,7 +96,7 @@ public class HistogramTest
                 },
                 new LineAnnotation
                 {
-                    X = -histogram.StandardDeviation * 3 + histogram.Mean,
+                    X = -histogram.StdDev * 3 + histogram.Mean,
                     Type = LineAnnotationType.Vertical,
                     Color = OxyColors.Red,
                     StrokeThickness = 2,
