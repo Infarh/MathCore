@@ -2,7 +2,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MathCore.Annotations;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -10,10 +9,16 @@ using MathCore.Annotations;
 
 namespace MathCore.IoC.ServiceRegistrations;
 
+/// <summary>Регистрация сервиса в режиме единственного экземпляра</summary>
+/// <typeparam name="TService">Тип реализации сервиса</typeparam>
 public class SingletonServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
 {
+    /// <summary>Признак того, что экземпляр сервиса был создан</summary>
     private bool _Created;
+
+    /// <summary>Регистрация сервиса выполнена на основе существующего экземпляра</summary>
     private readonly bool _InstanceService;
+    
     private readonly object _SyncRoot = new();
 
     public TimeSpan? InstanceActualityTime
@@ -21,7 +26,7 @@ public class SingletonServiceRegistration<TService> : ServiceRegistration<TServi
         get => _InstanceActualityTime;
         set
         {
-            if (_InstanceActualityTime.Equals(value)) return;
+            if (_InstanceActualityTime  == value) return;
             _InstanceActualityCheckCancel?.Cancel();
             _InstanceActualityTime = value;
         }
@@ -57,28 +62,32 @@ public class SingletonServiceRegistration<TService> : ServiceRegistration<TServi
             }
 
         CheckInstanceActualityTimeAsync();
-        var last_error = LastException;
-        if (last_error != null) throw last_error;
-        return CurrentInstance;
+        return LastException is { } last_error
+            ? throw last_error 
+            : CurrentInstance;
     }
 
     private DateTime _InstanceLastAccessTime;
+    
     private TimeSpan? _InstanceActualityTime;
+    
     private CancellationTokenSource? _InstanceActualityCheckCancel = new();
 
     private async void CheckInstanceActualityTimeAsync()
     {
         _InstanceLastAccessTime = DateTime.Now;
-        if (InstanceActualityTime is null || _InstanceActualityCheckCancel != null) return;
+        if (_InstanceActualityTime is not { } instance_time || _InstanceActualityCheckCancel != null) return;
         lock (_SyncRoot)
         {
             if (_InstanceActualityCheckCancel != null) return;
             _InstanceActualityCheckCancel = new CancellationTokenSource();
         }
         var cancel = _InstanceActualityCheckCancel.Token;
+        
         do
-            await Task.Delay((TimeSpan)InstanceActualityTime, cancel).ConfigureAwait(false);
-        while (DateTime.Now - _InstanceLastAccessTime >= _InstanceActualityTime || !cancel.IsCancellationRequested);
+            await Task.Delay(instance_time, cancel).ConfigureAwait(false);
+        while (DateTime.Now - _InstanceLastAccessTime >= instance_time || !cancel.IsCancellationRequested);
+
         _InstanceActualityCheckCancel = null;
         Reset();
     }

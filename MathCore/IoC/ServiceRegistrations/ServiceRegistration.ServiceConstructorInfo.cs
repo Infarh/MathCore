@@ -37,13 +37,14 @@ public abstract partial class ServiceRegistration
                 {
                     var parameter = InputParameters[j];
                     if (parameter is null)
-                        ++j;
+                        j++;
                     else if (parameter_type.IsInstanceOfType(parameter))
                     {
                         obj = parameter;
-                        ++j;
+                        j++;
                     }
                 }
+
                 result[i] = obj ?? ParameterSelector(parameter_type);
                 if (result[i] is null && parameters[i].GetCustomAttribute(typeof(NotNullAttribute)) != null)
                     throw new InvalidOperationException($"Ошибка в процессе создания объекта - не найден параметр конструктора c индексом {i} типа {parameter_type} с именем {parameters[i].Name} помеченный аттрибутом [NotNull]");
@@ -53,6 +54,6 @@ public abstract partial class ServiceRegistration
 
         public object CreateInstance(object?[] parameters) => _Constructor.Invoke(parameters);
 
-        public object CreateInstance(Func<Type, object> ParameterSelector, params object[] parameters) => CreateInstance(GetParametersValues(ParameterSelector, parameters));
+        public object CreateInstance(Func<Type, object?> ParameterSelector, params object[] parameters) => CreateInstance(GetParametersValues(ParameterSelector, parameters));
     }
 }

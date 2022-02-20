@@ -32,8 +32,11 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
     public class RegistrationNotFoundEventArgs : EventArgs
     {
         public Type ServiceType { get; }
+        
         public IReadOnlyCollection<object> Parameters { get; }
+        
         public object? ServiceInstance { get; set; }
+        
         public RegistrationNotFoundEventArgs(Type ServiceType, object[] Parameters)
         {
             this.ServiceType = ServiceType;
@@ -50,6 +53,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
             ServiceInstance = null;
             return false;
         }
+
         var args = new RegistrationNotFoundEventArgs(ServiceType, parameters);
         handlers(this, args);
         ServiceInstance = args.ServiceInstance;
@@ -57,15 +61,16 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
     }
 
     private readonly Dictionary<Type, ServiceRegistration> _Services = new();
+
     private readonly object _SyncRoot = new();
 
     public IServiceRegistrations ServiceRegistrations => this;
 
     public bool ThrowIfNotFound { get; set; } = true;
 
-    private List<IServiceManager>? _MerragedServiceManagers;
+    private List<IServiceManager>? _MergedServiceManagers;
 
-    public ICollection<IServiceManager> MeragedServiceManagers => _MerragedServiceManagers ??= new List<IServiceManager>();
+    public ICollection<IServiceManager> MergedServiceManagers => _MergedServiceManagers ??= new List<IServiceManager>();
 
     public object? this[Type ServiceType] => Get(ServiceType);
 
@@ -83,9 +88,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         _Services.ContainsKey(ServiceType)
         || _Services.Values.Any(s => s.AllowInheritance && ServiceType.IsAssignableFrom(s.ServiceType));
 
-    public TServiceInterface? Get<TServiceInterface>()
-        where TServiceInterface : class
-        => Get(typeof(TServiceInterface)) as TServiceInterface;
+    public TServiceInterface? Get<TServiceInterface>() where TServiceInterface : class => Get(typeof(TServiceInterface)) as TServiceInterface;
 
     public TServiceInterface Get<TServiceInterface>(params object[] parameters) where TServiceInterface : class => throw new NotImplementedException();
 
@@ -101,7 +104,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
             if (base_registration is null)
             {
-                if (_MerragedServiceManagers is not { Count: > 0 } managers) 
+                if (_MergedServiceManagers is not { Count: > 0 } managers) 
                     return null;
 
                 foreach (var manager in managers)
@@ -161,7 +164,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     private object? CheckMergedManagers(Type ServiceType, object[] parameters)
     {
-        foreach (var manager in MeragedServiceManagers)
+        foreach (var manager in MergedServiceManagers)
             if (manager != this && manager.ServiceRegistered(ServiceType))
                 return manager.Get(ServiceType, parameters);
         return null;

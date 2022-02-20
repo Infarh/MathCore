@@ -11,7 +11,8 @@ namespace MathCore.IoC.ServiceRegistrations;
 public class SingleThreadServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
 {
     private volatile ThreadLocal<object?> _Initializer = null!;
-    private volatile ThreadLocal<Exception> _Exceptions = null!;
+
+    private volatile ThreadLocal<Exception?> _Exceptions = null!;
 
     public bool IsInstanceCreated => _Initializer.IsValueCreated;
 
@@ -21,7 +22,7 @@ public class SingleThreadServiceRegistration<TService> : ServiceRegistration<TSe
 
     public object? Instance => GetService();
 
-    public override Exception LastException { get => _Exceptions.Value; set => _Exceptions.Value = value; }
+    public override Exception? LastException { get => _Exceptions.Value; set => _Exceptions.Value = value; }
 
     public SingleThreadServiceRegistration(IServiceManager Manager, Type ServiceType) : base(Manager, ServiceType) => ResetAll();
 
@@ -33,7 +34,7 @@ public class SingleThreadServiceRegistration<TService> : ServiceRegistration<TSe
     {
         var last_initializer = _Initializer;
         _Initializer = new ThreadLocal<object?>(() => CreateNewService());
-        _Exceptions = new ThreadLocal<Exception>();
+        _Exceptions = new ThreadLocal<Exception?>();
         last_initializer?.Dispose();
     }
 

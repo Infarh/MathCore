@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using System;
 
-using MathCore.Annotations;
-
 namespace MathCore.IoC.ServiceRegistrations;
 
 public class SingleCallServiceRegistration<TService> : ServiceRegistration<TService> where TService : class
@@ -19,13 +17,11 @@ public class SingleCallServiceRegistration<TService> : ServiceRegistration<TServ
         {
             return CreateServiceInstance(parameters);
         }
-#pragma warning disable CA1031 // Do not catch general exception types
         catch (Exception e)
         {
             LastException = e;
             OnExceptionThrown(e);
         }
-#pragma warning restore CA1031 // Do not catch general exception types
 
         return null;
     }

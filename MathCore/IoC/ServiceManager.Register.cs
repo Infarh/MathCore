@@ -17,8 +17,7 @@ public sealed partial class ServiceManager
         lock (_SyncRoot)
             return Mode switch
             {
-                ServiceRegistrationMode.Singleton =>
-                    RegisterSingleton<TServiceType>(),
+                ServiceRegistrationMode.Singleton => RegisterSingleton<TServiceType>(),
                 ServiceRegistrationMode.SingleCall => RegisterSingleCall<TServiceType>(),
                 ServiceRegistrationMode.SingleThread => RegisterSingleThread<TServiceType>(),
                 _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
