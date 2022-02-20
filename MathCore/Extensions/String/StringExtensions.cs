@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using MathCore;
 using MathCore.Annotations;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -19,6 +20,24 @@ namespace System
     /// <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
     public static class StringExtensions
     {
+        /// <summary>Преобразовать строку в указатель</summary>
+        /// <param name="str">Исходная строка</param>
+        /// <returns>Указатель на позицию в строке</returns>
+        public static StringPtr AsStringPtr(this string str) => new(str, 0, str.Length);
+
+        /// <summary>Преобразовать строку в указатель</summary>
+        /// <param name="str">Исходная строка</param>
+        /// <param name="Pos">Положение в строке</param>
+        /// <returns>Указатель на позицию в строке</returns>
+        public static StringPtr AsStringPtr(this string str, int Pos) => new(str, Pos, str.Length - Pos);
+
+        /// <summary>Преобразовать строку в указатель</summary>
+        /// <param name="str">Исходная строка</param>
+        /// <param name="Pos">Положение в строке</param>
+        /// <param name="Length">Длина подстроки</param>
+        /// <returns>Указатель на позицию в строке</returns>
+        public static StringPtr AsStringPtr(this string str, int Pos, int Length) => new(str, Pos, Length);
+
         /// <summary>Сжать строку в последовательность байт</summary>
         /// <param name="str">Сжимаемая строка</param>
         /// <returns>Сжатая строка в виде последовательности байт</returns>

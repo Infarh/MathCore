@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Linq;
+
 using MathCore;
 using MathCore.Annotations;
 using MathCore.Interpolation;
@@ -11,6 +12,7 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable CompareOfFloatsByEqualityOperator
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UseIndexFromEndExpression
 
 // ReSharper disable once CheckNamespace
 namespace System;
@@ -229,15 +231,37 @@ public static class DoubleArrayExtensions
     [DST]
     public static Histogram GetHistogram(this double[] X, int IntervalsCount) => new(X, IntervalsCount);
 
+    /// <summary>Интегрирование значений методом трапеций с регулярной сеткой</summary>
+    /// <param name="Y">Массив значений функции</param>
+    /// <param name="dx">Шаг интегрирования</param>
+    /// <returns>Площадь по кривой</returns>
     [DST]
     public static double GetIntegral(this double[] Y, double dx)
     {
-        var s = 0.0;
-        for (var i = 1; i < Y.Length; i++)
-            s += Y[i] + Y[i - 1];
-        return 0.5 * s * dx;
+        if (dx is double.NaN) return double.NaN;
+
+        switch (Y.Length)
+        {
+            case 0: return double.NaN;
+            case 1: return 0;
+
+            case 2: return (Y[0] + Y[1]) * dx * 0.5;
+            //case 3: return (Y[0] + Y[1]) * dx * 0.5 + (Y[1] + Y[2]) * dx * 0.5;
+            case 3: return (Y[0] + Y[1] * 2 + Y[2]) * dx * 0.5;
+            case 4: return (Y[0] + Y[1] * 2 + Y[2] * 2 + Y[3]) * dx * 0.5;
+            case 5: return (Y[0] + Y[1] * 2 + Y[2] * 2 + Y[3] * 2 + Y[4]) * dx * 0.5;
+
+            default:
+                var s = 0.0;
+                foreach (var y in Y) s += y;
+                return (2 * s - Y[0] - Y[Y.Length - 1]) * dx * 0.5;
+        }
     }
 
+    /// <summary>Интегрирование значений методом трапеций</summary>
+    /// <param name="Y">Массив значений функции</param>
+    /// <param name="X">Массив значений аргумента точек значений функции</param>
+    /// <returns>Площадь по кривой</returns>
     [DST]
     public static double GetIntegral(this double[] Y, double[] X)
     {

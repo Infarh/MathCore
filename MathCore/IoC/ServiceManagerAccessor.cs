@@ -1,15 +1,19 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+namespace MathCore.IoC;
 
-namespace MathCore.IoC
+/// <summary>Объект доступа к экземплярам сервиса <typeparamref name="TService"/></summary>
+/// <typeparam name="TService">Тип сервиса</typeparam>
+public class ServiceManagerAccessor<TService> where TService : class
 {
-    public class ServiceManagerAccessor<TService> where TService : class
-    {
-        private readonly ServiceManager _ServiceManager;
+    /// <summary>Экземпляр менеджера сервисов</summary>
+    private readonly ServiceManager _ServiceManager;
 
-        [CanBeNull] public TService Service => _ServiceManager.Get<TService>();
+    /// <summary>Экземпляр сервиса <typeparamref name="TService"/></summary>
+    public TService? Service => _ServiceManager.Get<TService>();
 
-        [NotNull] public TService ServiceRequired => _ServiceManager.GetRequired<TService>();
+    public TService ServiceRequired => _ServiceManager.GetRequired<TService>();
 
-        public ServiceManagerAccessor(ServiceManager ServiceManager) => _ServiceManager = ServiceManager;
-    }
+    /// <summary>Инициализация нового объекта доступа к экземплярам сервиса <typeparamref name="TService"/></summary>
+    /// <param name="ServiceManager">Менеджер сервисов</param>
+    public ServiceManagerAccessor(ServiceManager ServiceManager) => _ServiceManager = ServiceManager;
 }

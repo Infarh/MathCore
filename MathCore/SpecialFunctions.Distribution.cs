@@ -232,7 +232,7 @@ namespace MathCore
                     double z;
 
                     double rk = k;
-                    if (p > .25 && p < .75)
+                    if (p is > .25 and < .75)
                     {
                         if (Math.Abs(p - .5) < Eps) return 0;
                         z = IncompleteBeta.IncompleteBetaInversed(.5, .5 * rk, Math.Abs(1 - 2 * p));
@@ -261,13 +261,13 @@ namespace MathCore
                 /// <summary>Квантиль Хи-квадрат (Аппроксимация Корниша-Фишера)</summary>
                 /// <remarks>http://ru.wikipedia.org/wiki/Квантили_распределения_хи-квадрат</remarks>
                 /// <remarks>https://projecteuclid.org/download/pdf_1/euclid.aoms/1177730982</remarks>
-                /// <param name="alpha">Квантиль [0..1]</param>
-                /// <param name="n">Число степеней свободы</param>
+                /// <param name="alpha">Квантиль [0..1] (0.95 - 95% вероятности попадания значения в выбранный диапазон)</param>
+                /// <param name="n">Число степеней свободы (число элементов гистограммы, минус число параметров распределения: [mu, sgm = 2])</param>
                 /// <returns>Квантиль</returns>
                 // ReSharper restore CommentTypo
                 public static double QuantileHi2Approximation(double alpha, int n)
                 {
-                    if (alpha < .001 || alpha > .999)
+                    if (alpha is < .001 or > .999)
                         throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "Значения alpha < 0.001 и > 0.999 не поддерживаются");
 
                     var d = alpha >= .5

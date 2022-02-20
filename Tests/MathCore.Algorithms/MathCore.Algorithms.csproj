@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MathCore\MathCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Linq" />
     <Using Include="System.Collections.Generic" />
