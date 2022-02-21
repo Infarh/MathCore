@@ -1,49 +1,17 @@
 ﻿#nullable enable
+using System.Runtime.InteropServices;
+
 using MathCore.Vectors;
 // ReSharper disable ArgumentsStyleLiteral
 // ReSharper disable ArgumentsStyleOther
 
-using Field = System.Func<MathCore.Vectors.Vector3D, double, MathCore.Vectors.Vector3D>;
 // ReSharper disable InconsistentNaming
 
 namespace MathCore.Algorithms.Vectors;
 
 public static class VectorFields
 {
-    public static Vector3D dx(this Field field, Vector3D r, double t, double d) =>
-        (field(new(r.X + d / 2, r.Y, r.Z), t) - field(new(r.X - d / 2, r.Y, r.Z), t)) / d;
-    public static Vector3D dy(this Field field, Vector3D r, double t, double d) =>
-        (field(new(r.X, r.Y + d / 2, r.Z), t) - field(new(r.X, r.Y - d / 2, r.Z), t)) / d;
-    public static Vector3D dz(this Field field, Vector3D r, double t, double d) =>
-        (field(new(r.X, r.Y, r.Z + d / 2), t) - field(new(r.X, r.Y, r.Z - d / 2), t)) / d;
 
-    public static Func<Vector3D, double, Vector3D> Grad(this Field field, double dr) =>
-        (r, t) =>
-        {
-            return new(field.dx(r, t, dr), field.dy(r, t, dr), field.dz(r, t, dr));
-        };
-
-    public static Func<Vector3D, double, double> Div(this Field field, double dr) =>
-        (r, t) =>
-        {
-            var (x, y, z) = r;
-            var dr2 = dr / 2;
-            var dFdx = (field(new(x + dr2, y, z), t) - field(new(x - dr2, y, z), t)) / dr;
-            var dFdy = (field(new(x, y + dr2, z), t) - field(new(x, y - dr2, z), t)) / dr;
-            var dFdz = (field(new(x, y, z + dr2), t) - field(new(x, y, z - dr2), t)) / dr;
-            return dFdx + dFdy + dFdz;
-        };
-
-    public static Func<Vector3D, double, Vector3D> Rot(this Field field, double dr) =>
-        (r, t) =>
-        {
-            var (x, y, z) = r;
-            var dr2 = dr / 2;
-            var dFdx = (field(new(x + dr2, y, z), t) - field(new(x - dr2, y, z), t)) / dr;
-            var dFdy = (field(new(x, y + dr2, z), t) - field(new(x, y - dr2, z), t)) / dr;
-            var dFdz = (field(new(x, y, z + dr2), t) - field(new(x, y, z - dr2), t)) / dr;
-            return dFdx + dFdy + dFdz;
-        };
 
     public static void Test()
     {
@@ -53,9 +21,94 @@ public static class VectorFields
         const double lambda = c / f0; // m
         const double k = 2 * Math.PI / lambda;
 
-        Field E = (r, t) => new(
-            X: 0,
-            Y: Math.Sin(k * r.X + w * t),
-            Z: 0);
+
     }
+}
+
+public static class FieldComponentEx
+{
+    public static FieldComponent? dFdx(this FieldComponent? F, double dx) => F is null
+    ? null
+    : (in Vector3D r, double t) =>
+    {
+        var dx2 = dx / 2;
+        return (F(r with { X = r.X - dx2 }, t) - F(r with { X = r.X + dx2 }, t)) / dx;
+    };
+
+    public static FieldComponent? dFdy(this FieldComponent? F, double dy) => F is null
+    ? null
+    : (in Vector3D r, double t) =>
+    {
+        var dy2 = dy / 2;
+        return (F(r with { Y = r.Y - dy2 }, t) - F(r with { Y = r.Y + dy2 }, t)) / dy;
+    };
+
+    public static FieldComponent? dFdz(this FieldComponent? F, double dz) => F is null
+    ? null
+    : (in Vector3D r, double t) =>
+    {
+        var dz2 = dz / 2;
+        return (F(r with { Z = r.Z - dz2 }, t) - F(r with { Z = r.Z + dz2 }, t)) / dz;
+    };
+
+    public static FieldComponent? Add(this FieldComponent? X, FieldComponent? Y) => (X, Y) switch
+    {
+        (null, null) => null,
+        (null, _) => (in Vector3D r, double t) => Y(r, t),
+        (_, null) => X,
+        _ => (in Vector3D r, double t) => X(r, t) + Y(r, t),
+    };
+
+    public static FieldComponent? Subtract(this FieldComponent? X, FieldComponent? Y) => (X, Y) switch
+    {
+        (null, null) => null,
+        (null, _) => (in Vector3D r, double t) => -Y(r, t),
+        (_, null) => X,
+        _ => (in Vector3D r, double t) => X(r, t) - Y(r, t),
+    };
+}
+
+public delegate double FieldComponent(in Vector3D r, double t);
+
+public readonly record struct Field
+{
+    public static FieldComponent Zero { get; } = (in Vector3D r, double t) => 0;
+    public static FieldComponent One { get; } = (in Vector3D r, double t) => 1;
+
+    public static Field Grad(FieldComponent f, double dr) => new()
+    {
+        X = f.dFdx(dr),
+        Y = f.dFdy(dr),
+        Z = f.dFdz(dr),
+    };
+
+    public static FieldComponent? Div(in Field F, double dr) => F.X.dFdx(dr).Add(F.Y.dFdy(dr)).Add(F.Z.dFdz(dr));
+
+    public static Field Rot(in Field F, double dr) => new()
+    {
+        X = F.Z.dFdy(dr).Subtract(F.Y.dFdz(dr)),
+        Y = F.X.dFdz(dr).Subtract(F.Z.dFdx(dr)),
+        Z = F.Y.dFdx(dr).Subtract(F.X.dFdy(dr)),
+    };
+
+    public FieldComponent? X { get; init; }
+    public FieldComponent? Y { get; init; }
+    public FieldComponent? Z { get; init; }
+
+    public Vector3D Value(in Vector3D r, double t)
+    {
+        var x = X is { } fx ? fx(r, t) : 0;
+        var y = Y is { } fy ? fy(r, t) : 0;
+        var z = Z is { } fz ? fz(r, t) : 0;
+
+        return new(x, y, z);
+    }
+
+    public double ValueX(in Vector3D r, double t) => X is { } fx ? fx(r, t) : 0;
+    public double ValueY(in Vector3D r, double t) => Y is { } fy ? fy(r, t) : 0;
+    public double ValueZ(in Vector3D r, double t) => Z is { } fz ? fz(r, t) : 0;
+
+    public FieldComponent? Div(double dr) => Div(this, dr);
+
+    public Field Rot(double dr) => Rot(this, dr);
 }

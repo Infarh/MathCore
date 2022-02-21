@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.63</Version>
+    <Version>0.0.64</Version>
     <PackageReleaseNotes>
-      StringPtr - указатель подстроки
+      Добавление инициализаторов векторам и комплексным числам
     </PackageReleaseNotes>
   </PropertyGroup>
 
