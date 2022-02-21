@@ -42,25 +42,25 @@ namespace MathCore.Vectors
         private readonly double _xx;
 
         /// <summary>Элемент X[0,0]</summary>
-        public double xx => _xx;
+        public double xx { get => _xx; init => _xx = value; }
 
         /// <summary>Элемент X[0,1]</summary>
         private readonly double _xy;
 
         /// <summary>Элемент X[0,1]</summary>
-        public double xy => _xy;
+        public double xy { get=> _xy; init=> _xy = value; }
 
         /// <summary>Элемент X[1,0]</summary>
         private readonly double _yx;
 
         /// <summary>Элемент X[1,0]</summary>
-        public double yx => _yx;
+        public double yx { get => _yx; init => _yx = value; }
 
         /// <summary>Элемент X[1,1]</summary>
         private readonly double _yy;
 
         /// <summary>Элемент X[1,1]</summary>
-        public double yy => _yy;
+        public double yy { get => _yy; init => _yy = value; }
 
 #pragma warning restore IDE1006 // Стили именования
 

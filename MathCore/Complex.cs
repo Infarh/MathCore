@@ -270,10 +270,10 @@ namespace MathCore
         public ComplexConstantExpression Expression => ComplexExpression.Mod(_Re, _Im);
 
         /// <summary>Действительная часть</summary>
-        public double Re => _Re;
+        public double Re { get => _Re; init => _Re = value; }
 
         /// <summary>Мнимая часть</summary>
-        public double Im => _Im;
+        public double Im { get => _Im; init => _Im = value; }
 
         /// <summary>X * X^* = Re(X)^2 + Im(X)^2</summary>
         [XmlIgnore]

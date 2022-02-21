@@ -438,6 +438,188 @@ public readonly ref struct StringPtr
         return true;
     }
 
+    /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
+    /// <param name="Provider">Информация о формате</param>
+    /// <param name="value">Преобразованное значение</param>
+    /// <returns>Истина, если преобразование выполнено успешно</returns>
+    public bool TryParseDouble(IFormatProvider Provider, out double value)
+    {
+        var start = Pos;
+        var index = 0;
+        var length = Length;
+        var str = Source;
+        var format = NumberFormatInfo.GetInstance(Provider);
+
+        var decimal_separator_str = format.NumberDecimalSeparator;
+
+        if (length == 0 || str.EndsWith(decimal_separator_str))
+        {
+            value = double.NaN;
+            return false;
+        }
+
+        while (index < length && char.IsWhiteSpace(str, start + index))
+            index++;
+
+        if (index >= length)
+        {
+            value = double.NaN;
+            return false;
+        }
+
+        var sign = 1;
+
+        switch (str[start + index])
+        {
+            case '-':
+                sign = -1;
+                index++;
+                break;
+            case '+':
+                index++;
+                break;
+        }
+
+        var fraction_index = 0d;
+        var result = 0d;
+        while (index < length)
+        {
+            if (fraction_index == 0)
+            {
+                if (char.IsDigit(str, start + index))
+                {
+                    result = result * 10 + (str[start + index] - '0');
+                    index++;
+                    continue;
+                }
+
+                if(Substring(start + index).StartWith(decimal_separator_str))
+                    fraction_index = 0.1;
+                else
+                {
+                    while (char.IsWhiteSpace(str, start + index) && index < length)
+                        index++;
+
+                    if (index == length)
+                    {
+                        value = result;
+                        return true;
+                    }
+
+                    value = double.NaN;
+                    return false;
+                }
+            }
+            else
+            {
+                if (!char.IsDigit(str, start + index))
+                {
+                    while (char.IsWhiteSpace(str, start + index) && index < length)
+                        index++;
+
+                    if (index == length)
+                    {
+                        value = result;
+                        return true;
+                    }
+
+                    value = double.NaN;
+                    return false;
+                }
+
+                result += (str[start + index] - '0') * fraction_index;
+                fraction_index /= 10;
+            }
+
+            index++;
+        }
+
+        value = sign * result;
+        return true;
+    }
+
+    /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
+    /// <param name="Provider">Информация о формате</param>
+    /// <returns>Преобразованное вещественное число</returns>
+    public double ParseDouble(IFormatProvider Provider)
+    {
+        var start = Pos;
+        var index = 0;
+        var length = Length;
+        var str = Source;
+        var format = NumberFormatInfo.GetInstance(Provider);
+
+        var decimal_separator_str = format.NumberDecimalSeparator;
+
+        if (length == 0 || str.EndsWith(decimal_separator_str)) 
+            throw new FormatException("Строка имела неверный формат");
+
+        while (index < length && char.IsWhiteSpace(str, start + index))
+            index++;
+
+        if (index >= length) 
+            throw new FormatException("Строка состоит из одних пробелов");
+
+        var sign = 1;
+
+        switch (str[start + index])
+        {
+            case '-':
+                sign = -1;
+                index++;
+                break;
+            case '+':
+                index++;
+                break;
+        }
+
+        var fraction_index = 0d;
+        var result = 0d;
+        while (index < length)
+        {
+            if (fraction_index == 0)
+            {
+                if (char.IsDigit(str, start + index))
+                {
+                    result = result * 10 + (str[start + index] - '0');
+                    index++;
+                    continue;
+                }
+
+                if (Substring(start + index).StartWith(decimal_separator_str))
+                    fraction_index = 0.1;
+                else
+                {
+                    while (char.IsWhiteSpace(str, start + index) && index < length)
+                        index++;
+
+                    return index == length 
+                        ? sign * result 
+                        : throw new FormatException("Строка имела неверный формат");
+                }
+            }
+            else
+            {
+                if (!char.IsDigit(str, start + index))
+                {
+                    while (char.IsWhiteSpace(str, start + index) && index < length)
+                        index++;
+
+                    return index == length 
+                        ? sign * result
+                        : throw new FormatException("Строка имела неверный формат");
+                }
+
+                result += (str[start + index] - '0') * fraction_index;
+                fraction_index /= 10;
+            }
+
+            index++;
+        }
+
+        return sign * result;
+    }
+
     /* --------------------------------------------------------------------------------------- */
 
     public override bool Equals(object? obj)

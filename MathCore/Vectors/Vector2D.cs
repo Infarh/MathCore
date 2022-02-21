@@ -26,11 +26,11 @@ namespace MathCore.Vectors
 
         /// <summary>Координата X</summary>
         [XmlAttribute]
-        public double X => _X;
+        public double X { get => _X; init => _X = value; }
 
         /// <summary>Координата Y</summary>
         [XmlAttribute]
-        public double Y => _Y;
+        public double Y { get => _Y; init => _Y = value; }
 
         /// <summary>Радиус (длина) вектора</summary>
         [XmlIgnore]

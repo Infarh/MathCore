@@ -85,15 +85,15 @@ namespace MathCore.Vectors
 
         /// <summary>Длина по оси X</summary>
         [XmlAttribute]
-        public double X => _X;
+        public double X { get => _X; init => _X = value; }
 
         /// <summary>Длина по оси Y</summary>
         [XmlAttribute]
-        public double Y => _Y;
+        public double Y { get => _Y; init => _Y = value; }
 
         /// <summary>Длина по оси Z</summary>
         [XmlAttribute]
-        public double Z => _Z;
+        public double Z { get => _Z; init => _Z = value; }
 
         /// <summary>Длина вектора</summary>
         [XmlIgnore]

@@ -56,7 +56,31 @@ namespace MathCore.Values
 
         /// <summary>Добавить перечисление объектов к оценке статистики</summary>
         /// <param name="collection">Добавляемая последовательность значений</param>
-        public void AddEnumerable(IEnumerable<double> collection) => collection.Foreach(AddValue);
+        public void AddEnumerable(IEnumerable<double> collection)
+        {
+            switch (collection)
+            {
+                case double[] values:
+                    foreach (var value in values)
+                        AddValue(value);
+                    break;
+
+                case List<double> values:
+                    foreach (var value in values)
+                        AddValue(value);
+                    break;
+
+                case IList<double> values:
+                    foreach (var value in values)
+                        AddValue(value);
+                    break;
+
+                default:
+                    foreach (var value in collection)
+                        AddValue(value);
+                    break;
+            }
+        }
 
         /// <summary>Сбросить состояние оценки</summary>
         public void Reset()
