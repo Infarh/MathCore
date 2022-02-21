@@ -117,33 +117,33 @@ namespace MathCore.Vectors
 #pragma warning disable IDE1006 // Стили именования
 
         /// <summary>Элемент [0,0]</summary>
-        public double xx => _xx;
+        public double xx { get => _xx; init => _xx = value; }
         
         /// <summary>Элемент [0,1]</summary>
-        public double xy => _xy;
+        public double xy { get => _xy; init => _xy = value; }
         
         /// <summary>Элемент [0,2]</summary>
-        public double xz => _xz;
+        public double xz { get => _xz; init => _xz = value; }
 
         
         /// <summary>Элемент [1,0]</summary>
-        public double yx => _yx;
+        public double yx { get => _yx; init => _yx = value; }
         
         /// <summary>Элемент [1,1]</summary>
-        public double yy => _yy;
+        public double yy { get => _yy; init => _yy = value; }
         
         /// <summary>Элемент [1,2]</summary>
-        public double yz => _yz;
+        public double yz { get => _yz; init => _yz = value; }
 
         
         /// <summary>Элемент [2,0]</summary>
-        public double zx => _zx;
+        public double zx { get => _zx; init => _zx = value; }
         
         /// <summary>Элемент [2,1]</summary>
-        public double zy => _zy;
+        public double zy { get => _zy; init => _zy = value; }
         
         /// <summary>Элемент [2,2]</summary>
-        public double zz => _zz;
+        public double zz { get => _zz; init => _zz = value; }
 
 #pragma warning restore IDE1006 // Стили именования
 
