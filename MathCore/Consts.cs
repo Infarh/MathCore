@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+// ReSharper disable MemberHidesStaticFromOuterClass
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
@@ -88,7 +89,6 @@ namespace MathCore
         public const double GoldenRatio_Inv = 1 / GoldenRatio;
 
         /// <summary>Геометрические константы</summary>
-        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         public static class Geometry
         {
             /// <summary>Константа преобразования радиан в градусы = 180/π</summary>

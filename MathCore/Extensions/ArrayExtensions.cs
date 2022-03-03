@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using MathCore;
 using MathCore.Annotations;
+using MathCore.Interpolation;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
@@ -2209,6 +2210,302 @@ namespace System
                 result.AppendLine(line.ToString());
             }
             return result.ToString();
+        }
+
+        private static double Sinc(double x) => x == 0 ? 1 : Math.Sin(x) / x;
+
+        /// <summary>Изменение размера массива с интерполяцией значений методом оптимальной фильтрации</summary>
+        /// <param name="array">Исходный массив значений</param>
+        /// <param name="NewLength">Новая длина массива</param>
+        /// <param name="k0">Коэффициент смещения значений в пределах [0..1]</param>
+        /// <returns>Новый массив изменённой длины с интерполированными значениями</returns>
+        public static double[] ResamplingOptimal(this double[] array, int NewLength, double k0 = 0)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new double[NewLength];
+
+            if (old_length == NewLength)
+                return (double[])array.Clone();
+
+            var result = new double[NewLength];
+            if (NewLength == 1)
+            {
+                result[0] = array.Average();
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            // Размер нового массива больше, чем размер старого.
+            var k = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var n = 0; n < NewLength; n++)
+            {
+                var s = 0d;
+                var nk = (n + k0) / k;
+
+                for (var i = 0; i < old_length; i++)
+                    s += array[i] * Sinc(Math.PI * (nk - i));
+
+                result[n] = s;
+            }
+
+            return result;
+        }
+
+        /// <summary>Изменение размера массива с интерполяцией комплексных значений методом оптимальной фильтрации</summary>
+        /// <param name="array">Исходный массив комплексных значений</param>
+        /// <param name="NewLength">Новая длина массива</param>
+        /// <param name="k0">Коэффициент смещения значений в пределах [0..1]</param>
+        /// <returns>Новый массив изменённой длины с интерполированными значениями</returns>
+        public static Complex[] ResamplingOptimal(this Complex[] array, int NewLength, double k0 = 0)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new Complex[NewLength];
+
+            if (old_length == NewLength)
+                return (Complex[])array.Clone();
+
+            var result = new Complex[NewLength];
+            if (NewLength == 1)
+            {
+                var s_re = 0d;
+                var s_im = 0d;
+                foreach (var (re, im) in array)
+                {
+                    s_re += re;
+                    s_im += im;
+                }
+
+                result[0] = new(s_re / old_length, s_im / old_length);
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            // Размер нового массива больше, чем размер старого.
+            var k = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var n = 0; n < NewLength; n++)
+            {
+                var s_re = 0d;
+                var s_im = 0d;
+                var nk = (n + k0) / k;
+
+                for (var i = 0; i < old_length; i++)
+                {
+                    var (re, im) = array[i];
+                    var sinc = Sinc(Math.PI * (nk - i));
+                    s_re += re * sinc;
+                    s_im += im * sinc;
+                }
+
+                result[n] = new(s_re, s_im);
+            }
+
+            return result;
+        }
+
+        /// <summary>Изменение размера массива с интерполяцией значений методом интерполяционного полинома Ньютона</summary>
+        /// <param name="array">Исходный массив значений</param>
+        /// <param name="NewLength">Новая длина массива</param>
+        /// <returns>Новый массив изменённой длины с интерполированными значениями</returns>
+        public static double[] ResamplingNewton(this double[] array, int NewLength)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new double[NewLength];
+
+            if (old_length == NewLength)
+                return (double[])array.Clone();
+
+            var result = new double[NewLength];
+            if (NewLength == 1)
+            {
+                result[0] = array.Average();
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            var polynom = Interpolator.Newton(0, 1, array);
+            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var i = 0; i < NewLength; i++)
+            {
+                var x = i * dx;
+                result[i] = polynom.Value(x);
+            }
+
+            return result;
+        }
+
+        /// <summary>Изменение размера массива с интерполяцией значений методом интерполяционного полинома Ньютона</summary>
+        /// <param name="array">Исходный массив значений</param>
+        /// <param name="NewLength">Новая длина массива</param>
+        /// <returns>Новый массив изменённой длины с интерполированными значениями</returns>
+        public static Complex[] ResamplingNewton(this Complex[] array, int NewLength)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new Complex[NewLength];
+
+            if (old_length == NewLength)
+                return (Complex[])array.Clone();
+
+            var result = new Complex[NewLength];
+            if (NewLength == 1)
+            {
+                var s_re = 0d;
+                var s_im = 0d;
+                foreach (var (re, im) in array)
+                {
+                    s_re += re;
+                    s_im += im;
+                }
+
+                result[0] = new(s_re / old_length, s_im / old_length);
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            var (array_re, array_im) = array;
+
+            var polynom_re = Interpolator.Newton(0, 1, array_re);
+            var polynom_im = Interpolator.Newton(0, 1, array_im);
+            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var i = 0; i < NewLength; i++)
+            {
+                var x = i * dx;
+                result[i] = new(polynom_re.Value(x), polynom_im.Value(x));
+            }
+
+            return result;
+        }
+
+        /// <summary>Изменение размера массива с интерполяцией значений методом интерполяционного полинома Лагранжа</summary>
+        /// <param name="array">Исходный массив значений</param>
+        /// <param name="NewLength">Новая длина массива</param>
+        /// <returns>Новый массив изменённой длины с интерполированными значениями</returns>
+        public static double[] ResamplingLagrange(this double[] array, int NewLength)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new double[NewLength];
+
+            if (old_length == NewLength)
+                return (double[])array.Clone();
+
+            var result = new double[NewLength];
+            if (NewLength == 1)
+            {
+                result[0] = array.Average();
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            var polynom = Interpolator.Lagrange(0, 1, array);
+            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var i = 0; i < NewLength; i++)
+            {
+                var x = i * dx;
+                result[i] = polynom.Value(x);
+            }
+
+            return result;
+        }
+
+        /// <summary>Изменение размера массива с интерполяцией значений методом интерполяционного полинома Лагранжа</summary>
+        /// <param name="array">Исходный массив значений</param>
+        /// <param name="NewLength">Новая длина массива</param>
+        /// <returns>Новый массив изменённой длины с интерполированными значениями</returns>
+        public static Complex[] ResamplingLagrange(this Complex[] array, int NewLength)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new Complex[NewLength];
+
+            if (old_length == NewLength)
+                return (Complex[])array.Clone();
+
+            var result = new Complex[NewLength];
+            if (NewLength == 1)
+            {
+                var s_re = 0d;
+                var s_im = 0d;
+                foreach (var (re, im) in array)
+                {
+                    s_re += re;
+                    s_im += im;
+                }
+
+                result[0] = new(s_re / old_length, s_im / old_length);
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            var (array_re, array_im) = array;
+
+            var polynom_re = Interpolator.Lagrange(0, 1, array_re);
+            var polynom_im = Interpolator.Lagrange(0, 1, array_im);
+            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var i = 0; i < NewLength; i++)
+            {
+                var x = i * dx;
+                result[i] = new(polynom_re.Value(x), polynom_im.Value(x));
+            }
+
+            return result;
         }
     }
 }

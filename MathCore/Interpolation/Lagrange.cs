@@ -33,6 +33,32 @@ public class Lagrange : Interpolator, IInterpolator
         return result;
     }
 
+    public static double Interpolate(double x, double x0, double dx, double[] Y)
+    {
+        var result = 0d;
+        for (int i = 0, j = 0, count = Y.Length; i < count; i++, j = 0)
+        {
+            var xi = x0 + i * dx;
+            var p = 1d;
+
+            for (; j < i; j++)
+            {
+                var xj = x0 + j * dx;
+                p *= (x - xj) / (xi - xj);
+            }
+
+            for (j++; j < count; j++)
+            {
+                var xj = x0 + j * dx;
+                p *= (x - xj) / (xi - xj);
+            }
+
+            result += Y[i] * p;
+        }
+
+        return result;
+    }
+
     public static Polynom GetPolynom(double[] X, double[] Y) => new(GetPolynomCoefficients(X, Y));
 
     /// <summary>Рассчитать коэффициенты полинома Лагранжа для заданного набора точек</summary>
@@ -41,7 +67,15 @@ public class Lagrange : Interpolator, IInterpolator
     /// <returns>Массив коэффициентов полинома Лагранжа</returns>
     /// <exception cref="ArgumentNullException">Если отсутствует ссылка на массив <paramref name="X"/>, или <paramref name="Y"/></exception>
     /// <exception cref="InvalidOperationException">Если длина <paramref name="X"/> не равна <paramref name="Y"/></exception>
-    public static double[] GetPolynomCoefficients(double[] X, double[] Y) => GetPolynomCoefficients(X, Y, P: new double[X.Length]);
+    public static double[] GetPolynomCoefficients(double[] X, double[] Y) => GetPolynomCoefficients(X, Y, P: new double[Y.Length]);
+
+    /// <summary>Рассчитать коэффициенты полинома Лагранжа для заданного набора точек</summary>
+    /// <param name="x0">Начальное смещение аргумента</param>
+    /// <param name="dx">Шаг сетки аргумента</param>
+    /// <param name="Y">Массив значений на оси Y</param>
+    /// <returns>Массив коэффициентов полинома</returns>
+    /// <exception cref="ArgumentNullException">Если отсутствует ссылка на массив <paramref name="Y"/></exception>
+    public static double[] GetPolynomCoefficients(double x0, double dx, double[] Y) => GetPolynomCoefficients(x0, dx, Y, P: new double[Y.Length]);
 
     /// <summary>Рассчитать коэффициенты полинома Лагранжа для заданного набора точек</summary>
     /// <param name="X">Массив значений на оси X</param>
@@ -70,7 +104,7 @@ public class Lagrange : Interpolator, IInterpolator
             };
 
         var length = X.Length;
-        
+
         const string p_length = nameof(P) + "." + nameof(Array.Length);
         if (P.Length < length)
             throw new ArgumentException("Размер массива результата недостаточен для записи в него коэффициентов полинома", nameof(P))
@@ -113,6 +147,80 @@ public class Lagrange : Interpolator, IInterpolator
             for (j++; j < length; j++, k++)
             {
                 x = X[j];
+                for (n = k - 1; n > 0; n--)
+                    a[n] = a[n - 1] - a[n] * x;
+                a[0] *= -x;
+                a[k] = 1;
+                b *= xi - x;
+            }
+            // O(N)
+
+            x = Y[i] / b;
+            for (j = 0; j < length; j++)
+                P[j] += a[j] * x;
+        }
+
+        // O(N*(2N)) = O(2N^2)
+
+        return P;
+    }
+
+    /// <summary>Рассчитать коэффициенты полинома Лагранжа для заданного набора точек</summary>
+    /// <param name="x0">Начальное смещение аргумента</param>
+    /// <param name="dx">Шаг сетки аргумента</param>
+    /// <param name="Y">Массив значений на оси Y</param>
+    /// <param name="P">Массив, в который будут вычислены коэффициенты полинома</param>
+    /// <returns>Массив коэффициентов полинома</returns>
+    /// <exception cref="ArgumentNullException">Если отсутствует ссылка на массив <paramref name="Y"/></exception>
+    public static double[] GetPolynomCoefficients(double x0, double dx, double[] Y, double[] P)
+    {
+        if (Y is null) throw new ArgumentNullException(nameof(Y));
+        if (P is null) throw new ArgumentNullException(nameof(P));
+
+        var length = Y.Length;
+
+        const string p_length = nameof(P) + "." + nameof(Array.Length);
+        if (P.Length < length)
+            throw new ArgumentException("Размер массива результата недостаточен для записи в него коэффициентов полинома", nameof(P))
+            {
+                Data =
+                {
+                    { nameof(x0), x0 },
+                    { nameof(dx), dx },
+                    { p_length , P.Length },
+                }
+            };
+
+        if (P.Length > length)
+            Array.Clear(P, length, P.Length - length);
+
+        var a = new double[length];
+
+        // O(N)
+        for (var i = 0; i < length; i++) // По всем y из Y
+        {
+            var j = 0;
+            var k = 1;
+
+            a[0] = 1;
+
+            var b = 1d;
+            var xi = x0 + i * dx;
+            double x;
+            int n;
+            for (; j < i; j++, k++)
+            {
+                x = x0 + j * dx;
+                for (n = k - 1; n > 0; n--)
+                    a[n] = a[n - 1] - a[n] * x;
+                a[0] *= -x;
+                a[k] = 1;
+                b *= xi - x;
+            }
+
+            for (j++; j < length; j++, k++)
+            {
+                x = x0 + j * dx;
                 for (n = k - 1; n > 0; n--)
                     a[n] = a[n - 1] - a[n] * x;
                 a[0] *= -x;
@@ -213,6 +321,8 @@ public class Lagrange : Interpolator, IInterpolator
     public double this[double x] => Value(x);
 
     /* ------------------------------------------------------------------------------------------ */
+
+    public Lagrange(double x0, double dx, double[] Y) : this(GetPolynomCoefficients(x0, dx, Y)) { }
 
     public Lagrange(double[] X, double[] Y) : this(GetPolynomCoefficients(X, Y)) { }
 

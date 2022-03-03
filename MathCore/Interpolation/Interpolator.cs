@@ -6,7 +6,12 @@
 
         public static Linear Linear(double[] X, double[] Y) => new(X, Y);
 
+        public static double Lagrange(double x, double x0, double dx, double[] Y) => Interpolation.Lagrange.Interpolate(x, x0, dx, Y);
         public static double Lagrange(double x, double[] X, double[] Y) => Interpolation.Lagrange.Interpolate(x, X, Y);
+        public static Lagrange Lagrange(double x0, double dx, double[] Y) => new(x0, dx, Y);
         public static Lagrange Lagrange(double[] X, double[] Y) => new(X, Y);
+
+        public static Newton Newton(double x0, double dx, double[] Y) => new(x0, dx, Y);
+        public static Newton Newton(double[] X, double[] Y) => new(X, Y);
     }
 }

@@ -137,10 +137,23 @@ public readonly ref struct StringPtr
             ? index - Pos
             : -1;
 
+    /// <summary>Индекс последнего вхождения символа в подстроку</summary>
+    /// <param name="c">Проверяемый символ</param>
+    /// <returns>Индекс символа в подстроке с конца, либо -1 в случае его отсутствия</returns>
+    public int LastIndexOf(char c) =>
+        Source.LastIndexOf(c, Pos, Length) is >= 0 and var index
+            ? index - Pos
+            : -1;
+
     /// <summary>Индекс первого вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
     /// <returns>Индекс первого вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int IndexOf(string str) => IndexOf(str, StringComparison.Ordinal);
+
+    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
+    public int LastIndexOf(string str) => LastIndexOf(str, StringComparison.Ordinal);
 
     /// <summary>Индекс первого вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
@@ -150,6 +163,31 @@ public readonly ref struct StringPtr
         str.Length <= Length && str.IndexOf(str, Pos, Length, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
+
+    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <param name="Comparison">Способ сравнения строк</param>
+    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
+    public int LastIndexOf(string str, StringComparison Comparison) =>
+        str.Length <= Length && str.LastIndexOf(str, Pos, Length, Comparison) is >= 0 and var index
+            ? index - Pos
+            : -1;
+
+    public int LastIndexOf(StringPtr str, StringComparison Comparison)
+    {
+        if (str.Length > Length) return -1;
+        var index = Length - str.Length;
+
+        while (true)
+        {
+            index = Substring(0, index).LastIndexOf(str[0]);
+            if(index < 0) 
+                return -1;
+
+            if (Substring(index, str.Length).Equals(str, Comparison))
+                return index;
+        }
+    }
 
     /// <summary>Проверка соответствия текущей подстроки с указанной строкой</summary>
     /// <param name="str">Проверяемая на равенство строка</param>

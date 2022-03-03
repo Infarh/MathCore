@@ -14,18 +14,33 @@ public class HistogramTest
     {
         var rnd = new Random(5);
 
-        const double D = 5;
-        const double m = 3;
-        const int count = 1000000;
+        const int count = 100_000;
+
+        var samples = new double[count];
+
+        for (var i = 0; i < count; i++)
+        {
+            var x = (rnd.NextDouble() * 2 - 1)
+                    + (rnd.NextDouble() * 2 - 1)
+                    + (rnd.NextDouble() * 2 - 1)
+                    + (rnd.NextDouble() * 2 - 1)
+                    + (rnd.NextDouble() * 2 - 1)
+                ;
+
+            samples[i] = x / 5;
+        }
+
+        const double D = 1;
+        const double m = 0;
+        //const int count = 1000000;
         //var values = rnd.NextNormal(count, D, m);
 
         var values = Enumerable.Range(0, count).ToArray(_ => (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5));
-
         var gauss = Distributions.NormalGauss(D, m);
         var gauss0 = Distributions.NormalGauss(D, m + 0.1);
 
         const int intervals_count = 60;
-        var histogram = new Histogram(values, intervals_count);
+        var histogram = new Histogram(samples, intervals_count);
 
         var pirson = histogram.GetPirsonsCriteria(gauss);
         var pirson0 = histogram.GetPirsonsCriteria(gauss0);
