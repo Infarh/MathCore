@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.65</Version>
     <PackageReleaseNotes>
-      Методы изменения длины массива с интерполяицей значений
+      Методы изменения длины массива с интерполяцией значений
     </PackageReleaseNotes>
   </PropertyGroup>
 
