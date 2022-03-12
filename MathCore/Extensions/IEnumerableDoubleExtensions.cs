@@ -17,8 +17,52 @@ namespace System.Linq;
 
 public static partial class IEnumerableExtensions
 {
+    /// <summary>Усреднение последовательности методом скользящего среднего с заданной длиной окна</summary>
+    /// <param name="samples">Исходная последовательность</param>
+    /// <param name="WindowLength">Длина окна выборки (должна быть больше 1)</param>
+    /// <returns>Усреднённая последовательность если <paramref name="WindowLength"/> &gt; 1</returns>
+    /// <exception cref="ArgumentNullException">Если отсутствует ссылка на <paramref name="samples"/></exception>
+    /// <exception cref="ArgumentOutOfRangeException">При <paramref name="WindowLength"/> &lt; 1</exception>
+    public static IEnumerable<double> AverageWindow(this IEnumerable<double> samples, int WindowLength)
+    {
+        if (samples is null) throw new ArgumentNullException(nameof(samples));
+        switch (WindowLength)
+        {
+            case < 1: throw new ArgumentOutOfRangeException(nameof(WindowLength), WindowLength, "Длина окна должна быть больше 0");
+            case 1:
+                {
+                    foreach (var sample in samples)
+                        yield return sample;
+                    yield break;
+                }
+        }
+
+        var average = new AverageValue(WindowLength);
+
+        foreach (var sample in samples)
+            yield return average.AddValue(sample);
+    }
+
+    /// <summary>Усреднение последовательности методом выбора медианы в окне выборки</summary>
+    /// <param name="samples">Исходная последовательность</param>
+    /// <param name="WindowLength">Длина окна выборки (должна быть больше 1)</param>
+    /// <returns>Усреднённая последовательность если <paramref name="WindowLength"/> &gt; 1</returns>
+    /// <exception cref="ArgumentNullException">Если отсутствует ссылка на <paramref name="samples"/></exception>
+    /// <exception cref="ArgumentOutOfRangeException">При <paramref name="WindowLength"/> &lt; 1</exception>
     public static IEnumerable<double> AverageMedian(this IEnumerable<double> samples, int WindowLength)
     {
+        if(samples is null) throw new ArgumentNullException(nameof(samples));
+        switch (WindowLength)
+        {
+            case < 1: throw new ArgumentOutOfRangeException(nameof(WindowLength), WindowLength, "Длина окна должна быть больше 0");
+            case 1:
+                {
+                    foreach (var sample in samples)
+                        yield return sample;
+                    yield break;
+                }
+        }
+
         var buffer = new double[WindowLength];  // Отсортированный буфер для вычисления медианы
         var is_even = WindowLength % 2 == 0;    // Длина буфера является чётной
         var length05 = WindowLength / 2;        // Индекс середины в буфере
