@@ -27,7 +27,7 @@ namespace System.Linq
 {
     /// <summary>Класс методов-расширений для интерфейса перечисления</summary>
     [PublicAPI]
-    public static class IEnumerableExtensions
+    public static partial class IEnumerableExtensions
     {
         /// <summary>Преобразовать последовательность в хеш-таблицу</summary>
         /// <typeparam name="T">Тип элемента последовательности</typeparam>
@@ -3052,6 +3052,118 @@ namespace System.Linq
         /// <param name="values">Последовательность вещественных чисел</param>
         /// <returns>Интервал, границы которого определяют минимум и максимум значений, которые принимала входная последовательность</returns>
         public static Interval GetMinMax(this IEnumerable<double> values) => new MinMaxValue(values).Interval;
+
+        public static (int Min, int Max) GetMinMax(this IEnumerable<int> Items)
+        {
+            var min = int.MaxValue;
+            var max = int.MinValue;
+
+            foreach (var item in Items)
+            {
+                if (item > max)
+                    max = item;
+                if (item < min)
+                    min = item;
+            }
+
+            return min > max ? default : (min, max);
+        }
+
+        public static (T Min, T Max) GetMinMax<T>(this IEnumerable<T> Items) => Items.GetMinMax(Comparer<T>.Default);
+
+        public static (T Min, T Max) GetMinMax<T>(this IEnumerable<T> Items, IComparer<T> Comparer)
+        {
+            var item = Items.GetEnumerator();
+            try
+            {
+                if (!item.MoveNext()) 
+                    return default;
+
+                var min = item.Current;
+                var max = min;
+
+                while (item.MoveNext())
+                {
+                    var value = item.Current;
+                    if (Comparer.Compare(value, min) < 0)
+                        min = value;
+                    else if (Comparer.Compare(value, max) > 0)
+                        max = value;
+                }
+
+                return (min, max);
+            }
+            finally
+            {
+                item.Dispose();
+            }
+        }
+
+        public static (T Min, T Max) GetMinMax<T>(this IEnumerable<T> Items, Comparison<T> Comparer)
+        {
+            var item = Items.GetEnumerator();
+            try
+            {
+                if (!item.MoveNext())
+                    return default;
+
+                var min = item.Current;
+                var max = min;
+
+                while (item.MoveNext())
+                {
+                    var value = item.Current;
+                    if (Comparer(value, min) < 0)
+                        min = value;
+                    else if (Comparer(value, max) > 0)
+                        max = value;
+                }
+
+                return (min, max);
+            }
+            finally
+            {
+                item.Dispose();
+            }
+        }
+
+        public static (T Min, T Max) GetMinMax<T>(this IEnumerable<T> Items, Func<T, double> Selector)
+        {
+            var item = Items.GetEnumerator();
+            try
+            {
+                if (!item.MoveNext())
+                    return default;
+
+                var min = item.Current;
+                var max = min;
+
+                var min_value = Selector(min);
+                var max_value = min_value;
+
+                while (item.MoveNext())
+                {
+                    var value = item.Current;
+                    var x = Selector(value);
+                    if (x < min_value)
+                    {
+                        min = value;
+                        min_value = x;
+                    }
+                    else if (x > max_value)
+                    {
+                        max = value;
+                        max_value = x;
+                    }
+                }
+
+                return (min, max);
+            }
+            finally
+            {
+                item.Dispose();
+            }
+        }
 
         /// <summary>Добавить элемент в конец последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>

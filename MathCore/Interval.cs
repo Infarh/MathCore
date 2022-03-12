@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
+
 using MathCore.Annotations;
+using static MathCore.SpecialFunctions.Distribution;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -313,6 +317,12 @@ namespace MathCore
     {
         /* -------------------------------------------------------------------------------------------- */
 
+        public static Interval Width(double Center, double Length, bool IncludeLimits = true) => 
+            Width(Center, Length, IncludeLimits, IncludeLimits);
+
+        public static Interval Width(double Center, double Length, bool MinInclude, bool MaxInclude) =>
+            new(Center - Length / 2, MinInclude, Center + Length / 2, MaxInclude);
+
         public static IEnumerable<double> Range(double Min, double Max, double Step)
         {
             if (Min > Max)
@@ -593,26 +603,36 @@ namespace MathCore
         /// <inheritdoc />
         [DST]
         [NotNull]
-        public override string ToString() => string.Format(
-            "{0}{2};{3}{1}",
-            _MinInclude ? "[" : "(",
-            _MaxInclude ? "]" : ")",
-            _Min, _Max);
+        public override string ToString() => new StringBuilder()
+           .Append(_MinInclude ? '[' : '(')
+           .Append(_Min)
+           .Append(", ")
+           .Append(_Max)
+           .Append(_MaxInclude ? ']' : ')')
+           .ToString();
+
+        //public override string ToString() => string.Format(
+        //    "{0}{2};{3}{1}",
+        //    _MinInclude ? "[" : "(",
+        //    _MaxInclude ? "]" : ")",
+        //    _Min, _Max);
 
         [NotNull]
-        public string ToString(string Format) => string.Format(
-            "{0}{2};{3}{1}",
-            _MinInclude ? "[" : "(",
-            _MaxInclude ? "]" : ")",
-            _Min.ToString(Format),
-            _Max.ToString(Format));
+        public string ToString(string Format) => new StringBuilder()
+           .Append(_MinInclude ? '[' : '(')
+           .Append(_Min.ToString(Format))
+           .Append(", ")
+           .Append(_Max.ToString(Format))
+           .Append(_MaxInclude ? ']' : ')')
+           .ToString();
 
-        public string ToString(IFormatProvider FormatProvider) => string.Format(
-            "{0}{2};{3}{1}",
-            _MinInclude ? "[" : "(",
-            _MaxInclude ? "]" : ")",
-            _Min.ToString(FormatProvider),
-            _Max.ToString(FormatProvider));
+        public string ToString(IFormatProvider FormatProvider) => new StringBuilder()
+           .Append(_MinInclude ? '[' : '(')
+           .Append(_Min.ToString(FormatProvider))
+           .Append(", ")
+           .Append(_Max.ToString(FormatProvider))
+           .Append(_MaxInclude ? ']' : ')')
+           .ToString();
 
         /// <summary>Форматирует значение текущего экземпляра с использованием заданного формата.</summary>
         /// <returns>Объект <see cref="T:System.String"/> содержит значение текущего экземпляра в заданном формате.</returns>
@@ -627,26 +647,22 @@ namespace MathCore
         /// стандарта операционной системы. 
         /// </param>
         /// <filterpriority>2</filterpriority>
-        public string ToString(string Format, IFormatProvider FormatProvider) => string.Format(
-            "{0}{2};{3}{1}",
-            _MinInclude ? "[" : "(",
-            _MaxInclude ? "]" : ")",
-            _Min.ToString(Format, FormatProvider),
-            _Max.ToString(Format, FormatProvider));
+        public string ToString(string Format, IFormatProvider FormatProvider) => new StringBuilder()
+           .Append(_MinInclude ? '[' : '(')
+           .Append(_Min.ToString(Format, FormatProvider))
+           .Append(", ")
+           .Append(_Max.ToString(Format, FormatProvider))
+           .Append(_MaxInclude ? ']' : ')')
+           .ToString();
 
         /// <inheritdoc />
         [DST]
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var result = _MinInclude.GetHashCode();
-                result = (result * 397) ^ _MaxInclude.GetHashCode();
-                result = (result * 397) ^ _Min.GetHashCode();
-                result = (result * 397) ^ _Max.GetHashCode();
-                return result;
-            }
-        }
+        public override int GetHashCode() => new HashBuilder()
+           .Append(_MinInclude)
+           .Append(_MaxInclude)
+           .Append(_Min)
+           .Append(_Max)
+           .Hash;
 
         /// <inheritdoc />
         [DST]

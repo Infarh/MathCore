@@ -29,10 +29,40 @@ internal static class Program
 
     private static void Main()
     {
+        var dx = 1e12;
+        const double pi = Math.PI;
+        var last_x = 0d;
 
-        HistogramTest.Run();
+        do
+        {
+            Console.Title = Math.Log10(dx).ToString();
+            for (var (x, x0) = (last_x, -1d) ; 1 + 1 / (pi * x) > 1 && x != x0; x0 = x, x += dx)
+            {
+                Console.WriteLine(x);
+                last_x = x;
+            }
+
+            dx /= 10;
+        }
+        while (dx > 0);
+
+
+        var values = new int[5];
+        foreach (var array_item in new ArrayItems<int>(values))
+        {
+            array_item.Value = array_item.Index;
+        }
+
+
+
+        //HistogramTest.Run();
         //HistogramTest.RunIteration();
 
-        //Console.ReadLine();
+        Console.ReadLine();
     }
+}
+
+public interface ITest
+{
+    static abstract ITest operator +(ITest a, ITest b);
 }

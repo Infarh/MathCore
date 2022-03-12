@@ -2352,12 +2352,12 @@ namespace System
             }
 
             var polynom = Interpolator.Newton(0, 1, array);
-            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+            var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
             for (var i = 0; i < NewLength; i++)
             {
-                var x = i * dx;
-                result[i] = polynom.Value(x);
+                var j = i * di;
+                result[i] = polynom.Value(j);
             }
 
             return result;
@@ -2404,12 +2404,12 @@ namespace System
 
             var polynom_re = Interpolator.Newton(0, 1, array_re);
             var polynom_im = Interpolator.Newton(0, 1, array_im);
-            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+            var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
             for (var i = 0; i < NewLength; i++)
             {
-                var x = i * dx;
-                result[i] = new(polynom_re.Value(x), polynom_im.Value(x));
+                var j = i * di;
+                result[i] = new(polynom_re.Value(j), polynom_im.Value(j));
             }
 
             return result;
@@ -2445,12 +2445,12 @@ namespace System
             }
 
             var polynom = Interpolator.Lagrange(0, 1, array);
-            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+            var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
             for (var i = 0; i < NewLength; i++)
             {
-                var x = i * dx;
-                result[i] = polynom.Value(x);
+                var j = i * di;
+                result[i] = polynom.Value(j);
             }
 
             return result;
@@ -2497,15 +2497,55 @@ namespace System
 
             var polynom_re = Interpolator.Lagrange(0, 1, array_re);
             var polynom_im = Interpolator.Lagrange(0, 1, array_im);
-            var dx = (double)NewLength / old_length; // во сколько раз изменился размер
+            var di = (double)NewLength / old_length; // во сколько раз изменился размер
 
             for (var i = 0; i < NewLength; i++)
             {
-                var x = i * dx;
-                result[i] = new(polynom_re.Value(x), polynom_im.Value(x));
+                var j = i * di;
+                result[i] = new(polynom_re.Value(j), polynom_im.Value(j));
             }
 
             return result;
+        }
+
+        public static double[] ResamplingLinear(this double[] array, int NewLength)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new double[NewLength];
+
+            if (old_length == NewLength)
+                return (double[])array.Clone();
+
+            var result = new double[NewLength];
+            if (NewLength == 1)
+            {
+                result[0] = array.Average();
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            var polynom = Interpolator.Lagrange(0, 1, array);
+            var di = old_length / (double)NewLength;
+
+            for (var i = 0; i < NewLength; i++)
+            {
+                var j1 = (int)(i * di);
+                var j2 = j1 + di;
+                var j3 = j2 + di;
+
+
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

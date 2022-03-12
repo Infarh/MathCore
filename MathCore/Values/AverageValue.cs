@@ -27,6 +27,10 @@ namespace MathCore.Values
         /// <summary>Размер окна усреднения</summary>
         private int _Length;
 
+        public double _Min = double.PositiveInfinity;
+
+        public double _Max = double.NegativeInfinity;
+
         /* --------------------------------------------------------------------------------------------- */
 
         /// <summary>Начальное значение</summary>
@@ -43,6 +47,14 @@ namespace MathCore.Values
 
         /// <summary>Количество точек усреднения</summary>
         public int ValuesCount => _N;
+
+        public double Min => double.IsPositiveInfinity(_Min) ? double.NaN : _Min;
+
+        public double Max => double.IsNegativeInfinity(_Max) ? double.NaN : _Max;
+
+        public Interval Interval => double.IsPositiveInfinity(_Min) || double.IsNegativeInfinity(_Max)
+            ? new()
+            : new(_Min, _Max, true);
 
         /* --------------------------------------------------------------------------------------------- */
 
@@ -89,12 +101,24 @@ namespace MathCore.Values
                 _Value += (value - _Value) / (_N + 1);
                 _Value2 += (value * value - _Value2) / (_N + 1);
                 if (_Length < 0 || _N < _Length) _N++;
+
+                if (value > _Max)
+                    _Max = value;
+
+                if (value < _Min)
+                    _Min = value;
             }
             else
             {
                 // Если количество итераций усреднения не указано
                 _Value = value;
                 _N++;
+
+                if (value > _Max)
+                    _Max = value;
+
+                if (value < _Min)
+                    _Min = value;
             }
 
             return _Value;
@@ -114,6 +138,9 @@ namespace MathCore.Values
                 _N = 1;
                 _Value = _StartValue;
             }
+
+            _Min = double.PositiveInfinity;
+            _Max = double.NegativeInfinity;
         }
 
         /* --------------------------------------------------------------------------------------------- */
@@ -144,6 +171,8 @@ namespace MathCore.Values
         /// <summary>Оператор неявного приведения вещественного числа к скользящему среднему</summary>
         /// <param name="Data">Вещественное число</param>
         public static implicit operator AverageValue(double Data) => new(Data);
+
+        public static implicit operator Interval(AverageValue Value) => Value.Interval;
 
         /* --------------------------------------------------------------------------------------------- */
 
