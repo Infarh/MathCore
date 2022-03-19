@@ -62,8 +62,8 @@ namespace System
             for (var i = 0; i < length; i++)
             {
                 var j = rnd.Next(i, length);
-                yield return index[j] > 0 
-                    ? items[index[j] - 1] 
+                yield return index[j] > 0
+                    ? items[index[j] - 1]
                     : items[j];
                 index[j] = index[i] > 0
                     ? index[i]
@@ -2508,6 +2508,7 @@ namespace System
             return result;
         }
 
+        [NotImplemented]
         public static double[] ResamplingLinear(this double[] array, int NewLength)
         {
             var old_length = array.Length;
@@ -2533,7 +2534,6 @@ namespace System
                 return result;
             }
 
-            var polynom = Interpolator.Lagrange(0, 1, array);
             var di = old_length / (double)NewLength;
 
             for (var i = 0; i < NewLength; i++)
@@ -2546,6 +2546,99 @@ namespace System
             }
 
             throw new NotImplementedException();
+        }
+
+        public static double[] DifferentialSincApproximation(this double[] array, int NewLength, double k0 = 0)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new double[NewLength];
+
+            if (old_length == NewLength)
+                return (double[])array.Clone();
+
+            var result = new double[NewLength];
+            if (NewLength == 1)
+            {
+                result[0] = array.Average();
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            // Размер нового массива больше, чем размер старого.
+            var k = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var n = 0; n < NewLength; n++)
+            {
+                var s = 0d;
+                var nk = (n + k0) / k;
+
+                for (var i = 0; i < old_length; i++)
+                    if (nk != i)
+                    {
+                        var x = Math.PI * (nk - i);
+                        s += array[i] * (Math.Cos(x) / x - Math.Sin(x) / x / x);
+                    }
+
+                result[n] = s;
+            }
+
+            return result;
+        }
+
+        public static double[] IntegralSincApproximation(this double[] array, int NewLength, double k0 = 0)
+        {
+            var old_length = array.Length;
+
+            if (NewLength == 0 || old_length == 0)
+                return new double[NewLength];
+
+            if (old_length == NewLength)
+                return (double[])array.Clone();
+
+            var result = new double[NewLength];
+            if (NewLength == 1)
+            {
+                result[0] = array.Average();
+                return result;
+            }
+
+            if (old_length == 1)
+            {
+                var value = array[0];
+                for (var i = 0; i < NewLength; i++)
+                    result[i] = value;
+                return result;
+            }
+
+            // Размер нового массива больше, чем размер старого.
+            var k = (double)NewLength / old_length; // во сколько раз изменился размер
+
+            for (var n = 0; n < NewLength; n++)
+            {
+                var s = 0d;
+                var nk = (n + k0) / k;
+
+                for (var i = 0; i < old_length; i++)
+                    if (nk != i)
+                    {
+                        var x = Math.PI * (nk - i);
+                        SpecialFunctions.TrigonometryIntegrals.SineCosineIntegrals(x, out var si, out _);
+                        s += array[i] * si;
+                    }
+
+                result[n] = s;
+            }
+
+            return result;
         }
     }
 }
