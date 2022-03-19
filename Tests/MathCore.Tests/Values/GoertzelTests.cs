@@ -3,8 +3,34 @@
 namespace MathCore.Tests.Values;
 
 [TestClass]
-public class GoertzelTests
+public class GoertzelTests : UnitTest
 {
+    private class ComplexToleranceComparer : IEqualityComparer<Complex>
+    {
+        private double _Tolerance;
+
+        /// <summary>Точность сравнения</summary>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">Если значение точности меньше нуля</exception>
+        public double Tolerance
+        {
+            get => this._Tolerance;
+            set => this._Tolerance = value >= 0.0 ? value : throw new ArgumentOutOfRangeException(nameof(value), "Значение точности должно быть больше, либо равно 0");
+        }
+
+        public ComplexToleranceComparer(double Tolerance = 1e-14) => _Tolerance = Tolerance;
+
+        public bool Equals(Complex x, Complex y) =>
+            Math.Abs(x.Re - y.Re) <= _Tolerance &&
+            Math.Abs(x.Im - y.Im) <= _Tolerance;
+
+        public int GetHashCode(Complex obj)
+        {
+            var (re, im) = obj;
+            var z = new Complex(Math.Abs(re / _Tolerance) * _Tolerance, Math.Abs(im / _Tolerance) * _Tolerance);
+            return z.GetHashCode();
+        }
+    }
+
     [TestMethod]
     public void SpectrumSample()
     {
@@ -24,6 +50,8 @@ public class GoertzelTests
         var expected_y7 = new Complex(4.1213203435596384, -7.5355339059327431);
         var actual_y7 = goertzel.State;
 
-        Assert.That.Value(actual_y7).IsEqual(expected_y7);
+        var comparer = new ComplexToleranceComparer();
+
+        Assert.That.Value(actual_y7).IsEqual(expected_y7, comparer);
     }
 }
