@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.68</Version>
     <PackageReleaseNotes>
-      Методы-расширеня для Task, обеспечивающие безопасный запуск задачи с её последующей отменой
+      Методы-расширения для Task, обеспечивающие безопасный запуск задачи с её последующей отменой
     </PackageReleaseNotes>
   </PropertyGroup>
 
