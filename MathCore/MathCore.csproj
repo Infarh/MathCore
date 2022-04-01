@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.67</Version>
+    <Version>0.0.68</Version>
     <PackageReleaseNotes>
-      Алгоритм Гёрцеля
+      Методы-расширения для Task, обеспечивающие безопасный запуск задачи с её последующей отменой
     </PackageReleaseNotes>
   </PropertyGroup>
 
