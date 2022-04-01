@@ -50,12 +50,43 @@ namespace MathCore
                 } while (Abs(ki - k) > 0);
             }
 
-            private static double CalculateEllipticIntegral(IEnumerable<double> kk) => kk.Aggregate(PI / 2, (K, k) => K * (1 + k));
+            private static double CalculateEllipticIntegral(IEnumerable<double> kk)
+            {
+                //return kk.Aggregate(PI / 2, (K, k) => K * (1 + k));
+                var result = Consts.pi05;
+                foreach (var k in kk)
+                    result *= 1 + k;
+                return result;
+            }
+
+            private static double CalculateEllipticIntegral(double k)
+            {
+                var result = Consts.pi05;
+                var ki = k;
+                double ki_last;
+                do
+                {
+                    ki_last = ki;
+
+                    ki = ki_last / (1 + Sqrt(1 - ki_last * ki_last));
+                    ki *= ki;
+
+                    result *= 1 + ki;
+                } while (Abs(ki - ki_last) > 0);
+
+                return result;
+            }
 
             /// <summary>Полный эллиптический интеграл</summary>
             /// <param name="k">Параметр интегрирования от 0 до 1</param>
             /// <returns>Значение полного эллиптического интеграла</returns>
-            public static double FullEllipticIntegral(double k) => CalculateEllipticIntegral(EnumKValues(k));
+            public static double FullEllipticIntegral(double k) => k switch
+            {
+                < 0 or > 1 => double.NaN,
+                0 => Consts.pi05,
+                1 => double.PositiveInfinity,
+                _ => CalculateEllipticIntegral(k)
+            };
 
             /// <summary>Полный комплиментарного эллиптический интеграл</summary>
             /// <param name="k">Параметр интегрирования от 0 до 1</param>

@@ -56,6 +56,42 @@ namespace System.Threading.Tasks
         public static void AndForget<T>(this Task<T> task, Action<AggregateException>? OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
         public static void AndForget(this Task task, Action<AggregateException>? OnException = null) => task.ContinueWith(t => OnException?.Invoke(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);
 
+        public static async void AndForgetException<TException>(this Task task, Action<TException>? OnException = null) where TException : Exception
+        {
+            try
+            {
+                await task.ConfigureAwait(false);
+            }
+            catch (TException e)
+            {
+                OnException?.Invoke(e);
+            }
+        }
+
+        public static async void ForgetCancellation(this Task task, Action? OnCancelled = null)
+        {
+            try
+            {
+                await task.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                OnCancelled?.Invoke();
+            }
+        }
+
+        public static async void ForgetCancellation(this Task task, CancellationToken Cancel, Action? OnCancelled = null)
+        {
+            try
+            {
+                await task.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException e) when(e.CancellationToken == Cancel)
+            {
+                OnCancelled?.Invoke();
+            }
+        }
+
         public static Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancel) =>
             task.IsCompleted || !cancel.CanBeCanceled
                 ? task

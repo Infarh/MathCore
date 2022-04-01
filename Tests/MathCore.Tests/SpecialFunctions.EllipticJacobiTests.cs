@@ -15,16 +15,20 @@ namespace MathCore.Tests
         {
             double[] K =
             {
+                1,
                 0.93,
                 0.666667,
                 0.0028615,
+                0
             };
 
             double[] expected_K =
             {
+                double.PositiveInfinity,
                 2.437457556775147,
                 1.8097,
                 1.5708,
+                Consts.pi05,
             };
 
             const double eps = 3.22e-5;
