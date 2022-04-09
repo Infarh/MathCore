@@ -12,6 +12,8 @@ public class Goertzel : IResettable
     /// <summary>Состояние алгоритма два шага назад</summary>
     private double _s2;
 
+    private int _SamplesCount;
+
     /// <summary>Предыдущее состояние алгоритма</summary>
     public double State1 => _s1;
 
@@ -21,6 +23,10 @@ public class Goertzel : IResettable
     /// <summary>Текущее значение частотной компоненты спектра</summary>
     public Complex State { get; private set; }
 
+    public Complex NormState => State / _SamplesCount;
+
+    public int SamplesCount => _SamplesCount;
+
     public Goertzel(double f0) => _W = Complex.Exp(Consts.pi2 * f0);
 
     /// <summary>Сброс состояния фильтра</summary>
@@ -28,6 +34,7 @@ public class Goertzel : IResettable
     {
         _s1 = 0;
         _s2 = 0;
+        _SamplesCount = 0;
     }
 
     /// <summary>Добавление нового значения</summary>
@@ -35,6 +42,7 @@ public class Goertzel : IResettable
     /// <returns>Текущее значение частотной компоненты</returns>
     public Complex Add(double x)
     {
+        _SamplesCount++;
         var s = x + 2 * _W.Re * _s1 - _s2;
         var y = _W * s - _s1;
         State = y;
@@ -42,8 +50,16 @@ public class Goertzel : IResettable
         _s2 = _s1;
         _s1 = s;
 
-        return y;
+        return y / _SamplesCount;
     }
+
+    public static Goertzel operator +(Goertzel goertzel, double s)
+    {
+        goertzel.Add(s);
+        return goertzel;
+    }
+
+    public static implicit operator Complex(Goertzel goertzel) => goertzel.NormState;
 }
 
 /// <summary>Комплексный Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
@@ -58,6 +74,8 @@ public class GoertzelComplex : IResettable
     /// <summary>Состояние алгоритма два шага назад</summary>
     private Complex _s2;
 
+    private int _SamplesCount;
+
     /// <summary>Предыдущее состояние алгоритма</summary>
     public Complex State1 => _s1;
 
@@ -67,6 +85,8 @@ public class GoertzelComplex : IResettable
     /// <summary>Текущее значение частотной компоненты спектра</summary>
     public Complex State { get; private set; }
 
+    public Complex NormState => State / _SamplesCount;
+
     public GoertzelComplex(double f0) => _W = Complex.Exp(Consts.pi2 * f0);
 
     /// <summary>Сброс состояния фильтра</summary>
@@ -74,6 +94,7 @@ public class GoertzelComplex : IResettable
     {
         _s1 = 0;
         _s2 = 0;
+        _SamplesCount = 0;
     }
 
     /// <summary>Добавление нового значения</summary>
@@ -81,6 +102,7 @@ public class GoertzelComplex : IResettable
     /// <returns>Текущее значение частотной компоненты</returns>
     public Complex Add(Complex x)
     {
+        _SamplesCount++;
         var s = x + 2 * _W.Re * _s1 - _s2;
         var y = _W * s - _s1;
         State = y;
@@ -88,8 +110,16 @@ public class GoertzelComplex : IResettable
         _s2 = _s1;
         _s1 = s;
 
-        return y;
+        return y / _SamplesCount;
     }
+
+    public static GoertzelComplex operator +(GoertzelComplex goertzel, double s)
+    {
+        goertzel.Add(s);
+        return goertzel;
+    }
+
+    public static implicit operator Complex(GoertzelComplex goertzel) => goertzel.NormState;
 }
 
 /// <summary>Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
@@ -104,6 +134,8 @@ public readonly ref struct GoertzelStruct
     /// <summary>Состояние алгоритма два шага назад</summary>
     private readonly double _s2;
 
+    private readonly int _SamplesCount;
+
     /// <summary>Предыдущее состояние алгоритма</summary>
     public double State1 => _s1;
 
@@ -113,20 +145,24 @@ public readonly ref struct GoertzelStruct
     /// <summary>Текущее значение частотной компоненты спектра</summary>
     public Complex State { get; }
 
+    public Complex NormState => State / _SamplesCount;
+
     public GoertzelStruct(double f0)
     {
         _W = Complex.Exp(Consts.pi2 * f0);
         State = Complex.Zero;
         _s1 = 0;
         _s2 = 0;
+        _SamplesCount = 0;
     }
 
-    private GoertzelStruct(in Complex W0, in Complex State, double s1, double s2)
+    private GoertzelStruct(in Complex W0, in Complex State, double s1, double s2, int SamplesCount)
     {
         _W = W0;
         this.State = State;
         _s1 = s1;
         _s2 = s2;
+        _SamplesCount = SamplesCount;
     }
 
     /// <summary>Добавление нового значения</summary>
@@ -136,12 +172,12 @@ public readonly ref struct GoertzelStruct
     {
         var s = x + 2 * _W.Re * _s1 - _s2;
         var y = _W * s - _s1;
-        return new(_W, y, s, _s1);
+        return new(_W, y, s, _s1, _SamplesCount + 1);
     }
 
     public static GoertzelStruct operator +(GoertzelStruct goertzel, double s) => goertzel.Add(s);
 
-    public static implicit operator Complex(GoertzelStruct goertzel) => goertzel.State;
+    public static implicit operator Complex(GoertzelStruct goertzel) => goertzel.NormState;
 }
 
 /// <summary>Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
@@ -156,6 +192,8 @@ public readonly ref struct GoertzelComplexStruct
     /// <summary>Состояние алгоритма два шага назад</summary>
     private readonly Complex _s2;
 
+    private readonly int _SamplesCount;
+
     /// <summary>Предыдущее состояние алгоритма</summary>
     public Complex State1 => _s1;
 
@@ -165,20 +203,24 @@ public readonly ref struct GoertzelComplexStruct
     /// <summary>Текущее значение частотной компоненты спектра</summary>
     public Complex State { get; }
 
+    public Complex NormState => State / _SamplesCount;
+
     public GoertzelComplexStruct(double f0)
     {
         _W = Complex.Exp(Consts.pi2 * f0);
         State = Complex.Zero;
         _s1 = Complex.Zero;
         _s2 = Complex.Zero;
+        _SamplesCount = 0;
     }
 
-    private GoertzelComplexStruct(in Complex W0, in Complex State, in Complex s1, in Complex s2)
+    private GoertzelComplexStruct(in Complex W0, in Complex State, in Complex s1, in Complex s2, int SamplesCount)
     {
         _W = W0;
         this.State = State;
         _s1 = s1;
         _s2 = s2;
+        _SamplesCount = SamplesCount;
     }
 
     /// <summary>Добавление нового значения</summary>
@@ -188,7 +230,7 @@ public readonly ref struct GoertzelComplexStruct
     {
         var s = x + 2 * _W.Re * _s1 - _s2;
         var y = _W * s - _s1;
-        return new(_W, y, s, _s1);
+        return new(_W, y, s, _s1, _SamplesCount + 1);
     }
 
     public static GoertzelComplexStruct operator +(GoertzelComplexStruct goertzel, Complex s) => goertzel.Add(s);

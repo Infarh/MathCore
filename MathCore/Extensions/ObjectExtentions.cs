@@ -457,44 +457,6 @@ namespace System
                 Console.WriteLine(Format, Obj);
         }
 
-        /// <summary>Печать объекта в отладочной информации без переноса строки в конце</summary>
-        /// <typeparam name="T">Тип печатаемого объекта</typeparam>
-        /// <param name="Obj">Печатаемый объект</param>
-        public static void ToDubugOut<T>(this T? Obj)
-        {
-            if (Obj is null) return;
-            Debug.Write(Obj);
-        }
-
-        /// <summary>Печать объекта в отладочной информации без переноса строки в конце</summary>
-        /// <typeparam name="T">Тип печатаемого объекта</typeparam>
-        /// <param name="Obj">Печатаемый объект</param>
-        /// <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
-        public static void ToDubugOut<T>(this T? Obj, bool Condition)
-        {
-            if (Obj is null) return;
-            Debug.WriteIf(Condition, Obj);
-        }
-
-        /// <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
-        /// <typeparam name="T">Тип печатаемого объекта</typeparam>
-        /// <param name="Obj">Печатаемый объект</param>
-        public static void ToDebugOutLN<T>(this T? Obj)
-        {
-            if (Obj is null) return;
-            Debug.WriteLine(Obj);
-        }
-
-        /// <summary>Печать объекта в отладочной информации с переносом строки в конце</summary>
-        /// <typeparam name="T">Тип печатаемого объекта</typeparam>
-        /// <param name="Obj">Печатаемый объект</param>
-        /// <param name="Condition">Условие (если истина, то объект печатается в отладочный вывод)</param>
-        public static void ToDebugOutLN<T>(this T? Obj, bool Condition)
-        {
-            if (Obj is null) return;
-            Debug.WriteLineIf(Condition, Obj);
-        }
-
         /// <summary>Преобразование структуры в массив байт</summary>
         /// <typeparam name="T">Тип преобразуемой структуры</typeparam>
         /// <param name="value">Значение преобразуемой структуры</param>
