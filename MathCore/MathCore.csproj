@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.68</Version>
+    <Version>0.0.69</Version>
     <PackageReleaseNotes>
-      Методы-расширения для Task, обеспечивающие безопасный запуск задачи с её последующей отменой
+      Добавлен статический метод формирования комплексносопряжённой пары комплексных чисел
     </PackageReleaseNotes>
   </PropertyGroup>
 

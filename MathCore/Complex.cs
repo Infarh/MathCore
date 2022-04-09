@@ -226,6 +226,26 @@ namespace MathCore
         /// <returns>Комплексное число 0 + jIm</returns>
         public static Complex ImValue(double im) => new(0, im);
 
+        /// <summary>Комплексно-сопряжённые значения</summary>
+        /// <param name="Re">Действительная часть</param>
+        /// <param name="Im">Мнимая часть</param>
+        /// <returns>Пара комплексно-сопряжённых чисел</returns>
+        public static (Complex Z, Complex Zconj) Conjugate(double Re, double Im) =>
+            (new(Re, Im), new(Re - Im));
+
+        /// <summary>Комплексно-сопряжённые значения</summary>
+        /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
+        /// <returns>Пара комплексно-сопряжённых чисел</returns>
+        public static (Complex Z, Complex Zconj) Conjugate(double ExpPower) =>
+            Conjugate(Math.Cos(ExpPower), Math.Sin(ExpPower));
+
+        /// <summary>Комплексно-сопряжённые значения</summary>
+        /// <param name="Abs">Модуль комплексно-сопряжённой пары</param>
+        /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
+        /// <returns>Пара комплексно-сопряжённых чисел</returns>
+        public static (Complex Z, Complex Zconj) ConjugateAbsExp(double Abs, double ExpPower) =>
+            Conjugate(Abs * Math.Cos(ExpPower), Abs * Math.Sin(ExpPower));
+
         /// <summary>Действительное "комплексное" число</summary>
         public static readonly Complex Real = new(1);
 
