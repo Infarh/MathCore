@@ -231,7 +231,7 @@ namespace MathCore
         /// <param name="Im">Мнимая часть</param>
         /// <returns>Пара комплексно-сопряжённых чисел</returns>
         public static (Complex Z, Complex Zconj) Conjugate(double Re, double Im) =>
-            (new(Re, Im), new(Re - Im));
+            (new(Re, Im), new(Re, - Im));
 
         /// <summary>Комплексно-сопряжённые значения</summary>
         /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
