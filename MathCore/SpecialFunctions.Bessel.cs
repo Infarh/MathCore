@@ -1,4 +1,5 @@
 ﻿using System;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable IdentifierTypo
 
@@ -11,6 +12,35 @@ namespace MathCore
         //[Copyright("1984, 1987, 1989, 2000 by Stephen L. Moshier")]
         public static class Bessel
         {
+            public static Polynom Polynom(int N)
+            {
+                if (N == 0) throw new ArgumentOutOfRangeException(nameof(N), 0, "Порядок полинома не должен быть равен 0");
+                //if (N < 0) return PolynomInverted(-N);
+
+                var inversed = N < 0;
+                N = Math.Abs(N);
+
+                var a = new double[N + 1];
+                if (inversed)
+                    a[N] = 1;
+                else
+                    a[0] = 1;
+
+                //https/en.wikipedia.org/wiki/Bessel_polynomials
+                static double Ratio(int n, int k) => (n * n + n + k - k * k) / 2d / k;
+
+                if (inversed)
+                    for (var k = 1; k <= N; k++)
+                        a[N - k] = a[N - k + 1] * Ratio(N, k);
+                else
+                    for (var k = 1; k <= N; k++)
+                        a[k] = a[k - 1] * Ratio(N, k);
+
+                // y3(x) = 15x3 + 15x2 + 6x + 1
+                // inv_y3(x) = x3 + 6x2 + 15x + 15
+                return new Polynom(a);
+            }
+
             private static void BesselAsymptote0(double x, out double P, out double Q)
             {
                 var xsq = 64 / (x * x);
@@ -109,7 +139,7 @@ namespace MathCore
             {
                 x = Math.Abs(x);
 
-                if(x > 8)
+                if (x > 8)
                 {
                     BesselAsymptote0(x, out var p0, out var q0);
                     var nn = x - Consts.pi / 4;
@@ -151,12 +181,12 @@ namespace MathCore
 
                 x = Math.Abs(x);
 
-                if(x > 8)
+                if (x > 8)
                 {
                     BesselAsymptote1(x, out var p0, out var q0);
                     var nn = x - 3 * Math.PI / 4;
                     var result = Math.Sqrt(2 / Consts.pi / x) * (p0 * Math.Cos(nn) - q0 * Math.Sin(nn));
-                    if(s < 0) result = -result;
+                    if (s < 0) result = -result;
                     return result;
                 }
 
@@ -194,26 +224,26 @@ namespace MathCore
             {
                 int sg;
 
-                if(n >= 0) sg = 1;
+                if (n >= 0) sg = 1;
                 else
                 {
                     n = -n;
                     sg = n % 2 == 0 ? 1 : -1;
                 }
 
-                if(x < 0)
+                if (x < 0)
                 {
-                    if(n % 2 != 0) sg = -sg;
+                    if (n % 2 != 0) sg = -sg;
                     x = -x;
                 }
 
-                if(n == 0) return sg * J0(x);
+                if (n == 0) return sg * J0(x);
 
-                if(n == 1) return sg * J1(x);
+                if (n == 1) return sg * J1(x);
 
-                if(n == 2) return Math.Abs(x - 0) < Eps ? 0 : sg * 2 * J1(x) / x - J0(x);
+                if (n == 2) return Math.Abs(x - 0) < Eps ? 0 : sg * 2 * J1(x) / x - J0(x);
 
-                if(x < Eps) return 0;
+                if (x < Eps) return 0;
 
                 var k = 53;
                 var pk = 2d * (n + k);
@@ -225,7 +255,7 @@ namespace MathCore
                     pk -= 2;
                     ans = pk - xk / ans;
                     k--;
-                } while(k != 0);
+                } while (k != 0);
 
                 ans = x / ans;
                 pk = 1;
@@ -240,7 +270,7 @@ namespace MathCore
                     pkm1 = pkm2;
                     r -= 2;
                     k--;
-                } while(k != 0);
+                } while (k != 0);
 
                 return sg * (Math.Abs(pk) > Math.Abs(pkm1) ? J1(x) / pk : J0(x) / pkm1);
             }
@@ -251,7 +281,7 @@ namespace MathCore
             [DST]
             public static double Y0(double x)
             {
-                if(x > 8)
+                if (x > 8)
                 {
                     BesselAsymptote0(x, out var p0, out var q0);
                     var nn = x - Math.PI / 4;
@@ -289,7 +319,7 @@ namespace MathCore
             [DST]
             public static double Y1(double x)
             {
-                if(x > 8)
+                if (x > 8)
                 {
                     BesselAsymptote1(x, out var p0, out var q0);
                     var nn = x - 3 * Consts.pi / 4;
@@ -331,19 +361,19 @@ namespace MathCore
             {
                 double s = 1;
 
-                if(n < 0)
-                    if((n = -n) % 2 != 0)
+                if (n < 0)
+                    if ((n = -n) % 2 != 0)
                         s = -1;
 
-                if(n == 0)
+                if (n == 0)
                     return Y0(x);
 
-                if(n == 1)
+                if (n == 1)
                     return s * Y1(x);
 
                 var a = Y0(x);
                 var b = Y1(x);
-                for(var i = 1; i <= n - 1; i++)
+                for (var i = 1; i <= n - 1; i++)
                 {
                     var tmp = b;
                     b = 2 * i / x * b - a;
@@ -358,13 +388,13 @@ namespace MathCore
             [DST]
             public static double I0(double x)
             {
-                if(x < 0) x = -x;
+                if (x < 0) x = -x;
 
                 double b0 = 0;
                 double b1 = 0;
                 double b2 = 0;
 
-                if(x <= 8)
+                if (x <= 8)
                 {
                     var y = .5 * x - 2;
                     BesselMFirstCheb(-4.41534164647933937950E-18, ref b0, ref b1, ref b2);
@@ -441,7 +471,7 @@ namespace MathCore
                 double b2 = 0;
 
                 var z = Math.Abs(x);
-                if(z <= 8)
+                if (z <= 8)
                 {
                     y = z / 2 - 2;
                     BesselM1FirstCheb(2.77791411276104639959E-18, ref b0, ref b1, ref b2);
@@ -519,7 +549,7 @@ namespace MathCore
                 double b1 = 0;
                 double b2 = 0;
 
-                if(x <= 2)
+                if (x <= 2)
                 {
                     var y = x * x - 2;
                     BesselMFirstCheb(1.37446543561352307156E-16, ref b0, ref b1, ref b2);
@@ -575,7 +605,7 @@ namespace MathCore
                 double b1 = 0;
                 double b2 = 0;
 
-                if(x <= 2)
+                if (x <= 2)
                 {
                     var y = x * x - 2;
                     BesselM1FirstCheb(-7.02386347938628759343E-18, ref b0, ref b1, ref b2);
@@ -646,7 +676,7 @@ namespace MathCore
                 const double eul = 5.772156649015328606065e-1;
 
 
-                if(x <= 9.55)
+                if (x <= 9.55)
                 {
                     var ans = .0;
                     z0 = .25 * x * x;
@@ -655,11 +685,11 @@ namespace MathCore
                     var zmn = 1.0;
                     var tox = 2 / x;
 
-                    if(nn > 0)
+                    if (nn > 0)
                     {
                         pn = -eul;
                         k = 1.0;
-                        for(i = 1; i < nn; i++)
+                        for (i = 1; i < nn; i++)
                         {
                             pn += 1 / k;
                             k++;
@@ -667,7 +697,7 @@ namespace MathCore
                         }
 
                         zmn = tox;
-                        if(nn == 1)
+                        if (nn == 1)
                             ans = 1 / x;
                         else
                         {
@@ -677,7 +707,7 @@ namespace MathCore
                             z = -z0;
                             var zn = 1.0;
 
-                            for(i = 1; i < nn; i++)
+                            for (i = 1; i < nn; i++)
                             {
                                 nk1f /= nn - i;
                                 kf *= i;
@@ -685,10 +715,10 @@ namespace MathCore
                                 t = nk1f * zn / kf;
                                 s += t;
 
-                                if(__MaxRealNumber - Math.Abs(t) <= Math.Abs(s))
+                                if (__MaxRealNumber - Math.Abs(t) <= Math.Abs(s))
                                     throw new OverflowException();
 
-                                if(tox > 1 & __MaxRealNumber / tox < zmn)
+                                if (tox > 1 & __MaxRealNumber / tox < zmn)
                                     throw new OverflowException();
 
                                 zmn *= tox;
@@ -697,10 +727,10 @@ namespace MathCore
                             s *= .5;
                             t = Math.Abs(s);
 
-                            if(zmn > 1 & __MaxRealNumber / zmn < t)
+                            if (zmn > 1 & __MaxRealNumber / zmn < t)
                                 throw new OverflowException();
 
-                            if(t > 1 && __MaxRealNumber / t < zmn)
+                            if (t > 1 && __MaxRealNumber / t < zmn)
                                 throw new OverflowException();
 
                             ans = s * zmn;
@@ -710,7 +740,7 @@ namespace MathCore
                     var tlg = 2 * Math.Log(.5 * x);
                     pk = -eul;
 
-                    if(nn == 0)
+                    if (nn == 0)
                     {
                         pn = pk;
                         t = 1;
@@ -731,15 +761,15 @@ namespace MathCore
                         pn += 1 / (k + nn);
                         s += (pk + pn - tlg) * t;
                         k++;
-                    } while(Math.Abs(t / s) > Eps);
+                    } while (Math.Abs(t / s) > Eps);
 
                     s *= .5 / zmn;
-                    if(nn % 2 != 0)
+                    if (nn % 2 != 0)
                         s = -s;
 
                     return ans + s;
                 }
-                if(x > Math.Log(__MaxRealNumber))
+                if (x > Math.Log(__MaxRealNumber))
                     return 0;
 
                 k = nn;
@@ -755,7 +785,7 @@ namespace MathCore
                     t *= z / (fn * z0);
                     nk1f = Math.Abs(t);
 
-                    if(i >= nn & nk1f > nkf)
+                    if (i >= nn & nk1f > nkf)
                         break;
 
                     nkf = nk1f;
@@ -763,7 +793,7 @@ namespace MathCore
                     fn++;
                     pk += 2;
                     i++;
-                } while(Math.Abs(t / s) > Eps);
+                } while (Math.Abs(t / s) > Eps);
 
                 return Math.Exp(-x) * Math.Sqrt(Consts.pi / (2 * x)) * s;
             }
