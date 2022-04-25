@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.69.1</Version>
     <PackageReleaseNotes>
-      Добавлен статический метод формирования комплексносопряжённой пары комплексных чисел
+      Полином Бесселя, рациональная функция
     </PackageReleaseNotes>
   </PropertyGroup>
 
