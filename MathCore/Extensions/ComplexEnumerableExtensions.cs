@@ -14,7 +14,7 @@ namespace MathCore
         /// <summary>Получить перечисление мнимых частей комплексных чисел</summary>
         /// <param name="items">Перечисление комплексных чисел</param>
         /// <returns>Перечисление мнимых частей комплексных чисел</returns>
-        public static IEnumerable<double> ToIm(this IEnumerable<Complex> items) => items.Select(z => z.Re);
+        public static IEnumerable<double> ToIm(this IEnumerable<Complex> items) => items.Select(z => z.Im);
 
         /// <summary>Получить перечисление модулей комплексных чисел</summary>
         /// <param name="items">Перечисление комплексных чисел</param>

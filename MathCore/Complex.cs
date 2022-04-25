@@ -246,6 +246,16 @@ namespace MathCore
         public static (Complex Z, Complex Zconj) ConjugateAbsExp(double Abs, double ExpPower) =>
             Conjugate(Abs * Math.Cos(ExpPower), Abs * Math.Sin(ExpPower));
 
+        /// <summary>Вычисление синуса и косинуса аргумента</summary>
+        /// <param name="arg">Аргумент функции</param>
+        public static (double Sin, double Cos) SinCos(double arg) =>
+            (Math.Sin(arg), Math.Cos(arg));
+
+        /// <summary>Вычисление синуса и косинуса аргумента</summary>
+        /// <param name="arg">Аргумент функции</param>
+        public static (Complex Sin, Complex Cos) SinCos(Complex arg) =>
+            (Trigonometry.Sin(arg), Trigonometry.Cos(arg));
+
         /// <summary>Действительное "комплексное" число</summary>
         public static readonly Complex Real = new(1);
 
