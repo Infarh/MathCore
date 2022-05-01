@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using MathCore;
-using MathCore.Annotations;
 using MathCore.Interpolation;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
@@ -53,7 +53,7 @@ namespace System
         /// <param name="items">Перемешиваемый массив</param>
         /// <param name="rnd">Генератор случайных чисел</param>
         /// <returns>Перечисление элементов массива в случайном порядке без повторений</returns>
-        public static IEnumerable<T> Shuffle<T>(this T[] items, Random rnd = null)
+        public static IEnumerable<T> Shuffle<T>(this T[] items, Random? rnd = null)
         {
             if (items.Length is not (> 0 and var length))
                 yield break;
@@ -76,7 +76,7 @@ namespace System
         /// <param name="N">Число строк (первое измерение)</param>
         /// <param name="M">Число столбцов (второе измерение)</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
-        public static void Deconstruct<T>([NotNull] this T[,] array, out int N, out int M)
+        public static void Deconstruct<T>(this T[,] array, out int N, out int M)
         {
             N = array.GetLength(0);
             M = array.GetLength(1);
@@ -88,7 +88,7 @@ namespace System
         /// <param name="M">Число столбцов (второе измерение)</param>
         /// <param name="K">Глубина (третье измерение)</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
-        public static void Deconstruct<T>([NotNull] this T[,,] array, out int N, out int M, out int K)
+        public static void Deconstruct<T>(this T[,,] array, out int N, out int M, out int K)
         {
             N = array.GetLength(0);
             M = array.GetLength(1);
@@ -100,8 +100,7 @@ namespace System
         /// <param name="Rnd">Генератор случайных чисел</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Перечисление элементов массива в случайном порядке</returns>
-        [NotNull]
-        public static IEnumerable<T> AsRandomEnumerable<T>([NotNull] this T[] Items, [CanBeNull] Random Rnd = null)
+        public static IEnumerable<T> AsRandomEnumerable<T>(this T[] Items, Random? Rnd = null)
         {
             Rnd ??= new Random();
             var index = CreateSequence(Items.Length).MixRef(Rnd);
@@ -114,8 +113,7 @@ namespace System
         /// <param name="Count">Число элементов с конца, которые надо перебрать</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Перечисление элементов в конце массива в указанном количестве</returns>
-        [NotNull]
-        public static IEnumerable<T> TakeLast<T>([NotNull] this T[] Items, int Count)
+        public static IEnumerable<T> TakeLast<T>(this T[] Items, int Count)
         {
             if (Count <= 0) yield break;
 
@@ -128,8 +126,7 @@ namespace System
         /// <param name="Count">Число элементов с конца, которые надо перебрать</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Перечисление элементов в конце массива в указанном количестве</returns>
-        [NotNull]
-        public static IEnumerable<T> TakeLastInverted<T>([NotNull] this T[] Items, int Count)
+        public static IEnumerable<T> TakeLastInverted<T>(this T[] Items, int Count)
         {
             if (Count <= 0) yield break;
 
@@ -142,8 +139,7 @@ namespace System
         /// <param name="Count">Количество элементов с конца перечисления, которые требуется получить</param>
         /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <returns>Перечисление последних <paramref name="Count"/> элементов <paramref name="Items"/></returns>
-        [NotNull]
-        public static IEnumerable<T> TakeLastElements<T>([NotNull] this IEnumerable<T> Items, int Count)
+        public static IEnumerable<T> TakeLastElements<T>(this IEnumerable<T> Items, int Count)
         {
             var buffer = new T[Count];
             var index = 0;
@@ -162,8 +158,7 @@ namespace System
         /// <param name="array">Двумерный массив, элементы которого требуется перечислить</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Перечисление элементов двумерного массива по строкам</returns>
-        [NotNull]
-        public static IEnumerable<T> EnumerateElementsByRows<T>([NotNull] this T[,] array)
+        public static IEnumerable<T> EnumerateElementsByRows<T>(this T[,] array)
         {
             var N = array.GetLength(0);
             var M = array.GetLength(1);
@@ -176,8 +171,7 @@ namespace System
         /// <param name="array">Двумерный массив, элементы которого требуется перечислить</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Перечисление элементов двумерного массива по столбцам</returns>
-        [NotNull]
-        public static IEnumerable<T> EnumerateElementsByCols<T>([NotNull] this T[,] array)
+        public static IEnumerable<T> EnumerateElementsByCols<T>(this T[,] array)
         {
             var N = array.GetLength(0);
             var M = array.GetLength(1);
@@ -191,14 +185,14 @@ namespace System
         /// <param name="value">Искомый элемент</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Истина, если элемент найден</returns>
-        public static bool Exist<T>([NotNull] this T[] array, T value) => Array.IndexOf(array, value, 0, array.Length) >= 0;
+        public static bool Exist<T>(this T[] array, T value) => Array.IndexOf(array, value, 0, array.Length) >= 0;
 
         /// <summary>Проверка на отсутствие элемента в массиве</summary>
         /// <param name="array">Массив, проверка отсутствия элемента в котором выполняется</param>
         /// <param name="value">Искомый элемент</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Истина, если элемент в массиве отсутствует</returns>
-        public static bool NotExist<T>([NotNull] this T[] array, T value) => Array.IndexOf(array, value, 0, array.Length) < 0;
+        public static bool NotExist<T>(this T[] array, T value) => Array.IndexOf(array, value, 0, array.Length) < 0;
 
         /// <summary>Разделить входной массив на подмассивы указанным методом</summary>
         /// <typeparam name="T">Тип элементов массива</typeparam>
@@ -208,8 +202,8 @@ namespace System
         /// Массив подмассивов элементов исходного массива, разделённый выбранными указанным методом элементами.
         /// Выбранные элементы в результат не входят.
         /// </returns>
-        [DST, NotNull]
-        public static T[][] Split<T>([NotNull] this T[] array, [NotNull] Func<T, bool> Splitter)
+        [DST]
+        public static T[][] Split<T>(this T[] array, Func<T, bool> Splitter)
         {
             var result = new List<T[]>(array.Length);
             var aggregator = new List<T>(array.Length);
@@ -262,7 +256,7 @@ namespace System
         /// <param name="A">Сортируемый массив элементов</param>
         /// <param name="low">Нижняя граница индекса сортировки</param>
         /// <param name="high">Верхняя граница индекса сортировки</param>
-        public static void QuickSort<T>([NotNull] this T[] A, int low, int high) where T : IComparable
+        public static void QuickSort<T>(this T[] A, int low, int high) where T : IComparable
         {
             var i = low;  // i -  левая граница интервала сортировки
             var j = high; // j - правая граница интервала сортировки
@@ -293,7 +287,7 @@ namespace System
         /// <param name="low">Нижняя граница индекса сортировки</param>
         /// <param name="high">Верхняя граница индекса сортировки</param>
         /// <returns>Задача, выполняющая процесс быстрой сортировки</returns>
-        public static async Task QuickSortAsync<T>([NotNull] this T[] A, int low, int high) where T : IComparable
+        public static async Task QuickSortAsync<T>(this T[] A, int low, int high) where T : IComparable
         {
             var i = low;
             var j = high;
@@ -327,7 +321,7 @@ namespace System
         /// <param name="low">Нижняя граница индекса сортировки</param>
         /// <param name="high">Верхняя граница индекса сортировки</param>
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух объектов <typeparamref name="T"/></param>
-        public static void QuickSort<T>([NotNull] this T[] A, int low, int high, [NotNull] IComparer<T> Comparer)
+        public static void QuickSort<T>(this T[] A, int low, int high, IComparer<T> Comparer)
         {
             var i = low;
             var j = high;
@@ -356,7 +350,7 @@ namespace System
         /// <param name="high">Верхняя граница индекса сортировки</param>
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух объектов <typeparamref name="T"/></param>
         /// <returns>Задача, выполняющая процесс быстрой сортировки</returns>
-        public static async Task QuickSortAsync<T>([NotNull] this T[] A, int low, int high, [NotNull] IComparer<T> Comparer)
+        public static async Task QuickSortAsync<T>(this T[] A, int low, int high, IComparer<T> Comparer)
         {
             var i = low;
             var j = high;
@@ -388,16 +382,17 @@ namespace System
         /// <typeparam name="T">Тип элементов</typeparam>
         /// <param name="Objects">Массив элементов</param>
         /// <returns>Хеш-сумма элементов массива</returns>
-        public static int GetComplexHashCode<T>([NotNull] this T[] Objects)
+        public static int GetComplexHashCode<T>(this T[] Objects)
         {
             if (Objects.Length == 0) return 0;
 
-            var hash = Objects[0].GetHashCode();
+            var hash = 397;
             for (var i = 1; i < Objects.Length; i++)
-                unchecked
-                {
-                    hash = (hash * 397) ^ Objects.GetHashCode();
-                }
+                if (Objects[i] is { } obj)
+                    unchecked
+                    {
+                        hash = (hash * 397) ^ obj.GetHashCode();
+                    }
 
             return hash;
         }
@@ -407,8 +402,8 @@ namespace System
         ///<param name="B">Присоединяемый массив</param>
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         ///<returns>Массив из объединенных элементов</returns>
-        [DST, NotNull]
-        public static TArray[] Concatenate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[] B)
+        [DST]
+        public static TArray[] Concatenate<TArray>(this TArray[] A, params TArray[] B)
         {
             var result = new TArray[A.Length + B.Length];
             A.CopyTo(result, 0);
@@ -421,8 +416,7 @@ namespace System
         /// <param name="A">Исходный массив</param>
         /// <param name="B">Присоединяемые массивы</param>
         /// <returns>Массив, содержащий все элементы объединяемых массивов</returns>
-        [NotNull]
-        public static TArray[] Concatenate<TArray>([NotNull] this TArray[] A, [NotNull] params TArray[][] B)
+        public static TArray[] Concatenate<TArray>(this TArray[] A, params TArray[][] B)
         {
             var result = new TArray[A.Length + B.Sum(l => l.Length)];
             A.CopyTo(result, 0);
@@ -442,10 +436,10 @@ namespace System
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         ///<typeparam name="TOut">Тип выходного элемента</typeparam>
         ///<returns>Выбранный элемент массива</returns>
-        [DST, CanBeNull]
-        public static TOut GetSelectedValue<TArray, TOut>(
-            [NotNull] this TArray[] A,
-            [NotNull] Func<TArray, TOut, TOut> Selector)
+        [DST]
+        public static TOut? GetSelectedValue<TArray, TOut>(
+            this TArray[] A,
+            Func<TArray, TOut?, TOut?> Selector)
         {
             var result = default(TOut);
             var len = A.Length;
@@ -460,8 +454,8 @@ namespace System
         ///<typeparam name="TIn">Исходный тип элементов массива</typeparam>
         ///<typeparam name="TOut">Требуемый тип элементов массива</typeparam>
         ///<returns>Массив преобразованных элементов</returns>
-        [DST, NotNull]
-        public static TOut[] ConvertTo<TIn, TOut>([NotNull] this TIn[] In, [NotNull] Converter<TIn, TOut> converter)
+        [DST]
+        public static TOut[] ConvertTo<TIn, TOut>(this TIn[] In, Converter<TIn, TOut> converter)
         {
             var result = new TOut[In.Length];
             for (var i = 0; i < In.Length; i++)
@@ -475,8 +469,8 @@ namespace System
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         [DST]
         public static void Foreach<TArray>(
-            [NotNull] this TArray[] array,
-            [NotNull] Action<TArray> action)
+            this TArray[] array,
+            Action<TArray> action)
             => Array.ForEach(array, action);
 
         ///<summary>Выполнение действия для всех элементов массива с обработкой исключений</summary>
@@ -486,9 +480,9 @@ namespace System
         ///<typeparam name="TArray">Тип элементов массива</typeparam>
         [DST]
         public static void Foreach<TArray>(
-            [NotNull] this TArray[] array,
-            [NotNull] Action<TArray> action,
-            [NotNull] Func<Exception, bool> ErrorHandler)
+            this TArray[] array,
+            Action<TArray> action,
+            Func<Exception, bool> ErrorHandler)
             => array.Foreach<TArray, Exception>(action, ErrorHandler);
 
         /// <summary>Выполнение действия для всех элементов массива</summary>
@@ -501,9 +495,9 @@ namespace System
         [DST]
         public static void Foreach<TArray, TException>
         (
-            [NotNull] this TArray[] array,
-            [NotNull] Action<TArray> action,
-            [NotNull] Func<TException, bool> ErrorHandler
+            this TArray[] array,
+            Action<TArray> action,
+            Func<TException, bool> ErrorHandler
         ) where TException : Exception
         {
             var length = array.Length;
@@ -525,15 +519,15 @@ namespace System
         ///<typeparam name="TIn">Тип элементов массива области определения</typeparam>
         ///<typeparam name="TOut">Тип элементов массива области значения</typeparam>
         ///<returns>Массив значений функции</returns>
-        [DST, NotNull]
-        public static TOut[] Function<TIn, TOut>([NotNull] this TIn[] array, [NotNull] Func<TIn, TOut> f) => array.Select(f).ToArray();
+        [DST]
+        public static TOut[] Function<TIn, TOut>(this TIn[] array, Func<TIn, TOut> f) => array.Select(f).ToArray();
 
         /// <summary>Получить массив, индексы элементов которого имеют обратный порядок</summary>
         /// <typeparam name="TArray">Тип элементов массива</typeparam>
         /// <param name="array">Переворачиваемый массив</param>
         /// <returns>Перевёрнутый массив</returns>
-        [DST, NotNull]
-        public static TArray[] GetReversed<TArray>([NotNull] this TArray[] array)
+        [DST]
+        public static TArray[] GetReversed<TArray>(this TArray[] array)
         {
             var len = array.Length;
             var result = new TArray[len];
@@ -551,8 +545,8 @@ namespace System
         /// Новый экземпляр массива, содержащий последовательность элементов
         /// начиная с указанного <paramref name="Start"/> положения и указанной длины <paramref name="Length"/>
         /// </returns>
-        [DST, NotNull]
-        public static TArray[] GetSubArray<TArray>([NotNull] this TArray[] array, int Length, int Start = 0)
+        [DST]
+        public static TArray[] GetSubArray<TArray>(this TArray[] array, int Length, int Start = 0)
         {
             var result = new TArray[Length];
             Array.Copy(array, Start, result, 0, Length);
@@ -567,11 +561,11 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[] Initialize<TArray>
         (
-            [NotNull] this TArray[] array,
-            [NotNull] Func<int, TArray> Initializer
+            this TArray[] array,
+            Func<int, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -584,10 +578,10 @@ namespace System
         /// <param name="array">Инициализируемый массив</param>
         /// <param name="value">Значение, размещаемое во всех элементах массива</param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[] Initialize<TArray>
         (
-            [NotNull] this TArray[] array,
+            this TArray[] array,
             TArray value
         )
         {
@@ -603,12 +597,12 @@ namespace System
         /// <param name="p">Параметр инициализации</param>
         /// <param name="Initializer">Метод инициализации</param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TValue[] Initialize<TValue, TP>
         (
-            [NotNull] this TValue[] array,
-            [CanBeNull] TP p,
-            [NotNull] Func<int, TP, TValue> Initializer
+            this TValue[] array,
+            TP? p,
+            Func<int, TP?, TValue> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -625,13 +619,13 @@ namespace System
         /// <param name="p2">Второй параметр инициализации</param>
         /// <param name="Initializer">Метод инициализации</param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TValue[] Initialize<TValue, TP1, TP2>
         (
-            [NotNull] this TValue[] array,
-            [CanBeNull] TP1 p1,
-            [CanBeNull] TP2 p2,
-            [NotNull] Func<int, TP1, TP2, TValue> Initializer
+            this TValue[] array,
+            TP1? p1,
+            TP2? p2,
+            Func<int, TP1?, TP2?, TValue> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -647,11 +641,11 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[] Initialize<TArray>
         (
-            [NotNull] this TArray[] array,
-            [NotNull] Func<TArray, int, TArray> Initializer
+            this TArray[] array,
+            Func<TArray, int, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -670,12 +664,12 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[] Initialize<TArray, TP>
         (
-            [NotNull] this TArray[] array,
-            [CanBeNull] TP p,
-            [NotNull] Func<TArray, int, TP, TArray> Initializer
+            this TArray[] array,
+            TP? p,
+            Func<TArray, int, TP?, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -696,13 +690,13 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[] Initialize<TArray, TP1, TP2>
         (
-            [NotNull] this TArray[] array,
-            [CanBeNull] TP1 p1,
-            [CanBeNull] TP2 p2,
-            [NotNull] Func<TArray, int, TP1, TP2, TArray> Initializer
+            this TArray[] array,
+            TP1? p1,
+            TP2? p2,
+            Func<TArray, int, TP1?, TP2?, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -718,11 +712,11 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[,] Initialize<TArray>
         (
-            [NotNull] this TArray[,] array,
-            [NotNull] Func<int, int, TArray> Initializer
+            this TArray[,] array,
+            Func<int, int, TArray> Initializer
         )
         {
             var length_i = array.GetLength(0);
@@ -744,12 +738,12 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[,] Initialize<TArray, TP>
         (
-            [NotNull] this TArray[,] array,
-            [CanBeNull] TP p,
-            [NotNull] Func<int, int, TP, TArray> Initializer
+            this TArray[,] array,
+            TP? p,
+            Func<int, int, TP?, TArray> Initializer
         )
         {
             var length_i = array.GetLength(0);
@@ -773,13 +767,13 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[,] Initialize<TArray, TP1, TP2>
         (
-            [NotNull] this TArray[,] array,
-            [CanBeNull] TP1 p1,
-            [CanBeNull] TP2 p2,
-            [NotNull] Func<int, int, TP1, TP2, TArray> Initializer
+            this TArray[,] array,
+            TP1? p1,
+            TP2? p2,
+            Func<int, int, TP1?, TP2?, TArray> Initializer
         )
         {
             var length_i = array.GetLength(0);
@@ -805,14 +799,14 @@ namespace System
         /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[,] Initialize<TArray, TP1, TP2, TP3>
         (
-            [NotNull] this TArray[,] array,
-            [CanBeNull] TP1 p1,
-            [CanBeNull] TP2 p2,
-            [CanBeNull] TP3 p3,
-            [NotNull] Func<int, int, TP1, TP2, TP3, TArray> Initializer
+            this TArray[,] array,
+            TP1? p1,
+            TP2? p2,
+            TP3? p3,
+            Func<int, int, TP1?, TP2?, TP3?, TArray> Initializer
         )
         {
             var length_i = array.GetLength(0);
@@ -836,12 +830,12 @@ namespace System
         /// в одномерном массиве, а результатом его вызова должно быть значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный невыровненный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[][] Initialize<TArray>
         (
-            [NotNull] this TArray[][] array,
-            [NotNull] Func<int, TArray[]> ArrayInitializer,
-            [NotNull] Func<int, int, TArray> Initializer
+            this TArray[][] array,
+            Func<int, TArray[]> ArrayInitializer,
+            Func<int, int, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -869,13 +863,13 @@ namespace System
         /// помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный невыровненный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[][] Initialize<TArray, TP>
         (
-            [NotNull] this TArray[][] array,
-            [CanBeNull] TP p,
-            [NotNull] Func<int, TP, TArray[]> ArrayInitializer,
-            [NotNull] Func<int, int, TP, TArray> Initializer
+            this TArray[][] array,
+            TP? p,
+            Func<int, TP?, TArray[]> ArrayInitializer,
+            Func<int, int, TP?, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -905,14 +899,14 @@ namespace System
         /// значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный невыровненный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[][] Initialize<TArray, TP1, TP2>
         (
-            [NotNull] this TArray[][] array,
-            [CanBeNull] TP1 p1,
-            [CanBeNull] TP2 p2,
-            [NotNull] Func<int, TP1, TP2, TArray[]> ArrayInitializer,
-            [NotNull] Func<int, int, TP1, TP2, TArray> Initializer
+            this TArray[][] array,
+            TP1? p1,
+            TP2? p2,
+            Func<int, TP1?, TP2?, TArray[]> ArrayInitializer,
+            Func<int, int, TP1?, TP2?, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -944,15 +938,15 @@ namespace System
         /// значение, помещаемое в ячейку массива
         /// </param>
         /// <returns>Инициализированный невыровненный двумерный массив</returns>
-        [DST, NotNull]
+        [DST]
         public static TArray[][] Initialize<TArray, TP1, TP2, TP3>
         (
-            [NotNull] this TArray[][] array,
-            [CanBeNull] TP1 p1,
-            [CanBeNull] TP2 p2,
-            [CanBeNull] TP3 p3,
-            [NotNull] Func<int, TP1, TP2, TP3, TArray[]> ArrayInitializer,
-            [NotNull] Func<int, int, TP1, TP2, TP3, TArray> Initializer
+            this TArray[][] array,
+            TP1? p1,
+            TP2? p2,
+            TP3? p3,
+            Func<int, TP1?, TP2?, TP3?, TArray[]> ArrayInitializer,
+            Func<int, int, TP1?, TP2?, TP3?, TArray> Initializer
         )
         {
             for (var i = 0; i < array.Length; i++)
@@ -971,7 +965,7 @@ namespace System
         /// <typeparam name="TArray">Тип элементов массива</typeparam>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
         [DST]
-        public static void Reverse<TArray>([NotNull] this TArray[] array) =>
+        public static void Reverse<TArray>(this TArray[] array) =>
             Array.Reverse(array ?? throw new ArgumentNullException(nameof(array)));
 
         /// <summary>Установить значения ячеек массива</summary>
@@ -981,9 +975,9 @@ namespace System
         /// <typeparam name="TArray">Тип ячеек массива</typeparam>
         [DST]
         public static void SetValues<TArray>(
-            [NotNull] this TArray[] array,
+            this TArray[] array,
             int StartIndex,
-            [NotNull] params TArray[] Values)
+            params TArray[] Values)
             => Array.Copy(Values, 0, array, StartIndex, Math.Min(Values.Length, array.Length - StartIndex));
 
         /// <summary>
@@ -993,8 +987,8 @@ namespace System
         /// <typeparam name="TArray">Тим элементов</typeparam>
         /// <returns>Двумерный массив, составленный построчно из исходных массивов</returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
-        [DST, NotNull]
-        public static TArray[,] ToAlignedRows<TArray>([NotNull] this TArray[][] array)
+        [DST]
+        public static TArray[,] ToAlignedRows<TArray>(this TArray[][] array)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var lengths = array.Select(a => a.Length).ToArray();
@@ -1015,8 +1009,8 @@ namespace System
         /// <typeparam name="TArray">Тим элементов</typeparam>
         /// <returns>Двумерный массив, составленный из исходных массивов, расположенных по столбцам</returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
-        [DST, NotNull]
-        public static TArray[,] ToAlignedCols<TArray>([NotNull] this TArray[][] array)
+        [DST]
+        public static TArray[,] ToAlignedCols<TArray>(this TArray[][] array)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var lengths = array.Select(a => a.Length).ToArray();
@@ -1035,8 +1029,8 @@ namespace System
         /// <typeparam name="TArray">Тип элементов массивов</typeparam>
         /// <returns>Массив строк двумерного массива <paramref name="array"/></returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
-        [DST, NotNull]
-        public static TArray[][] ToNonAlignedRows<TArray>([NotNull] this TArray[,] array)
+        [DST]
+        public static TArray[][] ToNonAlignedRows<TArray>(this TArray[,] array)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var rows_count = array.GetLength(0);
@@ -1058,8 +1052,8 @@ namespace System
         /// <typeparam name="TArray">Тип элементов массивов</typeparam>
         /// <returns>Массив столбцов двумерного массива <paramref name="array"/></returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
-        [DST, NotNull]
-        public static TArray[][] ToNonAlignedCols<TArray>([NotNull] this TArray[,] array)
+        [DST]
+        public static TArray[][] ToNonAlignedCols<TArray>(this TArray[,] array)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var rows_count = array.GetLength(0);
@@ -1090,7 +1084,7 @@ namespace System
         /// <paramref name="array"/>, либо меньше 0
         /// </exception>
         [DST]
-        public static void SetCol<TArray>([NotNull] this TArray[,] array, [NotNull] TArray[] Col, int m = 0)
+        public static void SetCol<TArray>(this TArray[,] array, TArray[] Col, int m = 0)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var N = array.GetLength(0);
@@ -1118,7 +1112,7 @@ namespace System
         /// <paramref name="array"/>, либо меньше 0
         /// </exception>
         [DST]
-        public static void SetRow<TArray>([NotNull] this TArray[,] array, [NotNull] TArray[] Row, int n = 0)
+        public static void SetRow<TArray>(this TArray[,] array, TArray[] Row, int n = 0)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var N = array.GetLength(0);
@@ -1146,8 +1140,8 @@ namespace System
         /// <exception cref="ArgumentOutOfRangeException">
         /// Если номер столбца больше, либо равен числу столбцов массива (вторая размерность), либо меньше 0
         /// </exception>
-        [DST, NotNull]
-        public static TArray[] GetCol<TArray>([NotNull] this TArray[,] array, int m)
+        [DST]
+        public static TArray[] GetCol<TArray>(this TArray[,] array, int m)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var N = array.GetLength(0);
@@ -1176,7 +1170,7 @@ namespace System
         /// не равен числу строк исходного двумерного массива
         /// </exception>
         [DST]
-        public static void GetCol<TArray>([NotNull] this TArray[,] array, int m, [CanBeNull] ref TArray[] Col)
+        public static void GetCol<TArray>(this TArray[,] array, int m, ref TArray[]? Col)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
 
@@ -1206,8 +1200,8 @@ namespace System
         /// <returns>Новый массив, значения которого скопированы из строки элементов двумерного массива с выбранным индексом <paramref name="n"/></returns>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
         /// <exception cref="ArgumentOutOfRangeException">Если номер строки больше, либо равен числу строк массива (первая размерность), либо меньше 0</exception>
-        [DST, NotNull]
-        public static TArray[] GetRow<TArray>([NotNull] this TArray[,] array, int n)
+        [DST]
+        public static TArray[] GetRow<TArray>(this TArray[,] array, int n)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var N = array.GetLength(0);
@@ -1233,7 +1227,7 @@ namespace System
         /// Если номер строки больше, либо равен числу строк массива (первая размерность), либо меньше 0
         /// </exception>
         [DST]
-        public static void GetRow<TArray>([NotNull] this TArray[,] array, int n, [CanBeNull] ref TArray[] Row)
+        public static void GetRow<TArray>(this TArray[,] array, int n, ref TArray[]? Row)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             var N = array.GetLength(0);
@@ -1262,7 +1256,7 @@ namespace System
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
         [DST]
-        public static void SwapRows<T>([NotNull] this T[,] array, int i1, int i2)
+        public static void SwapRows<T>(this T[,] array, int i1, int i2)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             if (i1 == i2) return;
@@ -1282,7 +1276,7 @@ namespace System
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
         [DST]
-        public static void SwapCols<T>([NotNull] this T[,] array, int j1, int j2)
+        public static void SwapCols<T>(this T[,] array, int j1, int j2)
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             if (j1 == j2) return;
@@ -1300,7 +1294,7 @@ namespace System
         /// <param name="compare">Метод сравнения двух объектов между собой</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс минимального элемента</returns>
-        public static int GetMinIndex<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare)
+        public static int GetMinIndex<T>(this T[] array, Comparison<T> compare)
         {
             var i_min = 0;
             var min = array[i_min];
@@ -1319,7 +1313,7 @@ namespace System
         /// <param name="compare">Метод сравнения двух объектов между собой</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare)
+        public static ref T GetMinRef<T>(this T[] array, Comparison<T> compare)
         {
             var i_min = 0;
             var min = array[i_min];
@@ -1339,7 +1333,7 @@ namespace System
         /// <param name="MinIndex">Индекс минимального элемента</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare, out int MinIndex)
+        public static ref T GetMinRef<T>(this T[] array, Comparison<T> compare, out int MinIndex)
         {
             MinIndex = 0;
             var min = array[MinIndex];
@@ -1358,7 +1352,7 @@ namespace System
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс минимального элемента</returns>
-        public static int GetMinIndex<T>([NotNull] this T[] array, [NotNull] IComparer<T> Comparer)
+        public static int GetMinIndex<T>(this T[] array, IComparer<T> Comparer)
         {
             var i_min = 0;
             var min = array[i_min];
@@ -1377,7 +1371,7 @@ namespace System
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, [NotNull] IComparer<T> Comparer)
+        public static ref T GetMinRef<T>(this T[] array, IComparer<T> Comparer)
         {
             var i_min = 0;
             var min = array[i_min];
@@ -1397,7 +1391,7 @@ namespace System
         /// <param name="MinIndex">Индекс минимального элемента</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, [NotNull] IComparer<T> Comparer, out int MinIndex)
+        public static ref T GetMinRef<T>(this T[] array, IComparer<T> Comparer, out int MinIndex)
         {
             MinIndex = 0;
             var min = array[MinIndex];
@@ -1416,7 +1410,7 @@ namespace System
         /// <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс минимального элемента</returns>
-        public static int GetMinIndex<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
+        public static int GetMinIndex<T>(this T[] array, Func<T, double> converter)
         {
             var i_max = 0;
             var min = converter(array[i_max]);
@@ -1436,7 +1430,7 @@ namespace System
         /// <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
+        public static ref T GetMinRef<T>(this T[] array, Func<T, double> converter)
         {
             var i_max = 0;
             var min = converter(array[i_max]);
@@ -1457,7 +1451,7 @@ namespace System
         /// <param name="MinIndex">Индекс минимального элемента</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter, out int MinIndex)
+        public static ref T GetMinRef<T>(this T[] array, Func<T, double> converter, out int MinIndex)
         {
             MinIndex = 0;
             var min = converter(array[MinIndex]);
@@ -1476,7 +1470,7 @@ namespace System
         /// <param name="array">Массив элементов</param>
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <returns>Индекс минимального элемента</returns>
-        public static int GetMinIndex<T>([NotNull] this T[] array) where T : IComparable<T>
+        public static int GetMinIndex<T>(this T[] array) where T : IComparable<T>
         {
             var i_min = 0;
             var min = array[i_min];
@@ -1494,7 +1488,7 @@ namespace System
         /// <param name="array">Массив элементов</param>
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array) where T : IComparable<T>
+        public static ref T GetMinRef<T>(this T[] array) where T : IComparable<T>
         {
             var i_min = 0;
             var min = array[i_min];
@@ -1513,7 +1507,7 @@ namespace System
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <param name="MinIndex">Индекс минимального элемента</param>
         /// <returns>Минимальный элемент массива по ссылке</returns>
-        public static ref T GetMinRef<T>([NotNull] this T[] array, out int MinIndex) where T : IComparable<T>
+        public static ref T GetMinRef<T>(this T[] array, out int MinIndex) where T : IComparable<T>
         {
             MinIndex = 0;
             var min = array[MinIndex];
@@ -1532,7 +1526,7 @@ namespace System
         /// <param name="compare">Метод сравнения двух объектов между собой</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс максимального элемента</returns>
-        public static int GetMaxIndex<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare)
+        public static int GetMaxIndex<T>(this T[] array, Comparison<T> compare)
         {
             var i_max = 0;
             var max = array[i_max];
@@ -1551,7 +1545,7 @@ namespace System
         /// <param name="compare">Метод сравнения двух объектов между собой</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare)
+        public static ref T GetMaxRef<T>(this T[] array, Comparison<T> compare)
         {
             var i_max = 0;
             var max = array[i_max];
@@ -1571,7 +1565,7 @@ namespace System
         /// <param name="MaxIndex">Индекс максимального элемента</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, [NotNull] Comparison<T> compare, out int MaxIndex)
+        public static ref T GetMaxRef<T>(this T[] array, Comparison<T> compare, out int MaxIndex)
         {
             MaxIndex = 0;
             var max = array[MaxIndex];
@@ -1590,7 +1584,7 @@ namespace System
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс максимального элемента</returns>
-        public static int GetMaxIndex<T>([NotNull] this T[] array, [NotNull] IComparer<T> Comparer)
+        public static int GetMaxIndex<T>(this T[] array, IComparer<T> Comparer)
         {
             var i_max = 0;
             var max = array[i_max];
@@ -1609,7 +1603,7 @@ namespace System
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, [NotNull] IComparer<T> Comparer)
+        public static ref T GetMaxRef<T>(this T[] array, IComparer<T> Comparer)
         {
             var i_max = 0;
             var max = array[i_max];
@@ -1629,7 +1623,7 @@ namespace System
         /// <param name="MaxIndex">Индекс максимального элемента</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, [NotNull] IComparer<T> Comparer, out int MaxIndex)
+        public static ref T GetMaxRef<T>(this T[] array, IComparer<T> Comparer, out int MaxIndex)
         {
             MaxIndex = 0;
             var max = array[MaxIndex];
@@ -1648,7 +1642,7 @@ namespace System
         /// <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс максимального элемента</returns>
-        public static int GetMaxIndex<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
+        public static int GetMaxIndex<T>(this T[] array, Func<T, double> converter)
         {
             var i_max = 0;
             var max = converter(array[i_max]);
@@ -1668,7 +1662,7 @@ namespace System
         /// <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
+        public static ref T GetMaxRef<T>(this T[] array, Func<T, double> converter)
         {
             var i_max = 0;
             var max = converter(array[i_max]);
@@ -1689,7 +1683,7 @@ namespace System
         /// <param name="MaxIndex">Индекс максимального элемента</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter, out int MaxIndex)
+        public static ref T GetMaxRef<T>(this T[] array, Func<T, double> converter, out int MaxIndex)
         {
             MaxIndex = 0;
             var max = converter(array[MaxIndex]);
@@ -1708,7 +1702,7 @@ namespace System
         /// <param name="array">Массив элементов</param>
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <returns>Индекс максимального элемента</returns>
-        public static int GetMaxIndex<T>([NotNull] this T[] array) where T : IComparable<T>
+        public static int GetMaxIndex<T>(this T[] array) where T : IComparable<T>
         {
             var i_max = 0;
             var max = array[i_max];
@@ -1726,7 +1720,7 @@ namespace System
         /// <param name="array">Массив элементов</param>
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array) where T : IComparable<T>
+        public static ref T GetMaxRef<T>(this T[] array) where T : IComparable<T>
         {
             var i_max = 0;
             var max = array[i_max];
@@ -1745,7 +1739,7 @@ namespace System
         /// <param name="MaxIndex">Индекс максимального элемента</param>
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <returns>Максимальный элемент массива по ссылке</returns>
-        public static ref T GetMaxRef<T>([NotNull] this T[] array, out int MaxIndex) where T : IComparable<T>
+        public static ref T GetMaxRef<T>(this T[] array, out int MaxIndex) where T : IComparable<T>
         {
             MaxIndex = 0;
             var max = array[MaxIndex];
@@ -1764,7 +1758,7 @@ namespace System
         /// <param name="compare">Метод сравнения двух объектов между собой</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс минимального и максимального элементов массива</returns>
-        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>([NotNull] this T[] array, Comparison<T> compare)
+        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>(this T[] array, Comparison<T> compare)
         {
             var i_min = 0;
             var i_max = 0;
@@ -1793,7 +1787,7 @@ namespace System
         /// <param name="Comparer">Объект, обеспечивающий сравнение двух элементов в массиве</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс минимального и максимального элементов массива</returns>
-        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>([NotNull] this T[] array, IComparer<T> Comparer)
+        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>(this T[] array, IComparer<T> Comparer)
         {
             var i_min = 0;
             var i_max = 0;
@@ -1822,7 +1816,7 @@ namespace System
         /// <param name="converter">Функция, обеспечивающая преобразования элемента в численное значение для сравнения</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Индекс минимального и максимального элементов массива</returns>
-        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>([NotNull] this T[] array, [NotNull] Func<T, double> converter)
+        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>(this T[] array, Func<T, double> converter)
         {
             var i_min = 0;
             var i_max = 0;
@@ -1851,7 +1845,7 @@ namespace System
         /// <param name="array">Массив элементов</param>
         /// <typeparam name="T">Тип элементов массива, поддерживающий возможность сравнения</typeparam>
         /// <returns>Индекс минимального и максимального элементов массива</returns>
-        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>([NotNull] this T[] array) where T : IComparable<T>
+        public static (int MinIndex, int MaxIndex) GetMinMaxIndex<T>(this T[] array) where T : IComparable<T>
         {
             var i_min = 0;
             var i_max = 0;
@@ -1881,7 +1875,7 @@ namespace System
         /// <param name="length">Длина массива</param>
         /// <param name="offset">Начальное значение</param>
         /// <returns>Массив чисел длины <paramref name="length"/> начиная с <paramref name="offset"/></returns>
-        [DST, NotNull]
+        [DST]
         public static int[] CreateSequence(int length, int offset = 0)
         {
             var result = new int[length];
@@ -1894,27 +1888,27 @@ namespace System
         /// <param name="array">Исходный массив</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Копия исходного массива с перемешанным содержимым</returns>
-        [DST, NotNull]
-        public static T[] Mix<T>([NotNull] this T[] array) => ((T[])array.Clone()).MixRef();
+        [DST]
+        public static T[] Mix<T>(this T[] array) => ((T[])array.Clone()).MixRef();
 
         /// <summary>Создать копию массива с перемешанным содержимым</summary>
         /// <param name="array">Исходный массив</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <param name="rnd">Генератор случайных чисел</param>
         /// <returns>Копия исходного массива с перемешанным содержимым</returns>
-        [DST, NotNull]
-        public static T[] Mix<T>([NotNull] this T[] array, [CanBeNull] Random rnd) => ((T[])array.Clone()).MixRef(rnd);
+        [DST]
+        public static T[] Mix<T>(this T[] array, Random? rnd) => ((T[])array.Clone()).MixRef(rnd);
 
         /// <summary>Перемешать массив</summary>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <param name="array">Перемешиваемый массив</param>
         /// <param name="rnd">Генератор случайных чисел</param>
         /// <returns>Исходный массив с перемешанным содержимым</returns>
-        [DST, NotNull]
-        public static T[] MixRef<T>([NotNull] this T[] array, [CanBeNull] Random rnd)
+        [DST]
+        public static T[] MixRef<T>(this T[] array, Random? rnd)
         {
             var length = array.Length;
-            if (rnd is null) rnd = new Random();
+            rnd ??= new Random();
             var temp = array[0];
             var index = 0;
             for (var i = 1; i <= length; i++)
@@ -1928,8 +1922,8 @@ namespace System
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <param name="array">Перемешиваемый массив</param>
         /// <returns>Исходный массив с перемешанным содержимым</returns>
-        [DST, NotNull]
-        public static T[] MixRef<T>([NotNull] this T[] array)
+        [DST]
+        public static T[] MixRef<T>(this T[] array)
         {
             var length = array.Length - 1;
             var rnd = new Random();
@@ -1947,7 +1941,7 @@ namespace System
         /// <param name="B">Перечень устанавливаемых значений</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         [DST]
-        public static void SetSubArrays<T>([NotNull] this T[] A, [NotNull] params T[][] B)
+        public static void SetSubArrays<T>(this T[] A, params T[][] B)
         {
             var index = 0;
             foreach (var array in B)
@@ -1963,14 +1957,14 @@ namespace System
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Истина, если массив <paramref name="array"/> содержит среди своих элементов <paramref name="item"/></returns>
         [DST]
-        public static bool IsContains<T>([NotNull] this T[] array, T item) => Array.IndexOf(array, item) != -1;
+        public static bool IsContains<T>(this T[] array, T item) => Array.IndexOf(array, item) != -1;
 
         /// <summary>Создать одномерный массив, содержащий все элементы указанных массивов</summary>
         /// <param name="array">Массив массивов элементов</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         /// <returns>Одномерный массив, содержащий все элементы массивов из <paramref name="array"/></returns>
-        [DST, NotNull]
-        public static T[] Linearize<T>([NotNull] this T[][] array)
+        [DST]
+        public static T[] Linearize<T>(this T[][] array)
         {
             var result_length = array.Sum(a => a.Length);
             if (result_length == 0) return Array.Empty<T>();
@@ -1989,7 +1983,7 @@ namespace System
         /// <param name="action">Выполняемое действие, получающее в качестве параметра элемент массива</param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         [DST]
-        public static void Foreach<T>([NotNull] this T[,] array, [NotNull] Action<T> action)
+        public static void Foreach<T>(this T[,] array, Action<T> action)
         {
             var I = array.GetLength(0);
             var J = array.GetLength(1);
@@ -2006,7 +2000,7 @@ namespace System
         /// </param>
         /// <typeparam name="T">Тип элементов массива</typeparam>
         [DST]
-        public static void Foreach<T>([NotNull] this T[,] array, [NotNull] Action<int, int, T> action)
+        public static void Foreach<T>(this T[,] array, Action<int, int, T> action)
         {
             var I = array.GetLength(0);
             var J = array.GetLength(1);
@@ -2024,10 +2018,10 @@ namespace System
         /// <typeparam name="TItem">Тип элементов массива</typeparam>
         /// <typeparam name="TValue">Тип результата элементов перечисления</typeparam>
         /// <returns>Перечисление значений, сформированное на основе элементов двумерного массива</returns>
-        [DST, NotNull]
+        [DST]
         public static IEnumerable<TValue> Select<TItem, TValue>(
-            [NotNull] this TItem[,] array,
-            [NotNull] Func<TItem, TValue> selector)
+            this TItem[,] array,
+            Func<TItem, TValue> selector)
         {
             var N = array.GetLength(0);
             var M = array.GetLength(1);
@@ -2046,10 +2040,10 @@ namespace System
         /// <typeparam name="TItem">Тип элементов массива</typeparam>
         /// <typeparam name="TValue">Тип результата элементов перечисления</typeparam>
         /// <returns>Перечисление значений, сформированное на основе элементов двумерного массива</returns>
-        [DST, NotNull]
+        [DST]
         public static IEnumerable<TValue> Select<TItem, TValue>(
-            [NotNull] this TItem[,] array,
-            [NotNull] Func<int, int, TItem, TValue> selector)
+            this TItem[,] array,
+            Func<int, int, TItem, TValue> selector)
         {
             var I = array.GetLength(0);
             var J = array.GetLength(1);
@@ -2065,8 +2059,8 @@ namespace System
         /// <returns>
         /// Строковое представление двумерного массива в котором строки массива разделены переносом строки
         /// </returns>
-        [DST, CanBeNull]
-        public static string ToStringView<T>([CanBeNull] this T[,] array, [CanBeNull] string Splitter = "\t")
+        [DST]
+        public static string? ToStringView<T>(this T[,]? array, string? Splitter = "\t")
         {
             if (array is null) return null;
             var N = array.GetLength(0);
@@ -2098,11 +2092,11 @@ namespace System
         /// <returns>
         /// Строковое представление двумерного массива в котором строки массива разделены переносом строки
         /// </returns>
-        [DST, CanBeNull]
-        public static string ToStringView<T, TValue>(
-            [CanBeNull] this T[,] array,
-            [NotNull] Func<T, TValue> Selector,
-            [CanBeNull] string Splitter = "\t")
+        [DST]
+        public static string? ToStringView<T, TValue>(
+            this T[,]? array,
+            Func<T, TValue> Selector,
+            string? Splitter = "\t")
         {
             if (array is null) return null;
             var N = array.GetLength(0);
@@ -2136,20 +2130,20 @@ namespace System
         /// <returns>
         /// Строковое представление двумерного массива в котором строки массива разделены переносом строки
         /// </returns>
-        [DST, CanBeNull]
-        public static string ToStringFormatView<T>
+        [DST]
+        public static string? ToStringFormatView<T>
         (
-            [CanBeNull] this T[,] array,
-            [NotNull] string Format = "r",
-            [CanBeNull] string Splitter = "\t",
-            [CanBeNull] IFormatProvider provider = null
+            this T[,]? array,
+            string Format = "r",
+            string? Splitter = "\t",
+            IFormatProvider? provider = null
         ) where T : IFormattable
         {
             if (array is null) return null;
             var N = array.GetLength(0);
             var M = array.GetLength(1);
             if (N == 0 || M == 0) return string.Empty;
-            if (provider is null) provider = CultureInfo.InvariantCulture;
+            provider ??= CultureInfo.InvariantCulture;
             var result = new StringBuilder();
             var line = new StringBuilder();
 
@@ -2180,21 +2174,21 @@ namespace System
         /// <returns>
         /// Строковое представление двумерного массива в котором строки массива разделены переносом строки
         /// </returns>
-        [DST, CanBeNull]
-        public static string ToStringFormatView<T, TValue>
+        [DST]
+        public static string? ToStringFormatView<T, TValue>
         (
-            [CanBeNull] this T[,] array,
-            [NotNull] Func<T, TValue> Selector,
-            [NotNull] string Format = "r",
-            [CanBeNull] string Splitter = "\t",
-            [CanBeNull] IFormatProvider provider = null
+            this T[,]? array,
+            Func<T, TValue> Selector,
+            string Format = "r",
+            string? Splitter = "\t",
+            IFormatProvider? provider = null
         ) where TValue : IFormattable
         {
             if (array is null) return null;
             var N = array.GetLength(0);
             var M = array.GetLength(1);
             if (N == 0 || M == 0) return string.Empty;
-            if (provider is null) provider = CultureInfo.InvariantCulture;
+            provider ??= CultureInfo.InvariantCulture;
             var result = new StringBuilder();
             var line = new StringBuilder();
 

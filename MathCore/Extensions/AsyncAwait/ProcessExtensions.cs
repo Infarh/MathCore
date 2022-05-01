@@ -18,18 +18,29 @@ namespace System.Threading.Tasks
         //    return result.Task.GetAwaiter();
         //}
 
-        public static Task<Process> WaitForExitAsync(this Process process)
+        public static async Task<Process> WaitAsync(this Process process, CancellationToken Cancel = default)
         {
-            if (process.HasExited) return Task.FromResult(process);
+            if (process.HasExited) return process;
+            Cancel.ThrowIfCancellationRequested();
 
-            var result = new TaskCompletionSource<Process>();
+            var result = new TaskCompletionSource<Process>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            using var registraction_cancellation = Cancel.IsCancellationRequested
+                ? Cancel.Register(o => ((TaskCompletionSource<Process>)o).TrySetCanceled(), result)
+                : (IDisposable?)null;
+
             process.EnableRaisingEvents = true;
-            process.Exited += (_, _) => result.TrySetResult(process);
-            
-            if (process.HasExited)
-                result.TrySetResult(process);
-            
-            return result.Task;
+            void Handler(object _, EventArgs __) => result.TrySetResult(process);
+            process.Exited += Handler;
+
+            try
+            {
+                return await result.Task.ConfigureAwait(false);
+            }
+            finally
+            {
+                process.Exited -= Handler;
+            }
         }
 
         public static Task<Process> StartAsync(this Process process)
