@@ -257,6 +257,7 @@ namespace System
         /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
 
         [return: Diagnostics.CodeAnalysis.NotNull]
+        [return: NotNullIfNotNull("obj")]
         public static T NotNull<T>(this T? obj, string? Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
 
         /// <summary>Проверка параметра на <see langword="null"/></summary>
@@ -268,6 +269,7 @@ namespace System
         /// <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
 
         [return: Diagnostics.CodeAnalysis.NotNull]
+        [return: NotNullIfNotNull("obj")]
         public static T ParamNotNull<T>(this T? obj, string ParameterName, string? Message = null) where T : class =>
             obj ?? throw new ArgumentException(Message ?? $"Отсутствует ссылка для параметра {ParameterName}", ParameterName);
 
@@ -285,6 +287,7 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
+        [return: NotNullIfNotNull("obj")]
         public static T? InitializeObject<T>(this T? obj, Action<T?>? Initializer) where T : class
         {
             if (obj != null)
