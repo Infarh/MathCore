@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.69.1</Version>
+    <Version>0.0.70</Version>
     <PackageReleaseNotes>
-      Полином Бесселя, рациональная функция
+      Изменение WaitForExitAsync - возвращает Process вместо int:StatusCode
     </PackageReleaseNotes>
   </PropertyGroup>
 
