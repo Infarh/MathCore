@@ -18,14 +18,33 @@ namespace System.Threading.Tasks
         //    return result.Task.GetAwaiter();
         //}
 
-        public static Task<int> WaitForExitAsync(this Process process)
+        public static Task<Process> WaitForExitAsync(this Process process)
         {
-            if (process.HasExited) return Task.FromResult(process.ExitCode);
-            var result = new TaskCompletionSource<int>();
+            if (process.HasExited) return Task.FromResult(process);
+
+            var result = new TaskCompletionSource<Process>();
             process.EnableRaisingEvents = true;
-            process.Exited += (s, e) => result.TrySetResult(process.ExitCode);
+            process.Exited += (_, _) => result.TrySetResult(process);
+            
             if (process.HasExited)
-                result.TrySetResult(process.ExitCode);
+                result.TrySetResult(process);
+            
+            return result.Task;
+        }
+
+        public static Task<Process> StartAsync(this Process process)
+        {
+            if (process.HasExited) return Task.FromResult(process);
+            if (!process.Start()) return Task.FromResult(process);
+
+            var result = new TaskCompletionSource<Process>();
+            process.EnableRaisingEvents = true;
+            process.Exited += (_, _) => result.TrySetResult(process);
+
+
+            if (process.HasExited)
+                result.TrySetResult(process);
+            
             return result.Task;
         }
     }
