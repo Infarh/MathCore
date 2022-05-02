@@ -5,6 +5,10 @@ using MathCore.Threading;
 
 const string path = @"c:\123\qwe.png";
 
+var current_process = Process.GetCurrentProcess();
+var parent = current_process.GetParentProcess()!.GetParentProcess()!;
+var childs = parent.GetChildProcesses().ToArray();
+
 var file = new FileInfo(path);
 
 var execute_process = file.Execute();

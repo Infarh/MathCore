@@ -1,6 +1,8 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
@@ -119,4 +121,86 @@ public static class ProcessExtensions
             process.Exited -= Handler;
         }
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PROCESSENTRY32
+    {
+        public uint dwSize;
+        public uint cntUsage;
+        public uint th32ProcessID;
+        public IntPtr th32DefaultHeapID;
+        public uint th32ModuleID;
+        public uint cntThreads;
+        public uint th32ParentProcessID;
+        public int pcPriClassBase;
+        public uint dwFlags;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+        public string szExeFile;
+    };
+
+    private const uint TH32CS_SNAPPROCESS = 2;
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr CreateToolhelp32Snapshot(uint dwFlags, uint th32ProcessID);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool Process32First(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
+
+    [DllImport("kernel32.dll")]
+    private static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
+
+    public static Process? GetParentProcess(this Process process)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            throw new PlatformNotSupportedException("Поддерживается только на платформе Windows на WinAPI");
+
+        var process_pid = process.Id;
+
+        var handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+
+        if (handle == IntPtr.Zero)
+            return null;
+
+        var proc_info = new PROCESSENTRY32 { dwSize = (uint)Marshal.SizeOf(typeof(PROCESSENTRY32)) };
+
+        if (!Process32First(handle, ref proc_info))
+            return null;
+
+        var parent_pid = 0;
+        do
+        {
+            if (process_pid == proc_info.th32ProcessID)
+                parent_pid = (int)proc_info.th32ParentProcessID;
+        }
+        while (parent_pid == 0 && Process32Next(handle, ref proc_info));
+
+        return parent_pid > 0 ? Process.GetProcessById(parent_pid) : null;
+    }
+
+    public static IEnumerable<Process> GetChildProcesses(this Process process)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            throw new PlatformNotSupportedException("Поддерживается только на платформе Windows на WinAPI");
+
+        var pid = process.Id;
+
+        var handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+
+        if (handle == IntPtr.Zero)
+            yield break;
+
+        var proc_info = new PROCESSENTRY32 { dwSize = (uint)Marshal.SizeOf(typeof(PROCESSENTRY32)) };
+
+        if (!Process32First(handle, ref proc_info))
+            yield break;
+
+        do
+        {
+            var child_parent_pid = (int)proc_info.th32ParentProcessID;
+            if (child_parent_pid == pid)
+                yield return Process.GetProcessById((int)proc_info.th32ProcessID);
+        }
+        while (Process32Next(handle, ref proc_info));
+    }
 }
+
