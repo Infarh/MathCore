@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.70.1</Version>
+    <Version>0.0.71</Version>
     <PackageReleaseNotes>
-      Изменение WaitForExitAsync - возвращает Process вместо int:StatusCode
+      В класс Complex добавлен метод Conjugate, возвращающий пару комплексно сопряжённых чисел
     </PackageReleaseNotes>
   </PropertyGroup>
 
