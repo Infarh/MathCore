@@ -227,6 +227,10 @@ namespace MathCore
         public static Complex ImValue(double im) => new(0, im);
 
         /// <summary>Комплексно-сопряжённые значения</summary>
+        /// <returns>Пара комплексно-сопряжённых чисел</returns>
+        public (Complex Z, Complex Zconj) Conjugate() => (this, ComplexConjugate);
+
+        /// <summary>Комплексно-сопряжённые значения</summary>
         /// <param name="Re">Действительная часть</param>
         /// <param name="Im">Мнимая часть</param>
         /// <returns>Пара комплексно-сопряжённых чисел</returns>
