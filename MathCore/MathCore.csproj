@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.71</Version>
+    <Version>0.0.71.1</Version>
     <PackageReleaseNotes>
       В класс Complex добавлен метод Conjugate, возвращающий пару комплексно сопряжённых чисел
+      Исправление и оптимизация работы методов-расширения для Process - WaitAsync и StartAsync
     </PackageReleaseNotes>
   </PropertyGroup>
 
