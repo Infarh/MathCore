@@ -1,7 +1,13 @@
 
 using System.Diagnostics;
 
+using MathCore.IO;
 using MathCore.Threading;
+
+var test_file = new FileInfo("test-file.txt");
+await using var writer = test_file.CreateText();
+
+var process11 = test_file.GetLockingProcesses();
 
 const string path = @"c:\123\qwe.png";
 
