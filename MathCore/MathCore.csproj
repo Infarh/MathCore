@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.71.1</Version>
+    <Version>0.0.71.2</Version>
     <PackageReleaseNotes>
       В класс Complex добавлен метод Conjugate, возвращающий пару комплексно сопряжённых чисел
       Исправление и оптимизация работы методов-расширения для Process - WaitAsync и StartAsync
+      Добавлены методы-расширения к классу Process, позволяющие находить родительский (GetParentProcess) и дочерние процессы (GetChildProcesses)
     </PackageReleaseNotes>
   </PropertyGroup>
 
