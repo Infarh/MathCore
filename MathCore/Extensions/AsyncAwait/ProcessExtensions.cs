@@ -149,6 +149,7 @@ public static class ProcessExtensions
     [DllImport("kernel32.dll")]
     private static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
 
+    [Copyright("CIsSharp", url = "https://spradip.wordpress.com/2008/10/24/getting-parent-process-id-from-child-without-passing-any-arguments-2/")]
     public static Process? GetParentProcess(this Process process)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
