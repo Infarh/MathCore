@@ -685,6 +685,8 @@ namespace MathCore
         /// <returns>Кортеж из двух вещественных чисел - действительной и мнимой части</returns>
         public static implicit operator (double Re, double Im)(Complex Z) => (Z._Re, Z._Im);
 
+        public static implicit operator (Complex Z, Complex Zconj)(Complex Z) => (Z, Z.ComplexConjugate);
+
         #endregion
 
         /* -------------------------------------------------------------------------------------------- */
