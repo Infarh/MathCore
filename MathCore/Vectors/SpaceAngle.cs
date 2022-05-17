@@ -66,7 +66,7 @@ namespace MathCore.Vectors
         /// <param name="r">Вектор направления</param>
         /// <returns>Угол вектора направления</returns>
         [DST]
-        public static SpaceAngle Direction(in Vector3D r) => r.Angle;
+        public static SpaceAngle Direction(Vector3D r) => r.Angle;
 
         /// <summary>Создать пространственный угол по заданным координатам вектора направления</summary>
         /// <returns>Угол вектора направления</returns>
@@ -201,14 +201,14 @@ namespace MathCore.Vectors
         /// <summary>Копирование нового экземпляра <see cref="SpaceAngle"/> из прототипа</summary>
         /// <param name="Angle">Исходное значение угла</param>
         [DST]
-        public SpaceAngle(in SpaceAngle Angle) : this(Angle._Theta, Angle._Phi, Angle._AngleType) { }
+        public SpaceAngle(SpaceAngle Angle) : this(Angle._Theta, Angle._Phi, Angle._AngleType) { }
 
         /// <summary>Инициализация нового экземпляра <see cref="SpaceAngle"/></summary>
         /// <param name="Angle">Исходное значение угла</param>
         /// <param name="AngleType">Тип желаемого значения угла</param>
         /// <exception cref="NotSupportedException">Если AngleType != Deg || Rad - Неизвестный тип угла</exception>
         [DST]
-        public SpaceAngle(in SpaceAngle Angle, in AngleType AngleType)
+        public SpaceAngle(SpaceAngle Angle, in AngleType AngleType)
             : this(Angle._Theta, Angle._Phi, AngleType)
         {
             switch (_AngleType)
@@ -250,7 +250,7 @@ namespace MathCore.Vectors
         /// <summary>Повернуть угол в сферической системе координат</summary>
         /// <param name="angle">Пространственный угол поворота локальной системы координат</param>
         /// <returns>Угол в повёрнутой локальной системе координат</returns>
-        public SpaceAngle RotatePhiTheta(in SpaceAngle angle)
+        public SpaceAngle RotatePhiTheta(SpaceAngle angle)
         {
             var ph0 = angle.PhiRad;
             var th0 = angle.ThetaRad;
@@ -304,7 +304,7 @@ namespace MathCore.Vectors
         /// <param name="angle"></param>
         /// <returns></returns>
         [NotNull]
-        public static Func<SpaceAngle, SpaceAngle> GetRotatorPhiTheta(in SpaceAngle angle)
+        public static Func<SpaceAngle, SpaceAngle> GetRotatorPhiTheta(SpaceAngle angle)
         {
             var ph0 = angle.PhiRad;
             var th0 = angle.ThetaRad;
@@ -499,7 +499,7 @@ namespace MathCore.Vectors
 
         /// <inheritdoc />
         [DST]
-        public override bool Equals(object obj) => obj != null && obj is SpaceAngle a && Equals(a);
+        public override bool Equals(object obj) => obj is SpaceAngle a && Equals(a);
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -507,13 +507,13 @@ namespace MathCore.Vectors
 
         /* -------------------------------------------------------------------------------------------- */
 
-        public static SpaceAngle operator +(in SpaceAngle x, SpaceAngle y)
+        public static SpaceAngle operator +(SpaceAngle x, SpaceAngle y)
         {
             var (y_th, y_ph) = y.In(x._AngleType);
             return new SpaceAngle(x._Theta + y_th, x._Phi + y_ph, x._AngleType);
         }
 
-        public static SpaceAngle operator -(in SpaceAngle x, in SpaceAngle y)
+        public static SpaceAngle operator -(SpaceAngle x, SpaceAngle y)
         {
             var (y_th, y_ph) = y.In(x._AngleType);
             return new SpaceAngle(x._Theta - y_th, x._Phi - y_ph, x._AngleType);
@@ -522,31 +522,31 @@ namespace MathCore.Vectors
         /// <summary>Оператор отрицания значения пространственного угла</summary>
         /// <param name="a">Исходный пространственный угол</param>
         /// <returns>Пространственный угол у которого значения угла места и азимута имеют обратный знак по отношению к исходному значению</returns>
-        public static SpaceAngle operator -(in SpaceAngle a) => new(-a._Theta, -a._Phi, a._AngleType);
+        public static SpaceAngle operator -(SpaceAngle a) => new(-a._Theta, -a._Phi, a._AngleType);
 
-        public static SpaceAngle operator /(in SpaceAngle a, double x) => new(a.Theta / x, a.Phi / x, a.AngleType);
+        public static SpaceAngle operator /(SpaceAngle a, double x) => new(a.Theta / x, a.Phi / x, a.AngleType);
 
-        public static bool operator ==(in SpaceAngle A, in SpaceAngle B) => A.Equals(B);
+        public static bool operator ==(SpaceAngle A, SpaceAngle B) => A.Equals(B);
 
-        public static bool operator !=(in SpaceAngle A, in SpaceAngle B) => !(A == B);
+        public static bool operator !=(SpaceAngle A, SpaceAngle B) => !(A == B);
 
-        public static implicit operator Vector3D(in SpaceAngle a) => new(a);
+        public static implicit operator Vector3D(SpaceAngle a) => new(a);
 
-        public static explicit operator SpaceAngle(in Vector3D v) => v.Angle;
+        public static explicit operator SpaceAngle(Vector3D v) => v.Angle;
 
         /// <summary>Оператор поворота функции на пространственный угол</summary>
         /// <param name="f">Вещественная пространственная функция</param>
         /// <param name="a">Пространственный угол поворота</param>
         /// <returns>Вещественная функция, аргумент которой повёрнут на указанный пространственный угол</returns>
         [NotNull]
-        public static Func<SpaceAngle, double> operator ^(Func<SpaceAngle, double> f, in SpaceAngle a) => a.RotatePhiTheta(f);
+        public static Func<SpaceAngle, double> operator ^(Func<SpaceAngle, double> f, SpaceAngle a) => a.RotatePhiTheta(f);
 
         /// <summary>Оператор поворота функции на пространственный угол</summary>
         /// <param name="f">Комплексная пространственная функция</param>
         /// <param name="a">Пространственный угол поворота</param>
         /// <returns>Комплексная функция, аргумент которой повёрнут на указанный пространственный угол</returns>
         [NotNull]
-        public static Func<SpaceAngle, Complex> operator ^(Func<SpaceAngle, Complex> f, in SpaceAngle a) => a.RotatePhiTheta(f);
+        public static Func<SpaceAngle, Complex> operator ^(Func<SpaceAngle, Complex> f, SpaceAngle a) => a.RotatePhiTheta(f);
 
         /* -------------------------------------------------------------------------------------------- */
 
