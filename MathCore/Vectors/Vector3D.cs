@@ -187,12 +187,12 @@ namespace MathCore.Vectors
 
         /// <summary>Единичный вектор, заданный двумя углами в сферической системе координат</summary>
         /// <param name="Angle">Пространственный угол сферической системы координат</param>
-        public Vector3D(in SpaceAngle Angle) : this(1, Angle) { }
+        public Vector3D(SpaceAngle Angle) : this(1, Angle) { }
 
         /// <summary>Вектор, заданный двумя углами и радиусом в сферической системе координат</summary>
         /// <param name="R">Радиус вектора</param>
         /// <param name="Angle">Пространственный угол сферической системы координат</param>
-        public Vector3D(double R, in SpaceAngle Angle)
+        public Vector3D(double R, SpaceAngle Angle)
         {
             double theta;
             double phi;

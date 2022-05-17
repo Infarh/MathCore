@@ -7,12 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.71.5</Version>
+    <Version>0.0.72</Version>
     <PackageReleaseNotes>
-      В класс Complex добавлен метод Conjugate, возвращающий пару комплексно сопряжённых чисел
-      Исправление и оптимизация работы методов-расширения для Process - WaitAsync и StartAsync
-      Добавлены методы-расширения к классу Process, позволяющие находить родительский (GetParentProcess) и дочерние процессы (GetChildProcesses)
-      Добавлен метод-расширения для FileSystemInfo.GetLockingProcesses, возвращающий список блокирующих файл процессов
+      В операторах коплексных чисел и векторов убран модификатор in для параметров
     </PackageReleaseNotes>
   </PropertyGroup>
 
