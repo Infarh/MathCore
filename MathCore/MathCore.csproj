@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.72</Version>
     <PackageReleaseNotes>
-      В операторах коплексных чисел и векторов убран модификатор in для параметров
+      В операторах комплексных чисел и векторов убран модификатор in для параметров
     </PackageReleaseNotes>
   </PropertyGroup>
 
