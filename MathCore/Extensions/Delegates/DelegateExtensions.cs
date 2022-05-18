@@ -36,7 +36,7 @@ public static class DelegateExtensions
     public static Task InvokeAsync(this Action action) => Task.Factory.FromAsync(action.BeginInvoke, action.EndInvoke, null);
     public static Task InvokeAsync<T>(this Action<T> action, T parameter) => Task.Factory.FromAsync(action.BeginInvoke, action.EndInvoke, parameter, null);
 
-    public static Action TryCatch(this Action action, Action OnException = null) =>
+    public static Action TryCatch(this Action action, Action? OnException = null) =>
         () =>
         {
             try
@@ -48,7 +48,7 @@ public static class DelegateExtensions
             }
         };
 
-    public static Action<T> TryCatch<T>(this Action<T> action, Action<T> OnException = null) =>
+    public static Action<T> TryCatch<T>(this Action<T> action, Action<T>? OnException = null) =>
         t =>
         {
             try
@@ -60,7 +60,7 @@ public static class DelegateExtensions
             }
         };
 
-    public static Action TryCatch<TException>(this Action action, Action OnException = null)
+    public static Action TryCatch<TException>(this Action action, Action? OnException = null)
         where TException : Exception =>
         () =>
         {
@@ -73,7 +73,7 @@ public static class DelegateExtensions
             }
         };
 
-    public static Action<T> TryCatch<T, TException>(this Action<T> action, Action<T> OnException = null)
+    public static Action<T> TryCatch<T, TException>(this Action<T> action, Action<T>? OnException = null)
         where TException : Exception =>
         t =>
         {
