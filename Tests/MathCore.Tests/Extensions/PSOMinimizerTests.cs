@@ -62,7 +62,7 @@ namespace MathCore.Tests.Extensions
                 f.Minimize(x0 - Dx / 2, x0 + Dx / 2, 100, out var x, out var y);
 
                 Assert.That.Value(x).IsEqual(x0, 0.5, "x != x0");
-                Assert.That.Value(y).IsEqual(y0, 0.2, "y != y0");
+                Assert.That.Value(y).IsEqual(y0, 0.5, "y != y0");
             }
         }
 
