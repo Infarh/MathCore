@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.72</Version>
+    <Version>0.0.73</Version>
     <PackageReleaseNotes>
-      В операторах коплексных чисел и векторов убран модификатор in для параметров
+      В операторах комплексных чисел добавлены операции с котрежами
+      Добавлены новые реализации метода GetCoefficientsInvertedReIm для полиномиальных коэффициентов
     </PackageReleaseNotes>
   </PropertyGroup>
 

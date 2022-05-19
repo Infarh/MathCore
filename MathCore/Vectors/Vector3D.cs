@@ -13,7 +13,11 @@ namespace MathCore.Vectors
 {
     /// <summary>Трёхмерный вектор</summary>
     [TypeConverter(typeof(Vector3DConverter))]
-    public readonly partial struct Vector3D : IEquatable<Vector3D>, ICloneable<Vector3D>, IFormattable
+    public readonly partial struct Vector3D : 
+        ICloneable<Vector3D>, 
+        IFormattable, 
+        IEquatable<Vector3D>, 
+        IEquatable<(double X, double Y, double Z)>
     {
 
         public static readonly Vector3D Zero = new();
@@ -358,6 +362,15 @@ namespace MathCore.Vectors
             return Abs(other._X - _X) < eps
                    && Abs(other._Y - _Y) < eps
                    && Abs(other._Z - _Z) < eps;
+        }
+
+        /// <inheritdoc />
+        public bool Equals((double X, double Y, double Z) other)
+        {
+            var eps = ComparisonsAccuracy;
+            return Abs(other.X - _X) < eps 
+                && Abs(other.Y - _Y) < eps
+                && Abs(other.Z - _Z) < eps;
         }
 
         #endregion

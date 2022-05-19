@@ -18,6 +18,11 @@ namespace MathCore.Vectors
         /// <returns>Число, равное скалярному произведению векторов</returns>
         public double Product_Scalar(Vector3D Vector) => _X * Vector._X + Y * Vector._Y + _Z * Vector._Z;
 
+        /// <summary>Скалярное произведение векторов</summary>
+        /// <param name="Vector">Вектор, на который умножается текущий вектор</param>
+        /// <returns>Число, равное скалярному произведению векторов</returns>
+        public double Product_Scalar((double X, double Y, double Z) Vector) => _X * Vector.X + Y * Vector.Y + _Z * Vector.Z;
+
         /// <summary>Смешанное произведение трёх векторов</summary>
         /// <param name="A">Первый вектор произведения</param>
         /// <param name="B">Второй вектор произведения</param>
@@ -52,11 +57,65 @@ namespace MathCore.Vectors
                 );
         }
 
+        /// <summary>Векторное произведение векторов</summary>
+        /// <param name="Vector">Вектор, на который умножается исходный вектор</param>
+        /// <returns>Вектор, равный векторному произведению векторов</returns>
+        public Vector3D Product_Vector((double X, double Y, double Z) Vector)
+        {
+            /*
+             * A = {Xa, Ya, Za}
+             * B = {Xb, Yb, Zb}
+             *         | i  j  k  |   {Ya * Zb - Za * Yb}   {Xc}
+             * A * B = | Xa Ya Za | = {Za * Xb - Xa * Zb} = {Yc} = C
+             *         | Xb Yb Zb |   {Xa * Yb - Ya * Xb}   {Zc}
+             * C = {Xc, Yc, Zc}
+             */
+
+            var A = this;
+            var B = Vector;
+            return new Vector3D
+            (
+                A._Y * B.Z - A._Z * B.Y, // X
+                A._Z * B.X - A._X * B.Z, // Y
+                A._X * B.Y - A._Y * B.X  // Z
+            );
+        }
+
+        /// <summary>Векторное произведение векторов</summary>
+        /// <param name="Vector">Вектор, на который умножается исходный вектор</param>
+        /// <returns>Вектор, равный векторному произведению векторов</returns>
+        public Vector3D Product_VectorInv((double X, double Y, double Z) Vector)
+        {
+            /*
+             * A = {Xa, Ya, Za}
+             * B = {Xb, Yb, Zb}
+             *         | i  j  k  |   {Ya * Zb - Za * Yb}   {Xc}
+             * A * B = | Xa Ya Za | = {Za * Xb - Xa * Zb} = {Yc} = C
+             *         | Xb Yb Zb |   {Xa * Yb - Ya * Xb}   {Zc}
+             * C = {Xc, Yc, Zc}
+             */
+
+            var A = Vector;
+            var B = this;
+            return new Vector3D
+                (
+                    A.Y * B._Z - A.Z * B._Y, // X
+                    A.Z * B._X - A.X * B._Z, // Y
+                    A.X * B._Y - A.Y * B._X  // Z
+                );
+        }
+
         /// <summary>Покомпонентное умножение на вектор</summary>
         /// <param name="Vector">Векторный сомножитель</param>
         /// <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
         public Vector3D Product_Component(Vector3D Vector)
             => new(_X * Vector._X, _Y * Vector._Y, _Z * Vector._Z);
+
+        /// <summary>Покомпонентное умножение на вектор</summary>
+        /// <param name="Vector">Векторный сомножитель</param>
+        /// <returns>Вектор, компоненты которого являются произведениями компоненты векторов</returns>
+        public Vector3D Product_Component((double X, double Y, double Z) Vector)
+            => new(_X * Vector.X, _Y * Vector.Y, _Z * Vector.Z);
 
         /// <summary>Угол между векторами</summary>
         /// <param name="Vector">Вектор, к которому вычисляется угол</param>
@@ -72,6 +131,21 @@ namespace MathCore.Vectors
         /// <param name="Vector">Вектор, НА который производится проекции</param>
         /// <returns>Проекция на вектор</returns>
         public double GetProjectionTo(Vector3D Vector) => Product_Scalar(Vector) / Vector.R;
+
+        /// <summary>Проекция на вектор</summary>
+        /// <param name="Vector">Вектор, НА который производится проекции</param>
+        /// <returns>Проекция на вектор</returns>
+        public double GetProjectionTo((double X, double Y, double Z) Vector) => Product_Scalar(Vector) / Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z);
+
+        /// <summary>Проекция на вектор</summary>
+        /// <param name="Vector">Вектор, НА который производится проекции</param>
+        /// <returns>Проекция на вектор</returns>
+        public double GetProjectionInverseTo(Vector3D Vector) => Product_Scalar(Vector) / R;
+
+        /// <summary>Проекция на вектор</summary>
+        /// <param name="Vector">Вектор, НА который производится проекции</param>
+        /// <returns>Проекция на вектор</returns>
+        public double GetProjectionInverseTo((double X, double Y, double Z) Vector) => Product_Scalar(Vector) / R;
 
         /// <summary>Проекцию текущего вектора на вектор</summary>
         /// <returns>Функция, вычисляющая проекцию текущего вектора на вектор</returns>

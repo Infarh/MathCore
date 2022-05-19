@@ -1122,6 +1122,7 @@ public partial class Polynom
             return a;
         }
 
+        
         /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
         /// <param name="Root">Корни полинома</param>
         /// <returns>Коэффициенты при степенях</returns>
@@ -1286,6 +1287,76 @@ public partial class Polynom
             }
 
             return a;
+        }
+
+        public static double[] GetCoefficientsInvertedRe(params Complex[] Root)
+        {
+            switch (Root)
+            {
+                case null: throw new ArgumentNullException(nameof(Root));
+                case { Length: 0 }: throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
+                case { Length: 1 }: return new[] { 1, -Root[0].Re };
+            }
+
+            var N = Root.Length + 1;
+            var re = new double[N];
+            var im = new double[N];
+
+            (re[N - 1], im[N - 1]) = -Root[0];
+            re[N - 1 - 1] = 1;
+
+            for (var k = 2; k < N; k++)
+            {
+                re[N - 1 - k] = re[N - 1 - k + 1];
+                im[N - 1 - k] = im[N - 1 - k + 1];
+
+                for (var i = k - 1; i > 0; i--)
+                {
+                    var (t_re, t_im) = (re[N - 1 - i], im[N - 1 - i]) * Root[k - 1];
+
+                    re[N - 1 - i] = re[N - 1 - (i - 1)] - t_re;
+                    im[N - 1 - i] = im[N - 1 - (i - 1)] - t_im;
+                }
+
+                (re[N - 1], im[N - 1]) = (-re[N - 1], -im[N - 1]) * Root[k - 1];
+            }
+
+            return re;
+        }
+
+        public static (double[] Re, double[] Im) GetCoefficientsInvertedReIm(params Complex[] Root)
+        {
+            switch (Root)
+            {
+                case null: throw new ArgumentNullException(nameof(Root));
+                case { Length: 0 }: throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
+                case { Length: 1 }: return (new[] { 1, -Root[0].Re }, new[] { 1, -Root[0].Im });
+            }
+
+            var N = Root.Length + 1;
+            var re = new double[N];
+            var im = new double[N];
+
+            (re[N - 1], im[N - 1]) = -Root[0];
+            re[N - 1 - 1] = 1;
+
+            for (var k = 2; k < N; k++)
+            {
+                re[N - 1 - k] = re[N - 1 - k + 1];
+                im[N - 1 - k] = im[N - 1 - k + 1];
+
+                for (var i = k - 1; i > 0; i--)
+                {
+                    var (t_re, t_im) = (re[N - 1 - i], im[N - 1 - i]) * Root[k - 1];
+
+                    re[N - 1 - i] = re[N - 1 - (i - 1)] - t_re;
+                    im[N - 1 - i] = im[N - 1 - (i - 1)] - t_im;
+                }
+
+                (re[N - 1], im[N - 1]) = (-re[N - 1], -im[N - 1]) * Root[k - 1];
+            }
+
+            return (re, im);
         }
 
         #region Интегрирование/дифференцирование

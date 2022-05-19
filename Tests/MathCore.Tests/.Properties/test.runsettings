@@ -2,8 +2,8 @@
   <!-- MSTest adapter -->
   <MSTest>
     <Parallelize>
-      <Workers>4</Workers>
-      <Scope>ClassLevel</Scope>
+      <Workers>8</Workers>
+      <Scope>MethodLevel</Scope>
     </Parallelize>
   </MSTest>
 </RunSettings>

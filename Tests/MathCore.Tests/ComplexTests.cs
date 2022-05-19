@@ -16,7 +16,7 @@ namespace MathCore.Tests
         // ReSharper disable once InconsistentNaming
         private const double pi = Math.PI;
 
-        private static Random __RndGenerator;
+        private static Random __RndGenerator = new();
 
         private static double Random => __RndGenerator.NextDouble() * 20 - 10;
 
@@ -60,12 +60,12 @@ namespace MathCore.Tests
         //}
 
         //Use TestInitialize to run code before running each test
-        [TestInitialize]
-        public void MyTestInitialize() => __RndGenerator = new Random();
+        //[TestInitialize]
+        //public void MyTestInitialize() => __RndGenerator = new Random();
 
         //Use TestCleanup to run code after each test has run
-        [TestCleanup]
-        public void MyTestCleanup() => __RndGenerator = null;
+        //[TestCleanup]
+        //public void MyTestCleanup() => __RndGenerator = null;
 
         #endregion
 

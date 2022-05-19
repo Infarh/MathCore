@@ -107,92 +107,107 @@ namespace MathCore.Vectors
 
         /// <summary>Оператор проверки равенства двух векторов</summary>
         /// <returns>Истина, если координаты векторов равны</returns>
-        public static bool operator ==(Vector3D X, Vector3D Y) => X._X.Equals(Y._X) && X._Y.Equals(Y._Y) && X._Z.Equals(Y._Z);
+        public static bool operator ==(Vector3D X, Vector3D Y) => X._X == Y._X && X._Y == Y._Y && X._Z == Y._Z;
+
+        /// <summary>Оператор проверки равенства двух векторов</summary>
+        /// <returns>Истина, если координаты векторов равны</returns>
+        public static bool operator ==((double X, double Y, double Z) X, Vector3D Y) => X.X == Y._X && X.Y == Y._Y && X.Z == Y._Z;
+
+        /// <summary>Оператор проверки равенства двух векторов</summary>
+        /// <returns>Истина, если координаты векторов равны</returns>
+        public static bool operator ==(Vector3D X, (double X, double Y, double Z) Y) => X._X == Y.X && X._Y == Y.Y && X._Z == Y.Z;
 
         /// <summary>Оператор проверки неравенства двух векторов</summary>
         /// <returns>Истина, если координаты векторов неравны</returns>
-        public static bool operator !=(Vector3D X, Vector3D Y) => !X._X.Equals(Y._X) || !X._Y.Equals(Y._Y) || !X._Z.Equals(Y._Z);
+        public static bool operator !=(Vector3D X, Vector3D Y) => !(X == Y);
+
+        /// <summary>Оператор проверки неравенства двух векторов</summary>
+        /// <returns>Истина, если координаты векторов неравны</returns>
+        public static bool operator !=((double X, double Y, double Z) X, Vector3D Y) => !(X == Y);
+
+        /// <summary>Оператор проверки неравенства двух векторов</summary>
+        /// <returns>Истина, если координаты векторов неравны</returns>
+        public static bool operator !=(Vector3D X, (double X, double Y, double Z) Y) => !(X == Y);
 
         /// <summary>Оператор проверки равенства вектора и целого числа (1 байт)</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу (1 байт)</returns>
-        public static bool operator ==(Vector3D X, byte Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, byte Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и целого числа (1 байт со знаком)</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу (1 байт со знаком)</returns>
-        public static bool operator ==(Vector3D X, sbyte Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, sbyte Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и целого числа (2 байта со знаком)</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу (2 байта со знаком)</returns>
-        public static bool operator ==(Vector3D X, short Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, short Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и целого числа (2 байта без знака)</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу (2 байта без знака)</returns>
-        public static bool operator ==(Vector3D X, ushort Y) => X.R.Equals(Y);
-        
+        public static bool operator ==(Vector3D X, ushort Y) => X.R == Y;
+
         /// <summary>Оператор проверки равенства вектора и целого числа</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу</returns>
-        public static bool operator ==(Vector3D X, int Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, int Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и целого числа без знака</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу без знака</returns>
-        public static bool operator ==(Vector3D X, uint Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, uint Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и целого числа (8 байт со знаком)</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу (8 байт со знаком)</returns>
-        public static bool operator ==(Vector3D X, long Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, long Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и целого числа (8 байт без знака)</summary>
         /// <returns>Истина, если длина вектора равна указанному целому числу (8 байт без знака)</returns>
-        public static bool operator ==(Vector3D X, ulong Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, ulong Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и числа одинарной точности</summary>
         /// <returns>Истина, если длина вектора равна указанному числу одинарной точности</returns>
-        public static bool operator ==(Vector3D X, float Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, float Y) => X.R == Y;
 
         /// <summary>Оператор проверки равенства вектора и числа двойной точности</summary>
         /// <returns>Истина, если длина вектора равна указанному числу двойной точности</returns>
-        public static bool operator ==(Vector3D X, double Y) => X.R.Equals(Y);
+        public static bool operator ==(Vector3D X, double Y) => X.R == Y;
 
         /// <summary>Оператор проверки неравенства вектора и целого числа (1 байт без знака)</summary>
         /// <returns>Истина, если длина вектора не равна целому числу (1 байт без знака)</returns>
-        public static bool operator !=(Vector3D X, byte Y) => !X.R.Equals(Y);
+        public static bool operator !=(Vector3D X, byte Y) => !(X == Y);
 
         /// <summary>Оператор проверки неравенства вектора и целого числа (1 байт со знаком)</summary>
         /// <returns>Истина, если длина вектора не равна целому числу (1 байт со знаком)</returns>
-        public static bool operator !=(Vector3D X, sbyte Y) => !X.R.Equals(Y);
+        public static bool operator !=(Vector3D X, sbyte Y) => !(X == Y);
 
         /// <summary>Оператор проверки неравенства вектора и целого числа (2 байта со знаком)</summary>
         /// <returns>Истина, если длина вектора не равна целому числу (2 байта со знаком)</returns>
-        public static bool operator !=(Vector3D X, short Y) => !X.R.Equals(Y);
+        public static bool operator !=(Vector3D X, short Y) => !(X == Y);
 
         /// <summary>Оператор проверки неравенства вектора и целого числа (2 байта без знака)</summary>
         /// <returns>Истина, если длина вектора не равна целому числу (2 байта без знака)</returns>
-        public static bool operator !=(Vector3D X, ushort Y) => !X.R.Equals(Y);
-        
+        public static bool operator !=(Vector3D X, ushort Y) => !(X == Y);
+
         /// <summary>Оператор проверки неравенства вектора и целого числа</summary>
         /// <returns>Истина, если длина вектора не равна целому числу</returns>
-        public static bool operator !=(Vector3D X, int Y) => !X.R.Equals(Y);
-        
+        public static bool operator !=(Vector3D X, int Y) => !(X == Y);
+
         /// <summary>Оператор проверки неравенства вектора и целого числа</summary>
         /// <returns>Истина, если длина вектора не равна целому числу</returns>
-        public static bool operator !=(Vector3D X, uint Y) => !X.R.Equals(Y);
-        
+        public static bool operator !=(Vector3D X, uint Y) => !(X == Y);
+
         /// <summary>Оператор проверки неравенства вектора и целого числа (8 байт со знаком)</summary>
         /// <returns>Истина, если длина вектора не равна целому числу (8 байт со знаком)</returns>
-        public static bool operator !=(Vector3D X, long Y) => !X.R.Equals(Y);
-        
+        public static bool operator !=(Vector3D X, long Y) => !(X == Y);
+
         /// <summary>Оператор проверки неравенства вектора и целого числа (8 байт без знака)</summary>
         /// <returns>Истина, если длина вектора не равна целому числу (8 байт без знака)</returns>
-        public static bool operator !=(Vector3D X, ulong Y) => !X.R.Equals(Y);
-        
+        public static bool operator !=(Vector3D X, ulong Y) => !(X == Y);
+
         /// <summary>Оператор проверки неравенства вектора и вещественного числа одинарной точности</summary>
         /// <returns>Истина, если длина вектора не равна вещественному числу одинарной точности</returns>
-        public static bool operator !=(Vector3D X, float Y) => !X.R.Equals(Y);
-        
+        public static bool operator !=(Vector3D X, float Y) => !(X == Y);
+
         /// <summary>Оператор проверки неравенства вектора и вещественного числа двойной точности</summary>
         /// <returns>Истина, если длина вектора не равна вещественному числу двойной точности</returns>
-        public static bool operator !=(Vector3D X, double Y) => !X.R.Equals(Y);
-
+        public static bool operator !=(Vector3D X, double Y) => !(X == Y);
 
         #region Операции над двумя векторами
 
@@ -200,15 +215,43 @@ namespace MathCore.Vectors
         /// <returns>Вектор, координаты которого равны сумме координат двух исходных векторов</returns>
         public static Vector3D operator +(Vector3D A, Vector3D B) => new(A._X + B._X, A._Y + B._Y, A._Z + B._Z);
 
+        /// <summary>Оператор суммы двух векторов</summary>
+        /// <returns>Вектор, координаты которого равны сумме координат двух исходных векторов</returns>
+        public static Vector3D operator +((double X, double Y, double Z) A, Vector3D B) => new(A.X + B._X, A.Y + B._Y, A.Z + B._Z);
+
+        /// <summary>Оператор суммы двух векторов</summary>
+        /// <returns>Вектор, координаты которого равны сумме координат двух исходных векторов</returns>
+        public static Vector3D operator +(Vector3D A, (double X, double Y, double Z) B) => new(A._X + B.X, A._Y + B.Y, A._Z + B.Z);
+
         /// <summary>Оператор разности двух векторов</summary>
         /// <returns>Вектор, координаты которого равны разности координат двух исходных векторов</returns>
         public static Vector3D operator -(Vector3D A, Vector3D B) => new(A._X - B._X, A._Y - B._Y, A._Z - B._Z);
+
+        /// <summary>Оператор разности двух векторов</summary>
+        /// <returns>Вектор, координаты которого равны разности координат двух исходных векторов</returns>
+        public static Vector3D operator -((double X, double Y, double Z) A, Vector3D B) => new(A.X - B._X, A.Y - B._Y, A.Z - B._Z);
+
+        /// <summary>Оператор разности двух векторов</summary>
+        /// <returns>Вектор, координаты которого равны разности координат двух исходных векторов</returns>
+        public static Vector3D operator -(Vector3D A, (double X, double Y, double Z) B) => new(A._X - B.X, A._Y - B.Y, A._Z - B.Z);
 
         /// <summary>Скалярное произведение векторов</summary>
         /// <param name="A">Первый вектор-множитель</param>
         /// <param name="B">Второй вектор-множитель</param>
         /// <returns>Число - скалярное произведение векторов</returns>
         public static double operator *(Vector3D A, Vector3D B) => A.Product_Scalar(B);
+
+        /// <summary>Скалярное произведение векторов</summary>
+        /// <param name="A">Первый вектор-множитель</param>
+        /// <param name="B">Второй вектор-множитель</param>
+        /// <returns>Число - скалярное произведение векторов</returns>
+        public static double operator *((double X, double Y, double Z) A, Vector3D B) => B.Product_Scalar(A);
+
+        /// <summary>Скалярное произведение векторов</summary>
+        /// <param name="A">Первый вектор-множитель</param>
+        /// <param name="B">Второй вектор-множитель</param>
+        /// <returns>Число - скалярное произведение векторов</returns>
+        public static double operator *(Vector3D A, (double X, double Y, double Z) B) => A.Product_Scalar(B);
 
         //public static Vector3D operator /(Vector3D A, Vector3D B) { return A * B.GetInverse(); }
 
@@ -218,23 +261,58 @@ namespace MathCore.Vectors
         /// <returns>Угол между вектором А и вектором В в пространстве</returns>
         public static SpaceAngle operator ^(Vector3D A, Vector3D B) => A.GetAngle(B);
 
+
+#pragma warning disable IDE0047 // Удалить ненужные круглые скобки
+
         /// <summary>Проверка на параллельность</summary>
         /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
         /// <returns>Истина, если вектора параллельны</returns>
-#pragma warning disable IDE0047 // Удалить ненужные круглые скобки
-        public static bool operator |(Vector3D A, Vector3D B) => Math.Abs((A * B) / (A.R * B.R) - 1).Equals(0d);
-#pragma warning restore IDE0047 // Удалить ненужные круглые скобки
+        public static bool operator |(Vector3D A, Vector3D B) => Math.Abs((A * B) / (A.R * B.R) - 1) == 0d;
+
+        /// <summary>Проверка на параллельность</summary>
+        /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
+        /// <returns>Истина, если вектора параллельны</returns>
+        public static bool operator |((double X, double Y, double Z) A, Vector3D B) => Math.Abs((A * B) / (Math.Sqrt(A.X * A.X + A.Y * A.Y + A.Z * A.Z) * B.R) - 1) == 0d;
+
+        /// <summary>Проверка на параллельность</summary>
+        /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
+        /// <returns>Истина, если вектора параллельны</returns>
+        public static bool operator |(Vector3D A, (double X, double Y, double Z) B) => Math.Abs((A * B) / (A.R * Math.Sqrt(B.X * B.X + B.Y * B.Y + B.Z * B.Z)) - 1) == 0d;
 
         /// <summary>Проверка на ортогональность</summary>
         /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
         /// <returns>Истина, если вектор 1 ортогонален вектору 2</returns>
-        public static bool operator &(Vector3D A, Vector3D B) => Math.Abs((A * B) / (A.R * B.R)).Equals(0d);
+        public static bool operator &(Vector3D A, Vector3D B) => Math.Abs((A * B) / (A.R * B.R)) == 0d;
+
+        /// <summary>Проверка на ортогональность</summary>
+        /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
+        /// <returns>Истина, если вектор 1 ортогонален вектору 2</returns>
+        public static bool operator &((double X, double Y, double Z) A, Vector3D B) => Math.Abs((A * B) / (Math.Sqrt(A.X * A.X + A.Y * A.Y + A.Z * A.Z) * B.R)) == 0d;
+
+        /// <summary>Проверка на ортогональность</summary>
+        /// <param name="A">Вектор 1</param><param name="B">Вектор 2</param>
+        /// <returns>Истина, если вектор 1 ортогонален вектору 2</returns>
+        public static bool operator &(Vector3D A, (double X, double Y, double Z) B) => Math.Abs((A * B) / (A.R * Math.Sqrt(B.X * B.X + B.Y * B.Y + B.Z * B.Z))) == 0d;
+
+#pragma warning restore IDE0047 // Удалить ненужные круглые скобки
 
         /// <summary>Проекция вектора A на вектор B</summary>
         /// <param name="A">Проецируемый вектор</param>
         /// <param name="B">Вектор, на который производится проекции</param>
         /// <returns>Проекция вектора А на вектор В</returns>
         public static double operator %(Vector3D A, Vector3D B) => A.GetProjectionTo(B);
+
+        /// <summary>Проекция вектора A на вектор B</summary>
+        /// <param name="A">Проецируемый вектор</param>
+        /// <param name="B">Вектор, на который производится проекции</param>
+        /// <returns>Проекция вектора А на вектор В</returns>
+        public static double operator %((double X, double Y, double Z) A, Vector3D B) => B.GetProjectionInverseTo(B);
+
+        /// <summary>Проекция вектора A на вектор B</summary>
+        /// <param name="A">Проецируемый вектор</param>
+        /// <param name="B">Вектор, на который производится проекции</param>
+        /// <returns>Проекция вектора А на вектор В</returns>
+        public static double operator %(Vector3D A, (double X, double Y, double Z) B) => A.GetProjectionTo(B);
 
         /// <summary>Проекция вектора на направление</summary>
         /// <param name="Vector">Проецируемый вектор</param>
@@ -254,6 +332,8 @@ namespace MathCore.Vectors
         /// <param name="V">Трёхмерный вектор</param>
         public static implicit operator double(Vector3D V) => V.R;
 
+        public static implicit operator (double X, double Y, double Z)(Vector3D V) => (V._X, V._Y, V._Z);
+
         /// <summary>Оператор неявного приведения <see cref="Vector3D"/> к <see cref="SpaceAngle"/></summary>
         /// <param name="V">Трёхмерный вектор</param>
         public static implicit operator SpaceAngle(Vector3D V) => V.Angle;
@@ -265,6 +345,8 @@ namespace MathCore.Vectors
         /// <summary>Оператор явного приведения типа <see cref="double"/> к <see cref="Vector3D"/>, результатом которого является вектор, с равными координатами, длина которого равна указанному числу</summary>
         /// <param name="V">Длина вектора</param>
         public static explicit operator Vector3D(double V) => new(V / Consts.sqrt_3, V / Consts.sqrt_3, V / Consts.sqrt_3);
+
+        public static explicit operator Vector3D((double X, double Y, double Z) V) => new(V.X, V.Y, V.Z);
 
         #endregion
     }
