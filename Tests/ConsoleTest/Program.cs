@@ -5,7 +5,10 @@ using MathCore;
 using MathCore.IO;
 using MathCore.Threading;
 
+var x = new Complex(5, 7);
+var y = x + (5, 7.5);
 
+Console.WriteLine(y);
 
 //var messages = Enumerable.Range(1, 1000).Select(i => $"Message-{i}");
 
