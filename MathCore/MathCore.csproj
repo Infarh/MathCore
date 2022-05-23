@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.74</Version>
     <PackageReleaseNotes>
-      Ускорение эллитических функций Якоби
+      Ускорение эллиптических функций Якоби
     </PackageReleaseNotes>
   </PropertyGroup>
 
