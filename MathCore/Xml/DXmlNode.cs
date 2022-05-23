@@ -1,58 +1,69 @@
-﻿using System.Dynamic;
+﻿#nullable enable
+using System.Dynamic;
 using System.Reflection;
-using MathCore.Annotations;
 
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq
 {
-    public class DynamicXmlNode : DynamicObject
+    public class DXmlNode : DynamicObject
     {
+        public static DXmlNode From(XmlElement xml) => new(XElement.Load(xml.CreateNavigator().ReadSubtree()));
+
+        public static DXmlNode From(XElement xml) => new(xml);
+
         private readonly XElement _Node;
 
-        public DynamicXmlNode() { }
+        public DXmlNode(string name = "obj") : this(new XElement(name)) { }
 
-        public DynamicXmlNode(XElement node) => _Node = node;
+        public DXmlNode(XElement node) => _Node = node;
 
-        public DynamicXmlNode([NotNull] string name) => _Node = new XElement(name);
-
-        public override bool TrySetMember(SetMemberBinder binder, [NotNull] object value)
+        public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             var node = _Node.Element(binder.Name);
             if(node != null)
                 node.SetValue(value);
             else
-                _Node.Add(value.GetType() == typeof(DynamicXmlNode)
+                _Node.Add(value.GetType() == typeof(DXmlNode)
                     ? new XElement(binder.Name)
                     : new XElement(binder.Name, value));
             return true;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, [CanBeNull] out object result)
+        public override bool TryGetMember(GetMemberBinder binder, out object? result)
         {
             var get_node = _Node.Element(binder.Name);
             if(get_node != null)
             {
-                result = new DynamicXmlNode(get_node);
+                result = new DXmlNode(get_node);
                 return true;
             }
             result = null;
             return false;
         }
 
-        public override bool TryConvert([NotNull] ConvertBinder binder, [CanBeNull] out object result)
+        public override bool TryConvert(ConvertBinder binder, out object? result)
         {
-            if(binder.Type == typeof(string))
+            var conversion_type = binder.Type;
+            if(conversion_type == typeof(string))
             {
                 result = _Node.Value;
                 return true;
             }
+
+            var converter = conversion_type.GetTypeConverter();
+            if (converter.CanConvertFrom(typeof(string)))
+            {
+                result = converter.ConvertFrom(_Node.Value);
+                return true;
+            }
+
             result = null;
             return false;
         }
 
-        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
+        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object? result)
         {
             var x_type = typeof(XElement);
             try

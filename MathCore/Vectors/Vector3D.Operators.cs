@@ -70,7 +70,6 @@ namespace MathCore.Vectors
         /// <returns>Вектор, координаты которого являются результатом деления числа одинарной точности на координаты исходного вектора</returns>
         public static Vector3D operator /(float x, Vector3D V) => new(x / V._X, x / V._Y, x / V._Z);
 
-
         /// <summary>Оператор суммы вектора и целого числа</summary>
         /// <returns>Вектор, координаты которого увеличены на значения целого числа</returns>
         public static Vector3D operator +(Vector3D V, int x) => new(V._X + x, V._Y + x, V._Z + x);
@@ -260,7 +259,6 @@ namespace MathCore.Vectors
         /// <param name="B">Вектор 2</param>
         /// <returns>Угол между вектором А и вектором В в пространстве</returns>
         public static SpaceAngle operator ^(Vector3D A, Vector3D B) => A.GetAngle(B);
-
 
 #pragma warning disable IDE0047 // Удалить ненужные круглые скобки
 

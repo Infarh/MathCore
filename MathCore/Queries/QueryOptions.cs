@@ -19,18 +19,18 @@ namespace MathCore.Queries
         private static readonly MethodInfo __OrderBy = typeof(Queryable)
            .GetMethods()
            .Single(method => method.Name == nameof(Queryable.OrderBy)
-                             && method.IsGenericMethodDefinition
-                             && method.GetGenericArguments().Length == 2
-                             && method.GetParameters().Length == 2);
+                          && method.IsGenericMethodDefinition
+                          && method.GetGenericArguments().Length == 2
+                          && method.GetParameters().Length == 2);
 
         /// <summary>Метод упорядочивания запроса по убыванию</summary>
         [NotNull]
         private static readonly MethodInfo __OrderByDescending = typeof(Queryable)
            .GetMethods()
            .Single(method => method.Name == nameof(Queryable.OrderByDescending)
-                             && method.IsGenericMethodDefinition
-                             && method.GetGenericArguments().Length == 2
-                             && method.GetParameters().Length == 2);
+                          && method.IsGenericMethodDefinition
+                          && method.GetGenericArguments().Length == 2
+                          && method.GetParameters().Length == 2);
 
         /// <summary>Получить метод упорядочивания для заданного типа данных и типа ключа упорядочивания</summary>
         /// <param name="ItemsType">Тип упорядочиваемых элементов</param>

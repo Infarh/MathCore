@@ -49,7 +49,7 @@ namespace MathCore.Vectors
         /// <returns>Вектор со случайными значениями координат из указанного диапазона</returns>
         public static Vector3D Random(double min = -100, double max = 100, Random rnd = null)
         {
-            if (rnd is null) rnd = new Random();
+            rnd ??= new Random();
             var d = Abs(max - min);
             var m = (max + min) * .5;
             return new Vector3D(rnd.NextDouble(d, m), rnd.NextDouble(d, m), rnd.NextDouble(d, m));
@@ -341,12 +341,7 @@ namespace MathCore.Vectors
         public string ToString(string Format, IFormatProvider Provider) => $"({_X.ToString(Format, Provider)};{_Y.ToString(Format, Provider)};{_Z.ToString(Format, Provider)})";
 
         /// <summary>Деконструктор вектора на значения его координат</summary>
-        public void Deconstruct(out double x, out double y, out double z)
-        {
-            x = _X;
-            y = _Y;
-            z = _Z;
-        }
+        public void Deconstruct(out double x, out double y, out double z) { x = _X; y = _Y; z = _Z; }
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -360,8 +355,8 @@ namespace MathCore.Vectors
         {
             var eps = ComparisonsAccuracy;
             return Abs(other._X - _X) < eps
-                   && Abs(other._Y - _Y) < eps
-                   && Abs(other._Z - _Z) < eps;
+                && Abs(other._Y - _Y) < eps
+                && Abs(other._Z - _Z) < eps;
         }
 
         /// <inheritdoc />

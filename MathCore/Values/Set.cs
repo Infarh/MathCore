@@ -46,8 +46,7 @@ namespace MathCore.Values
         /// <param name="comparer">Объект, осуществляющий сравнение элементов множества</param>
         public Set(IEqualityComparer<T> comparer)
         {
-            if (comparer is null) comparer = EqualityComparer<T>.Default;
-            _Comparer = comparer;
+            _Comparer = comparer ?? EqualityComparer<T>.Default;
             _Buckets = new int[7];
             _Slots = new Slot[7];
             _FreeList = -1;

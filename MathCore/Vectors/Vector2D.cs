@@ -4,6 +4,8 @@ using System.Xml.Serialization;
 
 using MathCore.Annotations;
 
+using static System.Math;
+
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 // ReSharper disable UnusedMember.Global
 
@@ -49,19 +51,11 @@ namespace MathCore.Vectors
         /// <summary>Инициализация двумерного вектора</summary>
         /// <param name="X">Координата X</param>
         /// <param name="Y">Координата Y</param>
-        public Vector2D(double X, double Y)
-        {
-            _X = X;
-            _Y = Y;
-        }
+        public Vector2D(double X, double Y) { _X = X; _Y = Y; }
 
         /// <summary>Инициализация вектора по по комплексному числу</summary>
         /// <param name="Z">Комплексное число X + iY</param>
-        private Vector2D(Complex Z)
-        {
-            _X = Z.Re;
-            _Y = Z.Im;
-        }
+        private Vector2D(Complex Z) { _X = Z.Re; _Y = Z.Im; }
 
         /// <summary>Представление вектора в базисе</summary>
         /// <param name="b">Базис</param>
@@ -102,8 +96,7 @@ namespace MathCore.Vectors
         #region Операторы
 
         /// <summary>Деконструктор вектора на его составляющие</summary>
-        /// <param name="x">Координата X</param>
-        /// <param name="y">Координата Y</param>
+        /// <param name="x">Координата X</param><param name="y">Координата Y</param>
         public void Deconstruct(out double x, out double y) { x = _X; y = _Y; }
 
         /// <summary>Оператор равенства</summary>
@@ -346,130 +339,121 @@ namespace MathCore.Vectors
         public static Vector2D operator /(double a, Vector2D b) => new(a / b._X, a / b._Y);
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
         public static double operator ^(Vector2D a, Vector2D b) => a * b / (a.R * b.R);
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^((double X, double Y) a, Vector2D b) => a * b / (Math.Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
+        public static double operator ^((double X, double Y) a, Vector2D b) => a * b / (Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^((int X, double Y) a, Vector2D b) => a * b / (Math.Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
+        public static double operator ^((int X, double Y) a, Vector2D b) => a * b / (Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^((double X, int Y) a, Vector2D b) => a * b / (Math.Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
+        public static double operator ^((double X, int Y) a, Vector2D b) => a * b / (Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^((int X, int Y) a, Vector2D b) => a * b / (Math.Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
+        public static double operator ^((int X, int Y) a, Vector2D b) => a * b / (Sqrt(a.X * a.X + a.Y * a.Y) * b.R);
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^(Vector2D a, (double X, double Y) b) => a * b / (a.R * Math.Sqrt(b.X * b.X + b.Y * b.Y));
+        public static double operator ^(Vector2D a, (double X, double Y) b) => a * b / (a.R * Sqrt(b.X * b.X + b.Y * b.Y));
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^(Vector2D a, (int X, double Y) b) => a * b / (a.R * Math.Sqrt(b.X * b.X + b.Y * b.Y));
+        public static double operator ^(Vector2D a, (int X, double Y) b) => a * b / (a.R * Sqrt(b.X * b.X + b.Y * b.Y));
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^(Vector2D a, (double X, int Y) b) => a * b / (a.R * Math.Sqrt(b.X * b.X + b.Y * b.Y));
+        public static double operator ^(Vector2D a, (double X, int Y) b) => a * b / (a.R * Sqrt(b.X * b.X + b.Y * b.Y));
 
         /// <summary>Оператор проекции в вектора на вектор</summary>
-        /// <param name="a">Проецируемый вектор</param>
-        /// <param name="b">Вектор проекции</param>
+        /// <param name="a">Проецируемый вектор</param><param name="b">Вектор проекции</param>
         /// <returns>Проекция первого вектора на второй</returns>
-        public static double operator ^(Vector2D a, (int X, int Y) b) => a * b / (a.R * Math.Sqrt(b.X * b.X + b.Y * b.Y));
+        public static double operator ^(Vector2D a, (int X, int Y) b) => a * b / (a.R * Sqrt(b.X * b.X + b.Y * b.Y));
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |(Vector2D a, Vector2D b) => (a ^ b).Equals(1d);
+        public static bool operator |(Vector2D a, Vector2D b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |((double X, double Y) a, Vector2D b) => (a ^ b).Equals(1d);
+        public static bool operator |((double X, double Y) a, Vector2D b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |((int X, double Y) a, Vector2D b) => (a ^ b).Equals(1d);
+        public static bool operator |((int X, double Y) a, Vector2D b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |((double X, int Y) a, Vector2D b) => (a ^ b).Equals(1d);
+        public static bool operator |((double X, int Y) a, Vector2D b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |((int X, int Y) a, Vector2D b) => (a ^ b).Equals(1d);
+        public static bool operator |((int X, int Y) a, Vector2D b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |(Vector2D a, (double X, double Y) b) => (a ^ b).Equals(1d);
+        public static bool operator |(Vector2D a, (double X, double Y) b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |(Vector2D a, (int X, double Y) b) => (a ^ b).Equals(1d);
+        public static bool operator |(Vector2D a, (int X, double Y) b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |(Vector2D a, (double X, int Y) b) => (a ^ b).Equals(1d);
+        public static bool operator |(Vector2D a, (double X, int Y) b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на параллельность двух векторов</summary>
         /// <returns>Истина, если вектора параллельны</returns>
-        public static bool operator |(Vector2D a, (int X, int Y) b) => (a ^ b).Equals(1d);
+        public static bool operator |(Vector2D a, (int X, int Y) b) => (a ^ b) == 1d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &(Vector2D a, Vector2D b) => (a ^ b).Equals(0d);
+        public static bool operator &(Vector2D a, Vector2D b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &((double X, double Y) a, Vector2D b) => (a ^ b).Equals(0d);
+        public static bool operator &((double X, double Y) a, Vector2D b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &((int X, double Y) a, Vector2D b) => (a ^ b).Equals(0d);
+        public static bool operator &((int X, double Y) a, Vector2D b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &((double X, int Y) a, Vector2D b) => (a ^ b).Equals(0d);
+        public static bool operator &((double X, int Y) a, Vector2D b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &((int X, int Y) a, Vector2D b) => (a ^ b).Equals(0d);
+        public static bool operator &((int X, int Y) a, Vector2D b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &(Vector2D a, (double X, double Y) b) => (a ^ b).Equals(0d);
+        public static bool operator &(Vector2D a, (double X, double Y) b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &(Vector2D a, (int X, double Y) b) => (a ^ b).Equals(0d);
+        public static bool operator &(Vector2D a, (int X, double Y) b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &(Vector2D a, (double X, int Y) b) => (a ^ b).Equals(0d);
+        public static bool operator &(Vector2D a, (double X, int Y) b) => (a ^ b) == 0d;
 
         /// <summary>Оператор проверки на перпендикулярность двух векторов</summary>
         /// <returns>Истина, если вектора перпендикулярны</returns>
-        public static bool operator &(Vector2D a, (int X, int Y) b) => (a ^ b).Equals(0d);
+        public static bool operator &(Vector2D a, (int X, int Y) b) => (a ^ b) == 0d;
 
         /// <summary>Оператор вычисления проекции вектора на вектор</summary>
         /// <param name="a">Проецируемый вектор</param>
@@ -505,25 +489,25 @@ namespace MathCore.Vectors
         /// <param name="a">Проецируемый вектор</param>
         /// <param name="b">Вектор, на который осуществляется проекция</param>
         /// <returns>Длина проекции</returns>
-        public static double operator %(Vector2D a, (double X, double Y) b) => a * b / Math.Sqrt(b.X * b.X + b.Y * b.Y);
+        public static double operator %(Vector2D a, (double X, double Y) b) => a * b / Sqrt(b.X * b.X + b.Y * b.Y);
 
         /// <summary>Оператор вычисления проекции вектора на вектор</summary>
         /// <param name="a">Проецируемый вектор</param>
         /// <param name="b">Вектор, на который осуществляется проекция</param>
         /// <returns>Длина проекции</returns>
-        public static double operator %(Vector2D a, (int X, double Y) b) => a * b / Math.Sqrt(b.X * b.X + b.Y * b.Y);
+        public static double operator %(Vector2D a, (int X, double Y) b) => a * b / Sqrt(b.X * b.X + b.Y * b.Y);
 
         /// <summary>Оператор вычисления проекции вектора на вектор</summary>
         /// <param name="a">Проецируемый вектор</param>
         /// <param name="b">Вектор, на который осуществляется проекция</param>
         /// <returns>Длина проекции</returns>
-        public static double operator %(Vector2D a, (double X, int Y) b) => a * b / Math.Sqrt(b.X * b.X + b.Y * b.Y);
+        public static double operator %(Vector2D a, (double X, int Y) b) => a * b / Sqrt(b.X * b.X + b.Y * b.Y);
 
         /// <summary>Оператор вычисления проекции вектора на вектор</summary>
         /// <param name="a">Проецируемый вектор</param>
         /// <param name="b">Вектор, на который осуществляется проекция</param>
         /// <returns>Длина проекции</returns>
-        public static double operator %(Vector2D a, (int X, int Y) b) => a * b / Math.Sqrt(b.X * b.X + b.Y * b.Y);
+        public static double operator %(Vector2D a, (int X, int Y) b) => a * b / Sqrt(b.X * b.X + b.Y * b.Y);
 
         /// <summary>Оператор представление вектора в базисе</summary>
         /// <param name="a">Вектор, представляемый в базисе</param>

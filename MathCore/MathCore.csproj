@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.73</Version>
+    <Version>0.0.74</Version>
     <PackageReleaseNotes>
-      В операторах комплексных чисел добавлены операции с котрежами
-      Добавлены новые реализации метода GetCoefficientsInvertedReIm для полиномиальных коэффициентов
+      Ускорение эллиптических функций Якоби
     </PackageReleaseNotes>
   </PropertyGroup>
 

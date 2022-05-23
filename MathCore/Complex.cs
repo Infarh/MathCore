@@ -7,6 +7,8 @@ using System.Xml.Serialization;
 using MathCore.Annotations;
 using MathCore.Expressions.Complex;
 
+using static System.Math;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable MissingAnnotation
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -21,7 +23,8 @@ namespace MathCore
                                              IEquatable<Complex>, IEquatable<float>, IEquatable<double>,
                                              IEquatable<byte>, IEquatable<sbyte>, IEquatable<short>,
                                              IEquatable<ushort>, IEquatable<int>, IEquatable<uint>,
-                                             IEquatable<long>, IEquatable<ulong>, IEquatable<(double Re, double Im)>
+                                             IEquatable<long>, IEquatable<ulong>, IEquatable<(double Re, double Im)>,
+                                             IEquatable<(int Re, double Im)>, IEquatable<(double Re, int Im)>
     {
         /* -------------------------------------------------------------------------------------------- */
 
@@ -145,7 +148,7 @@ namespace MathCore
         /// <param name="Im">Комплексный аргумент</param>
         /// <returns>Значение логарифма</returns>
         public static Complex Ln(double Im)
-            => new(Math.Log(Im), Math.Abs(Im) == 0 ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
+            => new(Math.Log(Im), Abs(Im) == 0 ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
 
         ///<summary>Натуральный логогриф комплексного числа</summary>
         ///<param name="z">Комплексное число</param>
@@ -162,25 +165,25 @@ namespace MathCore
                 ? 0
                 : (Im > 0
                       ? Consts.pi05
-                      : -Consts.pi05) * Math.Log(Math.E, b));
+                      : -Consts.pi05) * Math.Log(E, b));
 
         /// <summary>Логарифм комплексного числа по действительному аргументу</summary>
         /// <param name="z">Комплексное число</param>
         /// <param name="b">Действительное основание логарифма</param>
         /// <returns>Логарифм комплексного числа по действительному основанию</returns>
         public static Complex Log(in Complex z, double b)
-            => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(Math.E, b));
+            => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(E, b));
 
         /// <summary>Экспоненциальная форма числа Z = e^j*Arg</summary>
         /// <param name="Arg">Аргумент</param>
         /// <returns>Комплексное число в экспоненциальной форме записи</returns>
-        public static Complex Exp(double Arg) => new(Math.Cos(Arg), Math.Sin(Arg));
+        public static Complex Exp(double Arg) => new(Cos(Arg), Sin(Arg));
 
         /// <summary>Экспоненциальная форма числа Z = Abs * e^j*Arg</summary>
         /// <param name="Abs">Модуль числа</param>
         /// <param name="Arg">Аргумент числа</param>
         /// <returns>Комплексное число в экспоненциальной форме</returns>
-        public static Complex Exp(double Abs, double Arg) => new(Abs * Math.Cos(Arg), Abs * Math.Sin(Arg));
+        public static Complex Exp(double Abs, double Arg) => new(Abs * Cos(Arg), Abs * Sin(Arg));
 
         /// <summary>Экспонента с комплексным показателем Z = e^(re + j*im) = e^re * [cos(im) + j*sin(im)]</summary>
         /// <param name="z">Комплексный показатель степени экспоненты</param>
@@ -189,7 +192,7 @@ namespace MathCore
         {
             var (re, im) = z;
             var e = Math.Exp(re);
-            return new Complex(e * Math.Cos(im), e * Math.Sin(im));
+            return new Complex(e * Cos(im), e * Sin(im));
         }
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
@@ -241,19 +244,19 @@ namespace MathCore
         /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
         /// <returns>Пара комплексно-сопряжённых чисел</returns>
         public static (Complex Z, Complex Zconj) Conjugate(double ExpPower) =>
-            Conjugate(Math.Cos(ExpPower), Math.Sin(ExpPower));
+            Conjugate(Cos(ExpPower), Sin(ExpPower));
 
         /// <summary>Комплексно-сопряжённые значения</summary>
         /// <param name="Abs">Модуль комплексно-сопряжённой пары</param>
         /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
         /// <returns>Пара комплексно-сопряжённых чисел</returns>
-        public static (Complex Z, Complex Zconj) ConjugateAbsExp(double Abs, double ExpPower) =>
-            Conjugate(Abs * Math.Cos(ExpPower), Abs * Math.Sin(ExpPower));
+        public static (Complex Z, Complex Zconj) ConjugateExp(double Abs, double ExpPower) =>
+            Conjugate(Abs * Cos(ExpPower), Abs * Sin(ExpPower));
 
         /// <summary>Вычисление синуса и косинуса аргумента</summary>
         /// <param name="arg">Аргумент функции</param>
         public static (double Sin, double Cos) SinCos(double arg) =>
-            (Math.Sin(arg), Math.Cos(arg));
+            (Sin(arg), Cos(arg));
 
         /// <summary>Вычисление синуса и косинуса аргумента</summary>
         /// <param name="arg">Аргумент функции</param>
@@ -390,7 +393,7 @@ namespace MathCore
             var im = Im;
             if (re == 0 && im == 0) return "0";
             var re_str = re.ToString(CultureInfo.CurrentCulture);
-            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
+            var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
             if (im < 0) im_str = $"-{im_str}";
             return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
@@ -405,7 +408,7 @@ namespace MathCore
             var im = Im;
             if (re == 0 && im == 0) return "0";
             var re_str = re.ToString(Format);
-            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(Format) : string.Empty)}i";
+            var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(Format) : string.Empty)}i";
             if (im < 0) im_str = $"-{im_str}";
             return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
@@ -417,7 +420,7 @@ namespace MathCore
             var im = Im;
             if (re == 0 && im == 0) return "0";
             var re_str = re.ToString(FormatProvider);
-            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(FormatProvider) : string.Empty)}i";
+            var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(FormatProvider) : string.Empty)}i";
             if (im < 0) im_str = $"-{im_str}";
             return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
@@ -430,7 +433,7 @@ namespace MathCore
             var im = Im;
             if (re == 0 && im == 0) return "0";
             var re_str = re.ToString(format, FormatProvider);
-            var im_str = $"{(Math.Abs(im) != 1 ? Math.Abs(im).ToString(format, FormatProvider) : string.Empty)}i";
+            var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(format, FormatProvider) : string.Empty)}i";
             if (im < 0) im_str = $"-{im_str}";
             return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
         }
@@ -447,159 +450,157 @@ namespace MathCore
 
         /// <summary>Получение клона</summary>
         /// <returns>Клон числа</returns>
-        [DST]
-        public Complex Clone() => new(_Re, _Im);
+        [DST] public Complex Clone() => new(_Re, _Im);
 
         /// <summary>Получение клона</summary>
         /// <returns>Клон числа</returns>
-        [DST]
-        object ICloneable.Clone() => Clone();
+        [DST] object ICloneable.Clone() => Clone();
 
 
         /// <inheritdoc />
-        [DST]
-        public override bool Equals(object obj) => obj is Complex z && Equals(z);
+        [DST] public override bool Equals(object obj) => obj is Complex z && Equals(z);
 
         #region IEquatable Members
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(Complex other) => (IsNaN && other.IsNaN) || _Re.Equals(other._Re) && _Im.Equals(other._Im);
+        [DST] public bool Equals(Complex other) => (IsNaN && other.IsNaN) || _Re == other._Re && _Im == other._Im;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<Complex>.Equals(Complex other) => Equals(other);
+        [DST] bool IEquatable<Complex>.Equals(Complex other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(double other) => (double.IsNaN(other) && IsNaN) || _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals((double Re, double Im) other) => (IsNaN && (double.IsNaN(other.Re) || double.IsNaN(other.Im))) || _Re == other.Re && _Im == other.Im;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        //[DST]
-        bool IEquatable<double>.Equals(double other) => Equals(other);
+        [DST] bool IEquatable<(double Re, double Im)>.Equals((double Re, double Im) other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(short other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals((int Re, double Im) other) => (IsNaN && double.IsNaN(other.Im)) || _Re == other.Re && _Im == other.Im;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<short>.Equals(short other) => Equals(other);
+        [DST] bool IEquatable<(int Re, double Im)>.Equals((int Re, double Im) other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(ushort other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals((double Re, int Im) other) => (IsNaN && double.IsNaN(other.Re)) || _Re == other.Re && _Im == other.Im;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<ushort>.Equals(ushort other) => Equals(other);
+        [DST] bool IEquatable<(double Re, int Im)>.Equals((double Re, int Im) other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(byte other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(double other) => (double.IsNaN(other) && IsNaN) || _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<byte>.Equals(byte other) => Equals(other);
+        [DST] bool IEquatable<double>.Equals(double other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(sbyte other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(short other) => _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<sbyte>.Equals(sbyte other) => Equals(other);
+        [DST] bool IEquatable<short>.Equals(short other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(float other) => (float.IsNaN(other) && IsNaN) || _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(ushort other) => _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<float>.Equals(float other) => Equals(other);
+        [DST] bool IEquatable<ushort>.Equals(ushort other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(int other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(byte other) => _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<int>.Equals(int other) => Equals(other);
+        [DST] bool IEquatable<byte>.Equals(byte other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(uint other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(sbyte other) => _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<uint>.Equals(uint other) => Equals(other);
+        [DST] bool IEquatable<sbyte>.Equals(sbyte other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(long other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(float other) => (float.IsNaN(other) && IsNaN) || _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<long>.Equals(long other) => Equals(other);
+        [DST] bool IEquatable<float>.Equals(float other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое значение</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        public bool Equals(ulong other) => _Re.Equals(other) && _Im.Equals(0d);
+        [DST] public bool Equals(int other) => _Re == other && _Im == 0d;
 
         /// <summary>Проверка на идентичность</summary>
         /// <param name="other">Проверяемое число</param>
         /// <returns>Истина, если числа идентичны</returns>
-        [DST]
-        bool IEquatable<ulong>.Equals(ulong other) => Equals(other);
+        [DST] bool IEquatable<int>.Equals(int other) => Equals(other);
 
         /// <summary>Проверка на идентичность</summary>
-        /// <param name="other">Кортеж двух вещественных чисел</param>
-        /// <returns>Истина, если действительная и мнимая части идентичны</returns>
-        bool IEquatable<(double Re, double Im)>.Equals((double Re, double Im) other) => 
-            (IsNaN && (double.IsNaN(other.Re) || double.IsNaN(other.Im))) 
-            || _Re.Equals(other.Re) && _Im.Equals(other.Im);
+        /// <param name="other">Проверяемое значение</param>
+        /// <returns>Истина, если числа идентичны</returns>
+        [DST] public bool Equals(uint other) => _Re == other && _Im == 0d;
+
+        /// <summary>Проверка на идентичность</summary>
+        /// <param name="other">Проверяемое число</param>
+        /// <returns>Истина, если числа идентичны</returns>
+        [DST] bool IEquatable<uint>.Equals(uint other) => Equals(other);
+
+        /// <summary>Проверка на идентичность</summary>
+        /// <param name="other">Проверяемое значение</param>
+        /// <returns>Истина, если числа идентичны</returns>
+        [DST] public bool Equals(long other) => _Re == other && _Im == 0d;
+
+        /// <summary>Проверка на идентичность</summary>
+        /// <param name="other">Проверяемое число</param>
+        /// <returns>Истина, если числа идентичны</returns>
+        [DST] bool IEquatable<long>.Equals(long other) => Equals(other);
+
+        /// <summary>Проверка на идентичность</summary>
+        /// <param name="other">Проверяемое значение</param>
+        /// <returns>Истина, если числа идентичны</returns>
+        [DST] public bool Equals(ulong other) => _Re == other && _Im == 0d;
+
+        /// <summary>Проверка на идентичность</summary>
+        /// <param name="other">Проверяемое число</param>
+        /// <returns>Истина, если числа идентичны</returns>
+        [DST] bool IEquatable<ulong>.Equals(ulong other) => Equals(other);
 
         #endregion
 
@@ -609,8 +610,8 @@ namespace MathCore
         [DST]
         public Complex Rotate(double w)
         {
-            var sin = Math.Sin(w);
-            var cos = Math.Cos(w);
+            var sin = Sin(w);
+            var cos = Cos(w);
             var re = _Re;
             var im = _Im;
 
