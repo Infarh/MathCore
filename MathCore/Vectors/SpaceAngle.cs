@@ -5,6 +5,10 @@ using System.Linq.Expressions;
 using MathCore.Annotations;
 using MathCore.Extensions.Expressions;
 using static System.Math;
+
+using static MathCore.Consts;
+using static MathCore.Consts.Geometry;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -24,10 +28,10 @@ namespace MathCore.Vectors
         /* -------------------------------------------------------------------------------------------- */
 
         /// <summary>Константа преобразования угла в радианах в градусы</summary>
-        private const double __ToDeg = Consts.Geometry.ToDeg;
+        private const double __ToDeg = Geometry.ToDeg;
 
         /// <summary>Константа преобразования угла в градусах в радианы</summary>
-        private const double __ToRad = Consts.Geometry.ToRad;
+        private const double __ToRad = Geometry.ToRad;
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -37,7 +41,7 @@ namespace MathCore.Vectors
         /// <returns>Угол, представленный в интервале от 0 до 360° (0 до 2π)</returns>
         public static double NormalizeAngle(double angle, in AngleType type = AngleType.Rad)
         {
-            var max = type == AngleType.Rad ? Consts.pi2 : 360;
+            var max = type == AngleType.Rad ? pi2 : 360;
             return angle % max + (angle < 0 ? max : 0);
         }
 
@@ -45,7 +49,7 @@ namespace MathCore.Vectors
         /// <param name="Min">Минимальное значение угла</param>
         /// <param name="Max">Максимальное значение угла</param>
         /// <returns>Случайный пространственный угол</returns>
-        public static SpaceAngle Random(double Min = -Consts.pi, double Max = Consts.pi)
+        public static SpaceAngle Random(double Min = -pi, double Max = pi)
         {
             var rnd = new Random();
             // ReSharper disable once EventExceptionNotDocumented
@@ -77,19 +81,19 @@ namespace MathCore.Vectors
         // ReSharper disable InconsistentNaming
 
         /// <summary>Орта оси OX</summary>
-        public static readonly SpaceAngle i = new(Theta: Consts.pi05, Phi: 0);
+        public static readonly SpaceAngle i = new(Theta: pi05, Phi: 0);
         /// <summary>Отрицательная орта оси OX</summary>
-        public static readonly SpaceAngle i_negative = new(Theta: Consts.pi05, Phi: Consts.pi);
+        public static readonly SpaceAngle i_negative = new(Theta: pi05, Phi: pi);
 
         /// <summary>Орта оси OY</summary>
-        public static readonly SpaceAngle j = new(Theta: Consts.pi05, Phi: Consts.pi05);
+        public static readonly SpaceAngle j = new(Theta: pi05, Phi: pi05);
         /// <summary>Отрицательная орта оси OY</summary>
-        public static readonly SpaceAngle j_negative = new(Theta: Consts.pi05, Phi: -Consts.pi05);
+        public static readonly SpaceAngle j_negative = new(Theta: pi05, Phi: -pi05);
 
         /// <summary>Орта оси OZ</summary>
         public static readonly SpaceAngle k = new(Theta: 0, Phi: 0);
         /// <summary>Отрицательная орта оси OZ</summary>
-        public static readonly SpaceAngle k_negative = new(Theta: Consts.pi, Phi: 0);
+        public static readonly SpaceAngle k_negative = new(Theta: pi, Phi: 0);
 
         // ReSharper restore InconsistentNaming
 
@@ -113,16 +117,16 @@ namespace MathCore.Vectors
         public double Phi => _Phi;
 
         /// <summary>Угол места в радианах</summary>
-        public double ThetaRad => _AngleType == AngleType.Rad ? _Theta : _Theta * Consts.Geometry.ToRad;
+        public double ThetaRad => _AngleType == AngleType.Rad ? _Theta : _Theta * Geometry.ToRad;
 
         /// <summary>Угол места в градусах</summary>
-        public double ThetaDeg => _AngleType == AngleType.Deg ? _Theta : _Theta * Consts.Geometry.ToDeg;
+        public double ThetaDeg => _AngleType == AngleType.Deg ? _Theta : _Theta * Geometry.ToDeg;
 
         /// <summary>Угол азимута в радианах</summary>
-        public double PhiRad => _AngleType == AngleType.Rad ? _Phi : _Phi * Consts.Geometry.ToRad;
+        public double PhiRad => _AngleType == AngleType.Rad ? _Phi : _Phi * Geometry.ToRad;
 
         /// <summary>Угол азимута в градусах</summary>
-        public double PhiDeg => _AngleType == AngleType.Deg ? _Phi : _Phi * Consts.Geometry.ToDeg;
+        public double PhiDeg => _AngleType == AngleType.Deg ? _Phi : _Phi * Geometry.ToDeg;
 
         /// <summary>Являются ли значения угла места и азимута = 0?</summary>
         public bool IsZero => _Theta.Equals(0d) && _Phi.Equals(0d);
@@ -141,7 +145,7 @@ namespace MathCore.Vectors
         public SpaceAngle InDeg =>
             _AngleType switch
             {
-                AngleType.Deg => this, //new SpaceAngle(_Theta, _Phi, AngleType.Deg);
+                AngleType.Deg => this,
                 AngleType.Rad => new SpaceAngle(_Theta * __ToDeg, _Phi * __ToDeg, AngleType.Deg),
                 _ => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
             };
@@ -152,7 +156,7 @@ namespace MathCore.Vectors
             _AngleType switch
             {
                 AngleType.Deg => new SpaceAngle(_Theta * __ToRad, _Phi * __ToRad, AngleType.Rad),
-                AngleType.Rad => this, //new SpaceAngle(_Theta, _Phi, AngleType.Rad);
+                AngleType.Rad => this,
                 _ => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
             };
 
@@ -472,11 +476,7 @@ namespace MathCore.Vectors
         /// <summary>Деконструктор значений угла</summary>
         /// <param name="theta">Угол места</param>
         /// <param name="phi">Угол азимута</param>
-        public void Deconstruct(out double theta, out double phi)
-        {
-            theta = _Theta;
-            phi = _Phi;
-        }
+        public void Deconstruct(out double theta, out double phi) { theta = _Theta; phi = _Phi; }
 
         /// <inheritdoc />
         [DST]
@@ -561,7 +561,7 @@ namespace MathCore.Vectors
         {
             if (other._AngleType != _AngleType)
                 other = other.In(_AngleType);
-            var max = _AngleType == AngleType.Rad ? Consts.pi2 : 360;
+            var max = _AngleType == AngleType.Rad ? pi2 : 360;
             return
                 Abs(_Theta % max + (_Theta < 0 ? max : 0) - (other._Theta % max + (other._Theta < 0 ? max : 0))) % max < eps &&
                 Abs(_Phi % max + (_Phi < 0 ? max : 0) - (other._Phi % max + (other._Phi < 0 ? max : 0))) % max < eps;

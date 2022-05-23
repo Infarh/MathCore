@@ -1,11 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 using MathCore.Annotations;
-using static MathCore.SpecialFunctions.Distribution;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
@@ -16,7 +16,8 @@ namespace MathCore
 {
     /// <summary>Интервал сравнимых величин</summary>
     /// <typeparam name="T">Тип сравнимых величин</typeparam>
-    public readonly struct Interval<T> : IEquatable<Interval<T>>, ICloneable<Interval<T>> where T : IComparable<T>
+    public readonly struct Interval<T> : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
+        where T : IComparable<T>
     {
         /* ------------------------------------------------------------------------------------------ */
 
@@ -47,16 +48,16 @@ namespace MathCore
         #region Свойства
 
         /// <summary>Включена ли нижняя граница интервала?</summary>
-        public bool MinInclude => _MinInclude;
+        public bool MinInclude { get => _MinInclude; init => _MinInclude = value; }
 
         /// <summary>Включена ли верхняя граница интервала?</summary>
-        public bool MaxInclude => _MaxInclude;
+        public bool MaxInclude { get => _MaxInclude; init => _MaxInclude = value; }
 
         /// <summary>Нижняя граница интервала</summary>
-        public T Min => _Min;
+        public T Min { get => _Min; init => _Min = value; }
 
         /// <summary>Верхняя граница интервала</summary>
-        public T Max => _Max;
+        public T Max { get => _Max; init => _Max = value; }
 
         #endregion
 
@@ -115,7 +116,7 @@ namespace MathCore
         /// иначе соответствующая граница интервала
         /// </returns>
         [DST]
-        public T Normalize([NotNull] T Value) => Value.CompareTo(_Max) > 0 ? _Max : (Value.CompareTo(_Min) < 0 ? _Min : Value);
+        public T Normalize(T Value) => Value.CompareTo(_Max) > 0 ? _Max : (Value.CompareTo(_Min) < 0 ? _Min : Value);
 
         /// <summary>Замена значения ссылки на значение границы интервала, если значение не входит в интервал</summary>
         /// <param name="Value">Проверяемое значение</param>
@@ -133,8 +134,8 @@ namespace MathCore
         [DST]
         public bool Check(T Value) =>
             (_MinInclude && _Min.CompareTo(Value) == 0)
-            || (_MaxInclude && _Max.CompareTo(Value) == 0)
-            || (Value.CompareTo(_Min) > 0 && Value.CompareTo(_Max) < 0);
+         || (_MaxInclude && _Max.CompareTo(Value) == 0)
+         || (Value.CompareTo(_Min) > 0 && Value.CompareTo(_Max) < 0);
 
         /// <summary>Проверка - входит ли указанный интервал в текущий</summary>
         /// <param name="I">Проверяемый интервал</param>
@@ -213,11 +214,24 @@ namespace MathCore
         /// <returns>true, если текущий объект равен параметру <paramref name="other"/>, в противном случае — false.</returns>
         /// <param name="other">Объект, который требуется сравнить с данным объектом.</param>
         [DST]
-        public bool Equals(Interval<T> other) =>
-            other._MinInclude == _MinInclude
-            && other._MaxInclude == _MaxInclude
-            && other._Min.Equals(_Min)
-            && other._Max.Equals(Max);
+        public bool Equals(Interval<T> other)
+        {
+            var comparer = EqualityComparer<T>.Default;
+            return other._MinInclude == _MinInclude
+                && other._MaxInclude == _MaxInclude
+                && comparer.Equals(other._Min, _Min)
+                && comparer.Equals(other._Max, _Max);
+        }
+
+        /// <summary>Указывает, равен ли текущий объект другому объекту того же типа.</summary>
+        /// <returns>true, если текущий объект равен параметру <paramref name="other"/>, в противном случае — false.</returns>
+        /// <param name="other">Объект, который требуется сравнить с данным объектом.</param>
+        [DST]
+        public bool Equals((T Min, T Max) other)
+        {
+            var comparer = EqualityComparer<T>.Default;
+            return comparer.Equals(other.Min, _Min) && comparer.Equals(other.Max, _Max);
+        }
 
         /// <summary>
         /// Определяет, равен ли заданный объект <see cref="T:System.Object"/> текущему объекту <see cref="T:System.Object"/>.
@@ -238,7 +252,6 @@ namespace MathCore
 
         /// <inheritdoc />
         [DST]
-        [NotNull]
         public override string ToString() => string.Format(
             "{0}{2};{3}{1}",
             _MinInclude ? "[" : "(",
@@ -256,11 +269,23 @@ namespace MathCore
 
         [DST]
         public static bool operator !=(Interval<T> left, Interval<T> right) => !(left == right);
+        [DST]
+        public static bool operator ==(Interval<T> left, (T Min, T Max) right) => left.Equals(right);
+
+        [DST]
+        public static bool operator !=(Interval<T> left, (T Min, T Max) right) => !(left == right);
+        [DST]
+        public static bool operator ==((T Min, T Max) left, Interval<T> right) => right.Equals(left);
+
+        [DST]
+        public static bool operator !=((T Min, T Max) left, Interval<T> right) => !(left == right);
+
+        public static implicit operator (T Min, T Max)(Interval<T> v) => (v._Min, v._Max);
 
         /// <summary>Оператор неявного приведения типа к предикату</summary>
         /// <param name="I">Интервал</param>
         /// <returns>Предикат от вещественного типа двойной точности</returns>
-        [DST, NotNull]
+        [DST]
         public static implicit operator Predicate<T>(Interval<T> I) => I.Check;
 
         /// <summary>Оператор проверки на вхождение величины в интервал</summary>
@@ -292,14 +317,14 @@ namespace MathCore
         }
 
         [DST]
-        public static bool operator >([NotNull] T Value, Interval<T> I)
+        public static bool operator >(T Value, Interval<T> I)
         {
             var result = Value.CompareTo(I._Max);
             return (result == 0 && !I._MaxInclude) || result > 0;
         }
 
         [DST]
-        public static bool operator <([NotNull] T Value, Interval<T> I)
+        public static bool operator <(T Value, Interval<T> I)
         {
             var result = Value.CompareTo(I._Min);
             return (result == 0 && !I._MinInclude) || result < 0;
@@ -313,11 +338,15 @@ namespace MathCore
     /// <summary>Интервал вещественных значений двойной точности</summary>
     [Serializable]
     [TypeConverter(typeof(IntervalConverter))]
-    public readonly struct Interval : IComparable<double>, IFormattable, IEquatable<Interval>
+    public readonly struct Interval : IComparable<double>, IFormattable, 
+                                      IEquatable<Interval>, 
+                                      IEquatable<(double Min, double Max)>,
+                                      IEquatable<(int Min, double Max)>,
+                                      IEquatable<(double Min, int Max)>
     {
         /* -------------------------------------------------------------------------------------------- */
 
-        public static Interval Width(double Center, double Length, bool IncludeLimits = true) => 
+        public static Interval Width(double Center, double Length, bool IncludeLimits = true) =>
             Width(Center, Length, IncludeLimits, IncludeLimits);
 
         public static Interval Width(double Center, double Length, bool MinInclude, bool MaxInclude) =>
@@ -339,7 +368,7 @@ namespace MathCore
             }
         }
 
-        public static IEnumerable<double> RangeN(double Min, double Max, int Count) => 
+        public static IEnumerable<double> RangeN(double Min, double Max, int Count) =>
             Range(Min, Max, (Max - Min) / (Count - 1));
 
         /* -------------------------------------------------------------------------------------------- */
@@ -355,7 +384,7 @@ namespace MathCore
             return l1 > l2 ? 1 : (l1 < l2 ? -1 : 0);
         }
 
-        private static Random __Random;
+        private static Random? __Random;
 
         /* -------------------------------------------------------------------------------------------- */
 
@@ -378,16 +407,16 @@ namespace MathCore
         public double RandomValue => (__Random ??= new Random()).NextDouble() * Length + _Min;
 
         /// <summary>Включена ли нижняя граница интервала?</summary>
-        public bool MinInclude => _MinInclude;
+        public bool MinInclude { get => _MinInclude; init => _MinInclude = value; }
 
         /// <summary>Включена ли верхняя граница интервала?</summary>
-        public bool MaxInclude => _MaxInclude;
+        public bool MaxInclude { get => _MaxInclude; init => _MaxInclude = value; }
 
         /// <summary>Нижняя граница интервала</summary>
-        public double Min => _Min;
+        public double Min { get => _Min; init => _Min = value; }
 
         /// <summary>Верхняя граница интервала</summary>
-        public double Max => _Max;
+        public double Max { get => _Max; init => _Max = value; }
 
         /// <summary>Длина интервала</summary>
         public double Length => _Max - _Min;
@@ -490,17 +519,17 @@ namespace MathCore
         /// <returns>Истина, если значение входит в интервал</returns>
         [DST]
         public bool Check(double Value) =>
-            (_MinInclude && _Min.CompareTo(Value) == 0)
-            || (_MaxInclude && _Max.CompareTo(Value) == 0)
-            || (Value.CompareTo(_Min) > 0 && Value.CompareTo(_Max) < 0);
+            (_MinInclude && _Min.CompareTo(Value) == 0) || 
+            (_MaxInclude && _Max.CompareTo(Value) == 0) || 
+            (Value.CompareTo(_Min) > 0 && Value.CompareTo(_Max) < 0);
 
         public bool Check(double X, double Offset) => Check(X, Offset, -Offset);
 
         public bool IsExclude(Interval I) => !IsInclude(I);
 
         public bool IsInclude(Interval I) =>
-            Check(I._MinInclude ? I._Min : I._Min + double.Epsilon)
-            && Check(I._MaxInclude ? I._Max : I._Max - double.Epsilon);
+            Check(I._MinInclude ? I._Min : I._Min + double.Epsilon) && 
+            Check(I._MaxInclude ? I._Max : I._Max - double.Epsilon);
 
         public bool IsIntersect(Interval I)
         {
@@ -512,12 +541,42 @@ namespace MathCore
             return min_include || max_include;
         }
 
+        public bool IsIntersect((double Min, double Max) I)
+        {
+            if (Math.Abs(I.Min - _Min) < double.Epsilon && Math.Abs(I.Max - _Max) < double.Epsilon) return true;
+
+            var min_include = Check(I.Min) || Math.Abs(I.Min - _Max) > double.Epsilon;
+            var max_include = Check(I.Max) || Math.Abs(I.Max - _Min) > double.Epsilon;
+
+            return min_include || max_include;
+        }
+
+        public bool IsIntersect((int Min, double Max) I)
+        {
+            if (Math.Abs(I.Min - _Min) < double.Epsilon && Math.Abs(I.Max - _Max) < double.Epsilon) return true;
+
+            var min_include = Check(I.Min) || Math.Abs(I.Min - _Max) > double.Epsilon;
+            var max_include = Check(I.Max) || Math.Abs(I.Max - _Min) > double.Epsilon;
+
+            return min_include || max_include;
+        }
+
+        public bool IsIntersect((double Min, int Max) I)
+        {
+            if (Math.Abs(I.Min - _Min) < double.Epsilon && Math.Abs(I.Max - _Max) < double.Epsilon) return true;
+
+            var min_include = Check(I.Min) || Math.Abs(I.Min - _Max) > double.Epsilon;
+            var max_include = Check(I.Max) || Math.Abs(I.Max - _Min) > double.Epsilon;
+
+            return min_include || max_include;
+        }
+
         #endregion
 
         public int CompareTo(double x) =>
-            (x > _Min && x < _Max)
-            || (_MinInclude && Math.Abs(Min - x) < double.Epsilon)
-            || (_MaxInclude && Math.Abs(Max - x) < double.Epsilon)
+            (x > _Min && x < _Max) || 
+            (_MinInclude && Math.Abs(Min - x) < double.Epsilon) || 
+            (_MaxInclude && Math.Abs(Max - x) < double.Epsilon)
                 ? 0
                 : x < _Min ? -1 : 1;
 
@@ -590,7 +649,6 @@ namespace MathCore
             } while ((_MaxInclude && position <= _Max) || (!_MaxInclude && position < Max));
         }
 
-        [NotNull]
         public IEnumerable<Interval> GetSubIntervals(int Count)
         {
             var last = _MinInclude ? _Min : _Min - double.Epsilon;
@@ -602,7 +660,6 @@ namespace MathCore
 
         /// <inheritdoc />
         [DST]
-        [NotNull]
         public override string ToString() => new StringBuilder()
            .Append(_MinInclude ? '[' : '(')
            .Append(_Min)
@@ -617,7 +674,6 @@ namespace MathCore
         //    _MaxInclude ? "]" : ")",
         //    _Min, _Max);
 
-        [NotNull]
         public string ToString(string Format) => new StringBuilder()
            .Append(_MinInclude ? '[' : '(')
            .Append(_Min.ToString(Format))
@@ -671,6 +727,24 @@ namespace MathCore
             && other._MaxInclude == _MaxInclude
             && other._Min.Equals(_Min)
             && other._Max.Equals(Max);
+
+        /// <inheritdoc />
+        [DST]
+        public bool Equals((double Min, double Max) other) =>
+            _Min.Equals(other.Min) && 
+            _Max.Equals(other.Max);
+
+        /// <inheritdoc />
+        [DST]
+        public bool Equals((int Min, double Max) other) =>
+            _Min.Equals(other.Min) && 
+            _Max.Equals(other.Max);
+
+        /// <inheritdoc />
+        [DST]
+        public bool Equals((double Min, int Max) other) =>
+            _Min.Equals(other.Min) && 
+            _Max.Equals(other.Max);
 
         /// <inheritdoc />
         public override bool Equals(object obj) => obj is Interval I && Equals(I);

@@ -20,14 +20,7 @@ namespace MathCore.Values
         public double M => _Average.Value;
 
         /// <summary>Дисперсия</summary>
-        public double D
-        {
-            get
-            {
-                var m = M;
-                return _Average2.Value - m * m;
-            }
-        }
+        public double D => _Average2.Value - M.Pow2();
 
         /// <summary>Интервал значений, в который попадает величина</summary>
         public Interval MinMax => _MinMax;

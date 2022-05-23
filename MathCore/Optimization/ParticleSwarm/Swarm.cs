@@ -13,12 +13,12 @@ namespace MathCore.Optimization.ParticleSwarm
         public double Inertia
         {
             get => _Inertia;
-            set
+            set => _Inertia = value switch
             {
-                if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть > 0");
-                if (value >= 1) throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть < 1");
-                _Inertia = value;
-            }
+                < 0 => throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть > 0"),
+                >= 1 => throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть < 1"),
+                _ => value
+            };
         }
 
         /// <summary>Коэффициент локального веса</summary>
@@ -35,7 +35,7 @@ namespace MathCore.Optimization.ParticleSwarm
 
         private class Particle
         {
-            private double BestValue;
+            private double _BestValue;
             public readonly double[] BestX;
             public double Value;
             public readonly double[] X;
@@ -45,26 +45,26 @@ namespace MathCore.Optimization.ParticleSwarm
                 this.X = X;
                 this.Value = Value;
                 BestX = (double[])X.Clone();
-                BestValue = Value;
+                _BestValue = Value;
             }
 
             private void SetBest()
             {
-                BestValue = Value;
+                _BestValue = Value;
                 X.CopyTo(BestX, 0);
             }
 
-            public void SetMin([NotNull] Func<double[], double> F)
+            public void SetMin(Func<double[], double> F)
             {
                 Value = F(X);
-                if (Value < BestValue) 
+                if (Value < _BestValue) 
                     SetBest();
             }
 
-            public void SetMax([NotNull] Func<double[], double> F)
+            public void SetMax(Func<double[], double> F)
             {
                 Value = F(X);
-                if (Value > BestValue) 
+                if (Value > _BestValue) 
                     SetBest();
             }
         }
@@ -76,7 +76,7 @@ namespace MathCore.Optimization.ParticleSwarm
         public Swarm(int ParticleCount = 100) => _ParticleCount = ParticleCount;
 
         public void Minimize(
-            [NotNull] in Func<double[], double> F,
+            in Func<double[], double> F,
             in double[] MinX,
             in double[] MaxX,
             int IterationCount,
@@ -85,8 +85,8 @@ namespace MathCore.Optimization.ParticleSwarm
             Minimize(F, MinX.Zip(MaxX, (min, max) => new Interval(min, max)).ToArray(), IterationCount, out X, out Value);
 
         public void Minimize(
-            [NotNull] in Func<double[], double> F,
-            [NotNull] in Interval[] IntervalX,
+            in Func<double[], double> F,
+            in Interval[] IntervalX,
             in int IterationCount,
             out double[] X,
             out double Value)
@@ -102,7 +102,7 @@ namespace MathCore.Optimization.ParticleSwarm
             X = new double[dimensions];
 
             var start = swarm.GetMin(p => p.Value);
-            start.X.CopyTo(X, 0);
+            start!.X.CopyTo(X, 0);
             Value = start.Value;
 
             for (var i = 0; i < IterationCount; i++)
@@ -119,26 +119,25 @@ namespace MathCore.Optimization.ParticleSwarm
                     }
                     p.SetMin(F);
 
-                    if (p.Value < Value)
-                    {
-                        p.X.CopyTo(X, 0);
-                        Value = p.Value;
-                    }
+                    if (p.Value >= Value) continue;
+
+                    p.X.CopyTo(X, 0);
+                    Value = p.Value;
                 }
         }
 
         public void Maximize(
-            [NotNull] in Func<double[], double> F,
-            [NotNull] in double[] MinX,
-            [NotNull] in double[] MaxX,
+            in Func<double[], double> F,
+            in double[] MinX,
+            in double[] MaxX,
             in int IterationCount,
             out double[] X,
             out double Value) =>
             Maximize(F, MinX.Zip(MaxX, (min, max) => new Interval(min, max)).ToArray(), IterationCount, out X, out Value);
 
         public void Maximize(
-            [NotNull] in Func<double[], double> F,
-            [NotNull] in Interval[] IntervalX,
+            in Func<double[], double> F,
+            in Interval[] IntervalX,
             int IterationCount,
             out double[] X,
             out double Value)
@@ -154,7 +153,7 @@ namespace MathCore.Optimization.ParticleSwarm
             X = new double[dimensions];
 
             var start = swarm.GetMin(p => p.Value);
-            start.X.CopyTo(X, 0);
+            start!.X.CopyTo(X, 0);
             Value = start.Value;
 
             for (var i = 0; i < IterationCount; i++)

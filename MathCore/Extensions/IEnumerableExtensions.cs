@@ -2167,26 +2167,25 @@ namespace System.Linq
                     foreach (var v in list)
                         if (min.AddValue(selector(v)))
                             result = v;
-                    break;
+                    return result;
                 case List<T> list:
                     foreach (var v in list)
                         if (min.AddValue(selector(v)))
                             result = v;
-                    break;
+                    return result;
 
                 case IList<T> list:
                     foreach (var v in list)
                         if (min.AddValue(selector(v)))
                             result = v;
-                    break;
+                    return result;
 
                 default:
                     foreach (var v in collection)
                         if (min.AddValue(selector(v)))
                             result = v;
-                    break;
+                    return result;
             }
-            return result;
         }
 
         /// <summary>Определение минимального элемента последовательности</summary>

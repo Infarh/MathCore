@@ -133,10 +133,10 @@ namespace System.Reflection
             if (type == typeof(object) && o != null)
                 type = o.GetType();
 
-            var IsStatic = o is null ? BindingFlags.Static : BindingFlags.Instance;
-            var IsPublic = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
+            var is_static = o is null ? BindingFlags.Static : BindingFlags.Instance;
+            var is_public = IsPrivate ? BindingFlags.NonPublic : BindingFlags.Public;
 
-            _PropertyInfo = type.GetProperty(PropertyName, IsStatic | IsPublic);
+            _PropertyInfo = type.GetProperty(PropertyName, is_static | is_public);
 
             if (_PropertyInfo is null)
             {
@@ -147,9 +147,8 @@ namespace System.Reflection
                 _SetMethod = value => set_method.Invoke(value);
             }
 
-            if (!(o is ISynchronizeInvoke)) return;
+            if (o is not ISynchronizeInvoke obj) return;
 
-            var obj = (ISynchronizeInvoke)o;
             _GetMethod = () => (TValue)obj.Invoke(_GetMethod, null);
             _SetMethod = value => obj.Invoke(_SetMethod, new object[] { value });
 

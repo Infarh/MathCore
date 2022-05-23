@@ -1,18 +1,20 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MathCore.Annotations;
+
 // ReSharper disable MemberCanBeInternal
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedType.Global
 
 namespace MathCore
 {
     public class SynchronizedQueue<T> : IDisposable
     {
-        [NotNull] private readonly Queue<T> _Queue;
-        [NotNull] private readonly AutoResetEvent _Event = new(false);
+        private readonly Queue<T> _Queue;
+        private readonly AutoResetEvent _Event = new(false);
 
         // ReSharper disable once InconsistentlySynchronizedField
         public int Count => _Queue.Count;
@@ -30,8 +32,7 @@ namespace MathCore
             }
         }
 
-        [CanBeNull]
-        private T GetValue()
+        private T? GetValue()
         {
             lock (_Queue)
             {
@@ -42,14 +43,11 @@ namespace MathCore
             }
         }
 
-        [CanBeNull]
-        public T Get() => _Event.WaitOne() ? GetValue() : default;
+        public T? Get() => _Event.WaitOne() ? GetValue() : default;
 
-        [CanBeNull]
-        public T Get(TimeSpan Timeout) => _Event.WaitOne(Timeout) ? GetValue() : default;
+        public T? Get(TimeSpan Timeout) => _Event.WaitOne(Timeout) ? GetValue() : default;
 
-        [CanBeNull]
-        public T Get(int Timeout) => _Event.WaitOne(Timeout) ? GetValue() : default;
+        public T? Get(int Timeout) => _Event.WaitOne(Timeout) ? GetValue() : default;
 
         public void Clear() { lock (_Queue) _Queue.Clear(); }
 
@@ -78,12 +76,12 @@ namespace MathCore
         private readonly Task[] _Tasks;
         private readonly CancellationTokenSource _Cancellation;
 
-        public SynchronizedItemsProcessor(Action<T> action, int ThreadCount = 1)
+        public SynchronizedItemsProcessor(Action<T?> action, int ThreadCount = 1)
         {
             _Cancellation = new CancellationTokenSource();
             var cancellation_token = _Cancellation.Token;
             _Tasks = Enumerable.Range(0, ThreadCount)
-                .Select(i => Task.Factory.StartNew(() =>
+                .Select(_ => Task.Factory.StartNew(() =>
                 {
                     while(!cancellation_token.IsCancellationRequested)
                         action(_Queue.Get());
@@ -91,11 +89,11 @@ namespace MathCore
                 .ToArray();
         }
 
-        public SynchronizedItemsProcessor(Action<T> action, Action<T, Exception> Catch, int ThreadCount = 1)
+        public SynchronizedItemsProcessor(Action<T?> action, Action<T?, Exception> Catch, int ThreadCount = 1)
         {
             _Cancellation = new CancellationTokenSource();
             _Tasks = Enumerable.Range(0, ThreadCount)
-                .Select(i => Task.Factory.StartNew(() =>
+                .Select(_ => Task.Factory.StartNew(() =>
                 {
                     while(!_Cancellation.IsCancellationRequested)
                     {
