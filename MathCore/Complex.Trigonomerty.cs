@@ -16,7 +16,7 @@ namespace MathCore
             /// <summary>Синус</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Синус комплексного аргумента</returns>
-            public static Complex Sin(in Complex z)
+            public static Complex Sin(Complex z)
             {
                 var (re, im) = z;
                 if (im.Equals(0)) return new Complex(Math.Sin(re));
@@ -29,7 +29,7 @@ namespace MathCore
             /// <summary>Косинус</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Косинус комплексного аргумента</returns>
-            public static Complex Cos(in Complex z)
+            public static Complex Cos(Complex z)
             {
                 var (re, im) = z;
                 if (im.Equals(0)) return new Complex(Math.Cos(re));
@@ -42,7 +42,7 @@ namespace MathCore
             /// <summary>Тангенс</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Тангенс комплексного аргумента</returns>
-            public static Complex Tg(in Complex z)
+            public static Complex Tg(Complex z)
             {
                 var (re, im) = z;
                 if (im.Equals(0d)) return new Complex(Math.Sin(re) / Math.Cos(re));
@@ -60,7 +60,7 @@ namespace MathCore
             /// <summary>Котангенс</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Котангенс комплексного аргумента</returns>
-            public static Complex Ctg(in Complex z)
+            public static Complex Ctg(Complex z)
             {
                 var (re, im) = z;
                 if (im.Equals(0d)) return new Complex(Math.Sin(re) / Math.Cos(re));
@@ -78,7 +78,7 @@ namespace MathCore
             /// <summary>Арксинус комплексного переменного</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Арксинус комплексного аргумента</returns>
-            public static Complex Asin(in Complex z)
+            public static Complex Asin(Complex z)
             {
                 var (sqrt_re, sqrt_im) = Sqrt(1 - z.Pow2());
                 var (ln_re, ln_im) = Ln(new Complex(sqrt_re - z.Im, sqrt_im + z.Re));
@@ -88,7 +88,7 @@ namespace MathCore
             /// <summary>Арккосинус комплексного переменного</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Арккосинус комплексного аргумента</returns>
-            public static Complex Acos(in Complex z)
+            public static Complex Acos(Complex z)
             {
                 var (sqrt_re, sqrt_im) = Sqrt(z.Pow2() - 1);
                 var (ln_re, ln_im) = Ln(new Complex(sqrt_re + z.Re, sqrt_im + z.Im));
@@ -98,7 +98,7 @@ namespace MathCore
             /// <summary>Арктангенс комплексного переменного</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Арктангенс комплексного аргумента</returns>
-            public static Complex Atan(in Complex z)
+            public static Complex Atan(Complex z)
             {
                 var iz = i * z;
                 return i * (Ln(1 - iz) - Ln(1 + iz)) / new Complex(2d);
@@ -107,7 +107,7 @@ namespace MathCore
             /// <summary>Арккатангенс комплексного переменного</summary>
             /// <param name="z">Комплексный аргумент</param>
             /// <returns>Арккатангенс комплексного аргумента</returns>
-            public static Complex Arctg(in Complex z)
+            public static Complex Arctg(Complex z)
             {
                 var iz = i * z;
                 return i * (Ln(iz + 1) - Ln(iz - 1)) / new Complex(2d);
@@ -119,7 +119,7 @@ namespace MathCore
                 /// <summary>Гиперболический синус</summary>
                 /// <param name="z">Комплексный аргумент</param>
                 /// <returns>Гиперболический синус комплексного аргумента</returns>
-                public static Complex Sh(in Complex z)
+                public static Complex Sh(Complex z)
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Sinh(re);
@@ -134,7 +134,7 @@ namespace MathCore
                 /// <summary>Гиперболический косинус</summary>
                 /// <param name="z">Комплексный аргумент</param>
                 /// <returns>Гиперболический косинус комплексного аргумента</returns>
-                public static Complex Ch(in Complex z)
+                public static Complex Ch(Complex z)
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Cosh(re);
@@ -149,7 +149,7 @@ namespace MathCore
                 /// <summary>Гиперболический тангенс</summary>
                 /// <param name="z">Комплексный аргумент</param>
                 /// <returns>Гиперболический тангенс комплексного аргумента</returns>
-                public static Complex Tgh(in Complex z)
+                public static Complex Tgh(Complex z)
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Tanh(re);
@@ -167,7 +167,7 @@ namespace MathCore
                 /// <summary>Гиперболический котангенс</summary>
                 /// <param name="z">Комплексный аргумент</param>
                 /// <returns>Гиперболический котангенс комплексного аргумента</returns>
-                public static Complex Ctgh(in Complex z)
+                public static Complex Ctgh(Complex z)
                 {
                     var (re, im) = z;
                     if (im.Equals(0)) return Math.Tanh(re);
