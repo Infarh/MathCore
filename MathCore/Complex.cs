@@ -153,7 +153,7 @@ namespace MathCore
         ///<summary>Натуральный логогриф комплексного числа</summary>
         ///<param name="z">Комплексное число</param>
         ///<returns>Натуральный логарифм</returns>
-        public static Complex Ln(in Complex z) => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im), z.Arg);
+        public static Complex Ln(Complex z) => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im), z.Arg);
 
         ///<summary>Логогриф мнимого числа по действительному основанию</summary>
         ///<param name="Im">Мнимое число</param>
@@ -171,7 +171,7 @@ namespace MathCore
         /// <param name="z">Комплексное число</param>
         /// <param name="b">Действительное основание логарифма</param>
         /// <returns>Логарифм комплексного числа по действительному основанию</returns>
-        public static Complex Log(in Complex z, double b)
+        public static Complex Log(Complex z, double b)
             => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(E, b));
 
         /// <summary>Экспоненциальная форма числа Z = e^j*Arg</summary>
@@ -188,7 +188,7 @@ namespace MathCore
         /// <summary>Экспонента с комплексным показателем Z = e^(re + j*im) = e^re * [cos(im) + j*sin(im)]</summary>
         /// <param name="z">Комплексный показатель степени экспоненты</param>
         /// <returns>Результат вычисления комплексной экспоненты</returns>
-        public static Complex Exp(in Complex z)
+        public static Complex Exp(Complex z)
         {
             var (re, im) = z;
             var e = Math.Exp(re);
@@ -205,19 +205,19 @@ namespace MathCore
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(double Re, in Complex Im) => new(Re + Im.Re, Im.Im);
+        public static Complex Mod(double Re, Complex Im) => new(Re + Im.Re, Im.Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(in Complex Re, in Complex Im) => new(Re.Re + Im.Re, Re.Im + Im.Im);
+        public static Complex Mod(Complex Re, Complex Im) => new(Re.Re + Im.Re, Re.Im + Im.Im);
 
         /// <summary>Алгебраическая форма записи комплексного числа</summary>
         /// <param name="Re">Действительная часть числа</param>
         /// <param name="Im">Мнимая часть числа</param>
         /// <returns>Комплексное число в алгебраической форме записи</returns>
-        public static Complex Mod(in Complex Re, double Im) => new(Re.Re, Re.Im + Im);
+        public static Complex Mod(Complex Re, double Im) => new(Re.Re, Re.Im + Im);
 
         /// <summary>Действительное число</summary>
         /// <param name="re">Значение действительной части числа</param>
@@ -633,7 +633,7 @@ namespace MathCore
         /// <param name="z">Комплексная степень корня</param>
         /// <returns>Комплексный результат вычисления корня комплексной степени от комплексного числа</returns>
         [DST]
-        public static Complex Sqrt(in Complex z) => z.Sqrt();
+        public static Complex Sqrt(Complex z) => z.Sqrt();
 
         /// <summary>Вычисление корня действительной степени</summary>
         /// <param name="x">Действительная степень корня</param>

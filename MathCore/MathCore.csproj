@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.74</Version>
+    <Version>0.0.75</Version>
     <PackageReleaseNotes>
-      Ускорение эллиптических функций Якоби
+      Класс MathEx расширенных математических функций (тригонометрия + гиперболические функции)
     </PackageReleaseNotes>
   </PropertyGroup>
 
