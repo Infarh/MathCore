@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.75</Version>
+    <Version>0.0.76</Version>
     <PackageReleaseNotes>
-      Класс MathEx расширенных математических функций (тригонометрия + гиперболические функции)
+      Построитель графиков в консоли
     </PackageReleaseNotes>
   </PropertyGroup>
 
