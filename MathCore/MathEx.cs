@@ -5,6 +5,10 @@ namespace MathCore;
 /// <summary>Расширенный класс математических функций</summary>
 public static class MathEx
 {
+    public static double Sinc(double x) => x == 0 ? 1 : Math.Sin(x) / x;
+
+    public static double SincN(double x, double N) => x == 0 ? 1 : Math.Sin(N * x) / (N * Math.Sin(x));
+
     /// <summary>Секанс</summary>
     public static double Sec(double x)
     {

@@ -255,23 +255,23 @@ public static class StringExtensions
     /// <param name="str">Шифруемая строка</param>
     /// <param name="password">Пароль шифрования</param>
     /// <returns>Зашифрованная строка</returns>
-    public static string Ecrypt(this string str, string password) => str.Ecrypt(password, __Salt);
+    public static string Encrypt(this string str, string password) => str.Encrypt(password, __Salt);
 
     /// <summary>Зашифровать строку</summary>
     /// <param name="str">Шифруемая строка</param>
     /// <param name="password">Пароль шифрования</param>
     /// <param name="Salt">Соль алгоритма</param>
     /// <returns>Зашифрованная строка</returns>
-    public static string Ecrypt(this string str, string password, byte[] Salt) => Convert.ToBase64String(str.Compress().Ecrypt(password, Salt));
+    public static string Encrypt(this string str, string password, byte[] Salt) => Convert.ToBase64String(str.Compress().Encrypt(password, Salt));
 
     /// <summary>Зашифровать массив байт</summary>
     /// <param name="data">Шифруемая последовательность байт</param>
     /// <param name="password">Ключ шифрования</param>
     /// <returns>Зашифрованная последовательность байт</returns>
-    public static byte[] Ecrypt(this byte[] data, string password) => data.Ecrypt(password, __Salt);
+    public static byte[] Encrypt(this byte[] data, string password) => data.Encrypt(password, __Salt);
 
 
-    public static byte[] Ecrypt(this byte[] data, string password, byte[] Salt)
+    public static byte[] Encrypt(this byte[] data, string password, byte[] Salt)
     {
         var algorithm = GetAlgorithm(password, Salt);
         using var stream = new MemoryStream();
@@ -310,16 +310,26 @@ public static class StringExtensions
         0x4d, 0x08, 0x22, 0x3c
     };
 
+    private static Rijndael CreateRijndael(string Password, byte[]? Salt = null)
+    {
+        var pdb = new Rfc2898DeriveBytes(Password, Salt ?? Array.Empty<byte>());
+        var algorithm = Rijndael.Create();
+        algorithm.Key = pdb.GetBytes(32);
+        algorithm.IV = pdb.GetBytes(16);
+        return algorithm;
+    }
+
     /// <summary>Получить алгоритм шифрования с указанным паролем</summary>
     /// <param name="password">Пароль шифрования</param>
     /// <param name="Salt">Соль алгоритма</param>
     /// <returns>Алгоритм шифрования</returns>
     private static ICryptoTransform GetAlgorithm(string password, byte[] Salt)
     {
-        var pdb = new Rfc2898DeriveBytes(password, Salt);
-        var algorithm = Rijndael.Create();
-        algorithm.Key = pdb.GetBytes(32);
-        algorithm.IV = pdb.GetBytes(16);
+        //var pdb = new Rfc2898DeriveBytes(password, Salt);
+        //var algorithm = Rijndael.Create();
+        //algorithm.Key = pdb.GetBytes(32);
+        //algorithm.IV = pdb.GetBytes(16);
+        var algorithm = CreateRijndael(password, Salt);
         return algorithm.CreateEncryptor();
     }
 
@@ -328,10 +338,11 @@ public static class StringExtensions
     /// <returns>Алгоритм расшифровки</returns>
     private static ICryptoTransform GetInverseAlgorithm(string password)
     {
-        var pdb = new Rfc2898DeriveBytes(password, Array.Empty<byte>());
-        var algorithm = Rijndael.Create();
-        algorithm.Key = pdb.GetBytes(32);
-        algorithm.IV = pdb.GetBytes(16);
+        //var pdb = new Rfc2898DeriveBytes(password, Array.Empty<byte>());
+        //var algorithm = Rijndael.Create();
+        //algorithm.Key = pdb.GetBytes(32);
+        //algorithm.IV = pdb.GetBytes(16);
+        var algorithm = CreateRijndael(password);
         return algorithm.CreateDecryptor();
     }
 
