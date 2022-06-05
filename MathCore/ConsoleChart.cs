@@ -36,6 +36,11 @@ public sealed class ConsoleChart
     public char AxeXArrowChar { get; set; } = '>'; //'→'
     public char AxeYArrowChar { get; set; } = '↑';
 
+    public double? AxeXMax { get; set; }
+    public double? AxeXMin { get; set; }
+    public double? AxeYMax { get; set; }
+    public double? AxeYMin { get; set; }
+
     public ConsoleChart(int Width, int Height, TextWriter Writer)
     {
         _Width = Width;
@@ -54,15 +59,19 @@ public sealed class ConsoleChart
         var x_interval = XX.GetMinMax();
         var y_interval = YY.GetMinMax();
 
-        var x_min = x_interval.Min;
-        var y_max = y_interval.Max;
+        var x_min = AxeXMin ?? x_interval.Min;
+        var x_max = AxeXMax ?? x_interval.Max;
+        var x_values_interval = x_max - x_min;
+        var y_min = AxeYMin ?? y_interval.Min;
+        var y_max = AxeYMax ?? y_interval.Max;
+        var y_values_interval = y_max - y_min;
 
         var axe_x_char = AxeXChar;
         var axe_y_char = AxeYChar;
         var axe_cross_char = AxeCrossChar;
 
         var values_rows_count = _Height - __ValuesYOffset0;
-        var dy = y_interval.Length / (values_rows_count - 1);
+        var dy = y_values_interval / (values_rows_count - 1);
 
         var row_str = new string[values_rows_count];
         var f_values_format = YValuesFormat;
@@ -76,12 +85,12 @@ public sealed class ConsoleChart
         }
 
         var y_max_label = f_values_format is null
-            ? y_interval.Max.ToString(formatter)
-            : y_interval.Max.ToString(f_values_format, formatter);
+            ? y_max.ToString(formatter)
+            : y_max.ToString(f_values_format, formatter);
 
         var y_min_label = f_values_format is null
-            ? y_interval.Min.ToString(formatter)
-            : y_interval.Min.ToString(f_values_format, formatter);
+            ? y_min.ToString(formatter)
+            : y_min.ToString(f_values_format, formatter);
 
         var y_axe_label_width = Math.Max(row_str.Max(l => l.Length), Math.Max(y_max_label.Length, y_min_label.Length));
 
@@ -103,7 +112,7 @@ public sealed class ConsoleChart
 
         var x_axe_values_width_offset = y_max_label.Length + 2 + XAxeName.Length;
         var values_cols_count = _Width - x_axe_values_width_offset;
-        var dx = x_interval / (values_cols_count - 1);
+        var dx = x_values_interval / (values_cols_count - 1);
 
         var buffer_lines = new char[values_rows_count][];
         var x_axes_not_plotet = PlotAxeX;
@@ -183,16 +192,16 @@ public sealed class ConsoleChart
         writer.WriteLine(XAxeName);
 
         var x_max_label = f_values_format is null
-            ? x_interval.Max.ToString(formatter)
-            : x_interval.Max.ToString(f_values_format, formatter);
+            ? x_max.ToString(formatter)
+            : x_max.ToString(f_values_format, formatter);
 
         var x_min_label = f_values_format is null
-            ? x_interval.Min.ToString(formatter)
-            : x_interval.Min.ToString(f_values_format, formatter);
+            ? x_min.ToString(formatter)
+            : x_min.ToString(f_values_format, formatter);
 
         var x_000_label = f_values_format is null
-            ? x_interval.Middle.ToString(formatter)
-            : x_interval.Middle.ToString(f_values_format, formatter);
+            ? ((x_min + x_max) / 2).ToString(formatter)
+            : ((x_min + x_max) / 2).ToString(f_values_format, formatter);
 
         writer.Write(new string(' ', y_axe_label_width));
         writer.Write(axe_y_char);
