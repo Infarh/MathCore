@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.77</Version>
+    <Version>0.0.78</Version>
     <PackageReleaseNotes>
-      Оптимизация методов-расширений математики с массивами вещественных чисел
+      ReaderWriterLockSlim Extensions
     </PackageReleaseNotes>
   </PropertyGroup>
 
