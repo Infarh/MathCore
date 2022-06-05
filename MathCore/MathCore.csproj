@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.76</Version>
+    <Version>0.0.77</Version>
     <PackageReleaseNotes>
-      Построитель графиков в консоли
+      Оптимизация методов-расширений математики с массивами вещественных чисел
     </PackageReleaseNotes>
   </PropertyGroup>
 
