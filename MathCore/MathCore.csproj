@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.78</Version>
+    <Version>0.0.78.1</Version>
     <PackageReleaseNotes>
       ReaderWriterLockSlim Extensions
+      Исправлено положение (дублирование) методов алгебры матриц
     </PackageReleaseNotes>
   </PropertyGroup>
 

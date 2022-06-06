@@ -18,126 +18,6 @@ public partial class Matrix
 {
     public partial class Array
     {
-        public static double[,] Add(double[,] A, double B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] + B;
-            return result;
-        }
-
-        public static double[,] Subtract(double[,] A, double B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] - B;
-            return result;
-        }
-
-        public static double[,] Subtract(double B, double[,] A)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = B - A[i, j];
-            return result;
-        }
-
-        public static double[,] Multiply(double[,] A, double B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] * B;
-            return result;
-        }
-
-        public static double[,] Divide(double[,] A, double B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] / B;
-            return result;
-        }
-
-        public static double[,] Divide(double B, double[,] A)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = B / A[i, j];
-            return result;
-        }
-
-        public static double[,] Add(double[,] A, double[,] B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            GetLength(B, out var rows_b, out var cols_b);
-
-            if (rows_a != rows_b) throw new InvalidOperationException("Число строк матриц не совпадает");
-            if (cols_a != cols_b) throw new InvalidOperationException("Число столбцов матриц не совпадает");
-
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] + B[i, j];
-            return result;
-        }
-
-        public static double[,] Subtract(double[,] A, double[,] B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            GetLength(B, out var rows_b, out var cols_b);
-
-            if (rows_a != rows_b) throw new InvalidOperationException("Число строк матриц не совпадает");
-            if (cols_a != cols_b) throw new InvalidOperationException("Число столбцов матриц не совпадает");
-
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] - B[i, j];
-            return result;
-        }
-
-        public static double[,] MultiplyElements(double[,] A, double[,] B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            GetLength(B, out var rows_b, out var cols_b);
-
-            if (rows_a != rows_b) throw new InvalidOperationException("Число строк матриц не совпадает");
-            if (cols_a != cols_b) throw new InvalidOperationException("Число столбцов матриц не совпадает");
-
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] * B[i, j];
-            return result;
-        }
-
-        public static double[,] DivideElements(double[,] A, double[,] B)
-        {
-            GetLength(A, out var rows_a, out var cols_a);
-            GetLength(B, out var rows_b, out var cols_b);
-
-            if (rows_a != rows_b) throw new InvalidOperationException("Число строк матриц не совпадает");
-            if (cols_a != cols_b) throw new InvalidOperationException("Число столбцов матриц не совпадает");
-
-            var result = new double[rows_a, cols_a];
-            for (var i = 0; i < rows_a; i++)
-                for (var j = 0; j < cols_a; j++)
-                    result[i, j] = A[i, j] / B[i, j];
-            return result;
-        }
-
         /// <summary>Преобразовать двумерный массив элементов матрицы в массив массивов-столбцов</summary>
         /// <param name="matrix">Двумерный массив элементов матрицы</param>
         /// <returns>Массив столбцов</returns>
@@ -237,7 +117,6 @@ public partial class Matrix
         /// <returns>Двумерный массив, содержащий на главной диагонали элементы диагональной матрицы</returns>
         /// <exception cref="ArgumentNullException"><paramref name="elements"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Массив не содержит элементов</exception>
-        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public static double[,] CreateDiagonal(params double[] elements)
         {
             if (elements is null)
@@ -445,7 +324,11 @@ public partial class Matrix
         /// <param name="M">Число столбцов (элементов строки) матрицы</param>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         [DST]
-        public static void GetLength(double[,] matrix, out int N, out int M, [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+        public static void GetLength(
+            double[,] matrix,
+            out int N,
+            out int M,
+            [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
         {
             if (matrix is null)
                 throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
@@ -473,7 +356,10 @@ public partial class Matrix
         /// <param name="N">Число строк матрицы</param>
         /// <exception cref="ArgumentNullException">В случае если отсутствует ссылка на матрицу <paramref name="matrix"/></exception>
         [DST]
-        public static void GetRowsCount(double[,] matrix, out int N, [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+        public static void GetRowsCount(
+            double[,] matrix,
+            out int N,
+            [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
         {
             if (matrix is null) throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
 
@@ -485,7 +371,10 @@ public partial class Matrix
         /// <param name="M">Число столбцов (элементов строки) матрицы</param>
         /// <exception cref="ArgumentNullException"><paramref name="matrix"/> is <see langword="null"/></exception>
         [DST]
-        public static void GetColsCount(double[,] matrix, out int M, [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
+        public static void GetColsCount(
+            double[,] matrix,
+            out int M,
+            [CallerArgumentExpression("matrix")] string? MatrixArgumentName = null)
         {
             if (matrix is null) throw new ArgumentNullException(MatrixArgumentName ?? nameof(matrix));
 
@@ -502,7 +391,8 @@ public partial class Matrix
             if (N < 1) throw new ArgumentOutOfRangeException(nameof(N), @"Размерность матрицы должна быть больше 0");
 
             var result = new double[N, N];
-            for (var i = 0; i < N; i++) result[i, i] = 1;
+            for (var i = 0; i < N; i++)
+                result[i, i] = 1;
             return result;
         }
 
@@ -518,7 +408,9 @@ public partial class Matrix
             if (N != M)
                 throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
 
-            for (var i = 0; i < N; i++) for (var j = 0; j < M; j++) matrix[i, j] = i == j ? 1 : 0;
+            for (var i = 0; i < N; i++)
+                for (var j = 0; j < M; j++)
+                    matrix[i, j] = i == j ? 1 : 0;
         }
 
         /// <summary>Трансвекция матрицы</summary>
@@ -537,7 +429,10 @@ public partial class Matrix
                 throw new ArgumentException(@"Номер опорной строки выходит за пределы индексов строк матрицы", nameof(i0));
 
             var result = GetUnitaryArrayMatrix(N);
-            for (var i = 0; i < N; i++) result[i, i0] = i == i0 ? 1 / A[i0, i0] : -A[i, i0] / A[i0, i0];
+            for (var i = 0; i < N; i++)
+                result[i, i0] = i == i0
+                    ? 1 / A[i0, i0]
+                    : -A[i, i0] / A[i0, i0];
             return result;
         }
 
@@ -556,15 +451,16 @@ public partial class Matrix
                 throw new ArgumentNullException(nameof(result));
 
             GetRowsCount(A, out var N);
-            if (N != A.GetLength(1))
-                throw new ArgumentException(@"Трансвекция неквадратной матрицы невозможна", nameof(A));
+            if (N != A.GetLength(1)) throw new ArgumentException(@"Трансвекция неквадратной матрицы невозможна", nameof(A));
             if (N != result.GetLength(0) || A.GetLength(1) != result.GetLength(1))
                 throw new ArgumentException(@"Размер матрицы результата не соответствует размеру исходной матрицы", nameof(result));
-            if (j0 < 0 || j0 >= N)
-                throw new ArgumentException(@"Номер опорного столбца выходит за пределы индексов столбцов матрицы", nameof(j0));
+            if (j0 < 0 || j0 >= N) throw new ArgumentException(@"Номер опорного столбца выходит за пределы индексов столбцов матрицы", nameof(j0));
 
             InitializeUnitaryMatrix(result);
-            for (var i = 0; i < N; i++) result[i, j0] = i == j0 ? 1 / A[j0, j0] : -A[i, j0] / A[j0, j0];
+            for (var i = 0; i < N; i++)
+                result[i, j0] = i == j0
+                    ? 1 / A[j0, j0]
+                    : -A[i, j0] / A[j0, j0];
         }
 
         /// <summary>Получить столбец матрицы в виде матрицы</summary>
@@ -577,11 +473,11 @@ public partial class Matrix
         public static double[,] GetCol(double[,] matrix, int j)
         {
             GetRowsCount(matrix, out var N);
-            if (j < 0 || j >= N)
-                throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
+            if (j < 0 || j >= N) throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
 
             var result = new double[N, 1];
-            for (var i = 0; i < N; i++) result[i, 0] = matrix[i, j];
+            for (var i = 0; i < N; i++)
+                result[i, 0] = matrix[i, j];
             return result;
         }
 
@@ -595,11 +491,11 @@ public partial class Matrix
         public static double[] GetCol_Array(double[,] matrix, int j)
         {
             GetRowsCount(matrix, out var N);
-            if (j < 0 || j >= N)
-                throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
+            if (j < 0 || j >= N) throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
 
             var result = new double[N];
-            for (var i = 0; i < N; i++) result[i] = matrix[i, j];
+            for (var i = 0; i < N; i++)
+                result[i] = matrix[i, j];
             return result;
         }
 
@@ -616,12 +512,9 @@ public partial class Matrix
         {
             GetRowsCount(matrix, out var N);
 
-            if (j < 0 || j >= N)
-                throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
-            if (result is null)
-                throw new ArgumentNullException(nameof(result));
-            if (result.Length != N)
-                throw new ArgumentException(@"Размер массива результата не соответствует числу строк исходной матрицы", nameof(result));
+            if (j < 0 || j >= N) throw new ArgumentOutOfRangeException(nameof(j), j, @"Указанный номер столбца матрицы выходит за границы массива");
+            if (result is null) throw new ArgumentNullException(nameof(result));
+            if (result.Length != N) throw new ArgumentException(@"Размер массива результата не соответствует числу строк исходной матрицы", nameof(result));
 
             for (var i = 0; i < N; i++)
                 result[i] = matrix[i, j];
@@ -638,11 +531,11 @@ public partial class Matrix
         {
             GetColsCount(matrix, out var M);
 
-            if (i < 0 || i >= M)
-                throw new ArgumentOutOfRangeException(nameof(i), i, @"Указанный номер строки матрицы выходит за границы массива");
+            if (i < 0 || i >= M) throw new ArgumentOutOfRangeException(nameof(i), i, @"Указанный номер строки матрицы выходит за границы массива");
 
             var result = new double[1, M];
-            for (var j = 0; j < M; j++) result[0, j] = matrix[i, j];
+            for (var j = 0; j < M; j++)
+                result[0, j] = matrix[i, j];
             return result;
         }
 
@@ -657,8 +550,7 @@ public partial class Matrix
         {
             GetColsCount(matrix, out var M);
 
-            if (i < 0 || i >= M)
-                throw new ArgumentOutOfRangeException(nameof(i), i, @"Указанный номер строки матрицы выходит за границы массива");
+            if (i < 0 || i >= M) throw new ArgumentOutOfRangeException(nameof(i), i, @"Указанный номер строки матрицы выходит за границы массива");
 
             var result = new double[M];
             for (var j = 0; j < M; j++)
@@ -679,12 +571,9 @@ public partial class Matrix
         {
             GetColsCount(matrix, out var M);
 
-            if (i < 0 || i >= M)
-                throw new ArgumentOutOfRangeException(nameof(i), i, @"Указанный номер строки матрицы выходит за границы массива");
-            if (result is null)
-                throw new ArgumentNullException(nameof(result));
-            if (result.Length != M)
-                throw new ArgumentException(@"Размер массива результата не соответствует числу столбцов исходной матрицы", nameof(result));
+            if (i < 0 || i >= M) throw new ArgumentOutOfRangeException(nameof(i), i, @"Указанный номер строки матрицы выходит за границы массива");
+            if (result is null) throw new ArgumentNullException(nameof(result));
+            if (result.Length != M) throw new ArgumentException(@"Размер массива результата не соответствует числу столбцов исходной матрицы", nameof(result));
 
             for (var j = 0; j < M; j++)
                 result[j] = matrix[i, j];
@@ -715,10 +604,8 @@ public partial class Matrix
         {
             GetLength(matrix, out var N, out var M);
 
-            if (N == 0 || M == 0)
-                throw new ArgumentOutOfRangeException(nameof(matrix), @"Матрица пуста");
-            if (N != M)
-                throw new ArgumentException(@"Обратная матрица существует только для квадратной матрицы", nameof(matrix));
+            if (N == 0 || M == 0) throw new ArgumentOutOfRangeException(nameof(matrix), @"Матрица пуста");
+            if (N != M) throw new ArgumentException(@"Обратная матрица существует только для квадратной матрицы", nameof(matrix));
 
             var result = GetUnitaryArrayMatrix(N);
             return TrySolve(matrix, ref result, out p)
@@ -734,12 +621,9 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
         public static void Inverse(double[,] matrix, double[,] result)
         {
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (matrix.GetLength(0) != matrix.GetLength(1))
-                throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
-            if (result is null)
-                throw new ArgumentNullException(nameof(result));
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
+            if (result is null) throw new ArgumentNullException(nameof(result));
             if (result.GetLength(0) != matrix.GetLength(0) || result.GetLength(1) != matrix.GetLength(1))
                 throw new ArgumentException(@"Размерность матрицы результата не соответствует размерности исходной матрицы", nameof(result));
 
@@ -760,11 +644,10 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         public static double[,] GetSolve(double[,] matrix, double[,] b, out double[,] p)
         {
-
             var x = b;
-            if (!TrySolve(matrix, ref x, out p, true))
-                throw new InvalidOperationException(@"Невозможно найти обратную матрицу для вырожденной матрицы");
-            return x;
+            return TrySolve(matrix, ref x, out p, true)
+                ? x
+                : throw new InvalidOperationException(@"Невозможно найти обратную матрицу для вырожденной матрицы");
         }
 
         /// <summary>Метод решения СЛАУ</summary>
@@ -794,14 +677,10 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         public static bool TrySolve(double[,] matrix, ref double[,] b, out double[,] p, bool clone_b = false)
         {
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (b is null)
-                throw new ArgumentNullException(nameof(b));
-            if (matrix.GetLength(0) != matrix.GetLength(1))
-                throw new ArgumentException(@"Матрица системы не квадратная", nameof(matrix));
-            if (matrix.GetLength(0) != b.GetLength(0))
-                throw new ArgumentException(@"Число строк матрицы правой части не равно числу строк матрицы системы", nameof(b));
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (b is null) throw new ArgumentNullException(nameof(b));
+            if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица системы не квадратная", nameof(matrix));
+            if (matrix.GetLength(0) != b.GetLength(0)) throw new ArgumentException(@"Число строк матрицы правой части не равно числу строк матрицы системы", nameof(b));
 
             var temp_b = b.CloneObject();
             Triangulate(ref matrix, ref temp_b, out p, out var d);
@@ -851,12 +730,9 @@ public partial class Matrix
         public static void Transpose(double[,] matrix, double[,] result)
         {
             GetLength(matrix, out var N, out var M);
-            if (result is null)
-                throw new ArgumentNullException(nameof(result));
-            if (result.GetLength(0) != M)
-                throw new ArgumentException(@"Число строк матрицы результата не равно числу столбцов исходной матрицы", nameof(result));
-            if (result.GetLength(1) != N)
-                throw new ArgumentException(@"Число столбцов матрицы результата не равно числу строк исходной матрицы", nameof(result));
+            if (result is null) throw new ArgumentNullException(nameof(result));
+            if (result.GetLength(0) != M) throw new ArgumentException(@"Число строк матрицы результата не равно числу столбцов исходной матрицы", nameof(result));
+            if (result.GetLength(1) != N) throw new ArgumentException(@"Число столбцов матрицы результата не равно числу строк исходной матрицы", nameof(result));
 
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
@@ -873,12 +749,9 @@ public partial class Matrix
         /// <exception cref="ArgumentOutOfRangeException">В случае если номер столбца <paramref name="m"/> меньше 0, или больше, либо равен числу столбцов матрицы <paramref name="matrix"/></exception>
         public static double GetAdjunct(double[,] matrix, int n, int m)
         {
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (n < 0 || n >= matrix.GetLength(0))
-                throw new ArgumentOutOfRangeException(nameof(n), n, @"Указанный номер строки вышел за пределы границ массива");
-            if (m < 0 || m >= matrix.GetLength(1))
-                throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (n < 0 || n >= matrix.GetLength(0)) throw new ArgumentOutOfRangeException(nameof(n), n, @"Указанный номер строки вышел за пределы границ массива");
+            if (m < 0 || m >= matrix.GetLength(1)) throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
 
             return (n + m) % 2 == 0
                 ? GetDeterminant(GetMinor(matrix, n, m))
@@ -899,7 +772,8 @@ public partial class Matrix
                 if (i != n)
                 {
                     var j0 = 0;
-                    for (var j = 0; j < M; j++) if (j != m)
+                    for (var j = 0; j < M; j++)
+                        if (j != m)
                             result[i0, j0++] = matrix[i, j];
                     i0++;
                 }
@@ -916,10 +790,8 @@ public partial class Matrix
         public static double[,] GetMinor(double[,] matrix, int n, int m)
         {
             GetLength(matrix, out var N, out var M);
-            if (n < 0 || n >= N)
-                throw new ArgumentOutOfRangeException(nameof(n), n, @"Указанный номер строки вышел за пределы границ массива");
-            if (m < 0 || m >= M)
-                throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
+            if (n < 0 || n >= N) throw new ArgumentOutOfRangeException(nameof(n), n, @"Указанный номер строки вышел за пределы границ массива");
+            if (m < 0 || m >= M) throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
 
             var result = new double[N - 1, M - 1];
             CopyMinor(matrix, n, m, N, M, result);
@@ -938,20 +810,15 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если число столбцов матрицы результата <paramref name="result"/> не равно числу столбцов исходной матрицы <paramref name="matrix"/></exception>
         public static void GetMinor(double[,] matrix, int n, int m, double[,] result)
         {
-            if (result is null)
-                throw new ArgumentNullException(nameof(result));
+            if (result is null) throw new ArgumentNullException(nameof(result));
 
             GetLength(matrix, out var N, out var M);
 
-            if (n < 0 || n >= N)
-                throw new ArgumentOutOfRangeException(nameof(n), n, @"Указанный номер строки вышел за пределы границ массива");
-            if (m < 0 || m >= M)
-                throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
+            if (n < 0 || n >= N) throw new ArgumentOutOfRangeException(nameof(n), n, @"Указанный номер строки вышел за пределы границ массива");
+            if (m < 0 || m >= M) throw new ArgumentOutOfRangeException(nameof(m), m, @"Указанный номер столбца вышел за пределы границ массива");
 
-            if (result.GetLength(0) != N - 1)
-                throw new ArgumentException(@"Число строк матрицы результата не равно числу строк исходной матрицы - 1", nameof(result));
-            if (result.GetLength(1) != M - 1)
-                throw new ArgumentException(@"Число столбцов матрицы результата не равно числу столбцов исходной матрицы - 1", nameof(result));
+            if (result.GetLength(0) != N - 1) throw new ArgumentException(@"Число строк матрицы результата не равно числу строк исходной матрицы - 1", nameof(result));
+            if (result.GetLength(1) != M - 1) throw new ArgumentException(@"Число столбцов матрицы результата не равно числу столбцов исходной матрицы - 1", nameof(result));
 
             CopyMinor(matrix, n, m, N, M, result);
         }
@@ -961,13 +828,10 @@ public partial class Matrix
         /// <returns>Определитель матрицы</returns>
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         /// <exception cref="ArgumentException">В случае если матрица <paramref name="matrix"/> не квадратная</exception>
-        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public static double GetDeterminant(double[,] matrix)
         {
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (matrix.GetLength(0) != matrix.GetLength(1))
-                throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
 
             GetRowsCount(matrix, out var N);
 
@@ -975,13 +839,16 @@ public partial class Matrix
             {
                 case 0: return double.NaN;
                 case 1: return matrix[0, 0];
-                case 2: return matrix[0, 0] * matrix[1, 1] - matrix[0, 1] * matrix[1, 0];
+                case 2:
+                    return matrix[0, 0] * matrix[1, 1] 
+                         - matrix[0, 1] * matrix[1, 0];
                 case 3:
                     return matrix[0, 0] * matrix[1, 1] * matrix[2, 2]
-                        + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] + matrix[0, 2] * matrix[1, 0] * matrix[2, 1]
-                        - matrix[0, 2] * matrix[1, 1] * matrix[2, 0]
-                        - matrix[0, 0] * matrix[1, 2] * matrix[2, 1] -
-                        matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
+                         + matrix[0, 1] * matrix[1, 2] * matrix[2, 0]
+                         + matrix[0, 2] * matrix[1, 0] * matrix[2, 1]
+                         - matrix[0, 2] * matrix[1, 1] * matrix[2, 0]
+                         - matrix[0, 0] * matrix[1, 2] * matrix[2, 1]
+                         - matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
                 default:
                     Triangulate(matrix.CloneObject(), out var d);
                     return d;
@@ -1057,7 +924,7 @@ public partial class Matrix
                 {
                     l[i, j] = u[i, j] / main; // Проводим операции над присоединённой матрицей
                     for (var k = 0; k <= j; k++) u[i, k] = 0d; // Очищаем начало очередной строки
-                    if (l[i, j].Equals(0d)) continue; // Если очередной ведущий элемент строки уже ноль, то пропускаем её
+                    if (l[i, j] == 0) continue; // Если очередной ведущий элемент строки уже ноль, то пропускаем её
                     for (var k = j + 1; k < N; k++) // Вычитаем из элементов строки ...
                         u[i, k] -= l[i, j] * u[j, k];
                 }
@@ -1089,7 +956,7 @@ public partial class Matrix
 
             for (var j = 0; j < N; j++)
             {
-                if (u[j, j].Equals(0d))
+                if (u[j, j] == 0)
                 {
                     l = null;
                     u = null;
@@ -1102,7 +969,7 @@ public partial class Matrix
                 {
                     l[i, j] = u[i, j] / main;
                     for (var k = 0; k <= j; k++) u[i, k] = 0d;
-                    if (l[i, j].Equals(0d)) continue;
+                    if (l[i, j] == 0) continue;
                     for (var k = j + 1; k < N; k++) u[i, k] -= l[i, j] * u[j, k];
                 }
             }
@@ -1169,7 +1036,7 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++)
                 {
                     c[i, j] /= main;
-                    if (c[i, j].Equals(0d)) continue;
+                    if (c[i, j] == 0) continue;
                     for (var k = j + 1; k < N; k++) c[i, k] -= c[i, j] * c[j, k];
                 }
             }
@@ -1212,7 +1079,7 @@ public partial class Matrix
                 for (var i = j + 1; i < N; i++)
                 {
                     c[i, j] /= main;
-                    if (c[i, j].Equals(0d)) continue;
+                    if (c[i, j] == 0) continue;
                     for (var k = j + 1; k < N; k++) c[i, k] -= c[i, j] * c[j, k];
                 }
             }
@@ -1228,20 +1095,19 @@ public partial class Matrix
         /// <exception cref="ArgumentException">Матрица не квадратная</exception>
         public static bool GetLUDecomposition(double[,] matrix, out double[,]? c)
         {
-
             GetRowsCount(matrix, out var N);
-            if (N != matrix.GetLength(1))
+            if (N != matrix.GetLength(1)) 
                 throw new ArgumentException(@"Матрица не квадратная", nameof(matrix));
 
             c = matrix.CloneObject();
 
             for (var j = 0; j < N; j++)
             {
-                if (c[j, j].Equals(0d)) { c = null; return false; }
+                if (c[j, j] == 0) { c = null; return false; }
                 for (var i = j + 1; i < N; i++)
                 {
                     c[i, j] /= c[j, j];
-                    if (c[i, j].Equals(0d)) continue;
+                    if (c[i, j] == 0) continue;
                     for (var k = j + 1; k < N; k++) c[i, k] -= c[i, j] * c[j, k];
                 }
             }
@@ -1270,10 +1136,8 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         public static double[,] GetTriangle(double[,] matrix, out double[,] p, out int rank, out double d)
         {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
             var result = matrix.CloneObject();
             rank = Triangulate(result, out p, out d);
             return result;
@@ -1287,10 +1151,8 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">В случае если матрица <paramref name="matrix"/> не задана</exception>
         public static double[,] GetTriangle(double[,] matrix, out int rank, out double d)
         {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
             var result = matrix.CloneObject();
             rank = Triangulate(result, out d);
             return result;
@@ -1307,12 +1169,9 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         public static double[,] GetTriangle(double[,] matrix, double[,] b, out int rank, out double d)
         {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (b is null) throw new ArgumentNullException(nameof(b));
 
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (b is null)
-                throw new ArgumentNullException(nameof(b));
             var result = matrix.CloneObject();
             rank = Triangulate(result, b, out d);
             return result;
@@ -1339,8 +1198,6 @@ public partial class Matrix
             bool clone_b = true
         )
         {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-
             rank = Triangulate(ref matrix, ref b, out p, out d, false, clone_b);
             return matrix;
         }
@@ -1366,7 +1223,7 @@ public partial class Matrix
                 if (matrix[i0, i0] == 0)
                 {
                     var nonzero_index = i0 + 1;
-                    while (nonzero_index < N && matrix[nonzero_index, i0].Equals(0d)) nonzero_index++;
+                    while (nonzero_index < N && matrix[nonzero_index, i0] == 0) nonzero_index++;
                     if (nonzero_index == N)
                     {
                         p = CreatePermutationMatrix(p_index);
@@ -1541,13 +1398,11 @@ public partial class Matrix
         /// <exception cref="ArgumentException">В случае если число строк присоединённой матрицы <paramref name="b"/> не равно числу строк исходной матрицы <paramref name="matrix"/></exception>
         public static int Triangulate(ref double[,] matrix, double[,] b, out double d, bool clone = true)
         {
-
             GetRowsCount(matrix, out var N);
-            if (b is null)
-                throw new ArgumentNullException(nameof(b));
+            if (b is null) throw new ArgumentNullException(nameof(b));
             GetRowsCount(b, out var B_N);
-            if (B_N != N)
-                throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
+            if (B_N != N) throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
+
             if (clone)
                 matrix = matrix.CloneObject();
             return Triangulate(matrix, b, out d);
@@ -1575,15 +1430,15 @@ public partial class Matrix
         )
         {
             GetLength(matrix, out var N, out var M);
-            if (b is null)
-                throw new ArgumentNullException(nameof(b));
+            if (b is null) throw new ArgumentNullException(nameof(b));
             GetLength(b, out var B_N, out var B_M);
-            if (B_N != N)
-                throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
+            if (B_N != N) throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
+
             if (clone_matrix)
                 matrix = matrix.CloneObject();
             if (clone_b)
                 b = b.CloneObject();
+
             d = 1d;
             var p_index = new int[N];
             for (var i = 0; i < N; i++)
@@ -1653,13 +1508,12 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
         public static bool AreEquals(double[,]? A, double[,]? B)
         {
-            if (ReferenceEquals(A, B))
-                return true;
-            if (B is null || A is null)
-                return false;
+            if (ReferenceEquals(A, B)) return true;
+            if (B is null || A is null) return false;
+
             GetLength(A, out var N, out var M);
-            if (N != B.GetLength(0) || M != B.GetLength(1))
-                return false;
+            if (N != B.GetLength(0) || M != B.GetLength(1)) return false;
+
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     if (!A[i, j].Equals(B[i, j]))
@@ -1675,13 +1529,12 @@ public partial class Matrix
         /// <exception cref="ArgumentNullException">matrix is <see langword="null"/></exception>
         public static bool AreEquals(double[,]? A, double[,]? B, double eps)
         {
-            if (ReferenceEquals(A, B))
-                return true;
-            if (B is null || A is null)
-                return false;
+            if (ReferenceEquals(A, B)) return true;
+            if (B is null || A is null) return false;
+
             GetLength(A, out var N, out var M);
-            if (N != B.GetLength(0) || M != B.GetLength(1))
-                return false;
+            if (N != B.GetLength(0) || M != B.GetLength(1)) return false;
+
             for (var i = 0; i < N; i++) for (var j = 0; j < M; j++)
                     if (Math.Abs(A[i, j] - B[i, j]) > eps)
                         return false;
@@ -1794,24 +1647,15 @@ public partial class Matrix
             [GreaterOrEqual(double.Epsilon)] double eps = double.Epsilon
         )
         {
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (matrix.Length == 0)
-                throw new ArgumentException(@"Матрица системы не содержит элементов", nameof(matrix));
-            if (matrix.GetLength(0) != matrix.GetLength(1))
-                throw new ArgumentException(@"Матрица системы не квадратная", nameof(matrix));
-            if (x is null)
-                throw new ArgumentNullException(nameof(x));
-            if (b is null)
-                throw new ArgumentNullException(nameof(b));
-            if (eps < double.Epsilon)
-                throw new ArgumentOutOfRangeException(nameof(eps), eps, @"Точность должна быть больше 0");
-            if (x.GetLength(0) != matrix.GetLength(0))
-                throw new ArgumentException(@"Число строк массива неизвестных не совпадает с числом строк матрицы системы", nameof(x));
-            if (b.GetLength(0) != matrix.GetLength(0))
-                throw new ArgumentException(@"Число строк массива правой части СЛАУ не совпадает с числом строк матрицы системы", nameof(x));
-            if (b.GetLength(1) != x.GetLength(1))
-                throw new ArgumentException(@"Число столбцов массива правых частей не совпадает с числом столбцов массива неизвестных", nameof(b));
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (matrix.Length == 0) throw new ArgumentException(@"Матрица системы не содержит элементов", nameof(matrix));
+            if (matrix.GetLength(0) != matrix.GetLength(1)) throw new ArgumentException(@"Матрица системы не квадратная", nameof(matrix));
+            if (x is null) throw new ArgumentNullException(nameof(x));
+            if (b is null) throw new ArgumentNullException(nameof(b));
+            if (eps < double.Epsilon) throw new ArgumentOutOfRangeException(nameof(eps), eps, @"Точность должна быть больше 0");
+            if (x.GetLength(0) != matrix.GetLength(0)) throw new ArgumentException(@"Число строк массива неизвестных не совпадает с числом строк матрицы системы", nameof(x));
+            if (b.GetLength(0) != matrix.GetLength(0)) throw new ArgumentException(@"Число строк массива правой части СЛАУ не совпадает с числом строк матрицы системы", nameof(x));
+            if (b.GetLength(1) != x.GetLength(1)) throw new ArgumentException(@"Число столбцов массива правых частей не совпадает с числом столбцов массива неизвестных", nameof(b));
 
             var x1 = x;
             var x0 = x1.CloneObject();
@@ -1843,10 +1687,8 @@ public partial class Matrix
         /// <exception cref="ArgumentException">Матрица не содержит элементов</exception>
         public static void QRDecomposition(double[,] matrix, double[,] q, double[,] r)
         {
-            if (matrix is null)
-                throw new ArgumentNullException(nameof(matrix));
-            if (matrix.Length == 0)
-                throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
+            if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+            if (matrix.Length == 0) throw new ArgumentException(@"Матрица не содержит элементов", nameof(matrix));
 
             GetLength(matrix, out var N, out var M);
 
@@ -1915,7 +1757,7 @@ public partial class Matrix
             var abs_a = Math.Abs(a);
             var abs_b = Math.Abs(b);
             return abs_a > abs_b ? abs_a * Math.Sqrt(1d + Sqr(abs_b / abs_a)) :
-                abs_b.Equals(0d) ? 0d : abs_b * Math.Sqrt(1d + Sqr(abs_a / abs_b));
+                abs_b == 0 ? 0d : abs_b * Math.Sqrt(1d + Sqr(abs_a / abs_b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1959,7 +1801,7 @@ public partial class Matrix
                 {
                     for (var k = i; k < N; k++)
                         scale += Math.Abs(u[k, i]);
-                    if (!scale.Equals(0d))
+                    if (scale != 0)
                     {
                         var s = 0d;
                         for (var k = i; k < N; k++)
@@ -1990,7 +1832,7 @@ public partial class Matrix
                 {
                     for (var k = l; k < M; k++)
                         scale += Math.Abs(u[i, k]);
-                    if (!scale.Equals(0d))
+                    if (scale != 0)
                     {
                         var s = 0d;
                         for (var k = l; k < M; k++)
@@ -2024,7 +1866,7 @@ public partial class Matrix
                 var l = i + 1;
                 if (i < M - 1)
                 {
-                    if (!g.Equals(0d))
+                    if (g != 0)
                     {
                         /* Double division to avoid possible underflow. */
                         for (var j = l; j < M; j++)
@@ -2051,7 +1893,7 @@ public partial class Matrix
                 g = w[i];
                 for (var j = l; j < M; j++)
                     u[i, j] = 0d;
-                if (!g.Equals(0d))
+                if (g != 0)
                 {
                     g = 1d / g;
                     for (var j = l; j < M; j++)
@@ -2172,7 +2014,7 @@ public partial class Matrix
                         z = PyThag(f, h);
                         w[j0] = z;
                         /* Rotation can be arbitrary if z = 0. */
-                        if (!z.Equals(0d))
+                        if (z != 0)
                         {
                             z = 1 / z;
                             c = f * z;
@@ -2237,12 +2079,9 @@ public partial class Matrix
             /// <returns>Скалярное произведение векторов</returns>
             public static double Multiply(double[] v1, double[] v2)
             {
-                if (v1 is null)
-                    throw new ArgumentNullException(nameof(v1));
-                if (v2 is null)
-                    throw new ArgumentNullException(nameof(v2));
-                if (v1.Length != v2.Length)
-                    throw new ArgumentException(@"Длины векторов не совпадают", nameof(v2));
+                if (v1 is null) throw new ArgumentNullException(nameof(v1));
+                if (v2 is null) throw new ArgumentNullException(nameof(v2));
+                if (v1.Length != v2.Length) throw new ArgumentException(@"Длины векторов не совпадают", nameof(v2));
 
                 var s = default(double);
                 var N = v1.Length;
@@ -2257,8 +2096,8 @@ public partial class Matrix
             /// <exception cref="ArgumentNullException"><paramref name="v"/> is <see langword="null"/></exception>
             public static double VectorLength(double[] v)
             {
-                if (v is null)
-                    throw new ArgumentNullException(nameof(v));
+                if (v is null) throw new ArgumentNullException(nameof(v));
+
                 var s = default(double);
                 for (var i = 0; i < v.Length; i++)
                     s += v[i] * v[i];
@@ -2272,8 +2111,7 @@ public partial class Matrix
             /// <exception cref="ArgumentNullException"><paramref name="v1"/> is <see langword="null"/></exception>
             public static double[] Multiply(double[] v1, double v2)
             {
-                if (v1 is null)
-                    throw new ArgumentNullException(nameof(v1));
+                if (v1 is null) throw new ArgumentNullException(nameof(v1));
 
                 var s = new double[v1.Length];
                 var N = s.Length;
@@ -2389,14 +2227,11 @@ public partial class Matrix
             /// <returns>Вектор элементов произведения</returns>
             /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
             /// <exception cref="InvalidOperationException">Размеры векторов не совпадают</exception>
-            public static double[] MultiplyComponent(double[] a, double[] b)
+            public static double[] MultiplyElements(double[] a, double[] b)
             {
-                if (a is null)
-                    throw new ArgumentNullException(nameof(a));
-                if (b is null)
-                    throw new ArgumentNullException(nameof(b));
-                if (a.Length != b.Length)
-                    throw new InvalidOperationException(@"Размеры векторов не совпадают");
+                if (a is null) throw new ArgumentNullException(nameof(a));
+                if (b is null) throw new ArgumentNullException(nameof(b));
+                if (a.Length != b.Length) throw new InvalidOperationException(@"Размеры векторов не совпадают");
 
                 var result = new double[a.Length];
                 for (var i = 0; i < a.Length; i++)
@@ -2409,7 +2244,7 @@ public partial class Matrix
             /// <param name="b">Вектор - делитель</param>
             /// <returns>Вектор, составленный из поэлементного частного элементов векторов делимого и делителя</returns>
             /// <exception cref="ArgumentNullException"><paramref name="a"/> or <paramref name="b"/> is <see langword="null"/></exception>
-            public static double[] DivideComponent(double[] a, double[] b)
+            public static double[] DivideElements(double[] a, double[] b)
             {
                 if (a is null)
                     throw new ArgumentNullException(nameof(a));
@@ -2419,6 +2254,36 @@ public partial class Matrix
                 var result = new double[a.Length];
                 for (var i = 0; i < result.Length; i++)
                     result[i] = a[i] / b[i];
+                return result;
+            }
+
+            public static double[,] MultiplyElements(double[,] A, double[,] B)
+            {
+                GetLength(A, out var rows_a, out var cols_a);
+                GetLength(B, out var rows_b, out var cols_b);
+
+                if (rows_a != rows_b) throw new InvalidOperationException("Число строк матриц не совпадает");
+                if (cols_a != cols_b) throw new InvalidOperationException("Число столбцов матриц не совпадает");
+
+                var result = new double[rows_a, cols_a];
+                for (var i = 0; i < rows_a; i++)
+                    for (var j = 0; j < cols_a; j++)
+                        result[i, j] = A[i, j] * B[i, j];
+                return result;
+            }
+
+            public static double[,] DivideElements(double[,] A, double[,] B)
+            {
+                GetLength(A, out var rows_a, out var cols_a);
+                GetLength(B, out var rows_b, out var cols_b);
+
+                if (rows_a != rows_b) throw new InvalidOperationException("Число строк матриц не совпадает");
+                if (cols_a != cols_b) throw new InvalidOperationException("Число столбцов матриц не совпадает");
+
+                var result = new double[rows_a, cols_a];
+                for (var i = 0; i < rows_a; i++)
+                    for (var j = 0; j < cols_a; j++)
+                        result[i, j] = A[i, j] / B[i, j];
                 return result;
             }
 
@@ -2521,10 +2386,8 @@ public partial class Matrix
             /// <exception cref="ArgumentException">В случае если размерности матрицы не равны</exception>
             public static double[,] Add(double[,] A, double[,] B)
             {
-                if (A is null)
-                    throw new ArgumentNullException(nameof(A));
-                if (B is null)
-                    throw new ArgumentNullException(nameof(B));
+                if (A is null) throw new ArgumentNullException(nameof(A));
+                if (B is null) throw new ArgumentNullException(nameof(B));
 
                 GetLength(A, out var N, out var M);
                 if (N != B.GetLength(0) || M != B.GetLength(1))
@@ -2545,12 +2408,9 @@ public partial class Matrix
             /// <exception cref="ArgumentException">В случае если размерности матрицы не равны</exception>
             public static double[,] Subtract(double[,] A, double[,] B)
             {
-                if (A is null)
-                    throw new ArgumentNullException(nameof(A));
-                if (B is null)
-                    throw new ArgumentNullException(nameof(B));
-
                 GetLength(A, out var N, out var M);
+                if (B is null) throw new ArgumentNullException(nameof(B));
+
                 if (N != B.GetLength(0) || M != B.GetLength(1))
                     throw new ArgumentException(@"Размеры матриц не равны.", nameof(B));
                 var result = new double[N, M];
@@ -2985,6 +2845,29 @@ public partial class Matrix
                 ExecuteAXAt(A, X, Y, N, M);
 
                 return Y;
+            }
+
+            public static double XtAY(double[] X, double[,] A, double[] Y)
+            {
+                if (X is null) throw new ArgumentNullException(nameof(X));
+                if (A is null) throw new ArgumentNullException(nameof(A));
+                if (Y is null) throw new ArgumentNullException(nameof(Y));
+
+                GetLength(A, out var N, out var M);
+                if (X.Length != N) throw new InvalidOperationException($"Число строк ({N}) матрицы A[{N},{M}] не равно длине вектора X.Length = {X.Length}");
+                if (Y.Length != M) throw new InvalidOperationException($"Число столбцов ({M}) матрицы A[{N},{M}] не равно длине вектора Y.Length = {Y.Length}");
+
+                var result = 0.0;
+                for (var i = 0; i < N; i++)
+                {
+                    var s = 0.0;
+                    for (var j = 0; j < M; j++)
+                        s += A[i, j] * Y[j];
+
+                    result += s * X[i];
+                }
+
+                return result;
             }
         }
     }
