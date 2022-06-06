@@ -1403,7 +1403,9 @@ public partial class Matrix
             GetRowsCount(b, out var B_N);
             if (B_N != N) throw new ArgumentException(@"Число строк присоединённой матрицы не равно числу строк исходной матрицы");
 
-            return Triangulate(clone ? matrix.CloneObject() : matrix, b, out d);
+            if (clone)
+                matrix = matrix.CloneObject();
+            return Triangulate(matrix, b, out d);
         }
 
         /// <summary>Приведение матрицы к треугольному виду</summary>
