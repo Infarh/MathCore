@@ -3020,4 +3020,90 @@ public class MatrixArrayTests
 
         result.AssertEquals(242);
     }
+
+    [TestMethod]
+    public void MultiplyAtB_Test()
+    {
+        double[,] A =
+        {
+            { 1, 2, 3, 4, 5 },
+            { 5, 4, 3, 2, 1 },
+            { 1, 2, 3, 2, 1 }
+        };
+        double[,] B =
+        {
+            { 1, 2 },
+            { 3, 4 },
+            { 5, 6 },
+        };
+
+        var C = Matrix.Array.Operator.MultiplyAtB(A, B);
+
+        Assert.That.Collection(C).IsEqualTo(new double[,]
+        {
+            { 21, 28 },
+            { 24, 32 },
+            { 27, 36 },
+            { 20, 28 },
+            { 13, 20 },
+        });
+    }
+
+    [TestMethod]
+    public void MultiplyABt_Test()
+    {
+        double[,] A =
+        {
+            { 1, 2, 3, 4, 5 },
+            { 5, 4, 3, 2, 1 },
+            { 1, 2, 3, 2, 1 }
+        };
+        double[,] B =
+        {
+            { 1, 2, 3, 4, 5 },
+            { 5, 4, 3, 2, 1 },
+        };
+
+        var C = Matrix.Array.Operator.MultiplyABt(A, B);
+
+        Assert.That.Collection(C).IsEqualTo(new double[,]
+        {
+            { 55, 35 },
+            { 35, 55 },
+            { 27, 27 },
+        });
+    }
+
+    [TestMethod]
+    public void MultiplyAtb_Test()
+    {
+        double[,] A =
+        {
+            { 1, 2, 3, 4, 5 },
+            { 5, 4, 3, 2, 1 },
+            { 1, 2, 3, 2, 1 }
+        };
+        double[] x = { 1, 2, 3 };
+
+        var y = Matrix.Array.Operator.MultiplyAtb(A, x);
+
+        y.AssertEquals(14, 16, 18, 14, 10);
+    }
+
+    [TestMethod]
+    public void MultiplyRowToColMatrix_Test()
+    {
+        double[] x = { 1, 2, 3 };
+        double[] y = { 1, 2, 3, 4, 5 };
+
+        var M = Matrix.Array.Operator.MultiplyRowToColMatrix(x, y);
+        Assert.That.Collection(M).IsEqualTo(new double[,]
+        {
+            { 1, 02, 03 },
+            { 2, 04, 06 },
+            { 3, 06, 09 },
+            { 4, 08, 12 },
+            { 5, 10, 15 },
+        });
+    }
 }
