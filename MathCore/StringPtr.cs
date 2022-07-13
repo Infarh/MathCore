@@ -776,23 +776,42 @@ public readonly ref struct StringPtr
     /// <summary>Символы, обрезаемые в начале и конце строки по умолчанию</summary>
     private static readonly char[] __DefaultTrimChars = { ' ', '\0', '\r', '\n', '\t' };
 
-    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <summary>Удаление технических символов в начале строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>
     /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(out bool Trimmed) => TrimStart(out Trimmed, __DefaultTrimChars);
 
+    /// <summary>Удаление технических символов в начале строки</summary>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart() => TrimStart(__DefaultTrimChars);
 
+    /// <summary>Удаление технических символов в конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(out bool Trimmed) => TrimEnd(out Trimmed, __DefaultTrimChars);
 
+    /// <summary>Удаление технических символов в конце строки</summary>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd() => TrimEnd(__DefaultTrimChars);
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool Trimmed) => Trim(out Trimmed, __DefaultTrimChars);
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim() => Trim(__DefaultTrimChars);
 
+    /// <summary>Удаление символа в начале строки</summary>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(char c) => TrimStart(out _, c);
 
+    /// <summary>Удаление символа в начале строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(out bool Trimmed, char c)
     {
         var pos = Pos;
@@ -804,8 +823,17 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos) : this;
     }
 
+    /// <summary>Удаление символа в начале строки</summary>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(char c1, char c2) => TrimStart(out _, c1, c2);
 
+    /// <summary>Удаление символа в начале строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(out bool Trimmed, char c1, char c2)
     {
         var pos = Pos;
@@ -817,8 +845,19 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos) : this;
     }
 
+    /// <summary>Удаление символа в начале строки</summary>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(char c1, char c2, char c3) => TrimStart(out _, c1, c2, c3);
 
+    /// <summary>Удаление символа в начале строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(out bool Trimmed, char c1, char c2, char c3)
     {
         var pos = Pos;
@@ -830,8 +869,15 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos) : this;
     }
 
+    /// <summary>Удаление символов в начале строки</summary>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(params char[] c) => TrimStart(out _, c);
 
+    /// <summary>Удаление символов в начале строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(out bool Trimmed, params char[] c)
     {
         var pos = Pos;
@@ -1287,28 +1333,53 @@ public readonly ref struct StringPtr
         }
     }
 
+    /// <summary>Разделить строку на подстроки по указанному символу-разделителю</summary>
+    /// <param name="Separator">Символ-разделитель</param>
+    /// <returns>Разделитель строки на фрагменты</returns>
     public TokenizerSingleChar Split(char Separator) => new(this, Separator);
 
+    /// <summary>Разделить строку на подстроки по указанному символу-разделителю</summary>
+    /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
+    /// <param name="Separator">Символ-разделитель</param>
+    /// <returns>Разделитель строки на фрагменты</returns>
     public TokenizerSingleChar Split(bool SkipEmpty, char Separator) => SkipEmpty
         ? new TokenizerSingleChar(this, Separator).SkipEmpty()
         : new(this, Separator);
 
+    /// <summary>Разделитель строки на фрагменты по указанному символу-разделителю</summary>
     public readonly ref struct TokenizerSingleChar
     {
+            /// <summary>Строковый буфер</summary>
         private readonly string _Buffer;
 
+            /// <summary>Символ-разделитель</summary>
         private readonly char _Separator;
 
+            /// <summary>Начальное положение в буфере</summary>
         private readonly int _StartIndex;
 
+            /// <summary>Длина подстроки для анализа</summary>
         private readonly int _Length;
 
+            /// <summary>Пропускать пустые фрагменты</summary>
         private readonly bool _SkipEmpty;
 
+        /// <summary>Инициализация нового разделителя строки</summary>
+        /// <param name="Str">Исходный фрагмент строки</param>
+        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
         public TokenizerSingleChar(StringPtr Str, char Separator) : this(Str.Source, Separator, Str.Pos, Str.Length) { }
 
+        /// <summary>Инициализация нового разделителя строки</summary>
+        /// <param name="Buffer">Исходный строковый буфер</param>
+        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
         public TokenizerSingleChar(string Buffer, char Separator) : this(Buffer, Separator, 0, Buffer.Length) { }
 
+        /// <summary>Инициализация нового разделителя строки</summary>
+        /// <param name="Buffer">Исходный строковый буфер</param>
+        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
+        /// <param name="StartIndex">Индекс начала анализируемой подстроки</param>
+        /// <param name="Length">Длина анализируемой подстроки</param>
+        /// <param name="SkipEmpty">Пропускать пустые строковые фрагменты</param>
         public TokenizerSingleChar(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty = false)
         {
             _Buffer = Buffer;
@@ -1318,24 +1389,42 @@ public readonly ref struct StringPtr
             _SkipEmpty = SkipEmpty;
         }
 
+        /// <summary>Пропускать пустые строковые фрагменты</summary>
+        /// <param name="Skip">Пропускать, или нет</param>
+        /// <returns>Перечислитель строковых фрагментов с изменённым режимом пропуска строковых фрагментов</returns>
         public TokenizerSingleChar SkipEmpty(bool Skip = true) => new(_Buffer, _Separator, _StartIndex, _Length, Skip);
 
+        /// <summary>Сформировать перечислитель строковых фрагментов</summary>
+        /// <returns>Перечислитель строковых фрагментов</returns>
         public TokenEnumerator GetEnumerator() => new(_Buffer, _Separator, _StartIndex, _Length, _SkipEmpty);
 
+        /// <summary>Перечислитель строковых фрагментов</summary>
         public ref struct TokenEnumerator
         {
+            /// <summary>Строковый буфер</summary>
             private readonly string _Buffer;
 
+            /// <summary>Символ-разделитель</summary>
             private readonly char _Separator;
 
+            /// <summary>Начальное положение в буфере</summary>
             private readonly int _StartIndex;
 
+            /// <summary>Длина подстроки для анализа</summary>
             private readonly int _Length;
 
+            /// <summary>Пропускать пустые фрагменты</summary>
             private readonly bool _SkipEmpty;
 
+            /// <summary>Текущая позиция в исходной строке</summary>
             private int _CurrentPos;
 
+            /// <summary>Инициализация нового перечислителя строковых фрагментов</summary>
+            /// <param name="Buffer">Исходный строковый буфер</param>
+            /// <param name="Separator">Символ-разделитель</param>
+            /// <param name="StartIndex">Начальное положение в строковом буфере</param>
+            /// <param name="Length">Длина подстроки для анализа</param>
+            /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
             public TokenEnumerator(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty)
             {
                 _Buffer = Buffer;
@@ -1348,8 +1437,11 @@ public readonly ref struct StringPtr
                 Current = default;
             }
 
+            /// <summary>Текущий фрагмент строки</summary>
             public StringPtr Current { get; private set; }
 
+            /// <summary>Перемещение к следующему фрагменту</summary>
+            /// <returns>Истина, если перемещение выполнено успешно</returns>
             public bool MoveNext()
             {
                 switch (_Length - (_CurrentPos - _StartIndex))
