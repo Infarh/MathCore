@@ -1046,6 +1046,117 @@ public readonly ref struct StringPtr
 
                 return -1;
             }
+
+            public bool TryParseNextDouble(out double value)
+            {
+                value = double.NaN;
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return Current.TryParseDouble(out value);
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return ptr.TryParseDouble(out value);
+            }
+
+            public bool TryParseNextDouble(IFormatProvider provider, out double value)
+            {
+                value = double.NaN;
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return Current.TryParseDouble(provider, out value);
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return ptr.TryParseDouble(provider, out value);
+            }
+
+            public bool TryParseNextAsInt32(out int value)
+            {
+                value = 0;
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return Current.TryParseAsInt32(out value);
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return ptr.TryParseAsInt32(out value);
+            }
         }
     }
 
@@ -1162,6 +1273,136 @@ public readonly ref struct StringPtr
                         return i;
 
                 return -1;
+            }
+
+            public bool TryParseNextDouble(out double value)
+            {
+                value = double.NaN;
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return Current.TryParseDouble(out value);
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separator, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return ptr.TryParseDouble(out value);
+            }
+
+            public bool TryParseNextDouble(IFormatProvider provider, out double value)
+            {
+                value = double.NaN;
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return Current.TryParseDouble(provider, out value);
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separator, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return ptr.TryParseDouble(provider, out value);
+            }
+
+            public bool TryParseNextAsInt32(out int value)
+            {
+                value = 0;
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return Current.TryParseAsInt32(out value);
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separator, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return ptr.TryParseAsInt32(out value);
+            }
+
+            public bool TryParseNextAsBool(out bool value)
+            {
+                value = default;
+                if (!MoveNext()) return false;
+                if (Current.Equals("true", StringComparison.OrdinalIgnoreCase))
+                {
+                    value = true;
+                    return true;
+                }
+
+                if (Current.Equals("false", StringComparison.OrdinalIgnoreCase))
+                {
+                    value = false;
+                    return true;
+                }
+
+                return false;
             }
         }
     }
