@@ -3,6 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading;
+
 // ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
 namespace MathCore;
@@ -22,11 +25,11 @@ public readonly ref struct StringPtr
     public int Length { get; }
 
     /// <summary>Подстрока является пустой</summary>
-    public bool IsEmpty => Length == 0;
+    public bool IsEmpty => Source is null || Length == 0;
 
     /// <summary>Индекс символа в подстроке</summary>
     /// <param name="index">Индекс в подстроке</param>
-    /// <returns>Символ по указаному положению</returns>
+    /// <returns>Символ по указанному положению</returns>
     public char this[int index] => Source[Pos + index];
 
     /// <summary>Новая подстрока</summary>
@@ -186,6 +189,10 @@ public readonly ref struct StringPtr
             ? index - Pos
             : -1;
 
+    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <param name="Comparison">Способ сравнения строк</param>
+    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int LastIndexOf(StringPtr str, StringComparison Comparison)
     {
         if (str.Length > Length) return -1;
@@ -241,6 +248,8 @@ public readonly ref struct StringPtr
 
     public static bool operator >(StringPtr ptr, string str) => string.Compare(ptr.Source, ptr.Pos, str, 0, ptr.Length) > 0;
     public static bool operator <(StringPtr ptr, string str) => string.Compare(ptr.Source, ptr.Pos, str, 0, ptr.Length) < 0;
+    public static bool operator >(string str, StringPtr ptr) => ptr < str;
+    public static bool operator <(string str, StringPtr ptr) => ptr > str;
 
     /* --------------------------------------------------------------------------------------- */
 
@@ -588,6 +597,10 @@ public readonly ref struct StringPtr
     }
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
+    /// <returns>Преобразованное вещественное число</returns>
+    public double ParseDouble() => ParseDouble(CultureInfo.InvariantCulture);
+
+    /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
     /// <param name="Provider">Информация о формате</param>
     /// <returns>Преобразованное вещественное число</returns>
     public double ParseDouble(IFormatProvider Provider)
@@ -635,7 +648,7 @@ public readonly ref struct StringPtr
                     continue;
                 }
 
-                if (Substring(start + index).StartWith(decimal_separator_str))
+                if (Substring(index).StartWith(decimal_separator_str))
                     fraction_index = 0.1;
                 else
                 {
@@ -669,15 +682,113 @@ public readonly ref struct StringPtr
         return sign * result;
     }
 
+    /// <summary>Получить имя (ключ) из пары ключ=значение</summary>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Подстрока, содержащая имя (ключ) из пары ключ-значение</returns>
+    public StringPtr GetName(char Separator = '=')
+    {
+        var index = IndexOf(Separator);
+        var pos = Pos;
+        var str = Source;
+        if (index <= 0) return new(str, pos, 0);
+        return Substring(0, index);
+    }
+
+    /// <summary>Получить значение из пары ключ=значение</summary>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Подстрока, содержащая значение из пары ключ-значение</returns>
+    public StringPtr GetValueString(char Separator = '=')
+    {
+        var index = IndexOf(Separator);
+        var pos = Pos;
+        var str = Source;
+        if (index <= 0) return new(str, pos, 0);
+        return Substring(index + 1);
+    }
+
+    /// <summary>Получить вещественное значение из пары ключ=значение</summary>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Вещественное значение из пары ключ-значение</returns>
+    public double GetValueDouble(char Separator = '=') => GetValueString(Separator).ParseDouble();
+
+    /// <summary>Получить вещественное значение из пары ключ=значение</summary>
+    /// <param name="Provider">Провайдер формата значения</param>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Вещественное значение из пары ключ-значение</returns>
+    public double GetValueDouble(IFormatProvider Provider, char Separator = '=') => GetValueString(Separator).ParseDouble(Provider);
+
+    /// <summary>Получить целочисленное значение из пары ключ=значение</summary>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Целочисленное значение из пары ключ-значение</returns>
+    public int GetValueInt32(char Separator = '=') => GetValueString(Separator).ParseAsInt32();
+
+    /// <summary>Попытаться получить вещественное значение из пары ключ=значение</summary>
+    /// <param name="value">Вещественное значение из пары ключ-значение</param>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Истина, если преобразование подстроки значения в вещественное значение выполнено успешно</returns>
+    public bool TryGetValueDouble(out double value, char Separator = '=') => GetValueString(Separator).TryParseDouble(out value);
+
+    /// <summary>Попытаться получить вещественное значение из пары ключ=значение</summary>
+    /// <param name="value">Вещественное значение из пары ключ-значение</param>
+    /// <param name="Provider">Провайдер формата значения</param>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Истина, если преобразование подстроки значения в вещественное значение выполнено успешно</returns>
+    public bool TryGetValueDouble(IFormatProvider Provider, out double value, char Separator = '=') => GetValueString(Separator).TryParseDouble(Provider, out value);
+
+    /// <summary>Попытаться получить целочисленное значение из пары ключ=значение</summary>
+    /// <param name="value">Целочисленное значение из пары ключ-значение</param>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Истина, если преобразование подстроки значения в целочисленное значение выполнено успешно</returns>
+    public bool TryGetValueInt32(out int value, char Separator = '=') => GetValueString(Separator).TryParseAsInt32(out value);
+
+    /// <summary>Попытаться получить булево значение из пары ключ=значение</summary>
+    /// <param name="value">Булево значение из пары ключ-значение</param>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Истина, если преобразование подстроки значения в булево значение выполнено успешно</returns>
+    public bool TryGetValueBool(out bool value, char Separator = '=')
+    {
+        var str = GetValueString(Separator);
+        value = false;
+
+        if (str.IsEmpty) return false;
+
+        if (str.Equals("true", StringComparison.OrdinalIgnoreCase))
+        {
+            value = true;
+            return true;
+        }
+
+        if (str.Equals("false", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    /// <summary>Получить булево значение из пары ключ=значение</summary>
+    /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
+    /// <returns>Булево значение из пары ключ-значение</returns>
+    public bool GetValueBool(char Separator = '=') => TryGetValueBool(out var value, Separator)
+        ? value
+        : throw new FormatException("Строка имела неверный формат");
+
     /* --------------------------------------------------------------------------------------- */
 
+    /// <summary>Символы, обрезаемые в начале и конце строки по умолчанию</summary>
     private static readonly char[] __DefaultTrimChars = { ' ', '\0', '\r', '\n', '\t' };
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimStart(out bool Trimmed) => TrimStart(out Trimmed, __DefaultTrimChars);
+
     public StringPtr TrimStart() => TrimStart(__DefaultTrimChars);
+
     public StringPtr TrimEnd(out bool Trimmed) => TrimEnd(out Trimmed, __DefaultTrimChars);
+
     public StringPtr TrimEnd() => TrimEnd(__DefaultTrimChars);
+
     public StringPtr Trim(out bool Trimmed) => Trim(out Trimmed, __DefaultTrimChars);
+
     public StringPtr Trim() => Trim(__DefaultTrimChars);
 
     public StringPtr TrimStart(char c) => TrimStart(out _, c);
@@ -929,7 +1040,9 @@ public readonly ref struct StringPtr
 
     public Tokenizer Split(params char[] Separators) => new(this, Separators);
 
-    public Tokenizer Split(bool SkipEmpty, params char[] Separators) => new(this, Separators) { SkipEmpty = SkipEmpty };
+    public Tokenizer Split(bool SkipEmpty, params char[] Separators) => SkipEmpty
+        ? new Tokenizer(this, Separators).SkipEmpty(true)
+        : new(this, Separators);
 
     public readonly ref struct Tokenizer
     {
@@ -941,22 +1054,24 @@ public readonly ref struct StringPtr
 
         private readonly int _Length;
 
-        public bool SkipEmpty { get; init; }
+        private readonly bool _SkipEmpty;
 
         public Tokenizer(StringPtr Str, char[] Separators) : this(Str.Source, Separators, Str.Pos, Str.Length) { }
 
         public Tokenizer(string Buffer, char[] Separators) : this(Buffer, Separators, 0, Buffer.Length) { }
 
-        public Tokenizer(string Buffer, char[] Separators, int StartIndex, int Length)
+        public Tokenizer(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty = false)
         {
             _Buffer = Buffer;
             _Separators = Separators;
             _StartIndex = StartIndex;
             _Length = Length;
-            SkipEmpty = false;
+            _SkipEmpty = SkipEmpty;
         }
 
-        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separators, _StartIndex, _Length, SkipEmpty);
+        public Tokenizer SkipEmpty(bool Skip) => new(_Buffer, _Separators, _StartIndex, _Length, Skip);
+
+        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separators, _StartIndex, _Length, _SkipEmpty);
 
         public ref struct TokenEnumerator
         {
@@ -1021,6 +1136,14 @@ public readonly ref struct StringPtr
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
                 return true;
             }
+
+            public StringPtr MoveNextOrThrow() => MoveNext()
+                ? Current
+                : throw new InvalidOperationException($"Невозможно получить следующий фрагмент строки после разделителя {string.Join(",", _Separators.Select(c => $"'{c}'"))}");
+
+            public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
+                ? Current
+                : throw new TException();
 
             private static StringPtr GetNext(string Str, char[] Separator, int StartIndex, int EndIndex)
             {
@@ -1157,12 +1280,18 @@ public readonly ref struct StringPtr
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
                 return ptr.TryParseAsInt32(out value);
             }
+
+            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
+
+            public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
         }
     }
 
     public TokenizerSingleChar Split(char Separator) => new(this, Separator);
 
-    public TokenizerSingleChar Split(bool SkipEmpty, char Separator) => new(this, Separator) { SkipEmpty = SkipEmpty };
+    public TokenizerSingleChar Split(bool SkipEmpty, char Separator) => SkipEmpty
+        ? new TokenizerSingleChar(this, Separator).SkipEmpty()
+        : new(this, Separator);
 
     public readonly ref struct TokenizerSingleChar
     {
@@ -1174,22 +1303,24 @@ public readonly ref struct StringPtr
 
         private readonly int _Length;
 
-        public bool SkipEmpty { get; init; }
+        private readonly bool _SkipEmpty;
 
         public TokenizerSingleChar(StringPtr Str, char Separator) : this(Str.Source, Separator, Str.Pos, Str.Length) { }
 
         public TokenizerSingleChar(string Buffer, char Separator) : this(Buffer, Separator, 0, Buffer.Length) { }
 
-        public TokenizerSingleChar(string Buffer, char Separator, int StartIndex, int Length)
+        public TokenizerSingleChar(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty = false)
         {
             _Buffer = Buffer;
             _Separator = Separator;
             _StartIndex = StartIndex;
             _Length = Length;
-            SkipEmpty = false;
+            _SkipEmpty = SkipEmpty;
         }
 
-        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separator, _StartIndex, _Length, SkipEmpty);
+        public TokenizerSingleChar SkipEmpty(bool Skip = true) => new(_Buffer, _Separator, _StartIndex, _Length, Skip);
+
+        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separator, _StartIndex, _Length, _SkipEmpty);
 
         public ref struct TokenEnumerator
         {
@@ -1254,6 +1385,14 @@ public readonly ref struct StringPtr
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
                 return true;
             }
+
+            public StringPtr MoveNextOrThrow() => MoveNext()
+                ? Current
+                : throw new InvalidOperationException($"Невозможно получить следующий фрагмент строки после разделителя {_Separator}");
+
+            public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
+                ? Current
+                : throw new TException();
 
             private static StringPtr GetNext(string Str, char Separator, int StartIndex, int EndIndex)
             {
@@ -1404,10 +1543,16 @@ public readonly ref struct StringPtr
 
                 return false;
             }
+
+            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
+
+            public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
         }
     }
 
     /* --------------------------------------------------------------------------------------- */
+
+    public override bool Equals(object? obj) => false;
 
     //public override bool Equals(object? obj) => obj is StringPtr other && 
     //    other.Source == Source &&
@@ -1418,9 +1563,13 @@ public readonly ref struct StringPtr
 
     public override int GetHashCode()
     {
-        var hash = Source.GetHashCode();
+        var hash = 397;
+        var str = Source;
         unchecked
         {
+            for (var (i, end) = (Pos, Pos + Length); i <= end; i++) 
+                hash = hash * 397 ^ str[i].GetHashCode();
+
             hash = hash * 397 ^ Pos.GetHashCode();
             hash = hash * 397 ^ Length.GetHashCode();
             return hash;
@@ -1490,7 +1639,11 @@ public readonly ref struct StringPtr
 
     public static implicit operator StringPtr(string Source) => new(Source);
 
-    public static implicit operator string(in StringPtr Ptr) => Ptr.ToString();
+    public static implicit operator string(StringPtr Ptr) => Ptr.ToString();
+
+    public static explicit operator int(StringPtr Ptr) => Ptr.ParseAsInt32();
+
+    public static explicit operator double(StringPtr Ptr) => Ptr.ParseDouble();
 
     /* --------------------------------------------------------------------------------------- */
 }
