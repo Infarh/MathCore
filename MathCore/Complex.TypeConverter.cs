@@ -14,14 +14,13 @@ namespace MathCore
             || t == typeof(int);
 
         /// <inheritdoc />
-        public override object ConvertFrom(ITypeDescriptorContext c, CultureInfo i, object v) =>
-            v switch
-            {
-                string s => Complex.Parse(s),
-                double x => new Complex(x),
-                int x => new Complex(x),
-                _ => base.ConvertFrom(c, i, v)
-            };
+        public override object ConvertFrom(ITypeDescriptorContext c, CultureInfo i, object v) => v switch
+        {
+            string s => Complex.Parse(s),
+            double x => new Complex(x),
+            int x => new Complex(x),
+            _ => base.ConvertFrom(c, i, v)
+        };
 
         /// <inheritdoc />
         public override bool CanConvertTo(ITypeDescriptorContext c, Type t) =>

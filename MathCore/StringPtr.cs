@@ -1,7 +1,9 @@
 ﻿#nullable enable
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+// ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
 namespace MathCore;
 
@@ -399,7 +401,7 @@ public readonly ref struct StringPtr
         var length = Length;
         var str = Source;
 
-        if (length == 0 || str[start + length] is '.' or ',')
+        if (length == 0 || str[start + length - 1] is '.' or ',')
         {
             value = double.NaN;
             return false;
@@ -671,21 +673,55 @@ public readonly ref struct StringPtr
 
     private static readonly char[] __DefaultTrimChars = { ' ', '\0', '\r', '\n', '\t' };
 
+    public StringPtr TrimStart(out bool Trimmed) => TrimStart(out Trimmed, __DefaultTrimChars);
     public StringPtr TrimStart() => TrimStart(__DefaultTrimChars);
+    public StringPtr TrimEnd(out bool Trimmed) => TrimEnd(out Trimmed, __DefaultTrimChars);
     public StringPtr TrimEnd() => TrimEnd(__DefaultTrimChars);
+    public StringPtr Trim(out bool Trimmed) => Trim(out Trimmed, __DefaultTrimChars);
     public StringPtr Trim() => Trim(__DefaultTrimChars);
 
-    public StringPtr TrimStart(char c)
+    public StringPtr TrimStart(char c) => TrimStart(out _, c);
+
+    public StringPtr TrimStart(out bool Trimmed, char c)
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
         var end_pos = pos + len - 1;
         var str = Source;
         while (pos < end_pos && str[pos] == c) pos++;
-        return Substring(pos);
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos) : this;
     }
 
-    public StringPtr TrimStart(params char[] c)
+    public StringPtr TrimStart(char c1, char c2) => TrimStart(out _, c1, c2);
+
+    public StringPtr TrimStart(out bool Trimmed, char c1, char c2)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (pos < end_pos && (str[pos] == c1 || str[pos] == c2)) pos++;
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos) : this;
+    }
+
+    public StringPtr TrimStart(char c1, char c2, char c3) => TrimStart(out _, c1, c2, c3);
+
+    public StringPtr TrimStart(out bool Trimmed, char c1, char c2, char c3)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (pos < end_pos && (str[pos] == c1 || str[pos] == c2 || str[pos] == c3)) pos++;
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos) : this;
+    }
+
+    public StringPtr TrimStart(params char[] c) => TrimStart(out _, c);
+
+    public StringPtr TrimStart(out bool Trimmed, params char[] c)
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
@@ -704,20 +740,56 @@ public readonly ref struct StringPtr
                     break;
                 }
         }
-        return Substring(pos);
+
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos) : this;
     }
 
-    public StringPtr TrimEnd(char c)
+    public StringPtr TrimEnd(char c) => TrimEnd(out _, c);
+
+    public StringPtr TrimEnd(out bool Trimmed, char c)
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
         var end_pos = pos + len - 1;
         var str = Source;
         while (end_pos > pos && str[end_pos] == c) end_pos--;
-        return Substring(pos, end_pos - pos + 1);
+
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
     }
 
-    public StringPtr TrimEnd(params char[] c)
+    public StringPtr TrimEnd(char c1, char c2) => TrimEnd(out _, c1, c2);
+
+    public StringPtr TrimEnd(out bool Trimmed, char c1, char c2)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (end_pos > pos && str[end_pos] == c1 || str[end_pos] == c2) end_pos--;
+
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
+    }
+
+    public StringPtr TrimEnd(char c1, char c2, char c3) => TrimEnd(out _, c1, c2, c3);
+
+    public StringPtr TrimEnd(out bool Trimmed, char c1, char c2, char c3)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (end_pos > pos && str[end_pos] == c1 || str[end_pos] == c2 || str[end_pos] == c3) end_pos--;
+
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
+    }
+
+    public StringPtr TrimEnd(params char[] c) => TrimEnd(out _, c);
+
+    public StringPtr TrimEnd(out bool Trimmed, params char[] c)
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
@@ -736,10 +808,21 @@ public readonly ref struct StringPtr
                     break;
                 }
         }
-        return Substring(pos, end_pos - pos + 1);
+
+        Trimmed = pos != Pos;
+        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
     }
 
-    public StringPtr Trim(char c)
+    public StringPtr Trim(char c) => Trim(out _, out _, c);
+
+    public StringPtr Trim(out bool Trimmed, char c)
+    {
+        var result = Trim(out var trimmed_start, out var trimmed_end, c);
+        Trimmed = trimmed_start || trimmed_end;
+        return result;
+    }
+
+    public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c)
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
@@ -747,10 +830,65 @@ public readonly ref struct StringPtr
         var str = Source;
         while (pos < end_pos && str[pos] == c) pos++;
         while (pos < end_pos && str[end_pos] == c) end_pos--;
-        return Substring(pos, end_pos - pos + 1);
+        TrimmedStart = pos != Pos;
+        TrimmedEnd = end_pos != Pos + len - 1;
+        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
     }
 
-    public StringPtr Trim(params char[] c)
+    public StringPtr Trim(char c1, char c2) => Trim(out _, out _, c1, c2);
+
+    public StringPtr Trim(out bool Trimmed, char c1, char c2)
+    {
+        var result = Trim(out var trimmed_start, out var trimmed_end, c1, c2);
+        Trimmed = trimmed_start || trimmed_end;
+        return result;
+    }
+
+    public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c1, char c2)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (pos < end_pos && str[pos] == c1 || str[pos] == c2) pos++;
+        while (pos < end_pos && str[end_pos] == c1 || str[end_pos] == c2) end_pos--;
+        TrimmedStart = pos != Pos;
+        TrimmedEnd = end_pos != Pos + len - 1;
+        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
+    }
+
+    public StringPtr Trim(char c1, char c2, char c3) => Trim(out _, out _, c1, c2, c3);
+
+    public StringPtr Trim(out bool Trimmed, char c1, char c2, char c3)
+    {
+        var result = Trim(out var trimmed_start, out var trimmed_end, c1, c2, c3);
+        Trimmed = trimmed_start || trimmed_end;
+        return result;
+    }
+
+    public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c1, char c2, char c3)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (pos < end_pos && str[pos] == c1 || str[pos] == c2 || str[pos] == c3) pos++;
+        while (pos < end_pos && str[end_pos] == c1 || str[end_pos] == c2 || str[end_pos] == c3) end_pos--;
+        TrimmedStart = pos != Pos;
+        TrimmedEnd = end_pos != Pos + len - 1;
+        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
+    }
+
+    public StringPtr Trim(params char[] c) => Trim(out _, out _, c);
+
+    public StringPtr Trim(out bool Trimmed, params char[] c)
+    {
+        var result = Trim(out var trimmed_start, out var trimmed_end, c);
+        Trimmed = trimmed_start || trimmed_end;
+        return result;
+    }
+
+    public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, params char[] c)
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
@@ -769,6 +907,7 @@ public readonly ref struct StringPtr
                     break;
                 }
         }
+        TrimmedStart = pos != Pos;
 
         can_move = true;
         while (pos < end_pos && can_move)
@@ -783,12 +922,13 @@ public readonly ref struct StringPtr
                     break;
                 }
         }
+        TrimmedEnd = end_pos != Pos + len - 1;
 
-        return Substring(pos, end_pos - pos + 1);
+        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
     }
 
-
     public Tokenizer Split(params char[] Separators) => new(this, Separators);
+
     public Tokenizer Split(bool SkipEmpty, params char[] Separators) => new(this, Separators) { SkipEmpty = SkipEmpty };
 
     public readonly ref struct Tokenizer
@@ -909,16 +1049,129 @@ public readonly ref struct StringPtr
         }
     }
 
+    public TokenizerSingleChar Split(char Separator) => new(this, Separator);
+
+    public TokenizerSingleChar Split(bool SkipEmpty, char Separator) => new(this, Separator) { SkipEmpty = SkipEmpty };
+
+    public readonly ref struct TokenizerSingleChar
+    {
+        private readonly string _Buffer;
+
+        private readonly char _Separator;
+
+        private readonly int _StartIndex;
+
+        private readonly int _Length;
+
+        public bool SkipEmpty { get; init; }
+
+        public TokenizerSingleChar(StringPtr Str, char Separator) : this(Str.Source, Separator, Str.Pos, Str.Length) { }
+
+        public TokenizerSingleChar(string Buffer, char Separator) : this(Buffer, Separator, 0, Buffer.Length) { }
+
+        public TokenizerSingleChar(string Buffer, char Separator, int StartIndex, int Length)
+        {
+            _Buffer = Buffer;
+            _Separator = Separator;
+            _StartIndex = StartIndex;
+            _Length = Length;
+            SkipEmpty = false;
+        }
+
+        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separator, _StartIndex, _Length, SkipEmpty);
+
+        public ref struct TokenEnumerator
+        {
+            private readonly string _Buffer;
+
+            private readonly char _Separator;
+
+            private readonly int _StartIndex;
+
+            private readonly int _Length;
+
+            private readonly bool _SkipEmpty;
+
+            private int _CurrentPos;
+
+            public TokenEnumerator(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty)
+            {
+                _Buffer = Buffer;
+                _Separator = Separator;
+                _StartIndex = StartIndex;
+                _CurrentPos = StartIndex;
+                _Length = Length;
+                _SkipEmpty = SkipEmpty;
+
+                Current = default;
+            }
+
+            public StringPtr Current { get; private set; }
+
+            public bool MoveNext()
+            {
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return true;
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separator, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return true;
+            }
+
+            private static StringPtr GetNext(string Str, char Separator, int StartIndex, int EndIndex)
+            {
+                if (StartIndex >= EndIndex) return new(Str, EndIndex, 0);
+
+                var index = NextIndex(Str, Separator, StartIndex, EndIndex);
+                return index < 0
+                    ? new(Str, StartIndex, EndIndex - StartIndex)
+                    : new(Str, StartIndex, index - StartIndex);
+            }
+
+            private static int NextIndex(string Str, char Separator, int StartIndex, int EndIndex)
+            {
+                var str_length = Str.Length;
+                for (var i = StartIndex; i < EndIndex && i < str_length; i++)
+                    if (Separator == Str[i])
+                        return i;
+
+                return -1;
+            }
+        }
+    }
+
     /* --------------------------------------------------------------------------------------- */
 
-    public override bool Equals(object? obj)
-    {
-        if (obj is null || obj.GetType() != typeof(StringPtr))
-            return false;
-
-        var other = (StringPtr)obj!;
-        return other.Source == Source && other.Length == Length && other.Pos == Pos;
-    }
+    //public override bool Equals(object? obj) => obj is StringPtr other && 
+    //    other.Source == Source &&
+    //    other.Length == Length && 
+    //    other.Pos == Pos;
 
     public override string ToString() => Source.Substring(Pos, Length);
 

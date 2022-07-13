@@ -1,6 +1,7 @@
 
 using ConsoleTest;
 
-ConsoleChartTest.Run();
+using MathCore;
+
 
 Console.ReadLine();
