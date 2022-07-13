@@ -33,6 +33,8 @@ public readonly ref struct StringPtr
     /// <returns>Указатель на новое положение</returns>
     public StringPtr this[int index, int length] => new(Source, Pos + index, length);
 
+    //public StringPtr this[Range range] => this[range.Start, range.End - range.End];
+
     /* --------------------------------------------------------------------------------------- */
 
     /// <summary>Инициализация нового указателя на положение в строке</summary>
@@ -68,6 +70,11 @@ public readonly ref struct StringPtr
     /// <returns>Указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
     public StringPtr Substring(int Offset, int Count) => new(Source, Pos + Offset, Count);
 
+    /// <summary>Начинается ли подстрока с указанного символа</summary>
+    /// <param name="c">Символ, с которого должна начинаться текущая подстрока</param>
+    /// <returns>Истина, если текущая подстрока начинается с указанного символа</returns>
+    public bool StartWith(char c) => Length >= 1 && Source[Pos] == c;
+
     /// <summary>Начинается ли подстрока с указанной строки</summary>
     /// <param name="Str">Строка, с которой должна начинаться текущая подстрока</param>
     /// <returns>Истина, если текущая подстрока начинается с указанной строки</returns>
@@ -90,24 +97,28 @@ public readonly ref struct StringPtr
     /// <returns>Истина, если в начале текущей подстроки содержится указанная подстрока</returns>
     public bool StartWith(StringPtr Str, StringComparison Comparison) => Length >= Str.Length && string.Compare(Source, Pos, Str.Source, Str.Pos, Str.Length, Comparison) == 0;
 
+    /// <summary>Заканчивается ли подстрока с указанным символом</summary>
+    /// <param name="c">Символ, на который должна заканчиваться текущая подстрока</param>
+    /// <returns>Истина, если текущая подстрока заканчивается на указанный символ</returns>
+    public bool EndWith(char c) => Length >= 1 && Source[Pos + Length - 1] == c;
 
-    /// <summary>Заканчивается ли подстрока с указанной строки</summary>
+    /// <summary>Заканчивается ли подстрока указанной строкой</summary>
     /// <param name="Str">Строка, на которую должна заканчиваться текущая подстрока</param>
     /// <returns>Истина, если текущая подстрока заканчивается на указанную строку</returns>
     public bool EndWith(string Str) => Length >= Str.Length && string.Compare(Source, Pos + Length - Str.Length, Str, 0, Str.Length) == 0;
 
-    /// <summary>Заканчивается ли подстрока с указанной строки</summary>
+    /// <summary>Заканчивается ли подстрока указанной строкой</summary>
     /// <param name="Str">Строка, на которую должна заканчиваться текущая подстрока</param>
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Истина, если текущая подстрока заканчивается на указанную строку</returns>
     public bool EndWith(string Str, StringComparison Comparison) => Length >= Str.Length && string.Compare(Source, Pos + Length - Str.Length, Str, 0, Str.Length, Comparison) == 0;
 
-    /// <summary>Начинается ли текущая подстрока с указанной подстроки</summary>
+    /// <summary>Начинается ли текущая подстрока указанной подстрокой</summary>
     /// <param name="Str">Подстрока, с которой должна начинаться текущая подстрока</param>
     /// <returns>Истина, если в начале текущей подстроки содержится указанная подстрока</returns>
     public bool EndWith(StringPtr Str) => Length >= Str.Length && string.Compare(Source, Pos + Length - Str.Length, Str.Source, Str.Pos, Str.Length) == 0;
 
-    /// <summary>Начинается ли текущая подстрока с указанной подстроки</summary>
+    /// <summary>Начинается ли текущая подстрока указанной подстрокой</summary>
     /// <param name="Str">Подстрока, с которой должна начинаться текущая подстрока</param>
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Истина, если в начале текущей подстроки содержится указанная подстрока</returns>
@@ -181,7 +192,7 @@ public readonly ref struct StringPtr
         while (true)
         {
             index = Substring(0, index).LastIndexOf(str[0]);
-            if(index < 0) 
+            if (index < 0)
                 return -1;
 
             if (Substring(index, str.Length).Equals(str, Comparison))
@@ -394,8 +405,6 @@ public readonly ref struct StringPtr
             return false;
         }
 
-        //var format = NumberFormatInfo.GetInstance(Provider);
-
         while (index < length && char.IsWhiteSpace(str, start + index))
             index++;
 
@@ -531,7 +540,7 @@ public readonly ref struct StringPtr
                     continue;
                 }
 
-                if(Substring(start + index).StartWith(decimal_separator_str))
+                if (Substring(start + index).StartWith(decimal_separator_str))
                     fraction_index = 0.1;
                 else
                 {
@@ -589,13 +598,13 @@ public readonly ref struct StringPtr
 
         var decimal_separator_str = format.NumberDecimalSeparator;
 
-        if (length == 0 || str.EndsWith(decimal_separator_str)) 
+        if (length == 0 || str.EndsWith(decimal_separator_str))
             throw new FormatException("Строка имела неверный формат");
 
         while (index < length && char.IsWhiteSpace(str, start + index))
             index++;
 
-        if (index >= length) 
+        if (index >= length)
             throw new FormatException("Строка состоит из одних пробелов");
 
         var sign = 1;
@@ -631,8 +640,8 @@ public readonly ref struct StringPtr
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
-                    return index == length 
-                        ? sign * result 
+                    return index == length
+                        ? sign * result
                         : throw new FormatException("Строка имела неверный формат");
                 }
             }
@@ -643,7 +652,7 @@ public readonly ref struct StringPtr
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
-                    return index == length 
+                    return index == length
                         ? sign * result
                         : throw new FormatException("Строка имела неверный формат");
                 }
@@ -656,6 +665,248 @@ public readonly ref struct StringPtr
         }
 
         return sign * result;
+    }
+
+    /* --------------------------------------------------------------------------------------- */
+
+    private static readonly char[] __DefaultTrimChars = { ' ', '\0', '\r', '\n', '\t' };
+
+    public StringPtr TrimStart() => TrimStart(__DefaultTrimChars);
+    public StringPtr TrimEnd() => TrimEnd(__DefaultTrimChars);
+    public StringPtr Trim() => Trim(__DefaultTrimChars);
+
+    public StringPtr TrimStart(char c)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (pos < end_pos && str[pos] == c) pos++;
+        return Substring(pos);
+    }
+
+    public StringPtr TrimStart(params char[] c)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        var can_move = true;
+        while (pos < end_pos && can_move)
+        {
+            var s = str[pos];
+            can_move = false;
+            foreach (var v in c)
+                if (s == v)
+                {
+                    pos++;
+                    can_move = true;
+                    break;
+                }
+        }
+        return Substring(pos);
+    }
+
+    public StringPtr TrimEnd(char c)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (end_pos > pos && str[end_pos] == c) end_pos--;
+        return Substring(pos, end_pos - pos + 1);
+    }
+
+    public StringPtr TrimEnd(params char[] c)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        var can_move = true;
+        while (end_pos > pos && can_move)
+        {
+            var s = str[end_pos];
+            can_move = false;
+            foreach (var v in c)
+                if (s == v)
+                {
+                    end_pos--;
+                    can_move = true;
+                    break;
+                }
+        }
+        return Substring(pos, end_pos - pos + 1);
+    }
+
+    public StringPtr Trim(char c)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        while (pos < end_pos && str[pos] == c) pos++;
+        while (pos < end_pos && str[end_pos] == c) end_pos--;
+        return Substring(pos, end_pos - pos + 1);
+    }
+
+    public StringPtr Trim(params char[] c)
+    {
+        var pos = Pos;
+        var len = Math.Min(Length, Source.Length);
+        var end_pos = pos + len - 1;
+        var str = Source;
+        var can_move = true;
+        while (pos < end_pos && can_move)
+        {
+            var s = str[pos];
+            can_move = false;
+            foreach (var v in c)
+                if (s == v)
+                {
+                    pos++;
+                    can_move = true;
+                    break;
+                }
+        }
+
+        can_move = true;
+        while (pos < end_pos && can_move)
+        {
+            var s = str[end_pos];
+            can_move = false;
+            foreach (var v in c)
+                if (s == v)
+                {
+                    end_pos--;
+                    can_move = true;
+                    break;
+                }
+        }
+
+        return Substring(pos, end_pos - pos + 1);
+    }
+
+
+    public Tokenizer Split(params char[] Separators) => new(this, Separators);
+    public Tokenizer Split(bool SkipEmpty, params char[] Separators) => new(this, Separators) { SkipEmpty = SkipEmpty };
+
+    public readonly ref struct Tokenizer
+    {
+        private readonly string _Buffer;
+
+        private readonly char[] _Separators;
+
+        private readonly int _StartIndex;
+
+        private readonly int _Length;
+
+        public bool SkipEmpty { get; init; }
+
+        public Tokenizer(StringPtr Str, char[] Separators) : this(Str.Source, Separators, Str.Pos, Str.Length) { }
+
+        public Tokenizer(string Buffer, char[] Separators) : this(Buffer, Separators, 0, Buffer.Length) { }
+
+        public Tokenizer(string Buffer, char[] Separators, int StartIndex, int Length)
+        {
+            _Buffer = Buffer;
+            _Separators = Separators;
+            _StartIndex = StartIndex;
+            _Length = Length;
+            SkipEmpty = false;
+        }
+
+        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separators, _StartIndex, _Length, SkipEmpty);
+
+        public ref struct TokenEnumerator
+        {
+            private readonly string _Buffer;
+
+            private readonly char[] _Separators;
+
+            private readonly int _StartIndex;
+
+            private readonly int _Length;
+
+            private readonly bool _SkipEmpty;
+
+            private int _CurrentPos;
+
+            public TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
+            {
+                _Buffer = Buffer;
+                _Separators = Separators;
+                _StartIndex = StartIndex;
+                _CurrentPos = StartIndex;
+                _Length = Length;
+                _SkipEmpty = SkipEmpty;
+
+                Current = default;
+            }
+
+            public StringPtr Current { get; private set; }
+
+            public bool MoveNext()
+            {
+                switch (_Length - (_CurrentPos - _StartIndex))
+                {
+                    case < 0: return false;
+                    case 0 when _SkipEmpty: return false;
+                    case 0:
+                        Current = new(_Buffer, _CurrentPos, 0);
+                        _CurrentPos++;
+                        return true;
+                }
+
+                var str = _Buffer;
+                var pos = _CurrentPos;
+                var end_pos = _StartIndex + _Length;
+
+                StringPtr ptr;
+                do
+                {
+                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    if (ptr.Pos == end_pos)
+                    {
+                        Current = ptr;
+                        _CurrentPos = end_pos;
+                        return true;
+                    }
+
+                    pos += Math.Max(1, ptr.Length);
+                }
+                while (ptr.Length == 0 && _SkipEmpty);
+
+                Current = ptr;
+                _CurrentPos = ptr.Pos + ptr.Length + 1;
+                return true;
+            }
+
+            private static StringPtr GetNext(string Str, char[] Separator, int StartIndex, int EndIndex)
+            {
+                if (StartIndex >= EndIndex) return new(Str, EndIndex, 0);
+
+                var index = NextIndex(Str, Separator, StartIndex, EndIndex);
+                return index < 0
+                    ? new(Str, StartIndex, EndIndex - StartIndex)
+                    : new(Str, StartIndex, index - StartIndex);
+            }
+
+            private static int NextIndex(string Str, char[] Separators, int StartIndex, int EndIndex)
+            {
+                var str_length = Str.Length;
+                var separators_length = Separators.Length;
+                for (var i = StartIndex; i < EndIndex && i < str_length; i++)
+                {
+                    var c = Str[i];
+                    for (var j = 0; j < separators_length; j++)
+                        if (Separators[j] == c)
+                            return i;
+                }
+
+                return -1;
+            }
+        }
     }
 
     /* --------------------------------------------------------------------------------------- */
