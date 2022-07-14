@@ -30,14 +30,15 @@ namespace MathCore
 
         /// <summary>Метод убирает все парные символы скобок в начале и конце строки</summary>
         /// <param name="str">Очищаемая строка</param>
-        private static void ClearString(ref string str)
+        private static StringPtr ClearStringPtr(StringPtr str)
         {
             while (str[0] == '{' && str[^1] == '}') str = str.Substring(1, str.Length - 2);
             while (str[0] == '[' && str[^1] == ']') str = str.Substring(1, str.Length - 2);
             while (str[0] == '(' && str[^1] == ')') str = str.Substring(1, str.Length - 2);
             while (str[0] == '\'' && str[^1] == '\'') str = str.Substring(1, str.Length - 2);
             while (str[0] == '"' && str[^1] == '"') str = str.Substring(1, str.Length - 2);
-            if (str.IndexOf(' ') != -1) str = str.Replace(" ", string.Empty);
+
+            return str;
         }
 
         /// <summary>Разобрать строку в комплексное число</summary>
@@ -45,47 +46,11 @@ namespace MathCore
         /// <returns>Комплексное число, получаемое в результате разбора строки</returns>
         /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
         /// <exception cref="FormatException">В случае ошибочной строки</exception>
-        public static Complex Parse(string str)
-        {
-            if (str is null) throw new ArgumentNullException(nameof(str));
-            // Если получили пустую строку, то это ошибка преобразования
-            if (string.IsNullOrWhiteSpace(str) || str.Length == 0)
-                throw new FormatException("Строка имела неверный формат", new ArgumentException(str, nameof(str)));
+        public static Complex Parse(string str) =>
+            TryParse(str ?? throw new ArgumentNullException(nameof(str)), out var result)
+                ? result
+                : throw new FormatException("Строка имела неверный формат", new ArgumentException(str, nameof(str)));
 
-            //Убираем все начальные и конечные скобки, ковычки и апострофы
-            var old_style = str.StartsWith("(");
-            ClearString(ref str);
-
-            var values = old_style ? str.Split(';') : str.Split('+', '-'); // Делим строку по знаку + и -
-
-            var Re = 0d; // Аккумулятор действительной части
-            var Im = 0d; // Аккумулятор мнимой части
-
-            var index = 0;
-            for (var j = 0; j < values.Length; j++)
-            {
-                var v = values[j]; // Берём очередной элемент из массива элементов
-                var v_index = str.IndexOf(values[j], index, StringComparison.Ordinal); // Ищем индекс включения текущего элемента в исходной строке
-                index = v_index + v.Length; // Устанавливаем индекс на последний символ текущего элемента в основной строке для того, что бы на следующем цикле искать уже с этого места
-                var sign = v_index > 1 && str[v_index - 1] == '-'; // Если мы рассматриваем не первый элемент и символ в основной строке, предшествующий текущему элементу - '-' (минус), то этот элемент носит отрицательное значение
-                var is_im = false;
-                if (v.IndexOf('i') != -1 || v.IndexOf('j') != -1) // Если в текущем элементе найден символ мнимой единицы
-                {                                                 // то...
-                    is_im = true;                                 // определяем текущий элемент, как мнимое число
-                    v = v.Replace("i", string.Empty).Replace("j", string.Empty);      // удаляем символ мнимой единицы
-                }
-                //var val = double.Parse(v);
-                if (!double.TryParse(v, out var val)) // Пытаемся преобразовать текущий элемент в число...
-                    throw new FormatException("Строка имела неверный формат", new ArgumentException(str, nameof(str)));
-                if (sign) val *= -1;              // Если был найден знак "минус", то это отрицательное значение 
-                if (is_im)                        // Если бы найден символ мнимой единицы, то...
-                    Im += val;                    // ... это мнимая часть, добавляем её в мнимый аккумулятор
-                else                              // иначе...
-                    Re += val;                    // ... это действительная часть, добавляем её в действительный аккумулятор.
-
-            }                                     // Когда все компоненты числа перебраны...
-            return new Complex(Re, Im);              // Формируем новое комплексное число и возвращаем его в качестве результата операции
-        }
 
         /// <summary>Попытаться разобрать строку и преобразовать её в комплексное число</summary>
         /// <param name="str">Разбираемая строка</param>
@@ -100,42 +65,59 @@ namespace MathCore
                 return false;
             }
 
-            //Убираем все начальные и конечные скобки, ковычки и апострофы
-            ClearString(ref str);
+            return TryParse(new StringPtr(str), out z);
+        }
 
-            var values = str.Split('+', '-'); // Делим строку по знаку + и -
+        public static bool TryParse(StringPtr str, out Complex z)
+        {
+            var str_ptr = ClearStringPtr(str);
+
+            var values_ptr = str_ptr.Split(true, '+', '-');
 
             var Re = 0d; // Аккумулятор действительной части
             var Im = 0d; // Аккумулятор мнимой части
 
-            var index = 0;
-            for (var j = 0; j < values.Length; j++)
+            foreach (var v in values_ptr)
             {
-                var v = values[j]; // Берём очередной элемент из массива элементов
-                var v_index = str.IndexOf(values[j], index, StringComparison.Ordinal); // Ищем индекс включения текущего элемента в исходной строке
-                index = v_index + v.Length; // Устанавливаем индекс на последний символ текущего элемента в основной строке для того, что бы на следующем цикле искать уже с этого места
-                var sign = v_index > 1 && str[v_index - 1] == '-'; // Если мы рассматриваем не первый элемент и символ в основной строке, предшествующий текущему элементу - '-' (минус), то этот элемент носит отрицательное значение
-                var is_im = false;
-                if (v.IndexOf('i') != -1 || v.IndexOf('j') != -1) // Если в текущем элементе найден символ мнимой единицы
-                {                                                 // то...
-                    is_im = true;                                 // определяем текущий элемент, как мнимое число
-                    v = v.Replace("i", string.Empty).Replace("j", string.Empty);      // удаляем символ мнимой единицы
-                }
-                //var val = double.Parse(v);
-                if (!double.TryParse(v, out var val)) // Пытаемся преобразовать текущий элемент в число...
-                {                                     // Если не получилось, то
-                    z = default;             // результат - значение по умолчанию
-                    return false;                     // результат операции - ложь. Выходим.
-                }                                     // Если получилось...
-                if (sign) val *= -1;              // Если был найден знак "минус", то это отрицательное значение 
-                if (is_im)                        // Если бы найден символ мнимой единицы, то...
-                    Im += val;                    // ... это мнимая часть, добавляем её в мнимый аккумулятор
-                else                              // иначе...
-                    Re += val;                    // ... это действительная часть, добавляем её в действительный аккумулятор.
+                if (v.Length == 0) continue;
 
-            }                                     // Когда все компоненты числа перебраны...
-            z = new Complex(Re, Im);              // Формируем новое комплексное число и возвращаем его в качестве результата операции
-            return true;                          // Операция выполнена успешно.
+                var sign = v.Pos > 1 && v[-1] == '-';
+                double val;
+
+                var is_im = false;
+                if (v.StartWith('i') || v.StartWith('j'))
+                {
+                    is_im = true;
+                    if (!v.Substring(1).TryParseDouble(out val))
+                    {
+                        z = default;
+                        return false;
+                    }
+                }
+                else if (v.EndWith('i') || v.EndWith('j'))
+                {
+                    is_im = true;
+                    if (!v.Substring(0, v.Length - 1).TryParseDouble(out val))
+                    {
+                        z = default;
+                        return false;
+                    }
+                }
+                else if (!v.TryParseDouble(out val))
+                {
+                    z = default;
+                    return false;
+                }
+
+                if (sign) val *= -1;
+                if (is_im)
+                    Im += val;
+                else
+                    Re += val;
+            }
+
+            z = new Complex(Re, Im);
+            return true;
         }
 
         /* -------------------------------------------------------------------------------------------- */
@@ -238,7 +220,7 @@ namespace MathCore
         /// <param name="Im">Мнимая часть</param>
         /// <returns>Пара комплексно-сопряжённых чисел</returns>
         public static (Complex Z, Complex Zconj) Conjugate(double Re, double Im) =>
-            (new(Re, Im), new(Re, - Im));
+            (new(Re, Im), new(Re, -Im));
 
         /// <summary>Комплексно-сопряжённые значения</summary>
         /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
@@ -288,7 +270,7 @@ namespace MathCore
             if (Re.Length != Im.Length) throw new InvalidOperationException(@"Длины массивов не совпадают");
 
             var result = new Complex[Re.Length];
-            for (var j = 0; j < result.Length; j++) 
+            for (var j = 0; j < result.Length; j++)
                 result[j] = new Complex(Re[j], Im[j]);
             return result;
         }

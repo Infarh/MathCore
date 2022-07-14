@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.78.1</Version>
+    <Version>0.0.79</Version>
     <PackageReleaseNotes>
-      ReaderWriterLockSlim Extensions
-      Исправлено положение (дублирование) методов алгебры матриц
+      Доработка StringPtr - добавлен токинизатор
     </PackageReleaseNotes>
   </PropertyGroup>
 
