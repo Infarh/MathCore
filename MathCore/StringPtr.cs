@@ -240,15 +240,52 @@ public readonly ref struct StringPtr
         Length == str.Length &&
         string.Compare(Source, Pos, str.Source, str.Pos, Length, Comparison) == 0;
 
+    /// <summary>Оператор проверки на равенство фрагмента строки со строкой</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если фрагмент строки посимвольно равен указанной строке</returns>
     public static bool operator ==(StringPtr ptr, string str) => ptr.Equals(str);
+
+    /// <summary>Оператор проверки на неравенство фрагмента строки со строкой</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если фрагмент строки посимвольно неравен указанной строке</returns>
     public static bool operator !=(StringPtr ptr, string str) => !(ptr == str);
 
+    /// <summary>Оператор проверки на равенство фрагмента строки со строкой</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если фрагмент строки посимвольно равен указанной строке</returns>
     public static bool operator ==(string str, StringPtr ptr) => ptr.Equals(str);
+
+    /// <summary>Оператор проверки на неравенство фрагмента строки со строкой</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если фрагмент строки посимвольно неравен указанной строке</returns>
     public static bool operator !=(string str, StringPtr ptr) => !(ptr == str);
 
+    /// <summary>Оператор порядка "больше", сравнивающий фрагмент строки со строкой</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если фрагмент строки больше, чем указанная строка</returns>
     public static bool operator >(StringPtr ptr, string str) => string.Compare(ptr.Source, ptr.Pos, str, 0, ptr.Length) > 0;
+
+    /// <summary>Оператор порядка "меньше", сравнивающий фрагмент строки со строкой</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если фрагмент строки меньше, чем указанная строка</returns>
     public static bool operator <(StringPtr ptr, string str) => string.Compare(ptr.Source, ptr.Pos, str, 0, ptr.Length) < 0;
+
+    /// <summary>Оператор порядка "больше", сравнивающий строку с фрагментом строки</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если строка больше, чем указанный фрагмент строки</returns>
     public static bool operator >(string str, StringPtr ptr) => ptr < str;
+
+    /// <summary>Оператор порядка "меньше", сравнивающий строку с фрагментом строки</summary>
+    /// <param name="ptr">Фрагмент строки</param>
+    /// <param name="str">Строка</param>
+    /// <returns>Истина, если строка меньше, чем указанный фрагмент строки</returns>
     public static bool operator <(string str, StringPtr ptr) => ptr > str;
 
     /* --------------------------------------------------------------------------------------- */
@@ -902,8 +939,15 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos) : this;
     }
 
+    /// <summary>Удаление символа в конца строки</summary>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(char c) => TrimEnd(out _, c);
 
+    /// <summary>Удаление символа в конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(out bool Trimmed, char c)
     {
         var pos = Pos;
@@ -916,8 +960,17 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление символа в конце строки</summary>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(char c1, char c2) => TrimEnd(out _, c1, c2);
 
+    /// <summary>Удаление символа в конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(out bool Trimmed, char c1, char c2)
     {
         var pos = Pos;
@@ -930,8 +983,19 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление символа в конце строки</summary>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(char c1, char c2, char c3) => TrimEnd(out _, c1, c2, c3);
 
+    /// <summary>Удаление символа в конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(out bool Trimmed, char c1, char c2, char c3)
     {
         var pos = Pos;
@@ -944,8 +1008,15 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление символов в конце строки</summary>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(params char[] c) => TrimEnd(out _, c);
 
+    /// <summary>Удаление символов в конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(out bool Trimmed, params char[] c)
     {
         var pos = Pos;
@@ -970,8 +1041,15 @@ public readonly ref struct StringPtr
         return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(char c) => Trim(out _, out _, c);
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool Trimmed, char c)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c);
@@ -979,6 +1057,11 @@ public readonly ref struct StringPtr
         return result;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="TrimmedStart">Обрезание строки в начале было выполнено</param>
+    /// <param name="TrimmedEnd">Обрезание строки в конце было выполнено</param>
+    /// <param name="c">Удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c)
     {
         var pos = Pos;
@@ -992,8 +1075,17 @@ public readonly ref struct StringPtr
         return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(char c1, char c2) => Trim(out _, out _, c1, c2);
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool Trimmed, char c1, char c2)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c1, c2);
@@ -1001,6 +1093,12 @@ public readonly ref struct StringPtr
         return result;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="TrimmedStart">Обрезание строки в начале было выполнено</param>
+    /// <param name="TrimmedEnd">Обрезание строки в конце было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c1, char c2)
     {
         var pos = Pos;
@@ -1014,8 +1112,19 @@ public readonly ref struct StringPtr
         return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(char c1, char c2, char c3) => Trim(out _, out _, c1, c2, c3);
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool Trimmed, char c1, char c2, char c3)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c1, c2, c3);
@@ -1023,6 +1132,13 @@ public readonly ref struct StringPtr
         return result;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="TrimmedStart">Обрезание строки в начале было выполнено</param>
+    /// <param name="TrimmedEnd">Обрезание строки в конце было выполнено</param>
+    /// <param name="c1">Первый удаляемый символ</param>
+    /// <param name="c2">Второй удаляемый символ</param>
+    /// <param name="c3">Третий удаляемый символ</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, char c1, char c2, char c3)
     {
         var pos = Pos;
@@ -1036,8 +1152,15 @@ public readonly ref struct StringPtr
         return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(params char[] c) => Trim(out _, out _, c);
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="Trimmed">Обрезание строки было выполнено</param>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool Trimmed, params char[] c)
     {
         var result = Trim(out var trimmed_start, out var trimmed_end, c);
@@ -1045,6 +1168,11 @@ public readonly ref struct StringPtr
         return result;
     }
 
+    /// <summary>Удаление технических символов в начале и конце строки</summary>
+    /// <param name="TrimmedStart">Обрезание строки в начале было выполнено</param>
+    /// <param name="TrimmedEnd">Обрезание строки в конце было выполнено</param>
+    /// <param name="c">Удаляемые символы</param>
+    /// <returns>Обрезанная строка</returns>
     public StringPtr Trim(out bool TrimmedStart, out bool TrimmedEnd, params char[] c)
     {
         var pos = Pos;
@@ -1084,28 +1212,53 @@ public readonly ref struct StringPtr
         return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
     }
 
+    /// <summary>Разделить строку на подстроки по указанному символам-разделителям</summary>
+    /// <param name="Separators">Символы-разделители</param>
+    /// <returns>Разделитель строки на фрагменты</returns>
     public Tokenizer Split(params char[] Separators) => new(this, Separators);
 
+    /// <summary>Разделить строку на подстроки по указанному символам-разделителям</summary>
+    /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
+    /// <param name="Separators">Символы-разделители</param>
+    /// <returns>Разделитель строки на фрагменты</returns>
     public Tokenizer Split(bool SkipEmpty, params char[] Separators) => SkipEmpty
         ? new Tokenizer(this, Separators).SkipEmpty(true)
         : new(this, Separators);
 
+    /// <summary>Разделитель строки на фрагменты по указанному символам-разделителям</summary>
     public readonly ref struct Tokenizer
     {
+        /// <summary>Строковый буфер</summary>
         private readonly string _Buffer;
 
+        /// <summary>Символы-разделители</summary>
         private readonly char[] _Separators;
 
+        /// <summary>Начальное положение в буфере</summary>
         private readonly int _StartIndex;
 
+        /// <summary>Длина подстроки для анализа</summary>
         private readonly int _Length;
 
+        /// <summary>Пропускать пустые фрагменты</summary>
         private readonly bool _SkipEmpty;
 
+        /// <summary>Инициализация нового разделителя строки</summary>
+        /// <param name="Str">Исходный фрагмент строки</param>
+        /// <param name="Separators">Символы-разделители фрагментов строки</param>
         public Tokenizer(StringPtr Str, char[] Separators) : this(Str.Source, Separators, Str.Pos, Str.Length) { }
 
+        /// <summary>Инициализация нового разделителя строки</summary>
+        /// <param name="Buffer">Исходный строковый буфер</param>
+        /// <param name="Separators">Символы-разделители фрагментов строки</param>
         public Tokenizer(string Buffer, char[] Separators) : this(Buffer, Separators, 0, Buffer.Length) { }
 
+        /// <summary>Инициализация нового разделителя строки</summary>
+        /// <param name="Buffer">Исходный строковый буфер</param>
+        /// <param name="Separators">Символы-разделители фрагментов строки</param>
+        /// <param name="StartIndex">Индекс начала анализируемой подстроки</param>
+        /// <param name="Length">Длина анализируемой подстроки</param>
+        /// <param name="SkipEmpty">Пропускать пустые строковые фрагменты</param>
         public Tokenizer(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty = false)
         {
             _Buffer = Buffer;
@@ -1115,24 +1268,42 @@ public readonly ref struct StringPtr
             _SkipEmpty = SkipEmpty;
         }
 
+        /// <summary>Пропускать пустые строковые фрагменты</summary>
+        /// <param name="Skip">Пропускать, или нет</param>
+        /// <returns>Перечислитель строковых фрагментов с изменённым режимом пропуска строковых фрагментов</returns>
         public Tokenizer SkipEmpty(bool Skip) => new(_Buffer, _Separators, _StartIndex, _Length, Skip);
 
+        /// <summary>Сформировать перечислитель строковых фрагментов</summary>
+        /// <returns>Перечислитель строковых фрагментов</returns>
         public TokenEnumerator GetEnumerator() => new(_Buffer, _Separators, _StartIndex, _Length, _SkipEmpty);
 
+        /// <summary>Перечислитель строковых фрагментов</summary>
         public ref struct TokenEnumerator
         {
+            /// <summary>Строковый буфер</summary>
             private readonly string _Buffer;
 
+            /// <summary>Символы-разделители</summary>
             private readonly char[] _Separators;
 
+            /// <summary>Начальное положение в буфере</summary>
             private readonly int _StartIndex;
 
+            /// <summary>Длина подстроки для анализа</summary>
             private readonly int _Length;
 
+            /// <summary>Пропускать пустые фрагменты</summary>
             private readonly bool _SkipEmpty;
 
+            /// <summary>Текущая позиция в исходной строке</summary>
             private int _CurrentPos;
 
+            /// <summary>Инициализация нового перечислителя строковых фрагментов</summary>
+            /// <param name="Buffer">Исходный строковый буфер</param>
+            /// <param name="Separators">Символы-разделители</param>
+            /// <param name="StartIndex">Начальное положение в строковом буфере</param>
+            /// <param name="Length">Длина подстроки для анализа</param>
+            /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
             public TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
             {
                 _Buffer = Buffer;
@@ -1145,8 +1316,11 @@ public readonly ref struct StringPtr
                 Current = default;
             }
 
+            /// <summary>Текущий фрагмент строки</summary>
             public StringPtr Current { get; private set; }
 
+            /// <summary>Перемещение к следующему фрагменту</summary>
+            /// <returns>Истина, если перемещение выполнено успешно</returns>
             public bool MoveNext()
             {
                 switch (_Length - (_CurrentPos - _StartIndex))
@@ -1183,24 +1357,42 @@ public readonly ref struct StringPtr
                 return true;
             }
 
+            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
+            /// <returns>Следующий фрагмент строки</returns>
+            /// <exception cref="InvalidOperationException">Возникает в случае отсутствия возможности выделить следующий фрагмент строки</exception>
             public StringPtr MoveNextOrThrow() => MoveNext()
                 ? Current
                 : throw new InvalidOperationException($"Невозможно получить следующий фрагмент строки после разделителя {string.Join(",", _Separators.Select(c => $"'{c}'"))}");
 
+            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
+            /// <typeparam name="TException">Генерируемое исключение в случае отсутствия возможности перемещения к следующей подстроке</typeparam>
+            /// <returns>Следующий фрагмент строки</returns>
             public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
                 ? Current
                 : throw new TException();
 
-            private static StringPtr GetNext(string Str, char[] Separator, int StartIndex, int EndIndex)
+            /// <summary>Найти следующую подстроку</summary>
+            /// <param name="Str">Исходный строковый буфер</param>
+            /// <param name="Separators">Символы-разделители</param>
+            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
+            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
+            /// <returns>Найденная подстрока</returns>
+            private static StringPtr GetNext(string Str, char[] Separators, int StartIndex, int EndIndex)
             {
                 if (StartIndex >= EndIndex) return new(Str, EndIndex, 0);
 
-                var index = NextIndex(Str, Separator, StartIndex, EndIndex);
+                var index = NextIndex(Str, Separators, StartIndex, EndIndex);
                 return index < 0
                     ? new(Str, StartIndex, EndIndex - StartIndex)
                     : new(Str, StartIndex, index - StartIndex);
             }
 
+            /// <summary>Индекс следующего разделителя в строке в заданном диапазоне</summary>
+            /// <param name="Str">Исходный строковый буфер</param>
+            /// <param name="Separators">Символы-разделители</param>
+            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
+            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
+            /// <returns>Индекс искомого символа в подстроке, либо -1, если его найдено не было</returns>
             private static int NextIndex(string Str, char[] Separators, int StartIndex, int EndIndex)
             {
                 var str_length = Str.Length;
@@ -1216,6 +1408,9 @@ public readonly ref struct StringPtr
                 return -1;
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
+            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
             public bool TryParseNextDouble(out double value)
             {
                 value = double.NaN;
@@ -1253,6 +1448,10 @@ public readonly ref struct StringPtr
                 return ptr.TryParseDouble(out value);
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
+            /// <param name="provider">Формат представления вещественного числа</param>
+            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
             public bool TryParseNextDouble(IFormatProvider provider, out double value)
             {
                 value = double.NaN;
@@ -1290,6 +1489,9 @@ public readonly ref struct StringPtr
                 return ptr.TryParseDouble(provider, out value);
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в целое число</summary>
+            /// <param name="value">Результат преобразования, либо 0, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в целое число выполнено успешно</returns>
             public bool TryParseNextAsInt32(out int value)
             {
                 value = 0;
@@ -1327,8 +1529,34 @@ public readonly ref struct StringPtr
                 return ptr.TryParseAsInt32(out value);
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
+            /// <param name="value">Результат преобразования, либо <c>false</c>, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в <see cref="bool"/> значение выполнено успешно</returns>
+            public bool TryParseNextAsBool(out bool value)
+            {
+                value = default;
+                if (!MoveNext()) return false;
+                if (Current.Equals("true", StringComparison.OrdinalIgnoreCase))
+                {
+                    value = true;
+                    return true;
+                }
+
+                if (Current.Equals("false", StringComparison.OrdinalIgnoreCase))
+                {
+                    value = false;
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
+            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
             public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
 
+            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
+            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
             public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
         }
     }
@@ -1349,19 +1577,18 @@ public readonly ref struct StringPtr
     /// <summary>Разделитель строки на фрагменты по указанному символу-разделителю</summary>
     public readonly ref struct TokenizerSingleChar
     {
-            /// <summary>Строковый буфер</summary>
+        /// <summary>Строковый буфер</summary>
         private readonly string _Buffer;
 
-            /// <summary>Символ-разделитель</summary>
+        /// <summary>Символ-разделитель</summary>
         private readonly char _Separator;
 
-            /// <summary>Начальное положение в буфере</summary>
+        /// <summary>Начальное положение в буфере</summary>
         private readonly int _StartIndex;
 
-            /// <summary>Длина подстроки для анализа</summary>
+        /// <summary>Длина подстроки для анализа</summary>
         private readonly int _Length;
 
-            /// <summary>Пропускать пустые фрагменты</summary>
         private readonly bool _SkipEmpty;
 
         /// <summary>Инициализация нового разделителя строки</summary>
@@ -1478,14 +1705,26 @@ public readonly ref struct StringPtr
                 return true;
             }
 
+            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
+            /// <returns>Следующий фрагмент строки</returns>
+            /// <exception cref="InvalidOperationException">Возникает в случае отсутствия возможности выделить следующий фрагмент строки</exception>
             public StringPtr MoveNextOrThrow() => MoveNext()
                 ? Current
                 : throw new InvalidOperationException($"Невозможно получить следующий фрагмент строки после разделителя {_Separator}");
 
+            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
+            /// <typeparam name="TException">Генерируемое исключение в случае отсутствия возможности перемещения к следующей подстроке</typeparam>
+            /// <returns>Следующий фрагмент строки</returns>
             public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
                 ? Current
                 : throw new TException();
 
+            /// <summary>Найти следующую подстроку</summary>
+            /// <param name="Str">Исходный строковый буфер</param>
+            /// <param name="Separator">Символ-разделитель</param>
+            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
+            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
+            /// <returns>Найденная подстрока</returns>
             private static StringPtr GetNext(string Str, char Separator, int StartIndex, int EndIndex)
             {
                 if (StartIndex >= EndIndex) return new(Str, EndIndex, 0);
@@ -1496,6 +1735,12 @@ public readonly ref struct StringPtr
                     : new(Str, StartIndex, index - StartIndex);
             }
 
+            /// <summary>Индекс следующего разделителя в строке в заданном диапазоне</summary>
+            /// <param name="Str">Исходный строковый буфер</param>
+            /// <param name="Separator">Символ-разделитель</param>
+            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
+            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
+            /// <returns>Индекс искомого символа в подстроке, либо -1, если его найдено не было</returns>
             private static int NextIndex(string Str, char Separator, int StartIndex, int EndIndex)
             {
                 var str_length = Str.Length;
@@ -1506,6 +1751,9 @@ public readonly ref struct StringPtr
                 return -1;
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
+            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
             public bool TryParseNextDouble(out double value)
             {
                 value = double.NaN;
@@ -1543,6 +1791,10 @@ public readonly ref struct StringPtr
                 return ptr.TryParseDouble(out value);
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
+            /// <param name="provider">Формат представления вещественного числа</param>
+            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
             public bool TryParseNextDouble(IFormatProvider provider, out double value)
             {
                 value = double.NaN;
@@ -1580,6 +1832,9 @@ public readonly ref struct StringPtr
                 return ptr.TryParseDouble(provider, out value);
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в целое число</summary>
+            /// <param name="value">Результат преобразования, либо 0, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в целое число выполнено успешно</returns>
             public bool TryParseNextAsInt32(out int value)
             {
                 value = 0;
@@ -1617,6 +1872,9 @@ public readonly ref struct StringPtr
                 return ptr.TryParseAsInt32(out value);
             }
 
+            /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
+            /// <param name="value">Результат преобразования, либо <c>false</c>, если подстрока имеет неверный формат, лио отсутствует</param>
+            /// <returns>Истина, если преобразование подстроки в <see cref="bool"/> значение выполнено успешно</returns>
             public bool TryParseNextAsBool(out bool value)
             {
                 value = default;
@@ -1636,14 +1894,19 @@ public readonly ref struct StringPtr
                 return false;
             }
 
+            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
+            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
             public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
 
+            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
+            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
             public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
         }
     }
 
     /* --------------------------------------------------------------------------------------- */
 
+    /// <inheritdoc />
     public override bool Equals(object? obj) => false;
 
     //public override bool Equals(object? obj) => obj is StringPtr other && 
@@ -1651,15 +1914,17 @@ public readonly ref struct StringPtr
     //    other.Length == Length && 
     //    other.Pos == Pos;
 
+    /// <inheritdoc />
     public override string ToString() => Source.Substring(Pos, Length);
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         var hash = 397;
         var str = Source;
         unchecked
         {
-            for (var (i, end) = (Pos, Pos + Length); i <= end; i++) 
+            for (var (i, end) = (Pos, Pos + Length); i <= end; i++)
                 hash = hash * 397 ^ str[i].GetHashCode();
 
             hash = hash * 397 ^ Pos.GetHashCode();
@@ -1729,12 +1994,20 @@ public readonly ref struct StringPtr
 
     /* --------------------------------------------------------------------------------------- */
 
+    /// <summary>Оператор неявного преобразования строки в фрагмент строки</summary>
+    /// <param name="Source">Исходная строка</param>
     public static implicit operator StringPtr(string Source) => new(Source);
 
+    /// <summary>Оператор неявного преобразования фрагмента строки в строку</summary>
+    /// <param name="Ptr">Фрагмент строки</param>
     public static implicit operator string(StringPtr Ptr) => Ptr.ToString();
 
+    /// <summary>Оператор явного преобразования фрагмента строки в целое число</summary>
+    /// <param name="Ptr">Фрагмент строки</param>
     public static explicit operator int(StringPtr Ptr) => Ptr.ParseAsInt32();
 
+    /// <summary>Оператор явного преобразования фрагмента строки в вещественное число</summary>
+    /// <param name="Ptr">Фрагмент строки</param>
     public static explicit operator double(StringPtr Ptr) => Ptr.ParseDouble();
 
     /* --------------------------------------------------------------------------------------- */
