@@ -496,7 +496,7 @@ public partial class Matrix
             /// <returns>Массив произведения двух матриц</returns>
             /// <exception cref="ArgumentNullException">В случае если <paramref name="At"/> не определена</exception>
             /// <exception cref="ArgumentNullException">В случае если <paramref name="B"/> не определена</exception>
-            public static double[,] MultiplyAtB(double[,] At, double[,] B) => MultiplyAtB(At, B, new double[At.GetLength(0), B.GetLength(1)]);
+            public static double[,] MultiplyAtB(double[,] At, double[,] B) => MultiplyAtB(At, B, new double[At.GetLength(1), B.GetLength(1)]);
 
             public static double[,] MultiplyAtB(double[,] At, double[,] B, double[,] C)
             {

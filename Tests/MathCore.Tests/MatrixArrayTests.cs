@@ -3037,16 +3037,18 @@ public class MatrixArrayTests
             { 5, 6 },
         };
 
-        var C = Matrix.Array.Operator.MultiplyAtB(A, B);
-
-        Assert.That.Collection(C).IsEqualTo(new double[,]
+        var expected_C = new double[,]
         {
             { 21, 28 },
             { 24, 32 },
             { 27, 36 },
             { 20, 28 },
             { 13, 20 },
-        });
+        };
+
+        var C = Matrix.Array.Operator.MultiplyAtB(A, B);
+
+        Assert.That.Collection(C).IsEqualTo(expected_C);
     }
 
     [TestMethod]
