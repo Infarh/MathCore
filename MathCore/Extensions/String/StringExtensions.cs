@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using MathCore;
-using MathCore.Annotations;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
@@ -21,6 +20,28 @@ namespace System;
 /// <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
 public static class StringExtensions
 {
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<string> EnumLines(this string str, bool SkipEmpty = false)
+    {
+        using var reader = str.CreateReader();
+        while (reader.ReadLine() is { } line)
+            if (line.Length > 0 || !SkipEmpty)
+                yield return line;
+    }
+
+    /// <summary>Создать объект чтения данных строки</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Объект <see cref="StringReader"/> для чтения данных строки</returns>
+    public static StringReader CreateReader(this string str) => new(str);
+
+    /// <summary>Создать построитель строки</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <returns>Объект <see cref="StringBuilder"/> для формирования строки</returns>
+    public static StringBuilder CreateBuilder(this string str) => new(str);
+
     /// <summary>Преобразовать строку в указатель</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Указатель на позицию в строке</returns>
