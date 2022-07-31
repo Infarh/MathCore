@@ -293,43 +293,53 @@ public readonly partial struct NT
         {
             public const int Length = 16 * ImageDataDirectoryValue.Length;
 
-            public ImageDataDirectoryValue Value0 { get; init; } // 8
-            public ImageDataDirectoryValue Value1 { get; init; } // 8
-            public ImageDataDirectoryValue Value2 { get; init; } // 8
-            public ImageDataDirectoryValue Value3 { get; init; } // 8
-            public ImageDataDirectoryValue Value4 { get; init; } // 8
-            public ImageDataDirectoryValue Value5 { get; init; } // 8
-            public ImageDataDirectoryValue Value6 { get; init; } // 8
-            public ImageDataDirectoryValue Value7 { get; init; } // 8
-            public ImageDataDirectoryValue Value8 { get; init; } // 8
-            public ImageDataDirectoryValue Value9 { get; init; } // 8
-            public ImageDataDirectoryValue Value10 { get; init; } // 8
-            public ImageDataDirectoryValue Value11 { get; init; } // 8
-            public ImageDataDirectoryValue Value12 { get; init; } // 8
-            public ImageDataDirectoryValue Value13 { get; init; } // 8
-            public ImageDataDirectoryValue Value14 { get; init; } // 8
-            public ImageDataDirectoryValue Value15 { get; init; } // 8
+            /// <summary>Каталог экспортируемых объектов</summary>
+            public ImageDataDirectoryValue Export { get; init; } // 0
+            /// <summary>Каталог импортируемых объектов</summary>
+            public ImageDataDirectoryValue Import { get; init; } // 1
+            /// <summary>Каталог ресурсов</summary>
+            public ImageDataDirectoryValue Resource { get; init; } // 2
+            /// <summary>Каталог исключений</summary>
+            public ImageDataDirectoryValue Exception { get; init; } // 3
+            /// <summary>Каталог безопасности</summary>
+            public ImageDataDirectoryValue Security { get; init; } // 4
+            /// <summary>Таблица переадресации</summary>
+            public ImageDataDirectoryValue BaseReloc { get; init; } // 5
+            /// <summary>Отладочный каталог</summary>
+            public ImageDataDirectoryValue Debug { get; init; } // 6
+            /// <summary>Строки описания</summary>
+            public ImageDataDirectoryValue Copyright { get; init; } // 7
+            public ImageDataDirectoryValue GlobalPtr { get; init; } // 8
+            /// <summary>Каталог TLS (Thread local storage - локальная память потоков)</summary>
+            public ImageDataDirectoryValue TLS { get; init; } // 9
+            public ImageDataDirectoryValue LoadConfig { get; init; } // 10
+            public ImageDataDirectoryValue BoundImport { get; init; } // 11
+            public ImageDataDirectoryValue IAT { get; init; } // 12
+            public ImageDataDirectoryValue DelayImport { get; init; } // 13
+            /// <summary>Информация COM-объектов</summary>
+            public ImageDataDirectoryValue Descriptor { get; init; } // 14
+            public ImageDataDirectoryValue Reserved { get; init; } // 15
 
             public IEnumerable<ImageDataDirectoryValue> Values
             {
                 get
                 {
-                    yield return Value0;
-                    yield return Value1;
-                    yield return Value2;
-                    yield return Value3;
-                    yield return Value4;
-                    yield return Value5;
-                    yield return Value6;
-                    yield return Value7;
-                    yield return Value8;
-                    yield return Value9;
-                    yield return Value10;
-                    yield return Value11;
-                    yield return Value12;
-                    yield return Value13;
-                    yield return Value14;
-                    yield return Value15;
+                    yield return Export;
+                    yield return Import;
+                    yield return Resource;
+                    yield return Exception;
+                    yield return Security;
+                    yield return BaseReloc;
+                    yield return Debug;
+                    yield return Copyright;
+                    yield return GlobalPtr;
+                    yield return TLS;
+                    yield return LoadConfig;
+                    yield return BoundImport;
+                    yield return IAT;
+                    yield return DelayImport;
+                    yield return Descriptor;
+                    yield return Reserved;
                 }
             }
 

@@ -7,6 +7,9 @@ namespace MathCore.PE;
 
 public class PEFile
 {
+    // #define MakePtr(Type, Base, Offset) ((Type)(DWORD(Base) + (DWORD)(Offset)))
+    internal static uint MakePtr(uint Base, uint Offset) => Base + Offset;
+
     private readonly FileInfo _File;
 
     public bool Exists => _File.Exists;
