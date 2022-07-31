@@ -1,9 +1,15 @@
 ﻿#nullable enable
 using System;
+using System.Linq;
 
 namespace MathCore.Text;
 
-/// <summary>Расстояние Левенштейна</summary>
+/// <summary>
+/// Расстояние Левенштейна (редакционное расстояние)<br/>
+/// Метрика, измеряющая по модулю разность между двумя последовательностями символов,
+/// определяемая как минимальное количество односимвольных операций (а именно вставки,
+/// удаления, замены), необходимых для превращения одной последовательности символов в другую
+/// </summary>
 /// <remarks>
 ///     <seealso href="https://ru.wikibooks.org/wiki/Реализации_алгоритмов/Расстояние_Левенштейна#C#"/>
 /// </remarks>
@@ -33,5 +39,34 @@ public static class Levenshtein
                         : results[i - 1, j - 1] + 1);
 
         return results[s1_length, s2_length];
+    }
+
+    public static int DistanceFast(string source, string target)
+    {
+        var cost_matrix = new int[source.Length + 1][];
+        for (var i = 0; i < cost_matrix.Length; i++)
+            cost_matrix[i] = new int[target.Length + 1];
+        //var cost_matrix = Enumerable
+        //   .Range(0, source.Length + 1)
+        //   .Select(_ => new int[target.Length + 1])
+        //   .ToArray();
+
+        for (var i = 1; i <= source.Length; ++i) 
+            cost_matrix[i][0] = i;
+
+        for (var i = 1; i <= target.Length; ++i) 
+            cost_matrix[0][i] = i;
+
+        for (var i = 1; i <= source.Length; ++i)
+            for (var j = 1; j <= target.Length; ++j)
+            {
+                var insert = cost_matrix[i][j - 1] + 1;
+                var delete = cost_matrix[i - 1][j] + 1;
+                var edit = cost_matrix[i - 1][j - 1] + (source[i - 1] == target[j - 1] ? 0 : 1);
+
+                cost_matrix[i][j] = Math.Min(Math.Min(insert, delete), edit);
+            }
+
+        return cost_matrix[source.Length][target.Length];
     }
 }

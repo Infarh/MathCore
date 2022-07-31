@@ -1915,7 +1915,9 @@ public readonly ref struct StringPtr
     //    other.Pos == Pos;
 
     /// <inheritdoc />
-    public override string ToString() => Source.Substring(Pos, Length);
+    public override string ToString() => Pos == 0 && Length == Source.Length
+        ? Source 
+        : Source.Substring(Pos, Length);
 
     /// <inheritdoc />
     public override int GetHashCode()
