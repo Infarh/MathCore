@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.79</Version>
+    <Version>0.0.79.1</Version>
     <PackageReleaseNotes>
-      Доработка StringPtr - добавлен токинизатор
+      Мелкие исправления
     </PackageReleaseNotes>
   </PropertyGroup>
 
