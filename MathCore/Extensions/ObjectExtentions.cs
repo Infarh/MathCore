@@ -303,7 +303,7 @@ namespace System
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
         [return: NotNullIfNotNull("obj")]
-        public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T?, TP?>? Initializer) where T : class
+        public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T, TP?>? Initializer) where T : class
         {
             if (obj != null)
                 Initializer?.Invoke(obj, parameter);

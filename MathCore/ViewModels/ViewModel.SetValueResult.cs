@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,26 +23,26 @@ namespace MathCore.ViewModels
             private readonly bool _Result;
 
             /// <summary>Предыдущее значение свойства</summary>
-            [CanBeNull] private readonly T _OldValue;
+            private readonly T? _OldValue;
 
             /// <summary>Новое значение свойства</summary>
-            [CanBeNull] private readonly T _NewValue;
+            private readonly T? _NewValue;
 
             /// <summary>Модель-представления, для которой производится установка значения</summary>
-            [NotNull] private readonly ViewModel _Model;
+            private readonly ViewModel _Model;
 
             /// <summary>Инициализация нового экземпляра <see cref="SetValueResult{T}"/></summary>
             /// <param name="Result">Было ли значение установлено для свойства</param>
             /// <param name="OldValue">Старое значение</param>
             /// <param name="model">Модель-представления, для свойство которой изменилось</param>
-            internal SetValueResult(bool Result, [CanBeNull] in T OldValue, [NotNull] in ViewModel model) : this(Result, OldValue, OldValue, model) { }
+            internal SetValueResult(bool Result, T? OldValue, ViewModel model) : this(Result, OldValue, OldValue, model) { }
 
             /// <summary>Инициализация нового экземпляра <see cref="SetValueResult{T}"/></summary>
             /// <param name="Result">Было ли значение установлено для свойства</param>
             /// <param name="OldValue">Старое значение</param>
             /// <param name="NewValue">Новое (установленное) значение</param>
             /// <param name="model">Модель-представления, для свойство которой изменилось</param>
-            internal SetValueResult(bool Result, [CanBeNull] in T OldValue, [CanBeNull] in T NewValue, [NotNull] in ViewModel model)
+            internal SetValueResult(bool Result, T? OldValue, T? NewValue, ViewModel model)
             {
                 _Result = Result;
                 _OldValue = OldValue;
@@ -52,7 +53,7 @@ namespace MathCore.ViewModels
             /// <summary>В случае если значение было установлено, выполнить указанное действие</summary>
             /// <param name="execute">Действие, которое требуется выполнить в случае если значение свойства было установлено</param>
             /// <returns>Истина, если значение свойства было установлено</returns>
-            public bool Then([NotNull] in Action execute)
+            public bool Then(Action execute)
             {
                 if (_Result) execute();
                 return _Result;
@@ -61,7 +62,7 @@ namespace MathCore.ViewModels
             /// <summary>В случае если значение было установлено, выполнить указанное действие над новым значением</summary>
             /// <param name="execute">Действие над значением, которое требуется выполнить в случае если значение свойства было установлено</param>
             /// <returns>Истина, если значение свойства было установлено</returns>
-            public bool Then([NotNull] in Action<T> execute)
+            public bool Then(Action<T?> execute)
             {
                 if (_Result) execute(_NewValue);
                 return _Result;
@@ -70,7 +71,7 @@ namespace MathCore.ViewModels
             /// <summary>В случае если значение было установлено, выполнить указанное действие над старым и новым значением</summary>
             /// <param name="execute">Действие над старым и новым значением, которое требуется выполнить в случае если значение свойства было установлено</param>
             /// <returns>Истина, если значение свойства было установлено</returns>
-            public bool Then([NotNull] in Action<T, T> execute)
+            public bool Then(Action<T?, T?> execute)
             {
                 if (_Result) execute(_OldValue, _NewValue);
                 return _Result;
@@ -79,7 +80,7 @@ namespace MathCore.ViewModels
             /// <summary>Выполнить генерацию события обновления указанного свойства</summary>
             /// <param name="PropertyName">Имя свойства, которое также изменилось</param>
             /// <returns>Текущий объект установки значения</returns>
-            public SetValueResult<T> Update([NotNull] in string PropertyName)
+            public SetValueResult<T> Update(string PropertyName)
             {
                 _Model.OnPropertyChanged(PropertyName);
                 return this;
@@ -88,7 +89,7 @@ namespace MathCore.ViewModels
             /// <summary>Выполнить генерацию события обновления для указанных свойств</summary>
             /// <param name="PropertyName">Массив имён изменившихся свойств</param>
             /// <returns>Текущий объект установки значения</returns>
-            public SetValueResult<T> Update([NotNull] params string[] PropertyName)
+            public SetValueResult<T> Update(params string[] PropertyName)
             {
                 foreach (var name in PropertyName) _Model.OnPropertyChanged(name);
                 return this;
@@ -97,7 +98,7 @@ namespace MathCore.ViewModels
             /// <summary>Выполнить действие вне зависимости от того, изменилось ли значение свойства, или нет</summary>
             /// <param name="execute">Действие, которое требуется выполнить</param>
             /// <returns>Истина, если свойство было изменено</returns>
-            public bool AnywayThen([NotNull] in Action execute)
+            public bool AnywayThen(Action execute)
             {
                 execute();
                 return _Result;
@@ -109,7 +110,7 @@ namespace MathCore.ViewModels
             /// </summary>
             /// <param name="execute">Действие, которое требуется выполнить</param>
             /// <returns>Истина, если свойство было изменено</returns>
-            public bool AnywayThen([NotNull] in Action<bool> execute)
+            public bool AnywayThen(Action<bool> execute)
             {
                 execute(_Result);
                 return _Result;
@@ -118,7 +119,7 @@ namespace MathCore.ViewModels
             /// <summary>Выполнить действие с новым значением вне зависимости от того, изменилось оно, или нет</summary>
             /// <param name="execute">Действие, которое требуется выполнить с параметром в виде значения свойства</param>
             /// <returns>Истина, если свойство было изменено</returns>
-            public bool AnywayThen([NotNull] in Action<T> execute)
+            public bool AnywayThen(Action<T?> execute)
             {
                 execute(_NewValue);
                 return _Result;
@@ -130,7 +131,7 @@ namespace MathCore.ViewModels
             /// </summary>
             /// <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
             /// <returns>Истина, если свойство было изменено</returns>
-            public bool AnywayThen([NotNull] in Action<T, bool> execute)
+            public bool AnywayThen(Action<T?, bool> execute)
             {
                 execute(_NewValue, _Result);
                 return _Result;
@@ -142,7 +143,7 @@ namespace MathCore.ViewModels
             /// </summary>
             /// <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
             /// <returns>Истина, если свойство было изменено</returns>
-            public bool AnywayThen([NotNull] in Action<T, T> execute)
+            public bool AnywayThen(Action<T?, T?> execute)
             {
                 execute(_OldValue, _NewValue);
                 return _Result;
@@ -154,7 +155,7 @@ namespace MathCore.ViewModels
             /// </summary>
             /// <param name="execute">Действие, которое требуется выполнить над значением свойства</param>
             /// <returns>Истина, если свойство было изменено</returns>
-            public bool AnywayThen([NotNull] in Action<T, T, bool> execute)
+            public bool AnywayThen(Action<T, T, bool> execute)
             {
                 execute(_OldValue, _NewValue, _Result);
                 return _Result;
@@ -162,7 +163,7 @@ namespace MathCore.ViewModels
 
             /// <summary>Indicates whether this instance and a specified object are equal.</summary>
             /// <param name="other">The object to compare with the current instance.</param>
-            public bool Equals(in SetValueResult<T> other) =>
+            public bool Equals(SetValueResult<T?> other) =>
                 _Result == other._Result
                 && EqualityComparer<T>.Default.Equals(_OldValue, other._OldValue)
                 && EqualityComparer<T>.Default.Equals(_NewValue, other._NewValue)
@@ -186,14 +187,14 @@ namespace MathCore.ViewModels
             }
 
             /// <summary>Оператор равенства двух значений</summary>
-            public static bool operator ==(in SetValueResult<T> left, in SetValueResult<T> right) =>
+            public static bool operator ==(SetValueResult<T> left, SetValueResult<T> right) =>
                 ReferenceEquals(left._Model, right._Model)
                 && left._Result == right._Result
                 && Equals(left._OldValue, right._OldValue)
                 && Equals(left._NewValue, right._NewValue);
 
             /// <summary>Оператор неравенства двух значений</summary>
-            public static bool operator !=(in SetValueResult<T> left, in SetValueResult<T> right) => !(left == right);
+            public static bool operator !=(SetValueResult<T> left, SetValueResult<T> right) => !(left == right);
         }
 
         /// <summary>Установить значение свойства</summary>
@@ -204,9 +205,9 @@ namespace MathCore.ViewModels
         /// <returns>Объект, отвечающий за обработку результата установки значения</returns>
         [NotifyPropertyChangedInvocator]
         protected virtual SetValueResult<T> SetValue<T>(
-            [CanBeNull] ref T field,
-            [CanBeNull] in T value,
-            [NotNull, CallerMemberName] in string PropertyName = null)
+            ref T? field,
+            T? value,
+            [CallerMemberName] string PropertyName = null!)
         {
             if (Equals(field, value))
                 return new SetValueResult<T>(false, field, field, this);
@@ -226,10 +227,10 @@ namespace MathCore.ViewModels
         /// <returns>Объект, отвечающий за обработку результата установки значения</returns>
         [NotifyPropertyChangedInvocator]
         protected virtual SetValueResult<T> SetValue<T>(
-            [CanBeNull] ref T field,
-            [CanBeNull] in T value,
-            [NotNull] in Func<T, bool> Validator,
-            [NotNull, CallerMemberName] in string PropertyName = null)
+            ref T? field,
+            T? value,
+            Func<T?, bool> Validator,
+            [CallerMemberName] string PropertyName = null!)
         {
             if (Equals(field, value) || !Validator(value))
                 return new SetValueResult<T>(false, field, value, this);

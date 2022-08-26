@@ -32,14 +32,14 @@ namespace MathCore.ViewModels
             /// <param name="Result">Было ли значение свойства обновлено</param>
             /// <param name="OldValue">Прежнее значение свойства</param>
             /// <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="System.ComponentModel.PropertyChangedEventHandler"/></param>
-            internal SetStaticValueResult(bool Result, [CanBeNull] in T OldValue, [NotNull] in Action<string> OnPropertyChanged) : this(Result, OldValue, OldValue, OnPropertyChanged) { }
+            internal SetStaticValueResult(bool Result, [CanBeNull] T OldValue, [NotNull] Action<string> OnPropertyChanged) : this(Result, OldValue, OldValue, OnPropertyChanged) { }
 
             /// <summary>Инициализация нового экземпляра <see cref="SetStaticValueResult{T}"/></summary>
             /// <param name="Result">Было ли значение свойства обновлено</param>
             /// <param name="OldValue">Прежнее значение свойства</param>
             /// <param name="NewValue">Новое значение свойства</param>
             /// <param name="OnPropertyChanged">Действие по генерации события обновления свойства - делегат <see cref="System.ComponentModel.PropertyChangedEventHandler"/></param>
-            internal SetStaticValueResult(bool Result, [CanBeNull] in T OldValue, [CanBeNull] in T NewValue, [NotNull] in Action<string> OnPropertyChanged)
+            internal SetStaticValueResult(bool Result, [CanBeNull]T OldValue, [CanBeNull]T NewValue, [NotNull]Action<string> OnPropertyChanged)
             {
                 _Result = Result;
                 _OldValue = OldValue;

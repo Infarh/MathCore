@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Reactive;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -394,7 +395,7 @@ namespace System.Linq
         /// <param name="collection">Исходная последовательность элементов</param>
         /// <param name="values">Добавляемый элемент</param>
         /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на последнем месте</returns>
-        public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T> collection, params T[] values)
+        public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T>? collection, params T[]? values)
         {
             if (collection != null) foreach (var v in collection) yield return v;
             if (values != null) foreach (var v in values) yield return v;
@@ -405,7 +406,7 @@ namespace System.Linq
         /// <param name="collection">Исходная последовательность элементов</param>
         /// <param name="values">Добавляемый элемент</param>
         /// <returns>Результирующая последовательность элементов, в которой добавленный элемент идёт на последнем месте</returns>
-        public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T> collection, IEnumerable<T> values)
+        public static IEnumerable<T> InsertAfter<T>(this IEnumerable<T>? collection, IEnumerable<T>? values)
         {
             if (collection != null) foreach (var v in collection) yield return v;
             if (values != null) foreach (var v in values) yield return v;
@@ -417,10 +418,11 @@ namespace System.Linq
         /// <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
         /// <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
         /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
-        public static T? FirstOrDefault<T>(this IEnumerable<T> enumerable, Func<T, bool> Selector, in T? DefaultValue = default)
+        public static T? FirstOrDefault<T>(this IEnumerable<T>? enumerable, Func<T, bool> Selector, T? DefaultValue = default)
         {
             switch (enumerable)
             {
+                case null: return DefaultValue;
                 case T[] { Length: 0 }: return DefaultValue;
                 case List<T> { Count: 0 }: return DefaultValue;
                 case IList<T> { Count: 0 }: return DefaultValue;
@@ -457,10 +459,11 @@ namespace System.Linq
         /// <param name="Selector">Критерий отбора элементов перечисления с параметром</param>
         /// <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
         /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
-        public static T? FirstOrDefault<T, TP>(this IEnumerable<T> enumerable, in TP p, Func<T, TP, bool> Selector, in T? DefaultValue = default)
+        public static T? FirstOrDefault<T, TP>(this IEnumerable<T>? enumerable, in TP p, Func<T, TP, bool> Selector, in T? DefaultValue = default)
         {
             switch (enumerable)
             {
+                case null: return DefaultValue;
                 case T[] { Length: 0 }: return DefaultValue;
                 case List<T> { Count: 0 }: return DefaultValue;
                 case IList<T> { Count: 0 }: return DefaultValue;
@@ -500,7 +503,7 @@ namespace System.Linq
         /// <param name="DefaultValue">Значение по умолчанию, возвращаемое если ни один из элементов перечисления не соответствует критерию</param>
         /// <returns>Первый найденный элемент в перечислении, удовлетворяющий критерию, либо значение по умолчанию</returns>
         public static T? FirstOrDefault<T, TP1, TP2>(
-            this IEnumerable<T> enumerable,
+            this IEnumerable<T>? enumerable,
             in TP1 p1,
             in TP2 p2,
             Func<T, TP1, TP2, bool> Selector,
@@ -508,6 +511,7 @@ namespace System.Linq
         {
             switch (enumerable)
             {
+                case null: return DefaultValue;
                 case T[] { Length: 0 }: return DefaultValue;
                 case List<T> { Count: 0 }: return DefaultValue;
                 case IList<T> { Count: 0 }: return DefaultValue;
@@ -543,13 +547,13 @@ namespace System.Linq
         /// <typeparam name="TItem">Тип перечисления результатов</typeparam>
         /// <returns>Перечисление вложенных элементов</returns>
         public static IEnumerable<TItem> SelectMany<TSource, TSubSource, TItem>(this TSource? enumerable)
-            where TSource : IEnumerable<TSubSource>
+            where TSource : IEnumerable<TSubSource?>
             where TSubSource : IEnumerable<TItem>
         {
             if (enumerable is null) yield break;
             switch (enumerable)
             {
-                case TSubSource[] list:
+                case TSubSource?[] list:
                     foreach (var items in list)
                         if (items != null)
                             foreach (var item in items)
@@ -743,7 +747,7 @@ namespace System.Linq
         /// <param name="source">Первое перечисление элементов</param>
         /// <param name="other">Второе перечисление элементов</param>
         /// <returns>Перечисление элементов, составленное из элементов первого и второго перечисления</returns>
-        public static IEnumerable Concat(this IEnumerable source, IEnumerable? other)
+        public static IEnumerable Concat(this IEnumerable? source, IEnumerable? other)
         {
             if (source != null) foreach (var src in source) yield return src;
             if (other != null) foreach (var oth in other) yield return oth;
@@ -1146,6 +1150,7 @@ namespace System.Linq
         /// <summary>Объединение перечисления строк в единую строку с разделителем - переносом строки</summary>
         /// <param name="Lines">Перечисление строк</param>
         /// <returns>Если ссылка на перечисление пуста, то пустая ссылка на строку, иначе - объединение строк с разделителем - переносом строки</returns>
+        [return: NotNullIfNotNull("Lines")]
         public static string? Aggregate(this IEnumerable<string>? Lines)
         {
             if (Lines is null) return null;
@@ -1598,7 +1603,7 @@ namespace System.Linq
         {
             if (Length > 0)
                 return new StatisticValue(Length)
-                          .InitializeObject(collection, (sv, items) => sv!.AddEnumerable(items))
+                          .InitializeObject(collection, (sv, items) => sv.AddEnumerable(items))
                        ?? throw new InvalidOperationException();
             var values = collection.ToArray();
             var result = new StatisticValue(values.Length);
@@ -2807,6 +2812,7 @@ namespace System.Linq
 
         /// <summary>Отложенное выполнение указанного действия для каждого элемента последовательности</summary>
         /// <typeparam name="T">Тип элементов последовательности</typeparam>
+        /// <typeparam name="T1">Тип значения</typeparam>
         /// <param name="collection">Последовательность элементов</param>
         /// <param name="Action">Выполняемое действие</param>
         /// <returns>Последовательность элементов, для элементов которой выполняется отложенное действие</returns>
@@ -2814,7 +2820,7 @@ namespace System.Linq
         public static IEnumerable<T> ForeachLazy<T, T1>(this IEnumerable<T> collection, Func<T, T1>? Action) =>
             Action is null ? collection : collection.Select(t =>
             {
-                Action(t);
+                _ = Action(t); // Именно должна быть функция
                 return t;
             });
 
@@ -2873,7 +2879,7 @@ namespace System.Linq
         /// <returns>Последовательность элементов, таких, что ранее они отсутствовали во входной последовательности</returns>
         public static IEnumerable<T> GetUnique<T>(this IEnumerable<T> values, Func<T, T, bool> Comparer, Func<T, int>? Hasher = null)
         {
-            var hash = new HashSet<T>(new LambdaEqualityComparer<T>(Comparer, Hasher ?? (item => item.GetHashCode())));
+            var hash = new HashSet<T>(new LambdaEqualityComparer<T>(Comparer, Hasher ?? (item => item!.GetHashCode())));
 
             foreach (var value in values.Where(value => hash.Add(value)))
                 yield return value;
@@ -2918,20 +2924,18 @@ namespace System.Linq
         /// <returns>Истина, если последовательности равны с точностью до элементов</returns>
         public static bool ItemEquals<T>(this IEnumerable<T> A, IEnumerable<T> B)
         {
-            using (var a = A.GetEnumerator())
-            using (var b = B.GetEnumerator())
+            using var a = A.GetEnumerator();
+            using var b = B.GetEnumerator();
+            var next_a = a.MoveNext();
+            var next_b = b.MoveNext();
+            while (next_a && next_b)
             {
-                var next_a = a.MoveNext();
-                var next_b = b.MoveNext();
-                while (next_a && next_b)
-                {
-                    if (a.Current is null && b.Current != null) return false;
-                    if (a.Current is null || !a.Current.Equals(b.Current)) return false;
-                    next_a = a.MoveNext();
-                    next_b = b.MoveNext();
-                }
-                return next_a == next_b;
+                if (a.Current is null && b.Current != null) return false;
+                if (a.Current is null || !a.Current.Equals(b.Current)) return false;
+                next_a = a.MoveNext();
+                next_b = b.MoveNext();
             }
+            return next_a == next_b;
         }
 
         /// <summary>Определение объектов, которые не входят в пересечение двух последовательностей</summary>
@@ -3601,7 +3605,7 @@ namespace System.Linq
         /// <typeparam name="T">Тип элементов перечисления</typeparam>
         /// <param name="enumerable">Перечисление</param>
         /// <returns>Перечисление, состоящее из первого и последнего элементов исходного перечисления</returns>
-        public static IEnumerable<T> TakeFirstAndLast<T>(this IEnumerable<T> enumerable)
+        public static IEnumerable<T?> TakeFirstAndLast<T>(this IEnumerable<T?> enumerable)
         {
             switch (enumerable)
             {

@@ -156,7 +156,7 @@ public readonly ref struct GoertzelStruct
         _SamplesCount = 0;
     }
 
-    private GoertzelStruct(in Complex W0, in Complex State, double s1, double s2, int SamplesCount)
+    private GoertzelStruct(Complex W0, Complex State, double s1, double s2, int SamplesCount)
     {
         _W = W0;
         this.State = State;
@@ -214,7 +214,7 @@ public readonly ref struct GoertzelComplexStruct
         _SamplesCount = 0;
     }
 
-    private GoertzelComplexStruct(in Complex W0, in Complex State, in Complex s1, in Complex s2, int SamplesCount)
+    private GoertzelComplexStruct(Complex W0, Complex State, Complex s1, Complex s2, int SamplesCount)
     {
         _W = W0;
         this.State = State;
