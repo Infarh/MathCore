@@ -2,7 +2,7 @@
 using MathCore.Algorithms.Numbers;
 using MathCore.Algorithms.Polynoms;
 
-CalculatorPI.Calculate(1000);
+CalculatorPI.Calculate(10000);
 
 MatrixRef a = new double[,]
 {
