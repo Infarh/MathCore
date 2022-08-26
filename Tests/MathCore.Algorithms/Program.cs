@@ -1,6 +1,8 @@
 ﻿using MathCore.Algorithms.Matrixes;
+using MathCore.Algorithms.Numbers;
 using MathCore.Algorithms.Polynoms;
 
+CalculatorPI.Calculate(1000);
 
 MatrixRef a = new double[,]
 {
