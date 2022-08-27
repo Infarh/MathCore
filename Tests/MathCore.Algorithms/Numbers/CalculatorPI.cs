@@ -15,6 +15,8 @@ public static class CalculatorPI
 
     public static void Calculate(int N)
     {
+        Console.WriteLine("Вычисление числа pi с числом знаков: {0}", N);
+
         var timer = Stopwatch.StartNew();
 
         var size = N / __Lb + 1;
@@ -24,12 +26,22 @@ public static class CalculatorPI
         var buffer1 = new long[size];
         var buffer2 = new long[size];
 
+        // Pi/4 = 12*arctan(1/18) + 8*arctan(1/57) - 5*arctan(1/239)
         Span<long> m = stackalloc long[] { 12, 8, -5 };
         Span<long> p = stackalloc long[] { 18, 57, 239 };
 
-        // Pi/4 = 12*arctan(1/18) + 8*arctan(1/57) - 5*arctan(1/239)
-        // Pi/4 = Sum(i) [m[i]*arctan(1/p[i])]
+        Console.WriteLine("Формула вычисления:");
+        Console.Write("    pi/4 =");
+        for (var i = 0; i < m.Length; i++)
+        {
+            Console.Write(' ');
+            if (m[i] >= 0) Console.Write('+');
+            Console.Write("{0} * atan(1/{1})", m[i], p[i]);
+        }
+        Console.WriteLine();
+        Console.WriteLine();
 
+        // Pi/4 = Sum(i) [m[i]*arctan(1/p[i])]
         var iterations = 0;
         for (var i = 0; i < m.Length; i++)
         {
@@ -42,19 +54,94 @@ public static class CalculatorPI
             else
                 Substrate(pi, arctan);
 
-            Console.WriteLine("Iterations: {0}", iterations);
+            Console.WriteLine("Итераций: {0}", iterations);
         }
 
         Multiply(pi, 4);
 
         timer.Stop();
 
-        Print(pi);
+        //Print(pi);
 
         Console.WriteLine();
-        Console.WriteLine("Digits per second : {0:f1}", pi.Length / timer.Elapsed.TotalSeconds);
-        Console.WriteLine("     Time elapsed : {0}", timer.Elapsed);
-        Console.WriteLine("       Iterations : {0}", iterations);
+        Console.WriteLine("Знаков в секунду : {0:f1}", pi.Length / timer.Elapsed.TotalSeconds);
+        Console.WriteLine("  Прошло времени : {0}", timer.Elapsed);
+        Console.WriteLine("        Итераций : {0}", iterations);
+    }
+
+    public static async Task CalculateParallelAsync(int N)
+    {
+        Console.WriteLine("Асинхронное параллельное вычисление числа pi с числом знаков: {0}", N);
+
+        var timer = Stopwatch.StartNew();
+
+        // Pi/4 = 12*arctan(1/18) + 8*arctan(1/57) - 5*arctan(1/239)
+        long[] m = { 12, 8, -5 };
+        long[] p = { 18, 57, 239 };
+
+        Console.WriteLine("Формула вычисления:");
+        Console.Write("    pi/4 =");
+        for (var i = 0; i < m.Length; i++)
+        {
+            Console.Write(' ');
+            if (m[i] >= 0) Console.Write('+');
+            Console.Write("{0} * atan(1/{1})", m[i], p[i]);
+        }
+        Console.WriteLine();
+        Console.WriteLine();
+
+        var size = N / __Lb + 1;
+        var tasks = new List<Task<(long[] Result, int Iterations, bool Sign)>>();
+        for (var i = 0; i < m.Length; i++)
+        {
+            var p_i = p[i];
+            var m_i = m[i];
+
+            var task = Task.Run(() =>
+            {
+                Debug.WriteLine($"Задача запущена {m_i} * atan(1 / {p_i})");
+                Console.WriteLine($"Задача запущена {m_i} * atan(1 / {p_i})");
+                var task_timer = Stopwatch.StartNew();
+
+                var arctan = new long[size];
+                var iters = ArcCot(p_i, arctan, new long[size], new long[size]);
+                Multiply(arctan, Math.Abs(m_i));
+
+                task_timer.Stop();
+
+                Debug.WriteLine($"Задача завершена {m_i,3} * atan(1 / {p_i}) итераций:{iters} время:{task_timer.Elapsed}");
+                Console.WriteLine($"Задача завершена {m_i,3} * atan(1 / {p_i}) итераций:{iters} время:{task_timer.Elapsed}");
+
+                return (Result: arctan, Iterations: iters, Sign: m_i < 0);
+            });
+
+            tasks.Add(task);
+        }
+
+        var result = await Task.WhenAll(tasks);
+
+        // Pi/4 = Sum(i) [m[i]*arctan(1/p[i])]
+        var pi = new long[size];
+        var iterations = 0;
+        foreach (var (atan, result_iterations, sign) in result)
+        {
+            iterations += result_iterations;
+            if (sign)
+                Substrate(pi, atan);
+            else
+                Add(pi, atan);
+        }
+
+        Multiply(pi, 4);
+
+        timer.Stop();
+
+        //Print(pi);
+
+        Console.WriteLine();
+        Console.WriteLine("Знаков в секунду : {0:f1}", pi.Length / timer.Elapsed.TotalSeconds);
+        Console.WriteLine("  Прошло времени : {0}", timer.Elapsed);
+        Console.WriteLine("        Итераций : {0}", iterations);
     }
 
 
@@ -190,7 +277,7 @@ public static class CalculatorPI
         var last_i0 = -1;
         while (!IsEmpty(uk, out var i0, out var x0))
         {
-            Debug.WriteLine("atan(1/{0}) {1,5:f1}% X=[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
+            //Debug.WriteLine("atan(1/{0}) {1,5:f1}% X=[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
 
             if (p < __MaxDiv)
                 Divide(uk, p2, uk);     // Один шаг малого p
@@ -211,7 +298,7 @@ public static class CalculatorPI
             sign = !sign;
             j++;
 
-            if(i0 == last_i0) continue;
+            if (i0 == last_i0) continue;
 
         }
 
@@ -235,7 +322,7 @@ public static class CalculatorPI
         while (!IsEmpty(uk, out var i0, out var x0))
         {
             Cancel.ThrowIfCancellationRequested();
-            Debug.WriteLine("atan(1/{0}) {1,5:f1}% X[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
+            //Debug.WriteLine("atan(1/{0}) {1,5:f1}% X[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
 
             if (p < __MaxDiv)
                 Divide(uk, p2, uk);     // Один шаг малого p
