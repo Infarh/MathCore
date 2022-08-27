@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
@@ -18,31 +19,25 @@ namespace MathCore.MathParser
     public class MathExpression : IDisposable, ICloneable<MathExpression>
     {
         /// <summary>Дерево математического выражения</summary>
-        private ExpressionTree _ExpressionTree;
+        private ExpressionTree _ExpressionTree = null!;
 
         /// <summary>Коллекция переменных математического выражения</summary>
-        [NotNull]
         private readonly VariablesCollection _Variables;
 
         /// <summary>Коллекция констант математического выражения</summary>
-        [NotNull]
         private readonly ConstantsCollection _Constants;
 
         /// <summary>Коллекция функций, участвующих в выражении</summary>
-        [NotNull]
         private readonly FunctionsCollection _Functions;
 
         /// <summary>Коллекция функционалов</summary>
-        [NotNull]
         private readonly FunctionalsCollection _Functionals;
 
         /// <summary>Имя выражения</summary>
-        [NotNull]
         private string _Name;
 
         /// <exception cref="ArgumentNullException" accessor="set"><paramref name="value"/> is <see langword="null" />.</exception>
         /// <exception cref="ArgumentException" accessor="set">Указано пустое имя функции</exception>
-        [NotNull]
         public string Name
         {
             get => _Name;
@@ -60,32 +55,26 @@ namespace MathCore.MathParser
         public bool IsPrecomputable => _ExpressionTree.Root.IsPrecomputable;
 
         /// <summary>Дерево математического выражения</summary>
-        [NotNull]
         public ExpressionTree Tree { [DST] get => _ExpressionTree; [DST] set => _ExpressionTree = value; }
 
         /// <summary>Перечисление узлов дерева, содержащих переменные</summary>
-        [NotNull]
         public IEnumerable<VariableValueNode> VariableNodes => _ExpressionTree.OfType<VariableValueNode>();
 
         /// <summary>Переменные, входящие в математическое выражение</summary>
-        [NotNull]
         public VariablesCollection Variable => _Variables;
 
         /// <summary>Константы, входящие в математическое выражение</summary>
-        [NotNull]
         public ConstantsCollection Constants => _Constants;
 
         /// <summary>Коллекция функций, участвующих в выражении</summary>
-        [NotNull]
         public FunctionsCollection Functions => _Functions;
 
         /// <summary>Коллекция функционалов</summary>
-        [NotNull]
         public FunctionalsCollection Functionals => _Functionals;
 
         /// <summary>Инициализация пустого математического выражения</summary>
         /// <param name="Name">Имя функции</param>
-        public MathExpression([NotNull] string Name = "f")
+        public MathExpression(string Name = "f")
         {
             _Name = Name;
             _Variables = new VariablesCollection(this);     // Коллекция переменных
@@ -97,7 +86,7 @@ namespace MathCore.MathParser
         /// <summary>Инициализация нового математического выражения</summary>
         /// <param name="Tree">Дерево математического выражения</param>
         /// <param name="Name">Имя функции</param>
-        private MathExpression([NotNull] ExpressionTree Tree, [NotNull] string Name = "f")
+        private MathExpression(ExpressionTree Tree, string Name = "f")
             : this(Name)
         {
             _ExpressionTree = Tree; //Сохраняем ссылку на корень дерева
@@ -121,7 +110,7 @@ namespace MathCore.MathParser
         /// <summary>Инициализация нового математического выражения</summary>
         /// <param name="StrExpression">Строковое представление выражения</param>
         /// <param name="Parser">Ссылка на парсер</param>
-        internal MathExpression([NotNull] string StrExpression, [NotNull] ExpressionParser Parser)
+        internal MathExpression(string StrExpression, ExpressionParser Parser)
             : this()
         {
             var terms = new BlockTerm(StrExpression);    // разбить строку на элементы
@@ -157,7 +146,7 @@ namespace MathCore.MathParser
 
         /// <summary>Вычисление математического выражения</summary>
         /// <returns>Значение выражения</returns>
-        public double Compute([NotNull] params double[] arg)
+        public double Compute(params double[] arg)
         {
             for (int i = 0, arg_count = arg.Length, var_count = Variable.Count; i < arg_count && i < var_count; i++)
                 Variable[i].Value = arg[i];
@@ -166,37 +155,31 @@ namespace MathCore.MathParser
 
         /// <summary>Компиляция математического выражения в функцию без параметров</summary>
         /// <returns>Функция типа double func(void) без параметров</returns>
-        [NotNull]
         public Func<double> Compile() => Compile<Func<double>>();
 
         /// <summary>Компиляция функции одной переменной</summary>
         /// <returns>Делегат функции одной переменной</returns>
-        [NotNull]
         public Func<double, double> Compile1() => Compile<Func<double, double>>();
 
         /// <summary>Компиляция функции двух переменных</summary>
         /// <returns>Делегат функции двух переменных</returns>
-        [NotNull]
         public Func<double, double, double> Compile2() => Compile<Func<double, double, double>>();
 
         /// <summary>Компиляция функции трёх переменных</summary>
         /// <returns>Делегат функции трёх переменных</returns>
-        [NotNull]
         public Func<double, double, double, double> Compile3() => Compile<Func<double, double, double, double>>();
 
         /// <summary>Компиляция математического выражения в функцию указанного типа</summary>
         /// <param name="ArgumentName">Список имён параметров</param>
         /// <returns>Делегат скомпилированного выражения</returns>
-        [NotNull]
-        public Delegate Compile([NotNull] params string[] ArgumentName) =>
+        public Delegate Compile(params string[] ArgumentName) =>
             Expression.Lambda(GetExpression(out var vars, ArgumentName), vars).Compile();
 
         /// <summary>Многопараметрическая компиляция мат.выражения</summary>
         /// <param name="ArgumentName">Массив имён компилируемых параметров</param>
         /// <returns>Делегат функции, принимающий на вход массив значений параметров</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
-        [NotNull]
-        public Func<double[], double> CompileMultiParameters([NotNull] params string[] ArgumentName)
+        public Func<double[], double> CompileMultiParameters(params string[] ArgumentName)
         {
             // Словарь индексов переменных
             var var_dictionary = new Dictionary<string, int>();
@@ -255,7 +238,7 @@ namespace MathCore.MathParser
         /// <param name="ArgumentName">Список имён параметров</param>
         /// <returns>Делегат скомпилированного выражения</returns>
         [NotNull]
-        public TDelegate Compile<TDelegate>([NotNull] params string[] ArgumentName)
+        public TDelegate Compile<TDelegate>(params string[] ArgumentName)
         {
             var compilation = GetExpression<TDelegate>(out var vars, ArgumentName);
             return Expression.Lambda<TDelegate>(compilation, vars).Compile();
@@ -265,8 +248,7 @@ namespace MathCore.MathParser
         /// <param name="vars">Список входных переменных</param>
         /// <param name="ArgumentName">Список имён аргументов</param>
         /// <returns>Выражение типа Linq.Expression</returns>
-        [NotNull]
-        public Expression GetExpression([NotNull] out ParameterExpression[] vars, [NotNull] params string[] ArgumentName)
+        public Expression GetExpression(out ParameterExpression[] vars, params string[] ArgumentName)
         {
             vars = ArgumentName.Select(name => Expression.Parameter(typeof(double), name)).ToArray();
             return ((ComputedNode)_ExpressionTree.Root).Compile(vars);
@@ -277,10 +259,9 @@ namespace MathCore.MathParser
         /// <param name="vars">Список входных переменных</param>
         /// <param name="ArgumentName">Список имён аргументов</param>
         /// <returns>Выражение типа Linq.Expression</returns>
-        [NotNull]
         public Expression GetExpression<TDelegate>(
             [CanBeNull] out ParameterExpression[] vars,
-            [NotNull] params string[] ArgumentName)
+            params string[] ArgumentName)
         {
             var t = typeof(TDelegate);
             vars = null;
@@ -304,12 +285,12 @@ namespace MathCore.MathParser
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление</returns>
-        [NotNull] public override string ToString() => $"{_Name}({_Variables.Select(v => v.Name).ToSeparatedStr(", ")})={_ExpressionTree.Root}";
+        public override string ToString() => $"{_Name}({_Variables.Select(v => v.Name).ToSeparatedStr(", ")})={_ExpressionTree.Root}";
 
         /// <summary>Перенос констант из выражения источника в выражение приёмник</summary>
         /// <param name="Source">Выражение источник</param>
         /// <param name="Result">Выражение приёмник</param>
-        private static void CheckConstantsCollection([NotNull] MathExpression Source, [NotNull] MathExpression Result) =>
+        private static void CheckConstantsCollection(MathExpression Source, MathExpression Result) =>
             Source.Constants
                .Select(constant => Result.Variable[constant.Name])
                .Where(c => Result.Variable.Remove(c))
@@ -317,7 +298,6 @@ namespace MathCore.MathParser
 
         /// <summary>Клонирование выражения</summary>
         /// <returns>Копия объектной модели выражения</returns>
-        [NotNull]
         public MathExpression Clone()
         {
             var result = new MathExpression(_ExpressionTree.Clone());
@@ -332,8 +312,7 @@ namespace MathCore.MathParser
         /// <param name="y">Второе выражение</param>
         /// <param name="node">Узел операции</param>
         /// <returns>Математическое выражение, в корне дерева которого лежит узел оператора. Поддеревья - корни первого и второго выражений</returns>
-        [NotNull]
-        protected static MathExpression CombineExpressions([NotNull] MathExpression x, [NotNull] MathExpression y, [NotNull] OperatorNode node)
+        protected static MathExpression CombineExpressions(MathExpression x, MathExpression y, OperatorNode node)
         {
             var x_tree = x.Tree.Clone();
             var y_tree = y.Tree.Clone();
@@ -356,53 +335,45 @@ namespace MathCore.MathParser
         /// <param name="x">Первое слагаемое</param>
         /// <param name="y">Второе слагаемое</param>
         /// <returns>Выражение-сумма, корень которого - узел суммы. Поддеревья - корни выражений слагаемых</returns>
-        [NotNull]
-        public static MathExpression operator +([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new AdditionOperatorNode());
+        public static MathExpression operator +(MathExpression x, MathExpression y) => CombineExpressions(x, y, new AdditionOperatorNode());
 
         /// <summary>Оператор вычитания двух выражений</summary>
         /// <param name="x">Уменьшаемое</param>
         /// <param name="y">Вычитаемое</param>
         /// <returns>Выражение-разность, корень которого - узел разности. Поддеревья - корни выражений вычитаемого и уменьшаемого</returns>
-        [NotNull]
-        public static MathExpression operator -([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new subtractionOperatorNode());
+        public static MathExpression operator -(MathExpression x, MathExpression y) => CombineExpressions(x, y, new subtractionOperatorNode());
 
         /// <summary>Оператор умножения двух выражений</summary>
         /// <param name="x">Первый сомножитель</param>
         /// <param name="y">Второй сомножитель</param>
         /// <returns>Выражение-произведения, корень которого - узел произведения. Поддеревья - корни выражений сомножителей</returns>
-        [NotNull]
-        public static MathExpression operator *([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new MultiplicationOperatorNode());
+        public static MathExpression operator *(MathExpression x, MathExpression y) => CombineExpressions(x, y, new MultiplicationOperatorNode());
 
         /// <summary>Оператор деления двух выражений</summary>
         /// <param name="x">Делимое</param>
         /// <param name="y">Делитель</param>
         /// <returns>Выражение-частное, корень которого - узел деления. Поддеревья - корни выражений делимого и делителя</returns>
-        [NotNull]
-        public static MathExpression operator /([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new DivisionOperatorNode());
+        public static MathExpression operator /(MathExpression x, MathExpression y) => CombineExpressions(x, y, new DivisionOperatorNode());
 
         /// <summary>Оператор возведения в степень</summary>
         /// <param name="x">Основание</param>
         /// <param name="y">Показатель степени</param>
         /// <returns>Выражение-степень, корень которого - узел степени. Поддеревья - корни выражений Основания и показателя степени</returns>
-        [NotNull]
-        public static MathExpression operator ^([NotNull] MathExpression x, [NotNull] MathExpression y) => CombineExpressions(x, y, new PowerOperatorNode());
+        public static MathExpression operator ^(MathExpression x, MathExpression y) => CombineExpressions(x, y, new PowerOperatorNode());
 
         /// <summary>Оператор неявного приведения типов математического выражения к типу дерева выражения</summary>
         /// <param name="Expression">Математическое выражение</param>
         /// <returns>Дерево математического выражения</returns>
-        [NotNull]
-        public static implicit operator ExpressionTree([NotNull] MathExpression Expression) => Expression.Tree;
+        public static implicit operator ExpressionTree(MathExpression Expression) => Expression.Tree;
 
         /// <summary>Оператор неявного приведения типов дерева выражения к типу математического выражения</summary>
         /// <param name="Tree">Дерево математического выражения</param>
         /// <returns>Математическое выражение, содержащее указанное дерево</returns>
-        [NotNull]
-        public static implicit operator MathExpression([NotNull] ExpressionTree Tree) => new(Tree);
+        public static implicit operator MathExpression(ExpressionTree Tree) => new(Tree);
 
         /// <summary>Оператор неявного приведения типов математического выражения к типу делегата функции double Func(void)</summary>
         /// <param name="expr">Математическое выражения</param>
         /// <returns>Результат компиляции математического выражения</returns>
-        [NotNull]
-        public static implicit operator Func<double>([NotNull] MathExpression expr) => expr.Compile();
+        public static implicit operator Func<double>(MathExpression expr) => expr.Compile();
     }
 }

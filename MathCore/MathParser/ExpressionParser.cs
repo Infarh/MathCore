@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,15 +19,15 @@ namespace MathCore.MathParser
     public class ExpressionParser
     {
         /// <summary>Событие возникает при добавлении нового узла в дерево выражения</summary>
-        public event EventHandler<EventArgs<ExpressionTreeNode>> NewNodeAdded;
+        public event EventHandler<EventArgs<ExpressionTreeNode>>? NewNodeAdded;
 
         /// <summary>При добавлении нового узла в дерево выражения</summary>
         /// <param name="e">Аргумент события, содержащий добавляемый узел</param>
-        protected virtual void OnNewNodeAdded([NotNull] EventArgs<ExpressionTreeNode> e) => NewNodeAdded?.Invoke(this, e);
+        protected virtual void OnNewNodeAdded(EventArgs<ExpressionTreeNode> e) => NewNodeAdded?.Invoke(this, e);
 
         /// <summary>Обработка очередного добавляемого в дерево узла</summary>
         /// <param name="NewNode">Новый добавляемый узел дерева выражения</param>
-        protected virtual void OnNewNodeAdded([NotNull] ref ExpressionTreeNode NewNode)
+        protected virtual void OnNewNodeAdded(ref ExpressionTreeNode NewNode)
         {
             ProcessNewNode(ref NewNode);
 
@@ -38,7 +39,7 @@ namespace MathCore.MathParser
 
         /// <summary>Обработка нового узла дерева выражения</summary>
         /// <param name="NewNode">Новый добавляемый узел</param>
-        protected virtual void ProcessNewNode([NotNull] ref ExpressionTreeNode NewNode)
+        protected virtual void ProcessNewNode(ref ExpressionTreeNode NewNode)
         {
             switch (NewNode)
             {
@@ -63,15 +64,15 @@ namespace MathCore.MathParser
         }
 
         /// <summary>Событие предобработки входящей строки</summary>
-        public event EventHandler<EventArgs<string>> StringPreprocessing;
+        public event EventHandler<EventArgs<string>>? StringPreprocessing;
 
         /// <summary>Генерация события предобработки входящей строки</summary>
         /// <param name="args">Аргумент события, содержащий обрабатываемую строку</param>
-        protected virtual void OnStringPreprocessing([NotNull] EventArgs<string> args) => StringPreprocessing?.Invoke(this, args);
+        protected virtual void OnStringPreprocessing(EventArgs<string> args) => StringPreprocessing?.Invoke(this, args);
 
         /// <summary>Генерация события предобработки входящей строки</summary>
         /// <param name="StrExpression">Обрабатываемая строка</param>
-        private void OnStringPreprocessing([NotNull] ref string StrExpression)
+        private void OnStringPreprocessing(ref string StrExpression)
         {
             var args = new EventArgs<string>(StrExpression);
             OnStringPreprocessing(args);
@@ -90,11 +91,12 @@ namespace MathCore.MathParser
             public int ArgumentCount => Arguments.Count;
 
             /// <summary>Делегат функции, который надо использовать при её вычислении</summary>
-            public Delegate Function { get; set; }
+            public Delegate? Function { get; set; }
+
             /// <summary>Инициализация аргумента события обнаружения функции</summary>
             /// <param name="Name">Имя функции</param>
             /// <param name="Arguments">Массив имён аргументов функции</param>
-            public FindFunctionEventArgs([NotNull] string Name, [NotNull] IReadOnlyList<string> Arguments)
+            public FindFunctionEventArgs(string Name, IReadOnlyList<string> Arguments)
             {
                 this.Name = Name;
                 this.Arguments = Arguments;
@@ -104,21 +106,21 @@ namespace MathCore.MathParser
             /// <param name="name">Имя проверяемой функции</param>
             /// <param name="ArgumentsCount">Число переменных</param>
             /// <returns></returns>
-            public bool SignatureEqual([NotNull] string name, int ArgumentsCount) => Name == name && ArgumentsCount == ArgumentCount;
+            public bool SignatureEqual(string name, int ArgumentsCount) => Name == name && ArgumentsCount == ArgumentCount;
         }
 
         /// <summary>Событие, возникающее в процессе разбора математического выражения при обнаружении функции</summary>
-        public event EventHandler<FindFunctionEventArgs> FindFunction;
+        public event EventHandler<FindFunctionEventArgs>? FindFunction;
 
         /// <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
         /// <param name="Args">Аргументы события, содержащие имя функции, имена аргументов и делегат метода функции</param>
-        protected virtual void OnFindFunction([NotNull] FindFunctionEventArgs Args) => FindFunction?.Invoke(this, Args);
+        protected virtual void OnFindFunction(FindFunctionEventArgs Args) => FindFunction?.Invoke(this, Args);
 
         /// <summary>Обработчик события обнаружения функции в процессе разбора выражения</summary>
         /// <param name="Name">Имя функции</param>
         /// <param name="Arguments">Аргументы функции</param>
         /// <returns>Делегат функции</returns>
-        private Delegate OnFunctionFind([NotNull] string Name, [NotNull] IReadOnlyList<string> Arguments)
+        private Delegate? OnFunctionFind(string Name, IReadOnlyList<string> Arguments)
         {
             var args = new FindFunctionEventArgs(Name, Arguments);
             OnFindFunction(args);
@@ -126,26 +128,23 @@ namespace MathCore.MathParser
         }
 
         /// <summary>Событие обработки переменных при разборе мат.выражений</summary>
-        public event EventHandler<EventArgs<ExpressionVariable>> VariableProcessing;
+        public event EventHandler<EventArgs<ExpressionVariable>>? VariableProcessing;
 
         /// <summary> Обработка обнаруженной переменной</summary>
         /// <param name="e">Обнаруженная переменная</param>
-        protected virtual void OnVariableProcessing([NotNull] EventArgs<ExpressionVariable> e) => VariableProcessing?.Invoke(this, e);
+        protected virtual void OnVariableProcessing(EventArgs<ExpressionVariable> e) => VariableProcessing?.Invoke(this, e);
 
         /// <summary> Обработка обнаруженной переменной</summary>
         /// <param name="Variable">Обнаруженная переменная</param>
-        private void OnVariableProcessing([NotNull] ExpressionVariable Variable) => OnVariableProcessing(new EventArgs<ExpressionVariable>(Variable));
+        private void OnVariableProcessing(ExpressionVariable Variable) => OnVariableProcessing(new EventArgs<ExpressionVariable>(Variable));
 
         /// <summary>Множество запрещённых символов</summary>
-        [NotNull]
         private readonly HashSet<char> _ExcludeCharsSet = new(" \r\n");
 
         /// <summary>Словарь констант</summary>
-        [NotNull]
         private readonly Dictionary<string, double> _Constants = new();
 
         /// <summary>Множество запрещённых символов</summary>
-        [NotNull]
         public HashSet<char> ExcludeCharsSet => _ExcludeCharsSet;
 
         /// <summary>Разделитель выражений (по умолчанию ';')</summary>
@@ -155,7 +154,6 @@ namespace MathCore.MathParser
         public char DecimalSeparator { get; set; }
 
         /// <summary>Константы</summary>
-        [NotNull]
         public Dictionary<string, double> Constants => _Constants;
 
         /// <summary>Парсер математических выражений</summary>
@@ -183,13 +181,12 @@ namespace MathCore.MathParser
         /// <summary>Предварительная обработка входного строкового выражения</summary>
         /// <param name="Str">Обрабатываемая строка</param>
         // Удаление из строки всех символов, из множества запрещённых символов
-        protected virtual void StrPreprocessing([NotNull] ref string Str) => Str = new string(Str.WhereNot(_ExcludeCharsSet.Contains).ToArray());
+        protected virtual void StrPreprocessing(ref string Str) => Str = new string(Str.WhereNot(_ExcludeCharsSet.Contains).ToArray());
 
         /// <summary>Разобрать строку математического выражения</summary>
         /// <param name="StrExpression">Строковое представление математического выражения</param>
         /// <returns>Математическое выражение</returns>
-        [NotNull]
-        public MathExpression Parse([NotNull] string StrExpression)
+        public MathExpression Parse(string StrExpression)
         {
             StrPreprocessing(ref StrExpression);
             OnStringPreprocessing(ref StrExpression);
@@ -204,7 +201,7 @@ namespace MathCore.MathParser
 
         /// <summary>Обработка переменных</summary>
         /// <param name="Expression">Обрабатываемое математическое выражение</param>
-        internal void ProcessVariables([NotNull] MathExpression Expression)
+        internal void ProcessVariables(MathExpression Expression)
         {
             var tree_vars = Expression.Tree.Root.GetVariables().ToArray();
             Expression.Variable
@@ -224,7 +221,7 @@ namespace MathCore.MathParser
 
         /// <summary>Обработка функций</summary>
         /// <param name="Expression">Обрабатываемое математическое выражение</param>
-        internal void ProcessFunctions([NotNull] MathExpression Expression)
+        internal void ProcessFunctions(MathExpression Expression)
         {
             foreach (var function in Expression.Functions)
             {
@@ -331,67 +328,60 @@ namespace MathCore.MathParser
                         break;
                 }
 
-                if (function.Delegate is null)
-                    function.Delegate =
-                        OnFunctionFind(function.Name, function.Arguments)
-                        ?? throw new InvalidOperationException($"Не удалось определить делегат для функции {function.Name}, либо функция не поддерживается");
+                function.Delegate ??= OnFunctionFind(function.Name, function.Arguments)
+                    ?? throw new InvalidOperationException($"Не удалось определить делегат для функции {function.Name}, либо функция не поддерживается");
             }
         }
 
         /// <summary>Метод определения узла дерева, реализующего оператор</summary>
         /// <param name="Name">Имя оператора</param>
         /// <returns>Узел дерева оператора</returns>
-        [NotNull]
-        public virtual ExpressionTreeNode GetOperatorNode(char Name) =>
-            Name switch
-            {
-                '+' => new AdditionOperatorNode(),
-                '-' => new subtractionOperatorNode(),
-                '*' => new MultiplicationOperatorNode(),
-                '×' => new MultiplicationOperatorNode(),
-                '·' => new MultiplicationOperatorNode(),
-                '/' => new DivisionOperatorNode(),
-                '^' => new PowerOperatorNode(),
-                '=' => new EqualityOperatorNode(),
-                '>' => new GreaterThenOperatorNode(),
-                '<' => new LessThenOperatorNode(),
-                '!' => new NotOperatorNode(),
-                '≠' => new NotOperatorNode(),
-                ':' => new VariantOperatorNode(),
-                '?' => new SelectorOperatorNode(),
-                '&' => new AndOperatorNode(),
-                '|' => new OrOperatorNode(),
-                _ => new CharNode(Name)
-            };
+        public virtual ExpressionTreeNode GetOperatorNode(char Name) => Name switch
+        {
+            '+' => new AdditionOperatorNode(),
+            '-' => new subtractionOperatorNode(),
+            '*' => new MultiplicationOperatorNode(),
+            '×' => new MultiplicationOperatorNode(),
+            '·' => new MultiplicationOperatorNode(),
+            '/' => new DivisionOperatorNode(),
+            '^' => new PowerOperatorNode(),
+            '=' => new EqualityOperatorNode(),
+            '>' => new GreaterThenOperatorNode(),
+            '<' => new LessThenOperatorNode(),
+            '!' => new NotOperatorNode(),
+            '≠' => new NotOperatorNode(),
+            ':' => new VariantOperatorNode(),
+            '?' => new SelectorOperatorNode(),
+            '&' => new AndOperatorNode(),
+            '|' => new OrOperatorNode(),
+            _ => new CharNode(Name)
+        };
 
         /// <summary>Метод определения функционала по имени</summary>
         /// <param name="Name">Имя функционала</param>
         /// <returns>Функционал</returns>
         /// <exception cref="NotSupportedException">Возникает для неопределённых имён функционалов</exception>
-        [NotNull]
-        public static Functional GetFunctional([NotNull] string Name) =>
-            Name switch
-            {
-                "sum" => new SumOperator(Name),
-                "Sum" => new SumOperator(Name),
-                "Σ" => new SumOperator(Name),
-                "int" => new IntegralOperator(Name),
-                "integral" => new IntegralOperator(Name),
-                "Int" => new IntegralOperator(Name),
-                "Integral" => new IntegralOperator(Name),
-                "∫" => new IntegralOperator(Name),
-                _ => throw new NotSupportedException($"Функционал {Name} не поддерживается")
-            };
+        public static Functional GetFunctional(string Name) => Name switch
+        {
+            "sum" => new SumOperator(Name),
+            "Sum" => new SumOperator(Name),
+            "Σ" => new SumOperator(Name),
+            "int" => new IntegralOperator(Name),
+            "integral" => new IntegralOperator(Name),
+            "Int" => new IntegralOperator(Name),
+            "Integral" => new IntegralOperator(Name),
+            "∫" => new IntegralOperator(Name),
+            _ => throw new NotSupportedException($"Функционал {Name} не поддерживается")
+        };
 
         /// <summary>Метод извлечения корня дерева из последовательности элементов математического выражения</summary>
         /// <param name="Group">группа элементов математического выражения</param>
         /// <param name="MathExpression">Ссылка на математическое выражение</param>
         /// <returns>Корень дерева мат.выражения</returns>
-        [NotNull]
-        internal ExpressionTreeNode GetRoot([NotNull] Term[] Group, [NotNull] MathExpression MathExpression)
+        internal ExpressionTreeNode GetRoot(Term[] Group, MathExpression MathExpression)
         {
             // Ссылка на последний обработанный узел дерева
-            ExpressionTreeNode last = null;
+            ExpressionTreeNode? last = null;
             for (var i = 0; i < Group.Length; i++) // в цикле по всем элементам группы
             {
                 var node = Group[i].GetSubTree(this, MathExpression); // извлечь поддерево для текущего элемента группы
@@ -431,7 +421,7 @@ namespace MathCore.MathParser
         /// <param name="Last">Предыдущий узел дерева (уже интегрированный в дерево)</param>
         /// <param name="Node">Текущий узел, который надо вставить в дерево</param>
         // ReSharper disable once CyclomaticComplexity
-        public virtual void Combine([CanBeNull] ExpressionTreeNode Last, [NotNull] ExpressionTreeNode Node)
+        public virtual void Combine(ExpressionTreeNode? Last, ExpressionTreeNode Node)
         {
             if (Last is null) return; // Если предыдущий узел дерева не указан, возврат
 
@@ -472,11 +462,11 @@ namespace MathCore.MathParser
                         if (priority <= parent_operator.Priority)
                         {
                             // то надо подниматься вверх под дереву до тех пор
-                            parent_operator = (OperatorNode)parent_operator.Parents
-                                        // пока встречаемые на пути операторы имеют приоритет выше приоритета текущего оператора
-                                        .TakeWhile(n => n is OperatorNode node && priority <= node.Priority)
-                                        // взять последний из последовательности
-                                        .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
+                            parent_operator = (OperatorNode?)parent_operator.Parents
+                                // пока встречаемые на пути операторы имеют приоритет выше приоритета текущего оператора
+                                .TakeWhile(n => n is OperatorNode node && priority <= node.Priority)
+                                // взять последний из последовательности
+                                .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
 
                             // На текущий момент предыдущий оператор имеет приоритет выше приоритета текущего оператора
 
@@ -502,11 +492,11 @@ namespace MathCore.MathParser
                         else //если приоритет текущего оператора больше приоритета предыдущего
                         {
                             // то надо спускаться в правое поддерево до тех пор
-                            parent_operator = (OperatorNode)parent_operator.RightNodes
-                                        // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
-                                        .TakeWhile(n => n is OperatorNode { Left: { } } node && node.Priority < priority)
-                                        // взять последний из последовательности
-                                        .LastOrDefault() ?? parent_operator;  // если вернулась пустая ссылка, то взять предыдущий оператор
+                            parent_operator = (OperatorNode?)parent_operator.RightNodes
+                                // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
+                                .TakeWhile(n => n is OperatorNode { Left: { } } node && node.Priority < priority)
+                                // взять последний из последовательности
+                                .LastOrDefault() ?? parent_operator;  // если вернулась пустая ссылка, то взять предыдущий оператор
 
                             // На текущий момент предыдущий оператор имеет приоритет ниже приоритета текущего оператора
 
