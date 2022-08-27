@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿#nullable enable
+using System.Diagnostics;
 using System.Threading;
+
+using MathCore.Threading.Tasks;
 
 namespace MathCore.Algorithms.Numbers;
 
@@ -69,51 +72,64 @@ public static class CalculatorPI
         Console.WriteLine("        Итераций : {0}", iterations);
     }
 
-    public static async Task CalculateParallelAsync(int N)
+    public static async Task<long[]> CalculateParallelAsync(int N, IProgress<double>? Progress = null, CancellationToken Cancel = default)
     {
-        Console.WriteLine("Асинхронное параллельное вычисление числа pi с числом знаков: {0}", N);
-
-        var timer = Stopwatch.StartNew();
+        var print_info = Progress is null;
 
         // Pi/4 = 12*arctan(1/18) + 8*arctan(1/57) - 5*arctan(1/239)
         long[] m = { 12, 8, -5 };
         long[] p = { 18, 57, 239 };
 
-        Console.WriteLine("Формула вычисления:");
-        Console.Write("    pi/4 =");
-        for (var i = 0; i < m.Length; i++)
+        if (print_info)
         {
-            Console.Write(' ');
-            if (m[i] >= 0) Console.Write('+');
-            Console.Write("{0} * atan(1/{1})", m[i], p[i]);
+            Console.WriteLine("Асинхронное параллельное вычисление числа pi с числом знаков: {0}", N);
+
+            Console.WriteLine("Формула вычисления:");
+            Console.Write("    pi/4 =");
+            for (var i = 0; i < m.Length; i++)
+            {
+                Console.Write(' ');
+                if (m[i] >= 0) Console.Write('+');
+                Console.Write("{0} * atan(1/{1})", m[i], p[i]);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
         }
-        Console.WriteLine();
-        Console.WriteLine();
+
+        var progress = new ProgressSplitter(Progress, m.Length);
 
         var size = N / __Lb + 1;
         var tasks = new List<Task<(long[] Result, int Iterations, bool Sign)>>();
+        var timer = Stopwatch.StartNew();
         for (var i = 0; i < m.Length; i++)
         {
             var p_i = p[i];
             var m_i = m[i];
+            var operation_progress = progress[i];
+            var cancel = Cancel;
 
             var task = Task.Run(() =>
             {
                 Debug.WriteLine($"Задача запущена {m_i} * atan(1 / {p_i})");
-                Console.WriteLine($"Задача запущена {m_i} * atan(1 / {p_i})");
+                if (print_info)
+                    Console.WriteLine($"Задача запущена {m_i} * atan(1 / {p_i})");
                 var task_timer = Stopwatch.StartNew();
 
                 var arctan = new long[size];
-                var iters = ArcCot(p_i, arctan, new long[size], new long[size]);
+                var iters = ArcCot(p_i, arctan, new long[size], new long[size], operation_progress, cancel);
+
+                cancel.ThrowIfCancellationRequested();
                 Multiply(arctan, Math.Abs(m_i));
 
                 task_timer.Stop();
 
                 Debug.WriteLine($"Задача завершена {m_i,3} * atan(1 / {p_i}) итераций:{iters} время:{task_timer.Elapsed}");
-                Console.WriteLine($"Задача завершена {m_i,3} * atan(1 / {p_i}) итераций:{iters} время:{task_timer.Elapsed}");
+                if (print_info)
+                    Console.WriteLine($"Задача завершена {m_i,3} * atan(1 / {p_i}) итераций:{iters} время:{task_timer.Elapsed}");
 
                 return (Result: arctan, Iterations: iters, Sign: m_i < 0);
-            });
+            }, Cancel);
 
             tasks.Add(task);
         }
@@ -138,12 +154,16 @@ public static class CalculatorPI
 
         //Print(pi);
 
-        Console.WriteLine();
-        Console.WriteLine("Знаков в секунду : {0:f1}", pi.Length / timer.Elapsed.TotalSeconds);
-        Console.WriteLine("  Прошло времени : {0}", timer.Elapsed);
-        Console.WriteLine("        Итераций : {0}", iterations);
-    }
+        if (print_info)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Знаков в секунду : {0:f1}", pi.Length / timer.Elapsed.TotalSeconds);
+            Console.WriteLine("  Прошло времени : {0}", timer.Elapsed);
+            Console.WriteLine("        Итераций : {0}", iterations);
+        }
 
+        return pi;
+    }
 
     private static void Print(long[] X)
     {
@@ -175,18 +195,16 @@ public static class CalculatorPI
         return true;
     }
 
-    private static bool IsEmpty(long[] X, out int i0, out long x0)
+    private static bool IsEmpty(long[] X, out int i0)
     {
         for (var i = 0; i < X.Length; i++)
             if (X[i] != 0)
             {
                 i0 = i;
-                x0 = X[i];
                 return false;
             }
 
         i0 = -1;
-        x0 = -1;
         return true;
     }
 
@@ -273,11 +291,10 @@ public static class CalculatorPI
         Divide(uk, p, uk);              // uk = 1/p
         Add(result, uk);                // x  = uk
 
-        var j = 0;
-        var last_i0 = -1;
-        while (!IsEmpty(uk, out var i0, out var x0))
+        var iteration = 0;
+        while (!IsEmpty(uk, out var i0))
         {
-            //Debug.WriteLine("atan(1/{0}) {1,5:f1}% X=[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
+            //Debug.WriteLine("atan(1/{0}) {1,5:f1}% X[{2}]", p, (double)i0 / uk.Length * 100, i0);
 
             if (p < __MaxDiv)
                 Divide(uk, p2, uk);     // Один шаг малого p
@@ -296,16 +313,15 @@ public static class CalculatorPI
 
             k += 2;
             sign = !sign;
-            j++;
-
-            if (i0 == last_i0) continue;
+            iteration++;
 
         }
+        //Debug.WriteLine("atan(1/{0}) {100.0}%", p);
 
-        return j;
+        return iteration;
     }
 
-    private static int ArcCot(long p, long[] result, long[] uk, long[] vk, IProgress<double> Progress, CancellationToken Cancel)
+    private static int ArcCot(long p, long[] result, long[] uk, long[] vk, IProgress<double>? Progress, CancellationToken Cancel)
     {
         var p2 = p * p;
         long k = 3;
@@ -317,12 +333,12 @@ public static class CalculatorPI
         Divide(uk, p, uk);              // uk = 1/p
         Add(result, uk);                // x  = uk
 
-        var j = 0;
-        var last_i0 = -1;
-        while (!IsEmpty(uk, out var i0, out var x0))
+        var iteration = 0;
+        var last_iteration = -1;
+        while (!IsEmpty(uk, out var i0))
         {
             Cancel.ThrowIfCancellationRequested();
-            //Debug.WriteLine("atan(1/{0}) {1,5:f1}% X[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
+            //Debug.WriteLine("atan(1/{0}) {1,5:f1}% X[{2}]", p, (double)i0 / uk.Length * 100, i0);
 
             if (p < __MaxDiv)
                 Divide(uk, p2, uk);     // Один шаг малого p
@@ -341,15 +357,16 @@ public static class CalculatorPI
 
             k += 2;
             sign = !sign;
-            j++;
+            iteration++;
 
-            if (i0 == last_i0) continue;
-            Progress.Report((double)(i0 + 1) / uk.Length);
-            last_i0 = i0;
+            if (Progress is null || i0 == last_iteration) continue;
+            Progress.Report((double)i0 / uk.Length);
+            last_iteration = i0;
         }
+        //Debug.WriteLine("atan(1/{0}) {100.0}%", p);
 
-        Progress.Report(1);
+        Progress?.Report(1);
 
-        return j;
+        return iteration;
     }
 }

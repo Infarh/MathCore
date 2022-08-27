@@ -1,12 +1,15 @@
-﻿using MathCore.Algorithms.Matrixes;
+﻿using MathCore;
+using MathCore.Algorithms.Matrixes;
 using MathCore.Algorithms.Numbers;
 using MathCore.Algorithms.Polynoms;
 
-const int digits_count = 10000;
-CalculatorPI.Calculate(digits_count);
-Console.WriteLine();
-Console.WriteLine("--------------------------------");
-await CalculatorPI.CalculateParallelAsync(digits_count);
+const int digits_count = 100000;
+//CalculatorPI.Calculate(digits_count);
+//Console.WriteLine();
+//Console.WriteLine("--------------------------------");
+//var progress = new ConsoleProgressBar(80);
+//Console.WriteLine();
+var pi = await CalculatorPI.CalculateParallelAsync(digits_count/*, progress*/);
 
 Console.ReadLine();
 
