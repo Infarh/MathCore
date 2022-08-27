@@ -1,64 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading;
 
 namespace MathCore.Algorithms.Numbers;
 
 public static class CalculatorPI
 {
-    private const long B = 10000;
-    private const long LB = 4;
-    private const long MaxDiv = 450;
+    /// <summary>Основание системы исчисления</summary>
+    private const long __B = 10000;
+
+    /// <summary>Число разрядов основания системы исчисления в десятичной системе = Log10(B)</summary>
+    private const long __Lb = 4;
+
+    private const long __MaxDiv = 450;
 
     public static void Calculate(int N)
     {
         var timer = Stopwatch.StartNew();
 
-        var NbDigits = (long)N;
+        var size = N / __Lb + 1;
 
-        var size = 1 + NbDigits / LB;
-
-        var Pi = new long[size];
+        var pi = new long[size];
         var arctan = new long[size];
         var buffer1 = new long[size];
         var buffer2 = new long[size];
 
-        long[] m = { 12, 8, -5 };
-        long[] p = { 18, 57, 239 };
+        Span<long> m = stackalloc long[] { 12, 8, -5 };
+        Span<long> p = stackalloc long[] { 18, 57, 239 };
 
         // Pi/4 = 12*arctan(1/18) + 8*arctan(1/57) - 5*arctan(1/239)
         // Pi/4 = Sum(i) [m[i]*arctan(1/p[i])]
 
-        for (long i = 0; i < m.Length; i++)
+        var iterations = 0;
+        for (var i = 0; i < m.Length; i++)
         {
-            Console.WriteLine(i);
-            ArcCot(p[i], arctan, buffer1, buffer2);
-            Mul(arctan, Math.Abs(m[i]));
+            Console.WriteLine("{0} * atan(1/{1})", m[i], p[i]);
+            iterations += ArcCot(p[i], arctan, buffer1, buffer2);
+            Multiply(arctan, Math.Abs(m[i]));
 
             if (m[i] > 0)
-                Add(Pi, arctan);
+                Add(pi, arctan);
             else
-                Sub(Pi, arctan);
+                Substrate(pi, arctan);
+
+            Console.WriteLine("Iterations: {0}", iterations);
         }
 
-        Mul(Pi, 4);
+        Multiply(pi, 4);
 
         timer.Stop();
 
-        Print(Pi, timer.Elapsed.TotalSeconds);
+        Print(pi);
+
+        Console.WriteLine();
+        Console.WriteLine("Digits per second : {0:f1}", pi.Length / timer.Elapsed.TotalSeconds);
+        Console.WriteLine("     Time elapsed : {0}", timer.Elapsed);
+        Console.WriteLine("       Iterations : {0}", iterations);
     }
 
-    private static void Print(long[] x, double Time)
+
+    private static void Print(long[] X)
     {
-        Console.Write(x[0]);
+        Console.Write(X[0]);
         Console.Write('.');
-        for (var i = 1; i < x.Length; i++)
-            Console.Write(x[i]);
-
+        for (var i = 1; i < X.Length; i++)
+            Console.Write(X[i]);
+        Console.WriteLine();
     }
+
+    public static void Clear(long[] X) => Array.Clear(X);
 
     /// <summary>Перевод большого действительного числа к малому целому</summary>
     /// <param name="x"></param>
@@ -71,11 +80,26 @@ public static class CalculatorPI
         x[0] = I;
     }
 
-    private static bool IsZero(long[] x)
+    private static bool IsEmpty(long[] X)
     {
-        for (var i = 0; i < x.Length; i++)
-            if (x[i] != 0)
+        for (var i = 0; i < X.Length; i++)
+            if (X[i] != 0)
                 return false;
+        return true;
+    }
+
+    private static bool IsEmpty(long[] X, out int i0, out long x0)
+    {
+        for (var i = 0; i < X.Length; i++)
+            if (X[i] != 0)
+            {
+                i0 = i;
+                x0 = X[i];
+                return false;
+            }
+
+        i0 = -1;
+        x0 = -1;
         return true;
     }
 
@@ -86,110 +110,159 @@ public static class CalculatorPI
         for (long i = x.Length - 1; i >= 0; i--)
         {
             x[i] += y[i] + carry;
-            if (x[i] < B) carry = 0;
+            if (x[i] < __B) carry = 0;
             else
             {
                 carry = 1;
-                x[i] -= B;
+                x[i] -= __B;
             }
         }
     }
 
-    private static void Sub(long[] x, long[] y)
+    private static void Substrate(long[] X, long[] Y)
     {
-        for (long i = x.Length - 1; i >= 0; i--)
+        for (long i = X.Length - 1; i >= 0; i--)
         {
-            x[i] -= y[i];
-            if (x[i] < 0 && i != 0)
+            X[i] -= Y[i];
+            if (X[i] < 0 && i != 0)
             {
-                x[i] += B;
-                x[i - 1]--;
+                X[i] += __B;
+                X[i - 1]--;
             }
         }
     }
 
-    private static void Mul(long[] x, long q)
+    /// <summary>X *= q</summary>
+    private static void Multiply(long[] X, long q)
     {
         long carry = 0;
-        for (long i = x.Length - 1; i >= 0; i--)
+        for (long i = X.Length - 1; i >= 0; i--)
         {
-            var xi = x[i] * q;
-            xi += carry;
-            if (xi >= B)
-            {
-                carry = xi / B;
-                xi -= carry * B;
-            }
-            else
+            var x = X[i] * q + carry;
+            if (x < __B)
                 carry = 0;
-            x[i] = xi;
+            else
+            {
+                //(carry, x) = (x / __B, x - carry * __B);
+                carry = x / __B;
+                x -= carry * __B;
+            }
+
+            X[i] = x;
         }
     }
 
-    private static void Div(long[] x, long d, long[] y)
+    /// <summary>Y = X / d</summary>
+    private static void Divide(long[] X, long d, long[] Y)
     {
         long carry = 0;
-        var n = x.Length;
+        var n = X.Length;
         for (long i = 0; i < n; i++)
         {
-            var xi = x[i] + carry * B;
-            var q = xi / d;
-            carry = xi - q * d;
-            y[i] = q;
+            var x = X[i] + carry * __B;
+            var q = x / d;
+            carry = x - q * d;
+            Y[i] = q;
         }
     }
-
-    private static int j0 = 0;
 
     /// <summary>
     /// Вычисление котангенса целого числа р (это тангенс (1/p))<br/>
     /// Результат - большое действительное число размера n
     /// </summary>
     /// <param name="p"></param>
-    /// <param name="x"></param>
+    /// <param name="result"></param>
     /// <param name="uk"></param>
     /// <param name="vk"></param>
-    private static void ArcCot(long p, long[] x, long[] uk, long[] vk)
+    private static int ArcCot(long p, long[] result, long[] uk, long[] vk)
     {
         var p2 = p * p;
         long k = 3;
-        long sign = 0;
+        var sign = false;
 
-        SetToInteger(x, 0);
+        Clear(result);
         SetToInteger(uk, 1);
 
-        Div(uk, p, uk);              // uk = 1/p
-        Add(x, uk);                  // x  = uk
+        Divide(uk, p, uk);              // uk = 1/p
+        Add(result, uk);                // x  = uk
 
         var j = 0;
-        var k0 = 1;
-        while (!IsZero(uk))
+        var last_i0 = -1;
+        while (!IsEmpty(uk, out var i0, out var x0))
         {
-            if (p < MaxDiv)
-                Div(uk, p2, uk);  // Один шаг малого p
+            Debug.WriteLine("atan(1/{0}) {1,5:f1}% X=[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
+
+            if (p < __MaxDiv)
+                Divide(uk, p2, uk);     // Один шаг малого p
             else
             {
-                Div(uk, p, uk);   // Два шага большого p (смотри деление)
-                Div(uk, p, uk);
+                Divide(uk, p, uk);      // Два шага большого p (смотри деление)
+                Divide(uk, p, uk);
             }
+
             // uk = u(k-1) / p^2
-            Div(uk, k, vk); // vk = uk / k
-            if (sign != 0)
-                Add(x, vk);  // x = x + vk
+            Divide(uk, k, vk);          // vk = uk / k
+            if (sign)
+                Add(result, vk);        // x = x + vk
             else
-                Sub(x, vk);  // x = x - vk
+                Substrate(result, vk);  // x = x - vk
+
             k += 2;
-            sign = 1 - sign;
+            sign = !sign;
             j++;
-            if ((j % k0) == 0)
-            {
-                Console.WriteLine(" .");
-                k0 *= 2;
-            }
+
+            if(i0 == last_i0) continue;
+
         }
-        Console.WriteLine(" -");
-        j0 += j;
-        if (j != j0)
-            Console.WriteLine(" +{0}", j0);
+
+        return j;
+    }
+
+    private static int ArcCot(long p, long[] result, long[] uk, long[] vk, IProgress<double> Progress, CancellationToken Cancel)
+    {
+        var p2 = p * p;
+        long k = 3;
+        var sign = false;
+
+        Clear(result);
+        SetToInteger(uk, 1);
+
+        Divide(uk, p, uk);              // uk = 1/p
+        Add(result, uk);                // x  = uk
+
+        var j = 0;
+        var last_i0 = -1;
+        while (!IsEmpty(uk, out var i0, out var x0))
+        {
+            Cancel.ThrowIfCancellationRequested();
+            Debug.WriteLine("atan(1/{0}) {1,5:f1}% X[{2}]:{3,-5}", p, (double)(i0 + 1) / uk.Length * 100, i0, x0);
+
+            if (p < __MaxDiv)
+                Divide(uk, p2, uk);     // Один шаг малого p
+            else
+            {
+                Divide(uk, p, uk);      // Два шага большого p (смотри деление)
+                Divide(uk, p, uk);
+            }
+
+            // uk = u(k-1) / p^2
+            Divide(uk, k, vk);          // vk = uk / k
+            if (sign)
+                Add(result, vk);        // x = x + vk
+            else
+                Substrate(result, vk);  // x = x - vk
+
+            k += 2;
+            sign = !sign;
+            j++;
+
+            if (i0 == last_i0) continue;
+            Progress.Report((double)(i0 + 1) / uk.Length);
+            last_i0 = i0;
+        }
+
+        Progress.Report(1);
+
+        return j;
     }
 }

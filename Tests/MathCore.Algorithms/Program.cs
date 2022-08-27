@@ -4,6 +4,8 @@ using MathCore.Algorithms.Polynoms;
 
 CalculatorPI.Calculate(10000);
 
+Console.ReadLine();
+
 MatrixRef a = new double[,]
 {
     { 1, 2, 3 },
