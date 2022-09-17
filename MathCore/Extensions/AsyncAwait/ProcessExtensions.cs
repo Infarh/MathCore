@@ -44,7 +44,7 @@ public static class ProcessExtensions
 
         var result = new TaskCompletionSource<Process>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        using var registraction_cancellation = Cancel.IsCancellationRequested
+        using var registration_cancellation = Cancel.IsCancellationRequested
             ? Cancel.Register(o => ((TaskCompletionSource<Process>)o).TrySetCanceled(), result)
             : (IDisposable?)null;
 
