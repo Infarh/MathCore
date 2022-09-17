@@ -32,6 +32,36 @@ public static class StringExtensions
                 yield return line;
     }
 
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="Selector">Преобразователь значения</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<T> EnumLines<T>(this string str, Func<string, T> Selector, bool SkipEmpty = false)
+    {
+        using var reader = str.CreateReader();
+        while (reader.ReadLine() is { } line)
+            if (line.Length > 0 || !SkipEmpty)
+                yield return Selector(line);
+    }
+
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="Selector">Преобразователь значения</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<T> EnumLines<T>(this string str, Func<string, int, T> Selector, bool SkipEmpty = false)
+    {
+        using var reader = str.CreateReader();
+        var i = 0;
+        while (reader.ReadLine() is { } line)
+        {
+            if (line.Length > 0 || !SkipEmpty)
+                yield return Selector(line, i);
+            i++;
+        }
+    }
+
     /// <summary>Создать объект чтения данных строки</summary>
     /// <param name="str">Исходная строка</param>
     /// <returns>Объект <see cref="StringReader"/> для чтения данных строки</returns>
