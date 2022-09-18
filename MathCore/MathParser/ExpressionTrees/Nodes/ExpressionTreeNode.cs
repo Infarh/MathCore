@@ -1,16 +1,16 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MathCore.Annotations;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes
 {
-    using ChildNodeSelector = Func<ExpressionTreeNode, ExpressionTreeNode, ExpressionTreeNode>;
-    using NodeSelector = Func<ExpressionTreeNode, ExpressionTreeNode>;
+    using ChildNodeSelector = Func<ExpressionTreeNode, ExpressionTreeNode, ExpressionTreeNode?>;
+    using NodeSelector = Func<ExpressionTreeNode, ExpressionTreeNode?>;
 
     /// <summary>Узел дерева вычислений</summary>
     public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTreeNode>
@@ -24,21 +24,20 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
             /// <summary>Итератор предков узла, где узел с индексом 0 - первый предок узла</summary>
             /// <param name="i">Номер предка</param>
             /// <returns>Предок указанного поколения</returns>
-            [CanBeNull]
-            public ExpressionTreeNode this[int i]
+            public ExpressionTreeNode? this[int i]
             {
                 get
                 {
-                    var Parent = Node.Parent;
-                    for (var j = 0; j < i && Parent != null; j++)
-                        Parent = Parent.Parent;
-                    return Parent;
+                    var node_parent = Node.Parent;
+                    for (var j = 0; j < i && node_parent is { }; j++)
+                        node_parent = node_parent.Parent;
+                    return node_parent;
                 }
             }
 
             /// <summary>Новый итератор предков узла</summary>
             /// <param name="Node">Обрабатываемый узел</param>
-            public ParentsIterator([NotNull] ExpressionTreeNode Node) => this.Node = Node;
+            public ParentsIterator(ExpressionTreeNode Node) => this.Node = Node;
 
             /// <summary>Получить перечислитель предков узла</summary>
             /// <returns>Перечислитель предков узла</returns>
@@ -50,27 +49,23 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
             /// <summary>Метод получения перечисления предков узла</summary>
             /// <returns>Перечисление предков узла</returns>
-            [NotNull]
-            [ItemNotNull]
             private IEnumerable<ExpressionTreeNode> GetParentsEnumerable()
             {
                 for (var node = Node; node.Parent != null; node = node.Parent)
                     yield return node.Parent;
             }
 
-            [NotNull] public override string ToString() => this.ToSeparatedStr(" | ");
+            public override string ToString() => this.ToSeparatedStr(" | ");
         }
 
         /// <summary>Узел левого поддерева</summary>
-        [CanBeNull]
-        private ExpressionTreeNode _Left;
+        private ExpressionTreeNode? _Left;
 
         /// <summary> Узел правого поддерева</summary>
-        [CanBeNull]
-        private ExpressionTreeNode _Right;
+        private ExpressionTreeNode? _Right;
 
         /// <summary>Признак возможности получения тривиального значения</summary>
-        public virtual bool IsPrecomputable { [DST] get; } = false;
+        public virtual bool IsPrecomputable { [DST] get => false; }
 
         /// <summary>Является ли узел дерева корнем?</summary>
         public bool IsRoot => Parent is null;
@@ -82,11 +77,10 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         public bool IsRightSubtree => Parent != null && Parent.Right == this;
 
         /// <summary>Ссылка на предка узла</summary>
-        public ExpressionTreeNode Parent { get; set; }
+        public ExpressionTreeNode? Parent { get; set; }
 
         /// <summary>Левое поддерево</summary>
-        [CanBeNull]
-        public ExpressionTreeNode Left
+        public ExpressionTreeNode? Left
         {
             [DST]
             get => _Left;
@@ -96,16 +90,15 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 _Left = value;
                 if (value is null) return;
                 if (value.IsLeftSubtree)
-                    value.Parent.Left = null;
+                    value.Parent!.Left = null;
                 else if (value.IsRightSubtree)
-                    value.Parent.Right = null;
+                    value.Parent!.Right = null;
                 value.Parent = this;
             }
         }
 
         /// <summary>Правое поддерево</summary>
-        [CanBeNull]
-        public ExpressionTreeNode Right
+        public ExpressionTreeNode? Right
         {
             [DST]
             get => _Right;
@@ -115,27 +108,23 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
                 _Right = value;
                 if (value is null) return;
                 if (value.IsLeftSubtree)
-                    value.Parent.Left = null;
+                    value.Parent!.Left = null;
                 else if (value.IsRightSubtree)
-                    value.Parent.Right = null;
+                    value.Parent!.Right = null;
                 value.Parent = this;
             }
         }
 
         /// <summary>Перечисление правых узлов правого поддерева включая корень</summary>
-        [NotNull]
         public IEnumerable<ExpressionTreeNode> RightNodes => this[node => node.Right];
 
         /// <summary>Перечисление левых узлов левого поддерева включая корень</summary>
-        [NotNull]
         public IEnumerable<ExpressionTreeNode> LeftNodes => this[node => node.Left];
 
         /// <summary>Перечислитель предков узла</summary>
-        [NotNull]
         public ParentsIterator Parents => new(this);
 
         /// <summary>Ссылка на корень дерева</summary>
-        [NotNull]
         public ExpressionTreeNode Root => this[node => node.Parent].Last();
 
         /// <summary>Глубина положения узла в дереве</summary>
@@ -158,8 +147,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Доступ к элементам узла по указанному пути</summary>
         /// <param name="path">Путь к элементам узла Пример:.\.\l\r\r\l  ..\l\r\r</param>
         /// <returns>Элемент узла, выбранный по указанному пути</returns>
-        [CanBeNull]
-        public ExpressionTreeNode this[[NotNull] string path]
+        public ExpressionTreeNode? this[string path]
         {
             get
             {
@@ -185,13 +173,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Доступ к дочерним элементам узла с помощью метода выбора</summary>
         /// <param name="ChildSelector">Метод выбора элементов узла</param>
         /// <returns>Перечисление дочерних элементов по указанному методу</returns>
-        [NotNull]
-        public IEnumerable<ExpressionTreeNode> this[[NotNull] ChildNodeSelector ChildSelector]
+        public IEnumerable<ExpressionTreeNode> this[ChildNodeSelector ChildSelector]
         {
             get
             {
                 yield return this;
-                for (var node = ChildSelector(Left, Right); node != null; node = ChildSelector(node.Left, node.Right))
+                for (var node = ChildSelector(Left!, Right!); node != null; node = ChildSelector(node.Left!, node.Right!))
                     yield return node;
             }
         }
@@ -199,8 +186,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary> Итератор элементов узла методом выборки</summary>
         /// <param name="Selector">Метод выборки узлов относительно текущего</param>
         /// <returns>Перечисление узлов по указанному методу</returns>
-        [NotNull]
-        public IEnumerable<ExpressionTreeNode> this[[NotNull] NodeSelector Selector]
+        public IEnumerable<ExpressionTreeNode> this[NodeSelector Selector]
         {
             get
             {
@@ -211,7 +197,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         }
 
         /// <summary>Путь к узлу</summary>
-        [NotNull]
         public string Path => this[node => node.Parent]
                     .Select(node => node.IsLeftSubtree ? "l" : (node.IsRightSubtree ? "r" : ".."))
                     .Reverse().ToSeparatedStr("/");
@@ -219,7 +204,6 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Метод обхода дерева</summary>
         /// <param name="type">Тип обхода дерева</param>
         /// <returns>Перечисление элементов дерева</returns>
-        [NotNull]
         public IEnumerable<ExpressionTreeNode> Bypassing(ExpressionTree.BypassingType type)
         {
             switch (type)
@@ -262,13 +246,12 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Перечисление дочерних элементов дерева</summary>
         /// <returns>Перечисление дочерних элементов дерева</returns>
-        [NotNull]
         public IEnumerable<ExpressionTreeNode> GetChilds() => Bypassing(ExpressionTree.BypassingType.RootLeftRight).Skip(1);
 
         /// <summary>Поменять узел местами с дочерним</summary>
         /// <param name="Parent">Материнский узел</param>
         /// <param name="Child">Дочерний узел</param>
-        private static void SwapToChild([NotNull] ExpressionTreeNode Parent, [NotNull] ExpressionTreeNode Child)
+        private static void SwapToChild(ExpressionTreeNode Parent, ExpressionTreeNode Child)
         {
             var parent_parent = Parent.Parent;
             var is_parent_left = Parent.IsLeftSubtree;
@@ -330,7 +313,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
         /// <summary>Подменить узел А узлом В</summary>
         /// <param name="A">Замещаемый узел</param>
         /// <param name="B">Подменяемый узел</param>
-        public static void Swap([NotNull] ExpressionTreeNode A, [NotNull] ExpressionTreeNode B)
+        public static void Swap(ExpressionTreeNode A, ExpressionTreeNode B)
         {
             if (B.Left == A || B.Right == A) { SwapToChild(B, A); return; }
             if (A.Left == B || A.Right == B) { SwapToChild(A, B); return; }
@@ -385,12 +368,11 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Заменить узел на указанный</summary>
         /// <param name="Node">Узел, на который производится замена</param>
-        public void SwapTo([NotNull] ExpressionTreeNode Node) => Swap(this, Node);
+        public void SwapTo(ExpressionTreeNode Node) => Swap(this, Node);
 
         /// <summary>Удалить узел с перекоммутацией ссылок</summary>
         /// <returns>Если удаляется корень, то левое поддерево, иначе ссылка не предка узла</returns>
-        [CanBeNull]
-        public ExpressionTreeNode Remove()
+        public ExpressionTreeNode? Remove()
         {
             // Запоминаем что было в качестве
             var parent = Parent; // - родительского узла
@@ -519,8 +501,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Получить следующий узел слева</summary>
         /// <returns>Узел слева от текущего</returns>
-        [CanBeNull]
-        public ExpressionTreeNode GetNextLeft()
+        public ExpressionTreeNode? GetNextLeft()
         {
             if (Left != null) return Left;
             if (Right != null) return Right;
@@ -538,8 +519,7 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Получить следующий узел справа</summary>
         /// <returns>Узел справа от текущего</returns>
-        [CanBeNull]
-        public ExpressionTreeNode GetNextRight()
+        public ExpressionTreeNode? GetNextRight()
         {
             if (Left != null) return Left;
             if (Right != null) return Right;
@@ -556,10 +536,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Перечисление переменных, известных данному узлу дерева</summary>
         /// <returns>Перечисление всех известных данному узлу дерева переменных</returns>
-        [NotNull]
         public virtual IEnumerable<ExpressionVariable> GetVariables()
         {
-            IEnumerable<ExpressionVariable> variables = null;
+            IEnumerable<ExpressionVariable>? variables = null;
             if (_Left != null)
                 variables = _Left.GetVariables();
             return _Right != null
@@ -569,10 +548,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Перечисление функций, известных данному узлу дерева</summary>
         /// <returns>Перечисление всех известных данному узлу дерева функций</returns>
-        [NotNull]
         public virtual IEnumerable<ExpressionFunction> GetFunctions()
         {
-            IEnumerable<ExpressionFunction> functions = null;
+            IEnumerable<ExpressionFunction>? functions = null;
             if (_Left != null)
                 functions = _Left.GetFunctions();
             return _Right != null
@@ -582,10 +560,9 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Перечисление функционалов, известных данному узлу дерева</summary>
         /// <returns>Перечисление всех известных данному узлу дерева функционалов</returns>
-        [NotNull]
         public virtual IEnumerable<Functional> GetFunctionals()
         {
-            IEnumerable<Functional> operators = null;
+            IEnumerable<Functional>? operators = null;
             if (_Left != null)
                 operators = _Left.GetFunctionals();
             return _Right != null
@@ -619,23 +596,19 @@ namespace MathCore.MathParser.ExpressionTrees.Nodes
 
         /// <summary>Клонирование поддерева</summary>
         /// <returns>Клон поддерева</returns>
-        [NotNull]
         public abstract ExpressionTreeNode Clone();
 
         /// <summary>Преобразование узла в строку</summary>
         /// <returns>Строковое представление узла</returns>
-        [NotNull]
         public override string ToString() => $"{Left?.ToString() ?? string.Empty}{Right?.ToString() ?? string.Empty}";
 
         /// <summary>Клонирование поддерева</summary>
         /// <returns>Клон поддерева</returns>
-        [NotNull]
         object ICloneable.Clone() => Clone();
 
         /// <summary>Оператор неявного преобразования строки в узел дерева</summary>
         /// <param name="value">Строковое значение</param>
         /// <returns>Строковый узел дерева</returns>
-        [NotNull]
-        public static implicit operator ExpressionTreeNode([NotNull] string value) => new StringNode(value);
+        public static implicit operator ExpressionTreeNode(string value) => new StringNode(value);
     }
 }

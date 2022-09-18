@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore;
 

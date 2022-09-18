@@ -6,6 +6,16 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>
+      0059;1006;
+      1701;1702;
+      0219;
+      8601;8602;8604;8607;8618;8625;
+      8794
+    </NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\MathCore\MathCore.csproj" />
   </ItemGroup>

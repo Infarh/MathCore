@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using MathCore;
 
-using NN = MathCore.Annotations.NotNullAttribute;
-
 // ReSharper disable once CheckNamespace
 namespace System;
 

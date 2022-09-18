@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,15 @@
     <Using Include="System.Collections.Generic" />
     <Using Include="System.Threading.Tasks" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <NoWarn>
+      1701;1702;
+      0219;
+      8601;8602;8604;8607;8618;8625;8632;
+      8794
+    </NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\MathCore\MathCore.csproj" />

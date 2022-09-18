@@ -116,6 +116,9 @@ public static class FileInfoExtensions
         return md5.ComputeHash(stream);
     }
 
+    /// <summary>Вычислить хеш-сумму MD5</summary>
+    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <returns>Массив байт контрольной суммы</returns>
     public static byte[] ComputeMD5(this FileInfo file)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
@@ -363,7 +366,7 @@ public static class FileInfoExtensions
         throw new InvalidOperationException($"Файл {File.FullName} заблокирован другим процессом");
     }
 
-    public static FileInfo ChangeExtension(this FileInfo File, string? NewExtension) => new(Path.ChangeExtension(File.ParamNotNull(nameof(File)).FullName, NewExtension));
+    public static FileInfo ChangeExtension(this FileInfo File, string? NewExtension) => new(Path.ChangeExtension(File.NotNull().FullName, NewExtension));
 
     public static FileInfo Zip(this FileInfo File, string? ArchiveFileName = null, bool Override = true)
     {

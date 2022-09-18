@@ -6,7 +6,6 @@ using System.Numerics;
 using MathCore;
 
 using Complex = MathCore.Complex;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace

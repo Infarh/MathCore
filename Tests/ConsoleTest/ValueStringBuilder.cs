@@ -34,14 +34,14 @@ public ref struct ValueStringBuilder
 
     public override string ToString()
     {
-        var s = new string(_Chars.Slice(0, _Pos));
+        var s = new string(_Chars[.._Pos]);
         Clear();
         return s;
     }
 
     public bool TryCopyTo(Span<char> destination, out int CharsWritten)
     {
-        if (_Chars.Slice(0, _Pos).TryCopyTo(destination))
+        if (_Chars[.._Pos].TryCopyTo(destination))
         {
             CharsWritten = _Pos;
             Clear();
@@ -176,8 +176,11 @@ public sealed class NativeMemoryManager : MemoryManager<byte>
         _Pointer = Marshal.AllocHGlobal(length);
     }
 
+    // The code that's violating the rule is on this line.
     /// <inheritdoc />
+#pragma warning disable CA2015
     ~NativeMemoryManager()
+#pragma warning restore CA2015
     {
         Debug.WriteLine($"{nameof(NativeMemoryManager)} being finalized");
         Dispose(false);

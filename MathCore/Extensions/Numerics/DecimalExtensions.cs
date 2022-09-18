@@ -1,6 +1,4 @@
-﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System;
 
 /// <summary>Расширения для чисел двойной точности</summary>

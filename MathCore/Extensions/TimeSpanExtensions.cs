@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using System.Text;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-
 // ReSharper disable once CheckNamespace
 namespace System;
 

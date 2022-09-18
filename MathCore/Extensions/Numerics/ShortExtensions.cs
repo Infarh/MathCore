@@ -1,5 +1,4 @@
-﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-using MathCore;
+﻿using MathCore;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace

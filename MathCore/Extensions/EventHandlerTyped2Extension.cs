@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.ComponentModel;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
@@ -22,7 +21,7 @@ public static class EventHandlerTyped2Extension
         var invocations = Handler.GetInvocationList();
         foreach (var invocation in invocations)
             if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
-                invoke.Invoke(invocation, new object[] { Sender, e });
+                invoke.Invoke(invocation, new object?[] { Sender, e });
             else
                 invocation.DynamicInvoke(Sender, e);
     }

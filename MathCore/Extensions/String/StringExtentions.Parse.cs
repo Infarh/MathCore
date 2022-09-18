@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable UnusedMember.Global
 

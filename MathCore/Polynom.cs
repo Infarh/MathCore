@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
@@ -221,7 +220,7 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
     #region Implementation of IEquatable<Polynom>
 
     /// <inheritdoc />
-    public bool Equals(Polynom other)
+    public bool Equals(Polynom? other)
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other) || ReferenceEquals(_a, other._a)) return true;

@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.ComponentModel;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable once CheckNamespace

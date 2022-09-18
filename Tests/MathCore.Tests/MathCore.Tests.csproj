@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,15 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting.Extensions" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <NoWarn>
+      1701;1702;
+      0219;
+      8601;8602;8604;8607;8618;8619;8625;
+      8794
+    </NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include=".Properties\AssemblyInfo.cs" />

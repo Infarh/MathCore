@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
 namespace System.Xml;

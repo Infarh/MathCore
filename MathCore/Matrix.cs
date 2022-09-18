@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 
 using static MathCore.Matrix.Array.Operator;

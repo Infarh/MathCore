@@ -7,9 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using MathCore;
-
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-
 using MathCore.Trees;
 
 // ReSharper disable UnusedMember.Global
@@ -69,7 +66,7 @@ public static class DirectoryInfoExtensions
             using var zip = GetArchive(ArchiveFile);
             foreach (var file in Directory.EnumerateFiles("*.*", SearchOption.AllDirectories))
             {
-                var       path        = Path.Combine(file.Directory!.GetRelativePosition(Directory)!, file.Directory.Name, file.Name);
+                var       path        = Path.Combine(file.Directory!.GetRelativePosition(Directory)!, file.Directory!.Name, file.Name);
                 var       entry       = zip.CreateEntry(path, CompressionLevel.Optimal);
                 using var zip_stream  = entry.Open();
                 using var file_stream = file.Open(FileMode.Open);

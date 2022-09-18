@@ -7,7 +7,6 @@ using System.Linq;
 
 using MathCore.MathParser.ExpressionTrees.Nodes;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMethodReturnValue.Global
 

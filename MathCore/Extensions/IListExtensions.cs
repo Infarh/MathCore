@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using MathCore;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 
 // ReSharper disable once CheckNamespace

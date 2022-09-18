@@ -1,6 +1,4 @@
 ﻿using MathCore;
-//using MathCore.Vectors;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable CompareOfFloatsByEqualityOperator

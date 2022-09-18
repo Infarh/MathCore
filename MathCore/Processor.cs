@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using MathCore;
 using MathCore.Annotations;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -27,27 +27,29 @@ namespace System
 
         /* ------------------------------------------------------------------------------------------ */
 
+        private event PropertyChangedEventHandler? PropertyChangedHandlers;
+
         /// <summary>Событие изменения свойства объекта</summary>
-        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
         {
             [MethodImpl(MethodImplOptions.Synchronized), DST]
-            add => _PropertyChanged += value;
+            add => PropertyChangedHandlers += value;
             [MethodImpl(MethodImplOptions.Synchronized), DST]
-            remove => _PropertyChanged -= value;
+            remove => PropertyChangedHandlers -= value;
         }
-        private event PropertyChangedEventHandler _PropertyChanged;
+
         /// <summary>Вызов события изменения свойства объекта</summary>
         ///  <param name="e">Параметры события изменения свойства объекта, содержащие имя свойства</param>
         [DST]
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => _PropertyChanged?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChangedHandlers?.Invoke(this, e);
 
         /// <summary>Вызов события изменения свойства объекта с указанием имени свойства</summary>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
         [DST, NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
+        protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null!) => OnPropertyChanged(new PropertyChangedEventArgs(PropertyName));
 
         /// <summary>Событие изменения свойства активности процессора</summary>
-        public event EventHandler EnableChanged;
+        public event EventHandler? EnableChanged;
         /// <summary>Источник события изменения свойства активности процессора</summary><param name="e">Параметры события</param>
         [DST]
         protected virtual void OnEnableChanged(EventArgs e) => EnableChanged?.Invoke(this, e);
@@ -89,7 +91,7 @@ namespace System
         protected readonly object _StartStopSectionLocker = new();
 
         /// <summary>Основной поток работы процессора</summary>
-        protected Thread _MainWorkThread;
+        protected Thread? _MainWorkThread;
 
         /// <summary>Время запуска</summary>
         private DateTime? _StartTime;
@@ -107,7 +109,7 @@ namespace System
         private int _ActionTimeout;
 
         /// <summary>Метод установки времени таймаута для работающего потока процессора</summary>
-        private Action<int> _SetTimeout;
+        private Action<int>? _SetTimeout;
 
         /// <summary>Признак синхронной работы</summary>
         private volatile bool _IsSynchronous;
@@ -157,7 +159,7 @@ namespace System
         public bool Enable { [DST] get => _Enabled; [DST] set { if(value) Start(); else Stop(); } }
 
         /// <summary>Основной поток работы процессора</summary>
-        public Thread MainThread { [DST] get => _MainWorkThread; }
+        public Thread? MainThread { [DST] get => _MainWorkThread; }
 
         /// <summary>Таймаут времени синхронизации основного потока процессора с потоком, завершившим его работу.</summary>
         public int JoinThreadTimeout

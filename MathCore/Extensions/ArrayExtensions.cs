@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using MathCore;
 using MathCore.Interpolation;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global

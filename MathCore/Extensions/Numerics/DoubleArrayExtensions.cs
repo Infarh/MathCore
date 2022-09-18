@@ -7,7 +7,6 @@ using MathCore.Interpolation;
 using MathCore.Statistic;
 using MathCore.Values;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable CompareOfFloatsByEqualityOperator
 // ReSharper disable UnusedMember.Global

@@ -1,6 +1,4 @@
-﻿using DST = System.Diagnostics.DebuggerStepThroughAttribute;
-
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace System;
 
 public static class ByteExtensions

@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.ComponentModel;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
@@ -15,14 +14,14 @@ public static class EventHandlerTyped1Extension
     /// <param name="Handler">Обработчик события</param>
     /// <param name="Sender">Источник события</param>
     /// <param name="e">Аргумент события</param>
-    //[DST]
+    [DST]
     public static void Start<TS, TE>(this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e)
     {
         if (Handler is not { }) return;
         var invocations = Handler.GetInvocationList();
         foreach (var invocation in invocations)
             if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
-                invoke.Invoke(invocation, new object[] { Sender, e });
+                invoke.Invoke(invocation, new object?[] { Sender, e });
             else
                 invocation.DynamicInvoke(Sender, e);
     }

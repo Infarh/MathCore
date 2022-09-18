@@ -1,4 +1,6 @@
-﻿using MathCore.CRC;
+﻿using System.Diagnostics;
+
+using MathCore.CRC;
 
 namespace MathCore.Tests.CRC;
 
@@ -11,10 +13,12 @@ public class CRC16Tests
         var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
         const ushort expected_crc = 0x718E;
 
-        var crc = new CRC16();
+        var crc = new CRC16(CRC16.Mode.XMODEM);
 
         var actual_crc = crc.Compute(data);
 
-        Assert.That.Value(actual_crc).IsEqual(expected_crc);
+        Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
+        Assert.That.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
     }
 }

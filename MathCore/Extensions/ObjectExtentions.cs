@@ -184,7 +184,7 @@ namespace System
         public static string ToFormattedString(this object obj, string Format, params object[]? args)
         {
             if (args is null || args.Length == 0) return string.Format(Format, obj);
-            var str_args = new object[args.ParamNotNull(nameof(args)).Length + 1];
+            var str_args = new object[args.NotNull().Length + 1];
             Array.Copy(args, 0, str_args, 1, args.Length);
             str_args[0] = obj;
             return string.Format(Format, str_args);
@@ -248,25 +248,17 @@ namespace System
         /// <typeparam name="T">Тип проверяемого объекта</typeparam>
         /// <param name="obj">Проверяемое значение</param>
         /// <param name="Message">Сообщение ошибки</param>
+        /// <param name="ParameterName">Название параметра</param>
         /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
-        /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
-
+        /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> == <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
         [return: Diagnostics.CodeAnalysis.NotNull]
         [return: NotNullIfNotNull(nameof(obj))]
-        public static T NotNull<T>(this T? obj, string? Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
-
-        /// <summary>Проверка параметра на <see langword="null"/></summary>
-        /// <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
-        /// <param name="obj">Проверяемый на <see langword="null"/> объект</param>
-        /// <param name="ParameterName">Имя параметра для указания его в исключении</param>
-        /// <param name="Message">Сообщение ошибки</param>
-        /// <returns>Объект, гарантированно не <see langword="null"/></returns>
-        /// <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
-
-        [return: Diagnostics.CodeAnalysis.NotNull]
-        [return: NotNullIfNotNull(nameof(obj))]
-        public static T ParamNotNull<T>(this T? obj, string ParameterName, string? Message = null) where T : class =>
-            obj ?? throw new ArgumentException(Message ?? $"Отсутствует ссылка для параметра {ParameterName}", ParameterName);
+        public static T NotNull<T>(this T? obj, string? Message = null, [CallerArgumentExpression(nameof(obj))] string? ParameterName = null!) 
+            where T : class => 
+            obj ?? throw (ParameterName is null
+                ? new InvalidOperationException(Message ?? "Пустая ссылка на объект")
+                : new ArgumentNullException(ParameterName, Message ?? "Пустая ссылка на в значении параметра"));
 
         /// <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
         /// <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>

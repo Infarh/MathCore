@@ -5,7 +5,6 @@ using System.Linq;
 
 using static MathCore.MatrixComplex.Array.Operator;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ExceptionNotThrown
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global

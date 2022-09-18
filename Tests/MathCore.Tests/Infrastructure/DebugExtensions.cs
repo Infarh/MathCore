@@ -1,8 +1,10 @@
-﻿using System.Globalization;
+﻿#nullable enable
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 using MathCore;
 
+// ReSharper disable once CheckNamespace
 namespace System.Diagnostics;
 
 internal static class DebugExtensions

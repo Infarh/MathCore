@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 
 // ReSharper disable UnusedMember.Global
@@ -305,9 +304,9 @@ public partial class MatrixLong : ICloneable, IEquatable<MatrixLong>
     public void GetLUDecomposition(out MatrixLong L, out MatrixLong U, out MatrixLong P)
     {
         LUDecomposition(_Data, out var l, out var u, out var p);
-        L = new MatrixLong(l);
-        U = new MatrixLong(u);
-        P = new MatrixLong(p);
+        L = new(l);
+        U = new(u);
+        P = new(p);
     }
 
     /// <summary>
