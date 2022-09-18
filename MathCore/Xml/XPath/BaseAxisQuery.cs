@@ -14,81 +14,54 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class BaseAxisQuery : Query
 {
-    internal class BaseAxisQuery : Query
+    #region Properties
+
+    internal string Name { get; } = string.Empty;
+
+    internal string Prefix { get; } = string.Empty;
+
+    internal XPathNodeType NodeType { get; }
+
+    internal int Depth { get; set; } = -1;
+
+    internal Query QueryInput { get; set; }
+
+    #endregion
+
+    #region Constructors
+
+    internal BaseAxisQuery() { }
+
+    internal BaseAxisQuery(Query QueryInput) => this.QueryInput = QueryInput;
+
+    internal BaseAxisQuery(Query QueryInput, string name, string prefix, XPathNodeType NodeType)
     {
-        #region Properties
-
-        internal string Name { get; } = string.Empty;
-
-        internal string Prefix { get; } = string.Empty;
-
-        internal XPathNodeType NodeType { get; }
-
-        internal int Depth { get; set; } = -1;
-
-        internal Query QueryInput { get; set; }
-
-        #endregion
-
-        #region Constructors
-
-        internal BaseAxisQuery() { }
-
-        internal BaseAxisQuery(Query queryInput) => QueryInput = queryInput;
-
-        internal BaseAxisQuery(Query queryInput, string name, string prefix, XPathNodeType nodeType)
-        {
-            Prefix = prefix;
-            QueryInput = queryInput;
-            Name = name;
-            NodeType = nodeType;
-        }
-
-        #endregion
-
-        #region Methods
-
-        internal override XPathResultType ReturnType() => XPathResultType.NodeSet;
-
-        internal static bool MatchType(XPathNodeType XType, XmlNodeType type)
-        {
-            var ret = false;
-
-            switch(XType)
-            {
-                case XPathNodeType.Element:
-                    if(type == XmlNodeType.Element || type == XmlNodeType.EndElement)
-                        ret = true;
-                    break;
-
-                case XPathNodeType.Attribute:
-                    if(type == XmlNodeType.Attribute)
-                        ret = true;
-                    break;
-
-                case XPathNodeType.Text:
-                    if(type == XmlNodeType.Text)
-                        ret = true;
-                    break;
-
-                case XPathNodeType.ProcessingInstruction:
-                    if(type == XmlNodeType.ProcessingInstruction)
-                        ret = true;
-                    break;
-
-                case XPathNodeType.Comment:
-                    if(type == XmlNodeType.Comment)
-                        ret = true;
-                    break;
-
-                default:
-                    throw new XPathReaderException("Unknown nodeType");
-            }
-            return ret;
-        }
-
-        #endregion
+        Prefix = prefix;
+        this.QueryInput = QueryInput;
+        Name = name;
+        this.NodeType = NodeType;
     }
+
+    #endregion
+
+    #region Methods
+
+    internal override XPathResultType ReturnType() => XPathResultType.NodeSet;
+
+    internal static bool MatchType(XPathNodeType XType, XmlNodeType type) => XType switch
+    {
+        XPathNodeType.Element when type is XmlNodeType.Element or XmlNodeType.EndElement   => true,
+        XPathNodeType.Attribute when type is XmlNodeType.Attribute                         => true,
+        XPathNodeType.Text when type is XmlNodeType.Text                                   => true,
+        XPathNodeType.ProcessingInstruction when type is XmlNodeType.ProcessingInstruction => true,
+        XPathNodeType.Comment when type is XmlNodeType.Comment                             => true,
+
+        _ => throw new XPathReaderException("Unknown nodeType")
+    };
+
+    #endregion
 }

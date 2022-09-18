@@ -1,19 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿#nullable enable
+using System.Threading.Tasks;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml
+namespace System.Xml;
+
+[PublicAPI]
+public static class XmlWriterExtensions
 {
-    [PublicAPI]
-    public static class XmlWriterExtensions
-    {
-        public static Task WriteElementStringAsync([NotNull] this XmlWriter writer, [NotNull] string name, string value) => writer.WriteElementStringAsync(null, name, null, value);
+    public static Task WriteElementStringAsync(this XmlWriter writer, string name, string value) => writer.WriteElementStringAsync(null, name, null, value);
 
-        public static Task WriteStartElementAsync([NotNull] this XmlWriter writer, [NotNull] string name) => writer.WriteStartElementAsync(null, name, null);
+    public static Task WriteStartElementAsync(this XmlWriter writer, string name) => writer.WriteStartElementAsync(null, name, null);
 
-        public static Task WriteAttributeString([NotNull] this XmlWriter writer, [NotNull] string name, [NotNull] string value) => writer.WriteAttributeStringAsync(null, name, null, value);
+    public static Task WriteAttributeString(this XmlWriter writer, string name, string value) => writer.WriteAttributeStringAsync(null, name, null, value);
 
-        public static Task WriteAttributeStringAsync(this XmlWriter writer, string name, string value) => writer.WriteAttributeStringAsync(null, name, null, value);
-
-    }
+    public static Task WriteAttributeStringAsync(this XmlWriter writer, string name, string value) => writer.WriteAttributeStringAsync(null, name, null, value);
 }

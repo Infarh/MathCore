@@ -1,4 +1,3 @@
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -50,7 +49,7 @@ namespace ConsoleTest
             _Pos = pos + 1;
         }
 
-        public ReadOnlySpan<T> AsSpan() => _Span.Slice(0, _Pos);
+        public ReadOnlySpan<T> AsSpan() => _Span[.._Pos];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()

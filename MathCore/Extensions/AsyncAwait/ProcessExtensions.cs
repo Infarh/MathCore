@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 // ReSharper disable UnusedMember.Global
@@ -44,7 +43,7 @@ public static class ProcessExtensions
 
         var result = new TaskCompletionSource<Process>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        using var registraction_cancellation = Cancel.IsCancellationRequested
+        using var registration_cancellation = Cancel.IsCancellationRequested
             ? Cancel.Register(o => ((TaskCompletionSource<Process>)o).TrySetCanceled(), result)
             : (IDisposable?)null;
 

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using MathCore.Interpolation;
 
-using MathCore.Interpolation;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests.Interpolation;

@@ -85,7 +85,7 @@ namespace MathCore.Functions.PSO
             var IntervalVx = IntervalX;
             var IntervalVy = IntervalY;
 
-            var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (i, x, y) => new Particle2D(func, x, y));
+            var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (_, x, y) => new Particle2D(func, x, y));
             var start = swarm.GetMin(p => p.Value) ?? throw new InvalidOperationException("Минимум не найден");
             X = start.X;
             Y = start.Y;
@@ -155,7 +155,7 @@ namespace MathCore.Functions.PSO
             var IntervalVx = IntervalX;
             var IntervalVy = IntervalY;
 
-            var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (i, ix, iy) => new Particle2D(func, ix, iy));
+            var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (_, ix, iy) => new Particle2D(func, ix, iy));
             var start = swarm.GetMax(p => p.Value) ?? throw new InvalidOperationException("Максимум не найден");
             X = start.X;
             Y = start.Y;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Benchmarks;
+﻿namespace Benchmarks;
 
 public class CSVString
 {

@@ -1,7 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathCore.Annotations;
+
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable ConvertToAutoProperty
 // ReSharper disable MemberCanBePrivate.Global
@@ -18,7 +19,6 @@ namespace MathCore.MathParser
         private readonly string _CloseBracket;
 
         /// <summary>Массив элементов подвыражения</summary>
-        [NotNull]
         private readonly Term[] _Terms;
 
         /// <summary>Строковое значение открывающейся скобки</summary>
@@ -28,18 +28,17 @@ namespace MathCore.MathParser
         public string CloseBracket => _CloseBracket;
 
         /// <summary>Массив элементов подвыражения</summary>
-        [NotNull]
         public Term[] Terms => _Terms;
 
         /// <summary>Новый блок математического выражения</summary>
         /// <param name="Str">Строковое значение блока</param>
-        public BlockTerm([NotNull] string Str) : this(string.Empty, Str, string.Empty) { }
+        public BlockTerm(string Str) : this(string.Empty, Str, string.Empty) { }
 
         /// <summary>Новый блок выражения</summary>
         /// <param name="OpenBracket">Открывающаяся скобка</param>
         /// <param name="Str">Строковое значение блока</param>
         /// <param name="CloseBracket">Закрывающаяся скобка</param>
-        public BlockTerm([NotNull] string OpenBracket, [NotNull] string Str, [NotNull] string CloseBracket)
+        public BlockTerm(string OpenBracket, string Str, string CloseBracket)
             : base(string.Format("{0}{2}{1}", OpenBracket, CloseBracket, Str))
         {
             _OpenBracket = OpenBracket;
@@ -47,7 +46,7 @@ namespace MathCore.MathParser
             _Terms = GetTerms(Str) ?? throw new InvalidOperationException();
         }
 
-        public BlockTerm(string OpenBracket, [NotNull] Term[] terms, string CloseBracket)
+        public BlockTerm(string OpenBracket, Term[] terms, string CloseBracket)
             : base($"{OpenBracket}{terms.ToSeparatedStr()}{CloseBracket}")
         {
             _Terms = terms;
@@ -59,8 +58,7 @@ namespace MathCore.MathParser
         /// <param name="Str">Исследуемая строка</param>
         /// <param name="pos">Исходная позиция в строке</param>
         /// <returns>Строка цифрового значения</returns>
-        [CanBeNull]
-        private static string GetNumberString([NotNull] string Str, ref int pos)
+        private static string? GetNumberString(string Str, ref int pos)
         {
             var p = pos;
             var l = Str.Length;
@@ -76,7 +74,7 @@ namespace MathCore.MathParser
         /// <param name="Str">Исходная строка</param>
         /// <param name="pos">Положение в строке</param>
         /// <returns>Строка имени</returns>
-        private static string GetNameString([NotNull] string Str, ref int pos)
+        private static string GetNameString(string Str, ref int pos)
         {
             var result = string.Empty;
             var L = Str.Length;
@@ -97,8 +95,7 @@ namespace MathCore.MathParser
         /// <summary>Получить список элементов математического выражения из строки</summary>
         /// <param name="Str">Строковое представление математического выражения</param>
         /// <returns>Массив элементов математического выражения</returns>
-        [CanBeNull]
-        private static Term[] GetTerms([CanBeNull] string Str)
+        private static Term[]? GetTerms(string? Str)
         {
             if(Str is null) return null;
             if(Str.Length == 0) return Array.Empty<Term>();
@@ -180,8 +177,7 @@ namespace MathCore.MathParser
 
         /// <summary>Преобразование в строковое представление</summary>
         /// <returns>Строковое представление</returns>
-        [NotNull]
-        public override string ToString() => $"{OpenBracket ?? string.Empty}{Terms.ToSeparatedStr()}{CloseBracket ?? string.Empty}";
+        public override string ToString() => $"{OpenBracket}{Terms.ToSeparatedStr()}{CloseBracket}";
 
         /// <summary>Получить корень поддерева выражений</summary>
         /// <param name="Parser">Парсер выражения</param>
@@ -199,7 +195,7 @@ namespace MathCore.MathParser
 
             if(roots.Length == 1) return roots[0]; // Если найден только один корень, то возвращаем его
             // Иначе корней найдено много
-            ExpressionTreeNode argument = null; // объявляем ссылку на аргумент
+            ExpressionTreeNode? argument = null; // объявляем ссылку на аргумент
             // проходим по всем найденным корням
             foreach (var root in roots)
             {

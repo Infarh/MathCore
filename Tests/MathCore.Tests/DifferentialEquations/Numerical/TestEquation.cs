@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace MathCore.Tests.DifferentialEquations.Numerical
+﻿namespace MathCore.Tests.DifferentialEquations.Numerical
 {
     internal static class TestEquation
     {

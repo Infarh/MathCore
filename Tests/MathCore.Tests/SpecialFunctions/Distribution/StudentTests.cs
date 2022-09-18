@@ -1,8 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System.Linq;
-
-using static MathCore.SpecialFunctions.Distribution.Student;
+﻿using static MathCore.SpecialFunctions.Distribution.Student;
 
 namespace MathCore.Tests.SpecialFunctions.Distribution
 {

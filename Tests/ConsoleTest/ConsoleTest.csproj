@@ -13,6 +13,15 @@
     <EnablePreviewFeatures>True</EnablePreviewFeatures>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>
+      1701;1702;
+      0219;
+      8601;8602;8604;8607;8618;8625;8632;
+      8794
+    </NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Linq" />

@@ -2,8 +2,6 @@
 
 using MathCore.IO;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace MathCore.Tests.IO
 {
     [TestClass]

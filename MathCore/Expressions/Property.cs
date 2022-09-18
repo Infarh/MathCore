@@ -132,7 +132,7 @@ namespace System.Linq.Expressions
                 var writer_expr = Expression.Lambda<Action<T>>(Expression.Call(null, set_method_info, ValueParameter), ValueParameter);
                 _Writer = writer_expr.Compile();
                 // ReSharper disable once UseNameofExpression
-                _Writer += t => OnPropertyChanged("Value");
+                _Writer += _ => OnPropertyChanged("Value");
             }
         }
 
@@ -171,12 +171,12 @@ namespace System.Linq.Expressions
                 var writer_expr = Expression.Lambda<Action<T>>(Expression.Call(ObjConstant, set_method_info, ValueParameter), ValueParameter);
                 _Writer = writer_expr.Compile();
                 // ReSharper disable once UseNameofExpression
-                if(!IsNotifyPropertyChanged) _Writer += t => OnPropertyChanged("Value");
+                if(!IsNotifyPropertyChanged) _Writer += _ => OnPropertyChanged("Value");
             }
 
             // ReSharper disable once AssignmentInConditionalExpression
             if(IsNotifyPropertyChanged = Obj is INotifyPropertyChanged)
-                ((INotifyPropertyChanged)Obj).PropertyChanged += (s, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
+                ((INotifyPropertyChanged)Obj).PropertyChanged += (_, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
         }
 
         /// <summary>Чтение сведений из атрибутов</summary>
@@ -343,9 +343,9 @@ namespace System.Linq.Expressions
                 var writer_expr = Expression.Lambda<Action<object>>(Expression.Call(null, set_method_info, Expression.Convert(p, _PropertyInfo.PropertyType)), p);
                 _Writer = writer_expr.Compile();
                 // ReSharper disable UseNameofExpression
-                _Writer += t => OnPropertyChanged("Value");
-                _Writer += t => OnPropertyChanged("ValueUnsafe");
-                _Writer += t => OnPropertyChanged("ValueSafe");
+                _Writer += _ => OnPropertyChanged("Value");
+                _Writer += _ => OnPropertyChanged("ValueUnsafe");
+                _Writer += _ => OnPropertyChanged("ValueSafe");
                 // ReSharper restore UseNameofExpression
             }
         }
@@ -392,16 +392,16 @@ namespace System.Linq.Expressions
                 if(!IsNotifyPropertyChanged)
                 {
                     // ReSharper disable UseNameofExpression
-                    _Writer += t => OnPropertyChanged("Value");
-                    _Writer += t => OnPropertyChanged("ValueSafe");
-                    _Writer += t => OnPropertyChanged("ValueUnsafe");
+                    _Writer += _ => OnPropertyChanged("Value");
+                    _Writer += _ => OnPropertyChanged("ValueSafe");
+                    _Writer += _ => OnPropertyChanged("ValueUnsafe");
                     // ReSharper restore UseNameofExpression
                 }
             }
 
             // ReSharper disable once AssignmentInConditionalExpression
             if(IsNotifyPropertyChanged = Obj is INotifyPropertyChanged)
-                ((INotifyPropertyChanged)Obj).PropertyChanged += (s, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
+                ((INotifyPropertyChanged)Obj).PropertyChanged += (_, e) => { if(e.PropertyName == _Name) OnPropertyChanged(nameof(Value)); };
         }
 
 

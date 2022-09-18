@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using Runge_Kutta = MathCore.DifferentialEquations.Numerical.RungeKutta;
 
-using Runge_Kutta = MathCore.DifferentialEquations.Numerical.RungeKutta;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable RedundantArgumentDefaultValue
 
 namespace MathCore.Tests.DifferentialEquations.Numerical

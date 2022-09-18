@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-using MathCore.Annotations;
+
 using MathCore.Extensions.Expressions;
 using MCEx = System.Linq.Expressions.MethodCallExpression;
 using Ex = System.Linq.Expressions.Expression;
@@ -143,5 +143,5 @@ public static class DelegateExtensions
 
     #endregion
 
-    public static Task<object> DynamicInvokeAsync(this Delegate action, params object[] parameters) => action.Async(parameters, (d, p) => d.DynamicInvoke(p));
+    public static Task<object?> DynamicInvokeAsync(this Delegate action, params object[] parameters) => action.Async(parameters, (d, p) => d.DynamicInvoke(p));
 }

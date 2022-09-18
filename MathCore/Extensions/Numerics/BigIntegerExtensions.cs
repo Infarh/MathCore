@@ -1,14 +1,14 @@
-﻿// ReSharper disable once CheckNamespace
-namespace System.Numerics
+﻿#nullable enable
+// ReSharper disable once CheckNamespace
+namespace System.Numerics;
+
+public static class BigIntegerExtensions
 {
-    public static class BigIntegerExtensions
+    public static BigInteger Factorial(BigInteger n)
     {
-        public static BigInteger Factorial(BigInteger n)
-        {
-            BigInteger result = 1;
-            for(BigInteger i = 1; i <= n; i++)
-                result *= i;
-            return result;
-        }
+        BigInteger result = 1;
+        for(BigInteger i = 1; i <= n; i++)
+            result *= i;
+        return result;
     }
 }

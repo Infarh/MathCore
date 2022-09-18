@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 using System.Linq;
 using System.Text;
 
@@ -230,7 +229,7 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
 
     #region Цыклы
 
-    public void For(int samples, [NotNull] Action<double> Do)
+    public void For(int samples, Action<double> Do)
     {
         var len = Length;
         var min = _Min;
@@ -245,7 +244,7 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
             Do(min + i * dx);
     }
 
-    public void For(int samples, [NotNull] Action<int, double> Do)
+    public void For(int samples, Action<int, double> Do)
     {
         var len = Length;
         var min = _Min;
@@ -260,7 +259,7 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
             Do(i, min + i * dx);
     }
 
-    public void WhileInInterval(double step, [NotNull] Action<double> Do)
+    public void WhileInInterval(double step, Action<double> Do)
     {
         var min = Math.Min(_Max, _Min);
         step = _Max < _Min && step > 0 ? -step : step;
@@ -304,7 +303,6 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
         } while ((_MaxInclude && position <= _Max) || (!_MaxInclude && position < _Max));
     }
 
-    [NotNull]
     public IEnumerable<ValuedInterval<T>> GetSubIntervals(int Count)
     {
         var last = _MinInclude ? _Min : _Min - double.Epsilon;

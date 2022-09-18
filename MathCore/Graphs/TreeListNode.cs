@@ -123,14 +123,14 @@ namespace MathCore.Graphs
         {
             get
             {
-                var node = this[n => n.Next].FirstOrDefault(n => i-- == 0);
+                var node = this[n => n.Next].FirstOrDefault(_ => i-- == 0);
                 if (node is null) throw new IndexOutOfRangeException();
                 return node;
             }
             set
             {
                 i--;
-                var node = this[n => n.Next].FirstOrDefault(n => i-- == 0);
+                var node = this[n => n.Next].FirstOrDefault(_ => i-- == 0);
                 if (node is null) throw new IndexOutOfRangeException();
                 var next = node.Next;
                 node.Next = value;

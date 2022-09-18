@@ -3,11 +3,9 @@ using MathCore;
 using MathCore.Evaluations;
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -29,7 +27,7 @@ namespace System
         /// <param name="obj">Объект, вызов к которому надо выполнить</param>
         /// <param name="action">Выполняемое над объектом действие, ошибки в котором требуется перехватить</param>
         /// <param name="OnError">Метод обработки исключения</param>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T Try<T>(this T obj, Action<T> action, Action<T, Exception> OnError)
         {
             if (OnError is null) throw new ArgumentNullException(nameof(OnError));
@@ -182,11 +180,11 @@ namespace System
         /// <param name="Format">Строка форматирования</param>
         /// <param name="args">Массив аргументов, добавляемых к объекту для создание форматированной строки</param>
         /// <returns>Форматированная строка текстового представления объекта</returns>
-        [StringFormatMethod("Format")]
+        [StringFormatMethod(nameof(Format))]
         public static string ToFormattedString(this object obj, string Format, params object[]? args)
         {
             if (args is null || args.Length == 0) return string.Format(Format, obj);
-            var str_args = new object[args.ParamNotNull(nameof(args)).Length + 1];
+            var str_args = new object[args.NotNull().Length + 1];
             Array.Copy(args, 0, str_args, 1, args.Length);
             str_args[0] = obj;
             return string.Format(Format, str_args);
@@ -211,10 +209,7 @@ namespace System
         {
             var hash = Consts.BigPrime_int;
             foreach (var obj in Objects)
-                unchecked
-                {
-                    hash = (hash * 397) ^ obj.GetHashCode();
-                }
+                hash = unchecked((hash * 397) ^ obj.GetHashCode());
             return hash == Consts.BigPrime_int ? 0 : hash;
         }
 
@@ -242,7 +237,7 @@ namespace System
         /// <summary>Ссылка на объект не равна null</summary>
         /// <param name="o">Проверяемый объект</param>
         /// <returns>Истина, если проверяемый объект не null</returns>
-        public static bool IsNotNull(this object? o) => o != null;
+        public static bool IsNotNull(this object? o) => o is { };
 
         /// <summary>Ссылка на объект равна null</summary>
         /// <param name="o">Проверяемый объект</param>
@@ -253,25 +248,17 @@ namespace System
         /// <typeparam name="T">Тип проверяемого объекта</typeparam>
         /// <param name="obj">Проверяемое значение</param>
         /// <param name="Message">Сообщение ошибки</param>
+        /// <param name="ParameterName">Название параметра</param>
         /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
-        /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == null</exception>
-
+        /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> == <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
         [return: Diagnostics.CodeAnalysis.NotNull]
-        [return: NotNullIfNotNull("obj")]
-        public static T NotNull<T>(this T? obj, string? Message = null) where T : class => obj ?? throw new InvalidOperationException(Message ?? "Пустая ссылка на объект");
-
-        /// <summary>Проверка параметра на <see langword="null"/></summary>
-        /// <typeparam name="T">Тип параметра <paramref name="obj"/></typeparam>
-        /// <param name="obj">Проверяемый на <see langword="null"/> объект</param>
-        /// <param name="ParameterName">Имя параметра для указания его в исключении</param>
-        /// <param name="Message">Сообщение ошибки</param>
-        /// <returns>Объект, гарантированно не <see langword="null"/></returns>
-        /// <exception cref="T:System.ArgumentException">Если параметр <paramref name="obj"/> == <see langword="null"/>.</exception>
-
-        [return: Diagnostics.CodeAnalysis.NotNull]
-        [return: NotNullIfNotNull("obj")]
-        public static T ParamNotNull<T>(this T? obj, string ParameterName, string? Message = null) where T : class =>
-            obj ?? throw new ArgumentException(Message ?? $"Отсутствует ссылка для параметра {ParameterName}", ParameterName);
+        [return: NotNullIfNotNull(nameof(obj))]
+        public static T NotNull<T>(this T? obj, string? Message = null, [CallerArgumentExpression(nameof(obj))] string? ParameterName = null!) 
+            where T : class => 
+            obj ?? throw (ParameterName is null
+                ? new InvalidOperationException(Message ?? "Пустая ссылка на объект")
+                : new ArgumentNullException(ParameterName, Message ?? "Пустая ссылка на в значении параметра"));
 
         /// <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
         /// <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>
@@ -287,10 +274,10 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T>(this T? obj, Action<T?>? Initializer) where T : class
         {
-            if (obj != null)
+            if (obj is { })
                 Initializer?.Invoke(obj);
             return obj;
         }
@@ -302,10 +289,10 @@ namespace System
         /// <param name="parameter">Параметр инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [return: NotNullIfNotNull("obj")]
-        public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T?, TP?>? Initializer) where T : class
+        [return: NotNullIfNotNull(nameof(obj))]
+        public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T, TP?>? Initializer) where T : class
         {
-            if (obj != null)
+            if (obj is { })
                 Initializer?.Invoke(obj, parameter);
             return obj;
         }
@@ -319,11 +306,11 @@ namespace System
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T, TP1, TP2>(this T? obj, TP1? parameter1, TP2? parameter2, Action<T?, TP1?, TP2?>? Initializer
         ) where T : class
         {
-            if (obj != null)
+            if (obj is { })
                 Initializer?.Invoke(obj, parameter1, parameter2);
             return obj;
         }
@@ -339,7 +326,7 @@ namespace System
         /// <param name="parameter3">Параметр инициализации</param>
         /// <param name="Initializer">Действие инициализации</param>
         /// <returns>Инициализированный объект</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T, TP1, TP2, TP3>(
             this T? obj,
             TP1? parameter1,
@@ -348,7 +335,7 @@ namespace System
             Action<T?, TP1?, TP2?, TP3?>? Initializer)
             where T : class
         {
-            if (obj != null)
+            if (obj is { })
                 Initializer?.Invoke(obj, parameter1, parameter2, parameter3);
             return obj;
         }
@@ -358,9 +345,9 @@ namespace System
         /// <param name="obj">Инициализируемый объект</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T>(this T? obj, Func<T?, T?>? Initializer) where T : class =>
-            Initializer != null && obj != null ? Initializer(obj) : obj;
+            Initializer is { } && obj is { } ? Initializer(obj) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -369,9 +356,9 @@ namespace System
         /// <param name="parameter">Параметр инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Func<T?, TP?, T?>? Initializer) where T : class =>
-            Initializer != null && obj != null ? Initializer(obj, parameter) : obj;
+            Initializer is { } && obj is { } ? Initializer(obj, parameter) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -384,7 +371,7 @@ namespace System
         /// <param name="parameter3">Параметр 3 инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T, TP1, TP2, TP3>(
             this T? obj,
             TP1? parameter1,
@@ -392,7 +379,7 @@ namespace System
             TP3? parameter3,
             Func<T?, TP1?, TP2?, TP3?, T?>? Initializer)
             where T : class =>
-            Initializer != null && obj != null ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
+            Initializer is { } && obj is { } ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
 
         /// <summary>Инициализировать объект ссылочного типа</summary>
         /// <typeparam name="T">Тип объекта</typeparam>
@@ -403,14 +390,14 @@ namespace System
         /// <param name="parameter2">Параметр 2 инициализации</param>
         /// <param name="Initializer">Функция инициализации, определяющая значение конечного объекта</param>
         /// <returns>Объект, возвращённый функцией инициализации</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull(nameof(obj))]
         public static T? InitializeObject<T, TP1, TP2>(
             this T? obj,
             TP1? parameter1,
             TP2? parameter2,
             Func<T?, TP1?, TP2?, T?>? Initializer)
             where T : class =>
-            Initializer != null && obj != null ? Initializer(obj, parameter1, parameter2) : obj;
+            Initializer is { } && obj is { } ? Initializer(obj, parameter1, parameter2) : obj;
 
         /// <summary>Печать объекта на консоли без переноса строки в конце</summary>
         /// <typeparam name="T">Тип печатаемого объекта</typeparam>
@@ -426,7 +413,7 @@ namespace System
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Format">Строка форматирования результата</param>
         /// <param name="args">Дополнительные аргументы строки форматирования</param>
-        [StringFormatMethod("Format")]
+        [StringFormatMethod(nameof(Format))]
         public static void ToConsole<TObject>(this TObject? Obj, string Format, params object[] args)
         {
             if (Obj is null) return;
@@ -450,12 +437,18 @@ namespace System
         /// <param name="Obj">Печатаемый объект</param>
         /// <param name="Format">Строка форматирования результата</param>
         /// <param name="args">Дополнительные аргументы строки форматирования</param>
-        [StringFormatMethod("Format")]
+        [StringFormatMethod(nameof(Format))]
         public static void ToConsoleLN<TObject>(this TObject? Obj, string Format, params object[] args)
         {
             if (Obj is null) return;
-            if (args.Length != 0)
-                Console.WriteLine(Format, args.AppendFirst(Obj).ToArray());
+
+            if (args.Length > 0)
+            {
+                var args_ex = new object[args.Length + 1];
+                args.CopyTo(args_ex, 1);
+                args_ex[0] = Obj;
+                Console.WriteLine(Format, args_ex);
+            }
             else
                 Console.WriteLine(Format, Obj);
         }
@@ -598,10 +591,10 @@ namespace System
         //    {
         //        get
         //        {
-        //            if (__Reader != null) return __Reader;
+        //            if (__Reader is { }) return __Reader;
         //            lock (typeof(StructureReadersPool<T>))
         //            {
-        //                if (__Reader != null) return __Reader;
+        //                if (__Reader is { }) return __Reader;
         //                return __Reader = CreateDelegate();
         //            }
         //        }
@@ -739,6 +732,7 @@ namespace System
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Actions : Dictionary<object, Action<object>?> { }
 }
+
 namespace System.Tags
 {
     /// <summary>Класс методов-расширений для реализации функциональности добавления объектов, которые могут быть приложены к другим объектам</summary>
@@ -780,7 +774,7 @@ namespace System.Tags
 
                     var reference = tags.Keys.Find(Selector);
                     Dictionary<Type, object?> dictionary;
-                    if (reference != null)
+                    if (reference is { })
                         dictionary = tags[reference];
                     else
                         tags.Add(new WeakReference(o), dictionary = new Dictionary<Type, object?>());

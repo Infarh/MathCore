@@ -1,5 +1,4 @@
-﻿using System;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 using WPFTest.Infrastructure.Commands.Base;
 
 namespace WPFTest.Infrastructure.Commands
@@ -10,7 +9,7 @@ namespace WPFTest.Infrastructure.Commands
         private readonly Func<object, bool> _CanExecute;
 
         public LambdaCommand(Action Execute, Func<bool> CanExecute  = null)
-            :this(p => Execute(), CanExecute is null ? (Func<object, bool>)null : p => CanExecute())
+            :this(_ => Execute(), CanExecute is null ? (Func<object, bool>)null : _ => CanExecute())
         { }
 
         public LambdaCommand([NotNull] Action<object> Execute, Func<object, bool> CanExecute = null)

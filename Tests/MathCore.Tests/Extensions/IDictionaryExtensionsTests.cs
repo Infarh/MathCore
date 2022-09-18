@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Diagnostics.CodeAnalysis;
+
 // ReSharper disable StringLiteralTypo
 
 namespace MathCore.Tests.Extensions
@@ -40,7 +37,7 @@ namespace MathCore.Tests.Extensions
             Assert.IsTrue(dictionary.ContainsKey("5"));
             Assert.AreEqual("aaaaa", dictionary["5"][0]);
 
-            dictionary.AddValue(7, i => "5", i => new string('a', i));
+            dictionary.AddValue(7, _ => "5", i => new string('a', i));
             Assert.AreEqual(1, dictionary.Count);
             Assert.AreEqual("aaaaaaa", dictionary["5"][1]);
 
@@ -100,7 +97,7 @@ namespace MathCore.Tests.Extensions
             Assert.IsTrue(dictionary.ContainsKey(5));
             Assert.AreEqual(1, dictionary.Count);
             dictionary.Add(7, "qwe");
-            Assert.AreEqual("qwe", dictionary.GetValueOrAddNew(7, i => "qwe"));
+            Assert.AreEqual("qwe", dictionary.GetValueOrAddNew(7, _ => "qwe"));
             Assert.AreEqual(2, dictionary.Count);
         }
 
@@ -114,7 +111,7 @@ namespace MathCore.Tests.Extensions
             Assert.IsTrue(dictionary.ContainsKey(5));
             Assert.AreEqual(1, dictionary.Count);
             dictionary.Add(7, "qwe");
-            Assert.AreEqual("qwe", dictionary.GetValueOrAddNew(7, i => "qwe"));
+            Assert.AreEqual("qwe", dictionary.GetValueOrAddNew(7, _ => "qwe"));
             Assert.AreEqual(2, dictionary.Count);
         }
 

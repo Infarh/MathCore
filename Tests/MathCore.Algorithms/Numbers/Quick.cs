@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace MathCore.Algorithms.Numbers;
+﻿namespace MathCore.Algorithms.Numbers;
 
 public static class Quick
 {

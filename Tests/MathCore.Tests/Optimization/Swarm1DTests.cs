@@ -1,5 +1,4 @@
 ﻿using MathCore.Optimization.ParticleSwarm;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.Optimization
 {

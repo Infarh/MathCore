@@ -2,9 +2,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
-using MathCore.Functions.Differentiable;
 using MathCore.Vectors;
 
 namespace MathCore.Interpolation;

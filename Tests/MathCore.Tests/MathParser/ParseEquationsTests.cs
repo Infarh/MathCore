@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using MathCore.MathParser;
+﻿using MathCore.MathParser;
 using MathCore.MathParser.ExpressionTrees.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace MathCore.Tests.MathParser

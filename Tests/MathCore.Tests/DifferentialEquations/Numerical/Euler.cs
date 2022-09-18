@@ -1,10 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Solver = MathCore.DifferentialEquations.Numerical.Euler;
+﻿using Solver = MathCore.DifferentialEquations.Numerical.Euler;
 using static System.Diagnostics.Debug;
 
 namespace MathCore.Tests.DifferentialEquations.Numerical

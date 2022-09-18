@@ -42,7 +42,7 @@ namespace System.Linq.Expressions
             {
                 if(_Properties != null) return _Properties;
                 var properties = _ObjectType.GetProperties(__BindingFlags)
-                            .Where(_PropertiesFilter ?? (p => true))
+                            .Where(_PropertiesFilter ?? (_ => true))
                             .Select(p => new Property(_Object, p)).ToArray();
                 _Properties = new DictionaryReadOnly<string, Property>(properties.ToDictionary(p => p.Name));
                 return _Properties;
@@ -77,7 +77,7 @@ namespace System.Linq.Expressions
             {
                 if(_Fields != null) return _Fields;
                 var fields = _ObjectType.GetFields(__BindingFlags)
-                            .Where(_FieldsFilter ?? (f => true))
+                            .Where(_FieldsFilter ?? (_ => true))
                             .Select(p => new Field(_Object, p)).ToArray();
                 _Fields = new DictionaryReadOnly<string, Field>(fields.ToDictionary(p => p.Name));
                 return _Fields;

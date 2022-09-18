@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 using MathCore;
 
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
@@ -30,6 +29,36 @@ public static class StringExtensions
         while (reader.ReadLine() is { } line)
             if (line.Length > 0 || !SkipEmpty)
                 yield return line;
+    }
+
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="Selector">Преобразователь значения</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<T> EnumLines<T>(this string str, Func<string, T> Selector, bool SkipEmpty = false)
+    {
+        using var reader = str.CreateReader();
+        while (reader.ReadLine() is { } line)
+            if (line.Length > 0 || !SkipEmpty)
+                yield return Selector(line);
+    }
+
+    /// <summary>Перечисление строк в строке</summary>
+    /// <param name="str">Исходная строка</param>
+    /// <param name="Selector">Преобразователь значения</param>
+    /// <param name="SkipEmpty">Пропускать пустые строки</param>
+    /// <returns>Перечисление строк в строке</returns>
+    public static IEnumerable<T> EnumLines<T>(this string str, Func<string, int, T> Selector, bool SkipEmpty = false)
+    {
+        using var reader = str.CreateReader();
+        var i = 0;
+        while (reader.ReadLine() is { } line)
+        {
+            if (line.Length > 0 || !SkipEmpty)
+                yield return Selector(line, i);
+            i++;
+        }
     }
 
     /// <summary>Создать объект чтения данных строки</summary>
@@ -96,9 +125,9 @@ public static class StringExtensions
     /// <returns>Распакованная последовательность байт в строковом представлении</returns>
     public static string DecompressAsString(this byte[] bytes)
     {
-        using var input_stream = new MemoryStream(bytes);
+        using var input_stream  = new MemoryStream(bytes);
         using var output_stream = new MemoryStream();
-        using var g_zip_stream = new GZipStream(input_stream, CompressionMode.Decompress);
+        using var g_zip_stream  = new GZipStream(input_stream, CompressionMode.Decompress);
         g_zip_stream.CopyTo(output_stream);
 
         return Encoding.UTF8.GetString(output_stream.ToArray());
@@ -157,7 +186,7 @@ public static class StringExtensions
         var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
         if (start_index == -1) return null;
         var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
-        if (stop_index == -1) throw new FormatException();
+        if (stop_index == -1) throw new FormatException($"Не найдена парная закрывающая скобка '{Close}'");
         var start = start_index;
         do
         {

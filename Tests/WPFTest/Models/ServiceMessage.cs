@@ -1,14 +1,15 @@
-﻿namespace WPFTest.Models
+﻿#nullable enable
+namespace WPFTest.Models;
+
+public class ServiceMessage
 {
-    public class ServiceMessage
-    {
-        public string Message { get; set; }
+    public string Message { get; set; } = null!;
 
-        public ServiceMessage() { }
-        public ServiceMessage(string Message) => this.Message = Message;
+    public ServiceMessage() { }
 
-        public static implicit operator ServiceMessage(string Message) => new ServiceMessage(Message);
+    public ServiceMessage(string Message) => this.Message = Message;
 
-        public static implicit operator string(ServiceMessage Message) => Message.Message;
-    }
+    public static implicit operator ServiceMessage(string Message) => new(Message);
+
+    public static implicit operator string(ServiceMessage Message) => Message.Message;
 }

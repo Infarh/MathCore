@@ -1,14 +1,13 @@
-﻿using System.Diagnostics;
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Diagnostics;
 
 // ReSharper disable once CheckNamespace
-namespace System.Runtime.Serialization.Formatters.Binary
-{
-	public static class BinarySerializerExtensions
-	{
-		[CanBeNull] private static BinaryFormatter __Formatter;
+namespace System.Runtime.Serialization.Formatters.Binary;
 
-        [DebuggerStepThrough, NotNull] 
-        public static BinaryFormatter GetSerializer() => __Formatter ??= new BinaryFormatter();
-    }
+public static class BinarySerializerExtensions
+{
+    private static BinaryFormatter? __Formatter;
+
+    [DebuggerStepThrough] 
+    public static BinaryFormatter GetSerializer() => __Formatter ??= new BinaryFormatter();
 }

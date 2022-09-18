@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+
 // ReSharper disable MemberHidesStaticFromOuterClass
 
 // ReSharper disable UnusedMember.Global

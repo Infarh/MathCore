@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using MathCore.Threading.Tasks.Schedulers;
+﻿using MathCore.Threading.Tasks.Schedulers;
 
 namespace ConsoleTest
 {

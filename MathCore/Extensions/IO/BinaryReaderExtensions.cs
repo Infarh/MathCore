@@ -1,136 +1,177 @@
-﻿using System.Collections.Generic;
-using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
-namespace System.IO
+namespace System.IO;
+
+public static class BinaryReaderExtensions
 {
-    public static class BinaryReaderExtensions
+    /// <summary>Признак конца потока</summary>
+    /// <param name="reader">Объект чтения потока</param>
+    /// <returns>Истина, если поток закончен</returns>
+    [DST]
+    public static bool IsEOF(this BinaryReader reader) => reader.BaseStream.Position == reader.BaseStream.Length;
+
+    /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
+    /// <param name="reader">Объект чтения потока данных</param>
+    /// <param name="BufferSize">Размер буфера</param>
+    /// <returns>Последовательность массивов байт указанной длины (последний массив будет меньше)</returns>
+    public static IEnumerable<byte[]> GetByteBuffer(this BinaryReader reader, int BufferSize)
     {
-        /// <summary>Признак конца потока</summary>
-        /// <param name="reader">Объект чтения потока</param>
-        /// <returns>Истина, если поток закончен</returns>
-        [DST]
-        public static bool IsEOF([NotNull] this BinaryReader reader) => reader.BaseStream.Position == reader.BaseStream.Length;
-
-        /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
-        /// <param name="reader">Объект чтения потока данных</param>
-        /// <param name="BufferSize">Размер буфера</param>
-        /// <returns>Перечислитель</returns>
-        [ItemNotNull]
-        public static IEnumerable<byte[]> GetByteBuffer([NotNull] this BinaryReader reader, int BufferSize)
+        int readed;
+        do
         {
-            while (!reader.IsEOF())
-            {
-                var buffer = new byte[BufferSize];
-                reader.Read(buffer, 0, BufferSize);
-                yield return buffer;
-            }
+            var buffer = new byte[BufferSize];
+            readed = reader.Read(buffer, 0, BufferSize);
+            if (readed != BufferSize)
+                Array.Resize(ref buffer, readed);
+            yield return buffer;
+        }
+        while (readed == BufferSize);
+    }
+
+    public readonly struct ReadedBuffer
+    {
+        public byte[] Buffer { get; }
+
+        public int Readed { get; }
+
+        public ReadedBuffer(byte[] Buffer, int Readed)
+        {
+            this.Buffer = Buffer;
+            this.Readed = Readed;
         }
 
-        /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
-        /// <param name="reader">Объект чтения потока данных</param>
-        /// <param name="Buffer">Буфер чтения</param>
-        /// <returns>Перечислитель</returns>
-        [ItemNotNull]
-        public static IEnumerable<byte[]> GetByteBuffer([NotNull] this BinaryReader reader, byte[] Buffer)
+        public byte[] GetReaded()
         {
-            if (Buffer is null) throw new ArgumentNullException(nameof(Buffer));
-            if (Buffer.Length == 0) throw new ArgumentException("Размер буфера должен быть больше 0", nameof(Buffer));
-
-            var buffer_size = Buffer.Length;
-            while (!reader.IsEOF())
-            {
-                reader.Read(Buffer, 0, buffer_size);
-                yield return Buffer;
-            }
+            var buffer = Buffer;
+            if (Readed < buffer.Length)
+                Array.Resize(ref buffer, Readed);
+            return buffer;
         }
 
-        [ItemNotNull]
-        public static IEnumerable<char[]> GetCharBuffer([NotNull] this BinaryReader reader, int BufferSize)
-        {
-            while (!reader.IsEOF())
-            {
-                var buffer = new char[BufferSize];
-                reader.Read(buffer, 0, BufferSize);
-                yield return buffer;
-            }
-        }
+        public static implicit operator byte[](ReadedBuffer buffer) => buffer.GetReaded();
 
-        public static T ReadStructure<T>([NotNull] this BinaryReader reader) where T : struct
-        {
-            var data = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
-            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
-            try
-            {
-                var ptr = gch.AddrOfPinnedObject();
-                return (T)Marshal.PtrToStructure(ptr, typeof(T));
-            }
-            finally
-            {
-                gch.Free();
-            }
-        }
+        public void Deconstruct(out byte[] Buffer, out int Readed) => (Buffer, Readed) = (this.Buffer, this.Readed);
+    }
 
-        public static void WriteStructure<T>([NotNull] this BinaryWriter writer, T value) where T : struct
-        {
-            var buffer = new byte[Marshal.SizeOf(value)]; // создать массив
-            var g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
-            try
-            {
-                var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
-                Marshal.StructureToPtr(value, p, true); // копировать в массив
-                writer.Write(buffer);
-            }
-            finally
-            {
-                g_lock.Free(); // снять фиксацию
-            }
-        }
+    /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
+    /// <param name="reader">Объект чтения потока данных</param>
+    /// <param name="Buffer">Буфер чтения</param>
+    /// <returns>Перечислитель</returns>
+    public static IEnumerable<ReadedBuffer> GetByteBuffer(this BinaryReader reader, byte[] Buffer)
+    {
+        if (Buffer is null) throw new ArgumentNullException(nameof(Buffer));
+        if (Buffer.Length == 0) throw new ArgumentException("Размер буфера должен быть больше 0", nameof(Buffer));
 
-        public static async Task<double> ReadDoubleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+        var buffer_size = Buffer.Length;
+        int readed;
+        do
         {
-            const int size = 8;
-            var buffer = new byte[8];
-            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
-            return BitConverter.ToDouble(buffer, 0);
+            var buffer = new byte[buffer_size];
+            readed = reader.Read(buffer, 0, buffer_size);
+            yield return new(buffer, readed);
         }
+        while (readed == buffer_size);
+    }
 
-        public static async Task<float> ReadSingleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+    public static IEnumerable<char[]> GetCharBuffer(this BinaryReader reader, int BufferSize)
+    {
+        int readed;
+        do
         {
-            const int size = 4;
-            var buffer = new byte[size];
-            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
-            return BitConverter.ToSingle(buffer, 0);
+            var buffer = new char[BufferSize];
+            readed = reader.Read(buffer, 0, BufferSize);
+            if (readed != BufferSize)
+                Array.Resize(ref buffer, readed);
+            yield return buffer;
         }
+        while (readed == BufferSize);
+    }
 
-        public static async Task<long> ReadInt64Async(this BinaryReader Reader, CancellationToken Cancel = default)
+    public static T ReadStructure<T>(this BinaryReader reader) where T : struct
+    {
+        var data = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
+        var gch  = GCHandle.Alloc(data, GCHandleType.Pinned);
+        try
         {
-            const int size = 8;
-            var buffer = new byte[8];
-            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
-            return BitConverter.ToInt64(buffer, 0);
+            var ptr = gch.AddrOfPinnedObject();
+            return (T)Marshal.PtrToStructure(ptr, typeof(T));
         }
+        finally
+        {
+            gch.Free();
+        }
+    }
 
-        public static async Task<int> ReadInt32Async(this BinaryReader Reader, CancellationToken Cancel = default)
+    public static void WriteStructure<T>(this BinaryWriter writer, T value) where T : struct
+    {
+        var buffer = new byte[Marshal.SizeOf(value)];             // создать массив
+        var g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
+        try
         {
-            const int size = 4;
-            var buffer = new byte[size];
-            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
-            return BitConverter.ToInt32(buffer, 0);
+            var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
+            Marshal.StructureToPtr(value, p, true);                    // копировать в массив
+            writer.Write(buffer);
         }
+        finally
+        {
+            g_lock.Free(); // снять фиксацию
+        }
+    }
 
-        public static async Task<bool> ReadBooleanAsync(this BinaryReader Reader, CancellationToken Cancel = default)
-        {
-            const int size = 1;
-            var buffer = new byte[size];
-            await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
-            return BitConverter.ToBoolean(buffer, 0);
-        }
+    public static async Task<double> ReadDoubleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+    {
+        const int size   = 8;
+        var       buffer = new byte[8];
+        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        return readed < size
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
+            : BitConverter.ToDouble(buffer, 0);
+    }
+
+    public static async Task<float> ReadSingleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+    {
+        const int size   = 4;
+        var       buffer = new byte[size];
+        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        return readed < size
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байта. Было прочитано {readed} байт")
+            : BitConverter.ToSingle(buffer, 0);
+    }
+
+    public static async Task<long> ReadInt64Async(this BinaryReader Reader, CancellationToken Cancel = default)
+    {
+        const int size   = 8;
+        var       buffer = new byte[8];
+        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        return readed < size
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
+            : BitConverter.ToInt64(buffer, 0);
+    }
+
+    public static async Task<int> ReadInt32Async(this BinaryReader Reader, CancellationToken Cancel = default)
+    {
+        const int size   = 4;
+        var       buffer = new byte[size];
+        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        return readed < size
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байта. Было прочитано {readed} байт")
+            : BitConverter.ToInt32(buffer, 0);
+    }
+
+    public static async Task<bool> ReadBooleanAsync(this BinaryReader Reader, CancellationToken Cancel = default)
+    {
+        const int size   = 1;
+        var       buffer = new byte[size];
+        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        return readed < size
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 1 байт. Было прочитано {readed} байт")
+            : BitConverter.ToBoolean(buffer, 0);
     }
 }

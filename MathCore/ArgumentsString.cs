@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using MathCore.Annotations;
 // ReSharper disable EventNeverSubscribedTo.Global

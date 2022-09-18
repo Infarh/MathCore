@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+
 using MathCore.Annotations;
 using MathCore.Vectors;
 // ReSharper disable SuggestBaseTypeForParameter

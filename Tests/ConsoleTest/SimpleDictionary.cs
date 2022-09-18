@@ -1,6 +1,3 @@
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using MathCore;
 
 namespace ConsoleTest
@@ -51,7 +48,7 @@ namespace ConsoleTest
             for (var i = _Indexes[item_index]; i >= 0; i = _Items[i].NextIndex, iteration++)
                 if (_Items[i].Hash == hash && _Comparer.Equals(_Items[i].Key, Key))
                 {
-                    if (Add) throw new InvalidOperationException("Рассаглосованное состояние словаря. Дублирование записей по ключу.");
+                    if (Add) throw new InvalidOperationException("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.");
 
                     _Items[i].Value = Value;
                     _Version++;

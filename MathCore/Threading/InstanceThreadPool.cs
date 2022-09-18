@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Xml.Linq;
 
 #nullable enable
 namespace MathCore.Threading;

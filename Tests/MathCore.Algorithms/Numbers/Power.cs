@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Algorithms.Numbers;
+﻿namespace MathCore.Algorithms.Numbers;
 
 // https://habr.com/ru/post/584662/
 public static class Power

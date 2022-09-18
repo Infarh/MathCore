@@ -1,16 +1,15 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace System.Threading.Tasks
+namespace System.Threading.Tasks;
+
+public readonly ref struct PauseToken
 {
-    public readonly ref struct PauseToken
-    {
-        private static readonly Task __CompletedTask = Task.FromResult(true);
+    private static readonly Task __CompletedTask = Task.FromResult(true);
 
-        private readonly PauseTokenSource _Source;
+    private readonly PauseTokenSource _Source;
 
-        public bool IsPaused => _Source != null && _Source.IsPaused;
+    public bool IsPaused => _Source is { IsPaused: true };
 
-        public Task WaitWhilePausedAsync() => IsPaused ? _Source.WaitWhilePausedAsync() : __CompletedTask;
+    public Task WaitWhilePausedAsync() => IsPaused ? _Source.WaitWhilePausedAsync() : __CompletedTask;
 
-        internal PauseToken(PauseTokenSource source) => _Source = source;
-    }
+    internal PauseToken(PauseTokenSource source) => _Source = source;
 }

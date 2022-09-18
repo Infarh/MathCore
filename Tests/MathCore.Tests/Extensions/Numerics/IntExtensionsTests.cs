@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace MathCore.Tests.Extensions.Numerics
+﻿namespace MathCore.Tests.Extensions.Numerics
 {
     [TestClass]
     public class IntExtensionsTests

@@ -17,7 +17,7 @@ namespace System.Linq.Reactive
             _EventDescriptor = event_descriptor;
             if(_EventDescriptor is null)
                 throw new ArgumentException($"Событие {EventName} не найдено", nameof(EventName));
-            _EventDescriptor.AddEventHandler(_Target, _EventHandler = (s, e) => OnNext(e));
+            _EventDescriptor.AddEventHandler(_Target, _EventHandler = (_, e) => OnNext(e));
         }
 
         protected override void Dispose(bool Disposing)

@@ -1,8 +1,4 @@
-﻿using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using EllipticJacobi = MathCore.SpecialFunctions.EllipticJacobi;
+﻿using EllipticJacobi = MathCore.SpecialFunctions.EllipticJacobi;
 // ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests

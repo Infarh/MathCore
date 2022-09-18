@@ -1,6 +1,4 @@
-﻿using System;
-using MathCore.Statistic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MathCore.Statistic;
 
 namespace MathCore.Tests.Extensions
 {

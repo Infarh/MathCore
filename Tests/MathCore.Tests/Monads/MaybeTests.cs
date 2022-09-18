@@ -1,6 +1,4 @@
-﻿using System;
-using MathCore.Monads;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MathCore.Monads;
 
 namespace MathCore.Tests.Monads
 {
