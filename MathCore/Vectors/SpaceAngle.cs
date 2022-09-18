@@ -7,7 +7,6 @@ using MathCore.Extensions.Expressions;
 using static System.Math;
 
 using static MathCore.Consts;
-using static MathCore.Consts.Geometry;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global

@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-
-using MathCore.Interpolation;
+﻿using MathCore.Interpolation;
 
 namespace MathCore.Tests.Interpolation;
 

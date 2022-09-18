@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MathCore.MathParser;
+﻿using MathCore.MathParser;
 using MathCore.MathParser.ExpressionTrees.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.MathParser
 {
@@ -482,8 +478,8 @@ namespace MathCore.Tests.MathParser
             Assert.IsTrue(root.Left is VariableValueNode);
             Assert.IsTrue(root.Right is VariableValueNode);
 
-            parser.VariableProcessing += (s, e) => { if (e.Argument.Name == "x") e.Argument.Value = 7; };
-            parser.VariableProcessing += (s, e) => { if (e.Argument.Name == "y") e.Argument.Value = 5; };
+            parser.VariableProcessing += (_, e) => { if (e.Argument.Name == "x") e.Argument.Value = 7; };
+            parser.VariableProcessing += (_, e) => { if (e.Argument.Name == "y") e.Argument.Value = 5; };
 
             var expr2v2 = parser.Parse("x+y");
             Assert.AreEqual(7 + 5, expr2v2.Compute());
@@ -667,7 +663,7 @@ namespace MathCore.Tests.MathParser
             Assert.IsNotNull(func_collection);
             Assert.AreEqual(0, func_collection.Count);
 
-            parser.FindFunction += (s, e) =>
+            parser.FindFunction += (_, e) =>
             {
                 if (e.Name == "sinc" && e.ArgumentCount == 1)
                     e.Function = new Func<double, double>(x => Math.Sin(x) / x);
@@ -716,7 +712,7 @@ namespace MathCore.Tests.MathParser
             Assert.IsTrue(args[1] is VariableValueNode);
             Assert.IsTrue(((VariableValueNode)args[1]).Variable.IsConstant);
 
-            parser.FindFunction += (s, e) =>
+            parser.FindFunction += (_, e) =>
             {
                 e.Function = e.Name switch
                 {
@@ -938,7 +934,7 @@ namespace MathCore.Tests.MathParser
             var LimitFunctionExecuted = false;
 
             var a_list = new List<(double index, double value)>(6);
-            parser.FindFunction += (s, e) =>
+            parser.FindFunction += (_, e) =>
             {
                 if (e.SignatureEqual("a", 1))
                 {
@@ -953,7 +949,7 @@ namespace MathCore.Tests.MathParser
                 }
                 else if (e.SignatureEqual("Length", 1))
                 {
-                    e.Function = new Func<double, double>(y => { LimitFunctionExecuted = true; return polynom.Length; });
+                    e.Function = new Func<double, double>(_ => { LimitFunctionExecuted = true; return polynom.Length; });
                     LimitFunctionFunded = true;
                 }
             };

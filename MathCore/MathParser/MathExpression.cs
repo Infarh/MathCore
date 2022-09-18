@@ -212,7 +212,7 @@ namespace MathCore.MathParser
             // Создаём пересборщик дерева выражения Linq.Expression 
             var rebuilder = new ExpressionRebuilder();
             // Добавляем обработчик узлов вызова методов
-            rebuilder.MethodCallVisited += (s, e) => // Если очередной узел дерева - вызов метода, то...
+            rebuilder.MethodCallVisited += (_, e) => // Если очередной узел дерева - вызов метода, то...
             {
                 var call = e.Argument; // Извлекаем ссылку на узел
                 //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 

@@ -1,6 +1,5 @@
-﻿using System;
-using MathCore.Vectors;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MathCore.Vectors;
+
 // ReSharper disable ArgumentsStyleOther
 // ReSharper disable ArgumentsStyleLiteral
 // ReSharper disable UnusedMember.Global

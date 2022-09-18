@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using MathCore.Extensions.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests
 {

@@ -1,8 +1,4 @@
-﻿using System;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace MathCore.Tests.Extensions
+﻿namespace MathCore.Tests.Extensions
 {
     [TestClass]
     public class EnumExtensions : UnitTest

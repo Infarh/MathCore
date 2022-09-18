@@ -26,7 +26,7 @@ namespace MathCore.Extensions
         {
             var tcs = new TaskCompletionSource<int>();
             process.EnableRaisingEvents = true;
-            process.Exited += (s, e) => tcs.TrySetResult(process.ExitCode);
+            process.Exited += (_, _) => tcs.TrySetResult(process.ExitCode);
             if (process.HasExited) tcs.TrySetResult(process.ExitCode);
             return tcs.Task;
         }

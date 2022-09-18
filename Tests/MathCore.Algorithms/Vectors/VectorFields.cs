@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.Runtime.InteropServices;
 
 using MathCore.Vectors;
 // ReSharper disable ArgumentsStyleLiteral
@@ -72,8 +71,8 @@ public delegate double FieldComponent(in Vector3D r, double t);
 
 public readonly record struct Field
 {
-    public static FieldComponent Zero { get; } = (in Vector3D r, double t) => 0;
-    public static FieldComponent One { get; } = (in Vector3D r, double t) => 1;
+    public static FieldComponent Zero { get; } = (in Vector3D _, double _) => 0;
+    public static FieldComponent One { get; } = (in Vector3D _, double _) => 1;
 
     public static Field Grad(FieldComponent f, double dr) => new()
     {

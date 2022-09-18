@@ -126,9 +126,9 @@ public static class StringExtensions
     /// <returns>Распакованная последовательность байт в строковом представлении</returns>
     public static string DecompressAsString(this byte[] bytes)
     {
-        using var input_stream = new MemoryStream(bytes);
+        using var input_stream  = new MemoryStream(bytes);
         using var output_stream = new MemoryStream();
-        using var g_zip_stream = new GZipStream(input_stream, CompressionMode.Decompress);
+        using var g_zip_stream  = new GZipStream(input_stream, CompressionMode.Decompress);
         g_zip_stream.CopyTo(output_stream);
 
         return Encoding.UTF8.GetString(output_stream.ToArray());
@@ -187,7 +187,7 @@ public static class StringExtensions
         var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
         if (start_index == -1) return null;
         var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
-        if (stop_index == -1) throw new FormatException();
+        if (stop_index == -1) throw new FormatException($"Не найдена парная закрывающая скобка '{Close}'");
         var start = start_index;
         do
         {

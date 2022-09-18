@@ -21,8 +21,8 @@ namespace MathCore.Mediator
         public void AddHandle<T>(string Address, EventHandler<T> Handler)
         {
             var messages_type = typeof(T);
-            var handlers = _Handlers.GetOrAdd(messages_type, t => new ConcurrentDictionary<string, List<Delegate>>());
-            var address_handlers = handlers.GetOrAdd(Address ?? "", a => new List<Delegate>());
+            var handlers = _Handlers.GetOrAdd(messages_type, _ => new ConcurrentDictionary<string, List<Delegate>>());
+            var address_handlers = handlers.GetOrAdd(Address ?? "", _ => new List<Delegate>());
             lock (address_handlers)
                 address_handlers.Add(Handler);
         }

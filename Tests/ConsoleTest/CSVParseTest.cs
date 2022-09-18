@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-
 namespace ConsoleTest;
 
 public static class CSVParseTest

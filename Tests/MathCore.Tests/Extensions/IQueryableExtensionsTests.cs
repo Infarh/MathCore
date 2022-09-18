@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace MathCore.Tests.Extensions
+﻿namespace MathCore.Tests.Extensions
 {
     [TestClass]
     public class IQueryableExtensionsTests

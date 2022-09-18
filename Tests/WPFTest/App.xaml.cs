@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using System.Windows;
 using MathCore.Threading.Tasks.Schedulers;
 using Microsoft.Extensions.Configuration;
@@ -17,10 +14,10 @@ namespace WPFTest
 
         public static IHost Host => __Host ??= Microsoft.Extensions.Hosting.Host
            .CreateDefaultBuilder(Environment.GetCommandLineArgs())
-           .ConfigureAppConfiguration((host, config) => config
+           .ConfigureAppConfiguration((_, config) => config
                .AddJsonFile("appsettings.json", true, true)
             )
-           .ConfigureServices((host, services) => services
+           .ConfigureServices((_, services) => services
                .AddServices()
                .AddViews()
            )
@@ -51,7 +48,7 @@ namespace WPFTest
         public static IHost UseApp(this IHost Host, Application app)
         {
             //app.Startup += async (s, e) => await Host.StartAsync();
-            app.Exit += async (s, e) => await Host.DisposeAfterAsync(host => host.StopAsync());
+            app.Exit += async (_, _) => await Host.DisposeAfterAsync(host => host.StopAsync());
             return Host;
         }
     }

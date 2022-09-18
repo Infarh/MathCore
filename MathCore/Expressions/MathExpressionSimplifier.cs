@@ -6,20 +6,20 @@ namespace System.Linq.Expressions
 {
     public class MathExpressionSimplifier : ExpressionVisitorEx
     {
-        private static bool IsNumerical(object value) => 
-            value is double
-            || value is float
-            || value is int
-            || value is short
-            || value is uint
-            || value is ushort
-            || value is byte
-            || value is sbyte
-            || value is long
-            || value is ulong
-            || value is Complex
-            || value is Vector2D
-            || value is Vector3D
+        private static bool IsNumerical(object value) => value 
+            is double 
+            or float 
+            or int 
+            or short 
+            or uint 
+            or ushort 
+            or byte 
+            or sbyte 
+            or long 
+            or ulong 
+            or Complex 
+            or Vector2D 
+            or Vector3D
             ;
 
         protected override Expression VisitBinary(BinaryExpression b)
@@ -29,7 +29,7 @@ namespace System.Linq.Expressions
             b = @base as BinaryExpression;
             if(b is null) return @base;
 
-            if (!(b.Left is ConstantExpression l) || !(b.Right is ConstantExpression r)) return @base;
+            if (b.Left is not ConstantExpression l || b.Right is not ConstantExpression r) return @base;
             if (!IsNumerical(l.Value) || !IsNumerical(r.Value)) return @base;
             var left_value = (double)l.Value;
             var right_value = (double)r.Value;

@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-using MathCore.Annotations;
-
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible

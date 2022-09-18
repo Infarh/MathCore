@@ -1,12 +1,9 @@
 ﻿#nullable enable
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-
-using MathCore.Annotations;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable UnusedMember.Global
@@ -33,7 +30,7 @@ public static class EventHandlerExtension
     /// <param name="e">Аргументы события</param>
     /// <returns>Задача асинхронного выполнения обработчика события</returns>
     public static Task InvokeAsync<TEventArgs>(
-        this EventHandler<TEventArgs>? handler,
+        this EventHandler<TEventArgs?>? handler,
         object? sender,
         TEventArgs? e)
         where TEventArgs : EventArgs =>
@@ -70,10 +67,10 @@ public static class EventHandlerExtension
     /// <param name="Sender">Источник события</param>
     /// <param name="PropertyName">Имя изменившегося свойства</param>
     public static void Start(
-        this PropertyChangedEventHandler Handler,
+        this PropertyChangedEventHandler? Handler,
         object Sender,
         [CallerMemberName] string PropertyName = null!)
-        => Handler.Start(Sender, new PropertyChangedEventArgs(PropertyName));
+        => Handler?.Start(Sender, new PropertyChangedEventArgs(PropertyName));
 
     /// <summary>Потоко-безопасная генерация события</summary>
     /// <param name="Handler">Обработчик события</param>

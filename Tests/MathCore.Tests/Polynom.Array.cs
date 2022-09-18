@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 using MathCore.Tests.Infrastructure;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable RedundantArgumentDefaultValue
 // ReSharper disable PossibleMultipleEnumeration
 // ReSharper disable InconsistentNaming

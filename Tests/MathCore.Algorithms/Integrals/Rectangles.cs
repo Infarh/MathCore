@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Algorithms.Integrals
+﻿namespace MathCore.Algorithms.Integrals
 {
     public static class Rectangles
     {

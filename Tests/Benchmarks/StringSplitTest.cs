@@ -15,7 +15,7 @@ public class StringSplitTest
        .Range(1, 50)
        .Aggregate(
             new StringBuilder(),
-            (s, i) => s.AppendFormat("Value{0}={0};", Math.PI * 1000),
+            (s, _) => s.AppendFormat("Value{0}={0};", Math.PI * 1000),
             s =>
             {
                 s.Length--;

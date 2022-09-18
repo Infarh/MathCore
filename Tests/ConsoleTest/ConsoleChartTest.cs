@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-using MathCore;
+﻿using MathCore;
 
 namespace ConsoleTest;
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.RegularExpressions;
 using MathCore.Collections;
 using MathCore.Extensions.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using BindingFlags = System.Reflection.BindingFlags;
 
 namespace MathCore.Tests.Collections

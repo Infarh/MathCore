@@ -203,8 +203,8 @@ namespace System.Linq.Reactive
             bool InitialState = true)
         {
             var t = Observable as TriggeredObservable<TSource> ?? new TriggeredObservable<TSource>(Observable, InitialState);
-            Open.ForeachAction(o => t.State = true);
-            Close.ForeachAction(c => t.State = false);
+            Open.ForeachAction(_ => t.State = true);
+            Close.ForeachAction(_ => t.State = false);
             return t;
         }
 
@@ -222,7 +222,7 @@ namespace System.Linq.Reactive
             bool IsOpen = true)
         {
             var o = Observable as TriggeredObservable<T> ?? new TriggeredObservable<T>(Observable, IsOpen);
-            Selector.ForeachAction(q => o.State = false);
+            Selector.ForeachAction(_ => o.State = false);
             return o;
         }
 
@@ -240,7 +240,7 @@ namespace System.Linq.Reactive
             bool IsOpen = false)
         {
             var o = Observable as TriggeredObservable<T> ?? new TriggeredObservable<T>(Observable, IsOpen);
-            Selector.ForeachAction(q => o.State = true);
+            Selector.ForeachAction(_ => o.State = true);
             return o;
         }
 

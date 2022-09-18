@@ -47,4 +47,96 @@ public static class StringBuilderExtensions
     public static StringBuilder LN(this StringBuilder builder) => builder.AppendLine();
 
     public static StringBuilder LN(this StringBuilder builder, string str) => builder.AppendLine(str);
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, string Format, object arg0) => builder.AppendFormat(Format, arg0).LN();
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, string Format, object arg0, object arg1) => builder.AppendFormat(Format, arg0, arg1).LN();
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, string Format, object arg0, object arg1, object arg2) => builder.AppendFormat(Format, arg0, arg1, arg2).LN();
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, string Format, params object[] args) => builder.AppendFormat(Format, args).LN();
+
+    public static StringBuilder LN(this StringBuilder builder, bool If)
+    {
+        if (!If) return builder;
+        return builder.AppendLine();
+    }
+
+    public static StringBuilder LN(this StringBuilder builder, bool If, string str)
+    {
+        if (!If) return builder;
+        return builder.AppendLine(str);
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, bool If, string Format, object arg0)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, arg0).LN();
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, bool If, string Format, object arg0, object arg1)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, arg0, arg1).LN();
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, bool If, string Format, object arg0, object arg1, object arg2)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, arg0, arg1, arg2).LN();
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder LN(this StringBuilder builder, bool If, string Format, params object[] args)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, args).LN();
+    }
+
+    public static StringBuilder Append(this StringBuilder builder, bool If, string Value)
+    {
+        if (!If) return builder;
+        return builder.Append(Value);
+    }
+
+    public static StringBuilder Append(this StringBuilder builder, bool If, char Value)
+    {
+        if (!If) return builder;
+        return builder.Append(Value);
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder Append(this StringBuilder builder, bool If, string Format, object arg)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, arg);
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder Append(this StringBuilder builder, bool If, string Format, object arg0, object arg1)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, arg0, arg1);
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder Append(this StringBuilder builder, bool If, string Format, object arg0, object arg1, object arg2)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, arg0, arg1, arg2);
+    }
+
+    [StringFormatMethod("Format")]
+    public static StringBuilder Append(this StringBuilder builder, bool If, string Format, params object[] args)
+    {
+        if (!If) return builder;
+        return builder.AppendFormat(Format, args);
+    }
 }

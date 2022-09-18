@@ -1,10 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
 using MathCore.Interpolation;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using static System.Math;
 // ReSharper disable InconsistentNaming

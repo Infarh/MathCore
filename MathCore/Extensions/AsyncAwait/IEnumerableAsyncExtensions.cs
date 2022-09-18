@@ -34,7 +34,7 @@ public static class IEnumerableAsyncExtensions
     public static IEnumerable<Task> SelectAsync<T>(this IEnumerable<T> items, Action<T, CancellationToken> action, CancellationToken Cancel = default)
     {
         foreach (var item in items)
-            yield return item.Async(i => { }, Cancel);
+            yield return item.Async(_ => { }, Cancel);
     }
 
     public static IEnumerable<Task> SelectAsync<T, TParameter>(this IEnumerable<T> items, TParameter Parameter, Action<T, TParameter> action, CancellationToken Cancel = default)

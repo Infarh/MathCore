@@ -1,5 +1,5 @@
 ﻿using MathCore.Graphs;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Tests

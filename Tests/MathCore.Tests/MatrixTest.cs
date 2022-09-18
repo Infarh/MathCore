@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+
 using MathCore.Annotations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 
 namespace MathCore.Tests

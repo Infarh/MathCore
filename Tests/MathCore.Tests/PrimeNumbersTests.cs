@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace MathCore.Tests
+﻿namespace MathCore.Tests
 {
     [TestClass]
     public class PrimeNumbersTests : UnitTest

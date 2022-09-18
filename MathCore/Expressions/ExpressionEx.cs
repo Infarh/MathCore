@@ -51,7 +51,7 @@ namespace System.Linq.Expressions
         {
             var visitor = new DifferentialVisitor();
             if(FunctionDifferentiator != null)
-                visitor.MethodDifferential += (s, e) => e.DifferentialExpression = FunctionDifferentiator(e.Method);
+                visitor.MethodDifferential += (_, e) => e.DifferentialExpression = FunctionDifferentiator(e.Method);
             var d = visitor.Visit(f);
             return (ExF)d;
         }

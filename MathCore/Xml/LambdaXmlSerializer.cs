@@ -386,7 +386,7 @@ namespace MathCore.Xml
         [NN]
         public LambdaXmlSerializer<T> Value<TValue>(TValue Value)
         {
-            _Elements.Add(v => Value);
+            _Elements.Add(_ => Value);
             return this;
         }
 

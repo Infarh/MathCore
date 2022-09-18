@@ -1,6 +1,3 @@
-using System.Runtime.InteropServices;
-using System.Text;
-
 using MathCore.PE;
 
 var pe_file = new PEFile("c:\\123\\user32.dll");

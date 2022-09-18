@@ -1,7 +1,4 @@
-﻿using MathCore;
-using MathCore.Algorithms.Matrixes;
-using MathCore.Algorithms.Numbers;
-using MathCore.Algorithms.Polynoms;
+﻿using MathCore.Algorithms.Numbers;
 
 const int digits_count = 100000;
 //CalculatorPI.Calculate(digits_count);

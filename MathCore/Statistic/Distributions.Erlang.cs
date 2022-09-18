@@ -45,7 +45,7 @@ namespace MathCore.Statistic
 
 
             private static double modelC_(double A, int N) => Math.Pow(A, N) * N / (N.Factorial() * (N - A));
-            public static double ModelC_OC(double A, int N) => 1 / (modelC_(A, N) + Enumerable.Range(0, N - 1).Aggregate(0d, (S, i) => modelB_(A, i)));
+            public static double ModelC_OC(double A, int N) => 1 / (modelC_(A, N) + Enumerable.Range(0, N - 1).Aggregate(0d, (_, i) => modelB_(A, i)));
             public static double ModelC(double A, int N) => ModelC_OC(A, N) * modelC_(A, N);
         }
     }

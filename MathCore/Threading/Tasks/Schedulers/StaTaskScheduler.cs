@@ -27,7 +27,7 @@ namespace MathCore.Threading.Tasks.Schedulers
             _Tasks = new BlockingCollection<Task>();
 
             // Create the threads to be used by this scheduler
-            _Threads = Enumerable.Range(0, NumberOfThreads).Select(i =>
+            _Threads = Enumerable.Range(0, NumberOfThreads).Select(_ =>
             {
                 var thread = new Thread(
                     () =>

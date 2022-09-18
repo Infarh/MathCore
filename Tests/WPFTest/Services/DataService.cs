@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using WPFTest.Services.Interfaces;
+﻿using WPFTest.Services.Interfaces;
 
 namespace WPFTest.Services
 {

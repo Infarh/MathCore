@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text.RegularExpressions;
 
 using MathCore.Annotations;
 using MathCore.CSV;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.CSV
 {

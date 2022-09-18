@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 using MathCore.IO;
 
+// ReSharper disable once CheckNamespace
 namespace System.IO;
 
 public static class FileSystemInfoExtensions

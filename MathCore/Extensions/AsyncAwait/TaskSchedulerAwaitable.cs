@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System.Runtime.CompilerServices;
-using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace

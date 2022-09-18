@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Serialization;
 
-using MathCore.Annotations;
 using MathCore.Expressions.Complex;
 
 using static System.Math;

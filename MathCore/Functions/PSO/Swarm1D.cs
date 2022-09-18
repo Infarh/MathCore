@@ -57,7 +57,7 @@ namespace MathCore.Functions.PSO
         {
             var IntervalVx = IntervalX;
 
-            var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (i, f, vx) => new Particle1D(f, vx));
+            var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new Particle1D(f, vx));
             var start = swarm.GetMin(p => p.Value);
             X = start.X;
             Value = start.Value;
@@ -94,7 +94,7 @@ namespace MathCore.Functions.PSO
         {
             var IntervalVx = IntervalX;
 
-            var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (i, f, vx) => new Particle1D(f, vx));
+            var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new Particle1D(f, vx));
             var start = swarm.GetMax(p => p.Value);
             X = start.X;
             Value = start.Value;

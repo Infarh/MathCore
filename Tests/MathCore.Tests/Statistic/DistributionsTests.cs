@@ -1,5 +1,4 @@
 ﻿using MathCore.Statistic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.Statistic
 {

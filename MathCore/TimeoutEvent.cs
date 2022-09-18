@@ -20,8 +20,8 @@ namespace MathCore
         {
             var Event = new TimeoutEvent<TEventArgs>(Timeout);
             EventHandler<TEventArgs> handler = Event.Invoke;
-            if(OnInvoke != null) Event.Invoked += (s, e) => OnInvoke(e?.EventSender, e?.E);
-            Event.AfterTimeout += (s, e) => OnTimeout(e?.EventSender, e?.E);
+            if(OnInvoke != null) Event.Invoked += (_, e) => OnInvoke(e?.EventSender, e?.E);
+            Event.AfterTimeout += (_, e) => OnTimeout(e?.EventSender, e?.E);
             return handler;
         }
 
@@ -116,13 +116,13 @@ namespace MathCore
         /// <summary>Инициализация нового объекта задержки генерации события</summary>
         /// <param name="Timeout">Временная задержка в миллисекундах</param>
         /// <param name="OnTimeout">Метод вторичной обработки события</param>
-        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout) : this(Timeout) => AfterTimeout += (s, e) => OnTimeout(e.EventSender, e.E);
+        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout) : this(Timeout) => AfterTimeout += (_, e) => OnTimeout(e.EventSender, e.E);
 
         /// <summary>Инициализация нового объекта задержки генерации события</summary>
         /// <param name="Timeout">Временная задержка в миллисекундах</param>
         /// <param name="OnTimeout">Метод вторичной обработки события</param>
         /// <param name="OnInvoke">Метод первичной обработки события</param>
-        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout, EventHandler<TEventArgs> OnInvoke) : this(Timeout, OnTimeout) => Invoked += (s, e) => OnInvoke(e.EventSender, e.E);
+        public TimeoutEvent(int Timeout, EventHandler<TEventArgs> OnTimeout, EventHandler<TEventArgs> OnInvoke) : this(Timeout, OnTimeout) => Invoked += (_, e) => OnInvoke(e.EventSender, e.E);
 
         /* ------------------------------------------------------------------------------------------ */
 

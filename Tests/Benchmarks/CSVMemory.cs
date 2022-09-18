@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System;
-
-namespace Benchmarks;
+﻿namespace Benchmarks;
 
 public class CSVMemory
 {

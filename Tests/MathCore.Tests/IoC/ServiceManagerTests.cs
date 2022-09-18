@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
+
 using MathCore.IoC;
 using MathCore.IoC.ServiceRegistrations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Local
 // ReSharper disable UnusedMember.Local

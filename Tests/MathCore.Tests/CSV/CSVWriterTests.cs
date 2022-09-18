@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using MathCore.CSV;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MathCore.Tests.CSV
 {

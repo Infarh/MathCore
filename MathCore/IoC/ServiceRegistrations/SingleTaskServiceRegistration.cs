@@ -33,7 +33,7 @@ public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TServ
     public void ResetAll()
     {
         var last_initializer = _Initializer;
-        _Initializer = new AsyncLocal<object>(e => CreateNewService());
+        _Initializer = new AsyncLocal<object>(_ => CreateNewService());
         _Exceptions = new AsyncLocal<Exception>();
     }
 

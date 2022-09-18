@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting.Extensions;
-
-namespace MathCore.Tests.SpecialFunctions;
+﻿namespace MathCore.Tests.SpecialFunctions;
 
 [TestClass]
 public class BesselTests

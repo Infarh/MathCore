@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Benchmarks;
+﻿namespace Benchmarks;
 
 public class CSVSpan
 {

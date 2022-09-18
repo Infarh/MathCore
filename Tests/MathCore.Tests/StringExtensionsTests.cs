@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace MathCore.Tests
+﻿namespace MathCore.Tests
 {
     [TestClass]
     public class StringExtensionsTests

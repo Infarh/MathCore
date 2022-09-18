@@ -24,7 +24,7 @@ namespace System.Linq.Reactive
         /// <param name="Observer">Добавляемый наблюдатель</param>
         /// <returns>Связь между наблюдателем и списком наблюдателей</returns>
         [NotNull]
-        public static ObserverLink<T> GetLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), h => new ObserverLink<T>(Observers, Observer));
+        public static ObserverLink<T> GetLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), _ => new ObserverLink<T>(Observers, Observer));
 
         /// <summary>Удаляемый наблюдатель</summary>
         private IObserver<T> _Observer;

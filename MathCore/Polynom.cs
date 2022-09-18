@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-using MathCore.Annotations;
-
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter

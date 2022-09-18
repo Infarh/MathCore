@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace MathCore.Algorithms.CSV;
+﻿namespace MathCore.Algorithms.CSV;
 
 public static class Parser
 {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathCore.Annotations;
+
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable ConvertToAutoProperty
 // ReSharper disable MemberCanBePrivate.Global

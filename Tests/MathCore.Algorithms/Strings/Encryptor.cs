@@ -4,8 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-using static System.Net.Mime.MediaTypeNames;
-
 namespace MathCore.Algorithms.Strings;
 
 public static class Encryptor
