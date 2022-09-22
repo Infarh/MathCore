@@ -1,4 +1,5 @@
-﻿// ReSharper disable once CheckNamespace
+﻿#nullable enable
+// ReSharper disable once CheckNamespace
 namespace System;
 
 /// <summary>Аргументы события исключения</summary>

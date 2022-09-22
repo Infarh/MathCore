@@ -52,7 +52,7 @@ public class Factory<T> : INotifyPropertyChanged, IFactory<T>
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Метод генерации объектов</summary>
-    private Func<T> _FactoryMethod;
+    private Func<T>? _FactoryMethod;
 
     private T _Last;
     private readonly PropertyChangedEventArgs _PropertyLastChangedArgs = new(nameof(Last));
