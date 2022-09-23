@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-
-using MathCore.Annotations;
+﻿#nullable enable
+using System.ComponentModel;
 
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable MemberCanBePrivate.Global
@@ -25,13 +24,12 @@ public static class ExceptionEventHandlerExtensions
     /// <typeparam name="TException">Тип исключения</typeparam>
     [DST]
     public static void Start<TException>(
-        this ExceptionEventHandler<TException> Handler,
+        this ExceptionEventHandler<TException>? Handler,
         object Sender,
         ExceptionEventHandlerArgs<TException> e) where TException : Exception
     {
-        var handler = Handler;
-        if (handler is null) return;
-        var invocations = handler.GetInvocationList();
+        if (Handler is null) return;
+        var invocations = Handler.GetInvocationList();
         for (var i = 0; i < invocations.Length; i++)
         {
             var invocation = invocations[i];
@@ -51,7 +49,7 @@ public static class ExceptionEventHandlerExtensions
     /// <typeparam name="TException">Тип исключения</typeparam>
     [DST]
     public static void StartAsync<TException>(
-        [NotNull] this ExceptionEventHandler<TException> Handler,
+        this ExceptionEventHandler<TException> Handler,
         object Sender,
         ExceptionEventHandlerArgs<TException> e,
         AsyncCallback CallBack,
@@ -66,7 +64,7 @@ public static class ExceptionEventHandlerExtensions
     /// <typeparam name="TException">Тип события</typeparam>
     [DST]
     public static void FastStart<TException>(
-        [CanBeNull] this ExceptionEventHandler<TException> Handler, 
+        this ExceptionEventHandler<TException>? Handler, 
         object Sender,
         ExceptionEventHandlerArgs<TException> e)
         where TException : Exception =>
@@ -89,9 +87,9 @@ public static class ExceptionEventHandlerExtensions
     /// <exception cref="Exception"><typeparamref name="TException">Исключение</typeparamref> генерируется при отсутствии обработки его обработчиками события</exception>
     [DST]
     public static void ThrowIfUnhandled<TException>(
-        [CanBeNull] this ExceptionEventHandler<TException> Handler,
+        this ExceptionEventHandler<TException>? Handler,
         object Sender,
-        [NotNull] ExceptionEventHandlerArgs<TException> e,
+        ExceptionEventHandlerArgs<TException> e,
         bool? IsHandledDefault = null)
         where TException : Exception
     {
