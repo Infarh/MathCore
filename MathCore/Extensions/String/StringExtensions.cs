@@ -299,8 +299,6 @@ public static class StringExtensions
             ? throw new ArgumentException(Message ?? "Передана пустая строка", ParameterName)
             : str;
 
-    public static string NotNull(this string? str, string? Message = null) => str ?? throw new InvalidOperationException(Message ?? "Отсутствует ссылка на объект");
-
     /// <summary>Зашифровать строку</summary>
     /// <param name="str">Шифруемая строка</param>
     /// <param name="password">Пароль шифрования</param>
@@ -320,7 +318,11 @@ public static class StringExtensions
     /// <returns>Зашифрованная последовательность байт</returns>
     public static byte[] Encrypt(this byte[] data, string password) => data.Encrypt(password, __Salt);
 
-
+    /// <summary>Зашифровать</summary>
+    /// <param name="data">Шифруемый массив байт</param>
+    /// <param name="password">Пароль</param>
+    /// <param name="Salt">Соль</param>
+    /// <returns>Зашифрованный массив байт</returns>
     public static byte[] Encrypt(this byte[] data, string password, byte[] Salt)
     {
         var algorithm = GetAlgorithm(password, Salt);

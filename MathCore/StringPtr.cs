@@ -861,7 +861,7 @@ public readonly ref struct StringPtr
                         index++;
                         break;
                     }
-
+                    
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
