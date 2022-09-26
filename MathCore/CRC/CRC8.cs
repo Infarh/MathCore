@@ -10,7 +10,13 @@ public class CRC8
 {
     public enum Mode : byte
     {
-        Default = 0xd5,
+        CRC8 = 0x07,
+        CDMA2000 = 0x9B,
+        DARC = 0x39,
+        DVB_S2 = 0xd5,
+        EBU = 0x1D,
+        ITU = 0x07,
+        MAXIM = 0x31,
     }
 
     private const int __TableLength = 256;
@@ -20,7 +26,7 @@ public class CRC8
 
     public bool UpdateState { get; set; }
 
-    public CRC8(Mode mode = Mode.Default) : this((byte)mode) { }
+    public CRC8(Mode mode = Mode.CRC8) : this((byte)mode) { }
 
     public CRC8(byte Polynimial)
     {
@@ -40,15 +46,6 @@ public class CRC8
 
     public byte ContinueCompute(byte crc, byte[] bytes)
     {
-        //for (var i = 0; i < bytes.Length; i++)
-        //    crc = (crc >> 8) ^ _Table[(crc ^ bytes[i]) & 0xFF];
-
-        //foreach (var b in bytes)
-        //    crc = (crc >> 8) ^ _Table[(crc ^ b) & 0xFF];
-
-        //foreach (var b in bytes)
-        //    crc = (crc << 8) ^ _Table[(crc >> 8) ^ b]; 
-
         foreach (var b in bytes)
             crc = (byte)((crc >> 8) ^ _Table[(crc ^ b) & 0xFF]);
 

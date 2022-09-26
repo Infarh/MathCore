@@ -12,6 +12,9 @@ public class CRC32
     {
         Zip = 0xEDB88320,
         POSIX = 0x04C11DB7,
+        CRC32C = 0x1EDC6F41,
+        CRC32D = 0xA833982B,
+        CRC32Q = 0x814141AB,
         XFER = 0x000000AF,
     }
 
