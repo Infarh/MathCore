@@ -100,11 +100,12 @@ public class CRC32Tests
     }
 
     [TestMethod]
-    public void Poly_XXXX_initial_0000_data_XXXXXXXXXXXX_crc_XXXXXXXX()
+    public void Poly_04C11DB7_initial_00000000_data_3FA2132103_crc_2AB29C5EU()
     {
         // https://crccalc.com/?crc=3FA2132103&method=CRC-32/POSIX&datatype=hex&outtype=0
         var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
-        const uint expected_crc = 0xD54D63A1 ^ 0xFFFFFFFF;
+        //const uint expected_crc = 0xD54D63A1 ^ 0xFFFFFFFF;
+        const uint expected_crc = 0x2AB29C5EU;
 
         var crc = new CRC32(CRC32.Mode.POSIX);
 
