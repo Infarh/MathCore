@@ -2,8 +2,9 @@
 
 public static class DoubleIEEE754
 {
-    const int __ExpMask = (1 << 11) - 1;
-    const long __MantissaMask = ((long)1 << 52) - 1;
+    private const double log10_2 = 0.3010299956639811952137388947244930267681898814621085413104274611271081892744245094869272521181861720406844771914309953790947678;
+    private const int __ExpMask = (1 << 11) - 1;
+    private const long __MantissaMask = ((long)1 << 52) - 1;
 
     public static (long Mantissa, short Exp2, bool Sign) Parse(double value)
     {
@@ -28,5 +29,29 @@ public static class DoubleIEEE754
         var result = BitConverter.Int64BitsToDouble(bits);
 
         return result;
+    }
+
+    public static (long Mantissa, short Exp2, bool Sign) Decode(double x)
+    {
+        var sign  = Math.Sign(x) < 0;
+        var abs_x = Math.Abs(x);
+        var exp2  = (short)Math.Floor(Math.Log2(abs_x));
+
+
+        var mantissa = x * Math.Pow(2, -exp2) - 1;
+        var q        = 1d;
+
+        var mantissa2 = 0L;
+        for (var n = 0; n < 52; n++)
+        {
+            q /= 2;
+            var m = mantissa % q;
+            mantissa2 <<= 1;
+            if (m != mantissa)
+                mantissa2 |= 1;
+            mantissa = m;
+        }
+
+        return (mantissa2, exp2, sign);
     }
 }

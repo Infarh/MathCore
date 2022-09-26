@@ -1,7 +1,6 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿namespace Benchmarks;
 
-namespace Benchmarks;
-
+//[CategoriesColumn]
 public class SwapTest
 {
     private static class Swap

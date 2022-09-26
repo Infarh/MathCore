@@ -1,7 +1,5 @@
 ﻿using System.Globalization;
 
-using BenchmarkDotNet.Attributes;
-
 namespace Benchmarks;
 
 [MemoryDiagnoser]

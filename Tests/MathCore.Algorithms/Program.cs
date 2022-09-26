@@ -1,8 +1,18 @@
 ﻿using MathCore.Algorithms.Numbers;
 
-var (mantissa, exp, sign) = DoubleIEEE754.Parse(0.5);
+var str    = "123;456;789";
+var values = str.AsStringPtr().Split(';');
+if (values is [{Length: > 0} a, { Length: > 0 } b, { Length: > 0 } c])
+{
 
-var value = DoubleIEEE754.Create((1L << 50) | (1L << 51), 0, false);
+}
+
+var x = 654.321;
+var (mantissa, exp, sign) = DoubleIEEE754.Parse(x);
+
+var value = DoubleIEEE754.Create(mantissa, 0, false);
+
+var items = DoubleIEEE754.Decode(x);
 
 //const int digits_count = 100000;
 //CalculatorPI.Calculate(digits_count);

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -240,6 +241,46 @@ public readonly ref struct StringPtr
         Length == str.Length &&
         string.Compare(Source, Pos, str.Source, str.Pos, Length, Comparison) == 0;
 
+    public bool Equals(int x)
+    {
+        var len = Length;
+        var str = Trim();
+        if (len == 0) return false;
+
+        if (x == 0)
+        {
+            for (var i = 0; i < len; i++)
+                if (str[i] != '0')
+                    return false;
+
+            return true;
+        }
+
+        if (x < 0)
+        {
+            if (str[0] != '-')
+                return false;
+
+            str = str.TrimStart('-');
+            len--;
+            x = -x;
+        }
+
+        len--;
+        while (len >= 0)
+        {
+            if (str[len] - '0' != x % 10)
+                return false;
+
+            len--;
+            x /= 10;
+        }
+
+        return len == -1 && x == 0;
+    }
+
+    public bool Equals(double x) => Length > 0 && TryParseDouble() == x;
+
     /// <summary>Оператор проверки на равенство фрагмента строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
     /// <param name="str">Строка</param>
@@ -263,6 +304,20 @@ public readonly ref struct StringPtr
     /// <param name="str">Строка</param>
     /// <returns>Истина, если фрагмент строки посимвольно неравен указанной строке</returns>
     public static bool operator !=(string str, StringPtr ptr) => !(ptr == str);
+
+    public static bool operator ==(StringPtr ptr, int x) => ptr.Equals(x);
+
+    public static bool operator ==(int x, StringPtr ptr) => ptr == x;
+
+    public static bool operator !=(StringPtr ptr, int x) => !(ptr == x);
+    public static bool operator !=(int x, StringPtr ptr) => !(ptr == x);
+
+    public static bool operator ==(StringPtr ptr, double x) => ptr.Equals(x);
+
+    public static bool operator ==(double x, StringPtr ptr) => ptr == x;
+
+    public static bool operator !=(StringPtr ptr, double x) => !(ptr == x);
+    public static bool operator !=(double x, StringPtr ptr) => !(ptr == x);
 
     /// <summary>Оператор порядка "больше", сравнивающий фрагмент строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
@@ -290,10 +345,12 @@ public readonly ref struct StringPtr
 
     /* --------------------------------------------------------------------------------------- */
 
+    public int? TryParseInt32() => TryParseInt32(out var x) ? x : null;
+
     /// <summary>Попытка преобразования подстроки в <see cref="int"/></summary>
     /// <param name="value">Преобразованное значение</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
-    public bool TryParseAsInt32(out int value)
+    public bool TryParseInt32(out int value)
     {
         var start = Pos;
         var index = 0;
@@ -375,7 +432,7 @@ public readonly ref struct StringPtr
     /// <returns>Преобразованное значение</returns>
     /// <exception cref="FormatException">В случае если строка не является представлением <see cref="int"/></exception>
     /// <exception cref="OverflowException">Если длина строковой записи числа превышает <see cref="int"/>.<see cref="int.MaxValue"/></exception>
-    public int ParseAsInt32()
+    public int ParseInt32()
     {
         var start = Pos;
         var index = 0;
@@ -436,6 +493,8 @@ public readonly ref struct StringPtr
 
         return sign * result;
     }
+
+    public double? TryParseDouble() => TryParseDouble(out var d) ? d : null;
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
     /// <param name="value">Преобразованное значение</param>
@@ -702,13 +761,29 @@ public readonly ref struct StringPtr
                     return false;
             }
 
-        value = sign * (whole + fraction / (double)fraction_base);
+        value = whole + fraction / (double)fraction_base;
 
         if (exp != 0)
         {
-            var e = Math.Pow(10, exp_sign * exp);
-            value *= e;
+            if (value > 1)
+                while (exp > 0 && value > 10)
+                {
+                    exp--;
+                    value /= 10;
+                }
+            else
+                while (exp > 0 && value < 1)
+                {
+                    exp--;
+                    value *= 10;
+                }
+
+            if (exp != 0)
+                value *= Math.Pow(10, exp_sign * exp);
         }
+
+        if (sign < 0)
+            value = -value;
 
         return true;
     }
@@ -861,7 +936,7 @@ public readonly ref struct StringPtr
                         index++;
                         break;
                     }
-                    
+
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
@@ -871,8 +946,8 @@ public readonly ref struct StringPtr
                     throw new FormatException("Строка имела неверный формат");
             }
 
-        return exp == 0 
-            ? sign * (whole + fraction / (double)fraction_base) 
+        return exp == 0
+            ? sign * (whole + fraction / (double)fraction_base)
             : sign * (whole + fraction / (double)fraction_base) * Math.Pow(10, exp_sign * exp);
     }
 
@@ -914,7 +989,7 @@ public readonly ref struct StringPtr
     /// <summary>Получить целочисленное значение из пары ключ=значение</summary>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
     /// <returns>Целочисленное значение из пары ключ-значение</returns>
-    public int GetValueInt32(char Separator = '=') => GetValueString(Separator).ParseAsInt32();
+    public int GetValueInt32(char Separator = '=') => GetValueString(Separator).ParseInt32();
 
     /// <summary>Попытаться получить вещественное значение из пары ключ=значение</summary>
     /// <param name="value">Вещественное значение из пары ключ-значение</param>
@@ -933,7 +1008,7 @@ public readonly ref struct StringPtr
     /// <param name="value">Целочисленное значение из пары ключ-значение</param>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
     /// <returns>Истина, если преобразование подстроки значения в целочисленное значение выполнено успешно</returns>
-    public bool TryGetValueInt32(out int value, char Separator = '=') => GetValueString(Separator).TryParseAsInt32(out value);
+    public bool TryGetValueInt32(out int value, char Separator = '=') => GetValueString(Separator).TryParseInt32(out value);
 
     /// <summary>Попытаться получить булево значение из пары ключ=значение</summary>
     /// <param name="value">Булево значение из пары ключ-значение</param>
@@ -1659,7 +1734,7 @@ public readonly ref struct StringPtr
                     case 0:
                         Current = new(_Buffer, _CurrentPos, 0);
                         _CurrentPos++;
-                        return Current.TryParseAsInt32(out value);
+                        return Current.TryParseInt32(out value);
                 }
 
                 var str = _Buffer;
@@ -1683,7 +1758,7 @@ public readonly ref struct StringPtr
 
                 Current = ptr;
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseAsInt32(out value);
+                return ptr.TryParseInt32(out value);
             }
 
             /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
@@ -1710,7 +1785,7 @@ public readonly ref struct StringPtr
 
             /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
             /// <param name="Enumerator">Перечислитель фрагментов строки</param>
-            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
+            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseInt32();
 
             /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
             /// <param name="Enumerator">Перечислитель фрагментов строки</param>
@@ -1747,6 +1822,68 @@ public readonly ref struct StringPtr
         private readonly int _Length;
 
         private readonly bool _SkipEmpty;
+
+        public int Count
+        {
+            get
+            {
+                if (_Length == 0) return 0;
+
+                var separator = _Separator;
+                var buffer = _Buffer;
+                var start_index = _StartIndex;
+                var count = buffer[0] == separator ? 0 : 1;
+
+                if (_SkipEmpty)
+                {
+                    for (var (i, last_index, end) = (start_index, start_index, start_index + _Length); i < end; i++)
+                        if (buffer[i] == separator && i > last_index + 1)
+                        {
+                            count++;
+                            last_index = i;
+                        }
+                }
+                else
+                    for (var (i, end) = (start_index, start_index + _Length); i < end; i++)
+                        if (buffer[i] == separator)
+                            count++;
+
+                return count;
+            }
+        }
+
+        public StringPtr this[int Index]
+        {
+            get
+            {
+                var start_index = _StartIndex;
+                var length = _Length;
+                var buffer = _Buffer;
+                if (length == 0) return new(buffer, start_index, 0);
+
+                var separator = _Separator;
+                var index = buffer.IndexOf(separator, start_index, length);
+                if (index < 0) return Index == 0
+                    ? new(buffer, start_index, length)
+                    : new(buffer, start_index, 0);
+
+                var last_index = start_index;
+                for (var i = Index; i > 0; i--)
+                {
+                    last_index = index + 1;
+                    index = buffer.IndexOf(separator, last_index, length - (last_index - start_index));
+                    if (index >= 0) continue;
+
+                    if (i == 1)
+                        index = start_index + length;
+                    else
+                        return new(buffer, start_index, 0);
+
+                }
+
+                return new(buffer, last_index, index - last_index);
+            }
+        }
 
         /// <summary>Инициализация нового разделителя строки</summary>
         /// <param name="Str">Исходный фрагмент строки</param>
@@ -2002,7 +2139,7 @@ public readonly ref struct StringPtr
                     case 0:
                         Current = new(_Buffer, _CurrentPos, 0);
                         _CurrentPos++;
-                        return Current.TryParseAsInt32(out value);
+                        return Current.TryParseInt32(out value);
                 }
 
                 var str = _Buffer;
@@ -2026,7 +2163,7 @@ public readonly ref struct StringPtr
 
                 Current = ptr;
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseAsInt32(out value);
+                return ptr.TryParseInt32(out value);
             }
 
             /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
@@ -2053,7 +2190,7 @@ public readonly ref struct StringPtr
 
             /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
             /// <param name="Enumerator">Перечислитель фрагментов строки</param>
-            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
+            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseInt32();
 
             /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
             /// <param name="Enumerator">Перечислитель фрагментов строки</param>
@@ -2064,12 +2201,13 @@ public readonly ref struct StringPtr
     /* --------------------------------------------------------------------------------------- */
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => false;
-
-    //public override bool Equals(object? obj) => obj is StringPtr other && 
-    //    other.Source == Source &&
-    //    other.Length == Length && 
-    //    other.Pos == Pos;
+    public override bool Equals(object? obj) => obj switch
+    {
+        string str => Equals(str),
+        int x => Equals(x),
+        double x => Equals(x),
+        _ => false
+    };
 
     /// <inheritdoc />
     public override string ToString() => Pos == 0 && Length == Source.Length
@@ -2163,7 +2301,7 @@ public readonly ref struct StringPtr
 
     /// <summary>Оператор явного преобразования фрагмента строки в целое число</summary>
     /// <param name="Ptr">Фрагмент строки</param>
-    public static explicit operator int(StringPtr Ptr) => Ptr.ParseAsInt32();
+    public static explicit operator int(StringPtr Ptr) => Ptr.ParseInt32();
 
     /// <summary>Оператор явного преобразования фрагмента строки в вещественное число</summary>
     /// <param name="Ptr">Фрагмент строки</param>
