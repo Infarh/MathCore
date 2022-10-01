@@ -1,31 +1,30 @@
-﻿using System;
-using MathCore.Annotations;
+﻿#nullable enable
+using System;
 
-namespace MathCore.DataGenericSources
+namespace MathCore.DataGenericSources;
+
+public abstract class DataSource<T>
 {
-    public abstract class DataSource<T>
+    public event EventHandler? Updated;
+
+    protected virtual void OnUpdated(EventArgs Args) => Updated.Start(this, Args);
+
+    private readonly Func<DataHost<T>, T> _DataExtractor;
+
+    private T _Value;
+
+    public DataHost<T> Host { get; }
+
+    public T Value => _Value;
+
+    protected DataSource(DataHost<T> Host, Func<DataHost<T>, T> DataExtractor)
     {
-        public event EventHandler Updated;
-
-        protected virtual void OnUpdated(EventArgs Args) => Updated.Start(this, Args);
-
-        private readonly Func<DataHost<T>, T> _DataExtractor;
-
-        private T _Value;
-
-        public DataHost<T> Host { get; }
-
-        public T Value => _Value;
-
-        protected DataSource([NotNull] DataHost<T> Host, Func<DataHost<T>, T> DataExtractor)
-        {
-            _DataExtractor = DataExtractor;
-            this.Host = Host;
-            Host.Updated += OnHostUpdated;
-        }
-
-        public T GetValue() => _Value = _DataExtractor(Host);
-
-        protected virtual void OnHostUpdated(object sender, EventArgs e) => OnUpdated(e);
+        _DataExtractor =  DataExtractor;
+        this.Host      =  Host;
+        Host.Updated   += OnHostUpdated;
     }
+
+    public T GetValue() => _Value = _DataExtractor(Host);
+
+    protected virtual void OnHostUpdated(object sender, EventArgs e) => OnUpdated(e);
 }

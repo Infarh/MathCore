@@ -1,9 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
-using MathCore.Annotations;
 
 // ReSharper disable UnusedMember.Global
 
@@ -46,7 +45,7 @@ public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<in
     /// <summary>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></summary>
     /// <param name="items">Перечисление <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
     [DST]
-    public DisposableGroup([NotNull] IEnumerable<T> items) : this(items.ToArray()) { }
+    public DisposableGroup(IEnumerable<T> items) : this(items.ToArray()) { }
 
     /* ------------------------------------------------------------------------------------------ */
 

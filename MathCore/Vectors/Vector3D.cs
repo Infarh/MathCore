@@ -1,7 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using MathCore.Annotations;
+
 using static System.Math;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -46,12 +47,12 @@ public readonly partial struct Vector3D :
     /// <param name="max">Максимальное значение</param>
     /// <param name="rnd">Генератор случайных чисел (если не задан, то будет создан новый)</param>
     /// <returns>Вектор со случайными значениями координат из указанного диапазона</returns>
-    public static Vector3D Random(double min = -100, double max = 100, Random rnd = null)
+    public static Vector3D Random(double min = -100, double max = 100, Random? rnd = null)
     {
-        rnd ??= new Random();
+        rnd ??= new();
         var d = Abs(max - min);
         var m = (max + min) * .5;
-        return new Vector3D(rnd.NextDouble(d, m), rnd.NextDouble(d, m), rnd.NextDouble(d, m));
+        return new(rnd.NextDouble(d, m), rnd.NextDouble(d, m), rnd.NextDouble(d, m));
     }
 
     /* -------------------------------------------------------------------------------------------- */
@@ -175,18 +176,18 @@ public readonly partial struct Vector3D :
 
     /// <summary>Инициализация нового вектора, расположенного вдоль оси OX</summary>
     /// <param name="X">Координата вдоль оси OX</param>
-    [DST] public Vector3D(double X) { _X = X; _Y = 0; _Z = 0; }
+    [DST] public Vector3D(double X) => (_X, _Y, _Z) = (X, 0, 0);
 
     /// <summary>Инициализация нового вектора, расположенного в плоскости XOY</summary>
     /// <param name="X">Координата вдоль оси OX</param>
     /// <param name="Y">Координата вдоль оси OY</param>
-    [DST] public Vector3D(double X, double Y) { _X = X; _Y = Y; _Z = 0; }
+    [DST] public Vector3D(double X, double Y) => (_X, _Y, _Z) = (X, Y, 0);
 
     /// <summary>Инициализация нового вектора, заданного своими координатами</summary>
     /// <param name="X">Координата вдоль оси OX</param>
     /// <param name="Y">Координата вдоль оси OY</param>
     /// <param name="Z">Координата вдоль оси OZ</param>
-    [DST] public Vector3D(double X, double Y, double Z) { _X = X; _Y = Y; _Z = Z; }
+    [DST] public Vector3D(double X, double Y, double Z) => (_X, _Y, _Z) = (X, Y, Z);
 
     /// <summary>Единичный вектор, заданный двумя углами в сферической системе координат</summary>
     /// <param name="Angle">Пространственный угол сферической системы координат</param>
@@ -210,20 +211,17 @@ public readonly partial struct Vector3D :
             phi   = Angle.Phi;
         }
 
-        _Z = R * Cos(theta);
-        var r = R * Sin(theta);
-        _X = r * Cos(phi);
-        _Y = r * Sin(phi);
+        (_Z, (_Y, _X)) = (R * Cos(theta), Complex.SinCos(phi, R * Sin(theta)));
     }
 
     /// <summary>Конструктор копирования</summary>
     /// <param name="V">Вектор-прототип</param>
-    private Vector3D(in Vector3D V) { _X = V._X; _Y = V._Y; _Z = V._Z; }
+    private Vector3D(Vector3D V) => (_X, _Y, _Z) = V;
 
     /// <summary>Представление вектора в базисе</summary>
     /// <param name="b">Новый базис вектора</param>
     /// <returns>Вектор в указанном базисе</returns>
-    public Vector3D InBasis(in Basis3D b) => new(
+    public Vector3D InBasis(Basis3D b) => new(
         b.xx * _X + b.xy * _Y + b.xz * _Z,
         b.yx * _X + b.yy * _Y + b.yz * _Z,
         b.zx * _X + b.zy * _Y + b.zz * _Z);
@@ -297,7 +295,7 @@ public readonly partial struct Vector3D :
     /* -------------------------------------------------------------------------------------------- */
 
     /// <inheritdoc />
-    [DST, NotNull]
+    [DST]
     public override string ToString() => $"({_X};{_Y};{_Z})";
 
     /// <inheritdoc />
@@ -324,12 +322,12 @@ public readonly partial struct Vector3D :
 
     /// <inheritdoc />
     [DST]
-    public override bool Equals(object obj) => obj is Vector3D vector_3d && Equals(vector_3d);
+    public override bool Equals(object? obj) => obj is Vector3D vector_3d && Equals(vector_3d);
 
     /// <summary>Преобразование в строку с форматированием</summary>
     /// <param name="Format">Строка формата</param>
     /// <returns>Форматированное строковое представление</returns>
-    [DST, NotNull]
+    [DST]
     public string ToString(string Format) => $"({_X.ToString(Format)};{_Y.ToString(Format)};{_Z.ToString(Format)})";
 
     /// <summary>Преобразование в строку с форматированием</summary>
@@ -350,22 +348,20 @@ public readonly partial struct Vector3D :
     public static double ComparisonsAccuracy { get; set; } = 1e-16;
 
     /// <inheritdoc />
-    public bool Equals(Vector3D other)
-    {
-        var eps = ComparisonsAccuracy;
-        return Abs(other._X - _X) < eps
-            && Abs(other._Y - _Y) < eps
-            && Abs(other._Z - _Z) < eps;
-    }
+    public bool Equals(Vector3D other) => Equals(other, ComparisonsAccuracy);
+
+    public bool Equals(Vector3D other, double Accuracy) =>
+        Abs(other._X - _X) < Accuracy && 
+        Abs(other._Y - _Y) < Accuracy &&
+        Abs(other._Z - _Z) < Accuracy;
 
     /// <inheritdoc />
-    public bool Equals((double X, double Y, double Z) other)
-    {
-        var eps = ComparisonsAccuracy;
-        return Abs(other.X - _X) < eps 
-            && Abs(other.Y - _Y) < eps
-            && Abs(other.Z - _Z) < eps;
-    }
+    public bool Equals((double X, double Y, double Z) other) => Equals(other, ComparisonsAccuracy);
+
+    public bool Equals((double X, double Y, double Z) other, double Accuracy) =>
+        Abs(other.X - _X) < Accuracy && 
+        Abs(other.Y - _Y) < Accuracy && 
+        Abs(other.Z - _Z) < Accuracy;
 
     #endregion
 

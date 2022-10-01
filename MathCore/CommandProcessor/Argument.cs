@@ -1,7 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathCore.Annotations;
+
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -36,12 +37,12 @@ namespace MathCore.CommandProcessor
         /// <summary>Аргумент команды</summary>
         /// <param name="ArgStr">Строковое описание аргумента</param>
         /// <param name="ValueSplitter">Разделитель имени аргумента и значения</param>
-        public Argument([NotNull] string ArgStr, char ValueSplitter = '=')
+        public Argument(string ArgStr, char ValueSplitter = '=')
             : this()
         {
-            var ArgItems = ArgStr.Split(ValueSplitter);
-            Name = ArgItems[0].ClearSystemSymbolsAtBeginAndEnd();
-            _Values = ArgItems.Skip(1)
+            var arg_items = ArgStr.Split(ValueSplitter);
+            Name = arg_items[0].ClearSystemSymbolsAtBeginAndEnd();
+            _Values = arg_items.Skip(1)
                         .Select(value => value.ClearSystemSymbolsAtBeginAndEnd())
                         .Where(value => !string.IsNullOrEmpty(value))
                         .ToArray();
@@ -77,7 +78,7 @@ namespace MathCore.CommandProcessor
         /// <param name="Error">Исключение, возникшее в процессе преобразования строки значения аргумента к типу <typeparamref name="T"/></param>
         /// <typeparam name="T">Требуемый тип значения аргумента</typeparam>
         /// <returns>Истина, если преобразование выполнено успешно</returns>
-        public bool TryGetValueAs<T>(out T value, [CanBeNull] out Exception Error)
+        public bool TryGetValueAs<T>(out T value, out Exception? Error)
         {
             try
             {
@@ -97,14 +98,13 @@ namespace MathCore.CommandProcessor
 
         /// <summary>Преобразование в строку</summary>
         /// <returns>Строковое представление аргумента</returns>
-        [NotNull]
         public override string ToString() => $"{Name}{(_Values is null || _Values.Length == 0 ? string.Empty : Values.ToSeparatedStr(", ").ToFormattedString("={0}"))}";
 
         /// <inheritdoc />
         public bool Equals(Argument other) => Equals(_Values, other._Values) && Name == other.Name;
 
         /// <inheritdoc />
-        public override bool Equals(object obj) => obj is Argument other && Equals(other);
+        public override bool Equals(object? obj) => obj is Argument other && Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode()

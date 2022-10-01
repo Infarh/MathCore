@@ -76,6 +76,19 @@ public readonly ref struct StringPtr
     /// <returns>Указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
     public StringPtr Substring(int Offset, int Count) => new(Source, Pos + Offset, Count);
 
+    public bool IsInBracket(char Open, char Close) => Length >= 2 && Source[Pos] == Open && Source[Pos + Length - 1] == Close;
+    public bool IsInBracket(string Open, string Close)
+    {
+        var open_length  = Open.Length;
+        var close_length = Close.Length;
+        var length       = Length;
+        var pos          = Pos;
+        var source        = Source;
+        return length >= open_length + close_length
+            && string.Compare(source, pos, Open, 0, open_length) == 0
+            && string.Compare(source, pos + length - close_length, Close, 0, close_length) == 0;
+    }
+
     /// <summary>Начинается ли подстрока с указанного символа</summary>
     /// <param name="c">Символ, с которого должна начинаться текущая подстрока</param>
     /// <returns>Истина, если текущая подстрока начинается с указанного символа</returns>

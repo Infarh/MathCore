@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using MathCore.Annotations;
+
 using MathCore.Extensions.Expressions;
+
 using static System.Math;
 
 using static MathCore.Consts;
@@ -19,9 +21,9 @@ namespace MathCore.Vectors;
 [TypeConverter(typeof(SpaceAngleConverter))]
 public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
 {
-    public static readonly SpaceAngle Zero = new ();
+    public static readonly SpaceAngle Zero = new();
 
-    public static readonly SpaceAngle NaN = new (double.NaN, double.NaN);
+    public static readonly SpaceAngle NaN = new(double.NaN, double.NaN);
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -126,37 +128,51 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <summary>Угол азимута в градусах</summary>
     public double PhiDeg => _AngleType == AngleType.Deg ? _Phi : _Phi * Geometry.ToDeg;
 
+    public (double Sin, double Cos) SinCosTheta => _AngleType == AngleType.Rad
+        ? (Sin(_Theta), Cos(_Theta))
+        : (Sin(_Theta * ToRad), Cos(_Theta * ToRad));
+
+    public (double Sin, double Cos) SinCosPhi => _AngleType == AngleType.Rad
+        ? (Sin(_Phi), Cos(_Phi))
+        : (Sin(_Phi * ToRad), Cos(_Phi * ToRad));
+
+    public ((double SinTh, double CosTh), (double SinPh, double CosPh)) SinCos => _AngleType == AngleType.Rad 
+        ? ((Sin(_Theta), Cos(_Theta)), (Sin(_Phi), Cos(_Phi))) 
+        : ((Sin(_Theta * ToRad), Cos(_Theta * ToRad)), (Sin(_Phi * ToRad), Cos(_Phi * ToRad)));
+
     /// <summary>Являются ли значения угла места и азимута = 0?</summary>
     public bool IsZero => _Theta.Equals(0d) && _Phi.Equals(0d);
 
     /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Theta"/>, мнимой частью - направляющий синус</summary>
-    public Complex ComplexCosTheta => _AngleType == AngleType.Rad ? Complex.Exp(_Theta) : Complex.Exp(_Theta * __ToRad);
+    public Complex ComplexCosTheta => _AngleType == AngleType.Rad 
+        ? Complex.Exp(_Theta) 
+        : Complex.Exp(_Theta * __ToRad);
 
     /// <summary>Комплексное число, характеризующее действительной частью направляющий косинус <see cref="Phi"/>, мнимой частью - направляющий синус</summary>
-    public Complex ComplexCosPhi => _AngleType == AngleType.Rad ? Complex.Exp(_Phi) : Complex.Exp(_Phi * __ToRad);
+    public Complex ComplexCosPhi => _AngleType == AngleType.Rad 
+        ? Complex.Exp(_Phi) 
+        : Complex.Exp(_Phi * __ToRad);
 
     /// <summary>Тип угла</summary>
     public AngleType AngleType => _AngleType;
 
     /// <summary>Представление угла в градусах</summary>
     /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
-    public SpaceAngle InDeg =>
-        _AngleType switch
-        {
-            AngleType.Deg => this,
-            AngleType.Rad => new SpaceAngle(_Theta * __ToDeg, _Phi * __ToDeg, AngleType.Deg),
-            _             => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
-        };
+    public SpaceAngle InDeg => _AngleType switch
+    {
+        AngleType.Deg => this,
+        AngleType.Rad => new(_Theta * __ToDeg, _Phi * __ToDeg, AngleType.Deg),
+        _ => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
+    };
 
     /// <summary>Представление угла в радианах</summary>
     /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
-    public SpaceAngle InRad =>
-        _AngleType switch
-        {
-            AngleType.Deg => new SpaceAngle(_Theta * __ToRad, _Phi * __ToRad, AngleType.Rad),
-            AngleType.Rad => this,
-            _             => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
-        };
+    public SpaceAngle InRad => _AngleType switch
+    {
+        AngleType.Deg => new(_Theta * __ToRad, _Phi * __ToRad, AngleType.Rad),
+        AngleType.Rad => this,
+        _ => throw new ArgumentOutOfRangeException(nameof(AngleType), _AngleType, "Неизвестный тип угла")
+    };
 
     /// <summary>Направляющий вектор</summary>
     public Vector3D DirectionalVector => new(this);
@@ -167,8 +183,8 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <param name="Phi">Угол азимута</param>
     public SpaceAngle(double Phi)
     {
-        _Phi       = Phi;
-        _Theta     = 0;
+        _Phi = Phi;
+        _Theta = 0;
         _AngleType = AngleType.Rad;
     }
 
@@ -177,8 +193,8 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <param name="AngleType">Тип значения угла</param>
     public SpaceAngle(double Phi, in AngleType AngleType)
     {
-        _Phi       = Phi;
-        _Theta     = 0;
+        _Phi = Phi;
+        _Theta = 0;
         _AngleType = AngleType;
     }
 
@@ -188,8 +204,8 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     [DST]
     public SpaceAngle(double Theta, double Phi)
     {
-        _Phi       = Phi;
-        _Theta     = Theta;
+        _Phi = Phi;
+        _Theta = Theta;
         _AngleType = AngleType.Rad;
     }
 
@@ -219,11 +235,11 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
             case AngleType.Deg:
                 switch (Angle._AngleType)
                 {
-                    default:            throw new ArgumentOutOfRangeException(nameof(AngleType), Angle._AngleType, "Неизвестный тип угла");
+                    default: throw new ArgumentOutOfRangeException(nameof(AngleType), Angle._AngleType, "Неизвестный тип угла");
                     case AngleType.Deg: break;
                     case AngleType.Rad:
                         _Theta *= __ToDeg;
-                        _Phi   *= __ToDeg;
+                        _Phi *= __ToDeg;
                         break;
                 }
                 break;
@@ -233,7 +249,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
                     default: throw new ArgumentOutOfRangeException(nameof(AngleType), Angle._AngleType, "Неизвестный тип угла");
                     case AngleType.Deg:
                         _Theta *= __ToRad;
-                        _Phi   *= __ToRad;
+                        _Phi *= __ToRad;
                         break;
                     case AngleType.Rad: break;
                 }
@@ -256,20 +272,16 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     {
         var ph0 = angle.PhiRad;
         var th0 = angle.ThetaRad;
-        if (ph0.Equals(0d) && th0.Equals(0d)) return this;
+        if (ph0 == 0 && th0 == 0) return this;
 
         var ph = PhiRad;
         var th = ThetaRad;
 
-        var s_ph0 = Sin(ph0);
-        var c_ph0 = Cos(ph0);
-        var s_th0 = Sin(th0);
-        var c_th0 = Cos(th0);
+        var (s_ph0, c_ph0) = Complex.SinCos(ph0);
+        var (s_th0, c_th0) = Complex.SinCos(th0);
 
-        var s_ph = Sin(ph);
-        var c_ph = Cos(ph);
-        var s_th = Sin(th);
-        var c_th = Cos(th);
+        var (s_ph, c_ph) = Complex.SinCos(ph);
+        var (s_th, c_th) = Complex.SinCos(th);
 
         var x = c_ph * s_th;
         var y = s_ph * s_th;
@@ -293,39 +305,33 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
         var ph1 = Atan2(y1, x1);
         var th1 = Atan2(Sqrt(x1 * x1 + y1 * y1), z1);
         return AngleType == AngleType.Rad
-            ? new SpaceAngle(th1, ph1)
-            : new SpaceAngle(th1 * __ToDeg, ph1 * __ToDeg, AngleType.Deg);
+            ? new(th1, ph1)
+            : new(th1 * __ToDeg, ph1 * __ToDeg, AngleType.Deg);
     }
 
     /// <summary>Получить функцию, осуществляющую поворот пространственного угла на текущий пространственный угол</summary>
     /// <returns>Функция, осуществляющая поворот пространственного угла на заданный угол</returns>
-    [NotNull]
     public Func<SpaceAngle, SpaceAngle> GetRotatorPhiTheta() => GetRotatorPhiTheta(this);
 
     /// <summary>Получить функцию, осуществляющую поворот пространственного угла на заданный пространственный угол</summary>
     /// <param name="angle"></param>
     /// <returns></returns>
-    [NotNull]
     public static Func<SpaceAngle, SpaceAngle> GetRotatorPhiTheta(SpaceAngle angle)
     {
         var ph0 = angle.PhiRad;
         var th0 = angle.ThetaRad;
-        if (ph0.Equals(0d) && th0.Equals(0d)) return a => a;
+        if (ph0 == 0 && th0 == 0) return a => a;
 
-        var s_ph0 = Sin(ph0);
-        var c_ph0 = Cos(ph0);
-        var s_th0 = Sin(th0);
-        var c_th0 = Cos(th0);
+        var (s_ph0, c_ph0) = Complex.SinCos(ph0);
+        var (s_th0, c_th0) = Complex.SinCos(th0);
 
         return r =>
         {
             var ph = r.PhiRad;
             var th = r.ThetaRad;
 
-            var s_ph = Sin(ph);
-            var c_ph = Cos(ph);
-            var s_th = Sin(th);
-            var c_th = Cos(th);
+            var (s_ph, c_ph) = Complex.SinCos(ph);
+            var (s_th, c_th) = Complex.SinCos(th);
 
             var x = c_ph * s_th;
             var y = s_ph * s_th;
@@ -370,8 +376,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <summary>Получить выражение, осуществляющее поворот угла на текущий пространственный угол</summary>
     /// <param name="r">Выражение, предоставляющее пространственный угол, который требуется повернуть</param>
     /// <returns>Выражение, обеспечивающее поворот пространственного угла на текущий угол</returns>
-    [NotNull]
-    public Expression GetRotatorPhiThetaExpression([NotNull] Expression r)
+    public Expression GetRotatorPhiThetaExpression(Expression r)
     {
         if (r is null) throw new ArgumentNullException(nameof(r));
         if (r.Type != typeof(SpaceAngle))
@@ -379,7 +384,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
                 $"Тип результата выражения {r.Type} не является типом {typeof(SpaceAngle)}",
                 nameof(r));
 
-        var a   = this;
+        var a = this;
         var ph0 = a.PhiRad;
         var th0 = a.ThetaRad;
         if (ph0.Equals(0d) && th0.Equals(0d)) return r;
@@ -387,8 +392,8 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
         var th0_ex = th0.ToExpression();
         var ph0_ex = ph0.ToExpression();
 
-        var sin  = (Func<double, double>)Sin;
-        var cos  = (Func<double, double>)Cos;
+        var sin = (Func<double, double>)Sin;
+        var cos = (Func<double, double>)Cos;
         var atan = (Func<double, double, double>)Atan2;
         var sqrt = (Func<double, double>)Sqrt;
 
@@ -397,9 +402,9 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
         var s_th0 = sin.GetCallExpression(th0_ex);
         var c_th0 = cos.GetCallExpression(th0_ex);
 
-        ParameterExpression th,   ph,   ph1,  th1;
+        ParameterExpression th, ph, ph1, th1;
         ParameterExpression s_th, s_ph, c_th, c_ph;
-        ParameterExpression x,    y,    z,    x0, x1, y1, z1;
+        ParameterExpression x, y, z, x0, x1, y1, z1;
         return Expression.Block
         (
             new[]
@@ -448,7 +453,6 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <param name="f">Поворачиваемая функция</param>
     /// <typeparam name="T">Тип значения функции</typeparam>
     /// <returns>Функция, аргумент которой повёрнут на текущий угол</returns>
-    [NotNull]
     public Func<SpaceAngle, T> RotatePhiTheta<T>(Func<SpaceAngle, T> f)
     {
         var r = GetRotatorPhiTheta();
@@ -459,15 +463,36 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <param name="type">Тип требуемого значения угла</param>
     /// <returns></returns>
     [DST]
-    public SpaceAngle In(in AngleType type) =>
+    public SpaceAngle In(AngleType type) =>
         _AngleType == type
             ? this
             : type switch
             {
                 AngleType.Rad => InRad,
                 AngleType.Deg => InDeg,
-                _             => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
+
+    public double ProjectionTo(double X, double Y, double Z)
+    {
+        double sin_th, cos_th, sin_ph, cos_ph;
+        if (_AngleType == AngleType.Rad)
+        {
+            sin_th = Sin(_Theta);
+            cos_th = Cos(_Theta);
+            sin_ph = Sin(_Phi);
+            cos_ph = Cos(_Phi);
+        }
+        else
+        {
+            sin_th = Sin(_Theta * ToRad);
+            cos_th = Cos(_Theta * ToRad);
+            sin_ph = Sin(_Phi * ToRad);
+            cos_ph = Cos(_Phi * ToRad);
+        }
+
+        return (X * cos_ph + Y * sin_ph) * sin_th + Z * cos_th;
+    }
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -481,23 +506,18 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     public object Clone() => new SpaceAngle(this, AngleType);
 
     /// <inheritdoc />
-    [DST, NotNull] public override string ToString() => $"(Theta:{_Theta}; Phi:{_Phi}):{_AngleType}";
+    [DST] public override string ToString() => $"(Theta:{_Theta}; Phi:{_Phi}):{_AngleType}";
 
     /// <inheritdoc />
     [DST]
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return _AngleType == AngleType.Deg 
-                ? InRad.GetHashCode()
-                : (_Theta.GetHashCode() * 397) ^ _Phi.GetHashCode();
-        }
-    }
+    public override int GetHashCode() =>
+        _AngleType == AngleType.Deg
+            ? InRad.GetHashCode()
+            : unchecked((_Theta.GetHashCode() * 397) ^ _Phi.GetHashCode());
 
     /// <inheritdoc />
     [DST]
-    public override bool Equals(object obj) => obj is SpaceAngle a && Equals(a);
+    public override bool Equals(object? obj) => obj is SpaceAngle a && Equals(a);
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -536,14 +556,12 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <param name="f">Вещественная пространственная функция</param>
     /// <param name="a">Пространственный угол поворота</param>
     /// <returns>Вещественная функция, аргумент которой повёрнут на указанный пространственный угол</returns>
-    [NotNull]
     public static Func<SpaceAngle, double> operator ^(Func<SpaceAngle, double> f, SpaceAngle a) => a.RotatePhiTheta(f);
 
     /// <summary>Оператор поворота функции на пространственный угол</summary>
     /// <param name="f">Комплексная пространственная функция</param>
     /// <param name="a">Пространственный угол поворота</param>
     /// <returns>Комплексная функция, аргумент которой повёрнут на указанный пространственный угол</returns>
-    [NotNull]
     public static Func<SpaceAngle, Complex> operator ^(Func<SpaceAngle, Complex> f, SpaceAngle a) => a.RotatePhiTheta(f);
 
     /* -------------------------------------------------------------------------------------------- */

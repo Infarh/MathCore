@@ -50,10 +50,7 @@ public sealed class ConsoleChart
 
     public void Plot(IReadOnlyList<double> XX, IReadOnlyList<double> YY)
     {
-        if (XX is null) throw new ArgumentNullException(nameof(XX));
-        if (YY is null) throw new ArgumentNullException(nameof(YY));
-
-        if (XX.Count != YY.Count) throw new InvalidOperationException("Размеры коллекций не совпадают");
+        if (XX.NotNull().Count != YY.NotNull().Count) throw new InvalidOperationException("Размеры коллекций не совпадают");
         if (XX.Count == 0) throw new InvalidOperationException("Число точек не должно быть равно 0");
 
         var x_interval = XX.GetMinMax();

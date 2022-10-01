@@ -4,6 +4,17 @@ namespace MathCore;
 /// <summary>Построитель хеш-суммы</summary>
 public readonly ref struct HashBuilder
 {
+    public const int BaseMultiplier = 379;
+
+    /* ------------------------------------------------------------------------------------- */
+
+    public static HashBuilder New(object? Obj) => Obj is null ? new(0) : new(Obj.GetHashCode());
+    public static HashBuilder New(object? Obj, int HashBase) => Obj is null ? new(0) : new(Obj.GetHashCode(), HashBase);
+    public static HashBuilder New<T>(T Struct) where T : struct => new(Struct.GetHashCode());
+    public static HashBuilder New<T>(T Struct, int HashBase) where T : struct => new(Struct.GetHashCode(), HashBase);
+
+    /* ------------------------------------------------------------------------------------- */
+
     /// <summary>Текущая хеш-сумма</summary>
     private readonly int _Hash;
 
@@ -16,7 +27,7 @@ public readonly ref struct HashBuilder
     /// <summary>Инициализация нового построителя хеш-суммы</summary>
     /// <param name="Hash">Базовое значение хеш-суммы</param>
     /// <param name="HashBase">Множитель хеш-суммы</param>
-    public HashBuilder(int Hash, int HashBase = 397)
+    public HashBuilder(int Hash, int HashBase = BaseMultiplier)
     {
         _Hash = Hash;
         _HashBase = HashBase;
@@ -30,19 +41,24 @@ public readonly ref struct HashBuilder
     /// <summary>Добавление компонента хеш-суммы</summary>
     /// <param name="hash">Добавляемое значение хеш-суммы</param>
     /// <returns>Новый построитель хеш-суммы с изменённым значением и тем же самым множителем</returns>
-    public HashBuilder Append(int hash)
-    {
-        var hash_base = _HashBase == 0 ? 397 : _HashBase;
-        unchecked
-        {
-            return new((_Hash * hash_base) ^ hash, hash_base);
-        }
-    }
+    public HashBuilder Append(int hash) => Append(hash, _HashBase == 0 ? BaseMultiplier : _HashBase);
+
+    /// <summary>Добавление компонента хеш-суммы</summary>
+    /// <param name="hash">Добавляемое значение хеш-суммы</param>
+    /// <param name="Base">Новый множитель</param>
+    /// <returns>Новый построитель хеш-суммы с изменённым значением и тем же самым множителем</returns>
+    public HashBuilder Append(int hash, int Base) => new(unchecked((_Hash * Base) ^ hash), Base);
 
     /// <summary>Добавление хеш-суммы объекта к сумме</summary>
-    /// <param name="Obj">ДОбавляемый объект</param>
+    /// <param name="Obj">Добавляемый объект</param>
     /// <returns>Новый построитель хеш-суммы с изменённым значением и тем же самым множителем</returns>
-    public HashBuilder Append(object Obj) => Obj is null ? this : Append(Obj.GetHashCode());
+    public HashBuilder Append(object? Obj) => Obj is null ? this : Append(Obj.GetHashCode());
+
+    /// <summary>Добавление хеш-суммы объекта к сумме</summary>
+    /// <param name="Obj">Добавляемый объект</param>
+    /// <returns>Новый построитель хеш-суммы с изменённым значением и тем же самым множителем</returns>
+    public HashBuilder Append<T>(T? Obj) => Obj is null ? this : Append(Obj.GetHashCode());
+    public HashBuilder Append<T>(T? Struct) where T : struct => Append(Struct.GetHashCode());
 
     public HashBuilder Append(double Value) => Append(Value.GetHashCode());
     public HashBuilder Append(float Value) => Append(Value.GetHashCode());

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Linq;
 
 namespace MathCore.Optimization.ParticleSwarm
@@ -11,12 +12,12 @@ namespace MathCore.Optimization.ParticleSwarm
         public double Inertia
         {
             get => _Inertia;
-            set
+            set => _Inertia = value switch
             {
-                if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть > 0");
-                if (value >= 1) throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть < 1");
-                _Inertia = value;
-            }
+                < 0  => throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Inertia)} величина должна быть > 0"),
+                >= 1 => throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Inertia)} величина должна быть < 1"),
+                _    => value
+            };
         }
 
         /// <summary>Коэффициент локального веса</summary>
@@ -33,7 +34,7 @@ namespace MathCore.Optimization.ParticleSwarm
 
         private class Particle1D
         {
-            private double BestValue;
+            private double _BestValue;
             public double BestX;
             public double Value;
             public double X;
@@ -48,20 +49,20 @@ namespace MathCore.Optimization.ParticleSwarm
             private void SetBest()
             {
                 BestX = X;
-                BestValue = Value;
+                _BestValue = Value;
             }
 
             public void SetMin(Func<double, double> F)
             {
                 Value = F(X);
-                if(Value < BestValue)
+                if(Value < _BestValue)
                     SetBest();
             }
 
             public void SetMax(Func<double, double> F)
             {
                 Value = F(X);
-                if(Value < BestValue)
+                if(Value < _BestValue)
                     SetBest();
             }
         }

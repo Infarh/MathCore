@@ -1,8 +1,9 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable StaticMemberInGenericType
 // ReSharper disable MemberCanBePrivate.Global
@@ -32,11 +33,11 @@ public partial class SetOf<T> : AbstractSetOf<T>, ICollection<T>, ICloneable<Set
 
     /// <summary>Новое множество элементов</summary>
     /// <param name="collection">Коллекция элементов</param>
-    public SetOf([NotNull] IEnumerable<T> collection) => _List = new List<T>(collection);
+    public SetOf(IEnumerable<T> collection) => _List = new List<T>(collection);
 
     /// <summary>Новое множество элементов</summary>
     /// <param name="element">Элементы множества</param>
-    public SetOf([NotNull] params T[] element) : this((IEnumerable<T>)element) { }
+    public SetOf(params T[] element) : this((IEnumerable<T>)element) { }
 
     /// <summary>Преобразование в список</summary>
     /// <returns>Список элементов</returns>
@@ -52,11 +53,10 @@ public partial class SetOf<T> : AbstractSetOf<T>, ICollection<T>, ICloneable<Set
 
     /// <summary>Клонирование множества элементов</summary>
     /// <returns></returns>
-    [NotNull]
     public SetOf<T> Clone() => new(this);
 
     /// <inheritdoc />
-    public bool Equals(SetOf<T> other)
+    public bool Equals(SetOf<T>? other)
     {
         if (other is null || other.Power != Power) return false;
         foreach (var item in this)
@@ -71,7 +71,7 @@ public partial class SetOf<T> : AbstractSetOf<T>, ICollection<T>, ICloneable<Set
     }
 
     /// <inheritdoc />
-    [NotNull] public override string ToString() => $"Set of {typeof(T).Name}[{Power}]: {{{this.ToSeparatedStr(",").TrimByLength(40, " ... ")}}}";
+    public override string ToString() => $"Set of {typeof(T).Name}[{Power}]: {{{this.ToSeparatedStr(",").TrimByLength(40, " ... ")}}}";
 
     object ICloneable.Clone() => Clone();
 
@@ -105,22 +105,21 @@ public partial class SetOf<T> : AbstractSetOf<T>, ICollection<T>, ICloneable<Set
     }
 
     /// <inheritdoc />
-    void ICollection<T>.Add(T item) => Add(item);
+    void ICollection<T>.Add(T? item) => Add(item);
 
-    [NotNull]
-    public KeyValuePair<T, bool>[] AddRange([NotNull] IEnumerable<T> collection) => collection.Select(item => new KeyValuePair<T, bool>(item, Add(item))).ToArray();
+    public KeyValuePair<T, bool>[] AddRange(IEnumerable<T> collection) => collection.Select(item => new KeyValuePair<T, bool>(item, Add(item))).ToArray();
 
     /// <inheritdoc />
     public void Clear() => _List.Clear();
 
     /// <inheritdoc cref="T:System.Collections.Generic.ICollection`1" />
-    public override bool Contains(T item) => _List.Contains(item);
+    public override bool Contains(T? item) => _List.Contains(item);
 
     /// <inheritdoc />
     void ICollection<T>.CopyTo(T[] array, int ArrayIndex) => _List.CopyTo(array, ArrayIndex);
 
     /// <inheritdoc />
-    public bool Remove(T item) => _List.Remove(item);
+    public bool Remove(T? item) => _List.Remove(item);
 
     /// <inheritdoc />
     int ICollection<T>.Count => Power;

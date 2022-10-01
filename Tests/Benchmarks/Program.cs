@@ -10,4 +10,5 @@ using Benchmarks;
 //_ = BenchmarkRunner.Run<SwapTest>();
 //_ = BenchmarkRunner.Run<PowerIterationTest>();
 //_ = BenchmarkRunner.Run<ParseDoubleTest>();
-_ = BenchmarkRunner.Run<ParseIntTest>();
+//_ = BenchmarkRunner.Run<ParseIntTest>();
+_ = BenchmarkRunner.Run<CortegeCtorTest>();

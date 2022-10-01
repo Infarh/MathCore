@@ -1,21 +1,21 @@
-﻿using System;
+﻿#nullable enable
+using System;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedParameter.Local
 
-namespace MathCore.Values
+namespace MathCore.Values;
+
+[NotImplemented]
+public class TimeBufferedValue<TValue> : IFactory<TValue>
 {
-    public class TimeBufferedValue<TValue> : IFactory<TValue>
+    private readonly LazyValue<TValue> _Value;
+    private DateTime _LastAccessTime = DateTime.MinValue;
+
+    public TimeBufferedValue(Func<TValue> Generator, TimeSpan Timeout) => _Value = new(() =>
     {
-        private readonly LazyValue<TValue> _Value;
-        private DateTime _LastAccessTime = DateTime.MinValue;
+        _LastAccessTime = DateTime.Now;
+        return Generator();
+    });
 
-        public TimeBufferedValue(Func<TValue> Generator, TimeSpan Timeout) => 
-            _Value = new LazyValue<TValue>(() =>
-            {
-                _LastAccessTime = DateTime.Now;
-                return Generator();
-            });
-
-        public TValue Create() => throw new NotImplementedException();
-    }
+    public TValue Create() => throw new NotImplementedException();
 }

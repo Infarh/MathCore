@@ -1,13 +1,23 @@
 ﻿using MathCore.Algorithms.Numbers;
 
-var str    = "123;456;789";
-var values = str.AsStringPtr().Split(';');
-if (values is [{Length: > 0} a, { Length: > 0 } b, { Length: > 0 } c])
-{
 
-}
+var (m1, k1) = DoubleIEEE754.GetPower2(+8);
+var (m2, k2) = DoubleIEEE754.GetPower2(-8);
+var (m3, k3) = DoubleIEEE754.GetPower21(+8);
+var (m4, k4) = DoubleIEEE754.GetPower21(-8);
+
+var (m, k) = DoubleIEEE754.GetPower21(-8);
 
 var x = 654.321;
+var x0 = 654.321e-8;
+
+var mm = 0;
+var y = x;
+while (y > 2) 
+    (y, mm) = (y / 2, mm + 1);
+
+var y1 = y * k * Math.Pow(2, mm + m);
+
 var (mantissa, exp, sign) = DoubleIEEE754.Parse(x);
 
 var value = DoubleIEEE754.Create(mantissa, 0, false);

@@ -134,6 +134,7 @@
 // ReSharper restore CommentTypo
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -151,7 +152,7 @@ public class BigInt
     public const int MaxLength = 70;
 
     /// <summary>Простые числа до 2000</summary>
-    public static readonly int[] PrimesBelow2000 =
+    public static readonly IReadOnlyList<int> PrimesBelow2000 = new[]
     {
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
         101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193,
@@ -172,7 +173,6 @@ public class BigInt
         1879, 1889, 1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999
     };
 
-
     /// <summary>Байты числа</summary>
     private readonly uint[] _Data;
 
@@ -185,28 +185,23 @@ public class BigInt
     /* ---------------------------------------------------------------------------- */
 
     /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
-    public BigInt()
-    {
-        _Data       = new uint[MaxLength];
-        _DataLength = 1;
-    }
+    public BigInt() => (_Data, _DataLength) = (new uint[MaxLength], 1);
 
     /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
     /// <param name="Value">Исходное значение числа</param>
     public BigInt(long Value)
     {
-        _Data = new uint[MaxLength];
-        var temp_val = Value;
+        (_Data, var temp_val) = (new uint[MaxLength], Value);
 
         // copy bytes from long to BigInteger without any assumption of
         // the length of the long datatype
 
-        _DataLength = 0;
-        while (Value != 0 && _DataLength < MaxLength)
+        var length = 0;
+        while (Value != 0 && length < MaxLength)
         {
-            _Data[_DataLength] =   (uint)(Value & 0xFFFFFFFF);
-            Value              >>= 32;
-            _DataLength++;
+            _Data[length] = (uint)(Value & 0xFFFFFFFF);
+            Value            >>= 32;
+            length++;
         }
 
         if (temp_val > 0) // overflow check for +ve value
@@ -215,10 +210,10 @@ public class BigInt
                 throw new ArithmeticException("Positive overflow in constructor.");
         }
         else if (temp_val < 0) // underflow check for -ve value
-            if (Value != -1 || (_Data[_DataLength - 1] & 0x80000000) == 0)
+            if (Value != -1 || (_Data[length - 1] & 0x80000000) == 0)
                 throw new ArithmeticException("Negative underflow in constructor.");
 
-        if (_DataLength == 0) _DataLength = 1;
+        _DataLength = Math.Max(1, length);
     }
 
     /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
@@ -230,31 +225,23 @@ public class BigInt
         // copy bytes from ulong to BigInteger without any assumption of
         // the length of the ulong datatype
 
-        _DataLength = 0;
-        while (Value != 0 && _DataLength < MaxLength)
+        var length = 0;
+        while (Value != 0 && length < MaxLength)
         {
-            _Data[_DataLength] =   (uint)(Value & 0xFFFFFFFF);
-            Value              >>= 32;
-            _DataLength++;
+            _Data[length] = (uint)(Value & 0xFFFFFFFF);
+            Value           >>= 32;
+            length++;
         }
 
         if (Value != 0 || (_Data[MaxLength - 1] & 0x80000000) != 0)
             throw new ArithmeticException("Positive overflow in constructor.");
 
-        if (_DataLength == 0) _DataLength = 1;
+        _DataLength = Math.Max(1, length);
     }
 
     /// <summary>Инициализация нового пустого <see cref="BigInt"/> = 0</summary>
     /// <param name="Value">Исходное значение числа</param>
-    public BigInt(BigInt Value)
-    {
-        _Data = new uint[MaxLength];
-
-        _DataLength = Value._DataLength;
-
-        for (var i = 0; i < _DataLength; i++) _Data[i] = Value._Data[i];
-    }
-
+    public BigInt(BigInt Value) => (_Data, _DataLength) = ((uint[])Value._Data.Clone(), Value._DataLength);
 
     //***********************************************************************
     // Constructor (Default value provided by a string of digits of the
@@ -363,7 +350,6 @@ public class BigInt
         if (left_over != 0) // length not multiples of 4
             _DataLength++;
 
-
         if (_DataLength > MaxLength)
             throw new OverflowException("Byte overflow in constructor.");
 
@@ -397,10 +383,8 @@ public class BigInt
         var left_over = Length & 0x3;
         if (left_over != 0) _DataLength++; // length not multiples of 4
 
-
         if (_DataLength > MaxLength || Length > Data.Length)
             throw new OverflowException("Byte overflow in constructor.");
-
 
         _Data = new uint[MaxLength];
 
@@ -421,8 +405,6 @@ public class BigInt
 
         while (_DataLength > 1 && _Data[_DataLength - 1] == 0)
             _DataLength--;
-
-        //Console.WriteLine("Len = " + _DataLength);
     }
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 // ReSharper disable UnusedMember.Global
@@ -78,10 +79,8 @@ public class StreamDataSpeedValue
     /// <summary>Минимально допустимый интервал времени проверки скорости</summary>
     public double SpeedCheckTimeout
     {
-        [DST]
-        get => _SpeedCheckTimeout;
-        [DST]
-        set => _SpeedCheckTimeout = value;
+        [DST] get => _SpeedCheckTimeout;
+        [DST] set => _SpeedCheckTimeout = value;
     }
 
     /* ------------------------------------------------------------------------------------------ */

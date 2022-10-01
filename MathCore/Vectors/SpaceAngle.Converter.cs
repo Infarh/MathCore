@@ -1,76 +1,66 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 
-namespace MathCore.Vectors
+namespace MathCore.Vectors;
+
+internal class SpaceAngleConverter : TypeConverter<string, SpaceAngle>
 {
-    internal class SpaceAngleConverter : TypeConverter<string, SpaceAngle>
+    public override object? ConvertFrom(ITypeDescriptorContext Context, CultureInfo Info, object? value)
     {
-        public override object ConvertFrom(ITypeDescriptorContext Context, CultureInfo Info, object value)
-        {
-            //Не указано объекта для преобразования
-            if(value is null)
-                throw new ArgumentNullException(nameof(value));
+        //Аргумент не является строкой, либо строка пуста
+        //var ss = value.NotNull() as string;
+        if (value.NotNull() is not string { Length: > 0 } ss)
+            return base.ConvertFrom(Context, Info, value);
 
-            //Аргумент не является строкой, либо строка пуста
-            var ss = value as string;
-            if(string.IsNullOrEmpty(ss) || ss.Length < 1)
-                return base.ConvertFrom(Context, Info, value);
+        //Убираем все начальные и конечные скобки, ковычки и апострофы
+        while (ss is ['{', .. var s, '}']) ss   = s;
+        while (ss is ['[', .. var s, ']']) ss   = s;
+        while (ss is ['(', .. var s, ')']) ss   = s;
+        while (ss is ['"', .. var s, '"']) ss   = s;
+        while (ss is ['\'', .. var s, '\'']) ss = s;
 
-            //Убираем все начальные и конечные скобки, ковычки и апострофы
-            while(ss[0] == '{' && ss[^1] == '}') ss = ss[1..^1];
-            while(ss[0] == '[' && ss[^1] == ']') ss = ss[1..^1];
-            while(ss[0] == '(' && ss[^1] == ')') ss = ss[1..^1];
-            while(ss[0] == '\'' && ss[^1] == '\'') ss = ss[1..^1];
-            while(ss[0] == '"' && ss[^1] == '"') ss = ss[1..^1];
+        var values = ss.Replace(" ", string.Empty).Split(',', ';');
 
-            var values = ss.Replace(" ", string.Empty).Split(',', ';');
-
-            var theta = 0d;
-            var phi = 0d;
-            bool th_set = false, ph_set = false;
-            var type = AngleType.Deg;
-            for(var i = 0; i < values.Length; i++)
-            {
-                var v = values[i].Split('=');
-                var name_str = v[0];
-                var value_str = v[^1];
-                if(value_str.IsNullOrWhiteSpace()) continue;
-                if(name_str.Equals("type", StringComparison.InvariantCultureIgnoreCase))
+        var theta = 0d;
+        var phi = 0d;
+        bool th_set = false, ph_set = false;
+        var type = AngleType.Deg;
+        foreach (var str_value in values.Where(s => s is { Length: > 0 }))
+            if (str_value.Length > 2 && str_value.Split('=') is [ [var name0, ..] name, { Length: > 0 } value_str])
+                if (name.Equals("type", StringComparison.InvariantCultureIgnoreCase))
+                    type = value_str.Equals("rad", StringComparison.InvariantCultureIgnoreCase) 
+                        ? AngleType.Rad 
+                        : AngleType.Deg;
+                else switch (name0)
                 {
-                    if(value_str.Equals("rad", StringComparison.InvariantCultureIgnoreCase))
-                        type = AngleType.Rad;
-                    continue;
-                }
-
-                switch(name_str.ToLower()[0])
-                {
+                    case 'T':
                     case 't':
                         double.TryParse(value_str, out theta);
                         th_set = true;
-                        continue;
+                        break;
+                    case 'P':
                     case 'p':
                         double.TryParse(value_str, out phi);
                         ph_set = true;
-                        continue;
+                        break;
                 }
-
-                var vv = values[i].AsDouble();
-                if(vv is null) continue;
-                if(!th_set)
+            else if (str_value.AsDouble() is { } vv)
+                if (!th_set)
                 {
-                    theta = vv.Value;
+                    theta = vv;
                     th_set = true;
                 }
-                else if(!ph_set)
+                else if (!ph_set)
                 {
-                    phi = vv.Value;
+                    phi = vv;
                     ph_set = true;
                 }
-            }
-            return type == AngleType.Deg
-                    ? new SpaceAngle(theta, phi, AngleType.Deg)
-                    : new SpaceAngle(theta, phi, AngleType.Deg).InRad;
-        }
+
+        return type == AngleType.Deg
+            ? new SpaceAngle(theta, phi, AngleType.Deg)
+            : new SpaceAngle(theta, phi, AngleType.Deg).InRad;
     }
 }
