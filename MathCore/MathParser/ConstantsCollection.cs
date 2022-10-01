@@ -21,17 +21,10 @@ public sealed class ConstantsCollection : IEnumerable<ExpressionVariable>
     /// <summary>Итератор констант по имени</summary>
     /// <param name="Name">Имя константы</param>
     /// <returns>Константа с указанным именем</returns>
-    public ExpressionVariable this[string Name]
-    {
-        get
-        {
-            if(Name is null) throw new ArgumentNullException(nameof(Name));
-            if(string.IsNullOrEmpty(Name)) throw new ArgumentOutOfRangeException(nameof(Name));
-            var c = _Items.Find(v => v.Name == Name);
-            if(c is null) throw new ArgumentException($"Константа с именем {Name} не найдена");
-            return c;
-        }
-    }
+    public ExpressionVariable this[string Name] => Name.NotNull().Length == 0
+        ? throw new ArgumentOutOfRangeException(nameof(Name))
+        : _Items.Find(v => v.Name == Name)
+        ?? throw new ArgumentException($"Константа с именем {Name} не найдена");
 
     /// <summary>Добавить элемент в коллекцию</summary>
     /// <param name="Constant">Добавляемое значение, как константа</param>

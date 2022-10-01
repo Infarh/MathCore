@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using MathCore.Annotations;
+
 using MathCore.MathParser.ExpressionTrees;
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable ClassCanBeSealed.Global
@@ -215,10 +215,10 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
         {
             var call = e.Argument; // Извлекаем ссылку на узел
             //Если целевой объект вызова - не(!) константное значение и оно не соответствует типу переменной дерева MathExpressionTree 
-            if (!(call.Object is ConstantExpression { Value: ExpressionVariable } constant))
+            if (call.Object is not ConstantExpression { Value: ExpressionVariable } constant)
                 return call; // пропускаем узел
             //Извлекаем из узла переменную дерева
-            var v = (ExpressionVariable)((ConstantExpression)call.Object).Value;
+            var v = (ExpressionVariable)constant.Value;
             //Если переменная дерева - константа, либо если её имя отсутствует в словаре компилируемых переменных
             if (v.IsConstant || !var_dictionary.ContainsKey(v.Name)) return call; // то пропускаем узел
             var index   = var_dictionary[v.Name];                                 // Запрашиваем индекс переменной
@@ -236,7 +236,6 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     /// <typeparam name="TDelegate">Тип делегата функции</typeparam>
     /// <param name="ArgumentName">Список имён параметров</param>
     /// <returns>Делегат скомпилированного выражения</returns>
-    [NotNull]
     public TDelegate Compile<TDelegate>(params string[] ArgumentName)
     {
         var compilation = GetExpression<TDelegate>(out var vars, ArgumentName);
@@ -259,7 +258,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     /// <param name="ArgumentName">Список имён аргументов</param>
     /// <returns>Выражение типа Linq.Expression</returns>
     public Expression GetExpression<TDelegate>(
-        [CanBeNull] out ParameterExpression[] vars,
+        out ParameterExpression[]? vars,
         params string[] ArgumentName)
     {
         var t = typeof(TDelegate);

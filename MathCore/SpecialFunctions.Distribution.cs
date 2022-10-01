@@ -1,4 +1,7 @@
 ﻿using System;
+
+using static System.Math;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore;
@@ -18,26 +21,26 @@ public static partial class SpecialFunctions
             [DST]
             public static double ErrorFunction(double x)
             {
-                var s = Math.Sign(x);
-                x = Math.Abs(x);
+                var s = Sign(x);
+                x = Abs(x);
                 if (x >= .5) return x >= 10 ? s : s * (1 - ErrorFunctionConform(x));
 
-                var xsq = x * x;
+                var x2 = x * x;
                 var p   = .007547728033418631287834;
-                p = .288805137207594084924010 + xsq * p;
-                p = 14.3383842191748205576712 + xsq * p;
-                p = 38.0140318123903008244444 + xsq * p;
-                p = 3017.82788536507577809226 + xsq * p;
-                p = 7404.07142710151470082064 + xsq * p;
-                p = 80437.3630960840172832162 + xsq * p;
+                p = .288805137207594084924010 + x2 * p;
+                p = 14.3383842191748205576712 + x2 * p;
+                p = 38.0140318123903008244444 + x2 * p;
+                p = 3017.82788536507577809226 + x2 * p;
+                p = 7404.07142710151470082064 + x2 * p;
+                p = 80437.3630960840172832162 + x2 * p;
 
                 var q = .0;
-                q = 1.00000000000000000000000 + xsq * q;
-                q = 38.0190713951939403753468 + xsq * q;
-                q = 658.070155459240506326937 + xsq * q;
-                q = 6379.60017324428279487120 + xsq * q;
-                q = 34216.5257924628539769006 + xsq * q;
-                q = 80437.3630960840172826266 + xsq * q;
+                q = 1.00000000000000000000000 + x2 * q;
+                q = 38.0190713951939403753468 + x2 * q;
+                q = 658.070155459240506326937 + x2 * q;
+                q = 6379.60017324428279487120 + x2 * q;
+                q = 34216.5257924628539769006 + x2 * q;
+                q = 80437.3630960840172826266 + x2 * q;
                 return s * 1.1283791670955125738961589031 * x * p / q;
             }
 
@@ -67,7 +70,7 @@ public static partial class SpecialFunctions
                 q *= 6089.5424232724435504633068 + x;
                 q *= 4958.82756472114071495438422 + x;
                 q *= 1826.3348842295112595576438 + x;
-                return Math.Exp(-(x * x)) * p / q;
+                return Exp(-(x * x)) * p / q;
             }
 
             [DST]
@@ -118,8 +121,8 @@ public static partial class SpecialFunctions
                     return (y + y * y2 * p0 / q0) * lc_s2pi;
                 }
 
-                var x  = Math.Sqrt(-2 * Math.Log(y));
-                var x0 = x - Math.Log(x) / x;
+                var x  = Sqrt(-2 * Log(y));
+                var x0 = x - Log(x) / x;
                 var z  = 1 / x;
 
                 double x1;
@@ -178,7 +181,7 @@ public static partial class SpecialFunctions
             [DST]
             public static double StudentDistribution(int k, double t)
             {
-                if (Math.Abs(t - 0) < Eps) return .5;
+                if (Abs(t - 0) < Eps) return .5;
                 if (t < -2)
                     return .5 * IncompleteBeta.IncompleteBetaValue(.5 * k, .5, k / (k + t * t));
 
@@ -192,8 +195,8 @@ public static partial class SpecialFunctions
                 int    j;
                 if (k % 2 != 0)
                 {
-                    var x_sqk = x / Math.Sqrt(rk);
-                    p = Math.Atan(x_sqk);
+                    var x_sqk = x / Sqrt(rk);
+                    p = Atan(x_sqk);
                     if (k > 1)
                     {
                         f  = 1;
@@ -219,7 +222,7 @@ public static partial class SpecialFunctions
                         f  += tz;
                         j  += 2;
                     }
-                    p = f * x / Math.Sqrt(z * rk);
+                    p = f * x / Sqrt(z * rk);
                 }
 
                 return .5 + .5 * (t < 0 ? -p : p);
@@ -233,9 +236,9 @@ public static partial class SpecialFunctions
                 double rk = k;
                 if (p is > .25 and < .75)
                 {
-                    if (Math.Abs(p - .5) < Eps) return 0;
-                    z = IncompleteBeta.IncompleteBetaInversed(.5, .5 * rk, Math.Abs(1 - 2 * p));
-                    var t = Math.Sqrt(rk * z / (1 - z));
+                    if (Abs(p - .5) < Eps) return 0;
+                    z = IncompleteBeta.IncompleteBetaInversed(.5, .5 * rk, Abs(1 - 2 * p));
+                    var t = Sqrt(rk * z / (1 - z));
                     return p < 0 ? -t : t;
                 }
 
@@ -247,7 +250,7 @@ public static partial class SpecialFunctions
                 }
 
                 z = IncompleteBeta.IncompleteBetaInversed(.5 * rk, .5, 2 * p);
-                return __MaxRealNumber * z < rk ? r_flg * __MaxRealNumber : r_flg * Math.Sqrt(rk / z - rk);
+                return __MaxRealNumber * z < rk ? r_flg * __MaxRealNumber : r_flg * Sqrt(rk / z - rk);
             }
 
             /// <summary>Квантиль Хи-квадрат</summary>
@@ -269,21 +272,21 @@ public static partial class SpecialFunctions
                 if (alpha is < .001 or > .999)
                     throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "Значения alpha < 0.001 и > 0.999 не поддерживаются");
 
-                var d = alpha >= .5
-                    ? 2.0637 * Math.Pow(Math.Log(1 / (1 - alpha)) - .16, .4274) - 1.5774
-                    : -2.0637 * Math.Pow(Math.Log(1 / alpha) - .16, .4274) + 1.5774;
+                var d0 = alpha >= .5
+                    ? 2.0637 * Pow(Log(1 / (1 - alpha)) - .16, .4274) - 1.5774
+                    : -2.0637 * Pow(Log(1 / alpha) - .16, .4274) + 1.5774;
 
-                var d2 = d * d;
+                var d2 = d0 * d0;
                 var d4 = d2 * d2;
 
-                var A = d * Consts.sqrt_2;
-                var B = 2 * (d2 - 1) / 3;
-                var C = d * (d2 - 7) / (9 * Consts.sqrt_2);
-                var D = -(6 * d4 + 14 * d2 - 32) / 405;
-                var E = d * (9 * d4 + 256 * d2 - 433) / (4860 * Consts.sqrt_2);
+                var a = d0 * Consts.sqrt_2;
+                var b = 2 * (d2 - 1) / 3;
+                var c = d0 * (d2 - 7) / (9 * Consts.sqrt_2);
+                var d = -(6 * d4 + 14 * d2 - 32) / 405;
+                var e = d0 * (9 * d4 + 256 * d2 - 433) / (4860 * Consts.sqrt_2);
 
-                var sqrt_n = Math.Sqrt(n);
-                return n + A * sqrt_n + B + C / sqrt_n + D / n + E / n / sqrt_n;
+                var sqrt_n = Sqrt(n);
+                return n + a * sqrt_n + b + c / sqrt_n + d / n + e / n / sqrt_n;
             }
         }
     }

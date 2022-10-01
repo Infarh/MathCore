@@ -1,4 +1,7 @@
 ﻿using System;
+
+using static System.Math;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore;
@@ -13,20 +16,20 @@ public static partial class SpecialFunctions
         {
             double z;
             var    sgn_gam = 1;
-            var    q       = Math.Abs(x);
+            var    q       = Abs(x);
             if (q > 33)
             {
                 if (x >= 0) z = GStir(x);
                 else
                 {
-                    double p                = (int)Math.Floor(q);
-                    var    i                = (int)Math.Round(p);
+                    double p                = (int)Floor(q);
+                    var    i                = (int)Round(p);
                     if (i % 2 == 0) sgn_gam = -1;
                     z = q - p;
                     if (z > .5) z = q - ++p;
-                    z = q * Math.Sin(Consts.pi * z);
-                    z = Math.Abs(z);
-                    z = Math.PI / (z * GStir(q));
+                    z = q * Sin(Consts.pi * z);
+                    z = Abs(z);
+                    z = PI / (z * GStir(q));
                 }
                 return sgn_gam * z;
             }
@@ -44,7 +47,7 @@ public static partial class SpecialFunctions
                 else
                     return z / ((1 + .5772156649015329 * x) * x);
 
-            if (Math.Abs(x - 2) < Eps) return z;
+            if (Abs(x - 2) < Eps) return z;
             x -= 2;
 
             var pp = 1.60119522476751861407E-4;
@@ -77,12 +80,12 @@ public static partial class SpecialFunctions
             stir = 3.47222221605458667310E-3 + w * stir;
             stir = 8.33333333333482257126E-2 + w * stir;
             w    = 1 + w * stir;
-            var y = Math.Exp(x);
+            var y = Exp(x);
 
-            if (x <= 143.01608) y = Math.Pow(x, x - .5) / y;
+            if (x <= 143.01608) y = Pow(x, x - .5) / y;
             else
             {
-                var v = Math.Pow(x, .5 * x - .25);
+                var v = Pow(x, .5 * x - .25);
                 y = v * v / y;
             }
             return 2.50662827463100050242 * y * w;
@@ -104,12 +107,12 @@ public static partial class SpecialFunctions
             {
                 q = -x;
                 var w = LnG(q, out _);
-                p = (int)Math.Floor(q);
-                var i = (int)Math.Round(p);
+                p = (int)Floor(q);
+                var i = (int)Round(p);
                 sign = i % 2 == 0 ? -1 : 1;
                 z    = q - p;
                 if (z > .5) z = ++p - q;
-                return log_pi - Math.Log(q * Math.Sin(Consts.pi * z)) - w;
+                return log_pi - Log(q * Sin(Consts.pi * z)) - w;
             }
             if (x < 13)
             {
@@ -136,7 +139,7 @@ public static partial class SpecialFunctions
                     z    = -z;
                 }
 
-                if (Math.Abs(u - 2) < Eps) return Math.Log(z);
+                if (Abs(u - 2) < Eps) return Log(z);
 
                 p -= 2;
                 x += p;
@@ -156,9 +159,9 @@ public static partial class SpecialFunctions
                 c = -2532523.07177582951285 + x * c;
                 c = -2018891.41433532773231 + x * c;
 
-                return Math.Log(z) + x * b / c;
+                return Log(z) + x * b / c;
             }
-            q = (x - .5) * Math.Log(x) - x + lc_Ls2Pi;
+            q = (x - .5) * Log(x) - x + lc_Ls2Pi;
             if (x > 100000000) return q;
 
             p = 1 / (x * x);
@@ -203,10 +206,10 @@ public static partial class SpecialFunctions
                     s += __GammaDk[i] / (i - z);
 
                 return Consts.LnPi
-                    - Math.Log(Math.Sin(Consts.pi * z))
-                    - Math.Log(s)
+                    - Log(Sin(Consts.pi * z))
+                    - Log(s)
                     - Consts.Ln2Sqrt_e_div_pi
-                    - (0.5 - z) * Math.Log((0.5 - z + __GammaR) / Math.E);
+                    - (0.5 - z) * Log((0.5 - z + __GammaR) / E);
             }
             else
             {
@@ -214,9 +217,9 @@ public static partial class SpecialFunctions
                 for (var i = 1; i <= __GammaN; i++)
                     s += __GammaDk[i] / (z + i - 1.0);
 
-                return Math.Log(s)
+                return Log(s)
                     + Consts.Ln2Sqrt_e_div_pi
-                    + (z - 0.5) * Math.Log((z - 0.5 + __GammaR) / Math.E);
+                    + (z - 0.5) * Log((z - 0.5 + __GammaR) / E);
             }
         }
 
@@ -243,7 +246,7 @@ public static partial class SpecialFunctions
 
             // Initial Guess
             var d   = 1d / (9 * a);
-            var y   = 1 - d - 0.98 * Consts.sqrt_2 * Erf.Inv(2.0 * y0 - 1.0) * Math.Sqrt(d);
+            var y   = 1 - d - 0.98 * Consts.sqrt_2 * Erf.Inv(2.0 * y0 - 1.0) * Sqrt(d);
             var x   = a * y * y * y;
             var lgm = Ln(a);
 
@@ -273,16 +276,16 @@ public static partial class SpecialFunctions
                     y_upper = y;
                 }
 
-                d = (a - 1) * Math.Log(x) - x - lgm;
+                d = (a - 1) * Log(x) - x - lgm;
                 if (d < -709.78271289338399)
                 {
                     d = 0.0625;
                     break;
                 }
 
-                d = -Math.Exp(d);
+                d = -Exp(d);
                 d = (y - y0) / d;
-                if (Math.Abs(d / x) < epsilon) return x;
+                if (Abs(d / x) < epsilon) return x;
 
                 if (d > x / 4 && y0 < 0.05)
                     // Naive heuristics for cases near the singularity
@@ -317,10 +320,10 @@ public static partial class SpecialFunctions
                 x   = x_lower + d * (x_upper - x_lower);
                 y   = 1 - LowerRegularized(a, x);
                 lgm = (x_upper - x_lower) / (x_lower + x_upper);
-                if (Math.Abs(lgm) < threshold) return x;
+                if (Abs(lgm) < threshold) return x;
 
                 lgm = (y - y0) / y0;
-                if (Math.Abs(lgm) < threshold) return x;
+                if (Abs(lgm) < threshold) return x;
 
                 if (x <= 0d) return 0d;
 
@@ -381,7 +384,7 @@ public static partial class SpecialFunctions
             if (x.EqualWithAccuracy(0.0))
                 return 0d;
 
-            var ax = a * Math.Log(x) - x - Ln(a);
+            var ax = a * Log(x) - x - Ln(a);
             if (ax < -709.78271289338399)
                 return a < x ? 1d : 0d;
 
@@ -399,7 +402,7 @@ public static partial class SpecialFunctions
                 }
                 while (c2 / ans2 > epsilon);
 
-                return Math.Exp(ax) * ans2 / a;
+                return Exp(ax) * ans2 / a;
             }
 
             var c = 0;
@@ -427,7 +430,7 @@ public static partial class SpecialFunctions
                 if (q != 0)
                 {
                     var next_ans = p / q;
-                    error = Math.Abs((ans - next_ans) / next_ans);
+                    error = Abs((ans - next_ans) / next_ans);
                     ans   = next_ans;
                 }
                 else
@@ -441,7 +444,7 @@ public static partial class SpecialFunctions
                 q2 = q;
 
                 // normalize fraction when the numerator becomes large
-                if (Math.Abs(p) > big)
+                if (Abs(p) > big)
                 {
                     p3 *= big_inv;
                     p2 *= big_inv;
@@ -451,7 +454,7 @@ public static partial class SpecialFunctions
             }
             while (error > epsilon);
 
-            return 1d - Math.Exp(ax) * ans;
+            return 1d - Exp(ax) * ans;
         }
     }
 }

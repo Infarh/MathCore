@@ -1,27 +1,26 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using MathCore.Annotations;
 
-namespace MathCore
+namespace MathCore;
+
+public class PropertyComparer<T, TValue> : IComparer<T>
 {
-    public class PropertyComparer<T, TValue> : IComparer<T>
-    {
-        [NotNull] private readonly Func<T, TValue> _Selector;
+    private readonly Func<T, TValue> _Selector;
 
-        public PropertyComparer([NotNull] Func<T, TValue> Selector) => _Selector = Selector ?? throw new ArgumentNullException(nameof(Selector));
+    public PropertyComparer(Func<T, TValue> Selector) => _Selector = Selector.NotNull();
 
-        public int Compare(T x, T y) => Comparer<TValue>.Default.Compare(_Selector(x), _Selector(y));
-    }
+    public int Compare(T? x, T? y) => Comparer<TValue>.Default.Compare(_Selector(x), _Selector(y));
+}
 
-    public class PropertyComparer : IComparer
-    {
-        [NotNull] public static PropertyComparer<T, TValue> Create<T, TValue>([NotNull] Func<T, TValue> Selector) => new(Selector);
+public class PropertyComparer : IComparer
+{
+    public static PropertyComparer<T, TValue> Create<T, TValue>(Func<T, TValue> Selector) => new(Selector);
 
-        [NotNull] private readonly Func<object, object> _Selector;
+    private readonly Func<object, object> _Selector;
 
-        public PropertyComparer([NotNull] Func<object, object> Selector) => _Selector = Selector ?? throw new ArgumentNullException(nameof(Selector));
+    public PropertyComparer(Func<object, object> Selector) => _Selector = Selector.NotNull();
 
-        public int Compare(object x, object y) => Comparer.Default.Compare(_Selector(x), _Selector(y));
-    }
+    public int Compare(object? x, object? y) => Comparer.Default.Compare(_Selector(x), _Selector(y));
 }

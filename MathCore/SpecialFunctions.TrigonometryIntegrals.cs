@@ -1,4 +1,5 @@
-﻿using System;
+﻿using static System.Math;
+
 // ReSharper disable IdentifierTypo
 
 namespace MathCore;
@@ -61,7 +62,7 @@ public static partial class SpecialFunctions
                 x  = -x;
             }
 
-            if(Math.Abs(x) < Eps)
+            if(Abs(x) < Eps)
             {
                 si = 0;
                 ci = -__MaxRealNumber;
@@ -70,8 +71,8 @@ public static partial class SpecialFunctions
 
             if(x > 1E9)
             {
-                si = Consts.pi05 - Math.Cos(x) / x;
-                ci = Math.Sin(x) / x;
+                si = Consts.pi05 - Cos(x) / x;
+                ci = Sin(x) / x;
                 return;
             }
 
@@ -111,12 +112,12 @@ public static partial class SpecialFunctions
                 cd = cd * z + 4.00000000000000000080E0;
                 c  = z * cn / cd;
                 si = sg == 0 ? s : -s;
-                ci = 0.57721566490153286061 + Math.Log(x) + c;
+                ci = 0.57721566490153286061 + Log(x) + c;
                 return;
             }
 
-            s = Math.Sin(x);
-            c = Math.Cos(x);
+            s = Sin(x);
+            c = Cos(x);
             z = 1 / (x * x);
 
             double gd;
@@ -269,7 +270,7 @@ public static partial class SpecialFunctions
                 x  = -x;
             }
 
-            if(Math.Abs(x) < Eps)
+            if(Abs(x) < Eps)
             {
                 shi = 0;
                 chi = -__MaxRealNumber;
@@ -295,7 +296,7 @@ public static partial class SpecialFunctions
                     a /= k;
                     s += a / k;
                     k++;
-                } while(Math.Abs(a / s) >= Eps);
+                } while(Abs(a / s) >= Eps);
                 s *= x;
             }
             else
@@ -306,7 +307,7 @@ public static partial class SpecialFunctions
                 if(x < 18)
                 {
                     a  = (576 / x - 52) / 10;
-                    k  = Math.Exp(x) / x;
+                    k  = Exp(x) / x;
                     b0 = 1.83889230173399459482E-17;
                     b1 = 0;
                     ChebIterationShiChi(a, -9.55485532279655569575E-17, ref b0, ref b1, out _);
@@ -363,7 +364,7 @@ public static partial class SpecialFunctions
                     if(x <= 88)
                     {
                         a  = (6336 / x - 212) / 70;
-                        k  = Math.Exp(x) / x;
+                        k  = Exp(x) / x;
                         b0 = -1.05311574154850938805E-17;
                         b1 = 0;
                         ChebIterationShiChi(a, 2.62446095596355225821E-17, ref b0, ref b1, out _);
@@ -426,9 +427,8 @@ public static partial class SpecialFunctions
                 }
             }
             shi = sg == 0 ? s : -s;
-            chi = 0.57721566490153286061 + Math.Log(x) + c;
+            chi = 0.57721566490153286061 + Log(x) + c;
         }
-
 
         private static void ChebIterationShiChi(double x, double c, ref double b0, ref double b1, out double b2)
         {

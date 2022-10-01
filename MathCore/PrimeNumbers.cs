@@ -145,8 +145,13 @@ public static class PrimeNumbers
                 var       length = file.Length;
                 _FirstBuffer = new byte[Math.Min(__MaxChunkLength, length)];
                 if (length > __MaxChunkLength) _SecondBuffer = new byte[length - __MaxChunkLength];
-                file.Read(_FirstBuffer, 0, _FirstBuffer.Length);
-                if (_SecondBuffer != null) file.Read(_SecondBuffer, 0, _SecondBuffer.Length);
+
+                if(file.Read(_FirstBuffer, 0, _FirstBuffer.Length) != _FirstBuffer.Length)
+                    throw new InvalidOperationException("Недостаточно данных в файле");
+
+                if (_SecondBuffer != null)
+                    if (file.Read(_SecondBuffer, 0, _SecondBuffer.Length) != _SecondBuffer.Length)
+                        throw new InvalidOperationException("Недостаточно данных для чтения второго буфера");
             }
 
             public long Length => _FirstBuffer.LongLength + (_SecondBuffer?.LongLength ?? 0);

@@ -892,14 +892,13 @@ public partial class Polynom
         /// <summary>Преобразовать массив корней полинома в коэффициенты при степенях</summary>
         /// <param name="Root">Корни полинома</param>
         /// <returns>Коэффициенты при степенях</returns>
-        public static double[] GetCoefficients(params double[] Root) =>
-            Root switch
-            {
-                null => throw new ArgumentNullException(nameof(Root)),
-                { Length: 0 } => throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root)),
-                { Length: 1 } => new[] { -Root[0], 1 },
-                _ => GetCoefficients(Root, new double[Root.Length + 1])
-            };
+        public static double[] GetCoefficients(params double[] Root) => Root switch
+        {
+            null => throw new ArgumentNullException(nameof(Root)),
+            { Length: 0 } => throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root)),
+            { Length: 1 } => new[] { -Root[0], 1 },
+            _ => GetCoefficients(Root, new double[Root.Length + 1])
+        };
 
         /// <summary>Преобразовать последовательность корней полинома в коэффициенты при степенях</summary>
         /// <param name="Root">Корни полинома</param>

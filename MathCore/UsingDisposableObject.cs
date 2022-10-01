@@ -1,5 +1,6 @@
-﻿using System;
-using MathCore.Annotations;
+﻿#nullable enable
+using System;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore;
@@ -22,7 +23,7 @@ public class UsingDisposableObject<T> : UsingObject<T> where T : IDisposable
     /// <param name="f">Метод получения значения</param>
     /// <returns>Значение, полученное от объекта указанным методом</returns>
     [DST]
-    public TValue GetValue<TValue>([NotNull] Func<T, TValue> f) => f(Object);
+    public TValue GetValue<TValue>(Func<T, TValue> f) => f(Object);
 
     /* ------------------------------------------------------------------------------------------ */
 }

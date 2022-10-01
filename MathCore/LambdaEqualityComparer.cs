@@ -1,6 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
-using MathCore.Annotations;
+
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable UnusedMember.Global
@@ -13,7 +14,7 @@ public class LambdaEqualityComparer<T> : IEqualityComparer<T>
 
     private readonly Func<T, int> _HashFunction;
 
-    public LambdaEqualityComparer(Func<T, T, bool> Comparer, [CanBeNull] Func<T, int> HashFunction = null)
+    public LambdaEqualityComparer(Func<T, T, bool> Comparer, Func<T, int>? HashFunction = null)
     {
         _Comparer = Comparer;
         _HashFunction = HashFunction ?? (o => o.GetHashCode());
@@ -23,7 +24,7 @@ public class LambdaEqualityComparer<T> : IEqualityComparer<T>
     /// <returns>Значение true, если указанные объекты равны; в противном случае — значение false.</returns>
     /// <param name="x">Первый сравниваемый объект типа <typeparamref name="T"/>.</param>
     /// <param name="y">Второй сравниваемый объект типа <typeparamref name="T"/>.</param>
-    public bool Equals(T x, T y) => _Comparer(x, y);
+    public bool Equals(T? x, T? y) => _Comparer(x, y);
 
     /// <summary>Возвращает хэш-код указанного объекта.</summary>
     /// <returns>Хэш-код указанного объекта.</returns>
@@ -34,7 +35,8 @@ public class LambdaEqualityComparer<T> : IEqualityComparer<T>
 
 public static class LambdaEqualityComparer
 {
-    [NotNull]
-    public static LambdaEqualityComparer<T> Create<T>(this Func<T, T, bool> Comparer, [CanBeNull] Func<T, int> HashFunction = null)
+    public static LambdaEqualityComparer<T> Create<T>(
+        this Func<T, T, bool> Comparer, 
+        Func<T, int>? HashFunction = null)
         => new(Comparer, HashFunction);
 }

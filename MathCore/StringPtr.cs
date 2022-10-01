@@ -1,11 +1,7 @@
 ﻿#nullable enable
 using System;
-using System.Collections;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
-
-using MathCore.CSV;
 
 // ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
@@ -68,7 +64,14 @@ public readonly ref struct StringPtr
     /// <summary>Подстрока</summary>
     /// <param name="Offset">Смещение в текущей подстроке</param>
     /// <returns>Новый указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
-    public StringPtr Substring(int Offset) => new(Source, Pos + Offset, Length - Offset);
+    public StringPtr Substring(int Offset)
+    {
+        if (Offset > Length) return new(Source, Pos + Length, 0);
+        if (Offset + Length == 0) return new(Source, Pos, 0);
+        return Offset >= 0
+            ? new(Source, Pos + Offset, Length - Offset)
+            : new(Source, Pos, Length + Offset);
+    }
 
     /// <summary>Подстрока</summary>
     /// <param name="Offset">Смещение в текущей подстроке</param>
@@ -2098,6 +2101,12 @@ public readonly ref struct StringPtr
                 return ptr.TryParseDouble(out value);
             }
 
+            public double? ParseNextDouble() => TryParseNextDouble(out var v) ? v : null;
+
+            public double ParseNextDoubleOrThrow() => TryParseNextDouble(out var v) 
+                ? v 
+                : throw new FormatException("Строка имела неверный формат");
+
             /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
             /// <param name="provider">Формат представления вещественного числа</param>
             /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
@@ -2139,10 +2148,16 @@ public readonly ref struct StringPtr
                 return ptr.TryParseDouble(provider, out value);
             }
 
+            public double? ParseNextDouble(IFormatProvider Provider) => TryParseNextDouble(Provider, out var v) ? v : null;
+
+            public double ParseNextDoubleOrThrow(IFormatProvider Provider) => TryParseNextDouble(Provider, out var v)
+                ? v
+                : throw new FormatException("Строка имела неверный формат");
+
             /// <summary>Попытаться преобразовать следующую подстроку в целое число</summary>
             /// <param name="value">Результат преобразования, либо 0, если подстрока имеет неверный формат, лио отсутствует</param>
             /// <returns>Истина, если преобразование подстроки в целое число выполнено успешно</returns>
-            public bool TryParseNextAsInt32(out int value)
+            public bool TryParseNextInt32(out int value)
             {
                 value = 0;
                 switch (_Length - (_CurrentPos - _StartIndex))

@@ -1,4 +1,7 @@
 ﻿using System;
+
+using static System.Math;
+
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
 
@@ -64,8 +67,8 @@ public static partial class SpecialFunctions
             const double min_log = __LogMinRealNumber;
             const double max_log = __LogMaxRealNumber;
 
-            if(Math.Abs(x - 0) < Eps) return 0;
-            if(Math.Abs(x - 1) < Eps) return 1;
+            if(Abs(x - 0) < Eps) return 0;
+            if(Abs(x - 1) < Eps) return 1;
             var flag = 0;
 
             if(b * x <= 1 && x <= .95)
@@ -93,20 +96,22 @@ public static partial class SpecialFunctions
             }
 
             var y = x * (a + b - 2) - (a - 1);
-            w = y < 0 ? IncompleteBetaFractionExpansion(a, b, x, big, big_inv) : IncompleteBetaFractionExpansion2(a, b, x, big, big_inv) / xc;
+            w = y < 0 
+                ? IncompleteBetaFractionExpansion(a, b, x, big, big_inv) 
+                : IncompleteBetaFractionExpansion2(a, b, x, big, big_inv) / xc;
 
-            y = a * Math.Log(x);
-            t = b * Math.Log(xc);
+            y = a * Log(x);
+            t = b * Log(xc);
 
-            if(a + b < max_gam && Math.Abs(y) < max_log && Math.Abs(t) < max_log)
+            if(a + b < max_gam && Abs(y) < max_log && Abs(t) < max_log)
             {
-                t = Math.Pow(xc, b) * Math.Pow(x, a) / a * w * Gamma.G(a + b) / (Gamma.G(a) * Gamma.G(b));
+                t = Pow(xc, b) * Pow(x, a) / a * w * Gamma.G(a + b) / (Gamma.G(a) * Gamma.G(b));
                 return flag == 1 ? 1 - (t <= Eps ? Eps : t) : t;
             }
 
             y += t + Gamma.LnG(a + b, out _) - Gamma.LnG(a, out _) - Gamma.LnG(b, out _);
-            y += Math.Log(w / a);
-            t =  y < min_log ? 0 : Math.Exp(y);
+            y += Log(w / a);
+            t =  y < min_log ? 0 : Exp(y);
             if(flag == 1)
                 t = 1 - (t <= Eps ? Eps : t);
             return t;
@@ -151,8 +156,8 @@ public static partial class SpecialFunctions
             //
             // special cases
             //
-            if(Math.Abs(y) < Eps) return 0;
-            if(Math.Abs(y - 1) < Eps) return 1;
+            if(Abs(y) < Eps) return 0;
+            if(Abs(y - 1) < Eps) return 1;
 
             //
             // these initializations are not really necessary,
@@ -231,23 +236,23 @@ public static partial class SpecialFunctions
 
                     lgm = (yp * yp - 3) / 6;
                     x   = 2 / (1 / (2 * aaa - 1) + 1 / (2 * bbb - 1));
-                    d = yp * Math.Sqrt(x + lgm) / x 
+                    d = yp * Sqrt(x + lgm) / x 
                         - (1 / (2 * bbb - 1) - 1 / (2 * aaa - 1)) 
                         * (lgm + 5d / 6 - 2 / (3 * x));
 
                     d *= 2;
 
-                    if(d < Math.Log(__MinRealNumber))
+                    if(d < Log(__MinRealNumber))
                     {
                         x = 0;
                         break;
                     }
 
-                    x   = aaa / (aaa + bbb * Math.Exp(d));
+                    x   = aaa / (aaa + bbb * Exp(d));
                     yyy = IncompleteBetaValue(aaa, bbb, x);
                     yp  = (yyy - y0) / y0;
 
-                    if(Math.Abs(yp) < .2)
+                    if(Abs(yp) < .2)
                     {
                         mainlooppos = newt;
                         continue;
@@ -279,21 +284,21 @@ public static partial class SpecialFunctions
                         {
                             x = x0 + di * (x1 - x0);
 
-                            if(Math.Abs(x - 1) < Eps)
+                            if(Abs(x - 1) < Eps)
                                 x = 1 - Eps;
 
-                            if(Math.Abs(x) < Eps)
+                            if(Abs(x) < Eps)
                             {
                                 di = .5;
                                 x  = x0 + di * (x1 - x0);
 
-                                if(Math.Abs(x) < Eps) break;
+                                if(Abs(x) < Eps) break;
                             }
 
                             yyy = IncompleteBetaValue(aaa, bbb, x);
                             yp  = (x1 - x0) / (x1 + x0);
 
-                            if(Math.Abs(yp) < dithresh)
+                            if(Abs(yp) < dithresh)
                             {
                                 mainlooppos = newt;
                                 continue;
@@ -301,7 +306,7 @@ public static partial class SpecialFunctions
 
                             yp = (yyy - y0) / y0;
 
-                            if(Math.Abs(yp) < dithresh)
+                            if(Abs(yp) < dithresh)
                             {
                                 mainlooppos = newt;
                                 continue;
@@ -443,22 +448,22 @@ public static partial class SpecialFunctions
                                 }
                             }
                         }
-                        if(Math.Abs(x - 1) < Eps || Math.Abs(x) < Eps)
+                        if(Abs(x - 1) < Eps || Abs(x) < Eps)
                         {
                             mainlooppos = breaknewtcycle;
                             continue;
                         }
 
-                        d = (aaa - 1) * Math.Log(x) + (bbb - 1) * Math.Log(1 - x) + lgm;
+                        d = (aaa - 1) * Log(x) + (bbb - 1) * Log(1 - x) + lgm;
 
-                        if(d < Math.Log(__MinRealNumber)) break;
+                        if(d < Log(__MinRealNumber)) break;
 
-                        if(d > Math.Log(__MaxRealNumber))
+                        if(d > Log(__MaxRealNumber))
                         {
                             mainlooppos = breaknewtcycle;
                             continue;
                         }
-                        d = (yyy - y0) / Math.Exp(d);
+                        d = (yyy - y0) / Exp(d);
                         var xt = x - d;
 
                         if(xt <= x0)
@@ -485,7 +490,7 @@ public static partial class SpecialFunctions
                         }
 
                         x = xt;
-                        if(Math.Abs(d / x) < 128 * Eps) break;
+                        if(Abs(d / x) < 128 * Eps) break;
                         i++;
                         mainlooppos = newtcycle;
                         continue;
@@ -553,13 +558,13 @@ public static partial class SpecialFunctions
                 qkm2 = qkm1;
                 qkm1 = qk;
 
-                if(Math.Abs(qk) > Eps)
+                if(Abs(qk) > Eps)
                     r = pk / qk;
                 double t;
-                if(Math.Abs(r) < Eps) t = 1;
+                if(Abs(r) < Eps) t = 1;
                 else
                 {
-                    t   = Math.Abs((ans - r) / r);
+                    t   = Abs((ans - r) / r);
                     ans = r;
                 }
 
@@ -574,7 +579,7 @@ public static partial class SpecialFunctions
                 k7 += 2;
                 k8 += 2;
 
-                if(Math.Abs(qk) + Math.Abs(pk) > big)
+                if(Abs(qk) + Abs(pk) > big)
                 {
                     pkm2 *= biginv;
                     pkm1 *= biginv;
@@ -582,7 +587,7 @@ public static partial class SpecialFunctions
                     qkm1 *= biginv;
                 }
 
-                if(Math.Abs(qk) >= biginv && Math.Abs(pk) >= biginv) continue;
+                if(Abs(qk) >= biginv && Abs(pk) >= biginv) continue;
 
                 pkm2 *= big;
                 pkm1 *= big;
@@ -637,13 +642,13 @@ public static partial class SpecialFunctions
                 qkm2 = qkm1;
                 qkm1 = qk;
 
-                if(Math.Abs(qk) > Eps) r = pk / qk;
+                if(Abs(qk) > Eps) r = pk / qk;
                 double t;
 
-                if(Math.Abs(r) < Eps) t = 1;
+                if(Abs(r) < Eps) t = 1;
                 else
                 {
-                    t   = Math.Abs((ans - r) / r);
+                    t   = Abs((ans - r) / r);
                     ans = r;
                 }
 
@@ -658,14 +663,14 @@ public static partial class SpecialFunctions
                 k7 += 2;
                 k8 += 2;
 
-                if(Math.Abs(qk) + Math.Abs(pk) > big)
+                if(Abs(qk) + Abs(pk) > big)
                 {
                     pkm2 *= biginv;
                     pkm1 *= biginv;
                     qkm2 *= biginv;
                     qkm1 *= biginv;
                 }
-                if(Math.Abs(qk) >= biginv && Math.Abs(pk) >= biginv) continue;
+                if(Abs(qk) >= biginv && Abs(pk) >= biginv) continue;
 
                 pkm2 *= big;
                 pkm1 *= big;
@@ -693,7 +698,7 @@ public static partial class SpecialFunctions
             var n  = 2.0;
             var s  = 0.0;
             var z  = Eps * ai;
-            while(Math.Abs(v) > z)
+            while(Abs(v) > z)
             {
                 u =  (n - b) * x / n;
                 t *= u;
@@ -703,16 +708,16 @@ public static partial class SpecialFunctions
             }
             s += t1;
             s += ai;
-            u =  a * Math.Log(x);
-            if((a + b) < maxgam && Math.Abs(u) < Math.Log(__MaxRealNumber))
+            u =  a * Log(x);
+            if((a + b) < maxgam && Abs(u) < Log(__MaxRealNumber))
             {
                 t =  Gamma.G(a + b) / (Gamma.G(a) * Gamma.G(b));
-                s *= t * Math.Pow(x, a);
+                s *= t * Pow(x, a);
             }
             else
             {
-                t = Gamma.LnG(a + b, out _) - Gamma.LnG(a, out _) - Gamma.LnG(b, out _) + u + Math.Log(s);
-                s = t < Math.Log(__MinRealNumber) ? 0 : Math.Exp(t);
+                t = Gamma.LnG(a + b, out _) - Gamma.LnG(a, out _) - Gamma.LnG(b, out _) + u + Log(s);
+                s = t < Log(__MinRealNumber) ? 0 : Exp(t);
             }
             return s;
         }
