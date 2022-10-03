@@ -365,8 +365,12 @@ public readonly struct Interval : IComparable<double>, IFormattable,
         }
     }
 
-    public static IEnumerable<double> RangeN(double Min, double Max, int Count) =>
-        Range(Min, Max, (Max - Min) / (Count - 1));
+    public static IEnumerable<double> RangeN(double Min, double Max, int Count) => Range
+    (
+        Min:  Min,
+        Max:  Max,
+        Step: (Max - Min) / (Count - 1)
+    );
 
     /* -------------------------------------------------------------------------------------------- */
 

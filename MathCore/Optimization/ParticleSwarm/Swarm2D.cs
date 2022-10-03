@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Linq;
 
 namespace MathCore.Optimization.ParticleSwarm
@@ -12,12 +13,12 @@ namespace MathCore.Optimization.ParticleSwarm
         public double Inertia
         {
             get => _Inertia;
-            set
+            set => _Inertia = value switch
             {
-                if(value < 0) throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть > 0");
-                if(value >= 1) throw new ArgumentOutOfRangeException(nameof(value), value, nameof(Inertia) + " величина должна быть < 1");
-                _Inertia = value;
-            }
+                < 0  => throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Inertia)} величина должна быть > 0"),
+                >= 1 => throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Inertia)} величина должна быть < 1"),
+                _    => value
+            };
         }
 
         /// <summary>Коэффициент локального веса</summary>
@@ -35,7 +36,7 @@ namespace MathCore.Optimization.ParticleSwarm
         /// <summary>Частица</summary>
         private class Particle2D
         {
-            private double BestValue;
+            private double _BestValue;
             public double BestX;
             public double BestY;
             public double Value;
@@ -52,7 +53,7 @@ namespace MathCore.Optimization.ParticleSwarm
 
             private void SetBest()
             {
-                BestValue = Value;
+                _BestValue = Value;
                 BestX = X;
                 BestY = Y;
             }
@@ -60,14 +61,14 @@ namespace MathCore.Optimization.ParticleSwarm
             public void SetMin(Func<double, double, double> F)
             {
                 Value = F(X, Y);
-                if(Value < BestValue)
+                if(Value < _BestValue)
                     SetBest();
             }
 
             public void SetMax(Func<double, double, double> F)
             {
                 Value = F(X, Y);
-                if(Value > BestValue)
+                if(Value > _BestValue)
                     SetBest();
             }
         }

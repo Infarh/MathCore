@@ -194,7 +194,7 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
         var a = result._a;
         var cc = 1d;
         for (int i = 1, length = a.Length; i < length; i++)
-            a[i] = a[i] * (cc *= c);
+            a[i] *= cc *= c;
         return result;
     }
 
@@ -225,8 +225,8 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
         if (other is null) return false;
         if (ReferenceEquals(this, other) || ReferenceEquals(_a, other._a)) return true;
 
-        var a = _a;
-        var b = other._a;
+        var a      = _a;
+        var b      = other._a;
         var length = a.Length;
 
         if (length != b.Length) return false;
@@ -258,31 +258,152 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
     /// <inheritdoc />
     IEnumerator<double> IEnumerable<double>.GetEnumerator() => ((IEnumerable<double>)_a).GetEnumerator();
 
+    ///// <inheritdoc />
+    //public override string ToString() =>
+    //    _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
+    //        a < 0 || i == 0 ? string.Empty : "+",
+    //        a,
+    //        i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}"))
+    //      .ToString();
+
+    ///// <inheritdoc />
+    //public override string ToString() => _a
+    //   .Aggregate(new StringBuilder(), (S, a, i) =>
+    //    {
+    //        switch (a)
+    //        {
+    //            case 0:
+    //                return S;
+    //            case > 0 when i > 0:
+    //                S.Append('+');
+    //                break;
+    //            case < 0: 
+    //                S.Append('-');
+    //                break;
+    //        }
+
+    //        return i switch
+    //        {
+    //            0 => S.Append(a),
+    //            1 => S.Append(a).Append("*x"),
+    //            _ => S.Append(a).Append("*x^").Append(i)
+    //        };
+    //    })
+    //   .ToString();
+
     /// <inheritdoc />
-    public override string ToString() =>
-        _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-            a < 0 || i == 0 ? string.Empty : "+",
-            a,
-            i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
+    public override string ToString()
+    {
+        var result        = new StringBuilder();
+        var length = _a.Length;
+        for (var i = 0; i <= length; i++)
+        {
+            var a = _a[i];
+            switch (a)
+            {
+                case > 0 when i > 0:
+                    result.Append('+');
+                    break;
+                case < 0:
+                    result.Append('-');
+                    break;
+            }
+
+            result.Append(a);
+            switch (i)
+            {
+                case 1:  result.Append("*x"); break;
+                default: result.Append("*x^").Append(i); break;
+            }
+        }
+
+        return result.ToString();
+    }
 
     /// <summary>Строковое представление полинома с форматированием</summary>
     /// <param name="Format">Строка форматирования</param>
     /// <returns>Форматированное представление полинома</returns>
-    public string ToString(string Format) =>
-        _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-            a < 0 || i == 0 ? string.Empty : "+",
-            a.ToString(Format),
-            i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
+    public string ToString(string Format)
+    {
+        var result = new StringBuilder();
+        var length = _a.Length;
+        for (var i = 0; i <= length; i++)
+        {
+            var a = _a[i];
+            switch (a)
+            {
+                case > 0 when i > 0:
+                    result.Append('+');
+                    break;
+                case < 0:
+                    result.Append('-');
+                    break;
+            }
 
-    public string ToString(IFormatProvider provider) =>
-        _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-            a < 0 || i == 0 ? string.Empty : "+",
-            a.ToString(provider),
-            i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
+            result.Append(a.ToString(Format));
+            switch (i)
+            {
+                case 1:  result.Append("*x"); break;
+                default: result.Append("*x^").Append(i); break;
+            }
+        }
 
-    public string ToString(string Format, IFormatProvider provider) =>
-        _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
-            a < 0 || i == 0 ? string.Empty : "+",
-            a.ToString(Format, provider),
-            i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}")).ToString();
+        return result.ToString();
+    }
+
+    public string ToString(IFormatProvider provider)
+    {
+        var result = new StringBuilder();
+        var length = _a.Length;
+        for (var i = 0; i <= length; i++)
+        {
+            var a = _a[i];
+            switch (a)
+            {
+                case > 0 when i > 0:
+                    result.Append('+');
+                    break;
+                case < 0:
+                    result.Append('-');
+                    break;
+            }
+
+            result.Append(a.ToString(provider));
+            switch (i)
+            {
+                case 1:  result.Append("*x"); break;
+                default: result.Append("*x^").Append(i); break;
+            }
+        }
+
+        return result.ToString();
+    }
+
+    public string ToString(string Format, IFormatProvider provider)
+    {
+        var result = new StringBuilder();
+        var length = _a.Length;
+        for (var i = 0; i <= length; i++)
+        {
+            var a = _a[i];
+            switch (a)
+            {
+                case > 0 when i > 0:
+                    result.Append('+');
+                    break;
+                case < 0:
+                    result.Append('-');
+                    break;
+            }
+
+            result.Append(a.ToString(Format, provider));
+            switch (i)
+            {
+                case 1:  result.Append("*x"); break;
+                default: result.Append("*x^").Append(i); break;
+            }
+        }
+
+        return result.ToString();
+    }
 }

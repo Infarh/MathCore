@@ -16,11 +16,8 @@ public static class Levenshtein
 {
     public static int Distance(string S1, string S2)
     {
-        if (S1 is null) throw new ArgumentNullException(nameof(S1));
-        if (S2 is null) throw new ArgumentNullException(nameof(S2));
-
-        var s1_length = S1.Length;
-        var s2_length = S2.Length;
+        if (S1 is not { Length: var s1_length }) throw new ArgumentNullException(nameof(S1));
+        if (S2 is not { Length: var s2_length }) throw new ArgumentNullException(nameof(S2));
 
         var results = new int[s1_length + 1, s2_length + 1];
 
@@ -61,7 +58,7 @@ public static class Levenshtein
             {
                 var insert = cost_matrix[i][j - 1] + 1;
                 var delete = cost_matrix[i - 1][j] + 1;
-                var edit = cost_matrix[i - 1][j - 1] + (source[i - 1] == target[j - 1] ? 0 : 1);
+                var edit   = cost_matrix[i - 1][j - 1] + (source[i - 1] == target[j - 1] ? 0 : 1);
 
                 cost_matrix[i][j] = Math.Min(Math.Min(insert, delete), edit);
             }

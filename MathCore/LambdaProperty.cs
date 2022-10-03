@@ -118,13 +118,7 @@ public class LambdaProperty<T> : LambdaPropertyBase, INotifyPropertyChanged, IEq
     /// <summary>Играет роль хэш-функции для определенного типа. </summary>
     /// <returns>Хэш-код для текущего объекта <see cref="T:System.Object"/>.</returns>
     /// <filterpriority>2</filterpriority>
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            // ReSharper disable NonReadonlyMemberInGetHashCode
-            return ((_GetMethod?.GetHashCode() ?? 0) * 397) ^ (_SetMethod?.GetHashCode() ?? 0);
-            // ReSharper restore NonReadonlyMemberInGetHashCode
-        }
-    }
+    // ReSharper disable NonReadonlyMemberInGetHashCode
+    public override int GetHashCode() => unchecked(((_GetMethod?.GetHashCode() ?? 0) * 397) ^ (_SetMethod?.GetHashCode() ?? 0));
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 }

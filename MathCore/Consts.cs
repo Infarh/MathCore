@@ -49,6 +49,12 @@ namespace MathCore
         /// <summary>ln(2√(e/π))</summary>
         public const double Ln2Sqrt_e_div_pi = 0.6207822376352452223455184457816472122518527279025978;
 
+        /// <summary>log2(10) - логарифм 10 по основанию 2</summary>
+        public const double Log2_10 = 3.3219280948873623478703194294893901758648313930245806120547563958;
+
+        /// <summary>log10(2) - логарифм 2 по основанию 10</summary>
+        public const double Log10_2 = 0.3010299956639811952137388947244930267681898814621085413104274611;
+
         /// <summary>π/180</summary>
         public const double ToRad = pi / 180d;
         /// <summary>180/π</summary>

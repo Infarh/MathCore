@@ -1,6 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
-
-namespace Benchmarks.Interpolation;
+﻿namespace Benchmarks.Interpolation;
 
 [MemoryDiagnoser]
 public class Polynoms

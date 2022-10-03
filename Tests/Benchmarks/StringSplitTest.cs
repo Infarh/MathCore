@@ -1,8 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
 
-using BenchmarkDotNet.Attributes;
-
 namespace Benchmarks;
 
 [MemoryDiagnoser]

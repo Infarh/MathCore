@@ -1,17 +1,13 @@
 ﻿#nullable enable
 using System;
 using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-
-using MathCore.CSV;
 
 // ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
 namespace MathCore;
 
 /// <summary>Указатель на позицию в строке</summary>
-public readonly ref struct StringPtr
+public readonly ref partial struct StringPtr
 {
     /* --------------------------------------------------------------------------------------- */
 
@@ -67,13 +63,33 @@ public readonly ref struct StringPtr
     /// <summary>Подстрока</summary>
     /// <param name="Offset">Смещение в текущей подстроке</param>
     /// <returns>Новый указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
-    public StringPtr Substring(int Offset) => new(Source, Pos + Offset, Length - Offset);
+    public StringPtr Substring(int Offset)
+    {
+        if (Offset > Length) return new(Source, Pos + Length, 0);
+        if (Offset + Length == 0) return new(Source, Pos, 0);
+        return Offset >= 0
+            ? new(Source, Pos + Offset, Length - Offset)
+            : new(Source, Pos, Length + Offset);
+    }
 
     /// <summary>Подстрока</summary>
     /// <param name="Offset">Смещение в текущей подстроке</param>
     /// <param name="Count">Число символов в новой подстроке</param>
     /// <returns>Указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
     public StringPtr Substring(int Offset, int Count) => new(Source, Pos + Offset, Count);
+
+    public bool IsInBracket(char Open, char Close) => Length >= 2 && Source[Pos] == Open && Source[Pos + Length - 1] == Close;
+    public bool IsInBracket(string Open, string Close)
+    {
+        var open_length  = Open.Length;
+        var close_length = Close.Length;
+        var length       = Length;
+        var pos          = Pos;
+        var source        = Source;
+        return length >= open_length + close_length
+            && string.Compare(source, pos, Open, 0, open_length) == 0
+            && string.Compare(source, pos + length - close_length, Close, 0, close_length) == 0;
+    }
 
     /// <summary>Начинается ли подстрока с указанного символа</summary>
     /// <param name="c">Символ, с которого должна начинаться текущая подстрока</param>
@@ -240,6 +256,46 @@ public readonly ref struct StringPtr
         Length == str.Length &&
         string.Compare(Source, Pos, str.Source, str.Pos, Length, Comparison) == 0;
 
+    public bool Equals(int x)
+    {
+        var len = Length;
+        var str = Trim();
+        if (len == 0) return false;
+
+        if (x == 0)
+        {
+            for (var i = 0; i < len; i++)
+                if (str[i] != '0')
+                    return false;
+
+            return true;
+        }
+
+        if (x < 0)
+        {
+            if (str[0] != '-')
+                return false;
+
+            str = str.TrimStart('-');
+            len--;
+            x = -x;
+        }
+
+        len--;
+        while (len >= 0)
+        {
+            if (str[len] - '0' != x % 10)
+                return false;
+
+            len--;
+            x /= 10;
+        }
+
+        return len == -1 && x == 0;
+    }
+
+    public bool Equals(double x) => Length > 0 && TryParseDouble() == x;
+
     /// <summary>Оператор проверки на равенство фрагмента строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
     /// <param name="str">Строка</param>
@@ -263,6 +319,20 @@ public readonly ref struct StringPtr
     /// <param name="str">Строка</param>
     /// <returns>Истина, если фрагмент строки посимвольно неравен указанной строке</returns>
     public static bool operator !=(string str, StringPtr ptr) => !(ptr == str);
+
+    public static bool operator ==(StringPtr ptr, int x) => ptr.Equals(x);
+
+    public static bool operator ==(int x, StringPtr ptr) => ptr == x;
+
+    public static bool operator !=(StringPtr ptr, int x) => !(ptr == x);
+    public static bool operator !=(int x, StringPtr ptr) => !(ptr == x);
+
+    public static bool operator ==(StringPtr ptr, double x) => ptr.Equals(x);
+
+    public static bool operator ==(double x, StringPtr ptr) => ptr == x;
+
+    public static bool operator !=(StringPtr ptr, double x) => !(ptr == x);
+    public static bool operator !=(double x, StringPtr ptr) => !(ptr == x);
 
     /// <summary>Оператор порядка "больше", сравнивающий фрагмент строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
@@ -290,10 +360,12 @@ public readonly ref struct StringPtr
 
     /* --------------------------------------------------------------------------------------- */
 
+    public int? TryParseInt32() => TryParseInt32(out var x) ? x : null;
+
     /// <summary>Попытка преобразования подстроки в <see cref="int"/></summary>
     /// <param name="value">Преобразованное значение</param>
     /// <returns>Истина, если преобразование выполнено успешно</returns>
-    public bool TryParseAsInt32(out int value)
+    public bool TryParseInt32(out int value)
     {
         var start = Pos;
         var index = 0;
@@ -375,7 +447,7 @@ public readonly ref struct StringPtr
     /// <returns>Преобразованное значение</returns>
     /// <exception cref="FormatException">В случае если строка не является представлением <see cref="int"/></exception>
     /// <exception cref="OverflowException">Если длина строковой записи числа превышает <see cref="int"/>.<see cref="int.MaxValue"/></exception>
-    public int ParseAsInt32()
+    public int ParseInt32()
     {
         var start = Pos;
         var index = 0;
@@ -436,6 +508,8 @@ public readonly ref struct StringPtr
 
         return sign * result;
     }
+
+    public double? TryParseDouble() => TryParseDouble(out var d) ? d : null;
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
     /// <param name="value">Преобразованное значение</param>
@@ -702,13 +776,29 @@ public readonly ref struct StringPtr
                     return false;
             }
 
-        value = sign * (whole + fraction / (double)fraction_base);
+        value = whole + fraction / (double)fraction_base;
 
         if (exp != 0)
         {
-            var e = Math.Pow(10, exp_sign * exp);
-            value *= e;
+            if (value > 1)
+                while (exp > 0 && value > 10)
+                {
+                    exp--;
+                    value /= 10;
+                }
+            else
+                while (exp > 0 && value < 1)
+                {
+                    exp--;
+                    value *= 10;
+                }
+
+            if (exp != 0)
+                value *= Math.Pow(10, exp_sign * exp);
         }
+
+        if (sign < 0)
+            value = -value;
 
         return true;
     }
@@ -861,7 +951,7 @@ public readonly ref struct StringPtr
                         index++;
                         break;
                     }
-                    
+
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
@@ -871,8 +961,8 @@ public readonly ref struct StringPtr
                     throw new FormatException("Строка имела неверный формат");
             }
 
-        return exp == 0 
-            ? sign * (whole + fraction / (double)fraction_base) 
+        return exp == 0
+            ? sign * (whole + fraction / (double)fraction_base)
             : sign * (whole + fraction / (double)fraction_base) * Math.Pow(10, exp_sign * exp);
     }
 
@@ -914,7 +1004,7 @@ public readonly ref struct StringPtr
     /// <summary>Получить целочисленное значение из пары ключ=значение</summary>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
     /// <returns>Целочисленное значение из пары ключ-значение</returns>
-    public int GetValueInt32(char Separator = '=') => GetValueString(Separator).ParseAsInt32();
+    public int GetValueInt32(char Separator = '=') => GetValueString(Separator).ParseInt32();
 
     /// <summary>Попытаться получить вещественное значение из пары ключ=значение</summary>
     /// <param name="value">Вещественное значение из пары ключ-значение</param>
@@ -933,7 +1023,7 @@ public readonly ref struct StringPtr
     /// <param name="value">Целочисленное значение из пары ключ-значение</param>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
     /// <returns>Истина, если преобразование подстроки значения в целочисленное значение выполнено успешно</returns>
-    public bool TryGetValueInt32(out int value, char Separator = '=') => GetValueString(Separator).TryParseAsInt32(out value);
+    public bool TryGetValueInt32(out int value, char Separator = '=') => GetValueString(Separator).TryParseInt32(out value);
 
     /// <summary>Попытаться получить булево значение из пары ключ=значение</summary>
     /// <param name="value">Булево значение из пары ключ-значение</param>
@@ -1382,342 +1472,6 @@ public readonly ref struct StringPtr
         ? new Tokenizer(this, Separators).SkipEmpty(true)
         : new(this, Separators);
 
-    /// <summary>Разделитель строки на фрагменты по указанному символам-разделителям</summary>
-    public readonly ref struct Tokenizer
-    {
-        /// <summary>Строковый буфер</summary>
-        private readonly string _Buffer;
-
-        /// <summary>Символы-разделители</summary>
-        private readonly char[] _Separators;
-
-        /// <summary>Начальное положение в буфере</summary>
-        private readonly int _StartIndex;
-
-        /// <summary>Длина подстроки для анализа</summary>
-        private readonly int _Length;
-
-        /// <summary>Пропускать пустые фрагменты</summary>
-        private readonly bool _SkipEmpty;
-
-        /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param name="Str">Исходный фрагмент строки</param>
-        /// <param name="Separators">Символы-разделители фрагментов строки</param>
-        public Tokenizer(StringPtr Str, char[] Separators) : this(Str.Source, Separators, Str.Pos, Str.Length) { }
-
-        /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param name="Buffer">Исходный строковый буфер</param>
-        /// <param name="Separators">Символы-разделители фрагментов строки</param>
-        public Tokenizer(string Buffer, char[] Separators) : this(Buffer, Separators, 0, Buffer.Length) { }
-
-        /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param name="Buffer">Исходный строковый буфер</param>
-        /// <param name="Separators">Символы-разделители фрагментов строки</param>
-        /// <param name="StartIndex">Индекс начала анализируемой подстроки</param>
-        /// <param name="Length">Длина анализируемой подстроки</param>
-        /// <param name="SkipEmpty">Пропускать пустые строковые фрагменты</param>
-        public Tokenizer(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty = false)
-        {
-            _Buffer = Buffer;
-            _Separators = Separators;
-            _StartIndex = StartIndex;
-            _Length = Length;
-            _SkipEmpty = SkipEmpty;
-        }
-
-        /// <summary>Пропускать пустые строковые фрагменты</summary>
-        /// <param name="Skip">Пропускать, или нет</param>
-        /// <returns>Перечислитель строковых фрагментов с изменённым режимом пропуска строковых фрагментов</returns>
-        public Tokenizer SkipEmpty(bool Skip) => new(_Buffer, _Separators, _StartIndex, _Length, Skip);
-
-        /// <summary>Сформировать перечислитель строковых фрагментов</summary>
-        /// <returns>Перечислитель строковых фрагментов</returns>
-        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separators, _StartIndex, _Length, _SkipEmpty);
-
-        /// <summary>Перечислитель строковых фрагментов</summary>
-        public ref struct TokenEnumerator
-        {
-            /// <summary>Строковый буфер</summary>
-            private readonly string _Buffer;
-
-            /// <summary>Символы-разделители</summary>
-            private readonly char[] _Separators;
-
-            /// <summary>Начальное положение в буфере</summary>
-            private readonly int _StartIndex;
-
-            /// <summary>Длина подстроки для анализа</summary>
-            private readonly int _Length;
-
-            /// <summary>Пропускать пустые фрагменты</summary>
-            private readonly bool _SkipEmpty;
-
-            /// <summary>Текущая позиция в исходной строке</summary>
-            private int _CurrentPos;
-
-            /// <summary>Инициализация нового перечислителя строковых фрагментов</summary>
-            /// <param name="Buffer">Исходный строковый буфер</param>
-            /// <param name="Separators">Символы-разделители</param>
-            /// <param name="StartIndex">Начальное положение в строковом буфере</param>
-            /// <param name="Length">Длина подстроки для анализа</param>
-            /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
-            public TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
-            {
-                _Buffer = Buffer;
-                _Separators = Separators;
-                _StartIndex = StartIndex;
-                _CurrentPos = StartIndex;
-                _Length = Length;
-                _SkipEmpty = SkipEmpty;
-
-                Current = default;
-            }
-
-            /// <summary>Текущий фрагмент строки</summary>
-            public StringPtr Current { get; private set; }
-
-            /// <summary>Перемещение к следующему фрагменту</summary>
-            /// <returns>Истина, если перемещение выполнено успешно</returns>
-            public bool MoveNext()
-            {
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return true;
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return true;
-            }
-
-            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
-            /// <returns>Следующий фрагмент строки</returns>
-            /// <exception cref="InvalidOperationException">Возникает в случае отсутствия возможности выделить следующий фрагмент строки</exception>
-            public StringPtr MoveNextOrThrow() => MoveNext()
-                ? Current
-                : throw new InvalidOperationException($"Невозможно получить следующий фрагмент строки после разделителя {string.Join(",", _Separators.Select(c => $"'{c}'"))}");
-
-            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
-            /// <typeparam name="TException">Генерируемое исключение в случае отсутствия возможности перемещения к следующей подстроке</typeparam>
-            /// <returns>Следующий фрагмент строки</returns>
-            public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
-                ? Current
-                : throw new TException();
-
-            /// <summary>Найти следующую подстроку</summary>
-            /// <param name="Str">Исходный строковый буфер</param>
-            /// <param name="Separators">Символы-разделители</param>
-            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
-            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
-            /// <returns>Найденная подстрока</returns>
-            private static StringPtr GetNext(string Str, char[] Separators, int StartIndex, int EndIndex)
-            {
-                if (StartIndex >= EndIndex) return new(Str, EndIndex, 0);
-
-                var index = NextIndex(Str, Separators, StartIndex, EndIndex);
-                return index < 0
-                    ? new(Str, StartIndex, EndIndex - StartIndex)
-                    : new(Str, StartIndex, index - StartIndex);
-            }
-
-            /// <summary>Индекс следующего разделителя в строке в заданном диапазоне</summary>
-            /// <param name="Str">Исходный строковый буфер</param>
-            /// <param name="Separators">Символы-разделители</param>
-            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
-            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
-            /// <returns>Индекс искомого символа в подстроке, либо -1, если его найдено не было</returns>
-            private static int NextIndex(string Str, char[] Separators, int StartIndex, int EndIndex)
-            {
-                var str_length = Str.Length;
-                var separators_length = Separators.Length;
-                for (var i = StartIndex; i < EndIndex && i < str_length; i++)
-                {
-                    var c = Str[i];
-                    for (var j = 0; j < separators_length; j++)
-                        if (Separators[j] == c)
-                            return i;
-                }
-
-                return -1;
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
-            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
-            public bool TryParseNextDouble(out double value)
-            {
-                value = double.NaN;
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return Current.TryParseDouble(out value);
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseDouble(out value);
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
-            /// <param name="provider">Формат представления вещественного числа</param>
-            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
-            public bool TryParseNextDouble(IFormatProvider provider, out double value)
-            {
-                value = double.NaN;
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return Current.TryParseDouble(provider, out value);
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseDouble(provider, out value);
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в целое число</summary>
-            /// <param name="value">Результат преобразования, либо 0, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в целое число выполнено успешно</returns>
-            public bool TryParseNextAsInt32(out int value)
-            {
-                value = 0;
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return Current.TryParseAsInt32(out value);
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseAsInt32(out value);
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
-            /// <param name="value">Результат преобразования, либо <c>false</c>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в <see cref="bool"/> значение выполнено успешно</returns>
-            public bool TryParseNextAsBool(out bool value)
-            {
-                value = default;
-                if (!MoveNext()) return false;
-                if (Current.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    value = true;
-                    return true;
-                }
-
-                if (Current.Equals("false", StringComparison.OrdinalIgnoreCase))
-                {
-                    value = false;
-                    return true;
-                }
-
-                return false;
-            }
-
-            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
-            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
-            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
-
-            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
-            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
-            public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
-        }
-    }
-
     /// <summary>Разделить строку на подстроки по указанному символу-разделителю</summary>
     /// <param name="Separator">Символ-разделитель</param>
     /// <returns>Разделитель строки на фрагменты</returns>
@@ -1731,345 +1485,16 @@ public readonly ref struct StringPtr
         ? new TokenizerSingleChar(this, Separator).SkipEmpty()
         : new(this, Separator);
 
-    /// <summary>Разделитель строки на фрагменты по указанному символу-разделителю</summary>
-    public readonly ref struct TokenizerSingleChar
-    {
-        /// <summary>Строковый буфер</summary>
-        private readonly string _Buffer;
-
-        /// <summary>Символ-разделитель</summary>
-        private readonly char _Separator;
-
-        /// <summary>Начальное положение в буфере</summary>
-        private readonly int _StartIndex;
-
-        /// <summary>Длина подстроки для анализа</summary>
-        private readonly int _Length;
-
-        private readonly bool _SkipEmpty;
-
-        /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param name="Str">Исходный фрагмент строки</param>
-        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
-        public TokenizerSingleChar(StringPtr Str, char Separator) : this(Str.Source, Separator, Str.Pos, Str.Length) { }
-
-        /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param name="Buffer">Исходный строковый буфер</param>
-        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
-        public TokenizerSingleChar(string Buffer, char Separator) : this(Buffer, Separator, 0, Buffer.Length) { }
-
-        /// <summary>Инициализация нового разделителя строки</summary>
-        /// <param name="Buffer">Исходный строковый буфер</param>
-        /// <param name="Separator">Символ-разделитель фрагментов строки</param>
-        /// <param name="StartIndex">Индекс начала анализируемой подстроки</param>
-        /// <param name="Length">Длина анализируемой подстроки</param>
-        /// <param name="SkipEmpty">Пропускать пустые строковые фрагменты</param>
-        public TokenizerSingleChar(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty = false)
-        {
-            _Buffer = Buffer;
-            _Separator = Separator;
-            _StartIndex = StartIndex;
-            _Length = Length;
-            _SkipEmpty = SkipEmpty;
-        }
-
-        /// <summary>Пропускать пустые строковые фрагменты</summary>
-        /// <param name="Skip">Пропускать, или нет</param>
-        /// <returns>Перечислитель строковых фрагментов с изменённым режимом пропуска строковых фрагментов</returns>
-        public TokenizerSingleChar SkipEmpty(bool Skip = true) => new(_Buffer, _Separator, _StartIndex, _Length, Skip);
-
-        /// <summary>Сформировать перечислитель строковых фрагментов</summary>
-        /// <returns>Перечислитель строковых фрагментов</returns>
-        public TokenEnumerator GetEnumerator() => new(_Buffer, _Separator, _StartIndex, _Length, _SkipEmpty);
-
-        /// <summary>Перечислитель строковых фрагментов</summary>
-        public ref struct TokenEnumerator
-        {
-            /// <summary>Строковый буфер</summary>
-            private readonly string _Buffer;
-
-            /// <summary>Символ-разделитель</summary>
-            private readonly char _Separator;
-
-            /// <summary>Начальное положение в буфере</summary>
-            private readonly int _StartIndex;
-
-            /// <summary>Длина подстроки для анализа</summary>
-            private readonly int _Length;
-
-            /// <summary>Пропускать пустые фрагменты</summary>
-            private readonly bool _SkipEmpty;
-
-            /// <summary>Текущая позиция в исходной строке</summary>
-            private int _CurrentPos;
-
-            /// <summary>Инициализация нового перечислителя строковых фрагментов</summary>
-            /// <param name="Buffer">Исходный строковый буфер</param>
-            /// <param name="Separator">Символ-разделитель</param>
-            /// <param name="StartIndex">Начальное положение в строковом буфере</param>
-            /// <param name="Length">Длина подстроки для анализа</param>
-            /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
-            public TokenEnumerator(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty)
-            {
-                _Buffer = Buffer;
-                _Separator = Separator;
-                _StartIndex = StartIndex;
-                _CurrentPos = StartIndex;
-                _Length = Length;
-                _SkipEmpty = SkipEmpty;
-
-                Current = default;
-            }
-
-            /// <summary>Текущий фрагмент строки</summary>
-            public StringPtr Current { get; private set; }
-
-            /// <summary>Перемещение к следующему фрагменту</summary>
-            /// <returns>Истина, если перемещение выполнено успешно</returns>
-            public bool MoveNext()
-            {
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return true;
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separator, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return true;
-            }
-
-            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
-            /// <returns>Следующий фрагмент строки</returns>
-            /// <exception cref="InvalidOperationException">Возникает в случае отсутствия возможности выделить следующий фрагмент строки</exception>
-            public StringPtr MoveNextOrThrow() => MoveNext()
-                ? Current
-                : throw new InvalidOperationException($"Невозможно получить следующий фрагмент строки после разделителя {_Separator}");
-
-            /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
-            /// <typeparam name="TException">Генерируемое исключение в случае отсутствия возможности перемещения к следующей подстроке</typeparam>
-            /// <returns>Следующий фрагмент строки</returns>
-            public StringPtr MoveNextOrThrow<TException>() where TException : Exception, new() => MoveNext()
-                ? Current
-                : throw new TException();
-
-            /// <summary>Найти следующую подстроку</summary>
-            /// <param name="Str">Исходный строковый буфер</param>
-            /// <param name="Separator">Символ-разделитель</param>
-            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
-            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
-            /// <returns>Найденная подстрока</returns>
-            private static StringPtr GetNext(string Str, char Separator, int StartIndex, int EndIndex)
-            {
-                if (StartIndex >= EndIndex) return new(Str, EndIndex, 0);
-
-                var index = NextIndex(Str, Separator, StartIndex, EndIndex);
-                return index < 0
-                    ? new(Str, StartIndex, EndIndex - StartIndex)
-                    : new(Str, StartIndex, index - StartIndex);
-            }
-
-            /// <summary>Индекс следующего разделителя в строке в заданном диапазоне</summary>
-            /// <param name="Str">Исходный строковый буфер</param>
-            /// <param name="Separator">Символ-разделитель</param>
-            /// <param name="StartIndex">Индекс символа, с которого начинается поиск</param>
-            /// <param name="EndIndex">Индекс символа, на котором должен закончиться поиск</param>
-            /// <returns>Индекс искомого символа в подстроке, либо -1, если его найдено не было</returns>
-            private static int NextIndex(string Str, char Separator, int StartIndex, int EndIndex)
-            {
-                var str_length = Str.Length;
-                for (var i = StartIndex; i < EndIndex && i < str_length; i++)
-                    if (Separator == Str[i])
-                        return i;
-
-                return -1;
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
-            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
-            public bool TryParseNextDouble(out double value)
-            {
-                value = double.NaN;
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return Current.TryParseDouble(out value);
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separator, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseDouble(out value);
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в вещественное число</summary>
-            /// <param name="provider">Формат представления вещественного числа</param>
-            /// <param name="value">Результат преобразования, либо <see cref="double.NaN"/>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в вещественное число выполнено успешно</returns>
-            public bool TryParseNextDouble(IFormatProvider provider, out double value)
-            {
-                value = double.NaN;
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return Current.TryParseDouble(provider, out value);
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separator, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseDouble(provider, out value);
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в целое число</summary>
-            /// <param name="value">Результат преобразования, либо 0, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в целое число выполнено успешно</returns>
-            public bool TryParseNextAsInt32(out int value)
-            {
-                value = 0;
-                switch (_Length - (_CurrentPos - _StartIndex))
-                {
-                    case < 0: return false;
-                    case 0 when _SkipEmpty: return false;
-                    case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
-                        _CurrentPos++;
-                        return Current.TryParseAsInt32(out value);
-                }
-
-                var str = _Buffer;
-                var pos = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
-
-                StringPtr ptr;
-                do
-                {
-                    ptr = GetNext(str, _Separator, pos, end_pos);
-                    if (ptr.Pos == end_pos)
-                    {
-                        Current = ptr;
-                        _CurrentPos = end_pos;
-                        return true;
-                    }
-
-                    pos += Math.Max(1, ptr.Length);
-                }
-                while (ptr.Length == 0 && _SkipEmpty);
-
-                Current = ptr;
-                _CurrentPos = ptr.Pos + ptr.Length + 1;
-                return ptr.TryParseAsInt32(out value);
-            }
-
-            /// <summary>Попытаться преобразовать следующую подстроку в <see cref="bool"/> значение</summary>
-            /// <param name="value">Результат преобразования, либо <c>false</c>, если подстрока имеет неверный формат, лио отсутствует</param>
-            /// <returns>Истина, если преобразование подстроки в <see cref="bool"/> значение выполнено успешно</returns>
-            public bool TryParseNextAsBool(out bool value)
-            {
-                value = default;
-                if (!MoveNext()) return false;
-                if (Current.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    value = true;
-                    return true;
-                }
-
-                if (Current.Equals("false", StringComparison.OrdinalIgnoreCase))
-                {
-                    value = false;
-                    return true;
-                }
-
-                return false;
-            }
-
-            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в целое число</summary>
-            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
-            public static implicit operator int(TokenEnumerator Enumerator) => Enumerator.Current.ParseAsInt32();
-
-            /// <summary>Оператор неявного преобразования перечислителя фрагментов строки в вещественное число</summary>
-            /// <param name="Enumerator">Перечислитель фрагментов строки</param>
-            public static implicit operator double(TokenEnumerator Enumerator) => Enumerator.Current.ParseDouble();
-        }
-    }
-
     /* --------------------------------------------------------------------------------------- */
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => false;
-
-    //public override bool Equals(object? obj) => obj is StringPtr other && 
-    //    other.Source == Source &&
-    //    other.Length == Length && 
-    //    other.Pos == Pos;
+    public override bool Equals(object? obj) => obj switch
+    {
+        string str => Equals(str),
+        int x => Equals(x),
+        double x => Equals(x),
+        _ => false
+    };
 
     /// <inheritdoc />
     public override string ToString() => Pos == 0 && Length == Source.Length
@@ -2107,50 +1532,6 @@ public readonly ref struct StringPtr
     /// <returns>Структура перечислителя символов подстроки</returns>
     public CharEnumerator GetEnumerator() => new(Source, Pos, Length);
 
-    /// <summary>Перечислитель символов подстроки, необходимый для использования в цикле <c>foreach</c></summary>
-    public ref struct CharEnumerator
-    {
-        /// <summary>Исходная строка</summary>
-        private readonly string _Str;
-
-        /// <summary>Начальное положение подстроки</summary>
-        private readonly int _Pos;
-
-        /// <summary>Длина подстроки</summary>
-        private readonly int _Length;
-
-        /// <summary>Текущий индекс в подстроке</summary>
-        private int _Index;
-
-        /// <summary>Текущий символ подстроки</summary>
-        public char Current { get; private set; }
-
-        /// <summary>Инициализация нового перечислителя подстроки</summary>
-        /// <param name="Str">Исходная строка</param>
-        /// <param name="Pos">Начальное положение подстроки</param>
-        /// <param name="Length">Длина подстроки</param>
-        public CharEnumerator(string Str, int Pos, int Length)
-        {
-            Current = '0';
-            _Index = 0;
-
-            _Str = Str;
-            _Pos = Pos;
-            _Length = Length;
-        }
-
-        /// <summary>Смещение перечислителя к следующему символу</summary>
-        /// <returns>Истина, если текущее положение символа находится в пределах подстроки</returns>
-        public bool MoveNext()
-        {
-            if (_Index >= _Length) return false;
-
-            Current = _Str[_Pos + _Index];
-            _Index++;
-            return true;
-        }
-    }
-
     /* --------------------------------------------------------------------------------------- */
 
     /// <summary>Оператор неявного преобразования строки в фрагмент строки</summary>
@@ -2163,11 +1544,13 @@ public readonly ref struct StringPtr
 
     /// <summary>Оператор явного преобразования фрагмента строки в целое число</summary>
     /// <param name="Ptr">Фрагмент строки</param>
-    public static explicit operator int(StringPtr Ptr) => Ptr.ParseAsInt32();
+    public static explicit operator int(StringPtr Ptr) => Ptr.ParseInt32();
+    public static explicit operator int?(StringPtr Ptr) => Ptr.ParseInt32();
 
     /// <summary>Оператор явного преобразования фрагмента строки в вещественное число</summary>
     /// <param name="Ptr">Фрагмент строки</param>
     public static explicit operator double(StringPtr Ptr) => Ptr.ParseDouble();
+    public static explicit operator double?(StringPtr Ptr) => Ptr.TryParseDouble();
 
     /* --------------------------------------------------------------------------------------- */
 }

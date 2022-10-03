@@ -1,61 +1,59 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq.Expressions;
-using MathCore.Annotations;
+
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace MathCore.MathParser.ExpressionTrees.Nodes
+namespace MathCore.MathParser.ExpressionTrees.Nodes;
+
+/// <summary>Узел дерева мат.выражения, хранящий данные об аргументе функции</summary>
+public class FunctionArgumentNode : OperatorNode
 {
-    /// <summary>Узел дерева мат.выражения, хранящий данные об аргументе функции</summary>
-    public class FunctionArgumentNode : OperatorNode
+    /// <summary>Перечисление аргументов начиная с указанного</summary>
+    /// <param name="Node">Первый узел аргумента</param>
+    /// <returns>Перечисление пар имени-корня дерева аргумента</returns>
+    public static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> EnumArguments(FunctionArgumentNode Node)
     {
-        /// <summary>Перечисление аргументов начиная с указанного</summary>
-        /// <param name="Node">Первый узел аргумента</param>
-        /// <returns>Перечисление пар имени-корня дерева аргумента</returns>
-        public static IEnumerable<KeyValuePair<string, ExpressionTreeNode>> EnumArguments(FunctionArgumentNode Node)
+        while(Node != null)
         {
-            while(Node != null)
-            {
-                yield return new KeyValuePair<string, ExpressionTreeNode>(Node.ArgumentName, Node.ArgumentSubtree);
-                Node = Node.Right as FunctionArgumentNode;
-            }
+            yield return new KeyValuePair<string, ExpressionTreeNode>(Node.ArgumentName, Node.ArgumentSubtree);
+            Node = Node.Right as FunctionArgumentNode;
         }
-
-        /// <summary>Значение аргумента - правое поддерево</summary>
-        [CanBeNull]
-        public ExpressionTreeNode ArgumentSubtree => Left is FunctionArgumentNameNode ? Left.Right : Left;
-
-        /// <summary>Имя аргумента - левое поддерево</summary>
-        [CanBeNull]
-        public string ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : string.Empty;
-
-        /// <summary>Инициализация узла-аргумента</summary>
-        public FunctionArgumentNode() : base(",", -20) { }
-
-        /// <summary>Инициализация узла-аргумента</summary>
-        /// <param name="Name">Имя аргумента</param>
-        /// <param name="Node">Узел поддерева аргумента</param>
-        public FunctionArgumentNode(string Name, ExpressionTreeNode Node) : this(new FunctionArgumentNameNode(Name, Node)) { }
-
-        /// <summary>Инициализация узла-аргумента</summary>
-        /// <param name="Node">Узел поддерева аргумента</param>
-        // ReSharper disable once SuggestBaseTypeForParameter
-        public FunctionArgumentNode(FunctionArgumentNameNode Node) : this() => Left = Node;
-
-        /// <summary>Вычисление значения узла</summary>
-        /// <returns>Значение узла</returns>
-        public override double Compute() => ((ComputedNode)ArgumentSubtree).Compute();
-
-        /// <summary>Компиляция узла аргумента</summary>
-        /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
-        public override Expression Compile() => ((ComputedNode)ArgumentSubtree).Compile();
-
-        /// <summary>Компиляция узла аргумента</summary>
-        /// <param name="Args">Список параметров выражения</param>
-        /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
-        public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode)ArgumentSubtree).Compile(Args);
-
-        /// <summary>Клонирование узла</summary>
-        /// <returns>Клонирование узла</returns>
-        public override ExpressionTreeNode Clone() => new FunctionArgumentNode { Left = Left.Clone(), Right = Right?.Clone() };
     }
+
+    /// <summary>Значение аргумента - правое поддерево</summary>
+    public ExpressionTreeNode? ArgumentSubtree => Left is FunctionArgumentNameNode ? Left.Right : Left;
+
+    /// <summary>Имя аргумента - левое поддерево</summary>
+    public string? ArgumentName => Left is FunctionArgumentNameNode node ? node.ArgumentName : string.Empty;
+
+    /// <summary>Инициализация узла-аргумента</summary>
+    public FunctionArgumentNode() : base(",", -20) { }
+
+    /// <summary>Инициализация узла-аргумента</summary>
+    /// <param name="Name">Имя аргумента</param>
+    /// <param name="Node">Узел поддерева аргумента</param>
+    public FunctionArgumentNode(string Name, ExpressionTreeNode Node) : this(new FunctionArgumentNameNode(Name, Node)) { }
+
+    /// <summary>Инициализация узла-аргумента</summary>
+    /// <param name="Node">Узел поддерева аргумента</param>
+    // ReSharper disable once SuggestBaseTypeForParameter
+    public FunctionArgumentNode(FunctionArgumentNameNode Node) : this() => Left = Node;
+
+    /// <summary>Вычисление значения узла</summary>
+    /// <returns>Значение узла</returns>
+    public override double Compute() => ((ComputedNode?)ArgumentSubtree).Compute();
+
+    /// <summary>Компиляция узла аргумента</summary>
+    /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
+    public override Expression Compile() => ((ComputedNode?)ArgumentSubtree).Compile();
+
+    /// <summary>Компиляция узла аргумента</summary>
+    /// <param name="Args">Список параметров выражения</param>
+    /// <returns>Скомпилированное выражение корня поддерева аргумента</returns>
+    public override Expression Compile(ParameterExpression[] Args) => ((ComputedNode?)ArgumentSubtree).Compile(Args);
+
+    /// <summary>Клонирование узла</summary>
+    /// <returns>Клонирование узла</returns>
+    public override ExpressionTreeNode Clone() => new FunctionArgumentNode { Left = Left.Clone(), Right = Right?.Clone() };
 }

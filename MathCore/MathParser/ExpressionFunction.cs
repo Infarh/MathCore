@@ -8,10 +8,10 @@ namespace MathCore.MathParser;
 /// <summary>функция в структуре математического выражения</summary>
 public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>
 {
-    private Delegate _Delegate = null!;
+    private Delegate? _Delegate;
 
     /// <summary>Делегат функции</summary>
-    public Delegate Delegate { get => _Delegate; set => Set(ref _Delegate, value); }
+    public Delegate? Delegate { get => _Delegate; set => Set(ref _Delegate, value); }
 
     /// <summary>Массив имён аргументов</summary>
     public IReadOnlyList<string> Arguments { get; }

@@ -2,6 +2,9 @@
 using System.Numerics;
 
 using MathCore.Annotations;
+
+using static System.Math;
+
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -123,7 +126,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref int Numerator, ref int Denominator)
     {
-        var gcd = GCD(Numerator, Denominator);
+        var gcd = GCD(Abs(Numerator), Abs(Denominator));
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -136,7 +139,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref long Numerator, ref long Denominator)
     {
-        var gcd = GCD(Numerator, Denominator);
+        var gcd = GCD(Abs(Numerator), Abs(Denominator));
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -162,7 +165,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref BigInt Numerator, ref BigInt Denominator)
     {
-        var gcd = Numerator.Gcd(Denominator);
+        var gcd = Numerator.Abs().Gcd(Denominator.Abs());
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -175,7 +178,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref BigInteger Numerator, ref BigInteger Denominator)
     {
-        var gcd = GCD(Numerator, Denominator);
+        var gcd = GCD(BigInteger.Abs(Numerator), BigInteger.Abs(Denominator));
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -229,15 +232,15 @@ public readonly struct Fraction
 
         var s = sign ? -1 : 1;
 
-        var v0 = s * (1 + (double)fraction / (1L << 52)) * Math.Pow(2, exponent - 1023);
+        var v0 = s * (1 + (double)fraction / (1L << 52)) * Pow(2, exponent - 1023);
 
         var l  = 0x10000000000000UL; // 1 << 52
-        var v2 = s * (double)(l + fraction) / l * Math.Pow(2, exponent - 1023);
-        var v3 = s * (double)(l + fraction) * Math.Pow(2, exponent - (1023 + 52));
-        var v4 = s * (double)(l + fraction) * Math.Pow(2, exponent - 1075);
+        var v2 = s * (double)(l + fraction) / l * Pow(2, exponent - 1023);
+        var v3 = s * (double)(l + fraction) * Pow(2, exponent - (1023 + 52));
+        var v4 = s * (double)(l + fraction) * Pow(2, exponent - 1075);
 
         var ee  = 1075 - exponent;
-        var pow = Math.Pow(2, ee);
+        var pow = Pow(2, ee);
         var ll  = l + fraction;
         var v5  = ll / pow;
 
@@ -286,13 +289,9 @@ public readonly struct Fraction
     }
 
     /// <summary>Новая дробь</summary>
-    /// <param name="Nominator">Числитель</param>
+    /// <param name="Numerator">Числитель</param>
     /// <param name="Denominator">Знаменатель</param>
-    public Fraction(long Nominator, ulong Denominator)
-    {
-        _Numerator   = Nominator;
-        _Denominator = Denominator;
-    }
+    public Fraction(long Numerator, ulong Denominator) => (_Numerator, _Denominator) = (Numerator, Denominator);
 
     /// <summary>Получить упрощённую дробь</summary>
     /// <returns>Упрощённая дробь</returns>
@@ -300,19 +299,23 @@ public readonly struct Fraction
     {
         if (!IsNormal) return this;
 
-        var sign          = Math.Sign(_Numerator);
-        var numerator_abs = (ulong)Math.Abs(_Numerator);
+        var sign          = Sign(_Numerator);
+        var numerator_abs = (ulong)Abs(_Numerator);
         var gcd           = GCD(numerator_abs, _Denominator);
         return gcd == 1
             ? this
-            : new Fraction((long)(numerator_abs / gcd) * sign, _Denominator / gcd);
+            : new
+            (
+                Numerator:   (long)(numerator_abs / gcd) * sign,
+                Denominator: _Denominator / gcd
+            );
     }
 
     /// <inheritdoc />
     [NotNull]
     public override string ToString() => (_Numerator, _Denominator) switch
     {
-        (0, 0)    => "NaN",
+        (0,    0) => "NaN",
         ( > 0, 0) => "+Infinity",
         ( < 0, 0) => "-Infinity",
         _         => $"{_Numerator}/{_Denominator}"
@@ -326,12 +329,12 @@ public readonly struct Fraction
     /// <returns>Истина, если дроби идентичные</returns>
     public bool Equals(Fraction other)
     {
-        var sign        = Math.Sign(_Numerator);
-        var numerator   = (ulong)Math.Abs(_Numerator);
+        var sign        = Sign(_Numerator);
+        var numerator   = (ulong)Abs(_Numerator);
         var denominator = _Denominator;
 
-        var other_sign        = Math.Sign(other._Numerator);
-        var other_numerator   = (ulong)Math.Abs(other._Numerator);
+        var other_sign        = Sign(other._Numerator);
+        var other_numerator   = (ulong)Abs(other._Numerator);
         var other_denominator = other._Denominator;
 
         Simplify(ref numerator, ref denominator);
@@ -345,8 +348,8 @@ public readonly struct Fraction
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        var sign        = Math.Sign(_Numerator);
-        var numerator   = (ulong)Math.Abs(_Numerator);
+        var sign        = Sign(_Numerator);
+        var numerator   = (ulong)Abs(_Numerator);
         var denominator = _Denominator;
         Simplify(ref numerator, ref denominator);
         unchecked

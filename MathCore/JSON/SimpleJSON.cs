@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MathCore.CSV;
+using MathCore.Values;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -64,14 +67,22 @@ public sealed class JSONObjectCreator<T> : JSONObjectCreatorBase
     {
         var fields = new List<JSONObject>(_FieldsDescriptions.Count);
         foreach (var (key, func) in _FieldsDescriptions)
-        {
-            var name  = key;
-            var value = func.Invoke(obj);
-            if (value is JSONObjectCreatorBase creator_base)
-                fields.Add(new JSONObject(name, creator_base.Create(obj)));
-            else
-                fields.Add(new JSONObject(name, value?.ToString() ?? ""));
-        }
+            switch (func.Invoke(obj))
+            {
+                case JSONObjectCreatorBase creator:
+                    fields.Add(new JSONObject(key, creator.Create(obj)));
+                    break;
+                case string str:
+                    fields.Add(new JSONObject(key, str));
+                    break;
+                case { } o:
+                    fields.Add(new JSONObject(key, o.ToString() ?? ""));
+                    break;
+                default:
+                    fields.Add(new JSONObject(key, ""));
+                    break;
+            }
+        
         return new JSONObject(fields);
     }
 
@@ -122,15 +133,19 @@ public sealed class JSONObject : IEnumerable<JSONObject>
 
     /// <summary>Имя структуры</summary>
     private readonly string? _Name;
+
     /// <summary>Значение структуры</summary>
     private readonly string _Data = null!;
+
     /// <summary>Словарь полей структуры по ключу-имени поля</summary>
     private readonly JSONObject[]? _Fields;
 
     /// <summary>Имя структуры</summary>
     public string? Name => _Name;
+
     /// <summary>Значение структуры</summary>
     public string Data => _Data;
+
     /// <summary>Признак того, что структура является сложной - со вложенными полями</summary>
     public bool IsComplex => _Fields is { Length: > 0 };
 
@@ -238,7 +253,7 @@ public sealed class JSONObject : IEnumerable<JSONObject>
         if (stop_index == -1 || stop_index < start_index) throw new FormatException();
         Offset      =  stop_index + Close.Length;
         start_index += Open.Length;
-        return Str.Substring(start_index, stop_index - start_index);
+        return Str[start_index..stop_index];
     }
 
     IEnumerator<JSONObject> IEnumerable<JSONObject>.GetEnumerator() => (_Fields ?? Enumerable.Empty<JSONObject>()).GetEnumerator();

@@ -30,11 +30,18 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="str">Очищаемая строка</param>
     private static StringPtr ClearStringPtr(StringPtr str)
     {
-        while (str[0] == '{' && str[^1] == '}') str   = str.Substring(1, str.Length - 2);
-        while (str[0] == '[' && str[^1] == ']') str   = str.Substring(1, str.Length - 2);
-        while (str[0] == '(' && str[^1] == ')') str   = str.Substring(1, str.Length - 2);
-        while (str[0] == '\'' && str[^1] == '\'') str = str.Substring(1, str.Length - 2);
-        while (str[0] == '"' && str[^1] == '"') str   = str.Substring(1, str.Length - 2);
+        var start_len = str.Length;
+        while(start_len > 0)
+        {
+            while (str.IsInBracket('{', '}')) str   = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('[', ']')) str   = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('(', ')')) str   = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('"', '"')) str   = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('\'', '\'')) str = str.Substring(1, str.Length - 2);
+
+            var len = str.Length;
+            start_len = len == start_len ? 0 : len;
+        }
 
         return str;
     }
@@ -57,13 +64,12 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     public static bool TryParse(string? str, out Complex z)
     {
         // Если получили пустую строку, то это ошибка преобразования
-        if (string.IsNullOrWhiteSpace(str) || str!.Length == 0)
-        {
-            z = default;
-            return false;
-        }
+        if (str is not { Length: > 0 }) 
+            return TryParse(new StringPtr(str), out z);
 
-        return TryParse(new StringPtr(str), out z);
+        z = default;
+        return false;
+
     }
 
     public static bool TryParse(StringPtr str, out Complex z)
@@ -107,11 +113,10 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
                 return false;
             }
 
-            if (sign) val *= -1;
             if (is_im)
-                Im += val;
+                Im += sign ? -val : val;
             else
-                Re += val;
+                Re += sign ? -val : val;
         }
 
         z = new Complex(Re, Im);
@@ -127,32 +132,45 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <summary>Логарифм комплексного аргумента</summary>
     /// <param name="Im">Комплексный аргумент</param>
     /// <returns>Значение логарифма</returns>
-    public static Complex Ln(double Im)
-        => new(Math.Log(Im), Abs(Im) == 0 ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05));
+    public static Complex Ln(double Im) => new
+    (
+        Re: Math.Log(Im), 
+        Im: Abs(Im) == 0 ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05)
+    );
 
     ///<summary>Натуральный логогриф комплексного числа</summary>
     ///<param name="z">Комплексное число</param>
     ///<returns>Натуральный логарифм</returns>
-    public static Complex Ln(Complex z) => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im), z.Arg);
+    public static Complex Ln(Complex z) => new
+    (
+        Re: .5 * Math.Log(z._Re * z._Re + z._Im * z._Im),
+        Im: z.Arg
+    );
 
     ///<summary>Логогриф мнимого числа по действительному основанию</summary>
     ///<param name="Im">Мнимое число</param>
     ///<param name="b">Действительное основание логарифма</param>
     ///<returns>Логарифм мнимого числа по действительному основанию</returns>
-    public static Complex Log(double Im, double b) => new(
-        Math.Log(Im, b),
-        Im == 0
-            ? 0
-            : (Im > 0
-                ? Consts.pi05
-                : -Consts.pi05) * Math.Log(E, b));
+    public static Complex Log(double Im, double b) => new
+    (
+        Re: Math.Log(Im, b),
+        Im: Im switch
+        {
+            > 0 => +Consts.pi05 * Math.Log(E, b),
+            < 0 => -Consts.pi05 * Math.Log(E, b),
+            _   => 0
+        }
+    );
 
     /// <summary>Логарифм комплексного числа по действительному аргументу</summary>
     /// <param name="z">Комплексное число</param>
     /// <param name="b">Действительное основание логарифма</param>
     /// <returns>Логарифм комплексного числа по действительному основанию</returns>
-    public static Complex Log(Complex z, double b)
-        => new(.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b), z.Arg * Math.Log(E, b));
+    public static Complex Log(Complex z, double b) => new
+    (
+        Re: 0.5   * Math.Log(z._Re * z._Re + z._Im * z._Im, b),
+        Im: z.Arg * Math.Log(E, b)
+    );
 
     /// <summary>Экспоненциальная форма числа Z = e^j*Arg</summary>
     /// <param name="Arg">Аргумент</param>
@@ -218,7 +236,10 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="Im">Мнимая часть</param>
     /// <returns>Пара комплексно-сопряжённых чисел</returns>
     public static (Complex Z, Complex Zconj) Conjugate(double Re, double Im) =>
-        (new(Re, Im), new(Re, -Im));
+    (
+        Z:     new(Re, Im),
+        Zconj: new(Re, -Im)
+    );
 
     /// <summary>Комплексно-сопряжённые значения</summary>
     /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
@@ -230,18 +251,35 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="Abs">Модуль комплексно-сопряжённой пары</param>
     /// <param name="ExpPower">Показатель степени комплексно-сопряжённой пары</param>
     /// <returns>Пара комплексно-сопряжённых чисел</returns>
-    public static (Complex Z, Complex Zconj) ConjugateExp(double Abs, double ExpPower) =>
-        Conjugate(Abs * Cos(ExpPower), Abs * Sin(ExpPower));
+    public static (Complex Z, Complex Zconj) ConjugateExp(double Abs, double ExpPower) => Conjugate
+    (
+        Re: Abs * Cos(ExpPower),
+        Im: Abs * Sin(ExpPower)
+    );
 
     /// <summary>Вычисление синуса и косинуса аргумента</summary>
     /// <param name="arg">Аргумент функции</param>
     public static (double Sin, double Cos) SinCos(double arg) =>
-        (Sin(arg), Cos(arg));
+    (
+        Sin(arg),
+        Cos(arg)
+    );
+
+    /// <summary>Вычисление синуса и косинуса аргумента</summary>
+    /// <param name="arg">Аргумент функции</param>
+    public static (double Sin, double Cos) SinCos(double arg, double abs) =>
+    (
+        abs * Sin(arg),
+        abs * Cos(arg)
+    );
 
     /// <summary>Вычисление синуса и косинуса аргумента</summary>
     /// <param name="arg">Аргумент функции</param>
     public static (Complex Sin, Complex Cos) SinCos(Complex arg) =>
-        (Trigonometry.Sin(arg), Trigonometry.Cos(arg));
+    (
+        Trigonometry.Sin(arg),
+        Trigonometry.Cos(arg)
+    );
 
     /// <summary>Действительное "комплексное" число</summary>
     public static readonly Complex Real = new(1);
@@ -263,9 +301,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <exception cref="InvalidOperationException">Длины массивов не совпадают</exception>
     public static Complex[] CreateArray(double[] Re, double[] Im)
     {
-        if (Re is null) throw new ArgumentNullException(nameof(Re));
-        if (Im is null) throw new ArgumentNullException(nameof(Im));
-        if (Re.Length != Im.Length) throw new InvalidOperationException(@"Длины массивов не совпадают");
+        if (Re.NotNull().Length != Im.NotNull().Length)
+            throw new InvalidOperationException(@"Длины массивов не совпадают");
 
         var result = new Complex[Re.Length];
         for (var j = 0; j < result.Length; j++)
@@ -309,7 +346,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     public Complex ComplexConjugate => new(Re, -Im);
 
     /// <summary>Обратное значение 1/Z</summary>
-    public Complex Reciprocal => _Re.Equals(0d) && _Im.Equals(0d)
+    public Complex Reciprocal => _Re == 0 && _Im == 0
         ? new Complex(double.PositiveInfinity, double.PositiveInfinity)
         : i / this;
 
@@ -321,11 +358,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="Re">Действительная часть</param>
     /// <param name="Im">Мнимая часть</param>
     [DST]
-    public Complex(double Re, double Im = 0)
-    {
-        _Re = Re;
-        _Im = Im;
-    }
+    public Complex(double Re, double Im = 0) => (_Re, _Im) = (Re, Im);
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -420,13 +453,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     /// <inheritdoc />
     [DST]
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (_Re.GetHashCode() * 0x18d) ^ _Im.GetHashCode();
-        }
-    }
+    public override int GetHashCode() => unchecked((_Re.GetHashCode() * 0x18d) ^ _Im.GetHashCode());
 
     /// <summary>Получение клона</summary>
     /// <returns>Клон числа</returns>
@@ -595,7 +622,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         var re  = _Re;
         var im  = _Im;
 
-        return new Complex(re * cos - im * sin, re * cos + im * sin);
+        return new(re * cos - im * sin, re * cos + im * sin);
     }
 
     /// <summary>Округление числа</summary>

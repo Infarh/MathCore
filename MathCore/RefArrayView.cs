@@ -1,125 +1,123 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using MathCore.Annotations;
 
-namespace MathCore
+namespace MathCore;
+
+public class RefArrayView<T> : IReadOnlyList<T>, ICollection
 {
-    public class RefArrayView<T> : IReadOnlyList<T>, ICollection
+    public class IndexInfo
     {
-        public class IndexInfo
+        private readonly int[] _Indexes;
+
+        public int this[int index]
         {
-            private readonly int[] _Indexes;
-
-            public int this[int index]
+            get => _Indexes[index];
+            set
             {
-                get => _Indexes[index];
-                set
-                {
-                    if (index < 0 || index >= _Indexes.Length)
-                        throw new ArgumentOutOfRangeException(nameof(index), index, "Индекс выходит за рамки массива");
-                    if (value < 0 || value >= _Indexes.Length)
-                        throw new ArgumentOutOfRangeException(nameof(value), value, "Устанавливаемый индекс выходит за рамки массива");
-                    _Indexes[index] = value;
-                }
+                if (index < 0 || index >= _Indexes.Length)
+                    throw new ArgumentOutOfRangeException(nameof(index), index, "Индекс выходит за рамки массива");
+                if (value < 0 || value >= _Indexes.Length)
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Устанавливаемый индекс выходит за рамки массива");
+                _Indexes[index] = value;
             }
-
-            public IndexInfo(int[] Indexes) => _Indexes = Indexes;
         }
 
-        [NotNull] private readonly T[] _Array;
+        public IndexInfo(int[] Indexes) => _Indexes = Indexes;
+    }
 
-        [NotNull] private readonly int[] _Indexes;
+    private readonly T[] _Array;
 
-        private readonly IndexInfo _IndexInfo;
+    private readonly int[] _Indexes;
 
-        public IndexInfo Index => _IndexInfo;
+    private readonly IndexInfo _IndexInfo;
 
-        public int Length => _Array.Length;
+    public IndexInfo Index => _IndexInfo;
 
-        public T[] Source => _Array;
+    public int Length => _Array.Length;
 
-        /// <inheritdoc />
-        int IReadOnlyCollection<T>.Count => _Array.Length;
+    public T[] Source => _Array;
 
-        public ref T this[int index] => ref _Array[_Indexes[index]];
+    /// <inheritdoc />
+    int IReadOnlyCollection<T>.Count => _Array.Length;
 
-        T IReadOnlyList<T>.this[int index] => this[index];
+    public ref T this[int index] => ref _Array[_Indexes[index]];
 
-        public RefArrayView(int Length) : this(new T[Length]) { }
+    T IReadOnlyList<T>.this[int index] => this[index];
 
-        public RefArrayView([NotNull] T[] array)
-        {
-            _Array = array ?? throw new ArgumentNullException(nameof(array));
-            var length = _Array.Length;
-            _Indexes = new int[length];
-            _IndexInfo = new IndexInfo(_Indexes);
+    public RefArrayView(int Length) : this(new T[Length]) { }
 
+    public RefArrayView(T[] array)
+    {
+        _Array = array.NotNull();
+        var length = _Array.Length;
+        _Indexes   = new int[length];
+        _IndexInfo = new IndexInfo(_Indexes);
+
+        for (var i = 0; i < length; i++)
+            _Indexes[i] = i;
+    }
+
+    public RefArrayView(T[] array, bool Inverted)
+    {
+        _Array = array.NotNull();
+        var length = _Array.Length;
+        _Indexes   = new int[length];
+        _IndexInfo = new IndexInfo(_Indexes);
+
+        if (Inverted)
+            for (var i = 0; i < length; i++)
+                _Indexes[i] = length - i - 1;
+        else
             for (var i = 0; i < length; i++)
                 _Indexes[i] = i;
-        }
+    }
 
-        public RefArrayView([NotNull] T[] array, bool Inverted)
-        {
-            _Array = array ?? throw new ArgumentNullException(nameof(array));
-            var length = _Array.Length;
-            _Indexes = new int[length];
-            _IndexInfo = new IndexInfo(_Indexes);
+    #region ICollection
 
-            if (Inverted)
-                for (var i = 0; i < length; i++)
-                    _Indexes[i] = length - i - 1;
-            else
-                for (var i = 0; i < length; i++)
-                    _Indexes[i] = i;
-        }
+    /// <inheritdoc />
+    bool ICollection.IsSynchronized => false;
 
-        #region ICollection
+    /// <inheritdoc />
+    object ICollection.SyncRoot => this;
 
-        /// <inheritdoc />
-        bool ICollection.IsSynchronized => false;
+    /// <inheritdoc />
+    int ICollection.Count => _Array.Length;
 
-        /// <inheritdoc />
-        object ICollection.SyncRoot => this;
+    /// <inheritdoc />
+    void ICollection.CopyTo(Array array, int index)
+    {
+        var length = _Array.Length;
+        for (var i = 0; i < length; i++)
+            array.SetValue(this[i], i + index);
+    } 
 
-        /// <inheritdoc />
-        int ICollection.Count => _Array.Length;
+    #endregion
 
-        /// <inheritdoc />
-        void ICollection.CopyTo(Array array, int index)
-        {
-            var length = _Array.Length;
-            for (var i = 0; i < length; i++)
-                array.SetValue(this[i], i + index);
-        } 
+    #region IEnumerable<T>
 
-        #endregion
+    /// <inheritdoc />
+    public IEnumerator<T> GetEnumerator()
+    {
+        var length = _Indexes.Length;
+        for (var i = 0; i < length; i++)
+            yield return _Array[_Indexes[i]];
+    }
 
-        #region IEnumerable<T>
+    /// <inheritdoc />
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        /// <inheritdoc />
-        public IEnumerator<T> GetEnumerator()
-        {
-            var length = _Indexes.Length;
-            for (var i = 0; i < length; i++)
-                yield return _Array[_Indexes[i]];
-        }
+    #endregion
 
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public static implicit operator RefArrayView<T>(T[] array) => new(array);
 
-        #endregion
-
-        [NotNull] public static implicit operator RefArrayView<T>([NotNull] T[] array) => new(array);
-
-        [NotNull]
-        public static implicit operator T[]([NotNull] RefArrayView<T> view)
-        {
-            var length = view.Length;
-            var result = new T[length];
-            for (var i = 0; i < length; i++)
-                result[i] = view[i];
-            return result;
-        }
+    public static implicit operator T[](RefArrayView<T> view)
+    {
+        var length = view.Length;
+        var result = new T[length];
+        for (var i = 0; i < length; i++)
+            result[i] = view[i];
+        return result;
     }
 }

@@ -25,6 +25,139 @@ namespace System.Linq;
 [PublicAPI]
 public static partial class IEnumerableExtensions
 {
+    /// <summary>Последовательность содержит число элементов больше указанного количества</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <returns>Истина если число элементов последовательности больше указанного</returns>
+    public static bool CountGreater<T>(this IEnumerable<T> items, int Count)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (count-- < 0)
+                return true;
+
+        return count < 0;
+    }
+
+
+    /// <summary>Последовательность содержит число элементов больше указанного количества</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <param name="Selector">Функция выборки элементов из последовательности, которые должны быть учтены</param>
+    /// <returns>Истина если число элементов последовательности больше указанного</returns>
+    public static bool CountGreater<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (Selector(enumerator.Current) && count-- < 0)
+                return true;
+
+        return count < 0;
+    }
+
+    /// <summary>Последовательность содержит число элементов больше, либо равное указанному количеству элементов</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <returns>Истина если число элементов последовательности больше, либо равно указанному количеству</returns>
+    public static bool CountGreaterOrEqual<T>(this IEnumerable<T> items, int Count)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (count-- < 0)
+                return true;
+
+        return count <= 0;
+    }
+
+    /// <summary>Последовательность содержит число элементов больше, либо равное указанному количеству элементов</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <param name="Selector">Функция выборки элементов из последовательности, которые должны быть учтены</param>
+    /// <returns>Истина если число элементов последовательности больше, либо равно указанному количеству</returns>
+    public static bool CountGreaterOrEqual<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (Selector(enumerator.Current) && count-- < 0)
+                return true;
+
+        return count <= 0;
+    }
+
+    /// <summary>Последовательность содержит число элементов меньше указанного количества</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <returns>Истина если число элементов последовательности меньше указанного</returns>
+    public static bool CountLess<T>(this IEnumerable<T> items, int Count)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (count-- < 0)
+                return false;
+
+        return count > 0;
+    }
+
+    /// <summary>Последовательность содержит число элементов меньше указанного количества</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <param name="Selector">Функция выборки элементов из последовательности, которые должны быть учтены</param>
+    /// <returns>Истина если число элементов последовательности меньше указанного</returns>
+    public static bool CountLess<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (Selector(enumerator.Current) && count-- < 0)
+                return false;
+
+        return count > 0;
+    }
+
+    /// <summary>Последовательность содержит число элементов меньше, либо равное указанному количеству элементов</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <returns>Истина если число элементов последовательности меньше, либо равно указанному количеству</returns>
+    public static bool CountLessOrEqual<T>(this IEnumerable<T> items, int Count)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (count-- < 0)
+                return false;
+
+        return count >= 0;
+    }
+
+    /// <summary>Последовательность содержит число элементов меньше, либо равное указанному количеству элементов</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="items">Проверяемая последовательность элементов</param>
+    /// <param name="Count">Пороговое значение числа элементов последовательности</param>
+    /// <param name="Selector">Функция выборки элементов из последовательности, которые должны быть учтены</param>
+    /// <returns>Истина если число элементов последовательности меньше, либо равно указанному количеству</returns>
+    public static bool CountLessOrEqual<T>(this IEnumerable<T> items, int Count, Func<T, bool> Selector)
+    {
+        var       count      = Count;
+        using var enumerator = items.GetEnumerator();
+        while (enumerator.MoveNext())
+            if (Selector(enumerator.Current) && count-- < 0)
+                return false;
+
+        return count >= 0;
+    }
+
     /// <summary>Преобразовать последовательность в хеш-таблицу</summary>
     /// <typeparam name="T">Тип элемента последовательности</typeparam>
     /// <param name="items">Последовательность элементов, для которой надо создать хеш-таблицу</param>

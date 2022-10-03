@@ -4,7 +4,6 @@ public static class Quick
 {
     public static void Test()
     {
-
         double[,] vv =
         {
             { 2, 7, 99, 106, 41 },
@@ -20,7 +19,7 @@ public static class Quick
             for (var j = 0; j < vv.GetLength(1); j++)
                 values.Add(vv[i, j]);
 
-        var mediane = Quick.QuickSelectMedian(values, Quick.SelectorRandom());
+        var mediane = QuickSelectMedian(values, SelectorRandom());
     }
 
     public static Func<IReadOnlyList<double>, double> SelectorHalfDiv() => v => v.Count switch

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Linq.Expressions;
 
 namespace MathCore.MathParser.ExpressionTrees.Nodes;

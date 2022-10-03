@@ -38,7 +38,7 @@ public class CRC16
             var temp = (ushort)(i << 8);
             for (var j = 0; j < 8; ++j)
             {
-                if (((value ^ temp) & 0x8000) != 0)
+                if (((value ^ temp) & 0b10000000_00000000) != 0)
                     value = (ushort)((value << 1) ^ Polynimial);
                 else
                     value <<= 1;

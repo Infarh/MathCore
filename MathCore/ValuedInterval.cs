@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MathCore.Annotations;
+using static System.Math;
+
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore;
@@ -160,8 +161,8 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
         var min = _Min + MinOffset;
         var max = _Max + MaxOffset;
 
-        return (_MinInclude && Math.Abs(X - min) < double.Epsilon)
-            || (_MaxInclude && Math.Abs(X - max) < double.Epsilon)
+        return (_MinInclude && Abs(X - min) < double.Epsilon)
+            || (_MaxInclude && Abs(X - max) < double.Epsilon)
             || (X > min && X < max);
     }
 
@@ -199,20 +200,20 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
 
     public bool IsIntersect(ValuedInterval<T> I)
     {
-        if (Math.Abs(I.Min - Min) < double.Epsilon && Math.Abs(I._Max - _Max) < double.Epsilon) return true;
+        if (Abs(I.Min - Min) < double.Epsilon && Abs(I._Max - _Max) < double.Epsilon) return true;
 
-        var min_include = Check(I._Min) || Math.Abs(I._Min - _Max) > double.Epsilon;
-        var max_include = Check(I._Max) || Math.Abs(I._Max - _Min) > double.Epsilon;
+        var min_include = Check(I._Min) || Abs(I._Min - _Max) > double.Epsilon;
+        var max_include = Check(I._Max) || Abs(I._Max - _Min) > double.Epsilon;
 
         return min_include || max_include;
     }
 
     public bool IsIntersect((double Min, double Max) I)
     {
-        if (Math.Abs(I.Min - Min) < double.Epsilon && Math.Abs(I.Max - _Max) < double.Epsilon) return true;
+        if (Abs(I.Min - Min) < double.Epsilon && Abs(I.Max - _Max) < double.Epsilon) return true;
 
-        var min_include = Check(I.Min) || Math.Abs(I.Min - _Max) > double.Epsilon;
-        var max_include = Check(I.Max) || Math.Abs(I.Max - _Min) > double.Epsilon;
+        var min_include = Check(I.Min) || Abs(I.Min - _Max) > double.Epsilon;
+        var max_include = Check(I.Max) || Abs(I.Max - _Min) > double.Epsilon;
 
         return min_include || max_include;
     }
@@ -222,8 +223,8 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
     /// <inheritdoc />
     public int CompareTo(double x) =>
         (x > _Min && x < _Max) ||
-        (_MinInclude && Math.Abs(_Min - x) < double.Epsilon) || 
-        (_MaxInclude && Math.Abs(_Max - x) < double.Epsilon)
+        (_MinInclude && Abs(_Min - x) < double.Epsilon) || 
+        (_MaxInclude && Abs(_Max - x) < double.Epsilon)
             ? 0
             : (x < _Min ? -1 : 1);
 
@@ -261,7 +262,7 @@ public readonly struct ValuedInterval<T> : IComparable<double>, IFormattable
 
     public void WhileInInterval(double step, Action<double> Do)
     {
-        var min = Math.Min(_Max, _Min);
+        var min = Min(_Max, _Min);
         step = _Max < _Min && step > 0 ? -step : step;
         var x = min + (_MinInclude ? 0 : double.Epsilon);
         while (Check(x)) Do(x += step);
