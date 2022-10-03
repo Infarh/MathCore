@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.80.1</Version>
+    <Version>0.0.81</Version>
     <PackageReleaseNotes>
-      Мелкие исправления
+      Добавлены новые возможности StringPtr для поддержки сопоставления с образцом списка
     </PackageReleaseNotes>
   </PropertyGroup>
 

@@ -137,7 +137,7 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     [MethodImpl(MethodImplOptions.Synchronized)]
     public IDisposable Subscribe(IObserver<T> observer)
     {
-        if(_ObservableObject is null) _ObservableObject = new SimpleObservableEx<T>();
+        _ObservableObject ??= new SimpleObservableEx<T>();
         return _ObservableObject.Subscribe(observer);
     }
 

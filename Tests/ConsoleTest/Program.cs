@@ -1,32 +1,54 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using MathCore.CSV;
 using MathCore.PE;
 
-//var line = """
-//    "value1","val2,5",value3
-//    """;
+bool Selector(FileInfo f)
+{
+    var name = f.Name;
+    if (name.EndsWith(".g.cs")) return false;
+    if (name.EndsWith(".g.i.cs")) return false;
+    if (f.FullName.Contains(@"\bin\", StringComparison.OrdinalIgnoreCase)) return false;
+    if (f.FullName.Contains(@"\obj\", StringComparison.OrdinalIgnoreCase)) return false;
+    if (f.FullName.Contains("RRJ-Express.3D.Unity")) return false;
+    if (f.FullName.EndsWith("assemblyinfo.cs", StringComparison.OrdinalIgnoreCase)) return false;
+    if (f.FullName.Contains(@"Algorithms\RRJ", StringComparison.OrdinalIgnoreCase)) return false;
+    if (f.FullName.Contains(@"\Migrations\", StringComparison.OrdinalIgnoreCase)) return false;
+    if (f.FullName.EndsWith(@"Designer.cs", StringComparison.OrdinalIgnoreCase)) return false;
+    return true;
+}
 
-//const char separator = ',';
-//var splitter = new Regex($@"(?<=(?:{separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
-//var headers = splitter
-//   .Matches(line)
-//   .Select(m => m.Value is ['"', .. var ss, '"'] ? ss : m.Value)
-//   .ToArray();
+var src_dir   = new DirectoryInfo(@"C:\Users\shmac\src");
+var src_files = src_dir.EnumerateFiles("*.cs", SearchOption.AllDirectories)
+   .Where(Selector)
+   .ToArray();
 
-var line = """
-    "value1","val2,5",value3
-    """;
+var total_lines = 0;
+var culture     = new NumberFormatInfo { NumberGroupSeparator = "'" };
+for (var i = 0; i < src_files.Length; i++)
+{
+    var file = src_files[i];
 
-const char separator = ',';
-var values = Regex
-       .Matches(line, $@"(?<=(?:{separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{separator}\n]*|(?:\n|$))")
-       .Select(m => m.Value is ['"', .. var ss, '"'] ? ss : m.Value)
-       .ToArray();
+    total_lines   += file.ReadLines().Count(l => !string.IsNullOrWhiteSpace(l) && !l.TrimStart(' ').StartsWith("//"));
+    Console.Title =  $"Lines {total_lines.ToString("N0", culture)} - {(i + 1d) / src_files.Length:p2}";
+    Console.WriteLine(file.FullName.TrimByLength(Console.BufferWidth));
+}
 
+Console.WriteLine("Total lines {0}", total_lines.ToString("N0", culture));
 
+var str = " 123;qwe;asd;zxc;000;111;456 ";
 
+var values = str.AsStringPtr().Trim().Split(';');
+if (values is [ ['1', .., '3'] a, var b, .. var ss, var c, var d])
+{
+    Process((int)a, b, (double)c, d, ss);
+}
 
+void Process(int a, string b, double c, string d, string sss)
+{
+    Console.WriteLine($"a:{a}, b:{b}, c:{c}, d:{d} - sss:{sss}");
+}
 
 
 Console.ReadLine();
