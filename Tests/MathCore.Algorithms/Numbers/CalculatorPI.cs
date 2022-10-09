@@ -383,7 +383,6 @@ public static class CalculatorPI
         while (count is < 0 or > 0)
             if (4 * q + r - t < m * t)
             {
-                Console.WriteLine(m);
                 yield return (byte)m;
                 (q, r, m) = (10 * q, 10 * (r - m * t), (int)(10 * (3 * q + r) / t - 10 * m));
                 count--;
@@ -403,5 +402,6 @@ public static class CalculatorPI
         timer.Stop();
         var elapsed    = timer.Elapsed;
         var elapsed_ms = elapsed.TotalSeconds;
+        Console.WriteLine(elapsed_ms);
     }
 }
