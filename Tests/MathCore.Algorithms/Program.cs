@@ -1,5 +1,6 @@
 ﻿using MathCore.Algorithms.Numbers;
 
+CalculatorPI.IterationPI();
 
 var (m1, k1) = DoubleIEEE754.GetPower2(+8);
 var (m2, k2) = DoubleIEEE754.GetPower2(-8);

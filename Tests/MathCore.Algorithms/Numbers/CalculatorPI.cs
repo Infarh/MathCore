@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Diagnostics;
+using System.Numerics;
 using System.Threading;
 
 using MathCore.Threading.Tasks;
@@ -368,5 +369,39 @@ public static class CalculatorPI
         Progress?.Report(1);
 
         return iteration;
+    }
+
+    /* -------------------------------------------------------------------------------- */
+
+    // https://stackoverflow.com/questions/9004789/1000-digits-of-pi-in-python
+
+    private static IEnumerable<byte> EnumPiDigits(int Count)
+    {
+        var (q, r, t, k, m, x) = (new BigInteger(1), new BigInteger(0), new BigInteger(1), 1, 3, 3);
+
+        var count = Count;
+        while (count is < 0 or > 0)
+            if (4 * q + r - t < m * t)
+            {
+                Console.WriteLine(m);
+                yield return (byte)m;
+                (q, r, m) = (10 * q, 10 * (r - m * t), (int)(10 * (3 * q + r) / t - 10 * m));
+                count--;
+            }
+            else
+                (q, r, t, k, m, x) = (q * k, (2 * q + r) * x, t * x, k + 1, (int)((q * (7 * k + 2) + r * x) / (t * x)), x + 2);
+    }
+
+    public static void IterationPI()
+    {
+        var digits = new List<byte>(100);
+        var timer  = Stopwatch.StartNew();
+        foreach (var digit in EnumPiDigits(100))
+        {
+            digits.Add(digit);
+        }
+        timer.Stop();
+        var elapsed    = timer.Elapsed;
+        var elapsed_ms = elapsed.TotalSeconds;
     }
 }
