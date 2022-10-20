@@ -2,41 +2,40 @@
 using System.Collections.Generic;
 using MathCore.Annotations;
 
-namespace MathCore.CommandProcessor
+namespace MathCore.CommandProcessor;
+
+/// <summary>Аргумент события обработки команды</summary>
+public class CommandEventArgs : EventArgs
 {
-    /// <summary>Аргумент события обработки команды</summary>
-    public class CommandEventArgs : EventArgs
+    /// <summary>Обрабатываемая команда</summary>
+    public Command Command { get; }
+
+    /// <summary>Перечень команд сессии</summary>
+    public IReadOnlyList<Command> Commands { get; }
+
+    /// <summary>Индекс команды в перечне команд сессии</summary>
+    public int Index { get; }
+
+    /// <summary>Признак того, что команда обработана</summary>
+    public bool Handled { get; set; }
+
+    /// <summary>Инициализация нового экземпляра <see cref="CommandEventArgs"/></summary>
+    /// <param name="Command">Обрабатываемая команда</param>
+    /// <param name="Index">Индекс команды в перечне команд сессии</param>
+    /// <param name="Commands">Перечень команд сессии</param>
+    public CommandEventArgs(Command Command, int Index, IReadOnlyList<Command> Commands)
     {
-        /// <summary>Обрабатываемая команда</summary>
-        public Command Command { get; }
-
-        /// <summary>Перечень команд сессии</summary>
-        public IReadOnlyList<Command> Commands { get; }
-
-        /// <summary>Индекс команды в перечне команд сессии</summary>
-        public int Index { get; }
-
-        /// <summary>Признак того, что команда обработана</summary>
-        public bool Handled { get; set; }
-
-        /// <summary>Инициализация нового экземпляра <see cref="CommandEventArgs"/></summary>
-        /// <param name="Command">Обрабатываемая команда</param>
-        /// <param name="Index">Индекс команды в перечне команд сессии</param>
-        /// <param name="Commands">Перечень команд сессии</param>
-        public CommandEventArgs(Command Command, int Index, IReadOnlyList<Command> Commands)
-        {
-            this.Command = Command;
-            this.Index = Index;
-            this.Commands = Commands;
-        }
-
-        /// <summary>Строковое представление</summary>
-        /// <returns>Строковое представление</returns>
-        [NotNull]
-        public override string ToString() => 
-            $"Command({Index + 1}/{Commands.Count}):> {Command}{(Handled ? "- processed" : string.Empty)}";
-
-        /// <summary>Установка признака того, что команда была обработана</summary>
-        public void SetHandled() => Handled = true;
+        this.Command  = Command;
+        this.Index    = Index;
+        this.Commands = Commands;
     }
+
+    /// <summary>Строковое представление</summary>
+    /// <returns>Строковое представление</returns>
+    [NotNull]
+    public override string ToString() => 
+        $"Command({Index + 1}/{Commands.Count}):> {Command}{(Handled ? "- processed" : string.Empty)}";
+
+    /// <summary>Установка признака того, что команда была обработана</summary>
+    public void SetHandled() => Handled = true;
 }

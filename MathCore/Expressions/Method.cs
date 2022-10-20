@@ -5,21 +5,20 @@ using MathCore.Extensions.Expressions;
 // ReSharper disable AnnotateNotNullTypeMember
 
 // ReSharper disable once CheckNamespace
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+public class Method<TResult>
 {
-    public class Method<TResult>
+    public static Expression<Func<TObject, TResult>> GetInvokerExpression<TObject>(MethodInfo method)
     {
-        public static Expression<Func<TObject, TResult>> GetInvokerExpression<TObject>(MethodInfo method)
-        {
-            var p = "obj".ParameterOf(typeof(TObject));
-            return p.GetCall(method).CreateLambda<Func<TObject, TResult>>(p);
-        }
-
-        private static readonly Dictionary<MethodInfo, Delegate> __InvokersDictionary =
-            new();
-
-        public static Func<TObject, TResult> GetInvoker<TObject>(MethodInfo method) =>
-            (Func<TObject, TResult>)__InvokersDictionary.GetValueOrAddNew(method,
-                m => GetInvokerExpression<TObject>(m).Compile());
+        var p = "obj".ParameterOf(typeof(TObject));
+        return p.GetCall(method).CreateLambda<Func<TObject, TResult>>(p);
     }
+
+    private static readonly Dictionary<MethodInfo, Delegate> __InvokersDictionary =
+        new();
+
+    public static Func<TObject, TResult> GetInvoker<TObject>(MethodInfo method) =>
+        (Func<TObject, TResult>)__InvokersDictionary.GetValueOrAddNew(method,
+            m => GetInvokerExpression<TObject>(m).Compile());
 }

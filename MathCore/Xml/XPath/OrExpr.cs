@@ -1,41 +1,40 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal sealed class OrExpr : Query
 {
-    internal sealed class OrExpr : Query
+    #region Fields
+
+    private readonly BooleanFunctions _Operand1;
+    private readonly BooleanFunctions _Operand2;
+
+    #endregion
+
+    #region Constructors
+
+    internal OrExpr(Query operand1, Query operand2)
     {
-        #region Fields
+        _Operand1 = new BooleanFunctions(operand1);
+        _Operand2 = new BooleanFunctions(operand2);
+    }
 
-        private readonly BooleanFunctions _Operand1;
-        private readonly BooleanFunctions _Operand2;
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Constructors
+    internal override object GetValue(XPathReader reader)
+    {
+        var ret = _Operand1.GetValue(reader);
 
-        internal OrExpr(Query operand1, Query operand2)
-        {
-            _Operand1 = new BooleanFunctions(operand1);
-            _Operand2 = new BooleanFunctions(operand2);
-        }
-
-        #endregion
-
-        #region Methods
-
-        internal override object GetValue(XPathReader reader)
-        {
-            var ret = _Operand1.GetValue(reader);
-
-            if(!Convert.ToBoolean(ret))
-                ret = _Operand2.GetValue(reader);
+        if(!Convert.ToBoolean(ret))
+            ret = _Operand2.GetValue(reader);
 #if DEBUG1
             Console.WriteLine("OrExpr: {0}", ret);
 #endif
-            return ret;
-        }
-
-        internal override XPathResultType ReturnType() => XPathResultType.Boolean;
-
-        #endregion
+        return ret;
     }
+
+    internal override XPathResultType ReturnType() => XPathResultType.Boolean;
+
+    #endregion
 }

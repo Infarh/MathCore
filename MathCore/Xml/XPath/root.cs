@@ -14,16 +14,15 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class Root : AstNode
 {
-    internal class Root : AstNode
-    {
-        #region Properties
+    #region Properties
 
-        internal override QueryType TypeOfAst => QueryType.Root;
+    internal override QueryType TypeOfAst => QueryType.Root;
 
-        internal override XPathResultType ReturnType => XPathResultType.NodeSet;
+    internal override XPathResultType ReturnType => XPathResultType.NodeSet;
 
-        #endregion
-    }
+    #endregion
 }

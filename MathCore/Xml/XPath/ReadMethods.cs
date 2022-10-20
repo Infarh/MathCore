@@ -1,12 +1,11 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal enum ReadMethods
 {
-    internal enum ReadMethods
-    {
-        Read,
-        ReadUntil,
-        MoveToAttribute,
-        MoveToElement,
-        None
-    }
+    Read,
+    ReadUntil,
+    MoveToAttribute,
+    MoveToElement,
+    None
 }

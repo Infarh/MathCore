@@ -3,24 +3,23 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
-namespace System
+namespace System;
+
+/// <summary>Атрибут признака нереализованности</summary>
+[AttributeUsage(AttributeTargets.All, Inherited = false)]
+public sealed class NotImplementedAttribute : Attribute
 {
-    /// <summary>Атрибут признака нереализованности</summary>
-    [AttributeUsage(AttributeTargets.All, Inherited = false)]
-    public sealed class NotImplementedAttribute : Attribute
-    {
-        /// <summary>Сообщение</summary>
-        public string Message { get; set; }
+    /// <summary>Сообщение</summary>
+    public string Message { get; set; }
 
-        /// <summary>Новый атрибут нереализованности</summary>
-        public NotImplementedAttribute() { }
+    /// <summary>Новый атрибут нереализованности</summary>
+    public NotImplementedAttribute() { }
 
-        /// <summary>Новый атрибут нереализованности</summary>
-        /// <param name="Message">Сообщение (почему не реализовано?)</param>
-        public NotImplementedAttribute(string Message) => this.Message = Message;
+    /// <summary>Новый атрибут нереализованности</summary>
+    /// <param name="Message">Сообщение (почему не реализовано?)</param>
+    public NotImplementedAttribute(string Message) => this.Message = Message;
 
-        /// <summary>Признак атрибута "по умолчанию"</summary>
-        /// <returns>Истина, если указан незаполненный атрибут</returns>
-        public override bool IsDefaultAttribute() => string.IsNullOrEmpty(Message);
-    }
+    /// <summary>Признак атрибута "по умолчанию"</summary>
+    /// <returns>Истина, если указан незаполненный атрибут</returns>
+    public override bool IsDefaultAttribute() => string.IsNullOrEmpty(Message);
 }

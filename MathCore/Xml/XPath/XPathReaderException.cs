@@ -17,27 +17,26 @@
 
 using System.Runtime.Serialization;
 
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+// The XPathException class contains XML parser errors.
+// 
+// The XPathReaderException class contains XML parser errors.
+// 
+/// <devdoc>
+///     <para>
+///         Represents the exception that is thrown when there is error processing an
+///         XPath expression.
+///     </para>
+/// </devdoc>
+[Serializable]
+public class XPathReaderException : XPathException
 {
-    // The XPathException class contains XML parser errors.
-    // 
-    // The XPathReaderException class contains XML parser errors.
-    // 
-    /// <devdoc>
-    ///     <para>
-    ///         Represents the exception that is thrown when there is error processing an
-    ///         XPath expression.
-    ///     </para>
-    /// </devdoc>
-    [Serializable]
-    public class XPathReaderException : XPathException
-    {
-        #region Constructors
+    #region Constructors
 
-        public XPathReaderException(string message) : base(message) { }
+    public XPathReaderException(string message) : base(message) { }
 
-        public XPathReaderException(SerializationInfo Info, StreamingContext Context) : base(Info, Context) { }
+    public XPathReaderException(SerializationInfo Info, StreamingContext Context) : base(Info, Context) { }
 
-        #endregion
-    }
+    #endregion
 }

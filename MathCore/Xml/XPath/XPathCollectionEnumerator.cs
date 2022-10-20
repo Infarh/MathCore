@@ -1,34 +1,33 @@
 ﻿using System.Collections;
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal sealed class XPathCollectionEnumerator : IEnumerator
 {
-    internal sealed class XPathCollectionEnumerator : IEnumerator
-    {
-        #region Fields
+    #region Fields
 
-        private readonly IDictionaryEnumerator _HashEnum;
+    private readonly IDictionaryEnumerator _HashEnum;
 
-        #endregion
+    #endregion
 
-        #region Properties
+    #region Properties
 
-        public object Current => ((DictionaryEntry) _HashEnum.Current).Value;
+    public object Current => ((DictionaryEntry) _HashEnum.Current).Value;
 
-        #endregion
+    #endregion
 
-        #region Constructors
+    #region Constructors
 
-        public XPathCollectionEnumerator(Hashtable XPatches) => _HashEnum = XPatches.GetEnumerator();
+    public XPathCollectionEnumerator(Hashtable XPatches) => _HashEnum = XPatches.GetEnumerator();
 
-        #endregion
+    #endregion
 
-        #region Interfaces
+    #region Interfaces
 
-        public bool MoveNext() => _HashEnum.MoveNext();
+    public bool MoveNext() => _HashEnum.MoveNext();
 
-        public void Reset() => _HashEnum.Reset();
+    public void Reset() => _HashEnum.Reset();
 
-        #endregion
-    }
+    #endregion
 }

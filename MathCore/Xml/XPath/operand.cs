@@ -14,57 +14,56 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class Operand : AstNode
 {
-    internal class Operand : AstNode
+    #region Fields
+
+    private readonly XPathResultType _Type;
+
+    #endregion
+
+    #region Properties
+
+    internal override QueryType TypeOfAst => QueryType.ConstantOperand;
+
+    internal override XPathResultType ReturnType => _Type;
+
+    internal string OperandType =>
+        _Type switch
+        {
+            XPathResultType.Number  => "number",
+            XPathResultType.String  => "string",
+            XPathResultType.Boolean => "boolean",
+            _                       => null
+        };
+
+    internal object OperandValue { get; }
+
+    internal string Prefix { get; } = string.Empty;
+
+    #endregion
+
+    #region Constructors
+
+    internal Operand(string var)
     {
-        #region Fields
-
-        private readonly XPathResultType _Type;
-
-        #endregion
-
-        #region Properties
-
-        internal override QueryType TypeOfAst => QueryType.ConstantOperand;
-
-        internal override XPathResultType ReturnType => _Type;
-
-        internal string OperandType =>
-            _Type switch
-            {
-                XPathResultType.Number => "number",
-                XPathResultType.String => "string",
-                XPathResultType.Boolean => "boolean",
-                _ => null
-            };
-
-        internal object OperandValue { get; }
-
-        internal string Prefix { get; } = string.Empty;
-
-        #endregion
-
-        #region Constructors
-
-        internal Operand(string var)
-        {
-            OperandValue = var;
-            _Type = XPathResultType.String;
-        }
-
-        internal Operand(double var)
-        {
-            OperandValue = var;
-            _Type = XPathResultType.Number;
-        }
-
-        internal Operand(bool var)
-        {
-            OperandValue = var;
-            _Type = XPathResultType.Boolean;
-        }
-
-        #endregion
+        OperandValue = var;
+        _Type        = XPathResultType.String;
     }
+
+    internal Operand(double var)
+    {
+        OperandValue = var;
+        _Type        = XPathResultType.Number;
+    }
+
+    internal Operand(bool var)
+    {
+        OperandValue = var;
+        _Type        = XPathResultType.Boolean;
+    }
+
+    #endregion
 }

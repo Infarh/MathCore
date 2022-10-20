@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace WPFTest.ViewModels
+namespace WPFTest.ViewModels;
+
+public static class ViewModelsRegistrator
 {
-    public static class ViewModelsRegistrator
-    {
-        public static IServiceCollection AddViews(this IServiceCollection Services) => Services
-           .AddSingleton<MainWindowViewModel>()
-           .AddSingleton<SecondViewModel>()
-        ;
-    }
+    public static IServiceCollection AddViews(this IServiceCollection Services) => Services
+       .AddSingleton<MainWindowViewModel>()
+       .AddSingleton<SecondViewModel>()
+    ;
 }

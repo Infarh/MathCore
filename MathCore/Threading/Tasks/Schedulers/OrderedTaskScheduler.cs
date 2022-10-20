@@ -1,8 +1,7 @@
-﻿namespace MathCore.Threading.Tasks.Schedulers
+﻿namespace MathCore.Threading.Tasks.Schedulers;
+
+/// <summary>Планировщик, обеспечивающий одновременное выполнение только одной задачи</summary>
+public sealed class OrderedTaskScheduler : LimitedConcurrencyLevelTaskScheduler
 {
-    /// <summary>Планировщик, обеспечивающий одновременное выполнение только одной задачи</summary>
-    public sealed class OrderedTaskScheduler : LimitedConcurrencyLevelTaskScheduler
-    {
-        public OrderedTaskScheduler() : base(1) { }
-    }
+    public OrderedTaskScheduler() : base(1) { }
 }

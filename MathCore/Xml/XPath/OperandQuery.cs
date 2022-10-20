@@ -14,40 +14,38 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+//
+// Function which takes operand
+//
+
+//
+// The leaf node for the expression
+//
+internal sealed class OperandQuery : Query
 {
-    //
-    // Function which takes operand
-    //
+    #region Fields
 
-    //
-    // The leaf node for the expression
-    //
-    internal sealed class OperandQuery : Query
+    private readonly XPathResultType _Type;
+    private readonly object _Variable;
+
+    #endregion
+
+    #region Constructors
+
+    internal OperandQuery(object var, XPathResultType type)
     {
-        #region Fields
-
-        private readonly XPathResultType _Type;
-        private readonly object _Variable;
-
-        #endregion
-
-        #region Constructors
-
-        internal OperandQuery(object var, XPathResultType type)
-        {
-            _Variable = var;
-            _Type = type;
-        }
-
-        #endregion
-
-        #region Methods
-
-        internal override object GetValue(XPathReader reader) => _Variable;
-
-        internal override XPathResultType ReturnType() => _Type;
-
-        #endregion
+        _Variable = var;
+        _Type     = type;
     }
+
+    #endregion
+
+    #region Methods
+
+    internal override object GetValue(XPathReader reader) => _Variable;
+
+    internal override XPathResultType ReturnType() => _Type;
+
+    #endregion
 }

@@ -14,32 +14,31 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class Variable : AstNode
 {
-    internal class Variable : AstNode
+    #region Properties
+
+    internal override QueryType TypeOfAst => QueryType.Variable;
+
+    internal override XPathResultType ReturnType => XPathResultType.Error;
+
+    internal string Name => Prefix != string.Empty ? $"{Prefix}:{LocalName}" : LocalName;
+
+    internal string LocalName { get; }
+
+    internal string Prefix { get; }
+
+    #endregion
+
+    #region Constructors
+
+    internal Variable(string name, string prefix)
     {
-        #region Properties
-
-        internal override QueryType TypeOfAst => QueryType.Variable;
-
-        internal override XPathResultType ReturnType => XPathResultType.Error;
-
-        internal string Name => Prefix != string.Empty ? $"{Prefix}:{LocalName}" : LocalName;
-
-        internal string LocalName { get; }
-
-        internal string Prefix { get; }
-
-        #endregion
-
-        #region Constructors
-
-        internal Variable(string name, string prefix)
-        {
-            LocalName = name;
-            Prefix = prefix;
-        }
-
-        #endregion
+        LocalName = name;
+        Prefix    = prefix;
     }
+
+    #endregion
 }

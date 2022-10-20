@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace MathCore.Exceptions
+namespace MathCore.Exceptions;
+
+[Serializable]
+public class CalculationsException : Exception
 {
-    [Serializable]
-    public class CalculationsException : Exception
+    public CalculationsException()
     {
-        public CalculationsException()
-        {
-        }
+    }
 
-        public CalculationsException(string message) : base(message)
-        {
-        }
+    public CalculationsException(string message) : base(message)
+    {
+    }
 
-        public CalculationsException(string message, Exception inner) : base(message, inner)
-        {
-        }
+    public CalculationsException(string message, Exception inner) : base(message, inner)
+    {
+    }
 
-        protected CalculationsException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
-        {
-        }
+    protected CalculationsException(
+        SerializationInfo info,
+        StreamingContext context) : base(info, context)
+    {
     }
 }
