@@ -961,9 +961,13 @@ public readonly ref partial struct StringPtr
                     throw new FormatException("Строка имела неверный формат");
             }
 
-        return exp == 0
-            ? sign * (whole + fraction / (double)fraction_base)
-            : sign * (whole + fraction / (double)fraction_base) * Math.Pow(10, exp_sign * exp);
+        var value = sign * (whole + fraction / (double)fraction_base);
+        
+        if (exp == 0)
+            return value;
+
+        
+        return value * Math.Pow(10, exp_sign * exp);
     }
 
     /// <summary>Получить имя (ключ) из пары ключ=значение</summary>
@@ -972,10 +976,7 @@ public readonly ref partial struct StringPtr
     public StringPtr GetName(char Separator = '=')
     {
         var index = IndexOf(Separator);
-        var pos = Pos;
-        var str = Source;
-        if (index <= 0) return new(str, pos, 0);
-        return Substring(0, index);
+        return index <= 0 ? new(Source, Pos, 0) : Substring(0, index);
     }
 
     /// <summary>Получить значение из пары ключ=значение</summary>
@@ -984,10 +985,7 @@ public readonly ref partial struct StringPtr
     public StringPtr GetValueString(char Separator = '=')
     {
         var index = IndexOf(Separator);
-        var pos = Pos;
-        var str = Source;
-        if (index <= 0) return new(str, pos, 0);
-        return Substring(index + 1);
+        return index <= 0 ? new(Source, Pos, 0) : Substring(index + 1);
     }
 
     /// <summary>Получить вещественное значение из пары ключ=значение</summary>
@@ -1036,16 +1034,11 @@ public readonly ref partial struct StringPtr
 
         if (str.IsEmpty) return false;
 
-        if (str.Equals("true", StringComparison.OrdinalIgnoreCase))
-        {
-            value = true;
-            return true;
-        }
+        if (!str.Equals("true", StringComparison.OrdinalIgnoreCase)) 
+            return str.Equals("false", StringComparison.OrdinalIgnoreCase);
 
-        if (str.Equals("false", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        return false;
+        value = true;
+        return true;
     }
 
     /// <summary>Получить булево значение из пары ключ=значение</summary>

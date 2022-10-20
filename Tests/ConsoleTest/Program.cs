@@ -1,28 +1,19 @@
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 
 using MathCore.CSV;
 using MathCore.PE;
 
-var str = " 123;qwe;asd;zxc;000;111;456 ";
+var str = "123.456E-3";
 
-var xml_serializer  = new XmlSerializer(typeof(string));
-var writer = new XmlTextWriter(Console.Out);
-writer.Formatting = Formatting.Indented;
-xml_serializer.Serialize(writer, str);
+var d = double.Parse(str, CultureInfo.InvariantCulture);
 
-var values = str.AsStringPtr().Trim().Split(';');
-if (values is [ ['1', .., '3'] a, var b, .. var ss, var c, var d])
-{
-    Process((int)a, b, (double)c, d, ss);
-}
-
-void Process(int a, string b, double c, string d, string sss)
-{
-    Console.WriteLine($"a:{a}, b:{b}, c:{c}, d:{d} - sss:{sss}");
-}
+var pstr = str.AsStringPtr();
+var d2   = pstr.ParseDouble(CultureInfo.InvariantCulture);
 
 
+Console.WriteLine("End.");
 Console.ReadLine();
 
 return;

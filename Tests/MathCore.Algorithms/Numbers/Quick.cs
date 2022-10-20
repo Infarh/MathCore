@@ -1,4 +1,5 @@
-﻿namespace MathCore.Algorithms.Numbers;
+﻿#nullable enable
+namespace MathCore.Algorithms.Numbers;
 
 public static class Quick
 {

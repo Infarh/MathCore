@@ -20,10 +20,10 @@ namespace MathCore.Algorithms.Matrixes
 
         private static void Swap<T>(ref T v1, ref T v2) { var t = v1; v1 = v2; v2 = t; }
 
-        public static (int Rank, double Determinant) Triangulate(double[,] matrix)
+        public static (int Rank, double Determinant) Triangulate(double[,] M)
         {
-            var n = matrix.GetLength(0); // число строк
-            var m = matrix.GetLength(1); // число столбцов
+            var n = M.GetLength(0); // число строк
+            var m = M.GetLength(1); // число столбцов
 
             var d = 1d;             // определитель
             var rank = Min(n, m);   // ранг матрицы в случае успеха операции
@@ -32,13 +32,13 @@ namespace MathCore.Algorithms.Matrixes
             {
                 // Если очередной элемент в строке равен нулю, то надо найти другую строку
                 // и поменять знак определителя
-                if (matrix[i0, i0] == 0)
+                if (M[i0, i0] == 0)
                 {
                     var max = 0d;
                     var max_index = -1;
                     // Ищем в столбце ниже опорного элемента строку с самым большим по модулю значением
                     for (var i1 = i0 + 1; i1 < n; i1++)
-                        if (Abs(matrix[i1, i0]) is var abs && abs > max)
+                        if (Abs(M[i1, i0]) is var abs && abs > max)
                         {
                             max = abs;
                             max_index = i1;
@@ -51,40 +51,40 @@ namespace MathCore.Algorithms.Matrixes
                         // В этом случае надо принудительно обнулить все нижние строки
                         for (var i = i0; i < n; i++)
                             for (var j = i0; j < m; j++)
-                                matrix[i, j] = 0d;
+                                M[i, j] = 0d;
                         // И завершить алгоритм
                         // Рангом матрицы будет в этом случае номер текущей строки, а определитель равен 0.
                         return (i0, 0);
                     }
 
                     // Если найдена строка, то надо её переместить в строку, следующую за текущей
-                    if (Swap(matrix, i0, max_index)) // Если найденная строка не совпадает со следующей, то меняем их местами
+                    if (Swap(M, i0, max_index)) // Если найденная строка не совпадает со следующей, то меняем их местами
                         d = -d; // и надо в этом случае изменить знак определителя
                 }
 
-                var main = matrix[i0, i0]; // Ведущий элемент строки
+                var main = M[i0, i0]; // Ведущий элемент строки
                 d *= main; // Сразу умножаем определитель на ведущий элемент (диагональный элемент будущей треугольной матрицы)
 
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < n; i++)
-                    if (matrix[i, i0] != 0) // В том случае, если очередной элемент строки в столбце ведущего элемента не равен нулю, то надо что-то делать...
+                    if (M[i, i0] != 0) // В том случае, если очередной элемент строки в столбце ведущего элемента не равен нулю, то надо что-то делать...
                     {
                         // Определяем коэффициент, на который будем умножать все элементы строки
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d; // Обнуляем элемент в столбце ведущей строки
+                        var k = M[i, i0] / main;
+                        M[i, i0] = 0d; // Обнуляем элемент в столбце ведущей строки
                         // Проходим по всем элементам строки и вычитаем из каждого элемента ведущий элемент
                         for (var j = i0 + 1; j < m; j++)
-                            matrix[i, j] -= matrix[i0, j] * k;
+                            M[i, j] -= M[i0, j] * k;
                     }
             }
 
             return (rank, d);
         }
 
-        public static (int Rank, double Determinant) Triangulate(double[,] matrix, double[,] b)
+        public static (int Rank, double Determinant) Triangulate(double[,] M, double[,] b)
         {
-            var n = matrix.GetLength(0); // число строк
-            var m = matrix.GetLength(1); // число столбцов
+            var n = M.GetLength(0); // число строк
+            var m = M.GetLength(1); // число столбцов
 
             var b_n = b.GetLength(0); // число строк
             var b_m = b.GetLength(1); // число столбцов
@@ -94,12 +94,12 @@ namespace MathCore.Algorithms.Matrixes
             var rank = Min(n, m);
             for (var i0 = 0; i0 < rank; i0++)
             {
-                if (matrix[i0, i0] == 0)
+                if (M[i0, i0] == 0)
                 {
                     var max = 0d;
                     var max_index = -1;
                     for (var i1 = i0 + 1; i1 < n; i1++)
-                        if (Abs(matrix[i1, i0]) is var abs && abs > max)
+                        if (Abs(M[i1, i0]) is var abs && abs > max)
                         {
                             max = abs;
                             max_index = i1;
@@ -109,28 +109,28 @@ namespace MathCore.Algorithms.Matrixes
                     {
                         for (var i = i0; i < n; i++)
                         {
-                            for (var j = i0; j < m; j++) matrix[i, j] = 0d;
+                            for (var j = i0; j < m; j++) M[i, j] = 0d;
                             for (var j = 0; j < b_m; j++) b[i, j] = 0d;
                         }
                         return (i0, 0);
                     }
 
-                    Swap(matrix, i0, max_index);
+                    Swap(M, i0, max_index);
                     Swap(b, i0, max_index);
                     d = -d;
                 }
 
-                var main = matrix[i0, i0]; // Ведущий элемент строки
+                var main = M[i0, i0]; // Ведущий элемент строки
                 d *= main;
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < n; i++)
-                    if (matrix[i, i0] != 0)
+                    if (M[i, i0] != 0)
                     {
-                        var k = matrix[i, i0] / main;
-                        matrix[i, i0] = 0d;
+                        var k = M[i, i0] / main;
+                        M[i, i0] = 0d;
 
                         for (var j = i0 + 1; j < m; j++)
-                            matrix[i, j] -= matrix[i0, j] * k;
+                            M[i, j] -= M[i0, j] * k;
                         for (var j = 0; j < b_m; j++)
                             b[i, j] -= b[i0, j] * k;
                     }
