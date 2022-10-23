@@ -42,7 +42,7 @@ public static class Pascal
                 ll[i] = Math.Max(ll[i], s.Length);
             }
 
-        Console.WriteLine("int[] z_matrix = ");
+        Console.WriteLine("double[,] z_matrix = ");
         Console.WriteLine("{");
         for (var i = 0; i < N; i++)
         {

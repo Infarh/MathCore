@@ -9,6 +9,7 @@ public class MatrixAlgorithmsTests
     [TestMethod]
     public void CrateZTransformMatrixArray()
     {
+        // http://we.easyelectronics.ru/Theory/cifrovye-rekursivnye-filtry-chast-2.html
         //double[,] z_matrix = 
         //{
         //    //           1,     2,    3,    4,   5,   6,   7,   8,   9,  10,  11,  12,   13,   14,    15,   16
