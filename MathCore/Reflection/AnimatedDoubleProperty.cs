@@ -1,6 +1,6 @@
-﻿using System;
+﻿#nullable enable
+using System;
 
-using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 
 namespace MathCore.Reflection;
@@ -18,7 +18,7 @@ public class AnimatedDoubleProperty<TObject> : AnimatedProperty<TObject, double>
     /// <param name="Private">Искать приватное свойство?</param>
     public AnimatedDoubleProperty(
         TObject o,
-        [NotNull] string Name,
+        string Name,
         int Samples,
         int Timeout,
         Func<int, int, double> Translator,

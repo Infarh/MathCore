@@ -1,24 +1,24 @@
-﻿using static System.Math;
+﻿#nullable enable
+
+using static System.Math;
 
 namespace MathCore.Algorithms.Matrixes;
 
 public static class Solve
 {
-    private static bool Swap(double[,] array, int i1, int i2)
+    private static bool SwapRows(double[,] M, int Row1, int Row2)
     {
-        if (i1 == i2) return false;
-        var n = array.GetLength(0);
-        for (var j = 0; j < n; j++)
-        {
-            var tmp = array[i1, j];
-            array[i1, j] = array[i2, j];
-            array[i2, j] = tmp;
-        }
+        if (Row1 == Row2) 
+            return false;
+
+        var m = M.GetLength(1);
+        for (var j = 0; j < m; j++)
+            (M[Row1, j], M[Row2, j]) = (M[Row2, j], M[Row1, j]);
 
         return true;
     }
 
-    private static void Swap<T>(ref T v1, ref T v2) { var t = v1; v1 = v2; v2 = t; }
+    private static void Swap<T>(ref T v1, ref T v2) => (v1, v2) = (v2, v1);
 
     public static (int Rank, double Determinant) Triangulate(double[,] M)
     {
@@ -39,10 +39,7 @@ public static class Solve
                 // Ищем в столбце ниже опорного элемента строку с самым большим по модулю значением
                 for (var i1 = i0 + 1; i1 < n; i1++)
                     if (Abs(M[i1, i0]) is var abs && abs > max)
-                    {
-                        max       = abs;
-                        max_index = i1;
-                    }
+                        (max, max_index) = (abs, i1);
 
                 // Если ни одно из значений в столбце ниже не отличается от нуля,
                 // то max_index останется равен 0. И это будет признаком того, что матрица вырождена
@@ -58,19 +55,19 @@ public static class Solve
                 }
 
                 // Если найдена строка, то надо её переместить в строку, следующую за текущей
-                if (Swap(M, i0, max_index)) // Если найденная строка не совпадает со следующей, то меняем их местами
+                if (SwapRows(M, i0, max_index)) // Если найденная строка не совпадает со следующей, то меняем их местами
                     d = -d;                 // и надо в этом случае изменить знак определителя
             }
 
-            var main = M[i0, i0]; // Ведущий элемент строки
-            d *= main;            // Сразу умножаем определитель на ведущий элемент (диагональный элемент будущей треугольной матрицы)
+            var pivot = M[i0, i0]; // Ведущий элемент строки
+            d *= pivot;            // Сразу умножаем определитель на ведущий элемент (диагональный элемент будущей треугольной матрицы)
 
             //Нормируем строку основной матрицы по первому элементу
             for (var i = i0 + 1; i < n; i++)
                 if (M[i, i0] != 0) // В том случае, если очередной элемент строки в столбце ведущего элемента не равен нулю, то надо что-то делать...
                 {
                     // Определяем коэффициент, на который будем умножать все элементы строки
-                    var k = M[i, i0] / main;
+                    var k = M[i, i0] / pivot;
                     M[i, i0] = 0d; // Обнуляем элемент в столбце ведущей строки
                     // Проходим по всем элементам строки и вычитаем из каждого элемента ведущий элемент
                     for (var j = i0 + 1; j < m; j++)
@@ -115,8 +112,8 @@ public static class Solve
                     return (i0, 0);
                 }
 
-                Swap(M, i0, max_index);
-                Swap(b, i0, max_index);
+                SwapRows(M, i0, max_index);
+                SwapRows(b, i0, max_index);
                 d = -d;
             }
 
@@ -192,8 +189,8 @@ public static class Solve
                     }
                     return (i0, 0, CreatePermutationMatrix(p_index));
                 }
-                Swap(matrix, i0, max_index);
-                Swap(b, i0, max_index);
+                SwapRows(matrix, i0, max_index);
+                SwapRows(b, i0, max_index);
                 Swap(ref p_index[i0], ref p_index[max_index]);
                 d = -d;
             }
@@ -222,7 +219,7 @@ public static class Solve
         return (n1, d, CreatePermutationMatrix(p_index));
     }
 
-    public static double[,] Inverse(double[,] matrix)
+    public static double[,]? Inverse(double[,] matrix)
     {
         var n = matrix.GetLength(0); // число строк
         var m = matrix.GetLength(1); // число столбцов

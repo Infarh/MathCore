@@ -1,8 +1,12 @@
-﻿using System.Collections;
-
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Collections;
+using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 using DST = System.Diagnostics.DebuggerStepThroughAttribute;
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Tests;
 
@@ -45,19 +49,64 @@ public class MatrixTest
 
     #endregion
 
-    [DST, NotNull]
+    [DST]
     public static IComparer GetComparer(double tolerance = 1e-14) => new LambdaComparer<double>((x1, x2) =>
     {
-        var delta                              = x2 - x1;
+        var delta = x2 - x1;
         if (Math.Abs(delta) < tolerance) delta = 0;
         return Math.Sign(delta);
     });
+
+    private static string MatrixArrayToString(double[,] matrix, string? Format = null, [CallerArgumentExpression(nameof(matrix))] string MatrixName = null!)
+    {
+        matrix.NotNull();
+        var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));
+
+        var s = new StringBuilder("double[,] ")
+           .Append(MatrixName)
+           .AppendLine(" =")
+           .AppendLine("{");
+
+        var ss = new string[n, m];
+        var ll = new int[m];
+
+        var provider = CultureInfo.InvariantCulture;
+        if (Format is not { Length: > 0 })
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < n; j++)
+                {
+                    var s0 = matrix[i, j].ToString(Format, provider);
+                    ss[i, j] = s0;
+                    ll[j]    = Math.Max(ll[j], s0.Length);
+                }
+        else
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < n; j++)
+                {
+                    var s0 = matrix[i, j].ToString(provider);
+                    ss[i, j] = s0;
+                    ll[j]    = Math.Max(ll[j], s0.Length);
+                }
+
+        for (var i = 0; i < n; i++)
+        {
+            s.Append(" { ");
+            for (var j = 0; j < m; j++) 
+                s.Append(ss[i, j].PadLeft(ll[j])).Append(", ");
+
+            s.Length -= 2;
+            s.AppendLine(" },");
+        }
+
+        s.Append("};");
+        return s.ToString();
+    }
 
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Тест оператора сложения двух матриц</summary>
     [TestMethod, Priority(0), Description("Тест оператора сложения двух матриц")]
-    public void Creation_Test()
+    public void Creation()
     {
         double[,] a =
         {
@@ -93,7 +142,7 @@ public class MatrixTest
 
     /// <summary>Тест вычисления обратной матрицы</summary>
     [TestMethod, Priority(0), Description("Тест вычисления обратной матрицы")]
-    public void Equals_Test()
+    public void Equals()
     {
         double[,] a =
         {
@@ -128,7 +177,7 @@ public class MatrixTest
 
     /// <summary>Тест оператора сложения двух матриц</summary>
     [TestMethod, Priority(1), Description("Тест оператора сложения двух матриц")]
-    public void OperatorAdd_Matrix_Matrix_Test()
+    public void OperatorAdd_Matrix_Matrix()
     {
         double[,] a =
         {
@@ -164,7 +213,7 @@ public class MatrixTest
 
     /// <summary>Тест оператора сложения двух матриц</summary>
     [TestMethod, Priority(1), Description("Тест оператора сложения двух матриц")]
-    public void OperatorSubtract_Matrix_Matrix_Test()
+    public void OperatorSubtract_Matrix_Matrix()
     {
         double[,] a =
         {
@@ -200,7 +249,7 @@ public class MatrixTest
 
     /// <summary>Тест оператора произведения двух матриц</summary>
     [TestMethod, Priority(1), Description("Тест оператора произведения двух матриц")]
-    public void OperatorMultiply_Matrix_Matrix_Test()
+    public void OperatorMultiply_Matrix_Matrix()
     {
         double[,] a =
         {
@@ -241,6 +290,49 @@ public class MatrixTest
         Assert.AreEqual(146, C[2, 2]);
 
         Assert.AreEqual(C, c);
+    }
+
+    [TestMethod]
+    public void Triangulate()
+    {
+        static void CombineRows(double[,] matrix, int DestI, int SrcI1, double SrcK1, int SrcI2, double SrcK2)
+        {
+            var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));
+            if (DestI >= n) throw new ArgumentOutOfRangeException(nameof(DestI), DestI, "Номер строки назначения вышел за пределы массива");
+            if (SrcI1 >= n) throw new ArgumentOutOfRangeException(nameof(SrcI1), SrcI1, "Номер строки источника 1 вышел за пределы массива");
+            if (SrcI2 >= n) throw new ArgumentOutOfRangeException(nameof(SrcI2), SrcI2, "Номер строки источника 2 вышел за пределы массива");
+
+            for (var j = 0; j < m; j++)
+                matrix[DestI, j] = matrix[SrcI1, j] * SrcK1 + matrix[SrcI2, j] * SrcK2;
+        }
+
+        static void SwapRows(double[,] matrix, int I1, int I2)
+        {
+            var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));
+            if (I1 >= n) throw new ArgumentOutOfRangeException(nameof(I1), I1, "Номер строки I1 вышел за пределы массива");
+            if (I2 >= n) throw new ArgumentOutOfRangeException(nameof(I2), I2, "Номер строки I2 вышел за пределы массива");
+
+            if (I1 == I2) return;
+
+            for (var j = 0; j < m; j++)
+                (matrix[I1, j], matrix[I2, j]) = (matrix[I2, j], matrix[I1, j]);
+        }
+
+        double[,] a =
+        {
+            { 1, 2, 3,  4 },
+            { 0, 5, 6,  7 },
+            { 0, 0, 8,  9 },
+            { 0, 0, 0, 10 }
+        };
+
+        //CombineRows(a, 1, 0, 3, 1, 2);
+        CombineRows(a, 2, 0, 5, 2, 2);
+        CombineRows(a, 3, 0, -9, 3, 3);
+
+        var rank = Matrix.Array.Triangulate(a, out var d);
+
+        Debug.WriteLine(MatrixArrayToString(a));
     }
 
     /* ------------------------------------------------------------------------------------------ */

@@ -22,7 +22,9 @@ public static class ArrayExtensions
     public static string ToBase64(this byte[] bytes) => Convert.ToBase64String(bytes);
     public static string ToBase64(this byte[] bytes, int offset, int length) => Convert.ToBase64String(bytes, offset, length);
     public static string ToBase64(this byte[] bytes, Base64FormattingOptions options) => Convert.ToBase64String(bytes, options);
-    public static string ToBase64(this byte[] bytes, int offset, int length, Base64FormattingOptions options) => Convert.ToBase64String(bytes, offset, length, options);
+
+    public static string ToBase64(this byte[] bytes, int offset, int length, Base64FormattingOptions options) =>
+        Convert.ToBase64String(bytes, offset, length, options);
 
     public static int BinarySearch<T>(this T[] array, T value) => Array.BinarySearch(array, value);
 
@@ -56,6 +58,7 @@ public static class ArrayExtensions
     {
         if (items.Length is not (> 0 and var length))
             yield break;
+
         rnd ??= new Random();
         var index = new int[length];
         for (var i = 0; i < length; i++)
@@ -64,6 +67,7 @@ public static class ArrayExtensions
             yield return index[j] > 0
                 ? items[index[j] - 1]
                 : items[j];
+
             index[j] = index[i] > 0
                 ? index[i]
                 : i + 1;
@@ -218,6 +222,7 @@ public static class ArrayExtensions
             else
                 aggregator.Add(value);
         }
+
         if (aggregator.Count != 0)
             result.Add(aggregator.ToArray());
 
@@ -268,14 +273,15 @@ public static class ArrayExtensions
             // Сдвигаем правую границу влево до тех пор, пока элемент на левой границе > x
             while (A[j].CompareTo(x) > 0) j--; // поиск элемента для переноса в младшую часть
             if (i > j) break;
+
             // обмен элементов местами:
-            var temp = A[i];
-            A[i] = A[j];
-            A[j] = temp;
+            (A[i], A[j]) = (A[j], A[i]);
             // переход к следующим элементам:
-            i++;         // Двигаем левую  границу вправо
-            j--;         // Двигаем правую границу влево
-        } while (i < j); // Делаем всё это до тех пор, пока границы не пересекутся
+            i++; // Двигаем левую  границу вправо
+            j--; // Двигаем правую границу влево
+        }
+        while (i < j); // Делаем всё это до тех пор, пока границы не пересекутся
+
         if (low < j) QuickSort(A, low, j);
         if (i < high) QuickSort(A, i, high);
     }
@@ -290,21 +296,22 @@ public static class ArrayExtensions
     {
         var i = low;
         var j = high;
-        await Task.Run(() =>
-            {
-                var x = A[(low + high) / 2];
-                do
+        await Task.Run(
+                () =>
                 {
-                    while (A[i].CompareTo(x) < 0) i++;
-                    while (A[j].CompareTo(x) > 0) j--;
-                    if (i > j) break;
-                    var temp = A[i];
-                    A[i] = A[j];
-                    A[j] = temp;
-                    i++;
-                    j--;
-                } while (i < j);
-            })
+                    var x = A[(low + high) / 2];
+                    do
+                    {
+                        while (A[i].CompareTo(x) < 0) i++;
+                        while (A[j].CompareTo(x) > 0) j--;
+                        if (i > j) break;
+
+                        (A[i], A[j]) = (A[j], A[i]);
+                        i++;
+                        j--;
+                    }
+                    while (i < j);
+                })
            .ConfigureAwait(false);
 
         var sort_tasks = new List<Task>(2);
@@ -330,14 +337,15 @@ public static class ArrayExtensions
             while (Comparer.Compare(A[i], x) < 0) i++; // поиск элемента для переноса в старшую часть
             while (Comparer.Compare(A[j], x) > 0) j--; // поиск элемента для переноса в младшую часть
             if (i > j) break;
+
             // обмен элементов местами:
-            var temp = A[i];
-            A[i] = A[j];
-            A[j] = temp;
+            (A[i], A[j]) = (A[j], A[i]);
             // переход к следующим элементам:
             i++;
             j--;
-        } while (i < j);
+        }
+        while (i < j);
+
         if (low < j) QuickSort(A, low, j, Comparer);
         if (i < high) QuickSort(A, i, high, Comparer);
     }
@@ -353,21 +361,22 @@ public static class ArrayExtensions
     {
         var i = low;
         var j = high;
-        await Task.Run(() =>
-            {
-                var x = A[(low + high) / 2];
-                do
+        await Task.Run(
+                () =>
                 {
-                    while (Comparer.Compare(A[i], x) < 0) i++;
-                    while (Comparer.Compare(A[j], x) > 0) j--;
-                    if (i > j) break;
-                    var temp = A[i];
-                    A[i] = A[j];
-                    A[j] = temp;
-                    i++;
-                    j--;
-                } while (i < j);
-            })
+                    var x = A[(low + high) / 2];
+                    do
+                    {
+                        while (Comparer.Compare(A[i], x) < 0) i++;
+                        while (Comparer.Compare(A[j], x) > 0) j--;
+                        if (i > j) break;
+
+                        (A[i], A[j]) = (A[j], A[i]);
+                        i++;
+                        j--;
+                    }
+                    while (i < j);
+                })
            .ConfigureAwait(false);
 
         var sort_tasks = new List<Task>(2);
@@ -492,8 +501,7 @@ public static class ArrayExtensions
     /// <typeparam name="TArray">Тип элементов массива</typeparam>
     /// <typeparam name="TException">Тип исключений</typeparam>
     [DST]
-    public static void Foreach<TArray, TException>
-    (
+    public static void Foreach<TArray, TException>(
         this TArray[] array,
         Action<TArray> action,
         Func<TException, bool> ErrorHandler
@@ -561,8 +569,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TArray[] Initialize<TArray>
-    (
+    public static TArray[] Initialize<TArray>(
         this TArray[] array,
         Func<int, TArray> Initializer
     )
@@ -578,8 +585,7 @@ public static class ArrayExtensions
     /// <param name="value">Значение, размещаемое во всех элементах массива</param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TArray[] Initialize<TArray>
-    (
+    public static TArray[] Initialize<TArray>(
         this TArray[] array,
         TArray value
     )
@@ -597,8 +603,7 @@ public static class ArrayExtensions
     /// <param name="Initializer">Метод инициализации</param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TValue[] Initialize<TValue, TP>
-    (
+    public static TValue[] Initialize<TValue, TP>(
         this TValue[] array,
         TP? p,
         Func<int, TP?, TValue> Initializer
@@ -619,8 +624,7 @@ public static class ArrayExtensions
     /// <param name="Initializer">Метод инициализации</param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TValue[] Initialize<TValue, TP1, TP2>
-    (
+    public static TValue[] Initialize<TValue, TP1, TP2>(
         this TValue[] array,
         TP1? p1,
         TP2? p2,
@@ -641,8 +645,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TArray[] Initialize<TArray>
-    (
+    public static TArray[] Initialize<TArray>(
         this TArray[] array,
         Func<TArray, int, TArray> Initializer
     )
@@ -664,8 +667,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TArray[] Initialize<TArray, TP>
-    (
+    public static TArray[] Initialize<TArray, TP>(
         this TArray[] array,
         TP? p,
         Func<TArray, int, TP?, TArray> Initializer
@@ -690,8 +692,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный массив</returns>
     [DST]
-    public static TArray[] Initialize<TArray, TP1, TP2>
-    (
+    public static TArray[] Initialize<TArray, TP1, TP2>(
         this TArray[] array,
         TP1? p1,
         TP2? p2,
@@ -712,8 +713,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный двумерный массив</returns>
     [DST]
-    public static TArray[,] Initialize<TArray>
-    (
+    public static TArray[,] Initialize<TArray>(
         this TArray[,] array,
         Func<int, int, TArray> Initializer
     )
@@ -738,8 +738,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный двумерный массив</returns>
     [DST]
-    public static TArray[,] Initialize<TArray, TP>
-    (
+    public static TArray[,] Initialize<TArray, TP>(
         this TArray[,] array,
         TP? p,
         Func<int, int, TP?, TArray> Initializer
@@ -767,8 +766,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный двумерный массив</returns>
     [DST]
-    public static TArray[,] Initialize<TArray, TP1, TP2>
-    (
+    public static TArray[,] Initialize<TArray, TP1, TP2>(
         this TArray[,] array,
         TP1? p1,
         TP2? p2,
@@ -799,8 +797,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный двумерный массив</returns>
     [DST]
-    public static TArray[,] Initialize<TArray, TP1, TP2, TP3>
-    (
+    public static TArray[,] Initialize<TArray, TP1, TP2, TP3>(
         this TArray[,] array,
         TP1? p1,
         TP2? p2,
@@ -830,8 +827,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный невыровненный двумерный массив</returns>
     [DST]
-    public static TArray[][] Initialize<TArray>
-    (
+    public static TArray[][] Initialize<TArray>(
         this TArray[][] array,
         Func<int, TArray[]> ArrayInitializer,
         Func<int, int, TArray> Initializer
@@ -843,6 +839,7 @@ public static class ArrayExtensions
             for (var j = 0; j < array[i].Length; j++)
                 array[i][j] = Initializer(i, j);
         }
+
         return array;
     }
 
@@ -863,8 +860,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный невыровненный двумерный массив</returns>
     [DST]
-    public static TArray[][] Initialize<TArray, TP>
-    (
+    public static TArray[][] Initialize<TArray, TP>(
         this TArray[][] array,
         TP? p,
         Func<int, TP?, TArray[]> ArrayInitializer,
@@ -877,6 +873,7 @@ public static class ArrayExtensions
             for (var j = 0; j < array[i].Length; j++)
                 array[i][j] = Initializer(i, j, p);
         }
+
         return array;
     }
 
@@ -899,8 +896,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный невыровненный двумерный массив</returns>
     [DST]
-    public static TArray[][] Initialize<TArray, TP1, TP2>
-    (
+    public static TArray[][] Initialize<TArray, TP1, TP2>(
         this TArray[][] array,
         TP1? p1,
         TP2? p2,
@@ -914,6 +910,7 @@ public static class ArrayExtensions
             for (var j = 0; j < array[i].Length; j++)
                 array[i][j] = Initializer(i, j, p1, p2);
         }
+
         return array;
     }
 
@@ -938,8 +935,7 @@ public static class ArrayExtensions
     /// </param>
     /// <returns>Инициализированный невыровненный двумерный массив</returns>
     [DST]
-    public static TArray[][] Initialize<TArray, TP1, TP2, TP3>
-    (
+    public static TArray[][] Initialize<TArray, TP1, TP2, TP3>(
         this TArray[][] array,
         TP1? p1,
         TP2? p2,
@@ -954,6 +950,7 @@ public static class ArrayExtensions
             for (var j = 0; j < array[i].Length; j++)
                 array[i][j] = Initializer(i, j, p1, p2, p3);
         }
+
         return array;
     }
 
@@ -990,6 +987,7 @@ public static class ArrayExtensions
     public static TArray[,] ToAlignedRows<TArray>(this TArray[][] array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var lengths    = array.Select(a => a.Length).ToArray();
         var rows_count = array.Length;
         var cols_count = lengths.Max();
@@ -1012,6 +1010,7 @@ public static class ArrayExtensions
     public static TArray[,] ToAlignedCols<TArray>(this TArray[][] array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var lengths    = array.Select(a => a.Length).ToArray();
         var cols_count = array.Length;
         var rows_count = lengths.Max();
@@ -1032,6 +1031,7 @@ public static class ArrayExtensions
     public static TArray[][] ToNonAlignedRows<TArray>(this TArray[,] array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var rows_count = array.GetLength(0);
         var cols_count = array.GetLength(1);
         var result     = new TArray[rows_count][];
@@ -1055,6 +1055,7 @@ public static class ArrayExtensions
     public static TArray[][] ToNonAlignedCols<TArray>(this TArray[,] array)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var rows_count = array.GetLength(0);
         var cols_count = array.GetLength(1);
         var result     = new TArray[cols_count][];
@@ -1086,13 +1087,16 @@ public static class ArrayExtensions
     public static void SetCol<TArray>(this TArray[,] array, TArray[] Col, int m = 0)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
 
         if (N != Col.Length)
             throw new ArgumentException($"Длина столбца {Col.Length} не совпадает с числом строк массива {N}");
         if (m < 0 || m >= M)
-            throw new ArgumentOutOfRangeException(nameof(m), m,
+            throw new ArgumentOutOfRangeException(
+                nameof(m),
+                m,
                 $"Указанный номер столбца {m} выходит за пределы размеров массива (числа столбцов) {M}");
 
         for (var i = 0; i < N; i++)
@@ -1114,13 +1118,16 @@ public static class ArrayExtensions
     public static void SetRow<TArray>(this TArray[,] array, TArray[] Row, int n = 0)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
 
         if (M != Row.Length)
             throw new ArgumentException($"Длина столбца {Row.Length} не совпадает с числом столбцов массива {M}");
         if (n < 0 || n >= N)
-            throw new ArgumentOutOfRangeException(nameof(n), n,
+            throw new ArgumentOutOfRangeException(
+                nameof(n),
+                n,
                 $"Указанный номер столбца {n} выходит за пределы размеров массива (числа строк) {N}");
 
         for (var i = 0; i < M; i++)
@@ -1143,6 +1150,7 @@ public static class ArrayExtensions
     public static TArray[] GetCol<TArray>(this TArray[,] array, int m)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
 
@@ -1177,13 +1185,14 @@ public static class ArrayExtensions
         var M = array.GetLength(1);
 
         if (m < 0 || m >= M)
-            throw new ArgumentOutOfRangeException(nameof(m), m,
+            throw new ArgumentOutOfRangeException(
+                nameof(m),
+                m,
                 $"Указанный номер столбца {m} выходит за пределы размеров массива (числа столбцов) {M}");
 
         if (Col is null)
             Col = new TArray[N];
-        else
-        if (Col.Length != N)
+        else if (Col.Length != N)
             throw new ArgumentException(
                 $"Размер переданного массива элементов столбца имеет длину {Col.Length}, отличную от числа строк двумерного массива {N}",
                 nameof(Col));
@@ -1203,11 +1212,14 @@ public static class ArrayExtensions
     public static TArray[] GetRow<TArray>(this TArray[,] array, int n)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
 
         if (n < 0 || n >= N)
-            throw new ArgumentOutOfRangeException(nameof(n), n,
+            throw new ArgumentOutOfRangeException(
+                nameof(n),
+                n,
                 $"Указанный номер строки {n} выходит за пределы размеров массива (числа строк) {N}");
 
         var result = new TArray[M];
@@ -1229,17 +1241,19 @@ public static class ArrayExtensions
     public static void GetRow<TArray>(this TArray[,] array, int n, ref TArray[]? Row)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
 
         if (n < 0 || n >= N)
-            throw new ArgumentOutOfRangeException(nameof(n), n,
+            throw new ArgumentOutOfRangeException(
+                nameof(n),
+                n,
                 $"Указанный номер строки {n} выходит за пределы размеров массива (числа строк) {N}");
 
         if (Row is null)
             Row = new TArray[M];
-        else
-        if (Row.Length != M)
+        else if (Row.Length != M)
             throw new ArgumentException(
                 $"Размер переданного массива элементов строки имеет длину {Row.Length}, отличную от числа столбцов двумерного массива {M}",
                 nameof(Row));
@@ -1250,22 +1264,23 @@ public static class ArrayExtensions
 
     /// <summary>Поменять местами элементы двух строк двумерного массива</summary>
     /// <param name="array">Массив в котором требуется поменять местами две строки</param>
-    /// <param name="i1">Индекс первой строки</param>
-    /// <param name="i2">Индекс второй строки</param>
+    /// <param name="Row1">Индекс первой строки</param>
+    /// <param name="Row2">Индекс второй строки</param>
     /// <typeparam name="T">Тип элементов массива</typeparam>
     /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
     [DST]
-    public static void SwapRows<T>(this T[,] array, int i1, int i2)
+    public static bool SwapRows<T>(this T[,] array, int Row1, int Row2)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
-        if (i1 == i2) return;
-        var N = array.GetLength(0);
-        for (var j = 0; j < N; j++)
-        {
-            var tmp = array[i1, j];
-            array[i1, j] = array[i2, j];
-            array[i2, j] = tmp;
-        }
+
+        if (Row1 == Row2)
+            return false;
+
+        var m = array.GetLength(1);
+        for (var j = 0; j < m; j++)
+            (array[Row1, j], array[Row2, j]) = (array[Row2, j], array[Row1, j]);
+
+        return true;
     }
 
     /// <summary>Поменять местами два столбца двумерного массива</summary>
@@ -1275,17 +1290,18 @@ public static class ArrayExtensions
     /// <typeparam name="T">Тип элементов массива</typeparam>
     /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
     [DST]
-    public static void SwapCols<T>(this T[,] array, int j1, int j2)
+    public static bool SwapCols<T>(this T[,] array, int j1, int j2)
     {
         if (array is null) throw new ArgumentNullException(nameof(array));
-        if (j1 == j2) return;
-        var M = array.GetLength(1);
-        for (var i = 0; i < M; i++)
-        {
-            var tmp = array[i, j1];
-            array[i, j1] = array[i, j2];
-            array[i, j2] = tmp;
-        }
+
+        if (j1 == j2)
+            return false;
+
+        var N = array.GetLength(0);
+        for (var i = 0; i < N; i++)
+            (array[i, j1], array[i, j2]) = (array[i, j2], array[i, j1]);
+
+        return true;
     }
 
     /// <summary>Найти индекс минимального элемента в массиве</summary>
@@ -1301,9 +1317,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (compare(min, v) >= 0) continue;
+
             i_min = i;
             min   = v;
         }
+
         return i_min;
     }
 
@@ -1320,9 +1338,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (compare(min, v) >= 0) continue;
+
             i_min = i;
             min   = v;
         }
+
         return ref array[i_min];
     }
 
@@ -1340,9 +1360,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (compare(min, v) >= 0) continue;
+
             MinIndex = i;
             min      = v;
         }
+
         return ref array[MinIndex];
     }
 
@@ -1359,9 +1381,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Comparer.Compare(min, v) >= 0) continue;
+
             i_min = i;
             min   = v;
         }
+
         return i_min;
     }
 
@@ -1378,9 +1402,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Comparer.Compare(min, v) >= 0) continue;
+
             i_min = i;
             min   = v;
         }
+
         return ref array[i_min];
     }
 
@@ -1398,9 +1424,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Comparer.Compare(min, v) >= 0) continue;
+
             MinIndex = i;
             min      = v;
         }
+
         return ref array[MinIndex];
     }
 
@@ -1418,9 +1446,11 @@ public static class ArrayExtensions
             var v = array[i];
             var y = converter(v);
             if (y >= min) continue;
+
             i_max = i;
             min   = y;
         }
+
         return i_max;
     }
 
@@ -1438,9 +1468,11 @@ public static class ArrayExtensions
             var v = array[i];
             var y = converter(v);
             if (y >= min) continue;
+
             i_max = i;
             min   = y;
         }
+
         return ref array[i_max];
     }
 
@@ -1459,9 +1491,11 @@ public static class ArrayExtensions
             var v = array[i];
             var y = converter(v);
             if (y >= min) continue;
+
             MinIndex = i;
             min      = y;
         }
+
         return ref array[MinIndex];
     }
 
@@ -1477,9 +1511,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Equals(min, default(T)) || min.CompareTo(v) >= 0) continue;
+
             i_min = i;
             min   = v;
         }
+
         return i_min;
     }
 
@@ -1495,9 +1531,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Equals(min, default(T)) || min.CompareTo(v) >= 0) continue;
+
             i_min = i;
             min   = v;
         }
+
         return ref array[i_min];
     }
 
@@ -1514,9 +1552,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Equals(min, default(T)) || min.CompareTo(v) >= 0) continue;
+
             MinIndex = i;
             min      = v;
         }
+
         return ref array[MinIndex];
     }
 
@@ -1533,9 +1573,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (compare(max, v) <= 0) continue;
+
             i_max = i;
             max   = v;
         }
+
         return i_max;
     }
 
@@ -1552,9 +1594,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (compare(max, v) <= 0) continue;
+
             i_max = i;
             max   = v;
         }
+
         return ref array[i_max];
     }
 
@@ -1572,9 +1616,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (compare(max, v) <= 0) continue;
+
             MaxIndex = i;
             max      = v;
         }
+
         return ref array[MaxIndex];
     }
 
@@ -1591,9 +1637,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Comparer.Compare(max, v) <= 0) continue;
+
             i_max = i;
             max   = v;
         }
+
         return i_max;
     }
 
@@ -1610,9 +1658,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Comparer.Compare(max, v) <= 0) continue;
+
             i_max = i;
             max   = v;
         }
+
         return ref array[i_max];
     }
 
@@ -1630,9 +1680,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (Comparer.Compare(max, v) <= 0) continue;
+
             MaxIndex = i;
             max      = v;
         }
+
         return ref array[MaxIndex];
     }
 
@@ -1650,9 +1702,11 @@ public static class ArrayExtensions
             var v = array[i];
             var y = converter(v);
             if (y <= max) continue;
+
             i_max = i;
             max   = y;
         }
+
         return i_max;
     }
 
@@ -1670,9 +1724,11 @@ public static class ArrayExtensions
             var v = array[i];
             var y = converter(v);
             if (y <= max) continue;
+
             i_max = i;
             max   = y;
         }
+
         return ref array[i_max];
     }
 
@@ -1691,9 +1747,11 @@ public static class ArrayExtensions
             var v = array[i];
             var y = converter(v);
             if (y <= max) continue;
+
             MaxIndex = i;
             max      = y;
         }
+
         return ref array[MaxIndex];
     }
 
@@ -1709,9 +1767,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (max is null || max.CompareTo(v) <= 0) continue;
+
             i_max = i;
             max   = v;
         }
+
         return i_max;
     }
 
@@ -1727,9 +1787,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (max is null || max.CompareTo(v) <= 0) continue;
+
             i_max = i;
             max   = v;
         }
+
         return ref array[i_max];
     }
 
@@ -1746,9 +1808,11 @@ public static class ArrayExtensions
         {
             var v = array[i];
             if (max is null || max.CompareTo(v) <= 0) continue;
+
             MaxIndex = i;
             max      = v;
         }
+
         return ref array[MaxIndex];
     }
 
@@ -1860,6 +1924,7 @@ public static class ArrayExtensions
                 min         = v;
                 min_changed = true;
             }
+
             if (max is null || !min_changed && max.CompareTo(v) > 0)
             {
                 i_max = i;
@@ -1967,6 +2032,7 @@ public static class ArrayExtensions
     {
         var result_length = array.Sum(a => a.Length);
         if (result_length == 0) return Array.Empty<T>();
+
         var result = new T[result_length];
         for (int i = 0, k = 0; i < array.Length; i++)
         {
@@ -1974,6 +2040,7 @@ public static class ArrayExtensions
             for (var j = 0; j < sub_array.Length; j++)
                 result[k++] = sub_array[j];
         }
+
         return result;
     }
 
@@ -2062,9 +2129,11 @@ public static class ArrayExtensions
     public static string? ToStringView<T>(this T[,]? array, string? Splitter = "\t")
     {
         if (array is null) return null;
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
         if (N == 0 || M == 0) return string.Empty;
+
         var result = new StringBuilder();
         var line   = new StringBuilder();
 
@@ -2077,8 +2146,10 @@ public static class ArrayExtensions
                 line.Append(Splitter);
                 line.Append(array[i, j]);
             }
+
             result.AppendLine(line.ToString());
         }
+
         return result.ToString();
     }
 
@@ -2098,9 +2169,11 @@ public static class ArrayExtensions
         string? Splitter = "\t")
     {
         if (array is null) return null;
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
         if (N == 0 || M == 0) return string.Empty;
+
         var result = new StringBuilder();
         var line   = new StringBuilder();
 
@@ -2113,8 +2186,10 @@ public static class ArrayExtensions
                 line.Append(Splitter);
                 line.Append(Selector(array[i, j]));
             }
+
             result.AppendLine(line.ToString());
         }
+
         return result.ToString();
     }
 
@@ -2130,8 +2205,7 @@ public static class ArrayExtensions
     /// Строковое представление двумерного массива в котором строки массива разделены переносом строки
     /// </returns>
     [DST]
-    public static string? ToStringFormatView<T>
-    (
+    public static string? ToStringFormatView<T>(
         this T[,]? array,
         string Format = "r",
         string? Splitter = "\t",
@@ -2139,9 +2213,11 @@ public static class ArrayExtensions
     ) where T : IFormattable
     {
         if (array is null) return null;
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
         if (N == 0 || M == 0) return string.Empty;
+
         provider ??= CultureInfo.InvariantCulture;
         var result = new StringBuilder();
         var line   = new StringBuilder();
@@ -2155,8 +2231,10 @@ public static class ArrayExtensions
                 line.Append(Splitter);
                 line.Append(array[i, j].ToString(Format, provider));
             }
+
             result.AppendLine(line.ToString());
         }
+
         return result.ToString();
     }
 
@@ -2174,8 +2252,7 @@ public static class ArrayExtensions
     /// Строковое представление двумерного массива в котором строки массива разделены переносом строки
     /// </returns>
     [DST]
-    public static string? ToStringFormatView<T, TValue>
-    (
+    public static string? ToStringFormatView<T, TValue>(
         this T[,]? array,
         Func<T, TValue> Selector,
         string Format = "r",
@@ -2184,9 +2261,11 @@ public static class ArrayExtensions
     ) where TValue : IFormattable
     {
         if (array is null) return null;
+
         var N = array.GetLength(0);
         var M = array.GetLength(1);
         if (N == 0 || M == 0) return string.Empty;
+
         provider ??= CultureInfo.InvariantCulture;
         var result = new StringBuilder();
         var line   = new StringBuilder();
@@ -2200,8 +2279,10 @@ public static class ArrayExtensions
                 line.Append(Splitter);
                 line.Append(Selector(array[i, j]).ToString(Format, provider));
             }
+
             result.AppendLine(line.ToString());
         }
+
         return result.ToString();
     }
 
