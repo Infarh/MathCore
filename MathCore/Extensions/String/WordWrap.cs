@@ -14,13 +14,28 @@ internal static class WordWrap
     private const char __HypSymb = (char)0x1F;
     private static readonly char[] __Spaces = { ' ', ',', ';', ':', '.', '?', '!', '/', '\r', '\n' };
     private static readonly char[] __SpecSign = { '-', '-', 'N', '-', 'щ', 'г' };
-    private static readonly char[] __GlasChar = {'e', 'L', 'х', '+', 'v', '-','р', '-', 'ю', '+', ' ', '-', 'ш', 'L', 
-        '|', '|', '2', '|', 'e', 'E', 'u', 'U','i', 'I', 'o', 'O', 'a', 'A', 'j', 'J'};
+    private static readonly char[] __GlasChar = 
+    {
+        'e', 'L', 'х', '+', 'v',
+        '-', 'р', '-', 'ю', '+',
+        ' ', '-', 'ш', 'L', '|',
+        '|', '2', '|', 'e', 'E',
+        'u', 'U', 'i', 'I', 'o',
+        'O', 'a', 'A', 'j', 'J'
+    };
 
-    private static readonly char[] __SoglChar = { '-', 'г', 'ъ', '|', 'э', '=', 'у', '+', '0', '+', '', '-', 'ч', '|',
-        'i', '-', 'I', 'L', 'т', 'T', 'я', '|', 'Ё', '|', 'ы', 'T', 'ф', '-', 'ц', '|', '-', '+', 'ё', 'T', 'ь', '|', 'E', 
-        'T', 'с', '+', 'q', 'Q', 'w', 'W', 'r', 'R', 't', 'T', 'y', 'Y', 'p', 'P', 's', 'S', 'd', 'D', 'f', 'F', 'g', 'G', 
-        'h', 'H', 'k', 'K', 'l', 'L', 'z', 'Z', 'x', 'X', 'c', 'C', 'v', 'V', 'b', 'B', 'n', 'N', 'm', 'M' };
+    private static readonly char[] __SoglChar = 
+    { 
+        '-', 'г', 'ъ', '|', 'э', '=', 'у', '+', '0',
+        '+', '', '-', 'ч', '|', 'i', '-', 'I', 'L',
+        'т', 'T', 'я', '|', 'Ё', '|', 'ы', 'T', 'ф',
+        '-', 'ц', '|', '-', '+', 'ё', 'T', 'ь', '|',
+        'E', 'T', 'с', '+', 'q', 'Q', 'w', 'W', 'r',
+        'R', 't', 'T', 'y', 'Y', 'p', 'P', 's', 'S',
+        'd', 'D', 'f', 'F', 'g', 'G', 'h', 'H', 'k',
+        'K', 'l', 'L', 'z', 'Z', 'x', 'X', 'c', 'C',
+        'v', 'V', 'b', 'B', 'n', 'N', 'm', 'M'
+    };
 
     /// <summary>Проверяет, является ли символ согласным</summary>
     /// <param name="c"></param><returns></returns>

@@ -98,7 +98,7 @@ public class StudentTests
     public void QuantileHi2ValuesTest(double p, int k, double ExpectedValue, double Accuracy = 1e-16) =>
         Assert.That.Value(QuantileHi2(p, k)).IsEqual(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
 
-    [TestMethod, Ignore]
+    [TestMethod]
     public void QuantileHi2Approximation_n1_p001_v000015()
     {
         const int    n              = 1;

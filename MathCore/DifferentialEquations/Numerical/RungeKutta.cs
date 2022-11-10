@@ -179,6 +179,7 @@ public static class RungeKutta
     }
 
     //https://ru.qaz.wiki/wiki/Dormand–Prince_method
+    /// <summary>Метод Дорманда – Принса Метод Дорманда – Принса - https://ru.abcdef.wiki/wiki/Dormand%E2%80%93Prince_method</summary>
     public static (double y, double err) Step45(
         Func<double, double, double> f,
         double t, double dt, double y)

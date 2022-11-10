@@ -2,8 +2,10 @@
 
 namespace MathCore;
 
+/// <summary>Алгоритмы над числами</summary>
 public static class Numeric
 {
+    /// <summary>Выделение старшего бита</summary>
     public static int HiBit(int x)
     {
         x |= x >> 1;
@@ -14,6 +16,7 @@ public static class Numeric
         return x - (x >> 1);
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static uint HiBit(uint x)
     {
         x |= x >> 1;
@@ -24,6 +27,7 @@ public static class Numeric
         return x - (x >> 1);
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static byte HiBit(byte x)
     {
         x |= (byte)(x >> 1);
@@ -32,6 +36,7 @@ public static class Numeric
         return (byte)(x - (x >> 1));
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static sbyte HiBit(sbyte x)
     {
         x |= (sbyte)(x >> 1);
@@ -40,6 +45,7 @@ public static class Numeric
         return (sbyte)(x - (x >> 1));
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static short HiBit(short x)
     {
         x |= (short)(x >> 1);
@@ -49,6 +55,7 @@ public static class Numeric
         return (short)(x - (x >> 1));
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static ushort HiBit(ushort x)
     {
         x |= (ushort)(x >> 1);
@@ -58,6 +65,7 @@ public static class Numeric
         return (ushort)(x - (x >> 1));
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static long HiBit(long x)
     {
         x |= x >> 1;
@@ -69,6 +77,7 @@ public static class Numeric
         return x - (x >> 1);
     }
 
+    /// <summary>Выделение старшего бита</summary>
     public static ulong HiBit(ulong x)
     {
         x |= x >> 1;
@@ -80,6 +89,7 @@ public static class Numeric
         return x - (x >> 1);
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(int x)
     {
         x = (x & 0x5555_5555) + ((x >> 1) & 0x5555_5555);
@@ -89,6 +99,7 @@ public static class Numeric
         return (x & 0x0000_FFFF) + (x >> 16);
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(uint x)
     {
         x = (x & 0x5555_5555) + ((x >> 1) & 0x5555_5555);
@@ -98,6 +109,7 @@ public static class Numeric
         return (int) ((x & 0x0000_FFFF) + (x >> 16));
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(byte x)
     {
         x = (byte)((x & 0x55) + ((x >> 1) & 0x55));
@@ -105,6 +117,7 @@ public static class Numeric
         return (x & 0x0F) + (x >> 4);
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(sbyte x)
     {
         x = (sbyte)((x & 0x55) + ((x >> 1) & 0x55));
@@ -112,6 +125,7 @@ public static class Numeric
         return (x & 0x0F) + (x >> 4);
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(short x)
     {
         x = (short) ((x & 0x5555) + ((x >> 1) & 0x5555));
@@ -120,6 +134,7 @@ public static class Numeric
         return (x & 0x00FF) + (x >> 8);
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(ushort x)
     {
         x = (ushort)((x & 0x5555) + ((x >> 1) & 0x5555));
@@ -128,6 +143,7 @@ public static class Numeric
         return (x & 0x00FF) + (x >> 8);
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(long x)
     {
         x = (x & 0x5555_5555__5555_5555) + ((x >> 01) & 0x5555_5555__5555_5555);
@@ -138,6 +154,7 @@ public static class Numeric
         return (int)((x & 0x0000_0000__FFFF_FFFF) + (x >> 32));
     }
 
+    /// <summary>Подсчёт числа единичных бит</summary>
     public static int SignedBitCount(ulong x)
     {
         x = (x & 0x5555_5555__5555_5555) + ((x >> 01) & 0x5555_5555__5555_5555);
@@ -188,7 +205,7 @@ public static class Numeric
 
         // |value| == sqrt(a^2 + b^2)
         // sqrt(a^2 + b^2) == a/a * sqrt(a^2 + b^2) = a * sqrt(a^2/a^2 + b^2/a^2) = a * sqrt(1 + b^2/a^2)
-        // Using the above we can factor out the square of the larger component to dodge overflow.
+        // Используя это, можно разложить квадрат большего компонента на множители, чтобы избежать переполнения.
 
 
         var x = Math.Abs(X);
@@ -199,8 +216,8 @@ public static class Numeric
             var ir = y / x;
             return x * Math.Sqrt(1d + ir * ir);
         }
-        if (y.Equals(0d))
-            return x; // re is either 0.0 or NaN
+        if (y == 0)
+            return x; // re равно либо 0.0, либо NaN
         var r = x / y;
         return y * Math.Sqrt(1d + r * r);
     }
@@ -212,8 +229,7 @@ public static class Numeric
 
         // |value| == sqrt(a^2 + b^2)
         // sqrt(a^2 + b^2) == a/a * sqrt(a^2 + b^2) = a * sqrt(a^2/a^2 + b^2/a^2) = a * sqrt(1 + b^2/a^2)
-        // Using the above we can factor out the square of the larger component to dodge overflow.
-
+        // Используя это, можно разложить квадрат большего компонента на множители, чтобы избежать переполнения.
 
         var x = Math.Abs(X);
         var y = Math.Abs(Y);
@@ -223,8 +239,8 @@ public static class Numeric
             var ir = y / x;
             return (float)(x * Math.Sqrt(1d + ir * ir));
         }
-        if (y.Equals(0f))
-            return x; // re is either 0.0 or NaN
+        if (y == 0)
+            return x; // re равно либо 0.0, либо NaN
         var r = x / y;
         return (float)(y * Math.Sqrt(1d + r * r));
     }
@@ -233,7 +249,7 @@ public static class Numeric
     {
         // |value| == sqrt(a^2 + b^2)
         // sqrt(a^2 + b^2) == a/a * sqrt(a^2 + b^2) = a * sqrt(a^2/a^2 + b^2/a^2) = a * sqrt(1 + b^2/a^2)
-        // Using the above we can factor out the square of the larger component to dodge overflow.
+        // Используя это, можно разложить квадрат большего компонента на множители, чтобы избежать переполнения.
         var x = Math.Abs(X);
         var y = Math.Abs(Y);
 
@@ -242,8 +258,8 @@ public static class Numeric
             var ir = y / x;
             return x * Sqrt(1m + ir * ir);
         }
-        if (y.Equals(0m))
-            return x; // re is either 0.0 or NaN
+        if (y == 0)
+            return x; // re равно либо 0.0, либо NaN
         var r = x / y;
         return y * Sqrt(1m + r * r);
     }
@@ -251,22 +267,22 @@ public static class Numeric
     #endregion
 
     public static double Angle(double X, double Y) =>
-        X.Equals(0d)
-            ? Y.Equals(0d)
+        X == 0
+            ? Y == 0
                 ? 0
                 : Math.Sign(Y) * Consts.pi05
-            : Y.Equals(0d)
+            : Y == 0
                 ? Math.Sign(X) > 0
                     ? 0d
                     : Consts.pi
                 : Math.Atan2(Y, X);
 
     public static float Angle(float X, float Y) => (float)
-        (X.Equals(0f)
-            ? Y.Equals(0f)
+        (X == 0
+            ? Y == 0
                 ? 0
                 : Math.Sign(Y) * Consts.pi05
-            : Y.Equals(0f)
+            : Y == 0
                 ? Math.Sign(X) > 0
                     ? 0f
                     : Consts.pi

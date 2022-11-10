@@ -11,9 +11,29 @@ namespace System.IO;
 
 public static class StreamExtensions
 {
+    public static int FillBuffer(this Stream stream, byte[] buffer)
+    {
+        var length = buffer.Length;
+        var readed = stream.Read(buffer, 0, length);
+        if (readed == 0)
+            return 0;
+
+        while (readed < length)
+        {
+            var last_readed = stream.Read(buffer, readed, length - readed);
+            if (last_readed == 0)
+                return readed;
+
+            readed += last_readed;
+        }
+
+        return readed;
+    }
+
     public static void CopyTo(this Stream input, Stream output, int BufferLength)
     {
         if (BufferLength < 1) throw new ArgumentOutOfRangeException(nameof(BufferLength), "Длина буфера копирования менее одного байта");
+
         input.CopyTo(output, new byte[BufferLength]);
     }
 
@@ -33,8 +53,10 @@ public static class StreamExtensions
         {
             readed = input.Read(Buffer, 0, buffer_length);
             if (readed == 0) continue;
+
             output.Write(Buffer, 0, readed);
-        } while (readed > 0);
+        }
+        while (readed > 0);
     }
 
     public static Task CopyToAsync(this Stream input, Stream output, int BufferLength = 0x1000, CancellationToken Cancel = default) =>
@@ -63,9 +85,11 @@ public static class StreamExtensions
             Cancel.ThrowIfCancellationRequested();
             readed = await input.ReadAsync(Buffer, 0, buffer_length, Cancel).ConfigureAwait(false);
             if (readed == 0) continue;
+
             Cancel.ThrowIfCancellationRequested();
             await output.WriteAsync(Buffer, 0, readed, Cancel).ConfigureAwait(false);
-        } while (readed > 0);
+        }
+        while (readed > 0);
     }
 
     public static async Task CopyToAsync(
@@ -95,13 +119,15 @@ public static class StreamExtensions
                .ReadAsync(Buffer, 0, (int)Math.Min(buffer_length, Length - total_readed), Cancel)
                .ConfigureAwait(false);
             if (readed == 0) continue;
+
             total_readed += readed;
             Cancel.ThrowIfCancellationRequested();
             await output.WriteAsync(Buffer, 0, readed, Cancel).ConfigureAwait(false);
             var percent = (double)total_readed / Length;
             if (percent - last_percent >= 0.01)
                 Progress?.Report(last_percent = percent);
-        } while (readed > 0 && total_readed < Length);
+        }
+        while (readed > 0 && total_readed < Length);
     }
 
     public static byte[] ComputeSHA256(this Stream stream)
@@ -147,12 +173,12 @@ public static class StreamExtensions
     {
         var size = Marshal.SizeOf(typeof(T));
         var data = new byte[size];
-        var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+        var gch  = GCHandle.Alloc(data, GCHandleType.Pinned);
 
         try
         {
             var ptr = gch.AddrOfPinnedObject();
-            while (stream.Read(data, 0, size) == size) 
+            while (stream.Read(data, 0, size) == size)
                 yield return (T)Marshal.PtrToStructure(ptr, typeof(T));
         }
         finally
@@ -163,18 +189,19 @@ public static class StreamExtensions
 
     public static void WriteStructure<T>(this Stream stream, T value) where T : struct
     {
-        var size = Marshal.SizeOf(value);
-        var buffer = new byte[size]; // создать массив
+        var size   = Marshal.SizeOf(value);
+        var buffer = new byte[size];                              // создать массив
         var g_lock = GCHandle.Alloc(buffer, GCHandleType.Pinned); // зафиксировать в памяти
         try
         {
             var p = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0); // и взять его адрес
-            Marshal.StructureToPtr(value, p, true); // копировать в массив
+            Marshal.StructureToPtr(value, p, true);                    // копировать в массив
         }
         finally
         {
             g_lock.Free(); // снять фиксацию
         }
+
         stream.Write(buffer, 0, size);
     }
 
@@ -195,6 +222,7 @@ public static class StreamExtensions
     public static string ReadToEndAsString(this Stream stream) => new StreamReader(stream).ReadToEnd();
 
     public static Task<string> ReadToEndAsStringAsync(this Stream stream) => new StreamReader(stream).ReadToEndAsync();
+
     public static Task<string> ReadToEndAsStringAsync(this Stream stream, Encoding encoding) =>
         new StreamReader(stream, encoding).ReadToEndAsync();
 
