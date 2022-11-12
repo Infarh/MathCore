@@ -1,56 +1,30 @@
 using System.Globalization;
-using System.Text.RegularExpressions;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 using MathCore.CSV;
 using MathCore.PE;
 
-bool Selector(FileInfo f)
-{
-    var name = f.Name;
-    if (name.EndsWith(".g.cs")) return false;
-    if (name.EndsWith(".g.i.cs")) return false;
-    if (f.FullName.Contains(@"\bin\", StringComparison.OrdinalIgnoreCase)) return false;
-    if (f.FullName.Contains(@"\obj\", StringComparison.OrdinalIgnoreCase)) return false;
-    if (f.FullName.Contains("RRJ-Express.3D.Unity")) return false;
-    if (f.FullName.EndsWith("assemblyinfo.cs", StringComparison.OrdinalIgnoreCase)) return false;
-    if (f.FullName.Contains(@"Algorithms\RRJ", StringComparison.OrdinalIgnoreCase)) return false;
-    if (f.FullName.Contains(@"\Migrations\", StringComparison.OrdinalIgnoreCase)) return false;
-    if (f.FullName.EndsWith(@"Designer.cs", StringComparison.OrdinalIgnoreCase)) return false;
-    return true;
-}
+var str = "123.456E-3";
 
-var src_dir   = new DirectoryInfo(@"C:\Users\shmac\src");
-var src_files = src_dir.EnumerateFiles("*.cs", SearchOption.AllDirectories)
-   .Where(Selector)
-   .ToArray();
+var d = double.Parse(str, CultureInfo.InvariantCulture);
 
-var total_lines = 0;
-var culture     = new NumberFormatInfo { NumberGroupSeparator = "'" };
-for (var i = 0; i < src_files.Length; i++)
-{
-    var file = src_files[i];
-
-    total_lines   += file.ReadLines().Count(l => !string.IsNullOrWhiteSpace(l) && !l.TrimStart(' ').StartsWith("//"));
-    Console.Title =  $"Lines {total_lines.ToString("N0", culture)} - {(i + 1d) / src_files.Length:p2}";
-    Console.WriteLine(file.FullName.TrimByLength(Console.BufferWidth));
-}
-
-Console.WriteLine("Total lines {0}", total_lines.ToString("N0", culture));
-
-var str = " 123;qwe;asd;zxc;000;111;456 ";
-
-var values = str.AsStringPtr().Trim().Split(';');
-if (values is [ ['1', .., '3'] a, var b, .. var ss, var c, var d])
-{
-    Process((int)a, b, (double)c, d, ss);
-}
-
-void Process(int a, string b, double c, string d, string sss)
-{
-    Console.WriteLine($"a:{a}, b:{b}, c:{c}, d:{d} - sss:{sss}");
-}
+var pstr = str.AsStringPtr();
+var d2   = pstr.ParseDouble(CultureInfo.InvariantCulture);
 
 
+var src_str           = "md5";
+var src_str_bytes = Encoding.UTF8.GetBytes(src_str);
+var exp_md5_bytes_str = "1bc29b36f623ba82aaf6724fd3b16718".AsSpan();
+var exp_md5_bytes = new byte[exp_md5_bytes_str.Length / 2];
+for (var i = 0; i < exp_md5_bytes.Length; i++)
+    exp_md5_bytes[i] = byte.Parse(exp_md5_bytes_str.Slice(i * 2, 2), NumberStyles.HexNumber);
+
+var md5_expected = MD5.HashData(src_str_bytes);
+
+Console.WriteLine("End.");
 Console.ReadLine();
 
 return;

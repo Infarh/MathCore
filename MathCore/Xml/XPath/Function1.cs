@@ -16,162 +16,161 @@
 using System.Collections;
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class Function : AstNode
 {
-    internal class Function : AstNode
+    #region Types
+
+    internal enum FunctionType
     {
-        #region Types
-
-        internal enum FunctionType
-        {
-            FuncLast = 0,
-            FuncPosition,
-            FuncCount,
-            FuncLocalName,
-            FuncNameSpaceUri,
-            FuncName,
-            FuncString,
-            FuncBoolean,
-            FuncNumber,
-            FuncTrue,
-            FuncFalse,
-            FuncNot,
-            FuncID,
-            FuncConcat,
-            FuncStartsWith,
-            FuncContains,
-            FuncSubstringBefore,
-            FuncSubstringAfter,
-            FuncSubstring,
-            FuncStringLength,
-            FuncNormalize,
-            FuncTranslate,
-            FuncLang,
-            FuncSum,
-            FuncFloor,
-            FuncCeiling,
-            FuncRound,
-            FuncUserDefined,
-            Error
-        }
-
-        #endregion
-
-        #region Static
-
-        // ReSharper disable StringLiteralTypo
-        private static readonly string[] _Str =
-        {
-            "last()",
-            "position()",
-            "count()",
-            "localname()",
-            "namespaceuri()",
-            "name()",
-            "string()",
-            "boolean()",
-            "number()",
-            "true()",
-            "false()",
-            "not()",
-            "id()",
-            "concat()",
-            "starts-with()",
-            "contains()",
-            "substring-before()",
-            "substring-after()",
-            "substring()",
-            "string-length()",
-            "normalize-space()",
-            "translate()",
-            "lang()",
-            "sum()",
-            "floor()",
-            "celing()",
-            "round()"
-        };
-        // ReSharper restore StringLiteralTypo
-
-        #endregion
-
-        #region Fields
-
-        private readonly string _Name;
-
-        #endregion
-
-        #region Properties
-
-        internal override QueryType TypeOfAst => QueryType.Function;
-
-        internal override XPathResultType ReturnType =>
-            TypeOfFunction switch
-            {
-                FunctionType.FuncLast => XPathResultType.Number,
-                FunctionType.FuncPosition => XPathResultType.Number,
-                FunctionType.FuncCount => XPathResultType.Number,
-                FunctionType.FuncID => XPathResultType.NodeSet,
-                FunctionType.FuncLocalName => XPathResultType.String,
-                FunctionType.FuncNameSpaceUri => XPathResultType.String,
-                FunctionType.FuncName => XPathResultType.String,
-                FunctionType.FuncString => XPathResultType.String,
-                FunctionType.FuncBoolean => XPathResultType.Boolean,
-                FunctionType.FuncNumber => XPathResultType.Number,
-                FunctionType.FuncTrue => XPathResultType.Boolean,
-                FunctionType.FuncFalse => XPathResultType.Boolean,
-                FunctionType.FuncNot => XPathResultType.Boolean,
-                FunctionType.FuncConcat => XPathResultType.String,
-                FunctionType.FuncStartsWith => XPathResultType.Boolean,
-                FunctionType.FuncContains => XPathResultType.Boolean,
-                FunctionType.FuncSubstringBefore => XPathResultType.String,
-                FunctionType.FuncSubstringAfter => XPathResultType.String,
-                FunctionType.FuncSubstring => XPathResultType.String,
-                FunctionType.FuncStringLength => XPathResultType.Number,
-                FunctionType.FuncNormalize => XPathResultType.String,
-                FunctionType.FuncTranslate => XPathResultType.String,
-                FunctionType.FuncLang => XPathResultType.Boolean,
-                FunctionType.FuncSum => XPathResultType.Number,
-                FunctionType.FuncFloor => XPathResultType.Number,
-                FunctionType.FuncCeiling => XPathResultType.Number,
-                FunctionType.FuncRound => XPathResultType.Number,
-                FunctionType.FuncUserDefined => XPathResultType.Error,
-                _ => XPathResultType.Error
-            };
-
-        internal FunctionType TypeOfFunction { get; }
-
-        internal ArrayList ArgumentList { get; }
-
-        internal string Prefix { get; }
-
-        internal string Name => TypeOfFunction == FunctionType.FuncUserDefined ? _Name : _Str[(int)TypeOfFunction];
-
-        #endregion
-
-        #region Constructors
-
-        internal Function(FunctionType FType, ArrayList argumentList)
-        {
-            TypeOfFunction = FType;
-            ArgumentList = new ArrayList(argumentList);
-        }
-
-        internal Function(string prefix, string name, ArrayList argumentList)
-        {
-            TypeOfFunction = FunctionType.FuncUserDefined;
-            Prefix = prefix;
-            _Name = name;
-            ArgumentList = new ArrayList(argumentList);
-        }
-
-        internal Function(FunctionType FType) => TypeOfFunction = FType;
-
-        internal Function(FunctionType FType, AstNode arg)
-        {
-            TypeOfFunction = FType;
-            ArgumentList = new ArrayList { arg };
-        }
-
-        #endregion
+        FuncLast = 0,
+        FuncPosition,
+        FuncCount,
+        FuncLocalName,
+        FuncNameSpaceUri,
+        FuncName,
+        FuncString,
+        FuncBoolean,
+        FuncNumber,
+        FuncTrue,
+        FuncFalse,
+        FuncNot,
+        FuncID,
+        FuncConcat,
+        FuncStartsWith,
+        FuncContains,
+        FuncSubstringBefore,
+        FuncSubstringAfter,
+        FuncSubstring,
+        FuncStringLength,
+        FuncNormalize,
+        FuncTranslate,
+        FuncLang,
+        FuncSum,
+        FuncFloor,
+        FuncCeiling,
+        FuncRound,
+        FuncUserDefined,
+        Error
     }
+
+    #endregion
+
+    #region Static
+
+    // ReSharper disable StringLiteralTypo
+    private static readonly string[] _Str =
+    {
+        "last()",
+        "position()",
+        "count()",
+        "localname()",
+        "namespaceuri()",
+        "name()",
+        "string()",
+        "boolean()",
+        "number()",
+        "true()",
+        "false()",
+        "not()",
+        "id()",
+        "concat()",
+        "starts-with()",
+        "contains()",
+        "substring-before()",
+        "substring-after()",
+        "substring()",
+        "string-length()",
+        "normalize-space()",
+        "translate()",
+        "lang()",
+        "sum()",
+        "floor()",
+        "celing()",
+        "round()"
+    };
+    // ReSharper restore StringLiteralTypo
+
+    #endregion
+
+    #region Fields
+
+    private readonly string _Name;
+
+    #endregion
+
+    #region Properties
+
+    internal override QueryType TypeOfAst => QueryType.Function;
+
+    internal override XPathResultType ReturnType =>
+        TypeOfFunction switch
+        {
+            FunctionType.FuncLast            => XPathResultType.Number,
+            FunctionType.FuncPosition        => XPathResultType.Number,
+            FunctionType.FuncCount           => XPathResultType.Number,
+            FunctionType.FuncID              => XPathResultType.NodeSet,
+            FunctionType.FuncLocalName       => XPathResultType.String,
+            FunctionType.FuncNameSpaceUri    => XPathResultType.String,
+            FunctionType.FuncName            => XPathResultType.String,
+            FunctionType.FuncString          => XPathResultType.String,
+            FunctionType.FuncBoolean         => XPathResultType.Boolean,
+            FunctionType.FuncNumber          => XPathResultType.Number,
+            FunctionType.FuncTrue            => XPathResultType.Boolean,
+            FunctionType.FuncFalse           => XPathResultType.Boolean,
+            FunctionType.FuncNot             => XPathResultType.Boolean,
+            FunctionType.FuncConcat          => XPathResultType.String,
+            FunctionType.FuncStartsWith      => XPathResultType.Boolean,
+            FunctionType.FuncContains        => XPathResultType.Boolean,
+            FunctionType.FuncSubstringBefore => XPathResultType.String,
+            FunctionType.FuncSubstringAfter  => XPathResultType.String,
+            FunctionType.FuncSubstring       => XPathResultType.String,
+            FunctionType.FuncStringLength    => XPathResultType.Number,
+            FunctionType.FuncNormalize       => XPathResultType.String,
+            FunctionType.FuncTranslate       => XPathResultType.String,
+            FunctionType.FuncLang            => XPathResultType.Boolean,
+            FunctionType.FuncSum             => XPathResultType.Number,
+            FunctionType.FuncFloor           => XPathResultType.Number,
+            FunctionType.FuncCeiling         => XPathResultType.Number,
+            FunctionType.FuncRound           => XPathResultType.Number,
+            FunctionType.FuncUserDefined     => XPathResultType.Error,
+            _                                => XPathResultType.Error
+        };
+
+    internal FunctionType TypeOfFunction { get; }
+
+    internal ArrayList ArgumentList { get; }
+
+    internal string Prefix { get; }
+
+    internal string Name => TypeOfFunction == FunctionType.FuncUserDefined ? _Name : _Str[(int)TypeOfFunction];
+
+    #endregion
+
+    #region Constructors
+
+    internal Function(FunctionType FType, ArrayList argumentList)
+    {
+        TypeOfFunction = FType;
+        ArgumentList   = new ArrayList(argumentList);
+    }
+
+    internal Function(string prefix, string name, ArrayList argumentList)
+    {
+        TypeOfFunction = FunctionType.FuncUserDefined;
+        Prefix         = prefix;
+        _Name          = name;
+        ArgumentList   = new ArrayList(argumentList);
+    }
+
+    internal Function(FunctionType FType) => TypeOfFunction = FType;
+
+    internal Function(FunctionType FType, AstNode arg)
+    {
+        TypeOfFunction = FType;
+        ArgumentList   = new ArrayList { arg };
+    }
+
+    #endregion
 }

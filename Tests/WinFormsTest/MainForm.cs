@@ -1,9 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace WinFormsTest
+namespace WinFormsTest;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
-    {
-        public MainForm() => InitializeComponent();
-    }
+    public MainForm() => InitializeComponent();
 }

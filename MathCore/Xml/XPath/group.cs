@@ -14,26 +14,25 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class Group : AstNode
 {
-    internal class Group : AstNode
-    {
-        #region Properties
+    #region Properties
 
-        internal override QueryType TypeOfAst => QueryType.Group;
+    internal override QueryType TypeOfAst => QueryType.Group;
 
-        internal override XPathResultType ReturnType => XPathResultType.NodeSet;
+    internal override XPathResultType ReturnType => XPathResultType.NodeSet;
 
-        internal AstNode GroupNode { get; }
+    internal AstNode GroupNode { get; }
 
-        internal override double DefaultPriority => 0;
+    internal override double DefaultPriority => 0;
 
-        #endregion
+    #endregion
 
-        #region Constructors
+    #region Constructors
 
-        internal Group(AstNode groupNode) => GroupNode = groupNode;
+    internal Group(AstNode groupNode) => GroupNode = groupNode;
 
-        #endregion
-    }
+    #endregion
 }

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Xml.Serialization;
 
 using static MathCore.Matrix.Array.Operator;
 // ReSharper disable ExceptionNotThrown
@@ -34,6 +36,20 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                               IEquatable<Matrix>, IEquatable<double[,]>
 {
     /* -------------------------------------------------------------------------------------------- */
+
+    public static Matrix Create(double[,] array, bool Clone = false) => new(array, Clone);
+
+    public static Matrix Create(int[,] IntArray)
+    {
+        var (n, m) = (IntArray.GetLength(0), IntArray.GetLength(1));
+
+        var array = new double[n, m];
+        for(var i = 0; i < n; i++)
+            for(var j = 0; j < n; j++)
+                array[i, j] = IntArray[i, j];
+
+        return new(array);
+    }
 
     public static Matrix Create(int N, int M, Func<int, int, double> Initializer) => new(N, M, (i, j) => Initializer(i, j));
 
@@ -165,6 +181,23 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
         for (var i = 0; i < N; i++)
             for (var j = 0; j < M; j++)
                 _Data[i, j] = CreateFunction(i, j);
+    }
+
+    /// <summary>Инициализация новой матрицы по двумерному массиву её элементов</summary>
+    /// <param name="Data">Двумерный массив элементов матрицы</param>
+    /// <param name="clone">Создать копию данных</param>
+    [DST]
+    public Matrix(int[,] Data)
+    {
+        var (n, m) = (Data.GetLength(0), Data.GetLength(1));
+        (_N, _M)   = (n, m);
+
+        var array = new double[n, m];
+        for (var i = 0; i < n; i++)
+            for (var j = 0; j < n; j++)
+                array[i, j] = Data[i, j];
+
+        _Data = array;
     }
 
     /// <summary>Инициализация новой матрицы по двумерному массиву её элементов</summary>
@@ -314,6 +347,8 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <returns></returns>
     [DST] public double[,] GetData() => _Data;
 
+    public void Deconstruct(out int N, out int M) => (N, M) = (_N, _M);
+
     /* -------------------------------------------------------------------------------------------- */
 
     /// <inheritdoc/>
@@ -334,6 +369,164 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
     /// <inheritdoc/>
     [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
+
+    public readonly ref struct MatrixView
+    {
+        private readonly Matrix _Matrix;
+
+        public MatrixView(Matrix Matrix) => _Matrix = Matrix;
+
+        public override string ToString()
+        {
+            var (n, m) = _Matrix;
+
+            var ss = new string[n, m];
+            var ll = new int[m];
+            var nn = _Matrix._Data;
+
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < m; j++)
+                {
+                    var s = nn[i, j].ToString();
+                    ss[i, j] = s;
+                    ll[j]    = Math.Max(ll[j], s.Length);
+                }
+            var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
+
+            var result = new StringBuilder("double[,] z_matrix = ").LN()
+               .Append('{').LN()
+               .Append("    //       {0}", colum_nums).LN()
+               .Append("    //       {0}", new string('-', colum_nums.Length)).LN()
+                ;
+
+            var i_pad = (int)Math.Ceiling(Math.Log10(n));
+            for (var i = 0; i < n; i++)
+            {
+                result.Append("    /*{0}*/ {{ ", (i + 1).ToString().PadLeft(i_pad));
+                for (var j = 0; j < m; j++)
+                    result.Append("{0}, ", ss[i, j].PadLeft(ll[j]));
+
+                result.Length      -= 2;
+                result.AppendLine(" },");
+            }
+
+            result.AppendLine("};");
+            return result.ToString();
+        }
+
+        public string ToString(string Format)
+        {
+            var (n, m) = _Matrix;
+
+            var ss = new string[n, m];
+            var ll = new int[m];
+            var nn = _Matrix._Data;
+
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < m; j++)
+                {
+                    var s = nn[i, j].ToString(Format);
+                    ss[i, j] = s;
+                    ll[j]    = Math.Max(ll[j], s.Length);
+                }
+            var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
+
+            var result = new StringBuilder("double[,] z_matrix = ").LN()
+                   .Append('{')
+                   .Append("    //       {0}", colum_nums).AppendLine()
+                   .Append("    //       {0}", new string('-', colum_nums.Length)).AppendLine()
+                ;
+
+            for (var i = 0; i < n; i++)
+            {
+                result.Append("    /*{0,2}*/ {{ ", i + 1);
+                for (var j = 0; j < m; j++)
+                    result.Append("{0}, ", ss[i, j].PadLeft(ll[j]));
+
+                result.Length -= 2;
+                result.AppendLine(" },");
+            }
+
+            result.AppendLine("};");
+            return result.ToString();
+        }
+
+        public string ToString(IFormatProvider Provider)
+        {
+            var (n, m) = _Matrix;
+
+            var ss = new string[n, m];
+            var ll = new int[m];
+            var nn = _Matrix._Data;
+
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < m; j++)
+                {
+                    var s = nn[i, j].ToString(Provider);
+                    ss[i, j] = s;
+                    ll[j]    = Math.Max(ll[j], s.Length);
+                }
+            var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
+
+            var result = new StringBuilder("double[,] z_matrix = ").LN()
+                   .Append('{')
+                   .Append("    //       {0}", colum_nums).AppendLine()
+                   .Append("    //       {0}", new string('-', colum_nums.Length)).AppendLine()
+                ;
+
+            for (var i = 0; i < n; i++)
+            {
+                result.Append("    /*{0,2}*/ {{ ", i + 1);
+                for (var j = 0; j < m; j++)
+                    result.Append("{0}, ", ss[i, j].PadLeft(ll[j]));
+
+                result.Length -= 2;
+                result.AppendLine(" },");
+            }
+
+            result.AppendLine("};");
+            return result.ToString();
+        }
+
+        public string ToString(string Format, IFormatProvider Provider)
+        {
+            var (n, m) = _Matrix;
+
+            var ss = new string[n, m];
+            var ll = new int[m];
+            var nn = _Matrix._Data;
+
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < m; j++)
+                {
+                    var s = nn[i, j].ToString(Format, Provider);
+                    ss[i, j] = s;
+                    ll[j]    = Math.Max(ll[j], s.Length);
+                }
+            var colum_nums = string.Join(", ", Enumerable.Range(1, n).Select(i => i.ToString().PadLeft(ll[i - 1])));
+
+            var result = new StringBuilder("double[,] z_matrix = ").LN()
+                   .Append('{')
+                   .Append("    //       {0}", colum_nums).AppendLine()
+                   .Append("    //       {0}", new string('-', colum_nums.Length)).AppendLine()
+                ;
+
+            for (var i = 0; i < n; i++)
+            {
+                result.Append("    /*{0,2}*/ {{ ", i + 1);
+                for (var j = 0; j < m; j++)
+                    result.Append("{0}, ", ss[i, j].PadLeft(ll[j]));
+
+                result.Length -= 2;
+                result.AppendLine(" },");
+            }
+
+            result.AppendLine("};");
+            return result.ToString();
+        }
+    }
+
+    public MatrixView View() => new(this);
 
     /* -------------------------------------------------------------------------------------------- */
 

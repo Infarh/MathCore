@@ -69,7 +69,7 @@ public static class Encryptor
         aes.Padding = PaddingMode.PKCS7;
 
         var password_bytes = Encoding.UTF8.GetBytes(password);
-        var key = new Rfc2898DeriveBytes(password_bytes, salt, 50000);
+        var key = new Rfc2898DeriveBytes(password_bytes, salt, 50000, HashAlgorithmName.SHA1);
         aes.Key = key.GetBytes(aes.KeySize / 8);
         aes.IV = key.GetBytes(aes.BlockSize / 8);
         aes.Mode = CipherMode.CFB;

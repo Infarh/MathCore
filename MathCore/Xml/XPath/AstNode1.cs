@@ -16,52 +16,51 @@
 using System.Diagnostics;
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class AstNode
 {
-    internal class AstNode
+    #region Types
+
+    internal enum QueryType
     {
-        #region Types
-
-        internal enum QueryType
-        {
-            Axis,
-            Operator,
-            Filter,
-            ConstantOperand,
-            Function,
-            Group,
-            Root,
-            Variable,
-            Error
-        }
-
-        #endregion
-
-        #region Properties
-
-        internal virtual QueryType TypeOfAst => QueryType.Error;
-
-        internal virtual XPathResultType ReturnType => XPathResultType.Error;
-
-        internal virtual double DefaultPriority => 0.5;
-
-        #endregion
-
-        #region Methods
-
-        internal static AstNode NewAstNode(string ParseString)
-        {
-            try
-            {
-                return XPathParser.ParseXPathExpression(ParseString);
-            }
-            catch (XPathException e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            return null;
-        }
-
-        #endregion
+        Axis,
+        Operator,
+        Filter,
+        ConstantOperand,
+        Function,
+        Group,
+        Root,
+        Variable,
+        Error
     }
+
+    #endregion
+
+    #region Properties
+
+    internal virtual QueryType TypeOfAst => QueryType.Error;
+
+    internal virtual XPathResultType ReturnType => XPathResultType.Error;
+
+    internal virtual double DefaultPriority => 0.5;
+
+    #endregion
+
+    #region Methods
+
+    internal static AstNode NewAstNode(string ParseString)
+    {
+        try
+        {
+            return XPathParser.ParseXPathExpression(ParseString);
+        }
+        catch (XPathException e)
+        {
+            Debug.WriteLine(e.Message);
+        }
+        return null;
+    }
+
+    #endregion
 }

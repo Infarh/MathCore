@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -40,7 +41,9 @@ public partial class Matrix
             for (var i = 0; i < N; i++)
             {
                 var row = new double[M];
-                for (var j = 0; j < M; j++) row[j] = matrix[i, j];
+                for (var j = 0; j < M; j++) 
+                    row[j] = matrix[i, j];
+
                 result[i] = row;
             }
 
@@ -1365,11 +1368,10 @@ public partial class Matrix
                     for (var i1 = i0 + 1; i1 < N; i1++)
                     {
                         var abs = Math.Abs(matrix[i1, i0]);
-                        if (abs > max)
-                        {
-                            max = abs;
-                            max_index = i1;
-                        }
+                        if (abs <= max) continue;
+
+                        max       = abs;
+                        max_index = i1;
                     }
 
                     if (max_index < 0)
@@ -1389,13 +1391,13 @@ public partial class Matrix
                     d = -d;
                 }
 
-                var main = matrix[i0, i0]; // Ведущий элемент строки
-                d *= main;
+                var pivot = matrix[i0, i0]; // Ведущий элемент строки
+                d *= pivot;
                 //Нормируем строку основной матрицы по первому элементу
                 for (var i = i0 + 1; i < N; i++)
                     if (matrix[i, i0] != 0)
                     {
-                        var k = matrix[i, i0] / main;
+                        var k = matrix[i, i0] / pivot;
                         matrix[i, i0] = 0d;
 
                         for (var j = i0 + 1; j < M; j++)
@@ -1469,6 +1471,7 @@ public partial class Matrix
             var p_index = new int[N];
             for (var i = 0; i < N; i++)
                 p_index[i] = i;
+
             var N1 = Math.Min(N, M);
             for (var i0 = 0; i0 < N1; i0++)
             {
@@ -1605,6 +1608,7 @@ public partial class Matrix
                 var col_sum = 0d;
                 for (var i = 0; i < N; i++)
                     col_sum += Math.Abs(matrix[i, j]);
+
                 if (col_sum > max)
                     max = col_sum;
             }
@@ -1619,10 +1623,12 @@ public partial class Matrix
         public static double GetRMS(double[,] matrix)
         {
             GetLength(matrix, out var N, out var M);
+
             var s = 0d;
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     s += matrix[i, j] * matrix[i, j];
+
             return Math.Sqrt(s);
         }
 
@@ -1651,8 +1657,10 @@ public partial class Matrix
             for (var i = 0; i < N; i++)
                 for (var j = 0; j < M; j++)
                     sum += Sqr(new_x[i, j] - last_x[i, j]);
+
             if (sum < eps * eps)
                 return true;
+
             Swap(ref new_x, ref last_x);
             return false;
         }

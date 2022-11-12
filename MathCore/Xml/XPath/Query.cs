@@ -14,25 +14,24 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal abstract class Query
 {
-    internal abstract class Query
-    {
-        #region Properties
+    #region Properties
 
-        internal virtual int PositionCount { get; set; }
+    internal virtual int PositionCount { get; set; }
 
-        #endregion
+    #endregion
 
-        #region Methods
+    #region Methods
 
-        internal virtual object GetValue(XPathReader reader) => null;
+    internal virtual object GetValue(XPathReader reader) => null;
 
-        //the default always not matched
-        internal virtual bool MatchNode(XPathReader reader) => false;
+    //the default always not matched
+    internal virtual bool MatchNode(XPathReader reader) => false;
 
-        internal abstract XPathResultType ReturnType();
+    internal abstract XPathResultType ReturnType();
 
-        #endregion
-    }
+    #endregion
 }

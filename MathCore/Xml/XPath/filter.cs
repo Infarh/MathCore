@@ -14,30 +14,29 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal class Filter : AstNode
 {
-    internal class Filter : AstNode
+    #region Properties
+
+    internal override QueryType TypeOfAst => QueryType.Filter;
+
+    internal override XPathResultType ReturnType => XPathResultType.NodeSet;
+
+    internal AstNode Input { get; }
+
+    internal AstNode Condition { get; }
+
+    #endregion
+
+    #region Constructors
+
+    internal Filter(AstNode input, AstNode condition)
     {
-        #region Properties
-
-        internal override QueryType TypeOfAst => QueryType.Filter;
-
-        internal override XPathResultType ReturnType => XPathResultType.NodeSet;
-
-        internal AstNode Input { get; }
-
-        internal AstNode Condition { get; }
-
-        #endregion
-
-        #region Constructors
-
-        internal Filter(AstNode input, AstNode condition)
-        {
-            Input = input;
-            Condition = condition;
-        }
-
-        #endregion
+        Input     = input;
+        Condition = condition;
     }
+
+    #endregion
 }

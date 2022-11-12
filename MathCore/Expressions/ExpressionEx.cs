@@ -5,88 +5,87 @@ using ExAF = System.Linq.Expressions.Expression<System.Func<double[], double>>;
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable once CheckNamespace
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+public static class ExpressionEx
 {
-    public static class ExpressionEx
+    [NotNull]
+    public static ExAF ArrayMaximum
     {
-        [NotNull]
-        public static ExAF ArrayMaximum
+        get
         {
-            get
+            Func<double[], double> GetMaximum = X =>
             {
-                Func<double[], double> GetMaximum = X =>
-                {
-                    var max = double.NegativeInfinity;
-                    var L = X.Length;
-                    for(var i = 0; i < L; i++)
-                        if(X[i] > max) max = X[i];
-                    return max;
-                };
+                var max = double.NegativeInfinity;
+                var L   = X.Length;
+                for(var i = 0; i < L; i++)
+                    if(X[i] > max) max = X[i];
+                return max;
+            };
 
-                ExAF result = X => GetMaximum(X);
-                return result;
-            }
+            ExAF result = X => GetMaximum(X);
+            return result;
         }
+    }
 
-        [NotNull]
-        public static ExAF ArrayMinimum
+    [NotNull]
+    public static ExAF ArrayMinimum
+    {
+        get
         {
-            get
+            Func<double[], double> GetMaximum = X =>
             {
-                Func<double[], double> GetMaximum = X =>
-                {
-                    var min = double.PositiveInfinity;
-                    var L = X.Length;
-                    for(var i = 0; i < L; i++)
-                        if(X[i] < min) min = X[i];
-                    return min;
-                };
+                var min = double.PositiveInfinity;
+                var L   = X.Length;
+                for(var i = 0; i < L; i++)
+                    if(X[i] < min) min = X[i];
+                return min;
+            };
 
-                ExAF result = X => GetMaximum(X);
-                return result;
-            }
+            ExAF result = X => GetMaximum(X);
+            return result;
         }
+    }
 
-        public static ExF GetDifferential(this ExF f, [CanBeNull] Func<MethodCallExpression, Expression> FunctionDifferentiator = null)
-        {
-            var visitor = new DifferentialVisitor();
-            if(FunctionDifferentiator != null)
-                visitor.MethodDifferential += (_, e) => e.DifferentialExpression = FunctionDifferentiator(e.Method);
-            var d = visitor.Visit(f);
-            return (ExF)d;
-        }
+    public static ExF GetDifferential(this ExF f, [CanBeNull] Func<MethodCallExpression, Expression> FunctionDifferentiator = null)
+    {
+        var visitor = new DifferentialVisitor();
+        if(FunctionDifferentiator != null)
+            visitor.MethodDifferential += (_, e) => e.DifferentialExpression = FunctionDifferentiator(e.Method);
+        var d = visitor.Visit(f);
+        return (ExF)d;
+    }
 
-        [NotNull]
-        public static Expression<Func<TFirstParam, TResult>>
-            Compose<TFirstParam, TIntermediate, TResult>(
+    [NotNull]
+    public static Expression<Func<TFirstParam, TResult>>
+        Compose<TFirstParam, TIntermediate, TResult>(
             [NotNull] this Expression<Func<TFirstParam, TIntermediate>> first,
             [NotNull] Expression<Func<TIntermediate, TResult>> second)
-        {
-            var param = Expression.Parameter(typeof(TFirstParam), "param");
+    {
+        var param = Expression.Parameter(typeof(TFirstParam), "param");
 
-            var new_first = first.Body.Replace(first.Parameters[0], param);
-            var new_second = second.Body.Replace(second.Parameters[0], new_first);
+        var new_first  = first.Body.Replace(first.Parameters[0], param);
+        var new_second = second.Body.Replace(second.Parameters[0], new_first);
 
-            return Expression.Lambda<Func<TFirstParam, TResult>>(new_second, param);
-        }
+        return Expression.Lambda<Func<TFirstParam, TResult>>(new_second, param);
+    }
 
-        public static Expression Replace(this Expression expression,
-            Expression SearchEx, Expression ReplaceEx) => new ReplaceVisitor(SearchEx, ReplaceEx).Visit(expression);
+    public static Expression Replace(this Expression expression,
+        Expression SearchEx, Expression ReplaceEx) => new ReplaceVisitor(SearchEx, ReplaceEx).Visit(expression);
 
-        [NotNull]
-        public static Expression<Func<TSource, bool>> IsNotNull<TSource, TKey>(
-            [NotNull] this Expression<Func<TSource, TKey>> expression) => expression.Compose(key => key != null);
+    [NotNull]
+    public static Expression<Func<TSource, bool>> IsNotNull<TSource, TKey>(
+        [NotNull] this Expression<Func<TSource, TKey>> expression) => expression.Compose(key => key != null);
 
-        [NotNull]
-        public static Expression<TResultDelegate> Substitute<TDelegate, TResultDelegate, TParameter, TParameterResult>(
-            [NotNull] this Expression<TDelegate> Source,
-            string Parameter,
-            [NotNull] Expression<Func<TParameter, TParameterResult>> Converter)
-        {
-            var inpine_parameter = Source.Parameters.First(p => p.Name == Parameter);
-            return Expression.Lambda<TResultDelegate>(
-                Source.Body.Replace(inpine_parameter, Converter.Body),
-                Source.Parameters.Replace(inpine_parameter, Converter.Parameters.Single()));
-        }
+    [NotNull]
+    public static Expression<TResultDelegate> Substitute<TDelegate, TResultDelegate, TParameter, TParameterResult>(
+        [NotNull] this Expression<TDelegate> Source,
+        string Parameter,
+        [NotNull] Expression<Func<TParameter, TParameterResult>> Converter)
+    {
+        var inpine_parameter = Source.Parameters.First(p => p.Name == Parameter);
+        return Expression.Lambda<TResultDelegate>(
+            Source.Body.Replace(inpine_parameter, Converter.Body),
+            Source.Parameters.Replace(inpine_parameter, Converter.Parameters.Single()));
     }
 }

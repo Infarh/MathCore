@@ -14,24 +14,23 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-namespace System.Xml.XPath
+namespace System.Xml.XPath;
+
+internal sealed class NullQuery : BaseAxisQuery
 {
-    internal sealed class NullQuery : BaseAxisQuery
-    {
-        #region Methods
+    #region Methods
 
-        internal override bool MatchNode(XPathReader reader) => false;
+    internal override bool MatchNode(XPathReader reader) => false;
 
-        #endregion
-    }
-
-
-    //
-    // handles the child axis in the following situation:
-    //  foo:bar
-    //  child::*
-    //  child::node() //element, text, comment, PI, no attribute
-    //  child::Text()
-    //  child::ProcessingInstruction()
-    //  child::comment();
+    #endregion
 }
+
+
+//
+// handles the child axis in the following situation:
+//  foo:bar
+//  child::*
+//  child::node() //element, text, comment, PI, no attribute
+//  child::Text()
+//  child::ProcessingInstruction()
+//  child::comment();
