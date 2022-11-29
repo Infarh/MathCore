@@ -2,13 +2,20 @@ name: Testing
 
 on: [push]
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+
 jobs:
   test:
     name: Test on .NET Core
     runs-on: [ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -17,8 +24,8 @@ jobs:
 
       - name: Building
         run: |
-          dotnet build MathCore --nologo
-          dotnet build Tests/MathCore.Tests --nologo
+          dotnet build MathCore
+          dotnet build Tests/MathCore.Tests
 
       - name: Run Tests
-        run: dotnet test Tests/MathCore.Tests --no-build --nologo
+        run: dotnet test Tests/MathCore.Tests --no-build
