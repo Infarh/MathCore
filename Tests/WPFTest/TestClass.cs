@@ -1,10 +1,5 @@
-﻿using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
+﻿using System.Net.Http;
 using System.Windows.Media;
-
-using Microsoft.Extensions.Primitives;
 
 // ReSharper disable SuggestVarOrType_SimpleTypes
 // ReSharper disable AccessToModifiedClosure

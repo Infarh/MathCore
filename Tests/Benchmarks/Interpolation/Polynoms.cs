@@ -1,6 +1,4 @@
-﻿namespace Benchmarks.Interpolation;
-
-[MemoryDiagnoser]
+﻿[MemoryDiagnoser]
 public class Polynoms
 {
     private static readonly double[] _X =

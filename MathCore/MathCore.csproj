@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.81.1</Version>
+    <Version>0.0.82</Version>
     <PackageReleaseNotes>
       Добавлены новые возможности StringPtr для поддержки сопоставления с образцом списка
     </PackageReleaseNotes>
@@ -17,17 +17,17 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Copyright>shmachilin@gmail.com</Copyright>
     <Authors>Shmachilin P.A.</Authors>
     <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/infarh/mathcore.git</RepositoryUrl>
     <Description>Библиотека прикладных алгоритмов</Description>
     <PackageTags>Mathematic;Logiс</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <SignAssembly>true</SignAssembly>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
-    <Copyright>shmachilin@gmail.com</Copyright>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -41,7 +41,7 @@
     </NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DocumentationFile>MathCore.xml</DocumentationFile>
   </PropertyGroup>
 
@@ -59,10 +59,6 @@
     <None Remove="MathParser\Operations.xml" />
     <None Remove="MathParser\Operations.xsd" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" PrivateAssets="All"/>
-  </ItemGroup>-->
 
   <ItemGroup>
     <None Update="ActionList.tt">

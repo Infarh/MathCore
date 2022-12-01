@@ -1,4 +1,6 @@
-﻿namespace Benchmarks;
+﻿using static System.Math;
+
+namespace Benchmarks;
 
 [CategoriesColumn]
 public class PowerIterationTest
@@ -12,9 +14,10 @@ public class PowerIterationTest
     [Benchmark(Baseline = true)]
     public (double, short) MathPow()
     {
+        
         var x = X;
-        var exp2 = Math.Floor(Math.Log2(x));
-        var mantissa = x * Math.Pow(2, -exp2);
+        var exp2 = Floor(Log2(x));
+        var mantissa = x * Pow(2, -exp2);
 
         return (mantissa - 1, (short)exp2);
     }
@@ -52,8 +55,8 @@ public class PowerIterationTest
             }
 
             default:
-                var exp2 = Math.Floor(Math.Log2(x));
-                return (x * Math.Pow(2, -exp2) - 1, (short)exp2);
+                var exp2 = Floor(Log2(x));
+                return (x * Pow(2, -exp2) - 1, (short)exp2);
         }
     }
 }

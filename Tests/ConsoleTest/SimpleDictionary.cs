@@ -1,5 +1,3 @@
-using MathCore;
-
 namespace ConsoleTest;
 
 class SimpleDictionary<TKey, TValue>

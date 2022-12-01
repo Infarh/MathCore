@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-using MathCore.IO;
+﻿using MathCore.IO;
 
 namespace MathCore.Tests.IO;
 

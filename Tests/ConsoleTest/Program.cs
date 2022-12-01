@@ -1,11 +1,6 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
-
-using MathCore.CSV;
-using MathCore.PE;
 
 var str = "123.456E-3";
 

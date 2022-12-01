@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Linq.Reactive;
 using MathCore.Annotations;
 using MathCore.CommandProcessor;

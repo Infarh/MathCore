@@ -306,17 +306,17 @@ public class MatrixTest
                 matrix[DestI, j] = matrix[SrcI1, j] * SrcK1 + matrix[SrcI2, j] * SrcK2;
         }
 
-        static void SwapRows(double[,] matrix, int I1, int I2)
-        {
-            var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));
-            if (I1 >= n) throw new ArgumentOutOfRangeException(nameof(I1), I1, "Номер строки I1 вышел за пределы массива");
-            if (I2 >= n) throw new ArgumentOutOfRangeException(nameof(I2), I2, "Номер строки I2 вышел за пределы массива");
+        //static void SwapRows(double[,] matrix, int I1, int I2)
+        //{
+        //    var (n, m) = (matrix.GetLength(0), matrix.GetLength(1));
+        //    if (I1 >= n) throw new ArgumentOutOfRangeException(nameof(I1), I1, "Номер строки I1 вышел за пределы массива");
+        //    if (I2 >= n) throw new ArgumentOutOfRangeException(nameof(I2), I2, "Номер строки I2 вышел за пределы массива");
 
-            if (I1 == I2) return;
+        //    if (I1 == I2) return;
 
-            for (var j = 0; j < m; j++)
-                (matrix[I1, j], matrix[I2, j]) = (matrix[I2, j], matrix[I1, j]);
-        }
+        //    for (var j = 0; j < m; j++)
+        //        (matrix[I1, j], matrix[I2, j]) = (matrix[I2, j], matrix[I1, j]);
+        //}
 
         double[,] a =
         {

@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using MathCore.Threading.Tasks.Schedulers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

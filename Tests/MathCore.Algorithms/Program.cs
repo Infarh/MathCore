@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-using MathCore.Algorithms.Numbers;
+﻿using MathCore.Algorithms.Numbers;
 
 Pascal.Run(16);
 
