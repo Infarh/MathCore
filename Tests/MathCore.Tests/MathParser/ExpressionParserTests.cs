@@ -409,7 +409,7 @@ public class ExpressionParserTests
         Assert.AreEqual(0, interval_f(5));
     }
 
-    [TestMethod, Timeout(300)]
+    [TestMethod, Timeout(500)]
     public void MathExpression_AbsExpression_StressTest()
     {
         var parser   = new ExpressionParser();
@@ -422,7 +422,7 @@ public class ExpressionParserTests
         }
     }
 
-    [TestMethod, Timeout(200)]
+    [TestMethod, Timeout(500)]
     public void MathExpression_AbsExpression_Original_StressTest()
     {
         var parser   = new ExpressionParser();
