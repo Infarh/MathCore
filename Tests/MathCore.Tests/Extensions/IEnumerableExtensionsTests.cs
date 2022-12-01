@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace MathCore.Tests.Extensions;
+﻿namespace MathCore.Tests.Extensions;
 
 [TestClass]
 // ReSharper disable once InconsistentNaming

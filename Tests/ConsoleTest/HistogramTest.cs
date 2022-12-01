@@ -1,7 +1,6 @@
 ﻿using ConsoleTest.Extensions;
 
 using MathCore.Statistic;
-using MathCore;
 using OxyPlot.Annotations;
 using OxyPlot.Series;
 using OxyPlot;

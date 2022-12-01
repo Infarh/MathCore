@@ -1,6 +1,4 @@
-﻿using MathCore;
-
-namespace ConsoleTest;
+﻿namespace ConsoleTest;
 
 public static class ConsoleChartTest
 {

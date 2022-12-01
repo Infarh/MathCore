@@ -15,14 +15,27 @@ public static class ICollectionExtensions
     /// <typeparam name="T">Тип добавляемых элементов</typeparam>
     /// <param name="collection">Коллекция, в которую надо добавить перечисленных элементы</param>
     /// <param name="items">Перечисление добавляемых элементов</param>
-    public static void AddItems<T>(this ICollection<T> collection, IEnumerable<T> items)
+    public static void AddItems<T>(this ICollection<T> collection, IEnumerable<T>? items)
     {
         switch (collection)
         {
             default:
-                items.Foreach(item => collection.Add(item));
+                switch (items)
+                {
+                    case null: break;
+                    case T[] array:
+                        foreach (var item in array)
+                            collection.Add(item);
+                        break;
+                    default:
+                        items.Foreach(collection, (item, c) => c.Add(item));
+                        break;
+                }
                 break;
-            case List<T> list:
+
+            case T[]: throw new NotSupportedException("Массив не поддерживает операций добавления элементов");
+
+            case List<T> list when items is not null:
                 list.AddRange(items);
                 break;
         }
@@ -49,10 +62,12 @@ public static class ICollectionExtensions
     /// <param name="collection">Коллекция, из которой требуется удалить перечисленные элементы</param>
     /// <param name="items">Перечисление удаляемых из коллекции элементов</param>
     /// <returns>Перечисление результатов удаления элементов</returns>
-    public static void RemoveItems<T>(this ICollection<T> collection, IEnumerable<T> items)
+    public static void RemoveItems<T>(this ICollection<T> collection, IEnumerable<T>? items)
     {
         switch (items)
         {
+            case null: break;
+
             default:
                 foreach (var item in items)
                     collection.Remove(item);
@@ -64,11 +79,6 @@ public static class ICollectionExtensions
                 break;
 
             case List<T> list:
-                foreach (var item in list)
-                    collection.Remove(item);
-                break;
-
-            case IList<T> list:
                 foreach (var item in list)
                     collection.Remove(item);
                 break;

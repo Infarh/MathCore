@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="MathCore" />
     <Using Include="System" />
     <Using Include="System.Linq" />
     <Using Include="System.Collections.Generic" />

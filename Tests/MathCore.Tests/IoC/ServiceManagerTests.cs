@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-using MathCore.IoC;
+﻿using MathCore.IoC;
 using MathCore.IoC.ServiceRegistrations;
 
 // ReSharper disable UnusedMember.Global

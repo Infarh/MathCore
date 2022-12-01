@@ -3,7 +3,7 @@
 namespace Benchmarks;
 
 [MemoryDiagnoser]
-public class Test
+public class CSVParseTest
 {
     private static IEnumerable<string> Lines => ReadLines("data.csv");
 

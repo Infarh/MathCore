@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace MathCore.Tests.Extensions;
+﻿namespace MathCore.Tests.Extensions;
 
 [TestClass]
 public class FuncExtensionsTests
