@@ -25,6 +25,14 @@ namespace System.Linq;
 [PublicAPI]
 public static partial class IEnumerableExtensions
 {
+    public static string Sum(this IEnumerable<string> strings)
+    {
+        var result = new StringBuilder();
+        foreach (var str in strings)
+            result.Append(str);
+        return result.ToString();
+    }
+
     /// <summary>Последовательность содержит число элементов больше указанного количества</summary>
     /// <typeparam name="T">Тип элементов последовательности</typeparam>
     /// <param name="items">Проверяемая последовательность элементов</param>
