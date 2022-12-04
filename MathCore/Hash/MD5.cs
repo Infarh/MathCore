@@ -1,6 +1,9 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 
@@ -73,6 +76,77 @@ public class MD5
         do
         {
             readed = data.FillBuffer(buffer64);
+
+            length += (ulong)readed;
+
+            if (readed < 64)
+            {
+                Array.Clear(buffer64, readed, 64 - readed);
+                buffer64[readed] = 0x80;
+
+                if (64 - readed > 8)
+                {
+                    var full_length = length << 3;
+                    buffer64[^8] = (byte)((full_length) & 0xff);
+                    buffer64[^7] = (byte)((full_length >> 8) & 0xff);
+                    buffer64[^6] = (byte)((full_length >> 16) & 0xff);
+                    buffer64[^5] = (byte)((full_length >> 24) & 0xff);
+                    buffer64[^4] = (byte)((full_length >> 32) & 0xff);
+                    buffer64[^3] = (byte)((full_length >> 40) & 0xff);
+                    buffer64[^2] = (byte)((full_length >> 48) & 0xff);
+                    buffer64[^1] = (byte)((full_length >> 56) & 0xff);
+
+                    completed = true;
+                }
+            }
+
+            Buffer.BlockCopy(buffer64, 0, buffer16, 0, 64);
+            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+        }
+        while (readed == 64);
+
+        if (readed > 0 && !completed)
+        {
+            Array.Clear(buffer64, 0, 64);
+
+            var full_length = length << 3;
+            buffer64[^8] = (byte)((full_length) & 0xff);
+            buffer64[^7] = (byte)((full_length >> 8) & 0xff);
+            buffer64[^6] = (byte)((full_length >> 16) & 0xff);
+            buffer64[^5] = (byte)((full_length >> 24) & 0xff);
+            buffer64[^4] = (byte)((full_length >> 32) & 0xff);
+            buffer64[^3] = (byte)((full_length >> 40) & 0xff);
+            buffer64[^2] = (byte)((full_length >> 48) & 0xff);
+            buffer64[^1] = (byte)((full_length >> 56) & 0xff);
+
+            Buffer.BlockCopy(buffer64, 0, buffer16, 0, 64);
+            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+        }
+
+        var result_bytes = new byte[16];
+        Buffer.BlockCopy(result, 0, result_bytes, 0, result_bytes.Length);
+        return result_bytes;
+    }
+
+    public static async Task<byte[]> ComputeAsync(Stream data, CancellationToken Cancel = default)
+    {
+        uint[] result =
+        {
+            0x67452301,
+            0xefcdab89,
+            0x98badcfe,
+            0x10325476,
+        };
+
+        var buffer64 = new byte[64];
+        var buffer16 = new uint[16];
+
+        var completed = false;
+        var length    = 0UL;
+        int readed;
+        do
+        {
+            readed = await data.FillBufferAsync(buffer64, Cancel).ConfigureAwait(false);
 
             length += (ulong)readed;
 
