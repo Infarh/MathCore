@@ -143,673 +143,287 @@ public class MD5
         var (A, B, C, D) = (a0, b0, c0, d0);
 
         static uint LeftRotate(uint x, int c) => (x << c) | (x >> (32 - c));
-        uint f;
-        int g;
-        (f, g) = ((B & C) | (~B & D), 0);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[0] + buffer16[g], __S[0]), B, C);
+        //int g;
+        var f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 1);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[0] + buffer16[0], __S[0]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[1] + buffer16[g], __S[1]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 2);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[1] + buffer16[1], __S[1]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[2] + buffer16[g], __S[2]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 3);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[2] + buffer16[2], __S[2]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[3] + buffer16[g], __S[3]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 4);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[3] + buffer16[3], __S[3]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[4] + buffer16[g], __S[4]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 5);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[4] + buffer16[4], __S[4]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[5] + buffer16[g], __S[5]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 6);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[5] + buffer16[5], __S[5]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[6] + buffer16[g], __S[6]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 7);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[6] + buffer16[6], __S[6]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[7] + buffer16[g], __S[7]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 8);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[7] + buffer16[7], __S[7]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[8] + buffer16[g], __S[8]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 9);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[8] + buffer16[8], __S[8]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[9] + buffer16[g], __S[9]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 10);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[9] + buffer16[9], __S[9]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[10] + buffer16[g], __S[10]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 11);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[10] + buffer16[10], __S[10]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[11] + buffer16[g], __S[11]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 12);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[11] + buffer16[11], __S[11]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[12] + buffer16[g], __S[12]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 13);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[12] + buffer16[12], __S[12]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[13] + buffer16[g], __S[13]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 14);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[13] + buffer16[13], __S[13]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[14] + buffer16[g], __S[14]), B, C);
+        f = (B & C) | (~B & D);
 
-        (f, g) = ((B & C) | (~B & D), 15);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[14] + buffer16[14], __S[14]), B, C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[15] + buffer16[g], __S[15]), B, C);
+        f = (B & C) | (~B & D);
 
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[15] + buffer16[15], __S[15]), B, C);
 
-        (f, g) = ((D & B) | (~D & C), (5 * 16 + 1) % 16);
 
+        f = (D & B) | (~D & C);
 
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[16] + buffer16[g], __S[16]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[16] + buffer16[(5 * 16 + 1) % 16], __S[16]), B, C);
 
-        if (17 <= 15)
-        {
-        }
 
-        if (17 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 17 + 1) % 16);
+        f = (D & B) | (~D & C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[17] + buffer16[g], __S[17]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[17] + buffer16[(5 * 17 + 1) % 16], __S[17]), B, C);
 
-        if (18 <= 15)
-        {
-        }
 
-        (f, g) = ((D & B) | (~D & C), (5 * 18 + 1) % 16);
+        f = (D & B) | (~D & C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[18] + buffer16[g], __S[18]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[18] + buffer16[(5 * 18 + 1) % 16], __S[18]), B, C);
 
-        (f, g) = ((D & B) | (~D & C), (5 * 19 + 1) % 16);
+        f = (D & B) | (~D & C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[19] + buffer16[g], __S[19]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[19] + buffer16[(5 * 19 + 1) % 16], __S[19]), B, C);
 
-        if (20 <= 15)
-        {
-        }
 
-        if (20 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 20 + 1) % 16);
+        f = (D & B) | (~D & C);
 
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[20] + buffer16[g], __S[20]), B, C);
-
-        if (21 <= 15)
-        {
-        }
-
-        if (21 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 21 + 1) % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[21] + buffer16[g], __S[21]), B, C);
-
-        if (22 <= 15)
-        {
-        }
-
-        if (22 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 22 + 1) % 16);
-        else if (22 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 22 + 5) % 16);
-        else if (22 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[22] + buffer16[g], __S[22]), B, C);
-
-        if (23 <= 15)
-        {
-        }
-
-        if (23 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 23 + 1) % 16);
-        else if (23 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 23 + 5) % 16);
-        else if (23 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[23] + buffer16[g], __S[23]), B, C);
-
-        if (24 <= 15)
-        {
-        }
-
-        if (24 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 24 + 1) % 16);
-        else if (24 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 24 + 5) % 16);
-        else if (24 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[24] + buffer16[g], __S[24]), B, C);
-
-        if (25 <= 15)
-        {
-        }
-
-        if (25 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 25 + 1) % 16);
-        else if (25 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 25 + 5) % 16);
-        else if (25 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[25] + buffer16[g], __S[25]), B, C);
-
-        if (26 <= 15)
-        {
-        }
-
-        if (26 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 26 + 1) % 16);
-        else if (26 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 26 + 5) % 16);
-        else if (26 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[26] + buffer16[g], __S[26]), B, C);
-
-        if (27 <= 15)
-        {
-        }
-
-        if (27 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 27 + 1) % 16);
-        else if (27 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 27 + 5) % 16);
-        else if (27 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[27] + buffer16[g], __S[27]), B, C);
-
-        if (28 <= 15)
-        {
-        }
-
-        if (28 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 28 + 1) % 16);
-        else if (28 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 28 + 5) % 16);
-        else if (28 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[28] + buffer16[g], __S[28]), B, C);
-
-        if (29 <= 15)
-        {
-        }
-
-        if (29 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 29 + 1) % 16);
-        else if (29 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 29 + 5) % 16);
-        else if (29 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[29] + buffer16[g], __S[29]), B, C);
-
-        if (30 <= 15)
-        {
-        }
-
-        if (30 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 30 + 1) % 16);
-        else if (30 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 30 + 5) % 16);
-        else if (30 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[30] + buffer16[g], __S[30]), B, C);
-
-        if (31 <= 15)
-        {
-        }
-
-        if (31 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 31 + 1) % 16);
-        else if (31 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 31 + 5) % 16);
-        else if (31 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[31] + buffer16[g], __S[31]), B, C);
-
-        if (32 <= 15)
-        {
-        }
-
-        if (32 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 32 + 1) % 16);
-        if (32 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 32 + 5) % 16);
-        else if (32 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[32] + buffer16[g], __S[32]), B, C);
-
-        if (33 <= 15)
-        {
-        }
-
-        if (33 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 33 + 1) % 16);
-        if (33 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 33 + 5) % 16);
-        else if (33 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[33] + buffer16[g], __S[33]), B, C);
-
-        if (34 <= 15)
-        {
-        }
-
-        if (34 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 34 + 1) % 16);
-        if (34 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 34 + 5) % 16);
-        else if (34 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[34] + buffer16[g], __S[34]), B, C);
-
-        if (35 <= 15)
-        {
-        }
-
-        if (35 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 35 + 1) % 16);
-        if (35 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 35 + 5) % 16);
-        else if (35 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[35] + buffer16[g], __S[35]), B, C);
-
-        if (36 <= 15)
-        {
-        }
-
-        if (36 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 36 + 1) % 16);
-        if (36 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 36 + 5) % 16);
-        else if (36 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[36] + buffer16[g], __S[36]), B, C);
-
-        if (37 <= 15)
-        {
-        }
-
-        if (37 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 37 + 1) % 16);
-        if (37 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 37 + 5) % 16);
-        else if (37 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[37] + buffer16[g], __S[37]), B, C);
-
-        if (38 <= 15)
-        {
-        }
-
-        if (38 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 38 + 1) % 16);
-        if (38 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 38 + 5) % 16);
-        else if (38 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[38] + buffer16[g], __S[38]), B, C);
-
-        if (39 <= 15)
-        {
-        }
-
-        if (39 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 39 + 1) % 16);
-        if (39 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 39 + 5) % 16);
-        else if (39 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[39] + buffer16[g], __S[39]), B, C);
-
-        if (40 <= 15)
-        {
-        }
-
-        if (40 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 40 + 1) % 16);
-        if (40 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 40 + 5) % 16);
-        else if (40 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[40] + buffer16[g], __S[40]), B, C);
-
-        if (41 <= 15)
-        {
-        }
-
-        if (41 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 41 + 1) % 16);
-        if (41 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 41 + 5) % 16);
-        else if (41 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[41] + buffer16[g], __S[41]), B, C);
-
-        if (42 <= 15)
-        {
-        }
-
-        if (42 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 42 + 1) % 16);
-        if (42 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 42 + 5) % 16);
-        else if (42 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[42] + buffer16[g], __S[42]), B, C);
-
-        if (43 <= 15)
-        {
-        }
-
-        if (43 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 43 + 1) % 16);
-        if (43 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 43 + 5) % 16);
-        else if (43 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[43] + buffer16[g], __S[43]), B, C);
-
-        if (44 <= 15)
-        {
-        }
-
-        if (44 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 44 + 1) % 16);
-        if (44 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 44 + 5) % 16);
-        else if (44 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[44] + buffer16[g], __S[44]), B, C);
-
-        if (45 <= 15)
-        {
-        }
-
-        if (45 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 45 + 1) % 16);
-        if (45 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 45 + 5) % 16);
-        else if (45 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[45] + buffer16[g], __S[45]), B, C);
-
-        if (46 <= 15)
-        {
-        }
-
-        if (46 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 46 + 1) % 16);
-        if (46 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 46 + 5) % 16);
-        else if (46 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[46] + buffer16[g], __S[46]), B, C);
-
-        if (47 <= 15)
-        {
-        }
-
-        if (47 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 47 + 1) % 16);
-        if (47 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 47 + 5) % 16);
-        else if (47 >= 48)
-        {
-        }
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[47] + buffer16[g], __S[47]), B, C);
-
-        if (48 <= 15)
-        {
-        }
-
-        if (48 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 48 + 1) % 16);
-        if (48 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 48 + 5) % 16);
-        if (48 >= 48) (f, g) = (C ^ (B | ~D), 7 * 48 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[48] + buffer16[g], __S[48]), B, C);
-
-        if (49 <= 15)
-        {
-        }
-
-        if (49 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 49 + 1) % 16);
-        if (49 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 49 + 5) % 16);
-        if (49 >= 48) (f, g) = (C ^ (B | ~D), 7 * 49 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[49] + buffer16[g], __S[49]), B, C);
-
-        if (50 <= 15)
-        {
-        }
-
-        if (50 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 50 + 1) % 16);
-        if (50 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 50 + 5) % 16);
-        if (50 >= 48) (f, g) = (C ^ (B | ~D), 7 * 50 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[50] + buffer16[g], __S[50]), B, C);
-
-        if (51 <= 15)
-        {
-        }
-
-        if (51 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 51 + 1) % 16);
-        if (51 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 51 + 5) % 16);
-        if (51 >= 48) (f, g) = (C ^ (B | ~D), 7 * 51 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[51] + buffer16[g], __S[51]), B, C);
-
-        if (52 <= 15)
-        {
-        }
-
-        if (52 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 52 + 1) % 16);
-        if (52 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 52 + 5) % 16);
-        if (52 >= 48) (f, g) = (C ^ (B | ~D), 7 * 52 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[52] + buffer16[g], __S[52]), B, C);
-
-        if (53 <= 15)
-        {
-        }
-
-        if (53 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 53 + 1) % 16);
-        if (53 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 53 + 5) % 16);
-        if (53 >= 48) (f, g) = (C ^ (B | ~D), 7 * 53 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[53] + buffer16[g], __S[53]), B, C);
-
-        if (54 <= 15)
-        {
-        }
-
-        if (54 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 54 + 1) % 16);
-        if (54 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 54 + 5) % 16);
-        if (54 >= 48) (f, g) = (C ^ (B | ~D), 7 * 54 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[54] + buffer16[g], __S[54]), B, C);
-
-        if (55 <= 15)
-        {
-        }
-
-        if (55 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 55 + 1) % 16);
-        if (55 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 55 + 5) % 16);
-        if (55 >= 48) (f, g) = (C ^ (B | ~D), 7 * 55 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[55] + buffer16[g], __S[55]), B, C);
-
-        if (56 <= 15)
-        {
-        }
-
-        if (56 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 56 + 1) % 16);
-        if (56 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 56 + 5) % 16);
-        if (56 >= 48) (f, g) = (C ^ (B | ~D), 7 * 56 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[56] + buffer16[g], __S[56]), B, C);
-
-        if (57 <= 15)
-        {
-        }
-
-        if (57 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 57 + 1) % 16);
-        if (57 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 57 + 5) % 16);
-        if (57 >= 48) (f, g) = (C ^ (B | ~D), 7 * 57 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[57] + buffer16[g], __S[57]), B, C);
-
-        if (58 <= 15)
-        {
-        }
-
-        if (58 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 58 + 1) % 16);
-        if (58 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 58 + 5) % 16);
-        if (58 >= 48) (f, g) = (C ^ (B | ~D), 7 * 58 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[58] + buffer16[g], __S[58]), B, C);
-
-        if (59 <= 15)
-        {
-        }
-
-        if (59 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 59 + 1) % 16);
-        if (59 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 59 + 5) % 16);
-        if (59 >= 48) (f, g) = (C ^ (B | ~D), 7 * 59 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[59] + buffer16[g], __S[59]), B, C);
-
-        if (60 <= 15)
-        {
-        }
-
-        if (60 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 60 + 1) % 16);
-        if (60 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 60 + 5) % 16);
-        if (60 >= 48) (f, g) = (C ^ (B | ~D), 7 * 60 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[60] + buffer16[g], __S[60]), B, C);
-
-        if (61 <= 15)
-        {
-        }
-
-        if (61 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 61 + 1) % 16);
-        if (61 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 61 + 5) % 16);
-        if (61 >= 48) (f, g) = (C ^ (B | ~D), 7 * 61 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[61] + buffer16[g], __S[61]), B, C);
-
-        if (62 <= 15)
-        {
-        }
-
-        if (62 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 62 + 1) % 16);
-        if (62 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 62 + 5) % 16);
-        if (62 >= 48) (f, g) = (C ^ (B | ~D), 7 * 62 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[62] + buffer16[g], __S[62]), B, C);
-
-        if (63 <= 15)
-        {
-        }
-
-        if (63 is >= 16 and <= 31)
-            (f, g) = ((D & B) | (~D & C), (5 * 63 + 1) % 16);
-        if (63 is >= 32 and <= 47)
-            (f, g) = (B ^ C ^ D, (3 * 63 + 5) % 16);
-        if (63 >= 48) (f, g) = (C ^ (B | ~D), 7 * 63 % 16);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[63] + buffer16[g], __S[63]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[20] + buffer16[(5 * 20 + 1) % 16], __S[20]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[21] + buffer16[(5 * 21 + 1) % 16], __S[21]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[22] + buffer16[(5 * 22 + 1) % 16], __S[22]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[23] + buffer16[(5 * 23 + 1) % 16], __S[23]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[24] + buffer16[(5 * 24 + 1) % 16], __S[24]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[25] + buffer16[(5 * 25 + 1) % 16], __S[25]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[26] + buffer16[(5 * 26 + 1) % 16], __S[26]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[27] + buffer16[(5 * 27 + 1) % 16], __S[27]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[28] + buffer16[(5 * 28 + 1) % 16], __S[28]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[29] + buffer16[(5 * 29 + 1) % 16], __S[29]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[30] + buffer16[(5 * 30 + 1) % 16], __S[30]), B, C);
+
+
+        f = (D & B) | (~D & C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[31] + buffer16[(5 * 31 + 1) % 16], __S[31]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[32] + buffer16[(3 * 32 + 5) % 16], __S[32]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[33] + buffer16[(3 * 33 + 5) % 16], __S[33]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[34] + buffer16[(3 * 34 + 5) % 16], __S[34]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[35] + buffer16[(3 * 35 + 5) % 16], __S[35]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[36] + buffer16[(3 * 36 + 5) % 16], __S[36]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[37] + buffer16[(3 * 37 + 5) % 16], __S[37]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[38] + buffer16[(3 * 38 + 5) % 16], __S[38]), B, C);
+
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[39] + buffer16[(3 * 39 + 5) % 16], __S[39]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[40] + buffer16[(3 * 40 + 5) % 16], __S[40]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[41] + buffer16[(3 * 41 + 5) % 16], __S[41]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[42] + buffer16[(3 * 42 + 5) % 16], __S[42]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[43] + buffer16[(3 * 43 + 5) % 16], __S[43]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[44] + buffer16[(3 * 44 + 5) % 16], __S[44]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[45] + buffer16[(3 * 45 + 5) % 16], __S[45]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[46] + buffer16[(3 * 46 + 5) % 16], __S[46]), B, C);
+
+        f = B ^ C ^ D;
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[47] + buffer16[(3 * 47 + 5) % 16], __S[47]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[48] + buffer16[7 * 48 % 16], __S[48]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[49] + buffer16[7 * 49 % 16], __S[49]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[50] + buffer16[7 * 50 % 16], __S[50]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[51] + buffer16[7 * 51 % 16], __S[51]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[52] + buffer16[7 * 52 % 16], __S[52]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[53] + buffer16[7 * 53 % 16], __S[53]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[54] + buffer16[7 * 54 % 16], __S[54]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[55] + buffer16[7 * 55 % 16], __S[55]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[56] + buffer16[7 * 56 % 16], __S[56]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[57] + buffer16[7 * 57 % 16], __S[57]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[58] + buffer16[7 * 58 % 16], __S[58]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[59] + buffer16[7 * 59 % 16], __S[59]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[60] + buffer16[7 * 60 % 16], __S[60]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[61] + buffer16[7 * 61 % 16], __S[61]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[62] + buffer16[7 * 62 % 16], __S[62]), B, C);
+
+        f = C ^ (B | ~D);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[63] + buffer16[7 * 63 % 16], __S[63]), B, C);
 
         a0 += A;
         b0 += B;
