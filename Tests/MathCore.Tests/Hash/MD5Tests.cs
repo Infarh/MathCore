@@ -48,7 +48,6 @@ public class MD5Tests
         actual.AssertEquals(expected);
     }
 
-
     [TestMethod]
     [DataRow(11, DisplayName = "Data byte length = 11")]
     [DataRow(55, DisplayName = "Data byte length = 55")]
