@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.82</Version>
+    <Version>0.0.83</Version>
     <PackageReleaseNotes>
-      Добавлены новые возможности StringPtr для поддержки сопоставления с образцом списка
+      Добавлена собственная реализация алгоритма MD5
     </PackageReleaseNotes>
   </PropertyGroup>
 
