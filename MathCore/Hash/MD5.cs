@@ -144,286 +144,74 @@ public class MD5
 
         static uint LeftRotate(uint x, int c) => (x << c) | (x >> (32 - c));
 
-        //int g;
-        var f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[0] + buffer16[0], __S[0]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[1] + buffer16[1], __S[1]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[2] + buffer16[2], __S[2]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[3] + buffer16[3], __S[3]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[4] + buffer16[4], __S[4]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[5] + buffer16[5], __S[5]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[6] + buffer16[6], __S[6]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[7] + buffer16[7], __S[7]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[8] + buffer16[8], __S[8]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[9] + buffer16[9], __S[9]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[10] + buffer16[10], __S[10]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[11] + buffer16[11], __S[11]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[12] + buffer16[12], __S[12]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[13] + buffer16[13], __S[13]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[14] + buffer16[14], __S[14]), B, C);
-
-        f = (B & C) | (~B & D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[15] + buffer16[15], __S[15]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[16] + buffer16[(5 * 16 + 1) % 16], __S[16]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[17] + buffer16[(5 * 17 + 1) % 16], __S[17]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[18] + buffer16[(5 * 18 + 1) % 16], __S[18]), B, C);
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[19] + buffer16[(5 * 19 + 1) % 16], __S[19]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[20] + buffer16[(5 * 20 + 1) % 16], __S[20]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[21] + buffer16[(5 * 21 + 1) % 16], __S[21]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[22] + buffer16[(5 * 22 + 1) % 16], __S[22]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[23] + buffer16[(5 * 23 + 1) % 16], __S[23]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[24] + buffer16[(5 * 24 + 1) % 16], __S[24]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[25] + buffer16[(5 * 25 + 1) % 16], __S[25]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[26] + buffer16[(5 * 26 + 1) % 16], __S[26]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[27] + buffer16[(5 * 27 + 1) % 16], __S[27]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[28] + buffer16[(5 * 28 + 1) % 16], __S[28]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[29] + buffer16[(5 * 29 + 1) % 16], __S[29]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[30] + buffer16[(5 * 30 + 1) % 16], __S[30]), B, C);
-
-
-        f = (D & B) | (~D & C);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[31] + buffer16[(5 * 31 + 1) % 16], __S[31]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[32] + buffer16[(3 * 32 + 5) % 16], __S[32]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[33] + buffer16[(3 * 33 + 5) % 16], __S[33]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[34] + buffer16[(3 * 34 + 5) % 16], __S[34]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[35] + buffer16[(3 * 35 + 5) % 16], __S[35]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[36] + buffer16[(3 * 36 + 5) % 16], __S[36]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[37] + buffer16[(3 * 37 + 5) % 16], __S[37]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[38] + buffer16[(3 * 38 + 5) % 16], __S[38]), B, C);
-
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[39] + buffer16[(3 * 39 + 5) % 16], __S[39]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[40] + buffer16[(3 * 40 + 5) % 16], __S[40]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[41] + buffer16[(3 * 41 + 5) % 16], __S[41]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[42] + buffer16[(3 * 42 + 5) % 16], __S[42]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[43] + buffer16[(3 * 43 + 5) % 16], __S[43]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[44] + buffer16[(3 * 44 + 5) % 16], __S[44]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[45] + buffer16[(3 * 45 + 5) % 16], __S[45]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[46] + buffer16[(3 * 46 + 5) % 16], __S[46]), B, C);
-
-        f = B ^ C ^ D;
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[47] + buffer16[(3 * 47 + 5) % 16], __S[47]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[48] + buffer16[7 * 48 % 16], __S[48]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[49] + buffer16[7 * 49 % 16], __S[49]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[50] + buffer16[7 * 50 % 16], __S[50]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[51] + buffer16[7 * 51 % 16], __S[51]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[52] + buffer16[7 * 52 % 16], __S[52]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[53] + buffer16[7 * 53 % 16], __S[53]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[54] + buffer16[7 * 54 % 16], __S[54]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[55] + buffer16[7 * 55 % 16], __S[55]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[56] + buffer16[7 * 56 % 16], __S[56]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[57] + buffer16[7 * 57 % 16], __S[57]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[58] + buffer16[7 * 58 % 16], __S[58]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[59] + buffer16[7 * 59 % 16], __S[59]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[60] + buffer16[7 * 60 % 16], __S[60]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[61] + buffer16[7 * 61 % 16], __S[61]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[62] + buffer16[7 * 62 % 16], __S[62]), B, C);
-
-        f = C ^ (B | ~D);
-
-        (A, B, C, D) = (D, B + LeftRotate(A + f + __K[63] + buffer16[7 * 63 % 16], __S[63]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[0] + buffer16[0], __S[0]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[1] + buffer16[1], __S[1]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[2] + buffer16[2], __S[2]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[3] + buffer16[3], __S[3]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[4] + buffer16[4], __S[4]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[5] + buffer16[5], __S[5]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[6] + buffer16[6], __S[6]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[7] + buffer16[7], __S[7]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[8] + buffer16[8], __S[8]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[9] + buffer16[9], __S[9]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[10] + buffer16[10], __S[10]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[11] + buffer16[11], __S[11]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[12] + buffer16[12], __S[12]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[13] + buffer16[13], __S[13]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[14] + buffer16[14], __S[14]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + __K[15] + buffer16[15], __S[15]), B, C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[16] + buffer16[(5 * 16 + 1) % 16], __S[16]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[17] + buffer16[(5 * 17 + 1) % 16], __S[17]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[18] + buffer16[(5 * 18 + 1) % 16], __S[18]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[19] + buffer16[(5 * 19 + 1) % 16], __S[19]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[20] + buffer16[(5 * 20 + 1) % 16], __S[20]), B, C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[21] + buffer16[(5 * 21 + 1) % 16], __S[21]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[22] + buffer16[(5 * 22 + 1) % 16], __S[22]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[23] + buffer16[(5 * 23 + 1) % 16], __S[23]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[24] + buffer16[(5 * 24 + 1) % 16], __S[24]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[25] + buffer16[(5 * 25 + 1) % 16], __S[25]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[26] + buffer16[(5 * 26 + 1) % 16], __S[26]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[27] + buffer16[(5 * 27 + 1) % 16], __S[27]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[28] + buffer16[(5 * 28 + 1) % 16], __S[28]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[29] + buffer16[(5 * 29 + 1) % 16], __S[29]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[30] + buffer16[(5 * 30 + 1) % 16], __S[30]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + ((D & B) | (~D & C)) + __K[31] + buffer16[(5 * 31 + 1) % 16], __S[31]), B, C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[32] + buffer16[(3 * 32 + 5) % 16], __S[32]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[33] + buffer16[(3 * 33 + 5) % 16], __S[33]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[34] + buffer16[(3 * 34 + 5) % 16], __S[34]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[35] + buffer16[(3 * 35 + 5) % 16], __S[35]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[36] + buffer16[(3 * 36 + 5) % 16], __S[36]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[37] + buffer16[(3 * 37 + 5) % 16], __S[37]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[38] + buffer16[(3 * 38 + 5) % 16], __S[38]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[39] + buffer16[(3 * 39 + 5) % 16], __S[39]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[40] + buffer16[(3 * 40 + 5) % 16], __S[40]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[41] + buffer16[(3 * 41 + 5) % 16], __S[41]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[42] + buffer16[(3 * 42 + 5) % 16], __S[42]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[43] + buffer16[(3 * 43 + 5) % 16], __S[43]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[44] + buffer16[(3 * 44 + 5) % 16], __S[44]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[45] + buffer16[(3 * 45 + 5) % 16], __S[45]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[46] + buffer16[(3 * 46 + 5) % 16], __S[46]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (B ^ C ^ D) + __K[47] + buffer16[(3 * 47 + 5) % 16], __S[47]), B, C);
+
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[48] + buffer16[7 * 48 % 16], __S[48]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[49] + buffer16[7 * 49 % 16], __S[49]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[50] + buffer16[7 * 50 % 16], __S[50]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[51] + buffer16[7 * 51 % 16], __S[51]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[52] + buffer16[7 * 52 % 16], __S[52]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[53] + buffer16[7 * 53 % 16], __S[53]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[54] + buffer16[7 * 54 % 16], __S[54]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[55] + buffer16[7 * 55 % 16], __S[55]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[56] + buffer16[7 * 56 % 16], __S[56]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[57] + buffer16[7 * 57 % 16], __S[57]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[58] + buffer16[7 * 58 % 16], __S[58]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[59] + buffer16[7 * 59 % 16], __S[59]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[60] + buffer16[7 * 60 % 16], __S[60]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[61] + buffer16[7 * 61 % 16], __S[61]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[62] + buffer16[7 * 62 % 16], __S[62]), B, C);
+        (A, B, C, D) = (D, B + LeftRotate(A + (C ^ (B | ~D)) + __K[63] + buffer16[7 * 63 % 16], __S[63]), B, C);
 
         a0 += A;
         b0 += B;
