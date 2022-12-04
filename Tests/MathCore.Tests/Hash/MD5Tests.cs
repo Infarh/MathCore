@@ -57,6 +57,7 @@ public class MD5Tests
     [DataRow(70, DisplayName = "Data byte length = 70")]
     public void Hash(int DataLength)
     {
+        Debug.WriteLine(DateTime.Now);
         //var rnd_seed = Random.Shared.Next();
         var rnd_seed = 5;
         Debug.WriteLine("Random seed " + rnd_seed);
