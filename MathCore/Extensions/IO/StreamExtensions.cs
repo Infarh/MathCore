@@ -30,14 +30,33 @@ public static class StreamExtensions
         return readed;
     }
 
-    public static void CopyTo(this Stream input, Stream output, int BufferLength)
+    public static async Task<int> FillBufferAsync(this Stream stream, byte[] buffer, CancellationToken Cancel = default)
+    {
+        var length = buffer.Length;
+        var readed = await stream.ReadAsync(buffer, 0, length, Cancel).ConfigureAwait(false);
+        if (readed == 0)
+            return 0;
+
+        while (readed < length)
+        {
+            var last_readed = await stream.ReadAsync(buffer, readed, length - readed, Cancel);
+            if (last_readed == 0)
+                return readed;
+
+            readed += last_readed;
+        }
+
+        return readed;
+    }
+
+    public static void CopyToStream(this Stream input, Stream output, int BufferLength)
     {
         if (BufferLength < 1) throw new ArgumentOutOfRangeException(nameof(BufferLength), "Длина буфера копирования менее одного байта");
 
-        input.CopyTo(output, new byte[BufferLength]);
+        input.CopyToStream(output, new byte[BufferLength]);
     }
 
-    public static void CopyTo(this Stream input, Stream output, byte[] Buffer)
+    public static void CopyToStream(this Stream input, Stream output, byte[] Buffer)
     {
         if (input is null) throw new ArgumentNullException(nameof(input));
         if (!input.CanRead) throw new ArgumentException("Входной поток недоступен для чтения", nameof(input));
@@ -59,7 +78,7 @@ public static class StreamExtensions
         while (readed > 0);
     }
 
-    public static Task CopyToAsync(this Stream input, Stream output, int BufferLength = 0x1000, CancellationToken Cancel = default) =>
+    public static Task CopyToStreamAsync(this Stream input, Stream output, int BufferLength = 0x1000, CancellationToken Cancel = default) =>
         BufferLength < 1
             ? throw new ArgumentOutOfRangeException(nameof(BufferLength), "Длина буфера копирования менее одного байта")
             : input.CopyToAsync(output, new byte[BufferLength], Cancel);

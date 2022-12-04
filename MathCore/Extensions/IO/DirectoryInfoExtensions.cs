@@ -42,7 +42,7 @@ public static class DirectoryInfoExtensions
                 var       entry       = zip.CreateEntry(path, CompressionLevel.Optimal);
                 using var zip_stream  = entry.Open();
                 using var file_stream = file.Open(FileMode.Open);
-                file_stream.CopyTo(zip_stream, buffer);
+                file_stream.CopyToStream(zip_stream, buffer);
             }
 
         ArchiveFile.Refresh();
