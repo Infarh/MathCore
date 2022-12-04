@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using MathCore;
+using MathCore.Hash;
+// ReSharper disable UnusedMethodReturnValue.Global
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -122,10 +124,20 @@ public static class FileInfoExtensions
     public static byte[] ComputeMD5(this FileInfo file)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
-        using var stream = file.ThrowIfNotFound().OpenRead();
-        using var md5    = new Security.Cryptography.MD5CryptoServiceProvider();
-        return md5.ComputeHash(stream);
+        using var stream   = file.ThrowIfNotFound().OpenRead();
+        var       md5_hash = MD5.Compute(stream);
+        return md5_hash;
     }
+
+    public static async Task<byte[]> ComputeMD5Async(this FileInfo file, CancellationToken Cancel = default)
+    {
+        if (file is null) throw new ArgumentNullException(nameof(file));
+
+        using var stream   = file.ThrowIfNotFound().OpenRead();
+        var       md5_hash = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+        return md5_hash;
+    }
+
     public static IEnumerable<byte> ReadBytes(this FileInfo file)
     {
         using var stream = file.ThrowIfNotFound().OpenRead();
