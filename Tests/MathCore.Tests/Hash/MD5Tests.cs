@@ -53,7 +53,7 @@ public class MD5Tests
     [DataRow(55, DisplayName = "Data byte length = 55")]
     [DataRow(56, DisplayName = "Data byte length = 56")]
     [DataRow(63, DisplayName = "Data byte length = 63")]
-    [DataRow(70, DisplayName = "Data byte length = 70")]
+    [DataRow(160, DisplayName = "Data byte length = 160")]
     public void Hash(int DataLength)
     {
         Debug.WriteLine(DateTime.Now);
@@ -82,24 +82,11 @@ public class MD5Tests
 
 
     [TestMethod]
-    //[DataRow(10)]
-    //[DataRow(30)]
-    [DataRow(55)]
-    [DataRow(56)]
-    //[DataRow(57)]
-    //[DataRow(58)]
-    //[DataRow(59)]
-    //[DataRow(60)]
-    //[DataRow(61)]
-    //[DataRow(62)]
-    [DataRow(63)]
-    [DataRow(64)]
-    //[DataRow(65)]
-    //[DataRow(66)]
-    //[DataRow(67)]
-    //[DataRow(68)]
-    //[DataRow(69)]
-    //[DataRow(70)]
+    [DataRow(11, DisplayName = "Data stream length = 11")]
+    [DataRow(55, DisplayName = "Data stream length = 55")]
+    [DataRow(56, DisplayName = "Data stream length = 56")]
+    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(160, DisplayName = "Data stream length = 160")]
     public void Hash_Stream(int DataLength)
     {
         //var rnd_seed = Random.Shared.Next();
