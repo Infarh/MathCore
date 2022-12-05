@@ -75,8 +75,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <summary>Создать пространственный угол по заданным координатам вектора направления</summary>
     /// <returns>Угол вектора направления</returns>
     [DST]
-    public static SpaceAngle Direction(double x, double y, double z = 0)
-        => new(Atan2(Sqrt(x * x + y * y), z), Atan2(y, x));
+    public static SpaceAngle Direction(double x, double y, double z = 0) => new(Atan2(Sqrt(x * x + y * y), z), Atan2(y, x));
 
     // ReSharper disable InconsistentNaming
 
@@ -111,10 +110,13 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Угол места</summary>
-    public double Theta => _Theta;
+    public double Theta { get => _Theta; init => _Theta = value; }
 
     /// <summary>Азимутальный угол в плоскости XOY</summary>
-    public double Phi => _Phi;
+    public double Phi { get => _Phi; init => _Phi = value; }
+
+    /// <summary>Тип угла</summary>
+    public AngleType AngleType { get => _AngleType; init => _AngleType = value; }
 
     /// <summary>Угол места в радианах</summary>
     public double ThetaRad => _AngleType == AngleType.Rad ? _Theta : _Theta * Geometry.ToRad;
@@ -152,10 +154,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     public Complex ComplexCosPhi => _AngleType == AngleType.Rad 
         ? Complex.Exp(_Phi) 
         : Complex.Exp(_Phi * __ToRad);
-
-    /// <summary>Тип угла</summary>
-    public AngleType AngleType => _AngleType;
-
+    
     /// <summary>Представление угла в градусах</summary>
     /// <exception cref="NotSupportedException" accessor="get">Неизвестный тип угла</exception>
     public SpaceAngle InDeg => _AngleType switch
