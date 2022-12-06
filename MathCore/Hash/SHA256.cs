@@ -83,36 +83,39 @@ public class Sha256Digest
             0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
         };
 
-    public Digest hash(byte[] message)
-    { //operates only with byte-multiple messages 
+    public byte[] Compute(byte[] message)
+    { 
         buf = new byte[message.LongLength];
         Array.Copy(message, buf, message.LongLength);
+
         messageLength = (ulong)message.LongLength;
-        completeMessageLength();
+
+        CompleteMessageLength();
         blocksQty = (ulong)m.LongLength / 64;
+
         for (ulong i = 0; i < blocksQty; i++)
         {
             expandBlock(i);
             processBlock();
         }
-        return digest;
+        return digest.ToByteArray();
     }
 
-    private void completeMessageLength()
+    private void CompleteMessageLength()
     {
-        int zeroBitsToAddQty = 512 - (int)(((ulong)buf.LongLength * 8 + 1 + 64) % 512);
-        m = new byte[((ulong)buf.LongLength * 8 + 1 + 64 + (ulong)zeroBitsToAddQty) / 8];
+        var zero_bits_to_add_qty = 512 - (int)(((ulong)buf.LongLength * 8 + 1 + 64) % 512);
+        m = new byte[((ulong)buf.LongLength * 8 + 1 + 64 + (ulong)zero_bits_to_add_qty) / 8];
         Array.Copy(buf, m, buf.LongLength);
 
         m[buf.LongLength] = 128; //set 1-st bit to "1", 7 remaining to "0" (may not work with bit-multiple message!!)
 
-        for (ulong i = (messageLength + 1); i < (ulong)m.LongLength; i++)
+        for (var i = messageLength + 1; i < (ulong)m.LongLength; i++)
         {
             m[i] = 0;
         }
 
-        byte[] messageBitLength_little_endian = BitConverter.GetBytes(messageLength * 8);
-        byte[] messageBitLength_big_endian = new byte[messageBitLength_little_endian.Length];
+        var messageBitLength_little_endian = BitConverter.GetBytes(messageLength * 8);
+        var messageBitLength_big_endian = new byte[messageBitLength_little_endian.Length];
         for (int i = 0, j = messageBitLength_little_endian.Length - 1; i < messageBitLength_little_endian.Length; i++, j--)
         {
             messageBitLength_big_endian[i] = messageBitLength_little_endian[j];
@@ -122,12 +125,12 @@ public class Sha256Digest
 
     private void expandBlock(ulong blockNumber)
     {
-        for (int i = 0; i < 16; i++)
+        for (var i = 0; i < 16; i++)
         {
             W[i] = Bytes_To_UInt32(m, blockNumber * 64 + (ulong)i * 4);
         }
 
-        for (int i = 16; i <= 63; i++)
+        for (var i = 16; i <= 63; i++)
         {
             W[i] = W[i - 16] + S0(W[i - 15]) + W[i - 7] + S1(W[i - 2]);
         }
@@ -135,7 +138,7 @@ public class Sha256Digest
 
     internal static uint Bytes_To_UInt32(byte[] bs, ulong off)
     {
-        uint n = (uint)bs[off] << 24;
+        var n = (uint)bs[off] << 24;
         n |= (uint)bs[++off] << 16;
         n |= (uint)bs[++off] << 8;
         n |= (uint)bs[++off];
@@ -144,27 +147,27 @@ public class Sha256Digest
 
     private static uint rotr(uint x, int n)
     {
-        return ((x >> n) | (x << 32 - n));
+        return x >> n | x << 32 - n;
     }
 
     private static uint S0(uint x)
     {
-        return rotr(x, 7) ^ rotr(x, 18) ^ (x >> 3);
+        return rotr(x, 7) ^ rotr(x, 18) ^ x >> 3;
     }
 
     private static uint S1(uint x)
     {
-        return rotr(x, 17) ^ rotr(x, 19) ^ (x >> 10);
+        return rotr(x, 17) ^ rotr(x, 19) ^ x >> 10;
     }
 
     private static uint Ch(uint x, uint y, uint z)
     {
-        return (x & y) ^ ((~x) & z);
+        return x & y ^ ~x & z;
     }
 
     private static uint Maj(uint x, uint y, uint z)
     {
-        return (x & y) ^ (x & z) ^ (y & z);
+        return x & y ^ x & z ^ y & z;
     }
 
     private static uint E0(uint x)
@@ -179,18 +182,18 @@ public class Sha256Digest
 
     private void processBlock()
     {
-        uint a = digest.H0;
-        uint b = digest.H1;
-        uint c = digest.H2;
-        uint d = digest.H3;
-        uint e = digest.H4;
-        uint f = digest.H5;
-        uint g = digest.H6;
-        uint h = digest.H7;
+        var a = digest.H0;
+        var b = digest.H1;
+        var c = digest.H2;
+        var d = digest.H3;
+        var e = digest.H4;
+        var f = digest.H5;
+        var g = digest.H6;
+        var h = digest.H7;
 
         uint T1 = 0, T2 = 0;
 
-        for (int i = 0; i < 64; i++)
+        for (var i = 0; i < 64; i++)
         {
             T1 = h + E1(e) + Ch(e, f, g) + K[i] + W[i];
             T2 = E0(a) + Maj(a, b, c);
