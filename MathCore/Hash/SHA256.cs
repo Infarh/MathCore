@@ -2,7 +2,7 @@
 
 namespace MathCore.Hash;
 
-public class Sha256Digest
+public class Sha256Digest : HashAlgorithm
 {
     private static readonly uint[] K = 
     {
@@ -24,7 +24,7 @@ public class Sha256Digest
         0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
     };
 
-    public static byte[] Compute(byte[] message)
+    public static byte[] Compute(byte[] data)
     {
         uint[] h =
         {
@@ -32,55 +32,17 @@ public class Sha256Digest
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         };
 
-        var buffer = new byte[message.LongLength];
-        Array.Copy(message, buffer, message.LongLength);
+        var buffer = new byte[data.LongLength];
+        Array.Copy(data, buffer, data.LongLength);
 
-        CompleteMessageLength(buffer, out var full_message);
-
-        var w = new uint[64];
-
-        var blocks_count = (ulong)full_message.LongLength / 64;
-        for (ulong i = 0; i < blocks_count; i++)
-        {
-            ExpandBlock(w, full_message, i);
-            ProcessBlock(w,
-                ref h[0], ref h[1], ref h[2], ref h[3], 
-                ref h[4], ref h[5], ref h[6], ref h[7]);
-        }
-
-        static void SetBytes(byte[] data, uint H, int index)
-        {
-            static ref byte Index(byte[] d, int i, int j) => ref d[4 * i + j];
-
-            Index(data, index, 0) = (byte)(H >> 24);
-            Index(data, index, 1) = (byte)(H >> 16);
-            Index(data, index, 2) = (byte)(H >> 8);
-            Index(data, index, 3) = (byte)H;
-        }
-
-        var result = new byte[32];
-        SetBytes(result, h[0], 0);
-        SetBytes(result, h[1], 1);
-        SetBytes(result, h[2], 2);
-        SetBytes(result, h[3], 3);
-        SetBytes(result, h[4], 4);
-        SetBytes(result, h[5], 5);
-        SetBytes(result, h[6], 6);
-        SetBytes(result, h[7], 7);
-
-        return result;
-    }
-
-    private static void CompleteMessageLength(byte[] buffer, out byte[] Message)
-    {
         var length = buffer.LongLength;
 
         var zeros_bits_count = 512 - (int)((length * 8 + 1 + 64) % 512);
 
-        Message = new byte[length + (1 + zeros_bits_count) / 8 + 8];
-        Array.Copy(buffer, Message, buffer.LongLength);
+        var message = new byte[length + (1 + zeros_bits_count) / 8 + 8];
+        Array.Copy(buffer, message, buffer.LongLength);
 
-        Message[buffer.LongLength] = 0x80;
+        message[buffer.LongLength] = 0x80;
 
         //for (var i = length + 1; i < Message.LongLength; i++) 
         //    Message[i] = 0;
@@ -91,36 +53,48 @@ public class Sha256Digest
 
         //    message_bit_length_big_endian[i] = length_bytes[j];
 
-        Array.Copy(length_bytes, 0, Message, Message.LongLength - 8, 8);
-    }
+        Array.Copy(length_bytes, 0, message, message.LongLength - 8, 8);
 
-    private static void ExpandBlock(uint[] w, byte[] message, ulong BlockNumber)
-    {
-        static uint Bytes2UInt32(byte[] Data, ulong Offset) =>
-            ((uint)Data[Offset] << 24) | ((uint)Data[Offset + 1] << 16) | ((uint)Data[Offset + 2] << 8) | (Data[Offset + 3]);
+        var w = new uint[64];
 
-        for (var i = 0; i < 16; i++) 
-            w[i] = Bytes2UInt32(message, BlockNumber * 64 + (ulong)i * 4);
+        var blocks_count = (ulong)message.LongLength / 64;
+        for (ulong i = 0; i < blocks_count; i++)
+        {
+            static uint Bytes2UInt32(byte[] Data, ulong Offset) =>
+                ((uint)Data[Offset] << 24) | ((uint)Data[Offset + 1] << 16) | ((uint)Data[Offset + 2] << 8) | (Data[Offset + 3]);
 
-        for (var i = 16; i <= 63; i++) 
-            w[i] = w[i - 16] + S0(w[i - 15]) + w[i - 7] + S1(w[i - 2]);
+            for (var j = 0; j < 16; j++)
+                w[j] = Bytes2UInt32(message, i * 64 + (ulong)j * 4);
 
-        static uint S0(uint x) => RightRotate(x, 7) ^ RightRotate(x, 18) ^ x >> 3;
-        static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
+            ProcessBlock(w,
+                ref h[0], ref h[1], ref h[2], ref h[3], 
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+
+        var result = new byte[32];
+
+        for (var i = 0; i < 8; i++)
+        {
+            result[4 * i + 0] = (byte)(h[i] >> 24);
+            result[4 * i + 1] = (byte)(h[i] >> 16);
+            result[4 * i + 2] = (byte)(h[i] >> 08);
+            result[4 * i + 3] = (byte)(h[i] >> 00);
+        }
+
+        return result;
     }
 
     private static void ProcessBlock(uint[] w,
         ref uint h0, ref uint h1, ref uint h2, ref uint h3,
         ref uint h4, ref uint h5, ref uint h6, ref uint h7)
     {
-        var a = h0;
-        var b = h1;
-        var c = h2;
-        var d = h3;
-        var e = h4;
-        var f = h5;
-        var g = h6;
-        var h = h7;
+        static uint S0(uint x) => RightRotate(x, 7) ^ RightRotate(x, 18) ^ x >> 3;
+        static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
+
+        for (var j = 16; j <= 63; j++)
+            w[j] = w[j - 16] + S0(w[j - 15]) + w[j - 7] + S1(w[j - 2]);
+
+        var (a, b, c, d, e, f, g, h) = (h0, h1, h2, h3, h4, h5, h6, h7);
 
         for (var i = 0; i < 64; i++)
         {
@@ -136,15 +110,6 @@ public class Sha256Digest
             (h, g, f, e, d, c, b, a) = (g, f, e, d + t1, c, b, a, t1 + t2);
         }
 
-        h0 += a;
-        h1 += b;
-        h2 += c;
-        h3 += d;
-        h4 += e;
-        h5 += f;
-        h6 += g;
-        h7 += h;
+        (h0, h1, h2, h3, h4, h5, h6, h7) = (h0 + a, h1 + b, h2 + c, h3 + d, h4 + e, h5 + f, h6 + g, h7 + h);
     }
-
-    private static uint RightRotate(uint x, int n) => x >> n | x << 32 - n;
 }
