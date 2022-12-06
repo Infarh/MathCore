@@ -60,11 +60,11 @@ public class Sha256Digest : HashAlgorithm
         var blocks_count = message.LongLength / 64;
         for (var i = 0; i < blocks_count; i++)
         {
-            static uint Bytes2UInt32(byte[] Data, int Offset) =>
-                ((uint)Data[Offset] << 24) | ((uint)Data[Offset + 1] << 16) | ((uint)Data[Offset + 2] << 8) | (Data[Offset + 3]);
-
             for (var j = 0; j < 16; j++)
-                w[j] = Bytes2UInt32(message, i * 64 + j * 4);
+            {
+                var offset = i * 64 + j * 4;
+                w[j] = ((uint)message[offset] << 24) | ((uint)message[offset + 1] << 16) | ((uint)message[offset + 2] << 8) | (message[offset + 3]);
+            }
 
             ProcessBlock(w,
                 ref h[0], ref h[1], ref h[2], ref h[3], 

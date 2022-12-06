@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 using MathCore.Hash;
 
@@ -8,17 +9,45 @@ namespace MathCore.Tests.Hash;
 public class SHA256Tests
 {
     [TestMethod]
-    public void Hash_123()
+    public void Hash_Hello_World()
     {
-        const string str      = "123";
-        const string expected = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3";
+        Debug.WriteLine(DateTime.Now);
 
-        var input_bytes = Encoding.UTF8.GetBytes(str);
+        const string str = "Hello World";
+
+        var input_bytes       = Encoding.UTF8.GetBytes(str);
+        var expected_hash     = System.Security.Cryptography.SHA256.HashData(input_bytes);
+        var expected_hash_str = expected_hash.ToStringHex(false);
 
         var result = Sha256Digest.Compute(input_bytes);
 
         var hash_str = result.ToStringHex(false);
 
-        hash_str.AssertEquals(expected);
+        hash_str.AssertEquals(expected_hash_str);
+    }
+
+    [TestMethod]
+    public void Hash_LongData()
+    {
+        Debug.WriteLine(DateTime.Now);
+
+        //var seed = Random.Shared.Next();
+        var seed = 5;
+        var rnd  = new Random(seed);
+
+        var data_length = rnd.Next(1024 * 1024 / 2, 5 * 1024 * 1024 + 1);
+        Debug.WriteLine("Data length = {0}", data_length);
+
+        var data = new byte[data_length];
+        rnd.NextBytes(data);
+
+        var expected_hash = System.Security.Cryptography.SHA256.HashData(data);
+
+        var actual_hash = Sha256Digest.Compute(data);
+
+        var expected_hash_str = expected_hash.ToStringHex(false);
+        var actual_hash_str   = actual_hash.ToStringHex(false);
+
+        actual_hash_str.AssertEquals(expected_hash_str);
     }
 }
