@@ -34,12 +34,12 @@ public struct Digest
 
 public class Sha256Digest
 {
-    private byte[] _Buffer;
-    private byte[] _Message;
+    //private byte[] _Buffer;
+    //private byte[] _Message;
     private Digest _Digest;
-    private ulong _MessageLength;
+    //private ulong _MessageLength;
     private ulong _BlocksQty;
-    private readonly uint[] _W = new uint[64];
+    //private readonly uint[] _W = new uint[64];
 
     public Sha256Digest()
     {
@@ -75,60 +75,62 @@ public class Sha256Digest
 
     public byte[] Compute(byte[] message)
     { 
-        _Buffer = new byte[message.LongLength];
-        Array.Copy(message, _Buffer, message.LongLength);
+        var buffer = new byte[message.LongLength];
+        Array.Copy(message, buffer, message.LongLength);
 
-        _MessageLength = (ulong)message.LongLength;
 
-        CompleteMessageLength();
-        _BlocksQty = (ulong)_Message.LongLength / 64;
+        CompleteMessageLength(buffer, out var full_message);
+        _BlocksQty = (ulong)full_message.LongLength / 64;
+
+        var w = new uint[64];
 
         for (ulong i = 0; i < _BlocksQty; i++)
         {
-            ExpandBlock(i);
-            ProcessBlock();
+            ExpandBlock(w, full_message, i);
+            ProcessBlock(w);
         }
         return _Digest.ToByteArray();
     }
 
-    private void CompleteMessageLength()
+    private static void CompleteMessageLength(byte[] buffer, out byte[] Message)
     {
-        var zero_bits_to_add_qty = 512 - (int)(((ulong)_Buffer.LongLength * 8 + 1 + 64) % 512);
-        _Message = new byte[((ulong)_Buffer.LongLength * 8 + 1 + 64 + (ulong)zero_bits_to_add_qty) / 8];
-        Array.Copy(_Buffer, _Message, _Buffer.LongLength);
+        var message_length = buffer.LongLength;
 
-        _Message[_Buffer.LongLength] = 0x80;
+        var zero_bits_to_add_qty = 512 - (int)((message_length * 8 + 1 + 64) % 512);
 
-        for (var i = _MessageLength + 1; i < (ulong)_Message.LongLength; i++)
-        {
-            _Message[i] = 0;
-        }
+        Message = new byte[((ulong)buffer.LongLength * 8 + 1 + 64 + (ulong)zero_bits_to_add_qty) / 8];
+        Array.Copy(buffer, Message, buffer.LongLength);
 
-        var message_bit_length_little_endian = BitConverter.GetBytes(_MessageLength * 8);
+        Message[buffer.LongLength] = 0x80;
+
+        for (var i = message_length + 1; i < Message.LongLength; i++) 
+            Message[i] = 0;
+
+        var message_bit_length_little_endian = BitConverter.GetBytes(message_length * 8);
         var message_bit_length_big_endian    = new byte[message_bit_length_little_endian.Length];
 
         for (int i = 0, j = message_bit_length_little_endian.Length - 1; i < message_bit_length_little_endian.Length; i++, j--)
             message_bit_length_big_endian[i] = message_bit_length_little_endian[j];
 
-        Array.Copy(message_bit_length_big_endian, 0, _Message, _Message.LongLength - 8, 8);
+        Array.Copy(message_bit_length_big_endian, 0, Message, Message.LongLength - 8, 8);
     }
 
-    private void ExpandBlock(ulong blockNumber)
+    private static void ExpandBlock(uint[] w, byte[] message, ulong BlockNumber)
     {
         static uint Bytes2UInt32(byte[] Data, ulong Offset) =>
             ((uint)Data[Offset] << 24) | ((uint)Data[Offset + 1] << 16) | ((uint)Data[Offset + 2] << 8) | (Data[Offset + 3]);
 
         for (var i = 0; i < 16; i++) 
-            _W[i] = Bytes2UInt32(_Message, blockNumber * 64 + (ulong)i * 4);
+            w[i] = Bytes2UInt32(message, BlockNumber * 64 + (ulong)i * 4);
 
         for (var i = 16; i <= 63; i++) 
-            _W[i] = _W[i - 16] + S0(_W[i - 15]) + _W[i - 7] + S1(_W[i - 2]);
+            w[i] = w[i - 16] + S0(w[i - 15]) + w[i - 7] + S1(w[i - 2]);
 
         static uint S0(uint x) => RightRotate(x, 7) ^ RightRotate(x, 18) ^ x >> 3;
         static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
     }
 
-    private void ProcessBlock()
+    private void ProcessBlock(uint[] _W)
     {
         var a = _Digest.H0;
         var b = _Digest.H1;
