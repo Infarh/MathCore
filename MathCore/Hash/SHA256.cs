@@ -2,7 +2,7 @@
 
 namespace MathCore.Hash;
 
-public class Sha256Digest : HashAlgorithm
+public class SHA256 : HashAlgorithm
 {
     private static readonly uint[] K = 
     {
@@ -50,21 +50,19 @@ public class Sha256Digest : HashAlgorithm
         var length_bytes = BitConverter.GetBytes(length * 8);
 
         Array.Reverse(length_bytes);
-
-        //    message_bit_length_big_endian[i] = length_bytes[j];
+        //message_bit_length_big_endian[i] = length_bytes[j];
 
         Array.Copy(length_bytes, 0, message, message.LongLength - 8, 8);
 
         var w = new uint[64];
-
-        var blocks_count = message.LongLength / 64;
-        for (var i = 0; i < blocks_count; i++)
+        for (var i = 0; i < message.LongLength; i += 64)
         {
-            for (var j = 0; j < 16; j++)
-            {
-                var offset = i * 64 + j * 4;
-                w[j] = ((uint)message[offset] << 24) | ((uint)message[offset + 1] << 16) | ((uint)message[offset + 2] << 8) | (message[offset + 3]);
-            }
+            for (var j = 0; j < 16 * 4; j += 4) 
+                w[j / 4] = 
+                    ((uint)message[i + j] << 24) | 
+                    ((uint)message[i + j + 1] << 16) | 
+                    ((uint)message[i + j + 2] << 8) | 
+                    (message[i + j + 3]);
 
             ProcessBlock(w,
                 ref h[0], ref h[1], ref h[2], ref h[3], 
