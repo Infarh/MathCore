@@ -5,6 +5,31 @@ namespace MathCore.Hash;
 public struct Digest
 {
     public uint H0, H1, H2, H3, H4, H5, H6, H7;
+
+    private static void SetBytes(byte[] data, uint H, int index)
+    {
+        static ref byte Index(byte[] d, int i, int j) => ref d[4 * i + j];
+
+        Index(data, index, 3) = (byte)H;
+        Index(data, index, 2) = (byte)(H >> 8);
+        Index(data, index, 1) = (byte)(H >> 16);
+        Index(data, index, 0) = (byte)(H >> 24);
+    } 
+
+    public byte[] ToByteArray()
+    {
+        var result = new byte[32];
+        SetBytes(result, H0, 0);
+        SetBytes(result, H1, 1);
+        SetBytes(result, H2, 2);
+        SetBytes(result, H3, 3);
+        SetBytes(result, H4, 4);
+        SetBytes(result, H5, 5);
+        SetBytes(result, H6, 6);
+        SetBytes(result, H7, 7);
+
+        return result;
+    }
 }
 
 public class Sha256Digest
