@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,8 +15,12 @@ namespace MathCore.Hash;
 /// https://tools.ietf.org/html/rfc1321<br/>
 /// https://ru.wikipedia.org/wiki/MD5
 /// </remarks>
-public class MD5
+public class MD5 : HashAlgorithm
 {
+    private MD5() { }
+
+    public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
+
     public static byte[] Compute(byte[] data)
     {
         uint[] result =
@@ -26,7 +31,7 @@ public class MD5
             0x10325476U,
         };
 
-        var zero_length = (64 - data.Length % 64) - 1 - 8;
+        var zero_length = 64 - data.Length % 64 - 1 - 8;
 
         if (zero_length < 0) zero_length += 64;
 
@@ -35,19 +40,19 @@ public class MD5
 
         var buffer64_length = data.Length + length_x80 + zero_length + length_end;
 
-        var bufer64 = new byte[buffer64_length];
+        var buffer64 = new byte[buffer64_length];
 
-        Array.Copy(data, bufer64, data.Length);
-        bufer64[data.Length] = 0x80;
+        Array.Copy(data, buffer64, data.Length);
+        buffer64[data.Length] = 0x80;
 
         var length_bytes = BitConverter.GetBytes(data.Length << 3);
 
-        Array.Copy(length_bytes, 0, bufer64, bufer64.Length - 8, 4);
+        Array.Copy(length_bytes, 0, buffer64, buffer64_length - 8, 4);
 
         var buffer16 = new uint[16];
-        for (var i = 0; i < bufer64.Length / 64; i++)
+        for (var i = 0; i < buffer64_length / 64; i++)
         {
-            Buffer.BlockCopy(bufer64, i * 64, buffer16, 0, 64);
+            Buffer.BlockCopy(buffer64, i * 64, buffer16, 0, 64);
             Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
         }
 
@@ -202,8 +207,6 @@ public class MD5
     private static void Compute(uint[] buffer16, ref uint a0, ref uint b0, ref uint c0, ref uint d0)
     {
         var (A, B, C, D) = (a0, b0, c0, d0);
-
-        static uint LeftRotate(uint x, int c) => (x << c) | (x >> (32 - c));
 
         (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + 0xd76aa478 + buffer16[00], 07), B, C);
         (A, B, C, D) = (D, B + LeftRotate(A + ((B & C) | (~B & D)) + 0xe8c7b756 + buffer16[01], 12), B, C);
