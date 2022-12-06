@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Reflection;
 
-using MathCore.CRC;
+using MathCore.Hash.CRC;
 
-namespace MathCore.Tests.CRC;
+namespace MathCore.Tests.Hash.CRC;
 
 [TestClass]
 public class CRC8Tests
