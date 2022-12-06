@@ -17,7 +17,7 @@ public class SHA256Tests
 
         var sha256 = new Sha256Digest();
 
-        var result = sha256.Compute(input_bytes);
+        var result = Sha256Digest.Compute(input_bytes);
 
         var hash_str = result.ToStringHex(false);
 
