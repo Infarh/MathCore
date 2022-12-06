@@ -94,25 +94,25 @@ public class Sha256Digest
 
     private static void CompleteMessageLength(byte[] buffer, out byte[] Message)
     {
-        var message_length = buffer.LongLength;
+        var length = buffer.LongLength;
 
-        var zero_bits_to_add_qty = 512 - (int)((message_length * 8 + 1 + 64) % 512);
+        var zeros_bits_count = 512 - (int)((length * 8 + 1 + 64) % 512);
 
-        Message = new byte[((ulong)buffer.LongLength * 8 + 1 + 64 + (ulong)zero_bits_to_add_qty) / 8];
+        Message = new byte[length + (1 + zeros_bits_count) / 8 + 8];
         Array.Copy(buffer, Message, buffer.LongLength);
 
         Message[buffer.LongLength] = 0x80;
 
-        for (var i = message_length + 1; i < Message.LongLength; i++) 
-            Message[i] = 0;
+        //for (var i = length + 1; i < Message.LongLength; i++) 
+        //    Message[i] = 0;
 
-        var message_bit_length_little_endian = BitConverter.GetBytes(message_length * 8);
-        var message_bit_length_big_endian    = new byte[message_bit_length_little_endian.Length];
+        var length_bytes = BitConverter.GetBytes(length * 8);
 
-        for (int i = 0, j = message_bit_length_little_endian.Length - 1; i < message_bit_length_little_endian.Length; i++, j--)
-            message_bit_length_big_endian[i] = message_bit_length_little_endian[j];
+        Array.Reverse(length_bytes);
 
-        Array.Copy(message_bit_length_big_endian, 0, Message, Message.LongLength - 8, 8);
+        //    message_bit_length_big_endian[i] = length_bytes[j];
+
+        Array.Copy(length_bytes, 0, Message, Message.LongLength - 8, 8);
     }
 
     private static void ExpandBlock(uint[] w, byte[] message, ulong BlockNumber)
