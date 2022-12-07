@@ -1,8 +1,11 @@
 ﻿#nullable enable
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -19,6 +22,40 @@ namespace System;
 /// <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
 public static class StringExtensions
 {
+    public static bool TryConvertTo<T>(this string? str, out T? value)
+    {
+        if(str is null || typeof(T).GetTypeConverter() is not { } converter || !converter.CanConvertFrom(typeof(string)))
+        {
+            value = default;
+            return false;
+        }
+
+        if (typeof(T) == typeof(bool?) || typeof(T) == typeof(bool))
+            str = str switch
+            {
+                "yes" or "Yes" or "YES" or "да" or "Да" or "ДА" => "true",
+                "no" or "No" or "NO" or "нет" or "Нет" or "НЕТ" => "false",
+                _ => str
+            };
+
+        try
+        {
+            value = (T?)converter.ConvertFrom(str);
+            return true;
+        }
+        catch (ArgumentException e)
+        {
+            Debug.WriteLine(e);
+        }
+        catch (FormatException e)
+        {
+            Debug.WriteLine(e);
+        }
+
+        value = default;
+        return false;
+    }
+
     /// <summary>Перечисление строк в строке</summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="SkipEmpty">Пропускать пустые строки</param>
