@@ -23,6 +23,9 @@ public class SHA256Tests
 
         var hash_str = result.ToStringHex(false);
 
+        hash_str.ToDebug("Actual  :");
+        expected_hash_str.ToDebug("Expected:");
+
         hash_str.AssertEquals(expected_hash_str);
     }
 
@@ -34,6 +37,8 @@ public class SHA256Tests
         //var seed = Random.Shared.Next();
         var seed = 5;
         var rnd  = new Random(seed);
+
+        Debug.WriteLine("Seed:", seed);
 
         var data_length = rnd.Next(1024 * 1024 / 2, 5 * 1024 * 1024 + 1);
         Debug.WriteLine("Data length = {0}", data_length);
@@ -47,6 +52,9 @@ public class SHA256Tests
 
         var expected_hash_str = expected_hash.ToStringHex(false);
         var actual_hash_str   = actual_hash.ToStringHex(false);
+
+        actual_hash_str.ToDebug("Actual  :");
+        expected_hash_str.ToDebug("Expected:");
 
         actual_hash_str.AssertEquals(expected_hash_str);
     }

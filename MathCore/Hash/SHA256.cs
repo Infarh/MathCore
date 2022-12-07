@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace MathCore.Hash;
 
 public class SHA256 : HashAlgorithm
 {
-    private static readonly uint[] K = 
+    private static readonly uint[] K =
     {
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
         0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -26,49 +27,58 @@ public class SHA256 : HashAlgorithm
 
     public static byte[] Compute(byte[] data)
     {
+        Debug.WriteLine("123");
+
         uint[] h =
         {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         };
 
-        //var buffer = new byte[data.LongLength];
-        //Array.Copy(data, buffer, data.LongLength);
-
         var length = data.LongLength;
 
-        var zeros_bits_count = 512 - (int)((length * 8 + 1 + 64) % 512);
+        //var buffer64_length = 512 - (int)((length * 8 + 1 + 64) % 512);
 
-        var message = new byte[length + (1 + zeros_bits_count) / 8 + 8];
-        Array.Copy(data, message, data.LongLength);
+        const int length_x80 = 1;
+        const int length_end = 8;
 
-        message[data.LongLength] = 0x80;
+        var zero_length = 64 - data.Length % 64 - length_x80 - length_end;
 
-        //for (var i = length + 1; i < Message.LongLength; i++) 
-        //    Message[i] = 0;
+        if (zero_length < 0) zero_length += 64;
 
-        var length_bytes = BitConverter.GetBytes(length * 8);
+        var buffer64_length = data.Length + length_x80 + zero_length + length_end;
 
-        Array.Reverse(length_bytes);
-        //message_bit_length_big_endian[i] = length_bytes[j];
+        var buffer64 = new byte[buffer64_length];
+        Array.Copy(data, buffer64, data.LongLength);
 
-        Array.Copy(length_bytes, 0, message, message.LongLength - 8, 8);
+        buffer64[length] = 0x80;
 
-        var w = new uint[64];
-        for (var i = 0; i < message.LongLength; i += 64)
+        buffer64[^8] = (byte)(length >> 53);
+        buffer64[^7] = (byte)(length >> 45);
+        buffer64[^6] = (byte)(length >> 37);
+        buffer64[^5] = (byte)(length >> 29);
+        buffer64[^4] = (byte)(length >> 21);
+        buffer64[^3] = (byte)(length >> 13);
+        buffer64[^2] = (byte)(length >> 5);
+        buffer64[^1] = (byte)(length << 3);
+
+        var words = new uint[64];
+        for (var i = 0; i < buffer64.LongLength; i += 64)
         {
-            for (var j = 0; j < 16 * 4; j += 4) 
-                w[j / 4] = 
-                    ((uint)message[i + j] << 24) | 
-                    ((uint)message[i + j + 1] << 16) | 
-                    ((uint)message[i + j + 2] << 8) | 
-                    (message[i + j + 3]);
+            for (var (j, k) = (0, i); j < 16; j++, k = i + j * 4)
+                words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
 
-            ProcessBlock(w,
-                ref h[0], ref h[1], ref h[2], ref h[3], 
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
                 ref h[4], ref h[5], ref h[6], ref h[7]);
         }
 
+        var result = CreateResult(h);
+        return result;
+    }
+
+    private static byte[] CreateResult(uint[] h)
+    {
         var result = new byte[32];
 
         for (var i = 0; i < 8; i++)
@@ -82,7 +92,7 @@ public class SHA256 : HashAlgorithm
         return result;
     }
 
-    private static void ProcessBlock(uint[] w,
+    private static void Compute(uint[] words,
         ref uint h0, ref uint h1, ref uint h2, ref uint h3,
         ref uint h4, ref uint h5, ref uint h6, ref uint h7)
     {
@@ -90,7 +100,7 @@ public class SHA256 : HashAlgorithm
         static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
 
         for (var j = 16; j <= 63; j++)
-            w[j] = w[j - 16] + S0(w[j - 15]) + w[j - 7] + S1(w[j - 2]);
+            words[j] = words[j - 16] + S0(words[j - 15]) + words[j - 7] + S1(words[j - 2]);
 
         var (a, b, c, d, e, f, g, h) = (h0, h1, h2, h3, h4, h5, h6, h7);
 
@@ -102,7 +112,7 @@ public class SHA256 : HashAlgorithm
             static uint E0(uint x) => RightRotate(x, 2) ^ RightRotate(x, 13) ^ RightRotate(x, 22);
             static uint E1(uint x) => RightRotate(x, 6) ^ RightRotate(x, 11) ^ RightRotate(x, 25);
 
-            var t1 = h + E1(e) + Ch(e, f, g) + K[i] + w[i];
+            var t1 = h + E1(e) + Ch(e, f, g) + K[i] + words[i];
             var t2 = E0(a) + Maj(a, b, c);
 
             (h, g, f, e, d, c, b, a) = (g, f, e, d + t1, c, b, a, t1 + t2);
