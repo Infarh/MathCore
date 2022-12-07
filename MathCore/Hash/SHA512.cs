@@ -1,9 +1,9 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
+
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Hash;
 
@@ -31,90 +31,115 @@ public class SHA512 : HashAlgorithm
         0x431d67c49c100d4c, 0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
     };
 
+    private static void SetLength(byte[] buffer64, ulong length)
+    {
+        buffer64[^8] = (byte)(length >> 53);
+        buffer64[^7] = (byte)(length >> 45);
+        buffer64[^6] = (byte)(length >> 37);
+        buffer64[^5] = (byte)(length >> 29);
+        buffer64[^4] = (byte)(length >> 21);
+        buffer64[^3] = (byte)(length >> 13);
+        buffer64[^2] = (byte)(length >> 5);
+        buffer64[^1] = (byte)(length << 3);
+    }
+
     public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
 
     public static byte[] Compute(byte[] data)
     {
         ulong[] h =
         {
-            0x6a09e667f3bcc908,
-            0xbb67ae8584caa73b,
-            0x3c6ef372fe94f82b,
-            0xa54ff53a5f1d36f1,
-            0x510e527fade682d1,
-            0x9b05688c2b3e6c1f,
-            0x1f83d9abfb41bd6b,
-            0x5be0cd19137e2179,
+            0x6a09e667f3bcc908, 0xbb67ae8584caa73b, 0x3c6ef372fe94f82b, 0xa54ff53a5f1d36f1,
+            0x510e527fade682d1, 0x9b05688c2b3e6c1f, 0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
         };
 
-        var zero_length = 128 - data.Length % 128 - 1 - 8;
+        var length = (ulong)data.LongLength;
+
+        const int length_0x80 = 1;
+        const int length_end = 8;
+
+        var zero_length = 128 - length % 128 - length_0x80 - length_end;
 
         if (zero_length < 0) zero_length += 128;
 
-        const int length_x80 = 1;
-        const int length_end = 8;
-
-        var buffer128_length = data.Length + length_x80 + zero_length + length_end;
+        var buffer128_length = length + length_0x80 + zero_length + length_end;
 
         var buffer128 = new byte[buffer128_length];
+        Array.Copy(data, buffer128, (long)length);
 
-        Array.Copy(data, buffer128, data.Length);
-        buffer128[data.Length] = 0x80;
+        buffer128[length] = 0x80;
 
-        var length_bytes = BitConverter.GetBytes(data.Length << 3);
+        SetLength(buffer128, length);
 
-        Array.Copy(length_bytes, 0, buffer128, buffer128_length - 8, 4);
-
-        var buffer80 = new uint[80];
-        for (var i = 0; i < buffer128_length / 320; i++)
+        var words = new ulong[80];
+        for (var i = 0; i < buffer128.LongLength; i += 128)
         {
-            Buffer.BlockCopy(buffer128, i * 320, buffer80, 0, 320);
-            Compute(buffer80, 
+            for (var (j, k) = (0, i); j < 16; j++, k = i + j * 8)
+                words[j] = 
+                    (ulong)buffer128[k] << 56 |
+                    (ulong)buffer128[k + 1] << 48 |
+                    (ulong)buffer128[k + 2] << 40 |
+                    (ulong)buffer128[k + 3] << 32 |
+                    (ulong)buffer128[k + 4] << 24 |
+                    (ulong)buffer128[k + 5] << 16 |
+                    (ulong)buffer128[k + 6] << 8 |
+                    buffer128[k + 7];
+
+            Compute(words, 
                 ref h[0], ref h[1], ref h[2], ref h[3], 
                 ref h[4], ref h[5], ref h[6], ref h[7]);
         }
 
-        var result_bytes = new byte[16];
-        Buffer.BlockCopy(h, 0, result_bytes, 0, result_bytes.Length);
-
-        return result_bytes;
+        var result = CreateResult(h);
+        return result;
     }
 
-    private static void Compute(uint[] w, 
+    private static byte[] CreateResult(ulong[] h)
+    {
+        var hash = new byte[64];
+
+        for (var i = 0; i < 8; i++)
+        {
+            hash[8 * i + 0] = (byte)(h[i] >> 56);
+            hash[8 * i + 1] = (byte)(h[i] >> 48);
+            hash[8 * i + 2] = (byte)(h[i] >> 40);
+            hash[8 * i + 3] = (byte)(h[i] >> 32);
+
+            hash[8 * i + 4] = (byte)(h[i] >> 24);
+            hash[8 * i + 5] = (byte)(h[i] >> 16);
+            hash[8 * i + 6] = (byte)(h[i] >> 08);
+            hash[8 * i + 7] = (byte)(h[i] >> 00);
+        }
+
+        return hash;
+    }
+
+    private static void Compute(ulong[] words, 
         ref ulong h0, ref ulong h1, ref ulong h2, ref ulong h3, 
         ref ulong h4, ref ulong h5, ref ulong h6, ref ulong h7)
     {
-        for (var i = 16; i < 80; i++)
-        {
-            var s0 = RightRotate(w[i - 15], 1) ^ RightRotate(w[i - 15], 8) ^ (w[i - 15] >> 7);
-            var s1 = RightRotate(w[i - 2], 19) ^ RightRotate(w[i - 2], 61) ^ (w[i - 2] >> 6);
-            w[i]   = w[i - 16] + s0 + w[i - 7] + s1;
-        }
-        
+        static ulong S0(ulong x) => RightRotate(x, 1) ^ RightRotate(x, 8) ^ x >> 7;
+        static ulong S1(ulong x) => RightRotate(x, 19) ^ RightRotate(x, 61) ^ x >> 6;
+
+        for (var j = 16; j < 80; j++)
+            words[j] = words[j - 16] + S0(words[j - 15]) + words[j - 7] + S1(words[j - 2]);
+
         var (a, b, c, d, e, f, g, h) = (h0, h1, h2, h3, h4, h5, h6, h7);
 
         for (var i = 0; i < 80; i += 1)
         {
-            var sgm0 = RightRotate(a, 28) ^ RightRotate(a, 34) ^ RightRotate(a, 39);
-            var ma     = (a & b) ^ (a & c) ^ (b & c);
-            var t2     = sgm0 + ma;
+            static ulong Ch(ulong x, ulong y, ulong z) => x & y ^ ~x & z;
+            static ulong Maj(ulong x, ulong y, ulong z) => x & y ^ x & z ^ y & z;
 
-            var sgm1 = RightRotate(e, 14) ^ RightRotate(e, 18) ^ RightRotate(e, 41);
-            var ch     = (e & f) ^ ((~e) & g);
-            var t1     = h + sgm1 + ch + K[i] + w[i];
+            static ulong E0(ulong x) => RightRotate(x, 28) ^ RightRotate(x, 34) ^ RightRotate(x, 39);
+            static ulong E1(ulong x) => RightRotate(x, 14) ^ RightRotate(x, 18) ^ RightRotate(x, 41);
+
+            var t1 = h + E1(e) + Ch(e, f, g) + K[i] + words[i];
+            var t2 = E0(a) + Maj(a, b, c);
 
             (h, g, f, e, d, c, b, a) = (g, f, e, d + t1, c, b, a, t1 + t2);
-
-            //h = g;
-            //g = f;
-            //f = e;
-            //e = d + t1;
-            //d = c;
-            //c = b;
-            //b = a;
-            //a = t1 + t2;
         }
 
-        (h0, h1, h2, h3, h4, h5, h6, h7) = (a, b, c, d, e, f, g, h);
+        (h0, h1, h2, h3, h4, h5, h6, h7) = (h0 + a, h1 + b, h2 + c, h3 + d, h4 + e, h5 + f, h6 + g, h7 + h);
     }
 }

@@ -57,8 +57,6 @@ public class SHA256 : HashAlgorithm
 
         var length = (ulong)data.LongLength;
 
-        //var buffer64_length = 512 - (int)((length * 8 + 1 + 64) % 512);
-
         const int length_0x80 = 1;
         const int length_end  = 8;
 
@@ -73,12 +71,7 @@ public class SHA256 : HashAlgorithm
 
         buffer64[length] = 0x80;
 
-        Debug.WriteLine(buffer64.ToStringHex(8));
-
-
         SetLength(buffer64, length);
-
-        Debug.WriteLine(buffer64.ToStringHex(8));
 
         var words = new uint[64];
         for (var i = 0; i < buffer64.LongLength; i += 64)
@@ -239,7 +232,7 @@ public class SHA256 : HashAlgorithm
         static uint S0(uint x) => RightRotate(x, 7) ^ RightRotate(x, 18) ^ x >> 3;
         static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
 
-        for (var j = 16; j <= 63; j++)
+        for (var j = 16; j < 64; j++)
             words[j] = words[j - 16] + S0(words[j - 15]) + words[j - 7] + S1(words[j - 2]);
 
         var (a, b, c, d, e, f, g, h) = (h0, h1, h2, h3, h4, h5, h6, h7);
