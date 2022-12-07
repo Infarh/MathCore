@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -117,7 +116,6 @@ public class SHA256 : HashAlgorithm
                 {
                     SetLength(buffer64, length);
 
-
                     completed = true;
                 }
             }
@@ -177,7 +175,6 @@ public class SHA256 : HashAlgorithm
                 if (64 - readed > 8)
                 {
                     SetLength(buffer64, length);
-
 
                     completed = true;
                 }

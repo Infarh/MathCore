@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -76,8 +75,6 @@ public class SHA512 : HashAlgorithm
         var words = new ulong[80];
         for (var i = 0; i < buffer128.LongLength; i += 128)
         {
-            Debug.WriteLine(i);
-
             for (var (j, k) = (0, i); j < 16; j++, k = i + j * 8)
                 words[j] = 
                     (ulong)buffer128[k] << 56 |
