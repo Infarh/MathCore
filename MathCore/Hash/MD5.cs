@@ -23,13 +23,7 @@ public class MD5 : HashAlgorithm
 
     public static byte[] Compute(byte[] data)
     {
-        uint[] result =
-        {
-            0x67452301U,
-            0xefcdab89U,
-            0x98badcfeU,
-            0x10325476U,
-        };
+        uint[] h = { 0x67452301U, 0xefcdab89U, 0x98badcfeU, 0x10325476U };
 
         var zero_length = 64 - data.Length % 64 - 1 - 8;
 
@@ -53,11 +47,11 @@ public class MD5 : HashAlgorithm
         for (var i = 0; i < buffer64_length / 64; i++)
         {
             Buffer.BlockCopy(buffer64, i * 64, buffer16, 0, 64);
-            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+            Compute(buffer16, ref h[0], ref h[1], ref h[2], ref h[3]);
         }
 
         var result_bytes = new byte[16];
-        Buffer.BlockCopy(result, 0, result_bytes, 0, result_bytes.Length);
+        Buffer.BlockCopy(h, 0, result_bytes, 0, result_bytes.Length);
 
         return result_bytes;
     }

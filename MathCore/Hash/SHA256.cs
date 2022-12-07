@@ -32,17 +32,17 @@ public class SHA256 : HashAlgorithm
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         };
 
-        var buffer = new byte[data.LongLength];
-        Array.Copy(data, buffer, data.LongLength);
+        //var buffer = new byte[data.LongLength];
+        //Array.Copy(data, buffer, data.LongLength);
 
-        var length = buffer.LongLength;
+        var length = data.LongLength;
 
         var zeros_bits_count = 512 - (int)((length * 8 + 1 + 64) % 512);
 
         var message = new byte[length + (1 + zeros_bits_count) / 8 + 8];
-        Array.Copy(buffer, message, buffer.LongLength);
+        Array.Copy(data, message, data.LongLength);
 
-        message[buffer.LongLength] = 0x80;
+        message[data.LongLength] = 0x80;
 
         //for (var i = length + 1; i < Message.LongLength; i++) 
         //    Message[i] = 0;
