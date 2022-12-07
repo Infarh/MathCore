@@ -1,8 +1,8 @@
-﻿using MathCore.Algorithms.Numbers;
+﻿//using MathCore.Algorithms.Numbers;
 
-Pascal.Run(16);
+//Pascal.Run(16);
 
-return;
+//return;
 
 //DoubleIEEE754.TestParsingStrings();
 
@@ -94,19 +94,19 @@ Console.ReadLine();
 //Console.ReadLine();
 
 
-static uint DigitsToUInt32(ReadOnlySpan<char> p, int count)
-{
-    var res = (uint)(p[0] - '0');
-    for (var i = 1; i < count; i++)
-        res = res * 10 + (uint)(p[i] - '0');
+//static uint DigitsToUInt32(ReadOnlySpan<char> p, int count)
+//{
+//    var res = (uint)(p[0] - '0');
+//    for (var i = 1; i < count; i++)
+//        res = res * 10 + (uint)(p[i] - '0');
 
-    return res;
-}
+//    return res;
+//}
 
-static ulong DigitsToUInt64(ReadOnlySpan<char> p, int count)
-{
-    var res = (ulong)(p[0] - '0');
-    for (var i = 1; i < count; i++)
-        res = res * 10 + (ulong)(p[i] - '0');
-    return res;
-}
+//static ulong DigitsToUInt64(ReadOnlySpan<char> p, int count)
+//{
+//    var res = (ulong)(p[0] - '0');
+//    for (var i = 1; i < count; i++)
+//        res = res * 10 + (ulong)(p[i] - '0');
+//    return res;
+//}

@@ -13,7 +13,7 @@ public readonly ref struct PerformActionAwaitable
     private readonly Task _Task;
     private readonly bool _LockContext;
 
-    public PerformActionAwaitable(Action Method, Task Task, in bool LockContext = true)
+    public PerformActionAwaitable(Action Method, Task Task, bool LockContext = true)
     {
         _Method      = Method;
         _Task        = Task;
@@ -30,7 +30,7 @@ public readonly ref struct PerformActionAwaitable
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
         private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
 
-        public Awaiter(Action Method, Task Task, in bool LockContext)
+        public Awaiter(Action Method, Task Task, bool LockContext)
         {
             _Method      = Method;
             _Task        = Task;
@@ -99,7 +99,7 @@ public readonly ref struct PerformActionAwaitable<T>
     private readonly Task<T> _Task;
     private readonly bool _LockContext;
 
-    public PerformActionAwaitable(Action Method, Task<T> Task, in bool LockContext = true)
+    public PerformActionAwaitable(Action Method, Task<T> Task, bool LockContext = true)
     {
         _Method      = Method;
         _Task        = Task;
@@ -117,7 +117,7 @@ public readonly ref struct PerformActionAwaitable<T>
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
         private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
 
-        public Awaiter(Action Method, Task<T> Task, in bool LockContext)
+        public Awaiter(Action Method, Task<T> Task, bool LockContext)
         {
             _Method      = Method;
             _Task        = Task;

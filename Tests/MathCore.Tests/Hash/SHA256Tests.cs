@@ -4,7 +4,7 @@ using System.Text;
 namespace MathCore.Tests.Hash;
 
 [TestClass]
-public class MD5Tests
+public class SHA256Tests
 {
     [TestMethod]
     public void Hash_Hello_World()
@@ -13,9 +13,9 @@ public class MD5Tests
 
         var bytes = Encoding.UTF8.GetBytes(str);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(bytes);
+        var result_bytes = MathCore.Hash.SHA256.Compute(bytes);
 
         var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
@@ -34,9 +34,9 @@ public class MD5Tests
 
         var bytes = Encoding.UTF8.GetBytes(str);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(new MemoryStream(bytes));
+        var result_bytes = MathCore.Hash.SHA256.Compute(new MemoryStream(bytes));
 
         var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
@@ -66,11 +66,11 @@ public class MD5Tests
         var bytes = new byte[DataLength];
         rnd.NextBytes(bytes);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(bytes);
+        var result_bytes = MathCore.Hash.SHA256.Compute(bytes);
 
-        var actual   = result_bytes.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");
@@ -97,11 +97,11 @@ public class MD5Tests
         var bytes = new byte[DataLength];
         rnd.NextBytes(bytes);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(new MemoryStream(bytes));
+        var result_bytes = MathCore.Hash.SHA256.Compute(new MemoryStream(bytes));
 
-        var actual   = result_bytes.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");
@@ -128,11 +128,11 @@ public class MD5Tests
         var bytes = new byte[DataLength];
         rnd.NextBytes(bytes);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var result_bytes = await MathCore.Hash.MD5.ComputeAsync(new MemoryStream(bytes));
+        var result_bytes = await MathCore.Hash.SHA256.ComputeAsync(new MemoryStream(bytes));
 
-        var actual   = result_bytes.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");

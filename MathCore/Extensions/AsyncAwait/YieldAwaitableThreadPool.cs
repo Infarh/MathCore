@@ -9,7 +9,7 @@ public readonly ref struct YieldAwaitableThreadPool
 {
     private readonly bool _LockContext;
 
-    public YieldAwaitableThreadPool(in bool LockContext) => _LockContext = LockContext;
+    public YieldAwaitableThreadPool(bool LockContext) => _LockContext = LockContext;
 
     public Awaiter GetAwaiter() => new(_LockContext);
 
