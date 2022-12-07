@@ -50,6 +50,7 @@ public class SHA512Tests
 
     [TestMethod]
     [DataRow(011, DisplayName = "Data length =  11")]
+    [DataRow(110, DisplayName = "Data length = 110")]
     [DataRow(111, DisplayName = "Data length = 111")]
     [DataRow(112, DisplayName = "Data length = 112")]
     [DataRow(127, DisplayName = "Data length = 127")]

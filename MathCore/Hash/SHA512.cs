@@ -61,11 +61,11 @@ public class SHA512 : HashAlgorithm
         const int length_0x80 = 1;
         const int length_end = 8;
 
-        var zero_length = 128 - length % 128 - length_0x80 - length_end;
+        var l0 = 128 - (length % 128 + length_0x80);
 
-        if (zero_length < 0) zero_length += 128;
+        var buffer128_length = length + l0 + 1;
 
-        var buffer128_length = length + length_0x80 + zero_length + length_end;
+        if (l0 < 16) buffer128_length += 128;
 
         var buffer128 = new byte[buffer128_length];
         Array.Copy(data, buffer128, (long)length);
@@ -74,9 +74,13 @@ public class SHA512 : HashAlgorithm
 
         SetLength(buffer128, length);
 
+        Debug.WriteLine(buffer128.ToStringHex(16, 8));
+
         var words = new ulong[80];
         for (var i = 0; i < buffer128.LongLength; i += 128)
         {
+            Debug.WriteLine(i);
+
             for (var (j, k) = (0, i); j < 16; j++, k = i + j * 8)
                 words[j] = 
                     (ulong)buffer128[k] << 56 |
