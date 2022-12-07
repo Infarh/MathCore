@@ -7,7 +7,7 @@ namespace MathCore.Tests.Hash;
 public class MD5Tests
 {
     [TestMethod]
-    public void Hash_of_Hello_World_UTF8()
+    public void Hash_Hello_World()
     {
         const string str = "Hello World";
 
@@ -28,7 +28,7 @@ public class MD5Tests
     }
 
     [TestMethod]
-    public void Hash_Stream_of_Hello_World_UTF8()
+    public void Hash_Stream_Hello_World()
     {
         const string str = "Hello World";
 

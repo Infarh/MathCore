@@ -78,7 +78,7 @@ public class SHA256 : HashAlgorithm
         return result;
     }
 
-    public byte[] Compute(Stream data)
+    public static byte[] Compute(Stream data)
     {
         uint[] h =
         {

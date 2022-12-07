@@ -30,6 +30,27 @@ public class SHA256Tests
     }
 
     [TestMethod]
+    public void Hash_Stream_Hello_World()
+    {
+        const string str = "Hello World";
+
+        var bytes = Encoding.UTF8.GetBytes(str);
+
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
+
+        var result = SHA256.Compute(new MemoryStream(bytes));
+
+        var actual   = result.ToStringHex();
+        var expected = expected_result.ToStringHex();
+
+        Debug.WriteLine("");
+        Debug.WriteLine("Expected {0}", (object)expected);
+        Debug.WriteLine("Actual   {0}", (object)actual);
+
+        actual.AssertEquals(expected);
+    }
+
+    [TestMethod]
     public void Hash_LongData()
     {
         Debug.WriteLine(DateTime.Now);
