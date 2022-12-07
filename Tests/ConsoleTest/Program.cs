@@ -1,6 +1,5 @@
+using System.Drawing;
 using System.Globalization;
-using System.Security.Cryptography;
-using System.Text;
 
 var str = "123.456E-3";
 
@@ -10,17 +9,18 @@ var pstr = str.AsStringPtr();
 var d2   = pstr.ParseDouble(CultureInfo.InvariantCulture);
 
 
-var src_str           = "md5";
-var src_str_bytes = Encoding.UTF8.GetBytes(src_str);
-var exp_md5_bytes_str = "1bc29b36f623ba82aaf6724fd3b16718".AsSpan();
-var exp_md5_bytes = new byte[exp_md5_bytes_str.Length / 2];
-for (var i = 0; i < exp_md5_bytes.Length; i++)
-    exp_md5_bytes[i] = byte.Parse(exp_md5_bytes_str.Slice(i * 2, 2), NumberStyles.HexNumber);
+var p0 = "5-7i";
 
-var md5_expected = MD5.HashData(src_str_bytes);
+var point_type = typeof(Point);
+
+var converter = point_type.GetTypeConverter();
+
+var qqq = p0.TryConvertTo(out Complex pp0);
 
 Console.WriteLine("End.");
 Console.ReadLine();
+
+
 
 return;
 

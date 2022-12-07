@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-using MathCore.CRC;
+using MathCore.Hash.CRC;
 
-namespace MathCore.Tests.CRC;
+namespace MathCore.Tests.Hash.CRC;
 
 [TestClass]
 public class CRC16Tests

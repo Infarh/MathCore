@@ -4,7 +4,7 @@ using System.Text;
 namespace MathCore.Tests.Hash;
 
 [TestClass]
-public class MD5Tests
+public class SHA512Tests
 {
     [TestMethod]
     public void Hash_Hello_World()
@@ -13,9 +13,9 @@ public class MD5Tests
 
         var bytes = Encoding.UTF8.GetBytes(str);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA512.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(bytes);
+        var result_bytes = MathCore.Hash.SHA512.Compute(bytes);
 
         var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
@@ -34,9 +34,9 @@ public class MD5Tests
 
         var bytes = Encoding.UTF8.GetBytes(str);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA512.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(new MemoryStream(bytes));
+        var result_bytes = MathCore.Hash.SHA512.Compute(new MemoryStream(bytes));
 
         var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
@@ -49,11 +49,14 @@ public class MD5Tests
     }
 
     [TestMethod]
-    [DataRow(11, DisplayName = "Data byte length = 11")]
-    [DataRow(55, DisplayName = "Data byte length = 55")]
-    [DataRow(56, DisplayName = "Data byte length = 56")]
-    [DataRow(63, DisplayName = "Data byte length = 63")]
-    [DataRow(160, DisplayName = "Data byte length = 160")]
+    [DataRow(011, DisplayName = "Data length =  11")]
+    [DataRow(110, DisplayName = "Data length = 110")]
+    [DataRow(111, DisplayName = "Data length = 111")]
+    [DataRow(112, DisplayName = "Data length = 112")]
+    [DataRow(127, DisplayName = "Data length = 127")]
+    [DataRow(128, DisplayName = "Data length = 128")]
+    [DataRow(160, DisplayName = "Data length = 160")]
+    [DataRow(271, DisplayName = "Data length = 271")]
     public void Hash(int DataLength)
     {
         Debug.WriteLine(DateTime.Now);
@@ -66,11 +69,11 @@ public class MD5Tests
         var bytes = new byte[DataLength];
         rnd.NextBytes(bytes);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA512.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(bytes);
+        var result_bytes = MathCore.Hash.SHA512.Compute(bytes);
 
-        var actual   = result_bytes.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");
@@ -81,11 +84,16 @@ public class MD5Tests
     }
 
     [TestMethod]
-    [DataRow(11, DisplayName = "Data stream length = 11")]
-    [DataRow(55, DisplayName = "Data stream length = 55")]
-    [DataRow(56, DisplayName = "Data stream length = 56")]
-    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(011, DisplayName = "Data stream length =  11")]
+    [DataRow(111, DisplayName = "Data stream length = 111")]
+    [DataRow(112, DisplayName = "Data stream length = 112")]
+    [DataRow(113, DisplayName = "Data stream length = 113")]
+    [DataRow(119, DisplayName = "Data stream length = 119")]
+    [DataRow(120, DisplayName = "Data stream length = 120")]
+    [DataRow(127, DisplayName = "Data stream length = 127")]
+    [DataRow(128, DisplayName = "Data stream length = 128")]
     [DataRow(160, DisplayName = "Data stream length = 160")]
+    [DataRow(271, DisplayName = "Data stream length = 271")]
     public void Hash_Stream(int DataLength)
     {
         //var rnd_seed = Random.Shared.Next();
@@ -97,11 +105,11 @@ public class MD5Tests
         var bytes = new byte[DataLength];
         rnd.NextBytes(bytes);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA512.HashData(bytes);
 
-        var result_bytes = MathCore.Hash.MD5.Compute(new MemoryStream(bytes));
+        var result_bytes = MathCore.Hash.SHA512.Compute(new MemoryStream(bytes));
 
-        var actual   = result_bytes.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");
@@ -112,11 +120,16 @@ public class MD5Tests
     }
 
     [TestMethod]
-    [DataRow(11, DisplayName = "Data stream length = 11")]
-    [DataRow(55, DisplayName = "Data stream length = 55")]
-    [DataRow(56, DisplayName = "Data stream length = 56")]
-    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(011, DisplayName = "Data stream length =  11")]
+    [DataRow(111, DisplayName = "Data stream length = 111")]
+    [DataRow(112, DisplayName = "Data stream length = 112")]
+    [DataRow(113, DisplayName = "Data stream length = 113")]
+    [DataRow(119, DisplayName = "Data stream length = 119")]
+    [DataRow(120, DisplayName = "Data stream length = 120")]
+    [DataRow(127, DisplayName = "Data stream length = 127")]
+    [DataRow(128, DisplayName = "Data stream length = 128")]
     [DataRow(160, DisplayName = "Data stream length = 160")]
+    [DataRow(271, DisplayName = "Data stream length = 271")]
     public async Task HashAsync_Stream(int DataLength)
     {
         //var rnd_seed = Random.Shared.Next();
@@ -128,11 +141,11 @@ public class MD5Tests
         var bytes = new byte[DataLength];
         rnd.NextBytes(bytes);
 
-        var expected_result = System.Security.Cryptography.MD5.HashData(bytes);
+        var expected_result = System.Security.Cryptography.SHA512.HashData(bytes);
 
-        var result_bytes = await MathCore.Hash.MD5.ComputeAsync(new MemoryStream(bytes));
+        var result_bytes = await MathCore.Hash.SHA512.ComputeAsync(new MemoryStream(bytes));
 
-        var actual   = result_bytes.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");

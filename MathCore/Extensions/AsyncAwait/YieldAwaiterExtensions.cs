@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿#nullable enable
+using System.Runtime.CompilerServices;
+
 // ReSharper disable UnusedParameter.Global
 // ReSharper disable InvalidXmlDocComment
 

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MathCore.CRC;
+namespace MathCore.Hash.CRC;
 
 public class CRC8
 {
@@ -35,7 +32,7 @@ public class CRC8
             var temp = i;
             for (var j = 0; j < 8; ++j)
                 if ((temp & 0x80) != 0)
-                    temp = (temp << 1) ^ Polynimial;
+                    temp = temp << 1 ^ Polynimial;
                 else
                     temp <<= 1;
             _Table[i] = (byte)temp;
@@ -47,7 +44,7 @@ public class CRC8
     public byte ContinueCompute(byte crc, byte[] bytes)
     {
         foreach (var b in bytes)
-            crc = (byte)((crc >> 8) ^ _Table[(crc ^ b) & 0xFF]);
+            crc = (byte)(crc >> 8 ^ _Table[(crc ^ b) & 0xFF]);
 
         if (UpdateState)
             State = crc;
@@ -60,7 +57,7 @@ public class CRC8
     public byte ContinueCompute(byte crc, IReadOnlyList<byte> bytes)
     {
         foreach (var b in bytes)
-            crc = (byte)((crc << 8) ^ _Table[(crc >> 8) ^ b]);
+            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
 
         if (UpdateState)
             State = crc;
@@ -71,13 +68,13 @@ public class CRC8
     public void Compute(ref byte crc, byte[] bytes)
     {
         foreach (var b in bytes)
-            crc = (byte)((crc << 8) ^ _Table[(crc >> 8) ^ b]);
+            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
     }
 
     public void Compute(ref byte crc, IReadOnlyList<byte> bytes)
     {
         foreach (var b in bytes)
-            crc = (byte)((crc << 8) ^ _Table[(crc >> 8) ^ b]);
+            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
     }
 
     public byte[] ComputeChecksumBytes(params byte[] bytes)

@@ -64,7 +64,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     public static bool TryParse(string? str, out Complex z)
     {
         // Если получили пустую строку, то это ошибка преобразования
-        if (str is not { Length: > 0 }) 
+        if (str is { Length: > 0 }) 
             return TryParse(new StringPtr(str), out z);
 
         z = default;

@@ -9,9 +9,10 @@ internal class ComplexConverter : TypeConverter
 {
     /// <inheritdoc />
     public override bool CanConvertFrom(ITypeDescriptorContext c, Type t) => 
-        base.CanConvertFrom(c, t) 
-        || t == typeof(double) 
-        || t == typeof(int);
+        t == typeof(string) ||
+        t == typeof(double) || 
+        t == typeof(int) ||
+        base.CanConvertFrom(c, t);
 
     /// <inheritdoc />
     public override object ConvertFrom(ITypeDescriptorContext c, CultureInfo i, object v) => v switch
