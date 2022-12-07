@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Hash;
+﻿namespace MathCore.Hash;
 
 public abstract class HashAlgorithm
 {
