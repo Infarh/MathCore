@@ -25,14 +25,14 @@ public class MD5 : HashAlgorithm
     {
         uint[] h = { 0x67452301U, 0xefcdab89U, 0x98badcfeU, 0x10325476U };
 
-        const int length_x80  = 1;
+        const int length_0x80  = 1;
         const int length_end  = 8;
 
-        var zero_length = 64 - data.Length % 64 - length_x80 - length_end;
+        var zero_length = 64 - data.Length % 64 - length_0x80 - length_end;
 
         if (zero_length < 0) zero_length += 64;
 
-        var buffer64_length = data.Length + length_x80 + zero_length + length_end;
+        var buffer64_length = data.Length + length_0x80 + zero_length + length_end;
 
         var buffer64 = new byte[buffer64_length];
 

@@ -1,8 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable InconsistentNaming
 
 namespace MathCore.Hash;
 
@@ -42,10 +45,10 @@ public class SHA256 : HashAlgorithm
         buffer64[^1] = (byte)(length << 3);
     }
 
+    public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
+    
     public static byte[] Compute(byte[] data)
     {
-        Debug.WriteLine("123");
-
         uint[] h =
         {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
@@ -56,21 +59,26 @@ public class SHA256 : HashAlgorithm
 
         //var buffer64_length = 512 - (int)((length * 8 + 1 + 64) % 512);
 
-        const int length_x80 = 1;
-        const int length_end = 8;
+        const int length_0x80 = 1;
+        const int length_end  = 8;
 
-        var zero_length = 64 - data.Length % 64 - length_x80 - length_end;
+        var zero_length = 64 - data.LongLength % 64 - length_0x80 - length_end;
 
         if (zero_length < 0) zero_length += 64;
 
-        var buffer64_length = data.Length + length_x80 + zero_length + length_end;
+        var buffer64_length = data.LongLength + length_0x80 + zero_length + length_end;
 
         var buffer64 = new byte[buffer64_length];
-        Array.Copy(data, buffer64, data.LongLength);
+        Array.Copy(data, buffer64, (long)length);
 
         buffer64[length] = 0x80;
 
+        Debug.WriteLine(buffer64.ToStringHex(8));
+
+
         SetLength(buffer64, length);
+
+        Debug.WriteLine(buffer64.ToStringHex(8));
 
         var words = new uint[64];
         for (var i = 0; i < buffer64.LongLength; i += 64)
