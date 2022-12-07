@@ -43,11 +43,11 @@ public class MD5 : HashAlgorithm
 
         Array.Copy(length_bytes, 0, buffer64, buffer64_length - 8, 4);
 
-        var buffer16 = new uint[16];
+        var words = new uint[16];
         for (var i = 0; i < buffer64_length / 64; i++)
         {
-            Buffer.BlockCopy(buffer64, i * 64, buffer16, 0, 64);
-            Compute(buffer16, ref h[0], ref h[1], ref h[2], ref h[3]);
+            Buffer.BlockCopy(buffer64, i * 64, words, 0, 64);
+            Compute(words, ref h[0], ref h[1], ref h[2], ref h[3]);
         }
 
         var result_bytes = new byte[16];
@@ -67,7 +67,7 @@ public class MD5 : HashAlgorithm
         };
 
         var buffer64 = new byte[64];
-        var buffer16 = new uint[16];
+        var words = new uint[16];
 
         var completed = false;
         var length    = 0UL;
@@ -99,8 +99,8 @@ public class MD5 : HashAlgorithm
                 }
             }
 
-            Buffer.BlockCopy(buffer64, 0, buffer16, 0, 64);
-            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+            Buffer.BlockCopy(buffer64, 0, words, 0, 64);
+            Compute(words, ref result[0], ref result[1], ref result[2], ref result[3]);
         }
         while (readed == 64);
 
@@ -118,8 +118,8 @@ public class MD5 : HashAlgorithm
             buffer64[^2] = (byte)((full_length >> 48) & 0xff);
             buffer64[^1] = (byte)((full_length >> 56) & 0xff);
 
-            Buffer.BlockCopy(buffer64, 0, buffer16, 0, 64);
-            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+            Buffer.BlockCopy(buffer64, 0, words, 0, 64);
+            Compute(words, ref result[0], ref result[1], ref result[2], ref result[3]);
         }
 
         var result_bytes = new byte[16];
@@ -138,7 +138,7 @@ public class MD5 : HashAlgorithm
         };
 
         var buffer64 = new byte[64];
-        var buffer16 = new uint[16];
+        var words = new uint[16];
 
         var completed = false;
         var length    = 0UL;
@@ -170,8 +170,8 @@ public class MD5 : HashAlgorithm
                 }
             }
 
-            Buffer.BlockCopy(buffer64, 0, buffer16, 0, 64);
-            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+            Buffer.BlockCopy(buffer64, 0, words, 0, 64);
+            Compute(words, ref result[0], ref result[1], ref result[2], ref result[3]);
         }
         while (readed == 64);
 
@@ -189,8 +189,8 @@ public class MD5 : HashAlgorithm
             buffer64[^2] = (byte)((full_length >> 48) & 0xff);
             buffer64[^1] = (byte)((full_length >> 56) & 0xff);
 
-            Buffer.BlockCopy(buffer64, 0, buffer16, 0, 64);
-            Compute(buffer16, ref result[0], ref result[1], ref result[2], ref result[3]);
+            Buffer.BlockCopy(buffer64, 0, words, 0, 64);
+            Compute(words, ref result[0], ref result[1], ref result[2], ref result[3]);
         }
 
         var result_bytes = new byte[16];
