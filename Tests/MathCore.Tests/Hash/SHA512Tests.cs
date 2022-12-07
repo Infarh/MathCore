@@ -49,11 +49,13 @@ public class SHA512Tests
     }
 
     [TestMethod]
-    [DataRow(11, DisplayName = "Data byte length = 11")]
-    [DataRow(55, DisplayName = "Data byte length = 55")]
-    [DataRow(56, DisplayName = "Data byte length = 56")]
-    [DataRow(63, DisplayName = "Data byte length = 63")]
-    [DataRow(160, DisplayName = "Data byte length = 160")]
+    [DataRow(011, DisplayName = "Data length =  11")]
+    [DataRow(111, DisplayName = "Data length = 111")]
+    [DataRow(112, DisplayName = "Data length = 112")]
+    [DataRow(127, DisplayName = "Data length = 127")]
+    [DataRow(128, DisplayName = "Data length = 128")]
+    [DataRow(160, DisplayName = "Data length = 160")]
+    [DataRow(271, DisplayName = "Data length = 271")]
     public void Hash(int DataLength)
     {
         Debug.WriteLine(DateTime.Now);
@@ -81,11 +83,16 @@ public class SHA512Tests
     }
 
     [TestMethod]
-    [DataRow(11, DisplayName = "Data stream length = 11")]
-    [DataRow(55, DisplayName = "Data stream length = 55")]
-    [DataRow(56, DisplayName = "Data stream length = 56")]
-    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(011, DisplayName = "Data stream length =  11")]
+    [DataRow(111, DisplayName = "Data stream length = 111")]
+    [DataRow(112, DisplayName = "Data stream length = 112")]
+    [DataRow(113, DisplayName = "Data stream length = 113")]
+    [DataRow(119, DisplayName = "Data stream length = 119")]
+    [DataRow(120, DisplayName = "Data stream length = 120")]
+    [DataRow(127, DisplayName = "Data stream length = 127")]
+    [DataRow(128, DisplayName = "Data stream length = 128")]
     [DataRow(160, DisplayName = "Data stream length = 160")]
+    [DataRow(271, DisplayName = "Data stream length = 271")]
     public void Hash_Stream(int DataLength)
     {
         //var rnd_seed = Random.Shared.Next();
@@ -112,11 +119,16 @@ public class SHA512Tests
     }
 
     [TestMethod]
-    [DataRow(11, DisplayName = "Data stream length = 11")]
-    [DataRow(55, DisplayName = "Data stream length = 55")]
-    [DataRow(56, DisplayName = "Data stream length = 56")]
-    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(011, DisplayName = "Data stream length =  11")]
+    [DataRow(111, DisplayName = "Data stream length = 111")]
+    [DataRow(112, DisplayName = "Data stream length = 112")]
+    [DataRow(113, DisplayName = "Data stream length = 113")]
+    [DataRow(119, DisplayName = "Data stream length = 119")]
+    [DataRow(120, DisplayName = "Data stream length = 120")]
+    [DataRow(127, DisplayName = "Data stream length = 127")]
+    [DataRow(128, DisplayName = "Data stream length = 128")]
     [DataRow(160, DisplayName = "Data stream length = 160")]
+    [DataRow(271, DisplayName = "Data stream length = 271")]
     public async Task HashAsync_Stream(int DataLength)
     {
         //var rnd_seed = Random.Shared.Next();
