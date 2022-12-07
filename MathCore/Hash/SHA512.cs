@@ -1,7 +1,10 @@
 ﻿#nullable enable
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 
@@ -87,6 +90,158 @@ public class SHA512 : HashAlgorithm
 
             Compute(words, 
                 ref h[0], ref h[1], ref h[2], ref h[3], 
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+
+        var result = CreateResult(h);
+        return result;
+    }
+
+    public static byte[] Compute(Stream data)
+    {
+        ulong[] h =
+        {
+            0x6a09e667f3bcc908, 0xbb67ae8584caa73b, 0x3c6ef372fe94f82b, 0xa54ff53a5f1d36f1,
+            0x510e527fade682d1, 0x9b05688c2b3e6c1f, 0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
+        };
+
+        var buffer128 = new byte[128];
+        var words     = new ulong[80];
+
+        var completed = false;
+        var length    = 0UL;
+        int readed;
+        do
+        {
+            readed = data.FillBuffer(buffer128);
+
+            length += (ulong)readed;
+
+            if (readed < 128)
+            {
+                Array.Clear(buffer128, readed, 128 - readed);
+                buffer128[readed] = 0x80;
+
+                if (128 - readed > 8)
+                {
+                    SetLength(buffer128, length);
+
+                    completed = true;
+                }
+            }
+
+            for (var (j, k) = (0, 0); j < 16; j++, k = j * 8)
+                words[j] =
+                    (ulong)buffer128[k] << 56 |
+                    (ulong)buffer128[k + 1] << 48 |
+                    (ulong)buffer128[k + 2] << 40 |
+                    (ulong)buffer128[k + 3] << 32 |
+                    (ulong)buffer128[k + 4] << 24 |
+                    (ulong)buffer128[k + 5] << 16 |
+                    (ulong)buffer128[k + 6] << 8 |
+                    buffer128[k + 7];
+
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+        while (readed == 128);
+
+        if (readed > 0 && !completed)
+        {
+            Array.Clear(buffer128, 0, 128);
+
+            SetLength(buffer128, length);
+
+            for (var (j, k) = (0, 0); j < 16; j++, k = j * 8)
+                words[j] =
+                    (ulong)buffer128[k] << 56 |
+                    (ulong)buffer128[k + 1] << 48 |
+                    (ulong)buffer128[k + 2] << 40 |
+                    (ulong)buffer128[k + 3] << 32 |
+                    (ulong)buffer128[k + 4] << 24 |
+                    (ulong)buffer128[k + 5] << 16 |
+                    (ulong)buffer128[k + 6] << 8 |
+                    buffer128[k + 7];
+
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+
+        var result = CreateResult(h);
+        return result;
+    }
+
+    public static async Task<byte[]> ComputeAsync(Stream data, CancellationToken Cancel = default)
+    {
+        ulong[] h =
+        {
+            0x6a09e667f3bcc908, 0xbb67ae8584caa73b, 0x3c6ef372fe94f82b, 0xa54ff53a5f1d36f1,
+            0x510e527fade682d1, 0x9b05688c2b3e6c1f, 0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
+        };
+
+        var buffer128 = new byte[128];
+        var words     = new ulong[80];
+
+        var completed = false;
+        var length    = 0UL;
+        int readed;
+        do
+        {
+            readed = await data.FillBufferAsync(buffer128, Cancel).ConfigureAwait(false);
+
+            length += (ulong)readed;
+
+            if (readed < 128)
+            {
+                Array.Clear(buffer128, readed, 128 - readed);
+                buffer128[readed] = 0x80;
+
+                if (128 - readed > 8)
+                {
+                    SetLength(buffer128, length);
+
+                    completed = true;
+                }
+            }
+
+            for (var (j, k) = (0, 0); j < 16; j++, k = j * 8)
+                words[j] =
+                    (ulong)buffer128[k] << 56 |
+                    (ulong)buffer128[k + 1] << 48 |
+                    (ulong)buffer128[k + 2] << 40 |
+                    (ulong)buffer128[k + 3] << 32 |
+                    (ulong)buffer128[k + 4] << 24 |
+                    (ulong)buffer128[k + 5] << 16 |
+                    (ulong)buffer128[k + 6] << 8 |
+                    buffer128[k + 7];
+
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+        while (readed == 128);
+
+        if (readed > 0 && !completed)
+        {
+            Array.Clear(buffer128, 0, 128);
+
+            SetLength(buffer128, length);
+
+            for (var (j, k) = (0, 0); j < 16; j++, k = j * 8)
+                words[j] =
+                    (ulong)buffer128[k] << 56 |
+                    (ulong)buffer128[k + 1] << 48 |
+                    (ulong)buffer128[k + 2] << 40 |
+                    (ulong)buffer128[k + 3] << 32 |
+                    (ulong)buffer128[k + 4] << 24 |
+                    (ulong)buffer128[k + 5] << 16 |
+                    (ulong)buffer128[k + 6] << 8 |
+                    buffer128[k + 7];
+
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
                 ref h[4], ref h[5], ref h[6], ref h[7]);
         }
 
