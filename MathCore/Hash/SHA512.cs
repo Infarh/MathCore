@@ -73,9 +73,6 @@ public class SHA512 : HashAlgorithm
 
         SetLength(buffer128, length);
 
-        Debug.WriteLine(buffer128.Length);
-        Debug.WriteLine(buffer128.ToStringHex(16, 8));
-
         var words = new ulong[80];
         for (var i = 0; i < buffer128.LongLength; i += 128)
         {
@@ -126,11 +123,9 @@ public class SHA512 : HashAlgorithm
                 Array.Clear(buffer128, readed, 128 - readed);
                 buffer128[readed] = 0x80;
 
-                if (128 - readed > 8)
+                if (128 - readed > 16)
                 {
                     SetLength(buffer128, length);
-
-                    Debug.WriteLine(buffer128.ToStringHex(16, 8));
 
                     completed = true;
                 }
@@ -204,7 +199,7 @@ public class SHA512 : HashAlgorithm
                 Array.Clear(buffer128, readed, 128 - readed);
                 buffer128[readed] = 0x80;
 
-                if (128 - readed > 8)
+                if (128 - readed > 16)
                 {
                     SetLength(buffer128, length);
 
