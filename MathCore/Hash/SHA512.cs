@@ -59,7 +59,6 @@ public class SHA512 : HashAlgorithm
         var length = (ulong)data.LongLength;
 
         const int length_0x80 = 1;
-        const int length_end = 8;
 
         var l0 = 128 - (length % 128 + length_0x80);
 
@@ -74,6 +73,7 @@ public class SHA512 : HashAlgorithm
 
         SetLength(buffer128, length);
 
+        Debug.WriteLine(buffer128.Length);
         Debug.WriteLine(buffer128.ToStringHex(16, 8));
 
         var words = new ulong[80];
@@ -129,6 +129,8 @@ public class SHA512 : HashAlgorithm
                 if (128 - readed > 8)
                 {
                     SetLength(buffer128, length);
+
+                    Debug.WriteLine(buffer128.ToStringHex(16, 8));
 
                     completed = true;
                 }
