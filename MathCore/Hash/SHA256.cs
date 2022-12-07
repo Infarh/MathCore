@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MathCore.Hash;
 
 public class SHA256 : HashAlgorithm
 {
+    private SHA256() { }
+
     private static readonly uint[] K =
     {
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -26,6 +30,18 @@ public class SHA256 : HashAlgorithm
         0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
     };
 
+    private static void SetLength(byte[] buffer64, ulong length)
+    {
+        buffer64[^8] = (byte)(length >> 53);
+        buffer64[^7] = (byte)(length >> 45);
+        buffer64[^6] = (byte)(length >> 37);
+        buffer64[^5] = (byte)(length >> 29);
+        buffer64[^4] = (byte)(length >> 21);
+        buffer64[^3] = (byte)(length >> 13);
+        buffer64[^2] = (byte)(length >> 5);
+        buffer64[^1] = (byte)(length << 3);
+    }
+
     public static byte[] Compute(byte[] data)
     {
         Debug.WriteLine("123");
@@ -36,7 +52,7 @@ public class SHA256 : HashAlgorithm
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         };
 
-        var length = data.LongLength;
+        var length = (ulong)data.LongLength;
 
         //var buffer64_length = 512 - (int)((length * 8 + 1 + 64) % 512);
 
@@ -54,14 +70,7 @@ public class SHA256 : HashAlgorithm
 
         buffer64[length] = 0x80;
 
-        buffer64[^8] = (byte)(length >> 53);
-        buffer64[^7] = (byte)(length >> 45);
-        buffer64[^6] = (byte)(length >> 37);
-        buffer64[^5] = (byte)(length >> 29);
-        buffer64[^4] = (byte)(length >> 21);
-        buffer64[^3] = (byte)(length >> 13);
-        buffer64[^2] = (byte)(length >> 5);
-        buffer64[^1] = (byte)(length << 3);
+        SetLength(buffer64, length);
 
         var words = new uint[64];
         for (var i = 0; i < buffer64.LongLength; i += 64)
@@ -105,14 +114,8 @@ public class SHA256 : HashAlgorithm
 
                 if (64 - readed > 8)
                 {
-                    buffer64[^8] = (byte)(length >> 53);
-                    buffer64[^7] = (byte)(length >> 45);
-                    buffer64[^6] = (byte)(length >> 37);
-                    buffer64[^5] = (byte)(length >> 29);
-                    buffer64[^4] = (byte)(length >> 21);
-                    buffer64[^3] = (byte)(length >> 13);
-                    buffer64[^2] = (byte)(length >> 5);
-                    buffer64[^1] = (byte)(length << 3);
+                    SetLength(buffer64, length);
+
 
                     completed = true;
                 }
@@ -131,14 +134,68 @@ public class SHA256 : HashAlgorithm
         {
             Array.Clear(buffer64, 0, 64);
 
-            buffer64[^8] = (byte)(length >> 53);
-            buffer64[^7] = (byte)(length >> 45);
-            buffer64[^6] = (byte)(length >> 37);
-            buffer64[^5] = (byte)(length >> 29);
-            buffer64[^4] = (byte)(length >> 21);
-            buffer64[^3] = (byte)(length >> 13);
-            buffer64[^2] = (byte)(length >> 5);
-            buffer64[^1] = (byte)(length << 3);
+            SetLength(buffer64, length);
+
+            for (var (j, k) = (0, 0); j < 16; j++, k = j * 4)
+                words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
+
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+
+        var result = CreateResult(h);
+        return result;
+    }
+
+    public static async Task<byte[]> ComputeAsync(Stream data, CancellationToken Cancel = default)
+    {
+        uint[] h =
+        {
+            0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+            0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+        };
+
+        var buffer64 = new byte[64];
+        var words    = new uint[64];
+
+        var completed = false;
+        var length = 0UL;
+        int readed;
+        do
+        {
+            readed = await data.FillBufferAsync(buffer64, Cancel).ConfigureAwait(false);
+
+            length += (ulong)readed;
+
+            if (readed < 64)
+            {
+                Array.Clear(buffer64, readed, 64 - readed);
+                buffer64[readed] = 0x80;
+
+                if (64 - readed > 8)
+                {
+                    SetLength(buffer64, length);
+
+
+                    completed = true;
+                }
+            }
+
+            for (var (j, k) = (0, 0); j < 16; j++, k = j * 4)
+                words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
+
+            Compute(words,
+                ref h[0], ref h[1], ref h[2], ref h[3],
+                ref h[4], ref h[5], ref h[6], ref h[7]);
+        }
+        while (readed == 64);
+
+        if (readed > 0 && !completed)
+        {
+            Array.Clear(buffer64, 0, 64);
+
+            SetLength(buffer64, length);
 
             for (var (j, k) = (0, 0); j < 16; j++, k = j * 4)
                 words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];

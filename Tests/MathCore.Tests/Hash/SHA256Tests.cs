@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-using MathCore.Hash;
-
 namespace MathCore.Tests.Hash;
 
 [TestClass]
@@ -11,22 +9,22 @@ public class SHA256Tests
     [TestMethod]
     public void Hash_Hello_World()
     {
-        Debug.WriteLine(DateTime.Now);
-
         const string str = "Hello World";
 
-        var input_bytes       = Encoding.UTF8.GetBytes(str);
-        var expected_hash     = System.Security.Cryptography.SHA256.HashData(input_bytes);
-        var expected_hash_str = expected_hash.ToStringHex(false);
+        var bytes = Encoding.UTF8.GetBytes(str);
 
-        var result = SHA256.Compute(input_bytes);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var hash_str = result.ToStringHex(false);
+        var result_bytes = MathCore.Hash.SHA256.Compute(bytes);
 
-        hash_str.ToDebug("Actual  :");
-        expected_hash_str.ToDebug("Expected:");
+        var actual = result_bytes.ToStringHex();
+        var expected = expected_result.ToStringHex();
 
-        hash_str.AssertEquals(expected_hash_str);
+        Debug.WriteLine("");
+        Debug.WriteLine("Expected {0}", (object)expected);
+        Debug.WriteLine("Actual   {0}", (object)actual);
+
+        actual.AssertEquals(expected);
     }
 
     [TestMethod]
@@ -38,9 +36,9 @@ public class SHA256Tests
 
         var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var result = SHA256.Compute(new MemoryStream(bytes));
+        var result_bytes = MathCore.Hash.SHA256.Compute(new MemoryStream(bytes));
 
-        var actual   = result.ToStringHex();
+        var actual = result_bytes.ToStringHex();
         var expected = expected_result.ToStringHex();
 
         Debug.WriteLine("");
@@ -51,32 +49,96 @@ public class SHA256Tests
     }
 
     [TestMethod]
-    public void Hash_LongData()
+    [DataRow(11, DisplayName = "Data byte length = 11")]
+    [DataRow(55, DisplayName = "Data byte length = 55")]
+    [DataRow(56, DisplayName = "Data byte length = 56")]
+    [DataRow(63, DisplayName = "Data byte length = 63")]
+    [DataRow(160, DisplayName = "Data byte length = 160")]
+    public void Hash(int DataLength)
     {
         Debug.WriteLine(DateTime.Now);
+        //var rnd_seed = Random.Shared.Next();
+        var rnd_seed = 5;
+        Debug.WriteLine("Random seed " + rnd_seed);
 
-        //var seed = Random.Shared.Next();
-        var seed = 5;
-        var rnd  = new Random(seed);
+        var rnd = new Random(rnd_seed);
 
-        Debug.WriteLine("Seed:", seed);
+        var bytes = new byte[DataLength];
+        rnd.NextBytes(bytes);
 
-        var data_length = rnd.Next(1024 * 1024 / 2, 5 * 1024 * 1024 + 1);
-        Debug.WriteLine("Data length = {0}", data_length);
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
 
-        var data = new byte[data_length];
-        rnd.NextBytes(data);
+        var result_bytes = MathCore.Hash.SHA256.Compute(bytes);
 
-        var expected_hash = System.Security.Cryptography.SHA256.HashData(data);
+        var actual = result_bytes.ToStringHex();
+        var expected = expected_result.ToStringHex();
 
-        var actual_hash = SHA256.Compute(data);
+        Debug.WriteLine("");
+        Debug.WriteLine("Expected {0}", (object)expected);
+        Debug.WriteLine("Actual   {0}", (object)actual);
 
-        var expected_hash_str = expected_hash.ToStringHex(false);
-        var actual_hash_str   = actual_hash.ToStringHex(false);
+        actual.AssertEquals(expected);
+    }
 
-        actual_hash_str.ToDebug("Actual  :");
-        expected_hash_str.ToDebug("Expected:");
+    [TestMethod]
+    [DataRow(11, DisplayName = "Data stream length = 11")]
+    [DataRow(55, DisplayName = "Data stream length = 55")]
+    [DataRow(56, DisplayName = "Data stream length = 56")]
+    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(160, DisplayName = "Data stream length = 160")]
+    public void Hash_Stream(int DataLength)
+    {
+        //var rnd_seed = Random.Shared.Next();
+        var rnd_seed = 5;
+        Debug.WriteLine("Random seed " + rnd_seed);
 
-        actual_hash_str.AssertEquals(expected_hash_str);
+        var rnd = new Random(rnd_seed);
+
+        var bytes = new byte[DataLength];
+        rnd.NextBytes(bytes);
+
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
+
+        var result_bytes = MathCore.Hash.SHA256.Compute(new MemoryStream(bytes));
+
+        var actual = result_bytes.ToStringHex();
+        var expected = expected_result.ToStringHex();
+
+        Debug.WriteLine("");
+        Debug.WriteLine("Expected {0}", (object)expected);
+        Debug.WriteLine("Actual   {0}", (object)actual);
+
+        actual.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    [DataRow(11, DisplayName = "Data stream length = 11")]
+    [DataRow(55, DisplayName = "Data stream length = 55")]
+    [DataRow(56, DisplayName = "Data stream length = 56")]
+    [DataRow(63, DisplayName = "Data stream length = 63")]
+    [DataRow(160, DisplayName = "Data stream length = 160")]
+    public async Task HashAsync_Stream(int DataLength)
+    {
+        //var rnd_seed = Random.Shared.Next();
+        var rnd_seed = 5;
+        Debug.WriteLine("Random seed " + rnd_seed);
+
+        var rnd = new Random(rnd_seed);
+
+        var bytes = new byte[DataLength];
+        rnd.NextBytes(bytes);
+
+        var expected_result = System.Security.Cryptography.SHA256.HashData(bytes);
+
+        var result_bytes = await MathCore.Hash.SHA256.ComputeAsync(new MemoryStream(bytes));
+
+        var actual = result_bytes.ToStringHex();
+        var expected = expected_result.ToStringHex();
+
+        Debug.WriteLine("");
+        Debug.WriteLine("Expected {0}", (object)expected);
+        Debug.WriteLine("Actual   {0}", (object)actual);
+
+        actual.AssertEquals(expected);
     }
 }
