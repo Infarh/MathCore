@@ -1,22 +1,23 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+#nullable enable
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
 public class LambdaObserver<T> : SimpleObserverEx<T>
 {
-    private readonly Action<T> _OnNext;
-    private readonly Action _OnCompleted;
-    private readonly Action _OnReset;
-    private readonly Action<Exception> _OnError;
+    private readonly Action<T>? _OnNext;
+    private readonly Action? _OnCompleted;
+    private readonly Action? _OnReset;
+    private readonly Action<Exception>? _OnError;
 
     public LambdaObserver
     (
-        [NotNull]IObservable<T> Observable,
-        [CanBeNull]Action<T> OnNext = null,
-        [CanBeNull]Action OnCompleted = null,
-        [CanBeNull]Action OnReset = null,
-        [CanBeNull]Action<Exception> OnError = null
+        IObservable<T> Observable,
+        Action<T>? OnNext = null,
+        Action? OnCompleted = null,
+        Action? OnReset = null,
+        Action<Exception>? OnError = null
     ) : base(Observable)
     {
         _OnNext      = OnNext;

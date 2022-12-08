@@ -1,10 +1,13 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
 
+using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
 namespace System.Xml;
 
+[PublicAPI]
 public static class XmlReaderExtensions
 {
     [DST]

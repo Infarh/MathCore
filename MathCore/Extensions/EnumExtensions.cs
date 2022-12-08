@@ -23,7 +23,7 @@ public static class EnumExtensions
         var attribute_type = typeof(TAttribute);
         var value_type     = value.GetType();
         var field          = value_type.GetField(value.ToString());
-        return (TAttribute[])field.GetCustomAttributes(attribute_type, false);
+        return (TAttribute[]?)field.GetCustomAttributes(attribute_type, false);
     }
 
     private static TValue[] GetAttributeValues<TAttribute, TValue>(this Enum value, Func<TAttribute, TValue> Selector)

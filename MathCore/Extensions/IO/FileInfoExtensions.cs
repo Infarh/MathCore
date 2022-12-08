@@ -114,8 +114,19 @@ public static class FileInfoExtensions
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
         using var stream = file.ThrowIfNotFound().OpenRead();
-        using var md5    = new Security.Cryptography.SHA256Managed();
-        return md5.ComputeHash(stream);
+        var       hash   = SHA512.Compute(stream);
+        return hash;
+    }
+
+    /// <summary>Вычислить хеш-сумму SHA256</summary>
+    /// <param name="file">Файл, контрольную сумму которого надо вычислить</param>
+    /// <returns>Массив байт контрольной суммы</returns>
+    public static async Task<byte[]> ComputeSHA256Async(this FileInfo file, CancellationToken Cancel = default)
+    {
+        if (file is null) throw new ArgumentNullException(nameof(file));
+        using var stream = file.ThrowIfNotFound().OpenRead();
+        var       hash   = await SHA512.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+        return hash;
     }
 
     /// <summary>Вычислить хеш-сумму MD5</summary>
@@ -124,18 +135,19 @@ public static class FileInfoExtensions
     public static byte[] ComputeMD5(this FileInfo file)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
-        using var stream   = file.ThrowIfNotFound().OpenRead();
-        var       md5_hash = MD5.Compute(stream);
-        return md5_hash;
+
+        using var stream = file.ThrowIfNotFound().OpenRead();
+        var       hash   = MD5.Compute(stream);
+        return hash;
     }
 
     public static async Task<byte[]> ComputeMD5Async(this FileInfo file, CancellationToken Cancel = default)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
 
-        using var stream   = file.ThrowIfNotFound().OpenRead();
-        var       md5_hash = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
-        return md5_hash;
+        using var stream = file.ThrowIfNotFound().OpenRead();
+        var       hash   = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+        return hash;
     }
 
     public static IEnumerable<byte> ReadBytes(this FileInfo file)

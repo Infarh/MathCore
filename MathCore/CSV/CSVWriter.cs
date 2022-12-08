@@ -303,7 +303,7 @@ public readonly struct CSVWriter<T>
                 values[i] = Convert.ToString(selectors[i](item));
 
             Cancel.ThrowIfCancellationRequested();
-            await writer.WriteLineValuesAsync(separator, values);
+            await writer.WriteLineValuesAsync(separator, values).ConfigureAwait(false);
         }
     }
 

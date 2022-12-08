@@ -1,4 +1,4 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -8,26 +8,26 @@ namespace System.Linq.Reactive;
 public class LambdaObservable<T> : SimpleObservableEx<T>
 {
     /// <summary>Присоединённый наблюдатель</summary>
-    private readonly LinkedObserver<T> _Observer;
+    private readonly LinkedObserver<T>? _Observer;
 
     /// <summary>Действие обработки следующего объекта наблюдения</summary>
-    private readonly Action<IObserver<T>, T> _OnNext;
+    private readonly Action<IObserver<T>, T>? _OnNext;
 
     /// <summary>Действие обработки завершения процесса наблюдения</summary>
-    private readonly Action<IObserver<T>> _OnCompleted;
+    private readonly Action<IObserver<T>>? _OnCompleted;
 
     /// <summary>Действие обработки сброса состояния наблюдаемого объекта</summary>
-    private readonly Action<IObserverEx<T>> _OnReset;
+    private readonly Action<IObserverEx<T>>? _OnReset;
 
-    private readonly Action<IObserver<T>, Exception> _OnError;
+    private readonly Action<IObserver<T>, Exception>? _OnError;
 
     public LambdaObservable
     (
-        [CanBeNull]IObservable<T> observable = null,
-        [CanBeNull]Action<IObserver<T>, T> OnNext = null,
-        [CanBeNull]Action<IObserver<T>> OnCompleted = null,
-        [CanBeNull]Action<IObserverEx<T>> OnReset = null,
-        [CanBeNull]Action<IObserver<T>, Exception> OnError = null
+        IObservable<T>? observable = null,
+        Action<IObserver<T>, T>? OnNext = null,
+        Action<IObserver<T>>? OnCompleted = null,
+        Action<IObserverEx<T>>? OnReset = null,
+        Action<IObserver<T>, Exception>? OnError = null
     )
     {
         if (observable != null)
@@ -54,6 +54,6 @@ public class LambdaObservable<T> : SimpleObservableEx<T>
     protected override void Dispose(bool Disposing)
     {
         base.Dispose(Disposing);
-        ((IDisposable) _Observer)?.Dispose();
+        _Observer?.Dispose();
     }
 }

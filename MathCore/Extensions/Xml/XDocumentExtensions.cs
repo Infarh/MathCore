@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Xml.XPath;
 
+using MathCore.Annotations;
+
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq;
 
+[PublicAPI]
 public static class XDocumentExtensions
 {
     public static string ToXml(this XDocument document)

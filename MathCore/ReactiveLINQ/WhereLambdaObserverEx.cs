@@ -1,4 +1,5 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -7,9 +8,9 @@ internal sealed class WhereLambdaObserverEx<T> : LambdaObserver<T>
 {
     public WhereLambdaObserverEx
     (
-        [NotNull]IObservable<T> Source,
-        [NotNull]SimpleObservableEx<T> Destination,
-        [NotNull]Func<T, bool> WhereSelector
+        IObservable<T> Source,
+        SimpleObservableEx<T> Destination,
+        Func<T, bool> WhereSelector
     ) : base
     (
         Source,

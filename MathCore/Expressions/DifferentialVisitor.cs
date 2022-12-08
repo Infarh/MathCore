@@ -1,5 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Runtime.CompilerServices;
+
 // ReSharper disable InconsistentNaming
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
@@ -21,19 +22,17 @@ public class DifferentialVisitor : ExpressionVisitorEx
         if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
     }
 
-    [NotNull]
-    protected override Expression VisitConstant([NotNull] ConstantExpression c)
+    protected override Expression VisitConstant(ConstantExpression c)
     {
         CheckValueType(c.Type);
         return Expression.Constant(0.0);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    private static Expression sAdd([NotNull] Expression a, [NotNull] Expression b) => sAdd(Expression.Add(a, b));
+    private static Expression sAdd(Expression a, Expression b) => sAdd(Expression.Add(a, b));
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    private static Expression sAdd(double a, [NotNull] Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
+    private static Expression sAdd(double a, Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //private static Expression sAdd(Expression a, double b) { return sAdd(Expression.Add(a, Expression.Constant(b))); }
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -41,14 +40,11 @@ public class DifferentialVisitor : ExpressionVisitorEx
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //private static Expression sSubtract(Expression a, Expression b) { return sAdd(Expression.Subtract(a, b)); }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    private static Expression sSubtract(double a, [NotNull] Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
+    private static Expression sSubtract(double a, Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    private static Expression sSubtract([NotNull] Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
+    private static Expression sSubtract(Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
     //private static Expression sDec(Expression a) { return sSubtract(a, 1); }
-    [NotNull]
-    private static Expression sAdd([NotNull] BinaryExpression b)
+    private static Expression sAdd(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -65,14 +61,12 @@ public class DifferentialVisitor : ExpressionVisitorEx
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    private static Expression sMultiply([NotNull] Expression a, [NotNull] Expression b) => sMultiply(Expression.Multiply(a, b));
+    private static Expression sMultiply(Expression a, Expression b) => sMultiply(Expression.Multiply(a, b));
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //private static Expression sMultiply(double a, Expression b) { return sMultiply(Expression.Multiply(Expression.Constant(a), b)); }
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //private static Expression sMultiply(Expression a, double b) { return sMultiply(Expression.Multiply(a, Expression.Constant(b))); }
-    [NotNull]
-    private static Expression sMultiply([NotNull] BinaryExpression b)
+    private static Expression sMultiply(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -85,11 +79,10 @@ public class DifferentialVisitor : ExpressionVisitorEx
         return b;
     }
 
-    [NotNull] private static Expression sDivide([NotNull] Expression a, [NotNull] Expression b) => sDivide(Expression.Divide(a, b));
-    [NotNull] private static Expression sDivide(double a, [NotNull] Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
+    private static Expression sDivide(Expression a, Expression b) => sDivide(Expression.Divide(a, b));
+    private static Expression sDivide(double a, Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
     //private static Expression sDivide(Expression a, double b) { return sDivide(Expression.Divide(a, Expression.Constant(b))); }
-    [NotNull]
-    private static Expression sDivide([NotNull] BinaryExpression b)
+    private static Expression sDivide(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -102,10 +95,9 @@ public class DifferentialVisitor : ExpressionVisitorEx
         return b;
     }
 
-    [NotNull] private static Expression sPower([NotNull] Expression a, [NotNull] Expression b) => sPower(Expression.Power(a, b));
-    [NotNull] private static Expression sPower([NotNull] Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
-    [NotNull]
-    private static Expression sPower([NotNull] BinaryExpression b)
+    private static Expression sPower(Expression a, Expression b) => sPower(Expression.Power(a, b));
+    private static Expression sPower(Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
+    private static Expression sPower(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -117,8 +109,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
         return b;
     }
 
-    [NotNull]
-    private static Expression sCall([NotNull] MethodCallExpression CallExpression)
+    private static Expression sCall(MethodCallExpression CallExpression)
     {
         var args = CallExpression.Arguments;
         if (!args.All(a => a is ConstantExpression)) return CallExpression;
@@ -129,7 +120,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
         return CallExpression;
     }
 
-    protected override Expression VisitBinary([NotNull] BinaryExpression b)
+    protected override Expression VisitBinary(BinaryExpression b)
     {
         switch(b.NodeType)
         {
@@ -198,18 +189,16 @@ public class DifferentialVisitor : ExpressionVisitorEx
         }
     }
 
-    [NotNull]
-    protected override Expression VisitParameter([NotNull] ParameterExpression p)
+    protected override Expression VisitParameter(ParameterExpression p)
     {
         CheckValueType(p.Type);
         return Expression.Constant(1.0);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    private static Expression MathMethod([NotNull] string Name, params Expression[] p) => Expression.Call(typeof(Math), Name, null, p);
+    private static Expression MathMethod(string Name, params Expression[] p) => Expression.Call(typeof(Math), Name, null, p);
 
-    protected Expression VisitMathMethodCall([NotNull] MethodCallExpression m)
+    protected Expression VisitMathMethodCall(MethodCallExpression m)
     {
         switch(m.Method.Name)
         {
@@ -314,18 +303,18 @@ public class DifferentialVisitor : ExpressionVisitorEx
 
     public class MethodDifferentialEventArgs : EventArgs
     {
-        public MethodCallExpression Method { get; private set; }
+        public MethodCallExpression Method { get; }
 
-        public Expression DifferentialExpression { get; set; }
+        public Expression? DifferentialExpression { get; set; }
 
         public MethodDifferentialEventArgs(MethodCallExpression Method) => this.Method = Method;
     }
 
-    public event EventHandler<MethodDifferentialEventArgs> MethodDifferential;
+    public event EventHandler<MethodDifferentialEventArgs>? MethodDifferential;
 
     protected virtual void OnMethodDifferential(MethodDifferentialEventArgs Args) => MethodDifferential?.Invoke(this, Args);
 
-    private Expression OnMethodDifferential(MethodCallExpression method)
+    private Expression? OnMethodDifferential(MethodCallExpression method)
     {
         var args = new MethodDifferentialEventArgs(method);
         OnMethodDifferential(args);
@@ -340,6 +329,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
         var method = m.Method;
         if(method.DeclaringType == typeof(Math))
             return VisitMathMethodCall(m);
+
         throw new NotSupportedException();
         //return base.VisitMethodCall(CallExpression);
     }

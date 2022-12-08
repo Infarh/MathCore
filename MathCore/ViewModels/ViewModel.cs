@@ -343,7 +343,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
         while (delta > 0)
         {
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            await Task.Delay(TimeSpan.FromMilliseconds(delta));
+            await Task.Delay(TimeSpan.FromMilliseconds(delta)).ConfigureAwait(false);
             delta = Timeout - (DateTime.Now - _PropertyAsyncInvokeTime[PropertyName]).TotalMilliseconds;
         }
         OnChanging?.Invoke();

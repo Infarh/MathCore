@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿#nullable enable
+using System.Threading;
 using System.Threading.Tasks;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -30,17 +31,18 @@ public class TimeIntervalObservable : SimpleObservableEx<TimeSpan>
         {
             if(_Work) return;
             _Work = true;
-            var NeedReset = _Thread != null;
+            var need_reset = _Thread != null;
             _Thread = _Async
                 ? new Thread(AsyncThreadMethod) { IsBackground = true }
                 : new Thread(SyncThreadMethod) { IsBackground  = true };
-            if(NeedReset) base.OnReset();
+            if(need_reset) base.OnReset();
             _Thread.Start();
         }
     }
 
     public void Stop()
     {
+        // ReSharper disable once InconsistentlySynchronizedField
         if(!_Work) return;
         lock (_SyncObject)
         {
@@ -80,6 +82,6 @@ public class TimeIntervalObservable : SimpleObservableEx<TimeSpan>
     protected override async void Dispose(bool Disposing)
     {
         base.Dispose(Disposing);
-        await Task.Factory.StartNew(Stop);
+        await Task.Run(Stop).ConfigureAwait(false);
     }
 }

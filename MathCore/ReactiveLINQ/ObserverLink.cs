@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿#nullable enable
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -13,31 +13,28 @@ internal sealed class ObserverLink<T> : IDisposable
     /// <param name="Observers">Коллекция наблюдателей</param>
     /// <param name="Observer">Добавляемый наблюдатель</param>
     /// <returns>Хэш-код связи</returns>
-    private static int GetHash([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) { unchecked { return Observer.GetHashCode() * 397 ^ Observers.GetHashCode(); } }
+    private static int GetHash(ICollection<IObserver<T>> Observers, IObserver<T> Observer) { unchecked { return Observer.GetHashCode() * 397 ^ Observers.GetHashCode(); } }
 
     /// <summary>Словарь связей</summary>
-    [NotNull]
     private static readonly ConcurrentDictionary<int, ObserverLink<T>> __Links = new();
 
     /// <summary>Получить связь между наблюдателем и списком наблюдателей</summary>
     /// <param name="Observers">Коллекция наблюдателей</param>
     /// <param name="Observer">Добавляемый наблюдатель</param>
     /// <returns>Связь между наблюдателем и списком наблюдателей</returns>
-    [NotNull]
-    public static ObserverLink<T> GetLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), _ => new ObserverLink<T>(Observers, Observer));
+    public static ObserverLink<T> GetLink(ICollection<IObserver<T>> Observers, IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), _ => new ObserverLink<T>(Observers, Observer));
 
     /// <summary>Удаляемый наблюдатель</summary>
     private IObserver<T> _Observer;
     /// <summary>Коллекция наблюдателей, из которой требуется удалить отслеживаемый наблюдатель</summary>
     private ICollection<IObserver<T>> _Observers;
     /// <summary>Объект межпотоковой синхронизации</summary>
-    [NotNull]
     private readonly object _SyncRoot = new();
 
     /// <summary>Инициализация новой связи между списком наблюдателей и отслеживаемым наблюдателем</summary>
     /// <param name="Observers">Список наблюдателей</param>
     /// <param name="Observer">Отслеживаемый наблюдатель</param>
-    private ObserverLink([NotNull] ICollection<IObserver<T>> Observers, [NotNull]IObserver<T> Observer)
+    private ObserverLink(ICollection<IObserver<T>> Observers, IObserver<T> Observer)
     {
         _Observers = Observers;
         _Observer  = Observer;

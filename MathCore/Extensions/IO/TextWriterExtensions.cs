@@ -27,11 +27,11 @@ public static class TextWriterExtensions
         await writer.WriteAsync(values[0]).ConfigureAwait(false);
         for(var i = 1; i < values.Length; i++)
         {
-            await writer.WriteAsync(Separator);
-            await writer.WriteAsync(values[i]);
+            await writer.WriteAsync(Separator).ConfigureAwait(false);
+            await writer.WriteAsync(values[i]).ConfigureAwait(false);
         }
 
-        await writer.WriteLineAsync();
+        await writer.WriteLineAsync().ConfigureAwait(false);
         return writer;
     }
 }

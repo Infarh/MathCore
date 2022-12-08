@@ -30,7 +30,7 @@ public static class TaskEx
 
     public static Task<T> ToTask<T>(this T value) => Task.FromResult(value);
 
-    public static async Task<TResult> Bind<T, TResult>(this Task<T> task, Func<T, Task<TResult>> Selector) => await Selector(await task);
+    public static async Task<TResult> Bind<T, TResult>(this Task<T> task, Func<T, Task<TResult>> Selector) => await Selector(await task).ConfigureAwait(false);
 
     //public static Task<TResult> SelectMany<T, TValue, TResult>(
     //    this Task<T> task,
@@ -105,9 +105,9 @@ public static class TaskEx
     {
         var tcs = new TaskCompletionSource<object?>();
         using (cancel.Register(__CancellationRegistration, tcs))
-            if (task != await Task.WhenAny(task, tcs.Task))
+            if (task != await Task.WhenAny(task, tcs.Task).ConfigureAwait(false))
                 throw new TaskCanceledException();
-        return await task;
+        return await task.ConfigureAwait(false);
     }
 
     public static Task Catch<T>(this Task<T> task, Action<AggregateException> ProcessExceptions) => task.ContinueWith(t => ProcessExceptions(t.Exception!), TaskContinuationOptions.OnlyOnFaulted);

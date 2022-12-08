@@ -157,7 +157,7 @@ public class MatrixTest
 
         Assert.AreEqual(A, B);
         Assert.IsTrue(A == B);
-        Assert.AreEqual(A, a);
+        Assert.AreEqual<object>(A, a);
         Assert.IsTrue(A == a);
 
         double[,] c =
@@ -289,7 +289,7 @@ public class MatrixTest
         Assert.AreEqual(89, C[1, 2]);
         Assert.AreEqual(146, C[2, 2]);
 
-        Assert.AreEqual(C, c);
+        Assert.AreEqual<object>(C, c);
     }
 
     [TestMethod]

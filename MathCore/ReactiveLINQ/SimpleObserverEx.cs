@@ -1,4 +1,6 @@
-﻿using MathCore.Annotations;
+﻿// ReSharper disable VirtualMemberNeverOverridden.Global
+#nullable enable
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
 
@@ -10,13 +12,13 @@ namespace System.Linq.Reactive;
 public class SimpleObserverEx<T> : IObserverEx<T>
 {
     /// <summary>События появления следующего объекта в последовательности</summary>
-    public event Action<T> Next;
+    public event Action<T>? Next;
     /// <summary>Событие завершения последовательности</summary>
-    public event Action Completed;
+    public event Action? Completed;
     /// <summary>Событие сброса последовательности</summary>
-    public event Action Reset;
+    public event Action? Reset;
     /// <summary>Событие появления исключения</summary>
-    public event Action<Exception> Error;
+    public event Action<Exception>? Error;
 
     private readonly IDisposable _Unsubscriber;
 
@@ -24,7 +26,7 @@ public class SimpleObserverEx<T> : IObserverEx<T>
     public object Tag { get; set; }
 
     /// <summary>Инициализация нового простейшего наблюдателя</summary>
-    public SimpleObserverEx([NotNull] IObservable<T> observable) => _Unsubscriber = observable.Subscribe(this);
+    public SimpleObserverEx(IObservable<T> observable) => _Unsubscriber = observable.Subscribe(this);
 
     /// <summary>Метод генерации события появления следующего объекта</summary>
     /// <param name="item">Следующий объект в последовательности</param>

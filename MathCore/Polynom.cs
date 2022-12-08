@@ -157,16 +157,16 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
     public Polynom GetDifferential(int Order = 1)
     {
         var coefficients = Array.GetDifferential(_a, Order);
-        var zerros = 0;
-        while (zerros < coefficients.Length)
+        var zeros = 0;
+        while (zeros < coefficients.Length)
         {
-            if (coefficients[coefficients.Length - 1 - zerros] != 0)
+            if (coefficients[coefficients.Length - 1 - zeros] != 0)
                 break;
-            zerros++;
+            zeros++;
         }
 
-        if (zerros > 0)
-            System.Array.Resize(ref coefficients, coefficients.Length - zerros);
+        if (zeros > 0)
+            System.Array.Resize(ref coefficients, coefficients.Length - zeros);
 
         return new(coefficients);
     }
@@ -225,14 +225,15 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
         if (other is null) return false;
         if (ReferenceEquals(this, other) || ReferenceEquals(_a, other._a)) return true;
 
-        var a      = _a;
         var b      = other._a;
-        var length = a.Length;
+        var length = _a.Length;
 
         if (length != b.Length) return false;
+
         for (var i = 0; i < length; i++)
-            if (!_a[i].Equals(other._a[i]))
+            if (_a[i] != other._a[i])
                 return false;
+
         return true;
     }
 
@@ -258,7 +259,6 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
     /// <inheritdoc />
     IEnumerator<double> IEnumerable<double>.GetEnumerator() => ((IEnumerable<double>)_a).GetEnumerator();
 
-    ///// <inheritdoc />
     //public override string ToString() =>
     //    _a.Aggregate(new StringBuilder(), (S, a, i) => S.AppendFormat("{0}{1}{2}",
     //        a < 0 || i == 0 ? string.Empty : "+",
@@ -266,7 +266,6 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
     //        i == 0 ? string.Empty : $"*x{(i == 1 ? string.Empty : "^" + i)}"))
     //      .ToString();
 
-    ///// <inheritdoc />
     //public override string ToString() => _a
     //   .Aggregate(new StringBuilder(), (S, a, i) =>
     //    {

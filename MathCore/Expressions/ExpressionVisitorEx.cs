@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 // ReSharper disable once CheckNamespace
@@ -7,7 +8,7 @@ namespace System.Linq.Expressions;
 //[Diagnostics.DST]
 public abstract class ExpressionVisitorEx
 {
-    public virtual Expression Visit(Expression Node) =>
+    public virtual Expression? Visit(Expression? Node) =>
         Node is null
             ? null
             : Node.NodeType switch

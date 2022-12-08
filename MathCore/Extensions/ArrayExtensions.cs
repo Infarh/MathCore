@@ -318,7 +318,7 @@ public static class ArrayExtensions
         if (low < j) sort_tasks.Add(QuickSortAsync(A, low, j));
         if (i < high) sort_tasks.Add(QuickSortAsync(A, i, high));
         if (sort_tasks.Count > 0)
-            await Task.WhenAll(sort_tasks);
+            await Task.WhenAll(sort_tasks).ConfigureAwait(false);
     }
 
     /// <summary>Быстрая сортировка Хоара</summary>
@@ -383,7 +383,7 @@ public static class ArrayExtensions
         if (low < j) sort_tasks.Add(QuickSortAsync(A, low, j, Comparer));
         if (i < high) sort_tasks.Add(QuickSortAsync(A, i, high, Comparer));
         if (sort_tasks.Count > 0)
-            await Task.WhenAll(sort_tasks);
+            await Task.WhenAll(sort_tasks).ConfigureAwait(false);
     }
 
     /// <summary>Расчёт хеш-суммы всех элементов массива</summary>
