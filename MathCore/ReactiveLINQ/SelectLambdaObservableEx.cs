@@ -1,4 +1,4 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -7,11 +7,11 @@ internal sealed class SelectLambdaObservableEx<TItem, TValue> : SimpleObservable
 {
     private readonly SelectLambdaObserverEx<TItem, TValue> _Observer;
 
-    public SelectLambdaObservableEx([NotNull] IObservable<TItem> observable, [NotNull] Func<TItem, TValue> Selector) => _Observer = new SelectLambdaObserverEx<TItem, TValue>(observable, this, Selector);
+    public SelectLambdaObservableEx(IObservable<TItem> observable, Func<TItem, TValue> Selector) => _Observer = new SelectLambdaObserverEx<TItem, TValue>(observable, this, Selector);
 
     protected override void Dispose(bool Disposing)
     {
         base.Dispose(Disposing);
-        ((IDisposable)_Observer).Dispose();
+        _Observer.Dispose();
     }
 }

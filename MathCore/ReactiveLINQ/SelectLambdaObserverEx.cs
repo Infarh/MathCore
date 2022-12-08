@@ -1,4 +1,5 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -7,9 +8,9 @@ internal sealed class SelectLambdaObserverEx<TItem, TValue> : LambdaObserver<TIt
 {
     public SelectLambdaObserverEx
     (
-        [NotNull]IObservable<TItem> Source,
-        [NotNull]SimpleObservableEx<TValue> Destination,
-        [NotNull]Func<TItem, TValue> Converter
+        IObservable<TItem> Source,
+        SimpleObservableEx<TValue> Destination,
+        Func<TItem, TValue> Converter
     ) : base
     (
         Source,

@@ -30,8 +30,8 @@ public static class IXmlSerializableAsyncExtensions
         where T : IXmlSerializableAsync
     {
         await writer.WriteStartElementAsync(ElementName).ConfigureAwait(false);
-        await obj.WriteXmlAsync(writer);
-        await writer.WriteEndElementAsync();
+        await obj.WriteXmlAsync(writer).ConfigureAwait(false);
+        await writer.WriteEndElementAsync().ConfigureAwait(false);
         return obj;
     }
 
@@ -42,12 +42,12 @@ public static class IXmlSerializableAsyncExtensions
         await writer.WriteStartElementAsync(GroupName).ConfigureAwait(false);
         if(attributes != null)
             foreach(var (key, value) in attributes.Where(kv => kv.Value != null))
-                await writer.WriteAttributeStringAsync(key, value.ToString());
+                await writer.WriteAttributeStringAsync(key, value.ToString()).ConfigureAwait(false);
 
         foreach(var obj in enumeration)
-            await obj.WriteXmlToAsync(writer, ElementName);
+            await obj.WriteXmlToAsync(writer, ElementName).ConfigureAwait(false);
 
-        await writer.WriteEndElementAsync();
+        await writer.WriteEndElementAsync().ConfigureAwait(false);
         return enumeration;
     }
 

@@ -1,4 +1,5 @@
-﻿// ReSharper disable EventNeverSubscribedTo.Global
+﻿#nullable enable
+// ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
@@ -7,16 +8,16 @@ namespace System.Linq.Reactive;
 public interface IObserverEx<T> : IObserver<T>, IDisposable
 {
     /// <summary>Событие появления следующего объекта последовательности</summary>
-    event Action<T> Next;
+    event Action<T>? Next;
 
     /// <summary>Событие завершения последовательности</summary>
-    event Action Completed;
+    event Action? Completed;
 
     /// <summary>Событие сброса последовательности</summary>
-    event Action Reset;
+    event Action? Reset;
 
     /// <summary>Событие появления исключения</summary>
-    event Action<Exception> Error;
+    event Action<Exception>? Error;
 
     /// <summary>Метод генерации события сброса последовательности</summary>
     void OnReset();

@@ -1,5 +1,6 @@
-﻿using System.Runtime.InteropServices;
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Runtime.InteropServices;
+
 // ReSharper disable UnusedParameter.Global
 
 // ReSharper disable UnusedMember.Global
@@ -15,7 +16,6 @@ namespace System.Linq.Reactive;
 /// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential, Size = 1)]
-[Diagnostics.CodeAnalysis.SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
 public struct Unit : IEquatable<Unit>
 {
     private static readonly Unit __Default;
@@ -52,7 +52,7 @@ public struct Unit : IEquatable<Unit>
     /// <summary>Determines whether the specified System.Object is equal to the current Unit</summary>
     /// <param name="obj">The System.Object to compare with the current Unit</param>
     /// <returns>true if the specified System.Object is a Unit value; otherwise, false</returns>
-    public override bool Equals(object obj) => obj is Unit;
+    public override bool Equals(object? obj) => obj is Unit;
 
     /// <summary>Returns the hash code for the current Unit value</summary>
     /// <returns>A hash code for the current Unit value</returns>
@@ -60,6 +60,5 @@ public struct Unit : IEquatable<Unit>
 
     /// <summary>Returns a string representation of the current Unit value</summary>
     /// <returns>String representation of the current Unit value</returns>
-    [NotNull]
     public override string ToString() => "void";
 }

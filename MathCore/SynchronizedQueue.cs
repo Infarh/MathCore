@@ -81,7 +81,7 @@ public class SynchronizedItemsProcessor<T> : IDisposable
         _Cancellation = new CancellationTokenSource();
         var cancellation_token = _Cancellation.Token;
         _Tasks = Enumerable.Range(0, ThreadCount)
-           .Select(_ => Task.Factory.StartNew(() =>
+           .Select(_ => Task.Run(() =>
             {
                 while(!cancellation_token.IsCancellationRequested)
                     action(_Queue.Get());
@@ -93,7 +93,7 @@ public class SynchronizedItemsProcessor<T> : IDisposable
     {
         _Cancellation = new CancellationTokenSource();
         _Tasks = Enumerable.Range(0, ThreadCount)
-           .Select(_ => Task.Factory.StartNew(() =>
+           .Select(_ => Task.Run(() =>
             {
                 while(!_Cancellation.IsCancellationRequested)
                 {

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿#nullable enable
+using System.Reflection;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;

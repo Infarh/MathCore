@@ -39,7 +39,7 @@ public static class StreamExtensions
 
         while (readed < length)
         {
-            var last_readed = await stream.ReadAsync(buffer, readed, length - readed, Cancel);
+            var last_readed = await stream.ReadAsync(buffer, readed, length - readed, Cancel).ConfigureAwait(false);
             if (last_readed == 0)
                 return readed;
 
@@ -253,7 +253,7 @@ public static class StreamExtensions
         using (cancel.Register(r => ((StreamReader)r).Dispose(), reader))
             try
             {
-                return await reader.ReadToEndAsync();
+                return await reader.ReadToEndAsync().ConfigureAwait(false);
             }
             catch (ObjectDisposedException) when (cancel.IsCancellationRequested)
             {

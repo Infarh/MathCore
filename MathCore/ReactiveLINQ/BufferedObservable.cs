@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using MathCore.Annotations;
+﻿#nullable enable
+using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -12,7 +12,7 @@ internal abstract class BufferedObservable<T> : SimpleObservableEx<T[]>
     private readonly Queue<Queue<T>> _Buffer;
     protected readonly object _SyncRoot = new();
 
-    protected BufferedObservable([NotNull] IObservable<T> ObservableObject, int QueueLength, int BufferLength = 0)
+    protected BufferedObservable(IObservable<T> ObservableObject, int QueueLength, int BufferLength = 0)
     {
         _BufferLength = BufferLength;
         _Observer     = new LambdaObserver<T>(ObservableObject, OnNext, OnCompleted, OnReset, OnError);
@@ -21,8 +21,7 @@ internal abstract class BufferedObservable<T> : SimpleObservableEx<T[]>
 
     protected abstract void OnNext(T value);
 
-    [CanBeNull]
-    protected T[] AddValue(T Value)
+    protected T[]? AddValue(T Value)
     {
         lock (_SyncRoot)
         {

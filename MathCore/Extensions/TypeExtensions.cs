@@ -36,7 +36,7 @@ public static class TypeExtensions
     /// <param name="TargetType">Целевой тип значения</param>
     /// <param name="Source">Объект, тип которого требуется привести</param>
     /// <returns>Функция, осуществляющая приведение типа объекта к целевому типу данных</returns>
-    private static Func<object, object> GetCasterFrom<T>(Type TargetType, [CanBeNull] T Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
+    private static Func<object, object> GetCasterFrom<T>(Type TargetType, T? Source) => TargetType.GetCasterFrom(Source?.GetType() ?? typeof(object));
 
     /// <summary>Сформировать функцию, осуществляющую приведение типа значения к указанному типу данных</summary>
     /// <param name="SourceType">Тип исходных данных</param>
@@ -93,10 +93,10 @@ public static class TypeExtensions
     /// <param name="SourceType">Тип исходного значения</param>
     /// <param name="TargetType">Целевой тип данных</param>
     /// <returns>Выражение, осуществляющее приведение исходного значение к целевому типу данных</returns>
-    public static Expression GetCastExpression(this Type SourceType, Type TargetType, ref ParameterExpression parameter)
+    public static Expression GetCastExpression(this Type SourceType, Type TargetType, ref ParameterExpression? parameter)
     {
         if (SourceType == TargetType) return parameter;
-        Expression source = parameter;
+        Expression? source = parameter;
         if (source is null) source                 = __ConvParameter;
         else if (source.Type != SourceType) source = source.ConvertTo(SourceType);
         return source.ConvertTo(TargetType).ConvertTo(typeof(object));

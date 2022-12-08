@@ -1,4 +1,5 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+using System.Threading;
 
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
@@ -10,7 +11,7 @@ internal class CountedBufferedObservable<T> : BufferedObservable<T>
     private readonly int _BufferPhase;
 
     public CountedBufferedObservable(
-        [NotNull] IObservable<T> ObservableObject,
+        IObservable<T> ObservableObject,
         int BufferLength,
         int BufferPeriod = 0, 
         int BufferPhase = 0) 
@@ -21,10 +22,10 @@ internal class CountedBufferedObservable<T> : BufferedObservable<T>
     }
     protected override void OnNext(T value)
     {
-        T[] r;
+        T[]? r;
         lock (_SyncRoot)
         {
-            if (_Phase++ % _BufferPeriod == _BufferPhase) AddBuffer();
+            if (Interlocked.Increment(ref _Phase) % _BufferPeriod == _BufferPhase) AddBuffer();
             r = AddValue(value);
         }
         if (r != null) OnNext(r);

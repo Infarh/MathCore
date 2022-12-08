@@ -801,12 +801,12 @@ public static class FuncExtensions
 
         var I = await f.GetIntegralValue_SimpsonAsync(x1, x2, N <<= 1).ConfigureAwait(false);
 
-        if (Math.Abs(await f.GetIntegralValue_SimpsonAsync(x1, x2, N) - I) < Eps) 
+        if (Math.Abs(await f.GetIntegralValue_SimpsonAsync(x1, x2, N).ConfigureAwait(false) - I) < Eps) 
             return I;
 
         var t1 = f.GetIntegralValue_AdaptiveAsync(x1, .5 * (x1 + x2), N, Eps);
         var t2 = f.GetIntegralValue_AdaptiveAsync(.5 * (x1 + x2), x2, N, Eps);
-        return (await Task.WhenAll(t1, t2)).Sum();
+        return (await Task.WhenAll(t1, t2).ConfigureAwait(false)).Sum();
     }
 
     public static double GetIntegralValue_AdaptiveTrap(

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable MemberCanBePrivate.Global
@@ -21,32 +22,31 @@ public static class ObservableExtensions
     /// <param name="Observers">Коллекция наблюдателей</param>
     /// <param name="Observer">Добавляемый наблюдатель</param>
     /// <returns>Объект, удаляющий наблюдатель из списка наблюдателей в случае своей отписки</returns>
-    [NotNull]
-    public static IDisposable AddObserver<T>([NotNull] this ICollection<IObserver<T>> Observers, [NotNull] IObserver<T> Observer) =>
+    public static IDisposable AddObserver<T>(this ICollection<IObserver<T>> Observers, IObserver<T> Observer) =>
         ObserverLink<T>.GetLink(Observers, Observer);
 
-    public static void OnCompleted<T>([CanBeNull] this IEnumerable<IObserver<T>> Observers)
+    public static void OnCompleted<T>(this IEnumerable<IObserver<T>>? Observers)
     {
         if (Observers is null) return;
         foreach (var observer in Observers)
             observer.OnCompleted();
     }
 
-    public static void OnError<T>([CanBeNull] this IEnumerable<IObserver<T>> Observers, Exception error)
+    public static void OnError<T>(this IEnumerable<IObserver<T>>? Observers, Exception error)
     {
         if (Observers is null) return;
         foreach (var observer in Observers)
             observer.OnError(error);
     }
 
-    public static void OnNext<T>([CanBeNull] this IEnumerable<IObserver<T>> Observers, T value)
+    public static void OnNext<T>(this IEnumerable<IObserver<T>>? Observers, T value)
     {
         if (Observers is null) return;
         foreach (var observer in Observers)
             observer.OnNext(value);
     }
 
-    public static void OnReset<T>([CanBeNull] this IEnumerable<IObserverEx<T>> Observers)
+    public static void OnReset<T>(this IEnumerable<IObserverEx<T>>? Observers)
     {
         if (Observers is null) return;
         foreach (var observer in Observers)
@@ -58,8 +58,7 @@ public static class ObservableExtensions
     /// <param name="Obj">Наблюдаемый объект</param>
     /// <param name="ProperName">Имя свойства</param>
     /// <returns>Объект-наблюдатель за свойством</returns>
-    [NotNull]
-    public static IObservable<T> FromProperty<T>([NotNull] this INotifyPropertyChanged Obj, [NotNull] string ProperName) =>
+    public static IObservable<T> FromProperty<T>(this INotifyPropertyChanged Obj, string ProperName) =>
         new Property<T>(Obj, ProperName);
 
     /// <summary>Метод фильтрации событий</summary>
@@ -67,8 +66,7 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="Predicate">Метод фильтрации</param>
     /// <returns>Объект-наблюдатель с установленным методом фильтрации</returns>
-    [NotNull]
-    public static IObservableEx<T> Where<T>([NotNull] this IObservable<T> Observable, [NotNull] Func<T, bool> Predicate) =>
+    public static IObservableEx<T> Where<T>(this IObservable<T> Observable, Func<T, bool> Predicate) =>
         new WhereLambdaObservableEx<T>(Observable, Predicate);
 
     /// <summary>Метод фильтрации событий</summary>
@@ -77,11 +75,10 @@ public static class ObservableExtensions
     /// <param name="Predicate">Метод фильтрации</param>
     /// <param name="ElseAction">Метод обработки невошедших событий</param>
     /// <returns>Объект-наблюдатель с установленным методом фильтрации</returns>
-    [NotNull]
     public static IObservableEx<T> Where<T>(
-        [NotNull] this IObservable<T> Observable,
-        [NotNull] Func<T, bool> Predicate,
-        [NotNull] Action<T> ElseAction)
+        this IObservable<T> Observable,
+        Func<T, bool> Predicate,
+        Action<T> ElseAction)
     {
         bool Selector(T t)
         {
@@ -99,27 +96,21 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="Selector">Объект-наблюдатель с преобразованными объектами событий</param>
     /// <returns>Объект-наблюдатель с преобразованными типами объектов</returns>
-    [NotNull]
-    public static IObservableEx<TResult> Select<T, TResult>([NotNull] this IObservable<T> Observable, [NotNull] Func<T, TResult> Selector) =>
+    public static IObservableEx<TResult> Select<T, TResult>(this IObservable<T> Observable, Func<T, TResult> Selector) =>
         new SelectLambdaObservableEx<T, TResult>(Observable, Selector);
 
-    [NotNull]
     public static TimeIntervalObservable Interval_Seconds(double TimeInterval, bool Started = false) =>
         Interval(TimeSpan.FromSeconds(TimeInterval), Started);
 
-    [NotNull]
     public static TimeIntervalObservable Interval_MilliSeconds(double TimeInterval, bool Started = false) =>
         Interval(TimeSpan.FromMilliseconds(TimeInterval), Started);
 
-    [NotNull]
     public static TimeIntervalObservable Interval_Minutes(double TimeInterval, bool Started = false) =>
         Interval(TimeSpan.FromMinutes(TimeInterval), Started);
 
-    [NotNull]
     public static TimeIntervalObservable Interval_Hours(double TimeInterval, bool Started = false) =>
         Interval(TimeSpan.FromHours(TimeInterval), Started);
 
-    [NotNull]
     public static TimeIntervalObservable Interval(this TimeSpan TimeInterval, bool Started = false) =>
         new(TimeInterval, Started);
 
@@ -128,8 +119,7 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="Interval">Интервал времени задержки событий</param>
     /// <returns>Объект-наблюдатель, события которого синхронно задержаны во времени на указанный интервал</returns>
-    [NotNull]
-    public static IObservableEx<T> WhitSync<T>([NotNull] this IObservable<T> Observable, TimeSpan Interval) =>
+    public static IObservableEx<T> WhitSync<T>(this IObservable<T> Observable, TimeSpan Interval) =>
         new LambdaObservable<T>(Observable, (o, t) => { Thread.Sleep(Interval); o.OnNext(t); });
 
     /// <summary>Метод получения задержанных во времени событий</summary>
@@ -137,16 +127,15 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="Interval">Интервал времени задержки событий</param>
     /// <returns>Объект-наблюдатель, события которого задержаны во времени на указанный интервал</returns>
-    [NotNull]
     public static IObservableEx<T> WhitAsync<T>(this IObservable<T> Observable, TimeSpan Interval)
     {
-        async Task OnNext(IObserver<T> o, T t)
+        async Task OnNextDelay(IObserver<T> o, T t)
         {
             await Task.Delay(Interval).ConfigureAwait(false);
             o.OnNext(t);
         }
 
-        void NextAsync(IObserver<T> o, T t) => Task.Run(() => OnNext(o, t));
+        void NextAsync(IObserver<T> o, T t) => Task.Run(() => OnNextDelay(o, t));
         return new LambdaObservable<T>(Observable, NextAsync);
     }
 
@@ -155,8 +144,7 @@ public static class ObservableExtensions
     /// <param name="Obj">Наблюдаемый объект</param>
     /// <param name="EventName">Имя события</param>
     /// <returns>Объект-наблюдатель за событием</returns>
-    [NotNull]
-    public static IObservableEx<TEventArgs> FromEvent<TEventArgs>([NotNull] this object Obj, [NotNull] string EventName)
+    public static IObservableEx<TEventArgs> FromEvent<TEventArgs>(this object Obj, string EventName)
         where TEventArgs : EventArgs =>
         new EventObservableEx<TEventArgs>(Obj, EventName);
 
@@ -165,8 +153,7 @@ public static class ObservableExtensions
     /// <param name="Enumerable">Перечисление объектов</param>
     /// <param name="Observable">Созданный объект-наблюдатель за перечислением объектов коллекции</param>
     /// <returns>Новое перечисление объектов, перечисление объектов которого вызывает события в наблюдателе</returns>
-    [NotNull]
-    public static IEnumerable<T> GetObservable<T>([NotNull] this IEnumerable<T> Enumerable, [NotNull] out IObservable<T> Observable)
+    public static IEnumerable<T> GetObservable<T>(this IEnumerable<T> Enumerable, out IObservable<T> Observable)
     {
         Observable = new SimpleObservableEx<T>();
         return Enumerable
@@ -174,7 +161,6 @@ public static class ObservableExtensions
            .OnComplete(((SimpleObservableEx<T>)Observable).OnCompleted);
     }
 
-    [NotNull]
     public static IObservable<T> ToObservable<T>(this IEnumerable<T> Enumerable) => new ObservableCollectionEnumerator<T>(Enumerable);
 
     /// <summary>Метод получения объекта-наблюдателя, пропускающего после создания указанное число событий</summary>
@@ -182,8 +168,7 @@ public static class ObservableExtensions
     /// <param name="Source">Исходный объект-наблюдатель</param>
     /// <param name="Count">Количество пропускаемых событий</param>
     /// <returns>Объект-наблюдатель с указанным количеством пропускаемых событий</returns>
-    [NotNull]
-    public static IObservableEx<T> Take<T>([NotNull] this IObservable<T> Source, int Count) =>
+    public static IObservableEx<T> Take<T>(this IObservable<T> Source, int Count) =>
         new TakeObservable<T>(Source, Count);
 
     /// <summary>Метод обработки последовательности событий с учётом разрешающей и запрещающей последовательностей</summary>
@@ -195,11 +180,10 @@ public static class ObservableExtensions
     /// <param name="Close">Объект-наблюдатель запрещающий событий в выходной последовательности</param>
     /// <param name="InitialState">Исходное состояния разрешения событий в выходной последовательности (по умолчанию разрешено)</param>
     /// <returns>Управляемый объект-наблюдатель</returns>
-    [NotNull]
     public static IObservableEx<TSource> Take<TSource, TOpen, TClose>(
-        [NotNull] this IObservable<TSource> Observable,
-        [NotNull] IObservable<TOpen> Open,
-        [NotNull] IObservable<TClose> Close,
+        this IObservable<TSource> Observable,
+        IObservable<TOpen> Open,
+        IObservable<TClose> Close,
         bool InitialState = true)
     {
         var t = Observable as TriggeredObservable<TSource> ?? new TriggeredObservable<TSource>(Observable, InitialState);
@@ -215,10 +199,9 @@ public static class ObservableExtensions
     /// <param name="Selector">Объект-наблюдатель управляющей последовательности</param>
     /// <param name="IsOpen">Исходное состояние выходной последовательности</param>
     /// <returns>Объект-наблюдатель управляемый управляющей последовательностью</returns>
-    [NotNull]
     public static IObservableEx<T> TakeUntil<T, TResult>(
         this IObservable<T> Observable,
-        [NotNull] IObservable<TResult> Selector,
+        IObservable<TResult> Selector,
         bool IsOpen = true)
     {
         var o = Observable as TriggeredObservable<T> ?? new TriggeredObservable<T>(Observable, IsOpen);
@@ -233,10 +216,9 @@ public static class ObservableExtensions
     /// <param name="Selector">Объект-наблюдатель управляющей последовательности</param>
     /// <param name="IsOpen">Исходное состояние выходной последовательности</param>
     /// <returns>Объект-наблюдатель управляемый управляющей последовательностью</returns>
-    [NotNull]
     public static IObservableEx<T> SkipWhile<T, TResult>(
         this IObservable<T> Observable,
-        [NotNull] IObservable<TResult> Selector,
+        IObservable<TResult> Selector,
         bool IsOpen = false)
     {
         var o = Observable as TriggeredObservable<T> ?? new TriggeredObservable<T>(Observable, IsOpen);
@@ -249,8 +231,7 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="Action">Метод обработки события <see cref="IObserverEx{T}.Next"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [NotNull]
-    public static IObservable<T> ForeachAction<T>([NotNull] this IObservable<T> Observable, [NotNull] Action<T> Action) =>
+    public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T> Action) =>
         Observable.InitializeObject(Action, (o, a) => new LambdaObserver<T>(o, a))
         ?? throw new InvalidOperationException("Возвращена пустая ссылка");
 
@@ -259,8 +240,7 @@ public static class ObservableExtensions
     /// <param name="Action">Действие, выполняемое при возникновении события</param>
     /// <typeparam name="T">Тип значения событий</typeparam>
     /// <returns>Объект отписки</returns>
-    [NotNull]
-    public static IDisposable Subscribe<T>([NotNull] this IObservable<T> Source, [NotNull] Action<T> Action) =>
+    public static IDisposable Subscribe<T>(this IObservable<T> Source, Action<T> Action) =>
         new LambdaObserver<T>(Source, Action);
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
@@ -269,11 +249,10 @@ public static class ObservableExtensions
     /// <param name="Action">Метод обработки события <see cref="IObserverEx{T}.Next"/></param>
     /// <param name="Where">Метод выборки события <see cref="IObserverEx{T}.Next"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [CanBeNull]
     public static IObservable<T> ForeachAction<T>(
-        [NotNull] this IObservable<T> Observable,
-        [NotNull] Action<T> Action,
-        [NotNull] Func<T, bool> Where) =>
+        this IObservable<T> Observable,
+        Action<T> Action,
+        Func<T, bool> Where) =>
         Observable.InitializeObject(Where, Action, (o, w, a) => new LambdaObserver<T>(o, t => { if (w(t)) a(t); }));
 
     /// <summary>Метод обработки события <see cref="IObserverEx{T}.Next"/></summary>
@@ -281,11 +260,9 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="Action">Метод обработки события <see cref="IObserverEx{T}.Next"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [CanBeNull]
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T, int> Action)
     {
         var i = 0;
-        // ReSharper disable once HeapView.CanAvoidClosure
         return Observable.InitializeObject(o => new LambdaObserver<T>(o, t => Action(t, i++)));
     }
 
@@ -295,11 +272,9 @@ public static class ObservableExtensions
     /// <param name="Action">Метод обработки события <see cref="IObserverEx{T}.Next"/></param>
     /// <param name="Where">Метод выборки события <see cref="IObserverEx{T}.Next"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [CanBeNull]
     public static IObservable<T> ForeachAction<T>(this IObservable<T> Observable, Action<T, int> Action, Func<T, int, bool> Where)
     {
         var i = 0;
-        // ReSharper disable once HeapView.CanAvoidClosure
         return Observable.InitializeObject(o => new LambdaObserver<T>(o, t => { if (Where(t, i)) Action(t, i++); }));
     }
 
@@ -308,7 +283,6 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="OnError">Метод обработки события <see cref="Exception"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [CanBeNull]
     public static IObservable<T> OnError<T>(this IObservable<T> Observable, Action<Exception> OnError) =>
         Observable.InitializeObject(OnError, (o, e) => new LambdaObserver<T>(o, OnError: e));
 
@@ -317,7 +291,6 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="OnCompleted">Метод обработки события <see cref="IObserverEx{T}.Completed"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [CanBeNull]
     public static IObservable<T> OnCompleted<T>(this IObservable<T> Observable, Action OnCompleted) =>
         Observable.InitializeObject(OnCompleted, (o, c) => new LambdaObserver<T>(o, OnCompleted: c));
 
@@ -326,7 +299,6 @@ public static class ObservableExtensions
     /// <param name="Observable">Исходный объект-наблюдатель</param>
     /// <param name="OnReset">Метод обработки события <see cref="IObserverEx{T}.Reset"/></param>
     /// <returns>Исходный объект-наблюдатель</returns>
-    [CanBeNull]
     public static IObservable<T> OnReset<T>(this IObservable<T> Observable, Action OnReset) =>
         Observable.InitializeObject(OnReset, (o, r) => new LambdaObserver<T>(o, OnReset: r));
 
@@ -335,7 +307,6 @@ public static class ObservableExtensions
     /// <param name="BeginInvoke">Метод начала асинхронной операции</param>
     /// <param name="EndInvoke">Метод завершения асинхронной операции</param>
     /// <returns>Функция, возвращающая наблюдаемый объект, генерирующий своё значение в момент завершения асинхронной операции</returns>
-    [NotNull]
     public static Func<IObservableEx<T>> FromAsyncPattern<T>(Func<AsyncCallback, object, IAsyncResult> BeginInvoke, Func<IAsyncResult, T> EndInvoke) =>
         () => new AsyncPatternObservable<T>(BeginInvoke, EndInvoke);
 
@@ -343,8 +314,7 @@ public static class ObservableExtensions
     /// <typeparam name="T">Тип результирующих объектов</typeparam>
     /// <param name="Observable">Объект-наблюдатель коллекции</param>
     /// <returns>Объект-наблюдатель элементов коллекции</returns>
-    [NotNull]
-    public static IObservableEx<T> SelectMany<T>([NotNull] this IObservable<IEnumerable<T>> Observable)
+    public static IObservableEx<T> SelectMany<T>(this IObservable<IEnumerable<T>> Observable)
     {
         var result = new SimpleObservableEx<T>();
         Observable.ForeachAction(t => t.Foreach(result.OnNext));
@@ -354,10 +324,9 @@ public static class ObservableExtensions
         return result;
     }
 
-    [NotNull]
     public static IObservableEx<TResult> SelectMany<TSource, TResult>(
-        [NotNull] this IObservable<TSource> Observable,
-        [NotNull] Func<TSource, IEnumerable<TResult>> Selector)
+        this IObservable<TSource> Observable,
+        Func<TSource, IEnumerable<TResult>> Selector)
     {
         if (Observable is null) throw new ArgumentNullException(nameof(Observable));
         if (Selector is null) throw new ArgumentNullException(nameof(Selector));
@@ -370,10 +339,9 @@ public static class ObservableExtensions
         return result;
     }
 
-    [NotNull]
     public static IObservableEx<TResult> SelectMany<TSource, TResult>(
-        [NotNull] this IObservable<TSource> Observable,
-        [NotNull] Func<TSource, int, IEnumerable<TResult>> Selector)
+        this IObservable<TSource> Observable,
+        Func<TSource, int, IEnumerable<TResult>> Selector)
     {
         if (Observable is null) throw new ArgumentNullException(nameof(Observable));
         if (Selector is null) throw new ArgumentNullException(nameof(Selector));
@@ -387,11 +355,10 @@ public static class ObservableExtensions
         return result;
     }
 
-    [NotNull]
     public static IObservableEx<TResult> SelectMany<TSource, TCollection, TResult>(
-        [NotNull] this IObservable<TSource> Observable,
-        [NotNull] Func<TSource, int, IEnumerable<TCollection>> CollectionSelector,
-        [NotNull] Func<TSource, TCollection, TResult> ResultSelector)
+        this IObservable<TSource> Observable,
+        Func<TSource, int, IEnumerable<TCollection>> CollectionSelector,
+        Func<TSource, TCollection, TResult> ResultSelector)
     {
         if (Observable is null) throw new ArgumentNullException(nameof(Observable));
         if (CollectionSelector is null) throw new ArgumentNullException(nameof(CollectionSelector));
@@ -406,11 +373,10 @@ public static class ObservableExtensions
         return result;
     }
 
-    [NotNull]
     public static IObservableEx<TResult> SelectMany<TSource, TCollection, TResult>(
-        [NotNull] this IObservable<TSource> Observable,
-        [NotNull] Func<TSource, IEnumerable<TCollection>> CollectionSelector,
-        [NotNull] Func<TSource, TCollection, TResult> ResultSelector)
+        this IObservable<TSource> Observable,
+        Func<TSource, IEnumerable<TCollection>> CollectionSelector,
+        Func<TSource, TCollection, TResult> ResultSelector)
     {
         if (Observable is null) throw new ArgumentNullException(nameof(Observable));
         if (CollectionSelector is null) throw new ArgumentNullException(nameof(CollectionSelector));
@@ -428,7 +394,7 @@ public static class ObservableExtensions
     /// <typeparam name="T">Тип значений объекта</typeparam>
     /// <param name="Observable">Наблюдаемый объект</param>
     /// <returns>Первое значение наблюдаемого объекта</returns>
-    public static T Single<T>([NotNull] this IObservable<T> Observable)
+    public static T Single<T>(this IObservable<T> Observable)
     {
         var w     = new AutoResetEvent(false);
         var value = default(T);
@@ -437,9 +403,8 @@ public static class ObservableExtensions
         return value;
     }
 
-    [NotNull]
     public static IObservableEx<T[]> Buffer<T>(
-        [NotNull] this IObservable<T> Observable,
+        this IObservable<T> Observable,
         int BufferLength,
         int BufferPeriod = 0,
         int BufferPhase = 0)

@@ -25,7 +25,7 @@ public static class ComplexExtensions
     }
 
     [return:NotNullIfNotNull(nameof(ZZ))]
-    public static Complex[]? Substrat(this Complex[]? ZZ, double x)
+    public static Complex[]? Substrate(this Complex[]? ZZ, double x)
     {
         if (ZZ is not { Length: var length }) return null;
         var result = new Complex[length];

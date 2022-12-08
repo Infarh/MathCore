@@ -19,11 +19,11 @@ public static class DirectoryInfoExtensions
 {
     public static FileInfo Zip(this DirectoryInfo Directory) => Directory.Zip(Directory.FullName + ".zip");
 
-    public static async Task<FileInfo> ZipAsync(this DirectoryInfo Directory, CancellationToken Cancel = default) => await Directory.ZipAsync(Directory.FullName + ".zip", Cancel);
+    public static async Task<FileInfo> ZipAsync(this DirectoryInfo Directory, CancellationToken Cancel = default) => await Directory.ZipAsync(Directory.FullName + ".zip", Cancel).ConfigureAwait(false);
 
     public static FileInfo Zip(this DirectoryInfo Directory, string ArchiveFilePath) => Directory.Zip(new FileInfo(ArchiveFilePath));
 
-    public static async Task<FileInfo> ZipAsync(this DirectoryInfo Directory, string ArchiveFilePath, CancellationToken Cancel = default) => await Directory.ZipAsync(new FileInfo(ArchiveFilePath), Cancel);
+    public static async Task<FileInfo> ZipAsync(this DirectoryInfo Directory, string ArchiveFilePath, CancellationToken Cancel = default) => await Directory.ZipAsync(new FileInfo(ArchiveFilePath), Cancel).ConfigureAwait(false);
 
     public static FileInfo Zip(this DirectoryInfo Directory, FileInfo ArchiveFile)
     {
