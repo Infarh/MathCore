@@ -26,6 +26,7 @@ public class HashStream : Stream
     public HashStream(Stream Source, HashAlgorithm Hasher)
     {
         _Source = Source;
+        Hasher.Initialize();
         _Hasher = Hasher;
     }
 
@@ -62,5 +63,17 @@ public class HashStream : Stream
         await write_task.ConfigureAwait(false);
     }
 
-    public override void Flush() => _Source.Flush();
+    #region Overrides of Stream
+
+    public override async Task CopyToAsync(Stream destination, int BufferSize, CancellationToken Cancel)
+    {
+        await base.CopyToAsync(destination, BufferSize, Cancel);
+    }
+
+    #endregion
+
+    public override void Flush()
+    {
+        _Source.Flush();
+    }
 }

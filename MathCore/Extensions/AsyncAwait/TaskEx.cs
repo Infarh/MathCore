@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 using MathCore.Extensions.AsyncAwait;
 
@@ -891,4 +889,220 @@ public static class TaskEx
         return result.Task;
     }
     #endregion
+
+    public static Task OnSuccess(this Task task, Action continuation) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            TaskContinuationOptions.OnlyOnRanToCompletion);
+
+    public static Task OnSuccess(this Task task, Action continuation, SynchronizationContext Context) =>
+        task.ContinueWith(
+            async (_, o) =>
+            {
+                await ((SynchronizationContext)((object[])o!)[0]).SwitchContext();
+                ((Action)((object[])o)[1])();
+            },
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnRanToCompletion);
+
+    public static Task OnSuccess(this Task task, Action continuation, TaskScheduler Scheduler) =>
+        task.ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            default,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task OnSuccess(this Task task, Action continuation, TaskScheduler Scheduler, CancellationToken Cancel) =>
+        task.ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            Cancel,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task OnSuccess<T>(this Task<T> task, Action<T> continuation) => task
+       .ContinueWith(
+            (t, o) => ((Action<T>)o!)(t.Result),
+            continuation,
+            TaskContinuationOptions.OnlyOnRanToCompletion);
+
+    public static Task<TResult> OnSuccess<T, TResult>(this Task<T> task, Func<T, TResult> continuation) => task
+       .ContinueWith(
+            (t, o) => ((Func<T, TResult>)o!)(t.Result),
+            continuation,
+            TaskContinuationOptions.OnlyOnRanToCompletion);
+
+    public static Task OnSuccess<T>(this Task<T> task, Action<T> continuation, SynchronizationContext Context) => task
+       .ContinueWith(
+            (t, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action<T>)((object[])a!)[0])((T)((object[])a)[1]), new[] { ((object[])o)[1], t.Result }),
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnRanToCompletion);
+
+    public static Task<TResult> OnSuccess<T, TResult>(this Task<T> task, Func<T, TResult> continuation, SynchronizationContext Context) => task
+       .ContinueWith(
+            async (t, o) =>
+            {
+                await ((SynchronizationContext)((object[])o!)[0]).SwitchContext();
+                return ((Func<T, TResult>)((object[])o)[1])(t.Result);
+            },
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
+
+    public static Task OnSuccess<T>(this Task<T> task, Action continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            default,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task OnSuccess<T>(this Task<T> task, Action<T> continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (t, o) => ((Action<T>)o!)(t.Result),
+            continuation,
+            default,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task OnSuccess<T>(this Task<T> task, Action<T> continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
+       .ContinueWith(
+            (t, o) => ((Action<T>)o!)(t.Result),
+            continuation,
+            Cancel,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task<TResult> OnSuccess<T, TResult>(this Task<T> task, Func<T, TResult> continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (t, o) => ((Func<T, TResult>)o!)(t.Result),
+            continuation,
+            default,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task<TResult> OnSuccess<T, TResult>(this Task<T> task, Func<T, TResult> continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
+       .ContinueWith(
+            (t, o) => ((Func<T, TResult>)o!)(t.Result),
+            continuation,
+            Cancel,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            Scheduler);
+
+    public static Task OnCancelled(this Task task, Action continuation) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            TaskContinuationOptions.OnlyOnCanceled);
+
+    public static Task OnCancelled(this Task task, Action continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            default, 
+            TaskContinuationOptions.OnlyOnCanceled,
+            Scheduler);
+
+    public static Task OnCancelled(this Task task, Action continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            Cancel, 
+            TaskContinuationOptions.OnlyOnCanceled,
+            Scheduler);
+
+    public static Task OnCancelled(this Task task, Action continuation, SynchronizationContext Context) => task
+       .ContinueWith(
+            (_, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action)a!)(), (((object[])o)[1])),
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnCanceled);
+
+    public static Task OnFailure(this Task task, Action continuation) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            TaskContinuationOptions.OnlyOnFaulted);
+
+    public static Task OnFailure(this Task task, Action continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            default,
+            TaskContinuationOptions.OnlyOnFaulted,
+            Scheduler);
+
+    public static Task OnFailure(this Task task, Action continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
+       .ContinueWith(
+            (_, o) => ((Action)o!)(),
+            continuation,
+            Cancel,
+            TaskContinuationOptions.OnlyOnFaulted,
+            Scheduler);
+
+    public static Task OnFailure(this Task task, Action continuation, SynchronizationContext Context) => task
+       .ContinueWith(
+            (_, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action)a!)(), ((object[])o)[1]),
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnFaulted);
+
+    public static Task OnFailure(this Task task, Action<AggregateException> continuation) => task
+       .ContinueWith(
+            (t, o) => ((Action<AggregateException>)o!)(t.Exception!),
+            continuation,
+            TaskContinuationOptions.OnlyOnFaulted);
+
+    public static Task OnFailure(this Task task, Action<AggregateException> continuation, SynchronizationContext Context) => task
+       .ContinueWith(
+            (t, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action<AggregateException>)((object[])a)[0])((AggregateException)((object[])a)[1]), new[] { ((object[])o)[1], t.Exception }),
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnFaulted);
+
+    public static Task OnFailure(this Task task, Action<AggregateException> continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (t, o) => ((Action<AggregateException>)o!)(t.Exception!),
+            continuation,
+            default, 
+            TaskContinuationOptions.OnlyOnFaulted, 
+            Scheduler);
+
+    public static Task OnFailure(this Task task, Action<AggregateException> continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
+       .ContinueWith(
+            (t, o) => ((Action<AggregateException>)o!)(t.Exception!),
+            continuation,
+            Cancel, 
+            TaskContinuationOptions.OnlyOnFaulted, 
+            Scheduler);
+
+    public static Task<TResult> OnFailure<T, TResult>(this Task<T> task, Func<AggregateException, TResult> continuation) => task
+       .ContinueWith(
+            (t, o) => ((Func<AggregateException, TResult>)o!)(t.Exception!),
+            continuation,
+            TaskContinuationOptions.OnlyOnFaulted);
+
+    public static Task<TResult> OnFailure<T, TResult>(this Task<T> task, Func<AggregateException, TResult> continuation, TaskScheduler Scheduler) => task
+       .ContinueWith(
+            (t, o) => ((Func<AggregateException, TResult>)o!)(t.Exception!),
+            continuation,
+            default,
+            TaskContinuationOptions.OnlyOnFaulted,
+            Scheduler);
+
+    public static Task<TResult> OnFailure<T, TResult>(this Task<T> task, Func<AggregateException, TResult> continuation, SynchronizationContext Context) => task
+       .ContinueWith(
+            async (t, o) =>
+            {
+                await ((SynchronizationContext)((object[])o!)[0]).SwitchContext();
+                return ((Func<AggregateException, TResult>)((object[])o)[1])(t.Exception!);
+            },
+            new object[] { Context, continuation },
+            TaskContinuationOptions.OnlyOnFaulted).Unwrap();
+
+    public static Task<TResult> OnFailure<T, TResult>(this Task<T> task, Func<AggregateException, TResult> continuation, TaskScheduler Scheduler, CancellationToken Cancel) => task
+       .ContinueWith(
+            (t, o) => ((Func<AggregateException, TResult>)o!)(t.Exception!),
+            continuation,
+            Cancel,
+            TaskContinuationOptions.OnlyOnFaulted,
+            Scheduler);
 }

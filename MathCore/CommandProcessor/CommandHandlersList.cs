@@ -4,7 +4,7 @@ using MathCore.Annotations;
 
 namespace MathCore.CommandProcessor;
 
-using CommandHandler = Action<Command, int, IReadOnlyList<Command>>;
+using CommandHandler = Action<ProcessorCommand, int, IReadOnlyList<ProcessorCommand>>;
 
 /// <summary>Список обработчиков команды</summary>
 public class CommandHandlersList : List<CommandHandler>
@@ -27,9 +27,9 @@ public class CommandHandlersList : List<CommandHandler>
     /// <param name="Handler">Добавляемый в список обработчик</param>
     /// <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
     [NotNull]
-    public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<Command> Handler)
+    public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<ProcessorCommand> Handler)
     {
-        void CommandHandler(Command c, int i, IReadOnlyList<Command> cc) => Handler(c);
+        void CommandHandler(ProcessorCommand c, int i, IReadOnlyList<ProcessorCommand> cc) => Handler(c);
         list._Handlers.Add(Handler.GetHashCode(), CommandHandler);
         list.Add(CommandHandler);
         return list;
@@ -40,9 +40,9 @@ public class CommandHandlersList : List<CommandHandler>
     /// <param name="Handler">Добавляемый в список обработчик, поддерживающий параметр индекса</param>
     /// <returns>Исходный список с добавленным в него новым обработчиком команды</returns>
     [NotNull]
-    public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<Command, int> Handler)
+    public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action<ProcessorCommand, int> Handler)
     {
-        void CommandHandler(Command c, int i, IReadOnlyList<Command> cc) => Handler(c, i);
+        void CommandHandler(ProcessorCommand c, int i, IReadOnlyList<ProcessorCommand> cc) => Handler(c, i);
         list._Handlers.Add(Handler.GetHashCode(), CommandHandler);
         list.Add(CommandHandler);
         return list;
@@ -55,7 +55,7 @@ public class CommandHandlersList : List<CommandHandler>
     [NotNull]
     public static CommandHandlersList operator +([NotNull] CommandHandlersList list, [NotNull] Action Handler)
     {
-        void CommandHandler(Command c, int i, IReadOnlyList<Command> cc) => Handler();
+        void CommandHandler(ProcessorCommand c, int i, IReadOnlyList<ProcessorCommand> cc) => Handler();
         list._Handlers.Add(Handler.GetHashCode(), CommandHandler);
         list.Add(CommandHandler);
         return list;
@@ -77,7 +77,7 @@ public class CommandHandlersList : List<CommandHandler>
     /// <param name="Handler">Удаляемый обработчик команды</param>
     /// <returns>Список с удалённым обработчиком команды</returns>
     [NotNull]
-    public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action<Command> Handler)
+    public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action<ProcessorCommand> Handler)
     {
         if(list._Handlers.TryGetValue(Handler.GetHashCode(), out var handler))
             list.Remove(handler);
@@ -89,7 +89,7 @@ public class CommandHandlersList : List<CommandHandler>
     /// <param name="Handler">Удаляемый обработчик команды с индексатором</param>
     /// <returns>Список с удалённым обработчиком команды</returns>
     [NotNull]
-    public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action<Command, int> Handler)
+    public static CommandHandlersList operator -([NotNull] CommandHandlersList list, [NotNull] Action<ProcessorCommand, int> Handler)
     {
         if(list._Handlers.TryGetValue(Handler.GetHashCode(), out var handler))
             list.Remove(handler);

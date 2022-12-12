@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text;
+
+using MathCore.Tests.IO;
 
 namespace MathCore.Tests.Hash;
 

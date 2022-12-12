@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MathCore.Annotations;
 
 // ReSharper disable UnusedType.Global
 
@@ -25,6 +25,5 @@ public sealed class CurrentThreadTaskScheduler : TaskScheduler
 
     /// <summary>Перечень задач, которые должны запланированы на выполнение в текущем планировщике</summary>
     /// <returns>Всегда возвращает пустое перечисление - задачи выполняются немедленно без планирования</returns>
-    [NotNull]
     protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
 }
