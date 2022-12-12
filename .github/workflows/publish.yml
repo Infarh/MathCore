@@ -3,7 +3,13 @@ name: Publish NuGet.org
 on:
   push:
     branches: 
-      - master
+    - master
+    paths-ignore: 
+    - '.github/workflows/**'
+    - '**.md'
+    - '**.docx'
+    - '**.bat'
+    - '**.vssettings'
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
