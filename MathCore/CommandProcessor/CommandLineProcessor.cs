@@ -1,11 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Linq.Reactive;
 
-using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
@@ -15,7 +15,7 @@ using MathCore.Annotations;
 
 namespace MathCore.CommandProcessor;
 
-using CommandHandler = Action<Command, int, IReadOnlyList<Command>>;
+using CommandHandler = Action<ProcessorCommand, int, IReadOnlyList<ProcessorCommand>>;
 
 /// <summary>Командный процессор</summary>
 public class CommandLineProcessor
@@ -26,14 +26,14 @@ public class CommandLineProcessor
     /// <param name="ConsoleWriter">Вывод в консоль (если не указано, то используется <see cref="Console"/>.<see cref="Console.Out"/>)</param>
     /// <param name="ConsoleReader">Ввод с консоли (если не указано, то используется <see cref="Console"/>.<see cref="Console.In"/>)</param>
     /// <returns>Сформированное перечисление команд запроса</returns>
-    public static IEnumerable<Command> ParseConsole(
+    public static IEnumerable<ProcessorCommand> ParseConsole(
         string Prompt = ">",
-        [CanBeNull] Action<CommandLineProcessor> Initializer = null,
-        TextWriter ConsoleWriter = null,
-        TextReader ConsoleReader = null)
+        Action<CommandLineProcessor>? Initializer = null,
+        TextWriter? ConsoleWriter = null,
+        TextReader? ConsoleReader = null)
     {
-        if (ConsoleWriter is null) ConsoleWriter = Console.Out;
-        if (ConsoleReader is null) ConsoleReader = Console.In;
+        ConsoleWriter ??= Console.Out;
+        ConsoleReader ??= Console.In;
 
         var work      = true;
         var processor = new CommandLineProcessor();
@@ -53,11 +53,11 @@ public class CommandLineProcessor
     }
 
     /// <summary>Событие обработки команды</summary>
-    public event EventHandler<CommandEventArgs> CommandProcess;
+    public event EventHandler<CommandEventArgs>? CommandProcess;
 
     /// <summary>Обработка команды</summary>
     /// <param name="Arg">Аргумент, содержащий сведения о команде</param>
-    protected virtual void OnCommandProcess([NotNull] CommandEventArgs Arg)
+    protected virtual void OnCommandProcess(CommandEventArgs Arg)
     {
         if (IsRegisteredCommand(Arg.Command.Name))
         {
@@ -68,9 +68,10 @@ public class CommandLineProcessor
         var handler = CommandProcess;
         if (handler is null) return;
         var invocations = handler.GetInvocationList();
-        for (var i = 0; !Arg.Handled && i < invocations.Length; i++)
+        foreach (var I in invocations)
         {
-            var I = invocations[i];
+            if (Arg.Handled) break;
+
             if (I.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
                 invoke.Invoke(I, new object[] { this, Arg });
             else
@@ -83,7 +84,7 @@ public class CommandLineProcessor
     /// <param name="command">Обрабатываемая команда</param>
     /// <param name="index">Индекс команды в массиве команд сессии</param>
     /// <param name="commands">Массив команд сессии</param>
-    private void OnCommandProcess(Command command, int index, Command[] commands)
+    private void OnCommandProcess(ProcessorCommand command, int index, ProcessorCommand[] commands)
     {
         var arg = new CommandEventArgs(command, index, commands);
         OnCommandProcess(arg);
@@ -91,7 +92,7 @@ public class CommandLineProcessor
     }
 
     /// <summary>Событие появления необработанной команды</summary>
-    public event EventHandler<CommandEventArgs> UnhandledCommand;
+    public event EventHandler<CommandEventArgs>? UnhandledCommand;
 
     /// <summary>Генерация события обнаружения необработанной команды</summary>
     /// <param name="Arg">Аргумент события, содержащий сведения о команде</param>
@@ -100,14 +101,11 @@ public class CommandLineProcessor
         var handlers = UnhandledCommand;
         if (handlers is null) return;
         var invocations = handlers.GetInvocationList();
-        for (var i = 0; i < invocations.Length; i++)
-        {
-            var I = invocations[i];
+        foreach (var I in invocations)
             if (I.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
                 invoke.Invoke(I, new object[] { this, Arg });
             else
                 I.DynamicInvoke(this, Arg);
-        }
     }
 
     /// <summary>Словарь списков обработчиков команд</summary>
@@ -133,7 +131,7 @@ public class CommandLineProcessor
     /// <summary>Доступ к списку обработчиков команды по её имени</summary>
     /// <param name="CommandName">Имя команды</param>
     /// <returns>Список обработчиков команды</returns>
-    public CommandHandlersList this[[NotNull] string CommandName]
+    public CommandHandlersList? this[string CommandName]
     {
         get
         {
@@ -172,13 +170,12 @@ public class CommandLineProcessor
 
     /// <summary>Обработать команду</summary>
     /// <param name="CommandLine">Командная строка</param>
-    [NotNull]
-    public IEnumerable<Command> Process([NotNull] params string[] CommandLine)
+    public IEnumerable<ProcessorCommand> Process(params string[] CommandLine)
     {
         var commands = CommandLine.SelectMany(str => str.Split(CommandSplitter))
            .Select(s => s.ClearSystemSymbolsAtBeginAndEnd())
            .Where(s => s.Length > 0)
-           .Select(CommandStr => new Command(CommandStr, CommandParameterSplitter, ArgSplitter, ValueSplitter))
+           .Select(CommandStr => new ProcessorCommand(CommandStr, CommandParameterSplitter, ArgSplitter, ValueSplitter))
            .ToArray();
 
         // ReSharper disable once IdentifierTypo
@@ -189,29 +186,28 @@ public class CommandLineProcessor
     /// <summary>Добавить обработчик команды</summary>
     /// <param name="CommandName">Имя команды</param>
     /// <param name="CommandHandler">Добавляемый обработчик команды</param>
-    public void AddCommandHandler([NotNull] string CommandName, CommandHandler CommandHandler) => this[CommandName].Add(CommandHandler);
+    public void AddCommandHandler(string CommandName, CommandHandler CommandHandler) => this[CommandName].Add(CommandHandler);
 
     /// <summary>Удалить обработчик команды</summary>
     /// <param name="CommandName">Имя команды</param>
     /// <param name="CommandHandler">Удаляемый обработчик команды</param>
     /// <returns>Истина, если удалось обработчик команды удалить</returns>
-    public bool RemoveCommandHandler([NotNull] string CommandName, CommandHandler CommandHandler) => this[CommandName].Remove(CommandHandler);
+    public bool RemoveCommandHandler(string CommandName, CommandHandler CommandHandler) => this[CommandName].Remove(CommandHandler);
 
     /// <summary>Очистить список обработчиков команды</summary>
     /// <param name="CommandName">Имя команды</param>
-    public void ClearCommandHandlers([NotNull] string CommandName) => this[CommandName].Clear();
+    public void ClearCommandHandlers(string CommandName) => this[CommandName].Clear();
 
     /// <summary>Очистить все обработчики команд</summary>
     public void ClearCommandHandlers() => _CommandHandlers.Clear();
 
     /// <summary>Получить перечисление имён команд с зарегистрированными обработчиками</summary>
     /// <returns>Перечисление имён команд, имеющих свои обработчики</returns>
-    [NotNull]
     public IEnumerable<string> GetRegisteredCommands() => _CommandHandlers.Keys.ToArray();
 
     /// <summary>Проверка - имеет ли команда обработчики</summary>
     /// <param name="CommandName">Проверяемая команда</param>
     /// <returns>Истина, если указаны обработчики команды</returns>
-    public bool IsRegisteredCommand([NotNull] string CommandName) =>
+    public bool IsRegisteredCommand(string CommandName) =>
         _CommandHandlers.ContainsKey(CommandName) && this[CommandName].IsRegisteredCommand(CommandName);
 }

@@ -8,10 +8,10 @@ namespace MathCore.CommandProcessor;
 public class CommandEventArgs : EventArgs
 {
     /// <summary>Обрабатываемая команда</summary>
-    public Command Command { get; }
+    public ProcessorCommand Command { get; }
 
     /// <summary>Перечень команд сессии</summary>
-    public IReadOnlyList<Command> Commands { get; }
+    public IReadOnlyList<ProcessorCommand> Commands { get; }
 
     /// <summary>Индекс команды в перечне команд сессии</summary>
     public int Index { get; }
@@ -23,7 +23,7 @@ public class CommandEventArgs : EventArgs
     /// <param name="Command">Обрабатываемая команда</param>
     /// <param name="Index">Индекс команды в перечне команд сессии</param>
     /// <param name="Commands">Перечень команд сессии</param>
-    public CommandEventArgs(Command Command, int Index, IReadOnlyList<Command> Commands)
+    public CommandEventArgs(ProcessorCommand Command, int Index, IReadOnlyList<ProcessorCommand> Commands)
     {
         this.Command  = Command;
         this.Index    = Index;

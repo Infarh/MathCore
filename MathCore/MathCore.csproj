@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>preview</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.84.1</Version>
+    <Version>0.0.85</Version>
     <PackageReleaseNotes>
-      Добавлена собственная реализация алгоритма SHA256/512
+      Добавлены методы-расширения для Task - OnSuccess,OnCancelled,OnFailure. Tags удалены в отдельынй пакет MathCore.Tags
     </PackageReleaseNotes>
   </PropertyGroup>
 

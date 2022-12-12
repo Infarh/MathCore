@@ -1,9 +1,9 @@
 ﻿using StandardMD5 = System.Security.Cryptography.MD5;
 using CustomMD5 = MathCore.Hash.MD5;
 
-namespace Benchmarks;
+namespace Benchmarks.Hash;
 
-[MemoryDiagnoser]
+[MemoryDiagnoser, MarkdownExporter, HtmlExporter]
 public class MD5Test
 {
     private byte[] _Data;
@@ -19,7 +19,7 @@ public class MD5Test
         var data = new byte[DataLength];
         Random.Shared.NextBytes(data);
 
-        _Data       = data;
+        _Data = data;
         _DataStream = new MemoryStream(data);
     }
 

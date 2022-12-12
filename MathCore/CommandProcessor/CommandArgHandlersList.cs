@@ -5,14 +5,14 @@ using MathCore.Annotations;
 namespace MathCore.CommandProcessor;
 
 /// <summary>Список обработчиков команды</summary>
-public class CommandArgHandlersList : List<Action<Command, int, Command[], Argument>>
+public class CommandArgHandlersList : List<Action<ProcessorCommand, int, ProcessorCommand[], Argument>>
 {
     /// <summary>Оператор добавления команды к списку</summary>
     /// <param name="list">Список обработчиков команды</param>
     /// <param name="handler">Добавляемый обработчик команды</param>
     /// <returns>Список с добавленным обработчиком команды</returns>
     [NotNull]
-    public static CommandArgHandlersList operator +([NotNull] CommandArgHandlersList list, [NotNull] Action<Command, int, Command[], Argument> handler)
+    public static CommandArgHandlersList operator +([NotNull] CommandArgHandlersList list, [NotNull] Action<ProcessorCommand, int, ProcessorCommand[], Argument> handler)
     {
         list.Add(handler);
         return list;
@@ -23,7 +23,7 @@ public class CommandArgHandlersList : List<Action<Command, int, Command[], Argum
     /// <param name="handler">Удаляемый обработчик команды</param>
     /// <returns>Список с удалённым обработчиком команды</returns>
     [NotNull]
-    public static CommandArgHandlersList operator -([NotNull] CommandArgHandlersList list, [NotNull] Action<Command, int, Command[], Argument> handler)
+    public static CommandArgHandlersList operator -([NotNull] CommandArgHandlersList list, [NotNull] Action<ProcessorCommand, int, ProcessorCommand[], Argument> handler)
     {
         list.Remove(handler);
         return list;

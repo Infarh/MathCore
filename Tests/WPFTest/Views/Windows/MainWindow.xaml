@@ -8,7 +8,12 @@
         Title="{Binding Title}"
         WindowStartupLocation="CenterScreen"
         Width="200" Height="100">
-    <Grid>
-        
-    </Grid>
+    <DockPanel>
+        <Menu>
+            <MenuItem Header="Test" Command="{Binding TestTaskCommand}"/>
+        </Menu>
+        <Grid>
+
+        </Grid>
+    </DockPanel>
 </Window>
