@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Collections;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 using MathCore.Extensions.AsyncAwait;
 
@@ -11,6 +12,12 @@ namespace System.Threading.Tasks;
 
 public static class TaskEx
 {
+    /// <summary><c>.ConfigureAwait(false)</c></summary>
+    public static ConfiguredTaskAwaitable CAF(this Task task, bool LockContext = false) => task.ConfigureAwait(LockContext);
+
+    /// <summary><c>.ConfigureAwait(false)</c></summary>
+    public static ConfiguredTaskAwaitable<T> CAF<T>(this Task<T> task, bool LockContext = false) => task.ConfigureAwait(LockContext);
+
     public static PerformActionAwaitable ConfigureAwait(this Task task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
 
     public static PerformActionAwaitable<T> ConfigureAwait<T>(this Task<T> task, bool LockContext, Action BeforeAction) => new(BeforeAction, task, LockContext);
