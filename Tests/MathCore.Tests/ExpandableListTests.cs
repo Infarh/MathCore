@@ -6,6 +6,7 @@ public class ExpandableListTests
     [TestMethod]
     public void AddItemOverMaxCount_thorough_indexer()
     {
+        // ReSharper disable once UseObjectOrCollectionInitializer
         var list1 = new ExpandableList<int>(3);
         list1[10] = 10;
         list1[15] = 15;
