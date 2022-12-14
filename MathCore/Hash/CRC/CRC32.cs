@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MathCore.Hash.CRC;
+﻿namespace MathCore.Hash.CRC;
 
 public class CRC32
 {
