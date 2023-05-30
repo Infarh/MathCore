@@ -475,10 +475,15 @@ public readonly ref partial struct StringPtr
                 break;
         }
 
-        while (str[start + index] == '0' && index < length) index++;
+        var index_before_skip_zerros = index;
+        while (index < length && str[start + index] == '0') index++;
 
         if (index >= length || !char.IsDigit(str, start + index))
+        {
+            if (index > index_before_skip_zerros)
+                return 0;
             throw new FormatException("Строка имела неверный формат");
+        }
 
         var result = 0;
         var digits = 0;
