@@ -107,4 +107,17 @@ public class StringPtrTests
         else
             Assert.Fail();
     }
+
+    [TestMethod]
+    public void ParseInt32_ZeroValueString()
+    {
+        const string str = "0";
+        const int expected = 0;
+
+        var str_ptr = str.AsStringPtr();
+
+        var actual = str_ptr.ParseInt32();
+
+        actual.AssertEquals(expected);
+    }
 }

@@ -1,21 +1,16 @@
-using System.Drawing;
-using System.Globalization;
+using MathCore.IO;
 
-var str = "123.456E-3";
+const string file_name = @"d:\123\test.txt";
 
-var d = double.Parse(str, CultureInfo.InvariantCulture);
+var watcher = new TextFileContentMonitor(file_name);
 
-var pstr = str.AsStringPtr();
-var d2   = pstr.ParseDouble(CultureInfo.InvariantCulture);
+//watcher.NewContent += (s, e) =>
+//{
+//    Console.WriteLine("--------------");
+//    Console.WriteLine(e.ToString());
+//};
 
-
-var p0 = "5-7i";
-
-var point_type = typeof(Point);
-
-var converter = point_type.GetTypeConverter();
-
-var qqq = p0.TryConvertTo(out Complex pp0);
+watcher.Start();
 
 Console.WriteLine("End.");
 Console.ReadLine();
