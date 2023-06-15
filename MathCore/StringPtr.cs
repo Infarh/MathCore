@@ -172,10 +172,13 @@ public readonly ref partial struct StringPtr
     /// <summary>Индекс последнего вхождения символа в подстроку</summary>
     /// <param name="c">Проверяемый символ</param>
     /// <returns>Индекс символа в подстроке с конца, либо -1 в случае его отсутствия</returns>
-    public int LastIndexOf(char c) =>
-        Source.LastIndexOf(c, Pos, Length) is >= 0 and var index
-            ? index - Pos
-            : -1;
+    public int LastIndexOf(char c)
+    {
+        if (Source.LastIndexOf(c, Pos + Length - 1, Length - Pos) is >= 0 and var index)
+            return index - Pos;
+
+        return -1;
+    }
 
     /// <summary>Индекс первого вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
@@ -192,7 +195,7 @@ public readonly ref partial struct StringPtr
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Индекс первого вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int IndexOf(string str, StringComparison Comparison) =>
-        str.Length <= Length && str.IndexOf(str, Pos, Length, Comparison) is >= 0 and var index
+        str.Length <= Length && str.IndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
 
@@ -201,7 +204,7 @@ public readonly ref partial struct StringPtr
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int LastIndexOf(string str, StringComparison Comparison) =>
-        str.Length <= Length && str.LastIndexOf(str, Pos, Length, Comparison) is >= 0 and var index
+        str.Length <= Length && str.LastIndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
 

@@ -120,4 +120,21 @@ public class StringPtrTests
 
         actual.AssertEquals(expected);
     }
+
+    [TestMethod]
+    public void LastIndexOf_Test()
+    {
+        const string str = "(0,1..127):8";
+        const int expected = 10;
+
+        var pos = 5;
+
+        var qq = str.LastIndexOf(':', pos + (str.Length - 1 - pos), (str.Length - pos));
+
+        var str_ptr = str.AsStringPtr();
+
+        var actual = str_ptr.LastIndexOf(':');
+
+        actual.AssertEquals(expected);
+    }
 }

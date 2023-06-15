@@ -435,7 +435,13 @@ public static class StringExtensions
         return algorithm.CreateDecryptor();
     }
 
+    public static Match MatchRegEx(this string str, string expr) => Regex.Match(str, expr);
+    public static Match MatchRegEx(this string str, string expr, RegexOptions options) => Regex.Match(str, expr, options);
     public static Match MatchRegEx(this string str, Regex expr) => expr.Match(str);
+
+    public static bool IsMatchRegEx(this string str, string expr) => Regex.IsMatch(str, expr);
+    public static bool IsIsMatchRegEx(this string str, string expr, RegexOptions options) => Regex.IsMatch(str, expr, options);
+    public static bool IsMatchRegEx(this string str, Regex expr) => expr.IsMatch(str);
 
     public static int ToInt(this string str) => int.Parse(str);
     public static int ToInt(this string str, IFormatProvider provider) => int.Parse(str, provider);
@@ -454,6 +460,13 @@ public static class StringExtensions
     public static double? ToDoubleNull(this string str, NumberStyles style, IFormatProvider provider) => double.TryParse(str, style, provider, out var v) ? v : null;
     public static bool TryParseDouble(this string str, out double value) => double.TryParse(str, out value);
     public static bool TryParseDouble(this string str, NumberStyles style, IFormatProvider provider, out double value) => double.TryParse(str, style, provider, out value);
+
+    public static double ToDoubleInvariant(this string str)
+    {
+        if (str.IndexOf('.') >= 0)
+            return double.Parse(str, CultureInfo.InvariantCulture);
+        return double.Parse(str, CultureInfo.GetCultureInfo("ru-RU"));
+    }
 
     public static bool IsInt(this string str)
     {
