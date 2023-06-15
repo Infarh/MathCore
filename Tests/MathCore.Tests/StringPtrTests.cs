@@ -124,6 +124,21 @@ public class StringPtrTests
     [TestMethod]
     public void LastIndexOf_Test()
     {
+        const string str = "-01234:::56789-";
+
+        var ptr = str.AsStringPtr();
+
+        //var ptr2 = ptr.Substring(1, -1);
+        var ptr2 = ptr[1, -1];
+
+        var actual_index = ptr2.LastIndexOf(':');
+
+        actual_index.AssertEquals(7);
+    }
+
+    [TestMethod]
+    public void LastIndexOf_Test2()
+    {
         const string str = "(0,1..127):8";
         const int expected = 10;
 
@@ -136,5 +151,64 @@ public class StringPtrTests
         var actual = str_ptr.LastIndexOf(':');
 
         actual.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    public void SubstringBefore_Test()
+    {
+        const string str = "Value=123";
+        var ptr = str.AsStringPtr();
+        var name = ptr.SubstringBefore('=');
+
+        name.ToString().AssertEquals("Value");
+    }
+
+    [TestMethod]
+    public void SubstringAfter_Test()
+    {
+        const string str = "Value=123";
+        var ptr = str.AsStringPtr();
+        var name = ptr.SubstringAfter('=');
+
+        name.ToString().AssertEquals("123");
+    }
+
+    [TestMethod]
+    public void TrimStart_Test()
+    {
+        const string str = ">Value='''123''';";
+        var ptr = str.AsStringPtr(1, -1);
+
+        var value = ptr.SubstringAfter('=');
+
+        var trimmed = value.TrimStart('\'');
+
+        trimmed.ToString().AssertEquals("123'''");
+    }
+
+    [TestMethod]
+    public void TrimEnd_Test()
+    {
+        const string str = ">Value='''123''';";
+        var ptr = str.AsStringPtr(1, -1);
+
+        var value = ptr.SubstringAfter('=');
+
+        var trimmed = value.TrimEnd('\'');
+
+        trimmed.ToString().AssertEquals("'''123");
+    }
+
+    [TestMethod]
+    public void Trim_Test()
+    {
+        const string str = ">Value='''123''';";
+        var ptr = str.AsStringPtr(1, -1);
+
+        var value = ptr.SubstringAfter('=');
+
+        var trimmed = value.Trim('\'');
+
+        trimmed.ToString().AssertEquals("123");
     }
 }

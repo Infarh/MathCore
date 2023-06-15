@@ -12,13 +12,13 @@ public readonly ref partial struct StringPtr
     /* --------------------------------------------------------------------------------------- */
 
     /// <summary>Исходная строка</summary>
-    public string Source { get; }
+    public string Source { [DST] get; }
 
     /// <summary>Положение начала в строке</summary>
-    public int Pos { get; }
+    public int Pos { [DST] get; }
 
     /// <summary>Длина подстроки</summary>
-    public int Length { get; }
+    public int Length { [DST] get; }
 
     /// <summary>Подстрока является пустой</summary>
     public bool IsEmpty => Source is null || Length == 0;
@@ -32,7 +32,7 @@ public readonly ref partial struct StringPtr
     /// <param name="index">Индекс начала</param>
     /// <param name="length">Длина</param>
     /// <returns>Указатель на новое положение</returns>
-    public StringPtr this[int index, int length] => new(Source, Pos + index, length);
+    public StringPtr this[int index, int length] => Substring(index, length);
 
     //public StringPtr this[Range range] => this[range.Start, range.End - range.End];
 
@@ -55,6 +55,10 @@ public readonly ref partial struct StringPtr
     {
         this.Source = Source;
         this.Pos = Pos;
+
+        if (Length < 0)
+            Length = Source.Length + Length - Pos;
+
         this.Length = Math.Max(Math.Min(Length, Source.Length - Pos), 0);
     }
 
@@ -65,18 +69,33 @@ public readonly ref partial struct StringPtr
     /// <returns>Новый указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
     public StringPtr Substring(int Offset)
     {
+        if (Offset < 0) return Substring(Length + Offset);
         if (Offset > Length) return new(Source, Pos + Length, 0);
         if (Offset + Length == 0) return new(Source, Pos, 0);
-        return Offset >= 0
-            ? new(Source, Pos + Offset, Length - Offset)
-            : new(Source, Pos, Length + Offset);
+        return new(Source, Pos + Offset, Length - Offset);
     }
 
     /// <summary>Подстрока</summary>
     /// <param name="Offset">Смещение в текущей подстроке</param>
     /// <param name="Count">Число символов в новой подстроке</param>
     /// <returns>Указатель на подстроку, смещённую на указанное значение символов относительно текущей подстроки</returns>
-    public StringPtr Substring(int Offset, int Count) => new(Source, Pos + Offset, Count);
+    public StringPtr Substring(int Offset, int Count) => new(Source, Pos + Offset, Count < 0 ? Length + Count - Offset : Count);
+
+    public StringPtr SubstringIndex(int Start, int End) => Substring(Start, Math.Max(0, End - Start));
+
+    public StringPtr SubstringBefore(char Separator)
+    {
+        var index = IndexOf(Separator);
+        if (index < 0) return new(Source, Pos, 0);
+        return SubstringIndex(0, index);
+    }
+
+    public StringPtr SubstringAfter(char Separator)
+    {
+        var index = LastIndexOf(Separator);
+        if (index < 0) return new(Source, Pos, 0);
+        return Substring(index + 1);
+    }
 
     public bool IsInBracket(char Open, char Close) => Length >= 2 && Source[Pos] == Open && Source[Pos + Length - 1] == Close;
     public bool IsInBracket(string Open, string Close)
@@ -1105,7 +1124,7 @@ public readonly ref partial struct StringPtr
         var str = Source;
         while (pos < end_pos && str[pos] == c) pos++;
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos) : this;
+        return Trimmed ? Substring(pos - Pos) : this;
     }
 
     /// <summary>Удаление символа в начале строки</summary>
@@ -1127,7 +1146,7 @@ public readonly ref partial struct StringPtr
         var str = Source;
         while (pos < end_pos && (str[pos] == c1 || str[pos] == c2)) pos++;
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos) : this;
+        return Trimmed ? Substring(pos - Pos) : this;
     }
 
     /// <summary>Удаление символа в начале строки</summary>
@@ -1151,7 +1170,7 @@ public readonly ref partial struct StringPtr
         var str = Source;
         while (pos < end_pos && (str[pos] == c1 || str[pos] == c2 || str[pos] == c3)) pos++;
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos) : this;
+        return Trimmed ? Substring(pos - Pos) : this;
     }
 
     /// <summary>Удаление символов в начале строки</summary>
@@ -1184,7 +1203,7 @@ public readonly ref partial struct StringPtr
         }
 
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos) : this;
+        return Trimmed ? Substring(pos - Pos) : this;
     }
 
     /// <summary>Удаление символа в конца строки</summary>
@@ -1200,12 +1219,12 @@ public readonly ref partial struct StringPtr
     {
         var pos = Pos;
         var len = Math.Min(Length, Source.Length);
-        var end_pos = pos + len - 1;
+        var trimmed_len = 0;
         var str = Source;
-        while (end_pos > pos && str[end_pos] == c) end_pos--;
+        while (trimmed_len < len && str[pos + len - trimmed_len - 1] == c) trimmed_len++;
 
-        Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
+        Trimmed = trimmed_len > 0;
+        return Trimmed ? Substring(0, len - trimmed_len) : this;
     }
 
     /// <summary>Удаление символа в конце строки</summary>
@@ -1228,7 +1247,7 @@ public readonly ref partial struct StringPtr
         while (end_pos > pos && str[end_pos] == c1 || str[end_pos] == c2) end_pos--;
 
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
+        return Trimmed ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Удаление символа в конце строки</summary>
@@ -1253,7 +1272,7 @@ public readonly ref partial struct StringPtr
         while (end_pos > pos && str[end_pos] == c1 || str[end_pos] == c2 || str[end_pos] == c3) end_pos--;
 
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
+        return Trimmed ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Удаление символов в конце строки</summary>
@@ -1286,7 +1305,7 @@ public readonly ref partial struct StringPtr
         }
 
         Trimmed = pos != Pos;
-        return Trimmed ? Substring(pos, end_pos - pos + 1) : this;
+        return Trimmed ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
@@ -1316,11 +1335,14 @@ public readonly ref partial struct StringPtr
         var len = Math.Min(Length, Source.Length);
         var end_pos = pos + len - 1;
         var str = Source;
+
         while (pos < end_pos && str[pos] == c) pos++;
         while (pos < end_pos && str[end_pos] == c) end_pos--;
+
         TrimmedStart = pos != Pos;
         TrimmedEnd = end_pos != Pos + len - 1;
-        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
+
+        return TrimmedStart || TrimmedEnd ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
@@ -1357,7 +1379,7 @@ public readonly ref partial struct StringPtr
         while (pos < end_pos && str[end_pos] == c1 || str[end_pos] == c2) end_pos--;
         TrimmedStart = pos != Pos;
         TrimmedEnd = end_pos != Pos + len - 1;
-        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
+        return TrimmedStart || TrimmedEnd ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
@@ -1393,11 +1415,14 @@ public readonly ref partial struct StringPtr
         var len = Math.Min(Length, Source.Length);
         var end_pos = pos + len - 1;
         var str = Source;
+
         while (pos < end_pos && str[pos] == c1 || str[pos] == c2 || str[pos] == c3) pos++;
         while (pos < end_pos && str[end_pos] == c1 || str[end_pos] == c2 || str[end_pos] == c3) end_pos--;
+
         TrimmedStart = pos != Pos;
         TrimmedEnd = end_pos != Pos + len - 1;
-        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
+
+        return TrimmedStart || TrimmedEnd ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Удаление технических символов в начале и конце строки</summary>
@@ -1457,7 +1482,7 @@ public readonly ref partial struct StringPtr
         }
         TrimmedEnd = end_pos != Pos + len - 1;
 
-        return TrimmedStart || TrimmedEnd ? Substring(pos, end_pos - pos + 1) : this;
+        return TrimmedStart || TrimmedEnd ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
     /// <summary>Разделить строку на подстроки по указанному символам-разделителям</summary>
@@ -1485,6 +1510,48 @@ public readonly ref partial struct StringPtr
     public TokenizerSingleChar Split(bool SkipEmpty, char Separator) => SkipEmpty
         ? new TokenizerSingleChar(this, Separator).SkipEmpty()
         : new(this, Separator);
+
+    public (string Key, int Value) SplitKeyValueInt32(char Separator)
+    {
+        var value = SubstringAfter(Separator).ParseInt32();
+        var key = SubstringBefore(Separator).ToString();
+        return (key, value);
+    }
+
+    public (string Key, double Value) SplitKeyValueDouble(char Separator)
+    {
+        var value = SubstringAfter(Separator).ParseDouble();
+        var key = SubstringBefore(Separator).ToString();
+        return (key, value);
+    }
+
+    public (string Key, double Value) SplitKeyValueDouble(char Separator, IFormatProvider format)
+    {
+        var value = SubstringAfter(Separator).ParseDouble(format);
+        var key = SubstringBefore(Separator).ToString();
+        return (key, value);
+    }
+
+    public (int First, int Last) SplitIntervalInt32(char Separator)
+    {
+        var first = SubstringBefore(Separator).ParseInt32();
+        var last = SubstringAfter(Separator).ParseInt32();
+        return (first, last);
+    }
+
+    public (double First, double Last) SplitIntervalDouble(char Separator, bool OrderMinMax = false)
+    {
+        var first = SubstringBefore(Separator).ParseDouble();
+        var last = SubstringAfter(Separator).ParseDouble();
+        return OrderMinMax ? (Math.Min(first, last), Math.Max(first, last)) : (first, last);
+    }
+
+    public (double First, double Last) SplitIntervalDouble(char Separator, IFormatProvider format, bool OrderMinMax = false)
+    {
+        var first = SubstringBefore(Separator).ParseDouble(format);
+        var last = SubstringAfter(Separator).ParseDouble(format);
+        return OrderMinMax ? (Math.Min(first, last), Math.Max(first, last)) : (first, last);
+    }
 
     /* --------------------------------------------------------------------------------------- */
 
