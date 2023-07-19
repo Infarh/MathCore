@@ -526,6 +526,10 @@ public readonly struct Interval : IComparable<double>, IFormattable,
 
     public bool Check(double X, double Offset) => Check(X, Offset, -Offset);
 
+    public double FitValue(double Value, double ValueMax) => Min + Value * Length / ValueMax;
+    public double FitValue(double Value, double ValueMin, double ValueMax) => Min + (Value - ValueMin) * Length / (ValueMax - ValueMin);
+    public double FitValue(double Value, Interval ValueInterval) => Min + (Value - ValueInterval.Min) * Length / ValueInterval.Length;
+
     public bool IsExclude(Interval I) => !IsInclude(I);
 
     public bool IsInclude(Interval I) =>
