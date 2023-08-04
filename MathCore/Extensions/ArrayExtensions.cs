@@ -1,9 +1,6 @@
 ﻿#nullable enable
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using MathCore;
 using MathCore.Interpolation;
@@ -2711,5 +2708,23 @@ public static class ArrayExtensions
         }
 
         return result;
+    }
+
+    /// <summary>Поменять подмассивы местами</summary>
+    /// <typeparam name="T">Тип элементов массива</typeparam>
+    /// <param name="array">Исходный массив</param>
+    /// <param name="Index">Индекс разделения массивов</param>
+    public static void SwapArrayParts<T>(this T[] array, int Index)
+    {
+        if (Index == 0 || array.Length - Index == 0) return;
+        
+        for (var i = Index - 1; i >= 0; i--)
+        {
+            var tmp = array[i];
+            var last_cell = i + array.Length - Index;
+            for (var j = i + 1; j < last_cell; j++)
+                array[j - 1] = array[j];
+            array[last_cell] = tmp;
+        }
     }
 }

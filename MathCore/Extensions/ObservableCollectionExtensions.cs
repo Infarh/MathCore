@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System.Collections.ObjectModel;

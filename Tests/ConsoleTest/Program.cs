@@ -1,8 +1,14 @@
 using MathCore.IO;
 
-const string file_name = @"d:\123\test.txt";
 
-var watcher = new TextFileContentMonitor(file_name);
+var s = "1234567890";
+
+var enumerable = s.EnumerateSegments(3);
+var enumerator = enumerable.GetEnumerator();
+
+//const string file_name = @"d:\123\test.txt";
+
+//var watcher = new TextFileContentMonitor(file_name);
 
 //watcher.NewContent += (s, e) =>
 //{
@@ -10,7 +16,7 @@ var watcher = new TextFileContentMonitor(file_name);
 //    Console.WriteLine(e.ToString());
 //};
 
-watcher.Start();
+//watcher.Start();
 
 Console.WriteLine("End.");
 Console.ReadLine();

@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 using MathCore;
@@ -415,4 +414,6 @@ public static class IDictionaryExtensions
                         ? formattable_value.ToString(Match.Groups["format"].Value, FormatProvider ?? CultureInfo.CurrentCulture)
                         : value?.ToString()
             );
+
+    public static DictionaryKeySafe<TKey, TValue> ToKeySafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dictionary) => new(dictionary);
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MathCore.Annotations;
+﻿#nullable enable
 using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 
@@ -38,7 +35,6 @@ public class BezierCurve : Interpolator
     /// <param name="n">Степень</param>
     /// <returns></returns>
     [Hyperlink("http://ru.wikipedia.org/wiki/Многочлен_Бернштейна")]
-    [NotNull]
     private static Func<double, double> GetBernshteynPolynom(int k, int n)
     {
         var B = BinomCoefficient(n, k);
@@ -63,7 +59,7 @@ public class BezierCurve : Interpolator
     /// <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
     /// <param name="X">Список координат точек x</param>
     /// <param name="Y">Список координат точек y</param>
-    public BezierCurve([NotNull] IEnumerable<double> X, [NotNull] IEnumerable<double> Y)
+    public BezierCurve(IEnumerable<double> X, IEnumerable<double> Y)
     {
         var x = X.Select((xx, i) => (X:xx, i));
         var y = Y.Select((yy, i) => (Y:yy, i));
@@ -72,15 +68,15 @@ public class BezierCurve : Interpolator
 
     /// <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
     /// <param name="Points">Набор точек в виде <see cref="MathCore.Complex">комплексных чисел</see></param>
-    public BezierCurve([NotNull] IEnumerable<Complex> Points) => Initialize(Points.Select(c => (Vector2D)c));
+    public BezierCurve(IEnumerable<Complex> Points) => Initialize(Points.Select(c => (Vector2D)c));
 
     /// <summary>Новая <see url="http://ru.wikipedia.org/wiki/Кривая_Безье">кривая Безье</see></summary>
     /// <param name="Points">Набор точек</param>
-    public BezierCurve([NotNull] IEnumerable<Vector2D> Points) => Initialize(Points);
+    public BezierCurve(IEnumerable<Vector2D> Points) => Initialize(Points);
 
     /// <summary>Инициализировать кривую Безье</summary>
     /// <param name="Points">Набор точек</param>
-    private void Initialize([NotNull] IEnumerable<Vector2D> Points)
+    private void Initialize(IEnumerable<Vector2D> Points)
     {
         _Points = Points.ToArray();
         //{
@@ -99,7 +95,7 @@ public class BezierCurve : Interpolator
     public Vector2D B(double t)
     {
         if(t is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(t), "t в не интервала [0;1]");
+            throw new ArgumentOutOfRangeException(nameof(t), t, "t в не интервала [0;1]");
 
         var count = _Points.Length;
         var x     = 0d;

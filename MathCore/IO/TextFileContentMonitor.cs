@@ -21,7 +21,7 @@ public class TextFileContentMonitor
         var length = File.Length;
         _LastLength = length;
 
-        var directory = File.Directory.FullName;
+        var directory = (File.Directory?.FullName).NotNull();
         var file_name = File.Name;
         _Watcher = new FileSystemWatcher(directory, file_name)
         {
@@ -42,10 +42,9 @@ public class TextFileContentMonitor
 
     private void OnFileChanged(object sender, FileSystemEventArgs e)
     {
-        var file = _File;
-        file.Refresh();
+        _File.Refresh();
 
-        var current_length = file.Length;
+        var current_length = _File.Length;
 
         var last_length = _LastLength;
         var delta = current_length - last_length;

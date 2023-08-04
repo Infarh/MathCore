@@ -1,5 +1,4 @@
-﻿using System;
-using MathCore.Annotations;
+﻿#nullable enable
 using static MathCore.Matrix.Array;
 using static MathCore.Matrix.Array.Operator;
 // ReSharper disable MemberCanBePrivate.Global
@@ -34,7 +33,6 @@ public class MNK
     // ReSharper disable once UnusedMember.Global
     public double Approximate(double x) => Polynom.Array.GetValue(x, _A); //F(_A, x);
 
-    [NotNull]
     public Func<double, double> GetApproximation() => x => Polynom.Array.GetValue(x, _A);
 
     private static double[,] CreateMatrix(double[] XData, int MaxPower)
@@ -72,5 +70,5 @@ public class MNK
         //    _A[i] = matrix3[i, 0];
     }
 
-    [NotNull] public static implicit operator Func<double, double>([NotNull] MNK mnk) => mnk.GetApproximation();
+    public static implicit operator Func<double, double>(MNK mnk) => mnk.GetApproximation();
 }

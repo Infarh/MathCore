@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Interpolation;
+﻿namespace MathCore.Interpolation;
 
 /// <summary>Интерфейс интерполяции</summary>
 public interface IInterpolator

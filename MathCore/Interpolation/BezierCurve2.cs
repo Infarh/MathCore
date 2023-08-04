@@ -1,5 +1,4 @@
-﻿using System;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 namespace MathCore.Interpolation;
 
@@ -12,7 +11,7 @@ internal class BezierCurve2
     // just check if n is appropriate, then return the result
     private double FastFactorial(int n)
     {
-        if(n < 0) throw new Exception("n is less than 0");
+        if(n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "n is less than 0");
         if(n > 32) return n.Factorial();
 
         return _FactorialLookup[n];

@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System.Collections;
-using System.Collections.Generic;
+
 using MathCore;
 
 // ReSharper disable UnusedMember.Global
@@ -353,9 +353,7 @@ public static class RandomExtensions
         {
             var j = rnd.Next(0, i + 1);
 
-            var temp = list[j];
-            list[j] = list[i];
-            list[i] = temp;
+            (list[j], list[i]) = (list[i], list[j]);
         }
     }
 
@@ -388,6 +386,10 @@ public static class RandomExtensions
 
         return result.ToArray();
     }
+
+    public static T Next<T>(this Random rnd, params T[] items) => items[rnd.Next(items.Length)];
+
+    public static T Next<T>(this Random rnd, IReadOnlyList<T> list) => list[rnd.Next(list.Count)];
 
     /// <summary>Случайных элемент из перечисленных вариантов</summary>
     /// <typeparam name="T">Тип вариантов выбора</typeparam>
