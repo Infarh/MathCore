@@ -259,4 +259,6 @@ public static class StreamExtensions
 
         throw new InvalidOperationException("Что-то пошло не так");
     }
+
+    public static IEnumerable<string> GetStringLines(this Stream stream) => new StreamReader(stream).GetStringLines();
 }

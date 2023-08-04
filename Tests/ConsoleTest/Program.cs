@@ -37,6 +37,9 @@ return;
 
 class Person
 {
+    /// <summary>
+    /// Доработана SelectableCollection&lt;T&gt; и добавлены методы-расширения для Object .GetPropertyValue и .SetPropertyValue
+    /// </summary>
     public int Age { get; set; }
 
     public override string ToString() => $"Age {Age}";
