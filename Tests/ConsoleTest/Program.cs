@@ -1,10 +1,8 @@
-using MathCore.IO;
+using MathCore.Extensions;
 
+var person = new Person { Age = 18 };
 
-var s = "1234567890";
-
-var enumerable = s.EnumerateSegments(3);
-var enumerator = enumerable.GetEnumerator();
+person.SetPropertyValue("Age", 20);
 
 //const string file_name = @"d:\123\test.txt";
 
@@ -36,3 +34,10 @@ return;
 
 //Console.WriteLine("End.");
 //Console.ReadLine();
+
+class Person
+{
+    public int Age { get; set; }
+
+    public override string ToString() => $"Age {Age}";
+}

@@ -80,7 +80,14 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     /// <param name="Collection">Внутренняя коллекция</param>
     public SelectableCollection(ICollection<T> Collection)
     {
+        if(Collection.NotNull() is not { IsReadOnly: false })
+            throw new ArgumentException($"Коллекция {Collection.GetType()} доступна только для чтения", nameof(Collection));
+
+        if (Collection is T[])
+            throw new ArgumentException("Коллекция не должна быть массивом", nameof(Collection));
+
         _Collection = Collection.NotNull();
+
         if (Collection is not INotifyCollectionChanged notify_collection) return;
         _IsNotifyCollection                 =  true;
         notify_collection.CollectionChanged += OnSourceCollectionChanged;
@@ -126,7 +133,7 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
         _Collection.Add(item);
         if (old_count == _Collection.Count) return;
         OnPropertyChanged(nameof(Count));
-        OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item));
+        OnCollectionChanged(new(NotifyCollectionChangedAction.Add, item, old_count));
     }
 
     /// <inheritdoc />
@@ -148,11 +155,34 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     /// <inheritdoc />
     public bool Remove(T? item)
     {
-        if (!_Collection.Remove(item)) return false;
+        var index = -1;
+        switch (_Collection)
+        {
+            case List<T> list:
+                index = list.IndexOf(item);
+                if (index < 0) return false;
+
+                list.RemoveAt(index);
+                break;
+
+            case IList<T> list:
+                index = list.IndexOf(item);
+                if (index < 0) return false;
+
+                list.RemoveAt(index);
+                break;
+
+            default:
+                if (!_Collection.Remove(item)) return false;
+                break;
+        }
+
         OnPropertyChanged(nameof(Count));
-        OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item));
+        OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, item, index));
+
         if (Equals(_SelectedItem, item))
             SelectedItem = default;
+
         return true;
     }
 
