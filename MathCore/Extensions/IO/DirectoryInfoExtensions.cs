@@ -1,10 +1,6 @@
 ﻿#nullable enable
-using System.Linq;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Threading;
-using System.Threading.Tasks;
 
 using MathCore;
 using MathCore.Trees;
@@ -273,4 +269,12 @@ public static class DirectoryInfoExtensions
         if (SubDirectoryPath is null) throw new ArgumentNullException(nameof(SubDirectoryPath));
         return string.IsNullOrEmpty(SubDirectoryPath) ? Directory : new DirectoryInfo(Path.Combine(Directory.FullName, SubDirectoryPath));
     }
+
+    /// <summary>Получить файл по указанному пути внутри директории</summary>
+    /// <param name="dir">Исходная директория</param>
+    /// <param name="RelativeFilePath">Путь к файлу относительно директории. Если указан абсолютный путь, то будет использован он.</param>
+    public static FileInfo GetFile(this DirectoryInfo dir, string RelativeFilePath) =>
+        Path.IsPathRooted(RelativeFilePath)
+            ? new(RelativeFilePath)
+            : new(Path.Combine(dir.FullName, RelativeFilePath));
 }

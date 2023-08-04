@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.IoC.ServiceRegistrations;
 
 public class SingleCallServiceRegistration<TService> : ServiceRegistration<TService> where TService : class

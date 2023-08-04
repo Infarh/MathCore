@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.IoC;
 
 /// <summary>Методы-расширения для менеджера сервисов</summary>

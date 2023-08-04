@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.IoC.ServiceRegistrations;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 // ReSharper disable UnusedMethodReturnValue.Global
 

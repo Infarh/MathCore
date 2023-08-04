@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Reactive;
 using System.Text;
@@ -3880,4 +3879,19 @@ public static partial class IEnumerableExtensions
     /// <returns>Последовательное перечисление всех элементов данных</returns>
     public static IEnumerable<TValue> SelectSequential<T, TValue>(this IEnumerable<T> Source, Func<T, IEnumerable<TValue>> Selector, IComparer<TValue> Comparer) =>
         new SequentialEnumerable<TValue>(Comparer, Source.Select(Selector));
+
+    /// <summary>Отбросить последовательно повторяющиеся элементы</summary>
+    /// <typeparam name="T">Тип элементов последовательности</typeparam>
+    /// <param name="values">Последовательность элементов</param>
+    /// <returns>Последовательность элементов без последовательных повторений</returns>
+    public static IEnumerable<T> DiscardRepetitions<T>(this IEnumerable<T> values)
+    {
+        var last = default(T);
+        foreach (var value in values)
+            if (!Equals(value, last))
+            {
+                yield return value;
+                last = value;
+            }
+    }
 }

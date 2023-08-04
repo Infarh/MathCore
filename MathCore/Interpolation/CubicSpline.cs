@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MathCore.Annotations;
+﻿#nullable enable
 using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMember.Local
@@ -15,18 +13,17 @@ public class CubicSpline : Interpolator, IInterpolator
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Структура, описывающая сплайн на каждом сегменте сетки</summary>
-    private struct SplineState
+    private struct SplineState(double a, double b, double c, double d, double x)
     {
-        public readonly double a;
-        public double b;
-        public double c;
-        public double d;
-        public readonly double x;
+        public readonly double a = a;
+        public double b = b;
+        public double c = c;
+        public double d = d;
+        public readonly double x = x;
 
-        public SplineState(double a, double b, double c, double d, double x)
-        { this.a = a; this.b = b; this.c = c; this.d = d; this.x = x; }
-
-        public SplineState(double a, double x) { this.a = a; this.x = x; b = 0; c = 0; d = 0; }
+        public SplineState(double a, double x) : this(a, 0, 0, 0, x)
+        {
+        }
     }
 
     /* -------------------------------------------------------------------------------------------- */
@@ -40,9 +37,9 @@ public class CubicSpline : Interpolator, IInterpolator
 
     /* -------------------------------------------------------------------------------------------- */
 
-    public CubicSpline([NotNull] double[] X, [NotNull] double[] Y) => Initialize(X, Y);
+    public CubicSpline(double[] X, double[] Y) => Initialize(X, Y);
 
-    public CubicSpline([NotNull] IList<Complex> Points)
+    public CubicSpline(IList<Complex> Points)
     {
         var count = Points.Count;
         var x     = new double[count];
@@ -55,7 +52,7 @@ public class CubicSpline : Interpolator, IInterpolator
         Initialize(x, y);
     }
 
-    public CubicSpline([NotNull] IList<Vector2D> Points)
+    public CubicSpline(IList<Vector2D> Points)
     {
         var count = Points.Count;
         var x     = new double[count];
@@ -73,7 +70,7 @@ public class CubicSpline : Interpolator, IInterpolator
     /// <summary>Инициализация сплайна</summary>
     /// <param name="X">Массив аргументов</param><param name="Y">Массив значений</param>
     /// <exception cref="ArgumentException">Возникает в случае, если размерности массивов не равны</exception>
-    public void Initialize([NotNull] double[] X, [NotNull] double[] Y)
+    public void Initialize(double[] X, double[] Y)
     {
         if(X.Length != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
 
@@ -142,6 +139,5 @@ public class CubicSpline : Interpolator, IInterpolator
         return state.a + (state.b + (state.c / 2 + state.d * dx / 6) * dx) * dx;
     }
 
-    [NotNull]
     public Func<double, double> GetFunction() => Value;
 }

@@ -1,18 +1,18 @@
-﻿using System;
-using System.IO;
+﻿namespace MathCore.IO;
 
-namespace MathCore.IO;
-
-public class LimitedStream : Stream
+public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : Stream
 {
+    public LimitedStream(Stream BaseStream) : this(BaseStream, 0, BaseStream.Length) { }
+    public LimitedStream(Stream BaseStream, long Offset) : this(BaseStream, Offset, BaseStream.Length - Offset) { }
+
     /// <summary>Поток-источник данных</summary>
-    private readonly Stream _BaseStream;
+    private readonly Stream _BaseStream = BaseStream.NotNull();
 
     /// <summary>Смещение потока относительного исходного</summary>
-    private long _DataOffset;
+    private long _DataOffset = Offset;
 
     /// <summary>Количество байт данных в потоке</summary>
-    private long _DataLength;
+    private long _DataLength = DataLength;
 
     /// <summary>Возможность растягивать исходный поток</summary>
     private bool _CanExpand;
@@ -38,15 +38,6 @@ public class LimitedStream : Stream
     }
 
     public Stream AsReadOnly => new LimitedStream(this) { _CanWrite = false };
-
-    public LimitedStream(Stream BaseStream) : this(BaseStream, 0, BaseStream.Length) { }
-    public LimitedStream(Stream BaseStream, long Offset) : this(BaseStream, Offset, BaseStream.Length - Offset) { }
-    public LimitedStream(Stream BaseStream, long Offset, long DataLength)
-    {
-        _BaseStream = BaseStream ?? throw new ArgumentNullException(nameof(BaseStream));
-        _DataOffset = Offset;
-        _DataLength = DataLength;
-    }
 
     #region Stream inherits
 

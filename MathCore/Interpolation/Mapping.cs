@@ -1,5 +1,4 @@
-﻿using System;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global

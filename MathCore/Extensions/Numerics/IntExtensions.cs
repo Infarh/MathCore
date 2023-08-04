@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System.Collections;
-using System.Collections.Generic;
 using System.Numerics;
 
 using MathCore;
@@ -543,4 +542,8 @@ public static class IntExtensions
         var x    = ((~((long)(I & mask) - 1)) & mask) * (sign ? -1 : 1);
         return (int)x;
     }
+
+    public static string ToBitString(this int value) => Convert.ToString(value, 2);
+
+    public static string ToBitString(this short value) => Convert.ToString(value, 2);
 }

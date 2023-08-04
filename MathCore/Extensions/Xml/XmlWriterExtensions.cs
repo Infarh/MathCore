@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.Threading.Tasks;
 using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace

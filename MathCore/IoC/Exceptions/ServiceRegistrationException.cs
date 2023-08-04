@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using System.Runtime.Serialization;
 
 namespace MathCore.IoC.Exceptions;

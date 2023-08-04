@@ -1,16 +1,10 @@
 ﻿#nullable enable
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.IO.Compression;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 using MathCore;
 
@@ -517,4 +511,27 @@ public static class StringExtensions
     public static bool EndWithInvariantIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.InvariantCultureIgnoreCase);
     public static bool EndWithOrdinal(this string str, string other) => str.EndsWith(other, StringComparison.Ordinal);
     public static bool EndWithOrdinalIgnoreCase(this string str, string other) => str.EndsWith(other, StringComparison.OrdinalIgnoreCase);
+
+    public static StringSegmentsEnumerable EnumerateSegments(this string s, int SegmentLength) => new(s, SegmentLength);
+
+    public readonly ref struct StringSegmentsEnumerable(string Str, int SegmentLength)
+    {
+        public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength);
+
+        public ref struct StringSegmentEnumerator(string Str, int SegmentLength)
+        {
+            private int _Offset;
+            private readonly int _Length = Str.Length;
+
+            public StringPtr Current { get; private set; }
+
+            public bool MoveNext()
+            {
+                if (_Offset >= _Length) return false;
+                Current = new(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
+                _Offset += SegmentLength;
+                return true;
+            }
+        }
+    }
 }

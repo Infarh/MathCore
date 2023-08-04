@@ -1,8 +1,6 @@
 ﻿#nullable enable
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 
 using MathCore.Extensions.Expressions;
 using MCEx = System.Linq.Expressions.MethodCallExpression;
@@ -32,6 +30,12 @@ public static class DelegateExtensions
     #endregion
 
     #region Action
+
+    public static EventHandler AsEventHandler(this Action action) => (_, _) => action();
+
+    public static EventHandler<T> AsEventHandler<T>(this Action action) where T : EventArgs => (_, _) => action();
+
+    public static EventHandler<EventArgs<T>> AsEventHandlerArg<T>(this Action action) => (_, _) => action();
 
     public static Task InvokeAsync(this Action action) => Task.Factory.FromAsync(action.BeginInvoke, action.EndInvoke, null);
     public static Task InvokeAsync<T>(this Action<T> action, T parameter) => Task.Factory.FromAsync(action.BeginInvoke, action.EndInvoke, parameter, null);
