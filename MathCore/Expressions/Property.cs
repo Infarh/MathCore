@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Reactive;
 using System.Reflection;
@@ -17,8 +18,7 @@ namespace System.Linq.Expressions;
 /// <typeparam name="T">Тип значения свойства</typeparam>
 public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
 {
-    [NotNull]
-    public static Expression<Func<TObject, T>> GetExtractorExpression<TObject>([NotNull] string PropertyName, bool IsPublicOnly)
+    public static Expression<Func<TObject, T>> GetExtractorExpression<TObject>(string PropertyName, bool IsPublicOnly)
     {
         var type = typeof(TObject);
         var info = type.GetProperty(PropertyName, BindingFlags.Instance |
@@ -32,7 +32,7 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
            .CreateLambda<Func<TObject, T>>(expr_object);
     }
 
-    [NotNull] public static Func<TObject, T> GetExtractor<TObject>([NotNull] string PropertyName, bool IsPublicOnly) => GetExtractorExpression<TObject>(PropertyName, IsPublicOnly).Compile();
+    public static Func<TObject, T> GetExtractor<TObject>(string PropertyName, bool IsPublicOnly) => GetExtractorExpression<TObject>(PropertyName, IsPublicOnly).Compile();
 
 
     /// <summary>Событие изменения свойства</summary>
@@ -48,7 +48,6 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     }
 
     /// <summary>Информация о свойстве</summary>
-    [NotNull]
     private readonly PropertyInfo _PropertyInfo;
 
     /// <summary>Метод чтения свойства</summary>
@@ -97,17 +96,17 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     /// <summary>Признак реализации объектом-хозяином свойства интерфейса <see cref="INotifyPropertyChanged"/></summary>
     public bool IsNotifyPropertyChanged { get; }
 
-    [NotNull] public AttributesExtractor Attributes => _Attributes ??= new AttributesExtractor(_PropertyInfo);
+    public AttributesExtractor Attributes => _Attributes ??= new AttributesExtractor(_PropertyInfo);
 
-    [NotNull] public PropertyInfo Info => _PropertyInfo;
+    public PropertyInfo Info => _PropertyInfo;
 
-    [NotNull] public Type PropertyType => _PropertyInfo.PropertyType;
+    public Type PropertyType => _PropertyInfo.PropertyType;
 
     /// <summary>Инициализация доступа к статическому свойству</summary>
     /// <param name="type">Рассматриваемый тип</param>
     /// <param name="Name">Имя статического свойства</param>
     /// <param name="IsPublicOnly">Признак публичности свойства</param>
-    public Property(Type type, [NotNull] string Name, bool IsPublicOnly = true)
+    public Property(Type type, string Name, bool IsPublicOnly = true)
         : base(type, Name)
     {
         IsNotifyPropertyChanged = false;
@@ -140,7 +139,7 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     /// <param name="Obj">Рассматриваемый объект</param>
     /// <param name="Name">Имя свойства</param>
     /// <param name="IsPublicOnly">Признак публичности свойства</param>
-    public Property([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+    public Property(object Obj, string Name, bool IsPublicOnly = true)
         : this(Obj, Obj.GetType().GetProperty(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Свойство {Name} не найдено в типе {Obj.GetType()}"))
     { }
 
@@ -149,7 +148,7 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     /// <param name="Obj">Рассматриваемый объект</param>
     /// <param name="info">Информация о свойстве</param>
     /// <param name="IsPublicOnly">Признак публичности свойства</param>
-    public Property(object Obj, [NotNull] PropertyInfo info, bool IsPublicOnly = true)
+    public Property(object Obj, PropertyInfo info, bool IsPublicOnly = true)
         : base(Obj, info.Name)
     {
         _PropertyInfo = info;
@@ -215,7 +214,6 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     }
 
     /// <summary>Информация о свойстве</summary>
-    [NotNull]
     private readonly PropertyInfo _PropertyInfo;
 
     /// <summary>Метод чтения свойства</summary>
@@ -251,7 +249,7 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
 
     public PropertyInfo Info => _PropertyInfo;
 
-    [NotNull] public Type PropertyType => _PropertyInfo.PropertyType;
+    public Type PropertyType => _PropertyInfo.PropertyType;
 
     /// <summary>Значение свойства</summary>
     public object Value
@@ -312,13 +310,13 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
         }
     }
 
-    [NotNull] public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_PropertyInfo);
+    public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_PropertyInfo);
 
     /// <summary>Инициализация доступа к статическому свойству</summary>
     /// <param name="type">Рассматриваемый тип</param>
     /// <param name="Name">Имя статического свойства</param>
     /// <param name="IsPublicOnly">Признак публичности свойства</param>
-    public Property(Type type, [NotNull] string Name, bool IsPublicOnly = true)
+    public Property(Type type, string Name, bool IsPublicOnly = true)
         : base(type, Name)
     {
         IsNotifyPropertyChanged = false;
@@ -354,7 +352,7 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     /// <param name="Obj">Рассматриваемый объект</param>
     /// <param name="Name">Имя свойства</param>
     /// <param name="IsPublicOnly">Признак публичности свойства</param>
-    public Property([NotNull] object Obj, [NotNull] string Name, bool IsPublicOnly = true)
+    public Property(object Obj, string Name, bool IsPublicOnly = true)
         : this(Obj, Obj.GetType().GetProperty(Name, BindingFlags.Instance | (IsPublicOnly ? BindingFlags.Public : BindingFlags.Public | BindingFlags.NonPublic)) ?? throw new InvalidOperationException($"Свойство {Name} не найдено в типе {Obj.GetType()}"))
     { }
 
@@ -364,18 +362,18 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     /// <param name="Obj">Рассматриваемый объект</param>
     /// <param name="info">Информация о свойстве</param>
     /// <param name="IsPublicOnly">Признак публичности свойства</param>
-    public Property(object Obj, [NotNull] PropertyInfo info, bool IsPublicOnly = true)
+    public Property(object Obj, PropertyInfo info, bool IsPublicOnly = true)
         : base(Obj, info.Name)
     {
         _PropertyInfo = info;
         Debug.Assert(_PropertyInfo != null, "_FieldInfo != null");
         LoadAttributes();
 
-        var ObjConstant = Expression.Constant(Obj);
+        var obj_constant = Expression.Constant(Obj);
         var object_type = typeof(object);
         if(_PropertyInfo.CanRead)
         {
-            var body        = Expression.Property(ObjConstant, Name);
+            var body        = Expression.Property(obj_constant, Name);
             var reader_expr = Expression.Lambda<Func<object>>(Expression.Convert(body, object_type));
             _Reader = reader_expr.Compile();
         }

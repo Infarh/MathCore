@@ -485,6 +485,7 @@ public static class ExpressionExtensions
             ?? throw new InvalidOperationException("Конструктор не найден"));
 
     public static pEx ParameterOf(this string ParameterName, Type type) => Parameter(type, ParameterName);
+    public static pEx ParameterOf<T>(this string ParameterName) => Parameter(typeof(T), ParameterName);
 
     public static mcEx GetCall(this Ex obj, string method, IEnumerable<Ex> arg)
         => Call(obj, method, (arg = arg.ToArray()).Select(a => a.Type).ToArray(), (Ex[])arg);
