@@ -10,9 +10,10 @@ namespace System.IO;
 
 public static class StreamReaderExtensions
 {
-    public static IEnumerable<string?> GetStringLines(this StreamReader reader)
+    public static IEnumerable<string> GetStringLines(this StreamReader reader)
     {
-        while (!reader.EndOfStream) yield return reader.ReadLine();
+        while (!reader.EndOfStream && reader.ReadLine() is { } line) 
+            yield return line;
     }
 
     public static IEnumerable<char[]> GetCharBuffer(this StreamReader reader, int BufferLength)
