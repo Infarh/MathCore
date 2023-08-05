@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.87</Version>
+    <Version>0.0.87.1</Version>
     <PackageReleaseNotes>
       Доработана SelectableCollection&lt;T&gt; и добавлены методы-расширения для Object .GetPropertyValue(PropertyName) и .SetPropertyValue(PropertyName, Value)
+      Исправлена рабобта RoundAraptive
     </PackageReleaseNotes>
   </PropertyGroup>
 
