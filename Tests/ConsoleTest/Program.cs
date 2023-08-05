@@ -1,8 +1,8 @@
 using MathCore.Extensions;
 
-var person = new Person { Age = 18 };
+var x = 123.00012345m;
 
-person.SetPropertyValue("Age", 20);
+var y = x.RoundAdaptive(2);
 
 //const string file_name = @"d:\123\test.txt";
 

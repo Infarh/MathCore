@@ -51,9 +51,15 @@ public static class DoubleExtensions
     [DST]
     public static int Pow(this int x, int p)
     {
+        switch (x)
+        {
+            case 0: return 0;
+            case 1: return 1;
+        }
+
         switch (p)
         {
-            case < 0: return 1 / x.Pow(-p);
+            case < 0: return 0;
             case 0:   return 1;
             case 1:   return x;
             case 2:   return x * x;
@@ -70,15 +76,55 @@ public static class DoubleExtensions
     [DST]
     public static double Pow(this double x, int p)
     {
-        if (x is double.NaN) return double.NaN;
+        switch (x)
+        {
+            case double.NaN: return double.NaN;
+            case 0: return 0;
+            case 1: return 1;
+        }
+
         switch (p)
         {
+            case -4:   return 1 / (x * x * x * x);
+            case -3:   return 1 / (x * x * x);
+            case -2:   return 1 / (x * x);
+            case -1:   return 1 / x;
             case < 0: return 1 / x.Pow(-p);
             case 0:   return 1;
             case 1:   return x;
             case 2:   return x * x;
             case 3:   return x * x * x;
             case 4:   return x * x * x * x;
+            default:
+                var result = x;
+                for (var i = 1; i < p; i++)
+                    result *= x;
+                return result;
+        }
+    }
+
+    [DST]
+    public static float Pow(this float x, int p)
+    {
+        switch (x)
+        {
+            case float.NaN: return float.NaN;
+            case 0: return 0;
+            case 1: return 1;
+        }
+
+        switch (p)
+        {
+            case -4: return 1 / (x * x * x * x);
+            case -3: return 1 / (x * x * x);
+            case -2: return 1 / (x * x);
+            case -1: return 1 / x;
+            case < 0: return 1 / x.Pow(-p);
+            case 0: return 1;
+            case 1: return x;
+            case 2: return x * x;
+            case 3: return x * x * x;
+            case 4: return x * x * x * x;
             default:
                 var result = x;
                 for (var i = 1; i < p; i++)
@@ -191,12 +237,18 @@ public static class DoubleExtensions
     [DST]
     public static double RoundAdaptive(this double x, int n = 1)
     {
-        if (x == 0d) return 0;
+        if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
+        if (n == 0) return x.Round();
         if (x is double.NaN or double.PositiveInfinity or double.NegativeInfinity) return x;
-        var sign = Math.Sign(x);
-        x = x.Abs();
-        var b = Math.Pow(10, (int)Math.Log10(x) - 1);
-        return Math.Round(x / b, n - 1) * b * sign;
+        if (x < 0) return -(-x).RoundAdaptive(n);
+
+        var integer = x.Truncate();
+        var fraction = x - integer;
+
+        var fraction_digits = (int)Math.Log10(fraction);
+        var b = 10d.Pow(fraction_digits);
+
+        return (x / b).Round(n) * b;
     }
 
     /// <summary>Адаптивное округление</summary>
@@ -206,12 +258,18 @@ public static class DoubleExtensions
     [DST]
     public static float RoundAdaptive(this float x, int n = 1)
     {
-        if (x == 0f) return 0;
+        if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
+        if (n == 0) return x.Round();
         if (x is float.NaN or float.PositiveInfinity or float.NegativeInfinity) return x;
-        var sign = Math.Sign(x);
-        x = x.Abs();
-        var b = Math.Pow(10, (int)Math.Log10(x) - 1);
-        return (float)(Math.Round(x / b, n - 1) * b * sign);
+        if (x < 0) return -(-x).RoundAdaptive(n);
+
+        var integer = x.Truncate();
+        var fraction = x - integer;
+
+        var fraction_digits = (int)Math.Log10(fraction);
+        var b = 10f.Pow(fraction_digits);
+
+        return (x / b).Round(n) * b;
     }
 
     /// <summary>Получить обратное число</summary>
