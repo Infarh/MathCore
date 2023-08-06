@@ -73,7 +73,44 @@ public static class DoubleExtensions
         }
     }
 
-    [DST]
+    //[DST]
+    //public static double Pow(this double x, int p)
+    //{
+    //    switch (x)
+    //    {
+    //        case double.NaN: return double.NaN;
+    //        case 0: return 0;
+    //        case 1: return 1;
+    //    }
+
+    //    switch (p)
+    //    {
+    //        case -4:   return 1 / (x * x * x * x);
+    //        case -3:   return 1 / (x * x * x);
+    //        case -2:   return 1 / (x * x);
+    //        case -1:   return 1 / x;
+    //        case < 0: return 1 / x.Pow(-p);
+    //        case 0:   return 1;
+    //        case 1:   return x;
+    //        case 2:   return x * x;
+    //        case 3:   return x * x * x;
+    //        case 4:   return x * x * x * x;
+    //        default:
+    //            var result = x;
+
+    //            var y = x;
+    //            var power = p;
+    //            //while (power > 0)
+    //            //{
+
+    //            //}
+
+    //            for (var i = 1; i < p; i++)
+    //                result *= x;
+    //            return result;
+    //    }
+    //}
+
     public static double Pow(this double x, int p)
     {
         switch (x)
@@ -85,25 +122,70 @@ public static class DoubleExtensions
 
         switch (p)
         {
-            case -4:   return 1 / (x * x * x * x);
-            case -3:   return 1 / (x * x * x);
-            case -2:   return 1 / (x * x);
-            case -1:   return 1 / x;
+            case -4: return 1 / (x * x * x * x);
+            case -3: return 1 / (x * x * x);
+            case -2: return 1 / (x * x);
+            case -1: return 1 / x;
             case < 0: return 1 / x.Pow(-p);
-            case 0:   return 1;
-            case 1:   return x;
-            case 2:   return x * x;
-            case 3:   return x * x * x;
-            case 4:   return x * x * x * x;
+            case 0: return 1;
+            case 1: return x;
+            case 2: return x * x;
+            case 3: return x * x * x;
+            case 4: return x * x * x * x;
             default:
                 var result = x;
-                for (var i = 1; i < p; i++)
-                    result *= x;
+
+                var power = p;
+                while (power > 0 && power % 2 == 0)
+                {
+                    result *= result;
+                    power >>= 1;
+                }
+
+                while (power > 0 && power % 3 == 0)
+                {
+                    result *= result * result;
+                    power /= 3;
+                }
+
+                var x0 = result;
+                while (--power > 0)
+                    result *= x0;
+
                 return result;
         }
     }
 
-    [DST]
+    //[DST]
+    //public static float Pow(this float x, int p)
+    //{
+    //    switch (x)
+    //    {
+    //        case float.NaN: return float.NaN;
+    //        case 0: return 0;
+    //        case 1: return 1;
+    //    }
+
+    //    switch (p)
+    //    {
+    //        case -4: return 1 / (x * x * x * x);
+    //        case -3: return 1 / (x * x * x);
+    //        case -2: return 1 / (x * x);
+    //        case -1: return 1 / x;
+    //        case < 0: return 1 / x.Pow(-p);
+    //        case 0: return 1;
+    //        case 1: return x;
+    //        case 2: return x * x;
+    //        case 3: return x * x * x;
+    //        case 4: return x * x * x * x;
+    //        default:
+    //            var result = x;
+    //            for (var i = 1; i < p; i++)
+    //                result *= x;
+    //            return result;
+    //    }
+    //}
+
     public static float Pow(this float x, int p)
     {
         switch (x)
@@ -127,8 +209,24 @@ public static class DoubleExtensions
             case 4: return x * x * x * x;
             default:
                 var result = x;
-                for (var i = 1; i < p; i++)
-                    result *= x;
+
+                var power = p;
+                while (power > 0 && power % 2 == 0)
+                {
+                    result *= result;
+                    power >>= 1;
+                }
+
+                while (power > 0 && power % 3 == 0)
+                {
+                    result *= result * result;
+                    power /= 3;
+                }
+
+                var x0 = result;
+                while (--power > 0)
+                    result *= x0;
+
                 return result;
         }
     }

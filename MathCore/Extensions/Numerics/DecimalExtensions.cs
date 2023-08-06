@@ -1,20 +1,20 @@
 ﻿// ReSharper disable once CheckNamespace
-using MathCore.Functions.Differentiable;
-
 namespace System;
 
 /// <summary>Расширения для чисел двойной точности</summary>
 public static class DecimalExtensions
 {
-    public const decimal Pi = 3.14159265358979323846264338327950288419716939937510M;
-    public const decimal Epsilon = 0.0000000000000000001M;
-    private const decimal PIx2 = 6.28318530717958647692528676655900576839433879875021M;
-    public const decimal E = 2.7182818284590452353602874713526624977572470936999595749M;
-    private const decimal PIdiv2 = 1.570796326794896619231321691639751442098584699687552910487M;
-    private const decimal PIdiv4 = 0.785398163397448309615660845819875721049292349843776455243M;
-    private const decimal Einv = 0.3678794411714423215955237701614608674458111310317678M;
-    private const decimal Log10Inv = 0.434294481903251827651128918916605082294397005803666566114M;
-    private const decimal Half = 0.5M;
+    // ReSharper disable InconsistentNaming
+    private const decimal pi = 3.14159265358979323846264338327950288419716939937510M;
+    //private const decimal eps = 0.0000000000000000001M;
+    private const decimal pi2 = 6.28318530717958647692528676655900576839433879875021M;
+    private const decimal e = 2.7182818284590452353602874713526624977572470936999595749M;
+    private const decimal pi05 = 1.570796326794896619231321691639751442098584699687552910487M;
+    private const decimal pi025 = 0.785398163397448309615660845819875721049292349843776455243M;
+    private const decimal e_inv = 0.3678794411714423215955237701614608674458111310317678M;
+    private const decimal log10_inv = 0.434294481903251827651128918916605082294397005803666566114M;
+    private const decimal half = 0.5M;
+    // ReSharper restore InconsistentNaming
 
     /// <summary>Вычисление квадратного корня указанной точности последовательными приближениями</summary>
     /// <param name="x">Число, квадратный корень которого требуется вычислить</param>
@@ -40,7 +40,7 @@ public static class DecimalExtensions
         {
             previous = current;
             if (previous == decimal.Zero) return decimal.Zero;
-            current = (previous + x / previous)  * Half;
+            current = (previous + x / previous)  * half;
         }
         while (Math.Abs(previous - current) > epsilon);
         return current;
@@ -95,7 +95,7 @@ public static class DecimalExtensions
         if (count == 0)
             return result;
 
-        return result * E.Pow(count);
+        return result * e.Pow(count);
     }
 
     [Copyright("https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath/DecimalMath.cs#L207")]
@@ -106,13 +106,13 @@ public static class DecimalExtensions
         var count = 0;
         while (x >= decimal.One)
         {
-            x *= Einv;
+            x *= e_inv;
             count++;
         }
 
-        while (x <= Einv)
+        while (x <= e_inv)
         {
-            x *= E;
+            x *= e;
             count--;
         }
 
@@ -137,20 +137,20 @@ public static class DecimalExtensions
         return count - result;
     }
 
-    public static decimal Log10(this decimal x) => Log(x) * Log10Inv;
+    public static decimal Log10(this decimal x) => Log(x) * log10_inv;
 
     private static void TruncateToPeriodicInterval(ref decimal x)
     {
-        while (x >= PIx2)
+        while (x >= pi2)
         {
-            var divide = Math.Abs(decimal.ToInt32(x / PIx2));
-            x -= divide * PIx2;
+            var divide = Math.Abs(decimal.ToInt32(x / pi2));
+            x -= divide * pi2;
         }
 
-        while (x <= -PIx2)
+        while (x <= -pi2)
         {
-            var divide = Math.Abs(decimal.ToInt32(x / PIx2));
-            x += divide * PIx2;
+            var divide = Math.Abs(decimal.ToInt32(x / pi2));
+            x += divide * pi2;
         }
     }
     public static decimal Sin(this decimal x) => CalculateSinFromCos(x, Cos(x));
@@ -163,16 +163,16 @@ public static class DecimalExtensions
         // now x in (-2pi,2pi)
         switch (x)
         {
-            case >= Pi and <= PIx2:
-                return -Cos(x - Pi);
-            case >= -PIx2 and <= -Pi:
-                return -Cos(x + Pi);
+            case >= pi and <= pi2:
+                return -Cos(x - pi);
+            case >= -pi2 and <= -pi:
+                return -Cos(x + pi);
         }
 
         x *= x;
         //y=1-x/2!+x^2/4!-x^3/6!...
 
-        var xx = -x * Half;
+        var xx = -x * half;
         var y = decimal.One + xx;
         var cached_y = y - decimal.One;//init cache  with different value
 
@@ -181,7 +181,7 @@ public static class DecimalExtensions
         {
             cached_y = y;
             decimal factor = i * ((i << 1) + 3) + 1; //2i^2+2i+i+1=2i^2+3i+1
-            factor = -Half / factor;
+            factor = -half / factor;
             xx *= x * factor;
             y += xx;
         }
@@ -197,10 +197,10 @@ public static class DecimalExtensions
         //now x in [-2*PI;2*PI]
         return x switch
         {
-            >= -PIx2 and <= -Pi => true,
-            >= -Pi and <= decimal.Zero => false,
-            >= decimal.Zero and <= Pi => true,
-            >= Pi and <= PIx2 => false,
+            >= -pi2 and <= -pi => true,
+            >= -pi and <= decimal.Zero => false,
+            >= decimal.Zero and <= pi => true,
+            >= pi and <= pi2 => false,
             _ => throw new ArgumentException(nameof(x))
         };
 
@@ -225,14 +225,14 @@ public static class DecimalExtensions
     {
         var exp = Exp(x);
         var exp_inv = decimal.One / exp;
-        return (exp - exp_inv) * Half;
+        return (exp - exp_inv) * half;
     }
 
     public static decimal Cosh(this decimal x)
     {
         var exp = Exp(x);
         var exp_inv = decimal.One / exp;
-        return (exp + exp_inv) * Half;
+        return (exp + exp_inv) * half;
     }
 
     public static decimal Tanh(this decimal x)
@@ -248,7 +248,7 @@ public static class DecimalExtensions
 
         //known values
         if (x == decimal.Zero) return decimal.Zero;
-        if (x == decimal.One) return PIdiv2;
+        if (x == decimal.One) return pi05;
 
         //asin function is odd function
         if (x < decimal.Zero) return -Asin(-x);
@@ -266,7 +266,7 @@ public static class DecimalExtensions
         if (x.Abs() > new_x.Abs())
         {
             var t = Asin(new_x);
-            return Half * (PIdiv2 - t);
+            return half * (pi05 - t);
         }
 
         var y = decimal.Zero;
@@ -278,7 +278,7 @@ public static class DecimalExtensions
         do
         {
             cached_result = result;
-            result *= xx * (decimal.One - Half / i);
+            result *= xx * (decimal.One - half / i);
             y += result / ((i << 1) + 1);
             i++;
         } while (cached_result != result);
@@ -289,25 +289,25 @@ public static class DecimalExtensions
     public static decimal ATan(this decimal x) => x switch
     {
         decimal.Zero => decimal.Zero,
-        decimal.One => PIdiv4,
+        decimal.One => pi025,
         _ => Asin(x / Sqrt(decimal.One + x * x))
     };
 
     public static decimal Acos(this decimal x) => x switch
     {
-        decimal.Zero => PIdiv2,
+        decimal.Zero => pi05,
         decimal.One => decimal.Zero,
-        < decimal.Zero => Pi - Acos(-x),
-        _ => PIdiv2 - Asin(x)
+        < decimal.Zero => pi - Acos(-x),
+        _ => pi05 - Asin(x)
     };
 
     public static decimal Atan2(this (decimal x, decimal y) point) => point switch
     {
         (> decimal.Zero,               _) => ATan(point.y / point.x),
-        (< decimal.Zero, >= decimal.Zero) => ATan(point.y / point.x) + Pi,
-        (< decimal.Zero,  < decimal.Zero) => ATan(point.y / point.x) - Pi,
-        (             _,  > decimal.Zero) => +PIdiv2,
-        (             _,  < decimal.Zero) => -PIdiv2,
+        (< decimal.Zero, >= decimal.Zero) => ATan(point.y / point.x) + pi,
+        (< decimal.Zero,  < decimal.Zero) => ATan(point.y / point.x) - pi,
+        (             _,  > decimal.Zero) => +pi05,
+        (             _,  < decimal.Zero) => -pi05,
         _ => throw new ArgumentException("invalid atan2 arguments")
     };
 
@@ -335,7 +335,7 @@ public static class DecimalExtensions
     //}
 
     [DST]
-    public static decimal Power(this decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
+    public static decimal Pow(this decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
 
     //[Diagnostics.DST]
     //public static Complex GetPower(this decimal x, Complex z) { return x ^ z; }
@@ -355,31 +355,75 @@ public static class DecimalExtensions
     //[Diagnostics.DST]
     //public static double ToDeg(this decimal rad) { return rad * Consts.Geometry.ToDeg; }
 
-    [DST]
+    //[DST]
+    //public static decimal Pow(this decimal x, int p)
+    //{
+    //    switch (x)
+    //    {
+    //        case 0m: return 0m;
+    //        case 1m: return 1m;
+    //    }
+
+    //    switch (p)
+    //    {
+    //        case -4: return 1m / (x * x * x * x);
+    //        case -3: return 1m / (x * x * x);
+    //        case -2: return 1m / (x * x);
+    //        case -1: return 1m / x;
+    //        case < 0: return 1m / x.Pow(-p);
+    //        case 0: return 1m;
+    //        case 1: return x;
+    //        case 2: return x * x;
+    //        case 3: return x * x * x;
+    //        case 4: return x * x * x * x;
+    //        default:
+    //            var result = x;
+    //            for (var i = 1; i < p; i++)
+    //                result *= x;
+    //            return result;
+    //    }
+    //}
+
     public static decimal Pow(this decimal x, int p)
     {
         switch (x)
         {
-            case 0m: return 0m;
-            case 1m: return 1m;
+            case decimal.Zero: return decimal.Zero;
+            case decimal.One: return decimal.One;
         }
 
         switch (p)
         {
-            case -4: return 1m / (x * x * x * x);
-            case -3: return 1m / (x * x * x);
-            case -2: return 1m / (x * x);
-            case -1: return 1m / x;
-            case < 0: return 1m / x.Pow(-p);
-            case 0: return 1m;
+            case -4: return decimal.One / (x * x * x * x);
+            case -3: return decimal.One / (x * x * x);
+            case -2: return decimal.One / (x * x);
+            case -1: return decimal.One / x;
+            case < 0: return decimal.One / x.Pow(-p);
+            case 0: return decimal.One;
             case 1: return x;
             case 2: return x * x;
             case 3: return x * x * x;
             case 4: return x * x * x * x;
             default:
                 var result = x;
-                for (var i = 1; i < p; i++)
-                    result *= x;
+
+                var power = p;
+                while (power > 0 && power % 2 == 0)
+                {
+                    result *= result;
+                    power >>= 1;
+                }
+
+                while (power > 0 && power % 3 == 0)
+                {
+                    result *= result * result;
+                    power /= 3;
+                }
+
+                var x0 = result;
+                while (--power > 0)
+                    result *= x0;
+
                 return result;
         }
     }

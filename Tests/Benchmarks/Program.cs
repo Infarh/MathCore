@@ -1,4 +1,5 @@
-﻿using Benchmarks.Hash;
+﻿using Benchmarks;
+using Benchmarks.Hash;
 
 
 // https://benchmarkdotnet.org/articles/features/parameterization.html
@@ -13,4 +14,5 @@
 //_ = BenchmarkRunner.Run<CortegeCtorTest>();
 //_ = BenchmarkRunner.Run<MD5Test>();
 //_ = BenchmarkRunner.Run<SHA256Test>();
-_ = BenchmarkRunner.Run<SHA512Test>();
+//_ = BenchmarkRunner.Run<SHA512Test>();
+_ = BenchmarkRunner.Run<PowerTest>();
