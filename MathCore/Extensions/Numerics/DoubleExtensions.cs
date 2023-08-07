@@ -91,8 +91,11 @@ public static class DoubleExtensions
         switch (x)
         {
             case double.NaN: return double.NaN;
+            case double.PositiveInfinity: return double.PositiveInfinity;
+            case double.NegativeInfinity: return double.NegativeInfinity;
             case 0: return 0;
-            case 1: return 1;
+            case +1: return 1;
+            case -1: return p % 2 == 0 ? 1 : -1;
         }
 
         switch (p)
@@ -123,12 +126,10 @@ public static class DoubleExtensions
                     power /= 3;
                 }
 
-                //var x0 = result;
-                //while (--power > 0)
-                //    result *= x0;
-
-                //return result;
-                return power > 1 ? result * result.Pow(power - 1) : result;
+                if (power > 1)
+                    return result * result.Pow(power - 1);
+                
+                return result;
         }
     }
 
@@ -167,8 +168,11 @@ public static class DoubleExtensions
         switch (x)
         {
             case float.NaN: return float.NaN;
+            case float.PositiveInfinity: return float.PositiveInfinity;
+            case float.NegativeInfinity: return float.NegativeInfinity;
             case 0: return 0;
-            case 1: return 1;
+            case +1: return 1;
+            case -1: return p % 2 == 0 ? 1 : -1;
         }
 
         switch (p)
@@ -183,31 +187,33 @@ public static class DoubleExtensions
             case 2: return x * x;
             case 3: return x * x * x;
             case 4: return x * x * x * x;
-            default:
-                var result = x;
-
-                var power = p;
-                while (power > 0 && power % 2 == 0)
-                {
-                    result *= result;
-                    power >>= 1;
-                }
-
-                while (power > 0 && power % 3 == 0)
-                {
-                    result *= result * result;
-                    power /= 3;
-                }
-
-                //var x0 = result;
-                //while (--power > 0)
-                //    result *= x0;
-
-                //return result;
-
-                return power > 1 ? result * result.Pow(power - 1) : result;
-
         }
+
+        var result = x;
+        var power = p;
+
+        if (p < 11)
+            while (--power > 0)
+                result *= x;
+        else
+        {
+            while (power > 0 && power % 2 == 0)
+            {
+                result *= result;
+                power >>= 1;
+            }
+
+            while (power > 0 && power % 3 == 0)
+            {
+                result *= result * result;
+                power /= 3;
+            }
+
+            if (power > 1)
+                return result * result.Pow(power - 1);
+        }
+
+        return result;
     }
 
     public static Complex Pow(this Complex x, int p)
@@ -227,24 +233,33 @@ public static class DoubleExtensions
             case 2: return x * x;
             case 3: return x * x * x;
             case 4: return x * x * x * x;
-            default:
-                var result = x;
-
-                var power = p;
-                while (power > 0 && power % 2 == 0)
-                {
-                    result *= result;
-                    power >>= 1;
-                }
-
-                while (power > 0 && power % 3 == 0)
-                {
-                    result *= result * result;
-                    power /= 3;
-                }
-
-                return power > 1 ? result * result.Pow(power - 1) : result;
         }
+
+        var result = x;
+        var power = p;
+
+        if (p < 11)
+            while (--power > 0)
+                result *= x;
+        else
+        {
+            while (power > 0 && power % 2 == 0)
+            {
+                result *= result;
+                power >>= 1;
+            }
+
+            while (power > 0 && power % 3 == 0)
+            {
+                result *= result * result;
+                power /= 3;
+            }
+
+            if (power > 1)
+                return result * result.Pow(power - 1);
+        }
+
+        return result;
     }
 
     [DST]

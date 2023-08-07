@@ -121,24 +121,33 @@ public static class ShortExtensions
             case 2: return x * x;
             case 3: return x * x * x;
             case 4: return x * x * x * x;
-            default:
-                int result = x;
+            }
 
-                var power = p;
-                while (power > 0 && power % 2 == 0)
-                {
-                    result *= result;
-                    power >>= 1;
-                }
+        int result = x;
+        var power = p;
 
-                while (power > 0 && power % 3 == 0)
-                {
-                    result *= result * result;
-                    power /= 3;
-                }
+        if (p < 11)
+            while (--power > 0)
+                result *= x;
+        else
+        {
+            while (power > 0 && power % 2 == 0)
+            {
+                result *= result;
+                power >>= 1;
+            }
 
-                return power > 1 ? result * result.Pow(power - 1) : result;
+            while (power > 0 && power % 3 == 0)
+            {
+                result *= result * result;
+                power /= 3;
+            }
+
+            if (power > 1)
+                return result * result.Pow(power - 1);
         }
+
+        return result;
     }
 
     [DST]

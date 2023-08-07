@@ -13,7 +13,6 @@ public static class DecimalExtensions
     private const decimal pi025 = 0.785398163397448309615660845819875721049292349843776455243M;
     private const decimal e_inv = 0.3678794411714423215955237701614608674458111310317678M;
     private const decimal log10_inv = 0.434294481903251827651128918916605082294397005803666566114M;
-    private const decimal half = 0.5M;
     // ReSharper restore InconsistentNaming
 
     /// <summary>Вычисление квадратного корня указанной точности последовательными приближениями</summary>
@@ -21,17 +20,17 @@ public static class DecimalExtensions
     /// <param name="epsilon">Требуемая точность</param>
     /// <returns>Квадратный корень числа</returns>
     [DST]
-    public static decimal Sqrt(this decimal x, decimal epsilon = decimal.Zero)
+    public static decimal Sqrt(this decimal x, decimal epsilon = 0)
     {
         switch (x)
         {
-            case < 0m: throw new ArgumentOutOfRangeException(nameof(x), x, "Мнимый результат");
-            case 0m: return 0m;
-            case 1m: return 1m;
-            case 4m: return 2m;
-            case 9m: return 3m;
-            case 16m: return 4m;
-            case 25m: return 5m;
+            case < 0: throw new ArgumentOutOfRangeException(nameof(x), x, "Мнимый результат");
+            case 0: return 0;
+            case 1: return 1;
+            case 4: return 2;
+            case 9: return 3;
+            case 16: return 4;
+            case 25: return 5;
         }
 
         var current = (decimal)Math.Sqrt((double)x);
@@ -39,8 +38,8 @@ public static class DecimalExtensions
         do
         {
             previous = current;
-            if (previous == decimal.Zero) return decimal.Zero;
-            current = (previous + x / previous)  * half;
+            if (previous == 0) return 0;
+            current = (previous + x / previous)  * 0.5m;
         }
         while (Math.Abs(previous - current) > epsilon);
         return current;
@@ -50,7 +49,7 @@ public static class DecimalExtensions
     /// <param name="x">Проверяемое число</param>
     /// <returns>Истина, если число целое</returns>
     [DST]
-    public static bool IsInt(this decimal x, decimal epsilon = decimal.Zero) => Math.Abs(decimal.Truncate(x) - x) <= epsilon;
+    public static bool IsInt(this decimal x, decimal epsilon = 0) => Math.Abs(decimal.Truncate(x) - x) <= epsilon;
 
     [DST]
     public static decimal Round(this decimal x) => decimal.Round(x);
@@ -69,21 +68,21 @@ public static class DecimalExtensions
     {
         var count = 0;
 
-        if (x > decimal.One)
+        if (x > 1)
         {
             count = decimal.ToInt32(decimal.Truncate(x));
             x -= decimal.Truncate(x);
         }
 
-        if (x < decimal.Zero)
+        if (x < 0)
         {
             count = decimal.ToInt32(decimal.Truncate(x) - 1);
-            x = decimal.One + (x - decimal.Truncate(x));
+            x = 1 + (x - decimal.Truncate(x));
         }
 
         var iteration = 1;
-        var result = decimal.One;
-        var factorial = decimal.One;
+        var result = 1m;
+        var factorial = 1m;
         decimal cached_result;
         do
         {
@@ -101,10 +100,10 @@ public static class DecimalExtensions
     [Copyright("https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath/DecimalMath.cs#L207")]
     public static decimal Log(this decimal x)
     {
-        if (x <= decimal.Zero) throw new ArgumentException("x must be greater than zero");
+        if (x <= 0) throw new ArgumentException("x must be greater than zero");
 
         var count = 0;
-        while (x >= decimal.One)
+        while (x >= 1)
         {
             x *= e_inv;
             count++;
@@ -118,12 +117,12 @@ public static class DecimalExtensions
 
         x--;
         
-        if (x == decimal.Zero) return count;
+        if (x == 0) return count;
         
-        var result = decimal.Zero;
+        var result = 0m;
         var iteration = 0;
-        var y = decimal.One;
-        var cache_result = result - decimal.One;
+        var y = 1m;
+        var cache_result = result - 1;
         
         const int max_iteration = 100;
         while (cache_result != result && iteration < max_iteration)
@@ -163,25 +162,23 @@ public static class DecimalExtensions
         // now x in (-2pi,2pi)
         switch (x)
         {
-            case >= pi and <= pi2:
-                return -Cos(x - pi);
-            case >= -pi2 and <= -pi:
-                return -Cos(x + pi);
+            case >= +pi and <= +pi2: return -Cos(x - pi);
+            case >= -pi2 and <= -pi: return -Cos(x + pi);
         }
 
         x *= x;
         //y=1-x/2!+x^2/4!-x^3/6!...
 
-        var xx = -x * half;
-        var y = decimal.One + xx;
-        var cached_y = y - decimal.One;//init cache  with different value
+        var xx = -x * 0.5m;
+        var y = 1 + xx;
+        var cached_y = y - 1;//init cache  with different value
 
         const int max_iteration = 100;
         for (var i = 1; cached_y != y && i < max_iteration; i++)
         {
             cached_y = y;
             decimal factor = i * ((i << 1) + 3) + 1; //2i^2+2i+i+1=2i^2+3i+1
-            factor = -half / factor;
+            factor = -0.5m / factor;
             xx *= x * factor;
             y += xx;
         }
@@ -198,8 +195,8 @@ public static class DecimalExtensions
         return x switch
         {
             >= -pi2 and <= -pi => true,
-            >= -pi and <= decimal.Zero => false,
-            >= decimal.Zero and <= pi => true,
+            >= -pi and <= 0 => false,
+            >= 0 and <= pi => true,
             >= pi and <= pi2 => false,
             _ => throw new ArgumentException(nameof(x))
         };
@@ -208,13 +205,13 @@ public static class DecimalExtensions
     }
 
     private static decimal CalculateSinFromCos(decimal x, decimal cos) => IsSignOfSinePositive(x) 
-        ? +Sqrt(decimal.One - cos * cos) 
-        : -Sqrt(decimal.One - cos * cos);
+        ? +Sqrt(1 - cos * cos) 
+        : -Sqrt(1 - cos * cos);
 
     public static decimal Tan(this decimal x)
     {
         var cos = Cos(x);
-        if (cos is decimal.Zero) throw new ArgumentException(nameof(x));
+        if (cos is 0) throw new ArgumentException(nameof(x));
 
         //calculate sin using cos
         var sin = CalculateSinFromCos(x, cos);
@@ -224,34 +221,34 @@ public static class DecimalExtensions
     public static decimal Sinh(this decimal x)
     {
         var exp = Exp(x);
-        var exp_inv = decimal.One / exp;
-        return (exp - exp_inv) * half;
+        var exp_inv = 1 / exp;
+        return (exp - exp_inv) * 0.5m;
     }
 
     public static decimal Cosh(this decimal x)
     {
         var exp = Exp(x);
-        var exp_inv = decimal.One / exp;
-        return (exp + exp_inv) * half;
+        var exp_inv = 1 / exp;
+        return (exp + exp_inv) * 0.5m;
     }
 
     public static decimal Tanh(this decimal x)
     {
         var exp = Exp(x);
-        var exp_inv = decimal.One / exp;
+        var exp_inv = 1 / exp;
         return (exp - exp_inv) / (exp + exp_inv);
     }
 
     public static decimal Asin(this decimal x)
     {
-        if (x is > decimal.One or < -decimal.One) throw new ArgumentException("x must be in [-1,1]");
+        if (x is > 1 or < -1) throw new ArgumentException("x must be in [-1,1]");
 
         //known values
-        if (x == decimal.Zero) return decimal.Zero;
-        if (x == decimal.One) return pi05;
+        if (x == 0) return 0;
+        if (x == 1) return pi05;
 
         //asin function is odd function
-        if (x < decimal.Zero) return -Asin(-x);
+        if (x < 0) return -Asin(-x);
 
         //my optimize trick here
 
@@ -259,17 +256,17 @@ public static class DecimalExtensions
         // asin(x)=0.5*(pi/2-asin(1-2*x*x)) 
         // if x>=0 is true
 
-        var new_x = decimal.One - 2 * x * x;
+        var new_x = 1 - 2 * x * x;
 
         //for calculating new value near to zero than current
         //because we gain more speed with values near to zero
         if (x.Abs() > new_x.Abs())
         {
             var t = Asin(new_x);
-            return half * (pi05 - t);
+            return 0.5m * (pi05 - t);
         }
 
-        var y = decimal.Zero;
+        var y = 0m;
         var result = x;
         decimal cached_result;
         var i = 1;
@@ -278,7 +275,7 @@ public static class DecimalExtensions
         do
         {
             cached_result = result;
-            result *= xx * (decimal.One - half / i);
+            result *= xx * (1 - 0.5m / i);
             y += result / ((i << 1) + 1);
             i++;
         } while (cached_result != result);
@@ -288,26 +285,26 @@ public static class DecimalExtensions
 
     public static decimal ATan(this decimal x) => x switch
     {
-        decimal.Zero => decimal.Zero,
-        decimal.One => pi025,
-        _ => Asin(x / Sqrt(decimal.One + x * x))
+        0 => 0,
+        1 => pi025,
+        _ => Asin(x / Sqrt(1 + x * x))
     };
 
     public static decimal Acos(this decimal x) => x switch
     {
-        decimal.Zero => pi05,
-        decimal.One => decimal.Zero,
-        < decimal.Zero => pi - Acos(-x),
+        0 => pi05,
+        1 => 0,
+        < 0 => pi - Acos(-x),
         _ => pi05 - Asin(x)
     };
 
     public static decimal Atan2(this (decimal x, decimal y) point) => point switch
     {
-        (> decimal.Zero,               _) => ATan(point.y / point.x),
-        (< decimal.Zero, >= decimal.Zero) => ATan(point.y / point.x) + pi,
-        (< decimal.Zero,  < decimal.Zero) => ATan(point.y / point.x) - pi,
-        (             _,  > decimal.Zero) => +pi05,
-        (             _,  < decimal.Zero) => -pi05,
+        (> 0,    _) => ATan(point.y / point.x),
+        (< 0, >= 0) => ATan(point.y / point.x) + pi,
+        (< 0,  < 0) => ATan(point.y / point.x) - pi,
+        (  _,  > 0) => +pi05,
+        (  _,  < 0) => -pi05,
         _ => throw new ArgumentException("invalid atan2 arguments")
     };
 
@@ -388,40 +385,50 @@ public static class DecimalExtensions
     {
         switch (x)
         {
-            case decimal.Zero: return decimal.Zero;
-            case decimal.One: return decimal.One;
+            case 0: return 0;
+            case +1: return 1;
+            case -1: return p % 2 == 0 ? 1 : -1;
         }
 
         switch (p)
         {
-            case -4: return decimal.One / (x * x * x * x);
-            case -3: return decimal.One / (x * x * x);
-            case -2: return decimal.One / (x * x);
-            case -1: return decimal.One / x;
-            case < 0: return decimal.One / x.Pow(-p);
-            case 0: return decimal.One;
+            case -4: return 1 / (x * x * x * x);
+            case -3: return 1 / (x * x * x);
+            case -2: return 1 / (x * x);
+            case -1: return 1 / x;
+            case < 0: return 1 / x.Pow(-p);
+            case 0: return 1;
             case 1: return x;
             case 2: return x * x;
             case 3: return x * x * x;
             case 4: return x * x * x * x;
-            default:
-                var result = x;
-
-                var power = p;
-                while (power > 0 && power % 2 == 0)
-                {
-                    result *= result;
-                    power >>= 1;
-                }
-
-                while (power > 0 && power % 3 == 0)
-                {
-                    result *= result * result;
-                    power /= 3;
-                }
-
-                return power > 1 ? result * result.Pow(power - 1) : result;
         }
+
+        var result = x;
+        var power = p;
+
+        if (p < 11)
+            while (--power > 0)
+                result *= x;
+        else
+        {
+            while (power > 0 && power % 2 == 0)
+            {
+                result *= result;
+                power >>= 1;
+            }
+
+            while (power > 0 && power % 3 == 0)
+            {
+                result *= result * result;
+                power /= 3;
+            }
+
+            if (power > 1)
+                return result * result.Pow(power - 1);
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -431,8 +438,8 @@ public static class DecimalExtensions
     {
         switch (x)
         {
-            case 0m: return 0;
-            case 1m: return 0;
+            case 0: return 0;
+            case 1: return 0;
             case < 0:
                 x = -x;
                 break;
@@ -453,7 +460,7 @@ public static class DecimalExtensions
     public static decimal RoundAdaptive(this decimal x, int n = 1)
     {
         if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
-        if (n == 0m) return x.Round();
+        if (n == 0) return x.Round();
         if (x < 0) return -(-x).RoundAdaptive(n);
 
         var fraction_digits = x.GetZerosCount();
