@@ -21,10 +21,32 @@ public static class IntExtensions
 
     /// <summary>Возведение целого числа в целую степень</summary>
     /// <param name="x">Целое основание</param>
-    /// <param name="N">Целый показатель степени</param>
+    /// <param name="p">Целый показатель степени</param>
     /// <returns>Результат возведения целого основания в целую степень</returns>
     [DST]
-    public static int Power(this int x, int N) => (int)Math.Pow(x, N);
+    public static int Pow(this int x, int p)
+    {
+        switch (x)
+        {
+            case 0: return 0;
+            case 1: return 1;
+        }
+
+        switch (p)
+        {
+            case < 0: return 0;
+            case 0: return 1;
+            case 1: return x;
+            case 2: return x * x;
+            case 3: return x * x * x;
+            case 4: return x * x * x * x;
+            default:
+                var result = x;
+                for (var i = 1; i < p; i++)
+                    result *= x;
+                return result;
+        }
+    }
 
     /// <summary>Возведение целого числа в вещественную степень</summary>
     /// <param name="x">Целое основание</param>

@@ -1,4 +1,6 @@
-﻿namespace MathCore.Algorithms.Numbers;
+﻿using System.Numerics;
+
+namespace MathCore.Algorithms.Numbers;
 
 // https://habr.com/ru/post/584662/
 public static class Power
@@ -28,14 +30,14 @@ public static class Power
     /// <param name="x">Возводимое в степень число</param>
     /// <param name="e">Показатель степени  0 ... 134217728</param>
     /// <remarks>
-    /// Еесть целая степень e, чтобы получить число x в этой степени
+    /// Есть целая степень e, чтобы получить число x в этой степени
     /// нужно возвести это число во все степени 1, 2, 4, … 2n
     /// (в коде этому соответствует x *= x), каждый раз сдвигая биты
     /// e вправо (e >>= 1) пока оно не равно 0 и тогда, когда
     /// последний бит e не равен нулю ((e &amp; 1) != 0), домножать результат
     /// v на полученное x
     /// </remarks>
-    public static double BinaryPower(double x, ulong e)
+    public static double BinaryPower(double x, int e)
     {
         var v = 1d;
         while (e != 0)
@@ -61,7 +63,7 @@ public static class Power
         var x_abs = Math.Abs(e);
         var el = Math.Ceiling(x_abs);
         var base_part = OldApproximatePower(x, x_abs / el);
-        var result = BinaryPower(base_part, (ulong)el);
+        var result = BinaryPower(base_part, (int)el);
 
         return e < 0d ? 1d / result : result;
     }
@@ -78,7 +80,7 @@ public static class Power
         if (x == 1d || e == 0d) return 1d;
 
         var abs_e = Math.Abs(e);
-        var int_e = (ulong)abs_e;
+        var int_e = (int)abs_e;
         var delta_e = abs_e - int_e;
         var result = OldApproximatePower(x, delta_e) * BinaryPower(x, int_e);
 

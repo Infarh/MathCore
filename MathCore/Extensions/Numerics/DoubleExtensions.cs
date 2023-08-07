@@ -48,31 +48,6 @@ public static class DoubleExtensions
     [DST] public static float Truncate(this float x) => float.IsNaN(x) ? float.NaN : (float)Math.Truncate(x);
     [DST] public static float Ceiling(this float x) => float.IsNaN(x) ? float.NaN : (float)Math.Ceiling(x);
 
-    [DST]
-    public static int Pow(this int x, int p)
-    {
-        switch (x)
-        {
-            case 0: return 0;
-            case 1: return 1;
-        }
-
-        switch (p)
-        {
-            case < 0: return 0;
-            case 0:   return 1;
-            case 1:   return x;
-            case 2:   return x * x;
-            case 3:   return x * x * x;
-            case 4:   return x * x * x * x;
-            default:
-                var result = x;
-                for (var i = 1; i < p; i++)
-                    result *= x;
-                return result;
-        }
-    }
-
     //[DST]
     //public static double Pow(this double x, int p)
     //{
@@ -251,21 +226,26 @@ public static class DoubleExtensions
 
     [DST] public static double Pow(this double x, double p) => double.IsNaN(x) ? double.NaN : double.IsNaN(p) ? double.NaN : Math.Pow(x, p);
 
+    /// <summary>Возведение числа в комплексную степень</summary>
+    /// <param name="x">Основание</param><param name="z">Комплексный показатель степень</param>
+    /// <returns>Значение x^z, где x - действительное, z - комплексное</returns>
+    [DST] public static Complex Pow(this double x, Complex z) => x ^ z;
+
     [DST] public static double Pow2(this double x) => x * x;
     [DST] public static float Pow2(this float x) => x * x;
-    [DST] public static int Pow2(this int value) => value * value;
-    [DST] public static uint Pow2(this uint value) => value * value;
-    [DST] public static long Pow2(this long value) => value * value;
-    [DST] public static ulong Pow2(this ulong value) => value * value;
-    [DST] public static short Pow2(this short value) => (short)(value * value);
-    [DST] public static ushort Pow2(this ushort value) => (ushort)(value * value);
-    [DST] public static byte Pow2(this byte value) => (byte)(value * value);
-    [DST] public static byte Pow2(this sbyte value) => (byte)(value * value);
+    [DST] public static int Pow2(this int x) => x * x;
+    [DST] public static uint Pow2(this uint x) => x * x;
+    [DST] public static long Pow2(this long x) => x * x;
+    [DST] public static ulong Pow2(this ulong x) => x * x;
+    [DST] public static short Pow2(this short x) => (short)(x * x);
+    [DST] public static ushort Pow2(this ushort x) => (ushort)(x * x);
+    [DST] public static byte Pow2(this byte x) => (byte)(x * x);
+    [DST] public static byte Pow2(this sbyte x) => (byte)(x * x);
 
     [DST]
-    public static Complex Pow2(this Complex value)
+    public static Complex Pow2(this Complex z)
     {
-        var (a, b) = value;
+        var (a, b) = z;
         return new Complex(a * a - b * b, 2 * a * b);
     }
 
@@ -383,57 +363,6 @@ public static class DoubleExtensions
     /// <param name="x">Инвертируемое число</param>
     /// <returns>Число, обратное к исходном</returns>
     [DST] public static float GetInverse(this float x) => 1 / x;
-        
-    /// <summary>Возведение в целую степень</summary>
-    /// <param name="x">Действительное число</param>
-    /// <param name="n">Целочисленный показатель степени</param>
-    /// <returns>x^n</returns>
-    [DST]
-    public static double Power(this double x, int n)
-    {
-        if (double.IsNaN(x)) return double.NaN;
-        if (x == 0d) return 0d;
-        if (x == 1d) return 1d;
-        if (n is < -1000 or > 1000) return Math.Pow(x, n);
-        if (n < 0) return (1 / x).Power(-n);
-        var result = 1.0;
-        for (var i = 0; i < n; i++)
-            result *= x;
-        return result;
-    }
-
-    /// <summary>Возведение в целую степень</summary>
-    /// <param name="x">Действительное число</param>
-    /// <param name="n">Целочисленный показатель степени</param>
-    /// <returns>x^n</returns>
-    [DST]
-    public static float Power(this float x, int n)
-    {
-        if (float.IsNaN(x)) return float.NaN;
-        if (x == 0f) return 0f;
-        if (x == 1f) return 1f;
-        if (n is < -1000 or > 1000) return (float)Math.Pow(x, n);
-        if (n < 0) return (1 / x).Power(-n);
-        var result = 1.0;
-        for (var i = 0; i < n; i++)
-            result *= x;
-        return (float)result;
-    }
-
-    /// <summary>Возведение числа в действительную степень</summary>
-    /// <param name="x">Основание</param><param name="y">Действительный показатель степени</param>
-    /// <returns>Действительное число x возведённое в степень y: x^y</returns>
-    [DST] public static double Power(this double x, double y) => double.IsNaN(x) ? double.NaN : (double.IsNaN(y) ? double.NaN : Math.Pow(x, y));
-
-    /// <summary>Возведение числа в действительную степень</summary>
-    /// <param name="x">Основание</param><param name="y">Действительный показатель степени</param>
-    /// <returns>Действительное число x возведённое в степень y: x^y</returns>
-    [DST] public static float Power(this float x, float y) => float.IsNaN(x) ? float.NaN : (float.IsNaN(y) ? float.NaN : (float)Math.Pow(x, y));
-
-    /// <summary>Возведение числа в комплексную степень</summary>
-    /// <param name="x">Основание</param><param name="z">Комплексный показатель степень</param>
-    /// <returns>Значение x^z, где x - действительное, z - комплексное</returns>
-    [DST] public static Complex Power(this double x, Complex z) => x ^ z;
 
     /// <summary>Преобразование в децибелы по амплитуде</summary>
     /// <param name="x">Амплитудное значение 20*lg(x)</param>

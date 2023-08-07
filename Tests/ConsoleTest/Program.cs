@@ -1,8 +1,32 @@
-using MathCore.Extensions;
 
-var x = 123.00012345m;
+using OxyPlot.Axes;
 
-var y = x.RoundAdaptive(2);
+var x0 = 0.01;
+var y0 = x0.RoundAdaptive(2);
+
+var x1 = 9999.123456;
+var x2 = 1.000001234;
+var x3 = 1234567.89;
+
+var y1 = RoundToTheHighestDigits(x1, 5);
+var y2 = RoundToTheHighestDigits(x2, 5);
+var y3 = RoundToTheHighestDigits(x3, 5);
+
+double RoundToTheHighestDigits(double x, int n)
+{
+    if (n <= 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть > 0");
+    if (x == 0) return 0;
+    if (x < 0) return RoundToTheHighestDigits(-x, n);
+
+
+    var d = Math.Ceiling(Math.Log10(x));
+
+    var q = Math.Pow(10, n - d);
+    var y = Math.Floor(x * q) / q;
+
+    return y;
+}
+
 
 //const string file_name = @"d:\123\test.txt";
 
@@ -35,12 +59,3 @@ return;
 //Console.WriteLine("End.");
 //Console.ReadLine();
 
-class Person
-{
-    /// <summary>
-    /// Доработана SelectableCollection&lt;T&gt; и добавлены методы-расширения для Object .GetPropertyValue и .SetPropertyValue
-    /// </summary>
-    public int Age { get; set; }
-
-    public override string ToString() => $"Age {Age}";
-}
