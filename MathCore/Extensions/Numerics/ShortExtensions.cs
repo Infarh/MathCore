@@ -105,7 +105,7 @@ public static class ShortExtensions
     public static bool IsEven(this short N) => Math.Abs(N).IsDeviatedTo(2);
 
     [DST]
-    public static int Pow(this int x, int p)
+    public static int Pow(this short x, int p)
     {
         switch (x)
         {
@@ -122,10 +122,22 @@ public static class ShortExtensions
             case 3: return x * x * x;
             case 4: return x * x * x * x;
             default:
-                var result = x;
-                for (var i = 1; i < p; i++)
-                    result *= x;
-                return result;
+                int result = x;
+
+                var power = p;
+                while (power > 0 && power % 2 == 0)
+                {
+                    result *= result;
+                    power >>= 1;
+                }
+
+                while (power > 0 && power % 3 == 0)
+                {
+                    result *= result * result;
+                    power /= 3;
+                }
+
+                return power > 1 ? result * result.Pow(power - 1) : result;
         }
     }
 

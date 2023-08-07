@@ -420,12 +420,6 @@ public static class DecimalExtensions
                     power /= 3;
                 }
 
-                //var x0 = result;
-                //while (--power > 0)
-                //    result *= x0;
-
-                //return result;
-
                 return power > 1 ? result * result.Pow(power - 1) : result;
         }
     }

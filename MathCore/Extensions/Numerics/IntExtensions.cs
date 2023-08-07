@@ -42,9 +42,21 @@ public static class IntExtensions
             case 4: return x * x * x * x;
             default:
                 var result = x;
-                for (var i = 1; i < p; i++)
-                    result *= x;
-                return result;
+
+                var power = p;
+                while (power > 0 && power % 2 == 0)
+                {
+                    result *= result;
+                    power >>= 1;
+                }
+
+                while (power > 0 && power % 3 == 0)
+                {
+                    result *= result * result;
+                    power /= 3;
+                }
+
+                return power > 1 ? result * result.Pow(power - 1) : result;
         }
     }
 

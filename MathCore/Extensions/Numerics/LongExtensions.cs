@@ -191,4 +191,45 @@ public static class LongExtensions
 
     [DST]
     public static long SetFlag(this long Value, long Flag, long Mask) => (Value & ~Mask) | (Flag & Mask);
+
+    /// <summary>Возведение целого числа в целую степень</summary>
+    /// <param name="x">Целое основание</param>
+    /// <param name="p">Целый показатель степени</param>
+    /// <returns>Результат возведения целого основания в целую степень</returns>
+    [DST]
+    public static long Pow(this long x, int p)
+    {
+        switch (x)
+        {
+            case 0: return 0;
+            case 1: return 1;
+        }
+
+        switch (p)
+        {
+            case < 0: return 0;
+            case 0: return 1;
+            case 1: return x;
+            case 2: return x * x;
+            case 3: return x * x * x;
+            case 4: return x * x * x * x;
+            default:
+                var result = x;
+
+                var power = p;
+                while (power > 0 && power % 2 == 0)
+                {
+                    result *= result;
+                    power >>= 1;
+                }
+
+                while (power > 0 && power % 3 == 0)
+                {
+                    result *= result * result;
+                    power /= 3;
+                }
+
+                return power > 1 ? result * result.Pow(power - 1) : result;
+        }
+    }
 }
