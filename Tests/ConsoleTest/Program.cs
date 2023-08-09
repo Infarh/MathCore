@@ -1,61 +1,59 @@
+using MathCore.Statistic;
 
-using OxyPlot.Axes;
+const    int seed   = 1395601201;
+const double sigma = 3;
+const double mu     = 5;
+const    int count  = 100000;
 
-var x0 = 0.01;
-var y0 = x0.RoundAdaptive(2);
+var rnd = new Random(seed);
+var xx = rnd.NextNormal(count, sigma, mu);
 
-var x1 = 9999.123456;
-var x2 = 1.000001234;
-var x3 = 1234567.89;
+var interval = xx.GetMinMax();
+var min = interval.Min;
+var interval_length = interval.Length;
 
-var y1 = RoundToTheHighestDigits(x1, 5);
-var y2 = RoundToTheHighestDigits(x2, 5);
-var y3 = RoundToTheHighestDigits(x3, 5);
+var dx = interval_length / (1 + 3.32 * Math.Log10(count));
+var segments_count = (int)Math.Round(interval_length / dx);
+var histogram_dx = interval_length / segments_count;
 
-double RoundToTheHighestDigits(double x, int n)
+var histogram = new int[segments_count];
+foreach (var x in xx)
 {
-    if (n <= 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть > 0");
-    if (x == 0) return 0;
-    if (x < 0) return RoundToTheHighestDigits(-x, n);
-
-
-    var d = Math.Ceiling(Math.Log10(x));
-
-    var q = Math.Pow(10, n - d);
-    var y = Math.Floor(x * q) / q;
-
-    return y;
+    var i = Math.Min(histogram.Length - 1, (int)Math.Floor((x - min) / dx));
+    histogram[i]++;
 }
 
+var average = 0d;
+for (var i = 0; i < segments_count; i++)
+    average += (min + (i + 0.5) * dx) * histogram[i];
+average /= count;
 
-//const string file_name = @"d:\123\test.txt";
+var variance = 0d;
+for (var i = 0; i < segments_count; i++)
+    variance += (average - (min + (i + 0.5) * dx)).Pow2() * histogram[i];
+variance /= count;
+//var sko = variance.Sqrt();
 
-//var watcher = new TextFileContentMonitor(file_name);
+var variance_restored = variance * count / (count - 1);
+var sko_restored = variance_restored.Sqrt();
 
-//watcher.NewContent += (s, e) =>
-//{
-//    Console.WriteLine("--------------");
-//    Console.WriteLine(e.ToString());
-//};
+var freedom_degree = segments_count - 1;
 
-//watcher.Start();
+var distribution = Distributions.NormalGauss(sigma, mu);
 
-Console.WriteLine("End.");
+var criteria = 0d;
+for (var i = 0; i < segments_count; i++)
+{
+    var x = min + (i + 0.5) * dx;
+    var p0 = histogram_dx * distribution(x);
+    var p = (double)histogram[i] / count;
+    criteria += (p0 - p).Pow2() / p0;
+
+    Console.WriteLine("{0,2} [{1,5}] - p:{2,-8:0.00000#} - p0:{3,-10:0.0000000#} - d:{4,-10:0.########} - d0:{5,-10:0.########} - h:{6}", 
+        i, histogram[i], p, p0, (p - p0).Abs(), (p0 - p).Pow2() / p0, criteria);
+}
+
+var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(0.99, freedom_degree);
+
+Console.WriteLine("chi:{0} - q:{1}", criteria, quantile);
 Console.ReadLine();
-
-
-
-return;
-
-//var pe_file = new PEFile("c:\\123\\user32.dll");
-
-////pe_file.ReadData();
-
-////var is_pe = pe_file.IsPE;
-//var header = pe_file.GetHeader();
-
-//var range = new Range(-10, 5);
-
-//Console.WriteLine("End.");
-//Console.ReadLine();
-
