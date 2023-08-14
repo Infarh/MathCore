@@ -1,12 +1,12 @@
 using MathCore.Statistic;
 
-const    int seed   = 1395601201;
-const double sigma  = 3;
+const    int seed   = 2;
+const double sigma  = 7;
 const double mu     = 5;
-const    int count  = 100000000;
+const    int count  = 100_000;
 
 var rnd = new Random(seed);
-var xx = GetRandom4(rnd, count, sigma, mu);
+var xx = GetRandom(rnd, count, sigma, mu);
 
 var interval = xx.GetMinMax();
 var min = interval.Min;
@@ -14,40 +14,40 @@ var interval_length = interval.Length;
 
 var dx = interval_length / (1 + 3.32 * Math.Log10(count));
 var segments_count = (int)Math.Round(interval_length / dx);
-var histogram_dx = interval_length / segments_count;
+var histogram_dx = interval_length / (segments_count - 0);
 
 var histogram = new int[segments_count];
 foreach (var x in xx)
 {
-    var i0 = Math.Min(segments_count - 1, (int)Math.Floor((x - min) / dx));
+    var i0 = Math.Min(segments_count - 1, (int)Math.Floor((x - min) / histogram_dx));
     histogram[i0]++;
 }
 
 var average = 0d;
 for (var i = 0; i < segments_count; i++)
-    average += (min + (i + 0.5) * dx) * histogram[i];
+    average += (min + (i + 0.5) * histogram_dx) * histogram[i];
 average /= count;
 
 var variance = 0d;
 for (var i = 0; i < segments_count; i++)
-    variance += (average - (min + (i + 0.5) * dx)).Pow2() * histogram[i];
+    variance += (average - (min + (i + 0.5) * histogram_dx)).Pow2() * histogram[i];
 variance /= count;
 var sko = variance.Sqrt();
 
 var variance_restored = variance * count / (count - 1);
 var sko_restored = variance_restored.Sqrt();
 
-var freedom_degree = segments_count - 3;
+var freedom_degree = segments_count - 1;
 
-Console.WriteLine("avg:{0:0.000} var:{1:0.000}({2:0.000}) sko:{3:0.000}({4:0.000})", average, variance, variance_restored, sko, sko_restored);
+Console.WriteLine("avg:{0:0.000} var:{1:0.000}({2:0.000}) sko:{3}({4:0.000})", average, variance, variance_restored, sko, sko_restored);
 
-var distribution = Distributions.NormalGauss(sko_restored, mu);
+var distribution = Distributions.NormalGauss(sko_restored, average);
 
 var criteria_p = 0d;
 var criteria_n = 0d;
 for (var i = 0; i < segments_count; i++)
 {
-    var x = min + (i + 0.5) * dx;
+    var x = min + (i + 0.5) * histogram_dx;
     var expected_p = histogram_dx * distribution(x);
     var expected_n = expected_p * count;
 
@@ -68,12 +68,13 @@ for (var i = 0; i < segments_count; i++)
 
 criteria_p *= count;
 
-var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(0.1, freedom_degree);
+var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(0.3, freedom_degree);
 
-Console.WriteLine("chi:{0:0.00} - q:{1:0.00}", criteria_p, quantile);
+Console.WriteLine("chi_p:{0:0.00} - q:{1:0.00}", criteria_p, quantile);
+Console.WriteLine("chi_n:{0:0.00} - q:{1:0.00}", criteria_n, quantile);
 Console.ReadLine();
 
-//static double[] GetRandom(Random rnd, int Count, double Sgm, double Mu) => rnd.NextNormal(Count, Sgm, Mu);
+static double[] GetRandom(Random rnd, int Count, double Sgm, double Mu) => rnd.NextNormal(Count, Sgm, Mu);
 
 static double[] GetRandom2(Random rnd, int Count, double Sgm, double Mu)
 {

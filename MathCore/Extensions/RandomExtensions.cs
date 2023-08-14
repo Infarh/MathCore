@@ -42,14 +42,14 @@ public static class RandomExtensions
     /// <param name="rnd">Генератор случайных чисел</param>
     /// <param name="items">Массив вариантов</param>
     /// <returns>Ссылка на случайный элемент массива</returns>
-    public static ref T NextItem<T>(this Random rnd, params T[] items) => ref items[rnd.Next(items.Length)]; 
+    public static ref T NextItem<T>(this Random rnd, params T[] items) => ref items[rnd.Next(items.Length)];
 
     /// <summary>Случайных элемент из списка</summary>
     /// <typeparam name="T">Тип элементов для выбора</typeparam>
     /// <param name="rnd">Генератор случайных чисел</param>
     /// <param name="items">Список элементов для выбора</param>
     /// <returns>Случайный элемент из списка</returns>
-    public static T NextItem<T>(this Random rnd, IList<T> items) => items[rnd.Next(items.Count)]; 
+    public static T NextItem<T>(this Random rnd, IList<T> items) => items[rnd.Next(items.Count)];
 
     /// <summary>Массив случайных чисел с равномерным распределением</summary>
     /// <param name="rnd">Датчик случайных чисел</param>
@@ -84,8 +84,8 @@ public static class RandomExtensions
     /// <returns>Массив случайных чисел с равномерным распределением</returns>
     public static double[] NextUniform(this Random rnd, int Count, Interval Interval)
     {
-        var D      = Interval.Length;
-        var M      = Interval.Middle;
+        var D = Interval.Length;
+        var M = Interval.Middle;
         var result = new double[Count];
         for (var i = 0; i < Count; i++)
             result[i] = rnd.NextUniform(D, M);
@@ -111,7 +111,7 @@ public static class RandomExtensions
     /// <returns>Массив случайных чисел с равномерным распределением</returns>
     public static double[] NextUniform(this Random rnd, params Interval[] Intervals)
     {
-        var count  = Intervals.Length;
+        var count = Intervals.Length;
         var result = new double[count];
         for (var i = 0; i < count; i++)
             result[i] = rnd.NextUniform(Intervals[i].Length, Intervals[i].Middle);
@@ -126,8 +126,8 @@ public static class RandomExtensions
     /// <returns>Массив случайных чисел с равномерным распределением</returns>
     public static double[] NextUniformInterval(this Random rnd, int Count, double Min, double Max)
     {
-        var D      = Math.Abs(Max - Min);
-        var M      = (Max + Min) / 2;
+        var D = Math.Abs(Max - Min);
+        var M = (Max + Min) / 2;
         var result = new double[Count];
         for (var i = 0; i < Count; i++)
             result[i] = rnd.NextUniform(D, M);
@@ -256,10 +256,12 @@ public static class RandomExtensions
     [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
     public static double NextNormal(this Random rnd, double sigma = 1, double mu = 0)
     {
-        var u1     = 1d - rnd.NextDouble(); //uniform(0,1] random doubles
-        var u2     = 1d - rnd.NextDouble();
+        var u1 = 1d - rnd.NextDouble(); //uniform(0,1] random doubles
+        var u2 = 1d - rnd.NextDouble();
         var normal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
-        return mu + sigma * normal;                                                 //random normal(m,D^2)
+
+        //const double correction_sgm = 1.008583987238489187988;
+        return mu + sigma * normal; //random normal(m,D^2)
     }
 
     /// <summary>Случайное число с равномерным распределением</summary>
