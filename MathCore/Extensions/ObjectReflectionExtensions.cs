@@ -36,7 +36,14 @@ public static class ObjectReflectionExtensions
     public static object? GetPropertyValue(this object obj, string PropertyName)
     {
         if(!obj.TryGetPropertyValue(PropertyName, out var value))
-            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для чтения");
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для чтения")
+            {
+                Data = 
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(PropertyName), PropertyName },
+                },
+            };
         return value;
     }
 
@@ -77,7 +84,17 @@ public static class ObjectReflectionExtensions
     public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName)
     {
         if(!obj.TryGetPropertyValue(PropertyName, out TValue value))
-            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения");
+            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения")
+            {
+                Data =
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(T), typeof(T) },
+                    { nameof(TValue), typeof(TValue) },
+                    { nameof(PropertyName), PropertyName },
+                },
+            };
+
         return value;
     }
 
@@ -122,7 +139,14 @@ public static class ObjectReflectionExtensions
     public static void SetPropertyValue(this object obj, string PropertyName, object? Value)
     {
         if(!obj.TrySetPropertyValue(PropertyName, Value))
-            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи");
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи") 
+            {
+                Data =
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(PropertyName), PropertyName },
+                },
+            };
     }
 
     public static bool TrySetPropertyValue(this object obj, string PropertyName, object? Value)
@@ -161,7 +185,16 @@ public static class ObjectReflectionExtensions
     public static void SetPropertyValue<T, TValue>(this T obj, string PropertyName, TValue? Value)
     {
         if(!obj.TrySetPropertyValue(PropertyName, Value))
-            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для записи");
+            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для записи")
+            {
+                Data =
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(T), typeof(T) },
+                    { nameof(TValue), typeof(TValue) },
+                    { nameof(PropertyName), PropertyName },
+                },
+            }; ;
     }
 
     public static bool TrySetPropertyValue<T, TValue>(this T obj, string PropertyName, TValue? Value)
