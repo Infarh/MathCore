@@ -22,6 +22,9 @@ public class StatisticValue : IResettable
     /// <summary>Дисперсия</summary>
     public double D => _Average2.Value - M.Pow2();
 
+    /// <summary>Среднеквадратичное отклонение</summary>
+    public double Sigma => D.Sqrt();
+
     /// <summary>Интервал значений, в который попадает величина</summary>
     public Interval MinMax => _MinMax;
 
@@ -86,4 +89,6 @@ public class StatisticValue : IResettable
 
     /// <inheritdoc />
     public override string ToString() => $"{M.RoundAdaptive(2)}(±{D.RoundAdaptive(2)})[{MinMax.Min.RoundAdaptive(2)}:{MinMax.Max.RoundAdaptive(2)}]";
+
+    public void Deconstruct(out double Mean, out double Sigma) => (Mean, Sigma) = (M, this.Sigma);
 }

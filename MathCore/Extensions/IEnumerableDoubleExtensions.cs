@@ -16,6 +16,26 @@ namespace System.Linq;
 
 public static partial class IEnumerableExtensions
 {
+    public static (double Average, double Dispersion) AverageAndDispersion(this IEnumerable<double> values)
+    {
+        var avg = 0d;
+        var d = 0d;
+
+        foreach(var x in values)
+        {
+            avg += x;
+            d += x * x;
+        }
+
+        return (avg, d - avg * avg);
+    }
+
+    public static (double Average, double Sigma) AverageAndSigma(this IEnumerable<double> values)
+    {
+        var (avg, d) = values.AverageAndDispersion();
+        return (avg, d.Sqrt());
+    }
+
     /// <summary>Усреднение последовательности методом скользящего среднего с заданной длиной окна</summary>
     /// <param name="samples">Исходная последовательность</param>
     /// <param name="WindowLength">Длина окна выборки (должна быть больше 1)</param>

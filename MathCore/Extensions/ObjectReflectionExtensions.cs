@@ -1,6 +1,8 @@
 ﻿#nullable enable
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using MathCore.Extensions.Expressions;
 
@@ -33,12 +35,22 @@ public static class ObjectReflectionExtensions
 
     public static object? GetPropertyValue(this object obj, string PropertyName)
     {
+        if(!obj.TryGetPropertyValue(PropertyName, out var value))
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для чтения");
+        return value;
+    }
+
+    public static bool TryGetPropertyValue(this object obj, string PropertyName, out object? value)
+    {
         var type = obj.NotNull().GetType();
         if (__PropertyGetters.GetOrAdd((type, PropertyName), GetPublicPropertyGetter) is not { } getter)
-            throw new InvalidOperationException($"Тип {type} не содержит свойства {PropertyName} доступного для чтения");
+        {
+            value = null;
+            return false;
+        }
 
-        var value = getter(obj);
-        return value;
+        value = getter(obj);
+        return true;
     }
 
     public static T? GetPropertyValue<T>(this object obj, string PropertyName) => (T?)obj.GetPropertyValue(PropertyName);
@@ -64,14 +76,24 @@ public static class ObjectReflectionExtensions
 
     public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName)
     {
+        if(!obj.TryGetPropertyValue(PropertyName, out TValue value))
+            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения");
+        return value;
+    }
+
+    public static bool TryGetPropertyValue<T, TValue>(this T obj, string PropertyName, out TValue? value)
+    {
         if (obj is null) throw new ArgumentNullException(nameof(obj));
 
         var type = obj.GetType();
         if (__TypedGetters.GetOrAdd((type, PropertyName), GetPublicPropertyGetter<T, TValue>) is not Func<T, TValue> getter)
-            throw new InvalidOperationException($"Тип {type} не содержит свойства {PropertyName} доступного для чтения");
+        {
+            value = default;
+            return false;
+        }    
 
-        var value = getter(obj);
-        return value;
+        value = getter(obj);
+        return true;
     }
 
     private static readonly ConcurrentDictionary<(Type, string), Action<object, object?>?> __PropertySetters = new();
@@ -99,12 +121,19 @@ public static class ObjectReflectionExtensions
 
     public static void SetPropertyValue(this object obj, string PropertyName, object? Value)
     {
+        if(!obj.TrySetPropertyValue(PropertyName, Value))
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи");
+    }
+
+    public static bool TrySetPropertyValue(this object obj, string PropertyName, object? Value)
+    {
         var type = obj.NotNull().GetType();
 
         if (__PropertySetters.GetOrAdd((type, PropertyName), GetPublicPropertySetter) is not { } setter)
-            throw new InvalidOperationException($"Тип {type} не содержит свойства {PropertyName} доступного для записи");
+            return false;
 
         setter(obj, Value);
+        return true;
     }
 
     private static readonly ConcurrentDictionary<(Type, string), Delegate?> __TypedPropertySetters = new();
@@ -131,13 +160,92 @@ public static class ObjectReflectionExtensions
 
     public static void SetPropertyValue<T, TValue>(this T obj, string PropertyName, TValue? Value)
     {
+        if(!obj.TrySetPropertyValue(PropertyName, Value))
+            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для записи");
+    }
+
+    public static bool TrySetPropertyValue<T, TValue>(this T obj, string PropertyName, TValue? Value)
+    {
         if (obj is null) throw new ArgumentNullException(nameof(obj));
 
         var type = obj.GetType();
 
         if (__TypedPropertySetters.GetOrAdd((type, PropertyName), GetPublicPropertySetter<T, TValue>) is not Action<T, TValue?> setter)
-            throw new InvalidOperationException($"Тип {type} не содержит свойства {PropertyName} доступного для записи");
+            return false;
 
         setter(obj, Value);
+        return true;
+    }
+
+    public static IDictionary<string, object?> GetPropertyValues<T>(this T obj) => new PropertyValuesController<T>(obj);
+
+    private class PropertyValuesController<T>(T obj) : IDictionary<string, object?>
+    {
+        private readonly Lazy<HashSet<string>> _PropertyNames = new(() => typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public).Select(p => p.Name).GetHashSet());
+
+        public object? this[string key]
+        {
+            get
+            {
+                if (!_PropertyNames.Value.Contains(key))
+                    throw new InvalidOperationException($"В объекте типа {typeof(T)} свойство {key} отсутствует");
+
+                if(obj.TryGetPropertyValue(key, out var value)) 
+                    return value;
+
+                throw new InvalidOperationException($"Свойство {typeof(T)}.{key} не доступно для чтения");
+            }
+            set
+            {
+                if (!_PropertyNames.Value.Contains(key))
+                    throw new InvalidOperationException($"В объекте типа {typeof(T)} свойство {key} отсутствует");
+
+                if (!obj.TrySetPropertyValue(key, value))
+                    throw new InvalidOperationException($"Свойство {typeof(T)}.{key} не доступно для записи");
+            }
+        }
+
+        public ICollection<string> Keys => _PropertyNames.Value;
+
+        public ICollection<object?> Values => Keys.ToList(p => this[p]).AsReadOnly();
+
+        public int Count => Keys.Count;
+
+        public bool IsReadOnly => false;
+
+        public void Add(string key, object value) => this[key] = value;
+
+        public void Add(KeyValuePair<string, object?> item) => Add(item.Key, item.Value);
+
+        public void Clear() => throw new NotSupportedException();
+
+        public bool Contains(KeyValuePair<string, object?> item) => Equals(this[item.Key], item.Value);
+        
+        public bool ContainsKey(string key) => _PropertyNames.Value.Contains(key);
+
+        public void CopyTo(KeyValuePair<string, object?>[] array, int Index)
+        {
+            var properties = _PropertyNames.Value;
+            if (array.Length - Index < properties.Count)
+                throw new InvalidOperationException("Недостаточная длина массива");
+
+            var i = 0;
+            foreach(var property in properties)
+                array[i++] = new(property, this[property]);
+        }
+
+        public bool Remove(string key) => throw new NotSupportedException();
+
+        public bool Remove(KeyValuePair<string, object?> item) => throw new NotSupportedException();
+
+        public bool TryGetValue(string key, out object value) => obj.TryGetPropertyValue(key, out value);
+
+        public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
+        {
+            foreach (var property in Keys)
+                yield return new(property, this[property]);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
