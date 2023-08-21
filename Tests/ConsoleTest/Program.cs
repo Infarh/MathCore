@@ -1,11 +1,18 @@
+using ConsoleTest;
+
 using MathCore.Statistic;
 
-const    int seed   = 2;
+//HistogramTest.Run();
+
+//return;
+
+const    int seed   = 13;
 const double sigma  = 7;
 const double mu     = 5;
-const    int count  = 100_000;
+const    int count  = 100_000_000;
 
 var rnd = new Random(seed);
+//var xx = Enumerable.Repeat(0, count).ToArray(i => rnd.NextDouble());
 var xx = GetRandom(rnd, count, sigma, mu);
 
 var interval = xx.GetMinMax();
@@ -37,19 +44,37 @@ var sko = variance.Sqrt();
 var variance_restored = variance * count / (count - 1);
 var sko_restored = variance_restored.Sqrt();
 
-var freedom_degree = segments_count - 1;
+var freedom_degree = segments_count - 3;
 
 Console.WriteLine("avg:{0:0.000} var:{1:0.000}({2:0.000}) sko:{3}({4:0.000})", average, variance, variance_restored, sko, sko_restored);
 
-var distribution = Distributions.NormalGauss(sko_restored, average);
+//var distribution = Distributions.Uniform(0, 1);
+var distribution = Distributions.NormalGauss(sko, average);
+
+//var pp = distribution.GetIntegralValue_Adaptive(interval);
 
 var criteria_p = 0d;
 var criteria_n = 0d;
+var p_sum = 0d;
+var p_sum2 = 0d;
+
+//var q = Distributions.NormalDistribution(min, sko, average);
+
 for (var i = 0; i < segments_count; i++)
 {
+    //var x_min = min + (i + 1) * histogram_dx;
+    //var q_x = Distributions.NormalDistribution(x_min, sko, average);
+    //var delta = q_x - q;
+    //q = q_x;
+
+    //var d2 = distribution.GetIntegralValue_AdaptiveTrap(min + (i + 0) * histogram_dx, min + (i + 1) * histogram_dx);
+
     var x = min + (i + 0.5) * histogram_dx;
     var expected_p = histogram_dx * distribution(x);
+    p_sum += expected_p;
     var expected_n = expected_p * count;
+
+    p_sum2 += expected_n;
 
     var actual_n = histogram[i];
     var actual_p = (double)actual_n / count;
@@ -68,7 +93,7 @@ for (var i = 0; i < segments_count; i++)
 
 criteria_p *= count;
 
-var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(0.3, freedom_degree);
+var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(0.1, freedom_degree);
 
 Console.WriteLine("chi_p:{0:0.00} - q:{1:0.00}", criteria_p, quantile);
 Console.WriteLine("chi_n:{0:0.00} - q:{1:0.00}", criteria_n, quantile);
