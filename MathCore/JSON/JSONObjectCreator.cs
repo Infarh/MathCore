@@ -1,4 +1,6 @@
-﻿namespace MathCore.JSON;
+﻿#nullable enable
+
+namespace MathCore.JSON;
 
 /// <summary>Генератор JSON-объекта по объекту-прототипу</summary>
 /// <typeparam name="T">Тип объекта-прототипа</typeparam>
@@ -19,7 +21,7 @@ public sealed class JSONObjectCreator<T> : JSONObjectCreatorBase
     /// <returns>Генератор JSON-объектов с добавленным методом</returns>
     public JSONObjectCreator<T> AddField(string Name, Func<T?, object> Field)
     {
-        _FieldsDescriptions.Add(new KeyValuePair<string, Func<T?, object?>>(Name, Field));
+        _FieldsDescriptions.Add(new(Name, Field));
         return this;
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Text;
 
 namespace MathCore.JSON;
@@ -91,26 +92,32 @@ public sealed class JSONObject : IEnumerable<JSONObject>
     {
         _Name = Name;
         _Data = str.Trim();
-        if (_Data.Length <= 1 || _Data[0] != '{') return;
-        var fields = new List<JSONObject>();
+
+        if (_Data is not [ '{', .., '}' ]) return;
+
         str = str.Trim('{', '}', ' ');
+
+        var fields = new List<JSONObject>();
         var len = str.Length;
         var pos = 0;
         while (pos < len)
         {
             var name = GetText(str, ref pos, "\"", "\"");
+
             while (pos < len && (char.IsSeparator(str, pos) || str[pos] == ':')) pos++;
+
             var body = str[pos] == '{'
                 ? $"{{{GetText(str, ref pos, "{", "}")}}}"
-                : GetText(str, ref pos, "\"", "\"");
-            fields.Add(new JSONObject(name, body ?? throw new InvalidOperationException("Пустая ссылка на значение")));
+                : GetText(str, ref pos, "\"", "\"") ?? throw new InvalidOperationException("Пустая ссылка на значение");
+
+            fields.Add(new JSONObject(name, body));
+
             while (pos < len && (char.IsSeparator(str, pos) || str[pos] == ',')) pos++;
         }
         if (fields.Count > 0) _Fields = fields.ToArray();
     }
 
     #endregion
-
 
     /// <summary>Преобразование значения структуры к целому числу</summary>
     /// <param name="Default">Значение по умолчанию</param>
@@ -152,19 +159,29 @@ public sealed class JSONObject : IEnumerable<JSONObject>
     public static string? GetText(string Str, ref int Offset, string Open, string Close)
     {
         var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
+
         if (start_index == -1) return null;
+
         var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
+
         if (stop_index == -1) throw new FormatException();
+
         var start = start_index;
         do
         {
             start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
+
             if (start != -1 && start < stop_index)
                 stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
-        } while (start != -1 && start < stop_index);
+
+        } 
+        while (start != -1 && start < stop_index);
+
         if (stop_index == -1 || stop_index < start_index) throw new FormatException();
+
         Offset      =  stop_index + Close.Length;
         start_index += Open.Length;
+
         return Str[start_index..stop_index];
     }
 
