@@ -18,7 +18,7 @@ public static partial class SpecialFunctions
     public static int Fibonacci(int n)
     {
         var phi_n = Consts.GoldenRatio.Pow(n);
-        return (int)(Consts.sqrt_5_inv * (phi_n - Math.Cos(Consts.pi * n) / phi_n));
+        return (int)Math.Round(Consts.sqrt_5_inv * (phi_n - Math.Cos(Consts.pi * n) / phi_n));
     }
 
     [DST]

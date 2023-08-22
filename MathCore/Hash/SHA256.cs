@@ -41,11 +41,12 @@ public class SHA256 : HashAlgorithm
         buffer64[^1] = (byte)(length << 3);
     }
 
-    public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
-    
+    //public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
+    public static byte[] Compute(string str, Encoding? encoding = null) => Compute(str.ToByteStream(encoding));
+
     public static byte[] Compute(byte[] data)
     {
-        uint[] h =
+        uint[] result =
         {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
@@ -76,17 +77,16 @@ public class SHA256 : HashAlgorithm
                 words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
 
             Compute(words,
-                ref h[0], ref h[1], ref h[2], ref h[3],
-                ref h[4], ref h[5], ref h[6], ref h[7]);
+                ref result[0], ref result[1], ref result[2], ref result[3],
+                ref result[4], ref result[5], ref result[6], ref result[7]);
         }
 
-        var result = CreateResult(h);
-        return result;
+        return CreateResult(result);
     }
 
     public static byte[] Compute(Stream data)
     {
-        uint[] h =
+        uint[] result =
         {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
@@ -121,8 +121,8 @@ public class SHA256 : HashAlgorithm
                 words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
 
             Compute(words,
-                ref h[0], ref h[1], ref h[2], ref h[3],
-                ref h[4], ref h[5], ref h[6], ref h[7]);
+                ref result[0], ref result[1], ref result[2], ref result[3],
+                ref result[4], ref result[5], ref result[6], ref result[7]);
         }
         while (readed == 64);
 
@@ -136,17 +136,16 @@ public class SHA256 : HashAlgorithm
                 words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
 
             Compute(words,
-                ref h[0], ref h[1], ref h[2], ref h[3],
-                ref h[4], ref h[5], ref h[6], ref h[7]);
+                ref result[0], ref result[1], ref result[2], ref result[3],
+                ref result[4], ref result[5], ref result[6], ref result[7]);
         }
 
-        var result = CreateResult(h);
-        return result;
+        return CreateResult(result);
     }
 
     public static async Task<byte[]> ComputeAsync(Stream data, CancellationToken Cancel = default)
     {
-        uint[] h =
+        uint[] result =
         {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
@@ -181,8 +180,8 @@ public class SHA256 : HashAlgorithm
                 words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
 
             Compute(words,
-                ref h[0], ref h[1], ref h[2], ref h[3],
-                ref h[4], ref h[5], ref h[6], ref h[7]);
+                ref result[0], ref result[1], ref result[2], ref result[3],
+                ref result[4], ref result[5], ref result[6], ref result[7]);
         }
         while (readed == 64);
 
@@ -196,12 +195,11 @@ public class SHA256 : HashAlgorithm
                 words[j] = (uint)buffer64[k] << 24 | (uint)buffer64[k + 1] << 16 | (uint)buffer64[k + 2] << 8 | buffer64[k + 3];
 
             Compute(words,
-                ref h[0], ref h[1], ref h[2], ref h[3],
-                ref h[4], ref h[5], ref h[6], ref h[7]);
+                ref result[0], ref result[1], ref result[2], ref result[3],
+                ref result[4], ref result[5], ref result[6], ref result[7]);
         }
 
-        var result = CreateResult(h);
-        return result;
+        return CreateResult(result);
     }
 
     private static byte[] CreateResult(uint[] h)
@@ -223,9 +221,6 @@ public class SHA256 : HashAlgorithm
         ref uint h0, ref uint h1, ref uint h2, ref uint h3,
         ref uint h4, ref uint h5, ref uint h6, ref uint h7)
     {
-        static uint S0(uint x) => RightRotate(x, 7) ^ RightRotate(x, 18) ^ x >> 3;
-        static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
-
         for (var j = 16; j < 64; j++)
             words[j] = words[j - 16] + S0(words[j - 15]) + words[j - 7] + S1(words[j - 2]);
 
@@ -233,18 +228,24 @@ public class SHA256 : HashAlgorithm
 
         for (var i = 0; i < 64; i++)
         {
-            static uint Ch(uint x, uint y, uint z) => x & y ^ ~x & z;
-            static uint Maj(uint x, uint y, uint z) => x & y ^ x & z ^ y & z;
-
-            static uint E0(uint x) => RightRotate(x, 2) ^ RightRotate(x, 13) ^ RightRotate(x, 22);
-            static uint E1(uint x) => RightRotate(x, 6) ^ RightRotate(x, 11) ^ RightRotate(x, 25);
-
             var t1 = h + E1(e) + Ch(e, f, g) + K[i] + words[i];
             var t2 = E0(a) + Maj(a, b, c);
 
             (h, g, f, e, d, c, b, a) = (g, f, e, d + t1, c, b, a, t1 + t2);
+
+            continue;
+
+            static uint Ch(uint x, uint y, uint z) => x & y ^ ~x & z;
+            static uint Maj(uint x, uint y, uint z) => x & y ^ x & z ^ y & z;
+            static uint E0(uint x) => RightRotate(x, 2) ^ RightRotate(x, 13) ^ RightRotate(x, 22);
+            static uint E1(uint x) => RightRotate(x, 6) ^ RightRotate(x, 11) ^ RightRotate(x, 25);
         }
 
         (h0, h1, h2, h3, h4, h5, h6, h7) = (h0 + a, h1 + b, h2 + c, h3 + d, h4 + e, h5 + f, h6 + g, h7 + h);
+
+        return;
+        
+        static uint S0(uint x) => RightRotate(x, 7) ^ RightRotate(x, 18) ^ x >> 3;
+        static uint S1(uint x) => RightRotate(x, 17) ^ RightRotate(x, 19) ^ x >> 10;
     }
 }

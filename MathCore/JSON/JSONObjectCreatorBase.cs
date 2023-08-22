@@ -1,11 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using MathCore.CSV;
-using MathCore.Values;
-
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible

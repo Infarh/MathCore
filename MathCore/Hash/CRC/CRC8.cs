@@ -1,6 +1,9 @@
-﻿namespace MathCore.Hash.CRC;
+﻿#nullable enable
+using System.Text;
 
-public class CRC8
+namespace MathCore.Hash.CRC;
+
+public class CRC8(byte Polynimial)
 {
     public enum Mode : byte
     {
@@ -14,7 +17,7 @@ public class CRC8
     }
 
     private const int __TableLength = 256;
-    private readonly byte[] _Table = new byte[__TableLength];
+    private readonly byte[] _Table = GetTable(Polynimial);
 
     public byte State { get; set; }
 
@@ -22,9 +25,10 @@ public class CRC8
 
     public CRC8(Mode mode = Mode.CRC8) : this((byte)mode) { }
 
-    public CRC8(byte Polynimial)
+    public static byte[] GetTable(byte Polynimial)
     {
-        for (var i = 0; i < __TableLength; ++i)
+        var table = new byte[__TableLength];
+        for (var i = 0; i < __TableLength; i++)
         {
             var temp = i;
             for (var j = 0; j < 8; ++j)
@@ -32,7 +36,25 @@ public class CRC8
                     temp = temp << 1 ^ Polynimial;
                 else
                     temp <<= 1;
-            _Table[i] = (byte)temp;
+            table[i] = (byte)temp;
+        }
+
+        return table;
+    }
+
+    public static void FillTable(byte[] table, byte Polynimial)
+    {
+        if (table is not { Length: __TableLength })
+            throw new ArgumentException($"Размер таблицы должен быть {__TableLength}, а составляет {table.Length}", nameof(table));
+        for (var i = 0; i < __TableLength; i++)
+        {
+            var temp = i;
+            for (var j = 0; j < 8; ++j)
+                if ((temp & 0x80) != 0)
+                    temp = temp << 1 ^ Polynimial;
+                else
+                    temp <<= 1;
+            table[i] = (byte)temp;
         }
     }
 
@@ -79,4 +101,26 @@ public class CRC8
         var crc = Compute(bytes);
         return BitConverter.GetBytes(crc);
     }
+
+    public static byte Compute(Stream stream, byte Polynimial, byte State = 0)
+    {
+        const int buffer_size = 512;
+        if (stream.Length <= buffer_size)
+            State = stream
+                .ToArray()
+                .Aggregate((State, Table : GetTable(Polynimial)), (v, b) => (Convert(b, v.State, v.Table), v.Table))
+                .State;
+        else
+        {
+            var table = GetTable(Polynimial);
+            var buffer = new byte[buffer_size];
+            while(stream.Read(buffer, 0, buffer_size) is > 0 and var readed)
+                for(var i = 0; i < readed; i++)
+                    State = Convert(buffer[i], State, table);
+        }
+
+        return State;
+    }
+
+    private static byte Convert(byte b, byte State, byte[] Table) => (byte)(State << 8 ^ Table[State >> 8 ^ b]);
 }

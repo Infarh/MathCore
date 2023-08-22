@@ -144,4 +144,64 @@ public class MD5Tests
 
         actual.AssertEquals(expected);
     }
+
+    [TestMethod]
+    public void HashShortString()
+    {
+        const string str = "Hello World!";
+
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var expected_hash = MD5.HashData(bytes);
+        var expected_hash_str = expected_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        var actual_hash = MathCore.Hash.MD5.Compute(str);
+        var actual_hash_str = actual_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        actual_hash_str.AssertEquals(expected_hash_str);
+    }
+
+    [TestMethod]
+    public void HashShortNonLatinString()
+    {
+        const string str = "Здравствуй, Мир!";
+
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var expected_hash = MD5.HashData(bytes);
+        var expected_hash_str = expected_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        var actual_hash = MathCore.Hash.MD5.Compute(str);
+        var actual_hash_str = actual_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        actual_hash_str.AssertEquals(expected_hash_str);
+    }
+
+    [TestMethod]
+    public void HashShortNonMixedString()
+    {
+        const string str = "Hello, Мир!";
+
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var expected_hash = MD5.HashData(bytes);
+        var expected_hash_str = expected_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        var actual_hash = MathCore.Hash.MD5.Compute(str);
+        var actual_hash_str = actual_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        actual_hash_str.AssertEquals(expected_hash_str);
+    }
+
+    [TestMethod]
+    public void HashLongString()
+    {
+        const string str = "Hello World! - 1234567890 - 0987654321 - abcdefghijklmnopqrstuvwxyz";
+
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var expected_hash = MD5.HashData(bytes);
+        var expected_hash_str = expected_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        var actual_hash = MathCore.Hash.MD5.Compute(str);
+        var actual_hash_str = actual_hash.ToStringHex().EnumerateSegments(4).JoinStrings('-');
+
+        actual_hash_str.AssertEquals(expected_hash_str);
+    }
 }

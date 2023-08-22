@@ -130,5 +130,22 @@ public class DoubleExtensionsTests
         var expected = Math.Pow(x, p);
         var actual = x.Pow(p);
         actual.AssertEquals(expected);
+
+    }
+    
+    [TestMethod]
+    public void PowOfGoldenRatio()
+    {
+        const double x = Consts.GoldenRatio;
+        const int p = 12;
+
+        var expected = Math.Pow(x, p);
+        var actual = x.Pow(p);
+
+        //var y = 1d;
+        //for (var i = 0; i < p; i++)
+        //    y *= x;
+
+        actual.AssertEquals(expected, 1.72e-13);
     }
 }

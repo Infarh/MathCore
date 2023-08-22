@@ -1,5 +1,4 @@
 ﻿#nullable enable
-
 namespace MathCore.JSON;
 
 /// <summary>Генератор JSON-объекта по объекту-прототипу</summary>
