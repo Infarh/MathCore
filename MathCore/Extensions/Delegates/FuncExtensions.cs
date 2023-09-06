@@ -753,6 +753,9 @@ public static class FuncExtensions
             + f.GetIntegralValue_Adaptive(.5 * (x1 + x2), x2, N, Eps);
     }
 
+    public static double GetIntegralValue_Adaptive(this Function f, Interval W, int N = 2, double Eps = 1e-6) =>
+        f.GetIntegralValue_Adaptive(W.Min, W.Max, N, Eps);
+
     /// <summary>Численный расчёт определённого интеграла методом адаптивного разбиения с базовым алгоритмом Трапеций</summary>
     /// <param name="f">Интегрируемая функция</param>
     /// <param name="x1">Нижний предел интегрирования</param>

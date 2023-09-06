@@ -74,12 +74,16 @@ public class Field<T> : ItemBase
         var field       = Expression.Field(ObjConstant, Name);
         var ReaderExpr  = Expression.Lambda<Func<T>>(field);
         _Reader = ReaderExpr.Compile();
+        
         if (IsReadOnly) return;
+
         var value = Expression.Parameter(value_type, "value");
         var method_info = typeof(Field<T>).GetMethod("Set", BindingFlags.Static | BindingFlags.NonPublic)
             ?? throw new InvalidOperationException("Не найден метод Set");
+
         var call = Expression.Call(null, method_info, field, value);
         var expr = Expression.Lambda<Action<T>>(call, value);
+
         _Writer = expr.Compile();
     }
 }

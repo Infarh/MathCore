@@ -4,6 +4,7 @@ using MathCore.Statistic;
 using OxyPlot.Annotations;
 using OxyPlot.Series;
 using OxyPlot;
+using OxyPlot.Axes;
 
 namespace ConsoleTest;
 
@@ -13,44 +14,64 @@ public class HistogramTest
     {
         var rnd = new Random(5);
 
-        const int count = 100_000;
+        const int count = 1000_000;
+        const double sigma = 1;
+        const double mu = 0;
 
         var samples = new double[count];
 
+        const int n = 12;
         for (var i = 0; i < count; i++)
         {
-            var x = (rnd.NextDouble() * 2 - 1)
-                    + (rnd.NextDouble() * 2 - 1)
-                    + (rnd.NextDouble() * 2 - 1)
-                    + (rnd.NextDouble() * 2 - 1)
-                    + (rnd.NextDouble() * 2 - 1)
-                ;
-
-            samples[i] = x / 5;
+            var x = 0d;
+            for (var j = 0; j < n; j++)
+                x += rnd.NextDouble() - 0.5;
+            samples[i] = x;
         }
 
-        const double D = 1;
-        const double m = 0;
-        //const int count = 1000000;
-        //var values = rnd.NextNormal(count, D, m);
+        var avg = samples.Average();
+        var sgm = samples.Dispersion().Sqrt();
+        Console.WriteLine("avg:{0}, sgm:{1}", avg, sgm);
 
-        var values = Enumerable.Range(0, count).ToArray(_ => (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5));
-        var gauss = Distributions.NormalGauss(D, m);
-        var gauss0 = Distributions.NormalGauss(D, m + 0.1);
+        //var values = rnd.NextNormal(count, sigma, m);
+
+        //var values = Enumerable.Range(0, count).ToArray(_ => (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5) + (rnd.NextDouble() - 0.5));
+        var gauss = Distributions.NormalGauss(sigma, mu);
+        var gauss0 = Distributions.NormalGauss(sigma, mu + 0.1);
 
         const int intervals_count = 60;
         var histogram = new Histogram(samples, intervals_count);
 
         var pirson = histogram.GetPirsonsCriteria(gauss);
-        var pirson0 = histogram.GetPirsonsCriteria(gauss0);
+        //var pirson0 = histogram.GetPirsonsCriteria(gauss0);
 
-        var q1 = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(0.95, intervals_count - 2);
-        var q2 = SpecialFunctions.Distribution.Student.QuantileHi2(0.95, intervals_count - 2);
+        //var q1 = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(0.95, intervals_count - 2);
+        //var q2 = SpecialFunctions.Distribution.Student.QuantileHi2(0.1, intervals_count - 2);
         var interval = histogram.Interval;
         const int function_points_count = 1000;
         var model = new PlotModel
         {
+            Title = $"Pirson {pirson}",
             Background = OxyColors.White,
+            Axes =
+            {
+                new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    MajorGridlineColor = OxyColors.Gray,
+                    MinorGridlineColor = OxyColors.LightGray,
+                    MajorGridlineStyle = LineStyle.Dash,
+                    MinorGridlineStyle = LineStyle.Dot,
+                },
+                new LinearAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    MajorGridlineColor = OxyColors.Gray,
+                    MinorGridlineColor = OxyColors.LightGray,
+                    MajorGridlineStyle = LineStyle.Dash,
+                    MinorGridlineStyle = LineStyle.Dot,
+                }
+            },
             Series =
             {
                 new HistogramSeries
@@ -79,7 +100,7 @@ public class HistogramTest
                     Color = OxyColors.DarkRed,
                     StrokeThickness = 2,
                     LineStyle = LineStyle.Solid,
-                    Text = "μ"
+                    Text = $"μ = {avg:0.###}"
                 },
                 new LineAnnotation
                 {
@@ -88,7 +109,7 @@ public class HistogramTest
                     Color = OxyColors.Red,
                     StrokeThickness = 2,
                     LineStyle = LineStyle.Dash,
-                    Text = "σ"
+                    Text = $"σ = {sgm:0.###}"
                 },
                 new LineAnnotation
                 {
@@ -97,7 +118,7 @@ public class HistogramTest
                     Color = OxyColors.Red,
                     StrokeThickness = 2,
                     LineStyle = LineStyle.Dash,
-                    Text = "σ"
+                    Text = $"σ = {sgm:0.###}"
                 },
                 new LineAnnotation
                 {
@@ -118,13 +139,15 @@ public class HistogramTest
                     Text = "3σ"
                 },
             }
-
         };
 
 
-        var result = histogram.CheckDistribution(gauss);
+        //var result = histogram.CheckDistribution(gauss);
 
-        model.ToPNG("image.png"); //.ShowInExplorer();
+        model.ToPNG("image.png", 1024, 768, 125)
+            .Execute()
+        //.ShowInExplorer()
+        ;
     }
 
     public static void RunIteration()

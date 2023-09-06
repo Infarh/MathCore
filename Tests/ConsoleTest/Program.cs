@@ -1,46 +1,165 @@
-using MathCore.Extensions;
+using ConsoleTest;
 
-var x = 123.00012345m;
+using MathCore.Statistic;
 
-var y = x.RoundAdaptive(2);
+//HistogramTest.Run();
 
-//const string file_name = @"d:\123\test.txt";
+//return;
 
-//var watcher = new TextFileContentMonitor(file_name);
+const    int seed   = 13;
+const double sigma  = 7;
+const double mu     = 5;
+const    int count  = 100_000_000;
 
-//watcher.NewContent += (s, e) =>
-//{
-//    Console.WriteLine("--------------");
-//    Console.WriteLine(e.ToString());
-//};
+var rnd = new Random(seed);
+//var xx = Enumerable.Repeat(0, count).ToArray(i => rnd.NextDouble());
+var xx = GetRandom(rnd, count, sigma, mu);
 
-//watcher.Start();
+var interval = xx.GetMinMax();
+var min = interval.Min;
+var interval_length = interval.Length;
 
-Console.WriteLine("End.");
+var dx = interval_length / (1 + 3.32 * Math.Log10(count));
+var segments_count = (int)Math.Round(interval_length / dx);
+var histogram_dx = interval_length / (segments_count - 0);
+
+var histogram = new int[segments_count];
+foreach (var x in xx)
+{
+    var i0 = Math.Min(segments_count - 1, (int)Math.Floor((x - min) / histogram_dx));
+    histogram[i0]++;
+}
+
+var average = 0d;
+for (var i = 0; i < segments_count; i++)
+    average += (min + (i + 0.5) * histogram_dx) * histogram[i];
+average /= count;
+
+var variance = 0d;
+for (var i = 0; i < segments_count; i++)
+    variance += (average - (min + (i + 0.5) * histogram_dx)).Pow2() * histogram[i];
+variance /= count;
+var sko = variance.Sqrt();
+
+var variance_restored = variance * count / (count - 1);
+var sko_restored = variance_restored.Sqrt();
+
+var freedom_degree = segments_count - 3;
+
+Console.WriteLine("avg:{0:0.000} var:{1:0.000}({2:0.000}) sko:{3}({4:0.000})", average, variance, variance_restored, sko, sko_restored);
+
+//var distribution = Distributions.Uniform(0, 1);
+var distribution = Distributions.NormalGauss(sko, average);
+
+//var pp = distribution.GetIntegralValue_Adaptive(interval);
+
+var criteria_p = 0d;
+var criteria_n = 0d;
+var p_sum = 0d;
+var p_sum2 = 0d;
+
+//var q = Distributions.NormalDistribution(min, sko, average);
+
+for (var i = 0; i < segments_count; i++)
+{
+    //var x_min = min + (i + 1) * histogram_dx;
+    //var q_x = Distributions.NormalDistribution(x_min, sko, average);
+    //var delta = q_x - q;
+    //q = q_x;
+
+    //var d2 = distribution.GetIntegralValue_AdaptiveTrap(min + (i + 0) * histogram_dx, min + (i + 1) * histogram_dx);
+
+    var x = min + (i + 0.5) * histogram_dx;
+    var expected_p = histogram_dx * distribution(x);
+    p_sum += expected_p;
+    var expected_n = expected_p * count;
+
+    p_sum2 += expected_n;
+
+    var actual_n = histogram[i];
+    var actual_p = (double)actual_n / count;
+
+    criteria_p += (expected_p - actual_p).Pow2() / expected_p;
+    criteria_n += (expected_n - actual_n).Pow2() / expected_n;
+
+    Console.WriteLine("{0,2} [{1,8}] - p:{2,-8:0.00000#} - [{3,8:0}]p0:{4,-10:0.0000000#} - [{5,7:0}]d:{6,-10:0.########} - [{7,8:0.00}]d0:{8,-10:0.########} - h:{9:0.00}", 
+        i, 
+        histogram[i], actual_p, 
+        expected_n, expected_p, 
+        (expected_n - actual_n).Abs(), (actual_p - expected_p).Abs(),
+        (expected_n - actual_n).Pow2() / expected_n, (expected_p - actual_p).Pow2() / expected_p, 
+        criteria_p * count);
+}
+
+criteria_p *= count;
+
+var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(0.1, freedom_degree);
+
+Console.WriteLine("chi_p:{0:0.00} - q:{1:0.00}", criteria_p, quantile);
+Console.WriteLine("chi_n:{0:0.00} - q:{1:0.00}", criteria_n, quantile);
 Console.ReadLine();
 
+static double[] GetRandom(Random rnd, int Count, double Sgm, double Mu) => rnd.NextNormal(Count, Sgm, Mu);
 
-
-return;
-
-//var pe_file = new PEFile("c:\\123\\user32.dll");
-
-////pe_file.ReadData();
-
-////var is_pe = pe_file.IsPE;
-//var header = pe_file.GetHeader();
-
-//var range = new Range(-10, 5);
-
-//Console.WriteLine("End.");
-//Console.ReadLine();
-
-class Person
+static double[] GetRandom2(Random rnd, int Count, double Sgm, double Mu)
 {
-    /// <summary>
-    /// Доработана SelectableCollection&lt;T&gt; и добавлены методы-расширения для Object .GetPropertyValue и .SetPropertyValue
-    /// </summary>
-    public int Age { get; set; }
+    var xx = new double[count];
 
-    public override string ToString() => $"Age {Age}";
+    for(var i = 0; i < count; i++)
+        xx[i] = GetRandom2(rnd, Sgm, Mu);
+
+    return xx;
+
+    static double GetRandom2(Random rnd, double Sgm, double Mu)
+    {
+        var r2 = 0d;
+        var x = rnd.NextDouble() * 2 - 1;
+        for (var y = rnd.NextDouble() * 2 - 1; r2 is > 1 or 0d; y = x, x = rnd.NextDouble() * 2 - 1)
+            r2 = x * x + y * y;
+
+        return Math.Sqrt(-2 * Math.Log(r2) / r2) * x * Sgm + Mu;
+    }
+}
+
+static double[] GetRandom3(Random rnd, int Count, double Sgm, double Mu)
+{
+    var xx = new double[count];
+
+    for (var i = 0; i < count; i++)
+        xx[i] = GetRandom3(rnd, Sgm, Mu, 5);
+
+    return xx;
+
+    static double GetRandom3(Random rnd, double Sgm, double Mu, int n)
+    {
+        var s = 1d;
+        for (var i = 0; i < n; i++)
+            s *= rnd.NextDouble();
+
+        return (n * s * 2 - 1) * Sgm + Mu;
+    }
+}
+
+static double[] GetRandom4(Random rnd, int Count, double Sgm, double Mu)
+{
+    var xx = EnumRandom4(rnd, Sgm, Mu).Take(count).ToArray();
+
+    return xx;
+
+    static IEnumerable<double> EnumRandom4(Random rnd, double Sgm, double Mu)
+    {
+        while (true)
+        {
+            var u1 = 1 - rnd.NextDouble();
+            var u2 = 1 - rnd.NextDouble();
+
+            var sqrt = Math.Sqrt(-2 * Math.Log(u1));
+
+            var z1 = sqrt * Math.Cos(2 * Math.PI * u2);
+            yield return z1 * Sgm + Mu;
+
+            var z2 = sqrt * Math.Sin(2 * Math.PI * u2);
+            yield return z2 * Sgm + Mu;
+        }
+    }
 }

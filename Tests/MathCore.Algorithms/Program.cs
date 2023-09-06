@@ -1,112 +1,107 @@
-﻿//using MathCore.Algorithms.Numbers;
+﻿using System.Diagnostics;
+using System.Numerics;
 
-//Pascal.Run(16);
+using MathCore.Algorithms.Numbers;
 
-//return;
+const int x0 = 2;
 
-//DoubleIEEE754.TestParsingStrings();
-
-//var xx = 123.456;
-//var yy = xx.Exp10(-3);
-
-//var (mantissa123, exp123, sign123) = DoubleIEEE754.Parse(123.456);
-//var (mantissa321, exp321, sign321) = DoubleIEEE754.Parse(0.123456);
+//const int n = 2 * 2 * 2 * 3 * 3 * 5 * 5 * 5 * 13 * 13;
+//const int n = 2 * 2 * 3 * 5 * 5 * 5 * 7 * 13 * 13;
+const int n = 2 * 2 * 3 * 5 * 7;
 
 
-////CalculatorPI.IterationPI();
-
-//var (m1, k1) = DoubleIEEE754.GetPower2(+8);
-//var (m2, k2) = DoubleIEEE754.GetPower2(-8);
-//var (m3, k3) = DoubleIEEE754.GetPower21(+8);
-//var (m4, k4) = DoubleIEEE754.GetPower21(-8);
-
-//var (m, k) = DoubleIEEE754.GetPower21(-8);
-
-//var x = 123.456;
-//var x0 = 123.456e-3;
-
-//var mm = 0;
-//var y = x;
-//while (y > 2)
-//    (y, mm) = (y / 2, mm + 1);
-
-//var (m0, k0) = DoubleIEEE754.GetPower2(-3);
-
-//var y1 = y * k0 * Math.Pow(2, mm + m0);
-
-//var (mantissa, exp, sign) = DoubleIEEE754.Parse(x);
-
-//var value = DoubleIEEE754.Create(mantissa, (short)(exp + m0), sign);
-//var v1 = value * k0;
-//var (mantissa1, exp1, sign1) = DoubleIEEE754.Parse(v1);
-//var (mantissa2, exp2, sign2) = DoubleIEEE754.Parse(0.123456);
-//var value1 = DoubleIEEE754.Create(mantissa2, exp2, sign2);
-
-//var qqq = double.Parse("0.123456".AsSpan(), NumberStyles.Any, CultureInfo.InvariantCulture);
-
-//var www = Convert.ToDouble("0.123456");
-
-//var b1 = Convert.ToString(mantissa, 2);
-//var b2 = Convert.ToString(mantissa1, 2);
-//var b3 = Convert.ToString(mantissa2, 2);
-
-
-//var items = DoubleIEEE754.Decode(x);
-
-//const int digits_count = 100000;
-//CalculatorPI.Calculate(digits_count);
-//Console.WriteLine();
-//Console.WriteLine("--------------------------------");
-//var progress = new ConsoleProgressBar(80);
-//Console.WriteLine();
-//var pi = await CalculatorPI.CalculateParallelAsync(digits_count/*, progress*/);
-
-Console.WriteLine("..");
-Console.ReadLine();
-
-//MatrixRef a = new double[,]
-//{
-//    { 1, 2, 3 },
-//    { 4, 5, 6 },
-//    { 7, 8, 9 },
-//};
-
-//MatrixRef b = new double[,]
-//{
-//    { 1, 4, 7 },
-//    { 2, 5, 8 },
-//    { 3, 6, 9 },
-//};
-
-//var c = a + b;
-
-//Console.WriteLine(a.ToString());
-//Console.WriteLine();
-//Console.WriteLine(b.ToString());
-//Console.WriteLine();
-//Console.WriteLine(c.ToString());
-
-//var k = BinomialRatio.Value(4, 10);
-
-//NewtonPolynom.Test();
-
-//Console.WriteLine("End.");
+Console.WriteLine("End.");
 //Console.ReadLine();
 
 
-//static uint DigitsToUInt32(ReadOnlySpan<char> p, int count)
-//{
-//    var res = (uint)(p[0] - '0');
-//    for (var i = 1; i < count; i++)
-//        res = res * 10 + (uint)(p[i] - '0');
+static BigInteger PowSimple(BigInteger x, uint n)
+{
+    Console.WriteLine("simple {0}^{1}", x, n);
+    var timer = Stopwatch.StartNew();
+    try
+    {
+        var result = new BigInteger(1);
 
-//    return res;
-//}
+        for (var i = 0; i < n; i++)
+        {
+            result *= x;
+            //Console.WriteLine(result);
+        }
 
-//static ulong DigitsToUInt64(ReadOnlySpan<char> p, int count)
-//{
-//    var res = (ulong)(p[0] - '0');
-//    for (var i = 1; i < count; i++)
-//        res = res * 10 + (ulong)(p[i] - '0');
-//    return res;
-//}
+        return result;
+    }
+    finally
+    {
+        timer.Stop();
+        Console.WriteLine("Calculation of SIMPLE x^{0} completed at time {1}s", n, timer.Elapsed.TotalSeconds);
+    }
+}
+
+static BigInteger PowFast(BigInteger x, uint n)
+{
+    var timer = Stopwatch.StartNew();
+    try
+    {
+        if (n == 0) return new(1);
+        //if (n == 1) return x;
+        //if (n == 2) return x * x;
+        //if (n == 3) return x * x * x;
+
+        var result = x;
+
+        var power = n;
+        while (power > 0 && power % 2 == 0)
+        {
+            result *= result;
+            power >>= 1;
+        }
+
+        while (power > 0 && power % 3 == 0)
+        {
+            result *= result * result;
+            power /= 3;
+        }
+
+        return power > 1 ? result * PowFast(result, power - 1) : result;
+    }
+    finally
+    {
+        timer.Stop();
+        Console.WriteLine("Calculation of FAST x^{0} completed at time {1}s", n, timer.Elapsed.TotalSeconds);
+    }
+}
+
+static double PowSimpleD(double x, uint n)
+{
+    var result = 1d;
+
+    for (var i = 0; i < n; i++)
+        result *= x;
+
+    return result;
+}
+
+static double PowFastD(double x, uint n)
+{
+    if (n == 0) return 1;
+    if (n == 1) return x;
+    if (n == 2) return x * x;
+    if (n == 3) return x * x * x;
+
+    var result = x;
+
+    var power = n;
+    while (power > 0 && power % 2 == 0)
+    {
+        result *= result;
+        power >>= 1;
+    }
+
+    while (power > 0 && power % 3 == 0)
+    {
+        result *= result * result;
+        power /= 3;
+    }
+
+    return power > 1 ? result * PowFastD(result, power - 1) : result;
+}

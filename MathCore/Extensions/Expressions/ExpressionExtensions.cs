@@ -171,6 +171,7 @@ public static class ExpressionExtensions
 
     public static mEx GetProperty(this Ex obj, string PropertyName) => Property(obj, PropertyName);
 
+    public static mEx GetField(this Ex obj, FieldInfo Info) => Field(obj, Info);
     public static mEx GetField(this Ex obj, string FieldName) => Field(obj, FieldName);
 
     public static bEx Assign(this Ex dest, Ex source) => Ex.Assign(dest, source);
@@ -545,6 +546,7 @@ public static class ExpressionExtensions
 
     public static Expression<TDelegate> CreateLambda<TDelegate>(this Ex body, params pEx[] p) => Lambda<TDelegate>(body, p);
     public static lEx CreateLambda(this Ex body, params pEx[] p) => Lambda(body, p);
+    public static lEx CreateLambda(this Ex body, Type DelegateType, params pEx[] p) => Lambda(DelegateType, body, p);
 
     public static TDelegate CompileTo<TDelegate>(this Ex body, params pEx[] p) => body.CreateLambda<TDelegate>(p).Compile();
 

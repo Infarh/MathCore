@@ -105,20 +105,53 @@ public static class ShortExtensions
     public static bool IsEven(this short N) => Math.Abs(N).IsDeviatedTo(2);
 
     [DST]
-    public static short Power(this short x, int n)
+    public static int Pow(this short x, int p)
     {
-        if (n is < -1000 or > 1000) return (short)Math.Pow(x, n);
-        if (n < 0) return (short)(1 / (double)x).Power(-n);
-        var result                         = 1.0;
-        for (var i = 0; i < n; i++) result *= x;
-        return (short)result;
+        switch (x)
+        {
+            case 0: return 0;
+            case 1: return 1;
+        }
+
+        switch (p)
+        {
+            case < 0: return 0;
+            case 0: return 1;
+            case 1: return x;
+            case 2: return x * x;
+            case 3: return x * x * x;
+            case 4: return x * x * x * x;
+            }
+
+        int result = x;
+        var power = p;
+
+        if (p < 11)
+            while (--power > 0)
+                result *= x;
+        else
+        {
+            while (power > 0 && power % 2 == 0)
+            {
+                result *= result;
+                power >>= 1;
+            }
+
+            while (power > 0 && power % 3 == 0)
+            {
+                result *= result * result;
+                power /= 3;
+            }
+
+            if (power > 1)
+                return result * result.Pow(power - 1);
+        }
+
+        return result;
     }
 
     [DST]
-    public static double Power(this short x, short y) => Math.Pow(x, y);
-
-    [DST]
-    public static Complex Power(this short x, Complex z) => x ^ z;
+    public static Complex Pow(this short x, Complex z) => x ^ z;
 
     [DST]
     public static short GetFlags(this short Value, short Mask) => (short)(Value & Mask);

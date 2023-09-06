@@ -17,18 +17,18 @@ public static partial class SpecialFunctions
     [DST]
     public static int Fibonacci(int n)
     {
-        var phi_n = Consts.GoldenRatio.Power(n);
+        var phi_n = Consts.GoldenRatio.Pow(n);
         return (int)(Consts.sqrt_5_inv * (phi_n - Math.Cos(Consts.pi * n) / phi_n));
     }
 
     [DST]
     public static int Fibonacci(Complex z)
     {
-        var phi_z = Consts.GoldenRatio.Power(z);
+        var phi_z = Consts.GoldenRatio.Pow(z);
         return (int)(Consts.sqrt_5_inv * (phi_z - Complex.Trigonometry.Cos(Consts.pi * z) / phi_z));
     }
 
-    public static int Fibonacci2(int n) => (int)(Consts.sqrt_5_inv * Consts.GoldenRatio.Power(n) + 0.5);
+    public static int Fibonacci2(int n) => (int)(Consts.sqrt_5_inv * Consts.GoldenRatio.Pow(n) + 0.5);
 
     private static readonly Lazy<ConcurrentDictionary<(int n, int k), ulong>> __BCR = new(() => new(), true);
     private static readonly Func<(int n, int k), ulong> __BCRCalculator = BCRCalculation;

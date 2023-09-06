@@ -1,5 +1,6 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=AsyncConverter_002EAsyncWait/@EntryIndexedValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UnusedMember_002EGlobal/@EntryIndexedValue">DO_NOT_SHOW</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=AKF/@EntryIndexedValue">AKF</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=BCR/@EntryIndexedValue">BCR</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=CF/@EntryIndexedValue">CF</s:String>
@@ -63,6 +64,7 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Differentiator/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Dubug/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Equirectangular/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Erlang/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=exprs/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=fead/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Flannery/@EntryIndexedValue">True</s:Boolean>
@@ -156,6 +158,7 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_041F_043E_0434_0433_043E_043D/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_041F_043E_0434_0434_0435_0440_0435_0432_044C_044F/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_041F_043E_0434_0438_043D_0442_0435_0433_0440_0430_043B_044C_043D_0430_044F/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=_041F_043E_0434_0441_0447_0451_0442/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_041F_043E_0442_043E_043A_043E/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_041F_0440_043E_0440_0435_0434_0438_0442_044C/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_0420_0430_0441_0441_0438_043D_0445_0440_043E_043D_0438_0437_0430_0446_0438_044F/@EntryIndexedValue">True</s:Boolean>
@@ -199,6 +202,7 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043D_0435_043F_0443_0431_043B_0438_0447_043D_044B_043C/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043D_0438_0436_043D_0435/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043E_0431_0440_0430_0442_043D_044B/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043E_043A_0440_0443_0433_043B_0451_043D_043D_043E_0435/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043E_0442_043F_0438_0441_0447_0438_043A/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043F_0430_0440_0441_0435_0440/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=_043F_0430_0440_0441_0435_0440_0430/@EntryIndexedValue">True</s:Boolean>

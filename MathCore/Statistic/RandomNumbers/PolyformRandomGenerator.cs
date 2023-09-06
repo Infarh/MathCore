@@ -328,9 +328,9 @@ public class PolyformRandomGenerator
     #region Cauchy
 
     public static double CauchyDistribution(double x, double x0, double g)
-        => g / (Consts.pi * (g * g + (x - x0).Power(2)));
+        => g / (Consts.pi * (g * g + (x - x0).Pow(2)));
     public static Func<double, double> GetCauchyDistribution(double x0, double g) =>
-        x => g / (Consts.pi * (g * g + (x - x0).Power(2)));
+        x => g / (Consts.pi * (g * g + (x - x0).Pow(2)));
 
     public static Expression<Func<double, double>> GetCauchyDistributionExpression(double x0, double g)
     {
@@ -381,9 +381,9 @@ public class PolyformRandomGenerator
     #region Levy
 
     public static double LevyDistribution(double x, double m, double c)
-        => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Power(3)));
+        => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Pow(3)));
     public static Func<double, double> GetLevyDistribution(double m, double c) =>
-        x => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Power(3)));
+        x => Sqrt(c * Exp(c / (m - x)) / (Consts.pi2 * (x - m).Pow(3)));
 
     public static Expression<Func<double, double>> GetLevyDistributionExpression(double m, double c)
     {
@@ -398,7 +398,7 @@ public class PolyformRandomGenerator
     public double Levy(double mu, double c)
     {
         var n = Normal(mu, 1.0 / c);
-        return mu + 1.0 / (n * n);
+        return mu + 1 / (n * n);
     }
 
     #endregion
@@ -433,10 +433,10 @@ public class PolyformRandomGenerator
     #region LogNormal
 
     public static double LogNormalDistribution(double x, double m, double s)
-        => Exp(Log(x - m).Power(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
+        => Exp(Log(x - m).Pow(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
 
     public static Func<double, double> GetLogNormalDistribution(double m, double s) =>
-        x => Exp(Log(x - m).Power(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
+        x => Exp(Log(x - m).Pow(2) / (2 * s * s)) / (x * s * Consts.sqrt_pi2);
 
     public static Expression<Func<double, double>> GetLogNormalDistributionExpression(double m, double s)
     {
@@ -457,10 +457,10 @@ public class PolyformRandomGenerator
     #region Logistic
 
     public static double LogisticDistribution(double x, double m, double s)
-        => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Power(2);
+        => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Pow(2);
 
     public static Func<double, double> GetLogisticDistribution(double m, double s) =>
-        x => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Power(2);
+        x => Exp(-(x - m) / s) / s / (1 + Exp(-(x - m) / s)).Pow(2);
 
     public static Expression<Func<double, double>> GetLogisticDistributionExpression(double M, double S)
     {
@@ -479,11 +479,11 @@ public class PolyformRandomGenerator
     public double Erlang(int k, double l) => GA1(k) / l;
 
     // ReSharper disable once IdentifierTypo
-    public double Weibull(double l, double k) => l * Pow(Exponential(1), 1.0 / k);
+    public double Weibull(double l, double k) => l * Pow(Exponential(1), 1 / k);
 
     public double Rayleigh(double sigma) => sigma * Sqrt(Exponential(0.5));
 
-    public double Pareto(double xm, double alpha) => xm / Pow(Uniform(0, 1), 1.0 / alpha);
+    public double Pareto(double xm, double alpha) => xm / Pow(Uniform(0, 1), 1 / alpha);
 
     public double StudentT(int v) => v == 1 ? Cauchy(0, 1) : Normal(0, 1) / Sqrt(ChiSquared(v) / v);
 
