@@ -25,9 +25,13 @@ public static class RegExExtensions
 
     public static MatchCollection FindAllRegEx(this string Str, [RegexPattern] string Pattern) => Regex.Matches(Str, Pattern);
 
+    public static IEnumerable<string> FindAllRegEx(this string str, Regex regex) => str.FindAllRegExMatch(regex).Select(m => m.Value);
+
     public static string FindRegEx(this string Str, [RegexPattern] string Pattern, string Default) => Regex.Match(Str, Pattern).OrDefault(Default);
 
     public static int FindRegEx(this string Str, [RegexPattern] string Pattern, int DefaultValue) => int.TryParse(Str.FindRegEx(Pattern, string.Empty), out var v) ? v : DefaultValue;
+
+    public static string FindRegEx(this string str, Regex regex, string Default = "") => regex.Match(str).OrDefault(Default);
 
     public static string? ValueOrDefault(this Group? g, string? Default = null) => g is null || !g.Success ? Default : g.Value;
 
@@ -38,4 +42,12 @@ public static class RegExExtensions
     public static double ValuedDoubleOrDefault(this Group? g, IFormatProvider format, NumberStyles style = NumberStyles.Float, double Default = double.NaN) => g is null || !g.Success || !double.TryParse(g.Value, style, format, out var v) ? Default : v;
 
     public static bool ValueBoolOrDefault(this Group? g, bool Default = false) => g is null || !g.Success || !bool.TryParse(g.Value, out var v) ? Default : v;
+
+    public static IEnumerable<Match> FindAllRegExMatch(this string str, Regex regex) => regex.Matches(str).Cast<Match>();
+
+    public static IEnumerable<Match> FindAllRegExMatch(this string str, [RegexPattern] string RegexStr) => Regex.Matches(str, RegexStr).Cast<Match>();
+
+    public static bool EqualsRegex(this string str, [RegexPattern] string RegexStr) => Regex.IsMatch(str, RegexStr);
+
+    public static bool EqualsRegex(this string str, [RegexPattern] string RegexStr, RegexOptions opt) => Regex.IsMatch(str, RegexStr, opt);
 }

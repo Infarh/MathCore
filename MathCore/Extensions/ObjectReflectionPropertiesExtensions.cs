@@ -7,8 +7,10 @@ using System.Reflection;
 using MathCore.Extensions.Expressions;
 
 namespace MathCore.Extensions;
-public static class ObjectReflectionExtensions
+public static class ObjectReflectionPropertiesExtensions
 {
+    private const BindingFlags __NonPublic = BindingFlags.Instance | BindingFlags.NonPublic;
+
     private static readonly ConcurrentDictionary<(Type, string), Func<object, object?>?> __PropertyGetters = new();
 
     private static Func<object, object?>? GetPublicPropertyGetter((Type type, string PropertyName) property)
@@ -16,6 +18,28 @@ public static class ObjectReflectionExtensions
         var (type, property_name) = property;
 
         if (type.GetProperty(property_name) is not { CanRead: true, PropertyType: { IsValueType: var is_value_type } } property_info)
+            return null;
+
+        var obj_parameter = "obj".ParameterOf<object>();
+        Expression body = obj_parameter
+            .ConvertTo(type)
+            .GetProperty(property_info);
+
+        if (is_value_type)
+            body = body.ConvertTo<object>();
+
+        var function = body
+            .CreateLambda<Func<object, object?>>(obj_parameter)
+            .Compile();
+
+        return function;
+    }
+
+    private static Func<object, object?>? GetPrivatePropertyGetter((Type type, string PropertyName) property)
+    {
+        var (type, property_name) = property;
+
+        if (type.GetProperty(property_name, __NonPublic) is not { CanRead: true, PropertyType: { IsValueType: var is_value_type } } property_info)
             return null;
 
         var obj_parameter = "obj".ParameterOf<object>();
@@ -44,6 +68,23 @@ public static class ObjectReflectionExtensions
                     { nameof(PropertyName), PropertyName },
                 },
             };
+
+        return value;
+    }
+
+    public static object? GetPropertyValue(this object obj, string PropertyName, bool NonPublic)
+    {
+        if (!obj.TryGetPropertyValue(PropertyName, NonPublic, out var value))
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для чтения")
+            {
+                Data =
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(PropertyName), PropertyName },
+                    { nameof(NonPublic), NonPublic },
+                },
+            };
+
         return value;
     }
 
@@ -60,13 +101,46 @@ public static class ObjectReflectionExtensions
         return true;
     }
 
-    public static T? GetPropertyValue<T>(this object obj, string PropertyName) => (T?)obj.GetPropertyValue(PropertyName);
+    public static bool TryGetPropertyValue(this object obj, string PropertyName, bool NonPublic, out object? value)
+    {
+        if(!NonPublic)
+            return obj.TryGetPropertyValue(PropertyName, out value);
+
+        var type = obj.NotNull().GetType();
+        if (__PropertyGetters.GetOrAdd((type, PropertyName), GetPrivatePropertyGetter) is not { } getter)
+        {
+            value = null;
+            return false;
+        }
+
+        value = getter(obj);
+        return true;
+    }
+
+    public static TValue? GetPropertyValue<TValue>(this object obj, string PropertyName) => (TValue?)obj.GetPropertyValue(PropertyName);
 
     private static Delegate? GetPublicPropertyGetter<T, TValue>((Type type, string PropertyName) property)
     {
         var (type, property_name) = property;
 
         if (type.GetProperty(property_name) is not { CanRead: true } property_info)
+            return null;
+
+        var obj_parameter = "obj".ParameterOf(type);
+        var expr = obj_parameter
+            .GetProperty(property_info)
+            .CreateLambda<Func<T, TValue?>>(obj_parameter);
+
+        var function = expr.Compile();
+
+        return function;
+    }
+
+    private static Delegate? GetPrivatePropertyGetter<T, TValue>((Type type, string PropertyName) property)
+    {
+        var (type, property_name) = property;
+
+        if (type.GetProperty(property_name, __NonPublic) is not { CanRead: true } property_info)
             return null;
 
         var obj_parameter = "obj".ParameterOf(type);
@@ -98,8 +172,44 @@ public static class ObjectReflectionExtensions
         return value;
     }
 
+    public static TValue? GetPropertyValue<T, TValue>(this T obj, string PropertyName, bool NonPublic)
+    {
+        if(!obj.TryGetPropertyValue(PropertyName, NonPublic, out TValue value))
+            throw new InvalidOperationException($"Тип {typeof(T)} не содержит свойства {PropertyName} доступного для чтения")
+            {
+                Data =
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(T), typeof(T) },
+                    { nameof(TValue), typeof(TValue) },
+                    { nameof(PropertyName), PropertyName },
+                    { nameof(NonPublic), true },
+                },
+            };
+
+        return value;
+    }
+
     public static bool TryGetPropertyValue<T, TValue>(this T obj, string PropertyName, out TValue? value)
     {
+        if (obj is null) throw new ArgumentNullException(nameof(obj));
+
+        var type = obj.GetType();
+        if (__TypedGetters.GetOrAdd((type, PropertyName), GetPublicPropertyGetter<T, TValue>) is not Func<T, TValue> getter)
+        {
+            value = default;
+            return false;
+        }    
+
+        value = getter(obj);
+        return true;
+    }
+
+    public static bool TryGetPropertyValue<T, TValue>(this T obj, string PropertyName, bool NonPublic, out TValue? value)
+    {
+        if(!NonPublic)
+            return obj.TryGetPropertyValue(PropertyName, out value);
+
         if (obj is null) throw new ArgumentNullException(nameof(obj));
 
         var type = obj.GetType();
@@ -136,6 +246,27 @@ public static class ObjectReflectionExtensions
         return action;
     }
 
+    private static Action<object, object?>? GetPrivatePropertySetter((Type type, string PropertyName) property)
+    {
+        var (type, property_name) = property;
+
+        if (type.GetProperty(property_name, __NonPublic) is not { CanWrite: true, SetMethod: var set_method })
+            return null;
+
+        var parameter = "obj".ParameterOf<object>();
+        var value_parameter = "value".ParameterOf<object>();
+
+        var call_expr = set_method.GetCallExpression(
+            parameter.ConvertTo(type), 
+            value_parameter.ConvertTo(set_method.GetParameters()[0].ParameterType));
+
+        var action = call_expr.
+            CreateLambda<Action<object, object?>>(parameter, value_parameter)
+            .Compile();
+
+        return action;
+    }
+
     public static void SetPropertyValue(this object obj, string PropertyName, object? Value)
     {
         if(!obj.TrySetPropertyValue(PropertyName, Value))
@@ -149,11 +280,39 @@ public static class ObjectReflectionExtensions
             };
     }
 
+    public static void SetPropertyValue(this object obj, string PropertyName, object? Value, bool NonPublic)
+    {
+        if(!obj.TrySetPropertyValue(PropertyName, Value, NonPublic))
+            throw new InvalidOperationException($"Тип {obj.GetType()} не содержит свойства {PropertyName} доступного для записи") 
+            {
+                Data =
+                {
+                    { nameof(obj), obj.GetType() },
+                    { nameof(PropertyName), PropertyName },
+                    { nameof(NonPublic), NonPublic },
+                },
+            };
+    }
+
     public static bool TrySetPropertyValue(this object obj, string PropertyName, object? Value)
     {
         var type = obj.NotNull().GetType();
 
         if (__PropertySetters.GetOrAdd((type, PropertyName), GetPublicPropertySetter) is not { } setter)
+            return false;
+
+        setter(obj, Value);
+        return true;
+    }
+
+    public static bool TrySetPropertyValue(this object obj, string PropertyName, object? Value, bool NonPublic)
+    {
+        if(!NonPublic)
+            return TrySetPropertyValue(obj, PropertyName, Value);
+
+        var type = obj.NotNull().GetType();
+
+        if (__PropertySetters.GetOrAdd((type, PropertyName), GetPrivatePropertySetter) is not { } setter)
             return false;
 
         setter(obj, Value);

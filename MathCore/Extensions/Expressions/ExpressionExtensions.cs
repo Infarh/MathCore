@@ -171,6 +171,7 @@ public static class ExpressionExtensions
 
     public static mEx GetProperty(this Ex obj, string PropertyName) => Property(obj, PropertyName);
 
+    public static mEx GetField(this Ex obj, FieldInfo Info) => Field(obj, Info);
     public static mEx GetField(this Ex obj, string FieldName) => Field(obj, FieldName);
 
     public static bEx Assign(this Ex dest, Ex source) => Ex.Assign(dest, source);
