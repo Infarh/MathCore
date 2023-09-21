@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using MathCore.Annotations;
-
 namespace MathCore.Statistic;
 
 /// <summary>Распределения</summary>
@@ -25,12 +23,11 @@ public static partial class Distributions
     /// <returns>Значение плотности вероятности</returns>
     public static double Hi2(int k, double x) => Gamma(k / 2d, 2, x);
 
-    public static Func<double, double> NormalGauss(double sigma = 1, double mu = 0) =>
-        x =>
-        {
-            var xx = (x - mu) / sigma;
-            return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
-        };
+    public static Func<double, double> NormalGauss(double sigma = 1, double mu = 0) => x =>
+    {
+        var xx = (x - mu) / sigma;
+        return Math.Exp(-0.5 * xx * xx) / (sigma * Consts.sqrt_pi2);
+    };
 
     public static double NormalGauss(double x, double sigma, double mu)
     {
@@ -43,7 +40,6 @@ public static partial class Distributions
         var z = (x - mu) / (sigma * Consts.sqrt_2);
         return 0.5 * (1 + SpecialFunctions.Erf.Value(z));
     }
-
 
     /// <summary>Равномерное распределение</summary>
     /// <param name="a">Минимальное значение</param>

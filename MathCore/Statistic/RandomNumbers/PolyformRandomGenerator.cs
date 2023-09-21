@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using MathCore.Exceptions;
 using MathCore.Extensions.Expressions;
@@ -36,7 +35,6 @@ public class PolyformRandomGenerator
     public double Uniform(double a, double b) => a + (double)BasicRandGenerator() / RandMax * (b - a);
 
     #endregion
-
 
     #region Normal
 
@@ -370,8 +368,8 @@ public class PolyformRandomGenerator
         var X    = Expression.Parameter(typeof(double), "x");
         var M    = m.ToExpression();
         var B    = b.ToExpression();
-        var body = 2.ToExpression().Multiply(B).Inverse().Multiply(MathExpression.Exp(X.Subtract(M).Divide(B).Negate()));
-        return Expression.Lambda<Func<double, double>>(body, X);
+        var body = 2.ToExpression().Multiply(B)!.Inverse().Multiply(MathExpression.Exp(X.Subtract(M).Divide(B).Negate()));
+        return Expression.Lambda<Func<double, double>>(body!, X);
     }
 
     public double Laplace(double mu, double b) => mu + ((long)BasicRandGenerator() > 0 ? Exponential(1.0 / b) : -Exponential(1.0 / b));
@@ -390,7 +388,7 @@ public class PolyformRandomGenerator
         var X = Expression.Parameter(typeof(double), "x");
         var M = m.ToExpression();
         var C = c.ToExpression();
-        var body = C.Multiply(MathExpression.Exp(C.Divide(M.Subtract(X))))
+        var body = C.Multiply(MathExpression.Exp(C.Divide(M.Subtract(X))))!
            .Divide(2.ToExpression().Multiply(Consts.pi).Multiply(X.Subtract(M).Power(3))).SqrtPower();
         return Expression.Lambda<Func<double, double>>(body, X);
     }
@@ -414,9 +412,9 @@ public class PolyformRandomGenerator
     {
         var X   = Expression.Parameter(typeof(double), "x");
         var K05 = k.ToExpression().Divide(2);
-        var body = K05.PowerOf(2).Multiply(MathExpression.F(SpecialFunctions.Gamma.G, K05)).Inverse()
+        var body = K05.PowerOf(2).Multiply(MathExpression.F(SpecialFunctions.Gamma.G, K05))!.Inverse()
            .Multiply(X.Power(K05.Subtract(1)).Multiply(MathExpression.Exp(X.Divide(2).Negate())));
-        return Expression.Lambda<Func<double, double>>(body, X);
+        return Expression.Lambda<Func<double, double>>(body!, X);
     }
 
     public double ChiSquared(int k)
@@ -443,11 +441,11 @@ public class PolyformRandomGenerator
         var X = Expression.Parameter(typeof(double), "x");
         var M = m.ToExpression();
         var S = s.ToExpression();
-        var body = X.Multiply(S).Multiply(2.ToExpression().Multiply(Consts.pi).Sqrt()).Inverse()
+        var body = X.Multiply(S).Multiply(2.ToExpression().Multiply(Consts.pi).Sqrt())!.Inverse()
            .Multiply(
                 MathExpression.Exp(
                     MathExpression.Log(X.Subtract(M)).Power(2).Divide(2.ToExpression().Multiply(S.Power(2)))).Negate());
-        return Expression.Lambda<Func<double, double>>(body, X);
+        return Expression.Lambda<Func<double, double>>(body!, X);
     }
 
     public double LogNormal(double mu, double sigma) => Exp(Normal(mu, sigma));
@@ -468,7 +466,7 @@ public class PolyformRandomGenerator
         var m    = M.ToExpression();
         var s    = S.ToExpression();
         var e    = MathExpression.Exp(x.Subtract(m).Divide(s).Negate());
-        var body = e.Divide(s.Multiply(1.ToExpression().Add(e)).Power(2));
+        var body = e.Divide(s.Multiply(1.ToExpression().Add(e))!.Power(2));
         return Expression.Lambda<Func<double, double>>(body, x);
     }
 
@@ -500,5 +498,4 @@ public class PolyformRandomGenerator
         var x = GA2(a);
         return x / (x + GA2(b));
     }
-
 }

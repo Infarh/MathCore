@@ -8,7 +8,7 @@ namespace MathCore.Tests.Extensions;
 public class RandomExtensionsTests
 {
     //[Owner("Tester")]
-    [TestMethod/*Iterative(100)*//*, Ignore*//*, Timeout(TestTimeout.Infinite)*/, Description("Тест нормального распределения")]
+    [TestMethod/*Iterative(100)*/, Ignore/*, Timeout(TestTimeout.Infinite)*/, Description("Тест нормального распределения")]
     public void NextNormal_SingleValue_Sigma1Mu0()
     {
         const double sigma  = 3;

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using MathCore.Values;
+﻿using MathCore.Values;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Statistic.RandomNumbers;
 
 /// <summary>Генератор случайных чисел</summary>
 [Serializable]
-public abstract class RandomGenerator : IValueRead<double>
+public abstract class RandomGenerator(Random rnd = null) : IValueRead<double>
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -18,7 +14,7 @@ public abstract class RandomGenerator : IValueRead<double>
     /// <summary>Математическое ожидание</summary>
     protected double _Mu;
 
-    protected readonly Random _Random;
+    protected readonly Random _Random = rnd ?? new();
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -32,8 +28,6 @@ public abstract class RandomGenerator : IValueRead<double>
     public double Value => GetValue();
 
     /* ------------------------------------------------------------------------------------------ */
-
-    protected RandomGenerator(Random rnd = null) => _Random = rnd ?? new();
 
     protected RandomGenerator(double sigma, Random rnd = null) : this(rnd) => _Sigma = sigma;
 

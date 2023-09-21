@@ -1,6 +1,6 @@
 ﻿#nullable enable
-using System;
 using System.Globalization;
+using System.Xml.XPath;
 
 // ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
@@ -100,11 +100,11 @@ public readonly ref partial struct StringPtr
     public bool IsInBracket(char Open, char Close) => Length >= 2 && Source[Pos] == Open && Source[Pos + Length - 1] == Close;
     public bool IsInBracket(string Open, string Close)
     {
-        var open_length  = Open.Length;
+        var open_length = Open.Length;
         var close_length = Close.Length;
-        var length       = Length;
-        var pos          = Pos;
-        var source        = Source;
+        var length = Length;
+        var pos = Pos;
+        var source = Source;
         return length >= open_length + close_length
             && string.Compare(source, pos, Open, 0, open_length) == 0
             && string.Compare(source, pos + length - close_length, Close, 0, close_length) == 0;
@@ -184,48 +184,145 @@ public readonly ref partial struct StringPtr
     /// <param name="c">Проверяемый символ</param>
     /// <returns>Индекс символа в подстроке, либо -1 в случае его отсутствия</returns>
     public int IndexOf(char c) =>
-        Source.IndexOf(c, Pos, Length) is >= 0 and var index
+        Length > 0 && Source.IndexOf(c, Pos, Length) is >= 0 and var index
             ? index - Pos
             : -1;
+
+    public int IndexOf(char c, StringComparison Comparison)
+    {
+        char up, low;
+        switch (Comparison)
+        {
+            case StringComparison.OrdinalIgnoreCase:
+                {
+                    up = char.ToUpper(c);
+                    low = char.ToLower(c);
+                }
+                break;
+
+            case StringComparison.InvariantCultureIgnoreCase:
+                {
+                    up = char.ToUpperInvariant(c);
+                    low = char.ToLowerInvariant(c);
+                }
+                break;
+
+            case StringComparison.CurrentCultureIgnoreCase:
+                {
+                    up = char.ToUpper(c, CultureInfo.CurrentCulture);
+                    low = char.ToLower(c, CultureInfo.CurrentCulture);
+                }
+                break;
+
+            default:
+                return IndexOf(c);
+        }
+
+        var up_index = IndexOf(up);
+        var low_index = IndexOf(low);
+
+        return (up_index, low_index) switch
+        {
+            (< 0, < 0) => -1,
+            (< 0, _) => low_index,
+            (_, < 0) => up_index,
+            _ => Math.Min(low_index, up_index)
+        };
+    }
 
     /// <summary>Индекс последнего вхождения символа в подстроку</summary>
     /// <param name="c">Проверяемый символ</param>
     /// <returns>Индекс символа в подстроке с конца, либо -1 в случае его отсутствия</returns>
-    public int LastIndexOf(char c)
-    {
-        if (Source.LastIndexOf(c, Pos + Length - 1, Length - Pos) is >= 0 and var index)
-            return index - Pos;
+    public int LastIndexOf(char c) =>
+        Length > 0 && Source.LastIndexOf(c, Pos + Length - 1, Length - Pos) is >= 0 and var index
+            ? index - Pos
+            : -1;
 
-        return -1;
-    }
+    public int LastIndexOf(char c, StringComparison Comparison) => Comparison switch
+    {
+        StringComparison.OrdinalIgnoreCase => Math.Max(LastIndexOf(char.ToUpper(c)), LastIndexOf(char.ToLower(c))),
+        StringComparison.InvariantCultureIgnoreCase => Math.Max(LastIndexOf(char.ToUpperInvariant(c)), LastIndexOf(char.ToLowerInvariant(c))),
+        StringComparison.CurrentCultureIgnoreCase => Math.Max(LastIndexOf(char.ToUpper(c, CultureInfo.CurrentCulture)), LastIndexOf(char.ToLower(c, CultureInfo.CurrentCulture))),
+        _ => LastIndexOf(c)
+    };
 
     /// <summary>Индекс первого вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
     /// <returns>Индекс первого вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int IndexOf(string str) => IndexOf(str, StringComparison.Ordinal);
 
-    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
-    /// <param name="str">Искомая строка</param>
-    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
-    public int LastIndexOf(string str) => LastIndexOf(str, StringComparison.Ordinal);
-
     /// <summary>Индекс первого вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Индекс первого вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int IndexOf(string str, StringComparison Comparison) =>
-        str.Length <= Length && str.IndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
+        Length > 0 && str.Length <= Length && str.IndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
+
+    /// <summary>Индекс первого вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <param name="Offset">Смещение</param>
+    /// <param name="Comparison">Способ сравнения строк</param>
+    /// <returns>Индекс первого вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
+    public int IndexOf(string str, int Offset, StringComparison Comparison) => str[Offset..].IndexOf(str, Comparison);
+
+    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
+    public int LastIndexOf(string str) => LastIndexOf(str, StringComparison.Ordinal);
 
     /// <summary>Индекс последнего вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int LastIndexOf(string str, StringComparison Comparison) =>
-        str.Length <= Length && str.LastIndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
+        Length > 0 && str.Length <= Length && str.LastIndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
+
+    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <param name="Comparison">Способ сравнения строк</param>
+    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
+    public int IndexOf(StringPtr str, StringComparison Comparison)
+    {
+        var str_length = str.Length;
+        if (str_length > Length) return -1;
+
+        var first_str_char = str[0];
+        var index = IndexOf(first_str_char, Comparison);
+        while (index >= 0)
+        {
+            if (Substring(index).Equals(str, Comparison))
+                return index;
+
+            index = Substring(index + 1).IndexOf(first_str_char);
+        }
+
+        return -1;
+    }
+
+    /// <summary>Индекс последнего вхождения строки в подстроку</summary>
+    /// <param name="str">Искомая строка</param>
+    /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
+    public int LastIndexOf(StringPtr str)
+    {
+        var str_length = str.Length;
+        if (str_length > Length) return -1;
+
+        var first_str_char = str[0];
+        var index = Substring(0, Length - str_length).LastIndexOf(first_str_char);
+        while (index >= 0)
+        {
+            if (Substring(index, str_length).Equals(str))
+                return index;
+
+            index = Substring(0, index).LastIndexOf(first_str_char);
+        }
+
+        return -1;
+    }
 
     /// <summary>Индекс последнего вхождения строки в подстроку</summary>
     /// <param name="str">Искомая строка</param>
@@ -233,18 +330,21 @@ public readonly ref partial struct StringPtr
     /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int LastIndexOf(StringPtr str, StringComparison Comparison)
     {
-        if (str.Length > Length) return -1;
-        var index = Length - str.Length;
+        var str_length = str.Length;
+        if (str_length > Length) return -1;
 
-        while (true)
+        var first_str_char = str[0];
+        //var index = Length - str_length;
+        var index = Substring(0, Length - str_length).LastIndexOf(first_str_char, Comparison);
+        while (index >= 0)
         {
-            index = Substring(0, index).LastIndexOf(str[0]);
-            if (index < 0)
-                return -1;
-
-            if (Substring(index, str.Length).Equals(str, Comparison))
+            if (Substring(index, str_length).Equals(str, Comparison))
                 return index;
+
+            index = Substring(0, index).LastIndexOf(first_str_char, Comparison);
         }
+
+        return -1;
     }
 
     /// <summary>Проверка соответствия текущей подстроки с указанной строкой</summary>
@@ -316,7 +416,7 @@ public readonly ref partial struct StringPtr
         return len == -1 && x == 0;
     }
 
-    public bool Equals(double x) => Length > 0 && TryParseDouble() == x;
+    public bool Equals(double x, double eps = 0) => Length > 0 && TryParseDouble() is { } y && Math.Abs(x - y) <= eps;
 
     /// <summary>Оператор проверки на равенство фрагмента строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
@@ -497,12 +597,12 @@ public readonly ref partial struct StringPtr
                 break;
         }
 
-        var index_before_skip_zerros = index;
+        var index_before_skip_zeros = index;
         while (index < length && str[start + index] == '0') index++;
 
         if (index >= length || !char.IsDigit(str, start + index))
         {
-            if (index > index_before_skip_zerros)
+            if (index > index_before_skip_zeros)
                 return 0;
             throw new FormatException("Строка имела неверный формат");
         }
@@ -660,7 +760,7 @@ public readonly ref partial struct StringPtr
 
         if (index >= length)
         {
-            // Если строка коныилась, то выход с ошибкой
+            // Если строка кончилась, то выход с ошибкой
             value = double.NaN;
             return false;
         }
@@ -989,11 +1089,11 @@ public readonly ref partial struct StringPtr
             }
 
         var value = sign * (whole + fraction / (double)fraction_base);
-        
+
         if (exp == 0)
             return value;
 
-        
+
         return value * Math.Pow(10, exp_sign * exp);
     }
 
@@ -1061,7 +1161,7 @@ public readonly ref partial struct StringPtr
 
         if (str.IsEmpty) return false;
 
-        if (!str.Equals("true", StringComparison.OrdinalIgnoreCase)) 
+        if (!str.Equals("true", StringComparison.OrdinalIgnoreCase))
             return str.Equals("false", StringComparison.OrdinalIgnoreCase);
 
         value = true;

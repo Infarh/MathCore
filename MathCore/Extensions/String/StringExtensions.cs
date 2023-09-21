@@ -7,10 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using MathCore;
-using MathCore.Extensions.String;
 
 // ReSharper disable UnusedMember.Global
-
 // ReSharper disable once CheckNamespace
 namespace System;
 
@@ -240,28 +238,73 @@ public static class StringExtensions
         out string TextBefore,
         out string? TextAfter)
     {
-        TextAfter = null;
         var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
         if (start_index == -1)
         {
             TextBefore = Str[Offset..];
+            TextAfter = null;
             return null;
         }
+
         var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
         if (stop_index == -1) throw new FormatException();
+
         var start = start_index;
         do
         {
             start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
             if (start != -1 && start < stop_index)
                 stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
-        } while (start != -1 && start < stop_index);
+        }
+        while (start != -1 && start < stop_index);
+
         if (stop_index == -1 || stop_index < start_index) throw new FormatException();
+
         TextBefore = Str[Offset..start_index];
         Offset = stop_index + Close.Length;
         TextAfter = Str.Length - Offset > 0 ? Str[Offset..] : string.Empty;
         start_index += Open.Length;
+
         return Str[start_index..stop_index];
+    }
+
+    public static StringPtr GetBracketText(
+        this StringPtr Str,
+        ref int Offset,
+        StringPtr Open,
+        StringPtr Close,
+        out StringPtr TextBefore,
+        out StringPtr TextAfter)
+    {
+
+        var start_index = Str.IndexOf(Open, Offset, StringComparison.Ordinal);
+        if (start_index == -1)
+        {
+            TextBefore = Str.Substring(Offset);
+            TextAfter = Str.Substring(0);
+            return null;
+        }
+
+        var stop_index = Str.IndexOf(Close, start_index + 1, StringComparison.Ordinal);
+        if (stop_index == -1) throw new FormatException();
+
+        var start = start_index;
+        do
+        {
+            start = Str.IndexOf(Open, start + 1, StringComparison.Ordinal);
+            if (start != -1 && start < stop_index)
+                stop_index = Str.IndexOf(Close, stop_index + 1, StringComparison.Ordinal);
+        }
+        while (start != -1 && start < stop_index);
+
+        if (stop_index == -1 || stop_index < start_index) throw new FormatException();
+
+        TextBefore = Str.Substring(Offset, start_index - Offset);
+        Offset = stop_index + Close.Length;
+        TextAfter = Str.Length - Offset > 0 ? Str.Substring(Offset) : string.Empty;
+        start_index += Open.Length;
+
+        return Str.Substring(start_index, stop_index - start_index);
     }
 
     /// <summary>Проверка строки на пустоту, либо нулевую ссылку</summary>
@@ -409,10 +452,6 @@ public static class StringExtensions
     /// <returns>Алгоритм шифрования</returns>
     private static ICryptoTransform GetAlgorithm(string password, byte[] Salt)
     {
-        //var pdb = new Rfc2898DeriveBytes(password, Salt);
-        //var algorithm = Rijndael.Create();
-        //algorithm.Key = pdb.GetBytes(32);
-        //algorithm.IV = pdb.GetBytes(16);
         var algorithm = CreateRijndael(password, Salt);
         return algorithm.CreateEncryptor();
     }
@@ -422,10 +461,6 @@ public static class StringExtensions
     /// <returns>Алгоритм расшифровки</returns>
     private static ICryptoTransform GetInverseAlgorithm(string password)
     {
-        //var pdb = new Rfc2898DeriveBytes(password, Array.Empty<byte>());
-        //var algorithm = Rijndael.Create();
-        //algorithm.Key = pdb.GetBytes(32);
-        //algorithm.IV = pdb.GetBytes(16);
         var algorithm = CreateRijndael(password);
         return algorithm.CreateDecryptor();
     }
@@ -517,12 +552,13 @@ public static class StringExtensions
 
     public delegate StringPtr StringPtrSelector(StringPtr ptr);
 
-    public readonly ref struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null)
+    public readonly ref struct StringSegmentsEnumerable(string SrcStr, int SegmentLength, StringPtrSelector? Selector = null)
     {
-        public string SourceString { get; } = Str;
+        public string SourceString => SrcStr;
+
         public int SegmentLength { get; } = SegmentLength;
 
-        public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength, Selector);
+        public StringSegmentEnumerator GetEnumerator() => new(SrcStr, SegmentLength, Selector);
 
         public ref struct StringSegmentEnumerator(string Str, int SegmentLength, StringPtrSelector? Selector)
         {
@@ -534,8 +570,8 @@ public static class StringExtensions
             public bool MoveNext()
             {
                 if (_Offset >= _Length) return false;
-                var str = new StringPtr(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
-                Current = Selector is not null ? Selector(str) : str;
+                var s = new StringPtr(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
+                Current = Selector is not null ? Selector(s) : s;
                 _Offset += SegmentLength;
                 return true;
             }

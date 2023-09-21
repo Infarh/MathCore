@@ -128,7 +128,6 @@ public class StringPtrTests
 
         var ptr = str.AsStringPtr();
 
-        //var ptr2 = ptr.Substring(1, -1);
         var ptr2 = ptr[1, -1];
 
         var actual_index = ptr2.LastIndexOf(':');
@@ -143,8 +142,6 @@ public class StringPtrTests
         const int expected = 10;
 
         var pos = 5;
-
-        var qq = str.LastIndexOf(':', pos + (str.Length - 1 - pos), (str.Length - pos));
 
         var str_ptr = str.AsStringPtr();
 
@@ -210,5 +207,51 @@ public class StringPtrTests
         var trimmed = value.Trim('\'');
 
         trimmed.ToString().AssertEquals("123");
+    }
+
+    [TestMethod]
+    public void IndexOfChar()
+    {
+        const string str = "--0123456--";
+        const char c = '3';
+        var expected_index = str[2..^2].IndexOf(c);
+
+        var str_ptr = str.AsStringPtr()[2, -2];
+
+        var actual_index = str_ptr.IndexOf(c);
+
+        actual_index.AssertEquals(expected_index);
+    }
+
+    [TestMethod]
+    public void IndexOfNotExistChar()
+    {
+        const string str = "--0123456--";
+        const char c = '9';
+        var expected_index = str[2..^2].IndexOf(c);
+
+        var str_ptr = str.AsStringPtr()[2, -2];
+
+        var actual_index = str_ptr.IndexOf(c);
+
+        actual_index.AssertEquals(expected_index);
+    }
+
+    [TestMethod]
+    public void IndexOfCharIgnoreCase()
+    {
+        const string str = "--AbCdEfG--";
+        const char up = 'c';
+        const char low = 'D';
+        var expected_up_index = str[2..^2].IndexOf(up, StringComparison.OrdinalIgnoreCase);
+        var expected_low_index = str[2..^2].IndexOf(low, StringComparison.OrdinalIgnoreCase);
+
+        var str_ptr = str.AsStringPtr()[2, -2];
+
+        var actual_up_index = str_ptr.IndexOf(up, StringComparison.OrdinalIgnoreCase);
+        var actual_low_index = str_ptr.IndexOf(low, StringComparison.OrdinalIgnoreCase);
+
+        actual_up_index.AssertEquals(expected_up_index);
+        actual_low_index.AssertEquals(expected_low_index);
     }
 }

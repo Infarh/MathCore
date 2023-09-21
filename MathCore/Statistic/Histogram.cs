@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 using MathCore.Annotations;
@@ -15,6 +11,7 @@ using static MathCore.Statistic.Histogram;
 // ReSharper disable ArgumentsStyleNamedExpression
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWhenPossible
+// ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
 namespace MathCore.Statistic;
 
@@ -174,10 +171,9 @@ public sealed class Histogram : IEnumerable<HistogramValue>
         var stat = 0d;
         for (var i = 0; i < _IntervalsCount; i++)
         {
-            var min = x0 + i * dx;
-            var max = min + dx;
+            var x = x0 + i * dx;
 
-            var p = Distribution.GetIntegralValue_AdaptiveTrapRecursive(min, max);
+            var p = Distribution.GetIntegralValue_AdaptiveTrapRecursive(x, x + dx);
             var f = _Frequencies[i];
             var dp = p - f;
             stat += dp * dp / p;
@@ -189,7 +185,7 @@ public sealed class Histogram : IEnumerable<HistogramValue>
     public bool CheckDistribution(Func<double, double> Distribution, double alpha = 0.05)
     {
         var stat = GetPirsonsCriteria(Distribution);
-        var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, _IntervalsCount - 3);
+        var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(alpha, _IntervalsCount - 3);
         return stat < quantile;
     }
 
