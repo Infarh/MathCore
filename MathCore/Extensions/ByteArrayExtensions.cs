@@ -172,6 +172,10 @@ public static class ByteArrayExtensions
         });
     }
 
+    public static string ToStringHexBytes(this byte[] bytes, char separator = '.') => bytes.ToStringHex(separator);
+
+    public static string ToStringHex(this byte[] bytes, char separator) => bytes.ToStringHex().EnumerateSegments(2).JoinStrings(separator);
+
     /// <summary>Преобразование массива байт в строку в HEX формате</summary>
     /// <param name="array">Кодируемый массив</param>
     /// <param name="UpperString">Преобразование в строку в верхнем регистре</param>
