@@ -223,27 +223,21 @@ public static class RandomExtensions
     /// <summary>Массив случайных чисел с нормальным распределением</summary>
     /// <param name="rnd">Датчик случайных чисел</param>
     /// <param name="Count">Размер массива</param>
-    /// <param name="D">Дисперсия</param>
-    /// <param name="M">Математическое ожидание</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <param name="mu">Математическое ожидание</param>
     /// <returns>Массив случайных чисел с нормальным распределением</returns>
-    public static double[] NextNormal(this Random rnd, int Count, double D = 1, double M = 0)
-    {
-        var result = new double[Count];
-        for (var i = 0; i < Count; i++)
-            result[i] = rnd.NextNormal(D, M);
-        return result;
-    }
+    public static double[] NextNormal(this Random rnd, int Count, double sigma = 1, double mu = 0) => rnd.FillNormal(new double[Count], sigma, mu);
 
     /// <summary>Перечисление случайных чисел с нормальным распределением</summary>
     /// <param name="rnd">Датчик случайных чисел</param>
     /// <param name="Count">Размер массива</param>
-    /// <param name="D">Дисперсия</param>
-    /// <param name="M">Математическое ожидание</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <param name="mu">Математическое ожидание</param>
     /// <returns>Перечисление случайных чисел с нормальным распределением</returns>
-    public static IEnumerable<double> NextNormalEnum(this Random rnd, int Count, double D = 1, double M = 0)
+    public static IEnumerable<double> NextNormalEnum(this Random rnd, int Count, double sigma = 1, double mu = 0)
     {
         for (var i = 0; i < Count; i++)
-            yield return rnd.NextNormal(D, M);
+            yield return rnd.NextNormal(sigma, mu);
     }
 
     //public static double NextNormal(this Random rnd, double D = 1, double M = 0) => Math.Tan(Math.PI * (rnd.NextDouble() - 0.5)) * D + M;
@@ -256,20 +250,18 @@ public static class RandomExtensions
     [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
     public static double NextNormal(this Random rnd, double sigma = 1, double mu = 0)
     {
-        var u1 = 1d - rnd.NextDouble(); //uniform(0,1] random doubles
-        var u2 = 1d - rnd.NextDouble();
-        var normal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
-
-        //const double correction_sgm = 1.008583987238489187988;
-        return mu + sigma * normal; //random normal(m,D^2)
+        var u1     = 1 - rnd.NextDouble(); //uniform(0,1] random doubles
+        var u2     = 1 - rnd.NextDouble();
+        var normal = Math.Sqrt(-2 * Math.Log(u1)) * Math.Sin(2 * Math.PI * u2); //random normal(0,1)
+        return mu + sigma * normal;                                                 //random normal(m,D^2)
     }
 
     /// <summary>Случайное число с равномерным распределением</summary>
     /// <param name="rnd">Датчик случайных чисел</param>
-    /// <param name="D">Дисперсия</param>
-    /// <param name="M">Математическое ожидание</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
+    /// <param name="mu">Математическое ожидание</param>
     /// <returns>Случайное число в равномерным распределением</returns>
-    public static double NextUniform(this Random rnd, double D = 1, double M = 0) => (rnd.NextDouble() - 0.5) * D + M;
+    public static double NextUniform(this Random rnd, double sigma = 1, double mu = 0) => (rnd.NextDouble() - 0.5) * sigma + mu;
 
     /// <summary>Случайное число с треугольным распределением</summary>
     /// <remarks>http://en.wikipedia.org/wiki/Triangular_distribution</remarks>
@@ -290,38 +282,42 @@ public static class RandomExtensions
 
     /// <summary>Заполнить массив случайными числами с равномерным распределением в интервале [0, 1)</summary>
     /// <param name="rnd">Генератор случайных чисел</param>
-    /// <param name="Array">Заполняемый массив</param>
-    public static void FillUniform(this Random rnd, double[] Array)
+    /// <param name="array">Заполняемый массив</param>
+    public static double[] FillUniform(this Random rnd, double[] array)
     {
-        for (var i = 0; i < Array.Length; i++)
-            Array[i] = rnd.NextDouble();
+        for (var i = 0; i < array.Length; i++)
+            array[i] = rnd.NextDouble();
+        return array;
     }
 
     /// <summary>Заполнить массив случайными числами с равномерным распределением в интервале [-D/2, D/2)</summary>
     /// <param name="rnd">Генератор случайных чисел</param>
-    /// <param name="Array">Заполняемый массив</param>
-    /// <param name="D">Дисперсия значений</param>
-    public static void FillUniform(this Random rnd, double[] Array, double D)
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="sigma">Среднеквадратичное отклонение значений</param>
+    public static double[] FillUniform(this Random rnd, double[] array, double sigma)
     {
-        for (var i = 0; i < Array.Length; i++)
-            Array[i] = rnd.NextDouble(D);
+        for (var i = 0; i < array.Length; i++)
+            array[i] = rnd.NextDouble(sigma);
+        return array;
     }
 
     /// <summary>Заполнить массив случайными числами с равномерным распределением в интервале [-D/2 + M, D/2 + M)</summary>
     /// <param name="rnd">Генератор случайных чисел</param>
-    /// <param name="Array">Заполняемый массив</param>
-    /// <param name="D">Дисперсия значений</param>
-    /// <param name="M">Математическое ожидание</param>
-    public static void FillUniform(this Random rnd, double[] Array, double D, double M)
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="sigma">Среднеквадратичное отклонение значений</param>
+    /// <param name="mu">Математическое ожидание</param>
+    public static double[] FillUniform(this Random rnd, double[] array, double sigma, double mu)
     {
-        for (var i = 0; i < Array.Length; i++)
-            Array[i] = rnd.NextDouble(D, M);
+        for (var i = 0; i < array.Length; i++)
+            array[i] = rnd.NextDouble(sigma, mu);
+        return array;
     }
 
-    public static void FillNormal(this Random rnd, double[] Array, double sigma = 1, double mu = 0)
+    public static double[] FillNormal(this Random rnd, double[] array, double sigma = 1, double mu = 0)
     {
-        for (var i = 0; i < Array.Length; i++)
-            Array[i] = rnd.NextNormal(sigma, mu);
+        for (var i = 0; i < array.Length; i++)
+            array[i] = rnd.NextNormal(sigma, mu);
+        return array;
     }
 
     /// <summary>Случайное значение <see langword="true"/>/<see langword="false"/></summary>
@@ -330,16 +326,16 @@ public static class RandomExtensions
 
     /// <summary>Случайное число с равномерным распределением в интервале [-D/2, D/2)</summary>
     /// <param name="rnd">Генератор случайных чисел</param>
-    /// <param name="D">Дисперсия значений</param>
+    /// <param name="sigma">Среднеквадратичное отклонение значений</param>
     /// <returns>Случайное число в интервале  [-D/2, D/2)</returns>
-    public static double NextDouble(this Random rnd, double D) => (rnd.NextDouble() - 0.5) * D;
+    public static double NextDouble(this Random rnd, double sigma) => (rnd.NextDouble() - 0.5) * sigma;
 
-    /// <summary>Случайное число с равномерным распределением в интервале [-D/2 + M, D/2 + M)</summary>
+    /// <summary>Случайное число с равномерным распределением в интервале [-sigma/2 + mu, sigma/2 + mu)</summary>
     /// <param name="rnd">Генератор случайных чисел</param>
-    /// <param name="D">Дисперсия значений</param>
-    /// <param name="M">Математическое ожидание</param>
-    /// <returns>Случайное число в интервале  [-D/2 + M, D/2 + M)</returns>
-    public static double NextDouble(this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
+    /// <param name="sigma">Среднеквадратичное отклонение значений</param>
+    /// <param name="mu">Математическое ожидание</param>
+    /// <returns>Случайное число в интервале  [-sigma/2 + mu, sigma/2 + mu)</returns>
+    public static double NextDouble(this Random rnd, double sigma, double mu) => (rnd.NextDouble() - 0.5) * sigma + mu;
 
     public static double NextDoubleInterval(this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle);
 
@@ -435,23 +431,23 @@ public static class RandomExtensions
 
         if (count == 0) yield break;
         if (count < 0) while (true) yield return rnd.NextDouble();
-        for (var i = 0; count == -1 || i < count; i++)
+        for (var i = 0; i < count; i++)
             yield return rnd.NextDouble();
     }
 
     /// <summary>Последовательность случайных вещественных чисел с нормальным распределением</summary>
     /// <param name="rnd">Датчик случайных чисел</param>
-    /// <param name="M">Математическое ожидание</param>
-    /// <param name="D">Дисперсия</param>
+    /// <param name="mu">Математическое ожидание</param>
+    /// <param name="sigma">Среднеквадратичное отклонение</param>
     /// <param name="count">Размер выборки (если меньше 0), то бесконечная последовательность</param>
     /// <returns>Последовательность случайных вещественных чисел</returns>
-    public static IEnumerable<double> SequenceNormal(this Random rnd, double D = 1, double M = 0, int count = -1)
+    public static IEnumerable<double> SequenceNormal(this Random rnd, double sigma = 1, double mu = 0, int count = -1)
     {
         if (rnd is null) throw new ArgumentNullException(nameof(rnd));
 
         if (count == 0) yield break;
-        if (count < 0) while (true) yield return rnd.NextNormal(D, M);
+        if (count < 0) while (true) yield return rnd.NextNormal(sigma, mu);
         for (var i = 0; i < count; i++)
-            yield return rnd.NextNormal(D, M);
+            yield return rnd.NextNormal(sigma, mu);
     }
 }

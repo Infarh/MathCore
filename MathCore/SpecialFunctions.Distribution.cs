@@ -267,26 +267,27 @@ public static partial class SpecialFunctions
             /// <param name="n">Число степеней свободы (число элементов гистограммы, минус число параметров распределения: [mu, sgm = 2])</param>
             /// <returns>Квантиль</returns>
             // ReSharper restore CommentTypo
+            [Obsolete("Use QuantileHi2")]
             public static double QuantileHi2Approximation(double alpha, int n)
             {
                 if (alpha is < .001 or > .999)
                     throw new ArgumentOutOfRangeException(nameof(alpha), alpha, "Значения alpha < 0.001 и > 0.999 не поддерживаются");
 
                 var d0 = alpha >= .5
-                    ? 2.0637 * Pow(Log(1 / (1 - alpha)) - .16, .4274) - 1.5774
-                    : -2.0637 * Pow(Log(1 / alpha) - .16, .4274) + 1.5774;
+                    ? 2.0637 * (Log(1 / (1 - alpha)) - 0.16).Pow(0.4274) - 1.5774
+                    : -2.0637 * (Log(1 / alpha) - 0.16).Pow(0.4274) + 1.5774;
 
                 var d2 = d0 * d0;
                 var d4 = d2 * d2;
 
-                var a = d0 * Consts.sqrt_2;
-                var b = 2 * (d2 - 1) / 3;
-                var c = d0 * (d2 - 7) / (9 * Consts.sqrt_2);
-                var d = -(6 * d4 + 14 * d2 - 32) / 405;
-                var e = d0 * (9 * d4 + 256 * d2 - 433) / (4860 * Consts.sqrt_2);
+                var A = d0 * Consts.sqrt_2;
+                var B = 2 * (d2 - 1) / 3;
+                var C = d0 * (d2 - 7) / (9 * Consts.sqrt_2);
+                var D = -(6 * d4 + 14 * d2 - 32) / 405;
+                var E = d0 * (9 * d4 + 256 * d2 - 433) / (4860 * Consts.sqrt_2);
 
                 var sqrt_n = Sqrt(n);
-                return n + a * sqrt_n + b + c / sqrt_n + d / n + e / n / sqrt_n;
+                return n + A * sqrt_n + B + C / sqrt_n + D / n + E / n / sqrt_n;
             }
         }
     }

@@ -1,34 +1,39 @@
-﻿using MathCore.Statistic;
+﻿using System.Globalization;
+
+using MathCore.Statistic;
 
 namespace MathCore.Tests.Extensions;
 
 [TestClass]
 public class RandomExtensionsTests
 {
-    [Owner("Tester")]
-    [TestMethod/*Iterative(100)*/, Ignore/*, Timeout(TestTimeout.Infinite)*/, Description("Тест нормального распределения")]
+    //[Owner("Tester")]
+    [TestMethod/*Iterative(100)*//*, Ignore*//*, Timeout(TestTimeout.Infinite)*/, Description("Тест нормального распределения")]
     public void NextNormal_SingleValue_Sigma1Mu0()
     {
-        const double sigma = 1;
-        const double mu    = 0;
+        const double sigma  = 3;
+        const double sigma2 = sigma * sigma;
+        const double mu     = 5;
+        const int count     = 100000;
 
-        const int count  = 100000;
-        var       values = new double[count];
+        var values = new double[count];
 
         //var seed = (int) (DateTime.Now.Ticks % int.MaxValue);
         const int seed = 1395601201;
         var       rnd  = new Random(seed);
         for (var i = 0; i < count; i++) 
-            values[i] = rnd.NextNormal(sigma, mu);
+            values[i] = rnd.NextNormal(sigma2, mu);
 
-        var pirsons_criteria = Distributions.GetPirsonsCriteria(
-            values, 
-            Distributions.NormalGauss(sigma, mu), 
-            out var freedom_degree);
+        //using(var file = File.CreateText(@"d:\123\values.txt"))
+        //    foreach (var value in values)
+                //file.WriteLine(value.ToString(CultureInfo.InvariantCulture));
 
-        var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2Approximation(0.80, freedom_degree);
+        var normal_gauss_distribution = Distributions.NormalGauss(sigma, mu);
+        var pirsons_criteria = values.GetPirsonsCriteria(normal_gauss_distribution, out var freedom_degree, out _, out _);
 
-        Assert.That.Value(pirsons_criteria).LessThan(quantile, $"seed:{seed}");
+        var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.80, freedom_degree);
+
+        pirsons_criteria.AssertLessThan(quantile, $"seed:{seed}");
     }
 
     [TestMethod, Ignore]
@@ -44,12 +49,12 @@ public class RandomExtensionsTests
         for (var i = 0; i < count; i++)
             values[i] = rnd.NextNormal(sigma, mu);
 
-        var pirsons_criteria = Distributions.GetPirsonsCriteria(
-            values,
+        var pirsons_criteria = values.GetPirsonsCriteria(
             Distributions.NormalGauss(sigma, mu),
-            out var freedom_degree);
+            out var freedom_degree, 
+            out _, out _);
 
-        var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2Approximation(0.95, freedom_degree);
+        var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.95, freedom_degree);
 
         Assert.That.Value(pirsons_criteria).LessThan(quantile);
     }

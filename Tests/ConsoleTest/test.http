@@ -1,0 +1,10 @@
+﻿@location = Moscow
+@api_key = 123
+
+GET http://api.weatherapi.com/v1/current.json?&q={{location}}
+key: {{api_key}}
+
+###
+
+GET http://api.weatherapi.com/v1/search.json?q=mosc
+key: {{api_key}}

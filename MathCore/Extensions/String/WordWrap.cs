@@ -163,7 +163,7 @@ internal static class WordWrap
     /// <returns></returns>
     private static bool MayBeHyph(string p, int pos) =>
         p.Length > 3 && pos > 2
-        && (pos != 0 && !__Spaces.Contains(p[pos]) && !__Spaces.Contains(p[pos + 1]) && !__Spaces.Contains(p[pos - 1]))
+        && (/*pos != 0 && */!__Spaces.Contains(p[pos]) && !__Spaces.Contains(p[pos + 1]) && !__Spaces.Contains(p[pos - 1]))
         && ((IsSogl(p[pos]) && IsGlas(p[pos - 1]) && IsSogl(p[pos + 1]) && Red_SlogMore(p, pos + 1))
             || (IsGlas(p[pos]) && IsSogl(p[pos - 1]) && IsSogl(p[pos + 1]) && IsGlas(p[pos + 2]))
             || (IsGlas(p[pos]) && IsSogl(p[pos - 1]) && IsGlas(p[pos + 1]) && Red_SlogMore(p, pos + 1))

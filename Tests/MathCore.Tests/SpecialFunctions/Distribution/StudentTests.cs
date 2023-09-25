@@ -20,11 +20,11 @@ public class StudentTests
         var hi_with_p_greater_than_05 = QuantileHi2Approximation(0.95, 8);
         var hi_with_p_less_than_05    = QuantileHi2Approximation(0.05, 8);
 
-        Assert.That.Value(hi_with_p_greater_than_05).IsEqual(15.506278896843497);
-        Assert.That.Value(hi_with_p_greater_than_05).IsEqual(15.507313055865437, 1.035e-3);
+        hi_with_p_greater_than_05.AssertEquals(15.506278896843497);
+        hi_with_p_greater_than_05.AssertEquals(15.507313055865437, 1.035e-3);
 
-        Assert.That.Value(hi_with_p_less_than_05).IsEqual(2.7356377218788865);
-        Assert.That.Value(hi_with_p_less_than_05).IsEqual(2.732636793499664, 3.01e-3);
+        hi_with_p_less_than_05.AssertEquals(2.7356377218788865);
+        hi_with_p_less_than_05.AssertEquals(2.732636793499664, 3.01e-3);
 
 
         //var M = new double[P.Length, K.Length];
@@ -95,17 +95,37 @@ public class StudentTests
     [DataRow(0.8, 10, 13.4420, 4.25e-5, DisplayName = "p:0.8, k:10")]
     [DataRow(0.9, 10, 15.9872, 2.09e-5, DisplayName = "p:0.9, k:10")]
     [DataRow(0.95, 10, 18.3070, 3.82e-5, DisplayName = "p:0.95, k:10")]
-    public void QuantileHi2ValuesTest(double p, int k, double ExpectedValue, double Accuracy = 1e-16) =>
-        Assert.That.Value(QuantileHi2(p, k)).IsEqual(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
-
-    [TestMethod, Ignore]
-    public void QuantileHi2Approximation_n1_p001_v000015()
+    public void QuantileHi2ValuesTest(double p, int k, double ExpectedValue, double Accuracy = 1e-16)
     {
-        const int    n              = 1;
-        const double p              = 0.01;
-        const double expected_value = 0.0001570878579097;
-        var          actual_value   = QuantileHi2Approximation(p, n);
-        Assert.That.Value(actual_value).IsEqual(expected_value);
+        var qch = QuantileHi2(p, k);
+        qch.AssertEquals(ExpectedValue, Accuracy, $"Квантиль(p:{p}, k:{k})~{Accuracy}");
+    }
+
+    [TestMethod]
+    public void QuantileHi2_k1_p0_01_Result0_00015708785790978123()
+    {
+        const int k = 1;
+        const double p = 0.01;
+        const double expected_value = 0.00015708785790978123;
+        //  MathCad qchisq(0.01, 1) = 0.0001570878579097
+
+        var qch = QuantileHi2(p, k);
+        qch.AssertEquals(expected_value);
+    }
+
+    [TestMethod]
+    public void QuantileHi2Approximation_n4_p0_01_v0_0001570878579097()
+    {
+        const int n = 4;
+        const double p = 0.001;
+        const double expected_value = 0.09080403553897888;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+        var actual_value = QuantileHi2Approximation(p, n);
+#pragma warning restore CS0618 // Type or member is obsolete
+        //var qch = QuantileHi2(p, n);
+
+        actual_value.AssertEquals(expected_value, 0.000649);
     }
 
     [TestMethod, Ignore]
@@ -176,12 +196,14 @@ public class StudentTests
         for (var i = 0; i < nn.Length; i++)
             for (var j = 0; j < pp.Length; j++)
             {
-                var          n              = nn[i];
-                var          p              = pp[j];
-                var          expected_value = q_chi_sq[i, j];
-                var          actual_value   = QuantileHi2Approximation(p, n);
-                const double accuracy       = 1e-20;
-                Assert.That.Value(actual_value).IsEqual(expected_value, accuracy, $"p:{p};k:{n}");
+                var n = nn[i];
+                var p              = pp[j];
+                var expected_value = q_chi_sq[i, j];
+                
+                var actual_value = QuantileHi2Approximation(p, n);
+                
+                const double accuracy = 1e-20;
+                actual_value.AssertEquals(expected_value, accuracy, $"p:{p};k:{n}");
             }
     }
 }
