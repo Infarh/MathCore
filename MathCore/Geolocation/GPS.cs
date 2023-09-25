@@ -1,6 +1,4 @@
-﻿using System;
-
-using MathCore.Vectors;
+﻿using MathCore.Vectors;
 
 using static System.Math;
 // ReSharper disable UnusedMember.Global
@@ -114,12 +112,12 @@ public static class GPS
     /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
     /// <param name="begin">Начало</param>
     /// <param name="end">Конец</param>
-    public static double LengthBetween(in Vector2D begin, in Vector2D end) => LengthBetween(begin.Y, begin.X, end.Y, end.X);
+    public static double LengthBetween(Vector2D begin, Vector2D end) => LengthBetween(begin.Y, begin.X, end.Y, end.X);
 
     /// <summary>Вычисление расстояния между двумя точками на поверхности земли, заданными своими координатами</summary>
     /// <param name="begin">Начало</param>
     /// <param name="end">Конец</param>
-    public static double LengthBetween(in GeoLocation begin, in GeoLocation end) => LengthBetween(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
+    public static double LengthBetween(GeoLocation begin, GeoLocation end) => LengthBetween(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
 
     /// <summary>Вычисление расстояния между двумя точками на поверхности земли (в равнопромежуточной проекции), заданными своими координатами</summary>
     /// <param name="latitude1">Широта первой точки в градусах</param>
@@ -138,9 +136,6 @@ public static class GPS
         longitude1 *= ToRad;
         longitude2 *= ToRad;
 
-        //var x = (longitude2 - longitude1) * Cos((latitude1 + latitude2) / 2);
-        //var y = latitude2 - latitude1;
-        //return Sqrt(x * x + y * y) * EarthRadius;
         var th1 = PI / 2 - latitude1;
         var th2 = PI / 2 - latitude2;
         return Consts.EarthRadius * Sqrt(th1 * th1 + th2 * th2 - 2 * th1 * th2 * Cos(longitude2 - longitude1));
@@ -186,12 +181,12 @@ public static class GPS
     /// <summary>Определение курса по координатам начальной и конечной точки</summary>
     /// <param name="begin">Исходная точка</param>
     /// <param name="end">Конечная точка</param>
-    public static double Heading(in Vector2D begin, in Vector2D end) => Heading(begin.Y, begin.X, end.Y, end.X);
+    public static double Heading(Vector2D begin, Vector2D end) => Heading(begin.Y, begin.X, end.Y, end.X);
 
     /// <summary>Определение курса по координатам начальной и конечной точки</summary>
     /// <param name="begin">Исходная точка</param>
     /// <param name="end">Конечная точка</param>
-    public static double Heading(in GeoLocation begin, in GeoLocation end) => Heading(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
+    public static double Heading(GeoLocation begin, GeoLocation end) => Heading(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
 
     /// <summary>Определение точки на середине отрезка, заданного двумя точками</summary>
     /// <param name="latitude1">Широта первой исходной точки</param>
@@ -223,12 +218,12 @@ public static class GPS
     /// <summary>Определение курса по координатам начальной и конечной точки</summary>
     /// <param name="begin">Исходная точка</param>
     /// <param name="end">Конечная точка</param>
-    public static GeoLocation HalfWayPoint(in Vector2D begin, in Vector2D end) => HalfWayPoint(begin.Y, begin.X, end.Y, end.X);
+    public static GeoLocation HalfWayPoint(Vector2D begin, Vector2D end) => HalfWayPoint(begin.Y, begin.X, end.Y, end.X);
 
     /// <summary>Определение курса по координатам начальной и конечной точки</summary>
     /// <param name="begin">Исходная точка</param>
     /// <param name="end">Конечная точка</param>
-    public static GeoLocation HalfWayPoint(in GeoLocation begin, in GeoLocation end) => HalfWayPoint(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
+    public static GeoLocation HalfWayPoint(GeoLocation begin, GeoLocation end) => HalfWayPoint(begin.Latitude, begin.Longitude, end.Latitude, end.Longitude);
 
     /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
     /// <param name="latitude">Широта исходной точки</param>
@@ -262,14 +257,14 @@ public static class GPS
     /// <param name="point">Исходная точка</param>
     /// <param name="heading">Курс в градусах</param>
     /// <param name="distance">Расстояние в метрах</param>
-    public static GeoLocation DestinationPoint(in Vector2D point, double heading, double distance) =>
+    public static GeoLocation DestinationPoint(Vector2D point, double heading, double distance) =>
         DestinationPoint(point.Y, point.X, heading, distance);
 
     /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
     /// <param name="point">Исходная точка</param>
     /// <param name="heading">Курс в градусах</param>
     /// <param name="distance">Расстояние в метрах</param>
-    public static GeoLocation DestinationPoint(in GeoLocation point, double heading, double distance) =>
+    public static GeoLocation DestinationPoint(GeoLocation point, double heading, double distance) =>
         DestinationPoint(point.Latitude, point.Longitude, heading, distance);
 
     /// <summary>Определение точки места назначения по исходной точке, курсу и расстоянию</summary>
@@ -291,7 +286,7 @@ public static class GPS
     /// <param name="heading">Курс в градусах</param>
     /// <param name="distance">Расстояние</param>
     /// <param name="final_heading">Курс в конечной точке</param>
-    public static GeoLocation DestinationPoint(in Vector2D point, double heading, double distance, out double final_heading) =>
+    public static GeoLocation DestinationPoint(Vector2D point, double heading, double distance, out double final_heading) =>
         DestinationPoint(point.Y, point.X, heading, distance, out final_heading);
 
     /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
@@ -376,7 +371,7 @@ public static class GPS
     /// <param name="heading1">Курс в первой точке</param>
     /// <param name="point2">Вторая точка</param>
     /// <param name="heading2">Курс во второй точке</param>
-    public static GeoLocation Intersection(in Vector2D point1, double heading1, in Vector2D point2, double heading2) =>
+    public static GeoLocation Intersection(Vector2D point1, double heading1, Vector2D point2, double heading2) =>
         Intersection(point1.Y, point1.X, heading1, point2.Y, point2.X, heading2);
 
     /// <summary>Определение точки пресечения двух курсов, каждый из которых задан исходной точкой</summary>
@@ -384,7 +379,7 @@ public static class GPS
     /// <param name="heading1">Курс в первой точке</param>
     /// <param name="point2">Вторая точка</param>
     /// <param name="heading2">Курс во второй точке</param>
-    public static GeoLocation Intersection(in GeoLocation point1, double heading1, in GeoLocation point2, double heading2) =>
+    public static GeoLocation Intersection(GeoLocation point1, double heading1, GeoLocation point2, double heading2) =>
         Intersection(point1.Latitude, point1.Longitude, heading1, point2.Latitude, point2.Longitude, heading2);
 
     public static class MercatorProjection
@@ -427,10 +422,10 @@ public static class GPS
             return lat * ToDeg;
         }
 
-        public static Vector2D ToXY(in Vector2D LongitudeLatitude) => new(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
-        public static Vector2D ToXY(in GeoLocation Location) => new(Location.Longitude, LatitudeToY(Location.Latitude));
+        public static Vector2D ToXY(Vector2D LongitudeLatitude) => new(LongitudeLatitude.X, LatitudeToY(LongitudeLatitude.Y));
+        public static Vector2D ToXY(GeoLocation Location) => new(Location.Longitude, LatitudeToY(Location.Latitude));
 
-        public static GeoLocation FromXY(in Vector2D Point) => new(YToLatitude(Point.Y), Point.X);
+        public static GeoLocation FromXY(Vector2D Point) => new(YToLatitude(Point.Y), Point.X);
 
         public static (double X, double Y) ToXY(double Longitude, double Latitude) => (Longitude, LatitudeToY(Latitude));
         public static (double X, double Y) ToXY(in (double Longitude, double Latitude) Point) => (Point.Longitude, LatitudeToY(Point.Latitude));
