@@ -1,8 +1,5 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using SArray = System.Array;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
@@ -1382,12 +1379,12 @@ public partial class Polynom
 
             if (Order >= p.Length)
             {
-                System.Array.Clear(Result, 0, Result.Length);
+                SArray.Clear(Result, 0, Result.Length);
                 return Result;
             }
 
             if (Result.Length - result_length is > 0 and var delta_length)
-                System.Array.Clear(Result, result_length, delta_length);
+                SArray.Clear(Result, result_length, delta_length);
 
             switch (Order)
             {
@@ -1450,12 +1447,12 @@ public partial class Polynom
 
             if (Order >= p.Length)
             {
-                System.Array.Clear(Result, 0, Result.Length);
+                SArray.Clear(Result, 0, Result.Length);
                 return Result;
             }
 
             if (Result.Length - result_length is > 0 and var delta_length)
-                System.Array.Clear(Result, result_length, delta_length);
+                SArray.Clear(Result, result_length, delta_length);
 
             switch (Order)
             {
@@ -1698,7 +1695,6 @@ public partial class Polynom
         /// <param name="p">Коэффициенты полинома - первого слагаемого</param>
         /// <param name="q">Коэффициенты полинома - первого слагаемого</param>
         /// <returns>Коэффициенты полинома - суммы</returns>
-
         public static double[] Sum(double[] p, double[] q)
         {
             if (p is null)
@@ -1790,7 +1786,7 @@ public partial class Polynom
         public static double[] Multiply(double[] p, double[] q)
         {
             var length = p.Length + q.Length;
-            var a = new double[length + 1];
+            var a = new double[length - 1];
             for (var i = 0; i < p.Length; i++)
                 for (var j = 0; j < q.Length; j++)
                     a[i + j] += p[i] * q[j];
@@ -1800,8 +1796,8 @@ public partial class Polynom
                 zeros_count++;
 
             if (zeros_count == 0) return a;
-            if (zeros_count == a.Length) return System.Array.Empty<double>();
-            System.Array.Resize(ref a, a.Length - zeros_count);
+            if (zeros_count == a.Length) return SArray.Empty<double>();
+            SArray.Resize(ref a, a.Length - zeros_count);
             return a;
         }
 
@@ -1827,6 +1823,7 @@ public partial class Polynom
                 for (var i = 0; i < p.Length; i++)
                     for (var j = 0; j < q_length; j++)
                         result[i + j] += p[i] * q[j];
+
                 q_length += a_length;
                 (result, q) = (q, result);
             }
