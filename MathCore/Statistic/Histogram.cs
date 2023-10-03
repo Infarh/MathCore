@@ -1,12 +1,8 @@
-﻿using System;
+﻿#nullable enable
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 
-using MathCore.Annotations;
 using MathCore.Values;
 
 using static MathCore.Statistic.Histogram;
@@ -189,11 +185,10 @@ public sealed class Histogram : IEnumerable<HistogramValue>
     public bool CheckDistribution(Func<double, double> Distribution, double alpha = 0.05)
     {
         var stat = GetPirsonsCriteria(Distribution);
-        var quantile = SpecialFunctions.Distribution.Student.QuantileHi2Approximation(alpha, _IntervalsCount - 3);
+        var quantile = SpecialFunctions.Distribution.Student.QuantileHi2(alpha, _IntervalsCount - 3);
         return stat < quantile;
     }
 
-    [NotNull]
     private IEnumerable<HistogramValue> GetEnumerable()
     {
         var x0 = _Interval.Min;
@@ -269,8 +264,8 @@ public sealed class Histogram : IEnumerable<HistogramValue>
 
         Writer.WriteLine($"           min x : {min.ToString(invariant_culture)}");
         Writer.WriteLine($"           max x : {max.ToString(invariant_culture)}");
-        Writer.WriteLine(" Intervals count : {0}", _IntervalsCount);
-        Writer.WriteLine("    Values count : {0}", TotalValuesCount);
+        Writer.WriteLine($" Intervals count : {_IntervalsCount}");
+        Writer.WriteLine($"    Values count : {TotalValuesCount}");
         Writer.WriteLine($"               μ : {_Mean.ToString(invariant_culture)}");
         Writer.WriteLine($"               D : {_Variance.ToString(invariant_culture)}");
         Writer.WriteLine($"               σ : {sgm.ToString(invariant_culture)}");

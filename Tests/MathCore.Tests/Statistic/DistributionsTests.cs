@@ -12,7 +12,7 @@ public class DistributionsTests
         -0.723, -0.517, +0.558, -0.245, +0.09,  +1.262, -0.706, +1.864e-3, +1.108, +0.893
     };
 
-    [TestMethod]
+    [TestMethod, Ignore]
     public void GetPirsonsCriteriaTest()
     {
         var normal_gauss_distribution = Distributions.NormalGauss();

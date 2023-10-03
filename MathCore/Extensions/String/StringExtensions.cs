@@ -519,7 +519,8 @@ public static class StringExtensions
 
     public readonly ref struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null)
     {
-        public string SourceString { get; } = Str;
+        public string SourceString => Str;
+
         public int SegmentLength { get; } = SegmentLength;
 
         public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength, Selector);

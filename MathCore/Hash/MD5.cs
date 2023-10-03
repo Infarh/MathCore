@@ -60,63 +60,7 @@ public class MD5 : HashAlgorithm
         return result_bytes;
     }
 
-    //public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
     public static byte[] Compute(string str, Encoding? encoding = null) => Compute(str.ToByteStream(encoding));
-    //{
-    //    encoding ??= Encoding.UTF8;
-    //    var str_length = str.Length;
-    //    uint[] result = { 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 };
-
-    //    var buffer64 = new byte[64];
-    //    var words = new uint[16];
-
-    //    var buffer_char_size = encoding.GetCharCount(buffer64);
-    //    var bytes_per_char = buffer64.Length / buffer_char_size;
-
-    //    var completed = false;
-    //    var length = 0UL;
-    //    var str_offset = 0;
-    //    int readed;
-    //    do
-    //    {
-    //        var readed_chars = encoding.GetBytes(str, str_offset, Math.Min(buffer_char_size, str_length - str_offset), buffer64, 0);
-    //        str_offset += readed_chars;
-    //        readed = readed_chars * bytes_per_char;
-
-    //        length += (ulong)readed;
-
-    //        if (readed < 64)
-    //        {
-    //            Array.Clear(buffer64, readed, 64 - readed);
-    //            buffer64[readed] = 0x80;
-
-    //            if (64 - readed > 8)
-    //            {
-    //                SetLength(buffer64, length);
-
-    //                completed = true;
-    //            }
-    //        }
-
-    //        Buffer.BlockCopy(buffer64, 0, words, 0, 64);
-    //        Compute(words, ref result[0], ref result[1], ref result[2], ref result[3]);
-    //    }
-    //    while (readed == 64);
-
-    //    if (readed > 0 && !completed)
-    //    {
-    //        Array.Clear(buffer64, 0, 64);
-
-    //        SetLength(buffer64, length);
-
-    //        Buffer.BlockCopy(buffer64, 0, words, 0, 64);
-    //        Compute(words, ref result[0], ref result[1], ref result[2], ref result[3]);
-    //    }
-
-    //    var result_bytes = new byte[16];
-    //    Buffer.BlockCopy(result, 0, result_bytes, 0, result_bytes.Length);
-    //    return result_bytes;
-    //}
 
     public static byte[] Compute(Stream data)
     {
