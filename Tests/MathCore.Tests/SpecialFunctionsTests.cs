@@ -3,7 +3,7 @@
 [TestClass]
 public class SpecialFunctionsTests
 {
-    [TestMethod, Ignore]
+    [TestMethod/*, Ignore*/]
     public void Fibonacci()
     {
         var expected_value_last = 1;

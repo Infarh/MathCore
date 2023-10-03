@@ -8,7 +8,7 @@ namespace MathCore.Tests.Extensions;
 public class RandomExtensionsTests
 {
     //[Owner("Tester")]
-    [TestMethod/*Iterative(100)*//*, Ignore*//*, Timeout(TestTimeout.Infinite)*/, Description("Тест нормального распределения")]
+    [TestMethod/*Iterative(100)*/, Ignore/*, Timeout(TestTimeout.Infinite)*/, Description("Тест нормального распределения")]
     public void NextNormal_SingleValue_Sigma1Mu0()
     {
         const double sigma  = 3;
@@ -29,11 +29,11 @@ public class RandomExtensionsTests
                 //file.WriteLine(value.ToString(CultureInfo.InvariantCulture));
 
         var normal_gauss_distribution = Distributions.NormalGauss(sigma, mu);
-        var pirsons_criteria = values.GetPirsonsCriteria(normal_gauss_distribution, out var freedom_degree, out _, out _);
+        var pirson_criteria = values.GetPirsonsCriteria(normal_gauss_distribution, out var freedom_degree, out _, out _);
 
         var quantile = MathCore.SpecialFunctions.Distribution.Student.QuantileHi2(0.80, freedom_degree);
 
-        pirsons_criteria.AssertLessThan(quantile, $"seed:{seed}");
+        pirson_criteria.AssertLessThan(quantile, $"seed:{seed}");
     }
 
     [TestMethod, Ignore]
