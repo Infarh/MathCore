@@ -1,10 +1,118 @@
 ﻿using System;
+using System.Numerics;
 
 namespace MathCore;
 
 /// <summary>Алгоритмы над числами</summary>
 public static class Numeric
 {
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static int GCD(int a, int b)
+    {
+        if (a == 1 || b == 1) return 1;
+        while (a != b)
+            if (a > b)
+            {
+                a %= b;
+                if (a == 0)
+                    return b;
+            }
+            else
+            {
+                b %= a;
+                if (b == 0)
+                    return a;
+            }
+
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static long GCD(long a, long b)
+    {
+        if (a == 1 || b == 1) return 1;
+        while (a != b)
+            if (a > b)
+            {
+                a %= b;
+                if (a == 0)
+                    return b;
+            }
+            else
+            {
+                b %= a;
+                if (b == 0)
+                    return a;
+            }
+
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static ulong GCD(ulong a, ulong b)
+    {
+        if (a == 1 || b == 1) return 1;
+        while (a != b)
+        {
+            if (a > b)
+            {
+                a %= b;
+                if (a == 0)
+                    return b;
+            }
+            else
+            {
+                b %= a;
+                if (b == 0)
+                    return a;
+            }
+        }
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static BigInt GCD(BigInt a, BigInt b)
+    {
+        if (a == 1 || b == 1) return 1;
+        while (a != b)
+            if (a > b)
+            {
+                a %= b;
+                if (a == 0)
+                    return b;
+            }
+            else
+            {
+                b %= a;
+                if (b == 0)
+                    return a;
+            }
+
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static BigInteger GCD(BigInteger a, BigInteger b)
+    {
+        if (a == 1 || b == 1) return 1;
+        while (a != b)
+            if (a > b)
+            {
+                a %= b;
+                if (a == 0)
+                    return b;
+            }
+            else
+            {
+                b %= a;
+                if (b == 0)
+                    return a;
+            }
+
+        return a;
+    }
+
+
     /// <summary>Выделение старшего бита</summary>
     public static int HiBit(int x)
     {

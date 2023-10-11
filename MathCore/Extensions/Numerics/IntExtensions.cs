@@ -290,28 +290,28 @@ public static class IntExtensions
     /// <param name="b">Второе число</param>
     /// <returns>Наибольший общий делитель</returns>
     [DST]
-    public static int GetNOD(this int a, int b) => Fraction.GCD(a, b);
+    public static int GetNOD(this int a, int b) => Numeric.GCD(a, b);
 
     /// <summary>Наибольший общий делитель</summary>
     /// <param name="a">Первое число</param>
     /// <param name="b">Второе число</param>
     /// <returns>Наибольший общий делитель</returns>
     [DST]
-    public static long GetNOD(this long a, long b) => Fraction.GCD(a, b);
+    public static long GetNOD(this long a, long b) => Numeric.GCD(a, b);
 
     /// <summary>Наибольший общий делитель</summary>
     /// <param name="a">Первое число</param>
     /// <param name="b">Второе число</param>
     /// <returns>Наибольший общий делитель</returns>
     [DST]
-    public static ulong GetNOD(this ulong a, ulong b) => Fraction.GCD(a, b);
+    public static ulong GetNOD(this ulong a, ulong b) => Numeric.GCD(a, b);
 
     /// <summary>Наибольший общий делитель</summary>
     /// <param name="a">Первое число</param>
     /// <param name="b">Второе число</param>
     /// <returns>Наибольший общий делитель</returns>
     [DST]
-    public static BigInteger GetNOD(this BigInteger a, BigInteger b) => Fraction.GCD(a, b);
+    public static BigInteger GetNOD(this BigInteger a, BigInteger b) => Numeric.GCD(a, b);
 
     /// <summary>Является ли число нечётным</summary>
     /// <param name="x">Проверяемое число</param>
