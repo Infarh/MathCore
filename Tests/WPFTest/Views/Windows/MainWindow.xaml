@@ -7,13 +7,25 @@
         DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
         Title="{Binding Title}"
         WindowStartupLocation="CenterScreen"
-        Width="200" Height="100">
+        Width="342" Height="191">
     <DockPanel>
         <Menu>
             <MenuItem Header="Test" Command="{Binding TestTaskCommand}"/>
         </Menu>
         <Grid>
-
+            <DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id"/>
+                    <DataGridTextColumn Width="*">
+                        <DataGridTextColumn.Header>
+                            <DockPanel>
+                                <TextBlock Text="Data"/>
+                                <Button Content="123"/>
+                            </DockPanel>
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </DockPanel>
 </Window>

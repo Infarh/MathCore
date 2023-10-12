@@ -86,7 +86,106 @@ public static class IntExtensions
     /// <summary>Факторизация целого числа</summary>
     /// <param name="N">Раскладываемое число</param>
     /// <returns>Последовательность простых чисел составляющих раскладываемое число</returns>
-    public static IEnumerable<int> FactorizationEnum(this int N)
+    public static IntFactorizatorFactor FactorizationEnum(this int N) => new(N);
+    //{
+    //    var n = Math.Abs(N);
+    //    if (n == 1) yield break;
+
+    //    var k = 0;
+    //    while ((n & 1) == 0)
+    //    {
+    //        k++;
+    //        n >>= 1;
+    //    }
+    //    if (k > 0)
+    //    {
+    //        yield return (2, k);
+    //        k = 0;
+    //    }
+
+    //    for (var d = 3; d > 0 && n != 1; d += 2)
+    //    {
+    //        while (n % d == 0)
+    //        {
+    //            k++;
+    //            n /= d;
+    //        }
+
+    //        if (k <= 0) continue;
+
+    //        yield return (d, k);
+    //        k = 0;
+    //    }
+    //}
+
+    public readonly struct IntFactorizatorFactor(int N) : IEnumerable<(int Factor, int Multiplier)>
+    {
+        public struct Enumerator(int N) : IEnumerator<(int Factor, int Multiplier)>
+        {
+            private int _N = Math.Abs(N);
+            private int _D = 2;
+
+            public (int Factor, int Multiplier) Current { get; private set; }
+            object IEnumerator.Current => Current;
+
+            public void Reset() => (_N, _D, Current) = (Math.Abs(N), 2, default);
+
+            public bool MoveNext()
+            {
+                if (_N < 2 || _D <= 0) return false;
+
+                var k = 0;
+                if (_D == 2)
+                {
+                    while ((_N & 1) == 0)
+                    {
+                        k++;
+                        _N >>= 1;
+                    }
+                    if (k > 0)
+                    {
+                        Current = (2, k);
+                        _D = 3;
+                        return true;
+                    }
+                }
+
+                while (_D > 0 && _N != 1)
+                {
+                    while (_N % _D == 0)
+                    {
+                        k++;
+                        _N /= _D;
+                    }
+
+                    if (k > 0)
+                    {
+                        Current = (_D, k);
+                        _D += 2;
+                        return true;
+                    }
+                    _D += 2;
+                    k = 0;
+                }
+
+                return false;
+            }
+
+            public void Dispose() { }
+        }
+
+        public Enumerator GetEnumerator() => new(N);
+
+        IEnumerator<(int Factor, int Multiplier)> IEnumerable<(int Factor, int Multiplier)>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>Разложение числа на простые множители</summary>
+    /// <param name="N">Раскладываемое число</param>
+    /// <returns>Массив простых множителей</returns>
+    //[Copyright("Alexandr A Alexeev 2011", url = "http://eax.me")]
+    public static IEnumerable<int> FactorizationList(this int N)
     {
         var n = Math.Abs(N);
         if (n == 1) yield break;
@@ -98,8 +197,7 @@ public static class IntExtensions
             yield return 2;
         }
 
-        //как только кончились двойки в числе, переходим к 3 и далее по списку простых чисел
-        for(var d = 3; n != 1; d += 2)
+        for (var d = 3; n != 1; d += 2)
             while (n % d == 0)
             {
                 yield return d;
@@ -107,31 +205,63 @@ public static class IntExtensions
             }
     }
 
-    /// <summary>Разложение числа на простые множители</summary>
-    /// <param name="N">Раскладываемое число</param>
-    /// <returns>Массив простых множителей</returns>
-    //[Copyright("Alexandr A Alexeev 2011", url = "http://eax.me")]
-    public static int[] FactorizationList(this int N)
+    public readonly struct IntFactorizator(int N) : IEnumerable<int>
     {
-        var n = Math.Abs(N);
-        if (n == 1) return Array.Empty<int>();
-
-        var result = new List<int>();
-        // пока число четное
-        while ((n & 1) == 0)
+        public struct Enumerator(int N) : IEnumerator<int>
         {
-            n >>= 1;
-            result.Add(2);
-        }
+            private int _N = Math.Abs(N);
+            private int _D = 2;
 
-        for (var d = 3; n != 1; d += 2)
-            while (n % d == 0)
+            public int Current { get; private set; }
+            object IEnumerator.Current => Current;
+
+            public void Reset() => (_N, _D, Current) = (Math.Abs(N), 2, default);
+
+            public bool MoveNext()
             {
-                result.Add(d);
-                n /= d;
+                if (_N < 2 || _D <= 0) return false;
+
+                if (_D == 2)
+                {
+                    while ((_N & 1) == 0)
+                    {
+                        _N >>= 1;
+                        Current = 2;
+                        return true;
+                    }
+
+                    _D = 3;
+                }
+
+                while (_D > 0 && _N != 1)
+                {
+                    var k = 0;
+                    while (_N % _D == 0)
+                    {
+                        k++;
+                        _N /= _D;
+                    }
+
+                    if (k > 0)
+                    {
+                        Current = _D;
+                        _D += 2;
+                        return true;
+                    }
+                    _D += 2;
+                }
+
+                return false;
             }
 
-        return result.ToArray();
+            public void Dispose() { }
+        }
+
+        public Enumerator GetEnumerator() => new(N);
+
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     /// <summary>Разложение числа на простые множители</summary>
@@ -139,12 +269,12 @@ public static class IntExtensions
     /// <returns>Словарь с делителями числа - значение элементов словаря - кратность делителя</returns>
     public static Dictionary<int, int> Factorization(this int N)
     {
-        var n      = Math.Abs(N);
+        var n = Math.Abs(N);
         var result = new Dictionary<int, int>();
         if (n == 1) return result;
 
         result.Add(2, 0);
-        // пока число четное
+        // пока число чётное
         while ((n & 1) == 0)
         {
             n >>= 1;
@@ -154,14 +284,20 @@ public static class IntExtensions
         for (var d = 3; n != 1; d += 2)
             while (n % d == 0)
             {
-                result[d] = result.TryGetValue(d, out var count) 
-                    ? count + 1 
+                result[d] = result.TryGetValue(d, out var count)
+                    ? count + 1
                     : 1;
                 n /= d;
             }
 
+        if (result[2] == 0)
+            result.Remove(2);
+
         return result;
     }
+
+
+
 
     /// <summary>Проверка - является ли число простым?</summary>
     /// <param name="N">Проверяемое число</param>
@@ -194,6 +330,7 @@ public static class IntExtensions
         for (var i = 3; i <= max; i += 2)
             if (N % i == 0)
                 return false;
+
         return true;
     }
 
@@ -236,8 +373,8 @@ public static class IntExtensions
         var array = new BitArray(Length);
         for (var i = 0; i < Length; i++)
         {
-            array[i] =   (Value & 1) == 1;
-            Value    >>= 1;
+            array[i] = (Value & 1) == 1;
+            Value >>= 1;
         }
         return array;
     }
@@ -253,8 +390,8 @@ public static class IntExtensions
         for (var i = 0; i < N; i++)
         {
             result <<= 1;
-            result +=  x & 1;
-            x      >>= 1;
+            result += x & 1;
+            x >>= 1;
         }
         return result;
     }
@@ -332,16 +469,16 @@ public static class IntExtensions
     [DST]
     public static long Factorial(this int n) => n switch
     {
-        0  => 1,
-        1  => 1,
-        2  => 2,
-        3  => 6,
-        4  => 24,
-        5  => 120,
-        6  => 720,
-        7  => 5040,
-        8  => 40320,
-        9  => 362880,
+        0 => 1,
+        1 => 1,
+        2 => 2,
+        3 => 6,
+        4 => 24,
+        5 => 120,
+        6 => 720,
+        7 => 5040,
+        8 => 40320,
+        9 => 362880,
         10 => 3628800,
         11 => 39916800,
         12 => 479001600,
@@ -364,7 +501,7 @@ public static class IntExtensions
         //29 => 8841761993739701954543616000000,
         //30 => 265252859812191058636308480000000,
         < 0 => throw new ArgumentOutOfRangeException(nameof(n), n, "Значение должно быть неотрицательным"),
-        _   => throw new ArgumentOutOfRangeException(nameof(n), n, "Вычисление факториала возможно лишь до значения n <= 20")
+        _ => throw new ArgumentOutOfRangeException(nameof(n), n, "Вычисление факториала возможно лишь до значения n <= 20")
     };
 
     //private static readonly long[] __Factorial =
@@ -467,7 +604,7 @@ public static class IntExtensions
         var y = 0;
         for (var i = 1; n != 0; i *= 10)
         {
-            y +=  (n % 8) * i;
+            y += (n % 8) * i;
             n >>= 3;
         }
         return y;
@@ -497,8 +634,8 @@ public static class IntExtensions
 
         for (var i = 0; i < result.Length; i++)
         {
-            result[i] =  x % Base;
-            x         /= Base;
+            result[i] = x % Base;
+            x /= Base;
         }
 
         return result;
@@ -513,26 +650,25 @@ public static class IntExtensions
     public static int ToInteger(this byte[] data, int Offset = 0, bool IsMsbFirst = true)
     {
         if (data.Length == 0) return 0;
-        var  result = 0;
+        var result = 0;
         bool sign;
 
         if (IsMsbFirst)
         {
-            sign = (data[0] & 0x80) == 0x80;
+            sign = (data[Offset] & 0x80) == 0x80;
             for (var i = Offset; i < data.Length; i++)
-            {
-                result <<= 8;
-                result +=  data[i];
-            }
+                result = (result << 8) | (data[i]);
         }
         else
         {
             sign = (data[^1] & 0x80) == 0x80;
             for (var i = 0; i + Offset < data.Length; i++)
-                result += data[i + Offset] << (i * 8);
+                result |= data[i + Offset] << (i * 8);
         }
 
-        return sign ? -(((~result) & ((1 << (8 * data.Length)) - 1)) + 1) : result;
+        return sign
+            ? -(((~result) & ((1 << (8 * data.Length)) - 1)) + 1)
+            : result;
     }
 
     public static int ToInteger(this byte[] data, int Offset, int Length, bool IsMsbFirst = true) =>
@@ -542,7 +678,7 @@ public static class IntExtensions
     {
         var result = 0;
 
-        for (var i = Offset; i < data.Length && i - Offset < Length; i++) 
+        for (var i = Offset; i < data.Length && i - Offset < Length; i++)
             result = unchecked((result << 8) + data[i]);
 
         return result;
@@ -552,7 +688,7 @@ public static class IntExtensions
     {
         var result = 0u;
 
-        for (var i = Offset; i < data.Length && i - Offset < Length; i++) 
+        for (var i = Offset; i < data.Length && i - Offset < Length; i++)
             result = unchecked((result << 8) + data[i]);
 
         return result;
@@ -562,7 +698,7 @@ public static class IntExtensions
     {
         var result = 0;
 
-        for (var i = 0; i + Offset < data.Length && i < Length; i++) 
+        for (var i = 0; i + Offset < data.Length && i < Length; i++)
             result = unchecked(result + data[i + Offset] << (i << 3));
 
         return result;
@@ -572,7 +708,7 @@ public static class IntExtensions
     {
         var result = 0u;
 
-        for (var i = 0; i + Offset < data.Length && i < Length; i++) 
+        for (var i = 0; i + Offset < data.Length && i < Length; i++)
             result = unchecked(result + (uint)(data[i + Offset] << (i << 3)));
 
         return result;
@@ -582,7 +718,10 @@ public static class IntExtensions
     {
         var sign = I >> (BitCount - 1) == 1;
         var mask = (1 << (BitCount - 1)) - 1;
-        var x    = ((~((long)(I & mask) - 1)) & mask) * (sign ? -1 : 1);
+
+        if (!sign) return I & mask;
+
+        var x = ~((long)(I & mask) - 1) & mask;
         return (int)x;
     }
 

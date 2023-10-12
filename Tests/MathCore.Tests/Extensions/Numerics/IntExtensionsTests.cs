@@ -25,4 +25,13 @@ public class IntExtensionsTests
 
         Assert.That.Value(actual_bits_count).IsEqual(expected_bits_count);
     }
+
+    [TestMethod]
+    public void FromComplementBinary()
+    {
+        const int x = 0b0111_1111__1111_1111__1111_1111__1111_1111; // 65535
+        const int bit_count = 17;
+
+        var y = x.FromComplementBinary(bit_count);
+    }
 }

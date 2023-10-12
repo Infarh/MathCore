@@ -14,4 +14,8 @@ public static class LinqEx
         this IEnumerable<T> collection,
         Func<T, TKey> KeySelector, Func<T, TValue> ValueSelector) =>
         collection.GroupBy(KeySelector).ToDictionary(v => v.Key, v => v.ToArray(ValueSelector));
+
+    public static IOrderedEnumerable<T> OrderByValue<T>(this IEnumerable<T> items) where T : IComparable<T> => items.OrderBy(static v => v);
+
+    public static IOrderedEnumerable<T> OrderByDescendingValue<T>(this IEnumerable<T> items) where T : IComparable<T> => items.OrderByDescending(static v => v);
 }

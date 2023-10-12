@@ -1,5 +1,8 @@
-﻿using MathCore.Algorithms.Collections;
+﻿using MathCore;
+using MathCore.Algorithms.Collections;
 using MathCore.Text;
+
+
 
 var bas = StringValueComparer.Base;
 //StringValueComparer.Base = 842003174;
