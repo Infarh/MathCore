@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Function = System.Func<int, int>;
 
 namespace MathCore.Algorithms.Functions;
 
@@ -17,4 +13,6 @@ public static class YCombinator
     }
 
     private static Func<T, T> Y<T>(Func<Func<T, T>, Func<T, T>> F) => t => F(Y(F))(t);
+
+    private static Function Y(Func<Function, Function> F) => t => F(Y(F))(t);
 }

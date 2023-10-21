@@ -6,23 +6,129 @@ namespace MathCore;
 /// <summary>Алгоритмы над числами</summary>
 public static class Numeric
 {
+    /// <summary>Наименьшее общее кратное чисел</summary>
+    public static int LCM(params int[] Numbers)
+    {
+        switch (Numbers)
+        {
+            case null: throw new ArgumentNullException(nameof(Numbers));
+            case []: throw new InvalidOperationException("Последовательность не содержит элементов");
+            case [var a]: return a;
+            case [var a, var b]: return LCM(a, b);
+            default:
+                var lcm = 1;
+
+                foreach(var a in Numbers)
+                    lcm = LCM(a, lcm);
+
+                return lcm;
+        }
+    }
+
+    /// <summary>Наименьшее общее кратное двух чисел</summary>
+    public static short LCM(short a, short b) => (short)(a / GCD(a, b) * b);
+
+    /// <summary>Наименьшее общее кратное двух чисел</summary>
+    public static ushort LCM(ushort a, ushort b) => (ushort)(a / GCD(a, b) * b);
+
+    /// <summary>Наименьшее общее кратное двух чисел</summary>
+    public static int LCM(int a, int b) => a / GCD(a, b) * b;
+
+    /// <summary>Наименьшее общее кратное двух чисел</summary>
+    public static uint LCM(uint a, uint b) => a / GCD(a, b) * b;
+
     /// <summary>Наибольший общий делитель двух чисел</summary>
     public static int GCD(int a, int b)
     {
         if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, a % b);
+
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static short GCD(short a, short b)
+    {
+        if (a == 1 || b == 1) return 1;
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, (short)(a % b));
+
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static ushort GCD(ushort a, ushort b)
+    {
+        if (a == 1 || b == 1) return 1;
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, (ushort)(a % b));
+
+        return a;
+    }
+
+    /// <summary>Наибольший общий делитель двух чисел</summary>
+    public static uint GCD(uint a, uint b)
+    {
+        if (a == 1 || b == 1) return 1;
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, a % b);
 
         return a;
     }
@@ -31,19 +137,22 @@ public static class Numeric
     public static long GCD(long a, long b)
     {
         if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, a % b);
 
         return a;
     }
@@ -52,21 +161,25 @@ public static class Numeric
     public static ulong GCD(ulong a, ulong b)
     {
         if (a == 1 || b == 1) return 1;
-        while (a != b)
-        {
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
-        }
+
+        //while (a != b)
+        //{
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+        //}
+
+        while (b != 0) (a, b) = (b, a % b);
+
         return a;
     }
 
@@ -74,19 +187,22 @@ public static class Numeric
     public static BigInt GCD(BigInt a, BigInt b)
     {
         if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, a % b);
 
         return a;
     }
@@ -95,19 +211,22 @@ public static class Numeric
     public static BigInteger GCD(BigInteger a, BigInteger b)
     {
         if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
+
+        //while (a != b)
+        //    if (a > b)
+        //    {
+        //        a %= b;
+        //        if (a == 0)
+        //            return b;
+        //    }
+        //    else
+        //    {
+        //        b %= a;
+        //        if (b == 0)
+        //            return a;
+        //    }
+
+        while (b != 0) (a, b) = (b, a % b);
 
         return a;
     }
@@ -324,9 +443,12 @@ public static class Numeric
             var ir = y / x;
             return x * Math.Sqrt(1d + ir * ir);
         }
+
         if (y == 0)
             return x; // re равно либо 0.0, либо NaN
+
         var r = x / y;
+
         return y * Math.Sqrt(1d + r * r);
     }
 
@@ -347,8 +469,10 @@ public static class Numeric
             var ir = y / x;
             return (float)(x * Math.Sqrt(1d + ir * ir));
         }
+
         if (y == 0)
             return x; // re равно либо 0.0, либо NaN
+
         var r = x / y;
         return (float)(y * Math.Sqrt(1d + r * r));
     }
@@ -358,6 +482,7 @@ public static class Numeric
         // |value| == sqrt(a^2 + b^2)
         // sqrt(a^2 + b^2) == a/a * sqrt(a^2 + b^2) = a * sqrt(a^2/a^2 + b^2/a^2) = a * sqrt(1 + b^2/a^2)
         // Используя это, можно разложить квадрат большего компонента на множители, чтобы избежать переполнения.
+
         var x = Math.Abs(X);
         var y = Math.Abs(Y);
 
@@ -366,8 +491,10 @@ public static class Numeric
             var ir = y / x;
             return x * Sqrt(1m + ir * ir);
         }
+
         if (y == 0)
             return x; // re равно либо 0.0, либо NaN
+
         var r = x / y;
         return y * Sqrt(1m + r * r);
     }
