@@ -16,7 +16,7 @@ public class SpecialFunctionsTests
         var fibonacci_12 = MathCore.SpecialFunctions.Fibonacci(12);
         fibonacci_12.AssertEquals(144);
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 47 - 3; i++)
         {
             var tmp = expected_value_last;
             expected_value_last = expected_value;
@@ -38,7 +38,7 @@ public class SpecialFunctionsTests
         MathCore.SpecialFunctions.Fibonacci2(1).AssertEquals(1);
         MathCore.SpecialFunctions.Fibonacci2(2).AssertEquals(1);
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 47 - 3; i++)
         {
             var tmp = expected_value_last;
             expected_value_last = expected_value;

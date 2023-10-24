@@ -19,8 +19,8 @@ public static partial class SpecialFunctions
     {
         var phi_n = Consts.GoldenRatio.Pow(n);
         return (int)Math.Round(Consts.sqrt_5_inv * (phi_n - Math.Cos(Consts.pi * n) / phi_n));
-        // ph = [(√5 + 1)/2]^n
-        // ( ph - cos(pi * n) / ph ) / √5
+        // phn = [(√5 + 1)/2]^n
+        // ( phn - cos(pi * n) / phn ) / √5
     }
 
     [DST]

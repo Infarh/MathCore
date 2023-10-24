@@ -88,7 +88,7 @@ public static class Consts
     /// <summary>1 / √5 = 0.4472135954999579...</summary>
     public const double sqrt_5_inv = 1/sqrt_5;
 
-    /// <summary>Золотое сечение = (√5 + 1)/2</summary>
+    /// <summary>Золотое сечение = (√5 + 1)/2 = 1.6180339887498948482045868343656</summary>
     public const double GoldenRatio = (sqrt_5 + 1) / 2;
 
     /// <summary>Величина, обратная золотому сечению = (√5 - 1)/2</summary>
