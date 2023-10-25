@@ -8,6 +8,38 @@ namespace System.IO;
 
 public static class StreamExtensions
 {
+    /// <summary>Получить объект чтения текстовых данных</summary>
+    /// <param name="stream">Поток данных</param>
+    /// <returns>Объект <see cref="StreamReader"/></returns>
+    /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности чтения</exception>
+    public static StreamReader GetStreamReader(this Stream stream) => stream.CanRead 
+        ? new(stream) 
+        : throw new InvalidOperationException("Поток не допускает операций чтения");
+
+    /// <summary>Получить объект чтения двоичных данных</summary>
+    /// <param name="stream">Поток данных</param>
+    /// <returns>Объект <see cref="StreamReader"/></returns>
+    /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности чтения</exception>
+    public static BinaryReader GetBinaryReader(this Stream stream) => stream.CanRead 
+        ? new(stream) 
+        : throw new InvalidOperationException("Поток не допускает операций чтения");
+
+    /// <summary>Получить объект записи текстовых данных</summary>
+    /// <param name="stream">Поток данных</param>
+    /// <returns>Объект <see cref="StreamWriter"/></returns>
+    /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности записи</exception>
+    public static StreamWriter GetStreamWriter(this Stream stream) => stream.CanWrite 
+        ? new(stream) 
+        : throw new InvalidOperationException("Поток не допускает операций записи");
+
+    /// <summary>Получить объект записи двоичных данных</summary>
+    /// <param name="stream">Поток данных</param>
+    /// <returns>Объект <see cref="BinaryWriter"/></returns>
+    /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности записи</exception>
+    public static BinaryWriter GetBinaryWriter(this Stream stream) => stream.CanWrite
+        ? new(stream) 
+        : throw new InvalidOperationException("Поток не допускает операций записи");
+
     public static int FillBuffer(this Stream stream, byte[] buffer)
     {
         var length = buffer.Length;
