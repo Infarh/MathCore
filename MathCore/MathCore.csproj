@@ -9,7 +9,7 @@
   <PropertyGroup>
     <Version>0.0.87.3</Version>
     <PackageReleaseNotes>
-      Добавлены методы-расшерения для Stream для получения обхъектов чтения/записи
+      Добавлены методы-расширения для Stream для получения объектов чтения/записи
     </PackageReleaseNotes>
   </PropertyGroup>
 
