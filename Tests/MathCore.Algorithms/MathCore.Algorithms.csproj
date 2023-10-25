@@ -27,6 +27,12 @@
     <Using Include="System.Collections.Generic" />
     <Using Include="System.Threading.Tasks" />
     <Using Include="MathCore.Algorithms" />
+    <Using Include="MathCore.Algorithms.Infrastructure" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OxyPlot.Core.Drawing" Version="2.1.0" />
+    <PackageReference Include="OxyPlot.ImageSharp" Version="2.1.2" />
   </ItemGroup>
 
 </Project>

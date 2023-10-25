@@ -8,12 +8,6 @@ namespace System.Text;
 
 public static class StringBuilderExtensions
 {
-    public static void Test(this StringBuilder builder)
-    {
-        if(builder[0] == 'q')
-            Console.WriteLine();
-    }
-
     public static IEnumerable<string> EnumLines(this StringBuilder builder, bool SkipEmpty = false) => builder.ToString().EnumLines(SkipEmpty);
 
     public static IEnumerable<T> EnumLines<T>(this StringBuilder builder, Func<string, T> selector, bool SkipEmpty = false) => builder.ToString().EnumLines(selector, SkipEmpty);

@@ -50,5 +50,8 @@ public class SpecialFunctionsGammaTests
         Assert.AreEqual(-2 * Math.Sqrt(Math.PI), Г(-0.5), "Г(-0.5) не равно -2*Sqrt(pi)");
         Assert.AreEqual(Г(5 + 1) / 5, Г(5), "Г(5) не равно Г(5+1)/5");
         Assert.AreEqual(Г(5 + 1) / 5, Г(5), "Г(5) не равно Г(5+1)/5");
+
+        var g35 = Г(35); // 2.9523279903960414084761860964352 × 10^38
+        g35.AssertEquals(2.9523279903960414084761860964352E38, 3.78e+22);
     }
 }

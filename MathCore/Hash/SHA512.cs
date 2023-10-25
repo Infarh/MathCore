@@ -41,7 +41,8 @@ public class SHA512 : HashAlgorithm
         buffer64[^1] = (byte)(length << 3);
     }
 
-    public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
+    //public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
+    public static byte[] Compute(string str, Encoding? encoding = null) => Compute(str.ToByteStream(encoding));
 
     public static byte[] Compute(byte[] data)
     {

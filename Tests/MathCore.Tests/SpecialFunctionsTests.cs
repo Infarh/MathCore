@@ -3,24 +3,28 @@
 [TestClass]
 public class SpecialFunctionsTests
 {
-    [TestMethod, Ignore]
+    [TestMethod/*, Ignore*/]
     public void Fibonacci()
     {
         var expected_value_last = 1;
         var expected_value      = 1;
 
-        Assert.That.Value(MathCore.SpecialFunctions.Fibonacci(0)).IsEqual(0);
-        Assert.That.Value(MathCore.SpecialFunctions.Fibonacci(1)).IsEqual(1);
-        Assert.That.Value(MathCore.SpecialFunctions.Fibonacci(2)).IsEqual(1);
+        MathCore.SpecialFunctions.Fibonacci(0).AssertEquals(0);
+        MathCore.SpecialFunctions.Fibonacci(1).AssertEquals(1);
+        MathCore.SpecialFunctions.Fibonacci(2).AssertEquals(1);
 
-        for (var i = 0; i < 10; i++)
+        var fibonacci_12 = MathCore.SpecialFunctions.Fibonacci(12);
+        fibonacci_12.AssertEquals(144);
+
+        for (var i = 0; i < 47 - 3; i++)
         {
             var tmp = expected_value_last;
             expected_value_last = expected_value;
             expected_value      = expected_value_last + tmp;
 
             var actual_value = MathCore.SpecialFunctions.Fibonacci(i + 3);
-            Assert.That.Value(actual_value).IsEqual(expected_value);
+
+            actual_value.AssertEquals(expected_value, $"Число Фибоначчи при n = {i+3}");
         }
     }
 
@@ -30,18 +34,18 @@ public class SpecialFunctionsTests
         var expected_value_last = 1;
         var expected_value      = 1;
 
-        Assert.That.Value(MathCore.SpecialFunctions.Fibonacci2(0)).IsEqual(0);
-        Assert.That.Value(MathCore.SpecialFunctions.Fibonacci2(1)).IsEqual(1);
-        Assert.That.Value(MathCore.SpecialFunctions.Fibonacci2(2)).IsEqual(1);
+        MathCore.SpecialFunctions.Fibonacci2(0).AssertEquals(0);
+        MathCore.SpecialFunctions.Fibonacci2(1).AssertEquals(1);
+        MathCore.SpecialFunctions.Fibonacci2(2).AssertEquals(1);
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 47 - 3; i++)
         {
             var tmp = expected_value_last;
             expected_value_last = expected_value;
             expected_value      = expected_value_last + tmp;
 
             var actual_value = MathCore.SpecialFunctions.Fibonacci2(i + 3);
-            Assert.That.Value(actual_value).IsEqual(expected_value);
+            actual_value.AssertEquals(expected_value, $"Число Фибоначчи при n = {i + 3}");
         }
     }
 

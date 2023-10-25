@@ -14,8 +14,6 @@ public class MD5 : HashAlgorithm
 {
     private MD5() { }
 
-    public static byte[] Compute(string str, Encoding? encoding = null) => Compute((encoding ?? Encoding.UTF8).GetBytes(str));
-
     private static void SetLength(byte[] buffer64, ulong length)
     {
         buffer64[^8] = (byte)(length << 3);
@@ -44,7 +42,7 @@ public class MD5 : HashAlgorithm
 
         var buffer64 = new byte[buffer64_length];
 
-        Array.Copy(data, buffer64, length);
+        Array.Copy(data, 0, buffer64, 0, length);
         buffer64[length] = 0x80;
 
         SetLength(buffer64, (ulong)length);
@@ -61,6 +59,8 @@ public class MD5 : HashAlgorithm
 
         return result_bytes;
     }
+
+    public static byte[] Compute(string str, Encoding? encoding = null) => Compute(str.ToByteStream(encoding));
 
     public static byte[] Compute(Stream data)
     {

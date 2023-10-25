@@ -1326,4 +1326,33 @@ public class PolynomArray
         var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetValue((Complex)0, ((Complex[])null)!));
         Assert.That.Value(exception.ParamName).IsEqual("A");
     }
+
+    [TestMethod]
+    public void Multiply()
+    {
+        double[] a = { 3, 5, 7 }; // p1(x) = 3 + 5x + 7x^2
+        double[] b = { 5, 4, 8 }; // p2(x) = 5 + 4x + 8x^2
+
+        // p3(x) = (5 + 4x + 8x^2)           * 3
+        //       +     (5  + 4x + 8x^2)      * 5x
+        //       +          (5  + 4x + 8x^2) * 7x^2
+
+        // p3(x) = 15 + 12x + 24x^2
+        //       +      25x + 20x^2 + 40x^3
+        //       +            35x^2 + 28x^3 + 56x^4
+
+        double[] c_expect = { 15, 37, 79, 68, 56 };
+
+        var c = Polynom.Array.Multiply(a, b);
+
+        const double x0 = 2;
+
+        var y_a = Polynom.Array.GetValue(x0, a);
+        var y_b = Polynom.Array.GetValue(x0, b);
+        var y_c = Polynom.Array.GetValue(x0, c);
+
+        var y_c1 = y_a * y_b;
+
+        CollectionAssert.AreEqual(c_expect, c);
+    }
 }

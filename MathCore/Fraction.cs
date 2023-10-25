@@ -1,7 +1,5 @@
-﻿using System;
+﻿#nullable enable
 using System.Numerics;
-
-using MathCore.Annotations;
 
 using static System.Math;
 
@@ -14,111 +12,7 @@ namespace MathCore;
 /// <summary>Дробь</summary>
 public readonly struct Fraction
 {
-    /// <summary>Наибольшее общее кратное двух чисел</summary>
-    public static int GCD(int a, int b)
-    {
-        if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
-
-        return a;
-    }
-
-    /// <summary>Наибольшее общее кратное двух чисел</summary>
-    public static long GCD(long a, long b)
-    {
-        if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
-
-        return a;
-    }
-
-    /// <summary>Наибольшее общее кратное двух чисел</summary>
-    public static ulong GCD(ulong a, ulong b)
-    {
-        if (a == 1 || b == 1) return 1;
-        while (a != b)
-        {
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
-        }
-        return a;
-    }
-
-    /// <summary>Наибольшее общее кратное двух чисел</summary>
-    public static BigInt GCD(BigInt a, BigInt b)
-    {
-        if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
-
-        return a;
-    }
-
-    /// <summary>Наибольшее общее кратное двух чисел</summary>
-    public static BigInteger GCD(BigInteger a, BigInteger b)
-    {
-        if (a == 1 || b == 1) return 1;
-        while (a != b)
-            if (a > b)
-            {
-                a %= b;
-                if (a == 0)
-                    return b;
-            }
-            else
-            {
-                b %= a;
-                if (b == 0)
-                    return a;
-            }
-
-        return a;
-    }
+    
 
     /// <summary>Упрощение дроби</summary>
     /// <param name="Numerator">Числитель</param>
@@ -126,7 +20,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref int Numerator, ref int Denominator)
     {
-        var gcd = GCD(Abs(Numerator), Abs(Denominator));
+        var gcd = Numeric.GCD(Abs(Numerator), Abs(Denominator));
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -139,7 +33,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref long Numerator, ref long Denominator)
     {
-        var gcd = GCD(Abs(Numerator), Abs(Denominator));
+        var gcd = Numeric.GCD(Abs(Numerator), Abs(Denominator));
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -152,7 +46,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref ulong Numerator, ref ulong Denominator)
     {
-        var gcd = GCD(Numerator, Denominator);
+        var gcd = Numeric.GCD(Numerator, Denominator);
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -178,7 +72,7 @@ public readonly struct Fraction
     /// <returns>Истина, если дробь можно упростить</returns>
     public static bool Simplify(ref BigInteger Numerator, ref BigInteger Denominator)
     {
-        var gcd = GCD(BigInteger.Abs(Numerator), BigInteger.Abs(Denominator));
+        var gcd = Numeric.GCD(BigInteger.Abs(Numerator), BigInteger.Abs(Denominator));
         if (gcd == 1) return false;
         Numerator   /= gcd;
         Denominator /= gcd;
@@ -215,7 +109,7 @@ public readonly struct Fraction
     {
         var bits = (ulong)BitConverter.DoubleToInt64Bits(x);
 
-        //var ss = 0b0;
+        //var ss = 0b00;
         //var ee = 0b__111111_1000; // 1016
         //var em = 0b__111111_1111;
         //var ff = 0b_____________1000_00000000_00000000_00000000_00000000_00000000_00000000; // 2251799813685248
@@ -301,7 +195,7 @@ public readonly struct Fraction
 
         var sign          = Sign(_Numerator);
         var numerator_abs = (ulong)Abs(_Numerator);
-        var gcd           = GCD(numerator_abs, _Denominator);
+        var gcd           = Numeric.GCD(numerator_abs, _Denominator);
         return gcd == 1
             ? this
             : new
@@ -312,7 +206,6 @@ public readonly struct Fraction
     }
 
     /// <inheritdoc />
-    [NotNull]
     public override string ToString() => (_Numerator, _Denominator) switch
     {
         (0,    0) => "NaN",

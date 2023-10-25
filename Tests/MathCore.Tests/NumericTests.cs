@@ -4,6 +4,16 @@
 public class NumericTests
 {
     [TestMethod]
+    public void LCM()
+    {
+        int[] numbers = { 2, 3, 4, 5 };
+
+        var lcm = Numeric.LCM(numbers);
+
+        Assert.AreEqual(60, lcm);
+    }
+
+    [TestMethod]
     public void HiBit_of_bx0111_1011_return_bx0100_0000()
     {
         const int value                 = 123; // bx0111_1011

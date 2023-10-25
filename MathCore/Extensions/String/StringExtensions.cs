@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using MathCore;
+using MathCore.Extensions.String;
 
 // ReSharper disable UnusedMember.Global
 
@@ -514,11 +515,17 @@ public static class StringExtensions
 
     public static StringSegmentsEnumerable EnumerateSegments(this string s, int SegmentLength) => new(s, SegmentLength);
 
-    public readonly ref struct StringSegmentsEnumerable(string Str, int SegmentLength)
-    {
-        public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength);
+    public delegate StringPtr StringPtrSelector(StringPtr ptr);
 
-        public ref struct StringSegmentEnumerator(string Str, int SegmentLength)
+    public readonly ref struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null)
+    {
+        public string SourceString => Str;
+
+        public int SegmentLength { get; } = SegmentLength;
+
+        public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength, Selector);
+
+        public ref struct StringSegmentEnumerator(string Str, int SegmentLength, StringPtrSelector? Selector)
         {
             private int _Offset;
             private readonly int _Length = Str.Length;
@@ -528,10 +535,28 @@ public static class StringExtensions
             public bool MoveNext()
             {
                 if (_Offset >= _Length) return false;
-                Current = new(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
+                var str = new StringPtr(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
+                Current = Selector is not null ? Selector(str) : str;
                 _Offset += SegmentLength;
                 return true;
             }
         }
     }
+
+    public static string JoinStrings(this StringSegmentsEnumerable strings, char Separator)
+    {
+        var result = new StringBuilder(strings.SourceString.Length + strings.SourceString.Length / strings.SegmentLength);
+        foreach (var item in strings)
+            result.Append(item).Append(Separator);
+
+        if (result.Length > 0)
+            result.Length--;
+
+        return result.ToString();
+    }
+
+    public static StringSegmentsEnumerable Select(this StringSegmentsEnumerable strings, StringPtrSelector Selector) => 
+        new(strings.SourceString, strings.SegmentLength, Selector);
+
+    public static Stream ToByteStream(this string str, Encoding? encoding = null) => new StringByteStream(str, encoding ?? Encoding.UTF8);
 }

@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.87.2</Version>
+    <Version>0.0.87.3</Version>
     <PackageReleaseNotes>
-      Доработана SelectableCollection&lt;T&gt; и добавлены методы-расширения для Object .GetPropertyValue(PropertyName) и .SetPropertyValue(PropertyName, Value)
-      Исправлена рабобта RoundAraptive
+      Добавлены методы-расширения для Stream для получения объектов чтения/записи
     </PackageReleaseNotes>
   </PropertyGroup>
 
