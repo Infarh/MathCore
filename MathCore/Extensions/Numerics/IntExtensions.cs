@@ -194,6 +194,7 @@ public static class IntExtensions
         for (var i = 3; i <= max; i += 2)
             if (N % i == 0)
                 return false;
+
         return true;
     }
 
