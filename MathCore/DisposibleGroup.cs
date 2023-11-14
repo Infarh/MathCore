@@ -45,7 +45,7 @@ public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<in
     /// <summary>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></summary>
     /// <param name="items">Перечисление <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
     [DST]
-    public DisposableGroup(IEnumerable<T> items) : this(items.ToArray()) { }
+    public DisposableGroup(IEnumerable<T> items) : this(items.Where(v => v is not null).ToArray()) { }
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -66,7 +66,7 @@ public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<in
     {
         if (!disposing || _Disposed) return;
         _Disposed = true;
-        _Items.Foreach(i => i.Dispose());
+        _Items.Foreach(i => i?.Dispose());
     }
 
     /// <summary>Получить перечислитель элементов группы</summary>

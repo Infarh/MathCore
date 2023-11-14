@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.87.3</Version>
+    <Version>0.0.87.4</Version>
     <PackageReleaseNotes>
       Добавлены методы-расширения для Stream для получения объектов чтения/записи
+      Исправлена проблема в DisposableGroup при наличии пустой ссылки внутри коллекции
     </PackageReleaseNotes>
   </PropertyGroup>
 
