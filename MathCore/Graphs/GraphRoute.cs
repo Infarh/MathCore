@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global

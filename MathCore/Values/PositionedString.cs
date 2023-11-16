@@ -1,23 +1,15 @@
 ﻿#nullable enable
-using System;
-
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace MathCore.Values;
 
-public class PositionedString
+public class PositionedString(string String, int Position = 0)
 {
-    public int Position { get; set; }
+    public int Position { get; set; } = Position;
 
-    public string String { get; set; }
-
-    public PositionedString(string String, int Position = 0)
-    {
-        this.String   = String;
-        this.Position = Position;
-    }
+    public string String { get; set; } = String;
 
     public string GetSubstringForward(int Length) => String.Substring(Position, Length);
 

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 // ReSharper disable AssignNullToNotNullAttribute

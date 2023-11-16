@@ -1,9 +1,5 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
@@ -16,15 +12,12 @@ namespace MathCore.Threading.Tasks.Schedulers;
 public sealed class ConcurrentExclusiveInterleave
 {
     /// <summary>Provides a debug view for ConcurrentExclusiveInterleave.</summary>
-    private class ConcurrentExclusiveInterleaveDebugView
+    /// <remarks>Initializes the debug view.</remarks>
+    /// <param name="Interleave">The interleave being debugged.</param>
+    private class ConcurrentExclusiveInterleaveDebugView(ConcurrentExclusiveInterleave Interleave)
     {
         /// <summary>The interleave being debugged.</summary>
-        private readonly ConcurrentExclusiveInterleave _Interleave;
-
-        /// <summary>Initializes the debug view.</summary>
-        /// <param name="Interleave">The interleave being debugged.</param>
-        public ConcurrentExclusiveInterleaveDebugView(ConcurrentExclusiveInterleave Interleave) => 
-            _Interleave = Interleave ?? throw new ArgumentNullException(nameof(Interleave));
+        private readonly ConcurrentExclusiveInterleave _Interleave = Interleave ?? throw new ArgumentNullException(nameof(Interleave));
 
         public IEnumerable<Task> ExclusiveTasksWaiting => _Interleave._ExclusiveTaskScheduler.Tasks;
 

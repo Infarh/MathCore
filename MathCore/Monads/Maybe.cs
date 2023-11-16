@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Monads;
+﻿namespace MathCore.Monads;
 
 public delegate T DMaybe<out T>();
 

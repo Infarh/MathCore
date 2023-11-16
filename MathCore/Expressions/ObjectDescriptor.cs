@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
+
 using MathCore.Annotations;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 // ReSharper disable UnusedType.Global
 
 namespace MathCore.Threading.Tasks.Schedulers;
@@ -25,7 +21,7 @@ public sealed class SynchronizationContextTaskScheduler : TaskScheduler
     /// <param name="context">The SynchronizationContext under which to execute tasks.</param>
     public SynchronizationContextTaskScheduler(SynchronizationContext context)
     {
-        _Context = context ?? throw new ArgumentNullException(nameof(context));
+        _Context = context.NotNull();
         _Tasks   = new ConcurrentQueue<Task>();
     }
 

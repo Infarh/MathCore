@@ -13,10 +13,10 @@ using NodeSelector = Func<ExpressionTreeNode, ExpressionTreeNode?>;
 public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTreeNode>
 {
     /// <summary>Перечислитель предков узла</summary>
-    public sealed class ParentsIterator : IEnumerable<ExpressionTreeNode>
+    /// <remarks>Новый итератор предков узла</remarks>
+    /// <param name="Node">Обрабатываемый узел</param>
+    public sealed class ParentsIterator(ExpressionTreeNode Node) : IEnumerable<ExpressionTreeNode>
     {
-        /// <summary>Исходный узел</summary>
-        private ExpressionTreeNode Node { get; }
 
         /// <summary>Итератор предков узла, где узел с индексом 0 - первый предок узла</summary>
         /// <param name="i">Номер предка</param>
@@ -31,10 +31,6 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
                 return node_parent;
             }
         }
-
-        /// <summary>Новый итератор предков узла</summary>
-        /// <param name="Node">Обрабатываемый узел</param>
-        public ParentsIterator(ExpressionTreeNode Node) => this.Node = Node;
 
         /// <summary>Получить перечислитель предков узла</summary>
         /// <returns>Перечислитель предков узла</returns>

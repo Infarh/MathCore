@@ -7,17 +7,15 @@ using System.Reflection;
 // ReSharper disable once CheckNamespace
 namespace System.Xml.Linq;
 
-public class DXmlNode : DynamicObject
+public class DXmlNode(XElement node) : DynamicObject
 {
+    public DXmlNode(string name = "obj") : this(new XElement(name)) { }
+
     public static DXmlNode From(XmlElement xml) => new(XElement.Load(xml.CreateNavigator().ReadSubtree()));
 
     public static DXmlNode From(XElement xml) => new(xml);
 
-    private readonly XElement _Node;
-
-    public DXmlNode(string name = "obj") : this(new XElement(name)) { }
-
-    public DXmlNode(XElement node) => _Node = node;
+    private readonly XElement _Node = node;
 
     public override bool TrySetMember(SetMemberBinder binder, object value)
     {

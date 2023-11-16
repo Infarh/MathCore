@@ -1,17 +1,11 @@
 ﻿#nullable enable
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MathCore.Mediator;
 
 public class Messenger : IMessenger
 {
-    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, List<Delegate>>> _Handlers =
-        new();
+    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, List<Delegate>>> _Handlers = new();
 
     public TaskScheduler TaskScheduler { get; set; } = TaskScheduler.Default;
 

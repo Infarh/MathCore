@@ -1,5 +1,5 @@
-﻿using System;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
+
 using Ex = System.Linq.Expressions.Expression;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global

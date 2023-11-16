@@ -4,35 +4,19 @@ using System.Runtime.CompilerServices;
 
 namespace MathCore.Extensions.AsyncAwait;
 
-public readonly ref struct PerformActionAwaitable
+public readonly ref struct PerformActionAwaitable(Action Method, Task Task, bool LockContext = true)
 {
-    private readonly Action _Method;
-    private readonly Task _Task;
-    private readonly bool _LockContext;
+    private readonly Task _Task = Task;
 
-    public PerformActionAwaitable(Action Method, Task Task, bool LockContext = true)
+    public Awaiter GetAwaiter() => new(Method, _Task, LockContext);
+
+    public readonly struct Awaiter(Action Method, Task Task, bool LockContext) : ICriticalNotifyCompletion
     {
-        _Method      = Method;
-        _Task        = Task;
-        _LockContext = LockContext;
-    }
-
-    public Awaiter GetAwaiter() => new(_Method, _Task, _LockContext);
-
-    public readonly struct Awaiter : ICriticalNotifyCompletion
-    {
-        private readonly Action _Method;
-        private readonly Task _Task;
-        private readonly bool _LockContext;
+        private readonly Action _Method = Method;
+        private readonly Task _Task = Task;
+        private readonly bool _LockContext = LockContext;
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
         private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
-
-        public Awaiter(Action Method, Task Task, bool LockContext)
-        {
-            _Method      = Method;
-            _Task        = Task;
-            _LockContext = LockContext;
-        }
 
         public bool IsCompleted => _Task.IsCompleted;
 
@@ -90,40 +74,21 @@ public readonly ref struct PerformActionAwaitable
     }
 }
 
-public readonly ref struct PerformActionAwaitable<T>
+public readonly ref struct PerformActionAwaitable<T>(Action Method, Task<T> task, bool LockContext = true)
 {
-    private readonly Action _Method;
-    private readonly Task<T> _Task;
-    private readonly bool _LockContext;
-
-    public PerformActionAwaitable(Action Method, Task<T> Task, bool LockContext = true)
-    {
-        _Method      = Method;
-        _Task        = Task;
-        _LockContext = LockContext;
-    }
-
-    public Awaiter GetAwaiter() => new(_Method, _Task, _LockContext);
+    public Awaiter GetAwaiter() => new(Method, task, LockContext);
 
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-    public readonly struct Awaiter : ICriticalNotifyCompletion
+    public readonly struct Awaiter(Action Method, Task<T> task, bool LockContext) : ICriticalNotifyCompletion
     {
-        private readonly Action _Method;
-        private readonly Task<T> _Task;
-        private readonly bool _LockContext;
+        private readonly Action _Method = Method;
+        private readonly bool _LockContext = LockContext;
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
         private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
 
-        public Awaiter(Action Method, Task<T> Task, bool LockContext)
-        {
-            _Method      = Method;
-            _Task        = Task;
-            _LockContext = LockContext;
-        }
+        public bool IsCompleted => task.IsCompleted;
 
-        public bool IsCompleted => _Task.IsCompleted;
-
-        public T GetResult() => _Task.Result;
+        public T GetResult() => task.Result;
 
         private static void RunAction(object? State) => ((Action)State!).Invoke();
 

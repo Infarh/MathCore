@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Linq;
-
 // ReSharper disable UnusedMemberInSuper.Global
 
 namespace MathCore.Queries;

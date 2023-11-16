@@ -1,6 +1,4 @@
-﻿using System;
-
-using static System.Math;
+﻿using static System.Math;
 
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo

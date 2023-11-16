@@ -1,6 +1,4 @@
-﻿using System;
-
-// ReSharper disable IdentifierTypo
+﻿// ReSharper disable IdentifierTypo
 
 namespace MathCore;
 

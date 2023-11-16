@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Functions.PSO;
+﻿namespace MathCore.Functions.PSO;
 
 public static class PSOFuncExtensions
 {

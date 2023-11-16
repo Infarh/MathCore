@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+
 using MathCore.Annotations;
 
 // ReSharper disable UnusedType.Global

@@ -1,20 +1,19 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-
 namespace MathCore.Values;
 
 /// <summary>Статистическая информация о значении</summary>
-public class StatisticValue : IResettable
+/// <remarks>Инициализация нового экземпляра <see cref="StatisticValue"/></remarks>
+/// <param name="Length">Требуемый размер выборки</param>
+public class StatisticValue([MinValue(1)] int Length = 100) : IResettable
 {
     /// <summary>Среднее значение</summary>
-    private readonly AverageValue _Average;
+    private readonly AverageValue _Average = new AverageValue(Length);
 
     /// <summary>Среднее значение квадрата величины</summary>
-    private readonly AverageValue _Average2;
+    private readonly AverageValue _Average2 = new AverageValue(Length);
 
     /// <summary>Диапазон значений</summary>
-    private readonly MinMaxValue _MinMax;
+    private readonly MinMaxValue _MinMax = new MinMaxValue();
 
     /// <summary>Математическое ожидание величины</summary>
     public double M => _Average.Value;
@@ -30,15 +29,6 @@ public class StatisticValue : IResettable
 
     /// <summary>Размер выборки</summary>
     public int Count { get; private set; }
-
-    /// <summary>Инициализация нового экземпляра <see cref="StatisticValue"/></summary>
-    /// <param name="Length">Требуемый размер выборки</param>
-    public StatisticValue([MinValue(1)] int Length = 100)
-    {
-        _Average  = new AverageValue(Length);
-        _Average2 = new AverageValue(Length);
-        _MinMax   = new MinMaxValue();
-    }
 
     /// <summary>Добавить значение к оценке статистики</summary>
     /// <param name="x">Добавляемое значение</param>

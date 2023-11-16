@@ -1,8 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace MathCore.Vectors;
 
 public static class Vector2DExtensions

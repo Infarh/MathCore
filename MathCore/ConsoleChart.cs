@@ -1,19 +1,11 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 
 namespace MathCore;
 
-public sealed class ConsoleChart
+public sealed class ConsoleChart(int Width, int Height, TextWriter Writer)
 {
     private const int __ValuesYOffset0 = 3;
-
-    private readonly int _Width;
-    private readonly int _Height;
-    private readonly TextWriter _Writer;
 
     public string? YValuesFormat { get; set; } = "f2";
 
@@ -41,13 +33,6 @@ public sealed class ConsoleChart
     public double? AxeYMax { get; set; }
     public double? AxeYMin { get; set; }
 
-    public ConsoleChart(int Width, int Height, TextWriter Writer)
-    {
-        _Width = Width;
-        _Height = Height;
-        _Writer = Writer;
-    }
-
     public void Plot(IReadOnlyList<double> XX, IReadOnlyList<double> YY)
     {
         if (XX.NotNull().Count != YY.NotNull().Count) throw new InvalidOperationException("Размеры коллекций не совпадают");
@@ -67,7 +52,7 @@ public sealed class ConsoleChart
         var axe_y_char = AxeYChar;
         var axe_cross_char = AxeCrossChar;
 
-        var values_rows_count = _Height - __ValuesYOffset0;
+        var values_rows_count = Height - __ValuesYOffset0;
         var dy = y_values_interval / (values_rows_count - 1);
 
         var row_str = new string[values_rows_count];
@@ -101,14 +86,14 @@ public sealed class ConsoleChart
         if (y_min_label.Length < y_axe_label_width)
             y_min_label = y_min_label.PadLeft(y_axe_label_width);
 
-        var writer = _Writer;
+        var writer = Writer;
 
         writer.Write(y_max_label);
         writer.Write(AxeYArrowChar);
         writer.WriteLine(YAxeName);
 
         var x_axe_values_width_offset = y_max_label.Length + 2 + XAxeName.Length;
-        var values_cols_count = _Width - x_axe_values_width_offset;
+        var values_cols_count = Width - x_axe_values_width_offset;
         var dx = x_values_interval / (values_cols_count - 1);
 
         var buffer_lines = new char[values_rows_count][];

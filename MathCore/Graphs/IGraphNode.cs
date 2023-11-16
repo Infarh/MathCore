@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MathCore.Graphs;
+﻿namespace MathCore.Graphs;
 
 /// <summary>Узел графа</summary>
 /// <typeparam name="TValue">Тип значения узла</typeparam>

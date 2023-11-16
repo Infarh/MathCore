@@ -1,32 +1,20 @@
 ﻿#nullable enable
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MathCore;
 
 /// <summary>Итератор выбирает последовательно одно из значений нескольких перечислений в соответствии с указанным объектом сравнения</summary>
 /// <typeparam name="T">Тип элементов коллекций</typeparam>
-public class SequentialEnumerable<T> : IEnumerable<T>
+public class SequentialEnumerable<T>(IComparer<T> comparer, params IEnumerable<T>[] Enumerables) : IEnumerable<T>
 {
-    private readonly IComparer<T> _Comparer;
-    private readonly IEnumerable<T>[] _Enumerables;
-
     public SequentialEnumerable(IEnumerable<IEnumerable<T>> Enumerables) : this(Enumerables.ToArray()) { }
     public SequentialEnumerable(params IEnumerable<T>[] Enumerables) : this(Comparer<T>.Default, Enumerables) { }
 
     public SequentialEnumerable(IComparer<T> Comparer, IEnumerable<IEnumerable<T>> Enumerables) : this(Comparer, Enumerables.ToArray()) { }
 
-    public SequentialEnumerable(IComparer<T> Comparer, params IEnumerable<T>[] Enumerables)
-    {
-        _Comparer    = Comparer ?? throw new ArgumentNullException(nameof(Comparer));
-        _Enumerables = Enumerables ?? throw new ArgumentNullException(nameof(Enumerables));
-    }
-
     public IEnumerator<T> GetEnumerator()
     {
-        using var enumerators = _Enumerables.Select(e => e.GetEnumerator()).AsDisposableGroup();
+        using var enumerators = Enumerables.Select(e => e.GetEnumerator()).AsDisposableGroup();
         var       count       = enumerators.Count;
         if (count == 0) yield break;
 
@@ -54,7 +42,7 @@ public class SequentialEnumerable<T> : IEnumerable<T>
                 if (process_enumerators[i] is null) continue;
 
                 var current_value  = process_enumerators[i]!.Current;
-                var compare_result = _Comparer.Compare(value, current_value);
+                var compare_result = comparer.Compare(value, current_value);
                 if (compare_result > 0)
                 {
                     compare_results[i] = 0;

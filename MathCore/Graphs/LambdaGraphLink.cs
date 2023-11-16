@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Graphs;
+﻿namespace MathCore.Graphs;
 
 public class LambdaGraphLink<TValue, TWeight> : IGraphLink<TValue, TWeight>
 {

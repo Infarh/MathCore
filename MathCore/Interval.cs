@@ -1,8 +1,5 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
 
 // ReSharper disable UnusedMember.Global
@@ -13,9 +10,36 @@ namespace MathCore;
 
 /// <summary>Интервал сравнимых величин</summary>
 /// <typeparam name="T">Тип сравнимых величин</typeparam>
-public readonly struct Interval<T> : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
+/// <remarks>Интервал</remarks>
+/// <param name="Min">Нижняя граница интервала</param>
+/// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
+/// <param name="Max">Верхняя граница интервала</param>
+/// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
+[method: DST]
+/// <summary>Интервал сравнимых величин</summary>
+/// <typeparam name="T">Тип сравнимых величин</typeparam>
+public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclude) : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
     where T : IComparable<T>
 {
+    /* ------------------------------------------------------------------------------------------ */
+
+    #region Конструкторы
+
+    /// <summary>Интервал</summary>
+    /// <param name="Min">Нижняя граница интервала</param>
+    /// <param name="Max">Верхняя граница интервала</param>
+    [DST]
+    public Interval(T Min, T Max) : this(Min, true, Max, true) { }
+
+    /// <summary>Интервал</summary>
+    /// <param name="Min">Нижняя граница интервала</param>
+    /// <param name="Max">Верхняя граница интервала</param>
+    /// <param name="IncludeLimits">Включать пределы? (default:true)</param>
+    [DST]
+    public Interval(T Min, T Max, bool IncludeLimits) : this(Min, IncludeLimits, Max, IncludeLimits) { }
+
+    #endregion
+
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Определение нового интервала</summary>
@@ -30,13 +54,13 @@ public readonly struct Interval<T> : IEquatable<Interval<T>>, IEquatable<(T Min,
     #region Поля
 
     /// <summary>Включена ли нижняя граница интервала?</summary>
-    private readonly bool _MinInclude;
+    private readonly bool _MinInclude = MinInclude;
     /// <summary>Включена ли верхняя граница интервала?</summary>
-    private readonly bool _MaxInclude;
+    private readonly bool _MaxInclude = MaxInclude;
     /// <summary>Нижняя граница интервала</summary>
-    private readonly T _Min;
+    private readonly T _Min = Min;
     /// <summary>Верхняя граница интервала</summary>
-    private readonly T _Max;
+    private readonly T _Max = Max;
 
     #endregion
 
@@ -55,39 +79,6 @@ public readonly struct Interval<T> : IEquatable<Interval<T>>, IEquatable<(T Min,
 
     /// <summary>Верхняя граница интервала</summary>
     public T Max { get => _Max; init => _Max = value; }
-
-    #endregion
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    #region Конструкторы
-
-    /// <summary>Интервал</summary>
-    /// <param name="Min">Нижняя граница интервала</param>
-    /// <param name="Max">Верхняя граница интервала</param>
-    [DST]
-    public Interval(T Min, T Max) : this(Min, true, Max, true) { }
-
-    /// <summary>Интервал</summary>
-    /// <param name="Min">Нижняя граница интервала</param>
-    /// <param name="Max">Верхняя граница интервала</param>
-    /// <param name="IncludeLimits">Включать пределы? (default:true)</param>
-    [DST]
-    public Interval(T Min, T Max, bool IncludeLimits) : this(Min, IncludeLimits, Max, IncludeLimits) { }
-
-    /// <summary>Интервал</summary>
-    /// <param name="Min">Нижняя граница интервала</param>
-    /// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
-    /// <param name="Max">Верхняя граница интервала</param>
-    /// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
-    [DST]
-    public Interval(T Min, bool MinInclude, T Max, bool MaxInclude)
-    {
-        _Min        = Min;
-        _Max        = Max;
-        _MinInclude = MinInclude;
-        _MaxInclude = MaxInclude;
-    }
 
     #endregion
 

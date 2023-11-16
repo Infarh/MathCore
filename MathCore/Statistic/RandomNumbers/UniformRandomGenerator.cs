@@ -1,7 +1,5 @@
 ﻿// ReSharper disable UnusedMember.Global
 
-using System;
-
 namespace MathCore.Statistic.RandomNumbers;
 
 /// <summary>Генератор случайных чисел с равномерным распределением</summary>

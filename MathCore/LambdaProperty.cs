@@ -1,7 +1,5 @@
 ﻿#nullable enable
-using System;
 using System.ComponentModel;
-using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -41,7 +39,6 @@ public class LambdaProperty<T> : LambdaPropertyBase, INotifyPropertyChanged, IEq
                     PropertyChangedHandlers -= value;
         }
     }
-
 
     /// <summary>Метод получения значения свойства</summary>
     private Func<T?>? _GetMethod;

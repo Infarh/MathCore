@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Text;
-
 namespace MathCore.Hash.CRC;
 
 public class CRC8(byte Polynimial)

@@ -2,10 +2,10 @@
 namespace MathCore.Values;
 
 /// <summary>Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
-public class Goertzel : IResettable
+public class Goertzel(double f0) : IResettable
 {
     /// <summary>Поворачивающий множитель</summary>
-    private readonly Complex _W;
+    private readonly Complex _W = Complex.Exp(Consts.pi2 * f0);
     
     /// <summary>Предыдущее состояние алгоритма</summary>
     private double _s1;
@@ -28,15 +28,8 @@ public class Goertzel : IResettable
 
     public int SamplesCount => _SamplesCount;
 
-    public Goertzel(double f0) => _W = Complex.Exp(Consts.pi2 * f0);
-
     /// <summary>Сброс состояния фильтра</summary>
-    public void Reset()
-    {
-        _s1 = 0;
-        _s2 = 0;
-        _SamplesCount = 0;
-    }
+    public void Reset() => (_s1, _s2, _SamplesCount) = (0, 0, 0);
 
     /// <summary>Добавление нового значения</summary>
     /// <param name="x">Добавляемое значение</param>
@@ -48,8 +41,7 @@ public class Goertzel : IResettable
         var y = _W * s - _s1;
         State = y;
 
-        _s2 = _s1;
-        _s1 = s;
+        (_s1, _s2) = (s, _s1);
 
         return y / _SamplesCount;
     }
@@ -64,10 +56,10 @@ public class Goertzel : IResettable
 }
 
 /// <summary>Комплексный Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
-public class GoertzelComplex : IResettable
+public class GoertzelComplex(double f0) : IResettable
 {
     /// <summary>Поворачивающий множитель</summary>
-    private readonly Complex _W;
+    private readonly Complex _W = Complex.Exp(Consts.pi2 * f0);
 
     /// <summary>Предыдущее состояние алгоритма</summary>
     private Complex _s1;
@@ -88,15 +80,8 @@ public class GoertzelComplex : IResettable
 
     public Complex NormState => State / _SamplesCount;
 
-    public GoertzelComplex(double f0) => _W = Complex.Exp(Consts.pi2 * f0);
-
     /// <summary>Сброс состояния фильтра</summary>
-    public void Reset()
-    {
-        _s1 = 0;
-        _s2 = 0;
-        _SamplesCount = 0;
-    }
+    public void Reset() => (_s1, _s2, _SamplesCount) = (0, 0, 0);
 
     /// <summary>Добавление нового значения</summary>
     /// <param name="x">Добавляемое значение</param>
@@ -108,8 +93,7 @@ public class GoertzelComplex : IResettable
         var y = _W * s - _s1;
         State = y;
 
-        _s2 = _s1;
-        _s1 = s;
+        (_s1, _s2) = (s, _s1);
 
         return y / _SamplesCount;
     }
@@ -124,18 +108,20 @@ public class GoertzelComplex : IResettable
 }
 
 /// <summary>Алгоритм Гёрцеля расчёта частотной компоненты спектра</summary>
-public readonly ref struct GoertzelStruct
+public readonly ref struct GoertzelStruct(Complex W0, Complex State, double s1, double s2, int SamplesCount)
 {
+    public GoertzelStruct(double f0) : this(Complex.Exp(Consts.pi2 * f0), Complex.Zero, 0, 0, 0) { }
+
     /// <summary>Поворачивающий множитель</summary>
-    private readonly Complex _W;
+    private readonly Complex _W = W0;
 
     /// <summary>Предыдущее состояние алгоритма</summary>
-    private readonly double _s1;
+    private readonly double _s1 = s1;
 
     /// <summary>Состояние алгоритма два шага назад</summary>
-    private readonly double _s2;
+    private readonly double _s2 = s2;
 
-    private readonly int _SamplesCount;
+    private readonly int _SamplesCount = SamplesCount;
 
     /// <summary>Предыдущее состояние алгоритма</summary>
     public double State1 => _s1;
@@ -144,27 +130,9 @@ public readonly ref struct GoertzelStruct
     public double State2 => _s2;
 
     /// <summary>Текущее значение частотной компоненты спектра</summary>
-    public Complex State { get; }
+    public Complex State { get; } = State;
 
     public Complex NormState => State / _SamplesCount;
-
-    public GoertzelStruct(double f0)
-    {
-        _W = Complex.Exp(Consts.pi2 * f0);
-        State = Complex.Zero;
-        _s1 = 0;
-        _s2 = 0;
-        _SamplesCount = 0;
-    }
-
-    private GoertzelStruct(Complex W0, Complex State, double s1, double s2, int SamplesCount)
-    {
-        _W = W0;
-        this.State = State;
-        _s1 = s1;
-        _s2 = s2;
-        _SamplesCount = SamplesCount;
-    }
 
     /// <summary>Добавление нового значения</summary>
     /// <param name="x">Добавляемое значение</param>

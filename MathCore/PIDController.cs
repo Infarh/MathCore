@@ -1,7 +1,11 @@
 ﻿namespace MathCore;
 
 /// <summary>Пропорционально-интегрально-дифференциальный регулятор</summary>
-public class PIDController
+/// <remarks>Инициализация нового PID-регулятора</remarks>
+/// <param name="P">Коэффициент пропорционального регулирования</param>
+/// <param name="I">Коэффициент интегрального регулирования</param>
+/// <param name="D">Коэффициент дифференциального регулирования</param>
+public class PIDController(double P, double I, double D)
 {
     /// <summary>Интеграл ошибки</summary>
     public double IntegralError { get; private set; }
@@ -10,24 +14,13 @@ public class PIDController
     public double Error { get; private set; }
 
     /// <summary>Коэффициент пропорционального регулирования</summary>
-    public double P { get; set; }
+    public double P { get; set; } = P;
 
     /// <summary>Коэффициент интегрального регулирования</summary>
-    public double I { get; set; }
+    public double I { get; set; } = I;
 
     /// <summary>Коэффициент дифференциального регулирования</summary>
-    public double D { get; set; }
-
-    /// <summary>Инициализация нового PID-регулятора</summary>
-    /// <param name="P">Коэффициент пропорционального регулирования</param>
-    /// <param name="I">Коэффициент интегрального регулирования</param>
-    /// <param name="D">Коэффициент дифференциального регулирования</param>
-    public PIDController(double P, double I, double D)
-    {
-        this.P = P;
-        this.I = I;
-        this.D = D;
-    }
+    public double D { get; set; } = D;
 
     /// <summary>Обработка очередного значения</summary>
     /// <param name="Input">Текущее значение</param>

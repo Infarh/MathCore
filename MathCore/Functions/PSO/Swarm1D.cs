@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace MathCore.Functions.PSO;
+﻿namespace MathCore.Functions.PSO;
 
 public class Swarm1D
 {

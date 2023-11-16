@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using MathCore.Values;
+﻿using MathCore.Values;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.Statistic.RandomNumbers;

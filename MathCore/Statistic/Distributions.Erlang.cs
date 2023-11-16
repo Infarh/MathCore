@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace MathCore.Statistic;
+﻿namespace MathCore.Statistic;
 
 public static partial class Distributions
 {

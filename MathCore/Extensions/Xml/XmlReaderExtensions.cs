@@ -9,6 +9,32 @@ namespace System.Xml;
 [PublicAPI]
 public static class XmlReaderExtensions
 {
+    public static XmlReader EnsureElement(this XmlReader reader, bool SkipCurrent = false)
+    {
+        if (SkipCurrent && reader.NodeType == XmlNodeType.Element)
+            reader.Read();
+
+        while (reader.NodeType != XmlNodeType.Element)
+            reader.Read();
+
+        return reader;
+    }
+
+    public static IEnumerable<(string Name, string Value)> EnumerateAttributeValues(this XmlReader reader)
+    {
+        if (reader.NodeType != XmlNodeType.Element)
+            throw new InvalidOperationException($"Процесс чтения находится не на элементе Xml. Тип текущего элемента {reader.NodeType}");
+
+        if (reader.MoveToFirstAttribute())
+            do
+            {
+                var name = reader.Name;
+                var value = reader.Value;
+                yield return (name, value);
+            }
+            while (reader.MoveToNextAttribute());
+    }
+
     [DST]
     public static void Read(this XmlReader reader, Action<XmlReader>? read) => read?.Invoke(reader);
 
@@ -63,10 +89,10 @@ public static class XmlReaderExtensions
     }
 
     public static async Task<T> ReadElementContentAsTypeAsync<T>(this XmlReader reader) => (T)await reader.ReadContentAsAsync(typeof(T), null).ConfigureAwait(false);
-    
+
     public static Task<int> ReadElementContentAsIntAsync(this XmlReader reader) => reader.ReadElementContentAsTypeAsync<int>();
-    
+
     public static Task<double> ReadElementContentAsDoubleAsync(this XmlReader reader) => reader.ReadElementContentAsTypeAsync<double>();
-    
+
     public static Task<bool> ReadElementContentAsBooleanAsync(this XmlReader reader) => reader.ReadElementContentAsTypeAsync<bool>();
 }

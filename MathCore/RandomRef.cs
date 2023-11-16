@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MathCore;
 
-namespace MathCore;
-
-public struct RandomRef
+public struct RandomRef(int seed)
 {
     private const uint __StateOffset = Consts.BigPrime_int;
     private const ulong __StateFactor = Consts.BigPrime_long;
 
-    private ulong _State;
-
-    public RandomRef(int seed) => _State = (ulong)seed;
+    private ulong _State = (ulong)seed;
 
     private ulong Core() => _State = unchecked((~_State ^ (_State * __StateFactor)) + __StateOffset);
 

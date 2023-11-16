@@ -4,7 +4,12 @@ namespace System;
 
 /// <summary>Аргументы события исключения</summary>
 /// <typeparam name="TException">Тип исключения</typeparam>
-public class ExceptionEventHandlerArgs<TException> : EventArgs<TException> where TException : Exception
+/// <remarks>Новый аргумент события генерации исключения</remarks>
+/// <param name="Error">Исключение</param>
+[method: DST]
+/// <summary>Аргументы события исключения</summary>
+/// <typeparam name="TException">Тип исключения</typeparam>
+public class ExceptionEventHandlerArgs<TException>(TException Error) : EventArgs<TException>(Error) where TException : Exception
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -21,14 +26,6 @@ public class ExceptionEventHandlerArgs<TException> : EventArgs<TException> where
 
     /// <summary>Признак необходимости генерации исключения</summary>
     public bool NeedToThrow => _Unhandled || !IsHandled;
-
-    /* ------------------------------------------------------------------------------------------ */
-
-
-    /// <summary>Новый аргумент события генерации исключения</summary>
-    /// <param name="Error">Исключение</param>
-    [DST]
-    public ExceptionEventHandlerArgs(TException Error) : base(Error) { }
 
     /* ------------------------------------------------------------------------------------------ */
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Парсер аргументов командной строки</summary>
 public class CommandLineArgs

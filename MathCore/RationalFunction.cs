@@ -1,17 +1,14 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-
 namespace MathCore;
 
 /// <summary>Рациональная функция - отношение полиномов</summary>
-public class RationalFunction : ICloneable
+public class RationalFunction(double[] P, double[] Q) : ICloneable
 {
     /// <summary>Массив коэффициентов числителя</summary>
-    private readonly double[] _P;
+    private readonly double[] _P = P.NotNull();
 
     /// <summary>Массив коэффициентов знаменателя</summary>
-    private readonly double[] _Q;
+    private readonly double[] _Q = Q.NotNull();
 
     /// <summary>полином числителя</summary>
     public Polynom P => _PolynomP ??= new(_P);
@@ -22,12 +19,6 @@ public class RationalFunction : ICloneable
     private Polynom? _PolynomQ;
 
     public RationalFunction(Polynom P, Polynom Q) : this(P.Coefficients, Q.Coefficients) { }
-
-    public RationalFunction(double[] P, double[] Q)
-    {
-        _P = P ?? throw new ArgumentNullException(nameof(P));
-        _Q = Q ?? throw new ArgumentNullException(nameof(Q));
-    }
 
     public double Value(double x)
     {

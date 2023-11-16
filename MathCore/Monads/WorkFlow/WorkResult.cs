@@ -1,33 +1,26 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Результат выполнения работы</summary>
-public readonly struct WorkResult : IWorkResult, IEquatable<WorkResult>
+/// <remarks>Инициализация нового результата выполнения работы</remarks>
+/// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
+/// <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
+public readonly struct WorkResult(Exception? PrevError = null, Exception? CurrentError = null) : IWorkResult, IEquatable<WorkResult>
 {
     /// <inheritdoc />
-    public Exception? Error { get; }
+    public Exception? Error { get; } = PrevError is null
+            ? CurrentError
+            : CurrentError is null
+                ? PrevError
+                : PrevError is AggregateException aggregate_exception
+                    ? new AggregateException(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
+                    : new AggregateException(PrevError, CurrentError);
 
     /// <inheritdoc />
     public bool Success => Error is null;
 
     /// <inheritdoc />
     public bool Failure => !Success;
-
-    /// <summary>Инициализация нового результата выполнения работы</summary>
-    /// <param name="PrevError">Ошибка предыдущего процесса выполнения работы</param>
-    /// <param name="CurrentError">Ошибка текущего процесса выполнения работы</param>
-    public WorkResult(Exception? PrevError = null, Exception? CurrentError = null) =>
-        Error = PrevError is null
-            ? CurrentError
-            : CurrentError is null 
-                ? PrevError 
-                : PrevError is AggregateException aggregate_exception
-                    ? new AggregateException(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
-                    : new AggregateException(PrevError, CurrentError);
 
     public bool Equals(WorkResult other) => Equals(Error, other.Error);
 

@@ -1,34 +1,22 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore;
 
-public class LambdaStateMachine<TState, TValue>
+public class LambdaStateMachine<TState, TValue>(TState state = default)
 {
     public delegate TState Rule(TState State, TValue Value);
 
-    public class NewValueEventArgs : EventArgs
+    public class NewValueEventArgs(TState state, TValue value) : EventArgs
     {
-        public TState? State { get; set; }
-        public TValue? Value { get; }
-        public NewValueEventArgs(TState State, TValue Value)
-        {
-            this.State = State;
-            this.Value = Value;
-        }
+        public TState? State { get; set; } = state;
+
+        public TValue? Value => value;
     }
 
-    public class NewStateEventArgs : EventArgs
+    public class NewStateEventArgs(TState Old, TState New, TValue value) : EventArgs
     {
-        public TState? OldState { get; }
-        public TState? NewState { get; }
-        public TValue? Value { get; }
-        public NewStateEventArgs(TState OldState, TState NewState, TValue Value)
-        {
-            this.OldState = OldState;
-            this.NewState = NewState;
-            this.Value    = Value;
-        }
+        public TState? OldState { get; } = Old;
+        public TState? NewState { get; } = New;
+        public TValue? Value { get; } = value;
     }
 
     public event EventHandler<NewValueEventArgs>? NewValue;
@@ -36,7 +24,7 @@ public class LambdaStateMachine<TState, TValue>
 
     protected virtual TState OnNewValue(TValue Value)
     {
-        var e = new NewValueEventArgs(_State, Value);
+        var e = new NewValueEventArgs(state, Value);
         OnNewValue(e);
         return e.State;
     }
@@ -45,24 +33,20 @@ public class LambdaStateMachine<TState, TValue>
 
     protected virtual void OnNewState(TState OldState, TState NewState, TValue Value = default) => this.NewState?.Invoke(this, new NewStateEventArgs(OldState, NewState, Value));
 
-    private TState _State;
-
     public TState State
     {
-        get => _State;
+        get => state;
         set
         {
-            if(Equals(_State, value)) return;
-            OnNewState(_State, _State = value);
+            if(Equals(state, value)) return;
+            OnNewState(state, state = value);
         }
     }
-
-    public LambdaStateMachine(TState State = default) => _State = State;
 
     public void Add(TValue Value)
     {
         var new_state = OnNewValue(Value);
-        if(Equals(new_state, _State)) return;
-        OnNewState(_State, _State = new_state, Value);
+        if(Equals(new_state, state)) return;
+        OnNewState(state, state = new_state, Value);
     }
 }

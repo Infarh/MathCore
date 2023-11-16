@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 using static System.Math;
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 // ReSharper disable InconsistentNaming
@@ -12,7 +10,12 @@ using static System.Math;
 namespace MathCore.Vectors;
 
 /// <summary>Двумерный базис</summary>
-public readonly struct Basis2D : IEquatable<Basis2D>
+/// <remarks>Инициализация нового экземпляра <see cref="Basis2D"/></remarks>
+/// <param name="xx">Элемент X[0,0]</param>
+/// <param name="xy">Элемент X[0,1]</param>
+/// <param name="yx">Элемент X[1,0]</param>
+/// <param name="yy">Элемент X[1,1]</param>
+public readonly struct Basis2D(double xx, double xy, double yx, double yy) : IEquatable<Basis2D>
 {
     /// <summary>Базис Евклидова пространства</summary>
     public static readonly Basis2D Euclid = new(
@@ -40,43 +43,28 @@ public readonly struct Basis2D : IEquatable<Basis2D>
 #pragma warning disable IDE1006 // Стили именования
 
     /// <summary>Элемент X[0,0]</summary>
-    private readonly double _xx;
+    private readonly double _xx = xx;
 
     /// <summary>Элемент X[0,0]</summary>
     public double xx { get => _xx; init => _xx = value; }
 
     /// <summary>Элемент X[0,1]</summary>
-    private readonly double _xy;
+    private readonly double _xy = xy;
 
     /// <summary>Элемент X[0,1]</summary>
     public double xy { get=> _xy; init=> _xy = value; }
 
     /// <summary>Элемент X[1,0]</summary>
-    private readonly double _yx;
+    private readonly double _yx = yx;
 
     /// <summary>Элемент X[1,0]</summary>
     public double yx { get => _yx; init => _yx = value; }
 
     /// <summary>Элемент X[1,1]</summary>
-    private readonly double _yy;
+    private readonly double _yy = yy;
 
     /// <summary>Элемент X[1,1]</summary>
     public double yy { get => _yy; init => _yy = value; }
-
-#pragma warning restore IDE1006 // Стили именования
-
-    /// <summary>Инициализация нового экземпляра <see cref="Basis2D"/></summary>
-    /// <param name="xx">Элемент X[0,0]</param>
-    /// <param name="xy">Элемент X[0,1]</param>
-    /// <param name="yx">Элемент X[1,0]</param>
-    /// <param name="yy">Элемент X[1,1]</param>
-    public Basis2D(double xx, double xy, double yx, double yy)
-    {
-        _xx = xx;
-        _xy = xy;
-        _yx = yx;
-        _yy = yy;
-    }
 
     /// <summary>Оператор неявного преобразования базиса в матрицу 2х2</summary>
     public static implicit operator Matrix(in Basis2D b) => new(new[,] { { b._xx, b._xy }, { b._yx, b._yy } });

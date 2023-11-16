@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -19,7 +17,7 @@ public abstract class Transformation3DMatrix : TransformationMatrix
     protected Transformation3DMatrix(double[,] Data) : base(Data) { }
 }
 
-public class Rotation3DMatrix : Transformation3DMatrix
+public class Rotation3DMatrix(double Angle, Rotation3DMatrix.RotationAxe Axe) : Transformation3DMatrix(GetData(Angle, Axe))
 {
     public enum RotationAxe { X, Y, Z }
 
@@ -37,9 +35,7 @@ public class Rotation3DMatrix : Transformation3DMatrix
         };
     }
 
-    public RotationAxe Axe { get; }
-
-    public Rotation3DMatrix(double Angle, RotationAxe Axe) : base(GetData(Angle, Axe)) => this.Axe = Axe;
+    public RotationAxe Axe { get; } = Axe;
 
     public static Vector3D operator ^(Rotation3DMatrix M, Vector3D v)
     {

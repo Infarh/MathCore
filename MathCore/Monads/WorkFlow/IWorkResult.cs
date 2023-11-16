@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Результат выполнения работы</summary>

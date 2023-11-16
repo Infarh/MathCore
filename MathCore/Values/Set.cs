@@ -1,8 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable UnusedType.Global
@@ -11,47 +7,27 @@ namespace MathCore.Values;
 
 /// <summary>Множество элементов</summary>
 /// <typeparam name="T">Тип данных множества</typeparam>
-public class Set<T> : AbstractSetOf<T>
+/// <remarks>Инициализация нового экземпляра <see cref="Set{TElement}"/></remarks>
+/// <param name="comparer">Объект, осуществляющий сравнение элементов множества</param>
+public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
 {
-    private readonly struct Slot
-    {
-        public readonly int HashCode;
-        public readonly T Value;
-        public readonly int Next;
-
-        public Slot(int HashCode, T Value, int Next)
-        {
-            this.HashCode = HashCode;
-            this.Value    = Value;
-            this.Next     = Next;
-        }
-    }
-
-    private int[] _Buckets;
-
-    private Slot[] _Slots;
-
-    private int _Count;
-
-    private int _FreeList;
-
-    private readonly IEqualityComparer<T> _Comparer;
-
-    /// <inheritdoc />
-    public override int Power => _Count;
-
     /// <summary>Инициализация нового экземпляра <see cref="Set{TElement}"/></summary>
     public Set() : this(null) { }
 
-    /// <summary>Инициализация нового экземпляра <see cref="Set{TElement}"/></summary>
-    /// <param name="comparer">Объект, осуществляющий сравнение элементов множества</param>
-    public Set(IEqualityComparer<T>? comparer)
-    {
-        _Comparer = comparer ?? EqualityComparer<T>.Default;
-        _Buckets  = new int[7];
-        _Slots    = new Slot[7];
-        _FreeList = -1;
-    }
+    private record struct Slot(int HashCode, T Value, int Next);
+
+    private int[] _Buckets = new int[7];
+
+    private Slot[] _Slots = new Slot[7];
+
+    private int _Count;
+
+    private int _FreeList = -1;
+
+    private readonly IEqualityComparer<T> _Comparer = comparer ?? EqualityComparer<T>.Default;
+
+    /// <inheritdoc />
+    public override int Power => _Count;
 
     /// <summary>Добавить элемент в множество</summary>
     /// <param name="Value">Добавляемый элемент</param>

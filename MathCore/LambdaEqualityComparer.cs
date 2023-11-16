@@ -1,24 +1,15 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore;
 
-public class LambdaEqualityComparer<T> : IEqualityComparer<T>
+public class LambdaEqualityComparer<T>(Func<T, T, bool> Comparer, Func<T, int>? HashFunction = null) : IEqualityComparer<T>
 {
-    private readonly Func<T, T, bool> _Comparer;
+    private readonly Func<T, T, bool> _Comparer = Comparer;
 
-    private readonly Func<T, int> _HashFunction;
-
-    public LambdaEqualityComparer(Func<T, T, bool> Comparer, Func<T, int>? HashFunction = null)
-    {
-        _Comparer = Comparer;
-        _HashFunction = HashFunction ?? (o => o.GetHashCode());
-    }
+    private readonly Func<T, int> _HashFunction = HashFunction ?? (o => o.GetHashCode());
 
     /// <summary>Определяет, равны ли два указанных объекта.</summary>
     /// <returns>Значение true, если указанные объекты равны; в противном случае — значение false.</returns>

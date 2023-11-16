@@ -1,27 +1,26 @@
 ﻿#nullable enable
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 
 namespace MathCore;
 
-public class LambdaDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+public class LambdaDictionary<TKey, TValue>(
+    Func<IEnumerable<KeyValuePair<TKey, TValue>>> ElementsGetter,
+    Action<TKey, TValue>? ElementSetter = null,
+    Action? Clear = null,
+    Func<TKey, bool>? Remove = null
+    ) : IDictionary<TKey, TValue>
 {
-    private readonly Func<IEnumerable<KeyValuePair<TKey, TValue>>> _ElementsGetter;
+    private readonly Func<IEnumerable<KeyValuePair<TKey, TValue>>> _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "Не задан метод получения значения");
+    private readonly Action? _Clear = Clear;
 
-    private readonly Action<TKey, TValue>? _ElementSetter;
-
-    private readonly Action? _Clear;
-
-    private readonly Func<TKey, bool>? _Remove;
+    private readonly Func<TKey, bool>? _Remove = Remove;
 
     /// <inheritdoc />
-    public bool IsReadOnly => _ElementSetter is null;
+    public bool IsReadOnly => ElementSetter is null;
 
     /// <inheritdoc />
     public int Count => _ElementsGetter().Count();
@@ -39,19 +38,6 @@ public class LambdaDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         set => Add(key, value);
     }
 
-    public LambdaDictionary(
-        Func<IEnumerable<KeyValuePair<TKey, TValue>>> ElementsGetter,
-        Action<TKey, TValue>? ElementSetter = null,
-        Action? Clear = null,
-        Func<TKey, bool>? Remove = null
-    )
-    {
-        _ElementsGetter = ElementsGetter ?? throw new ArgumentNullException(nameof(ElementsGetter), "Не задан метод получения значения");
-        _ElementSetter  = ElementSetter;
-        _Clear          = Clear;
-        _Remove         = Remove;
-    } 
-
     // ReSharper disable once UnusedParameter.Local
     // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
     // ReSharper disable once AnnotateNotNullParameter
@@ -65,7 +51,7 @@ public class LambdaDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
     /// <inheritdoc />
-    public void Add(TKey key, TValue value) => _ElementSetter.NotNull("Словарь не поддерживает операции записи").Invoke(key, value);
+    public void Add(TKey key, TValue value) => ElementSetter.NotNull("Словарь не поддерживает операции записи").Invoke(key, value);
 
     /// <inheritdoc />
     public void Clear() => _Clear.NotNull("Словарь не поддерживает операцию очистки")();

@@ -10,10 +10,11 @@ using static System.Math;
 namespace MathCore;
 
 /// <summary>Дробь</summary>
-public readonly struct Fraction
+/// <remarks>Новая дробь</remarks>
+/// <param name="numerator">Числитель</param>
+/// <param name="denominator">Знаменатель</param>
+public readonly struct Fraction(long numerator, ulong denominator)
 {
-    
-
     /// <summary>Упрощение дроби</summary>
     /// <param name="Numerator">Числитель</param>
     /// <param name="Denominator">Знаменатель</param>
@@ -80,10 +81,10 @@ public readonly struct Fraction
     }
 
     /// <summary>Числитель</summary>
-    private readonly long _Numerator;
+    private readonly long _Numerator = numerator;
 
     /// <summary>Знаменатель</summary>
-    private readonly ulong _Denominator;
+    private readonly ulong _Denominator = denominator;
 
     /// <summary>Числитель</summary>
     public long Numerator => _Numerator;
@@ -182,11 +183,6 @@ public readonly struct Fraction
         return result;
     }
 
-    /// <summary>Новая дробь</summary>
-    /// <param name="Numerator">Числитель</param>
-    /// <param name="Denominator">Знаменатель</param>
-    public Fraction(long Numerator, ulong Denominator) => (_Numerator, _Denominator) = (Numerator, Denominator);
-
     /// <summary>Получить упрощённую дробь</summary>
     /// <returns>Упрощённая дробь</returns>
     public Fraction GetSimplified()
@@ -200,8 +196,8 @@ public readonly struct Fraction
             ? this
             : new
             (
-                Numerator:   (long)(numerator_abs / gcd) * sign,
-                Denominator: _Denominator / gcd
+                numerator:   (long)(numerator_abs / gcd) * sign,
+                denominator: _Denominator / gcd
             );
     }
 

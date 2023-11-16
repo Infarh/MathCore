@@ -1,5 +1,5 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
+
 using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global

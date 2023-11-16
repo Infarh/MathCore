@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Наблюдатель за сборщиком мусора</summary>
 public sealed class GCWatcher

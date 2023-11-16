@@ -1,18 +1,12 @@
 ﻿#nullable enable
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MathCore;
 
 /// <summary>Настраиваемое перечисление</summary>
 /// <typeparam name="T">Тип элемента перечисления</typeparam>
-public class LambdaEnumerable<T> : Factory<IEnumerator<T>>, IEnumerable<T>
+public class LambdaEnumerable<T>(Func<IEnumerable<T>>? Generator) : Factory<IEnumerator<T>>(() => (Generator?.Invoke() ?? Enumerable.Empty<T>()).GetEnumerator()), IEnumerable<T>
 {
-    /* ------------------------------------------------------------------------------------------ */
-
-    public LambdaEnumerable(Func<IEnumerable<T>>? Generator) : base(() => (Generator?.Invoke() ?? Enumerable.Empty<T>()).GetEnumerator()) { }
 
     /* ------------------------------------------------------------------------------------------ */
 

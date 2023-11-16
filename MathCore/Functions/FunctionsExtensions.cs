@@ -1,5 +1,4 @@
-﻿using System;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 // ReSharper disable UnusedType.Global
 
@@ -12,43 +11,30 @@ using Function = Func<double, double>;
 public static class FunctionsExtensions
 {
     /// <summary>Структура значения функции {Аргумент - значение}</summary>
-    public struct FuncValue
+    /// <remarks>Инициализация новой пары аргумент-значение функции</remarks>
+    /// <param name="arg">Аргумент функции</param>
+    /// <param name="value">Значение функции</param>
+    public record struct FuncValue(double arg, double value)
     {
-        /// <summary>Аргумент функции</summary>
-        public double Argument;
+        public double Argument = arg;
 
         /// <summary>Значение функции</summary>
-        public double Value;
-
-        /// <summary>Инициализация новой пары аргумент-значение функции</summary>
-        /// <param name="arg">Аргумент функции</param>
-        /// <param name="value">Значение функции</param>
-        public FuncValue(double arg, double value)
-        {
-            Argument = arg;
-            Value    = value;
-        }
+        public double Value = value;
 
         public static implicit operator double(FuncValue fv) => fv.Value;
     }
 
     /// <summary>Структура, содержащая максимальное и минимальное значение функции</summary>
-    public struct FuncMinMaxValue
+    /// <remarks>Инициализация нового максимального и минимального значения функции</remarks>
+    /// <param name="min">Минимум функции</param>
+    /// <param name="max">Максимум функции</param>
+    public struct FuncMinMaxValue(FuncValue min, FuncValue max)
     {
         /// <summary>Минимальное значение функции</summary>
-        public FuncValue Min;
+        public FuncValue Min = min;
 
         /// <summary>Максимальное значение функции</summary>
-        public FuncValue Max;
-
-        /// <summary>Инициализация нового максимального и минимального значения функции</summary>
-        /// <param name="min">Минимум функции</param>
-        /// <param name="max">Максимум функции</param>
-        public FuncMinMaxValue(FuncValue min, FuncValue max)
-        {
-            Min = min;
-            Max = max;
-        }
+        public FuncValue Max = max;
     }
 
     /// <summary>Получить массив значений функции в указанном интервале с указанным шагом</summary>
@@ -134,11 +120,13 @@ public static class FunctionsExtensions
     public static FuncValue GetMaxValue([NotNull] this Function f, double x1, double x2, double dx = 0.0001)
     {
         var values = f.GetValues(x1, x2, dx);
+
         var max    = new FuncValue { Value = double.NegativeInfinity };
         for (int i = 0, N = values.Length; i < N; i++)
         {
             var v = values[i];
             if (v <= max.Value) continue;
+
             max.Value    = v;
             max.Argument = i * dx + x1;
         }

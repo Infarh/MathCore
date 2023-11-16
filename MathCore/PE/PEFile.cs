@@ -1,16 +1,15 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 
 using MathCore.PE.Headers;
 
 namespace MathCore.PE;
 
-public class PEFile
+public class PEFile(FileInfo File)
 {
     // #define MakePtr(Type, Base, Offset) ((Type)(DWORD(Base) + (DWORD)(Offset)))
     internal static uint MakePtr(uint Base, uint Offset) => Base + Offset;
 
-    private readonly FileInfo _File;
+    private readonly FileInfo _File = File;
 
     public bool Exists => _File.Exists;
 
@@ -48,8 +47,6 @@ public class PEFile
     }
 
     public PEFile(string FilePath) : this(new FileInfo(FilePath)) { }
-
-    public PEFile(FileInfo File) => _File = File;
 
     public Header GetHeader()
     {

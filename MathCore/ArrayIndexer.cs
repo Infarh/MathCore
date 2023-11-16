@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -9,13 +7,19 @@ namespace MathCore;
 
 /// <summary>Индексатор массива элементов</summary>
 /// <typeparam name="T">Тип элемента массива</typeparam>
-public class ArrayIndexer<T>
+/// <remarks>Инициализация нового <see cref="ArrayIndexer{T}"/></remarks>
+/// <param name="Array">Индексируемый массив</param>
+/// <param name="Index">Индекс текущего элемента</param>
+public class ArrayIndexer<T>(T[] Array, int Index = 0)
 {
+    /// <summary>Инициализация нового <see cref="ArrayIndexer{T}"/></summary>
+    public ArrayIndexer() : this(System.Array.Empty<T>()) { }
+
     /// <summary>Индексируемый массив</summary>
-    private T[] _Array;
+    private T[] _Array = Array.NotNull();
 
     /// <summary>Индекс текущего элемента</summary>
-    private int _Index;
+    private int _Index = Index;
 
     /// <summary>Длина массива</summary>
     public int Length => _Array.Length;
@@ -32,19 +36,7 @@ public class ArrayIndexer<T>
     public ref T this[int index] => ref _Array[index];
 
     /// <summary>Индексируемый массив</summary>
-    public T[] Array { get => _Array; set => _Array = value ?? throw new ArgumentNullException(nameof(value)); }
-
-    /// <summary>Инициализация нового <see cref="ArrayIndexer{T}"/></summary>
-    public ArrayIndexer() => _Array = System.Array.Empty<T>();
-
-    /// <summary>Инициализация нового <see cref="ArrayIndexer{T}"/></summary>
-    /// <param name="Array">Индексируемый массив</param>
-    /// <param name="Index">Индекс текущего элемента</param>
-    public ArrayIndexer(T[] Array, int Index = 0)
-    {
-        _Array = Array ?? throw new ArgumentNullException(nameof(Array));
-        _Index = Index;
-    }
+    public T[] Array { get => _Array; set => _Array = value.NotNull(); }
 
     /// <summary>Оператор неявного приведения типа <see cref="ArrayIndexer{T}"/> к <see cref="System.Array{T}"/></summary>
     /// <param name="Indexer">Индексатор массива <see cref="ArrayIndexer{T}"/></param>

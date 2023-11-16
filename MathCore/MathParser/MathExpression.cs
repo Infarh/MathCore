@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 using MathCore.MathParser.ExpressionTrees;
@@ -76,10 +73,10 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     public MathExpression(string Name = "f")
     {
         _Name        = Name;
-        _Variables   = new VariablesCollection(this); // Коллекция переменных
-        _Constants   = new ConstantsCollection();     // Коллекция констант
-        _Functions   = new FunctionsCollection();     // Коллекция функций
-        _Functionals = new FunctionalsCollection();   // Коллекция функционалов
+        _Variables   = new(this); // Коллекция переменных
+        _Constants   = new();     // Коллекция констант
+        _Functions   = new();     // Коллекция функций
+        _Functionals = new();   // Коллекция функционалов
     }
 
     /// <summary>Инициализация нового математического выражения</summary>

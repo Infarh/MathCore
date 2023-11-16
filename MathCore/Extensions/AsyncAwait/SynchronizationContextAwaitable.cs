@@ -4,33 +4,20 @@ using System.Runtime.CompilerServices;
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks;
 
-public readonly ref struct SynchronizationContextAwaitable
+public readonly ref struct SynchronizationContextAwaitable(SynchronizationContext Context, Task? Task = null)
 {
     internal static readonly SendOrPostCallback StartAction = action => ((Action)action)();
-    private readonly SynchronizationContext _Context;
-    private readonly Task? _Task;
+    private readonly Task? _Task = Task;
 
-    public SynchronizationContextAwaitable(SynchronizationContext Context, Task? Task = null)
-    {
-        _Context = Context;
-        _Task    = Task;
-    }
+    public SynchronizationContextAwaiter GetAwaiter() => new(Context, _Task);
 
-    public SynchronizationContextAwaiter GetAwaiter() => new(_Context, _Task);
-
-    public readonly struct SynchronizationContextAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct SynchronizationContextAwaiter(SynchronizationContext Context, Task? Task = null) : ICriticalNotifyCompletion, INotifyCompletion
     {
 
-        private readonly SynchronizationContext _Context;
-        private readonly Task? _Task;
+        private readonly SynchronizationContext _Context = Context;
+        private readonly Task? _Task = Task;
 
         public bool IsCompleted => _Task?.IsCompleted ?? false;
-
-        public SynchronizationContextAwaiter(SynchronizationContext Context, Task? Task = null)
-        {
-            _Context = Context;
-            _Task    = Task;
-        }
 
         public void OnCompleted(Action continuation) => _Context.Post(StartAction, continuation);
 
@@ -40,31 +27,18 @@ public readonly ref struct SynchronizationContextAwaitable
     }
 }
 
-public readonly ref struct SynchronizationContextAwaitable<T>
+public readonly ref struct SynchronizationContextAwaitable<T>(SynchronizationContext Context, Task<T>? Task = null)
 {
-    private readonly SynchronizationContext _Context;
-    private readonly Task<T>? _Task;
+    private readonly Task<T>? _Task = Task;
 
-    public SynchronizationContextAwaitable(SynchronizationContext Context, Task<T>? Task = null)
+    public SynchronizationContextAwaiter GetAwaiter() => new(Context, _Task);
+
+    public readonly struct SynchronizationContextAwaiter(SynchronizationContext Context, Task<T>? Task = null) : ICriticalNotifyCompletion, INotifyCompletion
     {
-        _Context = Context;
-        _Task    = Task;
-    }
-
-    public SynchronizationContextAwaiter GetAwaiter() => new(_Context, _Task);
-
-    public readonly struct SynchronizationContextAwaiter : ICriticalNotifyCompletion, INotifyCompletion
-    {
-        private readonly SynchronizationContext _Context;
-        private readonly Task<T>? _Task;
+        private readonly SynchronizationContext _Context = Context;
+        private readonly Task<T>? _Task = Task;
 
         public bool IsCompleted => (_Task?.IsCompleted).GetValueOrDefault();
-
-        public SynchronizationContextAwaiter(SynchronizationContext Context, Task<T>? Task = null)
-        {
-            _Context = Context;
-            _Task    = Task;
-        }
 
         public void OnCompleted(Action continuation) => _Context.Post(SynchronizationContextAwaitable.StartAction, continuation);
 

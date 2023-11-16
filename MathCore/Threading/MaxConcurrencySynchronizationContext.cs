@@ -1,17 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace MathCore.Threading;
+﻿namespace MathCore.Threading;
 
 /// <summary>Контекст синхронизации с максимально допустимой степенью параллелизма</summary>
-public sealed class MaxConcurrencySynchronizationContext : SynchronizationContext
+/// <remarks>Инициализация нового контекста синхронизации с ограничением числа параллельно выполняемых задач</remarks>
+/// <param name="MaxConcurrencyLevel">Максимальное число выполняемых в контексте задач</param>
+public sealed class MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel) : SynchronizationContext
 {
     /// <summary>Семафор, ограничивающий число выполняемых задач</summary>
-    private readonly SemaphoreSlim _Semaphore;
-
-    /// <summary>Инициализация нового контекста синхронизации с ограничением числа параллельно выполняемых задач</summary>
-    /// <param name="MaxConcurrencyLevel">Максимальное число выполняемых в контексте задач</param>
-    public MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel) => _Semaphore = new SemaphoreSlim(MaxConcurrencyLevel);
+    private readonly SemaphoreSlim _Semaphore = new SemaphoreSlim(MaxConcurrencyLevel);
 
     /// <summary>Метод, вызываемый при освобождении семафора</summary>
     /// <param name="SemaphoreWaitTask">Задача ожидания освобождения семафора</param>

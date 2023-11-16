@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Evaluations;
+﻿namespace MathCore.Evaluations;
 
 /// <summary>Именованное вычисление функции</summary>
 /// <typeparam name="T">Тип значения функции</typeparam>

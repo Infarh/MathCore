@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System.Linq;
-using System.Text;
-
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
@@ -9,12 +6,14 @@ using System.Text;
 namespace MathCore;
 
 /// <summary>Аргументы командной строки</summary>
-public class ArgumentsString
+/// <remarks>Инициализация нового экземпляра <see cref="ArgumentsString"/></remarks>
+/// <param name="Arguments">Массив значений аргументов</param>
+public class ArgumentsString(string[] Arguments)
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Строки значений аргументов</summary>
-    private readonly string[]? _Arguments;
+    private readonly string[]? _Arguments = Arguments;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -25,12 +24,6 @@ public class ArgumentsString
     /// <param name="index">Индекс аргумента</param>
     /// <returns>Значение аргумента по указанному индексу</returns>
     public ref readonly string this[int index] => ref _Arguments[index];
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Инициализация нового экземпляра <see cref="ArgumentsString"/></summary>
-    /// <param name="Arguments">Массив значений аргументов</param>
-    public ArgumentsString(string[] Arguments) => _Arguments = Arguments;
 
     /* ------------------------------------------------------------------------------------------ */
 

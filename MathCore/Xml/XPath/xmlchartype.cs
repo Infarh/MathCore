@@ -13,7 +13,6 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System.Linq;
 // ReSharper disable CommentTypo
 // ReSharper disable IdentifierTypo
 

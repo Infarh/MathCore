@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using MathCore.Vectors;
+﻿using MathCore.Vectors;
 
 namespace MathCore.DifferentialEquations.Numerical;
 

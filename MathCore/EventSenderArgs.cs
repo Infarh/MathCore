@@ -12,20 +12,16 @@ namespace System;
 /// <summary>Аргумент события с типизированным параметром</summary>
 /// <typeparam name="TSender">Тип источника события</typeparam>
 /// <typeparam name="TArg">Тип параметра аргумента</typeparam>
+/// <remarks>Новый аргумент события с типизированным параметром</remarks>
+/// <param name="Sender">Источник события</param>
+/// <param name="Argument">Параметр аргумента</param>
 [DebuggerStepThrough]
-public class EventSenderArgs<TSender, TArg> : EventArgs<TArg>
+public class EventSenderArgs<TSender, TArg>(TSender Sender, TArg Argument) : EventArgs<TArg>(Argument)
 {
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Источник события</summary>
-    public TSender Sender { get; set; }
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Новый аргумент события с типизированным параметром</summary>
-    /// <param name="Sender">Источник события</param>
-    /// <param name="Argument">Параметр аргумента</param>
-    public EventSenderArgs(TSender Sender, TArg Argument) : base(Argument) => this.Sender = Sender;
+    public TSender Sender { get; set; } = Sender;
 
     /* ------------------------------------------------------------------------------------------ */
 

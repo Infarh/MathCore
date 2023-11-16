@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using System.Globalization;
 
 // ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
@@ -40,12 +39,7 @@ public readonly ref partial struct StringPtr
 
     /// <summary>Инициализация нового указателя на положение в строке</summary>
     /// <param name="Source">Исходная строка</param>
-    public StringPtr(string Source)
-    {
-        this.Source = Source;
-        Pos = 0;
-        Length = Source.Length;
-    }
+    public StringPtr(string Source) : this(Source, 0, Source.Length) { }
 
     /// <summary>Инициализация нового указателя на положение в строке</summary>
     /// <param name="Source">Исходная строка</param>

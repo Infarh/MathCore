@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System.Collections.Generic;
-using System.IO;
-
 namespace MathCore.CSV;
 
 public static class Extensions

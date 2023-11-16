@@ -1,7 +1,5 @@
 ﻿#nullable enable
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 // ReSharper disable UnusedMember.Global
@@ -9,12 +7,14 @@ using System.Text.RegularExpressions;
 namespace MathCore;
 
 /// <summary>Строковый процессор, формирующий строку на основе шаблона</summary>
-public class PatternString : IEnumerable<KeyValuePair<string, object>>
+/// <remarks>Новый процессор шаблона строки</remarks>
+/// <param name="Pattern">Шаблон строки, содержащий набор полей для подстановки в них данных</param>
+public class PatternString(string Pattern) : IEnumerable<KeyValuePair<string, object>>
 {
     /// <summary>Регулярное выражение поиска составных частей шаблона</summary>
     private static readonly Regex __Regex = new(@"{(?<name>\w+)(?::(?<format>.+?))?}", RegexOptions.Compiled);
 
-    private readonly string _Pattern;
+    private readonly string _Pattern = Pattern.NotNull();
     private readonly Dictionary<string, object> _Fields = new();
     private string? _Regex;
 
@@ -65,10 +65,6 @@ public class PatternString : IEnumerable<KeyValuePair<string, object>>
                 _Fields[FieldName] = value;
         }
     }
-
-    /// <summary>Новый процессор шаблона строки</summary>
-    /// <param name="Pattern">Шаблон строки, содержащий набор полей для подстановки в них данных</param>
-    public PatternString(string Pattern) => _Pattern = Pattern.NotNull();
 
     /// <summary>Добавить значение для поля</summary>
     /// <param name="FieldName">Имя поля для подстановки</param>

@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -8,7 +6,17 @@ using System;
 namespace MathCore.Vectors;
 
 /// <summary>Базис трёхмерного пространства</summary>
-public readonly struct Basis3D : IEquatable<Basis3D>
+/// <remarks>Инициализация нового экземпляра <see cref="Basis3D"/></remarks>
+/// <param name="xx">Элемент X[0,0]</param>
+/// <param name="xy">Элемент X[0,1]</param>
+/// <param name="xz">Элемент X[0,2]</param>
+/// <param name="yx">Элемент X[1,0]</param>
+/// <param name="yy">Элемент X[1,1]</param>
+/// <param name="yz">Элемент X[1,2]</param>
+/// <param name="zx">Элемент X[2,0]</param>
+/// <param name="zy">Элемент X[2,1]</param>
+/// <param name="zz">Элемент X[2,2]</param>
+public readonly struct Basis3D(double xx, double xy, double xz, double yx, double yy, double yz, double zx, double zy, double zz) : IEquatable<Basis3D>
 {
     /// <summary>Базис Евклидова пространства</summary>
     public static readonly Basis3D Euclid = new(
@@ -94,15 +102,15 @@ public readonly struct Basis3D : IEquatable<Basis3D>
             cos_t1 * xz - sin_ty, cos_t1 * yz + sin_tx, cos_t + cos_t1 * z * z);
     }
 
-    private readonly double _xx;
-    private readonly double _xy;
-    private readonly double _xz;
-    private readonly double _yx;
-    private readonly double _yy;
-    private readonly double _yz;
-    private readonly double _zx;
-    private readonly double _zy;
-    private readonly double _zz;
+    private readonly double _xx = xx;
+    private readonly double _xy = xy;
+    private readonly double _xz = xz;
+    private readonly double _yx = yx;
+    private readonly double _yy = yy;
+    private readonly double _yz = yz;
+    private readonly double _zx = zx;
+    private readonly double _zy = zy;
+    private readonly double _zz = zz;
 
 #pragma warning disable IDE1006 // Стили именования
 
@@ -134,25 +142,6 @@ public readonly struct Basis3D : IEquatable<Basis3D>
         
     /// <summary>Элемент [2,2]</summary>
     public double zz { get => _zz; init => _zz = value; }
-
-#pragma warning restore IDE1006 // Стили именования
-
-    /// <summary>Инициализация нового экземпляра <see cref="Basis3D"/></summary>
-    /// <param name="xx">Элемент X[0,0]</param>
-    /// <param name="xy">Элемент X[0,1]</param>
-    /// <param name="xz">Элемент X[0,2]</param>
-    /// <param name="yx">Элемент X[1,0]</param>
-    /// <param name="yy">Элемент X[1,1]</param>
-    /// <param name="yz">Элемент X[1,2]</param>
-    /// <param name="zx">Элемент X[2,0]</param>
-    /// <param name="zy">Элемент X[2,1]</param>
-    /// <param name="zz">Элемент X[2,2]</param>
-    public Basis3D(double xx, double xy, double xz, double yx, double yy, double yz, double zx, double zy, double zz)
-    {
-        _xx = xx; _xy = xy; _xz = xz;
-        _yx = yx; _yy = yy; _yz = yz;
-        _zx = zx; _zy = zy; _zz = zz;
-    }
 
     /// <summary>Оператор неявного преобразования базиса в матрицу 3х3</summary>
     public static implicit operator Matrix(in Basis3D b) => new(new[,]

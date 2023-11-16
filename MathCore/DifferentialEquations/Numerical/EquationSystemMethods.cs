@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 using MathCore.Vectors;
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable UnusedMember.Global

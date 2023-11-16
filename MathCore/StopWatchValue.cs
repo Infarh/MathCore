@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace MathCore;
 
@@ -7,6 +6,7 @@ namespace MathCore;
 public readonly ref struct StopWatchValue
 {
     private static readonly double __TimestampToTicks = 10000000.0 / Stopwatch.Frequency;
+
     private readonly long _StartTimestamp;
 
     /// <summary>Структура может быть использована для определения времени</summary>

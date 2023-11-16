@@ -1,5 +1,4 @@
-﻿using System;
-using Ex = System.Linq.Expressions.Expression;
+﻿using Ex = System.Linq.Expressions.Expression;
 
 namespace MathCore.Evaluations;
 

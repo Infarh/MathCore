@@ -1,26 +1,20 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using MathCore.Collections.Interfaces;
 
 namespace MathCore.Collections;
 
 /// <summary>Репозиторий на основе коллекции</summary>
 /// <typeparam name="T">Тип элемента репозитория</typeparam>
-public class Repository<T> : IRepository<T>
+/// <remarks>Новый репозиторий</remarks>
+/// <param name="Collection">Коллекция элементов репозитория</param>
+/// <exception cref="ArgumentNullException"></exception>
+public class Repository<T>(ICollection<T> Collection) : IRepository<T>
 {
     /// <summary>Коллекция элементов репозитория</summary>
-    private readonly ICollection<T> _Collection;
+    private readonly ICollection<T> _Collection = Collection ?? throw new ArgumentNullException(nameof(Collection));
 
     /// <summary>Новый репозиторий</summary>
     public Repository() : this(new List<T>()) { }
-
-    /// <summary>Новый репозиторий</summary>
-    /// <param name="Collection">Коллекция элементов репозитория</param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public Repository(ICollection<T> Collection) => _Collection = Collection ?? throw new ArgumentNullException(nameof(Collection));
 
     /// <summary>Запрос к репозиторию</summary>
     public virtual IQueryable<T> Items => _Collection.AsQueryable();

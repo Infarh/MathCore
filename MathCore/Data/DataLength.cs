@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 
 // ReSharper disable UnusedType.Global
