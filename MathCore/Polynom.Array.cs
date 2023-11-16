@@ -1939,27 +1939,20 @@ public partial class Polynom
     }
 
     /// <summary>Результат деления полиномов</summary>
-    public readonly struct PolynomDivisionResult
+    /// <remarks>Инициализация результата деления полиномов</remarks>
+    /// <param name="Divisor"></param>
+    /// <param name="Result">Частное</param>
+    /// <param name="Remainder">Остаток от деления</param>
+    public readonly struct PolynomDivisionResult(Polynom Result, Polynom Remainder, Polynom Divisor)
     {
         /// <summary>Частное полиномов</summary>
-        public Polynom Result { get; }
+        public Polynom Result { get; } = Result;
 
         /// <summary>Остаток деления полиномов</summary>
-        public Polynom Remainder { get; }
+        public Polynom Remainder { get; } = Remainder;
 
         /// <summary>Полином - делитель</summary>
-        public Polynom Divisor { get; }
-
-        /// <summary>Инициализация результата деления полиномов</summary>
-        /// <param name="Divisor"></param>
-        /// <param name="Result">Частное</param>
-        /// <param name="Remainder">Остаток от деления</param>
-        public PolynomDivisionResult(Polynom Result, Polynom Remainder, Polynom Divisor)
-        {
-            this.Result = Result;
-            this.Remainder = Remainder;
-            this.Divisor = Divisor;
-        }
+        public Polynom Divisor { get; } = Divisor;
 
         /// <summary>Значение результата деления полиномов</summary>
         /// <param name="x">Аргумент</param>

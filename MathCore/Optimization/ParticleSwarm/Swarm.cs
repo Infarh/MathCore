@@ -29,20 +29,12 @@ public class Swarm
     /// <summary>Коэффициент стремления всех точек к лучшему значению</summary>
     public double GlobalWeight { get => _GlobalWeight; set => _GlobalWeight = value; }
 
-    private class Particle
+    private class Particle(double[] X, double Value)
     {
-        private double _BestValue;
-        public readonly double[] BestX;
-        public double Value;
-        public readonly double[] X;
-
-        public Particle(double[] X, double Value)
-        {
-            this.X     = X;
-            this.Value = Value;
-            BestX      = (double[])X.Clone();
-            _BestValue = Value;
-        }
+        private double _BestValue = Value;
+        public readonly double[] BestX = (double[])X.Clone();
+        public double Value = Value;
+        public readonly double[] X = X;
 
         private void SetBest()
         {

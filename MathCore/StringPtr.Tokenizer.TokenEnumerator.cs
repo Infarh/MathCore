@@ -6,69 +6,42 @@ public readonly ref partial struct StringPtr
     public readonly ref partial struct Tokenizer
     {
         /// <summary>Перечислитель строковых фрагментов</summary>
-        public ref struct TokenEnumerator
+        /// <remarks>Инициализация нового перечислителя строковых фрагментов</remarks>
+        /// <param name="Buffer">Исходный строковый буфер</param>
+        /// <param name="Separators">Символы-разделители</param>
+        /// <param name="StartIndex">Начальное положение в строковом буфере</param>
+        /// <param name="Length">Длина подстроки для анализа</param>
+        /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
+        public ref struct TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
         {
-            /// <summary>Строковый буфер</summary>
-            private readonly string _Buffer;
-
-            /// <summary>Символы-разделители</summary>
-            private readonly char[] _Separators;
-
-            /// <summary>Начальное положение в буфере</summary>
-            private readonly int _StartIndex;
-
-            /// <summary>Длина подстроки для анализа</summary>
-            private readonly int _Length;
-
-            /// <summary>Пропускать пустые фрагменты</summary>
-            private readonly bool _SkipEmpty;
-
             /// <summary>Текущая позиция в исходной строке</summary>
-            private int _CurrentPos;
-
-            /// <summary>Инициализация нового перечислителя строковых фрагментов</summary>
-            /// <param name="Buffer">Исходный строковый буфер</param>
-            /// <param name="Separators">Символы-разделители</param>
-            /// <param name="StartIndex">Начальное положение в строковом буфере</param>
-            /// <param name="Length">Длина подстроки для анализа</param>
-            /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
-            public TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
-            {
-                _Buffer     = Buffer;
-                _Separators = Separators;
-                _StartIndex = StartIndex;
-                _CurrentPos = StartIndex;
-                _Length     = Length;
-                _SkipEmpty  = SkipEmpty;
-
-                Current = default;
-            }
+            private int _CurrentPos = StartIndex;
 
             /// <summary>Текущий фрагмент строки</summary>
-            public StringPtr Current { get; private set; }
+            public StringPtr Current { get; private set; } = default;
 
             /// <summary>Перемещение к следующему фрагменту</summary>
             /// <returns>Истина, если перемещение выполнено успешно</returns>
             public bool MoveNext()
             {
-                switch (_Length - (_CurrentPos - _StartIndex))
+                switch (Length - (_CurrentPos - StartIndex))
                 {
-                    case < 0:               return false;
-                    case 0 when _SkipEmpty: return false;
+                    case < 0:              return false;
+                    case 0 when SkipEmpty: return false;
                     case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
+                        Current = new(Buffer, _CurrentPos, 0);
                         _CurrentPos++;
                         return true;
                 }
 
-                var str     = _Buffer;
+                var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
+                var end_pos = StartIndex + Length;
 
                 StringPtr ptr;
                 do
                 {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    ptr = GetNext(str, Separators, pos, end_pos);
                     if (ptr.Pos == end_pos)
                     {
                         Current     = ptr;
@@ -78,7 +51,7 @@ public readonly ref partial struct StringPtr
 
                     pos += Math.Max(1, ptr.Length);
                 }
-                while (ptr.Length == 0 && _SkipEmpty);
+                while (ptr.Length == 0 && SkipEmpty);
 
                 Current     = ptr;
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
@@ -91,7 +64,7 @@ public readonly ref partial struct StringPtr
             public StringPtr MoveNextOrThrow() => MoveNext()
                 ? Current
                 : throw new InvalidOperationException(
-                    $"Невозможно получить следующий фрагмент строки после разделителя {string.Join(",", _Separators.Select(c => $"'{c}'"))}");
+                    $"Невозможно получить следующий фрагмент строки после разделителя {string.Join(",", Separators.Select(c => $"'{c}'"))}");
 
             /// <summary>Переместиться к следующему фрагменту, либо сгенерировать исключение в случае отсутствия такой возможности</summary>
             /// <typeparam name="TException">Генерируемое исключение в случае отсутствия возможности перемещения к следующей подстроке</typeparam>
@@ -143,24 +116,24 @@ public readonly ref partial struct StringPtr
             public bool TryParseNextDouble(out double value)
             {
                 value = double.NaN;
-                switch (_Length - (_CurrentPos - _StartIndex))
+                switch (Length - (_CurrentPos - StartIndex))
                 {
                     case < 0:               return false;
-                    case 0 when _SkipEmpty: return false;
+                    case 0 when SkipEmpty: return false;
                     case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
+                        Current = new(Buffer, _CurrentPos, 0);
                         _CurrentPos++;
                         return Current.TryParseDouble(out value);
                 }
 
-                var str     = _Buffer;
+                var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
+                var end_pos = StartIndex + Length;
 
                 StringPtr ptr;
                 do
                 {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    ptr = GetNext(str, Separators, pos, end_pos);
                     if (ptr.Pos == end_pos)
                     {
                         Current     = ptr;
@@ -170,7 +143,7 @@ public readonly ref partial struct StringPtr
 
                     pos += Math.Max(1, ptr.Length);
                 }
-                while (ptr.Length == 0 && _SkipEmpty);
+                while (ptr.Length == 0 && SkipEmpty);
 
                 Current     = ptr;
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
@@ -184,24 +157,24 @@ public readonly ref partial struct StringPtr
             public bool TryParseNextDouble(IFormatProvider provider, out double value)
             {
                 value = double.NaN;
-                switch (_Length - (_CurrentPos - _StartIndex))
+                switch (Length - (_CurrentPos - StartIndex))
                 {
                     case < 0:               return false;
-                    case 0 when _SkipEmpty: return false;
+                    case 0 when SkipEmpty: return false;
                     case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
+                        Current = new(Buffer, _CurrentPos, 0);
                         _CurrentPos++;
                         return Current.TryParseDouble(provider, out value);
                 }
 
-                var str     = _Buffer;
+                var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
+                var end_pos = StartIndex + Length;
 
                 StringPtr ptr;
                 do
                 {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    ptr = GetNext(str, Separators, pos, end_pos);
                     if (ptr.Pos == end_pos)
                     {
                         Current     = ptr;
@@ -211,7 +184,7 @@ public readonly ref partial struct StringPtr
 
                     pos += Math.Max(1, ptr.Length);
                 }
-                while (ptr.Length == 0 && _SkipEmpty);
+                while (ptr.Length == 0 && SkipEmpty);
 
                 Current     = ptr;
                 _CurrentPos = ptr.Pos + ptr.Length + 1;
@@ -224,24 +197,24 @@ public readonly ref partial struct StringPtr
             public bool TryParseNextAsInt32(out int value)
             {
                 value = 0;
-                switch (_Length - (_CurrentPos - _StartIndex))
+                switch (Length - (_CurrentPos - StartIndex))
                 {
                     case < 0:               return false;
-                    case 0 when _SkipEmpty: return false;
+                    case 0 when SkipEmpty: return false;
                     case 0:
-                        Current = new(_Buffer, _CurrentPos, 0);
+                        Current = new(Buffer, _CurrentPos, 0);
                         _CurrentPos++;
                         return Current.TryParseInt32(out value);
                 }
 
-                var str     = _Buffer;
+                var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = _StartIndex + _Length;
+                var end_pos = StartIndex + Length;
 
                 StringPtr ptr;
                 do
                 {
-                    ptr = GetNext(str, _Separators, pos, end_pos);
+                    ptr = GetNext(str, Separators, pos, end_pos);
                     if (ptr.Pos == end_pos)
                     {
                         Current     = ptr;
@@ -251,7 +224,7 @@ public readonly ref partial struct StringPtr
 
                     pos += Math.Max(1, ptr.Length);
                 }
-                while (ptr.Length == 0 && _SkipEmpty);
+                while (ptr.Length == 0 && SkipEmpty);
 
                 Current     = ptr;
                 _CurrentPos = ptr.Pos + ptr.Length + 1;

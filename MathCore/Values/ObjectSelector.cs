@@ -23,16 +23,27 @@ namespace MathCore.Values;
 ///   }
 /// }
 /// </example>
-public sealed class ObjectSelector<T> : IValueRead<T>
+/// <remarks>Новый генератор последовательности объектов из источника параллельных значений</remarks>
+/// <param name="Selector">Метод выбора значения</param>
+/// <param name="CanRead">Метод определения возможности чтения значения</param>
+/// <param name="Generator">Массив генераторов объектов "ленивых" значений</param>
+public sealed class ObjectSelector<T>(Func<T[], int> Selector, Func<bool> CanRead, params Func<T>[] Generator) : IValueRead<T>
 {
-    /* ------------------------------------------------------------------------------------------ */
+    /// <summary>Новый генератор последовательности объектов из источника параллельных значений</summary>
+    /// <param name="Selector">Метод выбора значения</param>
+    /// <param name="CanRead">Метод определения возможности чтения значения</param>
+    /// <param name="GeneratorsEnum">Массив генераторов объектов "ленивых" значений</param>
+    public ObjectSelector(
+        Func<T[], int> Selector,
+        Func<bool> CanRead,
+        IEnumerable<Func<T>> GeneratorsEnum)
+        : this(Selector, CanRead, GeneratorsEnum.ToArray())
+    { }
 
-    /// <summary>Метод выбора одного из значений ряда источников объектов</summary>
-    private readonly Func<T[], int> _Selector;
     /// <summary>Массив "ленивых" значений, используемых в качестве генераторов объектов </summary>
-    private readonly LazyValue<T>[] _Values;
+    private readonly LazyValue<T>[] _Values = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new LazyValue<T>(g[i]));
     /// <summary>Метод, определяющий возможность чтения данных из источников</summary>
-    private readonly Func<bool> _CanRead;
+    private readonly Func<bool> _CanRead = CanRead;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -44,7 +55,7 @@ public sealed class ObjectSelector<T> : IValueRead<T>
             //Получить массив значений от всех "ленивых" значений объектов
             var values = new T[_Values.Length].Initialize(_Values, (i, vv) => vv[i].Value);
             //Выбрать индекс интересующего объекта
-            var index = _Selector(values);
+            var index = Selector(values);
             //Выбрать объект из массива значений
             var value = values[index];
             //Сбросить состояния выбранного "ленивого" значения
@@ -55,32 +66,6 @@ public sealed class ObjectSelector<T> : IValueRead<T>
 
     /// <summary>Признак возможности чтения объекта</summary>
     public bool CanRead => _CanRead();
-
-    /* ------------------------------------------------------------------------------------------ */
-
-
-    /// <summary>Новый генератор последовательности объектов из источника параллельных значений</summary>
-    /// <param name="Selector">Метод выбора значения</param>
-    /// <param name="CanRead">Метод определения возможности чтения значения</param>
-    /// <param name="Generator">Массив генераторов объектов "ленивых" значений</param>
-    public ObjectSelector(Func<T[], int> Selector, Func<bool> CanRead, params Func<T>[] Generator)
-    {
-        //Создать массив "ленивых" значений
-        _Values   = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new LazyValue<T>(g[i]));
-        _Selector = Selector;
-        _CanRead  = CanRead;
-    }
-
-    /// <summary>Новый генератор последовательности объектов из источника параллельных значений</summary>
-    /// <param name="Selector">Метод выбора значения</param>
-    /// <param name="CanRead">Метод определения возможности чтения значения</param>
-    /// <param name="GeneratorsEnum">Массив генераторов объектов "ленивых" значений</param>
-    public ObjectSelector(
-        Func<T[], int> Selector,
-        Func<bool> CanRead,
-        IEnumerable<Func<T>> GeneratorsEnum)
-        : this(Selector, CanRead, GeneratorsEnum.ToArray())
-    { }
 
     //private void Test()
     //{

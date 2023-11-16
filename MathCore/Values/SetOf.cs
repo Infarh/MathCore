@@ -9,32 +9,30 @@ namespace MathCore.Values;
 
 /// <summary>Множество объектов типа <typeparamref name="T"/></summary>
 /// <typeparam name="T">Тип элементов множества</typeparam>
+/// <remarks>Новое множество элементов</remarks>
+/// <param name="collection">Коллекция элементов</param>
 [Obsolete("Используйте Set<T>")]
-public partial class SetOf<T> : AbstractSetOf<T>, ICollection<T>, ICloneable<SetOf<T>>, IEquatable<SetOf<T>>
+public partial class SetOf<T>(IEnumerable<T> collection) : AbstractSetOf<T>, ICollection<T>, ICloneable<SetOf<T>>, IEquatable<SetOf<T>>
 {
-    /// <summary>Перемешивать содержимое при выдаче массива элементов</summary>
-    public static bool Mixed { get; set; }
-
-    /// <summary>Список элементов</summary>
-    private readonly List<T> _List;
-
-    /// <summary>Мощность множества</summary>
-    public override int Power => _List.Count;
-
     /// <summary>Новое множество элементов</summary>
-    public SetOf() => _List = new List<T>();
+    public SetOf() : this(new List<T>()) { }
 
     /// <summary>Новое множество элементов</summary>
     /// <param name="Capacity">Ёмкость множества</param>
-    public SetOf(int Capacity) => _List = new List<T>(Capacity);
-
-    /// <summary>Новое множество элементов</summary>
-    /// <param name="collection">Коллекция элементов</param>
-    public SetOf(IEnumerable<T> collection) => _List = new List<T>(collection);
+    public SetOf(int Capacity) : this(new List<T>(Capacity)) { }
 
     /// <summary>Новое множество элементов</summary>
     /// <param name="element">Элементы множества</param>
     public SetOf(params T[] element) : this((IEnumerable<T>)element) { }
+
+    /// <summary>Перемешивать содержимое при выдаче массива элементов</summary>
+    public static bool Mixed { get; set; }
+
+    /// <summary>Список элементов</summary>
+    private readonly List<T> _List = new List<T>(collection);
+
+    /// <summary>Мощность множества</summary>
+    public override int Power => _List.Count;
 
     /// <summary>Преобразование в список</summary>
     /// <returns>Список элементов</returns>

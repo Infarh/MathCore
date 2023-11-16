@@ -1,29 +1,28 @@
 ﻿#nullable enable
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MathCore;
 
 /// <summary>Расширяемый список</summary>
 /// <typeparam name="T">Тип элементов списка</typeparam>
-public class ExpandableList<T> : IList<T>, IReadOnlyList<T>
+/// <remarks>Инициализация нового расширяемого списка</remarks>
+/// <param name="BaseList">Базовый список</param>
+public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
 {
-    /// <summary>Базовый список, обеспечивающий хранение данных</summary>
-    public List<T> BaseList { get; }
-
     /// <summary>Инициализация нового расширяемого списка</summary>
-    public ExpandableList() => BaseList = new();
+    public ExpandableList() : this((List<T>)new()) { }
 
     /// <summary>Инициализация нового расширяемого списка</summary>
     /// <param name="Capacity">Ёмкость</param>
-    public ExpandableList(int Capacity) => BaseList = new(Capacity);
-
-    /// <summary>Инициализация нового расширяемого списка</summary>
-    /// <param name="BaseList">Базовый список</param>
-    public ExpandableList(List<T> BaseList) => this.BaseList = BaseList;
+    public ExpandableList(int Capacity) : this((List<T>)new(Capacity)) { }
 
     /// <summary>Инициализация нового расширяемого списка</summary>
     /// <param name="items">Исходный набор элементов</param>
-    public ExpandableList(IEnumerable<T> items) => BaseList = items.ToList();
+    public ExpandableList(IEnumerable<T> items) : this((List<T>)items.ToList()) { }
+
+    /// <summary>Базовый список, обеспечивающий хранение данных</summary>
+    public List<T> BaseList { get; } = BaseList;
 
     #region Implementation of IList<T>
 

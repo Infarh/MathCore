@@ -17,10 +17,20 @@ namespace MathCore;
 /// где N - число элементов массива коэффициентов
 /// Нулевой элемент массива при нулевой степени члена полинома 
 /// </summary>
+/// <remarks>Полином степени N, нулевой элемент массива a[0] при младшей степени x^0</remarks>
+/// <param name="a">a[0]+a[1]*x+a[2]*x^2+...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
 [Serializable]
-//[DebuggerDisplay("GetPower = {GetPower}")]
-public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumerable<double>, IFormattable
+[method: DST]//[DebuggerDisplay("GetPower = {GetPower}")]
+public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatable<Polynom>, IEnumerable<double>, IFormattable
 {
+    /// <inheritdoc />
+    [DST]
+    public Polynom(IEnumerable<double> a) : this(a.ToArray()) { }
+
+    /// <inheritdoc />
+    [DST]
+    public Polynom(IEnumerable<int> a) : this(a.Select(v => (double)v)) { }
+
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Создание нового полинома из массива его коэффициентов</summary>
@@ -42,7 +52,7 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
 
     /// <summary>Коэффициенты при степенях</summary>
     /// <remarks>a[0]+a[1]*x+a[2]*x^2+...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</remarks>
-    private readonly double[] _a;
+    private readonly double[] _a = a ?? throw new ArgumentNullException(nameof(a));
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -65,21 +75,6 @@ public partial class Polynom : ICloneable<Polynom>, IEquatable<Polynom>, IEnumer
     /// </summary>
     ///<param name="n">Степень a[0]+a[1]*x+a[2]*x^2+...<b>+a[<paramref name="n"/>]*x^<paramref name="n"/>+</b>...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
     public ref double this[int n] { [DST] get => ref _a[n]; }
-
-    /* -------------------------------------------------------------------------------------------- */
-
-    /// <summary>Полином степени N, нулевой элемент массива a[0] при младшей степени x^0</summary>
-    /// <param name="a">a[0]+a[1]*x+a[2]*x^2+...+a[N-1]*x^(N-1)+a[N-1]*x^(N-1)</param>
-    [DST]
-    public Polynom(params double[] a) => _a = a ?? throw new ArgumentNullException(nameof(a));
-
-    /// <inheritdoc />
-    [DST]
-    public Polynom(IEnumerable<double> a) : this(a.ToArray()) { }
-
-    /// <inheritdoc />
-    [DST]
-    public Polynom(IEnumerable<int> a) : this(a.Select(v => (double)v)) { }
 
     /* -------------------------------------------------------------------------------------------- */
 

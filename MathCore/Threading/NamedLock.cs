@@ -4,28 +4,19 @@
 public sealed class NamedLock : IDisposable
 {
     /// <summary>Контроль блокировки</summary>
-    public readonly struct LockController
+    /// <remarks>Инициализация нового контроллера блокировки ресурса</remarks>
+    /// <param name="Lock">Блокировщик доступа</param>
+    /// <param name="ResourceName">Имя блокируемого ресурса</param>
+    public readonly struct LockController(NamedLock Lock, string ResourceName)
     {
         /// <summary>Блокировщик доступа</summary>
-        private readonly NamedLock _Lock;
-
-        /// <summary>Имя блокируемого ресурса</summary>
-        private readonly string _ResourceName;
-
-        /// <summary>Инициализация нового контроллера блокировки ресурса</summary>
-        /// <param name="Lock">Блокировщик доступа</param>
-        /// <param name="ResourceName">Имя блокируемого ресурса</param>
-        public LockController(NamedLock Lock, string ResourceName)
-        {
-            _Lock = Lock;
-            _ResourceName = ResourceName;
-        }
+        private readonly NamedLock _Lock = Lock;
 
         /// <summary>разблокировать ресурс</summary>
-        public void Unlock() => _Lock.Unlock(_ResourceName);
+        public void Unlock() => _Lock.Unlock(ResourceName);
 
         /// <summary>разблокировать ресурс</summary>
-        public Task UnlockAsync(CancellationToken Cancel = default) => _Lock.UnlockAsync(_ResourceName, Cancel);
+        public Task UnlockAsync(CancellationToken Cancel = default) => _Lock.UnlockAsync(ResourceName, Cancel);
 
         /// <summary>Разрушение блокировки</summary>
         public void Dispose() => Unlock();

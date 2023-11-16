@@ -21,7 +21,7 @@ public sealed class SynchronizationContextTaskScheduler : TaskScheduler
     /// <param name="context">The SynchronizationContext under which to execute tasks.</param>
     public SynchronizationContextTaskScheduler(SynchronizationContext context)
     {
-        _Context = context ?? throw new ArgumentNullException(nameof(context));
+        _Context = context.NotNull();
         _Tasks   = new ConcurrentQueue<Task>();
     }
 

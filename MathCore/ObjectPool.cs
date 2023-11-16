@@ -100,22 +100,18 @@ internal sealed class IProducerConsumerCollection_DebugView<T>
 
 /// <summary>Provides a thread-safe object pool.</summary>
 /// <typeparam name="T">Specifies the type of the elements stored in the pool.</typeparam>
+/// <remarks>Initializes an instance of the ObjectPool class.</remarks>
+/// <param name="Factory">The function used to create items when no items exist in the pool.</param>
+/// <param name="collection">The collection used to store the elements of the pool.</param>
 [DebuggerDisplay("Count={" + nameof(Count) + "}")]
 [DebuggerTypeProxy(typeof(IProducerConsumerCollection_DebugView<>))]
-public sealed class ObjectPool<T> : ProducerConsumerCollectionBase<T>
+public sealed class ObjectPool<T>(Func<T> Factory, IProducerConsumerCollection<T> collection) : ProducerConsumerCollectionBase<T>(collection)
 {
-    private readonly Func<T> _Factory;
+    private readonly Func<T> _Factory = Factory.NotNull();
 
     /// <summary>Initializes an instance of the ObjectPool class.</summary>
     /// <param name="Factory">The function used to create items when no items exist in the pool.</param>
     public ObjectPool(Func<T> Factory) : this(Factory, new ConcurrentQueue<T>()) { }
-
-    /// <summary>Initializes an instance of the ObjectPool class.</summary>
-    /// <param name="Factory">The function used to create items when no items exist in the pool.</param>
-    /// <param name="collection">The collection used to store the elements of the pool.</param>
-    public ObjectPool(Func<T> Factory, IProducerConsumerCollection<T> collection)
-        : base(collection) => 
-        _Factory = Factory.NotNull();
 
     /// <summary>Adds the provided item into the pool.</summary>
     /// <param name="item">The item to be added.</param>

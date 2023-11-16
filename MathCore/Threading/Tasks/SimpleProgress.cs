@@ -1,8 +1,10 @@
 ﻿#nullable enable
 namespace MathCore.Threading.Tasks;
 
-public class SimpleProgress<T> : IProgress<T>
+public class SimpleProgress<T>(Action<T> ProgressReporter) : IProgress<T>
 {
+    public SimpleProgress() : this(null) { }
+
     private event EventHandler<EventArgs<T>>? ProgressChangedInternal;
     private EventArgs<T>? _Arg;
 
@@ -28,15 +30,10 @@ public class SimpleProgress<T> : IProgress<T>
         ProgressChangedInternal?.Invoke(this, arg);
     }
 
-    private readonly Action<T>? _ProgressReporter;
-
-    public SimpleProgress() { }
-
-    public SimpleProgress(Action<T> ProgressReporter) => _ProgressReporter = ProgressReporter;
 
     public void Report(T value)
     {
-        _ProgressReporter?.Invoke(value);
+        ProgressReporter?.Invoke(value);
         OnProgressChanged(value);
     }
 }

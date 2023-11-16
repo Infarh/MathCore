@@ -1,13 +1,14 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+using MathCore.Annotations;
 
 namespace MathCore.Trees;
 
-public class TreeNode<T> : ITreeValuedNode<T>
+public class TreeNode<T>(T Value, Func<T, T>? ParentSelector, Func<T, IEnumerable<T>>? ChildsSelector) : ITreeValuedNode<T>
 {
-    [CanBeNull] private readonly Func<T, T> _ParentSelector;
-    [CanBeNull] private readonly Func<T, IEnumerable<T>> _ChildsSelector;
+    private readonly Func<T, T>? _ParentSelector = ParentSelector;
+    private readonly Func<T, IEnumerable<T>>? _ChildsSelector = ChildsSelector;
 
-    public T Value { get; }
+    public T Value { get; } = Value;
 
     public int Level { get; }
 
@@ -33,21 +34,7 @@ public class TreeNode<T> : ITreeValuedNode<T>
         }
     }
 
-    public TreeNode(
-        [NotNull] T Value, 
-        [CanBeNull] Func<T, T> ParentSelector, 
-        [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector)
-    {
-        this.Value      = Value;
-        _ParentSelector = ParentSelector;
-        _ChildsSelector = ChildsSelector;
-    }
-
-    private TreeNode(
-        [NotNull] T Value,
-        [CanBeNull] Func<T, T> ParentSelector,
-        [CanBeNull] Func<T, IEnumerable<T>> ChildsSelector,
-        int Level)
+    private TreeNode(T Value, Func<T, T>? ParentSelector, Func<T, IEnumerable<T>>? ChildsSelector, int Level)
         : this(Value, ParentSelector, ChildsSelector)
         => this.Level = Level;
 }

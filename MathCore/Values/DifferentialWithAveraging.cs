@@ -2,23 +2,19 @@
 namespace MathCore.Values;
 
 [Serializable]
-public class DifferentialWithAveraging : IResettable, IValue<double>
+public class DifferentialWithAveraging(double Tau) : IResettable, IValue<double>
 {
+    public DifferentialWithAveraging() : this(0) { }
+
     protected double _LastValue;
 
     protected TimeSpan _LastTime;
 
-    public double Tau { get; set; }
+    public double Tau { get; set; } = Tau;
 
     public double Value { get; set; }
     
     public bool Initialized { get; protected set; }
-
-    public DifferentialWithAveraging() { }
-
-    public DifferentialWithAveraging(double Tau) => this.Tau = Tau;
-
-    //public DifferentialWithAveraging(double Tau, double Value) : this(Tau) { Add(Value); }
 
     public void Reset() => Initialized = false;
 

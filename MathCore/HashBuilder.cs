@@ -2,7 +2,10 @@
 namespace MathCore;
 
 /// <summary>Построитель хеш-суммы</summary>
-public readonly ref struct HashBuilder
+/// <remarks>Инициализация нового построителя хеш-суммы</remarks>
+/// <param name="Hash">Базовое значение хеш-суммы</param>
+/// <param name="HashBase">Множитель хеш-суммы</param>
+public readonly ref struct HashBuilder(int Hash, int HashBase = HashBuilder.BaseMultiplier)
 {
     public const int BaseMultiplier = 379;
 
@@ -16,22 +19,13 @@ public readonly ref struct HashBuilder
     /* ------------------------------------------------------------------------------------- */
 
     /// <summary>Текущая хеш-сумма</summary>
-    private readonly int _Hash;
+    private readonly int _Hash = Hash;
 
     /// <summary>Базовый множитель суммы</summary>
-    private readonly int _HashBase;
+    private readonly int _HashBase = HashBase;
 
     /// <summary>Текущая хеш-сумма</summary>
     public int Hash => _Hash;
-
-    /// <summary>Инициализация нового построителя хеш-суммы</summary>
-    /// <param name="Hash">Базовое значение хеш-суммы</param>
-    /// <param name="HashBase">Множитель хеш-суммы</param>
-    public HashBuilder(int Hash, int HashBase = BaseMultiplier)
-    {
-        _Hash = Hash;
-        _HashBase = HashBase;
-    }
 
     /// <summary>Изменение множителя</summary>
     /// <param name="Base">Новое значение множителя хеш-суммы</param>

@@ -29,21 +29,20 @@ public class TimeoutEvent<TEventArgs> where TEventArgs : EventArgs
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Аргумент события</summary>
-    public class Info : EventArgs
+    /// <remarks>Аргумент события</remarks>
+    /// <param name="Sender">Источник исходного события</param>
+    /// <param name="e">Аргумент исходного события</param>
+    [method: DST]
+    /* ------------------------------------------------------------------------------------------ */
+
+    /// <summary>Аргумент события</summary>
+    public class Info(object Sender, TEventArgs e) : EventArgs
     {
         /// <summary>Источник сходного события</summary>
-        public object EventSender { get; }
+        public object EventSender => Sender;
+
         /// <summary>Аргумент исходного события</summary>
-        public TEventArgs E { get; }
-        /// <summary>Аргумент события</summary>
-        /// <param name="EventSender">Источник исходного события</param>
-        /// <param name="e">Аргумент исходного события</param>
-        [DST]
-        public Info(object EventSender, TEventArgs e)
-        {
-            this.EventSender = EventSender;
-            E                = e;
-        }
+        public TEventArgs E => e;
     }
 
     /// <summary>Первичная генерация события</summary>

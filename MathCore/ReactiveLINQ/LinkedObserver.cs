@@ -2,33 +2,29 @@
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
-internal sealed class LinkedObserver<T> : SimpleObserverEx<T>
+internal sealed class LinkedObserver<T>(IObservable<T> source, SimpleObservableEx<T>? destination) : SimpleObserverEx<T>(source)
 {
-    private readonly SimpleObservableEx<T>? _Destination;
-
-    public LinkedObserver(IObservable<T> source, SimpleObservableEx<T>? destination) : base(source) => _Destination = destination;
-
     public override void OnNext(T item)
     {
         base.OnNext(item);
-        _Destination?.OnNext(item);
+        destination?.OnNext(item);
     }
 
     public override void OnCompleted()
     {
         base.OnCompleted();
-        _Destination?.OnCompleted();
+        destination?.OnCompleted();
     }
 
     public override void OnReset()
     {
         base.OnReset();
-        _Destination?.OnReset();
+        destination?.OnReset();
     }
 
     public override void OnError(Exception error)
     {
         base.OnError(error);
-        _Destination?.OnError(error);
+        destination?.OnError(error);
     }
 }

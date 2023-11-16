@@ -3,25 +3,21 @@ using System.Collections;
 
 namespace MathCore.Vectors;
 
-public class Vector<T> : IEnumerable<T>, ICloneable<Vector<T>>, IEquatable<Vector<T>>
+public class Vector<T>(T[] Elements) : IEnumerable<T>, ICloneable<Vector<T>>, IEquatable<Vector<T>>
 {
+    public Vector(int Dimension) : this(new T[Dimension]) { }
+
+    public Vector(IEnumerable<T> Elements) : this(Elements.ToArray()) { }
+
     /* ------------------------------------------------------------------------------------------ */
 
-    private readonly T[] _Elements;
+    private readonly T[] _Elements = (T[])Elements.Clone();
 
     /* ------------------------------------------------------------------------------------------ */
 
     public int Dimension => _Elements.Length;
 
     public ref T this[int i] => ref _Elements[i];
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    public Vector(int Dimension) => _Elements = new T[Dimension];
-
-    public Vector(T[] Elements) => _Elements = (T[])Elements.Clone();
-
-    public Vector(IEnumerable<T> Elements) : this(Elements.ToArray()) { }
 
     /* ------------------------------------------------------------------------------------------ */
 

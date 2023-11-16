@@ -4,17 +4,16 @@ using System.Globalization;
 namespace MathCore.Values;
 
 /// <summary>Максимальное значение</summary>
-public class MaxValue : IValue<double>, IResettable, IFormattable
+/// <remarks>Инициализация нового экземпляра <see cref="MaxValue"/></remarks>
+/// <param name="StartValue">Начальное значение</param>
+public class MaxValue(double StartValue) : IValue<double>, IResettable, IFormattable
 {
+    public MaxValue() : this(double.NegativeInfinity) { }
+
     /// <summary>Минимальное значение</summary>
-    public double Value { get; set; }
+    public double Value { get; set; } = StartValue;
 
     /// <summary>Инициализация нового экземпляра <see cref="MaxValue"/></summary>
-    public MaxValue() => Value = double.NegativeInfinity;
-
-    /// <summary>Инициализация нового экземпляра <see cref="MaxValue"/></summary>
-    /// <param name="StartValue">Начальное значение</param>
-    public MaxValue(double StartValue) => Value = StartValue;
 
     /// <summary>Добавить новое значение</summary>
     /// <param name="value">Добавляемое значение</param>

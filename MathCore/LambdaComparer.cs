@@ -7,15 +7,11 @@ namespace MathCore;
 
 /// <summary>Объект, представляющий метод сравнения двух объектов типа <typeparamref name="T"/>, задаваемый lambda-выражением</summary>
 /// <typeparam name="T">Тип сравниваемых объектов</typeparam>
-public class LambdaComparer<T> : IComparer<T>, IComparer
+public class LambdaComparer<T>(Func<T, T, int> Comparer) : IComparer<T>, IComparer
 {
     /* ------------------------------------------------------------------------------------------ */
 
-    private readonly Func<T, T, int> _Comparer;
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    public LambdaComparer(Func<T, T, int> Comparer) => _Comparer = Comparer;
+    private readonly Func<T, T, int> _Comparer = Comparer;
 
     /* ------------------------------------------------------------------------------------------ */
 

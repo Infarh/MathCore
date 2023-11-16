@@ -20,6 +20,7 @@ public class NumberedValues<TValue> : IEnumerable<KeyValuePair<double, TValue>>
     public ref TValue this[double t] => ref this[IndexOf(t)];
 
     public NumberedValues(double dt, int N, double t0 = 0) : this(dt, new TValue[N], t0) { }
+
     public NumberedValues(double dt, TValue[] Values, double t0 = 0)
     {
         _t0     = t0;

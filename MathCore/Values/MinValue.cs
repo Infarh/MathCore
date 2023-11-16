@@ -4,17 +4,15 @@ using System.Globalization;
 namespace MathCore.Values;
 
 /// <summary>Минимальное значение</summary>
-public class MinValue : IValue<double>, IResettable, IFormattable
+/// <remarks>Инициализация нового экземпляра <see cref="MinValue"/></remarks>
+/// <param name="StartValue">Начальное значение</param>
+public class MinValue(double StartValue) : IValue<double>, IResettable, IFormattable
 {
+    /// <summary>Инициализация нового экземпляра <see cref="MinValue"/></summary>
+    public MinValue() : this(double.PositiveInfinity) { }
+
     /// <summary>Минимальное значение</summary>
-    public double Value { get; set; }
-
-    /// <summary>Инициализация нового экземпляра <see cref="MinValue"/></summary>
-    public MinValue() => Value = double.PositiveInfinity;
-
-    /// <summary>Инициализация нового экземпляра <see cref="MinValue"/></summary>
-    /// <param name="StartValue">Начальное значение</param>
-    public MinValue(double StartValue) => Value = StartValue;
+    public double Value { get; set; } = StartValue;
 
     /// <summary>Добавить новое значение</summary>
     /// <param name="value">Добавляемое значение</param>

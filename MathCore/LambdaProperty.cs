@@ -40,7 +40,6 @@ public class LambdaProperty<T> : LambdaPropertyBase, INotifyPropertyChanged, IEq
         }
     }
 
-
     /// <summary>Метод получения значения свойства</summary>
     private Func<T?>? _GetMethod;
 

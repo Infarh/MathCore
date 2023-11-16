@@ -3,17 +3,11 @@
 
 namespace MathCore;
 
-public class LambdaToStringObjectIndicator<T>
+public class LambdaToStringObjectIndicator<T>(T t, Func<T, string> Converter)
 {
-    private readonly Func<T, string> _Converter;
+    private readonly Func<T, string> _Converter = Converter;
 
-    public T Value { get; }
-
-    public LambdaToStringObjectIndicator(T t, Func<T, string> Converter)
-    {
-        _Converter = Converter;
-        Value      = t;
-    }
+    public T Value { get; } = t;
 
     /// <inheritdoc />
     public override string ToString() => _Converter(Value);

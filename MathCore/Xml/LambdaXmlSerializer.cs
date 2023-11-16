@@ -19,7 +19,9 @@ public abstract class LambdaXmlSerializer
 
 /// <summary>Настраиваемый сериализатор объектов в XML</summary>
 /// <typeparam name="T">Тип сериализуемого класса</typeparam>
-public class LambdaXmlSerializer<T> : LambdaXmlSerializer
+/// <remarks>Инициализация нового настраиваемого сериализатора</remarks>
+/// <param name="ElementName">Название корневого элемента</param>
+public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSerializer
 {
     /// <summary>Название элемента по умолчанию</summary>
     // ReSharper disable once StaticMemberInGenericType
@@ -28,29 +30,22 @@ public class LambdaXmlSerializer<T> : LambdaXmlSerializer
     /// <summary>Название элемента по умолчанию</summary>
     public static string EmptyName { get => __EmptyName; set => __EmptyName = value; }
 
-    /// <summary>Название элемента</summary>
-    private readonly string? _ElementName;
-
     /// <summary>Список методов формирования атрибутов элемента</summary>
     private readonly List<Func<T, object>> _Attributes = new();
 
     /// <summary>Список методов формирования дочерних элементов</summary>
     private readonly List<Func<T, object>> _Elements = new();
 
-    /// <summary>Инициализация нового настраиваемого сериализатора</summary>
-    /// <param name="ElementName">Название корневого элемента</param>
-    public LambdaXmlSerializer(string? ElementName = null) => _ElementName = ElementName;
-
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>xml-представление сериализуемого объекта</returns>
-    public XElement Serialize(T value) => new(_ElementName ?? __EmptyName, Content(value).ToArray());
+    public XElement Serialize(T value) => new(ElementName ?? __EmptyName, Content(value).ToArray());
 
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="Name">Название корневого элемента</param>
     /// <param name="value">Сериализуемый объект</param>
     /// <returns>xml-представление сериализуемого объекта</returns>
-    public XElement Serialize(string? Name, T value) => new(Name ?? _ElementName ?? __EmptyName, Content(value).ToArray());
+    public XElement Serialize(string? Name, T value) => new(Name ?? ElementName ?? __EmptyName, Content(value).ToArray());
 
     /// <summary>Формирование содержимого элемента</summary>
     /// <remarks>Выполнение списков методов вычисления значений атрибутов, затем - дочерних элементов</remarks>

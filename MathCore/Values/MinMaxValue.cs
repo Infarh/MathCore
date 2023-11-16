@@ -4,12 +4,15 @@
 namespace MathCore.Values;
 
 /// <summary>Объект, отслеживающий минимальное и максимальное значение входящей величины</summary>
-public class MinMaxValue : IResettable, IFormattable
+public class MinMaxValue(double Min, double Max) : IResettable, IFormattable
 {
+    public MinMaxValue() : this(double.PositiveInfinity, double.NegativeInfinity) { }
+
     /// <summary>Минимальное значение</summary>
-    private double _Min;
+    private double _Min = Min;
+
     /// <summary>Максимальное значение</summary>
-    private double _Max;
+    private double _Max = Max;
 
     /// <summary>Минимальное значение</summary>
     public double Min => _Min;
@@ -19,18 +22,6 @@ public class MinMaxValue : IResettable, IFormattable
 
     /// <summary>Интервал значений</summary>
     public Interval Interval => new(_Min, _Max, true);
-
-    public MinMaxValue()
-    {
-        _Min = double.PositiveInfinity;
-        _Max = double.NegativeInfinity;
-    }
-
-    public MinMaxValue(double Min, double Max)
-    {
-        _Min = Min;
-        _Max = Max;
-    }
 
     public MinMaxValue(IEnumerable<double> values) : this() => values.Foreach(SetValue);
 
@@ -47,11 +38,7 @@ public class MinMaxValue : IResettable, IFormattable
     }
 
     /// <inheritdoc />
-    public void Reset()
-    {
-        _Min = double.PositiveInfinity;
-        _Max = double.NegativeInfinity;
-    }
+    public void Reset() => (_Min, _Max) = (double.PositiveInfinity, double.NegativeInfinity);
 
     /// <inheritdoc />
     public override string ToString() => $"Min:{_Min}; Max:{_Max}";

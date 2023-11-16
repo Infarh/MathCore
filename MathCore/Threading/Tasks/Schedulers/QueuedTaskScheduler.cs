@@ -13,14 +13,12 @@ namespace MathCore.Threading.Tasks.Schedulers;
 public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
 {
     /// <summary>Отладочное представление</summary>
-    private class QueuedTaskSchedulerDebugView
+    /// <remarks>Инициализация отладочного представления для планировщика</remarks>
+    /// <param name="scheduler">Рассматриваемый планировщик</param>
+    private class QueuedTaskSchedulerDebugView(QueuedTaskScheduler scheduler)
     {
         /// <summary>The scheduler.</summary>
-        private readonly QueuedTaskScheduler _Scheduler;
-
-        /// <summary>Инициализация отладочного представления для планировщика</summary>
-        /// <param name="scheduler">Рассматриваемый планировщик</param>
-        public QueuedTaskSchedulerDebugView(QueuedTaskScheduler scheduler) => _Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+        private readonly QueuedTaskScheduler _Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
 
         /// <summary>Извлечение всех задач, запланированных непосредственно в планировщике</summary>
         public IEnumerable<Task> ScheduledTasks

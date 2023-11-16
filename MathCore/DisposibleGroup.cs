@@ -9,40 +9,33 @@ namespace MathCore;
 
 /// <summary>Группа объектов, поддерживающих интерфейс <see cref="T:System.IDisposable">освобождения ресурсов</see></summary>
 /// <typeparam name="T">Тип объектов, поддерживающих интерфейс <see cref="T:System.IDisposable"/></typeparam>
-public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<int, T> where T : IDisposable
+/// <remarks>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></remarks>
+/// <param name="item"><typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
+[method: DST]
+/// <summary>Группа объектов, поддерживающих интерфейс <see cref="T:System.IDisposable">освобождения ресурсов</see></summary>
+/// <typeparam name="T">Тип объектов, поддерживающих интерфейс <see cref="T:System.IDisposable"/></typeparam>
+public class DisposableGroup<T>(params T[] item) : IDisposable, IEnumerable<T>, IIndexableRead<int, T> where T : IDisposable
 {
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Массив содержащихся объектов интерфейса <see cref="T:System.IDisposable"/></summary>
-    private readonly T[] _Items;
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Число элементов группы</summary>
-    public int Count => _Items.Length;
-
-    /// <summary>Массив элементов группы</summary>
-    public IReadOnlyList<T> Items => _Items;
-
-    /// <inheritdoc />
-    T IIndexableRead<int, T>.this[int i] { [DST] get => _Items[i]; }
-
-    /// <summary>Элемент группы</summary>
-    /// <param name="i">Номер элемента группы</param>
-    /// <returns>Элемент группы с номером <paramref name="i"/></returns>
-    public ref readonly T this[int i] => ref _Items[i];
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></summary>
-    /// <param name="item"><typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
-    [DST]
-    public DisposableGroup(params T[] item) => _Items = item;
-
     /// <summary>Группа <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></summary>
     /// <param name="items">Перечисление <typeparamref name="T"/> интерфейса <see cref="T:System.IDisposable"/></param>
     [DST]
     public DisposableGroup(IEnumerable<T> items) : this(items.Where(v => v is not null).ToArray()) { }
+
+    /* ------------------------------------------------------------------------------------------ */
+
+    /// <summary>Число элементов группы</summary>
+    public int Count => item.Length;
+
+    /// <summary>Массив элементов группы</summary>
+    public IReadOnlyList<T> Items => item;
+
+    /// <inheritdoc />
+    T IIndexableRead<int, T>.this[int i] { [DST] get => item[i]; }
+
+    /// <summary>Элемент группы</summary>
+    /// <param name="i">Номер элемента группы</param>
+    /// <returns>Элемент группы с номером <paramref name="i"/></returns>
+    public ref readonly T this[int i] => ref item[i];
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -63,13 +56,13 @@ public class DisposableGroup<T> : IDisposable, IEnumerable<T>, IIndexableRead<in
     {
         if (!disposing || _Disposed) return;
         _Disposed = true;
-        _Items.Foreach(i => i?.Dispose());
+        item.Foreach(i => i?.Dispose());
     }
 
     /// <summary>Получить перечислитель элементов группы</summary>
     /// <returns>Перечислитель элементов группы</returns>
     [DST]
-    public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)_Items).GetEnumerator();
+    public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)item).GetEnumerator();
 
 
     /// <summary>Возвращает перечислитель, который осуществляет перебор элементов коллекции.</summary>

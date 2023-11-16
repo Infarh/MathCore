@@ -13,13 +13,11 @@ public readonly ref struct YieldAwaitableThreadPool
 
     public Awaiter GetAwaiter() => new(_LockContext);
 
-    public readonly struct Awaiter : ICriticalNotifyCompletion, IEquatable<Awaiter>
+    public readonly struct Awaiter(bool LockContext) : ICriticalNotifyCompletion, IEquatable<Awaiter>
     {
-        private readonly bool _LockContext;
+        private readonly bool _LockContext = LockContext;
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
         private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
-
-        public Awaiter(in bool LockContext) => _LockContext = LockContext;
 
         public bool IsCompleted => false;
 

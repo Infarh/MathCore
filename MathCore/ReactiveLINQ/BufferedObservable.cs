@@ -14,7 +14,7 @@ internal abstract class BufferedObservable<T> : SimpleObservableEx<T[]>
     {
         _BufferLength = BufferLength;
         _Observer     = new LambdaObserver<T>(ObservableObject, OnNext, OnCompleted, OnReset, OnError);
-        _Buffer       = new Queue<Queue<T>>(QueueLength);
+        _Buffer       = new(QueueLength);
     }
 
     protected abstract void OnNext(T value);

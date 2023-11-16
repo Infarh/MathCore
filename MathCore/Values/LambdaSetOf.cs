@@ -1,21 +1,17 @@
 ﻿#nullable enable
 namespace MathCore.Values;
 
-public class LambdaSetOf<T> : AbstractSetOf<T>
+public class LambdaSetOf<T>(IEnumerable<T> enumerable) : AbstractSetOf<T>
 {
-    private readonly IEnumerable<T> _Enumerable;
-
-    public override int Power => _Enumerable.Count();
+    public override int Power => enumerable.Count();
 
     public override bool Add(T Value)
     {
-        var collection = _Enumerable as ICollection<T> ?? throw new NotSupportedException("Добавление элементов не поддерживается");
+        var collection = enumerable as ICollection<T> ?? throw new NotSupportedException("Добавление элементов не поддерживается");
         if (collection.Contains(Value)) return false;
         collection.Add(Value);
         return true;
     }
 
-    public LambdaSetOf(IEnumerable<T> enumerable) => _Enumerable = enumerable;
-
-    public override IEnumerator<T> GetEnumerator() => _Enumerable.GetEnumerator();
+    public override IEnumerator<T> GetEnumerator() => enumerable.GetEnumerator();
 }

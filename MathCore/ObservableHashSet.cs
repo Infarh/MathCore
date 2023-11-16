@@ -10,7 +10,9 @@ namespace MathCore;
 
 /// <summary>Хеш-таблица с уведомлением об изменениях</summary>
 /// <typeparam name="T">Тип элементов коллекции</typeparam>
-public class ObservableHashSet<T> : ICollection<T>, INotifyPropertyChanged, INotifyCollectionChanged
+/// <remarks>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</remarks>
+/// <param name="Set">Внутренняя таблица</param>
+public class ObservableHashSet<T>(HashSet<T> Set) : ICollection<T>, INotifyPropertyChanged, INotifyCollectionChanged
 {
     #region INotifyPropertyChanged
 
@@ -36,14 +38,10 @@ public class ObservableHashSet<T> : ICollection<T>, INotifyPropertyChanged, INot
     #endregion
 
     /// <summary>Внутренняя хеш-таблица</summary>
-    private readonly HashSet<T> _HashSet;
+    private readonly HashSet<T> _HashSet = Set.NotNull();
 
     /// <summary>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</summary>
     public ObservableHashSet() : this(new()) { }
-
-    /// <summary>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</summary>
-    /// <param name="Set">Внутренняя таблица</param>
-    public ObservableHashSet(HashSet<T> Set) => _HashSet = Set.NotNull();
 
     /// <summary>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</summary>
     /// <param name="Items">Исходный набор элементов</param>

@@ -7,33 +7,22 @@ namespace MathCore;
 
 /// <summary>Оболочка, обеспечивающая освобождение ресурсов указанным методом для указанного объекта</summary>
 /// <typeparam name="T">Тип объекта, с которым работает оболочка</typeparam>
-public class UsingObject<T> : IDisposable
+/// <remarks>Упаковка объекта в оболочку с указанием метода освобождения ресурсов, занимаемых указанным объектом</remarks>
+/// <param name="obj">Уничтожаемый объект</param>
+/// <param name="Disposer">Метод освобождения ресурсов</param>
+[method: DST]
+/// <summary>Оболочка, обеспечивающая освобождение ресурсов указанным методом для указанного объекта</summary>
+/// <typeparam name="T">Тип объекта, с которым работает оболочка</typeparam>
+public class UsingObject<T>([DisallowNull] T obj, Action<T> Disposer) : IDisposable
 {
     /* ------------------------------------------------------------------------------------------ */
 
-    /// <summary>Используемый объект</summary>
-    private readonly T _Obj;
-
-    /// <summary>Метод освобождения ресурсов</summary>
-    private readonly Action<T> _Disposer;
+    private readonly T _Obj = obj ?? throw new ArgumentNullException(nameof(obj));
 
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Используемый объект</summary>
-    public T Object => _Obj;
-
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Упаковка объекта в оболочку с указанием метода освобождения ресурсов, занимаемых указанным объектом</summary>
-    /// <param name="obj">Уничтожаемый объект</param>
-    /// <param name="Disposer">Метод освобождения ресурсов</param>
-    [DST]
-    public UsingObject([DisallowNull] T obj, Action<T> Disposer)
-    {
-        if(obj is null) throw new ArgumentNullException(nameof(obj));
-        _Obj      = obj;
-        _Disposer = Disposer ?? throw new ArgumentNullException(nameof(Disposer));
-    }
+    public T Object => obj;
 
     /* ------------------------------------------------------------------------------------------ */
 
@@ -53,7 +42,7 @@ public class UsingObject<T> : IDisposable
     {
         if (!disposing || _Disposed) return;
         _Disposed = true;
-        _Disposer(_Obj);
+        Disposer(_Obj);
     }
 
     /* ------------------------------------------------------------------------------------------ */

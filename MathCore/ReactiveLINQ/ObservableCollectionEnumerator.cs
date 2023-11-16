@@ -2,18 +2,14 @@
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 
-internal sealed class ObservableCollectionEnumerator<T> : IObservable<T>
+internal sealed class ObservableCollectionEnumerator<T>(IEnumerable<T> collection) : IObservable<T>
 {
-    private readonly IEnumerable<T> _Collection;
-
-    public ObservableCollectionEnumerator(IEnumerable<T> collection) => _Collection = collection;
-
     public IDisposable Subscribe(IObserver<T> observer)
     {
         (observer as IObserverEx<T>)?.OnReset();
         try
         {
-            _Collection.OnComplete(observer.OnCompleted).Foreach(observer.OnNext);
+            collection.OnComplete(observer.OnCompleted).Foreach(observer.OnNext);
         } catch(Exception e)
         {
             observer.OnError(e);

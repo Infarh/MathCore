@@ -6,19 +6,15 @@ using System.Globalization;
 
 namespace MathCore;
 
-public class LambdaFormatter<T> : IFormatProvider, ICustomFormatter
+public class LambdaFormatter<T>(Func<string, object, IFormatProvider, string> Formatter) : IFormatProvider, ICustomFormatter
 {
-    private readonly Func<string, object, IFormatProvider, string> _Formatter;
-
-    public LambdaFormatter(Func<string, object, IFormatProvider, string> Formatter) => _Formatter = Formatter;
-
     /// <inheritdoc />
     public object? GetFormat(Type FormatType) => FormatType == typeof(ICustomFormatter) ? this : null;
 
     /// <inheritdoc />
     public string Format(string format, object arg, IFormatProvider FormatProvider)
     {
-        if (arg.GetType() == typeof(T)) return _Formatter(format, arg, FormatProvider);
+        if (arg.GetType() == typeof(T)) return Formatter(format, arg, FormatProvider);
         try
         {
             return HandleOtherFormats(format, arg);
