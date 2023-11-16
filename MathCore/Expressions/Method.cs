@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
+
 using MathCore.Extensions.Expressions;
 // ReSharper disable UnusedType.Global
 // ReSharper disable AnnotateNotNullTypeMember

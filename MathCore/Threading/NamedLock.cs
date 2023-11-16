@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MathCore.Threading;
+﻿namespace MathCore.Threading;
 
 /// <summary>Блокировщик асинхронного доступа к именованному ресурсу</summary>
 public sealed class NamedLock : IDisposable

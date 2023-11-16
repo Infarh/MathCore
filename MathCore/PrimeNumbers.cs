@@ -1,8 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace MathCore;
 
 /// <summary>Алгоритмы для Простых чисел</summary>

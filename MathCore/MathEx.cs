@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Расширенный класс математических функций</summary>
 public static class MathEx

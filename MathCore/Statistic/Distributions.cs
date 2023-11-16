@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using MathCore.Annotations;
-
 namespace MathCore.Statistic;
 
 /// <summary>Распределения</summary>

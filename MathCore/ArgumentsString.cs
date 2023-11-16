@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System.Linq;
-using System.Text;
-
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global

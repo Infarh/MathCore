@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-
 namespace MathCore.Values;
 
 /// <summary>Статистическая информация о значении</summary>

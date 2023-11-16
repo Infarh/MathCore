@@ -1,8 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace MathCore.MathParser;
 
 /// <summary>функция в структуре математического выражения</summary>

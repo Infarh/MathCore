@@ -1,8 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace MathCore.Monads.WorkFlow;
 
 /// <summary>Результат выполнения работы</summary>

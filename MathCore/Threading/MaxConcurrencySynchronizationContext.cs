@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace MathCore.Threading;
+﻿namespace MathCore.Threading;
 
 /// <summary>Контекст синхронизации с максимально допустимой степенью параллелизма</summary>
 public sealed class MaxConcurrencySynchronizationContext : SynchronizationContext

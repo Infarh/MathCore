@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToAutoPropertyWhenPossible

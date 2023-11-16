@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.Collections.Generic;
 using MathCore;
 using MathCore.Extensions.Expressions;
 // ReSharper disable UnusedMember.Global

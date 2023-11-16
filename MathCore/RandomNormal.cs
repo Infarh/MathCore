@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 using static System.Math;
 
 namespace MathCore;

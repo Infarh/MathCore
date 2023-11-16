@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Linq;
-
 namespace MathCore.Optimization.ParticleSwarm;
 
 /// <summary>Рой двумерных частиц</summary>

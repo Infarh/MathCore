@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Threading;
-
 namespace MathCore;
 
 /// <summary>Информатор прогресса операции, осуществляющий прореживание вызовов к информатору по числу вызовов</summary>

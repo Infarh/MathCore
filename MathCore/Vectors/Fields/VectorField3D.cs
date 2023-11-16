@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.Vectors.Fields;
 
 /// <summary>Трёхмерное векторное поле</summary>

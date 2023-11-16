@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global

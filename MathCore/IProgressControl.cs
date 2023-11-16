@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Threading;
-
 namespace MathCore;
 
 /// <summary>Контроль над асинхронной операцией</summary>

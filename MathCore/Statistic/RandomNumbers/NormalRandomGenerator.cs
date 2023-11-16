@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Statistic.RandomNumbers;
+﻿namespace MathCore.Statistic.RandomNumbers;
 
 public class NormalRandomGenerator : RandomGenerator
 {

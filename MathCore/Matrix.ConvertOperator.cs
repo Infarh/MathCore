@@ -1,5 +1,4 @@
-﻿using System;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 
 // ReSharper disable InconsistentNaming
 namespace MathCore;

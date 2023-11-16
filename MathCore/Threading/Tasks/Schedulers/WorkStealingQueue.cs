@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System.Collections.Generic;
-using System.Threading;
-
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>A work-stealing queue.</summary>

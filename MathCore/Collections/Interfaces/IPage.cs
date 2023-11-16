@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MathCore.Collections.Interfaces;
+﻿namespace MathCore.Collections.Interfaces;
 
 /// <summary>Страница элементов</summary>
 /// <typeparam name="T">Тип элементов</typeparam>

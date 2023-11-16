@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Threading;
-
 namespace MathCore;
 
 /// <summary>Класс задержки реакции на событие</summary>

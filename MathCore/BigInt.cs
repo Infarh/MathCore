@@ -133,10 +133,6 @@
 //************************************************************************************
 // ReSharper restore CommentTypo
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
 // ReSharper disable UnusedMember.Global

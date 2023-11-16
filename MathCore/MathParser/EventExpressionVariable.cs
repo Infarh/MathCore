@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible

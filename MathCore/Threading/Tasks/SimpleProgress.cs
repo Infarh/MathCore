@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.Threading.Tasks;
 
 public class SimpleProgress<T> : IProgress<T>

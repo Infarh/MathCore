@@ -1,7 +1,5 @@
 ﻿#nullable enable
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using MathCore.MathParser.ExpressionTrees.Nodes;
 // ReSharper disable UnusedMember.Global

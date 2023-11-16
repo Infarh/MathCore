@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 // ReSharper disable UnusedType.Global

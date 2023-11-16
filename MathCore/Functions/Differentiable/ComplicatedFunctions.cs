@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Functions.Differentiable;
+﻿namespace MathCore.Functions.Differentiable;
 
 public class Sinus : Function
 {

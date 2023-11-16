@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using System.Linq.Reactive;
 
 namespace MathCore.DataGenericSources;

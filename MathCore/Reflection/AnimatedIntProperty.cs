@@ -1,6 +1,4 @@
-﻿using System;
-
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 
 namespace MathCore.Reflection;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.Time;
+﻿namespace MathCore.Time;
 
 /// <summary>Измеритель времени</summary>
 public sealed class TimeCounter

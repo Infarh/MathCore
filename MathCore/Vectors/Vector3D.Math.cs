@@ -1,8 +1,8 @@
 ﻿#nullable enable
-using System;
 using System.Linq.Expressions;
 
 using MathCore.Extensions.Expressions;
+
 using static System.Math;
 // ReSharper disable UnusedMember.Global
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore;
+﻿namespace MathCore;
 
 /// <summary>Объект поддерживает клонирование</summary>
 /// <typeparam name="T">Тип объекта</typeparam>

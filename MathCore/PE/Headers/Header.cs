@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace MathCore.PE.Headers;
+﻿namespace MathCore.PE.Headers;
 
 public struct Header
 {

@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-
 namespace MathCore;
 
 /// <summary>Рациональная функция - отношение полиномов</summary>

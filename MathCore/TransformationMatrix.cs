@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 using MathCore.Vectors;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global

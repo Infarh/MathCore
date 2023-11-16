@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MathCore.DifferentialEquations.Numerical;
+﻿namespace MathCore.DifferentialEquations.Numerical;
 
 public static class AdamsBashforth
 {

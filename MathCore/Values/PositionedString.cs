@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 // ReSharper disable UnusedType.Global
 
 // ReSharper disable MemberCanBePrivate.Global

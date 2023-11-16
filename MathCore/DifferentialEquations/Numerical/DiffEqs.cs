@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MathCore.DifferentialEquations.Numerical;
+﻿namespace MathCore.DifferentialEquations.Numerical;
 
 /// <summary>Система дифференциальных уравнений</summary>
 /// <param name="t">Аргумент</param>

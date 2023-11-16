@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using MathCore;
-using MathCore.Extensions.String;
 
 // ReSharper disable UnusedMember.Global
 

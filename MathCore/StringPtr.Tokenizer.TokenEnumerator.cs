@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Linq;
-
 namespace MathCore;
 
 public readonly ref partial struct StringPtr

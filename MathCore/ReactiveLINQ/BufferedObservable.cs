@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Collections.Generic;
-
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 

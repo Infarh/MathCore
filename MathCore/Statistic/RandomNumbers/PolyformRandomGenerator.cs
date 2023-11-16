@@ -1,8 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
 using MathCore.Exceptions;
 using MathCore.Extensions.Expressions;
+
 using static System.Math;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global

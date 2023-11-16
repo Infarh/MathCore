@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Threading;
-
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Reactive;
 

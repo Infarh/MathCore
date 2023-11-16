@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.IO;
 using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using MathCore.Annotations;
+﻿using MathCore.Annotations;
 // ReSharper disable UnusedMember.Global
 
 namespace MathCore.DifferentialEquations.Numerical;

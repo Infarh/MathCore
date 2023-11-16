@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System;
-
 namespace MathCore.DataGenericSources;
 
 public abstract class DataSource<T>

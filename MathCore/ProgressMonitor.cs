@@ -1,7 +1,7 @@
 ﻿#nullable enable
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
 using MathCore.Annotations;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global

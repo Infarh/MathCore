@@ -1,6 +1,4 @@
-﻿using System;
-
-// ReSharper disable MemberHidesStaticFromOuterClass
+﻿// ReSharper disable MemberHidesStaticFromOuterClass
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global

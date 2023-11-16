@@ -14,7 +14,6 @@
 //------------------------------------------------------------------------------
 
 using System.Collections;
-using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace System.Xml.XPath;
