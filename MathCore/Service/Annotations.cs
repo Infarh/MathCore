@@ -23,7 +23,7 @@ namespace MathCore.Annotations;
 ///   var s = p.ToString(); // Warning: Possible 'System.NullReferenceException'
 /// }
 /// </code></example>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.ReturnValue)]
 public sealed class CanBeNullAttribute : Attribute { }
 
 /// <summary>
@@ -34,8 +34,28 @@ public sealed class CanBeNullAttribute : Attribute { }
 ///   return null; // Warning: Possible 'null' assignment
 /// }
 /// </code></example>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.ReturnValue)]
 public sealed class NotNullAttribute : Attribute { }
+
+#if !NET8_0_OR_GREATER
+/// <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true)]
+public sealed class NotNullIfNotNullAttribute : Attribute
+{
+    /// <summary>Initializes the attribute with the associated parameter name.</summary>
+    /// <param name="parameterName">
+    /// The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
+    /// </param>
+    public NotNullIfNotNullAttribute(string parameterName) => ParameterName = parameterName;
+
+    /// <summary>Gets the associated parameter name.</summary>
+    public string ParameterName { get; }
+}
+
+/// <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
+public sealed class DisallowNullAttribute : Attribute { }
+#endif
 
 /// <summary>
 /// Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
@@ -205,7 +225,7 @@ public sealed class ContractAnnotationAttribute : Attribute
 
     public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
     {
-        Contract        = contract;
+        Contract = contract;
         ForceFullStates = forceFullStates;
     }
 
@@ -292,7 +312,7 @@ public sealed class UsedImplicitlyAttribute : Attribute
     public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
         UseKindFlags = useKindFlags;
-        TargetFlags  = targetFlags;
+        TargetFlags = targetFlags;
     }
 
     public ImplicitUseKindFlags UseKindFlags { get; }
@@ -320,7 +340,7 @@ public sealed class MeansImplicitUseAttribute : Attribute
         ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
         UseKindFlags = useKindFlags;
-        TargetFlags  = targetFlags;
+        TargetFlags = targetFlags;
     }
 
     [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }

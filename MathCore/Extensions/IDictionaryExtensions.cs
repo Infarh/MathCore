@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 
 using MathCore;
+using MathCore.Annotations;
 
 // ReSharper disable UnusedMember.Global
 

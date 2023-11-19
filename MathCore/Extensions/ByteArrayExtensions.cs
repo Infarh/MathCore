@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 using MathCore;
+using MathCore.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace System;

@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace MathCore.Exceptions;
+﻿namespace MathCore.Exceptions;
 
 [Serializable]
 public class CalculationsException : Exception
@@ -17,9 +15,11 @@ public class CalculationsException : Exception
     {
     }
 
+#if !NET8_0_OR_GREATER
     protected CalculationsException(
-        SerializationInfo info,
-        StreamingContext context) : base(info, context)
+        System.Runtime.Serialization.SerializationInfo info,
+        System.Runtime.Serialization.StreamingContext context) : base(info, context)
     {
-    }
+    } 
+#endif
 }

@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Runtime.Serialization;
-
 namespace MathCore.IoC.Exceptions;
 
 [Serializable]
@@ -12,5 +10,7 @@ public class ServiceRegistrationNotFoundException : ServiceRegistrationException
 
     public ServiceRegistrationNotFoundException(Type ServiceType, string message, Exception inner) : base(ServiceType, message, inner) { }
 
-    protected ServiceRegistrationNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#if !NET8_0_OR_GREATER
+    protected ServiceRegistrationNotFoundException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { } 
+#endif
 }

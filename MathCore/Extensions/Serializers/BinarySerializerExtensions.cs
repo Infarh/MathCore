@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !NET8_0_OR_GREATER
+
+#nullable enable
 using System.Diagnostics;
 
 // ReSharper disable once CheckNamespace
@@ -11,3 +13,5 @@ public static class BinarySerializerExtensions
     [DebuggerStepThrough] 
     public static BinaryFormatter GetSerializer() => __Formatter ??= new BinaryFormatter();
 }
+
+#endif

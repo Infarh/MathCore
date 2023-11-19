@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedType.Global
 
@@ -248,7 +247,9 @@ public class TimerException : ApplicationException
 
     public TimerException(string message) : base(message) { }
 
-    protected TimerException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#if !NET8_0_OR_GREATER
+    protected TimerException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { } 
+#endif
 
     public TimerException(string message, Exception inner) : base(message, inner) { }
 }

@@ -7,6 +7,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
+using MathCore.Annotations;
+
 using static System.Linq.Expressions.Expression;
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible

@@ -102,7 +102,7 @@ public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSe
 
     #endregion
 
-    public static implicit operator DictionaryKeySafe<TKey, TValue>(Dictionary<TKey, TValue> d) => new(d);
+    public static implicit operator DictionaryKeySafe<TKey, TValue>(Dictionary<TKey, TValue> d) => new(d!);
 
     public static implicit operator Dictionary<TKey, TValue>(DictionaryKeySafe<TKey, TValue> d) => d._Dictionary as Dictionary<TKey, TValue> ?? new Dictionary<TKey, TValue>(d._Dictionary);
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -32,6 +32,10 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
+  <!--<ItemGroup>
+    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST"/>
+  </ItemGroup>-->
 
   <PropertyGroup>
     <NoWarn>

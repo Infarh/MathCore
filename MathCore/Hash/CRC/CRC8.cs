@@ -97,7 +97,7 @@ public class CRC8(byte Polynimial)
     public byte[] ComputeChecksumBytes(params byte[] bytes)
     {
         var crc = Compute(bytes);
-        return BitConverter.GetBytes(crc);
+        return new[] { crc };
     }
 
     public static byte Compute(Stream stream, byte Polynimial, byte State = 0)

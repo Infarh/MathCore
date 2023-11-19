@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Runtime.Serialization;
-
 namespace MathCore.IoC.Exceptions;
 
 [Serializable]
@@ -18,8 +16,10 @@ public class ServiceRegistrationException : ApplicationException
         : base(message, inner) =>
         this.ServiceType = ServiceType;
 
-    protected ServiceRegistrationException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
+#if !NET8_0_OR_GREATER
+    protected ServiceRegistrationException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+   : base(info, context)
     {
-    }
+    } 
+#endif
 }

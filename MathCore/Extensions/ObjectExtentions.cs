@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 
 using MathCore.Annotations;
 
+using NotNullAttribute = MathCore.Annotations.NotNullAttribute;
+
 using cEx = System.Linq.Expressions.ConstantExpression;
 using Ex = System.Linq.Expressions.Expression;
 using mcEx = System.Linq.Expressions.MethodCallExpression;
@@ -250,7 +252,7 @@ public static class ObjectExtensions
     /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
     /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> == <c>null</c></exception>
     /// <exception cref="ArgumentNullException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
-    [return: Diagnostics.CodeAnalysis.NotNull]
+    [return: NotNull]
     [return: NotNullIfNotNull(nameof(obj))]
     public static T NotNull<T>(this T? obj, string? Message = null, [CallerArgumentExpression(nameof(obj))] string? ParameterName = null!) 
         where T : class => 
