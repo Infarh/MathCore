@@ -225,15 +225,15 @@ public class ProgressMonitor : INotifyPropertyChanged
         _ConnectedMonitor                    =  null;
     }
 
-    private void OnMonitorStatusChanged(object sender, EventArgs e)
+    private void OnMonitorStatusChanged(object? sender, EventArgs e)
     {
         var monitor = (ProgressMonitor)sender;
         Status = monitor.Status;
     }
 
-    private void OnMonitorInformationChanged(object sender, EventArgs e) => Information = ((ProgressMonitor)sender).Information;
+    private void OnMonitorInformationChanged(object? sender, EventArgs e) => Information = ((ProgressMonitor)sender).Information;
 
-    private void OnMonitorProgressChanged(object sender, EventArgs e) => Progress = ((ProgressMonitor)sender).Progress;
+    private void OnMonitorProgressChanged(object? sender, EventArgs e) => Progress = ((ProgressMonitor)sender).Progress;
 
     /* ------------------------------------------------------------------------------------------ */
 

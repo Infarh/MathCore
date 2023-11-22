@@ -61,7 +61,7 @@ public class DXmlNode(XElement node) : DynamicObject
         return false;
     }
 
-    public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object? result)
+    public override bool TryInvokeMember(InvokeMemberBinder binder, object?[] args, out object? result)
     {
         var x_type = typeof(XElement);
         try

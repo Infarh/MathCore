@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Reflection;
 using MathCore;
+// ReSharper disable EventNeverSubscribedTo.Global
 
 // ReSharper disable UnusedType.Global
 
@@ -27,13 +28,13 @@ public static class INotifyPropertyChangedExtensions
     /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
     public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, string Name)
     {
-        void Handler(object s, PropertyChangedEventArgs e)
+        obj.PropertyChanged += Handler;
+        return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
+
+        void Handler(object? s, PropertyChangedEventArgs e)
         {
             if (string.Equals(e.PropertyName, Name)) handler(s, e);
         }
-
-        obj.PropertyChanged += Handler;
-        return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
     }
 
     /// <summary>Подписка на событие изменения указанных свойств</summary>
@@ -50,13 +51,13 @@ public static class INotifyPropertyChangedExtensions
     /// <returns>Объект <see cref="IDisposable"/>, вызывающий отписку от события в случае своего уничтожения</returns>
     public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, params string[] Names)
     {
-        void Handler(object s, PropertyChangedEventArgs e)
+        obj.PropertyChanged += Handler;
+        return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
+
+        void Handler(object? s, PropertyChangedEventArgs e)
         {
             if (Names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e);
         }
-
-        obj.PropertyChanged += Handler;
-        return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
     }
 
     /// <summary>Подписка на событие изменения указанных свойств</summary>
@@ -74,13 +75,14 @@ public static class INotifyPropertyChangedExtensions
     public static IDisposable RegisterPropertyChangedHandler_Disposable(this INotifyPropertyChanged obj, PropertyChangedEventHandler handler, IEnumerable<string> Names)
     {
         var names = Names as string[] ?? Names.ToArray();
-        void Handler(object s, PropertyChangedEventArgs e)
-        {
-            if (names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e);
-        }
 
         obj.PropertyChanged += Handler;
         return new LambdaDisposable(() => obj.PropertyChanged -= Handler);
+
+        void Handler(object? s, PropertyChangedEventArgs e)
+        {
+            if (names.Any(name => string.Equals(name, e.PropertyName))) handler(s, e);
+        }
     }
 
     #region Связи свойств по атрибутам AffectsTheAttribute и DependencyOnAttribute
@@ -89,7 +91,7 @@ public static class INotifyPropertyChangedExtensions
     public sealed class DependentPropertyChangedEventArgs : PropertyChangedEventArgs
     {
         /// <summary>Перечень свойств, породивших изменение</summary>
-        public string[] FromProperties { get; }
+        public string[]? FromProperties { get; }
 
         /// <summary>Инициализация нового аргумента события изменения зависимого свойства</summary>
         /// <param name="PropertyName">Имя изменившегося свойства</param>
@@ -107,7 +109,7 @@ public static class INotifyPropertyChangedExtensions
         /// <summary>Словарь связей имён свойств типа</summary>
         private readonly Dictionary<string, string[]> _Dependencies;
         /// <summary>Обработчик события изменения свойства объекта</summary>
-        private PropertyChangedEventHandler _Handler;
+        private PropertyChangedEventHandler? _Handler;
 
         /// <summary>Инициализация нового экземпляра информации и связях между свойствами типа</summary>
         /// <param name="Dependencies">Словарь имён свойств зависимостей</param>
@@ -148,7 +150,7 @@ public static class INotifyPropertyChangedExtensions
     /// <summary>Обработка событий сборки мусора в системе</summary>
     /// <param name="Sender">Источник события - не используется</param>
     /// <param name="e">Аргумент события - не используется</param>
-    private static void OnGarbageCollected(object Sender, EventArgs e)
+    private static void OnGarbageCollected(object? Sender, EventArgs e)
     {
         lock (__ObjectsSet)
         {
@@ -241,9 +243,9 @@ public static class INotifyPropertyChangedExtensions
 
     #endregion
 
-    public abstract class Subscriber
+    public abstract class Subscriber(INotifyPropertyChanged Obj, string PropertyName)
     {
-        private event PropertyChangedEventHandler OnPropertyChangedEventHandlers;
+        private event PropertyChangedEventHandler? OnPropertyChangedEventHandlers;
 
         public event PropertyChangedEventHandler OnPropertyChangedEvent
         {
@@ -259,7 +261,7 @@ public static class INotifyPropertyChangedExtensions
             }
         }
 
-        private event Action<string> OnPropertyChangedHandlers;
+        private event Action<string>? OnPropertyChangedHandlers;
         public event Action<string> OnPropertyChanged
         {
             add
@@ -274,7 +276,7 @@ public static class INotifyPropertyChangedExtensions
             }
         }
 
-        private event Action ValueChangeEventHandlers;
+        private event Action? ValueChangeEventHandlers;
         public event Action ValueChangeEvent
         {
             add
@@ -289,9 +291,7 @@ public static class INotifyPropertyChangedExtensions
             }
         }
 
-        protected readonly WeakReference<INotifyPropertyChanged> _NotifyPropertyChangedObject;
-
-        private readonly string _PropertyName;
+        protected readonly WeakReference<INotifyPropertyChanged> _NotifyPropertyChangedObject = new(Obj);
 
         public virtual bool IsEmpty => OnPropertyChangedEventHandlers is null && OnPropertyChangedHandlers is null && ValueChangeEventHandlers is null;
 
@@ -300,15 +300,9 @@ public static class INotifyPropertyChangedExtensions
                 ? obj 
                 : throw new InvalidOperationException("Объект, для которого производится попытка доступа, удалён");
 
-        protected Subscriber(INotifyPropertyChanged Obj, string PropertyName)
-        {
-            _PropertyName                = PropertyName;
-            _NotifyPropertyChangedObject = new(Obj);
-        }
-
         private void OnPropertyChangedHandler(object? Sender, PropertyChangedEventArgs E)
         {
-            if (E.PropertyName != _PropertyName) return;
+            if (E.PropertyName != PropertyName) return;
             OnObjectPropertyChanged(Sender, E);
         }
 
@@ -331,7 +325,7 @@ public static class INotifyPropertyChangedExtensions
     }
     public sealed class Subscriber<T> : Subscriber where T : INotifyPropertyChanged
     {
-        private event Action<T> OnObjectValueChangedHandlers;
+        private event Action<T>? OnObjectValueChangedHandlers;
         public event Action<T> OnObjectValueChanged
         {
             add
@@ -363,8 +357,7 @@ public static class INotifyPropertyChangedExtensions
         }
     }
 
-    private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers =
-        new();
+    private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers = new();
 
     public static IDisposable UsingSubscribeToProperty(
         this INotifyPropertyChanged obj,

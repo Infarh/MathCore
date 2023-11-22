@@ -7,7 +7,7 @@ public class PropertyEqualityComparer<T, TValue>(Func<T, TValue> Selector) : IEq
 {
     public bool Equals(T? x, T? y) => EqualityComparer<TValue>.Default.Equals(Selector(x), Selector(y));
 
-    public int GetHashCode(T obj) => EqualityComparer<TValue>.Default.GetHashCode(Selector(obj));
+    public int GetHashCode(T obj) => EqualityComparer<TValue>.Default.GetHashCode(Selector(obj)!);
 }
 
 public class PropertyEqualityComparer(Func<object, object> Selector) : IEqualityComparer

@@ -10,7 +10,7 @@ public class TimeIntervalObservable : SimpleObservableEx<TimeSpan>
     private readonly bool _Async;
     private volatile bool _Work;
     private readonly object _SyncObject = new();
-    private Thread _Thread;
+    private Thread? _Thread;
 
     public TimeIntervalObservable(TimeSpan interval, bool Start = false, bool Async = false)
     {
@@ -47,7 +47,7 @@ public class TimeIntervalObservable : SimpleObservableEx<TimeSpan>
             if(!_Work) return;
             _Work = false;
             if(!_Thread.Join(_Interval.Milliseconds))
-                _Thread.Abort();
+                _Thread.Interrupt();
         }
         foreach(var observer in _Observers.ToArray())
             observer.OnCompleted();

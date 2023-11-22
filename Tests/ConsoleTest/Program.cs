@@ -2,6 +2,7 @@ using System.Linq;
 
 using MathCore.Statistic;
 using MathCore.Statistic.RandomNumbers;
+#pragma warning disable CS8321 // Local function is declared but never used
 
 //const    int seed   = 1395601201;
 //const    int seed   = 3;

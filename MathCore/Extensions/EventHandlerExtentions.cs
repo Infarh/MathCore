@@ -238,7 +238,7 @@ public static class EventHandlerExtension
     /// <typeparam name="TSender">Тип источника события</typeparam>
     /// <returns>Массив результатов обработки события</returns>
     [DST]
-    public static TResult[] Start<TResult, TSender, TArgs>(
+    public static TResult?[] Start<TResult, TSender, TArgs>(
         this EventHandler<TResult, TSender, TArgs>? Handler, 
         TSender? Sender, 
         TArgs Args) =>

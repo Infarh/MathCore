@@ -5,36 +5,29 @@ using System.Collections;
 
 namespace MathCore.Graphs;
 
-public class LambdaGraphNode<TValue, TWeight> : IGraphNode<TValue, TWeight>, IEquatable<LambdaGraphNode<TValue, TWeight>>
+public class LambdaGraphNode<TValue, TWeight>(TValue Value, Func<TValue, IEnumerable<TValue>?>? GetChilds,
+        Func<TValue, TValue, TWeight> GetWeight, bool Buffered = false)
+    : IGraphNode<TValue, TWeight>, IEquatable<LambdaGraphNode<TValue, TWeight>>
 {
-    private readonly Func<TValue, IEnumerable<TValue>> _GetChilds;
+    private readonly Func<TValue, IEnumerable<TValue>?>? _GetChilds = GetChilds;
 
-    private readonly Func<TValue, TValue, TWeight> _GetWeight;
-    private readonly bool _Buffered;
+    private readonly Func<TValue, TValue, TWeight> _GetWeight = GetWeight;
     private IGraphLink<TValue, TWeight>[]? _Links;
 
     /// <inheritdoc />
-    public IEnumerable<IGraphLink<TValue, TWeight>> Links => _Buffered
+    public IEnumerable<IGraphLink<TValue, TWeight>> Links => Buffered
         ? _Links ??= (_GetChilds(Value) ?? Enumerable.Empty<TValue>())
-           .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight, _Buffered))
-           .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight, _Buffered))
+           .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight, Buffered))
+           .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight, Buffered))
            .Cast<IGraphLink<TValue, TWeight>>().ToArray()
         : (_GetChilds(Value) ?? Enumerable.Empty<TValue>())
        .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight))
        .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight))
        .Cast<IGraphLink<TValue, TWeight>>();
 
-    public TValue Value { get; }
+    public TValue Value { get; } = Value;
 
     public LambdaGraphNode<TValue, TWeight>[] Childs => this.Cast<LambdaGraphNode<TValue, TWeight>>().ToArray();
-
-    public LambdaGraphNode(TValue Value, Func<TValue, IEnumerable<TValue>> GetChilds, Func<TValue, TValue, TWeight> GetWeight, bool Buffered = false)
-    {
-        _GetChilds = GetChilds;
-        _GetWeight = GetWeight;
-        _Buffered  = Buffered;
-        this.Value = Value;
-    }
 
     public override int GetHashCode()
     {
@@ -42,7 +35,7 @@ public class LambdaGraphNode<TValue, TWeight> : IGraphNode<TValue, TWeight>, IEq
         {
             var hash = _GetChilds?.GetHashCode() ?? 0;
             hash = (hash * 397) ^ (_GetWeight?.GetHashCode() ?? 0);
-            hash = (hash * 397) ^ EqualityComparer<TValue>.Default.GetHashCode(Value);
+            hash = (hash * 397) ^ EqualityComparer<TValue>.Default.GetHashCode(Value!);
             return hash;
         }
     }
@@ -72,31 +65,22 @@ public class LambdaGraphNode<TValue, TWeight> : IGraphNode<TValue, TWeight>, IEq
     [DST] public override string ToString() => $"λ[{(Value is null ? string.Empty : Value.ToString())}]";
 }
 
-public class LambdaGraphNode<V> : IGraphNode<V>, IEquatable<LambdaGraphNode<V>>
+public class LambdaGraphNode<V>(V Value, Func<V, IEnumerable<V>?> GetChilds, bool Buffered = false) : IGraphNode<V>, IEquatable<LambdaGraphNode<V>>
 {
-    private readonly Func<V, IEnumerable<V>> _GetChilds;
-    private readonly bool _Buffered;
     private IEnumerable<IGraphNode<V>>? _Childs;
 
     /// <summary>Связи узла</summary>
-    public IEnumerable<IGraphNode<V>> Childs => _Buffered
-        ? _Childs ??= (_GetChilds(Value) ?? Enumerable.Empty<V>())
-           .Select(value => new LambdaGraphNode<V>(value, _GetChilds, _Buffered))
+    public IEnumerable<IGraphNode<V>> Childs => Buffered
+        ? _Childs ??= (GetChilds(Value) ?? Enumerable.Empty<V>())
+           .Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered))
            .Cast<IGraphNode<V>>()
            .ToArray()
-        : (_GetChilds(Value) ?? Enumerable.Empty<V>()).Select(value => new LambdaGraphNode<V>(value, _GetChilds, _Buffered));
+        : (GetChilds(Value) ?? Enumerable.Empty<V>()).Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered));
 
     /// <summary>Значение узла</summary>
-    public V Value { get; set; }
+    public V Value { get; set; } = Value;
 
     public LambdaGraphNode<V>[] ChildsArray => Childs.Cast<LambdaGraphNode<V>>().ToArray();
-
-    public LambdaGraphNode(V Value, Func<V, IEnumerable<V>> GetChilds, bool Buffered = false)
-    {
-        _GetChilds = GetChilds;
-        _Buffered  = Buffered;
-        this.Value = Value;
-    }
 
     /// <inheritdoc />
     [DST]
@@ -119,5 +103,5 @@ public class LambdaGraphNode<V> : IGraphNode<V>, IEquatable<LambdaGraphNode<V>>
     public override bool Equals(object? obj) => Equals(obj as LambdaGraphNode<V>);
 
     /// <inheritdoc />
-    public override int GetHashCode() => EqualityComparer<V>.Default.GetHashCode(Value);
+    public override int GetHashCode() => EqualityComparer<V>.Default.GetHashCode(Value!);
 }

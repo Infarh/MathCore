@@ -103,12 +103,14 @@ public static class TaskEx
                 ? Task.FromCanceled<T>(cancel)
                 : task.CreateCancellation(cancel);
 
-    private static readonly Action<object> __CancellationRegistration =
-        s => ((TaskCompletionSource<bool>)s).TrySetResult(default);
+    private static readonly Action<object?> __CancellationRegistration = s => ((TaskCompletionSource<bool>)s).TrySetResult(default);
 
     private static async Task<T> CreateCancellation<T>(this Task<T> task, CancellationToken cancel)
     {
         var tcs = new TaskCompletionSource<object?>();
+#if NET8_0_OR_GREATER
+        await
+#endif
         using (cancel.Register(__CancellationRegistration, tcs))
             if (task != await Task.WhenAny(task, tcs.Task).ConfigureAwait(false))
                 throw new TaskCanceledException();
@@ -1021,7 +1023,7 @@ public static class TaskEx
 
     public static Task OnCancelled(this Task task, Action continuation, SynchronizationContext Context) => task
        .ContinueWith(
-            (_, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action)a!)(), (((object[])o)[1])),
+            (_, o) => ((SynchronizationContext)((object[])o!)[0]).Send(a => ((Action)a!)(), ((object[])o)[1]),
             new object[] { Context, continuation },
             TaskContinuationOptions.OnlyOnCanceled);
 

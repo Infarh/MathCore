@@ -39,10 +39,8 @@ public class IntegralOperator : Functional
            .OfType<VariableValueNode>()
            .Where(n => n.Parent is EqualityOperatorNode)
            .Select(n => n.Variable)
-           .FirstOrDefault();
-
-        if(iterator_var is null)
-            throw new FormatException();
+           .FirstOrDefault() 
+            ?? throw new FormatException();
 
         var iterator_var_name = iterator_var.Name;
         var iterator_node = Parameters.Tree
@@ -75,6 +73,7 @@ public class IntegralOperator : Functional
                 Right = new FunctionArgumentNode("step", iterator_node.Parent)
             };
         }
+
         Parameters.Tree
            .OfType<VariableValueNode>()
            .Where(n => !ReferenceEquals(n.Variable, iterator_var) && !ReferenceEquals(n.Variable, iterator_diff_var))
@@ -89,9 +88,10 @@ public class IntegralOperator : Functional
         var x_node = ParametersExpression.Tree
            .OfType<VariableValueNode>()
            .First(n => ReferenceEquals(x, n.Variable));
+
         var interval = (IntervalNode?)x_node.Parent.Right ?? throw new InvalidOperationException("Правый узел дерева не определён - невозможно рассчитать интервал значений интегрирования");
         var min_node = (ComputedNode?)interval.Left ?? throw new InvalidOperationException("В левом поддереве интервала значений отсутствует элемент - невозможно определить минимальное значение интервала");
-        var max_node = (ComputedNode?)interval.Right ?? throw new InvalidOperationException("В правом поддереве интервала значений отсутствует элемент - невозможно определить максимальное значение интервала"); ;
+        var max_node = (ComputedNode?)interval.Right ?? throw new InvalidOperationException("В правом поддереве интервала значений отсутствует элемент - невозможно определить максимальное значение интервала");
 
         var min = min_node.Compute();
         var max = max_node.Compute();
@@ -137,7 +137,7 @@ public class IntegralOperator : Functional
         Func<double, double> f = x =>
         {
             xx[0] = x;
-            return (double)d.DynamicInvoke(xx);
+            return (double)d.DynamicInvoke(xx)!;
         };
         return f.GetIntegralValue_Adaptive(Min, Max);
     }
@@ -167,7 +167,7 @@ public class IntegralOperator : Functional
         Func<double, double> f = x =>
         {
             xx[0] = x;
-            return (double)d.DynamicInvoke(xx);
+            return (double)d.DynamicInvoke(xx)!;
         };
         return f.GetIntegralValue(Min, Max, dx);
     }

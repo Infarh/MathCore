@@ -17,6 +17,7 @@ using mcEx = System.Linq.Expressions.MethodCallExpression;
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable once CheckNamespace
 namespace System;
 
 /// <summary>Класс методов-расширений для объекта</summary>
@@ -527,7 +528,7 @@ public static class ObjectExtensions
         {
             var ptr = gch.AddrOfPinnedObject();
             ptr += offset;
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
         }
         finally
         {
@@ -547,7 +548,7 @@ public static class ObjectExtensions
             for (var i = 0; i < count; i++)
             {
                 Marshal.Copy(data, length * i, ptr, length);
-                result[i] = (T)Marshal.PtrToStructure(ptr, type);
+                result[i] = (T)Marshal.PtrToStructure(ptr, type)!;
             }
             return result;
         }
@@ -730,4 +731,4 @@ public static class ObjectExtensions
 
 /// <summary>Словарь действий</summary>
 // ReSharper disable once ClassNeverInstantiated.Global
-public class Actions : Dictionary<object, Action<object>?> { }
+public class Actions : Dictionary<object, Action<object>?>;

@@ -45,7 +45,7 @@ public static class IQueryableExtensions
                 InnerKeySelector,
                 (Primary, Items) => new Tuple<T1, IEnumerable<T2>>(Primary, Items))
            .SelectMany(
-                value => value.Item2.DefaultIfEmpty(),
+                value => value.Item2.DefaultIfEmpty()!,
                 result_selector
             );
     }

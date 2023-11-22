@@ -170,7 +170,7 @@ public class Property<TObject, TValue> : IValue<TValue>
     /// <summary>Обработчик события изменения значения свойства</summary>
     /// <param name="Sender">Источник события - объект, свойство которого контролируется</param>
     /// <param name="Args">Аргумент события</param>
-    private void PropertyValueChanged(object Sender, EventArgs Args) => OnValueChanged(EventArgs.Empty);
+    private void PropertyValueChanged(object? Sender, EventArgs Args) => OnValueChanged(EventArgs.Empty);
 
     /// <summary>Метод, позволяющий установить значение свойства</summary>
     /// <param name="value">Устанавливаемое значение свойства</param>

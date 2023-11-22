@@ -13,12 +13,12 @@ namespace MathCore.Logging;
 
 public sealed class LogItem : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyCollectionChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     [NotifyPropertyChangedInvocator]
     private void OnPropertyChanged([CallerMemberName] string? PropertyName = null) => PropertyChanged.Start(this, new PropertyChangedEventArgs(PropertyName));
 
-    public event NotifyCollectionChangedEventHandler CollectionChanged;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     private void OnCollectionChanged(NotifyCollectionChangedEventArgs Args) => CollectionChanged?.Invoke(this, Args);
 

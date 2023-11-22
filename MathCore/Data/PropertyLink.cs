@@ -158,7 +158,7 @@ public class PropertyLink<TSource, TDestination>
     /// <summary>Обработчик события изменения свойства источника данных</summary>
     /// <param name="sender">Источник события</param>
     /// <param name="e">Аргумент события</param>
-    private void SourcePropertyChanged(object sender, EventArgs e)
+    private void SourcePropertyChanged(object? sender, EventArgs e)
     {
         if(!_Enable) return;
         //получаем новое значение свойства источника данных

@@ -15,7 +15,9 @@ public readonly ref partial struct StringPtr
         public ref struct TokenEnumerator(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty)
         {
             /// <summary>Текущая позиция в исходной строке</summary>
+#pragma warning disable CS9124
             private int _CurrentPos = StartIndex;
+#pragma warning restore
 
             /// <summary>Текущий фрагмент строки</summary>
             public StringPtr Current { get; private set; } = default;

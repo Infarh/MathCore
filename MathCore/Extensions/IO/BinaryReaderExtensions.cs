@@ -1,4 +1,7 @@
 ﻿#nullable enable
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
 using System.Runtime.InteropServices;
 
 // ReSharper disable UnusedMember.Global
@@ -32,17 +35,11 @@ public static class BinaryReaderExtensions
         while (readed == BufferSize);
     }
 
-    public readonly struct ReadedBuffer
+    public readonly struct ReadedBuffer(byte[] Buffer, int Readed)
     {
-        public byte[] Buffer { get; }
+        public byte[] Buffer { get; } = Buffer;
 
-        public int Readed { get; }
-
-        public ReadedBuffer(byte[] Buffer, int Readed)
-        {
-            this.Buffer = Buffer;
-            this.Readed = Readed;
-        }
+        public int Readed { get; } = Readed;
 
         public byte[] GetReaded()
         {
@@ -54,7 +51,7 @@ public static class BinaryReaderExtensions
 
         public static implicit operator byte[](ReadedBuffer buffer) => buffer.GetReaded();
 
-        public void Deconstruct(out byte[] Buffer, out int Readed) => (Buffer, Readed) = (this.Buffer, this.Readed);
+        public void Deconstruct(out byte[] buffer, out int readed) => (buffer, readed) = (Buffer, Readed);
     }
 
     /// <summary>Получить перечисление, содержащее массивы байт заданной длины из потока</summary>
@@ -94,11 +91,11 @@ public static class BinaryReaderExtensions
     public static T ReadStructure<T>(this BinaryReader reader) where T : struct
     {
         var data = reader.ReadBytes(Marshal.SizeOf(typeof(T)));
-        var gch  = GCHandle.Alloc(data, GCHandleType.Pinned);
+        var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
         try
         {
             var ptr = gch.AddrOfPinnedObject();
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
         }
         finally
         {
@@ -124,51 +121,136 @@ public static class BinaryReaderExtensions
 
     public static async Task<double> ReadDoubleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
     {
-        const int size   = 8;
-        var       buffer = new byte[8];
-        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        const int size = 8;
+
+#if NET8_0_OR_GREATER
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            return readed < size
+                ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
+                : BitConverter.ToDouble(buffer, 0);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#else
+        var buffer = new byte[size];
+        var readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false); 
+
         return readed < size
             ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
             : BitConverter.ToDouble(buffer, 0);
+#endif
     }
 
     public static async Task<float> ReadSingleAsync(this BinaryReader Reader, CancellationToken Cancel = default)
     {
-        const int size   = 4;
-        var       buffer = new byte[size];
-        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        const int size = 4;
+
+#if NET8_0_OR_GREATER
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            return readed < size
+                ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байт. Было прочитано {readed} байт")
+                : BitConverter.ToSingle(buffer, 0);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#else
+        var buffer = new byte[size];
+        var readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false); 
+
         return readed < size
-            ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байта. Было прочитано {readed} байт")
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байт. Было прочитано {readed} байт")
             : BitConverter.ToSingle(buffer, 0);
+#endif
     }
 
     public static async Task<long> ReadInt64Async(this BinaryReader Reader, CancellationToken Cancel = default)
     {
-        const int size   = 8;
-        var       buffer = new byte[8];
-        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        const int size = 8;
+
+#if NET8_0_OR_GREATER
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            return readed < size
+                ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
+                : BitConverter.ToInt64(buffer, 0);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#else
+        var buffer = new byte[size];
+        var readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false); 
+
         return readed < size
             ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
             : BitConverter.ToInt64(buffer, 0);
+#endif
     }
 
     public static async Task<int> ReadInt32Async(this BinaryReader Reader, CancellationToken Cancel = default)
     {
-        const int size   = 4;
-        var       buffer = new byte[size];
-        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        const int size = 4;
+
+#if NET8_0_OR_GREATER
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            return readed < size
+                ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байт. Было прочитано {readed} байт")
+                : BitConverter.ToInt32(buffer, 0);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#else
+        var buffer = new byte[size];
+        var readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false); 
+
         return readed < size
-            ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байта. Было прочитано {readed} байт")
+            ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байт. Было прочитано {readed} байт")
             : BitConverter.ToInt32(buffer, 0);
+#endif
     }
 
     public static async Task<bool> ReadBooleanAsync(this BinaryReader Reader, CancellationToken Cancel = default)
     {
-        const int size   = 1;
-        var       buffer = new byte[size];
-        var       readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false);
+        const int size = 1;
+
+#if NET8_0_OR_GREATER
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            return readed < size
+                ? throw new InvalidOperationException($"Не удалось прочитать из потока 1 байт. Было прочитано {readed} байт")
+                : BitConverter.ToBoolean(buffer, 0);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+#else
+        var buffer = new byte[size];
+        var readed = await Reader.BaseStream.ReadAsync(buffer, 0, size, Cancel).ConfigureAwait(false); 
+
         return readed < size
             ? throw new InvalidOperationException($"Не удалось прочитать из потока 1 байт. Было прочитано {readed} байт")
             : BitConverter.ToBoolean(buffer, 0);
+#endif
     }
 }

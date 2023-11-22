@@ -695,14 +695,14 @@ public static partial class IEnumerableExtensions
                             yield return item;
                 break;
 
-            case List<TSubSource> list:
+            case List<TSubSource?> list:
                 foreach (var items in list)
                     if (items != null)
                         foreach (var item in items)
                             yield return item;
                 break;
 
-            case IList<TSubSource> list:
+            case IList<TSubSource?> list:
                 foreach (var items in list)
                     if (items != null)
                         foreach (var item in items)
@@ -1123,7 +1123,7 @@ public static partial class IEnumerableExtensions
     public static Dictionary<TKey, T> ToDictionaryDistinctKeys<T, TKey>(
         this IEnumerable<T> enumerable,
         Func<T, TKey> KeySelector,
-        bool OverloadValues = false)
+        bool OverloadValues = false) where TKey : notnull
     {
         var dic = new Dictionary<TKey, T>();
         switch (enumerable)
@@ -1208,7 +1208,7 @@ public static partial class IEnumerableExtensions
         this IEnumerable<T> enumerable,
         Func<T, TKey> KeySelector,
         Func<T, TValue> ValueSelector,
-        bool OverloadValues = false)
+        bool OverloadValues = false) where TKey : notnull
     {
         var dic = new Dictionary<TKey, TValue>();
 

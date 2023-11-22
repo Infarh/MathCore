@@ -116,8 +116,8 @@ public static class TypeExtensions
         var source_to_object     = parameter_source.ConvertTo(typeof(object));
         var converter_expression = (converter_to ?? converter).ToExpression();
         var converter_delegate = converter_to is null
-            ? (Delegate)(Func<object, Type, object>)converter.ConvertTo
-            : (Func<object, object>)converter_to.ConvertFrom;
+            ? (Delegate)(Func<object, Type, object?>)converter.ConvertTo
+            : (Func<object, object?>)converter_to.ConvertFrom;
         var converter_args = converter_to is null
             ? new Expression[] { source_to_object, TargetType.ToExpression() }
             : new Expression[] { source_to_object };
@@ -140,8 +140,8 @@ public static class TypeExtensions
         var parameter_source     = Expression.Parameter(typeof(object), "pFrom");
         var converter_expression = (converter_to ?? converter).ToExpression();
         var converter_delegate = converter_to is null
-            ? (Delegate)(Func<object, Type, object>)converter.ConvertTo
-            : (Func<object, object>)converter_to.ConvertFrom;
+            ? (Delegate)(Func<object, Type, object?>)converter.ConvertTo
+            : (Func<object, object?>)converter_to.ConvertFrom;
         var converter_args = converter_to is null
             ? new Expression[] { parameter_source, Expression.Constant(TargetType) }
             : new Expression[] { parameter_source };

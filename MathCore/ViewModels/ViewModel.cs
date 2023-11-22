@@ -46,7 +46,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     private event PropertyChangedEventHandler? PropertyChangedEvent;
 
     /// <summary>Событие возникает когда изменяется значение свойства объекта</summary>
-    public event PropertyChangedEventHandler PropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged
     {
         add
         {
@@ -364,8 +364,8 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
                 PropertyDependence_Add(property.Name, affects_the_attribute.Name);
             foreach (var changed_handler_attribute in property.GetCustomAttributes(typeof(ChangedHandlerAttribute), true).OfType<ChangedHandlerAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.MethodName)))
             {
-                var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
-                if (handler is null) throw new InvalidOperationException(
+                var handler = type.GetMethod(changed_handler_attribute.MethodName, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic) 
+                    ?? throw new InvalidOperationException(
                     $"Для свойства {property.Name} определён атрибут {nameof(ChangedHandlerAttribute)}, но в классе {type.Name} отсутствует " +
                     $"указанный в атрибуте метод реакции на изменение значения свойства {changed_handler_attribute.MethodName}");
                 PropertyChanged_AddHandler(property.Name, (Action)Delegate.CreateDelegate(typeof(Action), this, handler));

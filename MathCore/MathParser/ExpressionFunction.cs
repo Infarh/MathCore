@@ -20,7 +20,7 @@ public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>
     /// <summary>Метод получения значения функции по массиву значений её аргументов</summary>
     /// <param name="arguments">Массив аргументов функции</param>
     /// <returns>Значение функции</returns>
-    public double GetValue(double[] arguments) => (double)Delegate.DynamicInvoke(arguments.Cast<object>().ToArray());
+    public double GetValue(double[] arguments) => (double)Delegate.DynamicInvoke(arguments.Cast<object>().ToArray())!;
 
     /// <summary>Проверка на эквивалентность сигнатуре</summary>
     /// <param name="sName">Имя функции</param>
@@ -29,21 +29,21 @@ public class ExpressionFunction : ExpressionItem, ICloneable<ExpressionFunction>
     public bool IsEqualSignature(string sName, int ArgumentsCount) => Name == sName && Arguments.Count == ArgumentsCount;
 
     /// <summary>Проверка на эквивалентность сигнатуре</summary>
-    /// <param name="sName">Имя функции</param>
-    /// <param name="Arguments">Массив имён аргументов</param>
+    /// <param name="SigName">Имя функции</param>
+    /// <param name="arg">Массив имён аргументов</param>
     /// <returns>Истина, если сигнатура соответствует функции</returns>
-    public bool IsEqualSignature(string sName, IReadOnlyList<string> Arguments)
+    public bool IsEqualSignature(string SigName, IReadOnlyList<string?> arg)
     {
-        if(!string.Equals(Name, sName, StringComparison.CurrentCulture)) return false;
-        var args = this.Arguments;
-        if(args.Count != Arguments.Count) return false;
+        if(!string.Equals(Name, SigName, StringComparison.CurrentCulture)) return false;
+        var args = Arguments;
+        if(args.Count != arg.Count) return false;
         for(int i = 0, N = args.Count; i < N; i++)
         {
             var arg_null = args[i] is null;
-            var Arg_null = Arguments[i] is null;
-            if(arg_null != Arg_null) return false;
-            if(!arg_null && args[i] != Arguments[i]) return false;
-            if(!Arg_null && Arguments[i] != args[i]) return false;
+            var arg2_null = arg[i] is null;
+            if(arg_null != arg2_null) return false;
+            if(!arg_null && args[i] != arg[i]) return false;
+            if(!arg2_null && arg[i] != args[i]) return false;
         }
 
         return true;

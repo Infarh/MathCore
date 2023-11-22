@@ -1,6 +1,8 @@
 ﻿#nullable enable
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+// ReSharper disable InconsistentNaming
+// ReSharper disable IdentifierTypo
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable once CheckNamespace
@@ -47,7 +49,7 @@ public static class ProcessExtensions
             : (IDisposable?)null;
 
         process.EnableRaisingEvents = true;
-        void Handler(object _, EventArgs __) => result.TrySetResult(process);
+        void Handler(object? _, EventArgs __) => result.TrySetResult(process);
         process.Exited += Handler;
 
         try
@@ -98,7 +100,7 @@ public static class ProcessExtensions
             : (IDisposable?)null;
 
         process.EnableRaisingEvents = true;
-        void Handler(object _, EventArgs __) => result.TrySetResult(process);
+        void Handler(object? _, EventArgs __) => result.TrySetResult(process);
         process.Exited += Handler;
 
         try
