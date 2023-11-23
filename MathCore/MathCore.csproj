@@ -33,9 +33,9 @@
     <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
-  <!--<ItemGroup>
+  <ItemGroup>
     <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST"/>
-  </ItemGroup>-->
+  </ItemGroup>
 
   <PropertyGroup>
     <NoWarn>

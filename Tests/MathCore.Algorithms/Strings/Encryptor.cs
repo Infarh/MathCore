@@ -102,7 +102,9 @@ public static class Encryptor
         using var source_file = new FileStream(InputFile, FileMode.Open);
         _ = source_file.Read(salt, 0, salt.Length);
 
+#pragma warning disable SYSLIB0041 // Тип или член устарел
         var key = new Rfc2898DeriveBytes(password_bytes, salt, 50000);
+#pragma warning restore SYSLIB0041 // Тип или член устарел
         aes.Key = key.GetBytes(aes.KeySize / 8);
         aes.IV = key.GetBytes(aes.BlockSize / 8);
         aes.Padding = PaddingMode.PKCS7;

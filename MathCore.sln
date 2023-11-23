@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore", "MathCore\MathCore.csproj", "{AFA60C84-107F-4582-8EED-2273957E89C5}"
 EndProject
@@ -19,13 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		BuildRelease.bat = BuildRelease.bat
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFTest", "Tests\WPFTest\WPFTest.csproj", "{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsTest", "Tests\WinFormsTest\WinFormsTest.csproj", "{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Tests\Benchmarks\Benchmarks.csproj", "{80108823-1EA4-46AC-B365-8B0F9CE59CC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathCore.Algorithms", "Tests\MathCore.Algorithms\MathCore.Algorithms.csproj", "{2B8FF1EE-42E8-4961-A734-1068F008D7D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Algorithms", "Tests\MathCore.Algorithms\MathCore.Algorithms.csproj", "{2B8FF1EE-42E8-4961-A734-1068F008D7D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,22 +55,6 @@ Global
 		{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1}.Release|x64.ActiveCfg = Release|x64
 		{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1}.Release|x64.Build.0 = Release|x64
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Debug|x64.Build.0 = Debug|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Release|x64.ActiveCfg = Release|Any CPU
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7}.Release|x64.Build.0 = Release|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Debug|x64.Build.0 = Debug|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Release|x64.ActiveCfg = Release|Any CPU
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008}.Release|x64.Build.0 = Release|Any CPU
 		{80108823-1EA4-46AC-B365-8B0F9CE59CC6}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{80108823-1EA4-46AC-B365-8B0F9CE59CC6}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{80108823-1EA4-46AC-B365-8B0F9CE59CC6}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -98,8 +78,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
-		{ACB3BFD9-0C97-49AC-819F-049A6E8535C7} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
-		{AB3C17CA-E8B7-4901-A09E-1E9DB2670008} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{80108823-1EA4-46AC-B365-8B0F9CE59CC6} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{2B8FF1EE-42E8-4961-A734-1068F008D7D1} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 	EndGlobalSection
