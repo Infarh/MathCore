@@ -28,17 +28,11 @@ public static class StreamReaderExtensions
         }
     }
 
-    public readonly struct ReadedCharBuffer
+    public readonly struct ReadedCharBuffer(char[] buffer, int readed)
     {
-        public char[] Buffer { get; }
-        public int Readed { get; }
-        public bool IsFull => Readed == Buffer.Length;
-
-        public ReadedCharBuffer(char[] Buffer, int Readed)
-        {
-            this.Buffer = Buffer;
-            this.Readed = Readed;
-        }
+        public char[] Buffer => buffer;
+        public int Readed => readed;
+        public bool IsFull => readed == Buffer.Length;
 
         public char[] GetReaded()
         {

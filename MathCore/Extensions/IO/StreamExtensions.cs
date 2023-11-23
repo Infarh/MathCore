@@ -288,17 +288,9 @@ public static class StreamExtensions
     {
         cancel.ThrowIfCancellationRequested();
 
-        using var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true);
+        using var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, false);
 #if NET8_0_OR_GREATER
-        await using (cancel.Register(r => ((StreamReader)r).Dispose(), reader))
-            try
-            {
-                return await reader.ReadToEndAsync(cancel).ConfigureAwait(false);
-            }
-            catch (ObjectDisposedException) when (cancel.IsCancellationRequested)
-            {
-                cancel.ThrowIfCancellationRequested();
-            }
+        return await reader.ReadToEndAsync(cancel).ConfigureAwait(false);
 #else
         using (cancel.Register(r => ((StreamReader)r).Dispose(), reader))
             try

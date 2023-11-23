@@ -394,10 +394,7 @@ public static class ArrayExtensions
         var hash = 397;
         for (var i = 1; i < Objects.Length; i++)
             if (Objects[i] is { } obj)
-                unchecked
-                {
-                    hash = (hash * 397) ^ obj.GetHashCode();
-                }
+                hash = unchecked((hash * 397) ^ obj.GetHashCode());
 
         return hash;
     }
