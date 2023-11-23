@@ -34,7 +34,9 @@ public sealed class StaTaskScheduler : TaskScheduler, IDisposable
                         TryExecuteTask(t);
                     }
                 }) {IsBackground = true};
+#pragma warning disable CA1416
             thread.SetApartmentState(ApartmentState.STA);
+#pragma warning restore CA1416
             return thread;
         }).ToList();
 

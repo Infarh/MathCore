@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
+using MathCore.Annotations;
+
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable UnusedMember.Global
 

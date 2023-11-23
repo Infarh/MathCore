@@ -14,9 +14,6 @@
 //------------------------------------------------------------------------------
 
 // ReSharper disable once CheckNamespace
-
-using System.Runtime.Serialization;
-
 namespace System.Xml.XPath;
 
 // The XPathException class contains XML parser errors.
@@ -36,7 +33,9 @@ public class XPathReaderException : XPathException
 
     public XPathReaderException(string message) : base(message) { }
 
-    public XPathReaderException(SerializationInfo Info, StreamingContext Context) : base(Info, Context) { }
+#if !NET8_0_OR_GREATER
+    public XPathReaderException(System.Runtime.Serialization.SerializationInfo Info, System.Runtime.Serialization.StreamingContext Context) : base(Info, Context) { } 
+#endif
 
     #endregion
 }

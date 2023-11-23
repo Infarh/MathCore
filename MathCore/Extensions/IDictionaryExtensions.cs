@@ -5,6 +5,10 @@ using System.Text.RegularExpressions;
 
 using MathCore;
 
+#if !NET8_0_OR_GREATER
+using MathCore.Annotations;
+#endif
+
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -38,7 +42,7 @@ public static class IDictionaryExtensions
         this IDictionary<TKey, IList<TValue>> dictionary,
         [DisallowNull] TKey key,
         TValue value
-    ) => dictionary.GetValueOrAddNew(key, () => new List<TValue>()).Add(value);
+    ) where TKey : notnull => dictionary.GetValueOrAddNew(key, () => new List<TValue>()).Add(value);
 
     /// <summary>Метод добавления значения в словарь списков значений</summary>
     /// <param name="dictionary">Словарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
@@ -54,8 +58,8 @@ public static class IDictionaryExtensions
         TObject obj,
         Func<TObject, TKey> KeySelector,
         Func<TObject, TValue> ValueSelector
-    ) =>
-        dictionary.AddValue(KeySelector(obj)!, ValueSelector(obj));
+    ) where TKey : notnull =>
+        dictionary.AddValue(KeySelector(obj), ValueSelector(obj));
 
     /// <summary>Метод добавления значения в словарь списков значений</summary>
     /// <param name="dictionary">Словарь списков <see cref="IList{TValue}"/> значений типа <typeparamref name="TValue"/></param>
@@ -68,8 +72,8 @@ public static class IDictionaryExtensions
         this IDictionary<TKey, IList<TValue>> dictionary,
         TValue value,
         Func<TValue, TKey> KeySelector
-    ) =>
-        dictionary.AddValue(KeySelector(value)!, value);
+    ) where TKey : notnull =>
+        dictionary.AddValue(KeySelector(value), value);
 
     /// <summary>Добавление значений в словарь</summary>
     /// <param name="dictionary">Словарь в который надо добавить значения</param>
@@ -97,7 +101,7 @@ public static class IDictionaryExtensions
         this Dictionary<TKey, TValue> dictionary,
         [DisallowNull] TKey key,
         Func<TValue> creator
-    )
+    ) where TKey : notnull
     {
         if (!dictionary.TryGetValue(key, out var value))
             dictionary.Add(key, value = creator());
@@ -116,7 +120,7 @@ public static class IDictionaryExtensions
         this Dictionary<TKey, TValue> dictionary,
         [DisallowNull] TKey key,
         Func<TKey, TValue> creator
-    )
+    ) where TKey : notnull
     {
         if (!dictionary.TryGetValue(key, out var value))
             dictionary.Add(key, value = creator(key));
@@ -135,7 +139,7 @@ public static class IDictionaryExtensions
         this IDictionary<TKey, TValue> dictionary,
         [DisallowNull] TKey key,
         Func<TValue> creator
-    )
+    ) where TKey : notnull
     {
         if (!dictionary.TryGetValue(key, out var value))
             dictionary.Add(key, value = creator());
@@ -154,7 +158,7 @@ public static class IDictionaryExtensions
         this IDictionary<TKey, TValue> dictionary,
         [DisallowNull] TKey key,
         Func<TKey, TValue> creator
-    )
+    ) where TKey : notnull
     {
         if (!dictionary.TryGetValue(key, out var value))
             dictionary.Add(key, value = creator(key));
@@ -173,7 +177,7 @@ public static class IDictionaryExtensions
         this Dictionary<TKey, TValue> dictionary,
         [DisallowNull] TKey key,
         TValue? DefaultValue = default
-    ) =>
+    ) where TKey : notnull =>
         dictionary.TryGetValue(key, out var v) ? v : DefaultValue;
 
     /// <summary>Получить значение из словаря в случае его наличия, или добавить новое</summary>
@@ -368,7 +372,7 @@ public static class IDictionaryExtensions
     /// <typeparam name="TValue">Тип второго элемента кортежа - тип значения</typeparam>
     /// <param name="items">Перечисление кортежей двух элементов</param>
     /// <returns>Словарь, составленный из ключей - первых элементов кортежа и значений - вторых элементов</returns>
-    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey Key, TValue Value)> items) =>
+    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey Key, TValue Value)> items) where TKey : notnull =>
         items.ToDictionary(value => value.Key, value => value.Value);
 
     /// <summary>Преобразовать в безопасный для ключей словарь</summary>
@@ -376,7 +380,7 @@ public static class IDictionaryExtensions
     /// <typeparam name="TValue">Тип значения</typeparam>
     /// <param name="Dictionary">Исходный словарь</param>
     /// <returns></returns>
-    public static DictionaryKeySafe<TKey, TValue> ToSafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> Dictionary) =>
+    public static DictionaryKeySafe<TKey, TValue> ToSafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> Dictionary) where TKey : notnull =>
         Dictionary as DictionaryKeySafe<TKey, TValue> ?? new(Dictionary);
 
     /// <summary>Добавить значение в словарь, если ключ отсутствует</summary>
@@ -415,5 +419,5 @@ public static class IDictionaryExtensions
                         : value?.ToString()
             );
 
-    public static DictionaryKeySafe<TKey, TValue> ToKeySafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dictionary) => new(dictionary);
+    public static DictionaryKeySafe<TKey, TValue> ToKeySafeDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dictionary) where TKey : notnull => new(dictionary);
 }

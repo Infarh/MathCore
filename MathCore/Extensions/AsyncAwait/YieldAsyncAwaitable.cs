@@ -15,14 +15,16 @@ public struct YieldAsyncAwaitable
 
     [StructLayout(LayoutKind.Sequential, Size = 1)]
     //[HostProtection(SecurityAction.LinkDemand, ExternalThreading = true, Synchronization = true)]
+    // ReSharper disable once RedundantExtendsListEntry
     public struct YieldAsyncAwaiter : ICriticalNotifyCompletion, INotifyCompletion
     {
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
+        // ReSharper disable once UnusedMember.Local
         private static readonly SendOrPostCallback __SendOrPostCallbackRunAction = RunAction;
 
         public bool IsCompleted => false;
 
-        private static void RunAction(object action) => ((Action)action)();
+        private static void RunAction(object? action) => ((Action)action)();
 
         [SecurityCritical]
         private static void QueueContinuation(Action continuation, bool FlowContext)

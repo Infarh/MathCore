@@ -48,15 +48,19 @@ public class DifferentialVisitor : ExpressionVisitorEx
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
+
         if(l is null && r is null) return b;
+        
         if(l != null && r != null)
             return b.NodeType == ExpressionType.Add
-                ? Expression.Constant((double)l.Value + (double)r.Value)
-                : Expression.Constant((double)l.Value - (double)r.Value);
+                ? Expression.Constant((double)l.Value! + (double)r.Value!)
+                : Expression.Constant((double)l.Value! - (double)r.Value!);
+
         if(l != null && l.Value.Equals(0.0))
             return b.NodeType == ExpressionType.Add
                 ? b.Right
                 : Expression.MakeUnary(ExpressionType.Negate, b.Right, b.Right.Type);
+    
         return r != null && r.Value.Equals(0.0) ? b.Left : b;
     }
 
@@ -71,7 +75,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
         if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant((double)l.Value * (double)r.Value);
+        if(l != null && r != null) return Expression.Constant((double)l.Value! * (double)r.Value!);
         if (l?.Value.Equals(0.0) == true) return l;
         if (l?.Value.Equals(1.0) == true) return b.Right;
         if (r?.Value.Equals(0.0) == true) return r;
@@ -87,7 +91,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
         if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant((double)l.Value / (double)r.Value);
+        if(l != null && r != null) return Expression.Constant((double)l.Value! / (double)r.Value!);
         if(l?.Value.Equals(0.0) == true) return l;
         if(l?.Value.Equals(1.0) == true) return b;
         if(r?.Value.Equals(0.0) == true) return Expression.Constant(double.PositiveInfinity);
@@ -102,7 +106,7 @@ public class DifferentialVisitor : ExpressionVisitorEx
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
         if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value, (double)r.Value));
+        if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value!, (double)r.Value!));
         if(l != null && (l.Value.Equals(0.0) || l.Value.Equals(1.0))) return l;
         if(r?.Value.Equals(0.0) == true) return Expression.Constant(1.0);
         if(r?.Value.Equals(1.0) == true) return b.Left;

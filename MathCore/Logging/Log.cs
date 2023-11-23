@@ -25,12 +25,12 @@ public sealed class Log : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyC
         public bool Contain(string Name) => _LogDictionary.ContainsKey(Name);
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     [NotifyPropertyChangedInvocator]
     private void OnPropertyChanged([CallerMemberName] string PropertyName = null!) => PropertyChanged.Start(this, PropertyName);
 
-    public event NotifyCollectionChangedEventHandler CollectionChanged;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     private void OnCollectionChanged(NotifyCollectionChangedEventArgs Args) => CollectionChanged.Start(this, Args);
 

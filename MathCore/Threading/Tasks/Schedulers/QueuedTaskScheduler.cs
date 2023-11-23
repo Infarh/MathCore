@@ -151,7 +151,9 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
                 IsBackground = !UseForegroundThreads,
             };
             if (ThreadName != null) threads[i].Name = $"{ThreadName} ({i})";
+#pragma warning disable CA1416
             threads[i].SetApartmentState(ThreadApartmentState);
+#pragma warning restore CA1416
         }
 
         // Start all of the threads
@@ -184,14 +186,14 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
                         else
                         {
                             // Find the next task based on our ordering rules...
-                            Task                     target_task;
+                            Task?                    target_task;
                             QueuedTaskSchedulerQueue queue_for_target_task;
                             lock (_QueueGroups)
-                                FindNextTask_NeedsLock(out target_task!, out queue_for_target_task!);
+                                FindNextTask_NeedsLock(out target_task, out queue_for_target_task);
 
                             // ... and if we found one, run it
                             if (target_task != null)
-                                queue_for_target_task!.ExecuteTask(target_task);
+                                queue_for_target_task.ExecuteTask(target_task);
                         }
                 }
                 catch (ThreadAbortException)
@@ -200,8 +202,12 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
                     // If we received a thread abort, and that thread abort was due to shutting down
                     // or unloading, let it pass through.  Otherwise, reset the abort so we can
                     // continue processing work items.
+#if NET5_0_OR_GREATER
+                    throw;
+#else
                     if (!Environment.HasShutdownStarted && !AppDomain.CurrentDomain.IsFinalizingForUnload())
                         Thread.ResetAbort();
+#endif
                 }
         }
         catch (OperationCanceledException) { }
@@ -217,7 +223,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     private int DebugQueueCount => _QueueGroups.Sum(group => group.Value.Count);
 
     /// <summary>Gets the number of tasks currently scheduled.</summary>
-    private int DebugTaskCount => ((_TargetScheduler is null ? (IEnumerable<Task>)_BlockingTaskQueue! : _NonThreadSafeTaskQueue!)!).Count(t => t != null);
+    private int DebugTaskCount => (_TargetScheduler is null ? (IEnumerable<Task?>?)_BlockingTaskQueue : _NonThreadSafeTaskQueue).Count(t => t != null);
 
     /// <summary>Find the next task that should be executed, based on priorities and fairness and the like.</summary>
     /// <param name="TargetTask">The found task, or null if none was found.</param>
@@ -233,7 +239,6 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         // Look through each of our queue groups in sorted order.
         // This ordering is based on the priority of the queues.
         foreach (var (_, queues) in _QueueGroups)
-        {
             // Within each group, iterate through the queues in a round-robin
             // fashion.  Every time we iterate again and successfully find a task, 
             // we'll start in the next location in the group.
@@ -248,7 +253,6 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
                 queues.NextQueueIndex = (queues.NextQueueIndex + 1) % queues.Count;
                 return;
             }
-        }
     }
 
     /// <summary>Queues a task to the scheduler.</summary>
@@ -392,7 +396,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         // Add the queue to the appropriate queue group based on priority
         lock (_QueueGroups)
         {
-            if (!_QueueGroups.TryGetValue(priority, out QueueGroup list))
+            if (!_QueueGroups.TryGetValue(priority, out var list))
             {
                 list = new QueueGroup();
                 _QueueGroups.Add(priority, list);

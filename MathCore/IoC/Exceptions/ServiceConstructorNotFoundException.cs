@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using System.Runtime.Serialization;
-
 namespace MathCore.IoC.Exceptions;
 
 [Serializable]
@@ -20,5 +18,7 @@ public class ServiceConstructorNotFoundException : Exception
     
     public ServiceConstructorNotFoundException(Type ServiceType, string message, Exception inner) : base(message, inner) => this.ServiceType = ServiceType;
 
-    protected ServiceConstructorNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#if !NET8_0_OR_GREATER
+    protected ServiceConstructorNotFoundException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { } 
+#endif
 }

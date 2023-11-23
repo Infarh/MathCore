@@ -173,7 +173,9 @@ public class AverageExpValue : ISerializable, IValue<double>, IResettable
     }
 
     /// <inheritdoc />
-    [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+#if !NET8_0_OR_GREATER
+    [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)] 
+#endif
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
         if (info is null) throw new ArgumentNullException(nameof(info));
@@ -184,7 +186,9 @@ public class AverageExpValue : ISerializable, IValue<double>, IResettable
     /// <param name="info">Объект сериализации</param>
     /// <param name="context">Контекст операции сериализации</param>
     /// <exception cref="ArgumentNullException">Если <paramref name="info"/> is null</exception>
-    [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+#if !NET8_0_OR_GREATER
+    [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)] 
+#endif
     // ReSharper disable once UnusedParameter.Global
     protected virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {

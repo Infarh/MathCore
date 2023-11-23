@@ -92,7 +92,7 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     }
 
     /// <summary>Обработчик события изменения внутренней коллекции</summary>
-    protected virtual void OnSourceCollectionChanged(object Sender, NotifyCollectionChangedEventArgs E)
+    protected virtual void OnSourceCollectionChanged(object? Sender, NotifyCollectionChangedEventArgs E)
     {
         OnPropertyChanged(nameof(Count));
 

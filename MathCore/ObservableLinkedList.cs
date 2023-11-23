@@ -304,7 +304,9 @@ public class ObservableLinkedList<T> :
     #endregion
 
     /// <inheritdoc />
-    public void GetObjectData(SerializationInfo info, StreamingContext context) => _List.GetObjectData(info, context);
+#pragma warning disable SYSLIB0051
+    public void GetObjectData(SerializationInfo info, StreamingContext context) => _List.GetObjectData(info, context); 
+#pragma warning restore SYSLIB0051
 
     /// <inheritdoc />
     public void OnDeserialization(object sender) => _List.OnDeserialization(sender);

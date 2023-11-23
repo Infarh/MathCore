@@ -7,7 +7,7 @@ namespace MathCore;
 /// <typeparam name="TKey">Тип ключа</typeparam>
 /// <typeparam name="TValue">Тип значения элемента</typeparam>
 // ReSharper disable once UnusedMember.Global
-public class LambdaKeyedCollection<TKey, TValue> : KeyedCollection<TKey, TValue>
+public class LambdaKeyedCollection<TKey, TValue> : KeyedCollection<TKey, TValue> where TKey : notnull
 {
     /// <summary>Метод определения ключа элемента</summary>
     private readonly Func<TValue, TKey> _KeyExtractor;

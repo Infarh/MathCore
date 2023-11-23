@@ -68,6 +68,36 @@ public class CRC16
         return crc;
     }
 
+#if NET8_0_OR_GREATER
+    public uint Compute(Span<byte> bytes) => ContinueCompute(State, bytes);
+    public uint Compute(ReadOnlySpan<byte> bytes) => ContinueCompute(State, bytes);
+
+    public uint Compute(Memory<byte> bytes) => ContinueCompute(State, bytes.Span);
+    public uint Compute(ReadOnlyMemory<byte> bytes) => ContinueCompute(State, bytes.Span);
+
+    public uint ContinueCompute(ushort crc, Span<byte> bytes)
+    {
+        foreach (var b in bytes)
+            crc = (ushort)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
+        if (UpdateState)
+            State = crc;
+
+        return crc;
+    }
+
+    public uint ContinueCompute(ushort crc, ReadOnlySpan<byte> bytes)
+    {
+        foreach (var b in bytes)
+            crc = (ushort)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
+        if (UpdateState)
+            State = crc;
+
+        return crc;
+    }
+#endif
+
     public ushort Compute(IReadOnlyList<byte> bytes) => ContinueCompute(State, bytes);
 
     public ushort ContinueCompute(ushort crc, IReadOnlyList<byte> bytes)

@@ -272,7 +272,7 @@ public static class INotifyCollectionChangedExtensions
             Collection.CollectionChanged += OnCollectionChanged;
         }
 
-        private void OnCollectionChanged(object Sender, NotifyCollectionChangedEventArgs E)
+        private void OnCollectionChanged(object? Sender, NotifyCollectionChangedEventArgs E)
         {
             switch (E.Action)
             {
@@ -287,7 +287,7 @@ public static class INotifyCollectionChangedExtensions
             }
         }
 
-        private void OnItemPropertyChanged(object Sender, PropertyChangedEventArgs E)
+        private void OnItemPropertyChanged(object? Sender, PropertyChangedEventArgs E)
         {
             if (E.PropertyName != _PropertyName) return;
             _OnPropertyChanged(Sender, EventArgs.Empty);

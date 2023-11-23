@@ -393,14 +393,18 @@ public static class StringExtensions
         0x4d, 0x08, 0x22, 0x3c
     };
 
+#pragma warning disable SYSLIB0022
     private static Rijndael CreateRijndael(string Password, byte[]? Salt = null)
     {
+#pragma warning disable SYSLIB0041
         var pdb = new Rfc2898DeriveBytes(Password, Salt ?? Array.Empty<byte>());
+#pragma warning restore SYSLIB0041
         var algorithm = Rijndael.Create();
         algorithm.Key = pdb.GetBytes(32);
         algorithm.IV = pdb.GetBytes(16);
         return algorithm;
     }
+#pragma warning restore SYSLIB0022
 
     /// <summary>Получить алгоритм шифрования с указанным паролем</summary>
     /// <param name="password">Пароль шифрования</param>

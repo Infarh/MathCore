@@ -1,6 +1,8 @@
 ﻿#nullable enable
 using System.Diagnostics.CodeAnalysis;
 
+using MathCore.Annotations;
+
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 

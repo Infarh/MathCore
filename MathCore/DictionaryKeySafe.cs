@@ -10,7 +10,7 @@ namespace MathCore;
 /// <typeparam name="TKey">Тип ключа</typeparam>
 /// <typeparam name="TValue">Тип значения</typeparam>
 [Serializable, XmlRoot("Dictionary")]
-public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSerializable
+public class DictionaryKeySafe<TKey, TValue> : IDictionary<TKey, TValue>, IXmlSerializable where TKey : notnull
 {
     #region Поля
 

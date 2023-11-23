@@ -69,7 +69,7 @@ public class AnimatedProperty<TObject, TValue>(
         lock (this)
         {
             if (_Enabled) return;
-            _Thread  = new Thread(Do) { Priority = _Priority };
+            _Thread = new Thread(Do) { Priority = _Priority };
             _Enabled = true;
             _Thread.Start();
         }
@@ -83,7 +83,6 @@ public class AnimatedProperty<TObject, TValue>(
         {
             if (!_Enabled) return;
             _Enabled = false;
-            _Thread.Abort();
             if (!_Thread.Join(2 * _Timeout) && _Thread.IsAlive)
                 _Thread.Interrupt();
             _Thread = null;
@@ -93,7 +92,7 @@ public class AnimatedProperty<TObject, TValue>(
     /// <summary>Метод, Выполняющий анимацию свойства</summary>
     private void Do()
     {
-        var count   = Samples;
+        var count = Samples;
         var timeout = _Timeout;
         while (Repeat)
         {

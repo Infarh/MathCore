@@ -7,8 +7,11 @@ using MathCore.Vectors;
 
 namespace MathCore;
 
+/// <summary>Матрица аффинного преобразования</summary>
 public abstract class TransformationMatrix : Matrix
 {
+    /// <summary>Инициализация новой матрицы аффинного преобразования</summary>
+    /// <param name="Data">Массив коэффициентов матрицы</param>
     protected TransformationMatrix(double[,] Data) : base(Data) { }
 }
 

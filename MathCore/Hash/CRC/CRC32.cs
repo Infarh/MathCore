@@ -21,14 +21,14 @@ public class CRC32
 
     public CRC32(Mode mode = Mode.Zip) : this((uint)mode) { }
 
-    public CRC32(uint Polynimial)
+    public CRC32(uint Polynomial)
     {
         for (uint i = 0; i < __TableLength; i++)
         {
             var crc = i << 24;
             for (var bit = 0; bit < 8; bit++)
                 crc = (crc & 1u << 31) != 0
-                    ? crc << 1 ^ Polynimial
+                    ? crc << 1 ^ Polynomial
                     : crc << 1;
             _Table[i] = crc;
         }
@@ -55,6 +55,36 @@ public class CRC32
 
         return crc;
     }
+
+#if NET8_0_OR_GREATER
+    public uint Compute(Span<byte> bytes) => ContinueCompute(State, bytes);
+    public uint Compute(ReadOnlySpan<byte> bytes) => ContinueCompute(State, bytes);
+
+    public uint Compute(Memory<byte> bytes) => ContinueCompute(State, bytes.Span);
+    public uint Compute(ReadOnlyMemory<byte> bytes) => ContinueCompute(State, bytes.Span);
+
+    public uint ContinueCompute(uint crc, Span<byte> bytes)
+    {
+        foreach (var b in bytes)
+            crc = crc << 8 ^ _Table[b ^ crc >> 24];
+
+        if (UpdateState)
+            State = crc;
+
+        return crc;
+    } 
+
+    public uint ContinueCompute(uint crc, ReadOnlySpan<byte> bytes)
+    {
+        foreach (var b in bytes)
+            crc = crc << 8 ^ _Table[b ^ crc >> 24];
+
+        if (UpdateState)
+            State = crc;
+
+        return crc;
+    } 
+#endif
 
     public uint Compute(IReadOnlyList<byte> bytes) => ContinueCompute(State, bytes);
 

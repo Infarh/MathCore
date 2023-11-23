@@ -1,6 +1,8 @@
 ﻿#nullable enable
 using System.Diagnostics.CodeAnalysis;
 
+using MathCore.Annotations;
+
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks;
 

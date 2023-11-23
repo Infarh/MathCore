@@ -100,19 +100,23 @@ public class PatternString(string Pattern) : IEnumerable<KeyValuePair<string, ob
     /// <summary>Метод, выполняемый регулярным выражением в процессе подстановки значений в строку шаблона</summary>
     /// <param name="Match">Найденное поле</param>
     /// <returns>Строка, подставляемая вместо найденного поля</returns>
-    private string? PatternPartSelector(Match Match)
+    private string PatternPartSelector(Match Match)
     {
         var name = Match.Groups["name"].Value;
-        if (!_Fields.TryGetValue(name, out var selector)) return Match.Value;
+
+        if (!_Fields.TryGetValue(name, out var selector)) 
+            return Match.Value;
+
         var value = selector switch
         {
             Func<object> f         => f(),
             Func<string, object> f => f(name),
             _                      => selector
         };
+
         return Match.Groups["format"].Success && value is IFormattable formattable_value
             ? formattable_value.ToString(Match.Groups["format"].Value, FormatProvider)
-            : value as string ?? value?.ToString();
+            : value as string ?? value.ToString();
     }
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _Fields.GetEnumerator();

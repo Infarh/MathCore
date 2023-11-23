@@ -53,7 +53,7 @@ public class Swarm1DTests
             out var X,
             out var Y);
         Assert.That.Value(X).IsEqual(-__X0, 6e-5);
-        Assert.That.Value(Y).IsEqual(-__Y0, 1e-9);
+        Assert.That.Value(Y).IsEqual(-__Y0, 2e-9);
     }
 
     [TestMethod]

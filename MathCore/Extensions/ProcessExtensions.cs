@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using MathCore.Annotations;
@@ -21,7 +22,7 @@ public static class ProcessExtensions
     /// <summary>Ожидание завершения процесса</summary>
     /// <param name="process">Процесс, завершение которого требуется дождаться</param>
     /// <returns>Задача, результат которой является кодом завершения процесса</returns>
-    public static Task<int> WaitAsync([NotNull] this Process process)
+    public static Task<int> WaitAsync([Annotations.NotNull] this Process process)
     {
         var tcs = new TaskCompletionSource<int>();
         process.EnableRaisingEvents =  true;
@@ -54,8 +55,8 @@ public static class ProcessExtensions
     /// <summary>Получить родительский процесс</summary>
     /// <param name="process">Дочерний процесс</param>
     /// <returns>Родительский процесс</returns>
-    [NotNull]
-    public static Process GetMotherProcess([NotNull] this Process process)
+    [Annotations.NotNull]
+    public static Process GetMotherProcess([Annotations.NotNull] this Process process)
     {
         var info = new PROCESS_BASIC_INFORMATION();
         if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var written) != 0 

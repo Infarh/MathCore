@@ -24,5 +24,5 @@ public abstract class DataSource<T>
 
     public T GetValue() => _Value = _DataExtractor(Host);
 
-    protected virtual void OnHostUpdated(object sender, EventArgs e) => OnUpdated(e);
+    protected virtual void OnHostUpdated(object? sender, EventArgs e) => OnUpdated(e);
 }

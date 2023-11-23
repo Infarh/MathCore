@@ -227,7 +227,7 @@ public static class StreamExtensions
         {
             var ptr = gch.AddrOfPinnedObject();
             while (stream.Read(data, 0, size) == size)
-                yield return (T)Marshal.PtrToStructure(ptr, typeof(T));
+                yield return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
         }
         finally
         {
@@ -255,15 +255,25 @@ public static class StreamExtensions
 
     public static byte[] ToArray(this Stream stream)
     {
+#if NET8_0_OR_GREATER
         var array = new byte[stream.Length];
-        stream.Read(array, 0, array.Length);
+        _ = stream.Read(array);
+#else
+        var array = new byte[stream.Length];
+        _ = stream.Read(array, 0, array.Length);
+#endif
         return array;
     }
 
     public static async Task<byte[]> ToArrayAsync(this Stream stream, CancellationToken Cancel = default)
     {
+#if NET8_0_OR_GREATER
         var array = new byte[stream.Length];
-        await stream.ReadAsync(array, 0, array.Length, Cancel).ConfigureAwait(false);
+        _ = await stream.ReadAsync(array, Cancel).ConfigureAwait(false);
+#else
+        var array = new byte[stream.Length];
+        _ = await stream.ReadAsync(array, 0, array.Length, Cancel).ConfigureAwait(false);
+#endif
         return array;
     }
 
@@ -278,7 +288,10 @@ public static class StreamExtensions
     {
         cancel.ThrowIfCancellationRequested();
 
-        using var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true);
+        using var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, false);
+#if NET8_0_OR_GREATER
+        return await reader.ReadToEndAsync(cancel).ConfigureAwait(false);
+#else
         using (cancel.Register(r => ((StreamReader)r).Dispose(), reader))
             try
             {
@@ -288,6 +301,7 @@ public static class StreamExtensions
             {
                 cancel.ThrowIfCancellationRequested();
             }
+#endif
 
         throw new InvalidOperationException("Что-то пошло не так");
     }

@@ -81,7 +81,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
     public override bool Equals(object? obj) => obj is WorkResult<T> result && Equals(result);
 
     /// <inheritdoc />
-    public override int GetHashCode() => unchecked((Error != null ? Error.GetHashCode() : 0) * 397 ^ EqualityComparer<T>.Default.GetHashCode(Result));
+    public override int GetHashCode() => unchecked((Error != null ? Error.GetHashCode() : 0) * 397 ^ EqualityComparer<T>.Default.GetHashCode(Result!));
 
     public static bool operator ==(WorkResult<T> left, WorkResult<T> right) => left.Equals(right);
 
@@ -152,6 +152,9 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
     public override bool Equals(object? obj) => obj is WorkResult<TParameter, T> other && Equals(other);
 
     /// <inheritdoc />
+#if NET8_0_OR_GREATER
+    public override int GetHashCode() => HashCode.Combine(Error, Parameter, Result);
+#else
     public override int GetHashCode()
     {
         unchecked
@@ -162,6 +165,7 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
             return hash_code;
         }
     }
+#endif
 
     public static bool operator ==(WorkResult<TParameter, T> left, WorkResult<TParameter, T> right) => left.Equals(right);
     public static bool operator !=(WorkResult<TParameter, T> left, WorkResult<TParameter, T> right) => !left.Equals(right);

@@ -9,12 +9,15 @@ using System.Runtime.InteropServices;
 
 using MathCore.Annotations;
 
+using NotNullAttribute = MathCore.Annotations.NotNullAttribute;
+
 using cEx = System.Linq.Expressions.ConstantExpression;
 using Ex = System.Linq.Expressions.Expression;
 using mcEx = System.Linq.Expressions.MethodCallExpression;
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable once CheckNamespace
 namespace System;
 
 /// <summary>Класс методов-расширений для объекта</summary>
@@ -250,7 +253,7 @@ public static class ObjectExtensions
     /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
     /// <exception cref="InvalidOperationException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> == <c>null</c></exception>
     /// <exception cref="ArgumentNullException">В случае если переданное значение <paramref name="obj"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
-    [return: Diagnostics.CodeAnalysis.NotNull]
+    [return: NotNull]
     [return: NotNullIfNotNull(nameof(obj))]
     public static T NotNull<T>(this T? obj, string? Message = null, [CallerArgumentExpression(nameof(obj))] string? ParameterName = null!) 
         where T : class => 
@@ -525,7 +528,7 @@ public static class ObjectExtensions
         {
             var ptr = gch.AddrOfPinnedObject();
             ptr += offset;
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            return (T)Marshal.PtrToStructure(ptr, typeof(T))!;
         }
         finally
         {
@@ -545,7 +548,7 @@ public static class ObjectExtensions
             for (var i = 0; i < count; i++)
             {
                 Marshal.Copy(data, length * i, ptr, length);
-                result[i] = (T)Marshal.PtrToStructure(ptr, type);
+                result[i] = (T)Marshal.PtrToStructure(ptr, type)!;
             }
             return result;
         }
@@ -728,4 +731,4 @@ public static class ObjectExtensions
 
 /// <summary>Словарь действий</summary>
 // ReSharper disable once ClassNeverInstantiated.Global
-public class Actions : Dictionary<object, Action<object>?> { }
+public class Actions : Dictionary<object, Action<object>?>;

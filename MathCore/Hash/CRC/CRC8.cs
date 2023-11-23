@@ -69,6 +69,36 @@ public class CRC8(byte Polynimial)
         return crc;
     }
 
+#if NET8_0_OR_GREATER
+    public uint Compute(Span<byte> bytes) => ContinueCompute(State, bytes);
+    public uint Compute(ReadOnlySpan<byte> bytes) => ContinueCompute(State, bytes);
+
+    public uint Compute(Memory<byte> bytes) => ContinueCompute(State, bytes.Span);
+    public uint Compute(ReadOnlyMemory<byte> bytes) => ContinueCompute(State, bytes.Span);
+
+    public uint ContinueCompute(byte crc, Span<byte> bytes)
+    {
+        foreach (var b in bytes)
+            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
+        if (UpdateState)
+            State = crc;
+
+        return crc;
+    }
+
+    public uint ContinueCompute(byte crc, ReadOnlySpan<byte> bytes)
+    {
+        foreach (var b in bytes)
+            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
+        if (UpdateState)
+            State = crc;
+
+        return crc;
+    }
+#endif
+
     public byte Compute(IReadOnlyList<byte> bytes) => ContinueCompute(State, bytes);
 
     public byte ContinueCompute(byte crc, IReadOnlyList<byte> bytes)
@@ -97,7 +127,7 @@ public class CRC8(byte Polynimial)
     public byte[] ComputeChecksumBytes(params byte[] bytes)
     {
         var crc = Compute(bytes);
-        return BitConverter.GetBytes(crc);
+        return new[] { crc };
     }
 
     public static byte Compute(Stream stream, byte Polynimial, byte State = 0)

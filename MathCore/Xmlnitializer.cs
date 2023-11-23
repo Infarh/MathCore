@@ -7,6 +7,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
+using MathCore.Annotations;
+
 using static System.Linq.Expressions.Expression;
 // ReSharper disable UnusedType.Global
 // ReSharper disable ConvertToAutoPropertyWhenPossible
@@ -116,7 +118,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
                     Call
                     (
                         Constant(c),                                        //Узел выражения, содержащий значение объекта преобразователя
-                        ((Func<string, object>)c.ConvertFromString).Method, //Описание метода
+                        ((Func<string, object?>)c.ConvertFromString).Method, //Описание метода
                         p_str                                               //Параметр метода - строковый
                     ),
                     typeof(TValue)
@@ -176,7 +178,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
                     Call //Создаём узел вызова метода
                     (
                         Constant(c),                                        //Значение объекта-преобразования типов
-                        ((Func<string, object>)c.ConvertFromString).Method, //Описание метода
+                        ((Func<string, object?>)c.ConvertFromString).Method, //Описание метода
                         p_str                                               //Строковый параметр
                     ),
                     typeof(TValue) //Целевой тип
@@ -220,7 +222,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
                     Call //Создаём узел вызова метода
                     (
                         Constant(converter),                                        //Значение объекта-преобразования типов
-                        ((Func<string, object>)converter.ConvertFromString).Method, //Описание метода
+                        ((Func<string, object?>)converter.ConvertFromString).Method, //Описание метода
                         p_str                                                       //Строковый параметр
                     ),
                     typeof(TValue) //Целевой тип
@@ -380,7 +382,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     {
         var path = XmlNamespace is null ? new XPathCollection() : new XPathCollection(XmlNamespace);
         _Rules.Select(rule => new XPathQuery(rule.XPath) { Tag = rule })
-           .ForeachLazy(query => path.Add(query))
+           .ForeachLazy(path.Add)
            .Foreach(obj, (q, o) => q.QueryMatch += (_, e) => ((Rule)q.Tag).Update(o!, e.Argument));
         var reader = new XPathReader(xml, path);
         while(reader.ReadUntilMatch()) { }

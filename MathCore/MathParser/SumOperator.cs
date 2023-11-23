@@ -88,13 +88,13 @@ public class SumOperator : Functional
             
         var sum = 0.0;
         if (min < max)
-            for (int i = (int)min, Max = (int)max; i < Max; i++)
+            for (int i = (int)min, lv_max = (int)max; i < lv_max; i++)
             {
                 iterator.Value =  i;
                 sum            += Function.Compute();
             }
         else
-            for (int i = (int)min, Min = (int)max - 1; i >= Min; i--)
+            for (int i = (int)min, lv_min = (int)max - 1; i >= lv_min; i--)
             {
                 iterator.Value =  i;
                 sum            += Function.Compute();
@@ -120,16 +120,18 @@ public class SumOperator : Functional
     {
         var pp_len = Parameters.Length;
 
-        var S  = 0.0;
+        var sum  = 0.0;
         var xx = new object[pp_len + 1];
         Array.Copy(Parameters, 0, xx, 1, pp_len);
+
         if (Min < Max)
             for (xx[0] = Min; (double)xx[0] < Max; xx[0] = (double)xx[0] + 1)
-                S += (double)d.DynamicInvoke(xx);
+                sum += (double)d.DynamicInvoke(xx)!;
         else
             for (xx[0] = Min; (double)xx[0] > Max; xx[0] = (double)xx[0] - 1)
-                S += (double)d.DynamicInvoke(xx);
-        return S;
+                sum += (double)d.DynamicInvoke(xx)!;
+
+        return sum;
     }
 
     /// <summary>Скомпилировать в выражение</summary>

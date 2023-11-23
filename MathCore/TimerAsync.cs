@@ -3,11 +3,13 @@ using System.Diagnostics;
 
 namespace MathCore;
 
+/// <summary>Асинхронный таймер</summary>
+/// <param name="Timeout">Интервал времени ожидания в миллисекундах</param>
 public class TimerAsync(int Timeout)
 {
     private readonly Lazy<Stopwatch> _Timer = new(Stopwatch.StartNew);
 
-    private async Task<int> WaitAsync()
+    public async Task<int> WaitAsync()
     {
         var timer   = _Timer.Value;
         var elapsed = timer.ElapsedMilliseconds;

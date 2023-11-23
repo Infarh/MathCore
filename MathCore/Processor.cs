@@ -264,8 +264,12 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
         {
             if(!_Enabled) return;
             _Enabled = false;
-            if(!_MainWorkThread.Join(_JoinThreadTimeout))
-                _MainWorkThread.Abort();
+
+#if !NET5_0_OR_GREATER
+            if (!_MainWorkThread.Join(_JoinThreadTimeout))
+                _MainWorkThread.Abort(); 
+#endif
+
             _MainWorkThread   = null;
             _SetTimeout       = null;
             _GetLastDeltaTime = null;
@@ -324,12 +328,15 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
         while(_Enabled)
         {
             start_time = Now;
-            try { MainAction(); } catch(Exception Error)
+            try { MainAction(); } catch(Exception error)
             {
-                var args = new ExceptionEventHandlerArgs<Exception>(Error);
+                var args = new ExceptionEventHandlerArgs<Exception>(error);
                 OnError(args);
                 if(args.NeedToThrow) throw;
-                if(Error is ThreadAbortException) Thread.ResetAbort();
+
+#if !NET5_0_OR_GREATER
+                if (error is ThreadAbortException) Thread.ResetAbort(); 
+#endif
             }
             stop_time = Now;
             _CyclesCount++;
@@ -360,7 +367,11 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
             var args = new ExceptionEventHandlerArgs<Exception>(error);
             OnError(args);
             if(args.NeedToThrow) throw;
-            if(error is ThreadAbortException) Thread.ResetAbort();
+
+#if !NET5_0_OR_GREATER
+            if (error is ThreadAbortException)
+                Thread.ResetAbort(); 
+#endif
         }
     }
 
@@ -403,7 +414,10 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
             OnError(args);
             if(args.NeedToThrow) throw;
 
-            if(error is ThreadAbortException) Thread.ResetAbort();
+#if !NET5_0_OR_GREATER
+            if (error is ThreadAbortException) 
+                Thread.ResetAbort(); 
+#endif
         }
     }
 

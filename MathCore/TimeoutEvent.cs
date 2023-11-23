@@ -32,10 +32,7 @@ public class TimeoutEvent<TEventArgs> where TEventArgs : EventArgs
     /// <remarks>Аргумент события</remarks>
     /// <param name="Sender">Источник исходного события</param>
     /// <param name="e">Аргумент исходного события</param>
-    [method: DST]
-    /* ------------------------------------------------------------------------------------------ */
-
-    /// <summary>Аргумент события</summary>
+    [DST]
     public class Info(object Sender, TEventArgs e) : EventArgs
     {
         /// <summary>Источник сходного события</summary>
@@ -122,7 +119,7 @@ public class TimeoutEvent<TEventArgs> where TEventArgs : EventArgs
 
     /// <summary>Метод обработки события таймера</summary>
     /// <param name="State">Состояние таймера</param>
-    private void OnTimer(object State)
+    private void OnTimer(object? State)
     {
         bool is_timeout;
         lock(_Timer)

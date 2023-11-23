@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>
+      net8.0;
+      netstandard2.0
+    </TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.88</Version>
+    <Version>0.0.89</Version>
     <PackageReleaseNotes>
-      Добавлены методы-расширения для Stream для получения объектов чтения/записи
-      Исправлена проблема в DisposableGroup при наличии пустой ссылки внутри коллекции
-      Обновление пакетов
+      Добавлена поддержка платформы net8
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -25,13 +26,17 @@
     <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/infarh/mathcore.git</RepositoryUrl>
     <Description>Библиотека прикладных алгоритмов</Description>
-    <PackageTags>Mathematic;Logiс</PackageTags>
+    <PackageTags>Mathematics;Logiс</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MathCoreSign.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST"/>
+  </ItemGroup>
 
   <PropertyGroup>
     <NoWarn>
@@ -148,10 +153,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Matrix.long.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>
