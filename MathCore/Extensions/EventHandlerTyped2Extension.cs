@@ -21,7 +21,7 @@ public static class EventHandlerTyped2Extension
         var invocations = Handler.GetInvocationList();
         foreach (var invocation in invocations)
             if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)
-                invoke.Invoke(invocation, new object?[] { Sender, e });
+                invoke.Invoke(invocation, [Sender, e]);
             else
                 invocation.DynamicInvoke(Sender, e);
     }
@@ -87,7 +87,7 @@ public static class EventHandlerTyped2Extension
     //    {
     //        var I = invocations[i];
     //        if(I.Target is ISynchronizeInvoke && ((ISynchronizeInvoke)I.Target).InvokeRequired)
-    //            ((ISynchronizeInvoke)I.Target).Invoke(I, new[] { Sender, e });
+    //            ((ISynchronizeInvoke)I.Target).Invoke(I, [Sender, e]);
     //        else
     //            I.DynamicInvoke(Sender, e);
     //    }
@@ -125,7 +125,7 @@ public static class EventHandlerTyped2Extension
     //                .GetInvocationList()
     //                .Select(I => (TResult)(I.Target is ISynchronizeInvoke && ((ISynchronizeInvoke)I.Target).InvokeRequired
     //                                                   ? ((ISynchronizeInvoke)I.Target)
-    //                                                                 .Invoke(I, new object[] { Sender, Args })
+    //                                                                 .Invoke(I, [Sender, Arg])
     //                                                   : I.DynamicInvoke(Sender, Args))).ToArray();
     //}
 }

@@ -12,7 +12,7 @@ public sealed class Log : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyC
 {
     public class LogPool
     {
-        private readonly Dictionary<string, Log> _LogDictionary = new();
+        private readonly Dictionary<string, Log> _LogDictionary = [];
 
         public Log this[string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new Log(name));
 
@@ -38,7 +38,7 @@ public sealed class Log : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyC
 
     private readonly string _Name;
     private LogType _Type;
-    private readonly List<LogItem> _Items = new();
+    private readonly List<LogItem> _Items = [];
 
     public int ItemsCount => _Items.Count;
 

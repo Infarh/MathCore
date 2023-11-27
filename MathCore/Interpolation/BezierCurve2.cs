@@ -18,8 +18,8 @@ internal class BezierCurve2
     }
 
     // create lookup table for fast Factorial calculation
-    private void CreateFactorialTable() => _FactorialLookup = new[]
-    {
+    private void CreateFactorialTable() => _FactorialLookup =
+    [
         1d,
         1d,
         2d,
@@ -53,7 +53,7 @@ internal class BezierCurve2
         265252859812191058636308480000000d,
         8222838654177922817725562880000000d,
         263130836933693530167218012160000000d
-    };
+    ];
 
     private double Ni(int n, int i) => FastFactorial(n) / (FastFactorial(i) * FastFactorial(n - i));
 

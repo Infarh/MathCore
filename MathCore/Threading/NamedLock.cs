@@ -32,7 +32,7 @@ public sealed class NamedLock : IDisposable
     private SemaphoreSlim _Lock = new(1, 1);
 
     /// <summary>Словарь семафоров заблокированных именованных ресурсов</summary>
-    private readonly Dictionary<string, SemaphoreSlim> _Resources = new();
+    private readonly Dictionary<string, SemaphoreSlim> _Resources = [];
 
     /// <summary>Заблокировать ресурс и получить контроллер блокировки для конструкции using</summary>
     /// <param name="ResourceName">Имя блокируемого ресурса</param>

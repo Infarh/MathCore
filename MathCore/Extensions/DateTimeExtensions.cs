@@ -19,7 +19,7 @@ public static class DateTimeExtensions
     {
         if(Offset < 0) throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение в массиве не может быть меньше нуля");
         if(Data.Length - Offset < 8) throw new InvalidOperationException("Процесс копирования данных выходит за пределы массива");
-        long[] data = { Time.ToBinary() };
+        long[] data = [Time.ToBinary()];
         Buffer.BlockCopy(data, 0, Data, Offset, 8);
     }
 

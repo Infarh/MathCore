@@ -893,7 +893,7 @@ public partial class Polynom
         {
             null => throw new ArgumentNullException(nameof(Root)),
             { Length: 0 } => throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root)),
-            { Length: 1 } => new[] { -Root[0], 1 },
+            { Length: 1 } => [-Root[0], 1],
             _ => GetCoefficients(Root, new double[Root.Length + 1])
         };
 
@@ -920,7 +920,7 @@ public partial class Polynom
                 a.Add(1);
             }
 
-            return a.ToArray();
+            return [.. a];
         }
 
         public static IList<double> GetCoefficients(IEnumerable<double> Root, IList<double> Coefficients)
@@ -1092,7 +1092,7 @@ public partial class Polynom
             {
                 case null: throw new ArgumentNullException(nameof(Root));
                 case { Length: 0 }: throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
-                case { Length: 1 }: return new[] { 1, -Root[0] };
+                case { Length: 1 }: return [1, -Root[0]];
             }
 
             var N = Root.Length + 1;
@@ -1124,7 +1124,7 @@ public partial class Polynom
             {
                 null => throw new ArgumentNullException(nameof(Root)),
                 { Length: 0 } => throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root)),
-                { Length: 1 } => new[] { -Root[0], 1 },
+                { Length: 1 } => [-Root[0], 1],
                 _ => GetCoefficients(Root, new Complex[Root.Length + 1])
             };
 
@@ -1151,7 +1151,7 @@ public partial class Polynom
                 a.Add(1);
             }
 
-            return a.ToArray();
+            return [.. a];
         }
 
         public static IList<Complex> GetCoefficients(IEnumerable<Complex> Root, IList<Complex> Coefficients)
@@ -1260,7 +1260,7 @@ public partial class Polynom
             {
                 case null: throw new ArgumentNullException(nameof(Root));
                 case { Length: 0 }: throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
-                case { Length: 1 }: return new[] { 1, -Root[0] };
+                case { Length: 1 }: return [1, -Root[0]];
             }
 
             var N = Root.Length + 1;
@@ -1288,7 +1288,7 @@ public partial class Polynom
             {
                 case null: throw new ArgumentNullException(nameof(Root));
                 case { Length: 0 }: throw new ArgumentException("Длина массива корней полинома должна быть больше 0", nameof(Root));
-                case { Length: 1 }: return new[] { 1, -Root[0].Re };
+                case { Length: 1 }: return [1, -Root[0].Re];
             }
 
             var N = Root.Length + 1;
@@ -1503,8 +1503,8 @@ public partial class Polynom
                 > 20 => throw new ArgumentOutOfRangeException(nameof(Order), Order, "Значение не должно быть больше 20"),
                 < 0 => GetIntegral(p, Order: -Order),
                 0 => p,
-                var o when o == p.Length - 1 => new[] { p[^1] * Order.Factorial() },
-                var o when o >= p.Length => new[] { 0d },
+                var o when o == p.Length - 1 => [p[^1] * Order.Factorial()],
+                var o when o >= p.Length => [0d],
                 _ => GetDifferential(p, new double[p.Length - Order], Order)
             }
         };
@@ -1522,8 +1522,8 @@ public partial class Polynom
                 > 20 => throw new ArgumentOutOfRangeException(nameof(Order), Order, "Значение не должно быть больше 20"),
                 < 0 => GetIntegral(p, Order: -Order),
                 0 => p,
-                var o when o == p.Length - 1 => new[] { p[^1] * Order.Factorial() },
-                var o when o >= p.Length => new[] { Complex.Zero },
+                var o when o == p.Length - 1 => [p[^1] * Order.Factorial()],
+                var o when o >= p.Length => [Complex.Zero],
                 _ => GetDifferential(p, new Complex[p.Length - Order], Order)
             }
         };
@@ -1796,7 +1796,7 @@ public partial class Polynom
                 zeros_count++;
 
             if (zeros_count == 0) return a;
-            if (zeros_count == a.Length) return SArray.Empty<double>();
+            if (zeros_count == a.Length) return [];
             SArray.Resize(ref a, a.Length - zeros_count);
             return a;
         }
@@ -1805,7 +1805,7 @@ public partial class Polynom
         {
             switch (Power)
             {
-                case 0: return new[] { 1d };
+                case 0: return [1d];
                 case 1: return p;
                 case < 0: throw new ArgumentOutOfRangeException(nameof(Power), Power, "Степень должна быть больше, либо равна 0");
             }

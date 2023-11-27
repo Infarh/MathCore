@@ -8,7 +8,7 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
     [ThreadStatic] private static WorkStealingQueue<Task> __ThreadTaskQueue;
 
     private readonly int _ConcurrencyLevel;
-    private readonly Queue<Task> _Queue = new();
+    private readonly Queue<Task> _Queue = [];
     private WorkStealingQueue<Task>[] _TaskQueues = new WorkStealingQueue<Task>[Environment.ProcessorCount];
     private readonly Lazy<Thread[]> _Threads;
     private int _ThreadsWaiting;

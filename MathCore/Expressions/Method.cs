@@ -15,8 +15,7 @@ public class Method<TResult>
         return p.GetCall(method).CreateLambda<Func<TObject, TResult>>(p);
     }
 
-    private static readonly Dictionary<MethodInfo, Delegate> __InvokersDictionary =
-        new();
+    private static readonly Dictionary<MethodInfo, Delegate> __InvokersDictionary = [];
 
     public static Func<TObject, TResult> GetInvoker<TObject>(MethodInfo method) =>
         (Func<TObject, TResult>)__InvokersDictionary.GetValueOrAddNew(method,

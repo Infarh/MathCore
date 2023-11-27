@@ -1,6 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿#nullable enable
+using System.Runtime.CompilerServices;
 
-using MathCore.Annotations;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Local
 
@@ -10,7 +10,7 @@ namespace System.Linq.Expressions;
 [NotImplemented]
 internal class IntegralVisitor : ExpressionVisitorEx
 {
-    private readonly Dictionary<int, ParameterExpression> _Parameters = new();
+    private readonly Dictionary<int, ParameterExpression> _Parameters = [];
 
     private ParameterExpression Parameter
     {
@@ -41,31 +41,30 @@ internal class IntegralVisitor : ExpressionVisitorEx
         if(!CheckNumType(type)) throw new NotSupportedException($"Неподдерживаемый тип данных {type}");
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sAdd([NotNull] Expression a, [NotNull] Expression b) => sAdd(Expression.Add(a, b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sAdd(Expression a, Expression b) => sAdd(Expression.Add(a, b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sAdd(double a, [NotNull] Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sAdd(double a, Expression b) => sAdd(Expression.Add(Expression.Constant(a), b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sAdd([NotNull] Expression a, double b) => sAdd(Expression.Add(a, Expression.Constant(b)));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sAdd(Expression a, double b) => sAdd(Expression.Add(a, Expression.Constant(b)));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sInc([NotNull] Expression a) => sAdd(a, 1);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sInc(Expression a) => sAdd(a, 1);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sSubtract([NotNull] Expression a, [NotNull] Expression b) => sAdd(Expression.Subtract(a, b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sSubtract(Expression a, Expression b) => sAdd(Expression.Subtract(a, b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sSubtract(double a, [NotNull] Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sSubtract(double a, Expression b) => sAdd(Expression.Subtract(Expression.Constant(a), b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sSubtract([NotNull] Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sSubtract(Expression a, double b) => sAdd(Expression.Subtract(a, Expression.Constant(b)));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sDec([NotNull] Expression a) => sSubtract(a, 1);
-    [NotNull]
-    private static Expression sAdd([NotNull] BinaryExpression b)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sDec(Expression a) => sSubtract(a, 1);
+    private static Expression sAdd(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -81,16 +80,15 @@ internal class IntegralVisitor : ExpressionVisitorEx
         return r != null && r.Value.Equals(0.0) ? b.Left : b;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sMultiply([NotNull] Expression a, [NotNull] Expression b) => sMultiply(Expression.Multiply(a, b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sMultiply(Expression a, Expression b) => sMultiply(Expression.Multiply(a, b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sMultiply(double a, [NotNull] Expression b) => sMultiply(Expression.Multiply(Expression.Constant(a), b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sMultiply(double a, Expression b) => sMultiply(Expression.Multiply(Expression.Constant(a), b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sMultiply([NotNull] Expression a, double b) => sMultiply(Expression.Multiply(a, Expression.Constant(b)));
-    [NotNull]
-    private static Expression sMultiply([NotNull] BinaryExpression b)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sMultiply(Expression a, double b) => sMultiply(Expression.Multiply(a, Expression.Constant(b)));
+    private static Expression sMultiply(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -103,16 +101,15 @@ internal class IntegralVisitor : ExpressionVisitorEx
         return r?.Value.Equals(1.0) == true ? b.Left : b;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sDivide([NotNull] Expression a, [NotNull] Expression b) => sDivide(Expression.Divide(a, b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sDivide(Expression a, Expression b) => sDivide(Expression.Divide(a, b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sDivide(double a, [NotNull] Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sDivide(double a, Expression b) => sDivide(Expression.Divide(Expression.Constant(a), b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sDivide([NotNull] Expression a, double b) => sDivide(Expression.Divide(a, Expression.Constant(b)));
-    [NotNull]
-    private static Expression sDivide([NotNull] BinaryExpression b)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sDivide(Expression a, double b) => sDivide(Expression.Divide(a, Expression.Constant(b)));
+    private static Expression sDivide(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -124,13 +121,12 @@ internal class IntegralVisitor : ExpressionVisitorEx
         return r?.Value.Equals(1.0) == true ? b.Left : b;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sPower([NotNull] Expression a, [NotNull] Expression b) => sPower(Expression.Power(a, b));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sPower(Expression a, Expression b) => sPower(Expression.Power(a, b));
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining), NotNull]
-    private static Expression sPower([NotNull] Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
-    [NotNull]
-    private static Expression sPower([NotNull] BinaryExpression b)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Expression sPower(Expression a, double b) => sPower(Expression.Power(a, Expression.Constant(b)));
+    private static Expression sPower(BinaryExpression b)
     {
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
@@ -142,22 +138,20 @@ internal class IntegralVisitor : ExpressionVisitorEx
         return b;
     }
 
-    [NotNull]
-    private static Expression MathMethod([NotNull] string Name, [NotNull] params Expression[] p) =>
+    private static Expression MathMethod(string Name, params Expression[] p) =>
         p.All(P => P is ConstantExpression)
             ? Expression.Constant(typeof(Math).GetMethod(Name, p.Select(P => P.Type).ToArray())
                .Invoke(null, p.Cast<ConstantExpression>().Select(P => P.Value).ToArray()))
             : Expression.Call(typeof(Math), Name, null, p);
 
-    [NotNull] public Expression Visit(LambdaExpression exp, double constant) => Visit(exp, Expression.Constant(constant));
-    [NotNull]
-    public Expression Visit(LambdaExpression exp, [NotNull] Expression constant)
+    public Expression Visit(LambdaExpression exp, double constant) => Visit(exp, Expression.Constant(constant));
+    public Expression Visit(LambdaExpression exp, Expression constant)
     {
-        exp = (LambdaExpression)base.Visit(exp);
+        exp = (LambdaExpression?)base.Visit(exp);
         return Expression.Lambda(exp.Type, sAdd(exp.Body, constant), exp.Parameters);
     }
 
-    protected override Expression VisitLambda([NotNull] LambdaExpression lambda)
+    protected override Expression VisitLambda(LambdaExpression lambda)
     {
         Parameter = lambda.Parameters[0];
         var expr = base.VisitLambda(lambda);
@@ -165,20 +159,19 @@ internal class IntegralVisitor : ExpressionVisitorEx
         return expr;
     }
 
-    protected override Expression VisitConstant([NotNull] ConstantExpression c)
+    protected override Expression VisitConstant(ConstantExpression c)
     {
         CheckValueType(c.Type);
         return Parameter;
     }
 
-    [NotNull]
-    protected override Expression VisitParameter([NotNull] ParameterExpression p)
+    protected override Expression VisitParameter(ParameterExpression p)
     {
         CheckValueType(p.Type);
         return sPower(p, 2);
     }
 
-    protected override Expression VisitBinary([NotNull] BinaryExpression b)
+    protected override Expression VisitBinary(BinaryExpression b)
     {
         var NodeType = b.NodeType;
         switch(NodeType)
@@ -237,7 +230,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
         }
     }
 
-    protected Expression VisitMathMethodCall([NotNull] MethodCallExpression m)
+    protected Expression? VisitMathMethodCall(MethodCallExpression m)
     {
         switch(m.Method.Name)
         {
@@ -337,7 +330,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
         //Math.
     }
 
-    protected override Expression VisitMethodCall([NotNull] MethodCallExpression m)
+    protected override Expression? VisitMethodCall(MethodCallExpression m)
     {
         //var result = OnMethodDifferential(m);
         //if(result != null) return result;

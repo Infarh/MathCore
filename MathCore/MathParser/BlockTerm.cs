@@ -94,7 +94,7 @@ internal sealed class BlockTerm : Term
     private static Term[]? GetTerms(string? Str)
     {
         if(Str is null) return null;
-        if(Str.Length == 0) return Array.Empty<Term>();
+        if(Str.Length == 0) return [];
         var pos    = 0;
         var len    = Str.Length;
         var result = new List<Term>();
@@ -168,7 +168,7 @@ internal sealed class BlockTerm : Term
                         break;
                 }
         }
-        return result.ToArray();
+        return [.. result];
     }
 
     /// <summary>Преобразование в строковое представление</summary>

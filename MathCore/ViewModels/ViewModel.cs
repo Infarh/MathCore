@@ -74,7 +74,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     {
         lock (_PropertiesDependenciesSyncRoot)
         {
-            var handlers = _PropertyChangedHandlers ??= new Dictionary<string, Action>();
+            var handlers = _PropertyChangedHandlers ??= [];
             if (handlers.TryGetValue(PropertyName, out var h)) handlers[PropertyName] = h + handler;
             else handlers.Add(PropertyName, handler);
         }
@@ -174,7 +174,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
             Dictionary<string, List<string>> dependencies_dictionary;
             if (_PropertiesDependenciesDictionary is null)
             {
-                dependencies_dictionary           = new Dictionary<string, List<string>>();
+                dependencies_dictionary           = [];
                 _PropertiesDependenciesDictionary = dependencies_dictionary;
             }
             else dependencies_dictionary = _PropertiesDependenciesDictionary;
@@ -222,7 +222,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
         Stack<string>? invoke_stack = null)
     {
         if(_PropertiesDependenciesDictionary is null) throw new InvalidOperationException("Отсутствует словарь свойств-зависимости");
-        invoke_stack ??= new() { property };
+        invoke_stack ??= [property];
 
         if (string.Equals(property, next_property)) 
             return invoke_stack.ToQueueReverse().AddValue(property);
@@ -301,7 +301,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
     }
 
     /// <summary>Словарь, хранящий время последней генерации события изменения указанного свойства в асинхронном режиме</summary>
-    private readonly Dictionary<string, DateTime> _PropertyAsyncInvokeTime = new();
+    private readonly Dictionary<string, DateTime> _PropertyAsyncInvokeTime = [];
 
     /// <summary>Асинхронная генерация события изменения свойства с возможностью указания таймаута ожидания повторных изменений</summary>
     /// <param name="PropertyName">Имя свойства</param>

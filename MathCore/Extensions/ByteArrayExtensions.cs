@@ -18,12 +18,8 @@ public static class ByteArrayExtensions
     /// <returns>Массив байт рассчитанной суммы SHA256</returns>
     public static byte[] ComputeSHA256(this byte[] bytes)
     {
-#if NET8_0_OR_GREATER
-        return SHA256.HashData(bytes);
-#else
         using var sha256 = SHA256.Create();
-        return sha256.ComputeHash(bytes); 
-#endif
+        return sha256.ComputeHash(bytes);
     }
 
     /// <summary>Вычислить контрольную сумму массива с применением алгоритма SHA256</summary>
@@ -33,12 +29,8 @@ public static class ByteArrayExtensions
     /// <returns>Массив байт рассчитанной суммы SHA256</returns>
     public static byte[] ComputeSHA256(this byte[] bytes, int offset, int count)
     {
-#if NET8_0_OR_GREATER
-        return SHA256.HashData(bytes.AsSpan(offset, count));
-#else
         using var sha256 = SHA256.Create();
-        return sha256.ComputeHash(bytes, offset, count); 
-#endif
+        return sha256.ComputeHash(bytes, offset, count);
     }
 
     /// <summary>Вычислить контрольную сумму массива с применением алгоритма MD5</summary>
@@ -46,12 +38,8 @@ public static class ByteArrayExtensions
     /// <returns>Массив байт рассчитанной суммы MD5</returns>
     public static byte[] ComputeMD5(this byte[] bytes)
     {
-#if NET8_0_OR_GREATER
-        return MD5.HashData(bytes);
-#else
         using var md5 = MD5.Create();
-        return md5.ComputeHash(bytes); 
-#endif
+        return md5.ComputeHash(bytes);
     }
 
     /// <summary>Вычислить контрольную сумму массива с применением алгоритма MD5</summary>
@@ -61,12 +49,8 @@ public static class ByteArrayExtensions
     /// <returns>Массив байт рассчитанной суммы MD5</returns>
     public static byte[] ComputeMD5(this byte[] bytes, int offset, int count)
     {
-#if NET8_0_OR_GREATER
-        return MD5.HashData(bytes.AsSpan(offset, count));
-#else
         using var md5 = MD5.Create();
-        return md5.ComputeHash(bytes, offset, count); 
-#endif
+        return md5.ComputeHash(bytes, offset, count);
     }
 
     /// <summary>Преобразовать массив байт в массив целых чисел длиной два байта каждое</summary>
@@ -591,7 +575,7 @@ public static class ByteArrayExtensions
     public static byte[]? FromBase64ByteArrayString(this string? str) => str switch
     {
         null => null,
-        { Length: 0 } => Array.Empty<byte>(),
+        { Length: 0 } => [],
         _ => Convert.FromBase64String(str)
     };
 }

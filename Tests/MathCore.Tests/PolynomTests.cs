@@ -53,7 +53,7 @@ public class PolynomTests : UnitTest
     [TestMethod, Priority(1), Timeout(100), Description("Тест значения")]
     public void Value_Test()
     {
-        double[] A = { 3, 5, 7 };
+        double[] A = [3, 5, 7];
         var      p = new Polynom(A);
         Assert.AreEqual(3, p.Value(0));
         Assert.AreEqual(15, p.Value(1));
@@ -286,8 +286,8 @@ public class PolynomTests : UnitTest
     [TestMethod]
     public void GetCoefficients_Test()
     {
-        double[] x0         = { 1, 3, 5, 7 };
-        double[] expected_a = { 105, -176, 86, -16, 1 };
+        double[] x0         = [1, 3, 5, 7];
+        double[] expected_a = [105, -176, 86, -16, 1];
 
         var a = Polynom.Array.GetCoefficients(x0);
         CollectionAssert.AreEqual(expected_a, a);

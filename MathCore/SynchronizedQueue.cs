@@ -13,7 +13,7 @@ public class SynchronizedQueue<T> : IDisposable
     // ReSharper disable once InconsistentlySynchronizedField
     public int Count => _Queue.Count;
 
-    public SynchronizedQueue() => _Queue = new Queue<T>();
+    public SynchronizedQueue() => _Queue = [];
 
     public SynchronizedQueue(int Capacity) => _Queue = new Queue<T>(Capacity);
 

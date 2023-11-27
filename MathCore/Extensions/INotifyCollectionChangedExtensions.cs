@@ -145,7 +145,7 @@ public static class INotifyCollectionChangedExtensions
         }
     }
 
-    private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>> __Subscribers = new();
+    private static readonly Dictionary<INotifyCollectionChanged, Dictionary<NotifyCollectionChangedAction, CollectionChangesSubscriber>> __Subscribers = [];
 
     public static IDisposable UsingSubscribeToProperty<T, TItem>(
         this T obj,

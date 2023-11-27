@@ -39,13 +39,13 @@ public class CommandLineProcessorTests
 
         var command_index = 0;
         string[] commands =
-        {
+        [
             __HelpCommandName,
             __StartCommandName,
             __ActionCommandName,
             __UnknownCommandName,
             __ExitCommandName,
-        };
+        ];
 
         var console_in_mock = new Mock<TextReader>();
         console_in_mock.Setup(r => r.ReadLine())

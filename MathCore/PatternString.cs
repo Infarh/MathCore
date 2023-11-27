@@ -15,7 +15,7 @@ public class PatternString(string Pattern) : IEnumerable<KeyValuePair<string, ob
     private static readonly Regex __Regex = new(@"{(?<name>\w+)(?::(?<format>.+?))?}", RegexOptions.Compiled);
 
     private readonly string _Pattern = Pattern.NotNull();
-    private readonly Dictionary<string, object> _Fields = new();
+    private readonly Dictionary<string, object> _Fields = [];
     private string? _Regex;
 
     /// <summary>Способ форматирования типов <seealso cref="IFormattable"/></summary>

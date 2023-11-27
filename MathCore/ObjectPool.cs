@@ -129,7 +129,7 @@ public sealed class ObjectPool<T>(Func<T> Factory, IProducerConsumerCollection<T
         var items = new List<T>();
         while (base.TryTake(out var value)) 
             items.Add(value);
-        return items.ToArray();
+        return [.. items];
     }
 
     protected override bool TryAdd(T item)

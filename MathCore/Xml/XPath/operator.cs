@@ -45,7 +45,7 @@ internal class Operator : AstNode
     #region Fields
 
     private readonly string[] _Str =
-    {
+    [
         "+",
         "-",
         "multiply",
@@ -61,7 +61,7 @@ internal class Operator : AstNode
         "or",
         "and",
         "union"
-    };
+    ];
 
     #endregion
 

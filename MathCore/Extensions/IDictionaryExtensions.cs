@@ -364,7 +364,7 @@ public static class IDictionaryExtensions
                 result.Add(value);
                 dictionary.Remove(key);
             }
-        return result.ToArray();
+        return [.. result];
     }
 
     /// <summary>Преобразование перечисления кортежей двух элементов в словарь</summary>

@@ -116,7 +116,7 @@ public abstract class ComplexExpression
     public Expression<TDelegate> Lambda<TDelegate>(params ParameterExpression[] Parameters)
     {
         var t_complex   = typeof(MathCore.Complex);
-        var constructor = t_complex.GetConstructor(new[] { typeof(double), typeof(double) });
+        var constructor = t_complex.GetConstructor([typeof(double), typeof(double)]);
         Debug.Assert(constructor != null, "MathCore.Complex.ctor info != null");
         var expression = Expression.New(constructor, Re, Im);
         return Expression.Lambda<TDelegate>(expression, Parameters);

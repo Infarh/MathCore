@@ -117,9 +117,7 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
     /// <returns>Новый словарь значений, содержащий в себе исходные значения и добавленные к ним новые</returns>
     private static IDictionary<string, int> Merge(IDictionary<string, int>? Source, IDictionary<string, int>? Values = null)
     {
-        var result = Source is { Count: > 0 }
-            ? new SortedList<string, int>(Source)
-            : new SortedList<string, int>();
+        SortedList<string, int> result = Source is { Count: > 0 } ? new(Source) : [];
 
         if (Values is not { Count: > 0 }) return result;
 
@@ -192,15 +190,13 @@ public readonly struct CSVQuery : IEnumerable<CSVQueryRow>, IEquatable<CSVQuery>
         if (count > 0)
             throw new FormatException("Неожиданный конец потока");
 
-        char[] separator = { Separator };
+        char[] separator = [Separator];
         var    line      = reader.ReadLine();
 
         if (string.IsNullOrWhiteSpace(line))
             throw new FormatException("Пустая строка заголовка");
 
-        var header = MergeWithDefault && Headers != null
-            ? new SortedList<string, int>(Headers)
-            : new SortedList<string, int>();
+        SortedList<string, int> header = MergeWithDefault && Headers != null ? new(Headers) : [];
 
         //var splitter = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
         //var headers = splitter

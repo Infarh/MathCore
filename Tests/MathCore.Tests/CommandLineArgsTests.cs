@@ -11,7 +11,7 @@ public class CommandLineArgsTests
             + "-- file7.qwe file8.asd";
 
         string[] expected_args =
-        {
+        [
             "file1.bin", "file2.bin",
             "-wps", "c:\\Program files 321\\123",
             "123",
@@ -19,7 +19,7 @@ public class CommandLineArgsTests
             "--in", "file6.txt",
             "-o", "result.bin",
             "--", "file7.qwe", "file8.asd"
-        };
+        ];
 
         var parser = new CommandLineArgs(command_line.Split(' '));
 

@@ -1031,9 +1031,9 @@ public static class FuncExtensions
     /// <returns>Массив значений функции</returns>
     public static TResult[] GetValues<TResult>(this Func<double, TResult> f, double x1, double x2, double dx)
     {
-        if (x1 == x2) return new[] { f(x1) };
+        if (x1 == x2) return [f(x1)];
         if (Math.Abs(x2 - x1) < dx) 
-            return new[] { f(x1), f(x2) };
+            return [f(x1), f(x2)];
 
         var N      = (int)((x2 - x1) / dx);
         var result = new List<TResult>(N);
@@ -1041,7 +1041,7 @@ public static class FuncExtensions
         for (var i = 0; i < N; i++) 
             result.Add(f(x1 + i * dx));
 
-        return result.ToArray();
+        return [.. result];
     }
 
     /// <summary>Получить функцию, значения которой обратны к значениям исходной функции g(x) = 1 / f(x)</summary>
@@ -1194,7 +1194,7 @@ public static class FuncExtensions
         // с поддержкой SSE - это законченная функция, принимающая 
         // четыре параметра (три вектора и длину) и складывающая их
         byte[] sse_assembly_bytes =
-        {
+        [
             0x8b, 0x5c, 0x24, 0x10, 0x8b, 0x74,
             0x24, 0x0c, 0x8b, 0x7c, 0x24, 0x08,
             0x8b, 0x4c, 0x24, 0x04, 0x31, 0xd2,
@@ -1203,7 +1203,7 @@ public static class FuncExtensions
             0x11, 0x0c, 0x91, 0x83, 0xc2, 0x04,
             0x39, 0xda, 0x7f, 0xea, 0xc2, 0x10,
             0x00
-        };
+        ];
 
         var code_buffer = VirtualAlloc
         (
@@ -1382,7 +1382,7 @@ public static class FuncExtensions
 
         /// <summary>Метод получения отсчётов функции</summary>
         /// <returns>Массив отсчётов функции</returns>
-        public Result[] GetValues() { lock (_List) return _List.OrderBy(v => v.Argument).ToArray(); }
+        public Result[] GetValues() { lock (_List) return [.. _List.OrderBy(v => v.Argument)]; }
 
         /// <summary>Оператор неявного приведения типа результата дискретизации к типу массива отсчётов функции</summary>
         /// <param name="result">Результат дискретизации</param>
@@ -1547,7 +1547,7 @@ public static class FuncExtensions
 
         /// <summary>Получить отсчёты функции в виде массива значений</summary>
         /// <returns>Массив значений функции</returns>
-        public Result[] GetValues() { lock (_List) return _List.OrderBy(v => v.Argument).ToArray(); }
+        public Result[] GetValues() { lock (_List) return [.. _List.OrderBy(v => v.Argument)]; }
 
         /// <summary>Оператор неявного преобразования результатов адаптивной дискретизации функции в массив её значений</summary>
         /// <param name="result">Результаты адаптивной дискретизации функции</param>

@@ -213,7 +213,7 @@ public static class ArrayExtensions
             var value = array[i];
             if (Splitter(value) && aggregator.Count != 0)
             {
-                result.Add(aggregator.ToArray());
+                result.Add([.. aggregator]);
                 aggregator.Clear();
             }
             else
@@ -221,9 +221,9 @@ public static class ArrayExtensions
         }
 
         if (aggregator.Count != 0)
-            result.Add(aggregator.ToArray());
+            result.Add([.. aggregator]);
 
-        return result.ToArray();
+        return [.. result];
     }
 
     ///// <summary>Быстрая сортировка Хоара</summary>
@@ -394,7 +394,10 @@ public static class ArrayExtensions
         var hash = 397;
         for (var i = 1; i < Objects.Length; i++)
             if (Objects[i] is { } obj)
-                hash = unchecked((hash * 397) ^ obj.GetHashCode());
+                unchecked
+                {
+                    hash = (hash * 397) ^ obj.GetHashCode();
+                }
 
         return hash;
     }
@@ -2025,7 +2028,7 @@ public static class ArrayExtensions
     public static T[] Linearize<T>(this T[][] array)
     {
         var result_length = array.Sum(a => a.Length);
-        if (result_length == 0) return Array.Empty<T>();
+        if (result_length == 0) return [];
 
         var result = new T[result_length];
         for (int i = 0, k = 0; i < array.Length; i++)

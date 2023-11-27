@@ -61,7 +61,7 @@ internal class Function : AstNode
 
     // ReSharper disable StringLiteralTypo
     private static readonly string[] _Str =
-    {
+    [
         "last()",
         "position()",
         "count()",
@@ -89,7 +89,7 @@ internal class Function : AstNode
         "floor()",
         "celing()",
         "round()"
-    };
+    ];
     // ReSharper restore StringLiteralTypo
 
     #endregion
@@ -169,7 +169,7 @@ internal class Function : AstNode
     internal Function(FunctionType FType, AstNode arg)
     {
         TypeOfFunction = FType;
-        ArgumentList   = new ArrayList { arg };
+        ArgumentList   = [arg];
     }
 
     #endregion

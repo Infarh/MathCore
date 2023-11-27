@@ -386,18 +386,18 @@ public static class StringExtensions
 
     /// <summary>Массив байт - "соль" алгоритма шифрования Rfc2898</summary>
     private static readonly byte[] __Salt =
-    {
+    [
         0x26, 0xdc, 0xff, 0x00,
         0xad, 0xed, 0x7a, 0xee,
         0xc5, 0xfe, 0x07, 0xaf,
         0x4d, 0x08, 0x22, 0x3c
-    };
+    ];
 
 #pragma warning disable SYSLIB0022
     private static Rijndael CreateRijndael(string Password, byte[]? Salt = null)
     {
 #pragma warning disable SYSLIB0041
-        var pdb = new Rfc2898DeriveBytes(Password, Salt ?? Array.Empty<byte>());
+        var pdb = new Rfc2898DeriveBytes(Password, Salt ?? []);
 #pragma warning restore SYSLIB0041
         var algorithm = Rijndael.Create();
         algorithm.Key = pdb.GetBytes(32);

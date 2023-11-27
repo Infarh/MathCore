@@ -56,7 +56,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         return ServiceInstance is not null;
     }
 
-    private readonly Dictionary<Type, ServiceRegistration> _Services = new();
+    private readonly Dictionary<Type, ServiceRegistration> _Services = [];
 
     private readonly object _SyncRoot = new();
 
@@ -66,7 +66,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
 
     private List<IServiceManager>? _MergedServiceManagers;
 
-    public ICollection<IServiceManager> MergedServiceManagers => _MergedServiceManagers ??= new List<IServiceManager>();
+    public ICollection<IServiceManager> MergedServiceManagers => _MergedServiceManagers ??= [];
 
     public object? this[Type ServiceType] => Get(ServiceType);
 

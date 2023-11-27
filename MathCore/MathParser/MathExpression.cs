@@ -74,9 +74,9 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     {
         _Name        = Name;
         _Variables   = new(this); // Коллекция переменных
-        _Constants   = new();     // Коллекция констант
-        _Functions   = new();     // Коллекция функций
-        _Functionals = new();   // Коллекция функционалов
+        _Constants   = [];     // Коллекция констант
+        _Functions   = [];     // Коллекция функций
+        _Functionals = [];   // Коллекция функционалов
     }
 
     /// <summary>Инициализация нового математического выражения</summary>

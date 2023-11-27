@@ -6,7 +6,7 @@ namespace MathCore.Threading;
 public class InstanceThreadPool : IDisposable
 {
     private readonly ThreadPriority _Priority;
-    private readonly Queue<(Action<object?> Work, object? Parameter)> _Works = new();
+    private readonly Queue<(Action<object?> Work, object? Parameter)> _Works = [];
     private readonly Thread[] _Threads;
     private volatile bool _CanWork = true;
     private readonly string _Name;

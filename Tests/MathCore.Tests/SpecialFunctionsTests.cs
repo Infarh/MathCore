@@ -53,7 +53,7 @@ public class SpecialFunctionsTests
     public void BinomialCoefficient_int()
     {
         const int n        = 4;
-        long[]    expected = { 1, 4, 6, 4, 1 };
+        long[]    expected = [1, 4, 6, 4, 1];
 
         for (var k = 0; k <= n; k++)
         {

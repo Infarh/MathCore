@@ -8,7 +8,7 @@ public sealed class JSONObjectCreator<T> : JSONObjectCreatorBase
     /// <summary>Объект-прототип</summary>
     private readonly T? _Obj;
     /// <summary>Список именованных методов получения JSON-объектов - полей из объекта-прототипа</summary>
-    private readonly List<KeyValuePair<string, Func<T?, object?>>> _FieldsDescriptions = new();
+    private readonly List<KeyValuePair<string, Func<T?, object?>>> _FieldsDescriptions = [];
 
     /// <summary>Инициализация нового генератора JSON-объектов</summary>
     /// <param name="obj"></param>

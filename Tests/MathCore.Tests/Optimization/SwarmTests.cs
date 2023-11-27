@@ -21,7 +21,7 @@ public class SwarmTests
     public void Minimize()
     {
         var swarm = new Swarm();
-        swarm.Minimize(F, new []{ -10d, -10d, -10d }, new []{ 10d, 10d, 10d }, 1000, out var X, out var V);
+        swarm.Minimize(F, [-10d, -10d, -10d], [10d, 10d, 10d], 1000, out var X, out var V);
 
         Assert.That.Value(V).IsEqual(__V0);
         CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
@@ -31,7 +31,7 @@ public class SwarmTests
     public void MinimizeInterval()
     {
         var swarm = new Swarm();
-        swarm.Minimize(F, new Interval[] { (-10, 10), (-10, 10), (-10, 10) }, 1000, out var X, out var V);
+        swarm.Minimize(F, [(-10, 10), (-10, 10), (-10, 10)], 1000, out var X, out var V);
 
         Assert.That.Value(V).IsEqual(__V0);
         CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
@@ -41,7 +41,7 @@ public class SwarmTests
     public void Maximize()
     {
         var swarm = new Swarm();
-        swarm.Maximize(FNeg, new[] { -10d, -10d, -10d }, new[] { 10d, 10d, 10d }, 1000, out var X, out var V);
+        swarm.Maximize(FNeg, [-10d, -10d, -10d], [10d, 10d, 10d], 1000, out var X, out var V);
 
         Assert.That.Value(V).IsEqual(-__V0);
         CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);
@@ -51,7 +51,7 @@ public class SwarmTests
     public void MaximizeInterval()
     {
         var swarm = new Swarm();
-        swarm.Maximize(FNeg, new Interval[] { (-10, 10), (-10, 10), (-10, 10) }, 1000, out var X, out var V);
+        swarm.Maximize(FNeg, [(-10, 10), (-10, 10), (-10, 10)], 1000, out var X, out var V);
 
         Assert.That.Value(V).IsEqual(-__V0);
         CollectionAssert.That.Collection(X).ValuesAreEqualTo(__X0, __Y0, __Z0).WithAccuracy(3e-8);

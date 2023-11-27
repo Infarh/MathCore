@@ -27,7 +27,7 @@ internal abstract class BufferedObservable<T> : SimpleObservableEx<T[]>
             var f = _Buffer.Peek();
             if (f.Count < _BufferLength) return null;
             _Buffer.Dequeue();
-            return f.ToArray();
+            return [.. f];
         }
     }
 

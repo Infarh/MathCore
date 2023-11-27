@@ -43,7 +43,7 @@ internal class Axis : AstNode
     #region Static
 
     internal static readonly string[] Str =
-    {
+    [
         "Ancestor",
         "AncestorOrSelf",
         "Attribute",
@@ -57,7 +57,7 @@ internal class Axis : AstNode
         "Preceding",
         "PrecedingSibling",
         "Self"
-    };
+    ];
 
     #endregion
 

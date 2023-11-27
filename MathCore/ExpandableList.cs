@@ -11,7 +11,7 @@ namespace MathCore;
 public class ExpandableList<T>(List<T> BaseList) : IList<T>, IReadOnlyList<T>
 {
     /// <summary>Инициализация нового расширяемого списка</summary>
-    public ExpandableList() : this((List<T>)new()) { }
+    public ExpandableList() : this((List<T>)[]) { }
 
     /// <summary>Инициализация нового расширяемого списка</summary>
     /// <param name="Capacity">Ёмкость</param>

@@ -173,7 +173,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
     /// <returns>Полином, являющийся обратным к текущим</returns>
     public Polynom GetInversed()
     {
-        Array.Divide(new[] { 1d }, _a, out var result, out _);
+        Array.Divide([1d], _a, out var result, out _);
         return new Polynom(result);
     }
 

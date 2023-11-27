@@ -19,7 +19,7 @@ public sealed class StaTaskScheduler : TaskScheduler, IDisposable
         if (NumberOfThreads < 1) throw new ArgumentOutOfRangeException(nameof(NumberOfThreads));
 
         // Initialize the tasks collection
-        _Tasks = new BlockingCollection<Task>();
+        _Tasks = [];
 
         // Create the threads to be used by this scheduler
         _Threads = Enumerable.Range(0, NumberOfThreads).Select(_ =>

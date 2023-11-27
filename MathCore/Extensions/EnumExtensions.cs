@@ -29,7 +29,7 @@ public static class EnumExtensions
         where TAttribute : Attribute
     {
         var attributes = value.GetValueAttribute<TAttribute>();
-        if (attributes is null || attributes.Length == 0) return Array.Empty<TValue>();
+        if (attributes is null || attributes.Length == 0) return [];
         var result = new TValue[attributes.Length];
         for (var i = 0; i < result.Length; i++)
             result[i] = Selector(attributes[i]);

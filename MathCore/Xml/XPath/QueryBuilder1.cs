@@ -146,7 +146,7 @@ internal class QueryBuilder
             case FT.FuncStringLength:
             case FT.FuncNormalize:
             case FT.FuncTranslate:
-                if (root.ArgumentList is null) return new StringFunctions(new ArrayList(), root.TypeOfFunction);
+                if (root.ArgumentList is null) return new StringFunctions([], root.TypeOfFunction);
                 var count    = 0;
                 var arg_list = new ArrayList();
                 while(count < root.ArgumentList.Count)

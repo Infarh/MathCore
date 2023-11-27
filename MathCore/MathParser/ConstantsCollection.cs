@@ -10,7 +10,7 @@ namespace MathCore.MathParser;
 public sealed class ConstantsCollection : IEnumerable<ExpressionVariable>
 {
     /// <summary>Элементы коллекции</summary>
-    private readonly List<ExpressionVariable> _Items = new();
+    private readonly List<ExpressionVariable> _Items = [];
 
     /// <summary>Количество элементов коллекции</summary>
     public int Count => _Items.Count;

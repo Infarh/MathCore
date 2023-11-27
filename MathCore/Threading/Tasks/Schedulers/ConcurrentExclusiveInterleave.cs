@@ -66,8 +66,8 @@ public sealed class ConcurrentExclusiveInterleave
         _InternalLock                        = new object();
         _ExclusiveProcessingIncludesChildren = ExclusiveProcessingIncludesChildren;
         _ParallelOptions                     = new ParallelOptions { TaskScheduler = TargetScheduler };
-        _ConcurrentTaskScheduler             = new ConcurrentExclusiveTaskScheduler(this, new Queue<Task>(), TargetScheduler.MaximumConcurrencyLevel);
-        _ExclusiveTaskScheduler              = new ConcurrentExclusiveTaskScheduler(this, new Queue<Task>(), 1);
+        _ConcurrentTaskScheduler             = new ConcurrentExclusiveTaskScheduler(this, [], TargetScheduler.MaximumConcurrencyLevel);
+        _ExclusiveTaskScheduler              = new ConcurrentExclusiveTaskScheduler(this, [], 1);
     }
 
     /// <summary>

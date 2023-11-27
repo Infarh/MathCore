@@ -88,7 +88,7 @@ public class XPathQuery
     //
     private void Compile()
     {
-        GetXPathQueries = new ArrayList();
+        GetXPathQueries = [];
         var builder = new QueryBuilder();
 
         //

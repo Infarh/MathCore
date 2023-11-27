@@ -51,7 +51,7 @@ public static class EventHandlerExtension
             switch (d.Target)
             {
                 case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
-                    synchronize_invoke.Invoke(d, new[] { Sender, e });
+                    synchronize_invoke.Invoke(d, [Sender, e]);
                     break;
                 default:
                     d.DynamicInvoke(Sender, e);
@@ -85,8 +85,8 @@ public static class EventHandlerExtension
             switch (d.Target)
             {
                 case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
-                    foreach (var arg in args)
-                        synchronize_invoke.Invoke(d, new[] { Sender, arg });
+                    foreach (var e in args)
+                        synchronize_invoke.Invoke(d, [Sender, e]);
                     break;
                 default:
                     foreach (var arg in args)
@@ -110,7 +110,7 @@ public static class EventHandlerExtension
             switch (d.Target)
             {
                 case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
-                    synchronize_invoke.Invoke(d, new[] { Sender, e });
+                    synchronize_invoke.Invoke(d, [Sender, e]);
                     break;
                 default:
                     d.DynamicInvoke(Sender, e);
@@ -131,7 +131,7 @@ public static class EventHandlerExtension
             switch (d.Target)
             {
                 case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
-                    synchronize_invoke.Invoke(d, new[] { Sender, e });
+                    synchronize_invoke.Invoke(d, [Sender, e]);
                     break;
                 default:
                     d.DynamicInvoke(Sender, e);
@@ -197,7 +197,7 @@ public static class EventHandlerExtension
             switch (d.Target)
             {
                 case ISynchronizeInvoke { InvokeRequired: true } synchronize_invoke:
-                    synchronize_invoke.Invoke(d, new[] { Sender, e });
+                    synchronize_invoke.Invoke(d, [Sender, e]);
                     break;
                 default:
                     d.DynamicInvoke(Sender, e);
@@ -243,10 +243,10 @@ public static class EventHandlerExtension
         TSender? Sender, 
         TArgs Args) =>
         Handler is null
-            ? Array.Empty<TResult>()
+            ? []
             : Handler
                .GetInvocationList()
                .Select(d => (TResult)(d.Target is ISynchronizeInvoke { InvokeRequired: true } invoke
-                    ? invoke.Invoke(d, new object?[] { Sender, Args })
+                    ? invoke.Invoke(d, [Sender, Args])
                     : d.DynamicInvoke(Sender, Args))).ToArray();
 }

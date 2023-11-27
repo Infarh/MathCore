@@ -10,7 +10,7 @@ public class DoubleArrayExtensionsTests
         //const double expected_sko = 8;
         //const double dispersion = expected_sko * expected_sko;
         double[] values =
-        {
+        [
             9.30648634667564, 3.9763292571622, -0.768328748147881, 12.8627951749408, 0.808145593269836,
             18.9954781965425, -8.56051435529085, 17.2188003131097, 24.1294621021259, 3.12024377092156,
             -0.550935417042393, 9.67305044980154, 7.3219192847624, 5.10607945331926, -17.7482514966561,
@@ -31,7 +31,7 @@ public class DoubleArrayExtensionsTests
             4.71964421193056, 8.00713060694699, 10.7103412696686, 9.03276700074391, 8.50858021522337,
             13.4085145834299, -1.59131730298977, 5.25700087897026, -0.981232593057717, -1.18262841845954,
             -0.261757729092094, 0.297570326089552, -14.9905122465409, 6.83205246518404, 2.47458712927715
-        };
+        ];
 
         var variance = values.Dispersion();
 
@@ -43,7 +43,7 @@ public class DoubleArrayExtensionsTests
     [TestMethod]
     public void Dispersion_Array_1D_Simple()
     {
-        double[] values = { 3, 7, 10, 5, 4, 8, 2 };
+        double[] values = [3, 7, 10, 5, 4, 8, 2];
 
         var variance = values.Dispersion();
 

@@ -40,7 +40,7 @@ public class VariableValueNode : ValueNode
     public override Expression Compile() => Expression.Call
     (
         _Variable.ToExpression(),
-        Variable.GetType().GetMethod(nameof(ExpressionVariable.GetValue), Array.Empty<Type>())
+        Variable.GetType().GetMethod(nameof(ExpressionVariable.GetValue), [])
         ?? throw new InvalidOperationException("Метод GetValue не найден")
     );
 

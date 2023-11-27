@@ -13,7 +13,7 @@ namespace MathCore;
 public class ArrayIndexer<T>(T[] Array, int Index = 0)
 {
     /// <summary>Инициализация нового <see cref="ArrayIndexer{T}"/></summary>
-    public ArrayIndexer() : this(System.Array.Empty<T>()) { }
+    public ArrayIndexer() : this([]) { }
 
     /// <summary>Индексируемый массив</summary>
     private T[] _Array = Array.NotNull();

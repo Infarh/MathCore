@@ -9,12 +9,12 @@ public class MemorySegmentTest
     public static void Run()
     {
         string[] lines =
-        {
+        [
             "123.",
             "..\"Hello,.World!,.QWE\".",
             ".Value.",
             "\"123,23",
-        };
+        ];
 
         var line = string.Join(',', lines);
         var line_array = line.ToCharArray().AsMemory();

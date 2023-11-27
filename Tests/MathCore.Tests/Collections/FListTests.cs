@@ -41,7 +41,7 @@ public class FListTests
     [TestMethod]
     public void FList_NewParams_CreateNewFListWithItems()
     {
-        int[] items = { 1, 2, 3 };
+        int[] items = [1, 2, 3];
         var   list  = FList.New(items);
         Assert.That.Value(list)
            .Where(l => l.IsEmpty).CheckEquals(false)
@@ -82,7 +82,7 @@ public class FListTests
     [ExpectedException(typeof(InvalidOperationException))]
     public void PrivateParameterlessConstructorThrowInvalidOperationException()
     {
-        var ctor    = typeof(FList<int>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, Array.Empty<Type>(), null);
+        var ctor    = typeof(FList<int>).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, [], null);
         var creator = ctor.NewExpression().CreateLambda<Func<FList<int>>>().Compile();
         var list    = creator();
     }

@@ -132,7 +132,7 @@ public sealed class Histogram : IEnumerable<HistogramValue>
                 list.Add(x);
             }
 
-            x_values = list.ToArray();
+            x_values = [.. list];
         }
 
         var total_values_count = x_values.Length;

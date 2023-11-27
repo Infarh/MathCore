@@ -11,7 +11,7 @@ namespace MathCore.MathParser;
 public class FunctionalsCollection : IEnumerable<Functional>
 {
     /// <summary>Список функционалов</summary>
-    private readonly List<Functional> _Operators = new();
+    private readonly List<Functional> _Operators = [];
 
     /// <summary>Количество функционалов в коллекции</summary>
     public int Count => _Operators.Count;

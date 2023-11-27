@@ -4,7 +4,7 @@ namespace MathCore.Tests.CSV;
 
 public abstract class CSVTestsBase
 {
-    protected static readonly string[] Headers = { "Id", "Name", "SurName", "Birthday", "Rating", "GroupId" };
+    protected static readonly string[] Headers = ["Id", "Name", "SurName", "Birthday", "Rating", "GroupId"];
     protected const string LineDelimiter = "------------------------------------------";
     protected const char ValuesSeparator = ';';
     private const int __DataRowsCount = 10000;

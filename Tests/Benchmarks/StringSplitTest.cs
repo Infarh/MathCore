@@ -6,7 +6,7 @@ namespace Benchmarks;
 [MemoryDiagnoser]
 public class StringSplitTest
 {
-    private static char[] __Separators = { ':', '|', '$', ';' };
+    private static char[] __Separators = [':', '|', '$', ';'];
     private static readonly CultureInfo __Culture = CultureInfo.CurrentCulture;
 
     private static readonly string __DataString = Enumerable

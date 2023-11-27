@@ -208,13 +208,12 @@ public static class DoubleArrayExtensions
     /// <param name="array">Усредняемые массивы</param>
     /// <returns>Массив средних значений</returns>
     [DST]
-    public static double[] Average(this double[][] array)
+    public static double[] Average(this double[][] array) => array switch
     {
-        if (array is null) throw new ArgumentNullException(nameof(array));
-        if (array.Length == 0) return Array.Empty<double>();
-
-        return array.ToArray(a => a?.Average() ?? double.NaN);
-    }
+        null => throw new ArgumentNullException(nameof(array)),
+        { Length: 0 } => [],
+        _ => array.ToArray(a => a?.Average() ?? double.NaN)
+    };
 
     [DST]
     public static double[] AverageByRows(this double[,] array)
@@ -448,7 +447,7 @@ public static class DoubleArrayExtensions
             default:
                 var s = 0.0;
                 foreach (var y in Y) s += y;
-                return (2 * s - Y[0] - Y[Y.Length - 1]) * dx * 0.5;
+                return (2 * s - Y[0] - Y[^1]) * dx * 0.5;
         }
     }
 
@@ -549,7 +548,7 @@ public static class DoubleArrayExtensions
     public static double[] GetNormalized(this double[] array) => array switch
     {
         null => throw new ArgumentNullException(nameof(array)),
-        { Length: 0 } => Array.Empty<double>(),
+        { Length: 0 } => [],
         _ => array.GetDivided(array.Max())
     };
 
@@ -857,14 +856,8 @@ public static class DoubleArrayExtensions
         var length = source.Length;
         switch (length)
         {
-            case 1:
-                return source;
-            case 2:
-                return new[]
-                {
-                    (source[0] - source[1]) / 2.0,
-                    (source[0] + source[1]) / 2.0
-                };
+            case 1: return source;
+            case 2: return [(source[0] - source[1]) / 2, (source[0] + source[1]) / 2];
             default:
                 var r = new double[length];
                 var t = new double[length / 2];
@@ -872,8 +865,8 @@ public static class DoubleArrayExtensions
                 //var temp = new List<double>(length / 2);
                 for (var i = 0; i < length / 2; i++)
                 {
-                    r[i] = (source[i * 2] - source[i * 2 + 1]) / 2.0;
-                    t[i] = (source[i * 2] + source[i * 2 + 1]) / 2.0;
+                    r[i] = (source[i * 2] - source[i * 2 + 1]) / 2;
+                    t[i] = (source[i * 2] + source[i * 2 + 1]) / 2;
                     //result.Add((source[i] - source[i + 1]) / 2.0);
                     //temp.Add((source[i] + source[i + 1]) / 2.0);
                 }
@@ -891,14 +884,8 @@ public static class DoubleArrayExtensions
         var length = source.Length;
         switch (length)
         {
-            case 1:
-                return source;
-            case 2:
-                return new[]
-                {
-                    source[1] + source[0],
-                    source[1] - source[0]
-                };
+            case 1: return source;
+            case 2: return [source[1] + source[0], source[1] - source[0]];
             default:
                 var r = new double[length];
                 var t = new double[length / 2];

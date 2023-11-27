@@ -169,7 +169,7 @@ public static partial class IEnumerableExtensions
     /// <typeparam name="T">Тип элемента последовательности</typeparam>
     /// <param name="items">Последовательность элементов, для которой надо создать хеш-таблицу</param>
     /// <returns>Новая хеш-таблица, созданная из указанной последовательности элементов</returns>
-    public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items) => new(items);
+    public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items) => [..items];
 
     public static HashSet<T> GetHashSet<T>(this IEnumerable<T> items, Func<T, T, bool> Comparer, Func<T, int> Hasher)
     {
@@ -991,7 +991,7 @@ public static partial class IEnumerableExtensions
             case T[] array:
                 {
                     var length = array.Length;
-                    if (length == 0) return Array.Empty<TValue>();
+                    if (length == 0) return [];
                     var result = new TValue[length];
                     for (var i = 0; i < length; i++)
                         result[i] = converter(array[i]);
@@ -1000,7 +1000,7 @@ public static partial class IEnumerableExtensions
             case List<T> list:
                 {
                     var length = list.Count;
-                    if (length == 0) return Array.Empty<TValue>();
+                    if (length == 0) return [];
                     var result = new TValue[length];
                     for (var i = 0; i < length; i++)
                         result[i] = converter(list[i]);
@@ -1009,7 +1009,7 @@ public static partial class IEnumerableExtensions
             case IList<T> list:
                 {
                     var length = list.Count;
-                    if (length == 0) return Array.Empty<TValue>();
+                    if (length == 0) return [];
                     var result = new TValue[length];
                     for (var i = 0; i < length; i++)
                         result[i] = converter(list[i]);
@@ -1040,7 +1040,7 @@ public static partial class IEnumerableExtensions
             case T[] array:
                 {
                     var length = array.Length;
-                    if (length == 0) return Array.Empty<TValue>();
+                    if (length == 0) return [];
                     var result = new TValue[length];
                     for (var i = 0; i < length; i++)
                         result[i] = converter(array[i], i);
@@ -1049,7 +1049,7 @@ public static partial class IEnumerableExtensions
             case List<T> list:
                 {
                     var length = list.Count;
-                    if (length == 0) return Array.Empty<TValue>();
+                    if (length == 0) return [];
                     var result = new TValue[length];
                     for (var i = 0; i < length; i++)
                         result[i] = converter(list[i], i);
@@ -1058,7 +1058,7 @@ public static partial class IEnumerableExtensions
             case IList<T> list:
                 {
                     var length = list.Count;
-                    if (length == 0) return Array.Empty<TValue>();
+                    if (length == 0) return [];
                     var result = new TValue[length];
                     for (var i = 0; i < length; i++)
                         result[i] = converter(list[i], i);
@@ -3169,12 +3169,12 @@ public static partial class IEnumerableExtensions
             }
         }
 
-        ExistingInAFromB = existing_in_a_from_b_list.ToArray();
-        ExistingInBFromA = existing_in_b_from_a_list.ToArray();
-        MissingInAFromB  = missing_in_a_from_b_list.ToArray();
-        MissingInBFromA  = missing_in_b_from_a_list.ToArray();
-        Intersection     = intersection_list.ToArray();
-        NotIntersection  = not_intersection_list.ToArray();
+        ExistingInAFromB = [.. existing_in_a_from_b_list];
+        ExistingInBFromA = [.. existing_in_b_from_a_list];
+        MissingInAFromB  = [.. missing_in_a_from_b_list];
+        MissingInBFromA  = [.. missing_in_b_from_a_list];
+        Intersection     = [.. intersection_list];
+        NotIntersection  = [.. not_intersection_list];
     }
 
     /// <summary>Преобразовать последовательность в строку с указанной строкой-разделителем</summary>

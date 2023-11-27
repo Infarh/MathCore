@@ -35,7 +35,7 @@ public static class Win32Processes
             uint proc_info = 0;
             uint reboot_reason_none = __RebootReasonNone;
 
-            string[] resources = { path }; // Just checking on one resource.
+            string[] resources = [path]; // Just checking on one resource.
 
             res = RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
 
@@ -138,6 +138,6 @@ public static class Win32Processes
                 // catch the error -- in case the process is no longer running
             }
 
-        return processes.ToArray();
+        return [.. processes];
     }
 }

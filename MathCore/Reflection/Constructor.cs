@@ -74,7 +74,7 @@ public class Constructor<T> : IFactory<T>, IFactory<T, object[]>
 
 
     /// <inheritdoc />
-    public T Create() => (T)_Info.Invoke(Array.Empty<object>());
+    public T Create() => (T)_Info.Invoke([]);
 
     /// <inheritdoc />
     public T Create(params object[] Parameter) => (T)_Info.Invoke(Parameter);
