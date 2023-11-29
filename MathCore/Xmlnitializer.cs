@@ -288,7 +288,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     #endregion
 
     /// <summary>Набор правил</summary>
-    private readonly List<Rule> _Rules = new();
+    private readonly List<Rule> _Rules = [];
 
     /// <summary>Число правил инициализации</summary>
     public int Count => _Rules.Count;
@@ -380,7 +380,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     /// <param name="XmlNamespace">Пространство имён данных процесса инициализации</param>
     public void Initialize([DisallowNull] TObject obj, XmlReader xml, XmlNamespaceManager? XmlNamespace)
     {
-        var path = XmlNamespace is null ? new XPathCollection() : new XPathCollection(XmlNamespace);
+        var path = XmlNamespace is null ? [] : new XPathCollection(XmlNamespace);
         _Rules.Select(rule => new XPathQuery(rule.XPath) { Tag = rule })
            .ForeachLazy(path.Add)
            .Foreach(obj, (q, o) => q.QueryMatch += (_, e) => ((Rule)q.Tag).Update(o!, e.Argument));

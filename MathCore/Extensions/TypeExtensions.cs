@@ -120,7 +120,7 @@ public static class TypeExtensions
             : (Func<object, object?>)converter_to.ConvertFrom;
         var converter_args = converter_to is null
             ? new Expression[] { source_to_object, TargetType.ToExpression() }
-            : new Expression[] { source_to_object };
+            : [source_to_object];
         var expr_conversation = Expression.Call(converter_expression, converter_delegate.Method, converter_args);
 
         return Expression.Lambda(expr_conversation.ConvertTo(TargetType), parameter_source);
@@ -144,7 +144,7 @@ public static class TypeExtensions
             : (Func<object, object?>)converter_to.ConvertFrom;
         var converter_args = converter_to is null
             ? new Expression[] { parameter_source, Expression.Constant(TargetType) }
-            : new Expression[] { parameter_source };
+            : [parameter_source];
         var expr_conversation = Expression.Call(converter_expression, converter_delegate.Method, converter_args);
 
         return Expression.Lambda<Func<object, object>>(Expression.Convert(expr_conversation, typeof(object)), parameter_source);

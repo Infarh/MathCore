@@ -31,10 +31,10 @@ public class LambdaXmlSerializer<T>(string? ElementName = null) : LambdaXmlSeria
     public static string EmptyName { get => __EmptyName; set => __EmptyName = value; }
 
     /// <summary>Список методов формирования атрибутов элемента</summary>
-    private readonly List<Func<T, object>> _Attributes = new();
+    private readonly List<Func<T, object>> _Attributes = [];
 
     /// <summary>Список методов формирования дочерних элементов</summary>
-    private readonly List<Func<T, object>> _Elements = new();
+    private readonly List<Func<T, object>> _Elements = [];
 
     /// <summary>Выполнение процесса сериализации</summary>
     /// <param name="value">Сериализуемый объект</param>

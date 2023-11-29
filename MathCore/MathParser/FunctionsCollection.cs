@@ -12,7 +12,7 @@ namespace MathCore.MathParser;
 public class FunctionsCollection : IEnumerable<ExpressionFunction>
 {
     /// <summary>Список функций математического выражения</summary>
-    private readonly List<ExpressionFunction> _Functions = new();
+    private readonly List<ExpressionFunction> _Functions = [];
 
     /// <summary>Имена функций</summary>
     public IEnumerable<string> Names => _Functions.Select(v => v.Name);

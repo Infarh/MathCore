@@ -151,7 +151,7 @@ public class Property<TObject, TValue> : IValue<TValue>
         if (o is not ISynchronizeInvoke obj) return;
 
         _GetMethod = () => (TValue)obj.Invoke(_GetMethod, null);
-        _SetMethod = value => obj.Invoke(_SetMethod, new object?[] { value });
+        _SetMethod = value => obj.Invoke(_SetMethod, [value]);
 
         Description = _PropertyInfo?.GetCustomAttribute<DescriptionAttribute>()?.Description;
         DisplayName = _PropertyInfo?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? _PropertyInfo?.Name;

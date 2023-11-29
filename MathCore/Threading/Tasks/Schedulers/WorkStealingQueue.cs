@@ -185,6 +185,6 @@ internal class WorkStealingQueue<T> where T : class
             var obj = _Array[i & _Mask];
             if (obj != null) list.Add(obj);
         }
-        return list.ToArray();
+        return [.. list];
     }
 }

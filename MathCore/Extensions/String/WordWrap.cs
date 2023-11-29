@@ -11,20 +11,20 @@ internal static class WordWrap
     private enum SymbType { Empty, NoDefined, Glas, Sogl, Spec }
 
     private const char __HypSymb = (char)0x1F;
-    private static readonly char[] __Spaces = { ' ', ',', ';', ':', '.', '?', '!', '/', '\r', '\n' };
-    private static readonly char[] __SpecSign = { '-', '-', 'N', '-', 'щ', 'г' };
+    private static readonly char[] __Spaces = [' ', ',', ';', ':', '.', '?', '!', '/', '\r', '\n'];
+    private static readonly char[] __SpecSign = ['-', '-', 'N', '-', 'щ', 'г'];
     private static readonly char[] __GlasChar = 
-    {
+    [
         'e', 'L', 'х', '+', 'v',
         '-', 'р', '-', 'ю', '+',
         ' ', '-', 'ш', 'L', '|',
         '|', '2', '|', 'e', 'E',
         'u', 'U', 'i', 'I', 'o',
         'O', 'a', 'A', 'j', 'J'
-    };
+    ];
 
     private static readonly char[] __SoglChar = 
-    { 
+    [ 
         '-', 'г', 'ъ', '|', 'э', '=', 'у', '+', '0',
         '+', '', '-', 'ч', '|', 'i', '-', 'I', 'L',
         'т', 'T', 'я', '|', 'Ё', '|', 'ы', 'T', 'ф',
@@ -34,7 +34,7 @@ internal static class WordWrap
         'd', 'D', 'f', 'F', 'g', 'G', 'h', 'H', 'k',
         'K', 'l', 'L', 'z', 'Z', 'x', 'X', 'c', 'C',
         'v', 'V', 'b', 'B', 'n', 'N', 'm', 'M'
-    };
+    ];
 
     /// <summary>Проверяет, является ли символ согласным</summary>
     /// <param name="c"></param><returns></returns>
@@ -62,10 +62,12 @@ internal static class WordWrap
     {
         var len = c.Length;
         for(var i = Start; i < len - 1; i++)
-        {
-            if(c[i] == SymbType.NoDefined) return false;
-            if(c[i] == SymbType.Glas && (c[i + 1] != SymbType.NoDefined || i != Start)) return true;
-        }
+            switch (c[i])
+            {
+                case SymbType.NoDefined: return false;
+                case SymbType.Glas when c[i + 1] != SymbType.NoDefined || i != Start: return true;
+            }
+
         return false;
     }
 

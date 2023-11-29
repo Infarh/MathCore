@@ -114,7 +114,7 @@ public static class IntExtensions
     public static int[] FactorizationList(this int N)
     {
         var n = Math.Abs(N);
-        if (n == 1) return Array.Empty<int>();
+        if (n == 1) return [];
 
         var result = new List<int>();
         // пока число четное
@@ -131,7 +131,7 @@ public static class IntExtensions
                 n /= d;
             }
 
-        return result.ToArray();
+        return [.. result];
     }
 
     /// <summary>Разложение числа на простые множители</summary>

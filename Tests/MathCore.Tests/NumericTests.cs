@@ -6,7 +6,7 @@ public class NumericTests
     [TestMethod]
     public void LCM()
     {
-        int[] numbers = { 2, 3, 4, 5 };
+        int[] numbers = [2, 3, 4, 5];
 
         var lcm = Numeric.LCM(numbers);
 

@@ -13,7 +13,7 @@ public class CommandLineArgs
     private readonly (int Pos, int Count) _EndArgs;
 
     /// <summary>Список ключей со значениями</summary>
-    private readonly List<KeyValuePair<string, (int Pos, int Count)>> _Args = new();
+    private readonly List<KeyValuePair<string, (int Pos, int Count)>> _Args = [];
 
     /// <summary>Получение значений указанного ключа</summary>
     /// <param name="key">Требуемый ключ</param>

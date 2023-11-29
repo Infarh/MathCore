@@ -14,7 +14,7 @@ public class LambdaXmlSerializerTests
 
         public Group Group { get; set; }
 
-        public List<int> Ratings { get; set; } = new();
+        public List<int> Ratings { get; set; } = [];
 
         public string Description { get; init; }
     }
@@ -25,7 +25,7 @@ public class LambdaXmlSerializerTests
 
         public Student Leader { get; set; }
 
-        public List<Student> Students { get; init; } = new();
+        public List<Student> Students { get; init; } = [];
     }
 
     [TestMethod]
@@ -34,12 +34,19 @@ public class LambdaXmlSerializerTests
         var group = new Group
         {
             Name = "04-216",
-            Students = new List<Student>
-            {
-                new() {SureName = "Иванов", Name  = "Иван", Patronymic  = "Иванович", Ratings  = { 3,4,5 }},
-                new() {SureName = "Петров", Name  = "Пётр", Patronymic  = "Петрович", Ratings  = { 2,3,4 }, Description = "Описание"},
-                new() {SureName = "Сидоров", Name = "Сидор", Patronymic = "Сидорович", Ratings = { 1,2,3 }},
-            }
+            Students =
+            [
+                new() { SureName = "Иванов", Name = "Иван", Patronymic = "Иванович", Ratings = { 3, 4, 5 } },
+                new()
+                {
+                    SureName = "Петров",
+                    Name = "Пётр",
+                    Patronymic = "Петрович",
+                    Ratings = { 2, 3, 4 },
+                    Description = "Описание"
+                },
+                new() { SureName = "Сидоров", Name = "Сидор", Patronymic = "Сидорович", Ratings = { 1, 2, 3 } }
+            ]
         };
 
         group.Leader = group.Students.First();

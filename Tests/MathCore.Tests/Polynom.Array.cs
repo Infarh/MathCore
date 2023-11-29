@@ -578,7 +578,7 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficients()
     {
-        double[] roots = { 3, 5, 7 };
+        double[] roots = [3, 5, 7];
 
         var coefficients = Polynom.Array.GetCoefficients(roots);
 
@@ -595,7 +595,7 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficients_Enum()
     {
-        double[] roots = { 3, 5, 7 };
+        double[] roots = [3, 5, 7];
         var coefficients = Polynom.Array.GetCoefficients((IEnumerable<double>)roots);
 
         Debug.WriteLine("Polynom({0}):\r\n{1}",
@@ -608,7 +608,7 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficients_List()
     {
-        double[] roots = { 3, 5, 7 };
+        double[] roots = [3, 5, 7];
         List<double> coefficients = new();
         Polynom.Array.GetCoefficients(roots, coefficients);
 
@@ -632,7 +632,7 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficientsInverted()
     {
-        double[] roots = { 3, 5, 7 };
+        double[] roots = [3, 5, 7];
 
         var coefficients = Polynom.Array.GetCoefficients(roots);                   // -105 71 -15 1
         var coefficients_inverted = Polynom.Array.GetCoefficientsInverted(roots);
@@ -693,7 +693,7 @@ public class PolynomArray
         //Assert.That.Collection(coefficients).IsEqualTo(-5, 1);
         ////CollectionAssert.AreEqual(new[] { new Complex(-5), 1 }, coefficients);
 
-        Complex[] roots = { 3, 5, 7 };
+        Complex[] roots = [3, 5, 7];
 
         var coefficients = Polynom.Array.GetCoefficients(roots);
 
@@ -722,7 +722,7 @@ public class PolynomArray
     [TestMethod]
     public void GetCoefficientsInverted_Complex()
     {
-        Complex[] roots = { 3, 5, 7 };
+        Complex[] roots = [3, 5, 7];
 
         var coefficients = Polynom.Array.GetCoefficients(roots);                   // -105 71 -15 1
         var coefficients_inverted = Polynom.Array.GetCoefficientsInverted(roots);
@@ -746,7 +746,7 @@ public class PolynomArray
     public void GetDifferential_doubleArrays_Throw_ArgumentNullException_p()
     {
         double[] p = null;
-        double[] result = { };
+        double[] result = [];
         const int order = 1;
         var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.ParamName).IsEqual("p");
@@ -755,7 +755,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArrays_Throw_ArgumentNullException_Result()
     {
-        double[] p = { };
+        double[] p = [];
         double[] result = null;
         const int order = 1;
         var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
@@ -765,7 +765,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArrays_Order_0_Copy_Array()
     {
-        double[] p = { 1, 3, 5, 7, 9 };
+        double[] p = [1, 3, 5, 7, 9];
         var result = new double[p.Length];
         const int order = 0;
 
@@ -778,7 +778,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArrays_Throw_ArgumentException_when_ResultLength_less_pLength()
     {
-        double[] p = { 1, 3, 5, 7, 9 };
+        double[] p = [1, 3, 5, 7, 9];
         var result = new double[p.Length - 2];
         const int order = 1;
 
@@ -792,7 +792,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArrays_ClearResult_when_ResultLength_greater_pLength()
     {
-        double[] p = { 1, 3, 5, 7, 9 };
+        double[] p = [1, 3, 5, 7, 9];
         var result = Enumerable.Range(1, p.Length + 1).ToArray(v => (double)v);
         const int order = 1;
 
@@ -821,7 +821,7 @@ public class PolynomArray
     public void GetDifferential_ComplexArrays_Throw_ArgumentNullException_p()
     {
         Complex[] p = null;
-        Complex[] result = { };
+        Complex[] result = [];
         const int order = 1;
         var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
         Assert.That.Value(exception.ParamName).IsEqual("p");
@@ -830,7 +830,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArrays_Throw_ArgumentNullException_Result()
     {
-        Complex[] p = { };
+        Complex[] p = [];
         Complex[] result = null;
         const int order = 1;
         var exception = Assert.ThrowsException<ArgumentNullException>(() => Polynom.Array.GetDifferential(p, result, order));
@@ -840,7 +840,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArrays_Order_0_Copy_Array()
     {
-        Complex[] p = { 1, 3, 5, 7, 9 };
+        Complex[] p = [1, 3, 5, 7, 9];
         var result = new Complex[p.Length];
         const int order = 0;
 
@@ -853,7 +853,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArrays_Throw_ArgumentException_when_ResultLength_less_pLength()
     {
-        Complex[] p = { 1, 3, 5, 7, 9 };
+        Complex[] p = [1, 3, 5, 7, 9];
         var result = new Complex[p.Length - 2];
         const int order = 1;
 
@@ -867,7 +867,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArrays_ClearResult_when_ResultLength_greater_pLength()
     {
-        Complex[] p = { 1, 3, 5, 7, 9 };
+        Complex[] p = [1, 3, 5, 7, 9];
         var result = Enumerable.Range(1, p.Length + 1).ToArray(v => (Complex)v);
         const int order = 1;
 
@@ -907,7 +907,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArray_throw_ArgumentOutOfRangeException_Order_greater_20()
     {
-        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        double[] p = [1, 3, 5, 7, 9, 12, 14];
         const int order = 21;
 
         var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
@@ -919,7 +919,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArray_Return_source_array_when_Order_0()
     {
-        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        double[] p = [1, 3, 5, 7, 9, 12, 14];
         const int order = 0;
 
         var result = Polynom.Array.GetDifferential(p, order);
@@ -930,7 +930,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArray_Return_last_value_mult_OrderFactorial_when_Order_eq_SourceLength_without_1()
     {
-        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        double[] p = [1, 3, 5, 7, 9, 12, 14];
         var order = p.Length - 1;
 
         var result = Polynom.Array.GetDifferential(p, order);
@@ -940,7 +940,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_doubleArray_Return_result_with_1_element_eq_0_When_Order_greater_orEqual_SourceLength()
     {
-        double[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        double[] p = [1, 3, 5, 7, 9, 12, 14];
         var order = p.Length;
 
         var result = Polynom.Array.GetDifferential(p, order);
@@ -988,7 +988,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArray_throw_ArgumentOutOfRangeException_Order_greater_20()
     {
-        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        Complex[] p = [1, 3, 5, 7, 9, 12, 14];
         const int order = 21;
 
         var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Polynom.Array.GetDifferential(p, order));
@@ -1000,7 +1000,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArray_Return_source_array_when_Order_0()
     {
-        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        Complex[] p = [1, 3, 5, 7, 9, 12, 14];
         const int order = 0;
 
         var result = Polynom.Array.GetDifferential(p, order);
@@ -1011,7 +1011,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArray_Return_last_value_mult_OrderFactorial_when_Order_eq_SourceLength_without_1()
     {
-        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        Complex[] p = [1, 3, 5, 7, 9, 12, 14];
         var order = p.Length - 1;
 
         var result = Polynom.Array.GetDifferential(p, order);
@@ -1021,7 +1021,7 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_ComplexArray_Return_result_with_1_element_eq_0_When_Order_greater_orEqual_SourceLength()
     {
-        Complex[] p = { 1, 3, 5, 7, 9, 12, 14 };
+        Complex[] p = [1, 3, 5, 7, 9, 12, 14];
         var order = p.Length;
 
         var result = Polynom.Array.GetDifferential(p, order);
@@ -1067,7 +1067,7 @@ public class PolynomArray
     [DataRow(4, 10296, DisplayName = "DifferentialValue Order 5")]
     public void GetDifferentialValue(int Order, double ExpectedValue)
     {
-        double[] a = { 1, 3, 5, 7, 9, 12 };
+        double[] a = [1, 3, 5, 7, 9, 12];
         const double x = 7;
 
         var value = Polynom.Array.GetDifferentialValue(x, a, Order);
@@ -1078,19 +1078,19 @@ public class PolynomArray
     [TestMethod]
     public void Differential()
     {
-        double[] a = { 3, 5, 7, 9, 12 };
+        double[] a = [3, 5, 7, 9, 12];
 
         var actual_differential_1 = (double[])a.Clone();
         Polynom.Array.Differential(actual_differential_1, 1);
 
-        double[] expected_differential_1 = { 5, 14, 27, 48, 0 };
+        double[] expected_differential_1 = [5, 14, 27, 48, 0];
 
         Assert.That.Collection(actual_differential_1).IsEqualTo(expected_differential_1);
 
         var actual_differential_3 = (double[])a.Clone();
         Polynom.Array.Differential(actual_differential_3, 3);
 
-        double[] expected_differential_3 = { 54, 288, 0, 0, 0 };
+        double[] expected_differential_3 = [54, 288, 0, 0, 0];
         Assert.That.Collection(actual_differential_3).IsEqualTo(expected_differential_3);
     }
 
@@ -1100,16 +1100,16 @@ public class PolynomArray
     [TestMethod]
     public void GetDifferential_Complex()
     {
-        Complex[] a = { 3, 5, 7 };
+        Complex[] a = [3, 5, 7];
 
         var actual_differential = Polynom.Array.GetDifferential(a);
 
-        Complex[] expected_differential = { 5, 14 };
+        Complex[] expected_differential = [5, 14];
         CollectionAssert.AreEqual(expected_differential, actual_differential);
 
-        a = new Complex[] { 3, 5, 7, 9, 12 };
+        a = [3, 5, 7, 9, 12];
         actual_differential = Polynom.Array.GetDifferential(a, 3);
-        expected_differential = new Complex[] { 54, 288 };
+        expected_differential = [54, 288];
         CollectionAssert.AreEqual(expected_differential, actual_differential);
 
         actual_differential = Polynom.Array.GetDifferential(a, 0);
@@ -1123,11 +1123,11 @@ public class PolynomArray
     [TestMethod]
     public void GetIntegral()
     {
-        double[] a = { 18, 30, 42 };
+        double[] a = [18, 30, 42];
         const int c = 17;
 
         var integral = Polynom.Array.GetIntegral(a, c);
-        double[] expected_integral = { c, 18, 15, 14 };
+        double[] expected_integral = [c, 18, 15, 14];
 
         CollectionAssert.AreEqual(expected_integral, integral);
     }
@@ -1135,11 +1135,11 @@ public class PolynomArray
     [TestMethod]
     public void Integral()
     {
-        double[] a = { 18, 30, 42, 0 };
+        double[] a = [18, 30, 42, 0];
         const int c = 17;
 
         Polynom.Array.Integral(a, c);
-        double[] expected_integral = { c, 18, 15, 14 };
+        double[] expected_integral = [c, 18, 15, 14];
 
         CollectionAssert.AreEqual(expected_integral, a);
     }
@@ -1150,11 +1150,11 @@ public class PolynomArray
     [TestMethod]
     public void GetIntegral_Complex()
     {
-        Complex[] a = { 18, 30, 42 };
+        Complex[] a = [18, 30, 42];
         Complex c = 17;
 
         var integral = Polynom.Array.GetIntegral(a, c);
-        Complex[] expected_integral = { c, 18, 15, 14 };
+        Complex[] expected_integral = [c, 18, 15, 14];
 
         CollectionAssert.AreEqual(expected_integral, integral);
     }
@@ -1166,9 +1166,9 @@ public class PolynomArray
     [TestMethod]
     public void Sum()
     {
-        double[] p = { 3, 5, 7 };
-        double[] q = { 1, 2, 3, 4, 5 };
-        double[] expected_sum = { 4, 7, 10, 4, 5 };
+        double[] p = [3, 5, 7];
+        double[] q = [1, 2, 3, 4, 5];
+        double[] expected_sum = [4, 7, 10, 4, 5];
 
         var actual_sum = Polynom.Array.Sum(p, q);
         CollectionAssert.AreEqual(expected_sum, actual_sum);
@@ -1186,14 +1186,14 @@ public class PolynomArray
     [TestMethod]
     public void subtract()
     {
-        double[] p = { 3, 5, 7 };
-        double[] q = { 1, 2, 3, 4, 5 };
-        double[] expected_subtract = { 2, 3, 4, -4, -5 };
+        double[] p = [3, 5, 7];
+        double[] q = [1, 2, 3, 4, 5];
+        double[] expected_subtract = [2, 3, 4, -4, -5];
 
         var actual_subtract = Polynom.Array.Subtract(p, q);
         CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
 
-        expected_subtract = new double[] { -2, -3, -4, 4, 5 };
+        expected_subtract = [-2, -3, -4, 4, 5];
         actual_subtract = Polynom.Array.Subtract(q, p);
         CollectionAssert.That.Collection(actual_subtract).IsEqualTo(expected_subtract);
     }
@@ -1209,8 +1209,8 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_DoubleX_DoubleArray()
     {
-        double[] A = { 3, 5, 7 };
-        double[] X = { 0, 1, -1, 2, -2, 5, -5, 10, -10 };
+        double[] A = [3, 5, 7];
+        double[] X = [0, 1, -1, 2, -2, 5, -5, 10, -10];
 
         foreach (var x in X)
         {
@@ -1224,7 +1224,7 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_DoubleX_DoubleArray_with_ZeroLength_ResultNaN()
     {
-        double[] A = { };
+        double[] A = [];
         double x = 0;
 
         var actual = Polynom.Array.GetValue(x, A);
@@ -1242,13 +1242,13 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_ComplexX_DoubleArray()
     {
-        double[] A = { 3, 5, 7 };
+        double[] A = [3, 5, 7];
         Complex[] X =
-        {
+        [
             0, 1, -1, 2, -2, 5, -5,
             Complex.i, -Complex.i,
             new(5, 7), new(-5, 7), new(5, -7), new(-5, -7)
-        };
+        ];
 
         foreach (var x in X)
         {
@@ -1262,7 +1262,7 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_ComplexX_DoubleArray_with_ZeroLength_ResultNaN()
     {
-        double[] A = { };
+        double[] A = [];
         Complex x = 0;
 
         var actual = Polynom.Array.GetValue(x, A);
@@ -1280,19 +1280,19 @@ public class PolynomArray
     private static IEnumerable GetValue_ComplexX_ComplexArray_DataSource()
     {
         Complex[][] AA =
-        {
-            new Complex[] { 1 },
-            new Complex[] { 1, 3 },
-            new Complex[] { 1, 3, 5 },
-            new Complex[] { 1, 3, 5, 7, 9 },
-        };
+        [
+            [1],
+            [1, 3],
+            [1, 3, 5],
+            [1, 3, 5, 7, 9],
+        ];
 
         Complex[] X =
-        {
+        [
             0, 1, -1, 2, -2, 5, -5,
             Complex.i, -Complex.i,
             new(5, 7), new(-5, 7), new(5, -7), new(-5, -7)
-        };
+        ];
 
         foreach (var A in AA)
             foreach (var x in X)
@@ -1312,7 +1312,7 @@ public class PolynomArray
     [TestMethod]
     public void GetValue_ComplexX_ComplexArray_with_ZeroLength_ResultNaN()
     {
-        Complex[] A = { };
+        Complex[] A = [];
         Complex x = 0;
 
         var actual = Polynom.Array.GetValue(x, A);
@@ -1330,8 +1330,8 @@ public class PolynomArray
     [TestMethod]
     public void Multiply()
     {
-        double[] a = { 3, 5, 7 }; // p1(x) = 3 + 5x + 7x^2
-        double[] b = { 5, 4, 8 }; // p2(x) = 5 + 4x + 8x^2
+        double[] a = [3, 5, 7]; // p1(x) = 3 + 5x + 7x^2
+        double[] b = [5, 4, 8]; // p2(x) = 5 + 4x + 8x^2
 
         // p3(x) = (5 + 4x + 8x^2)           * 3
         //       +     (5  + 4x + 8x^2)      * 5x
@@ -1341,7 +1341,7 @@ public class PolynomArray
         //       +      25x + 20x^2 + 40x^3
         //       +            35x^2 + 28x^3 + 56x^4
 
-        double[] c_expect = { 15, 37, 79, 68, 56 };
+        double[] c_expect = [15, 37, 79, 68, 56];
 
         var c = Polynom.Array.Multiply(a, b);
 

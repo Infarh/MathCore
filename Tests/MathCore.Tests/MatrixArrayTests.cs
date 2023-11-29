@@ -1517,7 +1517,7 @@ public class MatrixArrayTests
             { -0.239903416810653, 0.609992655271404, 0.347879496037195 }
         };
 
-        w0 = new[] { 15.7303317555405, 5.58045576061558, 1.18961185453396 };
+        w0 = [15.7303317555405, 5.58045576061558, 1.18961185453396];
 
         v0 = new[,]
         {
@@ -1545,7 +1545,7 @@ public class MatrixArrayTests
             { -0.574243463983732, -0.136233763875403, 0.746923210928333, 0.306252383874501 }
         };
 
-        w0 = new[] { 19.0497217931626, 4.52034500612088, 3.26714933515809, 0.0177721838955954 };
+        w0 = [19.0497217931626, 4.52034500612088, 3.26714933515809, 0.0177721838955954];
 
         v0 = new[,]
         {
@@ -1573,7 +1573,7 @@ public class MatrixArrayTests
             { -0.492232930962052, -0.54276860322352, -0.512941502543221, 0.447213595499958 }
         };
 
-        w0 = new[] { 17.9018858414946, 5.64711417858407, 1.90593409438226, 0 };
+        w0 = [17.9018858414946, 5.64711417858407, 1.90593409438226, 0];
 
         v0 = new[,]
         {
@@ -1638,11 +1638,11 @@ public class MatrixArrayTests
     public void ColsToMatrix_Test()
     {
         double[][] cols =
-        {
-            new [] { 1d,4,7 },
-            new [] { 2d,5,8 },
-            new [] { 3d,6,9 }
-        };
+        [
+            [1d,4,7],
+            [2d,5,8],
+            [3d,6,9]
+        ];
 
         var m = Matrix.Array.ColsArrayToMatrix(cols);
 
@@ -1656,11 +1656,11 @@ public class MatrixArrayTests
     public void RowsToMatrix_Test()
     {
         double[][] cols =
-        {
-            new [] { 1d,2,3 },
-            new [] { 4d,5,6 },
-            new [] { 7d,8,9 }
-        };
+        [
+            [1d,2,3],
+            [4d,5,6],
+            [7d,8,9]
+        ];
 
         var m = Matrix.Array.RowsArrayToMatrix(cols);
 
@@ -1744,7 +1744,7 @@ public class MatrixArrayTests
     [TestMethod]
     public void CreateDiagonal_Test()
     {
-        double[] shadow = { 1, 2, 3 };
+        double[] shadow = [1, 2, 3];
 
         var m = Matrix.Array.CreateDiagonal(shadow);
 
@@ -1758,7 +1758,7 @@ public class MatrixArrayTests
     public void CreateDiagonal_ArgumentNullException_Test() => Matrix.Array.CreateDiagonal(null);
 
     [TestMethod, ExpectedException(typeof(ArgumentException))]
-    public void CreateDiagonal_ArgumentException_Test() => Matrix.Array.CreateDiagonal(Array.Empty<double>());
+    public void CreateDiagonal_ArgumentException_Test() => Matrix.Array.CreateDiagonal([]);
 
     [TestMethod]
     public void GetMatrixShadow_Test()
@@ -1813,7 +1813,7 @@ public class MatrixArrayTests
     [TestMethod]
     public void CreateColArray_Test()
     {
-        double[] col_items = { 1, 2, 3 };
+        double[] col_items = [1, 2, 3];
 
         var col = Matrix.Array.CreateColArray(col_items);
 
@@ -1825,12 +1825,12 @@ public class MatrixArrayTests
 
     [TestMethod, ExpectedException(typeof(ArgumentException))]
     // ReSharper disable once RedundantExplicitParamsArrayCreation
-    public void CreateColArray_ArgumentException_Test() => Matrix.Array.CreateColArray(Array.Empty<double>());
+    public void CreateColArray_ArgumentException_Test() => Matrix.Array.CreateColArray([]);
 
     [TestMethod]
     public void CreateRowArray_Test()
     {
-        double[] col_items = { 1, 2, 3 };
+        double[] col_items = [1, 2, 3];
 
         var row = Matrix.Array.CreateRowArray(col_items);
 
@@ -1842,7 +1842,7 @@ public class MatrixArrayTests
 
     [TestMethod, ExpectedException(typeof(ArgumentException))]
     // ReSharper disable once RedundantExplicitParamsArrayCreation
-    public void CreateRowArray_ArgumentException_Test() => Matrix.Array.CreateRowArray(Array.Empty<double>());
+    public void CreateRowArray_ArgumentException_Test() => Matrix.Array.CreateRowArray([]);
 
     [TestMethod]
     public void GetUnitaryArrayMatrix_Test()
@@ -2818,7 +2818,7 @@ public class MatrixArrayTests
     [TestMethod]
     public void Operator_BiliniarMultiply_Vector_Test()
     {
-        double[] x = { 1, 2, 3, 4 };
+        double[] x = [1, 2, 3, 4];
 
         double[,] a =
         {
@@ -2828,7 +2828,7 @@ public class MatrixArrayTests
             { 0, 1, 2 }
         };
 
-        double[] y = { 1, 2, 3 };
+        double[] y = [1, 2, 3];
 
         var b = Matrix.Array.Operator.BiliniarMultiply(x, a, y);
         var b0 = x[0] * (a[0, 0] * y[0] + a[0, 1] * y[1] + a[0, 2] * y[2]) +
@@ -2838,13 +2838,13 @@ public class MatrixArrayTests
 
         Assert.AreEqual(b0, b);
 
-        x = Array.Empty<double>();
+        x = [];
         a = new double[0, 3];
         b = Matrix.Array.Operator.BiliniarMultiply(x, a, y);
         Assert.IsTrue(double.IsNaN(b));
 
-        x = new double[] { 1, 2, 3, 4 };
-        y = Array.Empty<double>();
+        x = [1, 2, 3, 4];
+        y = [];
         a = new double[4, 0];
         b = Matrix.Array.Operator.BiliniarMultiply(x, a, y);
         Assert.IsTrue(double.IsNaN(b));
@@ -2862,7 +2862,7 @@ public class MatrixArrayTests
     [TestMethod]
     public void Operator_BiliniarMultiplyAuto_Vector_Test()
     {
-        double[] x = { 1, 2, 3, 4, 5 };
+        double[] x = [1, 2, 3, 4, 5];
 
         double[,] a =
         {
@@ -2879,7 +2879,7 @@ public class MatrixArrayTests
 
         Assert.AreEqual(b0, b);
 
-        x = Array.Empty<double>();
+        x = [];
         a = new double[0, 0];
         b = Matrix.Array.Operator.BiliniarMultiplyAuto(x, a);
         Assert.IsTrue(double.IsNaN(b));
@@ -2997,8 +2997,8 @@ public class MatrixArrayTests
     [TestMethod]
     public void XtAY_Test()
     {
-        double[] x = { 3, 2, 1 };
-        double[] y = { 1, 2, 3, 4, 5 };
+        double[] x = [3, 2, 1];
+        double[] y = [1, 2, 3, 4, 5];
         double[,] A =
         {
             { 5, 4, 3, 2, 1 },
@@ -3081,7 +3081,7 @@ public class MatrixArrayTests
             { 5, 4, 3, 2, 1 },
             { 1, 2, 3, 2, 1 }
         };
-        double[] x = { 1, 2, 3 };
+        double[] x = [1, 2, 3];
 
         var y = Matrix.Array.Operator.MultiplyAtb(A, x);
 
@@ -3091,8 +3091,8 @@ public class MatrixArrayTests
     [TestMethod]
     public void MultiplyRowToColMatrix_Test()
     {
-        double[] x = { 1, 2, 3 };
-        double[] y = { 1, 2, 3, 4, 5 };
+        double[] x = [1, 2, 3];
+        double[] y = [1, 2, 3, 4, 5];
 
         var M = Matrix.Array.Operator.MultiplyRowToColMatrix(x, y);
         Assert.That.Collection(M).IsEqualTo(new double[,]

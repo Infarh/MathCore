@@ -2268,9 +2268,9 @@ public class BigInt
 
     public BigInt ModInverse(BigInt modulus)
     {
-        BigInt[] p = { 0, 1 };
+        BigInt[] p = [0, 1];
         var      q = new BigInt[2]; // quotients
-        BigInt[] r = { 0, 0 };      // remainders
+        BigInt[] r = [0, 0];      // remainders
 
         var step = 0;
 

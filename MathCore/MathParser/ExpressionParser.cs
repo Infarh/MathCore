@@ -137,7 +137,7 @@ public class ExpressionParser
     private readonly HashSet<char> _ExcludeCharsSet = new(" \r\n");
 
     /// <summary>Словарь констант</summary>
-    private readonly Dictionary<string, double> _Constants = new();
+    private readonly Dictionary<string, double> _Constants = [];
 
     /// <summary>Множество запрещённых символов</summary>
     public HashSet<char> ExcludeCharsSet => _ExcludeCharsSet;

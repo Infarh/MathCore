@@ -635,7 +635,7 @@ public class ExpressionParserTests
         parser.Constants.Add("c1", -13);
         expr             = parser.Parse("13+c1");
         const_collection = expr.Constants;
-        constants        = const_collection.ToArray();
+        constants        = [.. const_collection];
         Assert.AreEqual(1, constants.Length);
         Assert.AreEqual("c1", constants[0].Name);
         Assert.AreEqual(constants[0], expr.Constants["c1"]);
@@ -986,7 +986,7 @@ public class ExpressionParserTests
             Assert.That.Value(((Func<double, double>)length_function.Function.Delegate).Invoke(0)).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
             LimitFunctionExecuted = false;
-            Assert.That.Value(length_function.Function.GetValue(new[] { 0.0 })).IsEqual(6);
+            Assert.That.Value(length_function.Function.GetValue([0.0])).IsEqual(6);
             Assert.IsTrue(LimitFunctionExecuted);
 
             Assert.IsTrue(parameters_expr.Variable.Exist("a"));

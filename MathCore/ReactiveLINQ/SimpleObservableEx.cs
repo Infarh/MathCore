@@ -6,7 +6,7 @@ namespace System.Linq.Reactive;
 public class SimpleObservableEx<T> : IObservableEx<T>, IObserver<T>, IDisposable
 {
     /// <summary>Список объектов наблюдателей</summary>
-    protected readonly List<IObserver<T>> _Observers = new();
+    protected readonly List<IObserver<T>> _Observers = [];
 
     /// <summary>Метод генерации следующего события</summary>
     /// <param name="item">Объект события</param>

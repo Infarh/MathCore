@@ -62,7 +62,7 @@ public class XPathCollection : ICollection
 
     #region Constructors
 
-    public XPathCollection() => _XPatches = new Hashtable();
+    public XPathCollection() => _XPatches = [];
 
     public XPathCollection(XmlNamespaceManager NsManager) : this() => NamespaceManager = NsManager;
 

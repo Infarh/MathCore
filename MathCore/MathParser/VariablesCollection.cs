@@ -16,7 +16,7 @@ public class VariablesCollection : IEnumerable<ExpressionVariable>
     /// <summary>Математическое выражение</summary>
     private readonly MathExpression _Expression;
 
-    private readonly List<ExpressionVariable> _Variables = new();
+    private readonly List<ExpressionVariable> _Variables = [];
 
     /// <summary>Количество переменных в коллекции</summary>
     public int Count => _Variables.Count;

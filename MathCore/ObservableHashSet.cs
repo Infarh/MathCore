@@ -41,11 +41,11 @@ public class ObservableHashSet<T>(HashSet<T> Set) : ICollection<T>, INotifyPrope
     private readonly HashSet<T> _HashSet = Set.NotNull();
 
     /// <summary>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</summary>
-    public ObservableHashSet() : this(new()) { }
+    public ObservableHashSet() : this([]) { }
 
     /// <summary>Инициализация новой хеш-таблицы с уведомлениями об изменениях в содержимом</summary>
     /// <param name="Items">Исходный набор элементов</param>
-    public ObservableHashSet(IEnumerable<T> Items) : this(new(Items)) { }
+    public ObservableHashSet(IEnumerable<T> Items) : this([..Items]) { }
 
     /// <inheritdoc />
     public int Count => _HashSet.Count;

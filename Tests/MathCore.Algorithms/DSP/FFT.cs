@@ -8,7 +8,7 @@ public static class FFT
         var n05 = n / 2;
 
         // Base case
-        if (n == 1) return new Complex[] { input[0] };
+        if (n == 1) return [input[0]];
 
         // Splitting the even and odd indexed elements
         var even = new double[n05];
@@ -35,7 +35,7 @@ public static class FFT
 
     public static void Test()
     {
-        double[] input = { 1, 2, 3, 4, 5, 6, 7, 8 };
+        double[] input = [1, 2, 3, 4, 5, 6, 7, 8];
         var fft = TransformRecursive(input);
 
         Console.WriteLine("FFT result:");

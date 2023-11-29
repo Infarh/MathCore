@@ -194,11 +194,11 @@ public class IntegralOperator : Functional
         var function           = Expression.Lambda(body, parameters).Compile();
 
         if(_IsAdaptive)
-            return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
-            {
+            return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method,
+            [
                 function.ToExpression(), min, max,
                 Expression.NewArrayInit(typeof(double))
-            });
+            ]);
 
         var dx_var = ParametersExpression.Variable[1];
         var dx_node = ParametersExpression.Tree
@@ -207,12 +207,12 @@ public class IntegralOperator : Functional
            .First(n => ReferenceEquals(dx_var, n.Variable));
         var dx = dx_node.Compile();
 
-        return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
-        {
+        return Expression.Call(new IntegralDelegate(GetIntegral).Method,
+        [
             function.ToExpression(), min, max,
             Expression.NewArrayInit(typeof(double)),
             dx
-        });
+        ]);
     }
 
     /// <summary>Скомпилировать в выражение</summary>
@@ -245,11 +245,11 @@ public class IntegralOperator : Functional
         var function           = Expression.Lambda(body, parameters).Compile();
 
         if(_IsAdaptive)
-            return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method, new[]
-            {
+            return Expression.Call(new AdaptiveIntegralDelegate(GetAdaptiveIntegral).Method,
+            [
                 function.ToExpression(), min, max,
                 Expression.NewArrayInit(typeof(double))
-            });
+            ]);
 
         var dx_var = ParametersExpression.Variable[1];
         var dx_node = ParametersExpression.Tree
@@ -258,11 +258,11 @@ public class IntegralOperator : Functional
            .First(n => ReferenceEquals(dx_var, n.Variable));
         var dx = dx_node.Compile();
 
-        return Expression.Call(new IntegralDelegate(GetIntegral).Method, new[]
-        {
+        return Expression.Call(new IntegralDelegate(GetIntegral).Method,
+        [
             function.ToExpression(), min, max,
             Expression.NewArrayInit(typeof(double), Parameters.Cast<Expression>().ToArray()),
             dx
-        });
+        ]);
     }
 }

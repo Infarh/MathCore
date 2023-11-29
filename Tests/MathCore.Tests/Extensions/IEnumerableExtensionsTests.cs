@@ -295,8 +295,8 @@ public class IEnumerableExtensionsTests
     [TestMethod]
     public void AverageMedian_WindowLength_Odd()
     {
-        double[] x = { 2, 80, 6, 3, 0, 2 };
-        double[] expected_y = { 2, 41, 6, 6, 3, 2 };
+        double[] x = [2, 80, 6, 3, 0, 2];
+        double[] expected_y = [2, 41, 6, 6, 3, 2];
 
         var buffer = x.AverageMedian(3).ToArray();
 
@@ -329,8 +329,8 @@ public class IEnumerableExtensionsTests
         //                    7, 10, 1, 4  : [1, 4, 7, 10]   = 5.5
         //                              ^        ^
 
-        double[] x = { 2, 80, 6, 3, 0, 2, 7, 10, 1, 4 };
-        double[] expected_y = { 2, 41, 6, 4.5, 4.5, 2.5, 2.5, 4.5, 4.5, 5.5 };
+        double[] x = [2, 80, 6, 3, 0, 2, 7, 10, 1, 4];
+        double[] expected_y = [2, 41, 6, 4.5, 4.5, 2.5, 2.5, 4.5, 4.5, 5.5];
 
         var buffer = x.AverageMedian(4).ToArray();
 

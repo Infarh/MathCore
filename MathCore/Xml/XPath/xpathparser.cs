@@ -56,26 +56,26 @@ internal class XPathParser
     #region Static
 
     // ----------------------------------------------------------------
-    private static readonly XPathResultType[] __TempArray1 = { XPathResultType.Error };
-    private static readonly XPathResultType[] __TempArray2 = { XPathResultType.NodeSet };
-    private static readonly XPathResultType[] __TempArray3 = { XPathResultType.Any };
-    private static readonly XPathResultType[] __TempArray4 = { XPathResultType.String };
-    private static readonly XPathResultType[] __TempArray5 = { XPathResultType.String, XPathResultType.String };
+    private static readonly XPathResultType[] __TempArray1 = [XPathResultType.Error];
+    private static readonly XPathResultType[] __TempArray2 = [XPathResultType.NodeSet];
+    private static readonly XPathResultType[] __TempArray3 = [XPathResultType.Any];
+    private static readonly XPathResultType[] __TempArray4 = [XPathResultType.String];
+    private static readonly XPathResultType[] __TempArray5 = [XPathResultType.String, XPathResultType.String];
 
     private static readonly XPathResultType[] __TempArray6 =
-    {
+    [
         XPathResultType.String, XPathResultType.Number,
         XPathResultType.Number
-    };
+    ];
 
     private static readonly XPathResultType[] __TempArray7 =
-    {
+    [
         XPathResultType.String, XPathResultType.String,
         XPathResultType.String
-    };
+    ];
 
-    private static readonly XPathResultType[] __TempArray8 = { XPathResultType.Boolean };
-    private static readonly XPathResultType[] __TempArray9 = { XPathResultType.Number };
+    private static readonly XPathResultType[] __TempArray8 = [XPathResultType.Boolean];
+    private static readonly XPathResultType[] __TempArray9 = [XPathResultType.Number];
 
     private static readonly Hashtable __FunctionTable = CreateFunctionTable();
 

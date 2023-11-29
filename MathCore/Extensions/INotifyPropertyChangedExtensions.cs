@@ -100,9 +100,9 @@ public static class INotifyPropertyChangedExtensions
     }
 
     /// <summary>Перечень слабых ссылок на отслеживаемые объекты</summary>
-    private static readonly HashSet<WeakReference> __ObjectsSet = new();
+    private static readonly HashSet<WeakReference> __ObjectsSet = [];
     /// <summary>Словарь описаний связей между свойствами типов</summary>
-    private static readonly Dictionary<Type, RegistratorInfo> __RegistrationPool = new();
+    private static readonly Dictionary<Type, RegistratorInfo> __RegistrationPool = [];
     /// <summary>Информация о связях между свойствами типов</summary>
     private sealed class RegistratorInfo
     {
@@ -125,7 +125,7 @@ public static class INotifyPropertyChangedExtensions
                 if (!_Dependencies.ContainsKey(e.PropertyName)) return;
                 if (e is DependentPropertyChangedEventArgs args)
                 {
-                    var p_stack = args.FromProperties ?? Array.Empty<string>();
+                    var p_stack = args.FromProperties ?? [];
                     if (p_stack.Contains(str => e.PropertyName.Equals(str))) return;
                     foreach (var property in _Dependencies[args.PropertyName])
                     {
@@ -137,7 +137,7 @@ public static class INotifyPropertyChangedExtensions
                 }
                 else
                     foreach (var property in _Dependencies[e.PropertyName])
-                        OnPropertyChanged(new DependentPropertyChangedEventArgs(property, new[] { e.PropertyName }));
+                        OnPropertyChanged(new DependentPropertyChangedEventArgs(property, [e.PropertyName]));
             };
             obj.PropertyChanged += _Handler;
         }
@@ -229,10 +229,10 @@ public static class INotifyPropertyChangedExtensions
             foreach (var property in properties)
             {
                 foreach (AffectsTheAttribute affect_on in property.GetCustomAttributes(typeof(AffectsTheAttribute), true))
-                    dep.GetValueOrAddNew(property.Name, () => new List<string>()).Add(affect_on.Name);
+                    dep.GetValueOrAddNew(property.Name, () => []).Add(affect_on.Name);
 
                 foreach (DependencyOnAttribute dependence_on in property.GetCustomAttributes(typeof(DependencyOnAttribute), true))
-                    dep.GetValueOrAddNew(dependence_on.Name, () => new List<string>()).Add(property.Name);
+                    dep.GetValueOrAddNew(dependence_on.Name, () => []).Add(property.Name);
             }
 
             var dependencies = dep.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
@@ -357,7 +357,7 @@ public static class INotifyPropertyChangedExtensions
         }
     }
 
-    private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers = new();
+    private static readonly Dictionary<INotifyPropertyChanged, Dictionary<string, Subscriber>> __Subscribers = [];
 
     public static IDisposable UsingSubscribeToProperty(
         this INotifyPropertyChanged obj,

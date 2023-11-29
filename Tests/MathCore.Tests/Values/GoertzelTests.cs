@@ -34,7 +34,7 @@ public class GoertzelTests : UnitTest
     [TestMethod]
     public void SpectrumSample()
     {
-        double[] s = { 3, 2, 1, -1, 1, -2, -3, -2 };
+        double[] s = [3, 2, 1, -1, 1, -2, -3, -2];
 
         var goertzel = new Goertzel(1 / 8d);
 
@@ -68,14 +68,14 @@ public class GoertzelTests : UnitTest
         const double f_rel = f0 / fd;
 
         double[] ff =
-        {
+        [
             0.0 * f0,
             0.1 * f0,
             0.9 * f0,
             1.0 * f0,
             1.1 * f0,
             0.9 * fd / 2,
-        };
+        ];
 
         var results = new (double f, double Y)[ff.Length];
 

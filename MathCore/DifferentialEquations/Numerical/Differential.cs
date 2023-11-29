@@ -7,7 +7,7 @@ public static partial class Solver
 {
     public static class Differential
     {
-        internal static readonly int[] diff_b = { 1, 2, 6, 12, 60 };
+        internal static readonly int[] diff_b = [1, 2, 6, 12, 60];
 
         private static readonly int __MethodsCount = diff_b.Length;
 
@@ -19,13 +19,13 @@ public static partial class Solver
             {-137, 300, -300, 200, -75, 12}
         };
 
-        private static readonly int[][] dif_a = {
-            new[] {-1, 1},
-            new[] {-3, 4, -1},
-            new[] {-11, 18, -9, 2},
-            new[] {-25, 48, -36, 16, -3},
-            new[] {-137, 300, -300, 200, -75, 12}
-        };
+        private static readonly int[][] dif_a = [
+            [-1, 1],
+            [-3, 4, -1],
+            [-11, 18, -9, 2],
+            [-25, 48, -36, 16, -3],
+            [-137, 300, -300, 200, -75, 12]
+        ];
 
         public static int MethodsCount => __MethodsCount;
 

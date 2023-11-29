@@ -15,7 +15,7 @@ public static class RandomExtensions
     public static byte[] NextBytes(this Random random, int Count)
     {
         if (Count < 0) throw new ArgumentOutOfRangeException(nameof(Count), Count, "Размер должен быть больше нуля");
-        if (Count == 0) return Array.Empty<byte>();
+        if (Count == 0) return [];
 
         var bytes = new byte[Count];
         random.NextBytes(bytes);
@@ -382,7 +382,7 @@ public static class RandomExtensions
             sorted.Add(r);
         }
 
-        return result.ToArray();
+        return [.. result];
     }
 
     public static T Next<T>(this Random rnd, params T[] items) => items[rnd.Next(items.Length)];

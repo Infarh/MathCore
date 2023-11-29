@@ -30,7 +30,7 @@ public static class AdaptiveSampling
                 next = points.AddAfter(current, (x0, y0));
         }
 
-        return points.ToArray();
+        return [.. points];
     }
 
     public static void Test()

@@ -5,22 +5,22 @@ public static class NewtonPolynom
     public static void Test()
     {
         double[] X =
-        {
+        [
             -3/2d,
             -3/4d,
             0,
             3/4d,
             3/2d
-        };
+        ];
 
         double[] Y =
-        {
+        [
             -14.1014,
             -0.931596,
             0,
             0.931596,
             14.1014
-        };
+        ];
 
         var length = Y.Length;
         var len = length - 1;

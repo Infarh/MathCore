@@ -66,7 +66,7 @@ public class ConcurrentList<T> : IList<T>, IDisposable
     public ConcurrentList()
     {
         _Lock = new(LockRecursionPolicy.NoRecursion);
-        _List = new();
+        _List = [];
     }
 
     public ConcurrentList(int capacity)
@@ -78,7 +78,7 @@ public class ConcurrentList<T> : IList<T>, IDisposable
     public ConcurrentList(IEnumerable<T> items)
     {
         _Lock = new(LockRecursionPolicy.NoRecursion);
-        _List = new(items);
+        _List = [..items];
     }
 
     #endregion

@@ -17,7 +17,7 @@ public readonly struct DataLength : IFormattable, IEquatable<DataLength>
     private const double __Threshold = 0.948964729348844D;
 
     /// <summary>Множители единиц измерения</summary>
-    [NotNull] private static readonly string[] __Units = { string.Empty, "k", "M", "G", "T", "P", "E", "Z", "Y" };
+    [NotNull] private static readonly string[] __Units = [string.Empty, "k", "M", "G", "T", "P", "E", "Z", "Y"];
 
     /// <summary>Множители единиц измерения</summary>
     [NotNull] public static IReadOnlyList<string> Units => __Units;

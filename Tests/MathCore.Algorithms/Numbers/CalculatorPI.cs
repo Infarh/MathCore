@@ -77,8 +77,8 @@ public static class CalculatorPI
         var print_info = Progress is null;
 
         // Pi/4 = 12*arctan(1/18) + 8*arctan(1/57) - 5*arctan(1/239)
-        long[] m = { 12, 8, -5 };
-        long[] p = { 18, 57, 239 };
+        long[] m = [12, 8, -5];
+        long[] p = [18, 57, 239];
 
         if (print_info)
         {

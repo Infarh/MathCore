@@ -242,7 +242,7 @@ public class XPathReader : XmlReader
     public XPathReader([NotNull] string Url, string XPath) : this()
     {
         BaseReader       = new XmlTextReader(Url);
-        _XPathCollection = new XPathCollection { XPath };
+        _XPathCollection = [XPath];
     }
 
     /// <internalonly />
@@ -260,7 +260,7 @@ public class XPathReader : XmlReader
     public XPathReader(TextReader Reader, string XPath) : this()
     {
         BaseReader       = new XmlTextReader(Reader);
-        _XPathCollection = new XPathCollection { XPath };
+        _XPathCollection = [XPath];
     }
 
 

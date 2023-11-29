@@ -29,7 +29,7 @@ public partial class SetOf<T>(IEnumerable<T> collection) : AbstractSetOf<T>, ICo
     public static bool Mixed { get; set; }
 
     /// <summary>Список элементов</summary>
-    private readonly List<T> _List = new List<T>(collection);
+    private readonly List<T> _List = [..collection];
 
     /// <summary>Мощность множества</summary>
     public override int Power => _List.Count;

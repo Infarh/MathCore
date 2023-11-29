@@ -114,7 +114,7 @@ public sealed class JSONObject : IEnumerable<JSONObject>
 
             while (pos < len && (char.IsSeparator(str, pos) || str[pos] == ',')) pos++;
         }
-        if (fields.Count > 0) _Fields = fields.ToArray();
+        if (fields.Count > 0) _Fields = [.. fields];
     }
 
     #endregion

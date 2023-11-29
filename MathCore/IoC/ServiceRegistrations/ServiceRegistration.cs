@@ -85,11 +85,14 @@ public abstract class ServiceRegistration<TService> : ServiceRegistration where 
     #region Конструкторы
 
     protected ServiceRegistration(IServiceManager Manager, Type ServiceType) : base(Manager, ServiceType) => 
-        _Constructors = (ServiceType ?? throw new ArgumentNullException(nameof(ServiceType)))
-           .GetConstructors()
-           .Select(c => new ServiceConstructorInfo(c))
-           .OrderByDescending(c => c.Parameters.Count)
-           .ToArray();
+        _Constructors =
+        [
+            .. (ServiceType ?? throw new ArgumentNullException(nameof(ServiceType)))
+                       .GetConstructors()
+                       .Select(c => new ServiceConstructorInfo(c))
+                       .OrderByDescending(c => c.Parameters.Count)
+,
+        ];
 
     protected ServiceRegistration(IServiceManager Manager, Type ServiceType, Func<TService> FactoryMethod) : base(Manager, ServiceType) => _FactoryMethod = FactoryMethod;
 

@@ -41,7 +41,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
     /// Задачи с малыми приоритетами являются предпочтительными.
     /// Группы приоритетов являются циклическими в пределах одного уровня приоритета.
     /// </summary>
-    private readonly SortedList<int, QueueGroup> _QueueGroups = new();
+    private readonly SortedList<int, QueueGroup> _QueueGroups = [];
 
     /// <summary>Система отмены задач в случае вызова метода <see cref="Dispose"/></summary>
     private readonly CancellationTokenSource _DisposeCancellation = new();
@@ -91,7 +91,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         // Initialize only those fields relevant to use an underlying scheduler.  We don't
         // initialize the fields relevant to using our own custom threads.
         _TargetScheduler        = TargetScheduler ?? throw new ArgumentNullException(nameof(TargetScheduler));
-        _NonThreadSafeTaskQueue = new Queue<Task?>();
+        _NonThreadSafeTaskQueue = [];
 
         // If 0, use the number of logical processors.  But make sure whatever value we pick
         // is not greater than the degree of parallelism allowed by the underlying scheduler.
@@ -139,7 +139,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         //    : ThreadCount;
 
         // Initialize the queue used for storing tasks
-        _BlockingTaskQueue = new BlockingCollection<Task?>();
+        _BlockingTaskQueue = [];
 
         // Create all of the threads
         var threads = new Thread[ThreadCount];
@@ -483,7 +483,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         {
             Priority  = priority;
             _Pool     = pool;
-            WorkItems = new Queue<Task>();
+            WorkItems = [];
         }
 
         /// <summary>Gets the number of tasks waiting in this scheduler.</summary>

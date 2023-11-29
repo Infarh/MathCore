@@ -7,7 +7,7 @@ public static class StrEx
         if (StartIndex >= s.Length)
         {
             EndIndex = StartIndex;
-            return ReadOnlySpan<char>.Empty;
+            return [];
         }
 
         var index = s.IndexOf(Separator, StartIndex);
@@ -21,7 +21,7 @@ public static class StrEx
         var length = EndIndex - StartIndex;
         return length > 1
             ? s.AsSpan().Slice(StartIndex, length - 1)
-            : ReadOnlySpan<char>.Empty;
+            : [];
     }
 
     public static ReadOnlyMemory<char> SplitMemory(this string s, char Separator, out int EndIndex, int StartIndex = 0)

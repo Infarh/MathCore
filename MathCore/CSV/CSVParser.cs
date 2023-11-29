@@ -6,7 +6,7 @@ namespace MathCore.CSV;
 /// <summary>Парсер строк с разделителем</summary>
 public static class CSVParser
 {
-    private static readonly char[] __TrimChars = { ' ', '"' };
+    private static readonly char[] __TrimChars = [' ', '"'];
 
     /// <summary>Разбор строки на элементы с учётом возможности экранирования разделителей кавычками</summary>
     /// <param name="Line">Разделяемая строка</param>

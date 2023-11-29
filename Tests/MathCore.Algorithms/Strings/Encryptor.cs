@@ -9,7 +9,7 @@ public static class Encryptor
 {
     public static byte[] GenerateRandomSalt() => RandomNumberGenerator.GetBytes(32);
 
-    private static readonly byte[] aes_KEY_IV = { 0x17, 0x99, 0x6d, 0x09, 0x3d, 0x28, 0xdd, 0xb3, 0xba, 0x69, 0x5a, 0x2e, 0x6f, 0x58, 0x56, 0x2e };
+    private static readonly byte[] aes_KEY_IV = [0x17, 0x99, 0x6d, 0x09, 0x3d, 0x28, 0xdd, 0xb3, 0xba, 0x69, 0x5a, 0x2e, 0x6f, 0x58, 0x56, 0x2e];
 
     public static string Encryptaes(string Str, string Key, Encoding? Encoding = null)
     {
@@ -102,9 +102,9 @@ public static class Encryptor
         using var source_file = new FileStream(InputFile, FileMode.Open);
         _ = source_file.Read(salt, 0, salt.Length);
 
-#pragma warning disable SYSLIB0041 // Тип или член устарел
+#pragma warning disable SYSLIB0041
         var key = new Rfc2898DeriveBytes(password_bytes, salt, 50000);
-#pragma warning restore SYSLIB0041 // Тип или член устарел
+#pragma warning restore SYSLIB0041
         aes.Key = key.GetBytes(aes.KeySize / 8);
         aes.IV = key.GetBytes(aes.BlockSize / 8);
         aes.Padding = PaddingMode.PKCS7;

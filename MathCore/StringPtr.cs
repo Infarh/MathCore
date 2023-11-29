@@ -1072,7 +1072,7 @@ public readonly ref partial struct StringPtr
     /* --------------------------------------------------------------------------------------- */
 
     /// <summary>Символы, обрезаемые в начале и конце строки по умолчанию</summary>
-    private static readonly char[] __DefaultTrimChars = { ' ', '\0', '\r', '\n', '\t' };
+    private static readonly char[] __DefaultTrimChars = [' ', '\0', '\r', '\n', '\t'];
 
     /// <summary>Удаление технических символов в начале строки</summary>
     /// <param name="Trimmed">Обрезание строки было выполнено</param>

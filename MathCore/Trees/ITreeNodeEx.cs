@@ -37,7 +37,7 @@ public static class ITreeNodeEx
         Node is null
             ? throw new ArgumentNullException(nameof(Node))
             : Node.Parent is null
-                ? Array.Empty<T>()
+                ? []
                 : Node.EnumerateParents().ToArray();
 
     /// <summary>Перечислить всех предков текущего узла</summary>

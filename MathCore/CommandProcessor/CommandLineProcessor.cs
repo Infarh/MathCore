@@ -105,7 +105,7 @@ public class CommandLineProcessor
     }
 
     /// <summary>Словарь списков обработчиков команд</summary>
-    private readonly Dictionary<string, CommandHandlersList> _CommandHandlers = new();
+    private readonly Dictionary<string, CommandHandlersList> _CommandHandlers = [];
 
     private readonly SimpleObservableEx<CommandEventArgs> _ObservableObject = new();
 
@@ -132,7 +132,7 @@ public class CommandLineProcessor
         get
         {
             if (!_CommandHandlers.TryGetValue(CommandName, out var result))
-                _CommandHandlers.Add(CommandName, result = new CommandHandlersList());
+                _CommandHandlers.Add(CommandName, result = []);
             return result;
         }
         set

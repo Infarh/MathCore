@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 
-using MathCore.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable UnusedType.Global
@@ -10,11 +10,11 @@ namespace System.Linq;
 
 public class JoinedEnumerable<T> : IEnumerable<T>
 {
-    [NotNull] private readonly IEnumerable<T> _Source;
+    private readonly IEnumerable<T> _Source;
 
     public bool IsOuter { get; set; }
 
-    public JoinedEnumerable([NotNull] IEnumerable<T> source) => _Source = source;
+    public JoinedEnumerable(IEnumerable<T> source) => _Source = source;
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator() => _Source.GetEnumerator();
 
@@ -45,12 +45,11 @@ public class JoinedEnumerable<T> : IEnumerable<T>
 /// </remarks>
 public static class JoinedEnumerable
 {
-    [NotNull] public static JoinedEnumerable<T> Inner<T>([NotNull] this IEnumerable<T> source) => Wrap(source, false);
+    public static JoinedEnumerable<T> Inner<T>(this IEnumerable<T> source) => Wrap(source, false);
 
-    [NotNull] public static JoinedEnumerable<T> Outer<T>([NotNull] this IEnumerable<T> source) => Wrap(source, true);
+    public static JoinedEnumerable<T> Outer<T>(this IEnumerable<T> source) => Wrap(source, true);
 
-    [NotNull]
-    public static JoinedEnumerable<T> Wrap<T>([NotNull] IEnumerable<T> source, bool IsOuter)
+    public static JoinedEnumerable<T> Wrap<T>(IEnumerable<T> source, bool IsOuter)
     {
         var joined_source = source as JoinedEnumerable<T> ?? new JoinedEnumerable<T>(source);
         joined_source.IsOuter = IsOuter;
@@ -58,12 +57,12 @@ public static class JoinedEnumerable
     }
 
     public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
-        [NotNull] this JoinedEnumerable<TOuter> outer,
-        [NotNull] IEnumerable<TInner> inner,
-        [NotNull] Func<TOuter, TKey> OuterKeySelector,
-        [NotNull] Func<TInner, TKey> InnerKeySelector,
-        [NotNull] Func<TOuter, TInner, TResult> ResultSelector,
-        [CanBeNull] IEqualityComparer<TKey> comparer = null)
+        this JoinedEnumerable<TOuter> outer,
+        IEnumerable<TInner> inner,
+        Func<TOuter, TKey> OuterKeySelector,
+        Func<TInner, TKey> InnerKeySelector,
+        Func<TOuter, TInner, TResult> ResultSelector,
+        IEqualityComparer<TKey>? comparer = null)
     {
         if (outer is null) throw new ArgumentNullException(nameof(outer));
         if (inner is null) throw new ArgumentNullException(nameof(inner));
@@ -86,12 +85,12 @@ public static class JoinedEnumerable
     }
 
     public static IEnumerable<TResult> LeftOuterJoin<TOuter, TInner, TKey, TResult>(
-        [NotNull] this IEnumerable<TOuter> outer,
-        [NotNull] IEnumerable<TInner> inner,
-        [NotNull] Func<TOuter, TKey> OuterKeySelector,
-        [NotNull] Func<TInner, TKey> InnerKeySelector,
-        [NotNull] Func<TOuter, TInner, TResult> ResultSelector,
-        [CanBeNull] IEqualityComparer<TKey> comparer = null)
+        this IEnumerable<TOuter> outer,
+        IEnumerable<TInner> inner,
+        Func<TOuter, TKey> OuterKeySelector,
+        Func<TInner, TKey> InnerKeySelector,
+        Func<TOuter, TInner, TResult> ResultSelector,
+        IEqualityComparer<TKey>? comparer = null)
     {
         var inner_lookup = inner.ToLookup(InnerKeySelector, comparer);
 
@@ -101,12 +100,12 @@ public static class JoinedEnumerable
     }
 
     public static IEnumerable<TResult> RightOuterJoin<TOuter, TInner, TKey, TResult>(
-        [NotNull] this IEnumerable<TOuter> outer,
-        [NotNull] IEnumerable<TInner> inner,
-        [NotNull] Func<TOuter, TKey> OuterKeySelector,
-        [NotNull] Func<TInner, TKey> InnerKeySelector,
-        [NotNull] Func<TOuter, TInner, TResult> ResultSelector,
-        [CanBeNull] IEqualityComparer<TKey> comparer = null)
+        this IEnumerable<TOuter> outer,
+        IEnumerable<TInner> inner,
+        Func<TOuter, TKey> OuterKeySelector,
+        Func<TInner, TKey> InnerKeySelector,
+        Func<TOuter, TInner, TResult> ResultSelector,
+        IEqualityComparer<TKey>? comparer = null)
     {
         var outer_lookup = outer.ToLookup(OuterKeySelector, comparer);
 
@@ -116,12 +115,12 @@ public static class JoinedEnumerable
     }
 
     public static IEnumerable<TResult> FullOuterJoin<TOuter, TInner, TKey, TResult>(
-        [NotNull] this IEnumerable<TOuter> outer,
-        [NotNull] IEnumerable<TInner> inner,
-        [NotNull] Func<TOuter, TKey> OuterKeySelector,
-        [NotNull] Func<TInner, TKey> InnerKeySelector,
-        [NotNull] Func<TOuter, TInner, TResult> ResultSelector,
-        [CanBeNull] IEqualityComparer<TKey> comparer = null)
+        this IEnumerable<TOuter> outer,
+        IEnumerable<TInner> inner,
+        Func<TOuter, TKey> OuterKeySelector,
+        Func<TInner, TKey> InnerKeySelector,
+        Func<TOuter, TInner, TResult> ResultSelector,
+        IEqualityComparer<TKey>? comparer = null)
     {
         var outer_lookup = outer.ToLookup(OuterKeySelector, comparer);
         var inner_lookup = inner.ToLookup(InnerKeySelector, comparer);

@@ -267,7 +267,7 @@ public static class GraphEx
             next.Foreach(stack.Push);
         } while(stack.Count != 0);
 
-        return new GraphRoute<TValue, TWeight>(Array.Empty<IGraphNode<TValue, TWeight>>());
+        return new GraphRoute<TValue, TWeight>([]);
     }
 
     /// <summary>Метод поиска всех путей из указанной вершины до всех доступных вершин графа методом фронта волны</summary>
@@ -307,7 +307,7 @@ public static class GraphEx
                 queue.Enqueue(r);
             }
         } while(queue.Count > 0);
-        return result.ToArray();
+        return [.. result];
     }
 
     [NotImplemented]

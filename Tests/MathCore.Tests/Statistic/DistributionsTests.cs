@@ -6,11 +6,11 @@ namespace MathCore.Tests.Statistic;
 public class DistributionsTests
 {
     private static readonly double[] __TestData =
-    {
+    [
         -0.439, -0.679, -0.473, -0.951, -1.686, +0.044, -0.121, +0.556,    +2.192, +0.809,
         +0.985, +0.862, +0.916, +0.673, -1.044, +0.069, -0.756, +0.697,    -0.182, -0.644,
         -0.723, -0.517, +0.558, -0.245, +0.09,  +1.262, -0.706, +1.864e-3, +1.108, +0.893
-    };
+    ];
 
     [TestMethod, Ignore]
     public void GetPirsonsCriteriaTest()

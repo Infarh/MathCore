@@ -477,7 +477,7 @@ public static class ObjectExtensions
 
     public static byte[] ListToByteArray<T>(this IReadOnlyList<T> values) where T : struct
     {
-        if (values.Count == 0) return Array.Empty<byte>();
+        if (values.Count == 0) return [];
 
         var size   = Marshal.SizeOf(typeof(T));
         var buffer = new byte[size * values.Count]; // создать массив

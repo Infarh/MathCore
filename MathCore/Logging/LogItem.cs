@@ -27,7 +27,7 @@ public sealed class LogItem : IEnumerable<LogItem>, INotifyPropertyChanged, INot
     private string _Message;
     private object _Data;
     private LogType _Type;
-    private readonly List<LogItem> _Items = new();
+    private readonly List<LogItem> _Items = [];
     private bool _Initialized;
 
     public int ItemsCount => _Items.Count;
