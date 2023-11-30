@@ -4,6 +4,7 @@ using MathCore.Statistic;
 using CommunityToolkit.HighPerformance;
 using MathCore.Hash;
 using MMD5 = System.Security.Cryptography.MD5;
+using System.Globalization;
 #pragma warning disable CS8321 // Local function is declared but never used
 
 var bytes = new byte[60];

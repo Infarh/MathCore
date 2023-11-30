@@ -24,7 +24,7 @@ namespace MathCore.Annotations;
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.ReturnValue)]
-public sealed class CanBeNullAttribute : Attribute { }
+public sealed class CanBeNullAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the value of the marked element could never be <c>null</c>
@@ -35,26 +35,49 @@ public sealed class CanBeNullAttribute : Attribute { }
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.ReturnValue)]
-public sealed class NotNullAttribute : Attribute { }
+public sealed class NotNullAttribute : Attribute;
 
 #if !NET8_0_OR_GREATER
 /// <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
+/// <remarks>Initializes the attribute with the associated parameter name.</remarks>
+/// <param name="parameterName">
+/// The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
+/// </param>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true)]
-public sealed class NotNullIfNotNullAttribute : Attribute
+public sealed class NotNullIfNotNullAttribute(string parameterName) : Attribute
 {
-    /// <summary>Initializes the attribute with the associated parameter name.</summary>
-    /// <param name="parameterName">
-    /// The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
-    /// </param>
-    public NotNullIfNotNullAttribute(string parameterName) => ParameterName = parameterName;
-
     /// <summary>Gets the associated parameter name.</summary>
-    public string ParameterName { get; }
+    public string ParameterName { get; } = parameterName;
 }
 
 /// <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
-public sealed class DisallowNullAttribute : Attribute { }
+public sealed class DisallowNullAttribute : Attribute;
+
+/// <summary>Specifies that when a method returns <see cref="ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
+/// <remarks>Initializes the attribute with the specified return value condition.</remarks>
+/// <param name="returnValue">
+/// The return value condition. If the method returns this value, the associated parameter may be null.
+/// </param>
+[AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+public sealed class MaybeNullWhenAttribute(bool returnValue) : Attribute
+{
+    /// <summary>Gets the return value condition.</summary>
+    public bool ReturnValue { get; } = returnValue;
+}
+
+/// <summary>Specifies that when a method returns <see cref="ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
+/// <remarks>Initializes the attribute with the specified return value condition.</remarks>
+/// <param name="returnValue">
+/// The return value condition. If the method returns this value, the associated parameter will not be null.
+/// </param>
+[AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+public sealed class NotNullWhenAttribute(bool returnValue) : Attribute
+{
+
+    /// <summary>Gets the return value condition.</summary>
+    public bool ReturnValue { get; } = returnValue;
+}
 #endif
 
 /// <summary>
@@ -72,7 +95,7 @@ public sealed class DisallowNullAttribute : Attribute { }
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Delegate)]
-public sealed class ItemNotNullAttribute : Attribute { }
+public sealed class ItemNotNullAttribute : Attribute;
 
 /// <summary>
 /// Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
@@ -90,7 +113,7 @@ public sealed class ItemNotNullAttribute : Attribute { }
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Delegate)]
-public sealed class ItemCanBeNullAttribute : Attribute { }
+public sealed class ItemCanBeNullAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the marked method builds string by format pattern and (optional) arguments.
@@ -104,15 +127,13 @@ public sealed class ItemCanBeNullAttribute : Attribute { }
 ///   ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
 /// }
 /// </code></example>
+/// <param name="formatParameterName">
+/// Specifies which parameter of an annotated method should be treated as format-string
+/// </param>
 [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
-public sealed class StringFormatMethodAttribute : Attribute
+public sealed class StringFormatMethodAttribute(string formatParameterName) : Attribute
 {
-    /// <param name="formatParameterName">
-    /// Specifies which parameter of an annotated method should be treated as format-string
-    /// </param>
-    public StringFormatMethodAttribute(string formatParameterName) => FormatParameterName = formatParameterName;
-
-    public string FormatParameterName { get; }
+    public string FormatParameterName { get; } = formatParameterName;
 }
 
 /// <summary>
@@ -127,7 +148,7 @@ public sealed class StringFormatMethodAttribute : Attribute
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class InvokerParameterNameAttribute : Attribute { }
+public sealed class InvokerParameterNameAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the method is contained in a type that implements
@@ -219,18 +240,12 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
 /// </list></examples>
 // ReSharper restore CommentTypo
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public sealed class ContractAnnotationAttribute : Attribute
+public sealed class ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates) : Attribute
 {
     public ContractAnnotationAttribute([NotNull] string contract) : this(contract, false) { }
 
-    public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
-    {
-        Contract = contract;
-        ForceFullStates = forceFullStates;
-    }
-
-    public string Contract { get; }
-    public bool ForceFullStates { get; }
+    public string Contract { get; } = contract;
+    public bool ForceFullStates { get; } = forceFullStates;
 }
 
 /// <summary>
@@ -243,12 +258,11 @@ public sealed class ContractAnnotationAttribute : Attribute
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.All)]
-public sealed class LocalizationRequiredAttribute : Attribute
+public sealed class LocalizationRequiredAttribute(bool required) : Attribute
 {
     public LocalizationRequiredAttribute() : this(true) { }
-    public LocalizationRequiredAttribute(bool required) => Required = required;
 
-    public bool Required { get; }
+    public bool Required { get; } = required;
 }
 
 /// <summary>
@@ -271,7 +285,7 @@ public sealed class LocalizationRequiredAttribute : Attribute
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct)]
-public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
+public sealed class CannotApplyEqualityOperatorAttribute : Attribute;
 
 /// <summary>
 /// When applied to a target attribute, specifies a requirement for any type marked
@@ -279,17 +293,16 @@ public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 /// </summary>
 /// <example><code>
 /// [BaseTypeRequired(typeof(IComponent)] // Specify requirement
-/// public class ComponentAttribute : Attribute { }
+/// public class ComponentAttribute : Attribute;
 /// [Component] // ComponentAttribute requires implementing IComponent interface
 /// public class MyComponent : IComponent { }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 [BaseTypeRequired(typeof(Attribute))]
-public sealed class BaseTypeRequiredAttribute : Attribute
+public sealed class BaseTypeRequiredAttribute([NotNull] Type baseType) : Attribute
 {
-    public BaseTypeRequiredAttribute([NotNull] Type baseType) => BaseType = baseType;
-
-    [NotNull] public Type BaseType { get; }
+    [NotNull]
+    public Type BaseType { get; } = baseType;
 }
 
 /// <summary>
@@ -298,7 +311,7 @@ public sealed class BaseTypeRequiredAttribute : Attribute
 /// will not be marked as unused (as well as by other usage inspections)
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
-public sealed class UsedImplicitlyAttribute : Attribute
+public sealed class UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags) : Attribute
 {
     public UsedImplicitlyAttribute()
         : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
@@ -309,14 +322,8 @@ public sealed class UsedImplicitlyAttribute : Attribute
     public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
         : this(ImplicitUseKindFlags.Default, targetFlags) { }
 
-    public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
-    {
-        UseKindFlags = useKindFlags;
-        TargetFlags = targetFlags;
-    }
-
-    public ImplicitUseKindFlags UseKindFlags { get; }
-    public ImplicitUseTargetFlags TargetFlags { get; }
+    public ImplicitUseKindFlags UseKindFlags { get; } = useKindFlags;
+    public ImplicitUseTargetFlags TargetFlags { get; } = targetFlags;
 }
 
 /// <summary>
@@ -325,7 +332,8 @@ public sealed class UsedImplicitlyAttribute : Attribute
 /// (as well as by other usage inspections)
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public sealed class MeansImplicitUseAttribute : Attribute
+public sealed class MeansImplicitUseAttribute(
+    ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags) : Attribute
 {
     public MeansImplicitUseAttribute()
         : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
@@ -336,15 +344,8 @@ public sealed class MeansImplicitUseAttribute : Attribute
     public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
         : this(ImplicitUseKindFlags.Default, targetFlags) { }
 
-    public MeansImplicitUseAttribute(
-        ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
-    {
-        UseKindFlags = useKindFlags;
-        TargetFlags = targetFlags;
-    }
-
-    [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }
-    [UsedImplicitly] public ImplicitUseTargetFlags TargetFlags { get; }
+    [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; } = useKindFlags;
+    [UsedImplicitly] public ImplicitUseTargetFlags TargetFlags { get; } = targetFlags;
 }
 
 [Flags]
@@ -401,7 +402,7 @@ public sealed class PublicAPIAttribute : Attribute
 /// while the method is executed
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class InstantHandleAttribute : Attribute { }
+public sealed class InstantHandleAttribute : Attribute;
 
 /// <summary>
 /// Indicates that a parameter is a path to a file or a folder
@@ -420,45 +421,39 @@ public class PathReferenceAttribute : Attribute
 // ASP.NET MVC attributes
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
+[method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
+public sealed class AspMvcAreaMasterLocationFormatAttribute(string format) : Attribute
 {
-    [SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-    public AspMvcAreaMasterLocationFormatAttribute(string format) { }
 }
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
+[method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
+public sealed class AspMvcAreaPartialViewLocationFormatAttribute(string format) : Attribute
 {
-    [SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-    public AspMvcAreaPartialViewLocationFormatAttribute(string format) { }
 }
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
+[method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
+public sealed class AspMvcAreaViewLocationFormatAttribute(string format) : Attribute
 {
-    [SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-    public AspMvcAreaViewLocationFormatAttribute(string format) { }
 }
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class AspMvcMasterLocationFormatAttribute : Attribute
+[method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
+public sealed class AspMvcMasterLocationFormatAttribute(string format) : Attribute
 {
-    [SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-    public AspMvcMasterLocationFormatAttribute(string format) { }
 }
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
+[method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
+public sealed class AspMvcPartialViewLocationFormatAttribute(string format) : Attribute
 {
-    [SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-    public AspMvcPartialViewLocationFormatAttribute(string format) { }
 }
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class AspMvcViewLocationFormatAttribute : Attribute
+[method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
+public sealed class AspMvcViewLocationFormatAttribute(string format) : Attribute
 {
-    [SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-    public AspMvcViewLocationFormatAttribute(string format) { }
 }
 
 /// <summary>
@@ -512,7 +507,7 @@ public sealed class AspMvcControllerAttribute : Attribute
 /// <c>System.Web.Mvc.Controller.View(String, String)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class AspMvcMasterAttribute : Attribute { }
+public sealed class AspMvcMasterAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
@@ -520,7 +515,7 @@ public sealed class AspMvcMasterAttribute : Attribute { }
 /// <c>System.Web.Mvc.Controller.View(String, Object)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class AspMvcModelTypeAttribute : Attribute { }
+public sealed class AspMvcModelTypeAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that
@@ -530,14 +525,14 @@ public sealed class AspMvcModelTypeAttribute : Attribute { }
 /// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute { }
+public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Allows disabling all inspections
 /// for MVC views within a class or a method.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public sealed class AspMvcPressuresViewErrorAttribute : Attribute { }
+public sealed class AspMvcPressuresViewErrorAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
@@ -545,7 +540,7 @@ public sealed class AspMvcPressuresViewErrorAttribute : Attribute { }
 /// <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class AspMvcDisplayTemplateAttribute : Attribute { }
+public sealed class AspMvcDisplayTemplateAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
@@ -553,7 +548,7 @@ public sealed class AspMvcDisplayTemplateAttribute : Attribute { }
 /// <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class AspMvcEditorTemplateAttribute : Attribute { }
+public sealed class AspMvcEditorTemplateAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC template.
@@ -561,7 +556,7 @@ public sealed class AspMvcEditorTemplateAttribute : Attribute { }
 /// <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class AspMvcTemplateAttribute : Attribute { }
+public sealed class AspMvcTemplateAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
@@ -570,7 +565,7 @@ public sealed class AspMvcTemplateAttribute : Attribute { }
 /// <c>System.Web.Mvc.Controller.View(Object)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-public sealed class AspMvcViewAttribute : PathReferenceAttribute { }
+public sealed class AspMvcViewAttribute : PathReferenceAttribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. When applied to a parameter of an attribute,
@@ -584,7 +579,7 @@ public sealed class AspMvcViewAttribute : PathReferenceAttribute { }
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
-public sealed class AspMvcActionSelectorAttribute : Attribute { }
+public sealed class AspMvcActionSelectorAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class HtmlElementAttributesAttribute : Attribute
@@ -596,11 +591,10 @@ public sealed class HtmlElementAttributesAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-public sealed class HtmlAttributeValueAttribute : Attribute
+public sealed class HtmlAttributeValueAttribute([NotNull] string name) : Attribute
 {
-    public HtmlAttributeValueAttribute([NotNull] string name) => Name = name;
-
-    [NotNull] public string Name { get; }
+    [NotNull]
+    public string Name { get; } = name;
 }
 
 // Razor attributes
@@ -611,4 +605,4 @@ public sealed class HtmlAttributeValueAttribute : Attribute
 /// <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-public sealed class RazorSectionAttribute : Attribute { }
+public sealed class RazorSectionAttribute : Attribute;

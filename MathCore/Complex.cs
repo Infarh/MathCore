@@ -1,8 +1,10 @@
 ﻿#nullable enable
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml.Serialization;
 
+using MathCore.Annotations;
 using MathCore.Expressions.Complex;
 
 using static System.Math;
@@ -30,12 +32,12 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     private static StringPtr ClearStringPtr(StringPtr str)
     {
         var start_len = str.Length;
-        while(start_len > 0)
+        while (start_len > 0)
         {
-            while (str.IsInBracket('{', '}')) str   = str.Substring(1, str.Length - 2);
-            while (str.IsInBracket('[', ']')) str   = str.Substring(1, str.Length - 2);
-            while (str.IsInBracket('(', ')')) str   = str.Substring(1, str.Length - 2);
-            while (str.IsInBracket('"', '"')) str   = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('{', '}')) str = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('[', ']')) str = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('(', ')')) str = str.Substring(1, str.Length - 2);
+            while (str.IsInBracket('"', '"')) str = str.Substring(1, str.Length - 2);
             while (str.IsInBracket('\'', '\'')) str = str.Substring(1, str.Length - 2);
 
             var len = str.Length;
@@ -51,9 +53,14 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <exception cref="ArgumentNullException">В случае если передана пустая ссылка на строку</exception>
     /// <exception cref="FormatException">В случае ошибочной строки</exception>
     public static Complex Parse(string str) =>
-        TryParse(str ?? throw new ArgumentNullException(nameof(str)), out var result)
+        TryParse(str.NotNull(), out var result)
             ? result
-            : throw new FormatException("Строка имела неверный формат", new ArgumentException(str, nameof(str)));
+            : throw new FormatException("Строка имела неверный формат") { Data = { [nameof(str)] = str } };
+
+    public static Complex Parse(string str, IFormatProvider provider) =>
+        TryParse(str.NotNull(), provider, out var result)
+            ? result
+            : throw new FormatException("Строка имела неверный формат") { Data = { [nameof(str)] = str } };
 
 
     /// <summary>Попытаться разобрать строку и преобразовать её в комплексное число</summary>
@@ -63,7 +70,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     public static bool TryParse(string? str, out Complex z)
     {
         // Если получили пустую строку, то это ошибка преобразования
-        if (str is { Length: > 0 }) 
+        if (str is { Length: > 0 })
             return TryParse(new StringPtr(str), out z);
 
         z = default;
@@ -84,7 +91,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         {
             if (v.Length == 0) continue;
 
-            var    sign = v.Pos > 1 && v[-1] == '-';
+            var sign = v.Pos > 1 && v[-1] == '-';
             double val;
 
             var is_im = false;
@@ -122,6 +129,74 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         return true;
     }
 
+    public static bool TryParse([NotNullWhen(true)] string str, IFormatProvider provider, out Complex z)
+    {
+        // Если получили пустую строку, то это ошибка преобразования
+        if (str is { Length: > 0 })
+            return TryParse(new StringPtr(str), provider, out z);
+
+        z = default;
+        return false;
+    }
+
+    public static bool TryParse(StringPtr str, IFormatProvider provider, out Complex z)
+    {
+        var str_ptr = ClearStringPtr(str);
+
+        var format = (NumberFormatInfo)provider.GetFormat(typeof(NumberFormatInfo));
+
+        var plus_char = format.PositiveSign[0];
+        var minus_char = format.NegativeSign[0];
+
+        var values_ptr = str_ptr.Split(true, plus_char, minus_char);
+
+        var Re = 0d; // Аккумулятор действительной части
+        var Im = 0d; // Аккумулятор мнимой части
+
+        foreach (var v in values_ptr)
+        {
+            if (v.Length == 0) continue;
+
+            var sign = v.Pos > 1 && v[-1] == minus_char;
+            double val;
+
+            var is_im = false;
+            if (v.StartWith('i') || v.StartWith('j'))
+            {
+                is_im = true;
+                if (!v.Substring(1).TryParseDouble(provider, out val))
+                {
+                    z = default;
+                    return false;
+                }
+            }
+            else if (v.EndWith('i') || v.EndWith('j'))
+            {
+                is_im = true;
+                if (!v.Substring(0, v.Length - 1).TryParseDouble(provider, out val))
+                {
+                    z = default;
+                    return false;
+                }
+            }
+            else if (!v.TryParseDouble(provider, out val))
+            {
+                z = default;
+                return false;
+            }
+
+            if (is_im)
+                Im += sign ? -val : val;
+            else
+                Re += sign ? -val : val;
+        }
+
+        z = new(Re, Im);
+
+        return true;
+    }
+
+
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Точность вычисления тригонометрических функций 3e-16 </summary>
@@ -133,7 +208,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <returns>Значение логарифма</returns>
     public static Complex Ln(double Im) => new
     (
-        Re: Math.Log(Im), 
+        Re: Math.Log(Im),
         Im: Abs(Im) == 0 ? 0 : (Im > 0 ? Consts.pi05 : -Consts.pi05)
     );
 
@@ -157,7 +232,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         {
             > 0 => +Consts.pi05 * Math.Log(E, b),
             < 0 => -Consts.pi05 * Math.Log(E, b),
-            _   => 0
+            _ => 0
         }
     );
 
@@ -167,7 +242,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <returns>Логарифм комплексного числа по действительному основанию</returns>
     public static Complex Log(Complex z, double b) => new
     (
-        Re: 0.5   * Math.Log(z._Re * z._Re + z._Im * z._Im, b),
+        Re: 0.5 * Math.Log(z._Re * z._Re + z._Im * z._Im, b),
         Im: z.Arg * Math.Log(E, b)
     );
 
@@ -236,7 +311,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <returns>Пара комплексно-сопряжённых чисел</returns>
     public static (Complex Z, Complex Zconj) Conjugate(double Re, double Im) =>
     (
-        Z:     new(Re, Im),
+        Z: new(Re, Im),
         Zconj: new(Re, -Im)
     );
 
@@ -404,8 +479,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         var re = Re;
         var im = Im;
         if (re == 0 && im == 0) return "0";
-        var re_str         = re.ToString(CultureInfo.CurrentCulture);
-        var im_str         = $"{(Abs(im) != 1 ? Abs(im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
+        var re_str = re.ToString(CultureInfo.CurrentCulture);
+        var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(CultureInfo.CurrentCulture) : string.Empty)}i";
         if (im < 0) im_str = $"-{im_str}";
         return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
     }
@@ -419,8 +494,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         var re = Re;
         var im = Im;
         if (re == 0 && im == 0) return "0";
-        var re_str         = re.ToString(Format);
-        var im_str         = $"{(Abs(im) != 1 ? Abs(im).ToString(Format) : string.Empty)}i";
+        var re_str = re.ToString(Format);
+        var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(Format) : string.Empty)}i";
         if (im < 0) im_str = $"-{im_str}";
         return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
     }
@@ -431,8 +506,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         var re = Re;
         var im = Im;
         if (re == 0 && im == 0) return "0";
-        var re_str         = re.ToString(FormatProvider);
-        var im_str         = $"{(Abs(im) != 1 ? Abs(im).ToString(FormatProvider) : string.Empty)}i";
+        var re_str = re.ToString(FormatProvider);
+        var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(FormatProvider) : string.Empty)}i";
         if (im < 0) im_str = $"-{im_str}";
         return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
     }
@@ -444,8 +519,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         var re = Re;
         var im = Im;
         if (re == 0 && im == 0) return "0";
-        var re_str         = re.ToString(format, FormatProvider);
-        var im_str         = $"{(Abs(im) != 1 ? Abs(im).ToString(format, FormatProvider) : string.Empty)}i";
+        var re_str = re.ToString(format, FormatProvider);
+        var im_str = $"{(Abs(im) != 1 ? Abs(im).ToString(format, FormatProvider) : string.Empty)}i";
         if (im < 0) im_str = $"-{im_str}";
         return $"{(re != 0 ? $"{re_str}{(im > 0 ? "+" : string.Empty)}" : string.Empty)}{(im != 0 ? im_str : string.Empty)}";
     }
@@ -618,8 +693,8 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     {
         var sin = Sin(w);
         var cos = Cos(w);
-        var re  = _Re;
-        var im  = _Im;
+        var re = _Re;
+        var im = _Im;
 
         return new(re * cos - im * sin, re * cos + im * sin);
     }
