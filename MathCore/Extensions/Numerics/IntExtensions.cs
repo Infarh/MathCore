@@ -74,14 +74,14 @@ public static class IntExtensions
     /// <param name="q">Вещественный показатель степени</param>
     /// <returns>Результат возведения целого основания в вещественную степень</returns>
     [DST]
-    public static double Power(this int x, double q) => Math.Pow(x, q);
+    public static double Pow(this int x, double q) => Math.Pow(x, q);
 
     /// <summary>Возведение целого числа в комплексную степень</summary>
     /// <param name="x">Целое основание</param>
     /// <param name="z">Комплексный показатель степени</param>
     /// <returns>Результат возведения целого основания в комплексную степень</returns>
     [DST]
-    public static Complex Power(this int x, Complex z) => x ^ z;
+    public static Complex Pow(this int x, Complex z) => x ^ z;
 
     /// <summary>Факторизация целого числа</summary>
     /// <param name="N">Раскладываемое число</param>

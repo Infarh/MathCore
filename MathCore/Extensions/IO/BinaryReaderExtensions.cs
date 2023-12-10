@@ -127,7 +127,7 @@ public static class BinaryReaderExtensions
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
-            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(0, size), Cancel).ConfigureAwait(false);
             return readed < size
                 ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
                 : BitConverter.ToDouble(buffer, 0);
@@ -154,7 +154,7 @@ public static class BinaryReaderExtensions
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
-            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(0, size), Cancel).ConfigureAwait(false);
             return readed < size
                 ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байт. Было прочитано {readed} байт")
                 : BitConverter.ToSingle(buffer, 0);
@@ -181,7 +181,7 @@ public static class BinaryReaderExtensions
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
-            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(0, size), Cancel).ConfigureAwait(false);
             return readed < size
                 ? throw new InvalidOperationException($"Не удалось прочитать из потока 8 байт. Было прочитано {readed} байт")
                 : BitConverter.ToInt64(buffer, 0);
@@ -208,7 +208,7 @@ public static class BinaryReaderExtensions
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
-            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(0, size), Cancel).ConfigureAwait(false);
             return readed < size
                 ? throw new InvalidOperationException($"Не удалось прочитать из потока 4 байт. Было прочитано {readed} байт")
                 : BitConverter.ToInt32(buffer, 0);
@@ -235,7 +235,7 @@ public static class BinaryReaderExtensions
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
-            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(size), Cancel).ConfigureAwait(false);
+            var readed = await Reader.BaseStream.ReadAsync(buffer.AsMemory(0, size), Cancel).ConfigureAwait(false);
             return readed < size
                 ? throw new InvalidOperationException($"Не удалось прочитать из потока 1 байт. Было прочитано {readed} байт")
                 : BitConverter.ToBoolean(buffer, 0);
