@@ -12,6 +12,21 @@ namespace System.Threading.Tasks;
 
 public static class TaskEx
 {
+    /// <summary>Проверка на пустоту результата выполнения задачи</summary>
+    /// <typeparam name="T">Тип значения задачи</typeparam>
+    /// <param name="task">Выполняемая задача</param>
+    /// <param name="Message">Сообщение ошибки</param>
+    /// <param name="ParameterName">Название параметра</param>
+    /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
+    /// <exception cref="InvalidOperationException">В случае если переданное значение <c>await</c> <paramref name="task"/> == <c>null</c> и <paramref name="ParameterName"/> == <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">В случае если переданное значение <c>await</c> <paramref name="task"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
+    public static async Task<T> NotNull<T>(this Task<T?> task, string? Message = null, [CallerArgumentExpression(nameof(task))] string? ParameterName = null!) where T : class
+    {
+        await Task.Yield().ConfigureAwait(false);
+        var result = await task.ConfigureAwait(false);
+        return result.NotNull(Message, ParameterName);
+    }
+
     /// <summary><c>.ConfigureAwait(false)</c></summary>
     public static ConfiguredTaskAwaitable CAF(this Task task, bool LockContext = false) => task.ConfigureAwait(LockContext);
 

@@ -259,7 +259,7 @@ public static class ObjectExtensions
         where T : class => 
         obj ?? throw (ParameterName is null
             ? new InvalidOperationException(Message ?? "Пустая ссылка на объект")
-            : new ArgumentNullException(ParameterName, Message ?? "Пустая ссылка на в значении параметра"));
+            : new ArgumentNullException(ParameterName, Message ?? "Пустая ссылка в значении параметра"));
 
     /// <summary>Получение списка атрибутов указанного типа для типа переданного объекта</summary>
     /// <typeparam name="TAttribute">Тип извлекаемого атрибута</typeparam>

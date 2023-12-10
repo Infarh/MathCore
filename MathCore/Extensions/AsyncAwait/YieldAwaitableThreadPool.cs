@@ -5,15 +5,11 @@ using System.Runtime.CompilerServices;
 // ReSharper disable once CheckNamespace
 namespace System.Threading.Tasks;
 
-public readonly ref struct YieldAwaitableThreadPool
+public readonly ref struct YieldAwaitableThreadPool(bool LockContext, bool LongRunning = false)
 {
-    private readonly bool _LockContext;
+    public Awaiter GetAwaiter() => new(LockContext, LongRunning);
 
-    public YieldAwaitableThreadPool(bool LockContext) => _LockContext = LockContext;
-
-    public Awaiter GetAwaiter() => new(_LockContext);
-
-    public readonly struct Awaiter(bool LockContext) : ICriticalNotifyCompletion, IEquatable<Awaiter>
+    public readonly struct Awaiter(bool LockContext, bool LongRunning = false) : ICriticalNotifyCompletion, IEquatable<Awaiter>
     {
         private readonly bool _LockContext = LockContext;
         private static readonly WaitCallback __WaitCallbackRunAction = RunAction;
@@ -25,11 +21,11 @@ public readonly ref struct YieldAwaitableThreadPool
 
         private static void RunAction(object? State) => ((Action)State!).Invoke();
 
-        public void OnCompleted(Action Continuation) => QueueContinuation(Continuation, true, _LockContext);
+        public void OnCompleted(Action Continuation) => QueueContinuation(Continuation, true, _LockContext, LongRunning);
 
-        public void UnsafeOnCompleted(Action Continuation) => QueueContinuation(Continuation, false, _LockContext);
+        public void UnsafeOnCompleted(Action Continuation) => QueueContinuation(Continuation, false, _LockContext, LongRunning);
 
-        private static void QueueContinuation(Action Continuation, bool FlowContext, bool LockContext)
+        private static void QueueContinuation(Action Continuation, bool FlowContext, bool LockContext, bool LongRunning)
         {
             if (Continuation is null) throw new ArgumentNullException(nameof(Continuation));
 
@@ -40,14 +36,24 @@ public readonly ref struct YieldAwaitableThreadPool
             {
                 var scheduler = TaskScheduler.Current;
                 if (!LockContext || scheduler == TaskScheduler.Default)
-                {
-                    if (FlowContext)
+                    if (LongRunning)
+                        Task.Factory.StartNew(
+                            Continuation,
+                            default,
+                            TaskCreationOptions.LongRunning,
+                            TaskScheduler.Default);
+                    else if (FlowContext)
                         ThreadPool.QueueUserWorkItem(__WaitCallbackRunAction, Continuation);
                     else
                         ThreadPool.UnsafeQueueUserWorkItem(__WaitCallbackRunAction, Continuation);
-                }
                 else
-                    Task.Factory.StartNew(Continuation, default, TaskCreationOptions.PreferFairness, scheduler);
+                    Task.Factory.StartNew(
+                        Continuation,
+                        default,
+                        LongRunning 
+                            ? TaskCreationOptions.PreferFairness | TaskCreationOptions.LongRunning 
+                            : TaskCreationOptions.PreferFairness, 
+                        scheduler);
             }
         }
 
