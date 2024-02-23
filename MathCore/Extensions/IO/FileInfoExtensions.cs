@@ -450,4 +450,11 @@ public static class FileInfoExtensions
 
         return new(ArchiveFileName);
     }
+
+    public static FileInfo EnsureDeleted(this FileInfo file)
+    {
+        file.Delete();
+        file.Refresh();
+        return file;
+    }
 }

@@ -277,4 +277,12 @@ public static class DirectoryInfoExtensions
         Path.IsPathRooted(RelativeFilePath)
             ? new(RelativeFilePath)
             : new(Path.Combine(dir.FullName, RelativeFilePath));
+
+
+    public static DirectoryInfo EnsureDeleted(this DirectoryInfo dir, bool recursive = true)
+    {
+        dir.Delete(recursive);
+        dir.Refresh();
+        return dir;
+    }
 }
