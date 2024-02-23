@@ -109,8 +109,7 @@ public static class FileInfoExtensions
     /// <returns>Массив байт контрольной суммы</returns>
     public static byte[] ComputeSHA256(this FileInfo file)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-        using var stream = file.ThrowIfNotFound().OpenRead();
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
         var       hash   = SHA512.Compute(stream);
         return hash;
     }
@@ -152,7 +151,7 @@ public static class FileInfoExtensions
 
     public static IEnumerable<byte> ReadBytes(this FileInfo file)
     {
-        using var stream = file.ThrowIfNotFound().OpenRead();
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
         using var reader = new BinaryReader(stream);
         while (!reader.IsEOF())
             yield return reader.ReadByte();
@@ -160,7 +159,7 @@ public static class FileInfoExtensions
 
     public static IEnumerable<byte[]> ReadBytes(this FileInfo file, int Length)
     {
-        using var stream = file.ThrowIfNotFound().OpenRead();
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
 
         int readed;
         do
@@ -175,7 +174,7 @@ public static class FileInfoExtensions
 
     public static IEnumerable<string?> ReadLines(this FileInfo file)
     {
-        using var reader = file.ThrowIfNotFound().OpenText();
+        using var reader = file.NotNull().ThrowIfNotFound().OpenText();
         while (!reader.EndOfStream)
             yield return reader.ReadLine();
     }
@@ -185,9 +184,10 @@ public static class FileInfoExtensions
         Action<StreamReader>? initializer, 
         int BufferSize = 3 * Consts.DataLength.Bytes.MB)
     {
-        Stream stream = file.ThrowIfNotFound().Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+        Stream stream = file.NotNull().ThrowIfNotFound().Open(FileMode.Open, FileAccess.Read, FileShare.Read);
         if (BufferSize > 0) 
             stream = new BufferedStream(stream, BufferSize);
+
         using var reader = new StreamReader(stream);
         initializer?.Invoke(reader);
         while (!reader.EndOfStream)
@@ -373,8 +373,7 @@ public static class FileInfoExtensions
 
     public static async Task CheckFileAccessAsync(this FileInfo File, int Timeout = 1000, int IterationCount = 100, CancellationToken Cancel = default)
     {
-        if (File is null) throw new ArgumentNullException(nameof(File));
-        File.ThrowIfNotFound();
+        File.NotNull().ThrowIfNotFound();
         for (var i = 0; i < IterationCount; i++)
             try
             {
@@ -394,12 +393,13 @@ public static class FileInfoExtensions
 
     public static FileInfo Zip(this FileInfo File, string? ArchiveFileName = null, bool Override = true)
     {
-        if (File is null) throw new ArgumentNullException(nameof(File));
-        File.ThrowIfNotFound();
+        File.NotNull().ThrowIfNotFound();
 
-        if (ArchiveFileName is null) ArchiveFileName = $"{File.FullName}.zip";
+        if (ArchiveFileName is null) 
+            ArchiveFileName = $"{File.FullName}.zip";
         else if (!Path.IsPathRooted(ArchiveFileName))
             ArchiveFileName = (File.Directory ?? throw new InvalidOperationException($"Не удалось получить директорию файла {File}")).CreateFileInfo(ArchiveFileName).FullName;
+
         using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
         using var zip        = new ZipArchive(zip_stream);
         var       file_entry = zip.GetEntry(File.Name);
@@ -424,15 +424,19 @@ public static class FileInfoExtensions
         IProgress<double>? Progress = null,
         CancellationToken Cancel = default)
     {
-        if (File is null) throw new ArgumentNullException(nameof(File));
-        File.ThrowIfNotFound();
+        File.NotNull().ThrowIfNotFound();
         Cancel.ThrowIfCancellationRequested();
 
         if (ArchiveFileName is null)
             ArchiveFileName = $"{File.FullName}.zip";
         else if (!Path.IsPathRooted(ArchiveFileName))
             ArchiveFileName = (File.Directory ?? throw new InvalidOperationException($"Не удалось получить директорию файла {File}")).CreateFileInfo(ArchiveFileName).FullName;
+
+#if NET8_0_OR_GREATER
+        await using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
+#else
         using var zip_stream = IO.File.Open(ArchiveFileName, FileMode.OpenOrCreate, FileAccess.Write);
+#endif
         using var zip        = new ZipArchive(zip_stream);
         var       file_entry = zip.GetEntry(File.Name);
         if (file_entry != null)
@@ -441,8 +445,14 @@ public static class FileInfoExtensions
             file_entry.Delete();
         }
 
+#if NET8_0_OR_GREATER
+        await using var file_entry_stream = zip.CreateEntry(File.Name).Open();
+        await using var file_stream       = File.OpenRead();
+#else
         using var file_entry_stream = zip.CreateEntry(File.Name).Open();
         using var file_stream       = File.OpenRead();
+#endif
+
         if (Progress is null)
             await file_stream.CopyToAsync(file_entry_stream, Buffer, Cancel).ConfigureAwait(false);
         else
