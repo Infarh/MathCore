@@ -457,4 +457,15 @@ public static class FileInfoExtensions
         file.Refresh();
         return file;
     }
+
+    public static FileInfo EnsureCreated(this FileInfo file)
+    {
+        if(file.Exists) return file;
+
+        if(!file.Directory.Exists)
+            file.Directory.Create();
+
+        using (file.Create())
+            return file;
+    }
 }

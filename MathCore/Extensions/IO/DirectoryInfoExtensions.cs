@@ -285,4 +285,13 @@ public static class DirectoryInfoExtensions
         dir.Refresh();
         return dir;
     }
+
+    public static DirectoryInfo EnsureCreated(this DirectoryInfo dir)
+    {
+        if (dir.Exists) return dir;
+
+        dir.Create();
+        dir.Refresh();
+        return dir;
+    }
 }
