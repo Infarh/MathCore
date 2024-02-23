@@ -475,7 +475,7 @@ public readonly ref partial struct StringPtr
 
         if (index >= length)
             throw index > 0
-                ? new FormatException("Строка содержит лишь символы пробелов")
+                ? new("Строка содержит лишь символы пробелов")
                 : new FormatException("Пустая строка");
 
         var sign = 1;

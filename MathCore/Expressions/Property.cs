@@ -43,7 +43,7 @@ public class Property<T> : ItemBase, INotifyPropertyChanged, IObservableEx<T>
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged(string PropertyName)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        PropertyChanged?.Invoke(this, new(PropertyName));
         _ObservableObject.OnNext(Value);
     }
 
@@ -209,7 +209,7 @@ public class Property : ItemBase, INotifyPropertyChanged, IObservable<object>
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged(string PropertyName)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        PropertyChanged?.Invoke(this, new(PropertyName));
         _ObservableObject.OnNext(Value);
     }
 

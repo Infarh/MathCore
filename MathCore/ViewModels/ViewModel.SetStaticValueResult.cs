@@ -219,12 +219,12 @@ public partial class ViewModel
         [NotNull, CallerMemberName] in string PropertyName = null)
     {
         if (Equals(field, value)) 
-            return new SetStaticValueResult<T>(false, field, field, OnPropertyChanged);
+            return new(false, field, field, OnPropertyChanged);
 
         var old_value = field;
         field = value;
         OnPropertyChanged(PropertyName);
-        return new SetStaticValueResult<T>(true, old_value, value, OnPropertyChanged);
+        return new(true, old_value, value, OnPropertyChanged);
     }
 
     /// <summary>Установить новое значение свойства</summary>
@@ -243,11 +243,11 @@ public partial class ViewModel
         [NotNull, CallerMemberName] in string PropertyName = null)
     {
         if (Equals(field, value) || !Validator(value)) 
-            return new SetStaticValueResult<T>(false, field, value, OnPropertyChanged);
+            return new(false, field, value, OnPropertyChanged);
 
         var old_value = field;
         field = value;
         OnPropertyChanged(PropertyName);
-        return new SetStaticValueResult<T>(true, old_value, value, OnPropertyChanged);
+        return new(true, old_value, value, OnPropertyChanged);
     }
 }

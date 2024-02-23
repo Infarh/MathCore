@@ -51,7 +51,7 @@ public class RefArrayView<T> : IReadOnlyList<T>, ICollection
         _Array = array.NotNull();
         var length = _Array.Length;
         _Indexes   = new int[length];
-        _IndexInfo = new IndexInfo(_Indexes);
+        _IndexInfo = new(_Indexes);
 
         for (var i = 0; i < length; i++)
             _Indexes[i] = i;
@@ -62,7 +62,7 @@ public class RefArrayView<T> : IReadOnlyList<T>, ICollection
         _Array = array.NotNull();
         var length = _Array.Length;
         _Indexes   = new int[length];
-        _IndexInfo = new IndexInfo(_Indexes);
+        _IndexInfo = new(_Indexes);
 
         if (Inverted)
             for (var i = 0; i < length; i++)

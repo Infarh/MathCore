@@ -120,9 +120,12 @@ public static class FileInfoExtensions
     /// <returns>Массив байт контрольной суммы</returns>
     public static async Task<byte[]> ComputeSHA256Async(this FileInfo file, CancellationToken Cancel = default)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-        using var stream = file.ThrowIfNotFound().OpenRead();
-        var       hash   = await SHA512.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead(); 
+#endif
+        var hash = await SHA512.ComputeAsync(stream, Cancel).ConfigureAwait(false);
         return hash;
     }
 
@@ -131,19 +134,19 @@ public static class FileInfoExtensions
     /// <returns>Массив байт контрольной суммы</returns>
     public static byte[] ComputeMD5(this FileInfo file)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-
-        using var stream = file.ThrowIfNotFound().OpenRead();
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
         var       hash   = MD5.Compute(stream);
         return hash;
     }
 
     public static async Task<byte[]> ComputeMD5Async(this FileInfo file, CancellationToken Cancel = default)
     {
-        if (file is null) throw new ArgumentNullException(nameof(file));
-
-        using var stream = file.ThrowIfNotFound().OpenRead();
-        var       hash   = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
+#if NET8_0_OR_GREATER
+        await using var stream = file.NotNull().ThrowIfNotFound().OpenRead();
+#else
+        using var stream = file.NotNull().ThrowIfNotFound().OpenRead(); 
+#endif
+        var hash   = await MD5.ComputeAsync(stream, Cancel).ConfigureAwait(false);
         return hash;
     }
 
@@ -214,7 +217,7 @@ public static class FileInfoExtensions
     {
         var new_file = Path.Combine(DestinationDirectory.FullName, Path.GetFileName(SourceFile.Name));
         return !Overwrite && File.Exists(new_file) 
-            ? new FileInfo(new_file) 
+            ? new(new_file) 
             : SourceFile.CopyTo(new_file, true);
     }
 
@@ -288,7 +291,7 @@ public static class FileInfoExtensions
                 if (write && read_count != 0) data.Write(buffer, 0, read_count);
                 else write = false;
             } while (write);
-        OnComplete.Start(file, new EventArgs<FileInfo, Stream>(file, DataStream));
+        OnComplete.Start(file, new(file, DataStream));
     }
 
     /// <summary>Получить объект наблюдения за файлом</summary>
@@ -402,7 +405,7 @@ public static class FileInfoExtensions
         var       file_entry = zip.GetEntry(File.Name);
         if (file_entry != null)
         {
-            if (!Override) return new FileInfo(ArchiveFileName);
+            if (!Override) return new(ArchiveFileName);
             file_entry.Delete();
         }
 
@@ -410,7 +413,7 @@ public static class FileInfoExtensions
         using var file_stream       = File.OpenRead();
         file_stream.CopyTo(file_entry_stream);
 
-        return new FileInfo(ArchiveFileName);
+        return new(ArchiveFileName);
     }
 
     public static async Task<FileInfo> ZipAsync(
@@ -434,7 +437,7 @@ public static class FileInfoExtensions
         var       file_entry = zip.GetEntry(File.Name);
         if (file_entry != null)
         {
-            if (!Override) return new FileInfo(ArchiveFileName);
+            if (!Override) return new(ArchiveFileName);
             file_entry.Delete();
         }
 
@@ -445,6 +448,6 @@ public static class FileInfoExtensions
         else
             await file_stream.CopyToAsync(file_entry_stream, Buffer, file_stream.Length, Progress, Cancel).ConfigureAwait(false);
 
-        return new FileInfo(ArchiveFileName);
+        return new(ArchiveFileName);
     }
 }

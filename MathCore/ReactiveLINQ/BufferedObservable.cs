@@ -31,5 +31,5 @@ internal abstract class BufferedObservable<T> : SimpleObservableEx<T[]>
         }
     }
 
-    protected void AddBuffer() { lock (_SyncRoot) _Buffer.Enqueue(new Queue<T>(_BufferLength)); }
+    protected void AddBuffer() { lock (_SyncRoot) _Buffer.Enqueue(new(_BufferLength)); }
 }

@@ -63,7 +63,7 @@ public class CSV(
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
             for (int i = 0, len = Math.Min(_Header.Length, Items.Length); i < len; i++)
-                yield return new KeyValuePair<string, string>(_Header[i], Items[i]);
+                yield return new(_Header[i], Items[i]);
         }
 
         /// <inheritdoc />
@@ -93,7 +93,7 @@ public class CSV(
             var file_pos  = reader.BaseStream.Position;
             if (reader.ReadLine()?.Split(separator) is not { } item_line) continue;
             if (SkipEmptyLines && item_line.All(s => s is { Length: > 0 })) continue;
-            yield return new Item(header, item_line, file_pos, reader.BaseStream.Position);
+            yield return new(header, item_line, file_pos, reader.BaseStream.Position);
         }
     }
 

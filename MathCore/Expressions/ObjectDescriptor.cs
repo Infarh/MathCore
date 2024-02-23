@@ -44,7 +44,7 @@ public class ObjectDescriptor<T>
             var properties = _ObjectType.GetProperties(__BindingFlags)
                .Where(_PropertiesFilter ?? (_ => true))
                .Select(p => new Property(_Object, p)).ToArray();
-            _Properties = new DictionaryReadOnly<string, Property>(properties.ToDictionary(p => p.Name));
+            _Properties = new(properties.ToDictionary(p => p.Name));
             return _Properties;
         }
     }
@@ -79,7 +79,7 @@ public class ObjectDescriptor<T>
             var fields = _ObjectType.GetFields(__BindingFlags)
                .Where(_FieldsFilter ?? (_ => true))
                .Select(p => new Field(_Object, p)).ToArray();
-            _Fields = new DictionaryReadOnly<string, Field>(fields.ToDictionary(p => p.Name));
+            _Fields = new(fields.ToDictionary(p => p.Name));
             return _Fields;
         }
     }

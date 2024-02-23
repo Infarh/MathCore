@@ -52,7 +52,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     {
         var rnd = new Random();
         // ReSharper disable once EventExceptionNotDocumented
-        return new SpaceAngle(
+        return new(
             Abs(Max - Min) * (rnd.NextDouble() - .5) + (Max + Min) * .5,
             Abs(Max - Min) * (rnd.NextDouble() - .5) + (Max + Min) * .5);
     }
@@ -261,7 +261,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     /// <param name="type">Тип значений угловых величин</param>
     /// <returns>Угол в повёрнутой локальной системе координат</returns>
     public SpaceAngle RotatePhiTheta(double theta, double phi, in AngleType type = AngleType.Rad)
-        => RotatePhiTheta(new SpaceAngle(theta, phi, type));
+        => RotatePhiTheta(new(theta, phi, type));
 
     /// <summary>Повернуть угол в сферической системе координат</summary>
     /// <param name="angle">Пространственный угол поворота локальной системы координат</param>
@@ -365,7 +365,7 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
             var ph1 = Atan2(y1, x1);
             var th1 = Atan2(Sqrt(x1 * x1 + y1 * y1), z1);
             return r.AngleType == AngleType.Rad
-                ? new SpaceAngle(th1, ph1)
+                ? new(th1, ph1)
                 : new SpaceAngle(th1 * __ToDeg, ph1 * __ToDeg, AngleType.Deg);
         };
     }
@@ -526,13 +526,13 @@ public readonly struct SpaceAngle : IEquatable<SpaceAngle>, ICloneable
     public static SpaceAngle operator +(SpaceAngle x, SpaceAngle y)
     {
         var (y_th, y_ph) = y.In(x._AngleType);
-        return new SpaceAngle(x._Theta + y_th, x._Phi + y_ph, x._AngleType);
+        return new(x._Theta + y_th, x._Phi + y_ph, x._AngleType);
     }
 
     public static SpaceAngle operator -(SpaceAngle x, SpaceAngle y)
     {
         var (y_th, y_ph) = y.In(x._AngleType);
-        return new SpaceAngle(x._Theta - y_th, x._Phi - y_ph, x._AngleType);
+        return new(x._Theta - y_th, x._Phi - y_ph, x._AngleType);
     }
 
     /// <summary>Оператор отрицания значения пространственного угла</summary>

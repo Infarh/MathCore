@@ -26,7 +26,7 @@ public static class DateTimeExtensions
         if(Data.Length - Offset < 8) throw new InvalidOperationException("Процесс копирования данных выходит за пределы массива");
 
 #if NET8_0_OR_GREATER
-        MemoryMarshal.Cast<DateTime, byte>(new Span<DateTime>(ref Time)).CopyTo(Data.AsSpan(Offset));
+        MemoryMarshal.Cast<DateTime, byte>(new(ref Time)).CopyTo(Data.AsSpan(Offset));
 #else
         long[] data = [Time.ToBinary()];
         Buffer.BlockCopy(data, 0, Data, Offset, 8);

@@ -83,7 +83,7 @@ public class HistogramTest
                     Mapping = o =>
                     {
                         var ((min, max), n, value, normal_value) = (Histogram.HistogramValue)o;
-                        return new HistogramItem(min, max, value, 0);
+                        return new(min, max, value, 0);
                     },
                 },
                 new FunctionSeries(gauss, interval.Min, interval.Max, interval.Length / function_points_count)

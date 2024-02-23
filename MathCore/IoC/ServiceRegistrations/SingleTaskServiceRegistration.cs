@@ -31,8 +31,8 @@ public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TServ
     public void ResetAll()
     {
         var last_initializer = _Initializer;
-        _Initializer = new AsyncLocal<object>(_ => CreateNewService());
-        _Exceptions = new AsyncLocal<Exception>();
+        _Initializer = new(_ => CreateNewService());
+        _Exceptions = new();
     }
 
     public void Reset()
@@ -50,6 +50,6 @@ public class SingleTaskServiceRegistration<TService> : ServiceRegistration<TServ
 
     [NotNull]
     internal override ServiceRegistration CloneFor(IServiceManager manager) => _FactoryMethod is null
-        ? new SingleThreadServiceRegistration<TService>(manager, ServiceType)
+        ? new(manager, ServiceType)
         : new SingleThreadServiceRegistration<TService>(manager, ServiceType, _FactoryMethod);
 }

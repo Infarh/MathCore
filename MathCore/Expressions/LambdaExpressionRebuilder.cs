@@ -37,7 +37,7 @@ public class LambdaExpressionRebuilder : ExpressionVisitorEx, IEnumerable
         return V is null ? base.Visit(node) : V.NewNode(node);
     }
 
-    public void Add(Func<Expression, bool> Selector, Func<Expression, Expression> NewNode) => _NewValues.Add(new Rule(Selector, NewNode));
+    public void Add(Func<Expression, bool> Selector, Func<Expression, Expression> NewNode) => _NewValues.Add(new(Selector, NewNode));
 
     public IEnumerator GetEnumerator() => _NewValues.GetEnumerator();
 }

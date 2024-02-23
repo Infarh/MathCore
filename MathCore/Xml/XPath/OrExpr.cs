@@ -14,8 +14,8 @@ internal sealed class OrExpr : Query
 
     internal OrExpr(Query operand1, Query operand2)
     {
-        _Operand1 = new BooleanFunctions(operand1);
-        _Operand2 = new BooleanFunctions(operand2);
+        _Operand1 = new(operand1);
+        _Operand2 = new(operand2);
     }
 
     #endregion

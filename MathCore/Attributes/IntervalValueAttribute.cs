@@ -19,7 +19,7 @@ public sealed class IntervalValueAttribute : Attribute
     public MathCore.Interval Interval { set; get; }
 
     /// <summary>Инициализация нового экземпляра <see cref="IntervalValueAttribute"/></summary>
-    public IntervalValueAttribute() => Interval = new MathCore.Interval(double.NegativeInfinity, double.PositiveInfinity);
+    public IntervalValueAttribute() => Interval = new(double.NegativeInfinity, double.PositiveInfinity);
 
     /// <summary>Инициализация нового экземпляра <see cref="IntervalValueAttribute"/></summary>
     /// <param name="Interval">Допустимый интервал значений</param>
@@ -28,5 +28,5 @@ public sealed class IntervalValueAttribute : Attribute
     /// <summary>Инициализация нового экземпляра <see cref="IntervalValueAttribute"/></summary>
     /// <param name="Min">Минимально допустимое значение</param>
     /// <param name="Max">Максимально допустимое значение</param>
-    public IntervalValueAttribute(double Min, double Max = double.PositiveInfinity) => Interval = new MathCore.Interval(Min, Max);
+    public IntervalValueAttribute(double Min, double Max = double.PositiveInfinity) => Interval = new(Min, Max);
 }

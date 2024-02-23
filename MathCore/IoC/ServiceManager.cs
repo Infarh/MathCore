@@ -20,7 +20,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
             if (__Default is not null) return __Default;
             lock (__DefaultManagerSyncRoot)
                 if (__Default is null)
-                    __Default = new ServiceManager();
+                    __Default = new();
             return __Default;
         }
     }

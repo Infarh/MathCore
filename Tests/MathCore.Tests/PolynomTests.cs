@@ -41,7 +41,7 @@ public class PolynomTests : UnitTest
             Assert.AreEqual(A[i], polynom[i], "Коэффициент {0} при степени {1} не соответствует исходному {2}",
                 polynom[i], i, A[i]);
 
-        polynom = new Polynom(new List<double>(A));
+        polynom = new(new List<double>(A));
         Assert.AreEqual(A.Length - 1, polynom.Power,
             "Степень полинома {0} не соответствует числу коэффициентов при степенях {1} - 1", polynom.Power, A.Length);
         for (var i = 0; i < N; i++)
@@ -62,7 +62,7 @@ public class PolynomTests : UnitTest
 
         var N = GetRNDInt(5, 15);
         A = GetRNDDoubleArray(N);
-        p = new Polynom(A);
+        p = new(A);
         var X = GetRNDDoubleArray(GetRNDInt(5, 15));
 
         double P(double x)
@@ -102,8 +102,8 @@ public class PolynomTests : UnitTest
         Assert.IsFalse(P.Equals(null), "Полином {0} равен null", P);
         Assert.IsFalse(P.Equals(Z), "Полином {0} равен неравному ему полиному {1}", P, Z);
 
-        P = new Polynom(GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5));
-        Q = new Polynom(P.Coefficients);
+        P = new(GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5));
+        Q = new(P.Coefficients);
 
         Assert.IsTrue(P.Equals(Q), "Случайный полином {0} не равен полиному {1}, составленному из его коэффициентов", P, Q);
         Assert.IsFalse(P.Equals(Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
@@ -126,8 +126,8 @@ public class PolynomTests : UnitTest
         Assert.IsFalse(P.Equals("Test"), "Полином {0} равен строке", P);
         Assert.IsFalse(P.Equals((object)Z), "Полином {0} равен неравному ему полиному {1}", P, Z);
 
-        P = new Polynom(GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5));
-        Q = new Polynom(P.Coefficients);
+        P = new(GetRNDDoubleArray(GetRNDInt(5, 15), -5, 5));
+        Q = new(P.Coefficients);
 
         Assert.IsTrue(P.Equals((object)Q), "Случайный полином {0} не равен полиному {1}, составленному из его коэффициентов", P, Q);
         Assert.IsFalse(P.Equals((object)Z), "Случайный полином {0} равен неравному ему полиному {1}", P, Z);
@@ -262,7 +262,7 @@ public class PolynomTests : UnitTest
 
         var p = new Polynom(3, 5, 7);
         var q = new Polynom(2, 3, 5);
-        Assert.AreEqual(new Polynom(1, 2, 2), p - q);
+        Assert.AreEqual(new(1, 2, 2), p - q);
         Test(p, q);
         Test(GetRandomPolynom(4), GetRandomPolynom(5));
         Test(GetRandomPolynom(), GetRandomPolynom());

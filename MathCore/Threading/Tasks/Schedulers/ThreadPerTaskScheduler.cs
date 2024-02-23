@@ -12,7 +12,7 @@ public class ThreadPerTaskScheduler : TaskScheduler
 
     /// <summary>Получить перечень запланированных задач в данном планировщике (всегда возвращает пустое перечисление)</summary>
     /// <remarks>Данный планировщик не задерживает задачи, а исполняет их по мере поступления</remarks>
-    protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
+    protected override IEnumerable<Task> GetScheduledTasks() => [];
 
     /// <summary>Запускает новый поток для выполнения задачи</summary>
     protected override void QueueTask(Task task)

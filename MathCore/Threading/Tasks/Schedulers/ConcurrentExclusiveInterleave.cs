@@ -63,11 +63,11 @@ public sealed class ConcurrentExclusiveInterleave
         if (TargetScheduler is null) throw new ArgumentNullException(nameof(TargetScheduler));
 
         // Create the state for this interleave
-        _InternalLock                        = new object();
+        _InternalLock                        = new();
         _ExclusiveProcessingIncludesChildren = ExclusiveProcessingIncludesChildren;
-        _ParallelOptions                     = new ParallelOptions { TaskScheduler = TargetScheduler };
-        _ConcurrentTaskScheduler             = new ConcurrentExclusiveTaskScheduler(this, [], TargetScheduler.MaximumConcurrencyLevel);
-        _ExclusiveTaskScheduler              = new ConcurrentExclusiveTaskScheduler(this, [], 1);
+        _ParallelOptions                     = new() { TaskScheduler = TargetScheduler };
+        _ConcurrentTaskScheduler             = new(this, [], TargetScheduler.MaximumConcurrencyLevel);
+        _ExclusiveTaskScheduler              = new(this, [], 1);
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public sealed class ConcurrentExclusiveInterleave
 
         // Otherwise, run the processor. Store the task and then start it to ensure that 
         // the assignment happens before the body of the task runs.
-        _TaskExecuting = new Task(ConcurrentExclusiveInterleaveProcessor, CancellationToken.None, TaskCreationOptions.None);
+        _TaskExecuting = new(ConcurrentExclusiveInterleaveProcessor, CancellationToken.None, TaskCreationOptions.None);
         _TaskExecuting.Start(_ParallelOptions.TaskScheduler);
     }
 

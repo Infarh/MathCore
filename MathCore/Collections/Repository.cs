@@ -34,7 +34,7 @@ public class Repository<T>(ICollection<T> Collection) : IRepository<T>
     public virtual IEnumerable<T> Get(int Skip, int Take)
     {
         if (Take == 0 || Skip >= _Collection.Count)
-            return Enumerable.Empty<T>();
+            return [];
 
         IEnumerable<T> query = _Collection;
         if (Skip > 0)

@@ -1680,7 +1680,7 @@ public static partial class IEnumerableExtensions
         public EnumerableHistory([MinValue(0)] int HistoryLength)
         {
             _HistoryLength = HistoryLength;
-            _Queue         = new List<T>(HistoryLength);
+            _Queue         = new(HistoryLength);
         }
 
         /// <summary>Удаление лишних элементов из истории</summary>

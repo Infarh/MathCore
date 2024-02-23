@@ -42,9 +42,9 @@ public class FunctionalNode : ComputedNode
         : this(term.Name)
     {
         // Расшифровка блока ядра функции
-        _CoreExpression.Tree = new ExpressionTree(term.Block.GetSubTree(Parser, _CoreExpression));
+        _CoreExpression.Tree = new(term.Block.GetSubTree(Parser, _CoreExpression));
         // Расшифровка блока параметров
-        _ParametersExpression.Tree = new ExpressionTree(term.Parameters.GetSubTree(Parser, _ParametersExpression));
+        _ParametersExpression.Tree = new(term.Parameters.GetSubTree(Parser, _ParametersExpression));
 
         Parser.ProcessVariables(_CoreExpression);
         Parser.ProcessVariables(_ParametersExpression);

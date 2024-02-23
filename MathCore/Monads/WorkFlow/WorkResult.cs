@@ -13,7 +13,7 @@ public readonly struct WorkResult(Exception? PrevError = null, Exception? Curren
             : CurrentError is null
                 ? PrevError
                 : PrevError is AggregateException aggregate_exception
-                    ? new AggregateException(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
+                    ? new(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
                     : new AggregateException(PrevError, CurrentError);
 
     /// <inheritdoc />
@@ -70,7 +70,7 @@ public readonly struct WorkResult<T> : IWorkResult<T>, IEquatable<WorkResult<T>>
             : CurrentError is null
                 ? PrevError
                 : PrevError is AggregateException aggregate_exception
-                    ? new AggregateException(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
+                    ? new(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
                     : new AggregateException(PrevError, CurrentError);
     }
 
@@ -141,7 +141,7 @@ public readonly struct WorkResult<TParameter, T> : IWorkResult<TParameter, T>, I
             : CurrentError is null
                 ? PrevError
                 : PrevError is AggregateException aggregate_exception
-                    ? new AggregateException(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
+                    ? new(aggregate_exception.InnerExceptions.AppendLast(CurrentError))
                     : new AggregateException(PrevError, CurrentError);
     }
 

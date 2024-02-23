@@ -35,7 +35,7 @@ public class Field<T> : ItemBase
         }
     }
 
-    public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
+    public AttributesExtractor Attribute => _Attributes ??= new(_FieldInfo);
 
     [Diagnostics.CodeAnalysis.SuppressMessage("Качество кода", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
     private static void Set(ref T field, T value) => field = value;
@@ -112,7 +112,7 @@ public class Field : ItemBase
         }
     }
 
-    public AttributesExtractor Attribute => _Attributes ??= new AttributesExtractor(_FieldInfo);
+    public AttributesExtractor Attribute => _Attributes ??= new(_FieldInfo);
 
     [Diagnostics.CodeAnalysis.SuppressMessage("Качество кода", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
     private static void Set(ref object field, object value) => field = value;

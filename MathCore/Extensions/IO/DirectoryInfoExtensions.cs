@@ -26,7 +26,7 @@ public static class DirectoryInfoExtensions
         Directory.ThrowIfNotFound("Архивируемая директория не найдена");
 
         static ZipArchive GetArchive(FileInfo file) => file.Exists
-            ? new ZipArchive(file.OpenWrite(), ZipArchiveMode.Update)
+            ? new(file.OpenWrite(), ZipArchiveMode.Update)
             : new ZipArchive(file.Create(), ZipArchiveMode.Create, false);
 
         const int buffer_size = Consts.DataLength.Bytes.MB;
@@ -52,7 +52,7 @@ public static class DirectoryInfoExtensions
         var is_new = !ArchiveFile.Exists;
 
         static ZipArchive GetArchive(FileInfo file) => file.Exists
-            ? new ZipArchive(file.OpenWrite(), ZipArchiveMode.Update)
+            ? new(file.OpenWrite(), ZipArchiveMode.Update)
             : new ZipArchive(file.Create(), ZipArchiveMode.Create, false);
 
         const int buffer_size = Consts.DataLength.Bytes.MB;
@@ -217,13 +217,13 @@ public static class DirectoryInfoExtensions
     [DST]
     public static FileSystemWatcher GetWatcher(this DirectoryInfo directory, string? filter = null) =>
         string.IsNullOrEmpty(filter)
-            ? new FileSystemWatcher(directory.FullName)
+            ? new(directory.FullName)
             : new FileSystemWatcher(directory.FullName, filter);
 
     public static FileSystemWatcher GetWatcher(this DirectoryInfo directory, string? filter, Action<FileSystemWatcher>? initializer)
     {
         var watcher = string.IsNullOrWhiteSpace(filter)
-            ? new FileSystemWatcher(directory.FullName)
+            ? new(directory.FullName)
             : new FileSystemWatcher(directory.FullName, filter);
         initializer?.Invoke(watcher);
         return watcher;
@@ -267,7 +267,7 @@ public static class DirectoryInfoExtensions
     {
         if (Directory is null) throw new ArgumentNullException(nameof(Directory));
         if (SubDirectoryPath is null) throw new ArgumentNullException(nameof(SubDirectoryPath));
-        return string.IsNullOrEmpty(SubDirectoryPath) ? Directory : new DirectoryInfo(Path.Combine(Directory.FullName, SubDirectoryPath));
+        return string.IsNullOrEmpty(SubDirectoryPath) ? Directory : new(Path.Combine(Directory.FullName, SubDirectoryPath));
     }
 
     /// <summary>Получить файл по указанному пути внутри директории</summary>

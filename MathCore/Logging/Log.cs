@@ -14,7 +14,7 @@ public sealed class Log : IEnumerable<LogItem>, INotifyPropertyChanged, INotifyC
     {
         private readonly Dictionary<string, Log> _LogDictionary = [];
 
-        public Log this[string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new Log(name));
+        public Log this[string Name] => _LogDictionary.GetValueOrAddNew(Name, name => new(name));
 
         internal LogPool() { }
 

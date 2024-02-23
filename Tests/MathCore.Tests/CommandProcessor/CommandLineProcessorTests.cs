@@ -34,7 +34,7 @@ public class CommandLineProcessorTests
         var console_out_mock = new Mock<TextWriter>();
         console_out_mock
            .Setup(w => w.Write(It.IsAny<char[]>(), It.IsAny<int>(), It.IsAny<int>()))
-           .Callback((char[] Buffer, int _, int _) => _Values.Add((new string(Buffer), _Timer.Elapsed)));
+           .Callback((char[] Buffer, int _, int _) => _Values.Add((new(Buffer), _Timer.Elapsed)));
         _Logger = console_out_mock.Object;
 
         var command_index = 0;

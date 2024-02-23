@@ -18,6 +18,4 @@ public class AnimatedIntProperty<TObject>(
     int Samples,
     int Timeout,
     Func<int, int, int> Translator,
-    bool Private = false) : AnimatedProperty<TObject, int>(o, Name, Samples, Timeout, Translator, Private)
-{
-}
+    bool Private = false) : AnimatedProperty<TObject, int>(o, Name, Samples, Timeout, Translator, Private);

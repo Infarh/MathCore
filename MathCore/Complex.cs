@@ -125,7 +125,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
                 Re += sign ? -val : val;
         }
 
-        z = new Complex(Re, Im);
+        z = new(Re, Im);
         return true;
     }
 
@@ -264,7 +264,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     {
         var (re, im) = z;
         var e = Math.Exp(re);
-        return new Complex(e * Cos(im), e * Sin(im));
+        return new(e * Cos(im), e * Sin(im));
     }
 
     /// <summary>Алгебраическая форма записи комплексного числа</summary>
@@ -380,7 +380,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
         var result = new Complex[Re.Length];
         for (var j = 0; j < result.Length; j++)
-            result[j] = new Complex(Re[j], Im[j]);
+            result[j] = new(Re[j], Im[j]);
         return result;
     }
 
@@ -421,7 +421,7 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
 
     /// <summary>Обратное значение 1/Z</summary>
     public Complex Reciprocal => _Re == 0 && _Im == 0
-        ? new Complex(double.PositiveInfinity, double.PositiveInfinity)
+        ? new(double.PositiveInfinity, double.PositiveInfinity)
         : i / this;
 
     public bool IsNaN => double.IsNaN(_Re) || double.IsNaN(_Im);
@@ -720,5 +720,5 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
     /// <param name="x">Действительная степень корня</param>
     /// <returns>Комплексный результат вычисления корня действительной степени от комплексного числа</returns>
     [DST]
-    public static Complex Sqrt(double x) => x >= 0 ? new Complex(Math.Sqrt(x)) : new Complex(0, Math.Sqrt(-x));
+    public static Complex Sqrt(double x) => x >= 0 ? new(Math.Sqrt(x)) : new Complex(0, Math.Sqrt(-x));
 }

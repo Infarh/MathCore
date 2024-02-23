@@ -34,7 +34,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     {
         var v0 = 0d.ToExpression();
         var v1 = 1d.ToExpression();
-        return new ExpressionMatrix(N, (i, j) => i == j ? v1 : v0);
+        return new(N, (i, j) => i == j ? v1 : v0);
     }
 
     /* -------------------------------------------------------------------------------------------- */
@@ -416,7 +416,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
     public static ExpressionMatrix operator /(Expression x, ExpressionMatrix M)
     {
         M = M.GetInverse();
-        return new ExpressionMatrix(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
+        return new(M.N, M.M, (i, j) => x.MultiplyWithConversion(M[i, j]));
     }
 
     /// <summary>Оператор сложения двух матриц</summary>
@@ -429,7 +429,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
         if (A.N != B.N || A.M != B.M)
             throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
-        return new ExpressionMatrix(A.N, A.M, (i, j) => A[i, j].AddWithConversion(B[i, j]));
+        return new(A.N, A.M, (i, j) => A[i, j].AddWithConversion(B[i, j]));
     }
 
     /// <summary>Оператор разности двух матриц</summary>
@@ -442,7 +442,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
         if (A.N != B.N || A.M != B.M)
             throw new ArgumentOutOfRangeException(nameof(B), "Размеры матриц не равны.");
 
-        return new ExpressionMatrix(A.N, A.M, (i, j) => A[i, j].Subtract(B[i, j]));
+        return new(A.N, A.M, (i, j) => A[i, j].Subtract(B[i, j]));
     }
 
     /// <summary>Оператор произведения двух матриц</summary>
@@ -496,7 +496,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
         ExpressionMatrix result;
         if (A.M == B.M) // Конкатенация по строкам
         {
-            result = new ExpressionMatrix(A.N + B.N, A.M);
+            result = new(A.N + B.N, A.M);
             var data = result._Data;
 
             for (var i = 0; i < A.N; i++)
@@ -510,7 +510,7 @@ public class ExpressionMatrix : ICloneable<ExpressionMatrix>, IEquatable<Express
         }
         else if (A.N == B.N) //Конкатенация по строкам
         {
-            result = new ExpressionMatrix(A.N, A.M + B.M);
+            result = new(A.N, A.M + B.M);
             var data = result._Data;
 
             for (var i = 0; i < A.N; i++)

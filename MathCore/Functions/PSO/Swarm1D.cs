@@ -42,7 +42,7 @@ public class Swarm1D
         int IterationCount,
         out double X, 
         out double Value) => 
-        Minimize(func, new Interval(minX, maxX), IterationCount, out X, out Value);
+        Minimize(func, new(minX, maxX), IterationCount, out X, out Value);
 
     /// <exception cref="Exception">A delegate callback throws an exception.</exception>
     public void Minimize(
@@ -54,7 +54,7 @@ public class Swarm1D
     {
         var IntervalVx = IntervalX;
 
-        var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new Particle1D(f, vx));
+        var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
         var start = swarm.GetMin(p => p.Value);
         X     = start.X;
         Value = start.Value;
@@ -84,14 +84,14 @@ public class Swarm1D
     }
 
     public void Maximize(Func<double, double> func, double minX, double maxX, int IterationCount,
-        out double X, out double Value) => Maximize(func, new Interval(minX, maxX), IterationCount, out X, out Value);
+        out double X, out double Value) => Maximize(func, new(minX, maxX), IterationCount, out X, out Value);
 
     public void Maximize(Func<double, double> func, Interval IntervalX, int IterationCount,
         out double X, out double Value)
     {
         var IntervalVx = IntervalX;
 
-        var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new Particle1D(f, vx));
+        var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
         var start = swarm.GetMax(p => p.Value);
         X     = start.X;
         Value = start.Value;

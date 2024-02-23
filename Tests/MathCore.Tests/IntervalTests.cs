@@ -24,7 +24,7 @@ public class IntervalTests
 
     //Use TestInitialize to run code before running each test
     [TestInitialize]
-    public void MyTestInitialize() => _RandomGenerator = new Random();
+    public void MyTestInitialize() => _RandomGenerator = new();
 
     //Use TestCleanup to run code after each test has run
     [TestCleanup]
@@ -115,7 +115,7 @@ public class IntervalTests
         Assert.IsFalse(interval.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно");
         Assert.IsFalse(interval.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно");
 
-        interval = new Interval<double>(min, max, true);
+        interval = new(min, max, true);
 
         Assert.AreEqual(interval.Min, min, "Минимальное значение установлено некорректно");
         Assert.AreEqual(interval.Max, max, "Максимальное значение установлено некорректно");
@@ -137,7 +137,7 @@ public class IntervalTests
         Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
         Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
-        I = new Interval<double>(min, true, max, true);
+        I = new(min, true, max, true);
 
         Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
         Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
@@ -157,21 +157,21 @@ public class IntervalTests
         Assert.IsFalse(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
         Assert.IsFalse(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
-        I = new Interval<double>(min, true, max, false);
+        I = new(min, true, max, false);
 
         Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
         Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
         Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
         Assert.IsFalse(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
-        I = new Interval<double>(min, true, max, true);
+        I = new(min, true, max, true);
 
         Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
         Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
         Assert.IsTrue(I.MinInclude, "Флаг проверки вхождения нижнего предела установлен некорректно для интервала {0}", I);
         Assert.IsTrue(I.MaxInclude, "Флаг проверки вхождения верхнего предела установлен некорректно для интервала {0}", I);
 
-        I = new Interval<double>(min, false, max, true);
+        I = new(min, false, max, true);
 
         Assert.AreEqual(I.Min, min, "Минимальное значение установлено некорректно для интервала {0}", I);
         Assert.AreEqual(I.Max, max, "Максимальное значение установлено некорректно для интервала {0}", I);
@@ -195,14 +195,14 @@ public class IntervalTests
         Assert.IsTrue(I.Check(5), "Величина, лежащая на верхней границе интервала, не вошла в интервал {0}", I);
         Assert.IsFalse(I.Check(7), "Величина, лежащая выше интервала, вошла в интервал {0}", I);
 
-        I = new Interval<double>(-5, 5, true);
+        I = new(-5, 5, true);
         Assert.IsFalse(I.Check(-100), "Величина, лежащая ниже интервала, вошла в интервал {0}", I);
         Assert.IsTrue(I.Check(-5), "Величина, лежащая на нижней границе интервала, не вошла в интервал {0}", I);
         Assert.IsTrue(I.Check(4), "Величина не вошла в интервал {0}", I);
         Assert.IsTrue(I.Check(5), "Величина, лежащая на верхней границе интервала, не вошла в интервал {0}", I);
         Assert.IsFalse(I.Check(8), "Величина, лежащая выше интервала, вошла в интервал {0}", I);
 
-        I = new Interval<double>(-5, false, 5, true);
+        I = new(-5, false, 5, true);
         Assert.IsFalse(I.Check(-6), "Величина, лежащая ниже интервала, вошла в интервал {0}", I);
         Assert.IsFalse(I.Check(-5), "Величина, лежащая на нижней границе интервала, вошла в интервал {0}", I);
         Assert.IsTrue(I.Check(0), "Величина не вошла в интервал {0}", I);
@@ -230,12 +230,12 @@ public class IntervalTests
     {
         var I = new Interval<double>(-5, 5);
         Assert.IsTrue(I.Equals(I));
-        Assert.IsTrue(I.Equals(new Interval<double>(-5, 5)));
-        Assert.IsFalse(I.Equals(new Interval<double>(-7, 5)));
-        Assert.IsFalse(I.Equals(new Interval<double>(-5, 8)));
-        Assert.IsFalse(I.Equals(new Interval<double>(-5, 5, false)));
-        Assert.IsFalse(I.Equals(new Interval<double>(-5, false, 5, true)));
-        Assert.IsFalse(I.Equals(new Interval<double>(-5, true, 5, false)));
+        Assert.IsTrue(I.Equals(new(-5, 5)));
+        Assert.IsFalse(I.Equals(new(-7, 5)));
+        Assert.IsFalse(I.Equals(new(-5, 8)));
+        Assert.IsFalse(I.Equals(new(-5, 5, false)));
+        Assert.IsFalse(I.Equals(new(-5, false, 5, true)));
+        Assert.IsFalse(I.Equals(new(-5, true, 5, false)));
     }
 
     [TestMethod, Priority(1), Description("Тестирования метода определения вхождения интервала в интервал")]
@@ -295,13 +295,13 @@ public class IntervalTests
         var I = new Interval<double>(-5, 5);
         Assert.AreEqual("[-5;5]", I.ToString(), "Некорректное преобразование интервала {0} в строку", I);
 
-        I = new Interval<double>(-3, false, 4, true);
+        I = new(-3, false, 4, true);
         Assert.AreEqual("(-3;4]", I.ToString(), "Некорректное преобразование интервала {0} в строку", I);
 
-        I = new Interval<double>(7, true, 10, false);
+        I = new(7, true, 10, false);
         Assert.AreEqual("[7;10)", I.ToString(), "Некорректное преобразование интервала {0} в строку", I);
 
-        I = new Interval<double>(0, 15, false);
+        I = new(0, 15, false);
         Assert.AreEqual("(0;15)", I.ToString(), "Некорректное преобразование интервала {0} в строку", I);
     }
 

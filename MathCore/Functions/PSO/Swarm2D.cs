@@ -64,8 +64,8 @@ public class Swarm2D
         out double Value) =>
         Minimize(
             func: func, 
-            IntervalX: new Interval(Min: MinX, Max: MaxX),
-            IntervalY: new Interval(Min: MinY, Max: MaxY),
+            IntervalX: new(Min: MinX, Max: MaxX),
+            IntervalY: new(Min: MinY, Max: MaxY),
             IterationCount: IterationCount,
             X: out X, 
             Y: out Y, 
@@ -83,7 +83,7 @@ public class Swarm2D
         var IntervalVx = IntervalX;
         var IntervalVy = IntervalY;
 
-        var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (_, x, y) => new Particle2D(func, x, y));
+        var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (_, x, y) => new(func, x, y));
         var start = swarm.GetMin(p => p.Value) ?? throw new InvalidOperationException("Минимум не найден");
         X     = start.X;
         Y     = start.Y;
@@ -134,8 +134,8 @@ public class Swarm2D
         out double Value) =>
         Maximize(
             func: func, 
-            IntervalX: new Interval(Min: MinX, Max: MaxX), 
-            IntervalY: new Interval(Min: MinY, Max: MaxY),
+            IntervalX: new(Min: MinX, Max: MaxX), 
+            IntervalY: new(Min: MinY, Max: MaxY),
             IterationCount: IterationCount,
             X: out X, 
             Y: out Y,
@@ -153,7 +153,7 @@ public class Swarm2D
         var IntervalVx = IntervalX;
         var IntervalVy = IntervalY;
 
-        var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (_, ix, iy) => new Particle2D(func, ix, iy));
+        var swarm = new Particle2D[_ParticleCount].Initialize(IntervalX, IntervalY, (_, ix, iy) => new(func, ix, iy));
         var start = swarm.GetMax(p => p.Value) ?? throw new InvalidOperationException("Максимум не найден");
         X     = start.X;
         Y     = start.Y;

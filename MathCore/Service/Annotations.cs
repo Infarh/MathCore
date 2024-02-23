@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#nullable enable
+using System.Diagnostics.CodeAnalysis;
+// ReSharper disable UnusedType.Global
+#pragma warning disable CS9113 // Parameter is unread.
 
 #pragma warning disable 1591
 // ReSharper disable UnusedMember.Global
@@ -240,9 +243,9 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
 /// </list></examples>
 // ReSharper restore CommentTypo
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public sealed class ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates) : Attribute
+public sealed class ContractAnnotationAttribute(string contract, bool forceFullStates) : Attribute
 {
-    public ContractAnnotationAttribute([NotNull] string contract) : this(contract, false) { }
+    public ContractAnnotationAttribute(string contract) : this(contract, false) { }
 
     public string Contract { get; } = contract;
     public bool ForceFullStates { get; } = forceFullStates;
@@ -299,9 +302,8 @@ public sealed class CannotApplyEqualityOperatorAttribute : Attribute;
 /// </code></example>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 [BaseTypeRequired(typeof(Attribute))]
-public sealed class BaseTypeRequiredAttribute([NotNull] Type baseType) : Attribute
+public sealed class BaseTypeRequiredAttribute(Type baseType) : Attribute
 {
-    [NotNull]
     public Type BaseType { get; } = baseType;
 }
 
@@ -389,9 +391,9 @@ public enum ImplicitUseTargetFlags
 public sealed class PublicAPIAttribute : Attribute
 {
     public PublicAPIAttribute() { }
-    public PublicAPIAttribute([NotNull] string comment) => Comment = comment;
+    public PublicAPIAttribute(string comment) => Comment = comment;
 
-    [NotNull] public string Comment { get; }
+    public string Comment { get; }
 }
 
 /// <summary>
@@ -415,46 +417,34 @@ public class PathReferenceAttribute : Attribute
     public PathReferenceAttribute() { }
     public PathReferenceAttribute([PathReference] string basePath) => BasePath = basePath;
 
-    [NotNull] public string BasePath { get; }
+    public string BasePath { get; }
 }
 
 // ASP.NET MVC attributes
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-public sealed class AspMvcAreaMasterLocationFormatAttribute(string format) : Attribute
-{
-}
+public sealed class AspMvcAreaMasterLocationFormatAttribute(string format) : Attribute;
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-public sealed class AspMvcAreaPartialViewLocationFormatAttribute(string format) : Attribute
-{
-}
+public sealed class AspMvcAreaPartialViewLocationFormatAttribute(string format) : Attribute;
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-public sealed class AspMvcAreaViewLocationFormatAttribute(string format) : Attribute
-{
-}
+public sealed class AspMvcAreaViewLocationFormatAttribute(string format) : Attribute;
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-public sealed class AspMvcMasterLocationFormatAttribute(string format) : Attribute
-{
-}
+public sealed class AspMvcMasterLocationFormatAttribute(string format) : Attribute;
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-public sealed class AspMvcPartialViewLocationFormatAttribute(string format) : Attribute
-{
-}
+public sealed class AspMvcPartialViewLocationFormatAttribute(string format) : Attribute;
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 [method: SuppressMessage("Стиль", "IDE0060:Удалите неиспользуемый параметр", Justification = "<Ожидание>")]
-public sealed class AspMvcViewLocationFormatAttribute(string format) : Attribute
-{
-}
+public sealed class AspMvcViewLocationFormatAttribute(string format) : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
@@ -466,9 +456,9 @@ public sealed class AspMvcViewLocationFormatAttribute(string format) : Attribute
 public sealed class AspMvcActionAttribute : Attribute
 {
     public AspMvcActionAttribute() { }
-    public AspMvcActionAttribute([NotNull] string anonymousProperty) => AnonymousProperty = anonymousProperty;
+    public AspMvcActionAttribute(string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
-    [NotNull] public string AnonymousProperty { get; }
+    public string AnonymousProperty { get; }
 }
 
 /// <summary>
@@ -480,9 +470,9 @@ public sealed class AspMvcActionAttribute : Attribute
 public sealed class AspMvcAreaAttribute : PathReferenceAttribute
 {
     public AspMvcAreaAttribute() { }
-    public AspMvcAreaAttribute([NotNull] string anonymousProperty) => AnonymousProperty = anonymousProperty;
+    public AspMvcAreaAttribute(string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
-    [NotNull] public string AnonymousProperty { get; }
+    public string AnonymousProperty { get; }
 }
 
 /// <summary>
@@ -496,9 +486,9 @@ public sealed class AspMvcAreaAttribute : PathReferenceAttribute
 public sealed class AspMvcControllerAttribute : Attribute
 {
     public AspMvcControllerAttribute() { }
-    public AspMvcControllerAttribute([NotNull] string anonymousProperty) => AnonymousProperty = anonymousProperty;
+    public AspMvcControllerAttribute(string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
-    [NotNull] public string AnonymousProperty { get; }
+    public string AnonymousProperty { get; }
 }
 
 /// <summary>
@@ -585,15 +575,14 @@ public sealed class AspMvcActionSelectorAttribute : Attribute;
 public sealed class HtmlElementAttributesAttribute : Attribute
 {
     public HtmlElementAttributesAttribute() { }
-    public HtmlElementAttributesAttribute([NotNull] string name) => Name = name;
+    public HtmlElementAttributesAttribute(string name) => Name = name;
 
-    [NotNull] public string Name { get; }
+    public string Name { get; }
 }
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-public sealed class HtmlAttributeValueAttribute([NotNull] string name) : Attribute
+public sealed class HtmlAttributeValueAttribute(string name) : Attribute
 {
-    [NotNull]
     public string Name { get; } = name;
 }
 

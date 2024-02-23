@@ -69,7 +69,7 @@ public class AnimatedProperty<TObject, TValue>(
         lock (this)
         {
             if (_Enabled) return;
-            _Thread = new Thread(Do) { Priority = _Priority };
+            _Thread = new(Do) { Priority = _Priority };
             _Enabled = true;
             _Thread.Start();
         }

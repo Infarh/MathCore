@@ -369,9 +369,9 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
     public void GetLUDecomposition(out MatrixFloat L, out MatrixFloat U, out MatrixFloat P)
     {
         LUDecomposition(_Data, out var l, out var u, out var p);
-        L = new MatrixFloat(l);
-        U = new MatrixFloat(u);
-        P = new MatrixFloat(p);
+        L = new(l);
+        U = new(u);
+        P = new(p);
     }
 
     /// <summary>
@@ -728,7 +728,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         MatrixFloat result;
         if (A.M == B.M) // Конкатенация по строкам
         {
-            result = new MatrixFloat(A.N + B.N, A.M);
+            result = new(A.N + B.N, A.M);
             for (var i = 0; i < A.N; i++)
                 for (var j = 0; j < A.M; j++)
                     result[i, j] = A[i, j];
@@ -740,7 +740,7 @@ public class MatrixFloat : ICloneable, IEquatable<MatrixFloat>
         }
         else if (A.N == B.N) //Конкатенация по строкам
         {
-            result = new MatrixFloat(A.N, A.M + B.M);
+            result = new(A.N, A.M + B.M);
             for (var i = 0; i < A.N; i++)
                 for (var j = 0; j < A.M; j++)
                     result[i, j] = A[i, j];

@@ -30,7 +30,7 @@ public partial class WorkTests
         private readonly List<Item> _Items = new();
 
         public void Add(string Message) => _Items.Add(Message);
-        public void Add(string Message, Exception Error) => _Items.Add(new Item(Message, Error));
+        public void Add(string Message, Exception Error) => _Items.Add(new(Message, Error));
 
         public IEnumerator<Item> GetEnumerator() => _Items.GetEnumerator();
 
@@ -121,7 +121,7 @@ public partial class WorkTests
 
         public Result Register(string UserName, string Password) =>
             Work.With(_UserManager)
-               .Invoke(m => m.Create(new User { UserName = UserName }, Password))
+               .Invoke(m => m.Create(new() { UserName = UserName }, Password))
                .InvokeIfSuccess(() => _Logger.Add($"{UserName} registered"))
                .InvokeIfSuccess(() => _Logger.Add($"{UserName} registered"))
                .InvokeIfFailure(e => _Logger.Add($"{UserName} not registered with reason {e.Message}", e))

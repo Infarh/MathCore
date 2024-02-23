@@ -13,7 +13,7 @@ public class Page<T> : IPage<T>
     /// <param name="Size">Размер страницы</param>
     /// <returns>Страница с пустым перечислением элементов</returns>
     public static Page<T> Empty(int TotalCount, int Index, int Size) =>
-        new(Enumerable.Empty<T>(), 0, TotalCount, Index, Size);
+        new([], 0, TotalCount, Index, Size);
 
     /// <summary>Новая страница элементов</summary>
     /// <param name="Items">Перечисление элементов страницы</param>

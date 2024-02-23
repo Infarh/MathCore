@@ -17,7 +17,7 @@ public class GraphRoute<TValue, TWeight> : IEnumerable<IGraphNode<TValue, TWeigh
         get
         {
             if(_Nodes.Length == 0)
-                throw new Exception("Попытка доступа к первому узлу пустого пути");
+                throw new("Попытка доступа к первому узлу пустого пути");
             return _Nodes[0];
         }
     }
@@ -27,7 +27,7 @@ public class GraphRoute<TValue, TWeight> : IEnumerable<IGraphNode<TValue, TWeigh
         get
         {
             if(_Nodes.Length == 0)
-                throw new Exception("Попытка доступа к последнему узлу пустого пути");
+                throw new("Попытка доступа к последнему узлу пустого пути");
             return _Nodes[^1];
         }
     }

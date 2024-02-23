@@ -94,7 +94,7 @@ public class Swarm2D
         out double X,
         out double Y,
         out double Value) =>
-        Minimize(F, new Interval(MinX, MaxX), new Interval(MinY, MaxY), IterationCount, out X, out Y, out Value);
+        Minimize(F, new(MinX, MaxX), new(MinY, MaxY), IterationCount, out X, out Y, out Value);
 
     public void Minimize(
         in Func<double, double, double> F,
@@ -115,7 +115,7 @@ public class Swarm2D
         {
             var x = __Random.NextDouble() * delta_x + min_x;
             var y = __Random.NextDouble() * delta_y + min_y;
-            swarm[i] = new Particle2D(x, y, F(x, y));
+            swarm[i] = new(x, y, F(x, y));
         }
 
         var start = swarm.GetMin(p => p.Value);
@@ -152,8 +152,8 @@ public class Swarm2D
         out double Value) =>
         Maximize(
             F: F, 
-            IntervalX: new Interval(Min: MinX, Max: MaxX),
-            IntervalY: new Interval(Min: MinY, Max: MaxY), 
+            IntervalX: new(Min: MinX, Max: MaxX),
+            IntervalY: new(Min: MinY, Max: MaxY), 
             IterationCount: IterationCount,
             X: out X,
             Y: out Y, 
@@ -178,7 +178,7 @@ public class Swarm2D
         {
             var x = __Random.NextDouble() * delta_x + min_x;
             var y = __Random.NextDouble() * delta_y + min_y;
-            swarm[i] = new Particle2D(x, y, F(x, y));
+            swarm[i] = new(x, y, F(x, y));
         }
 
         var start = swarm.GetMin(p => p.Value);

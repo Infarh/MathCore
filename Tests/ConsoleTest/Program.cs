@@ -138,7 +138,7 @@ static double ChiSquarePval(double x, int df)
     // output = prob. x value occurred by chance.
     // ACM 299.
     if (x <= 0 || df < 1)
-        throw new Exception("Bad arg in ChiSquarePval()");
+        throw new("Bad arg in ChiSquarePval()");
 
     var y = 0.0;
     double ee; // change from e

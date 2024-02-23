@@ -31,7 +31,7 @@ public class LambdaObservable<T> : SimpleObservableEx<T>
     )
     {
         if (observable != null)
-            _Observer = new LinkedObserver<T>(observable, this);
+            _Observer = new(observable, this);
         _OnNext      = OnNext;
         _OnCompleted = OnCompleted;
         _OnReset     = OnReset;

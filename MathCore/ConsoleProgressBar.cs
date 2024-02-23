@@ -55,7 +55,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
         _CursorTop  = Console.CursorTop;
 
         _BlockCount = BlockCount;
-        _Timer      = new Timer(TimerHandler);
+        _Timer      = new(TimerHandler);
 
         // A progress bar is only for temporary display in a console window.
         // If the console output is redirected to a file, draw nothing.

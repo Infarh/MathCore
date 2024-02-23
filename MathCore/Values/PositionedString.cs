@@ -43,7 +43,7 @@ public class PositionedString(string String, int Position = 0)
         var visual_pos = position;
         if(position < 0)
         {
-            sub_str  = new string(' ', -position);
+            sub_str  = new(' ', -position);
             position = 0;
         }
         Console.WriteLine("{1}{0}", String, sub_str);

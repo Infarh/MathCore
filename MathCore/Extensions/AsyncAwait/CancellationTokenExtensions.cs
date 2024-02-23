@@ -18,7 +18,7 @@ public static class CancellationTokenExtensions
     /// <summary>Creates a CancellationTokenSource that will be canceled when the specified token has cancellation requested.</summary>
     /// <param name="token">The token.</param>
     /// <returns>The created CancellationTokenSource.</returns>
-    public static CancellationTokenSource CreateLinkedSource(this CancellationToken token) => CancellationTokenSource.CreateLinkedTokenSource(token, new CancellationToken());
+    public static CancellationTokenSource CreateLinkedSource(this CancellationToken token) => CancellationTokenSource.CreateLinkedTokenSource(token, new());
 
     public static TaskAwaiter GetAwaiter(this CancellationToken cancel)
     {

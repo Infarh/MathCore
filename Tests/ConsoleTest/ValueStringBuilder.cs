@@ -214,12 +214,12 @@ public sealed class NativeMemoryManager : MemoryManager<byte>
 
         lock (this)
         {
-            if (_RetainedCount == 0 && _Disposed) throw new Exception();
+            if (_RetainedCount == 0 && _Disposed) throw new();
             _RetainedCount++;
         }
 
         var pointer = (void*)((byte*)_Pointer + ElementIndex); // T = byte
-        return new MemoryHandle(pointer, default, this);
+        return new(pointer, default, this);
     }
 
     public override void Unpin()

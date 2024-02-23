@@ -58,8 +58,8 @@ public partial class Matrix
     public void SVD(out Matrix U, out double[] w, out Matrix V)
     {
         Array.SVD(_Data, out var u, out w, out var v);
-        U = new Matrix(u);
-        V = new Matrix(v);
+        U = new(u);
+        V = new(v);
     }
 
     /// <summary>SVD-разложение матрицы</summary>

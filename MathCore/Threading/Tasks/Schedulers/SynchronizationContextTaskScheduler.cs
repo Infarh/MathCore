@@ -22,7 +22,7 @@ public sealed class SynchronizationContextTaskScheduler : TaskScheduler
     public SynchronizationContextTaskScheduler(SynchronizationContext context)
     {
         _Context = context.NotNull();
-        _Tasks   = new ConcurrentQueue<Task>();
+        _Tasks   = new();
     }
 
     /// <summary>Queues a task to the scheduler for execution on the I/O ThreadPool.</summary>

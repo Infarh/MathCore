@@ -322,7 +322,7 @@ public class Lagrange : Interpolator, IInterpolator
 
     public Lagrange(double[] X, double[] Y) : this(GetPolynomCoefficients(X, Y)) { }
 
-    private Lagrange(double[] P) => _Polynom = new Polynom(P);
+    private Lagrange(double[] P) => _Polynom = new(P);
 
     public Lagrange(params Vector2D[] P)
     {

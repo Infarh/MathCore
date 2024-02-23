@@ -24,7 +24,7 @@ public class DXmlNode(XElement node) : DynamicObject
             node.SetValue(value);
         else
             _Node.Add(value.GetType() == typeof(DXmlNode)
-                ? new XElement(binder.Name)
+                ? new(binder.Name)
                 : new XElement(binder.Name, value));
         return true;
     }

@@ -85,7 +85,7 @@ public class Swarm
         for (var i = 0; i < _ParticleCount; i++)
         {
             var xx = __Random.NextUniform(IntervalX);
-            swarm[i] = new Particle(xx, F(xx));
+            swarm[i] = new(xx, F(xx));
         }
         X = new double[dimensions];
 
@@ -136,7 +136,7 @@ public class Swarm
         for (var i = 0; i < _ParticleCount; i++)
         {
             var xx = __Random.NextUniform(IntervalX);
-            swarm[i] = new Particle(xx, F(xx));
+            swarm[i] = new(xx, F(xx));
         }
         X = new double[dimensions];
 

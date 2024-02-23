@@ -7,7 +7,7 @@ internal sealed class SelectLambdaObservableEx<TItem, TValue> : SimpleObservable
 {
     private readonly SelectLambdaObserverEx<TItem, TValue> _Observer;
 
-    public SelectLambdaObservableEx(IObservable<TItem> observable, Func<TItem, TValue> Selector) => _Observer = new SelectLambdaObserverEx<TItem, TValue>(observable, this, Selector);
+    public SelectLambdaObservableEx(IObservable<TItem> observable, Func<TItem, TValue> Selector) => _Observer = new(observable, this, Selector);
 
     protected override void Dispose(bool Disposing)
     {

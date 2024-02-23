@@ -32,37 +32,37 @@ public class Vector3DTests : UnitTest
     [TestMethod, Priority(1), Description("Тест общего конструктора 3-х-мерного вектора")]
     public void Vector3DConstructor_Simple_Test()
     {
-        TestVectorsComponents(0, 0, 0, new Vector3D(0, 0, 0));
-        TestVectorsComponents(1, 0, 0, new Vector3D(1, 0, 0));
-        TestVectorsComponents(0, 1, 0, new Vector3D(0, 1, 0));
-        TestVectorsComponents(0, 0, 1, new Vector3D(0, 0, 1));
+        TestVectorsComponents(0, 0, 0, new(0, 0, 0));
+        TestVectorsComponents(1, 0, 0, new(1, 0, 0));
+        TestVectorsComponents(0, 1, 0, new(0, 1, 0));
+        TestVectorsComponents(0, 0, 1, new(0, 0, 1));
         var x = GetRNDDouble();
         var y = GetRNDDouble();
         var z = GetRNDDouble();
-        TestVectorsComponents(x, y, z, new Vector3D(x, y, z));
+        TestVectorsComponents(x, y, z, new(x, y, z));
     }
 
     /// <summary>Тест конструктора с одним параметром X</summary>
     [TestMethod, Priority(1), Description("Тест конструктора с одним параметром X")]
     public void Vector3DConstructor_X_Test()
     {
-        TestVectorsComponents(0, 0, 0, new Vector3D(0));
-        TestVectorsComponents(1, 0, 0, new Vector3D(1));
+        TestVectorsComponents(0, 0, 0, new(0));
+        TestVectorsComponents(1, 0, 0, new(1));
         var x = GetRNDDouble();
-        TestVectorsComponents(x, 0, 0, new Vector3D(x));
+        TestVectorsComponents(x, 0, 0, new(x));
     }
 
     /// <summary>Тест конструктора с двумя параметрами X, Y</summary>
     [TestMethod, Priority(1), Description("Тест конструктора с двумя параметрами X, Y")]
     public void Vector3DConstructor_XY_Test()
     {
-        TestVectorsComponents(0, 0, 0, new Vector3D(0, 0));
-        TestVectorsComponents(1, 0, 0, new Vector3D(1, 0));
-        TestVectorsComponents(0, 1, 0, new Vector3D(0, 1));
-        TestVectorsComponents(1, 1, 0, new Vector3D(1, 1));
+        TestVectorsComponents(0, 0, 0, new(0, 0));
+        TestVectorsComponents(1, 0, 0, new(1, 0));
+        TestVectorsComponents(0, 1, 0, new(0, 1));
+        TestVectorsComponents(1, 1, 0, new(1, 1));
         var x = GetRNDDouble();
         var y = GetRNDDouble();
-        TestVectorsComponents(x, y, 0, new Vector3D(x, y));
+        TestVectorsComponents(x, y, 0, new(x, y));
     }
 
     /// <summary>Тестирование конструктора по радиусу и пространственному углу</summary>
@@ -98,13 +98,13 @@ public class Vector3DTests : UnitTest
         R = 1;
         TestXYZ(R, A, 0, 0, 1);
 
-        TestXYZ(1, new SpaceAngle(0.0, 0.0), 0, 0, 1);
-        TestXYZ(1, new SpaceAngle(pi05, pi05), 0, 1, 0);
-        TestXYZ(1, new SpaceAngle(pi05, 0.0), 1, 0, 0);
+        TestXYZ(1, new(0.0, 0.0), 0, 0, 1);
+        TestXYZ(1, new(pi05, pi05), 0, 1, 0);
+        TestXYZ(1, new(pi05, 0.0), 1, 0, 0);
 
-        TestXYZ(1, new SpaceAngle(pi, 0.0), 0, 0, -1);
-        TestXYZ(1, new SpaceAngle(pi05, pi3_2), 0, -1, 0);
-        TestXYZ(1, new SpaceAngle(pi05, pi), -1, 0, 0);
+        TestXYZ(1, new(pi, 0.0), 0, 0, -1);
+        TestXYZ(1, new(pi05, pi3_2), 0, -1, 0);
+        TestXYZ(1, new(pi05, pi), -1, 0, 0);
 
 
         double Theta;
@@ -112,7 +112,7 @@ public class Vector3DTests : UnitTest
 
         Func<double, double> sin1 = Sin;
         Func<double, double> cos1 = Cos;
-        void TestThetaPhi() => TestXYZ(R, new SpaceAngle(Theta, Phi), R * sin1(Theta) * cos1(Phi), R * sin1(Theta) * sin1(Phi), R * cos1(Theta));
+        void TestThetaPhi() => TestXYZ(R, new(Theta, Phi), R * sin1(Theta) * cos1(Phi), R * sin1(Theta) * sin1(Phi), R * cos1(Theta));
 
         for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
             for (Theta = -2 * pi; Theta <= 2 * pi; Theta += 0.1 * pi)
@@ -142,18 +142,18 @@ public class Vector3DTests : UnitTest
         var A = new SpaceAngle();
         TestXYZ(A, 0, 0, 1);
 
-        TestXYZ(new SpaceAngle(0.0, 0.0), 0, 0, 1);
-        TestXYZ(new SpaceAngle(pi05, pi05), 0, 1, 0);
-        TestXYZ(new SpaceAngle(pi05, 0.0), 1, 0, 0);
+        TestXYZ(new(0.0, 0.0), 0, 0, 1);
+        TestXYZ(new(pi05, pi05), 0, 1, 0);
+        TestXYZ(new(pi05, 0.0), 1, 0, 0);
 
-        TestXYZ(new SpaceAngle(pi, 0.0), 0, 0, -1);
-        TestXYZ(new SpaceAngle(pi05, pi3_2), 0, -1, 0);
-        TestXYZ(new SpaceAngle(pi05, pi), -1, 0, 0);
+        TestXYZ(new(pi, 0.0), 0, 0, -1);
+        TestXYZ(new(pi05, pi3_2), 0, -1, 0);
+        TestXYZ(new(pi05, pi), -1, 0, 0);
 
         double Theta;
         double Phi;
 
-        void TestThetaPhi() => TestXYZ(new SpaceAngle(Theta, Phi), Sin(Theta) * Cos(Phi), Sin(Theta) * Sin(Phi), Cos(Theta));
+        void TestThetaPhi() => TestXYZ(new(Theta, Phi), Sin(Theta) * Cos(Phi), Sin(Theta) * Sin(Phi), Cos(Theta));
 
         for (Phi = -2 * pi; Phi <= 2 * pi; Phi += 0.1 * pi)
             for (Theta = -2 * pi; Theta <= 2 * pi; Theta += 0.1 * pi)
@@ -192,8 +192,8 @@ public class Vector3DTests : UnitTest
         Assert.IsTrue(V.Equals(V));
         var v = V.Clone();
         Assert.IsTrue(v.Equals(v));
-        Assert.IsTrue(new Vector3D(1, 0, 0).Equals(new Vector3D(1, 0, 0)));
-        Assert.IsFalse(new Vector3D(1, 0, 0).Equals(new Vector3D(0, 1, 0)));
+        Assert.IsTrue(new Vector3D(1, 0, 0).Equals(new(1, 0, 0)));
+        Assert.IsFalse(new Vector3D(1, 0, 0).Equals(new(0, 1, 0)));
         Assert.IsTrue(new Vector3D(1, 0, 0).Equals(Vector3D.i));
         Assert.IsFalse(new Vector3D(1, 0, 0).Equals(Vector3D.j));
         do
@@ -256,7 +256,7 @@ public class Vector3DTests : UnitTest
             Assert.That.Value(P).IsEqual(p, 6.0e-14);
         }
 
-        Test(new Vector3D());
+        Test(new());
 
         Test(Vector3D.i);
         Test(Vector3D.j);
@@ -275,7 +275,7 @@ public class Vector3DTests : UnitTest
     {
         var seed = -1212098950;
         //var seed = (int)DateTime.Now.Ticks;
-        var x = Vector3D.Random(rnd: new Random(seed));
+        var x = Vector3D.Random(rnd: new(seed));
         var b = new Basis3D(1, 0, 0,
             0, 1, 0,
             0, 0, 1);
@@ -283,10 +283,10 @@ public class Vector3DTests : UnitTest
         void Test(Vector3D v) => Assert.AreEqual(v, x.InBasis(b));
         Test(x);
 
-        b = new Basis3D(0, 1, 0,
+        b = new(0, 1, 0,
             1, 0, 0,
             0, 0, 1);
-        Test(new Vector3D(x.Y, x.X, x.Z));
+        Test(new(x.Y, x.X, x.Z));
 
         const double eps   = 1e-15;
         const double pi    = Consts.pi;
@@ -327,8 +327,8 @@ public class Vector3DTests : UnitTest
         Vector3D Y;
         do Y = Vector3D.Random(); while (Abs(Y.R) < double.Epsilon);
 
-        X = new Vector3D(3, 5, 7);
-        Y = new Vector3D(-5, 7, -10);
+        X = new(3, 5, 7);
+        Y = new(-5, 7, -10);
 
         var x_r = Sqrt(X.X * X.X + X.Y * X.Y + X.Z * X.Z);
         var y_r = Sqrt(Y.X * Y.X + Y.Y * Y.Y + Y.Z * Y.Z);
@@ -384,7 +384,7 @@ public class Vector3DTests : UnitTest
         var a = new Vector3D();
         var b = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(a.Y * b.Z - a.Z * b.Y, a.Z * b.X - a.X * b.Z, a.X * b.Y - a.Y * b.X), a.Product_Vector(b));
+        void Test() => Assert.AreEqual(new(a.Y * b.Z - a.Z * b.Y, a.Z * b.X - a.X * b.Z, a.X * b.Y - a.Y * b.X), a.Product_Vector(b));
         Test();
         a = Vector3D.Random();
         b = Vector3D.Random();
@@ -399,7 +399,7 @@ public class Vector3DTests : UnitTest
         var y = GetRNDDouble();
         var z = GetRNDDouble();
 
-        Assert.AreEqual(new Vector3D(x, y, z), Vector3D.XYZ(x, y, z));
+        Assert.AreEqual(new(x, y, z), Vector3D.XYZ(x, y, z));
     }
 
     #region Операторы сложения
@@ -432,7 +432,7 @@ public class Vector3DTests : UnitTest
         var x = 0.0;
         var v = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(v.X + x, v.Y + x, v.Z + x), x + v);
+        void Test() => Assert.AreEqual(new(v.X + x, v.Y + x, v.Z + x), x + v);
         Test();
         v = Vector3D.Random();
         Test();
@@ -447,7 +447,7 @@ public class Vector3DTests : UnitTest
         var x = 0.0;
         var v = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(v.X + x, v.Y + x, v.Z + x), v + x);
+        void Test() => Assert.AreEqual(new(v.X + x, v.Y + x, v.Z + x), v + x);
         Test();
         v = Vector3D.Random();
         Test();
@@ -462,7 +462,7 @@ public class Vector3DTests : UnitTest
         var x = 0.0f;
         var v = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(v.X + x, v.Y + x, v.Z + x), x + v);
+        void Test() => Assert.AreEqual(new(v.X + x, v.Y + x, v.Z + x), x + v);
         Test();
         v = Vector3D.Random();
         Test();
@@ -477,7 +477,7 @@ public class Vector3DTests : UnitTest
         var x = 0.0f;
         var v = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(v.X + x, v.Y + x, v.Z + x), v + x);
+        void Test() => Assert.AreEqual(new(v.X + x, v.Y + x, v.Z + x), v + x);
         Test();
         v = Vector3D.Random();
         Test();
@@ -492,7 +492,7 @@ public class Vector3DTests : UnitTest
         var x = 0;
         var v = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(v.X + x, v.Y + x, v.Z + x), x + v);
+        void Test() => Assert.AreEqual(new(v.X + x, v.Y + x, v.Z + x), x + v);
         Test();
         v = Vector3D.Random();
         Test();
@@ -507,7 +507,7 @@ public class Vector3DTests : UnitTest
         var x = 0;
         var v = new Vector3D();
 
-        void Test() => Assert.AreEqual(new Vector3D(v.X + x, v.Y + x, v.Z + x), v + x);
+        void Test() => Assert.AreEqual(new(v.X + x, v.Y + x, v.Z + x), v + x);
         Test();
         v = Vector3D.Random();
         Test();
@@ -601,7 +601,7 @@ public class Vector3DTests : UnitTest
     {
         var a = Vector3D.Random();
         var b = GetRNDDouble();
-        Assert.AreEqual(new Vector3D(a.X * b, a.Y * b, a.Z * b), a * b);
+        Assert.AreEqual(new(a.X * b, a.Y * b, a.Z * b), a * b);
     }
 
     /// <summary>Тестирование оператора скалярного умножения вещественного число двойной точности на вектор</summary>
@@ -610,7 +610,7 @@ public class Vector3DTests : UnitTest
     {
         var a = Vector3D.Random();
         var b = GetRNDDouble();
-        Assert.AreEqual(new Vector3D(a.X * b, a.Y * b, a.Z * b), b * a);
+        Assert.AreEqual(new(a.X * b, a.Y * b, a.Z * b), b * a);
     }
 
     /// <summary>Тестирование оператора скалярного умножения вектора на вещественное число одинарной точности</summary>
@@ -619,7 +619,7 @@ public class Vector3DTests : UnitTest
     {
         var a = Vector3D.Random();
         var b = (float)GetRNDDouble();
-        Assert.AreEqual(new Vector3D(a.X * b, a.Y * b, a.Z * b), a * b);
+        Assert.AreEqual(new(a.X * b, a.Y * b, a.Z * b), a * b);
     }
 
     /// <summary>Тестирование оператора скалярного умножения вещественного число одинарной точности на вектор</summary>
@@ -628,7 +628,7 @@ public class Vector3DTests : UnitTest
     {
         var a = Vector3D.Random();
         var b = (float)GetRNDDouble();
-        Assert.AreEqual(new Vector3D(a.X * b, a.Y * b, a.Z * b), b * a);
+        Assert.AreEqual(new(a.X * b, a.Y * b, a.Z * b), b * a);
     }
 
     /// <summary>Тестирование оператора скалярного умножения целого числа на вектор</summary>
@@ -637,7 +637,7 @@ public class Vector3DTests : UnitTest
     {
         var a = Vector3D.Random();
         var b = GetRNDInt(-100, 100);
-        Assert.AreEqual(new Vector3D(a.X * b, a.Y * b, a.Z * b), a * b);
+        Assert.AreEqual(new(a.X * b, a.Y * b, a.Z * b), a * b);
     }
 
     /// <summary>Тестирование оператора скалярного умножения вектора на целое число</summary>
@@ -646,7 +646,7 @@ public class Vector3DTests : UnitTest
     {
         var a = Vector3D.Random();
         var b = GetRNDInt(-100, 100);
-        Assert.AreEqual(new Vector3D(a.X * b, a.Y * b, a.Z * b), b * a);
+        Assert.AreEqual(new(a.X * b, a.Y * b, a.Z * b), b * a);
     }
 
     #endregion

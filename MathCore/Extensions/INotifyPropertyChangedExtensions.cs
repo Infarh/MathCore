@@ -169,7 +169,7 @@ public static class INotifyPropertyChangedExtensions
         lock (__ObjectsSet)
         {
             if (__ObjectsSet.Any(wr => obj.Equals(wr.Target))) return;
-            __ObjectsSet.Add(new WeakReference(obj));
+            __ObjectsSet.Add(new(obj));
             typeof(T).GetRegistrator().Subscribe(obj, OnPropertyChanged);
             if (__ObjectsSet.Count == 1)
                 GCWatcher.Complete += OnGarbageCollected;
@@ -187,7 +187,7 @@ public static class INotifyPropertyChangedExtensions
         lock (__ObjectsSet)
         {
             if (__ObjectsSet.Any(wr => obj.Equals(wr.Target))) return new LambdaDisposable();
-            __ObjectsSet.Add(new WeakReference(obj));
+            __ObjectsSet.Add(new(obj));
             typeof(T).GetRegistrator().Subscribe(obj, OnPropertyChanged);
             if (__ObjectsSet.Count == 1)
                 GCWatcher.Complete += OnGarbageCollected;
@@ -236,7 +236,7 @@ public static class INotifyPropertyChangedExtensions
             }
 
             var dependencies = dep.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
-            __RegistrationPool.Add(type, registration = new RegistratorInfo(dependencies));
+            __RegistrationPool.Add(type, registration = new(dependencies));
             return registration;
         }
     }
@@ -382,7 +382,7 @@ public static class INotifyPropertyChangedExtensions
         if (obj is null) return;
         lock (__Subscribers)
         {
-            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new Dictionary<string, Subscriber>()) ?? throw new InvalidOperationException();
+            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new()) ?? throw new InvalidOperationException();
             var object_subscriber = object_subscribers.GetValueOrAddNew(PropertyName, () => new Subscriber<T>(obj, PropertyName)) ?? throw new InvalidOperationException();
             object_subscriber.OnPropertyChangedEvent += Handler;
         }
@@ -393,7 +393,7 @@ public static class INotifyPropertyChangedExtensions
     {
         lock (__Subscribers)
         {
-            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new Dictionary<string, Subscriber>()) ?? throw new InvalidOperationException();
+            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new()) ?? throw new InvalidOperationException();
             return (Subscriber<T>)object_subscribers.GetValueOrAddNew(PropertyName, () => new Subscriber<T>(obj, PropertyName)) ?? throw new InvalidOperationException();
         }
     }

@@ -78,7 +78,7 @@ public class SingletonServiceRegistration<TService> : ServiceRegistration<TServi
         lock (_SyncRoot)
         {
             if (_InstanceActualityCheckCancel != null) return;
-            _InstanceActualityCheckCancel = new CancellationTokenSource();
+            _InstanceActualityCheckCancel = new();
         }
         var cancel = _InstanceActualityCheckCancel.Token;
         
@@ -129,6 +129,6 @@ public class SingletonServiceRegistration<TService> : ServiceRegistration<TServi
     }
 
     internal override ServiceRegistration CloneFor(IServiceManager manager) => _InstanceService
-        ? new SingletonServiceRegistration<TService>(manager, ServiceType, CurrentInstance ?? throw new InvalidOperationException("Не указан экземпляр сервиса для регистрации"))
+        ? new(manager, ServiceType, CurrentInstance ?? throw new InvalidOperationException("Не указан экземпляр сервиса для регистрации"))
         : new SingletonServiceRegistration<TService>(manager, ServiceType);
 }

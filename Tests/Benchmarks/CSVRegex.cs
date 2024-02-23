@@ -6,7 +6,7 @@ public class CSVRegex
 {
     private readonly Regex _Regex;
 
-    public CSVRegex(char Separator) => _Regex = new Regex($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
+    public CSVRegex(char Separator) => _Regex = new($@"(?<=(?:{Separator}|\n|^))(""(?:(?:"""")*[^""]*)*""|[^""{Separator}\n]*|(?:\n|$))", RegexOptions.Compiled);
 
     public int Parse(string Line)
     {

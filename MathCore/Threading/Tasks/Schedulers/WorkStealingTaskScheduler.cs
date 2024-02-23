@@ -26,12 +26,12 @@ public class WorkStealingTaskScheduler : TaskScheduler, IDisposable
         _ConcurrencyLevel = ConcurrencyLevel;
 
         // Set up threads
-        _Threads = new Lazy<Thread[]>(() =>
+        _Threads = new(() =>
         {
             var threads = new Thread[_ConcurrencyLevel];
             for (var i = 0; i < threads.Length; i++)
             {
-                threads[i] = new Thread(DispatchLoop) { IsBackground = true };
+                threads[i] = new(DispatchLoop) { IsBackground = true };
                 threads[i].Start();
             }
             return threads;

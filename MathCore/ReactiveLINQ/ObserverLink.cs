@@ -21,7 +21,7 @@ internal sealed class ObserverLink<T> : IDisposable
     /// <param name="Observers">Коллекция наблюдателей</param>
     /// <param name="Observer">Добавляемый наблюдатель</param>
     /// <returns>Связь между наблюдателем и списком наблюдателей</returns>
-    public static ObserverLink<T> GetLink(ICollection<IObserver<T>> Observers, IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), _ => new ObserverLink<T>(Observers, Observer));
+    public static ObserverLink<T> GetLink(ICollection<IObserver<T>> Observers, IObserver<T> Observer) => __Links.GetOrAdd(GetHash(Observers, Observer), _ => new(Observers, Observer));
 
     /// <summary>Удаляемый наблюдатель</summary>
     private IObserver<T> _Observer;

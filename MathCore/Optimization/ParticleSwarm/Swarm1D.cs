@@ -80,7 +80,7 @@ public class Swarm1D
         in int IterationCount, 
         out double X,
         out double Value) =>
-        Minimize(F, new Interval(MinX, MaxX), IterationCount, out X, out Value);
+        Minimize(F, new(MinX, MaxX), IterationCount, out X, out Value);
 
     public void Minimize(
         in Func<double, double> F, 
@@ -96,7 +96,7 @@ public class Swarm1D
         for (var i = 0; i < _ParticleCount; i++)
         {
             var x = __Random.NextDouble() * delta_x + min_x;
-            swarm[i] = new Particle1D(x, F(x));
+            swarm[i] = new(x, F(x));
         }
 
         var start = swarm.GetMin(p => p.Value);
@@ -124,7 +124,7 @@ public class Swarm1D
         in int IterationCount,
         out double X,
         out double Value) =>
-        Maximize(F, new Interval(MinX, MaxX), IterationCount, out X, out Value);
+        Maximize(F, new(MinX, MaxX), IterationCount, out X, out Value);
 
     public void Maximize(
         in Func<double, double> F, 
@@ -140,7 +140,7 @@ public class Swarm1D
         for (var i = 0; i < _ParticleCount; i++)
         {
             var x = __Random.NextDouble() * delta_x + min_x;
-            swarm[i] = new Particle1D(x, F(x));
+            swarm[i] = new(x, F(x));
         }
 
         var start = swarm.GetMin(p => p.Value);

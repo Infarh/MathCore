@@ -58,7 +58,7 @@ internal class SpaceAngleConverter : TypeConverter<string, SpaceAngle>
                 }
 
         return type == AngleType.Deg
-            ? new SpaceAngle(theta, phi, AngleType.Deg)
+            ? new(theta, phi, AngleType.Deg)
             : new SpaceAngle(theta, phi, AngleType.Deg).InRad;
     }
 }

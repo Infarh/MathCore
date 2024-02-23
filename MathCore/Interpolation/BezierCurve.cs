@@ -106,7 +106,7 @@ public class BezierCurve : Interpolator
             x += _Points[i].X * b;
             y += _Points[i].Y * b;
         }
-        return new Vector2D(x, y);
+        return new(x, y);
     }
 
     /* -------------------------------------------------------------------------------------------- */

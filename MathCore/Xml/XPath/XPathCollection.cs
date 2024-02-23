@@ -144,10 +144,10 @@ public class XPathCollection : ICollection
         XPathQuery xpath_expr;
 
         if(_Reader is null)
-            xpath_expr = new XPathQuery(expression);
+            xpath_expr = new(expression);
         else
         {
-            xpath_expr = new XPathQuery(expression, _Reader.Depth);
+            xpath_expr = new(expression, _Reader.Depth);
             if(_Reader.ReadState == ReadState.Interactive)
                 xpath_expr.Advance(_Reader);
         }

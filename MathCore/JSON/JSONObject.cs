@@ -63,12 +63,12 @@ public sealed class JSONObject : IEnumerable<JSONObject>
     public bool IsComplex => _Fields is { Length: > 0 };
 
     /// <summary>Перечисление имён полей структуры</summary>
-    public IEnumerable<string> Fields => _Fields?.Select(f => f.Name).WhereNotNull() ?? Enumerable.Empty<string>();
+    public IEnumerable<string> Fields => _Fields?.Select(f => f.Name).WhereNotNull() ?? [];
 
     /// <summary>Перечисление полей структуры по указанному имени</summary>
     /// <param name="Field">Имя поля структуры</param>
     /// <returns>Вложенные поля с указанным именем</returns>
-    public IEnumerable<JSONObject> this[string Field] => _Fields?.Where(f => string.Equals(Field, f._Name)) ?? Enumerable.Empty<JSONObject>();
+    public IEnumerable<JSONObject> this[string Field] => _Fields?.Where(f => string.Equals(Field, f._Name)) ?? [];
 
     #region Конструкторы
 
@@ -110,7 +110,7 @@ public sealed class JSONObject : IEnumerable<JSONObject>
                 ? $"{{{GetText(str, ref pos, "{", "}")}}}"
                 : GetText(str, ref pos, "\"", "\"") ?? throw new InvalidOperationException("Пустая ссылка на значение");
 
-            fields.Add(new JSONObject(name, body));
+            fields.Add(new(name, body));
 
             while (pos < len && (char.IsSeparator(str, pos) || str[pos] == ',')) pos++;
         }

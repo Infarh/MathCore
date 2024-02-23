@@ -134,7 +134,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
            .GetInvocationList()
            .Select(i => i.Target)
            .OfType<T>() 
-        ?? Enumerable.Empty<T>();
+        ?? [];
 
     /// <summary>Получить перечисление всех методов, подписанных на событие <see cref="PropertyChanged"/></summary>
     /// <returns>Перечисление всех методов-подписчиков события <see cref="PropertyChanged"/></returns>
@@ -142,7 +142,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
         PropertyChangedEvent?
            .GetInvocationList()
            .Cast<PropertyChangedEventHandler>() 
-        ?? Enumerable.Empty<PropertyChangedEventHandler>();
+        ?? [];
 
     /// <summary>Получить перечисление всех методов, подписанных на событие <see cref="PropertyChanged"/></summary>
     /// <typeparam name="T">Тип интересующих объектов</typeparam>
@@ -152,7 +152,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
            .GetInvocationList()
            .Where(i => i.Target is T)
            .Cast<PropertyChangedEventHandler>() 
-        ?? Enumerable.Empty<PropertyChangedEventHandler>();
+        ?? [];
 
 
     private readonly object _PropertiesDependenciesSyncRoot = new();
@@ -180,7 +180,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
             else dependencies_dictionary = _PropertiesDependenciesDictionary;
 
             // Извлекаем из словаря зависимостей список зависящих от указанного свойства свойств (если он не существует, то создаём новый
-            var dependencies = dependencies_dictionary.GetValueOrAddNew(PropertyName, () => new List<string>());
+            var dependencies = dependencies_dictionary.GetValueOrAddNew(PropertyName, () => new());
 
             // Перебираем все зависимые свойства среди указанных исключая исходное свойство
             foreach (var dependence_property in Dependencies.Where(name => name != PropertyName))

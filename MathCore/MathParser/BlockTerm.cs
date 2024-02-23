@@ -133,7 +133,7 @@ internal sealed class BlockTerm : Term
                     value = new FunctionalTerm
                     (
                         (FunctionTerm)value,
-                        new BlockTerm("{", Str.GetBracketText(ref pos, "{", "}") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения"), "}")
+                        new("{", Str.GetBracketText(ref pos, "{", "}") ?? throw new InvalidOperationException("Получена пустая ссылка на блок выражения"), "}")
                     );
                 result.Add(value);
             }

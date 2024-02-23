@@ -37,6 +37,6 @@ public class VectorND<T>
 
         _Dimensions = new VectorND<T>[length];
         for(var j = 0; j < length; j++)
-            _Dimensions[j] = new VectorND<T>(Dimensions, i);
+            _Dimensions[j] = new(Dimensions, i);
     }
 }

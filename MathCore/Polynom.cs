@@ -110,8 +110,8 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
         var n = remainder.Length;
         while (n >= 1 && remainder[n - 1].Equals(0)) n--;
         System.Array.Resize(ref remainder, n);
-        Remainder = new Polynom(remainder);
-        return new Polynom(result);
+        Remainder = new(remainder);
+        return new(result);
     }
 
     /// <summary>Представить полином в виде математической записи в степенной форме</summary>
@@ -174,7 +174,7 @@ public partial class Polynom(params double[] a) : ICloneable<Polynom>, IEquatabl
     public Polynom GetInversed()
     {
         Array.Divide([1d], _a, out var result, out _);
-        return new Polynom(result);
+        return new(result);
     }
 
     /// <summary>Масштабирование полинома Q(x) = P(x * c)</summary>

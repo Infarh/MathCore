@@ -49,7 +49,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     public static partial class Array
     {
         /// <summary>Операторы над двумерными массивами</summary>
-        public static partial class Operator { }
+        public static partial class Operator;
     }
 
     /// <summary>Получить единичную матрицу размерности NxN</summary>
@@ -213,7 +213,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
     public MatrixComplex GetTriangle(out MatrixComplex P, out int rank, out Complex D)
     {
         var result = new MatrixComplex(Array.GetTriangle(_Data, out var p, out rank, out D));
-        P = new MatrixComplex(p);
+        P = new(p);
         return result;
     }
 
@@ -391,7 +391,7 @@ public partial class MatrixComplex : ICloneable<MatrixComplex>, ICloneable<Compl
                 }
                 var result                         = Array.GetUnitaryArrayMatrix(M._N);
                 for (var i = 0; i < n; i++) result = Multiply(result, m);
-                return new MatrixComplex(result);
+                return new(result);
         }
     }
 

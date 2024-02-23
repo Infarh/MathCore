@@ -16,7 +16,7 @@ public class CsvQueryTests : CSVTestsBase
     public static void ClassInitialize(TestContext Context)
     {
         var       seed     = (int)DateTime.Now.Ticks;
-        var       students = GetStudents(new Random(seed));
+        var       students = GetStudents(new(seed));
         using var writer   = File.CreateText(__DataFileName);
 
         for(var i = 0; i < __BeforeLinesCount; i++)

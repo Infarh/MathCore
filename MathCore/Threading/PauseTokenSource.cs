@@ -12,7 +12,7 @@ public class PauseTokenSource
         set
         {
             if (value)
-                Interlocked.CompareExchange(ref _Paused, new TaskCompletionSource<bool>(), null);
+                Interlocked.CompareExchange(ref _Paused, new(), null);
             else
                 while (true)
                 {

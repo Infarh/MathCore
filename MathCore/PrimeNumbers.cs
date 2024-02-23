@@ -192,7 +192,7 @@ public static class PrimeNumbers
         {
             // ensure length divides by 30
             length = (length + 29) / 30 * 30;
-            _Data  = new LongArray(length / 30);
+            _Data  = new(length / 30);
             for (long i = 0; i < _Data.Length; i++) 
                 _Data[i] = byte.MaxValue;
 
@@ -204,7 +204,7 @@ public static class PrimeNumbers
             }
         }
 
-        public Wheel235(string file) => _Data = new LongArray(file);
+        public Wheel235(string file) => _Data = new(file);
 
         public void Save(string file) => _Data.Save(file);
 

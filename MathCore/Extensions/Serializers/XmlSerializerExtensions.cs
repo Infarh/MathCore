@@ -17,13 +17,13 @@ public static class XmlSerializerExtensions
     /// <param name="type">Тип XML-сериализатора</param>
     /// <returns>XML-сериализатор</returns>
     [DebuggerStepThrough] 
-    public static XmlSerializer GetXmlSerializer(this Type type) => __XmlSerializersPool.GetOrAdd(type, t => new XmlSerializer(t));
+    public static XmlSerializer GetXmlSerializer(this Type type) => __XmlSerializersPool.GetOrAdd(type, t => new(t));
 
     /// <summary>Получить XML-сериализатор по указанному типу</summary>
     /// <param name="type">Тип XML-сериализатора</param>
     /// <returns>XML-сериализатор</returns>
     [DebuggerStepThrough] 
-    public static XmlSerializer GetXmlSerializer<T>() => __XmlSerializersPool.GetOrAdd(typeof(T), t => new XmlSerializer(t));
+    public static XmlSerializer GetXmlSerializer<T>() => __XmlSerializersPool.GetOrAdd(typeof(T), t => new(t));
 
     [DebuggerStepThrough]
     public static bool CanDeserialize(this XmlSerializer serializer, string str) => serializer.CanDeserialize(XmlReader.Create(str));

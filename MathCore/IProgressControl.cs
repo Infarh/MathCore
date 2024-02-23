@@ -13,7 +13,7 @@ public interface IProgressControl<in T>
 }
 
 /// <summary>Контроль над асинхронной операцией</summary>
-public interface IProgressControl : IProgressControl<double> { }
+public interface IProgressControl : IProgressControl<double>;
 
 /// <summary>Методы-расширения над контролем асинхронной операцией</summary>
 public static class ProgressControlEx

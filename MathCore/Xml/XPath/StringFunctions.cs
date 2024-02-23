@@ -57,7 +57,7 @@ internal sealed class StringFunctions : Query
         FT.FuncStringLength    => StringLength(reader),
         FT.FuncNormalize       => Normalize(reader),
         FT.FuncTranslate       => Translate(reader),
-        _                      => new object()
+        _                      => new()
     };
 
     internal override XPathResultType ReturnType() => _FuncType switch

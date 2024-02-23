@@ -16,7 +16,7 @@ public class ItemBase
 
     public object Object => _Object;
 
-    public AttributesExtractor ObjectAttribute => _ObjectAttributes ??= new AttributesExtractor(_ObjectType);
+    public AttributesExtractor ObjectAttribute => _ObjectAttributes ??= new(_ObjectType);
 
     protected ItemBase(object Obj, string Name) : this(Obj.GetType(), Name) => _Object = Obj;
 

@@ -41,7 +41,7 @@ public sealed class ObjectSelector<T>(Func<T[], int> Selector, Func<bool> CanRea
     { }
 
     /// <summary>Массив "ленивых" значений, используемых в качестве генераторов объектов </summary>
-    private readonly LazyValue<T>[] _Values = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new LazyValue<T>(g[i]));
+    private readonly LazyValue<T>[] _Values = new LazyValue<T>[Generator.Length].Initialize(Generator, (i, g) => new(g[i]));
     /// <summary>Метод, определяющий возможность чтения данных из источников</summary>
     private readonly Func<bool> _CanRead = CanRead;
 
