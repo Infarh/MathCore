@@ -2,20 +2,14 @@
 
 namespace MathCore.Expressions.Complex;
 
-public class ComplexLambdaBinaryExpression : ComplexBinaryExpression
+public class ComplexLambdaBinaryExpression(
+    ComplexExpression Left,
+    ComplexExpression Right,
+    Func<ComplexExpression, ComplexExpression, Expression> GetReExpr,
+    Func<ComplexExpression, ComplexExpression, Expression> GetImExpr)
+    : ComplexBinaryExpression(Left, Right)
 {
-    private readonly Func<ComplexExpression, ComplexExpression, Expression> _GetRe;
-    private readonly Func<ComplexExpression, ComplexExpression, Expression> _GetIm;
+    protected override Expression GetRe() => GetReExpr(Left, Right);
 
-    public ComplexLambdaBinaryExpression(ComplexExpression Left, ComplexExpression Right,
-        Func<ComplexExpression, ComplexExpression, Expression> GetRe, Func<ComplexExpression, ComplexExpression, Expression> GetIm)
-        : base(Left, Right)
-    {
-        _GetRe = GetRe;
-        _GetIm = GetIm;
-    }
-
-    protected override Expression GetRe() => _GetRe(Left, Right);
-
-    protected override Expression GetIm() => _GetIm(Left, Right);
+    protected override Expression GetIm() => GetImExpr(Left, Right);
 }

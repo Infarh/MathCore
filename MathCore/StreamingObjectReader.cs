@@ -81,7 +81,7 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     /// <param name="DataStream">Поток байт из которого требуется читать объекты</param>
     protected StreamingObjectReader(Stream DataStream)
     {
-        _Speed                  = new StreamDataSpeedValue(_DataStream = DataStream);
+        _Speed                  = new(_DataStream = DataStream);
         Monitor.ProgressChecker = () => Completed;
     }
 
@@ -137,7 +137,7 @@ public abstract class StreamingObjectReader<T> : Processor, IObservable<T>
     [MethodImpl(MethodImplOptions.Synchronized)]
     public IDisposable Subscribe(IObserver<T> observer)
     {
-        _ObservableObject ??= new SimpleObservableEx<T>();
+        _ObservableObject ??= new();
         return _ObservableObject.Subscribe(observer);
     }
 

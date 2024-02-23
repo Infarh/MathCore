@@ -153,7 +153,7 @@ internal class Function : AstNode
     internal Function(FunctionType FType, ArrayList argumentList)
     {
         TypeOfFunction = FType;
-        ArgumentList   = new ArrayList(argumentList);
+        ArgumentList   = new(argumentList);
     }
 
     internal Function(string prefix, string name, ArrayList argumentList)
@@ -161,7 +161,7 @@ internal class Function : AstNode
         TypeOfFunction = FunctionType.FuncUserDefined;
         Prefix         = prefix;
         _Name          = name;
-        ArgumentList   = new ArrayList(argumentList);
+        ArgumentList   = new(argumentList);
     }
 
     internal Function(FunctionType FType) => TypeOfFunction = FType;

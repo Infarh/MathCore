@@ -1,4 +1,5 @@
-﻿using MathCore.Annotations;
+﻿#nullable enable
+
 // ReSharper disable UnusedType.Global
 
 namespace MathCore.Reflection;
@@ -14,10 +15,8 @@ namespace MathCore.Reflection;
 /// <param name="Private">Искать приватное свойство?</param>
 public class AnimatedIntProperty<TObject>(
     TObject o,
-    [NotNull] string Name,
+    string Name,
     int Samples,
     int Timeout,
     Func<int, int, int> Translator,
-    bool Private = false) : AnimatedProperty<TObject, int>(o, Name, Samples, Timeout, Translator, Private)
-{
-}
+    bool Private = false) : AnimatedProperty<TObject, int>(o, Name, Samples, Timeout, Translator, Private);

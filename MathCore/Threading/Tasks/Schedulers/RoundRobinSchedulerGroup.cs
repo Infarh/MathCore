@@ -22,7 +22,7 @@ public sealed class RoundRobinSchedulerGroup
     /// <summary>Gets a collection of all schedulers in this group.</summary>
     public ReadOnlyCollection<TaskScheduler> Schedulers
     {
-        get { lock (_Queues) return new ReadOnlyCollection<TaskScheduler>(_Queues.Cast<TaskScheduler>().ToArray()); }
+        get { lock (_Queues) return new(_Queues.Cast<TaskScheduler>().ToArray()); }
     }
 
     /// <summary>Removes a scheduler from the group.</summary>

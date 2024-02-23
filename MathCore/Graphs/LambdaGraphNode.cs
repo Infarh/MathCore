@@ -16,11 +16,11 @@ public class LambdaGraphNode<TValue, TWeight>(TValue Value, Func<TValue, IEnumer
 
     /// <inheritdoc />
     public IEnumerable<IGraphLink<TValue, TWeight>> Links => Buffered
-        ? _Links ??= (_GetChilds(Value) ?? Enumerable.Empty<TValue>())
+        ? _Links ??= (_GetChilds(Value) ?? [])
            .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight, Buffered))
            .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight, Buffered))
            .Cast<IGraphLink<TValue, TWeight>>().ToArray()
-        : (_GetChilds(Value) ?? Enumerable.Empty<TValue>())
+        : (_GetChilds(Value) ?? [])
        .Select(v => new LambdaGraphNode<TValue, TWeight>(v, _GetChilds, _GetWeight))
        .Select(to => new LambdaGraphLink<TValue, TWeight>(this, to, _GetWeight))
        .Cast<IGraphLink<TValue, TWeight>>();
@@ -71,11 +71,11 @@ public class LambdaGraphNode<V>(V Value, Func<V, IEnumerable<V>?> GetChilds, boo
 
     /// <summary>Связи узла</summary>
     public IEnumerable<IGraphNode<V>> Childs => Buffered
-        ? _Childs ??= (GetChilds(Value) ?? Enumerable.Empty<V>())
+        ? _Childs ??= (GetChilds(Value) ?? [])
            .Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered))
            .Cast<IGraphNode<V>>()
            .ToArray()
-        : (GetChilds(Value) ?? Enumerable.Empty<V>()).Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered));
+        : (GetChilds(Value) ?? []).Select(value => new LambdaGraphNode<V>(value, GetChilds, Buffered));
 
     /// <summary>Значение узла</summary>
     public V Value { get; set; } = Value;

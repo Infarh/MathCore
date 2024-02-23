@@ -105,7 +105,7 @@ public static class IListExtensions
     /// <returns>Перемешанный исходный список</returns>
     public static IList<T> Mix<T>(this IList<T> list, Random? rnd = null)
     {
-        rnd ??= new Random();
+        rnd ??= new();
 
         switch (list)
         {

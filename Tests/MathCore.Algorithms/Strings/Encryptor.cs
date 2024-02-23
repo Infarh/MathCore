@@ -41,7 +41,7 @@ public static class Encryptor
 
         public_key = JsonSerializer.Deserialize<RSAParameters>(public_key_string);
 
-        csp = new RSACryptoServiceProvider();
+        csp = new();
         csp.ImportParameters(public_key);
 
         var str_bytes = Encoding.GetBytes(Str);

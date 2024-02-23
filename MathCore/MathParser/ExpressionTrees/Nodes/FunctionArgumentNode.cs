@@ -15,7 +15,7 @@ public class FunctionArgumentNode : OperatorNode
     {
         while(Node != null)
         {
-            yield return new KeyValuePair<string, ExpressionTreeNode>(Node.ArgumentName, Node.ArgumentSubtree);
+            yield return new(Node.ArgumentName, Node.ArgumentSubtree);
             Node = Node.Right as FunctionArgumentNode;
         }
     }
@@ -32,7 +32,7 @@ public class FunctionArgumentNode : OperatorNode
     /// <summary>Инициализация узла-аргумента</summary>
     /// <param name="Name">Имя аргумента</param>
     /// <param name="Node">Узел поддерева аргумента</param>
-    public FunctionArgumentNode(string Name, ExpressionTreeNode Node) : this(new FunctionArgumentNameNode(Name, Node)) { }
+    public FunctionArgumentNode(string Name, ExpressionTreeNode Node) : this(new(Name, Node)) { }
 
     /// <summary>Инициализация узла-аргумента</summary>
     /// <param name="Node">Узел поддерева аргумента</param>

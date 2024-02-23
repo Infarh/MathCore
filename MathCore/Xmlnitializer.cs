@@ -426,7 +426,7 @@ public class XmlInitializer<TObject> : ICollection<XmlInitializer<TObject>.Rule>
     ) => _Rules.Add
     (
         DataConverterExpression is null
-            ? new Rule<string>(XPath, InitializationExpression)
+            ? new(XPath, InitializationExpression)
             : new Rule<string>(XPath, InitializationExpression, DataConverterExpression)
     );
 

@@ -1985,7 +1985,7 @@ public partial class Polynom
         var a = new double[Power];
         for (var i = 0; i < Power; i++)
             a[i] = (rnd.NextDouble() - .5) * Da + Ma;
-        return new Polynom(a);
+        return new(a);
     }
 
     public static Polynom RandomPower(int MaxPower = 5, double Ma = 0, double Da = 1, Random? rnd = null) =>
@@ -1998,7 +1998,7 @@ public partial class Polynom
         var a = new double[Power];
         for (var i = 0; i < Power; i++)
             a[i] = Math.Round(rnd.Next(Da) - .5 * Da + Ma);
-        return new Polynom(a);
+        return new(a);
     }
 
     public static Polynom RandomWithIntCoefficients_P(int MaxPower = 5, int Ma = 0, int Da = 10, Random? rnd = null) =>

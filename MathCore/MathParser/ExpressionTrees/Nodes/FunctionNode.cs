@@ -41,9 +41,9 @@ public class FunctionNode : ComputedNode
         if (arg is not FunctionArgumentNode)
             arg = arg switch
             {
-                FunctionArgumentNameNode name => new FunctionArgumentNode(name),
-                VariableValueNode             => new FunctionArgumentNode(null, arg),
-                VariantOperatorNode when arg.Left is VariableValueNode => new FunctionArgumentNode(
+                FunctionArgumentNameNode name => new(name),
+                VariableValueNode             => new(null, arg),
+                VariantOperatorNode when arg.Left is VariableValueNode => new(
                     ((VariableValueNode) arg.Left).Name, arg.Right),
                 _ => new FunctionArgumentNode(null, arg)
             };

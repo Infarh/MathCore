@@ -109,22 +109,11 @@ public static class EulerModified
         return (T, Y);
     }
 
-    private readonly struct AddMulList : IReadOnlyList<double>
+    private readonly struct AddMulList(IReadOnlyList<double> Y, double K, double[] X) : IReadOnlyList<double>
     {
-        private readonly double[] _X;
-        private readonly IReadOnlyList<double> _Y;
-        private readonly double _K;
+        public int Count => X.Length;
 
-        public int Count => _X.Length;
-
-        public double this[int i] => _Y[i] + _K * _X[i];
-
-        public AddMulList(IReadOnlyList<double> Y, double K, double[] X)
-        {
-            _Y = Y;
-            _K = K;
-            _X = X;
-        }
+        public double this[int i] => Y[i] + K * X[i];
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

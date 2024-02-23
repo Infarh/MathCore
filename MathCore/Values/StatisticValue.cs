@@ -7,13 +7,13 @@ namespace MathCore.Values;
 public class StatisticValue([MinValue(1)] int Length = 100) : IResettable
 {
     /// <summary>Среднее значение</summary>
-    private readonly AverageValue _Average = new AverageValue(Length);
+    private readonly AverageValue _Average = new(Length);
 
     /// <summary>Среднее значение квадрата величины</summary>
-    private readonly AverageValue _Average2 = new AverageValue(Length);
+    private readonly AverageValue _Average2 = new(Length);
 
     /// <summary>Диапазон значений</summary>
-    private readonly MinMaxValue _MinMax = new MinMaxValue();
+    private readonly MinMaxValue _MinMax = new();
 
     /// <summary>Математическое ожидание величины</summary>
     public double M => _Average.Value;

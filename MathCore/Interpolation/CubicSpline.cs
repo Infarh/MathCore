@@ -78,7 +78,7 @@ public class CubicSpline : Interpolator, IInterpolator
         _SplineStates = new SplineState[count];
 
         for(var i = 0; i < count; i++)
-            _SplineStates[i] = new SplineState(Y[i], X[i]);
+            _SplineStates[i] = new(Y[i], X[i]);
 
         _SplineStates[0].c = _SplineStates[count - 1].c = 0;
 

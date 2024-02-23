@@ -1208,9 +1208,9 @@ public static class FuncExtensions
         var code_buffer = VirtualAlloc
         (
             IntPtr.Zero,
-            new UIntPtr((uint)sse_assembly_bytes.Length),
-            new IntPtr(0x1000 | 0x2000), // MEM_COMMIT | MEM_RESERVE
-            new IntPtr(0x40)             // EXECUTE_READWRITE
+            new((uint)sse_assembly_bytes.Length),
+            new(0x1000 | 0x2000), // MEM_COMMIT | MEM_RESERVE
+            new(0x40)             // EXECUTE_READWRITE
         );
         Marshal.Copy(sse_assembly_bytes, 0, code_buffer, sse_assembly_bytes.Length);
         return __VectorAddDelegate = (VectorAddDelegate)Marshal.GetDelegateForFunctionPointer(code_buffer, typeof(VectorAddDelegate));
@@ -1301,7 +1301,7 @@ public static class FuncExtensions
             } while (Math.Abs(x2 - x) / dx > 0.25);
 
             if (result.Last.Value.Argument != x2)
-                result.Last.Value = new Result(x2, f(x2));
+                result.Last.Value = new(x2, f(x2));
             accuracy = Math.Sqrt(accuracy);
             return (result, accuracy);
         }
@@ -1370,7 +1370,7 @@ public static class FuncExtensions
                         l      =  Math.Sqrt(dx * dx + dy * dy);
                         l      =  accuracy - l;
                         result += l * l;
-                        current.AddAfter(new Result(x11, y11));
+                        current.AddAfter(new(x11, y11));
                     }
                     else if (next.Next != null)
                         _List.Remove(next);
@@ -1453,7 +1453,7 @@ public static class FuncExtensions
                 node     =  result.AddAfter(node, new Result(x, v));
             } while (Math.Abs(x2 - x) / dx > 0.25);
             if (result.Last.Value.Argument != x2)
-                result.Last.Value = new Result(x2, f(x2));
+                result.Last.Value = new(x2, f(x2));
             return (result, Math.Sqrt(accuracy));
         }
 
@@ -1535,7 +1535,7 @@ public static class FuncExtensions
                         l      =  Math.Sqrt(dx * dx + dy * dy);
                         l      =  accuracy - l;
                         result += l * l;
-                        current.AddAfter(new Result(x11, v11));
+                        current.AddAfter(new(x11, v11));
                     }
                     else if (next.Next != null)
                         _List.Remove(next);
@@ -1613,14 +1613,14 @@ public static class FuncExtensions
     {
         var x = x1;
         var y = f(x);
-        yield return new SamplingResult<double>.Result(x, y);
+        yield return new(x, y);
         var accuracy = 0d;
 
         do
         {
             x += dx;
             var dy = -y + (y = f(x));
-            yield return new SamplingResult<double>.Result(x, y);
+            yield return new(x, y);
             var l = Math.Sqrt(dx * dx + dy * dy);
             dx *= Eps / l;
             var dl = l - Eps;
@@ -1687,14 +1687,14 @@ public static class FuncExtensions
         var x = x1;
         var v = f(x);
         var y = Converter(v);
-        yield return new SamplingResult<T>.Result(x, v);
+        yield return new(x, v);
         var accuracy = 0d;
 
         do
         {
             x += dx;
             var dy = -y + (y = Converter(v = f(x)));
-            yield return new SamplingResult<T>.Result(x, v);
+            yield return new(x, v);
             var l = Math.Sqrt(dx * dx + dy * dy);
             dx *= Eps / l;
             var dl = l - Eps;

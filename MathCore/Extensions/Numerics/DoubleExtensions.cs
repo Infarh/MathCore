@@ -298,7 +298,7 @@ public static class DoubleExtensions
     public static Complex Pow2(this Complex z)
     {
         var (a, b) = z;
-        return new Complex(a * a - b * b, 2 * a * b);
+        return new(a * a - b * b, 2 * a * b);
     }
 
     /// <summary>Квадратный корень</summary>

@@ -20,7 +20,7 @@ public class SelectableCollection<T> : ICollection<T>, INotifyPropertyChanged, I
     /// <summary>Метод генерации события изменения значения свойства</summary>
     /// <param name="PropertyName">Имя изменившегося свойства</param>
     [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null!) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+    protected virtual void OnPropertyChanged([CallerMemberName] string PropertyName = null!) => PropertyChanged?.Invoke(this, new(PropertyName));
 
     #endregion
 

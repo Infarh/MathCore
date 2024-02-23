@@ -207,12 +207,12 @@ public partial class ViewModel
         [CallerMemberName] string PropertyName = null!)
     {
         if (Equals(field, value))
-            return new SetValueResult<T>(false, field, field, this);
+            return new(false, field, field, this);
 
         var old_value = field;
         field = value;
         OnPropertyChanged(PropertyName);
-        return new SetValueResult<T>(true, old_value, value, this);
+        return new(true, old_value, value, this);
     }
 
     /// <summary>Установить значение свойства</summary>
@@ -230,11 +230,11 @@ public partial class ViewModel
         [CallerMemberName] string PropertyName = null!)
     {
         if (Equals(field, value) || !Validator(value))
-            return new SetValueResult<T>(false, field, value, this);
+            return new(false, field, value, this);
 
         var old_value = field;
         field = value;
         OnPropertyChanged(PropertyName);
-        return new SetValueResult<T>(true, old_value, value, this);
+        return new(true, old_value, value, this);
     }
 }

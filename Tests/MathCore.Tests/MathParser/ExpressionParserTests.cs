@@ -486,7 +486,7 @@ public class ExpressionParserTests
         Assert.AreEqual(1 + 5, expr2v2.Compute(1));
         Assert.AreEqual(1 + 2, expr2v2.Compute(1, 2));
 
-        var ConstAndValueExpr = (parser = new ExpressionParser()).Parse("5x");
+        var ConstAndValueExpr = (parser = new()).Parse("5x");
         Assert.AreEqual(10, ConstAndValueExpr.Compute(2));
         Assert.AreEqual(3, parser.Parse("2x-7").Compute(5));
         Assert.AreEqual(3, parser.Parse("-7+2x").Compute(5));
@@ -563,12 +563,12 @@ public class ExpressionParserTests
         expr.Compile()();
         Assert.AreEqual(4, x_var_call_counter);
 
-        Assert.IsTrue(var_collection.Add(new ExpressionVariable("test1")));
+        Assert.IsTrue(var_collection.Add(new("test1")));
         var var_test2 = new ExpressionVariable("test2");
         Assert.IsTrue(var_collection.Add(var_test2));
-        Assert.IsTrue(var_collection.Add(new ExpressionVariable("test3")));
-        Assert.IsFalse(var_collection.Add(new ExpressionVariable("test1")));
-        Assert.IsFalse(var_collection.Add(new ExpressionVariable("x")));
+        Assert.IsTrue(var_collection.Add(new("test3")));
+        Assert.IsFalse(var_collection.Add(new("test1")));
+        Assert.IsFalse(var_collection.Add(new("x")));
         Assert.IsTrue(var_collection.Remove(var_test2));
         Assert.IsFalse(var_collection.Remove(var_test2));
         Assert.IsFalse(var_collection.Remove(var_collection["x"]));

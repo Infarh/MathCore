@@ -367,9 +367,9 @@ public class MatrixDecimal : ICloneable, IEquatable<MatrixDecimal>
     public void GetLUDecomposition(out MatrixDecimal L, out MatrixDecimal U, out MatrixDecimal P)
     {
         LUDecomposition(_Data, out var l, out var u, out var p);
-        L = new MatrixDecimal(l);
-        U = new MatrixDecimal(u);
-        P = new MatrixDecimal(p);
+        L = new(l);
+        U = new(u);
+        P = new(p);
     }
 
     /// <summary>
@@ -726,7 +726,7 @@ public class MatrixDecimal : ICloneable, IEquatable<MatrixDecimal>
         MatrixDecimal result;
         if (A.M == B.M) // Конкатенация по строкам
         {
-            result = new MatrixDecimal(A.N + B.N, A.M);
+            result = new(A.N + B.N, A.M);
             for (var i = 0; i < A.N; i++)
                 for (var j = 0; j < A.M; j++)
                     result[i, j] = A[i, j];
@@ -738,7 +738,7 @@ public class MatrixDecimal : ICloneable, IEquatable<MatrixDecimal>
         }
         else if (A.N == B.N) //Конкатенация по строкам
         {
-            result = new MatrixDecimal(A.N, A.M + B.M);
+            result = new(A.N, A.M + B.M);
             for (var i = 0; i < A.N; i++)
                 for (var j = 0; j < A.M; j++)
                     result[i, j] = A[i, j];

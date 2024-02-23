@@ -124,16 +124,15 @@ public static class ExpressionExtensions
         var main_parameter = MainEx.Parameters.FirstOrDefault(p => p.Name == ParameterName);
 
         if (main_parameter is null)
-            throw new Exception($"Could not find input parameter \"{ParameterName}\" in Expression \"{MainEx}\"");
+            throw new($"Could not find input parameter \"{ParameterName}\" in Expression \"{MainEx}\"");
 
         var substitution_parameter = SubstExpression.Parameters.FirstOrDefault(p => p.Name == ParameterName);
 
         if (substitution_parameter is null)
-            throw new Exception($"Could not find substitution parameter \"{ParameterName}\" in Expression \"{SubstExpression}\"");
+            throw new($"Could not find substitution parameter \"{ParameterName}\" in Expression \"{SubstExpression}\"");
 
         if (substitution_parameter.Type != main_parameter.Type)
-            throw new Exception
-            (
+            throw new(
                 $"The substitute Expression return type \"{SubstExpression.Type}\" does not match the type of the substituted variable \"{ParameterName}:{main_parameter.Type}\""
             );
 
@@ -148,7 +147,7 @@ public static class ExpressionExtensions
         foreach (var subst_pe in SubstExpression.Parameters)
         {
             if (pars.Count(pe => pe.Name == subst_pe.Name) != 0)
-                throw new Exception($"Input parameter of name \"{subst_pe.Name}\" already exists in the main Expression");
+                throw new($"Input parameter of name \"{subst_pe.Name}\" already exists in the main Expression");
             pars.Insert(idx_to_subst, subst_pe);
             idx_to_subst++;
         }

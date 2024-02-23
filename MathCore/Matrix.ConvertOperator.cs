@@ -12,7 +12,7 @@ public partial class Matrix
         var (n, m) = data;
         var complex_data = new Complex[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) complex_data[i, j] = data[i, j];
-        return new MatrixComplex(complex_data);
+        return new(complex_data);
     }
 
     [NotNull]
@@ -22,7 +22,7 @@ public partial class Matrix
         var (n, m) = complex_data;
         var data = new double[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) data[i, j] = complex_data[i, j].Abs;
-        return new Matrix(data);
+        return new(data);
     }
 
     /// <summary>Оператор явного приведения вещественной матрицы к целочисленной</summary>
@@ -34,7 +34,7 @@ public partial class Matrix
         var (n, m) = data;
         var int_data = new int[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) int_data[i, j] = (int)data[i, j];
-        return new MatrixInt(int_data);
+        return new(int_data);
     }
 
     [NotNull]
@@ -44,7 +44,7 @@ public partial class Matrix
         var (n, m) = data;
         var int_data = new int[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) int_data[i, j] = (int)Math.Ceiling(data[i, j]);
-        return new MatrixInt(int_data);
+        return new(int_data);
     } 
 
     [NotNull]
@@ -54,7 +54,7 @@ public partial class Matrix
         var (n, m) = data;
         var int_data = new int[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) int_data[i, j] = (int)Math.Floor(data[i, j]);
-        return new MatrixInt(int_data);
+        return new(int_data);
     }
 
     [NotNull]
@@ -64,7 +64,7 @@ public partial class Matrix
         var (n, m) = data;
         var int_data = new int[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) int_data[i, j] = (int)Math.Round(data[i, j]);
-        return new MatrixInt(int_data);
+        return new(int_data);
     }
 
     [NotNull]
@@ -74,7 +74,7 @@ public partial class Matrix
         var (n, m) = data;
         var int_data = new int[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) int_data[i, j] = (int)Math.Round(data[i, j], Digits);
-        return new MatrixInt(int_data);
+        return new(int_data);
     }
 
     [NotNull]
@@ -84,7 +84,7 @@ public partial class Matrix
         var (n, m) = data;
         var int_data = new int[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) int_data[i, j] = (int)Math.Round(data[i, j], Digits, Rounding);
-        return new MatrixInt(int_data);
+        return new(int_data);
     }
 
     [NotNull]
@@ -94,6 +94,6 @@ public partial class Matrix
         var (n, m) = int_data;
         var data = new double[n, m];
         for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) data[i, j] = int_data[i, j];
-        return new Matrix(data);
+        return new(data);
     }
 }

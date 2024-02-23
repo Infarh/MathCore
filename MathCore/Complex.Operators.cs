@@ -276,7 +276,7 @@ public readonly partial struct Complex
         var q = 1 / (re * re + im * im);
         re = X * re * q;
         im = -X * im * q;
-        return new Complex(re, im);
+        return new(re, im);
     }
 
     /// <summary>Оператор деления целого и комплексного числа</summary>
@@ -288,7 +288,7 @@ public readonly partial struct Complex
     {
         var (re, im) = Y;
         var q = 1 / (re * re + im * im);
-        return new Complex(X * re * q, -X * im * q);
+        return new(X * re * q, -X * im * q);
     }
     /// <summary>Оператор деления вещественного числа одинарной точности и комплексного числа</summary>
     /// <param name="X">Вещественное делимое число одинарной точности</param>
@@ -299,7 +299,7 @@ public readonly partial struct Complex
     {
         var (re, im) = Y;
         var q = 1 / (re * re + im * im);
-        return new Complex(X * re * q, -X * im * q);
+        return new(X * re * q, -X * im * q);
     }
 
     /// <summary>Оператор произведения двух комплексных чисел</summary>
@@ -368,16 +368,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -392,16 +392,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -416,16 +416,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -440,16 +440,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -464,16 +464,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -488,16 +488,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -512,16 +512,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -536,16 +536,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(y_re) || double.IsNaN(y_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     /// <summary>Оператор деления двух комплексных чисел</summary>
@@ -560,16 +560,16 @@ public readonly partial struct Complex
         var (y_re, y_im) = Y;
 
         if (double.IsNaN(x_re) || double.IsNaN(x_im))
-            return new Complex(double.NaN, double.NaN);
+            return new(double.NaN, double.NaN);
 
         if (Math.Abs(y_im) < Math.Abs(y_re))
         {
             var doc = y_im / y_re;
-            return new Complex((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
+            return new((x_re + x_im * doc) / (y_re + y_im * doc), (x_im - x_re * doc) / (y_re + y_im * doc));
         }
 
         var cod = y_re / y_im;
-        return new Complex((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
+        return new((x_im + x_re * cod) / (y_im + y_re * cod), (-x_re + x_im * cod) / (y_im + y_re * cod));
     }
 
     //public static Complex operator /(Complex X, Complex Y)

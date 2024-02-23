@@ -827,7 +827,7 @@ public class BigInt
         // if we proceed.
 
         if (x._DataLength == 1 && x._Data[0] == 0)
-            return new BigInt();
+            return new();
 
         var result = new BigInt(x);
 
@@ -1238,21 +1238,21 @@ public class BigInt
     // Returns max(this, Value)
     //***********************************************************************
 
-    public BigInt Max(BigInt x) => this > x ? new BigInt(this) : new BigInt(x);
+    public BigInt Max(BigInt x) => this > x ? new(this) : new BigInt(x);
 
 
     //***********************************************************************
     // Returns min(this, Value)
     //***********************************************************************
 
-    public BigInt Min(BigInt x) => this < x ? new BigInt(this) : new BigInt(x);
+    public BigInt Min(BigInt x) => this < x ? new(this) : new BigInt(x);
 
 
     //***********************************************************************
     // Returns the absolute value
     //***********************************************************************
 
-    public BigInt Abs() => (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : new BigInt(this);
+    public BigInt Abs() => (_Data[MaxLength - 1] & 0x80000000) != 0 ? -this : new(this);
 
 
     //***********************************************************************

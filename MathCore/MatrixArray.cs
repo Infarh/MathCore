@@ -113,7 +113,7 @@ public class MatrixArray
         for (var i = 0; i < count; i++)
             result[i] = a[i] + b[i];
 
-        return new MatrixArray(A.N, A.M, result);
+        return new(A.N, A.M, result);
     }
 
     public static MatrixArray operator -(MatrixArray A, MatrixArray B)
@@ -131,7 +131,7 @@ public class MatrixArray
         for (var i = 0; i < count; i++)
             result[i] = a[i] - b[i];
 
-        return new MatrixArray(A.N, A.M, result);
+        return new(A.N, A.M, result);
     }
 
     public static MatrixArray operator +(MatrixArray A, double B)
@@ -145,7 +145,7 @@ public class MatrixArray
         for (var i = 0; i < count; i++)
             result[i] = a[i] + B;
 
-        return new MatrixArray(A.N, A.M, result);
+        return new(A.N, A.M, result);
     }
 
     public static MatrixArray operator -(MatrixArray A, double B)
@@ -159,7 +159,7 @@ public class MatrixArray
         for (var i = 0; i < count; i++)
             result[i] = a[i] - B;
 
-        return new MatrixArray(A.N, A.M, result);
+        return new(A.N, A.M, result);
     }
 
     public static MatrixArray operator +(double A, MatrixArray B)
@@ -173,7 +173,7 @@ public class MatrixArray
         for (var i = 0; i < count; i++)
             result[i] = A + b[i];
 
-        return new MatrixArray(B.N, B.M, result);
+        return new(B.N, B.M, result);
     }
 
     public static MatrixArray operator -(double A, MatrixArray B)
@@ -187,7 +187,7 @@ public class MatrixArray
         for (var i = 0; i < count; i++)
             result[i] = A - b[i];
 
-        return new MatrixArray(B.N, B.M, result);
+        return new(B.N, B.M, result);
     }
 
     /// <summary>Преобразовать матрицу на линейном массиве в матрицу на двумерном массиве</summary>

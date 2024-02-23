@@ -176,7 +176,7 @@ public class ExpressionParser
     /// <summary>Предварительная обработка входного строкового выражения</summary>
     /// <param name="Str">Обрабатываемая строка</param>
     // Удаление из строки всех символов, из множества запрещённых символов
-    protected virtual void StrPreprocessing(ref string Str) => Str = new string(Str.WhereNot(_ExcludeCharsSet.Contains).ToArray());
+    protected virtual void StrPreprocessing(ref string Str) => Str = new(Str.WhereNot(_ExcludeCharsSet.Contains).ToArray());
 
     /// <summary>Разобрать строку математического выражения</summary>
     /// <param name="StrExpression">Строковое представление математического выражения</param>
@@ -391,7 +391,7 @@ public class ExpressionParser
                     break;
                 case BlockTerm block:               //...очередной элемент блок (со скобками)
                     node = new ComputedBracketNode( // очередной узел дерева - это вычислимый блок
-                        new Bracket(                //вид скобок:
+                        new(                //вид скобок:
                             block.OpenBracket,      // копируем вид открывающей скобки
                             block.CloseBracket),    // копируем вид закрывающей скобки
                         node);                      //Внутри узел дерева
@@ -489,7 +489,7 @@ public class ExpressionParser
                         // то надо спускаться в правое поддерево до тех пор
                         parent_operator = (OperatorNode?)parent_operator.RightNodes
                             // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
-                           .TakeWhile(n => n is OperatorNode { Left: { } } node && node.Priority < priority)
+                           .TakeWhile(n => n is OperatorNode { Left: not null } node && node.Priority < priority)
                             // взять последний из последовательности
                            .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
 

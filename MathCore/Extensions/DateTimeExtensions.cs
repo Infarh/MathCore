@@ -1,6 +1,11 @@
 ﻿#nullable enable
 
 // ReSharper disable once CheckNamespace
+
+using System.Runtime.InteropServices;
+
+using MathCore.Extensions;
+
 namespace System;
 
 /// <summary>Класс методов-расширений для даты-времени <see cref="DateTime"/></summary>
@@ -19,8 +24,13 @@ public static class DateTimeExtensions
     {
         if(Offset < 0) throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение в массиве не может быть меньше нуля");
         if(Data.Length - Offset < 8) throw new InvalidOperationException("Процесс копирования данных выходит за пределы массива");
+
+#if NET8_0_OR_GREATER
+        MemoryMarshal.Cast<DateTime, byte>(new(ref Time)).CopyTo(Data.AsSpan(Offset));
+#else
         long[] data = [Time.ToBinary()];
         Buffer.BlockCopy(data, 0, Data, Offset, 8);
+#endif
     }
 
     /// <summary>Преобразование массива байт в <see cref="DateTime"/></summary>
@@ -31,6 +41,11 @@ public static class DateTimeExtensions
     {
         if (Offset < 0) throw new ArgumentOutOfRangeException(nameof(Offset), Offset, "Смещение в массиве не может быть меньше нуля");
         if (Data.Length - Offset < 8) throw new InvalidOperationException("Процесс копирования данных выходит за пределы массива");
+
+#if NET8_0_OR_GREATER
+        return Data.AsSpan(Offset).Cast<DateTime>()[0];
+#else
         return DateTime.FromBinary(BitConverter.ToInt64(Data, Offset));
+#endif
     }
 }

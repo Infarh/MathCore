@@ -12,7 +12,7 @@ public class XPathQuery
 
     protected virtual void OnMatch(string? value)
     {
-        if (value is { })
+        if (value is not null)
             QueryMatch?.Invoke(this, value);
     }
 

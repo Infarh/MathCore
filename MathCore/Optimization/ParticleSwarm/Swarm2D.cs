@@ -2,7 +2,7 @@
 namespace MathCore.Optimization.ParticleSwarm;
 
 /// <summary>Рой двумерных частиц</summary>
-public class Swarm2D
+public class Swarm2D(int ParticleCount = 100)
 {
     /// <summary>Вес инерции</summary>
     private double _Inertia;
@@ -73,9 +73,7 @@ public class Swarm2D
     private static readonly Random __Random = new();
 
     /// <summary>Размер роя</summary>
-    private readonly int _ParticleCount;
-
-    public Swarm2D(int ParticleCount = 100) => _ParticleCount = ParticleCount;
+    private readonly int _ParticleCount = ParticleCount;
 
     private double Get(in Interval Interval, double PointX, double BestX, double X) =>
         Interval.Normalize(PointX + (
@@ -94,7 +92,7 @@ public class Swarm2D
         out double X,
         out double Y,
         out double Value) =>
-        Minimize(F, new Interval(MinX, MaxX), new Interval(MinY, MaxY), IterationCount, out X, out Y, out Value);
+        Minimize(F, new(MinX, MaxX), new(MinY, MaxY), IterationCount, out X, out Y, out Value);
 
     public void Minimize(
         in Func<double, double, double> F,
@@ -115,7 +113,7 @@ public class Swarm2D
         {
             var x = __Random.NextDouble() * delta_x + min_x;
             var y = __Random.NextDouble() * delta_y + min_y;
-            swarm[i] = new Particle2D(x, y, F(x, y));
+            swarm[i] = new(x, y, F(x, y));
         }
 
         var start = swarm.GetMin(p => p.Value);
@@ -126,17 +124,15 @@ public class Swarm2D
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
             {
-                   
                 p.X = Get(IntervalX, p.X, p.BestX, X);
                 p.Y = Get(IntervalY, p.Y, p.BestY, Y);
                 p.SetMin(F);
 
-                if (p.Value < Value)
-                {
-                    X     = p.X;
-                    Y     = p.Y;
-                    Value = p.Value;
-                }
+                if (p.Value >= Value) continue;
+
+                X     = p.X;
+                Y     = p.Y;
+                Value = p.Value;
             }
     }
 
@@ -152,8 +148,8 @@ public class Swarm2D
         out double Value) =>
         Maximize(
             F: F, 
-            IntervalX: new Interval(Min: MinX, Max: MaxX),
-            IntervalY: new Interval(Min: MinY, Max: MaxY), 
+            IntervalX: new(Min: MinX, Max: MaxX),
+            IntervalY: new(Min: MinY, Max: MaxY), 
             IterationCount: IterationCount,
             X: out X,
             Y: out Y, 
@@ -178,7 +174,7 @@ public class Swarm2D
         {
             var x = __Random.NextDouble() * delta_x + min_x;
             var y = __Random.NextDouble() * delta_y + min_y;
-            swarm[i] = new Particle2D(x, y, F(x, y));
+            swarm[i] = new(x, y, F(x, y));
         }
 
         var start = swarm.GetMin(p => p.Value);
@@ -189,17 +185,14 @@ public class Swarm2D
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
             {
-
                 p.X = Get(IntervalX, p.X, p.BestX, X);
                 p.Y = Get(IntervalY, p.Y, p.BestY, Y);
                 p.SetMax(F);
 
-                if (p.Value > Value)
-                {
-                    X     = p.X;
-                    Y     = p.Y;
-                    Value = p.Value;
-                }
+                if (p.Value <= Value) continue;
+                X     = p.X;
+                Y     = p.Y;
+                Value = p.Value;
             }
     }
 }

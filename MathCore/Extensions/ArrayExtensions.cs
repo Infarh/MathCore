@@ -56,7 +56,7 @@ public static class ArrayExtensions
         if (items.Length is not (> 0 and var length))
             yield break;
 
-        rnd ??= new Random();
+        rnd ??= new();
         var index = new int[length];
         for (var i = 0; i < length; i++)
         {
@@ -102,7 +102,7 @@ public static class ArrayExtensions
     /// <returns>Перечисление элементов массива в случайном порядке</returns>
     public static IEnumerable<T> AsRandomEnumerable<T>(this T[] Items, Random? Rnd = null)
     {
-        Rnd ??= new Random();
+        Rnd ??= new();
         var index = CreateSequence(Items.Length).MixRef(Rnd);
         for (var i = 0; i < Items.Length; i++)
             yield return Items[index[i]];
@@ -1969,7 +1969,7 @@ public static class ArrayExtensions
     public static T[] MixRef<T>(this T[] array, Random? rnd)
     {
         var length = array.Length;
-        rnd ??= new Random();
+        rnd ??= new();
         var temp  = array[0];
         var index = 0;
         for (var i = 1; i <= length; i++)

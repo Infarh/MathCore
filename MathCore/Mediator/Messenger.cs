@@ -14,8 +14,8 @@ public class Messenger : IMessenger
     public void AddHandle<T>(string? Address, EventHandler<T> Handler)
     {
         var messages_type    = typeof(T);
-        var handlers         = _Handlers.GetOrAdd(messages_type, _ => new ConcurrentDictionary<string, List<Delegate>>());
-        var address_handlers = handlers.GetOrAdd(Address ?? "", _ => new List<Delegate>());
+        var handlers         = _Handlers.GetOrAdd(messages_type, _ => new());
+        var address_handlers = handlers.GetOrAdd(Address ?? "", _ => new());
         lock (address_handlers)
             address_handlers.Add(Handler);
     }

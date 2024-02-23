@@ -184,7 +184,7 @@ public class PropertyLink<TSource, TDestination>
             _DestinationPropertyDescriptor.SetValue(_Destination, converted_value);
         }
         else
-            throw new Exception("Невозможно преобразование типа источника к типу свойства");
+            throw new("Невозможно преобразование типа источника к типу свойства");
     }
 
     /* -------------------------------------------------------------------------------- */

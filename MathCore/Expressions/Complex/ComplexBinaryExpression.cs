@@ -1,13 +1,7 @@
 ﻿namespace MathCore.Expressions.Complex;
 
-public abstract class ComplexBinaryExpression : ComplexExpression
+public abstract class ComplexBinaryExpression(ComplexExpression Left, ComplexExpression Right) : ComplexExpression
 {
-    public ComplexExpression Left { get; private set; }
-    public ComplexExpression Right { get; private set; }
-
-    protected ComplexBinaryExpression(ComplexExpression Left, ComplexExpression Right)
-    {
-        this.Left  = Left;
-        this.Right = Right;
-    }
+    public ComplexExpression Left { get; private set; } = Left;
+    public ComplexExpression Right { get; private set; } = Right;
 }

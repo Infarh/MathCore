@@ -396,7 +396,7 @@ public readonly struct Interval : IComparable<double>, IFormattable,
 
     #region Свойства
 
-    public double RandomValue => (__Random ??= new Random()).NextDouble() * Length + _Min;
+    public double RandomValue => (__Random ??= new()).NextDouble() * Length + _Min;
 
     /// <summary>Включена ли нижняя граница интервала?</summary>
     public bool MinInclude { get => _MinInclude; init => _MinInclude = value; }

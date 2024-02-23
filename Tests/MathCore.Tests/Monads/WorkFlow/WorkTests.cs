@@ -10,8 +10,7 @@ public partial class WorkTests
     {
         public static TestAction GetSuccess() => new();
 
-        public static TestFailAction<TException> GetFail<TException>(TException Error) where TException : Exception =>
-            new(Error);
+        public static TestFailAction<TException> GetFail<TException>(TException Error) where TException : Exception => new(Error);
 
         public bool Executed { get; private set; }
 
@@ -20,11 +19,9 @@ public partial class WorkTests
         public static implicit operator Action(TestAction action) => action.Execute;
     }
 
-    private class TestFailAction<TException> : TestAction where TException : Exception
+    private class TestFailAction<TException>(TException Error) : TestAction where TException : Exception
     {
-        public TException Exception { get; }
-
-        public TestFailAction(TException Error) => Exception = Error ?? throw new ArgumentNullException(nameof(Error));
+        public TException Exception { get; } = Error ?? throw new ArgumentNullException(nameof(Error));
 
         protected override void Execute()
         {
@@ -33,27 +30,22 @@ public partial class WorkTests
         }
     }
 
-    private abstract class TestFunction
+    private abstract class TestFunction(Exception Error)
     {
         public static ValueFunction<T> Value<T>(T Value, Exception? Error = null) => new(Value, Error);
 
-        private readonly Exception _Exception;
-
         public bool Executed { get; protected set; }
-
-        protected TestFunction(Exception Error) => _Exception = Error;
 
         protected void ExecuteFunction()
         {
             Executed = true;
-            if (_Exception != null) throw _Exception;
+            if (Error != null) throw Error;
         }
     }
 
-    private class ValueFunction<T> : TestFunction
+    private class ValueFunction<T>(T ReturnValue, Exception Error) : TestFunction(Error)
     {
-        public T ReturnValue { get; }
-        public ValueFunction(T ReturnValue, Exception Error) : base(Error) => this.ReturnValue = ReturnValue;
+        public T ReturnValue { get; } = ReturnValue;
 
         public T Execute()
         {

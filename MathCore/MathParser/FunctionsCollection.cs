@@ -30,7 +30,7 @@ public class FunctionsCollection : IEnumerable<ExpressionFunction>
         {
             var function = _Functions.FirstOrDefault(f => f.IsEqualSignature(Name, ArgumentsCount));
             if(function != null) return function;
-            function = new ExpressionFunction(Name, new string[ArgumentsCount]);
+            function = new(Name, new string[ArgumentsCount]);
             _Functions.Add(function);
             return function;
         }
@@ -46,7 +46,7 @@ public class FunctionsCollection : IEnumerable<ExpressionFunction>
         {
             var function = _Functions.FirstOrDefault(f => f.IsEqualSignature(Name, Arguments));
             if(function != null) return function;
-            function = new ExpressionFunction(Name, Arguments);
+            function = new(Name, Arguments);
             _Functions.Add(function);
             return function;
         }

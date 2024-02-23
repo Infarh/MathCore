@@ -237,7 +237,7 @@ public abstract class Processor : INotifyPropertyChanged, IDisposable
         {
             if(_Enabled) return;
             _Enabled = true;
-            _MainWorkThread = new Thread(ThreadMethod)
+            _MainWorkThread = new(ThreadMethod)
             {
                 IsBackground = true,
                 Name         = _NameForeNewMainThread,

@@ -101,7 +101,7 @@ public class TimeoutEvent<TEventArgs> where TEventArgs : EventArgs
     public TimeoutEvent(int Timeout)
     {
         _Timeout = Timeout;
-        _Timer   = new Timer(OnTimer, null, __Infinite, __Infinite);
+        _Timer   = new(OnTimer, null, __Infinite, __Infinite);
     }
 
     /// <summary>Инициализация нового объекта задержки генерации события</summary>
@@ -155,7 +155,7 @@ public class TimeoutEvent<TEventArgs> where TEventArgs : EventArgs
                 _Timer.Change(_Timeout, __Infinite);
             }
         }
-        OnInvoked(new Info(EventSender, args));
+        OnInvoked(new(EventSender, args));
     }
 
     /// <summary>Отмена реакции на событие</summary>

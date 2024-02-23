@@ -57,7 +57,7 @@ public static class Win32Processes
             RmEndSession(handle);
         }
 
-        return Array.Empty<Process>();
+        return [];
     }
 
 

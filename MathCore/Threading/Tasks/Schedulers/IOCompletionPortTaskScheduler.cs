@@ -30,10 +30,10 @@ public sealed class IOCompletionPortTaskScheduler : TaskScheduler, IDisposable
         if (MaxConcurrencyLevel < 1) throw new ArgumentNullException(nameof(MaxConcurrencyLevel));
         if (NumAvailableThreads < 1) throw new ArgumentNullException(nameof(NumAvailableThreads));
 
-        _Tasks                      = new ConcurrentQueue<Task>();
-        _IOcp                       = new IOCompletionPort(MaxConcurrencyLevel);
-        _SchedulerThread            = new ThreadLocal<bool>();
-        _RemainingThreadsToShutdown = new CountdownEvent(NumAvailableThreads);
+        _Tasks                      = new();
+        _IOcp                       = new(MaxConcurrencyLevel);
+        _SchedulerThread            = new();
+        _RemainingThreadsToShutdown = new(NumAvailableThreads);
 
         // Create and start the threads
         for (var i = 0; i < NumAvailableThreads; i++)

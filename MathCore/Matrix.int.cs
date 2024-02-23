@@ -727,7 +727,7 @@ public class MatrixInt : ICloneable, IEquatable<MatrixInt>
         MatrixInt result;
         if (A.M == B.M) // Конкатенация по строкам
         {
-            result = new MatrixInt(A.N + B.N, A.M);
+            result = new(A.N + B.N, A.M);
             for (var i = 0; i < A.N; i++)
                 for (var j = 0; j < A.M; j++)
                     result[i, j] = A[i, j];
@@ -739,7 +739,7 @@ public class MatrixInt : ICloneable, IEquatable<MatrixInt>
         }
         else if (A.N == B.N) //Конкатенация по строкам
         {
-            result = new MatrixInt(A.N, A.M + B.M);
+            result = new(A.N, A.M + B.M);
             for (var i = 0; i < A.N; i++)
                 for (var j = 0; j < A.M; j++)
                     result[i, j] = A[i, j];

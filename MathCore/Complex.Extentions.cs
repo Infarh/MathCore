@@ -207,7 +207,7 @@ public static class ComplexExtensions
         var result = new Complex[Values.GetLength(0)];
 
         for(var i = 0; i < Values.GetLength(0); i++)
-            result[i] = new Complex(Values[i, 0], Values[i, 1]);
+            result[i] = new(Values[i, 0], Values[i, 1]);
 
         return result;
     }

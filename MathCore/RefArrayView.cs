@@ -5,24 +5,20 @@ namespace MathCore;
 
 public class RefArrayView<T> : IReadOnlyList<T>, ICollection
 {
-    public class IndexInfo
+    public class IndexInfo(int[] Indexes)
     {
-        private readonly int[] _Indexes;
-
         public int this[int index]
         {
-            get => _Indexes[index];
+            get => Indexes[index];
             set
             {
-                if (index < 0 || index >= _Indexes.Length)
+                if (index < 0 || index >= Indexes.Length)
                     throw new ArgumentOutOfRangeException(nameof(index), index, "Индекс выходит за рамки массива");
-                if (value < 0 || value >= _Indexes.Length)
+                if (value < 0 || value >= Indexes.Length)
                     throw new ArgumentOutOfRangeException(nameof(value), value, "Устанавливаемый индекс выходит за рамки массива");
-                _Indexes[index] = value;
+                Indexes[index] = value;
             }
         }
-
-        public IndexInfo(int[] Indexes) => _Indexes = Indexes;
     }
 
     private readonly T[] _Array;
@@ -51,7 +47,7 @@ public class RefArrayView<T> : IReadOnlyList<T>, ICollection
         _Array = array.NotNull();
         var length = _Array.Length;
         _Indexes   = new int[length];
-        _IndexInfo = new IndexInfo(_Indexes);
+        _IndexInfo = new(_Indexes);
 
         for (var i = 0; i < length; i++)
             _Indexes[i] = i;
@@ -62,7 +58,7 @@ public class RefArrayView<T> : IReadOnlyList<T>, ICollection
         _Array = array.NotNull();
         var length = _Array.Length;
         _Indexes   = new int[length];
-        _IndexInfo = new IndexInfo(_Indexes);
+        _IndexInfo = new(_Indexes);
 
         if (Inverted)
             for (var i = 0; i < length; i++)

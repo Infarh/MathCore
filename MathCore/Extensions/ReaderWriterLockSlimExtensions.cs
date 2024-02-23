@@ -48,52 +48,42 @@ public static class ReaderWriterLockSlimExtensions
 
     public static LockObject<T> Lock<T>(this ReaderWriterLockSlim Lock, T obj) => new(Lock, obj);
 
-    public readonly ref struct LockObject<T>
+    public readonly ref struct LockObject<T>(ReaderWriterLockSlim Lock, T obj)
     {
-        private readonly ReaderWriterLockSlim _Lock;
-
-        private readonly T _Obj;
-
-        public LockObject(ReaderWriterLockSlim Lock, T obj)
-        {
-            _Lock = Lock;
-            _Obj = obj;
-        }
-
         public TResult Read<TResult>(Func<T, TResult> Reader)
         {
-            using (_Lock.LockRead())
-                return Reader(_Obj);
+            using (Lock.LockRead())
+                return Reader(obj);
         }
 
         public TResult Read<TResult, TP>(TP Parameter, Func<T, TP, TResult> Reader)
         {
-            using (_Lock.LockRead())
-                return Reader(_Obj, Parameter);
+            using (Lock.LockRead())
+                return Reader(obj, Parameter);
         }
 
         public void Write(Action<T> Writer)
         {
-            using(_Lock.LockWrite())
-                Writer(_Obj);
+            using(Lock.LockWrite())
+                Writer(obj);
         }
 
         public TResult Write<TResult>(Func<T, TResult> Writer)
         {
-            using(_Lock.LockWrite())
-                return Writer(_Obj);
+            using(Lock.LockWrite())
+                return Writer(obj);
         }
 
         public void Write<TP>(TP Parameter, Action<T, TP> Writer)
         {
-            using(_Lock.LockWrite())
-                Writer(_Obj, Parameter);
+            using(Lock.LockWrite())
+                Writer(obj, Parameter);
         }
 
         public TResult Write<TResult, TP>(TP Parameter, Func<T, TP, TResult> Writer)
         {
-            using(_Lock.LockWrite())
-                return Writer(_Obj, Parameter);
+            using(Lock.LockWrite())
+                return Writer(obj, Parameter);
         }
     }
 }

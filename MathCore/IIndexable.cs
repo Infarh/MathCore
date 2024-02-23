@@ -67,4 +67,4 @@ public interface IIndexable<in TIndex1, in TIndex2, TValue> :
 
 /// <summary>Объект индексируемый с целочисленным индексом</summary>
 /// <typeparam name="TValue">Тип элементов</typeparam>
-public interface IIndexable<TValue> : IIndexable<int, TValue>, ICountable { }
+public interface IIndexable<TValue> : IIndexable<int, TValue>, ICountable;

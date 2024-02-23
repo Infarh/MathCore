@@ -6,7 +6,7 @@
 public sealed class MaxConcurrencySynchronizationContext(int MaxConcurrencyLevel) : SynchronizationContext
 {
     /// <summary>Семафор, ограничивающий число выполняемых задач</summary>
-    private readonly SemaphoreSlim _Semaphore = new SemaphoreSlim(MaxConcurrencyLevel);
+    private readonly SemaphoreSlim _Semaphore = new(MaxConcurrencyLevel);
 
     /// <summary>Метод, вызываемый при освобождении семафора</summary>
     /// <param name="SemaphoreWaitTask">Задача ожидания освобождения семафора</param>

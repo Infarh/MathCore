@@ -15,7 +15,7 @@ public class SynchronizationContextScheduler : TaskScheduler
         _Execute = Execute;
     }
 
-    protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
+    protected override IEnumerable<Task> GetScheduledTasks() => [];
 
     protected override void QueueTask(Task task) => _Context.Send(_Execute, task);
 

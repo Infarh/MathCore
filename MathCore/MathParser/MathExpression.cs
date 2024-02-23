@@ -111,7 +111,7 @@ public class MathExpression : IDisposable, ICloneable<MathExpression>
     {
         var terms = new BlockTerm(StrExpression);   // разбить строку на элементы
         var root  = terms.GetSubTree(Parser, this); // выделить корень дерева из первого элемента
-        _ExpressionTree = new ExpressionTree(root); // Создать дерево выражения из корня
+        _ExpressionTree = new(root); // Создать дерево выражения из корня
     }
 
     #region IDisposable

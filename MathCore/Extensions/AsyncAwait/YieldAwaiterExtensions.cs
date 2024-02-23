@@ -14,8 +14,16 @@ public static class YieldAwaiterExtensions
     /// <param name="LockContext">Если истина, то продолжение будет выполнено в том же потоке, если ложь - то в пуле потоков</param>
     public static YieldAwaitableThreadPool ConfigureAwait(this YieldAwaitable _, bool LockContext) => new(LockContext);
 
+    /// <summary>Продолжить в пуле потоков</summary>
+    /// <param name="LockContext">Если истина, то продолжение будет выполнено в том же потоке, если ложь - то в пуле потоков</param>
+    /// <param name="LongRunning">Длительное выполнение задачи</param>
+    public static YieldAwaitableThreadPool ConfigureAwait(this YieldAwaitable _, bool LockContext, bool LongRunning) => new(LockContext, LongRunning);
+
+    /// <summary>Продолжить в пуле потоков</summary>
+    public static YieldAwaitableThreadPool ConfigureAwaitLongRunning(this YieldAwaitable _, bool LockContext) => new(LockContext, true);
+
     /// <summary>Продолжить в новом потоке</summary>
-    public static YieldAwaitableThread ConfigureAwaitLongRunning(this YieldAwaitable _) => new();
+    public static YieldAwaitableThread ConfigureAwaitThread(this YieldAwaitable _) => new();
 
     /// <summary>Выполнить продолжение в указанном планировщике</summary>
     /// <param name="Scheduler">Планировщик, в котором требуется выполнить продолжение</param>

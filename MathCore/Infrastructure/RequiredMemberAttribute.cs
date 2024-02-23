@@ -4,20 +4,18 @@
 namespace System.Runtime.CompilerServices;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property, Inherited = false)]
-internal sealed class RequiredMemberAttribute : Attribute { }
+internal sealed class RequiredMemberAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = false)]
-internal sealed class CompilerFeatureRequiredAttribute : Attribute
+internal sealed class CompilerFeatureRequiredAttribute(string FeatureName) : Attribute
 {
     public const string RequiredMembers = nameof(RequiredMembers);
 
     public const string RefStructs = nameof(RefStructs);
 
-    public string FeatureName { get; }
+    public string FeatureName { get; } = FeatureName;
 
     public bool IsOptional { get; init; }
-
-    public CompilerFeatureRequiredAttribute(string FeatureName) => this.FeatureName = FeatureName;
 }
 
 #endif

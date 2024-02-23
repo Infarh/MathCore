@@ -5,24 +5,18 @@
 // ReSharper disable MemberCanBeProtected.Global
 namespace System.Linq.Expressions;
 
-public class ItemBase
+public class ItemBase(Type type, string Name)
 {
     protected readonly object _Object;
-    protected readonly Type _ObjectType;
-    protected readonly string _Name;
+    protected readonly Type _ObjectType = type;
+    protected readonly string _Name = Name;
     protected AttributesExtractor _ObjectAttributes;
 
     public string Name => _Name;
 
     public object Object => _Object;
 
-    public AttributesExtractor ObjectAttribute => _ObjectAttributes ??= new AttributesExtractor(_ObjectType);
+    public AttributesExtractor ObjectAttribute => _ObjectAttributes ??= new(_ObjectType);
 
     protected ItemBase(object Obj, string Name) : this(Obj.GetType(), Name) => _Object = Obj;
-
-    public ItemBase(Type type, string Name)
-    {
-        _ObjectType = type;
-        _Name       = Name;
-    }
 }

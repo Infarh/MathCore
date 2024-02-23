@@ -96,7 +96,7 @@ public sealed class Histogram : IEnumerable<HistogramValue>
             var min = i * dx + _Interval.Min;
             return new()
             {
-                Interval = new Interval(min, true, min + dx, i == _IntervalsCount - 1),
+                Interval = new(min, true, min + dx, i == _IntervalsCount - 1),
                 Value = _Frequencies[i],
                 NormalValue = _Frequencies[i] / _Normalizer,
                 Count = _Counts[i],
@@ -202,9 +202,9 @@ public sealed class Histogram : IEnumerable<HistogramValue>
             var min = x0 + i * dx;
             integral_value += frequency;
             integral_count += count;
-            yield return new HistogramValue
+            yield return new()
             {
-                Interval = new Interval(min, true, min + dx, i == _IntervalsCount - 1),
+                Interval = new(min, true, min + dx, i == _IntervalsCount - 1),
                 Value = frequency,
                 NormalValue = frequency / _Normalizer,
                 Count = count,

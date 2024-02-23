@@ -72,6 +72,6 @@ public static class StackExtensions
         var items = new T[stack.Count];
         stack.CopyTo(items, 0);
         Array.Reverse(items);
-        return new Queue<T>(items);
+        return new(items);
     }
 }

@@ -31,7 +31,7 @@ public class LambdaStateMachine<TState, TValue>(TState state = default)
 
     protected virtual void OnNewValue(NewValueEventArgs e) => NewValue?.Invoke(this, e);
 
-    protected virtual void OnNewState(TState OldState, TState NewState, TValue Value = default) => this.NewState?.Invoke(this, new NewStateEventArgs(OldState, NewState, Value));
+    protected virtual void OnNewState(TState OldState, TState NewState, TValue Value = default) => this.NewState?.Invoke(this, new(OldState, NewState, Value));
 
     public TState State
     {

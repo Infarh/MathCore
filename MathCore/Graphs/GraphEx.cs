@@ -252,7 +252,7 @@ public static class GraphEx
             route_stack.Push(node);
 
             if(FindPredicate(node.Value))
-                return new GraphRoute<TValue, TWeight>(route_stack.Reverse());
+                return new(route_stack.Reverse());
 
             visited.Add(node);
             var next = node.Links.Select(l => l.Node)
@@ -267,7 +267,7 @@ public static class GraphEx
             next.Foreach(stack.Push);
         } while(stack.Count != 0);
 
-        return new GraphRoute<TValue, TWeight>([]);
+        return new([]);
     }
 
     /// <summary>Метод поиска всех путей из указанной вершины до всех доступных вершин графа методом фронта волны</summary>
@@ -296,7 +296,7 @@ public static class GraphEx
                .ToArray();
             if(wave.Length == 0)
             {
-                result.Add(new GraphRoute<TValue, TWeight>(route_stack.ToArray().GetReversed()));
+                result.Add(new(route_stack.ToArray().GetReversed()));
                 continue;
             }
             foreach(var node in wave)

@@ -23,7 +23,7 @@ public class TextFileContentMonitor
 
         var directory = (File.Directory?.FullName).NotNull();
         var file_name = File.Name;
-        _Watcher = new FileSystemWatcher(directory, file_name)
+        _Watcher = new(directory, file_name)
         {
             NotifyFilter = NotifyFilters.LastWrite,
         };

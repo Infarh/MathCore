@@ -31,7 +31,7 @@ public class TimeIntervalObservable : SimpleObservableEx<TimeSpan>
             _Work = true;
             var need_reset = _Thread != null;
             _Thread = _Async
-                ? new Thread(AsyncThreadMethod) { IsBackground = true }
+                ? new(AsyncThreadMethod) { IsBackground = true }
                 : new Thread(SyncThreadMethod) { IsBackground  = true };
             if(need_reset) base.OnReset();
             _Thread.Start();

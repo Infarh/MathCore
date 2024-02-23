@@ -49,7 +49,7 @@ public class QueryResult<T> : IPagedQueryable<T>
     /// <summary>Получить результат запроса для предыдущей страницы</summary>
     /// <returns>Результата запроса для предыдущей страницы</returns>
     public QueryResult<T>? GetPreviousPage() => HasPreviousPage
-        ? new QueryResult<T>(SourceQuery, new QueryOptions
+        ? new QueryResult<T>(SourceQuery, new()
         {
             Page              = Page - 1,
             Size              = PageSize,
@@ -63,7 +63,7 @@ public class QueryResult<T> : IPagedQueryable<T>
     /// <summary>Получить результат запроса для следующей страницы</summary>
     /// <returns>Результата запроса для следующей страницы</returns>
     public QueryResult<T>? GetNextPage() => HasNextPage
-        ? new QueryResult<T>(SourceQuery, new QueryOptions
+        ? new QueryResult<T>(SourceQuery, new()
         {
             Page              = Page + 1,
             Size              = PageSize,

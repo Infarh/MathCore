@@ -115,7 +115,7 @@ internal static class WordWrap
                 @lock           = 1;
             }
         }
-        return new string(hyp_buff, 0, cur);
+        return new(hyp_buff, 0, cur);
     }
 
     /// <summary>

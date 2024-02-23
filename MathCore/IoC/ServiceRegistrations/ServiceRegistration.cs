@@ -11,25 +11,19 @@ using MathCore.IoC.Exceptions;
 
 namespace MathCore.IoC.ServiceRegistrations;
 
-public abstract partial class ServiceRegistration : IDisposable
+public abstract partial class ServiceRegistration(IServiceManager Manager, Type ServiceType) : IDisposable
 {
     public event ExceptionEventHandler<Exception> ExceptionThrown = null!;
 
     protected virtual void OnExceptionThrown(Exception e) => ExceptionThrown.ThrowIfUnhandled(this, e);
 
-    protected readonly IServiceManager _Manager;
+    protected readonly IServiceManager _Manager = Manager;
 
     public virtual Exception? LastException { get; set; }
 
-    public Type ServiceType { get; }
+    public Type ServiceType { get; } = ServiceType;
 
     public bool AllowInheritance { get; set; }
-
-    protected ServiceRegistration(IServiceManager Manager, Type ServiceType)
-    {
-        _Manager = Manager;
-        this.ServiceType = ServiceType;
-    }
 
     protected abstract object? CreateServiceInstance(params object[] parameters);
 
@@ -106,12 +100,12 @@ public abstract class ServiceRegistration<TService> : ServiceRegistration where 
         bool ApplicableConstructor(ServiceConstructorInfo ctor)
         {
             foreach (var type in ctor.ParameterTypes)
-                if (!service_manager.ServiceRegistered(type) && !parameters.Where(p => p != null).Any(p => type.IsInstanceOfType(p)))
+                if (!service_manager.ServiceRegistered(type) && !parameters.WhereNotNull().Any(type.IsInstanceOfType))
                     return false;
             return true;
         }
 
-        if (_Constructors.FirstOrDefault(ctor => ApplicableConstructor(ctor)) is not { } constructor)
+        if (_Constructors.FirstOrDefault(ApplicableConstructor) is not { } constructor)
             throw new ServiceConstructorNotFoundException(typeof(TService));
 
         return constructor.CreateInstance(service_manager.Get, parameters);

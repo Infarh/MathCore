@@ -21,7 +21,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
         if(Handlers is null) return element;
         var node = element as TExpressionNode;
         return node != null
-            ? Handlers(this, new EventArgs<TExpressionNode>(node))
+            ? Handlers(this, new(node))
             : element; // иначе возвращаем элемент, от базового метода
     }
 
@@ -37,7 +37,7 @@ public class ExpressionRebuilder : ExpressionVisitorEx
         var element = Base(Node); // Вызываем базовый метод для получения замены
         if(Handlers is null) return element;
         // Генерируем событие с передачей в него узла, полученного от базового дерева
-        return Handlers(this, new EventArgs<TOut>(element));
+        return Handlers(this, new(element));
     }
 
     /// <summary>Событие возникает при посещении любого узла дерева</summary>

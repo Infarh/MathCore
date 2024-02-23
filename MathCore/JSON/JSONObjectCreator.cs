@@ -43,20 +43,20 @@ public sealed class JSONObjectCreator<T> : JSONObjectCreatorBase
             switch (func.Invoke(obj))
             {
                 case JSONObjectCreatorBase creator:
-                    fields.Add(new JSONObject(key, creator.Create(obj)));
+                    fields.Add(new(key, creator.Create(obj)));
                     break;
                 case string str:
-                    fields.Add(new JSONObject(key, str));
+                    fields.Add(new(key, str));
                     break;
                 case { } o:
-                    fields.Add(new JSONObject(key, o.ToString() ?? ""));
+                    fields.Add(new(key, o.ToString() ?? ""));
                     break;
                 default:
-                    fields.Add(new JSONObject(key, ""));
+                    fields.Add(new(key, ""));
                     break;
             }
         
-        return new JSONObject(fields);
+        return new(fields);
     }
 
     /// <summary>Оператор неявного приведения типа объекта-генератора к типу JSON-объекта</summary>

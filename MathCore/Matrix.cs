@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System.Globalization;
 using System.Text;
 
 using static MathCore.Matrix.Array.Operator;
@@ -6,6 +7,7 @@ using static MathCore.Matrix.Array.Operator;
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+// ReSharper disable OutParameterValueIsAlwaysDiscarded.Global
 
 // ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable LocalizableElement
@@ -67,7 +69,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     public static partial class Array
     {
         /// <summary>Операторы над двумерными массивами</summary>
-        public static partial class Operator { }
+        public static partial class Operator;
     }
 
     /// <summary>Получить единичную матрицу размерности NxN</summary>
@@ -81,7 +83,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
         for (var i = 0; i < N; i++)
             for (var j = 0; j < N; j++)
                 result[i, j] = 1;
-        return new Matrix(result);
+        return new(result);
     }
 
     public static Matrix GetZeros(int N, int M) => new(N, M);
@@ -306,16 +308,16 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <returns>Транспонированная матрица</returns>
     [DST] public Matrix GetTranspose() => new(Array.Transpose(_Data));
 
-    /// <summary>Алгебраическое дополнение к элементу [n,m]</summary>
+    /// <summary>Алгебраическое дополнение к элементу [n, m]</summary>
     /// <param name="n">Номер столбца</param>
     /// <param name="m">Номер строки</param>
-    /// <returns>Алгебраическое дополнение к элементу [n,m]</returns>
+    /// <returns>Алгебраическое дополнение к элементу [n, m]</returns>
     public double GetAdjunct(int n, int m) => Array.GetAdjunct(_Data, n, m);
 
     /// <summary>Минор матрицы по определённому элементу</summary>
     /// <param name="n">Номер столбца</param>
     /// <param name="m">Номер строки</param>
-    /// <returns>Минор элемента матрицы [n,m]</returns>
+    /// <returns>Минор элемента матрицы [n, m]</returns>
     public Matrix GetMinor(int n, int m) => new(Array.GetMinor(_Data, n, m));
 
     /// <summary>Определитель матрицы</summary>
@@ -366,24 +368,20 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <inheritdoc/>
     [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
-    public readonly ref struct MatrixView
+    public readonly ref struct MatrixView(Matrix Matrix)
     {
-        private readonly Matrix _Matrix;
-
-        public MatrixView(Matrix Matrix) => _Matrix = Matrix;
-
         public override string ToString()
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
                 {
-                    var s = nn[i, j].ToString();
+                    var s = nn[i, j].ToString(CultureInfo.CurrentCulture);
                     ss[i, j] = s;
                     ll[j]    = Math.Max(ll[j], s.Length);
                 }
@@ -412,11 +410,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
         public string ToString(string Format)
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
@@ -449,11 +447,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
         public string ToString(IFormatProvider Provider)
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
@@ -486,11 +484,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
         public string ToString(string Format, IFormatProvider Provider)
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
@@ -638,7 +636,7 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
                 }
                 var result                         = Array.GetUnitaryArrayMatrix(M._N);
                 for (var i = 0; i < n; i++) result = Multiply(result, m);
-                return new Matrix(result);
+                return new(result);
         }
     }
 

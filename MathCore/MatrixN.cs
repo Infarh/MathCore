@@ -31,7 +31,7 @@ public class MatrixN
             }
         }
 
-        return new MatrixN(dimensions, values);
+        return new(dimensions, values);
     }
 
     private readonly int[] _Dimensions;
@@ -106,7 +106,7 @@ public class MatrixN
         var new_values = new double[A._Values.Length];
         for (int i = 0, count = A._Values.Length; i < count; i++)
             new_values[i] = A._Values[i] + B._Values[i];
-        return new MatrixN((int[])A._Dimensions.Clone(), new_values);
+        return new((int[])A._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator -(MatrixN A, MatrixN B)
@@ -115,7 +115,7 @@ public class MatrixN
         var new_values = new double[A._Values.Length];
         for (int i = 0, count = A._Values.Length; i < count; i++)
             new_values[i] = A._Values[i] - B._Values[i];
-        return new MatrixN((int[])A._Dimensions.Clone(), new_values);
+        return new((int[])A._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator +(MatrixN A, double B)
@@ -123,7 +123,7 @@ public class MatrixN
         var new_values = new double[A._Values.Length];
         for (int i = 0, count = A._Values.Length; i < count; i++)
             new_values[i] = A._Values[i] + B;
-        return new MatrixN((int[])A._Dimensions.Clone(), new_values);
+        return new((int[])A._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator -(MatrixN A, double B)
@@ -131,7 +131,7 @@ public class MatrixN
         var new_values = new double[A._Values.Length];
         for (int i = 0, count = A._Values.Length; i < count; i++)
             new_values[i] = A._Values[i] - B;
-        return new MatrixN((int[])A._Dimensions.Clone(), new_values);
+        return new((int[])A._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator *(MatrixN A, double B)
@@ -139,7 +139,7 @@ public class MatrixN
         var new_values = new double[A._Values.Length];
         for (int i = 0, count = A._Values.Length; i < count; i++)
             new_values[i] = A._Values[i] * B;
-        return new MatrixN((int[])A._Dimensions.Clone(), new_values);
+        return new((int[])A._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator /(MatrixN A, double B)
@@ -147,7 +147,7 @@ public class MatrixN
         var new_values = new double[A._Values.Length];
         for (int i = 0, count = A._Values.Length; i < count; i++)
             new_values[i] = A._Values[i] / B;
-        return new MatrixN((int[])A._Dimensions.Clone(), new_values);
+        return new((int[])A._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator +(double A, MatrixN B)
@@ -155,7 +155,7 @@ public class MatrixN
         var new_values = new double[B._Values.Length];
         for (int i = 0, count = B._Values.Length; i < count; i++)
             new_values[i] = A + B._Values[i];
-        return new MatrixN((int[])B._Dimensions.Clone(), new_values);
+        return new((int[])B._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator -(double A, MatrixN B)
@@ -163,7 +163,7 @@ public class MatrixN
         var new_values = new double[B._Values.Length];
         for (int i = 0, count = B._Values.Length; i < count; i++)
             new_values[i] = A + B._Values[i];
-        return new MatrixN((int[])B._Dimensions.Clone(), new_values);
+        return new((int[])B._Dimensions.Clone(), new_values);
     }
 
     public static MatrixN operator *(double A, MatrixN B)
@@ -171,6 +171,6 @@ public class MatrixN
         var new_values = new double[B._Values.Length];
         for (int i = 0, count = B._Values.Length; i < count; i++)
             new_values[i] = A + B._Values[i];
-        return new MatrixN((int[])B._Dimensions.Clone(), new_values);
+        return new((int[])B._Dimensions.Clone(), new_values);
     }
 }

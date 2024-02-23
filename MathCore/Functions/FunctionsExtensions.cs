@@ -69,8 +69,8 @@ public static class FunctionsExtensions
         var N      = values.Length;
         var MinMax = new FuncMinMaxValue
         {
-            Min = new FuncValue { Value = double.PositiveInfinity },
-            Max = new FuncValue { Value = double.NegativeInfinity }
+            Min = new() { Value = double.PositiveInfinity },
+            Max = new() { Value = double.NegativeInfinity }
         };
 
         for (var i = 0; i < N; i++)

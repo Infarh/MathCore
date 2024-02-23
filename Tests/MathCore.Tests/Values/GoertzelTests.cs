@@ -5,28 +5,24 @@ namespace MathCore.Tests.Values;
 [TestClass]
 public class GoertzelTests : UnitTest
 {
-    private class ComplexToleranceComparer : IEqualityComparer<Complex>
+    private class ComplexToleranceComparer(double tolerance = 1e-14) : IEqualityComparer<Complex>
     {
-        private double _Tolerance;
-
         /// <summary>Точность сравнения</summary>
         /// <exception cref="T:System.ArgumentOutOfRangeException">Если значение точности меньше нуля</exception>
         public double Tolerance
         {
-            get => this._Tolerance;
-            set => this._Tolerance = value >= 0.0 ? value : throw new ArgumentOutOfRangeException(nameof(value), "Значение точности должно быть больше, либо равно 0");
+            get => tolerance;
+            set => tolerance = value >= 0.0 ? value : throw new ArgumentOutOfRangeException(nameof(value), "Значение точности должно быть больше, либо равно 0");
         }
 
-        public ComplexToleranceComparer(double Tolerance = 1e-14) => _Tolerance = Tolerance;
-
         public bool Equals(Complex x, Complex y) =>
-            Math.Abs(x.Re - y.Re) <= _Tolerance &&
-            Math.Abs(x.Im - y.Im) <= _Tolerance;
+            Math.Abs(x.Re - y.Re) <= tolerance &&
+            Math.Abs(x.Im - y.Im) <= tolerance;
 
         public int GetHashCode(Complex obj)
         {
             var (re, im) = obj;
-            var z = new Complex(Math.Abs(re / _Tolerance) * _Tolerance, Math.Abs(im / _Tolerance) * _Tolerance);
+            var z = new Complex(Math.Abs(re / tolerance) * tolerance, Math.Abs(im / tolerance) * tolerance);
             return z.GetHashCode();
         }
     }

@@ -97,7 +97,7 @@ public abstract class ExpressionVisitorEx
                 //ExpressionType.TypeEqual => expr,
                 //ExpressionType.UnaryPlus => expr,
                 //ExpressionType.Unbox => expr,
-                _ => throw new Exception($"Unhandled expression type: '{Node.NodeType}'")
+                _ => throw new($"Unhandled expression type: '{Node.NodeType}'")
             };
 
     protected virtual MemberBinding VisitBinding(MemberBinding binding) =>
@@ -106,7 +106,7 @@ public abstract class ExpressionVisitorEx
             MemberBindingType.Assignment    => VisitMemberAssignment((MemberAssignment) binding),
             MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding) binding),
             MemberBindingType.ListBinding   => VisitMemberListBinding((MemberListBinding) binding),
-            _                               => throw new Exception($"Unhandled binding type '{binding.BindingType}'")
+            _                               => throw new($"Unhandled binding type '{binding.BindingType}'")
         };
 
     protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
@@ -176,7 +176,7 @@ public abstract class ExpressionVisitorEx
                 list.Add(p);
             else if(p != original[i])
             {
-                list = new List<Expression>(n);
+                list = new(n);
                 for(var j = 0; j < i; j++)
                     list.Add(original[j]);
                 list.Add(p);
@@ -213,7 +213,7 @@ public abstract class ExpressionVisitorEx
                 list.Add(b);
             else if(b != original[i])
             {
-                list = new List<MemberBinding>(n);
+                list = new(n);
                 for(var j = 0; j < i; j++)
                     list.Add(original[j]);
                 list.Add(b);
@@ -235,7 +235,7 @@ public abstract class ExpressionVisitorEx
                 list.Add(init);
             else if(init != original[i])
             {
-                list = new List<ElementInit>(n);
+                list = new(n);
                 for(var j = 0; j < i; j++)
                     list.Add(original[j]);
                 list.Add(init);

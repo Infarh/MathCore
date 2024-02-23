@@ -23,7 +23,7 @@ public abstract class CSVTestsBase
     protected static IEnumerable<Student> GetStudents(Random rnd = null)
     {
         var now = DateTime.Now;
-        rnd ??= new Random((int)now.Ticks);
+        rnd ??= new((int)now.Ticks);
         return Enumerable.Range(1, __DataRowsCount)
            .Select(i => new Student
             {

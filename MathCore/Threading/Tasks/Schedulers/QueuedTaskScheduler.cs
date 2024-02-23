@@ -145,7 +145,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         var threads = new Thread[ThreadCount];
         for (var i = 0; i < ThreadCount; i++)
         {
-            threads[i] = new Thread(() => ThreadBasedDispatchLoop(ThreadInit, ThreadFinally), ThreadMaxStackSize)
+            threads[i] = new(() => ThreadBasedDispatchLoop(ThreadInit, ThreadFinally), ThreadMaxStackSize)
             {
                 Priority     = ThreadPriority,
                 IsBackground = !UseForegroundThreads,
@@ -398,7 +398,7 @@ public sealed class QueuedTaskScheduler : TaskScheduler, IDisposable
         {
             if (!_QueueGroups.TryGetValue(priority, out var list))
             {
-                list = new QueueGroup();
+                list = new();
                 _QueueGroups.Add(priority, list);
             }
             list.Add(created_queue);

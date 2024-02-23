@@ -3,23 +3,17 @@
 // ReSharper disable once CheckNamespace
 namespace System.Xml.XPath;
 
-internal sealed class XPathCollectionEnumerator : IEnumerator
+internal sealed class XPathCollectionEnumerator(Hashtable XPatches) : IEnumerator
 {
     #region Fields
 
-    private readonly IDictionaryEnumerator _HashEnum;
+    private readonly IDictionaryEnumerator _HashEnum = XPatches.GetEnumerator();
 
     #endregion
 
     #region Properties
 
     public object Current => ((DictionaryEntry) _HashEnum.Current).Value;
-
-    #endregion
-
-    #region Constructors
-
-    public XPathCollectionEnumerator(Hashtable XPatches) => _HashEnum = XPatches.GetEnumerator();
 
     #endregion
 

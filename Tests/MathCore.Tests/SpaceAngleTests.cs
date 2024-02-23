@@ -43,7 +43,7 @@ public class SpaceAngleTests : UnitTest
     {
         var a = new SpaceAngle(0, 0, AngleType.Deg);
         var v = a.DirectionalVector;
-        Assert.AreEqual(new Vector3D(0, 0, 1), v);
+        Assert.AreEqual(new(0, 0, 1), v);
     }
 
     /// <summary></summary>

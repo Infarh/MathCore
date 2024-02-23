@@ -7,4 +7,4 @@ namespace System;
 
 /// <summary>Является регулярным выражением</summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class RegexPatternAttribute : Attribute { }
+public sealed class RegexPatternAttribute : Attribute;

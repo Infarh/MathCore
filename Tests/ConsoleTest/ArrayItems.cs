@@ -1,53 +1,35 @@
 ﻿namespace ConsoleTest;
 
-public readonly ref struct ArrayItems<T>
+public readonly ref struct ArrayItems<T>(T[] Items)
 {
-    public T[] Items { get; init; }
-
-    public ArrayItems(T[] Items) => this.Items = Items;
+    public T[] Items { get; init; } = Items;
 
     public Enumerator GetEnumerator() => new(Items);
 
-    public ref struct Enumerator
+    public ref struct Enumerator(T[] Items)
     {
-        private int _Index;
-        private readonly T[] _Items;
-        private Item _Current;
+        private int _Index = -1;
+        private Item _Current = default;
 
         public Item Current => _Current;
 
-        public Enumerator(T[] Items)
-        {
-            _Index = -1;
-            _Items = Items;
-            _Current = default;
-        }
-
         public bool MoveNext()
         {
-            if (_Index == _Items.Length)
+            if (_Index == Items.Length)
                 return false;
 
             _Index++;
-            _Current = _Index == _Items.Length ? default : new(_Items, _Index);
+            _Current = _Index == Items.Length ? default : new(Items, _Index);
 
             return true;
         }
     }
 
-    public readonly ref struct Item
+    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    public readonly ref struct Item(T[] Items, int index)
     {
-        private readonly int _Index;
-        private readonly T[] _Items;
+        public int Index => index;
 
-        public int Index => _Index;
-
-        public ref T Value => ref _Items[Index];
-
-        public Item(T[] Items, int Index)
-        {
-            _Items = Items;
-            _Index = Index;
-        }
+        public ref T Value => ref Items[index];
     }
 }

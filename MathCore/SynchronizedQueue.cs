@@ -15,7 +15,7 @@ public class SynchronizedQueue<T> : IDisposable
 
     public SynchronizedQueue() => _Queue = [];
 
-    public SynchronizedQueue(int Capacity) => _Queue = new Queue<T>(Capacity);
+    public SynchronizedQueue(int Capacity) => _Queue = new(Capacity);
 
     public void Add(T value)
     {
@@ -72,7 +72,7 @@ public class SynchronizedItemsProcessor<T> : IDisposable
 
     public SynchronizedItemsProcessor(Action<T?> action, int ThreadCount = 1)
     {
-        _Cancellation = new CancellationTokenSource();
+        _Cancellation = new();
         var cancellation_token = _Cancellation.Token;
         _Tasks = Enumerable.Range(0, ThreadCount)
            .Select(_ => Task.Run(() =>
@@ -85,7 +85,7 @@ public class SynchronizedItemsProcessor<T> : IDisposable
 
     public SynchronizedItemsProcessor(Action<T?> action, Action<T?, Exception> Catch, int ThreadCount = 1)
     {
-        _Cancellation = new CancellationTokenSource();
+        _Cancellation = new();
         _Tasks = Enumerable.Range(0, ThreadCount)
            .Select(_ => Task.Run(() =>
             {

@@ -26,7 +26,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
             get
             {
                 var node_parent = Node.Parent;
-                for (var j = 0; j < i && node_parent is { }; j++)
+                for (var j = 0; j < i && node_parent is not null; j++)
                     node_parent = node_parent.Parent;
                 return node_parent;
             }
@@ -536,7 +536,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
             variables = _Left.GetVariables();
         return _Right != null
             ? variables.AppendLast(_Right.GetVariables()).Distinct()
-            : Enumerable.Empty<ExpressionVariable>();
+            : [];
     }
 
     /// <summary>Перечисление функций, известных данному узлу дерева</summary>
@@ -548,7 +548,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
             functions = _Left.GetFunctions();
         return _Right != null
             ? functions.AppendLast(_Right.GetFunctions()).Distinct()
-            : Enumerable.Empty<ExpressionFunction>();
+            : [];
     }
 
     /// <summary>Перечисление функционалов, известных данному узлу дерева</summary>
@@ -560,7 +560,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
             operators = _Left.GetFunctionals();
         return _Right != null
             ? operators.AppendLast(_Right.GetFunctionals()).Distinct()
-            : Enumerable.Empty<Functional>();
+            : [];
     }
 
     #region IDisposable

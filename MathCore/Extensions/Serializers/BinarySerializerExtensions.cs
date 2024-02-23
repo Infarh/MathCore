@@ -11,7 +11,7 @@ public static class BinarySerializerExtensions
     private static BinaryFormatter? __Formatter;
 
     [DebuggerStepThrough] 
-    public static BinaryFormatter GetSerializer() => __Formatter ??= new BinaryFormatter();
+    public static BinaryFormatter GetSerializer() => __Formatter ??= new();
 }
 
 #endif

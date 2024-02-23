@@ -4,22 +4,18 @@
 namespace MathCore.Threading.Tasks.Schedulers;
 
 /// <summary>Планировщик обеспечивает создание отдельного потока на каждую выполняемою задачу</summary>
-public class ThreadPerTaskScheduler : TaskScheduler
+public class ThreadPerTaskScheduler(Action<Thread>? ThreadInitializer = null) : TaskScheduler
 {
-    private readonly Action<Thread>? _ThreadInitializer;
-
-    public ThreadPerTaskScheduler(Action<Thread>? ThreadInitializer = null) => _ThreadInitializer = ThreadInitializer;
-
     /// <summary>Получить перечень запланированных задач в данном планировщике (всегда возвращает пустое перечисление)</summary>
     /// <remarks>Данный планировщик не задерживает задачи, а исполняет их по мере поступления</remarks>
-    protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
+    protected override IEnumerable<Task> GetScheduledTasks() => [];
 
     /// <summary>Запускает новый поток для выполнения задачи</summary>
     protected override void QueueTask(Task task)
     {
         //var thread = new Thread(() => TryExecuteTask(task)) {IsBackground = true};
         var thread = new Thread(p => ((ThreadPerTaskScheduler)p).TryExecuteTask(task)) { IsBackground = true };
-        _ThreadInitializer?.Invoke(thread);
+        ThreadInitializer?.Invoke(thread);
         thread.Start(this);
     }
 

@@ -12,6 +12,21 @@ namespace System.Threading.Tasks;
 
 public static class TaskEx
 {
+    /// <summary>Проверка на пустоту результата выполнения задачи</summary>
+    /// <typeparam name="T">Тип значения задачи</typeparam>
+    /// <param name="task">Выполняемая задача</param>
+    /// <param name="Message">Сообщение ошибки</param>
+    /// <param name="ParameterName">Название параметра</param>
+    /// <returns>Значение, точно не являющееся пустой ссылкой</returns>
+    /// <exception cref="InvalidOperationException">В случае если переданное значение <c>await</c> <paramref name="task"/> == <c>null</c> и <paramref name="ParameterName"/> == <c>null</c></exception>
+    /// <exception cref="ArgumentNullException">В случае если переданное значение <c>await</c> <paramref name="task"/> == <c>null</c> и <paramref name="ParameterName"/> != <c>null</c></exception>
+    public static async Task<T> NotNull<T>(this Task<T?> task, string? Message = null, [CallerArgumentExpression(nameof(task))] string? ParameterName = null!) where T : class
+    {
+        await Task.Yield().ConfigureAwait(false);
+        var result = await task.ConfigureAwait(false);
+        return result.NotNull(Message, ParameterName);
+    }
+
     /// <summary><c>.ConfigureAwait(false)</c></summary>
     public static ConfiguredTaskAwaitable CAF(this Task task, bool LockContext = false) => task.ConfigureAwait(LockContext);
 
@@ -536,12 +551,8 @@ public static class TaskEx
 
     /// <summary>An implementation of IObservable that wraps a Task.</summary>
     /// <typeparam name="TResult">The type of data returned by the task.</typeparam>
-    private class TaskObservable<TResult> : IObservable<TResult>
+    private class TaskObservable<TResult>(Task<TResult> ObservedTask) : IObservable<TResult>
     {
-        private readonly Task<TResult> _ObservedTask;
-
-        public TaskObservable(Task<TResult> ObservedTask) => _ObservedTask = ObservedTask;
-
         public IDisposable Subscribe(IObserver<TResult> observer)
         {
             // Validate arguments
@@ -551,17 +562,17 @@ public static class TaskEx
             var cts = new CancellationTokenSource();
 
             // Create a continuation to pass data along to the observer
-            _ObservedTask.ContinueWith(t =>
+            ObservedTask.ContinueWith(t =>
             {
                 switch (t.Status)
                 {
                     case TaskStatus.RanToCompletion:
-                        observer.OnNext(_ObservedTask.Result);
+                        observer.OnNext(ObservedTask.Result);
                         observer.OnCompleted();
                         break;
 
                     case TaskStatus.Faulted:
-                        observer.OnError(_ObservedTask.Exception ?? throw new InvalidOperationException());
+                        observer.OnError(ObservedTask.Exception ?? throw new InvalidOperationException());
                         break;
 
                     case TaskStatus.Canceled:
@@ -576,13 +587,9 @@ public static class TaskEx
     }
 
     /// <summary>Translate a call to IDisposable.Dispose to a CancellationTokenSource.Cancel.</summary>
-    private class CancelOnDispose : IDisposable
+    private class CancelOnDispose(CancellationTokenSource source) : IDisposable
     {
-        private readonly CancellationTokenSource _Source;
-
-        public CancelOnDispose(CancellationTokenSource source) => _Source = source;
-
-        void IDisposable.Dispose() => _Source.Cancel();
+        void IDisposable.Dispose() => source.Cancel();
     }
     #endregion
 

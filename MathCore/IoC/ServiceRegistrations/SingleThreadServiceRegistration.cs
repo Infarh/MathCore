@@ -31,8 +31,8 @@ public class SingleThreadServiceRegistration<TService> : ServiceRegistration<TSe
     public void ResetAll()
     {
         var last_initializer = _Initializer;
-        _Initializer = new ThreadLocal<object?>(() => CreateNewService());
-        _Exceptions = new ThreadLocal<Exception?>();
+        _Initializer = new(() => CreateNewService());
+        _Exceptions = new();
         last_initializer?.Dispose();
     }
 
@@ -56,6 +56,6 @@ public class SingleThreadServiceRegistration<TService> : ServiceRegistration<TSe
 
     [NotNull]
     internal override ServiceRegistration CloneFor(IServiceManager manager) => _FactoryMethod is null
-        ? new SingleThreadServiceRegistration<TService>(manager, ServiceType)
+        ? new(manager, ServiceType)
         : new SingleThreadServiceRegistration<TService>(manager, ServiceType, _FactoryMethod);
 }

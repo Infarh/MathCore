@@ -22,25 +22,18 @@ internal class ArrayManager
 {
     #region Types
 
-    internal class Buffer
+    internal class Buffer(char[] buffer, int offset, int size)
     {
         #region Fields
 
-        public int _offset;
+        public int _offset = offset;
 
-        public char[] CharBuffer;
-        public int Size;
+        public char[] CharBuffer = buffer;
+        public int Size = size;
 
         #endregion
 
         #region Constructors
-
-        public Buffer(char[] buffer, int offset, int size)
-        {
-            CharBuffer = buffer;
-            _offset    = offset;
-            Size       = size;
-        }
 
         #endregion
     }
@@ -58,7 +51,7 @@ internal class ArrayManager
 
     private Queue BufferQueue
     {
-        get => _BufferQueue ??= new Queue();
+        get => _BufferQueue ??= new();
         set => _BufferQueue = value;
     }
 
@@ -138,7 +131,7 @@ internal class ArrayManager
 
     internal void Refresh()
     {
-        BufferQueue    = new Queue();
+        BufferQueue    = new();
         _CurrentBuffer = null;
         Offset         = 0;
     }

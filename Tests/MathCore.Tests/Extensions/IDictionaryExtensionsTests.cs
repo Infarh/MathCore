@@ -31,16 +31,16 @@ public class IDictionaryExtensionsTests
     {
         var dictionary = new Dictionary<string, IList<string>>();
 
-        dictionary.AddValue(5, i => i.ToString(), i => new string('a', i));
+        dictionary.AddValue(5, i => i.ToString(), i => new('a', i));
         Assert.AreEqual(1, dictionary.Count);
         Assert.IsTrue(dictionary.ContainsKey("5"));
         Assert.AreEqual("aaaaa", dictionary["5"][0]);
 
-        dictionary.AddValue(7, _ => "5", i => new string('a', i));
+        dictionary.AddValue(7, _ => "5", i => new('a', i));
         Assert.AreEqual(1, dictionary.Count);
         Assert.AreEqual("aaaaaaa", dictionary["5"][1]);
 
-        dictionary.AddValue(7, i => i.ToString(), i => new string('a', i));
+        dictionary.AddValue(7, i => i.ToString(), i => new('a', i));
         Assert.AreEqual(2, dictionary.Count);
         Assert.IsTrue(dictionary.ContainsKey("7"));
         Assert.AreEqual("aaaaaaa", dictionary["7"][0]);
@@ -168,7 +168,7 @@ public class IDictionaryExtensionsTests
     {
         var j = 0;
         var dictionary = new Dictionary<int, string>()
-           .Initialize(5, () => new KeyValuePair<int, string>(j, j++.ToString()));
+           .Initialize(5, () => new(j, j++.ToString()));
         for (var i = 0; i < 5; i++)
         {
             Assert.IsTrue(dictionary.ContainsKey(i));
@@ -180,7 +180,7 @@ public class IDictionaryExtensionsTests
     public void Initialize_Index_Test()
     {
         var dictionary = new Dictionary<int, string>()
-           .Initialize(5, i => new KeyValuePair<int, string>(i, i.ToString()));
+           .Initialize(5, i => new(i, i.ToString()));
         for (var i = 0; i < 5; i++)
         {
             Assert.IsTrue(dictionary.ContainsKey(i));
@@ -204,7 +204,7 @@ public class IDictionaryExtensionsTests
     public void RemoveWhere_Test()
     {
         var dictionary = new Dictionary<int, string>()
-           .Initialize(10, i => new KeyValuePair<int, string>(i, i.ToString()));
+           .Initialize(10, i => new(i, i.ToString()));
         dictionary.RemoveWhere(kv => kv.Key % 2 != 0);
         Assert.IsFalse(dictionary.Any(kv => kv.Key % 2 != 0));
     }

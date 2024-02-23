@@ -4,6 +4,7 @@ using MathCore.Statistic;
 using CommunityToolkit.HighPerformance;
 using MathCore.Hash;
 using MMD5 = System.Security.Cryptography.MD5;
+using System.Globalization;
 #pragma warning disable CS8321 // Local function is declared but never used
 
 var bytes = new byte[60];
@@ -137,7 +138,7 @@ static double ChiSquarePval(double x, int df)
     // output = prob. x value occurred by chance.
     // ACM 299.
     if (x <= 0 || df < 1)
-        throw new Exception("Bad arg in ChiSquarePval()");
+        throw new("Bad arg in ChiSquarePval()");
 
     var y = 0.0;
     double ee; // change from e

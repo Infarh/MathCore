@@ -146,7 +146,7 @@ public ref struct ValueStringBuilder
 
         var to_return                 = _ArrayToReturnToPool;
         _Chars = _ArrayToReturnToPool = pool_array;
-        if (to_return is { }) ArrayPool<char>.Shared.Return(to_return);
+        if (to_return is not null) ArrayPool<char>.Shared.Return(to_return);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -155,7 +155,7 @@ public ref struct ValueStringBuilder
         var to_return = _ArrayToReturnToPool;
         // for safety, to avoid using pooled array if this instance is erroneously appended to again
         this = default; 
-        if (to_return is { }) ArrayPool<char>.Shared.Return(to_return);
+        if (to_return is not null) ArrayPool<char>.Shared.Return(to_return);
     }
 }
 
@@ -214,12 +214,12 @@ public sealed class NativeMemoryManager : MemoryManager<byte>
 
         lock (this)
         {
-            if (_RetainedCount == 0 && _Disposed) throw new Exception();
+            if (_RetainedCount == 0 && _Disposed) throw new();
             _RetainedCount++;
         }
 
         var pointer = (void*)((byte*)_Pointer + ElementIndex); // T = byte
-        return new MemoryHandle(pointer, default, this);
+        return new(pointer, default, this);
     }
 
     public override void Unpin()

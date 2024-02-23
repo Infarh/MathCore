@@ -21,5 +21,5 @@ public sealed class CurrentThreadTaskScheduler : TaskScheduler
 
     /// <summary>Перечень задач, которые должны запланированы на выполнение в текущем планировщике</summary>
     /// <returns>Всегда возвращает пустое перечисление - задачи выполняются немедленно без планирования</returns>
-    protected override IEnumerable<Task> GetScheduledTasks() => Enumerable.Empty<Task>();
+    protected override IEnumerable<Task> GetScheduledTasks() => [];
 }

@@ -2,23 +2,15 @@
 
 public class CortegeCtorTest
 {
-    public readonly ref struct TestComplexSimple
+    public readonly ref struct TestComplexSimple(double Re, double Im)
     {
-        public readonly double Re;
-        public readonly double Im;
-
-        public TestComplexSimple(double Re, double Im)
-        {
-            this.Re = Re;
-            this.Im = Im;
-        }
+        public readonly double Re = Re;
+        public readonly double Im = Im;
     }
-    public readonly ref struct TestComplexCortege
+    public readonly ref struct TestComplexCortege(double Re, double Im)
     {
-        public readonly double Re;
-        public readonly double Im;
-
-        public TestComplexCortege(double Re, double Im) => (this.Re, this.Im) = (Re, Im);
+        public readonly double Re = Re;
+        public readonly double Im = Im;
     }
 
     private static double __Re = 5;

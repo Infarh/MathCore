@@ -218,6 +218,6 @@ public class CommandLineArgsTests
         var parser = new CommandLineArgs(command_line.Split(' '));
 
         Assert.That.Enumerable(parser["in"]).IsEqualTo(new[] { "file3.txt", "file4.txt", "file5.txt", "file6.txt" });
-        Assert.That.Enumerable(parser["tst"]).IsEqualTo(Enumerable.Empty<string>());
+        Assert.That.Enumerable(parser["tst"]).IsEqualTo([]);
     }
 }

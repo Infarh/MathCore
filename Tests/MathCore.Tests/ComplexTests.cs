@@ -139,7 +139,7 @@ public class ComplexTests
         {
             Re[i]       = Random;
             Im[i]       = Random;
-            expected[i] = new Complex(Re[i], Im[i]);
+            expected[i] = new(Re[i], Im[i]);
         }
         CollectionAssert.AreEqual(expected, Complex.CreateArray(Re, Im), "Массив не соответствует ожидаемому");
     }
@@ -178,7 +178,7 @@ public class ComplexTests
         var                 Re     = Random;
         var                 Im     = Random;
         IEquatable<Complex> target = new Complex(Re, Im);
-        Assert.IsTrue(target.Equals(new Complex(Re, Im)));
+        Assert.IsTrue(target.Equals(new(Re, Im)));
         Assert.IsFalse(target.Equals(Rnd));
     }
 
@@ -217,9 +217,9 @@ public class ComplexTests
     [TestMethod]
     public void ModTest()
     {
-        Assert.AreEqual(new Complex(1, 1), Complex.Mod(1, 1), "Mod.(1,1) не равно 1+i");
-        Assert.AreEqual(new Complex(1), Complex.Mod(1), "Mod.(1) не равно 1");
-        Assert.AreEqual(new Complex(-4.6, 3.7), Complex.Mod(-4.6, 3.7), "Mod.(-4.6,3.7) не равно -4.6+i3.7");
+        Assert.AreEqual(new(1, 1), Complex.Mod(1, 1), "Mod.(1,1) не равно 1+i");
+        Assert.AreEqual(new(1), Complex.Mod(1), "Mod.(1) не равно 1");
+        Assert.AreEqual(new(-4.6, 3.7), Complex.Mod(-4.6, 3.7), "Mod.(-4.6,3.7) не равно -4.6+i3.7");
     }
 
     /// <summary>
@@ -244,7 +244,7 @@ public class ComplexTests
         var N        = __RndGenerator.Next(10) + 5;
         var X        = new Complex[N].Initialize(_ => Rnd);
         var Y        = Rnd;
-        var expected = new Complex[N].Initialize(i => new Complex(X[i].Re + Y.Re, X[i].Im + Y.Im));
+        var expected = new Complex[N].Initialize(i => new(X[i].Re + Y.Re, X[i].Im + Y.Im));
         (X + Y).Foreach((a, i) => Assert.AreEqual(expected[i], a));
     }
 
@@ -255,7 +255,7 @@ public class ComplexTests
     public void OperatorAdditionComplexToDoubleTest()
     {
         Assert.AreEqual(6, new Complex(1) + 5, "(1+0i) + 5 не равно 6");
-        Assert.AreEqual(new Complex(5, 1), new Complex(0, 1) + 5, "(0+1i) + 5 не равно 5+1i");
+        Assert.AreEqual(new(5, 1), new Complex(0, 1) + 5, "(0+1i) + 5 не равно 5+1i");
     }
 
     /// <summary>
@@ -267,7 +267,7 @@ public class ComplexTests
         var N        = __RndGenerator.Next(10) + 5;
         var X        = new double[N].Initialize(_ => Random);
         var Y        = Rnd;
-        var expected = new Complex[N].Initialize(i => new Complex(X[i] + Y.Re, Y.Im));
+        var expected = new Complex[N].Initialize(i => new(X[i] + Y.Re, Y.Im));
         (X + Y).Foreach((a, i) => Assert.AreEqual(expected[i], a));
     }
 
@@ -277,9 +277,9 @@ public class ComplexTests
     [TestMethod]
     public void OperatorAdditionComplexToComplexTest()
     {
-        Assert.AreEqual(new Complex(1, 1), new Complex(1) + new Complex(0, 1), "1 + i != (1+1i)");
-        Assert.AreEqual(new Complex(5, 7), new Complex(1, 2) + new Complex(4, 5), "(1+2i) + (4+5i) != (5+7i)");
-        Assert.AreEqual(new Complex(0, 7), new Complex(5, 2) + new Complex(-5, 5), "(5+2i) + (-5+5i) != 7i");
+        Assert.AreEqual(new(1, 1), new Complex(1) + new Complex(0, 1), "1 + i != (1+1i)");
+        Assert.AreEqual(new(5, 7), new Complex(1, 2) + new Complex(4, 5), "(1+2i) + (4+5i) != (5+7i)");
+        Assert.AreEqual(new(0, 7), new Complex(5, 2) + new Complex(-5, 5), "(5+2i) + (-5+5i) != 7i");
     }
 
     /// <summary>
@@ -344,7 +344,7 @@ public class ComplexTests
         var expected = new Complex[N].Initialize(i =>
         {
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
-            return new Complex((X[i].Re * Y.Re + X[i].Im * Y.Im) / q, (X[i].Im * Y.Re - X[i].Re * Y.Im) / q);
+            return new((X[i].Re * Y.Re + X[i].Im * Y.Im) / q, (X[i].Im * Y.Re - X[i].Re * Y.Im) / q);
         });
         (X / Y).Foreach((z, i) =>
         {
@@ -369,7 +369,7 @@ public class ComplexTests
         var expected = new Complex[N].Initialize(i =>
         {
             var q = Y.Re * Y.Re + Y.Im * Y.Im;
-            return new Complex(X[i] * Y.Re / q, -X[i] * Y.Im / q);
+            return new(X[i] * Y.Re / q, -X[i] * Y.Im / q);
         });
         (X / Y).Foreach((z, i) =>
         {
@@ -673,13 +673,13 @@ public class ComplexTests
     {
         var target = new Complex();
         Assert.AreEqual(GetArg(target) / pi, target.Arg / pi, 1e-15);
-        target = new Complex(RandomPositive);
+        target = new(RandomPositive);
         Assert.AreEqual(GetArg(target) / pi, target.Arg / pi, 1e-15);
-        target = new Complex(-RandomPositive);
+        target = new(-RandomPositive);
         Assert.AreEqual(GetArg(target) / pi, target.Arg / pi, 1e-15);
-        target = new Complex(0, RandomPositive);
+        target = new(0, RandomPositive);
         Assert.AreEqual(GetArg(target) / pi, target.Arg / pi, 1e-15);
-        target = new Complex(0, -RandomPositive);
+        target = new(0, -RandomPositive);
         Assert.AreEqual(GetArg(target) / pi, target.Arg / pi, 1e-15);
     }
 
@@ -687,9 +687,9 @@ public class ComplexTests
     [TestMethod]
     public void ComplexConjugateTest()
     {
-        Assert.AreEqual(new Complex(5, -8), new Complex(5, 8).ComplexConjugate, "(5+8i)* != (5-8i)");
-        Assert.AreEqual(new Complex(0, -8), new Complex(0, 8).ComplexConjugate, "8i* != -8i");
-        Assert.AreEqual(new Complex(10), new Complex(10).ComplexConjugate, "(10+0i)* != (10-0i)");
+        Assert.AreEqual(new(5, -8), new Complex(5, 8).ComplexConjugate, "(5+8i)* != (5-8i)");
+        Assert.AreEqual(new(0, -8), new Complex(0, 8).ComplexConjugate, "8i* != -8i");
+        Assert.AreEqual(new(10), new Complex(10).ComplexConjugate, "(10+0i)* != (10-0i)");
     }
 
     /// <summary>

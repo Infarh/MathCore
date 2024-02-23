@@ -69,7 +69,7 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
         }
 
         var j = Hash % _Buckets.Length;
-        _Slots[k]   = new Slot(Hash, Value, _Buckets[j] - 1);
+        _Slots[k]   = new(Hash, Value, _Buckets[j] - 1);
         _Buckets[j] = k + 1;
     }
 
@@ -88,8 +88,8 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
                 if (k < 0)
                     _Buckets[j] = _Slots[i].Next + 1;
                 else
-                    _Slots[k] = new Slot(_Slots[k].HashCode, _Slots[k].Value, _Slots[i].Next);
-                _Slots[i] = new Slot(-1, default, _FreeList);
+                    _Slots[k] = new(_Slots[k].HashCode, _Slots[k].Value, _Slots[i].Next);
+                _Slots[i] = new(-1, default, _FreeList);
                 _FreeList = i;
                 return true;
             }
@@ -108,7 +108,7 @@ public class Set<T>(IEqualityComparer<T>? comparer) : AbstractSetOf<T>
         for (var i = 0; i < _Count; i++)
         {
             var j = slots[i].HashCode % length;
-            slots[i] = new Slot(slots[i].HashCode, slots[i].Value, nn[j] - 1);
+            slots[i] = new(slots[i].HashCode, slots[i].Value, nn[j] - 1);
             nn[j]    = i + 1;
         }
         _Buckets = nn;
