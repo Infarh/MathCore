@@ -7,19 +7,15 @@ namespace MathCore.IoC.ServiceRegistrations;
 
 public abstract partial class ServiceRegistration
 {
-    protected class ServiceConstructorInfo
+    protected class ServiceConstructorInfo(ConstructorInfo constructor)
     {
-        private readonly ConstructorInfo _Constructor;
-
         private ParameterInfo[]? _Parameters;
 
-        public IReadOnlyList<ParameterInfo> Parameters => _Parameters ??= _Constructor.GetParameters();
+        public IReadOnlyList<ParameterInfo> Parameters => _Parameters ??= constructor.GetParameters();
 
         public IEnumerable<Type> ParameterTypes => Parameters.Select(p => p.ParameterType);
 
         public bool IsDefault => Parameters.Count == 0;
-
-        public ServiceConstructorInfo(ConstructorInfo constructor) => _Constructor = constructor;
 
         public object?[] GetParametersValues(Func<Type, object?> ParameterSelector, object?[] InputParameters)
         {
@@ -49,7 +45,7 @@ public abstract partial class ServiceRegistration
             return result;
         }
 
-        public object CreateInstance(object?[] parameters) => _Constructor.Invoke(parameters);
+        public object CreateInstance(object?[] parameters) => constructor.Invoke(parameters);
 
         public object CreateInstance(Func<Type, object?> ParameterSelector, params object[] parameters) => CreateInstance(GetParametersValues(ParameterSelector, parameters));
     }

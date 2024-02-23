@@ -146,7 +146,7 @@ public ref struct ValueStringBuilder
 
         var to_return                 = _ArrayToReturnToPool;
         _Chars = _ArrayToReturnToPool = pool_array;
-        if (to_return is { }) ArrayPool<char>.Shared.Return(to_return);
+        if (to_return is not null) ArrayPool<char>.Shared.Return(to_return);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -155,7 +155,7 @@ public ref struct ValueStringBuilder
         var to_return = _ArrayToReturnToPool;
         // for safety, to avoid using pooled array if this instance is erroneously appended to again
         this = default; 
-        if (to_return is { }) ArrayPool<char>.Shared.Return(to_return);
+        if (to_return is not null) ArrayPool<char>.Shared.Return(to_return);
     }
 }
 

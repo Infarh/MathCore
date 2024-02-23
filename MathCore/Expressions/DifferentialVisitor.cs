@@ -305,13 +305,11 @@ public class DifferentialVisitor : ExpressionVisitorEx
         }
     }
 
-    public class MethodDifferentialEventArgs : EventArgs
+    public class MethodDifferentialEventArgs(MethodCallExpression Method) : EventArgs
     {
-        public MethodCallExpression Method { get; }
+        public MethodCallExpression Method { get; } = Method;
 
         public Expression? DifferentialExpression { get; set; }
-
-        public MethodDifferentialEventArgs(MethodCallExpression Method) => this.Method = Method;
     }
 
     public event EventHandler<MethodDifferentialEventArgs>? MethodDifferential;

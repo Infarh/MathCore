@@ -26,7 +26,7 @@ public abstract class ExpressionTreeNode : IDisposable, ICloneable<ExpressionTre
             get
             {
                 var node_parent = Node.Parent;
-                for (var j = 0; j < i && node_parent is { }; j++)
+                for (var j = 0; j < i && node_parent is not null; j++)
                     node_parent = node_parent.Parent;
                 return node_parent;
             }

@@ -1,8 +1,6 @@
 ﻿namespace MathCore.Expressions.Complex;
 
-public abstract class ComplexUnaryExpression : ComplexExpression
+public abstract class ComplexUnaryExpression(ComplexExpression Value) : ComplexExpression
 {
-    public ComplexExpression Value { get; private set; }
-
-    protected ComplexUnaryExpression(ComplexExpression Value) => this.Value = Value;
+    public ComplexExpression Value { get; private set; } = Value;
 }

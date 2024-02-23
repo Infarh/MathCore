@@ -18,26 +18,19 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         get
         {
             if (__Default is not null) return __Default;
-            lock (__DefaultManagerSyncRoot)
-                if (__Default is null)
-                    __Default = new();
+            // ReSharper disable once NonAtomicCompoundOperator
+            lock (__DefaultManagerSyncRoot) __Default ??= new();
             return __Default;
         }
     }
 
-    public class RegistrationNotFoundEventArgs : EventArgs
+    public class RegistrationNotFoundEventArgs(Type ServiceType, object[] Parameters) : EventArgs
     {
-        public Type ServiceType { get; }
-        
-        public IReadOnlyCollection<object> Parameters { get; }
-        
+        public Type ServiceType { get; } = ServiceType;
+
+        public IReadOnlyCollection<object> Parameters { get; } = Parameters;
+
         public object? ServiceInstance { get; set; }
-        
-        public RegistrationNotFoundEventArgs(Type ServiceType, object[] Parameters)
-        {
-            this.ServiceType = ServiceType;
-            this.Parameters = Parameters;
-        }
     }
 
     public event EventHandler<RegistrationNotFoundEventArgs>? RegistrationNotFound;
@@ -129,6 +122,7 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
                 base_registration = services_value;
                 break;
             }
+
             if (base_registration is null)
                 if (InvokeRegistrationNotFound(ServiceType, parameters, out var instance))
                     return instance;
@@ -183,12 +177,11 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         foreach (var method in methods)
         {
             var method_parameters = method.GetParameters();
-            if (method_parameters.Length == 0 || method_parameters.All(p => ServiceRegistered(p.ParameterType)))
-            {
-                call_method = method;
-                parameter_infos = method_parameters;
-                break;
-            }
+            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType))) 
+                continue;
+            call_method = method;
+            parameter_infos = method_parameters;
+            break;
         }
 
         if (call_method is null)
@@ -213,12 +206,11 @@ public sealed partial class ServiceManager : IServiceManager, IServiceRegistrati
         foreach (var method in methods)
         {
             var method_parameters = method.GetParameters();
-            if (method_parameters.Length == 0 || method_parameters.All(p => ServiceRegistered(p.ParameterType)))
-            {
-                call_method = method;
-                parameter_infos = method_parameters;
-                break;
-            }
+            if (method_parameters.Length != 0 && !method_parameters.All(p => ServiceRegistered(p.ParameterType))) 
+                continue;
+            call_method = method;
+            parameter_infos = method_parameters;
+            break;
         }
 
         if (call_method is null)

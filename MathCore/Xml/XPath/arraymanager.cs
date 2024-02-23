@@ -22,25 +22,18 @@ internal class ArrayManager
 {
     #region Types
 
-    internal class Buffer
+    internal class Buffer(char[] buffer, int offset, int size)
     {
         #region Fields
 
-        public int _offset;
+        public int _offset = offset;
 
-        public char[] CharBuffer;
-        public int Size;
+        public char[] CharBuffer = buffer;
+        public int Size = size;
 
         #endregion
 
         #region Constructors
-
-        public Buffer(char[] buffer, int offset, int size)
-        {
-            CharBuffer = buffer;
-            _offset    = offset;
-            Size       = size;
-        }
 
         #endregion
     }

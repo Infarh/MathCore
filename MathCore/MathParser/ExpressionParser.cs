@@ -489,7 +489,7 @@ public class ExpressionParser
                         // то надо спускаться в правое поддерево до тех пор
                         parent_operator = (OperatorNode?)parent_operator.RightNodes
                             // пока встречаемые на пути операторы имеют левые поддеревья и приоритет операторов меньше текущего
-                           .TakeWhile(n => n is OperatorNode { Left: { } } node && node.Priority < priority)
+                           .TakeWhile(n => n is OperatorNode { Left: not null } node && node.Priority < priority)
                             // взять последний из последовательности
                            .LastOrDefault() ?? parent_operator; // если вернулась пустая ссылка, то взять предыдущий оператор
 

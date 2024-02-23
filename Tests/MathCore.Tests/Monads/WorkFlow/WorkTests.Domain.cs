@@ -51,11 +51,9 @@ public partial class WorkTests
     }
 
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-    private sealed class UserManager
+    private sealed class UserManager(IEnumerable<User> Users)
     {
-        private readonly List<User> _Users;
-
-        public UserManager(IEnumerable<User> Users) => _Users = Users as List<User> ?? Users.ToList();
+        private readonly List<User> _Users = Users as List<User> ?? Users.ToList();
 
         public void Create(User user, string password)
         {
@@ -108,16 +106,10 @@ public partial class WorkTests
         }
     }
 
-    private class AccountController
+    private class AccountController(UserManager UserManager, Logger Logger)
     {
-        private readonly UserManager _UserManager;
-        private readonly Logger _Logger;
-
-        public AccountController(UserManager UserManager, Logger Logger)
-        {
-            _UserManager = UserManager ?? throw new ArgumentNullException(nameof(UserManager));
-            _Logger      = Logger ?? throw new ArgumentNullException(nameof(Logger));
-        }
+        private readonly UserManager _UserManager = UserManager ?? throw new ArgumentNullException(nameof(UserManager));
+        private readonly Logger _Logger = Logger ?? throw new ArgumentNullException(nameof(Logger));
 
         public Result Register(string UserName, string Password) =>
             Work.With(_UserManager)
@@ -137,14 +129,13 @@ public partial class WorkTests
            .GetIfFailure(e => new FailureResult($"Registration operation faulted with message {e.Message}"));
     }
 
-    private abstract class Result
+    private abstract class Result(string Message)
     {
-        public string Message { get; }
-        public Result(string Message) => this.Message = Message;
+        public string Message { get; } = Message;
     }
 
-    private sealed class SuccessResult : Result { public SuccessResult(string Message) : base(Message) { } }
-    private sealed class FailureResult : Result { public FailureResult(string Message) : base(Message) { } }
+    private sealed class SuccessResult(string Message) : Result(Message);
+    private sealed class FailureResult(string Message) : Result(Message);
 
     #endregion
 

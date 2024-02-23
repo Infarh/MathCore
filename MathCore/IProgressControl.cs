@@ -46,21 +46,13 @@ public static class ProgressControlEx
 
 /// <summary>Реализация интерфейса контроля за асинхронной операцией</summary>
 /// <typeparam name="T">Тип значения прогресса</typeparam>
-public class ProgressControl<T> : IProgressControl<T>
+public class ProgressControl<T>(IProgress<T>? Progress, CancellationToken Cancel) : IProgressControl<T>
 {
-    public ProgressControl(IProgress<T>? Progress, CancellationToken Cancel)
-    {
-        this.Progress = Progress;
-        this.Cancel = Cancel;
-    }
+    public IProgress<T>? Progress { get; init; } = Progress;
 
-    public IProgress<T>? Progress { get; init; }
-
-    public CancellationToken Cancel { get; init; }
+    public CancellationToken Cancel { get; init; } = Cancel;
 }
 
 /// <summary>Реализация интерфейса контроля за асинхронной операцией</summary>
-public class ProgressControl : ProgressControl<double>, IProgressControl
-{
-    public ProgressControl(IProgress<double>? Progress, CancellationToken Cancel) : base(Progress, Cancel) { }
-}
+public class ProgressControl(IProgress<double>? Progress, CancellationToken Cancel)
+    : ProgressControl<double>(Progress, Cancel), IProgressControl;

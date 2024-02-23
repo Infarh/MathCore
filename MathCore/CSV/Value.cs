@@ -3,54 +3,45 @@ using System.Globalization;
 
 namespace MathCore.CSV;
 
-public readonly ref struct Value
+public readonly ref struct Value(string value, IFormatProvider Culture)
 {
-    private readonly string _Value;
-    private readonly CultureInfo _Culture;
+    public string TrimmedStringValue => value.Trim(' ', '\'', '"');
 
-    public string TrimmedStringValue => _Value.Trim(' ', '\'', '"');
+    public string StringValue => value;
 
-    public string StringValue => _Value;
+    public byte Int8Value => byte.Parse(TrimmedStringValue, Culture);
+    public sbyte SInt8Value => sbyte.Parse(TrimmedStringValue, Culture);
+    public short Int16Value => short.Parse(TrimmedStringValue, Culture);
+    public ushort UInt16Value => ushort.Parse(TrimmedStringValue, Culture);
+    public int Int32Value => int.Parse(TrimmedStringValue, Culture);
+    public uint UInt32Value => uint.Parse(TrimmedStringValue, Culture);
+    public long Int64Value => long.Parse(TrimmedStringValue, Culture);
+    public ulong UInt64Value => ulong.Parse(TrimmedStringValue, Culture);
 
-    public byte Int8Value => byte.Parse(TrimmedStringValue, _Culture);
-    public sbyte SInt8Value => sbyte.Parse(TrimmedStringValue, _Culture);
-    public short Int16Value => short.Parse(TrimmedStringValue, _Culture);
-    public ushort UInt16Value => ushort.Parse(TrimmedStringValue, _Culture);
-    public int Int32Value => int.Parse(TrimmedStringValue, _Culture);
-    public uint UInt32Value => uint.Parse(TrimmedStringValue, _Culture);
-    public long Int64Value => long.Parse(TrimmedStringValue, _Culture);
-    public ulong UInt64Value => ulong.Parse(TrimmedStringValue, _Culture);
-
-    public float FloatValue => TrimmedStringValue is { Length  : > 0 } ? float.Parse(TrimmedStringValue, _Culture) : float.NaN;
-    public double DoubleValue => TrimmedStringValue is { Length: > 0 } ? double.Parse(TrimmedStringValue, _Culture) : double.NaN;
-    public decimal DecimalValue => decimal.Parse(TrimmedStringValue, _Culture);
+    public float FloatValue => TrimmedStringValue is { Length  : > 0 } ? float.Parse(TrimmedStringValue, Culture) : float.NaN;
+    public double DoubleValue => TrimmedStringValue is { Length: > 0 } ? double.Parse(TrimmedStringValue, Culture) : double.NaN;
+    public decimal DecimalValue => decimal.Parse(TrimmedStringValue, Culture);
 
     public bool BoolValue => bool.Parse(TrimmedStringValue);
 
     /* ------------------------------------------------------------------------------------------------------------- */
 
-    public byte? Int8NullValue => byte.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public sbyte? SInt8NullValue => sbyte.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public short? Int16NullValue => short.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public ushort? UInt16NullValue => ushort.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public int? Int32NullValue => int.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public uint? UInt32NullValue => uint.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public long? Int64NullValue => long.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public ulong? UInt64NullValue => ulong.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
+    public byte? Int8NullValue => byte.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public sbyte? SInt8NullValue => sbyte.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public short? Int16NullValue => short.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public ushort? UInt16NullValue => ushort.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public int? Int32NullValue => int.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public uint? UInt32NullValue => uint.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public long? Int64NullValue => long.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public ulong? UInt64NullValue => ulong.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
 
-    public float? FloatNullValue => float.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public double? DoubleNullValue => double.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
-    public decimal? DecimalNullValue => decimal.TryParse(TrimmedStringValue, NumberStyles.Any, _Culture, out var v) ? v : null;
+    public float? FloatNullValue => float.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public double? DoubleNullValue => double.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
+    public decimal? DecimalNullValue => decimal.TryParse(TrimmedStringValue, NumberStyles.Any, Culture, out var v) ? v : null;
 
     public bool? BoolNullValue => bool.TryParse(TrimmedStringValue, out var v) ? v : null;
 
     /* ------------------------------------------------------------------------------------------------------------- */
-
-    public Value(string value, CultureInfo Culture)
-    {
-        _Value   = value;
-        _Culture = Culture;
-    }
 
     /* ------------------------------------------------------------------------------------------------------------- */
 

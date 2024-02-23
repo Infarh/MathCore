@@ -6,10 +6,8 @@ using MathCore.Extensions.Expressions;
 namespace MathCore.MathParser.ExpressionTrees.Nodes;
 
 /// <summary>Узел дерева мат.выражения, реализующий логическую операцию</summary>
-public abstract class LogicOperatorNode : OperatorNode
+public abstract class LogicOperatorNode(string Name, int Priority) : OperatorNode(Name, Priority)
 {
-    protected LogicOperatorNode(string Name, int Priority) : base(Name, Priority) { }
-
     /// <summary>Компиляция логики узла</summary>
     /// <returns>Скомпилированное логическое выражение, реализующее логику оператора</returns>
     public abstract Expression LogicCompile();

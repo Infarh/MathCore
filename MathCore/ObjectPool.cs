@@ -88,14 +88,10 @@ public abstract class ProducerConsumerCollectionBase<T> : IProducerConsumerColle
 
 /// <summary>Debug view for the IProducerConsumerCollection.</summary>
 /// <typeparam name="T">Specifies the type of the data being aggregated.</typeparam>
-internal sealed class IProducerConsumerCollection_DebugView<T>
+internal sealed class IProducerConsumerCollection_DebugView<T>(IProducerConsumerCollection<T> collection)
 {
-    private readonly IProducerConsumerCollection<T> _Collection;
-
     [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-    public T[] Values => _Collection.ToArray();
-
-    public IProducerConsumerCollection_DebugView(IProducerConsumerCollection<T> collection) => _Collection = collection;
+    public T[] Values => collection.ToArray();
 }
 
 /// <summary>Provides a thread-safe object pool.</summary>

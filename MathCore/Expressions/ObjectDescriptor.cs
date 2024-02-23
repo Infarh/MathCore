@@ -1,7 +1,14 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+using System.ComponentModel;
 using System.Reflection;
 
-using MathCore.Annotations;
+#if NET8_0_OR_GREATER
+using DisallowNullAttribute = System.Diagnostics.CodeAnalysis.DisallowNullAttribute;
+#else
+using DisallowNullAttribute = MathCore.Annotations.DisallowNullAttribute;
+#endif
+
+
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 
@@ -14,28 +21,22 @@ using MathCore.Annotations;
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions;
 
-public class ObjectDescriptor : ObjectDescriptor<object>
-{
-    public ObjectDescriptor([NotNull] object obj) : base(obj) { }
+public class ObjectDescriptor(object obj) : ObjectDescriptor<object>(obj);
 
-}
-
-public class ObjectDescriptor<T>
+public class ObjectDescriptor<T>([DisallowNull] T obj)
 {
     private const BindingFlags __BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-    private readonly T _Object;
-    private readonly Type _ObjectType;
-    private DictionaryReadOnly<string, Property> _Properties;
-    private DictionaryReadOnly<string, Field> _Fields;
-    private Func<PropertyInfo, bool> _PropertiesFilter;
-    private Func<FieldInfo, bool> _FieldsFilter;
+    private readonly Type _ObjectType = obj.GetType();
+    private DictionaryReadOnly<string, Property>? _Properties;
+    private DictionaryReadOnly<string, Field>? _Fields;
+    private Func<PropertyInfo, bool>? _PropertiesFilter;
+    private Func<FieldInfo, bool>? _FieldsFilter;
 
-    public T Obj => _Object;
+    public T Obj => obj;
 
-    public bool IsNotifyPropertyChanged { get; private set; }
+    public bool IsNotifyPropertyChanged { get; private set; } = obj is INotifyPropertyChanged;
 
-    [NotNull]
     public DictionaryReadOnly<string, Property> Property
     {
         get
@@ -43,7 +44,7 @@ public class ObjectDescriptor<T>
             if(_Properties != null) return _Properties;
             var properties = _ObjectType.GetProperties(__BindingFlags)
                .Where(_PropertiesFilter ?? (_ => true))
-               .Select(p => new Property(_Object, p)).ToArray();
+               .Select(p => new Property(obj, p)).ToArray();
             _Properties = new(properties.ToDictionary(p => p.Name));
             return _Properties;
         }
@@ -70,7 +71,6 @@ public class ObjectDescriptor<T>
         }
     }
 
-    [NotNull]
     public DictionaryReadOnly<string, Field> Fields
     {
         get
@@ -78,17 +78,9 @@ public class ObjectDescriptor<T>
             if(_Fields != null) return _Fields;
             var fields = _ObjectType.GetFields(__BindingFlags)
                .Where(_FieldsFilter ?? (_ => true))
-               .Select(p => new Field(_Object, p)).ToArray();
+               .Select(p => new Field(obj, p)).ToArray();
             _Fields = new(fields.ToDictionary(p => p.Name));
             return _Fields;
         }
-    }
-
-
-    public ObjectDescriptor([NotNull] T obj)
-    {
-        _Object                 = obj;
-        _ObjectType             = obj.GetType();
-        IsNotifyPropertyChanged = obj is INotifyPropertyChanged;
     }
 }

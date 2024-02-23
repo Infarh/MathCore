@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Specialized;
+// ReSharper disable EventNeverSubscribedTo.Global
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -10,7 +11,9 @@ namespace System.ComponentModel;
 // ReSharper disable once InconsistentNaming
 public static class INotifyCollectionChangedExtensions
 {
-    public abstract class CollectionChangesSubscriber
+    public abstract class CollectionChangesSubscriber(
+        INotifyCollectionChanged Obj,
+        NotifyCollectionChangedAction ChangeType)
     {
         private event NotifyCollectionChangedEventHandler? OnCollectionChangedEventHandlers;
 
@@ -58,9 +61,7 @@ public static class INotifyCollectionChangedExtensions
             }
         }
 
-        protected readonly WeakReference<INotifyCollectionChanged> _Collection;
-
-        private readonly NotifyCollectionChangedAction _ChangeType;
+        protected readonly WeakReference<INotifyCollectionChanged> _Collection = new(Obj);
 
         public virtual bool IsEmpty => OnCollectionChangedEventHandlers is null && CollectionChangedHandlers is null && ValueChangeEventHandlers is null;
 
@@ -69,15 +70,9 @@ public static class INotifyCollectionChangedExtensions
                 ? collection
                 : throw new InvalidOperationException("Попытка доступа к объекту, который был удалён из памяти");
 
-        protected CollectionChangesSubscriber(INotifyCollectionChanged Obj, NotifyCollectionChangedAction ChangeType)
-        {
-            _ChangeType = ChangeType;
-            _Collection = new(Obj);
-        }
-
         private void OnCollectionChangedHandler(object? Sender, NotifyCollectionChangedEventArgs E)
         {
-            if (E.Action != _ChangeType) return;
+            if (E.Action != ChangeType) return;
             OnCollectionChanged(Sender, E);
         }
 
@@ -95,7 +90,7 @@ public static class INotifyCollectionChangedExtensions
         {
             OnCollectionChangedEventHandlers = null;
             CollectionChangedHandlers        = null;
-            ValueChangeEventHandlers  = null;
+            ValueChangeEventHandlers         = null;
         }
     }
 

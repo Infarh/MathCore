@@ -8,17 +8,13 @@ using System.Collections;
 // ReSharper disable once CheckNamespace
 namespace System.Linq;
 
-public class JoinedEnumerable<T> : IEnumerable<T>
+public class JoinedEnumerable<T>(IEnumerable<T> source) : IEnumerable<T>
 {
-    private readonly IEnumerable<T> _Source;
-
     public bool IsOuter { get; set; }
 
-    public JoinedEnumerable(IEnumerable<T> source) => _Source = source;
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => source.GetEnumerator();
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator() => _Source.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => _Source.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => source.GetEnumerator();
 }
 
 /// <remarks>

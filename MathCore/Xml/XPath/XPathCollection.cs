@@ -26,11 +26,11 @@ namespace System.Xml.XPath;
 // and it's compiled query expression
 
 //XPathCollection class
-public class XPathCollection : ICollection
+public class XPathCollection() : ICollection
 {
     #region Fields
 
-    private readonly Hashtable _XPatches;
+    private readonly Hashtable _XPatches = [];
 
     private int _Key; // number of XPatches added into collection as keys
     private XPathReader _Reader;
@@ -61,8 +61,6 @@ public class XPathCollection : ICollection
     #endregion
 
     #region Constructors
-
-    public XPathCollection() => _XPatches = [];
 
     public XPathCollection(XmlNamespaceManager NsManager) : this() => NamespaceManager = NsManager;
 

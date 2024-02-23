@@ -1,14 +1,8 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath;
 
-internal class DescendantQuery : BaseAxisQuery
+internal class DescendantQuery(Query QyInput, string name, string prefix, XPathNodeType type) : BaseAxisQuery(QyInput, name, prefix, type)
 {
-    #region Constructors
-
-    public DescendantQuery(Query QyInput, string name, string prefix, XPathNodeType type) : base(QyInput, name, prefix, type) { }
-
-    #endregion
-
     #region Methods
 
     internal override bool MatchNode(XPathReader reader)

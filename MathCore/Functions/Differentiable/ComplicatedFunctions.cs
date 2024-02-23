@@ -12,8 +12,8 @@ public class Cousins : Function
     public override Function Derivative() => new Sinus();
 }
 
-public class Tangent : Division { public Tangent() : base(new Sinus(), new Cousins()) { } }
-public class Cotangent : Division { public Cotangent() : base(new Cousins(), new Sinus()) { } }
+public class Tangent() : Division(new Sinus(), new Cousins());
+public class Cotangent() : Division(new Cousins(), new Sinus());
 
 public class Exponent : Function
 {
@@ -21,20 +21,10 @@ public class Exponent : Function
     public override Function Derivative() => new Exponent();
 }
 
-public class HyperbolicSinus : Division
-{
-    public HyperbolicSinus()
-        : base(new Exponent() - new One() / new Exponent(), (Constant)2)
-    { }
-}
+public class HyperbolicSinus() : Division(new Exponent() - new One() / new Exponent(), (Constant)2);
 
-public class HyperbolicCosines : Division
-{
-    public HyperbolicCosines()
-        : base(new Exponent() + new One() / new Exponent(), (Constant)2)
-    { }
-}
+public class HyperbolicCosines() : Division(new Exponent() + new One() / new Exponent(), (Constant)2);
 
-public class HyperbolicTangent : Division { public HyperbolicTangent() : base(new HyperbolicSinus(), new HyperbolicCosines()) { } }
+public class HyperbolicTangent() : Division(new HyperbolicSinus(), new HyperbolicCosines());
 
-public class HyperbolicCotangent : Division { public HyperbolicCotangent() : base(new HyperbolicCosines(), new HyperbolicSinus()) { } }
+public class HyperbolicCotangent() : Division(new HyperbolicCosines(), new HyperbolicSinus());

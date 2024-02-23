@@ -2,7 +2,7 @@
 namespace MathCore.Optimization.ParticleSwarm;
 
 /// <summary>Рой двумерных частиц</summary>
-public class Swarm2D
+public class Swarm2D(int ParticleCount = 100)
 {
     /// <summary>Вес инерции</summary>
     private double _Inertia;
@@ -73,9 +73,7 @@ public class Swarm2D
     private static readonly Random __Random = new();
 
     /// <summary>Размер роя</summary>
-    private readonly int _ParticleCount;
-
-    public Swarm2D(int ParticleCount = 100) => _ParticleCount = ParticleCount;
+    private readonly int _ParticleCount = ParticleCount;
 
     private double Get(in Interval Interval, double PointX, double BestX, double X) =>
         Interval.Normalize(PointX + (
@@ -126,17 +124,15 @@ public class Swarm2D
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
             {
-                   
                 p.X = Get(IntervalX, p.X, p.BestX, X);
                 p.Y = Get(IntervalY, p.Y, p.BestY, Y);
                 p.SetMin(F);
 
-                if (p.Value < Value)
-                {
-                    X     = p.X;
-                    Y     = p.Y;
-                    Value = p.Value;
-                }
+                if (p.Value >= Value) continue;
+
+                X     = p.X;
+                Y     = p.Y;
+                Value = p.Value;
             }
     }
 
@@ -189,17 +185,14 @@ public class Swarm2D
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
             {
-
                 p.X = Get(IntervalX, p.X, p.BestX, X);
                 p.Y = Get(IntervalY, p.Y, p.BestY, Y);
                 p.SetMax(F);
 
-                if (p.Value > Value)
-                {
-                    X     = p.X;
-                    Y     = p.Y;
-                    Value = p.Value;
-                }
+                if (p.Value <= Value) continue;
+                X     = p.X;
+                Y     = p.Y;
+                Value = p.Value;
             }
     }
 }

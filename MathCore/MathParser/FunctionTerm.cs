@@ -6,17 +6,15 @@ using MathCore.MathParser.ExpressionTrees.Nodes;
 namespace MathCore.MathParser;
 
 /// <summary>Функциональный элемент выражения</summary>
-internal class FunctionTerm : StringTerm
+internal class FunctionTerm(string Name, BlockTerm Block) : StringTerm(Name)
 {
     /// <summary>Блок со скобками</summary>
-    public BlockTerm Block { get; set; }
+    public BlockTerm Block { get; set; } = Block;
 
     /// <summary>Новый функциональный элемент выражения</summary>
     /// <param name="StrTerm">Строковый элемент выражения</param>
     /// <param name="Block">Блок выражения</param>
     public FunctionTerm(StringTerm StrTerm, BlockTerm Block) : this(StrTerm.Name, Block) { }
-
-    public FunctionTerm(string Name, BlockTerm Block) : base(Name) => this.Block = Block;
 
     /// <summary>Получить поддерево</summary>
     /// <param name="Parser">Парсер</param>

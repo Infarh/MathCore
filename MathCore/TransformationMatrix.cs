@@ -8,17 +8,11 @@ using MathCore.Vectors;
 namespace MathCore;
 
 /// <summary>Матрица аффинного преобразования</summary>
-public abstract class TransformationMatrix : Matrix
-{
-    /// <summary>Инициализация новой матрицы аффинного преобразования</summary>
-    /// <param name="Data">Массив коэффициентов матрицы</param>
-    protected TransformationMatrix(double[,] Data) : base(Data) { }
-}
+/// <remarks>Инициализация новой матрицы аффинного преобразования</remarks>
+/// <param name="Data">Массив коэффициентов матрицы</param>
+public abstract class TransformationMatrix(double[,] Data) : Matrix(Data);
 
-public abstract class Transformation3DMatrix : TransformationMatrix
-{
-    protected Transformation3DMatrix(double[,] Data) : base(Data) { }
-}
+public abstract class Transformation3DMatrix(double[,] Data) : TransformationMatrix(Data);
 
 public class Rotation3DMatrix(double Angle, Rotation3DMatrix.RotationAxe Axe) : Transformation3DMatrix(GetData(Angle, Axe))
 {

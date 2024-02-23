@@ -2,20 +2,13 @@
 
 namespace MathCore.Expressions.Complex;
 
-public class ComplexLambdaUnaryExpression : ComplexUnaryExpression
+public class ComplexLambdaUnaryExpression(
+    ComplexExpression Value,
+    Func<ComplexExpression, Expression> GetReExpr,
+    Func<ComplexExpression, Expression> GetImExpr)
+    : ComplexUnaryExpression(Value)
 {
-    private readonly Func<ComplexExpression, Expression> _GetRe;
-    private readonly Func<ComplexExpression, Expression> _GetIm;
+    protected override Expression GetRe() => GetReExpr(Value);
 
-    public ComplexLambdaUnaryExpression(ComplexExpression Value,
-        Func<ComplexExpression, Expression> GetRe, Func<ComplexExpression, Expression> GetIm)
-        : base(Value)
-    {
-        _GetRe = GetRe;
-        _GetIm = GetIm;
-    }
-
-    protected override Expression GetRe() => _GetRe(Value);
-
-    protected override Expression GetIm() => _GetIm(Value);
+    protected override Expression GetIm() => GetImExpr(Value);
 }

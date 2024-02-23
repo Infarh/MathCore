@@ -116,7 +116,7 @@ public static class ObjectExtensions
     public class ObjectSelector<TSource, TResult>
     {
         /// <summary>Продолжать выборку?</summary>
-        public bool Continue { get; set; }
+        public bool Continue { get; set; } = true;
 
         /// <summary>Объект-источник</summary>
         public TSource? Object { get; set; }
@@ -126,9 +126,6 @@ public static class ObjectExtensions
 
         /// <summary>Номер итерации</summary>
         public int Iteration { get; set; }
-
-        /// <summary>Инициализация нового экземпляра <see cref="ObjectSelector{TSource,TResult}"/></summary>
-        public ObjectSelector() => Continue = true;
 
         /// <summary>Переход к следующей итерации</summary>
         /// <param name="result">Результат итерации</param>
@@ -179,7 +176,7 @@ public static class ObjectExtensions
     /// <summary>Преобразование объекта в форматированную строку</summary>
     /// <param name="obj">Преобразуемый объект (идущий нулевым аргументом)</param>
     /// <param name="Format">Строка форматирования</param>
-    /// <param name="args">Массив аргументов, добавляемых к объекту для создание форматированной строки</param>
+    /// <param name="args">Массив аргументов, добавляемых к объекту для создания форматированной строки</param>
     /// <returns>Форматированная строка текстового представления объекта</returns>
     [StringFormatMethod(nameof(Format))]
     public static string ToFormattedString(this object obj, string Format, params object[]? args)
@@ -238,7 +235,7 @@ public static class ObjectExtensions
     /// <summary>Ссылка на объект не равна null</summary>
     /// <param name="o">Проверяемый объект</param>
     /// <returns>Истина, если проверяемый объект не null</returns>
-    public static bool IsNotNull(this object? o) => o is { };
+    public static bool IsNotNull(this object? o) => o is not null;
 
     /// <summary>Ссылка на объект равна null</summary>
     /// <param name="o">Проверяемый объект</param>
@@ -278,7 +275,7 @@ public static class ObjectExtensions
     [return: NotNullIfNotNull(nameof(obj))]
     public static T? InitializeObject<T>(this T? obj, Action<T?>? Initializer) where T : class
     {
-        if (obj is { })
+        if (obj is not null)
             Initializer?.Invoke(obj);
         return obj;
     }
@@ -293,7 +290,7 @@ public static class ObjectExtensions
     [return: NotNullIfNotNull(nameof(obj))]
     public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Action<T, TP?>? Initializer) where T : class
     {
-        if (obj is { })
+        if (obj is not null)
             Initializer?.Invoke(obj, parameter);
         return obj;
     }
@@ -311,7 +308,7 @@ public static class ObjectExtensions
     public static T? InitializeObject<T, TP1, TP2>(this T? obj, TP1? parameter1, TP2? parameter2, Action<T?, TP1?, TP2?>? Initializer
     ) where T : class
     {
-        if (obj is { })
+        if (obj is not null)
             Initializer?.Invoke(obj, parameter1, parameter2);
         return obj;
     }
@@ -336,7 +333,7 @@ public static class ObjectExtensions
         Action<T?, TP1?, TP2?, TP3?>? Initializer)
         where T : class
     {
-        if (obj is { })
+        if (obj is not null)
             Initializer?.Invoke(obj, parameter1, parameter2, parameter3);
         return obj;
     }
@@ -348,7 +345,7 @@ public static class ObjectExtensions
     /// <returns>Объект, возвращённый функцией инициализации</returns>
     [return: NotNullIfNotNull(nameof(obj))]
     public static T? InitializeObject<T>(this T? obj, Func<T?, T?>? Initializer) where T : class =>
-        Initializer is { } && obj is { } ? Initializer(obj) : obj;
+        Initializer is not null && obj is not null ? Initializer(obj) : obj;
 
     /// <summary>Инициализировать объект ссылочного типа</summary>
     /// <typeparam name="T">Тип объекта</typeparam>
@@ -359,7 +356,7 @@ public static class ObjectExtensions
     /// <returns>Объект, возвращённый функцией инициализации</returns>
     [return: NotNullIfNotNull(nameof(obj))]
     public static T? InitializeObject<T, TP>(this T? obj, TP? parameter, Func<T?, TP?, T?>? Initializer) where T : class =>
-        Initializer is { } && obj is { } ? Initializer(obj, parameter) : obj;
+        Initializer is not null && obj is not null ? Initializer(obj, parameter) : obj;
 
     /// <summary>Инициализировать объект ссылочного типа</summary>
     /// <typeparam name="T">Тип объекта</typeparam>
@@ -380,7 +377,7 @@ public static class ObjectExtensions
         TP3? parameter3,
         Func<T?, TP1?, TP2?, TP3?, T?>? Initializer)
         where T : class =>
-        Initializer is { } && obj is { } ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
+        Initializer is not null && obj is not null ? Initializer(obj, parameter1, parameter2, parameter3) : obj;
 
     /// <summary>Инициализировать объект ссылочного типа</summary>
     /// <typeparam name="T">Тип объекта</typeparam>
@@ -398,7 +395,7 @@ public static class ObjectExtensions
         TP2? parameter2,
         Func<T?, TP1?, TP2?, T?>? Initializer)
         where T : class =>
-        Initializer is { } && obj is { } ? Initializer(obj, parameter1, parameter2) : obj;
+        Initializer is not null && obj is not null ? Initializer(obj, parameter1, parameter2) : obj;
 
     /// <summary>Печать объекта на консоли без переноса строки в конце</summary>
     /// <typeparam name="T">Тип печатаемого объекта</typeparam>

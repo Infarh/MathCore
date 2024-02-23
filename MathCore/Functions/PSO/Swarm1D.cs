@@ -1,6 +1,6 @@
 ﻿namespace MathCore.Functions.PSO;
 
-public class Swarm1D
+public class Swarm1D(int ParticleCount = 100)
 {
     private const double w = 0.729;    // inertia weight. see http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=00870279
     private const double c1 = 1.49445; // cognitive/local weight
@@ -13,10 +13,8 @@ public class Swarm1D
         public double Value;
         public double X;
 
-        public Particle1D(Func<double, double> Function, Interval IntervalX)
-            : this(Function, IntervalX.RandomValue) { }
-        private Particle1D(Func<double, double> Function, double X)
-            : this(X, Function(X)) { }
+        public Particle1D(Func<double, double> Function, Interval IntervalX) : this(Function, IntervalX.RandomValue) { }
+        private Particle1D(Func<double, double> Function, double X) : this(X, Function(X)) { }
 
         private Particle1D(double X, double Value) : this(X, Value, X, Value) { }
 
@@ -30,10 +28,6 @@ public class Swarm1D
     }
 
     private static readonly Random __Random = new();
-
-    private readonly int _ParticleCount;
-
-    public Swarm1D(int ParticleCount = 100) => _ParticleCount = ParticleCount;
 
     public void Minimize(
         Func<double, double> func, 
@@ -54,7 +48,7 @@ public class Swarm1D
     {
         var IntervalVx = IntervalX;
 
-        var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
+        var swarm = new Particle1D[ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
         var start = swarm.GetMin(p => p.Value);
         X     = start.X;
         Value = start.Value;
@@ -77,21 +71,31 @@ public class Swarm1D
                     p.BestValue = p.Value;
                 }
 
-                if (!(p.Value < Value)) continue;
+                if (p.Value >= Value) continue;
                 X     = newX;
                 Value = p.Value;
             }
     }
 
-    public void Maximize(Func<double, double> func, double minX, double maxX, int IterationCount,
-        out double X, out double Value) => Maximize(func, new(minX, maxX), IterationCount, out X, out Value);
+    public void Maximize(
+        Func<double, double> func,
+        double minX,
+        double maxX, 
+        int IterationCount,
+        out double X,
+        out double Value)
+        => Maximize(func, new(minX, maxX), IterationCount, out X, out Value);
 
-    public void Maximize(Func<double, double> func, Interval IntervalX, int IterationCount,
-        out double X, out double Value)
+    public void Maximize(
+        Func<double, double> func, 
+        Interval IntervalX, 
+        int IterationCount,
+        out double X, 
+        out double Value)
     {
         var IntervalVx = IntervalX;
 
-        var swarm = new Particle1D[_ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
+        var swarm = new Particle1D[ParticleCount].Initialize(func, IntervalVx, (_, f, vx) => new(f, vx));
         var start = swarm.GetMax(p => p.Value);
         X     = start.X;
         Value = start.Value;
@@ -113,7 +117,8 @@ public class Swarm1D
                     p.BestX     = newX;
                     p.BestValue = p.Value;
                 }
-                if (!(p.Value > Value)) continue;
+
+                if (p.Value <= Value) continue;
                 X     = newX;
                 Value = p.Value;
             }

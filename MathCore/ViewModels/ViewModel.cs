@@ -292,7 +292,7 @@ public partial class ViewModel : INotifyPropertyChanging, INotifyPropertyChanged
                     dependencies = properties_dependencies_dictionary[PropertyName].Where(name => name != PropertyName).ToArray();
         var dependency_handlers = _PropertyChangedHandlers;
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (dependency_handlers is { } && dependency_handlers.TryGetValue(PropertyName, out var handler)) handler?.Invoke();
+        if (dependency_handlers is not null && dependency_handlers.TryGetValue(PropertyName, out var handler)) handler?.Invoke();
         if (dependencies is null) return;
         handlers.Start(this, dependencies);
         if (dependency_handlers != null)

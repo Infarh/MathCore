@@ -15,9 +15,9 @@ public static class EventHandlerTyped1Extension
     /// <param name="Sender">Источник события</param>
     /// <param name="e">Аргумент события</param>
     [DST]
-    public static void Start<TS, TE>(this EventHandler<TS, TE> Handler, TS Sender, EventArgs<TE> e)
+    public static void Start<TS, TE>(this EventHandler<TS, TE>? Handler, TS Sender, EventArgs<TE> e)
     {
-        if (Handler is not { }) return;
+        if (Handler is null) return;
         var invocations = Handler.GetInvocationList();
         foreach (var invocation in invocations)
             if (invocation.Target is ISynchronizeInvoke { InvokeRequired: true } invoke)

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 namespace MathCore.Optimization.ParticleSwarm;
 
-public class Swarm
+public class Swarm(int ParticleCount = 100)
 {
     /// <summary>Вес инерции</summary>
     private double _Inertia;
@@ -59,10 +59,6 @@ public class Swarm
 
     private static readonly Random __Random = new();
 
-    private readonly int _ParticleCount;
-
-    public Swarm(int ParticleCount = 100) => _ParticleCount = ParticleCount;
-
     public void Minimize(
         in Func<double[], double> F,
         in double[] MinX,
@@ -81,8 +77,8 @@ public class Swarm
     {
         var dimensions = IntervalX.Length;
 
-        var swarm = new Particle[_ParticleCount];
-        for (var i = 0; i < _ParticleCount; i++)
+        var swarm = new Particle[ParticleCount];
+        for (var i = 0; i < ParticleCount; i++)
         {
             var xx = __Random.NextUniform(IntervalX);
             swarm[i] = new(xx, F(xx));
@@ -132,8 +128,8 @@ public class Swarm
     {
         var dimensions = IntervalX.Length;
 
-        var swarm = new Particle[_ParticleCount];
-        for (var i = 0; i < _ParticleCount; i++)
+        var swarm = new Particle[ParticleCount];
+        for (var i = 0; i < ParticleCount; i++)
         {
             var xx = __Random.NextUniform(IntervalX);
             swarm[i] = new(xx, F(xx));
@@ -159,11 +155,9 @@ public class Swarm
                 }
                 p.SetMax(F);
 
-                if (p.Value > Value)
-                {
-                    p.X.CopyTo(X, 0);
-                    Value = p.Value;
-                }
+                if (p.Value <= Value) continue;
+                p.X.CopyTo(X, 0);
+                Value = p.Value;
             }
     }
 }

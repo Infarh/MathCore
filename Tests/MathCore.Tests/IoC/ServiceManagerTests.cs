@@ -48,24 +48,18 @@ public class ServiceManagerTests
         public int GetValue() => _TaskId;
     }
 
-    private class Service_Value : IService
+    private class Service_Value(int value) : IService
     {
-        private readonly int _Value;
-
-        public Service_Value(int value) => _Value = value;
-
-        public int GetValue() => _Value;
+        public int GetValue() => value;
     }
 
-    private class Service_TwoInterfaces : IService, IService2
+    private class Service_TwoInterfaces(int value) : IService, IService2
     {
-        private readonly int _Value;
         public Service_TwoInterfaces() : this(15) { }
-        public Service_TwoInterfaces(int value) => _Value = value;
 
-        int IService.GetValue() => _Value;
+        int IService.GetValue() => value;
 
-        int IService2.Value => _Value;
+        int IService2.Value => value;
     }
 
     private class Service_ThrowException<TException> : IService

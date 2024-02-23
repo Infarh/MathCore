@@ -1,7 +1,7 @@
 ﻿#nullable enable
 namespace MathCore.Optimization.ParticleSwarm;
 
-public class Swarm1D
+public class Swarm1D(int ParticleCount = 100)
 {
     /// <summary>Вес инерции</summary>
     private double _Inertia;
@@ -66,10 +66,6 @@ public class Swarm1D
 
     private static readonly Random __Random = new();
 
-    private readonly int _ParticleCount;
-
-    public Swarm1D(int ParticleCount = 100) => _ParticleCount = ParticleCount;
-
     private double Get(in Interval interval, double px, double best, double x) =>
         interval.Normalize(px + (_Inertia * px + _LocalWeight * __Random.NextDouble() * (best - px) + _GlobalWeight * __Random.NextDouble() * (x - px)));
 
@@ -92,8 +88,8 @@ public class Swarm1D
         var delta_x = IntervalX.Length;
         var min_x   = IntervalX.Min;
 
-        var swarm = new Particle1D[_ParticleCount];
-        for (var i = 0; i < _ParticleCount; i++)
+        var swarm = new Particle1D[ParticleCount];
+        for (var i = 0; i < ParticleCount; i++)
         {
             var x = __Random.NextDouble() * delta_x + min_x;
             swarm[i] = new(x, F(x));
@@ -109,11 +105,9 @@ public class Swarm1D
                 p.X = Get(IntervalX, p.X, p.BestX, X);
                 p.SetMin(F);
 
-                if (p.Value < Value)
-                {
-                    X     = p.X;
-                    Value = p.Value;
-                }
+                if (p.Value >= Value) continue;
+                X     = p.X;
+                Value = p.Value;
             }
     }
 
@@ -136,8 +130,8 @@ public class Swarm1D
         var delta_x = IntervalX.Length;
         var min_x   = IntervalX.Min;
 
-        var swarm = new Particle1D[_ParticleCount];
-        for (var i = 0; i < _ParticleCount; i++)
+        var swarm = new Particle1D[ParticleCount];
+        for (var i = 0; i < ParticleCount; i++)
         {
             var x = __Random.NextDouble() * delta_x + min_x;
             swarm[i] = new(x, F(x));
@@ -150,16 +144,12 @@ public class Swarm1D
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
             {
-                    
-
                 p.X = Get(IntervalX, p.X, p.BestX, X);
                 p.SetMax(F);
 
-                if (p.Value > Value)
-                {
-                    X     = p.X;
-                    Value = p.Value;
-                }
+                if (p.Value <= Value) continue;
+                X     = p.X;
+                Value = p.Value;
             }
     }
 }

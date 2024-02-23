@@ -3,16 +3,10 @@
 // ReSharper disable once CheckNamespace
 namespace System.Linq.Expressions;
 
-public class SubstitutionVisitor : ExpressionVisitorEx
+public class SubstitutionVisitor([NotNull] LambdaExpression Substitution) : ExpressionVisitorEx
 {
-    private readonly LambdaExpression _Substitution;
-    private readonly ParameterExpression _Parameter;
-
-    public SubstitutionVisitor([NotNull] LambdaExpression Substitution)
-    {
-        _Substitution = Substitution;
-        _Parameter    = Substitution.Parameters.First();
-    }
+    private readonly LambdaExpression _Substitution = Substitution;
+    private readonly ParameterExpression _Parameter = Substitution.Parameters.First();
 
     protected override Expression VisitParameter(ParameterExpression p)
         => p.Name == _Parameter.Name && p.Type == _Parameter.Type

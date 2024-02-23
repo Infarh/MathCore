@@ -6,14 +6,15 @@
 namespace MathCore.Functions.PSO;
 
 /// <summary>Рой двумерных частиц</summary>
-public class Swarm2D
+[Hyperlink("http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=00870279")]
+public class Swarm2D(int ParticleCount = 100)
 {
     /// <summary>Вес инерции</summary>
-    [Hyperlink("http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=00870279")]
     const double w = 0.729;
 
     /// <summary>Коэффициент локального веса</summary>
     const double c1 = 1.49445; // cognitive/local weight
+
     /// <summary>Коэффициент глобального веса</summary>
     const double c2 = 1.49445; // social/global weight
 
@@ -48,9 +49,7 @@ public class Swarm2D
     private static readonly Random __Random = new();
 
     /// <summary>Размер роя</summary>
-    private readonly int _ParticleCount;
-
-    public Swarm2D(int ParticleCount = 100) => _ParticleCount = ParticleCount;
+    private readonly int _ParticleCount = ParticleCount;
 
     public void Minimize(
         Func<double, double, double> func,

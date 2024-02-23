@@ -1,13 +1,9 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace System.Xml.XPath;
 
-internal class XmlReaderWrapper : XmlReader
+internal class XmlReaderWrapper(XmlReader reader) : XmlReader
 {
     private bool _IsInFuture;
-
-    private readonly XmlReader _Reader;
-
-    public XmlReaderWrapper(XmlReader reader) => _Reader = reader;
 
     private XmlNodeType _OldNodeType;
     private string _OldLocalName;
@@ -30,23 +26,23 @@ internal class XmlReaderWrapper : XmlReader
     {
         if(!_IsInFuture)
         {
-            var next = _Reader.Read();
-            _OldNodeType       = _Reader.NodeType;
-            _OldLocalName      = _Reader.LocalName;
-            _OldPrefix         = _Reader.Prefix;
-            _OldName           = _Reader.Name;
-            _OldValue          = _Reader.Value;
-            _OldValueType      = _Reader.ValueType;
-            _OldDepth          = _Reader.Depth;
-            _OldQuoteChar      = _Reader.QuoteChar;
-            _OldBaseURI        = _Reader.BaseURI;
-            _OldIsEmptyElement = _Reader.IsEmptyElement;
-            _OldAttributeCount = _Reader.AttributeCount;
-            _OldEOF            = _Reader.EOF;
-            _OldReadState      = _Reader.ReadState;
-            _OldHasAttributes  = _Reader.HasAttributes;
-            _OldHasValue       = _Reader.HasValue;
-            _OldIsDefault      = _Reader.IsDefault;
+            var next = reader.Read();
+            _OldNodeType       = reader.NodeType;
+            _OldLocalName      = reader.LocalName;
+            _OldPrefix         = reader.Prefix;
+            _OldName           = reader.Name;
+            _OldValue          = reader.Value;
+            _OldValueType      = reader.ValueType;
+            _OldDepth          = reader.Depth;
+            _OldQuoteChar      = reader.QuoteChar;
+            _OldBaseURI        = reader.BaseURI;
+            _OldIsEmptyElement = reader.IsEmptyElement;
+            _OldAttributeCount = reader.AttributeCount;
+            _OldEOF            = reader.EOF;
+            _OldReadState      = reader.ReadState;
+            _OldHasAttributes  = reader.HasAttributes;
+            _OldHasValue       = reader.HasValue;
+            _OldIsDefault      = reader.IsDefault;
             return next;
         }
         _IsInFuture = false;
@@ -59,149 +55,149 @@ internal class XmlReaderWrapper : XmlReader
         if(!_NextReadValue) return false;
         if(_IsInFuture) return _NextReadValue;
         _IsInFuture    = true;
-        _NextReadValue = _Reader.Read();
+        _NextReadValue = reader.Read();
         return _NextReadValue;
     }
 
-    public override XmlReaderSettings Settings => _Reader.Settings;
+    public override XmlReaderSettings Settings => reader.Settings;
 
-    public override bool IsDefault => _IsInFuture ? _OldIsDefault : _Reader.IsDefault;
+    public override bool IsDefault => _IsInFuture ? _OldIsDefault : reader.IsDefault;
 
     public bool? NextNodeIsDefault => _IsInFuture
-        ? _Reader.IsDefault
+        ? reader.IsDefault
         : (PeekNextNode()
-            ? _Reader.IsDefault
+            ? reader.IsDefault
             : null);
 
-    public override XmlNodeType NodeType => _IsInFuture ? _OldNodeType : _Reader.NodeType;
+    public override XmlNodeType NodeType => _IsInFuture ? _OldNodeType : reader.NodeType;
 
-    public XmlNodeType? NextNodeType => _IsInFuture ? _Reader.NodeType : PeekNextNode() ? _Reader.NodeType : null;
+    public XmlNodeType? NextNodeType => _IsInFuture ? reader.NodeType : PeekNextNode() ? reader.NodeType : null;
 
-    public override string LocalName => _IsInFuture ? _OldLocalName : _Reader.LocalName;
+    public override string LocalName => _IsInFuture ? _OldLocalName : reader.LocalName;
 
     public string NextNodeLocalName => _IsInFuture
-        ? _Reader.LocalName
+        ? reader.LocalName
         : (PeekNextNode()
-            ? _Reader.LocalName
+            ? reader.LocalName
             : null);
 
-    public override string NamespaceURI => _Reader.NamespaceURI;
+    public override string NamespaceURI => reader.NamespaceURI;
 
-    public override string Prefix => _IsInFuture ? _OldPrefix : _Reader.Prefix;
+    public override string Prefix => _IsInFuture ? _OldPrefix : reader.Prefix;
     public string NextNodePrefix => _IsInFuture
-        ? _Reader.Prefix
+        ? reader.Prefix
         : (PeekNextNode()
-            ? _Reader.Prefix
+            ? reader.Prefix
             : null);
 
-    public override string Name => _IsInFuture ? _OldName : _Reader.Name;
+    public override string Name => _IsInFuture ? _OldName : reader.Name;
     public string NextNodeName => _IsInFuture
-        ? _Reader.Name
+        ? reader.Name
         : (PeekNextNode()
-            ? _Reader.Name
+            ? reader.Name
             : null);
 
-    public override string Value => _IsInFuture ? _OldValue : _Reader.Value;
+    public override string Value => _IsInFuture ? _OldValue : reader.Value;
     public string NextNodeValue => _IsInFuture
-        ? _Reader.Value
+        ? reader.Value
         : (PeekNextNode()
-            ? _Reader.Value
+            ? reader.Value
             : null);
 
-    public override Type ValueType => _IsInFuture ? _OldValueType : _Reader.ValueType;
+    public override Type ValueType => _IsInFuture ? _OldValueType : reader.ValueType;
     public Type NextNodeValueType => _IsInFuture
-        ? _Reader.ValueType
+        ? reader.ValueType
         : (PeekNextNode()
-            ? _Reader.ValueType
+            ? reader.ValueType
             : null);
 
-    public override int Depth => _IsInFuture ? _OldDepth : _Reader.Depth;
+    public override int Depth => _IsInFuture ? _OldDepth : reader.Depth;
     public int? NextNodeDepth => _IsInFuture
-        ? _Reader.Depth
+        ? reader.Depth
         : (PeekNextNode()
-            ? _Reader.Depth
+            ? reader.Depth
             : null);
 
-    public override char QuoteChar => _IsInFuture ? _OldQuoteChar : _Reader.QuoteChar;
+    public override char QuoteChar => _IsInFuture ? _OldQuoteChar : reader.QuoteChar;
     public char? NextNodeQuoteChar => _IsInFuture
-        ? _Reader.QuoteChar
+        ? reader.QuoteChar
         : (PeekNextNode()
-            ? _Reader.QuoteChar
+            ? reader.QuoteChar
             : null);
 
-    public override string BaseURI => _IsInFuture ? _OldBaseURI : _Reader.BaseURI;
+    public override string BaseURI => _IsInFuture ? _OldBaseURI : reader.BaseURI;
     public string NextNodeBaseURI => _IsInFuture
-        ? _Reader.BaseURI
+        ? reader.BaseURI
         : (PeekNextNode()
-            ? _Reader.BaseURI
+            ? reader.BaseURI
             : null);
 
-    public override bool IsEmptyElement => _IsInFuture ? _OldIsEmptyElement : _Reader.IsEmptyElement;
+    public override bool IsEmptyElement => _IsInFuture ? _OldIsEmptyElement : reader.IsEmptyElement;
     public bool? NextNodeIsEmptyElement => _IsInFuture
-        ? _Reader.IsEmptyElement
+        ? reader.IsEmptyElement
         : (PeekNextNode()
-            ? _Reader.IsEmptyElement
+            ? reader.IsEmptyElement
             : null);
 
-    public override bool HasAttributes => _IsInFuture ? _OldHasAttributes : _Reader.HasAttributes;
+    public override bool HasAttributes => _IsInFuture ? _OldHasAttributes : reader.HasAttributes;
     public bool? NextNodeHasAttributes => _IsInFuture
-        ? _Reader.HasAttributes
+        ? reader.HasAttributes
         : (PeekNextNode()
-            ? _Reader.HasAttributes
+            ? reader.HasAttributes
             : null);
 
-    public override bool HasValue => _IsInFuture ? _OldHasValue : _Reader.HasValue;
+    public override bool HasValue => _IsInFuture ? _OldHasValue : reader.HasValue;
     public bool? NextNodeHasValue => _IsInFuture
-        ? _Reader.HasValue
+        ? reader.HasValue
         : (PeekNextNode()
-            ? _Reader.HasValue
+            ? reader.HasValue
             : null);
 
-    public override int AttributeCount => _IsInFuture ? _OldAttributeCount : _Reader.AttributeCount;
+    public override int AttributeCount => _IsInFuture ? _OldAttributeCount : reader.AttributeCount;
     public int? NextNodeAttributeCount => _IsInFuture
-        ? _Reader.AttributeCount
+        ? reader.AttributeCount
         : (PeekNextNode()
-            ? _Reader.AttributeCount
+            ? reader.AttributeCount
             : null);
 
-    public override bool EOF => _IsInFuture ? _OldEOF : _Reader.EOF;
+    public override bool EOF => _IsInFuture ? _OldEOF : reader.EOF;
     public bool? NextNodeEOF => _IsInFuture
-        ? _Reader.EOF
+        ? reader.EOF
         : (PeekNextNode()
-            ? _Reader.EOF
+            ? reader.EOF
             : null);
 
-    public override ReadState ReadState => _IsInFuture ? _OldReadState : _Reader.ReadState;
+    public override ReadState ReadState => _IsInFuture ? _OldReadState : reader.ReadState;
     public ReadState? NextNodeReadState => _IsInFuture
-        ? _Reader.ReadState
+        ? reader.ReadState
         : (PeekNextNode()
-            ? _Reader.ReadState
+            ? reader.ReadState
             : null);
 
-    public override XmlNameTable NameTable => _Reader.NameTable;
+    public override XmlNameTable NameTable => reader.NameTable;
 
-    public override string GetAttribute(string name) => _Reader.GetAttribute(name);
+    public override string GetAttribute(string name) => reader.GetAttribute(name);
 
-    public override string GetAttribute(string name, string namespaceURI) => _Reader.GetAttribute(name, namespaceURI);
+    public override string GetAttribute(string name, string NamespaceURI) => reader.GetAttribute(name, NamespaceURI);
 
-    public override string GetAttribute(int i) => _Reader.GetAttribute(i);
+    public override string GetAttribute(int i) => reader.GetAttribute(i);
 
-    public override bool MoveToAttribute(string name) => _Reader.MoveToAttribute(name);
+    public override bool MoveToAttribute(string name) => reader.MoveToAttribute(name);
 
-    public override bool MoveToAttribute(string name, string ns) => _Reader.MoveToAttribute(name, ns);
+    public override bool MoveToAttribute(string name, string ns) => reader.MoveToAttribute(name, ns);
 
-    public override bool MoveToFirstAttribute() => _Reader.MoveToFirstAttribute();
+    public override bool MoveToFirstAttribute() => reader.MoveToFirstAttribute();
 
-    public override bool MoveToNextAttribute() => _Reader.MoveToNextAttribute();
+    public override bool MoveToNextAttribute() => reader.MoveToNextAttribute();
 
-    public override bool MoveToElement() => _Reader.MoveToElement();
+    public override bool MoveToElement() => reader.MoveToElement();
 
-    public override bool ReadAttributeValue() => _Reader.ReadAttributeValue();
+    public override bool ReadAttributeValue() => reader.ReadAttributeValue();
 
-    public override string LookupNamespace(string prefix) => _Reader.LookupNamespace(prefix);
+    public override string LookupNamespace(string prefix) => reader.LookupNamespace(prefix);
 
-    public override void ResolveEntity() => _Reader.ResolveEntity();
+    public override void ResolveEntity() => reader.ResolveEntity();
 
     /// <inheritdoc />
-    public override void Close() => _Reader.Close();
+    public override void Close() => reader.Close();
 }

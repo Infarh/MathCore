@@ -2,34 +2,24 @@
 
 namespace MathCore.Algorithms.Matrixes;
 
-public readonly ref struct MatrixRef
+public readonly ref struct MatrixRef(double[,] Matrix, bool Transposed = false)
 {
-    private readonly double[,] _Matrix;
-
-    private readonly bool _Transposed;
-
     public readonly ref double this[int n, int m]
     {
         get
         {
-            if (_Transposed)
-                return ref _Matrix[m, n];
+            if (Transposed)
+                return ref Matrix[m, n];
 
-            return ref _Matrix[n, m];
+            return ref Matrix[n, m];
         }
     }
 
-    public int N => _Matrix.GetLength(_Transposed ? 1 : 0);
+    public int N => Matrix.GetLength(Transposed ? 1 : 0);
 
-    public int M => _Matrix.GetLength(_Transposed ? 0 : 1);
+    public int M => Matrix.GetLength(Transposed ? 0 : 1);
 
-    public MatrixRef(double[,] Matrix, bool Transposed = false)
-    {
-        _Matrix = Matrix;
-        _Transposed = Transposed;
-    }
-
-    public MatrixRef Transpose() => new(_Matrix, !_Transposed);
+    public MatrixRef Transpose() => new(Matrix, !Transposed);
 
     public override string ToString()
     {
@@ -47,7 +37,7 @@ public readonly ref struct MatrixRef
         }
 
         result.Length -= Environment.NewLine.Length + 2;
-        result.Append("}");
+        result.Append('}');
         return result.ToString();
     }
 

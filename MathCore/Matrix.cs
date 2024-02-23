@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System.Globalization;
 using System.Text;
 
 using static MathCore.Matrix.Array.Operator;
@@ -367,24 +368,20 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
     /// <inheritdoc/>
     [DST] public string ToString(string format, IFormatProvider? provider) => _Data.ToStringFormatView(format, "\t", provider) ?? throw new InvalidOperationException();
 
-    public readonly ref struct MatrixView
+    public readonly ref struct MatrixView(Matrix Matrix)
     {
-        private readonly Matrix _Matrix;
-
-        public MatrixView(Matrix Matrix) => _Matrix = Matrix;
-
         public override string ToString()
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
                 {
-                    var s = nn[i, j].ToString();
+                    var s = nn[i, j].ToString(CultureInfo.CurrentCulture);
                     ss[i, j] = s;
                     ll[j]    = Math.Max(ll[j], s.Length);
                 }
@@ -413,11 +410,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
         public string ToString(string Format)
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
@@ -450,11 +447,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
         public string ToString(IFormatProvider Provider)
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)
@@ -487,11 +484,11 @@ public partial class Matrix : ICloneable<Matrix>, ICloneable<double[,]>, IFormat
 
         public string ToString(string Format, IFormatProvider Provider)
         {
-            var (n, m) = _Matrix;
+            var (n, m) = Matrix;
 
             var ss = new string[n, m];
             var ll = new int[m];
-            var nn = _Matrix._Data;
+            var nn = Matrix._Data;
 
             for (var i = 0; i < n; i++)
                 for (var j = 0; j < m; j++)

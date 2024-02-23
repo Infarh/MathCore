@@ -5,19 +5,16 @@ namespace MathCore.Tests.Extensions.Delegates;
 [TestClass]
 public class FuncExtensionsIntegrals
 {
-    private class TestIntegralFunc
+    private class TestIntegralFunc(Func<double, double> f)
     {
-        private readonly Func<double, double> _f;
         private int _CallCount;
 
         public int CallCount => _CallCount;
 
-        public TestIntegralFunc(Func<double, double> f) => _f = f;
-
         public double GetValue(double x)
         {
             _CallCount++;
-            return _f(x);
+            return f(x);
         }
 
         public Func<double, double> GetFunc() => GetValue;
