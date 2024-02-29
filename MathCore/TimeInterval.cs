@@ -37,6 +37,12 @@ public readonly struct TimeInterval
 
     public TimeSpan Middle => TimeSpan.FromSeconds((_Min + _Max).TotalSeconds / 2);
 
+    /// <summary>Интервал является пустым - минимум совпадает с максимумом</summary>
+    public bool IsEmpty => Equals(_Min, _Max);
+
+    /// <summary>Границы интервала инвертированы (минимум больше максимума)</summary>
+    public bool IsInverted => _Min > _Max;
+
     /// <summary>Интервал</summary>
     /// <param name="Max">Верхняя граница интервала</param>
     public TimeInterval(TimeSpan Max) : this(default, true, Max, true) { }
