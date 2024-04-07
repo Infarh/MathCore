@@ -5,15 +5,14 @@ using CommunityToolkit.HighPerformance;
 using MathCore.Hash;
 using MMD5 = System.Security.Cryptography.MD5;
 using System.Globalization;
+
+using ConsoleTest;
+
 #pragma warning disable CS8321 // Local function is declared but never used
 
-var bytes = new byte[60];
-for (var i = 0; i < bytes.Length; i++)
-    bytes[i] = (byte)i;
+AppDomainTest.Run();
 
-var hash0 = MMD5.HashData(bytes).ToStringHex();
-var hash1 = MD5.Compute(bytes).ToStringHex();
-//var hash2 = MD5.Compute(bytes.AsSpan()).ToStringHex();
+return;
 
 //const    int seed   = 1395601201;
 //const    int seed   = 3;
