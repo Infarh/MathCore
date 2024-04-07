@@ -6,6 +6,180 @@ namespace MathCore.Tests.Extensions.Numerics;
 public class DoubleExtensionsTests
 {
     [TestMethod]
+    public void SqrtInvFast_Double()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1; x < 4; x += 0.1)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2/ n).Sqrt();
+
+        //error.ToDebug();
+        error.AssertLessThan(0.0013);
+    }
+
+    [TestMethod]
+    public void SqrtInvFast2_Double()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1; x < 4; x += 0.1)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast2();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2/ n).Sqrt();
+
+        //error.ToDebug();
+        error.AssertLessThan(2.84E-6);
+    }
+
+    [TestMethod]
+    public void SqrtInvFast3_Double()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1; x < 4; x += 0.1)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast3();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2/ n).Sqrt();
+
+        error.ToDebug();
+        error.AssertLessThan(1.62E-11);
+    }
+
+    [TestMethod]
+    [DataRow(1, 0.0013, DisplayName = "SqrtInvFastK1_Double err2 < 0.0013")]
+    [DataRow(2, 2.9E-6, DisplayName = "SqrtInvFastK2_Double err2 < 2.9E-6")]
+    [DataRow(3, 3.7E-8, DisplayName = "SqrtInvFastK3_Double err2 < 1.7E-11")]
+    public void SqrtInvFastK_Double(int K, double ExpectedError)
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1; x < 4; x += 0.1)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast(K);
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2 / n).Sqrt();
+
+        error.ToDebug();
+        error.AssertLessThan(ExpectedError);
+    }
+
+    [TestMethod]
+    public void SqrtInvFast_Float()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1f; x < 4; x += 0.1f)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2/ n).Sqrt();
+
+        //error.ToDebug();
+        error.AssertLessThan(0.0013);
+    }
+
+    [TestMethod]
+    public void SqrtInvFast2_Float()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1f; x < 4; x += 0.1f)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast2();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2/ n).Sqrt();
+
+        //error.ToDebug();
+        error.AssertLessThan(2.9E-6);
+    }
+
+    [TestMethod]
+    public void SqrtInvFast3_Float()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1f; x < 4; x += 0.1f)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast3();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2/ n).Sqrt();
+
+        error.ToDebug();
+        error.AssertLessThan(3.7E-8);
+    }
+
+    [TestMethod]
+    [DataRow(1, 0.0013, DisplayName = "SqrtInvFastK1_Float err2 < 0.0013")]
+    [DataRow(2, 2.9E-6, DisplayName = "SqrtInvFastK2_Float err2 < 2.9E-6")]
+    [DataRow(3, 3.7E-8, DisplayName = "SqrtInvFastK3_Float err2 < 3.7E-8")]
+    public void SqrtInvFastK_Float(int K, double ExpectedError)
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.1f; x < 4; x += 0.1f)
+        {
+            var y0 = 1 / Math.Sqrt(x);
+            var y1 = x.SqrtInvFast(K);
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2 / n).Sqrt();
+
+        //error.ToDebug();
+        error.AssertLessThan(ExpectedError);
+    }
+
+    [TestMethod]
     public void PowIntTest()
     {
         const double x = 2;
