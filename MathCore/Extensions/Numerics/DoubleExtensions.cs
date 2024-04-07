@@ -429,6 +429,34 @@ public static class DoubleExtensions
         return y;
     }
 
+    private const int __SqrtFloatFast = 0x1fbd1df5;
+
+    public static double SqrtFast(this float x)
+    {
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = __SqrtFloatFast + (i >> 1);
+        var y = new FloatToIntBytesConverter(i).Float;
+
+        y = 0.5f * (y + x / y);
+
+        return y;
+    }
+
+    // https://habr.com/ru/companies/infopulse/articles/336110/
+    public static double PowFast(this float x, double p)
+    {
+        const int l = 1 << 23;
+        const int b = 127;
+        const double sgm = 0.0450465;
+        const int k = (int)(l * (b - sgm));
+
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = (int)(k + p * (i - k));
+        var y = new FloatToIntBytesConverter(i).Float;
+
+        return y;
+    }
+
     /// <summary>Квадратный корень</summary>
     /// <param name="x">Число из которого извлекается квадратный корень</param>
     /// <returns>Квадратный корень числа</returns>

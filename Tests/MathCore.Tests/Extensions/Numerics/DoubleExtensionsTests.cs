@@ -6,11 +6,55 @@ namespace MathCore.Tests.Extensions.Numerics;
 public class DoubleExtensionsTests
 {
     [TestMethod]
+    public void PowFast05_Float()
+    {
+        const double p = -0.3;
+
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.0f; x <= 100; x += 0.1f)
+        {
+            var y0 = Math.Pow(x, p);
+            var y1 = x.PowFast(p);
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2 / n).Sqrt();
+
+        error.ToDebug();
+        //error.AssertLessThan(0.0013);
+    }
+
+    [TestMethod]
+    public void SqrtFast_Float()
+    {
+        var error2 = 0d;
+        var n = 0;
+        for (var x = 0.0f; x <= 4; x += 0.1f)
+        {
+            var y0 = Math.Sqrt(x);
+            var y1 = x.SqrtFast();
+
+            var delta = y0 - y1;
+            error2 += delta.Pow2();
+            n++;
+        }
+
+        var error = (error2 / n).Sqrt();
+
+        error.ToDebug();
+        //error.AssertLessThan(0.0013);
+    }
+
+    [TestMethod]
     public void SqrtInvFast_Double()
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1; x < 4; x += 0.1)
+        for (var x = 0.1; x <= 4; x += 0.1)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast();
@@ -31,7 +75,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1; x < 4; x += 0.1)
+        for (var x = 0.1; x <= 4; x += 0.1)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast2();
@@ -52,7 +96,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1; x < 4; x += 0.1)
+        for (var x = 0.1; x <= 4; x += 0.1)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast3();
@@ -76,7 +120,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1; x < 4; x += 0.1)
+        for (var x = 0.1; x <= 4; x += 0.1)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast(K);
@@ -97,7 +141,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1f; x < 4; x += 0.1f)
+        for (var x = 0.1f; x <= 4; x += 0.1f)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast();
@@ -118,7 +162,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1f; x < 4; x += 0.1f)
+        for (var x = 0.1f; x <= 4; x += 0.1f)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast2();
@@ -139,7 +183,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1f; x < 4; x += 0.1f)
+        for (var x = 0.1f; x <= 4; x += 0.1f)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast3();
@@ -163,7 +207,7 @@ public class DoubleExtensionsTests
     {
         var error2 = 0d;
         var n = 0;
-        for (var x = 0.1f; x < 4; x += 0.1f)
+        for (var x = 0.1f; x <= 4; x += 0.1f)
         {
             var y0 = 1 / Math.Sqrt(x);
             var y1 = x.SqrtInvFast(K);
