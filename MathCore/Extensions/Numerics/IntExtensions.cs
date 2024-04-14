@@ -19,6 +19,10 @@ public static class IntExtensions
 
     public static int Log2(this int x) => Numeric.Log2(x);
 
+    public static double Log10(this int x) => Math.Log10(x);
+
+    public static int Log10Int(this int x) => (int)Math.Log10(x);
+
     /// <summary>Возведение целого числа в целую степень</summary>
     /// <param name="x">Целое основание</param>
     /// <param name="p">Целый показатель степени</param>

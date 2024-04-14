@@ -68,6 +68,8 @@ public class Swarm2D(int ParticleCount = 100)
             if(Value > _BestValue)
                 SetBest();
         }
+
+        public void Deconstruct(out double X, out double Y, out double Value) => (X, Y, Value) = (this.X, this.Y, this.Value);
     }
 
     private static readonly Random __Random = new();
@@ -75,12 +77,16 @@ public class Swarm2D(int ParticleCount = 100)
     /// <summary>Размер роя</summary>
     private readonly int _ParticleCount = ParticleCount;
 
-    private double Get(in Interval Interval, double PointX, double BestX, double X) =>
-        Interval.Normalize(PointX + (
-            _Inertia * PointX 
-            + _LocalWeight * __Random.NextDouble() * (BestX - PointX) 
-            + _GlobalWeight * __Random.NextDouble() * (X - PointX)
-        ));
+    private double Get(in Interval Interval, double X, double CurrentBestX, double GlobalBestX)
+    {
+        var dx_local = _LocalWeight * __Random.NextDouble() * (CurrentBestX - X);
+        var dx_global = _GlobalWeight * __Random.NextDouble() * (GlobalBestX - X);
+
+        var dx = dx_local + dx_global;
+
+        var new_position = X * (1 + _Inertia) + dx;
+        return Interval.Normalize(new_position);
+    }
 
     public void Minimize(
         in Func<double, double, double> F,
@@ -116,10 +122,7 @@ public class Swarm2D(int ParticleCount = 100)
             swarm[i] = new(x, y, F(x, y));
         }
 
-        var start = swarm.GetMin(p => p.Value);
-        X     = start.X;
-        Y     = start.Y;
-        Value = start.Value;
+        (X, Y, Value) = swarm.GetMin(p => p.Value);
 
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
@@ -130,9 +133,7 @@ public class Swarm2D(int ParticleCount = 100)
 
                 if (p.Value >= Value) continue;
 
-                X     = p.X;
-                Y     = p.Y;
-                Value = p.Value;
+                (X, Y, Value) = p;
             }
     }
 
@@ -177,10 +178,7 @@ public class Swarm2D(int ParticleCount = 100)
             swarm[i] = new(x, y, F(x, y));
         }
 
-        var start = swarm.GetMin(p => p.Value);
-        X     = start.X;
-        Y     = start.Y;
-        Value = start.Value;
+        (X, Y, Value) = swarm.GetMin(p => p.Value);
 
         for (var i = 0; i < IterationCount; i++)
             foreach (var p in swarm)
@@ -190,9 +188,8 @@ public class Swarm2D(int ParticleCount = 100)
                 p.SetMax(F);
 
                 if (p.Value <= Value) continue;
-                X     = p.X;
-                Y     = p.Y;
-                Value = p.Value;
+
+                (X, Y, Value) = p;
             }
     }
 }
