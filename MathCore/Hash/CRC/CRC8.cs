@@ -5,13 +5,41 @@ public class CRC8(byte Polynimial)
 {
     public enum Mode : byte
     {
-        CRC8 = 0x07,
-        CDMA2000 = 0x9B,
-        DARC = 0x39,
-        DVB_S2 = 0xd5,
-        EBU = 0x1D,
-        ITU = 0x07,
-        MAXIM = 0x31,
+        P0x07 = 0x07,
+        P0x9B = 0x9B,
+        P0x39 = 0x39,
+        P0xD5 = 0xD5,
+        P0x1D = 0x1D,
+        P0x31 = 0x31,
+
+        CRC8 = P0x07,
+        CDMA2000 = P0x9B,
+        DARC = P0x39,
+        DVB_S2 = P0xD5,
+        EBU = P0x1D,
+        ITU = P0x07,
+        MAXIM = P0x31,
+    }
+
+    public static byte Hash(byte[] data, Mode mode = Mode.CRC8, byte crc = 0xFF, byte xor = 0xFF)
+    {
+        var poly = (byte)mode;
+
+        foreach (var b in data)
+            crc = (byte)(crc >> 8 ^ Table((crc ^ b) & 0xFF, poly));
+
+        return (byte)(crc ^ xor);
+
+        static byte Table(int i, byte poly)
+        {
+            var temp = i;
+            for (var j = 0; j < 8; ++j)
+                if ((temp & 0x80) != 0)
+                    temp = temp << 1 ^ poly;
+                else
+                    temp <<= 1;
+            return (byte)temp;
+        }
     }
 
     private const int __TableLength = 256;
@@ -20,6 +48,8 @@ public class CRC8(byte Polynimial)
     public byte State { get; set; }
 
     public bool UpdateState { get; set; }
+
+    public byte XOR { get; set; } = 0;
 
     public CRC8(Mode mode = Mode.CRC8) : this((byte)mode) { }
 
@@ -63,18 +93,22 @@ public class CRC8(byte Polynimial)
         foreach (var b in bytes)
             crc = (byte)(crc >> 8 ^ _Table[(crc ^ b) & 0xFF]);
 
+        crc ^= XOR;
+
         if (UpdateState)
             State = crc;
 
         return crc;
     }
 
-    public byte Compute(IReadOnlyList<byte> bytes) => ContinueCompute(State, bytes);
+    public byte Compute(IEnumerable<byte> bytes) => ContinueCompute(State, bytes);
 
-    public byte ContinueCompute(byte crc, IReadOnlyList<byte> bytes)
+    public byte ContinueCompute(byte crc, IEnumerable<byte> bytes)
     {
         foreach (var b in bytes)
             crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
+        crc ^= XOR;
 
         if (UpdateState)
             State = crc;
@@ -86,38 +120,20 @@ public class CRC8(byte Polynimial)
     {
         foreach (var b in bytes)
             crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+        crc ^= XOR;
     }
 
     public void Compute(ref byte crc, IReadOnlyList<byte> bytes)
     {
         foreach (var b in bytes)
             crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+        crc ^= XOR;
     }
 
     public byte[] ComputeChecksumBytes(params byte[] bytes)
     {
         var crc = Compute(bytes);
         return [crc];
-    }
-
-    public static byte Compute(Stream stream, byte Polynimial, byte State = 0)
-    {
-        const int buffer_size = 512;
-        if (stream.Length <= buffer_size)
-            State = stream
-                .ToArray()
-                .Aggregate((State, Table : GetTable(Polynimial)), (v, b) => (Convert(b, v.State, v.Table), v.Table))
-                .State;
-        else
-        {
-            var table = GetTable(Polynimial);
-            var buffer = new byte[buffer_size];
-            while(stream.Read(buffer, 0, buffer_size) is > 0 and var readed)
-                for(var i = 0; i < readed; i++)
-                    State = Convert(buffer[i], State, table);
-        }
-
-        return State;
     }
 
     private static byte Convert(byte b, byte State, byte[] Table) => (byte)(State << 8 ^ Table[State >> 8 ^ b]);

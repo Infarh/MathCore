@@ -4,12 +4,44 @@ public class CRC32
 {
     public enum Mode : uint
     {
-        Zip = 0xEDB88320,
-        POSIX = 0x04C11DB7,
-        CRC32C = 0x1EDC6F41,
-        CRC32D = 0xA833982B,
-        CRC32Q = 0x814141AB,
-        XFER = 0x000000AF,
+        P0xEDB88320 = 0xEDB88320,
+        P0x04C11DB7 = 0x04C11DB7,
+        P0x1EDC6F41 = 0x1EDC6F41,
+        P0xA833982B = 0xA833982B,
+        P0x814141AB = 0x814141AB,
+        P0x000000AF = 0x000000AF,
+
+        Zip = P0xEDB88320,
+        POSIX = P0x04C11DB7,
+        CRC32C = P0x1EDC6F41,
+        CRC32D = P0xA833982B,
+        CRC32Q = P0x814141AB,
+        XFER = P0x000000AF,
+    }
+
+    public static uint Hash(byte[] data, Mode mode = Mode.Zip, uint crc = 0xFFFFFFFF, uint xor = 0xFFFFFFFF)
+    {
+        if (data.NotNull().Length == 0)
+            throw new InvalidOperationException();
+
+        var poly = (uint)mode;
+
+        foreach (var b in data)
+            crc = crc << 8 ^ Table(b ^ crc >> 24, poly);
+
+        return crc ^ xor;
+
+        static uint Table(uint i, uint poly)
+        {
+            var table = i << 24;
+            const uint mask = 0b10000000_00000000_00000000_00000000U;
+            for (var bit = 0; bit < 8; bit++)
+                table = (table & mask) != 0
+                    ? table << 1 ^ poly
+                    : table << 1;
+
+            return table;
+        }
     }
 
     private const int __TableLength = 256;
@@ -19,6 +51,8 @@ public class CRC32
 
     public bool UpdateState { get; set; }
 
+    public uint XOR { get; set; } = 0;
+
     public CRC32(Mode mode = Mode.Zip) : this((uint)mode) { }
 
     public CRC32(uint Polynomial)
@@ -26,8 +60,9 @@ public class CRC32
         for (uint i = 0; i < __TableLength; i++)
         {
             var crc = i << 24;
+            const uint mask = 0b10000000_00000000_00000000_00000000U;
             for (var bit = 0; bit < 8; bit++)
-                crc = (crc & 1u << 31) != 0
+                crc = (crc & mask) != 0
                     ? crc << 1 ^ Polynomial
                     : crc << 1;
             _Table[i] = crc;
@@ -50,6 +85,8 @@ public class CRC32
         //foreach (var b in bytes)
         //    crc = (crc >> 8) ^ _Table[(crc ^ b) & 0xFF];
 
+        crc ^= XOR;
+
         if (UpdateState)
             State = crc;
 
@@ -68,6 +105,8 @@ public class CRC32
         foreach (var b in bytes)
             crc = crc << 8 ^ _Table[b ^ crc >> 24];
 
+        crc ^= XOR;
+
         if (UpdateState)
             State = crc;
 
@@ -78,6 +117,8 @@ public class CRC32
     {
         foreach (var b in bytes)
             crc = crc << 8 ^ _Table[b ^ crc >> 24];
+
+        crc ^= XOR;
 
         if (UpdateState)
             State = crc;
@@ -93,6 +134,8 @@ public class CRC32
         foreach (var b in bytes)
             crc = crc << 8 ^ _Table[crc >> 8 ^ b];
 
+        crc ^= XOR;
+
         if (UpdateState)
             State = crc;
 
@@ -103,12 +146,14 @@ public class CRC32
     {
         foreach (var b in bytes)
             crc = crc << 8 ^ _Table[crc >> 8 ^ b];
+        crc ^= XOR;
     }
 
     public void Compute(ref uint crc, IReadOnlyList<byte> bytes)
     {
         foreach (var b in bytes)
             crc = crc << 8 ^ _Table[crc >> 8 ^ b];
+        crc ^= XOR;
     }
 
     public byte[] ComputeChecksumBytes(params byte[] bytes)
