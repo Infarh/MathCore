@@ -1,7 +1,36 @@
-﻿namespace MathCore.Hash.CRC;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class CRC32
+namespace MathCore.Hash.CRC;
+
+public class CRC32(uint Polynomial)
 {
+    public CRC32(Mode mode = Mode.Zip) : this((uint)mode) { }
+
+    public static uint[] GetTable(uint Polynomial)
+    {
+        var table = new uint[__TableLength];
+
+        FillTable(table, Polynomial);
+
+        return table;
+    }
+
+    public static void FillTable(uint[] table, uint Polynomial)
+    {
+        for (uint i = 0; i < __TableLength; i++)
+        {
+            ref var crc = ref table[i];
+            crc = i << 24;
+            //const uint mask = 0b10000000_00000000_00000000_00000000U;
+            const uint mask = 0x80_00_00_00U;
+            for (var bit = 0; bit < 8; bit++)
+                crc = (crc & mask) != 0
+                    ? crc << 1 ^ Polynomial
+                    : crc << 1;
+        }
+    }
+
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum Mode : uint
     {
         P0xEDB88320 = 0xEDB88320,
@@ -19,17 +48,27 @@ public class CRC32
         XFER = P0x000000AF,
     }
 
-    public static uint Hash(byte[] data, Mode mode = Mode.Zip, uint crc = 0xFFFFFFFF, uint xor = 0xFFFFFFFF)
+    public static uint Hash(
+        byte[] data, 
+        Mode mode = Mode.Zip, 
+        uint crc = 0xFFFFFFFF, 
+        uint xor = 0xFFFFFFFF,
+        bool RefIn = false,
+        bool RefOut = false)
     {
         if (data.NotNull().Length == 0)
             throw new InvalidOperationException();
 
         var poly = (uint)mode;
 
-        foreach (var b in data)
-            crc = crc << 8 ^ Table(b ^ crc >> 24, poly);
+        if(RefIn)
+            foreach (var b in data)
+                crc = crc << 8 ^ Table(b.ReverseBits() ^ crc >> 24, poly);
+        else
+            foreach (var b in data)
+                crc = crc << 8 ^ Table(b ^ crc >> 24, poly);
 
-        return crc ^ xor;
+        return RefOut ? (crc ^ xor).ReverseBits() : crc ^ xor;
 
         static uint Table(uint i, uint poly)
         {
@@ -45,7 +84,8 @@ public class CRC32
     }
 
     private const int __TableLength = 256;
-    private readonly uint[] _Table = new uint[__TableLength];
+
+    private readonly uint[] _Table = GetTable(Polynomial);
 
     public uint State { get; set; }
 
@@ -53,21 +93,9 @@ public class CRC32
 
     public uint XOR { get; set; } = 0;
 
-    public CRC32(Mode mode = Mode.Zip) : this((uint)mode) { }
+    public bool RefIn { get; set; }
 
-    public CRC32(uint Polynomial)
-    {
-        for (uint i = 0; i < __TableLength; i++)
-        {
-            var crc = i << 24;
-            const uint mask = 0b10000000_00000000_00000000_00000000U;
-            for (var bit = 0; bit < 8; bit++)
-                crc = (crc & mask) != 0
-                    ? crc << 1 ^ Polynomial
-                    : crc << 1;
-            _Table[i] = crc;
-        }
-    }
+    public bool RefOut { get; set; }
 
     public uint Compute(params byte[] bytes) => ContinueCompute(State, bytes);
 
@@ -79,8 +107,12 @@ public class CRC32
         //foreach (var b in bytes)
         //    crc = (crc >> 8) ^ _Table[(crc ^ b) & 0xFF];
 
-        foreach (var b in bytes)
-            crc = crc << 8 ^ _Table[b ^ crc >> 24];
+        if(RefIn)
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[crc >> 24 ^ b.ReverseBits()];
+        else
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[crc >> 24 ^ b];
 
         //foreach (var b in bytes)
         //    crc = (crc >> 8) ^ _Table[(crc ^ b) & 0xFF];
@@ -90,27 +122,34 @@ public class CRC32
         if (UpdateState)
             State = crc;
 
-        return crc;
+        return RefOut ? crc.ReverseBits() : crc;
     }
 
 #if NET8_0_OR_GREATER
+
     public uint Compute(Span<byte> bytes) => ContinueCompute(State, bytes);
+
     public uint Compute(ReadOnlySpan<byte> bytes) => ContinueCompute(State, bytes);
 
     public uint Compute(Memory<byte> bytes) => ContinueCompute(State, bytes.Span);
+
     public uint Compute(ReadOnlyMemory<byte> bytes) => ContinueCompute(State, bytes.Span);
 
     public uint ContinueCompute(uint crc, Span<byte> bytes)
     {
-        foreach (var b in bytes)
-            crc = crc << 8 ^ _Table[b ^ crc >> 24];
+        if (RefIn)
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b.ReverseBits() ^ crc >> 24];
+        else
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b ^ crc >> 24];
 
         crc ^= XOR;
 
         if (UpdateState)
             State = crc;
 
-        return crc;
+        return RefOut ? crc.ReverseBits() : crc;
     } 
 
     public uint ContinueCompute(uint crc, ReadOnlySpan<byte> bytes)
@@ -125,35 +164,56 @@ public class CRC32
 
         return crc;
     } 
+
 #endif
 
-    public uint Compute(IReadOnlyList<byte> bytes) => ContinueCompute(State, bytes);
+    public uint Compute(IEnumerable<byte> bytes) => ContinueCompute(State, bytes);
 
-    public uint ContinueCompute(uint crc, IReadOnlyList<byte> bytes)
+    public uint ContinueCompute(uint crc, IEnumerable<byte> bytes)
     {
-        foreach (var b in bytes)
-            crc = crc << 8 ^ _Table[crc >> 8 ^ b];
+        if (RefIn)
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b.ReverseBits() ^ crc >> 24];
+        else
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b ^ crc >> 24];
 
         crc ^= XOR;
 
         if (UpdateState)
             State = crc;
 
-        return crc;
+        return RefOut ? crc.ReverseBits() : crc;
     }
 
     public void Compute(ref uint crc, byte[] bytes)
     {
-        foreach (var b in bytes)
-            crc = crc << 8 ^ _Table[crc >> 8 ^ b];
+        if (RefIn)
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b.ReverseBits() ^ crc >> 24];
+        else
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b ^ crc >> 24];
+
         crc ^= XOR;
+
+        if (RefOut)
+            crc = crc.ReverseBits();
     }
 
-    public void Compute(ref uint crc, IReadOnlyList<byte> bytes)
+    public void Compute(ref uint crc, IEnumerable<byte> bytes)
     {
-        foreach (var b in bytes)
-            crc = crc << 8 ^ _Table[crc >> 8 ^ b];
+        if (RefIn)
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b.ReverseBits() ^ crc >> 24];
+        else
+            foreach (var b in bytes)
+                crc = crc << 8 ^ _Table[b ^ crc >> 24];
+
         crc ^= XOR;
+
+        if (RefOut)
+            crc = crc.ReverseBits();
     }
 
     public byte[] ComputeChecksumBytes(params byte[] bytes)

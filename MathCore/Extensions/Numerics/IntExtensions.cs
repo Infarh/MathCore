@@ -13,6 +13,19 @@ namespace System;
 /// <summary>Класс методов-расширений для класса целых 4-х-байтовых чисел со знаком</summary>
 public static class IntExtensions
 {
+    public static int ReverseBits(this int b) => (int)((uint)b).ReverseBits();
+
+    public static uint ReverseBits(this uint b)
+    {
+        b = (b & 0b1111_1111_1111_1111_0000_0000_0000_0000) >> 16 | (b & 0b0000_0000_0000_0000_1111_1111_1111_1111) << 16;
+        b = (b & 0b1111_1111_0000_0000_1111_1111_0000_0000) >> 08 | (b & 0b0000_0000_1111_1111_0000_0000_1111_1111) << 08;
+        b = (b & 0b1111_0000_1111_0000_1111_0000_1111_0000) >> 04 | (b & 0b0000_1111_0000_1111_0000_1111_0000_1111) << 04;
+        b = (b & 0b1100_1100_1100_1100_1100_1100_1100_1100) >> 02 | (b & 0b0011_0011_0011_0011_0011_0011_0011_0011) << 02;
+        b = (b & 0b1010_1010_1010_1010_1010_1010_1010_1010) >> 01 | (b & 0b0101_0101_0101_0101_0101_0101_0101_0101) << 01;
+
+        return b;
+    }
+
     public static (int Div, int Mod) GetDivMod(this int x, int y) => (x / y, x % y);
 
     public static int HiBit(this int x) => Numeric.HiBit(x);

@@ -1,8 +1,36 @@
 ﻿#nullable enable
 namespace MathCore.Hash.CRC;
 
-public class CRC8(byte Polynimial)
+public class CRC8(byte Polynomial)
 {
+    public CRC8(Mode mode = Mode.CRC8) : this((byte)mode) { }
+
+    public static byte[] GetTable(byte Polynomial)
+    {
+        var table = new byte[__TableLength];
+
+        FillTable(table, Polynomial);
+
+        return table;
+    }
+
+    public static void FillTable(byte[] table, byte Polynomial)
+    {
+        if (table.NotNull().Length != __TableLength)
+            throw new ArgumentException($"Размер таблицы должен быть {__TableLength}, а составляет {table.Length}", nameof(table));
+
+        for (var i = 0; i < __TableLength; i++)
+        {
+            var temp = i;
+            for (var j = 0; j < 8; ++j)
+                if ((temp & 0x80) != 0)
+                    temp = temp << 1 ^ Polynomial;
+                else
+                    temp <<= 1;
+            table[i] = (byte)temp;
+        }
+    }
+
     public enum Mode : byte
     {
         P0x07 = 0x07,
@@ -21,14 +49,27 @@ public class CRC8(byte Polynimial)
         MAXIM = P0x31,
     }
 
-    public static byte Hash(byte[] data, Mode mode = Mode.CRC8, byte crc = 0xFF, byte xor = 0xFF)
+    public static byte Hash(
+        byte[] data, 
+        Mode mode = Mode.CRC8, 
+        byte crc = 0xFF, 
+        byte xor = 0xFF,
+        bool RefIn = false,
+        bool RefOut = false)
     {
+        if (data.NotNull().Length == 0)
+            throw new InvalidOperationException();
+
         var poly = (byte)mode;
 
-        foreach (var b in data)
-            crc = (byte)(crc >> 8 ^ Table((crc ^ b) & 0xFF, poly));
+        if(RefIn)
+            foreach (var b in data)
+                crc = (byte)(crc >> 8 ^ Table((crc ^ b.ReverseBits()) & 0xFF, poly));
+        else
+            foreach (var b in data)
+                crc = (byte)(crc >> 8 ^ Table((crc ^ b) & 0xFF, poly));
 
-        return (byte)(crc ^ xor);
+        return RefOut ? ((byte)(crc ^ xor)).BitReversing() : (byte)(crc ^ xor);
 
         static byte Table(int i, byte poly)
         {
@@ -43,91 +84,85 @@ public class CRC8(byte Polynimial)
     }
 
     private const int __TableLength = 256;
-    private readonly byte[] _Table = GetTable(Polynimial);
+
+    private readonly byte[] _Table = GetTable(Polynomial);
 
     public byte State { get; set; }
 
     public bool UpdateState { get; set; }
 
     public byte XOR { get; set; } = 0;
+    
+    public bool RefIn { get; set; }
 
-    public CRC8(Mode mode = Mode.CRC8) : this((byte)mode) { }
-
-    public static byte[] GetTable(byte Polynimial)
-    {
-        var table = new byte[__TableLength];
-        for (var i = 0; i < __TableLength; i++)
-        {
-            var temp = i;
-            for (var j = 0; j < 8; ++j)
-                if ((temp & 0x80) != 0)
-                    temp = temp << 1 ^ Polynimial;
-                else
-                    temp <<= 1;
-            table[i] = (byte)temp;
-        }
-
-        return table;
-    }
-
-    public static void FillTable(byte[] table, byte Polynimial)
-    {
-        if (table is not { Length: __TableLength })
-            throw new ArgumentException($"Размер таблицы должен быть {__TableLength}, а составляет {table.Length}", nameof(table));
-        for (var i = 0; i < __TableLength; i++)
-        {
-            var temp = i;
-            for (var j = 0; j < 8; ++j)
-                if ((temp & 0x80) != 0)
-                    temp = temp << 1 ^ Polynimial;
-                else
-                    temp <<= 1;
-            table[i] = (byte)temp;
-        }
-    }
+    public bool RefOut { get; set; }
 
     public byte Compute(params byte[] bytes) => ContinueCompute(State, bytes);
 
     public byte ContinueCompute(byte crc, byte[] bytes)
     {
-        foreach (var b in bytes)
-            crc = (byte)(crc >> 8 ^ _Table[(crc ^ b) & 0xFF]);
+        if(RefIn)
+            foreach (var b in bytes)
+                crc = (byte)(crc >> 8 ^ _Table[(crc ^ b.ReverseBits()) & 0xFF]);
+        else
+            foreach (var b in bytes)
+                crc = (byte)(crc >> 8 ^ _Table[(crc ^ b) & 0xFF]);
 
         crc ^= XOR;
 
         if (UpdateState)
             State = crc;
 
-        return crc;
+        return RefOut ? crc.ReverseBits() : crc;
     }
 
     public byte Compute(IEnumerable<byte> bytes) => ContinueCompute(State, bytes);
 
     public byte ContinueCompute(byte crc, IEnumerable<byte> bytes)
     {
-        foreach (var b in bytes)
-            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+        if(RefIn)
+            foreach (var b in bytes)
+                crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b.ReverseBits()]);
+        else
+            foreach (var b in bytes)
+                crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
 
         crc ^= XOR;
 
         if (UpdateState)
             State = crc;
 
-        return crc;
+        return RefOut ? crc.ReverseBits() : crc;
     }
 
     public void Compute(ref byte crc, byte[] bytes)
     {
-        foreach (var b in bytes)
-            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+        if (RefIn)
+            foreach (var b in bytes)
+                crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b.ReverseBits()]);
+        else
+            foreach (var b in bytes)
+                crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
         crc ^= XOR;
+
+        if (RefOut)
+            crc = crc.ReverseBits();
     }
 
-    public void Compute(ref byte crc, IReadOnlyList<byte> bytes)
+    public void Compute(ref byte crc, IEnumerable<byte> bytes)
     {
-        foreach (var b in bytes)
-            crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+        if (RefIn)
+            foreach (var b in bytes)
+                crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b.ReverseBits()]);
+        else
+            foreach (var b in bytes)
+                crc = (byte)(crc << 8 ^ _Table[crc >> 8 ^ b]);
+
         crc ^= XOR;
+
+        if (RefOut)
+            crc = crc.ReverseBits();
     }
 
     public byte[] ComputeChecksumBytes(params byte[] bytes)
@@ -135,6 +170,4 @@ public class CRC8(byte Polynimial)
         var crc = Compute(bytes);
         return [crc];
     }
-
-    private static byte Convert(byte b, byte State, byte[] Table) => (byte)(State << 8 ^ Table[State >> 8 ^ b]);
 }

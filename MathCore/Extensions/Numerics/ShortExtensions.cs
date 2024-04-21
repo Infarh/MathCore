@@ -6,6 +6,18 @@ namespace System;
 
 public static class ShortExtensions
 {
+    public static short ReverseBits(this short b) => (short)((ushort)b).ReverseBits();
+
+    public static ushort ReverseBits(this ushort b)
+    {
+        b = (ushort)((b & 0b1111_1111_0000_0000) >> 8 | (b & 0b0000_0000_1111_1111) << 8);
+        b = (ushort)((b & 0b1111_0000_1111_0000) >> 4 | (b & 0b0000_1111_0000_1111) << 4);
+        b = (ushort)((b & 0b1100_1100_1100_1100) >> 2 | (b & 0b0011_0011_0011_0011) << 2);
+        b = (ushort)((b & 0b1010_1010_1010_1010) >> 1 | (b & 0b0101_0101_0101_0101) << 1);
+
+        return b;
+    }
+
     /// <summary>Проверка - является ли число простым?</summary>
     /// <param name="N">Проверяемое число</param>
     /// <returns>Истина, если число простое</returns>

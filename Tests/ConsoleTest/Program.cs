@@ -10,6 +10,10 @@ using ConsoleTest;
 
 #pragma warning disable CS8321 // Local function is declared but never used
 
+//await ScriptingTest.RunAsync();
+
+TestCRC64.Run();
+
 AppDomainTest.Run();
 
 return;
