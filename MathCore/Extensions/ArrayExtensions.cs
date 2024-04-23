@@ -16,6 +16,34 @@ namespace System;
 ///<summary>Методы расширения для массивов</summary>
 public static class ArrayExtensions
 {
+    /// <summary>Заполнить массив указанным значением</summary>
+    /// <typeparam name="T">Тип значения</typeparam>
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="value">Значение, которым надо заполнить ячейки массива</param>
+    /// <returns>Заполненный массив</returns>
+    public static T[] Fill<T>(this T[] array, T value)
+    {
+        for(var i = 0; i < array.Length; i++)
+            array[i] = value;
+
+        return array;
+    }
+
+    /// <summary>Заполнить массив указанным значением</summary>
+    /// <typeparam name="T">Тип значения</typeparam>
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="value">Значение, которым надо заполнить ячейки массива</param>
+    /// <param name="index">Индекс начальной ячейки массива</param>
+    /// <param name="count">Количество заполняемых ячеек</param>
+    /// <returns>Заполненный массив</returns>
+    public static T[] Fill<T>(this T[] array, T value, int index, int count)
+    {
+        for(var i = index; i < array.Length && i - index < count; i++)
+            array[i] = value;
+
+        return array;
+    }
+
     public static string ToBase64(this byte[] bytes) => Convert.ToBase64String(bytes);
     public static string ToBase64(this byte[] bytes, int offset, int length) => Convert.ToBase64String(bytes, offset, length);
     public static string ToBase64(this byte[] bytes, Base64FormattingOptions options) => Convert.ToBase64String(bytes, options);
