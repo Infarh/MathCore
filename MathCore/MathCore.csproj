@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.89.2</Version>
+    <Version>0.0.90</Version>
     <PackageReleaseNotes>
       Добавлена поддержка платформы net8
     </PackageReleaseNotes>
