@@ -6,9 +6,9 @@ namespace System;
 /// <typeparam name="TException">Тип исключения</typeparam>
 /// <remarks>Новый аргумент события генерации исключения</remarks>
 /// <param name="Error">Исключение</param>
-[method: DST]
 /// <summary>Аргументы события исключения</summary>
 /// <typeparam name="TException">Тип исключения</typeparam>
+[method: DST]
 public class ExceptionEventHandlerArgs<TException>(TException Error) : EventArgs<TException>(Error) where TException : Exception
 {
     /* ------------------------------------------------------------------------------------------ */

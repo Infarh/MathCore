@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Text;
 
 // ReSharper disable UnusedMember.Global
@@ -15,9 +16,10 @@ namespace MathCore;
 /// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
 /// <param name="Max">Верхняя граница интервала</param>
 /// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
-[method: DST]
 /// <summary>Интервал сравнимых величин</summary>
 /// <typeparam name="T">Тип сравнимых величин</typeparam>
+[StructLayout(LayoutKind.Sequential)]
+[method: DST]
 public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclude) : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
     where T : IComparable<T>
 {
@@ -79,6 +81,12 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
 
     /// <summary>Верхняя граница интервала</summary>
     public T Max { get => _Max; init => _Max = value; }
+
+    /// <summary>Интервал является пустым - минимум совпадает с максимумом</summary>
+    public bool IsEmpty => Equals(_Min, _Max);
+
+    /// <summary>Границы интервала инвертированы (минимум больше максимума)</summary>
+    public bool IsInverted => _Min.CompareTo(_Max) > 0;
 
     #endregion
 
@@ -324,13 +332,21 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
 }
 
 /// <summary>Интервал вещественных значений двойной точности</summary>
+/// <remarks>Интервал</remarks>
+/// <param name="Min">Нижняя граница интервала</param>
+/// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
+/// <param name="Max">Верхняя граница интервала</param>
+/// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
 [Serializable]
 [TypeConverter(typeof(IntervalConverter))]
-public readonly struct Interval : IComparable<double>, IFormattable, 
-                                  IEquatable<Interval>, 
-                                  IEquatable<(double Min, double Max)>,
-                                  IEquatable<(int Min, double Max)>,
-                                  IEquatable<(double Min, int Max)>
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[method: DST]
+public readonly struct Interval(double Min, bool MinInclude, double Max, bool MaxInclude) : 
+    IComparable<double>, IFormattable, 
+    IEquatable<Interval>, 
+    IEquatable<(double Min, double Max)>,
+    IEquatable<(int Min, double Max)>,
+    IEquatable<(double Min, int Max)>
 {
     /* -------------------------------------------------------------------------------------------- */
 
@@ -381,16 +397,16 @@ public readonly struct Interval : IComparable<double>, IFormattable,
     /* -------------------------------------------------------------------------------------------- */
 
     /// <summary>Включена ли нижняя граница интервала?</summary>
-    private readonly bool _MinInclude;
+    private readonly bool _MinInclude = MinInclude;
 
     /// <summary>Включена ли верхняя граница интервала?</summary>
-    private readonly bool _MaxInclude;
+    private readonly bool _MaxInclude = MaxInclude;
 
     /// <summary>Нижняя граница интервала</summary>
-    private readonly double _Min;
+    private readonly double _Min = Min;
 
     /// <summary>Верхняя граница интервала</summary>
-    private readonly double _Max;
+    private readonly double _Max = Max;
 
     /* -------------------------------------------------------------------------------------------- */
 
@@ -416,6 +432,12 @@ public readonly struct Interval : IComparable<double>, IFormattable,
     /// <summary>Середина интервала</summary>
     public double Middle => (_Min + _Max) / 2;
 
+    /// <summary>Интервал является пустым - минимум совпадает с максимумом</summary>
+    public bool IsEmpty => Equals(_Min, _Max);
+
+    /// <summary>Границы интервала инвертированы (минимум больше максимума)</summary>
+    public bool IsInverted => _Min > _Max;
+
     #endregion
 
     /* -------------------------------------------------------------------------------------------- */
@@ -432,19 +454,6 @@ public readonly struct Interval : IComparable<double>, IFormattable,
     /// <param name="Max">Верхняя граница интервала</param>
     /// <param name="IncludeLimits">Включать пределы?</param>
     public Interval(double Min, double Max, bool IncludeLimits) : this(Min, IncludeLimits, Max, IncludeLimits) { }
-
-    /// <summary>Интервал</summary>
-    /// <param name="Min">Нижняя граница интервала</param>
-    /// <param name="MinInclude">Включена ли нижняя граница интервала?</param>
-    /// <param name="Max">Верхняя граница интервала</param>
-    /// <param name="MaxInclude">Включена ли верхняя граница интервала</param>
-    public Interval(double Min, bool MinInclude, double Max, bool MaxInclude)
-    {
-        _Min        = Min;
-        _Max        = Max;
-        _MinInclude = MinInclude;
-        _MaxInclude = MaxInclude;
-    }
 
     #endregion
 

@@ -1,4 +1,6 @@
-﻿using MathCore;
+﻿using System.Runtime.InteropServices;
+
+using MathCore;
 // ReSharper disable UnusedMember.Global
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
@@ -297,8 +299,162 @@ public static class DoubleExtensions
     [DST]
     public static Complex Pow2(this Complex z)
     {
+        if(z.IsNaN) return Complex.NaN;
         var (a, b) = z;
         return new(a * a - b * b, 2 * a * b);
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    private readonly ref struct DoubleToLongBytesConverter
+    {
+        [FieldOffset(0)]
+        public readonly double Double;
+
+        [FieldOffset(0)]
+        public readonly long Long;
+
+        public DoubleToLongBytesConverter(double x) => Double = x;
+        public DoubleToLongBytesConverter(long x) => Long = x;
+    }
+
+    private const long __InvSqrtDoubleMagik = 0x5FE6EB50C7B537A9;
+
+    public static double SqrtInvFast(this double x)
+    {
+        var i = new DoubleToLongBytesConverter(x).Long;
+        i = __InvSqrtDoubleMagik - (i >> 1);
+        var y = new DoubleToLongBytesConverter(i).Double;
+        y *= 1.5 - 0.5 * x * y * y;
+
+        return y;
+    }
+
+    public static double SqrtInvFast2(this double x)
+    {
+        var i = new DoubleToLongBytesConverter(x).Long;
+        i = __InvSqrtDoubleMagik - (i >> 1);
+        var y = new DoubleToLongBytesConverter(i).Double;
+        y *= 1.5 - 0.5 * x * y * y;
+        y *= 1.5 - 0.5 * x * y * y;
+
+        return y;
+    }
+
+    public static double SqrtInvFast3(this double x)
+    {
+        var i = new DoubleToLongBytesConverter(x).Long;
+        i = __InvSqrtDoubleMagik - (i >> 1);
+        var y = new DoubleToLongBytesConverter(i).Double;
+
+        var x05 = 0.5 * x;
+        y *= 1.5 - x05 * y * y;
+        y *= 1.5 - x05 * y * y;
+        y *= 1.5 - x05 * y * y;
+
+        return y;
+    }
+
+    public static double SqrtInvFast(this double x, int n)
+    {
+        var i = new DoubleToLongBytesConverter(x).Long;
+        i = __InvSqrtDoubleMagik - (i >> 1);
+        var y = new DoubleToLongBytesConverter(i).Double;
+
+        var x05 = 0.5 * x;
+        for (var j = 0; j < n; j++)
+            y *= 1.5 - x05 * y * y;
+
+        return y;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    private readonly ref struct FloatToIntBytesConverter
+    {
+        [FieldOffset(0)]
+        public readonly float Float;
+
+        [FieldOffset(0)]
+        public readonly int Int;
+
+        public FloatToIntBytesConverter(float x) => Float = x;
+        public FloatToIntBytesConverter(int x) => Int = x;
+    }
+
+    private const int __InvSqrtFloatMagik = 0x5f3759df;
+
+    public static double SqrtInvFast(this float x)
+    {
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = __InvSqrtFloatMagik - (i >> 1);
+        var y = new FloatToIntBytesConverter(i).Float;
+        y *= 1.5f - 0.5f * x * y * y;
+
+        return y;
+    }
+
+    public static double SqrtInvFast2(this float x)
+    {
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = __InvSqrtFloatMagik - (i >> 1);
+        var y = new FloatToIntBytesConverter(i).Float;
+        y *= 1.5f - 0.5f * x * y * y;
+        y *= 1.5f - 0.5f * x * y * y;
+
+        return y;
+    }
+
+    public static double SqrtInvFast3(this float x)
+    {
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = __InvSqrtFloatMagik - (i >> 1);
+        var y = new FloatToIntBytesConverter(i).Float;
+        var x05 = 0.5f * x;
+        y *= 1.5f - x05 * y * y;
+        y *= 1.5f - x05 * y * y;
+        y *= 1.5f - x05 * y * y;
+
+        return y;
+    }
+
+    public static double SqrtInvFast(this float x, int n)
+    {
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = __InvSqrtFloatMagik - (i >> 1);
+        var y = new FloatToIntBytesConverter(i).Float;
+
+        var x05 = 0.5f * x;
+        for (var j = 0; j < n; j++)
+            y *= 1.5f - x05 * y * y;
+
+        return y;
+    }
+
+    private const int __SqrtFloatFast = 0x1fbd1df5;
+
+    public static double SqrtFast(this float x)
+    {
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = __SqrtFloatFast + (i >> 1);
+        var y = new FloatToIntBytesConverter(i).Float;
+
+        y = 0.5f * (y + x / y);
+
+        return y;
+    }
+
+    // https://habr.com/ru/companies/infopulse/articles/336110/
+    public static double PowFast(this float x, double p)
+    {
+        const int l = 1 << 23;
+        const int b = 127;
+        const double sgm = 0.0450465;
+        const int k = (int)(l * (b - sgm));
+
+        var i = new FloatToIntBytesConverter(x).Int;
+        i = (int)(k + p * (i - k));
+        var y = new FloatToIntBytesConverter(i).Float;
+
+        return y;
     }
 
     /// <summary>Квадратный корень</summary>

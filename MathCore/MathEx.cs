@@ -3,9 +3,9 @@
 /// <summary>Расширенный класс математических функций</summary>
 public static class MathEx
 {
-    public static double Sinc(double x) => x == 0 ? 1 : Math.Sin(x) / x;
+    public static double Sinc(double x) => Math.Abs(x) < 1e-9 ? 1 - x * x * (1d / 6) : Math.Sin(x) / x;
 
-    public static double SincN(double x, double N) => x == 0 ? 1 : Math.Sin(N * x) / (N * Math.Sin(x));
+    public static double SincN(double x, double N) => Math.Abs(x) < 1e-9 ? 1 - x * x * (1d / 6) : Math.Sin(N * x) / (N * Math.Sin(x));
 
     /// <summary>Секанс</summary>
     public static double Sec(double x)
@@ -173,7 +173,8 @@ public static class MathEx
         public static Complex Asech(Complex z) => Complex.Ln((Complex.Sqrt(1 - z.Pow2()) + 1) / 2);
 
         /// <summary>Гиперболический арккосеканс</summary>
-        public static double Acosech(double x) => Math.Log((Math.Sign(x) * Math.Sqrt(x * x) + 1) / x);
+        public static double Acosech(double x) => Math.Log((x + 1) / x);
+        //public static double Acosech(double x) => Math.Log((Math.Sign(x) * Math.Sqrt(x * x) + 1) / x);
 
         ///// <summary>Гиперболический арккосеканс</summary>
         //public static Complex Acosech(Complex z) => Complex.Ln((Math.Sign(z) * Complex.Sqrt(z.Pow2() + 1)) / z);

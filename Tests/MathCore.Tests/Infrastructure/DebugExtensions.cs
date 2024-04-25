@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System.Collections;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
@@ -9,7 +10,7 @@ namespace System.Diagnostics;
 
 internal static class DebugExtensions
 {
-    public static T ToDebug<T>(this T value, [CallerArgumentExpression("value")] string? Prefix = null)
+    public static T ToDebug<T>(this T value, [CallerArgumentExpression(nameof(value))] string? Prefix = null)
     {
         if (Prefix is { Length: > 0 })
         {
@@ -24,33 +25,52 @@ internal static class DebugExtensions
         return value;
     }
 
-    public static void ToDebugEnum<T>(this IEnumerable<T> items, [CallerArgumentExpression("items")] string? Name = null)
+    public static void ToDebugEnum<T>(this IEnumerable<T> items, [CallerArgumentExpression(nameof(items))] string? Name = null)
     {
+        string? pad_str = null;
         if (Name is { Length: > 0 })
-            Debug.WriteLine("{0}[] {1} = {{", typeof(T).Name, Name);
+        {
+            Debug.WriteLine("{0}[] {1} =", typeof(T).Name, Name);
+            Debug.WriteLine("[");
+            pad_str = "    ";
+        }
         var i = 0;
+        var m = items is ICollection { Count: var items_count }
+            ? items_count.Log10Int() + 1
+            : 2;
         var culture = CultureInfo.InvariantCulture;
         foreach (var item in items)
         {
-            FormattableString msg = $"/*[{i,2}]*/ {item},";
+
+            FormattableString msg = $"{pad_str}/*[{i.ToString().PadLeft(m)}]*/ {item},";
             Debug.WriteLine(msg.ToString(culture));
             i++;
         }
-        Debug.WriteLine("}");
+        if (pad_str is not null)
+            Debug.WriteLine("]");
     }
 
-    public static void ToDebugEnum(this IEnumerable<Complex> items, [CallerArgumentExpression("items")] string? Name = null)
+    public static void ToDebugEnum(this IEnumerable<Complex> items, [CallerArgumentExpression(nameof(items))] string? Name = null)
     {
+        string? pad_str = null;
         if (Name is { Length: > 0 })
-            Debug.WriteLine("Complex[] {0} = {{", (object)Name);
+        {
+            Debug.WriteLine("Complex[] {0} =", (object)Name);
+            Debug.WriteLine("[");
+            pad_str = "    ";
+        }
         var i = 0;
+        var m = items is ICollection { Count: var items_count }
+            ? items_count.Log10Int() + 1
+            : 2;
         var culture = CultureInfo.InvariantCulture;
         foreach (var (re, im) in items)
         {
-            FormattableString msg = $"/*[{i,2}]*/ ({re:F18}, {im:F18}),";
+            FormattableString msg = $"{pad_str}/*[{i.ToString().PadLeft(m)}]*/ ({re:F18}, {im:F18}),";
             Debug.WriteLine(msg.ToString(culture));
             i++;
         }
-        Debug.WriteLine("}");
+        if (pad_str is not null)
+            Debug.WriteLine("}");
     }
 }

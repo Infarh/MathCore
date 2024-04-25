@@ -3,6 +3,15 @@ namespace System;
 
 public static class ByteExtensions
 {
+    public static byte ReverseBits(this byte b)
+    {
+        b = (byte)((b & 0b1111_0000) >> 4 | (b & 0b0000_1111) << 4);
+        b = (byte)((b & 0b1100_1100) >> 2 | (b & 0b0011_0011) << 2);
+        b = (byte)((b & 0b1010_1010) >> 1 | (b & 0b0101_0101) << 1);
+
+        return b;
+    }
+
     /// <summary>Проверка - является ли число простым?</summary>
     /// <param name="N">Проверяемое число</param>
     /// <returns>Истина, если число простое</returns>

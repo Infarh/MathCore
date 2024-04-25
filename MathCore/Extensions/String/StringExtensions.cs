@@ -520,7 +520,7 @@ public static class StringExtensions
 
     public delegate StringPtr StringPtrSelector(StringPtr ptr);
 
-    public readonly ref struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null)
+    public readonly struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null)
     {
         public string SourceString => Str;
 

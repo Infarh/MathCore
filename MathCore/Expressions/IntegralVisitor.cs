@@ -330,7 +330,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
         //Math.
     }
 
-    protected override Expression? VisitMethodCall(MethodCallExpression m)
+    protected override Expression VisitMethodCall(MethodCallExpression m)
     {
         //var result = OnMethodDifferential(m);
         //if(result != null) return result;

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 
 using MathCore.Hash.CRC;
 
@@ -116,5 +117,29 @@ public class CRC32Tests
         Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
 
         $"0x{actual_crc:X4}".AssertEquals($"0x{expected_crc:X4}");
+    }
+
+    [TestMethod]
+    public void StaticHash()
+    {
+        var data = "Hello World!"u8.ToArray();
+        const uint expected_crc = 0x7AC1161F;
+
+        var poly = CRC32.Mode.Zip;
+        var initial_crc = 0xFFFFFFFF;
+        var xor = 0xFFFFFFFF;
+
+        var actual_crc = CRC32.Hash(data, poly, initial_crc, xor);
+        var crc_coder = new CRC32(poly) { State = initial_crc, XOR = xor };
+        var computed_crc = crc_coder.Compute(data);
+
+        var crc32_actual = $"0x{actual_crc:X8}";
+        var crc32_computed = $"0x{computed_crc:X8}";
+        var crc32_expected = $"0x{expected_crc:X8}";
+        crc32_actual.ToDebug();
+        crc32_computed.ToDebug();
+        crc32_expected.ToDebug();
+
+        crc32_actual.AssertEquals(crc32_expected);
     }
 }

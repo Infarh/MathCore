@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using System.Collections;
+
 using MathCore.Values;
 
 // ReSharper disable UnusedMember.Global
@@ -178,5 +180,24 @@ public static partial class IEnumerableExtensions
         {
             element.Dispose();
         }
+    }
+
+    public static (double Q1, double Median, double Q3) GetQ1Q3(this IEnumerable<double> samples)
+    {
+        var buffer = samples.ToArray();
+
+        if (buffer is { Length: 0 })
+            throw new InvalidOperationException("Последовательность не содержит элементов");
+
+        if (buffer is { Length: 1 })
+            return (double.NaN, buffer[0], double.NaN);
+
+        Array.Sort(buffer);
+
+        var q1 = buffer[buffer.Length / 4];
+        var median = buffer[buffer.Length / 2];
+        var q3 = buffer[3 * buffer.Length / 4];
+
+        return (q1, median, q3);
     }
 }

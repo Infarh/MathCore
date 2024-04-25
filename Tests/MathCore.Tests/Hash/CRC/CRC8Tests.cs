@@ -78,4 +78,17 @@ public class CRC8Tests
         Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
         Assert.That.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
     }
+
+    [TestMethod]
+    public void StaticHash()
+    {
+        var data = new byte[] { 0x3F, 0xA2, 0x13, 0x21, 0x03 };
+        const byte expected_crc = 0x18;
+
+        var actual_crc = CRC8.Hash(data, CRC8.Mode.CRC8, 0, 0);
+
+        Debug.WriteLine("Actual   0x{0:X4}", actual_crc);
+        Debug.WriteLine("Expected 0x{0:X4}", expected_crc);
+        Assert.That.Value($"0x{actual_crc:X4}").IsEqual($"0x{expected_crc:X4}");
+    }
 }

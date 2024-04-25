@@ -1,4 +1,6 @@
-﻿using Benchmarks;
+﻿using BenchmarkDotNet.Configs;
+
+using Benchmarks;
 using Benchmarks.Vectorization;
 
 
@@ -16,4 +18,5 @@ using Benchmarks.Vectorization;
 //_ = BenchmarkRunner.Run<SHA256Test>();
 //_ = BenchmarkRunner.Run<SHA512Test>();
 //_ = BenchmarkRunner.Run<PowerTest>();
-_ = BenchmarkRunner.Run<VectorizationSumBenchmark>();
+//_ = BenchmarkRunner.Run<VectorizationSumBenchmark>();
+_ = BenchmarkRunner.Run<ToHexStringTest>();

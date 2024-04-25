@@ -20,8 +20,8 @@ public class TestDataAttribute : Attribute, ITestDataSource
 
         var type = TestMethod.DeclaringType ?? throw new InvalidOperationException("Не удалось определить класс модульных тестов");
 
-        var source_method = type.GetMethod(MethodSourceName, BindingFlags.Static | BindingFlags.Public)
-            ?? type.GetMethod(MethodSourceName, BindingFlags.Static | BindingFlags.NonPublic);
+        var source_method = type.GetMethod(method_name, BindingFlags.Static | BindingFlags.Public)
+            ?? type.GetMethod(method_name, BindingFlags.Static | BindingFlags.NonPublic);
 
         if (source_method is null)
             throw new InvalidOperationException("Не удалось найти статический метод-источник данных в классе модульного теста");
@@ -70,7 +70,7 @@ public class TestDataAttribute : Attribute, ITestDataSource
         if (data is null) return null;
 
         var result = new StringBuilder(Prefix ?? TestMethod.Name);
-        result.Append("(");
+        result.Append('(');
         var parameters = TestMethod.GetParameters();
         for (var i = 0; i < parameters.Length; i++)
         {
@@ -100,7 +100,7 @@ public class TestDataAttribute : Attribute, ITestDataSource
 
         if (parameters.Length > 0)
             result.Length -= 2;
-        result.Append(")");
+        result.Append(')');
 
 
         return result.ToString();
