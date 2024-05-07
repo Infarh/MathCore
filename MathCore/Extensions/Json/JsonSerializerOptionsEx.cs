@@ -8,7 +8,7 @@ namespace MathCore.Extensions.Json;
 
 public static class JsonSerializerOptionsEx
 {
-    public static JsonSerializerOptions Idented(this JsonSerializerOptions opt) => new(opt) { WriteIndented = true };
+    public static JsonSerializerOptions Idented(this JsonSerializerOptions opt, bool WriteIndented = true) => new(opt) { WriteIndented = WriteIndented };
 
     public static JsonSerializerOptions WithPropertyNamingPolicy(this JsonSerializerOptions opt, JsonNamingPolicy? NamingPolicy) =>
         new(opt)
