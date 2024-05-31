@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.90</Version>
+    <Version>0.0.91</Version>
     <PackageReleaseNotes>
-      Добавлена поддержка платформы net8
+      Добавлены методы-деконструкторы для StringPtr для метода Slice(char) для разделения названия и значения поля с разделителем в виде символа
     </PackageReleaseNotes>
   </PropertyGroup>
 

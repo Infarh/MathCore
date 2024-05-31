@@ -211,4 +211,47 @@ public class StringPtrTests
 
         trimmed.ToString().AssertEquals("123");
     }
+
+    [TestMethod]
+    public void TokenizerSingleChar_Deconstruct_TwoValues()
+    {
+        const string str = "-= Value:123:321:QWE =-";
+        const string expected_name = "Value";
+        const string expected_value = "123:321:QWE";
+
+        var ptr = str.AsStringPtr().Trim("-= ".ToCharArray());
+
+        var split = ptr.Split(':');
+
+        var (name, value) = split;
+
+        var actual_name = name.ToString();
+        var actual_value = value.ToString();
+
+        actual_name.AssertEquals(expected_name);
+        StringAssert.Equals(expected_value, actual_value);
+    }
+
+    [TestMethod]
+    public void TokenizerSingleChar_Deconstruct_ThreeValues()
+    {
+        const string str = "-= Value:123:321:QWE =-";
+        const string expected_name = "Value";
+        const string expected_value = "123";
+        const string expected_tail = "321:QWE";
+
+        var ptr = str.AsStringPtr().Trim("-= ".ToCharArray());
+
+        var split = ptr.Split(':');
+
+        var (name, value, tail) = split;
+        
+        var actual_name = name.ToString();
+        var actual_value = value.ToString();
+        var actual_tail = tail.ToString();
+
+        actual_name.AssertEquals(expected_name);
+        StringAssert.Equals(expected_value, actual_value);
+        StringAssert.Equals(expected_tail, actual_tail);
+    }
 }

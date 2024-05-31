@@ -312,6 +312,17 @@ public readonly ref partial struct StringPtr
 
     public bool Equals(double x) => Length > 0 && TryParseDouble() == x;
 
+    public bool Equals(char c) => Length == 1 && char.Equals(this[0], c);
+
+    public bool Equals(char c, StringComparison Comparison)
+    {
+        if (Length != 1) return false;
+
+        if(Comparison is StringComparison.OrdinalIgnoreCase or StringComparison.InvariantCultureIgnoreCase or StringComparison.CurrentCultureIgnoreCase)
+            return char.Equals(char.ToUpper(this[0]), char.ToUpper(c));
+        return Equals(c);
+    }
+
     /// <summary>Оператор проверки на равенство фрагмента строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
     /// <param name="str">Строка</param>
@@ -349,6 +360,11 @@ public readonly ref partial struct StringPtr
 
     public static bool operator !=(StringPtr ptr, double x) => !(ptr == x);
     public static bool operator !=(double x, StringPtr ptr) => !(ptr == x);
+
+    public static bool operator ==(StringPtr ptr, char c) => ptr.Equals(c);
+    public static bool operator ==(char c, StringPtr ptr) => ptr.Equals(c);
+    public static bool operator !=(StringPtr ptr, char c) => !(ptr == c);
+    public static bool operator !=(char c, StringPtr ptr) => !(c == ptr);
 
     /// <summary>Оператор порядка "больше", сравнивающий фрагмент строки со строкой</summary>
     /// <param name="ptr">Фрагмент строки</param>
