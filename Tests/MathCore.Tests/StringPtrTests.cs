@@ -161,6 +161,12 @@ public class StringPtrTests
         var name = ptr.SubstringBefore('=');
 
         name.ToString().AssertEquals("Value");
+
+        const string str2 = ">c:256<";
+        var ptr2 = str2.AsStringPtr().Substring(1, -1);
+
+        var value2 = ptr2.SubstringBefore(' ');
+        value2.ToString().AssertEquals("c:256");
     }
 
     [TestMethod]
@@ -197,6 +203,11 @@ public class StringPtrTests
         var trimmed = value.TrimEnd('\'');
 
         trimmed.ToString().AssertEquals("'''123");
+
+        const string str_spaces = ">f <";
+        var ptr_spaces = str_spaces.AsStringPtr().Substring(1, -1);
+        var ptr_spaces_trimmed = ptr_spaces.TrimEnd();
+        ptr_spaces_trimmed.ToString().AssertEquals("f");
     }
 
     [TestMethod]

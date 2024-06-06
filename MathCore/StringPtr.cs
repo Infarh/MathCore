@@ -80,7 +80,7 @@ public readonly ref partial struct StringPtr
     public StringPtr SubstringBefore(char Separator)
     {
         var index = IndexOf(Separator);
-        if (index < 0) return new(Source, Pos, 0);
+        if (index < 0) return new(Source, Pos, Length);
         return SubstringIndex(0, index);
     }
 
@@ -1256,7 +1256,7 @@ public readonly ref partial struct StringPtr
         var str = Source;
         while (end_pos > pos && str[end_pos] == c1 || str[end_pos] == c2) end_pos--;
 
-        Trimmed = pos != Pos;
+        Trimmed = end_pos != pos + len - 1;
         return Trimmed ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
@@ -1281,7 +1281,7 @@ public readonly ref partial struct StringPtr
         var str = Source;
         while (end_pos > pos && str[end_pos] == c1 || str[end_pos] == c2 || str[end_pos] == c3) end_pos--;
 
-        Trimmed = pos != Pos;
+        Trimmed = end_pos != pos + len - 1;
         return Trimmed ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
@@ -1314,7 +1314,7 @@ public readonly ref partial struct StringPtr
                 }
         }
 
-        Trimmed = pos != Pos;
+        Trimmed = end_pos != pos + len - 1;
         return Trimmed ? Substring(pos - Pos, end_pos - pos + 1) : this;
     }
 
