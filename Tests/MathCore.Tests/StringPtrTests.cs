@@ -161,6 +161,12 @@ public class StringPtrTests
         var name = ptr.SubstringBefore('=');
 
         name.ToString().AssertEquals("Value");
+
+        const string str2 = ">c:256<";
+        var ptr2 = str2.AsStringPtr().Substring(1, -1);
+
+        var value2 = ptr2.SubstringBefore(' ');
+        value2.ToString().AssertEquals("c:256");
     }
 
     [TestMethod]

@@ -80,7 +80,7 @@ public readonly ref partial struct StringPtr
     public StringPtr SubstringBefore(char Separator)
     {
         var index = IndexOf(Separator);
-        if (index < 0) return new(Source, Pos, 0);
+        if (index < 0) return new(Source, Pos, Length);
         return SubstringIndex(0, index);
     }
 
