@@ -197,6 +197,11 @@ public class StringPtrTests
         var trimmed = value.TrimEnd('\'');
 
         trimmed.ToString().AssertEquals("'''123");
+
+        const string str_spaces = ">f <";
+        var ptr_spaces = str_spaces.AsStringPtr().Substring(1, -1);
+        var ptr_spaces_trimmed = ptr_spaces.TrimEnd();
+        ptr_spaces_trimmed.ToString().AssertEquals("f");
     }
 
     [TestMethod]
