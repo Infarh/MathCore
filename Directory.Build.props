@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BuildAccelerationIncompatiblePackage Include="MyPackage" />
+  </ItemGroup>
+
+</Project>

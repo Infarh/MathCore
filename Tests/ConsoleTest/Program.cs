@@ -1,20 +1,33 @@
-using System.Linq;
+using System.Reflection.Emit;
 
 using MathCore.Statistic;
-using CommunityToolkit.HighPerformance;
-using MathCore.Hash;
-using MMD5 = System.Security.Cryptography.MD5;
-using System.Globalization;
 
 using ConsoleTest;
+
+using MathCore.Text;
 
 #pragma warning disable CS8321 // Local function is declared but never used
 
 //await ScriptingTest.RunAsync();
 
-TestCRC64.Run();
+var str = "1234567890";
+var v0 = str.AsSpan()[^7..^5];
+var ptr = str.AsStringPtr();
+var vv = ptr[^7..^5];
+
+vv.ParseDouble();
+
+
+var format = new StringFormat("time:{time} value:{value}");
+
+var values = format.Parse("time:123 value:qwe");
 
 AppDomainTest.Run();
+
+//var asm = AssemblyBuilder.DefineDynamicAssembly(new("Test"), AssemblyBuilderAccess.RunAndCollect);
+//var mod = asm.DefineDynamicModule("main");
+//var tt = mod.DefineType("TestType");
+//tt.DefineConstructor()
 
 return;
 

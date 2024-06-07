@@ -314,7 +314,9 @@ public class Streebog
                 _Iv[i] = 0x01;
             }
 
-        var n_512 = BitConverter.GetBytes(512);
+        //byte[] n_512 = BitConverter.GetBytes(512);
+        //Array.Reverse(n_512);
+        byte[] n_512 = [0, 0, 2, 0];
 
         var inc = 0;
         while (len >= 512)
@@ -325,7 +327,7 @@ public class Streebog
 
             h = G_n(_N, h, temp_mes);
 
-            _N = AddModulo512(_N, n_512.AsEnumerable().Reverse().ToArray());
+            _N = AddModulo512(_N, n_512);
             _Sigma = AddModulo512(_Sigma, temp_mes);
             len -= 512;
         }

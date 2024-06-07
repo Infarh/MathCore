@@ -520,15 +520,17 @@ public static class StringExtensions
 
     public delegate StringPtr StringPtrSelector(StringPtr ptr);
 
-    public readonly struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null)
+    public delegate bool StringPtrWhereChecker(StringPtr ptr);
+
+    public readonly struct StringSegmentsEnumerable(string Str, int SegmentLength, StringPtrSelector? Selector = null, StringPtrWhereChecker? Checker = null)
     {
         public string SourceString => Str;
 
         public int SegmentLength { get; } = SegmentLength;
 
-        public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength, Selector);
+        public StringSegmentEnumerator GetEnumerator() => new(Str, SegmentLength, Selector, Checker);
 
-        public ref struct StringSegmentEnumerator(string Str, int SegmentLength, StringPtrSelector? Selector)
+        public ref struct StringSegmentEnumerator(string Str, int SegmentLength, StringPtrSelector? Selector, StringPtrWhereChecker? Checker)
         {
             private int _Offset;
             private readonly int _Length = Str.Length;
@@ -537,10 +539,15 @@ public static class StringExtensions
 
             public bool MoveNext()
             {
-                if (_Offset >= _Length) return false;
-                var str = new StringPtr(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
-                Current = Selector is not null ? Selector(str) : str;
-                _Offset += SegmentLength;
+                do
+                {
+                    if (_Offset >= _Length) return false;
+                    var str = new StringPtr(Str, _Offset, Math.Min(SegmentLength, _Length - _Offset));
+                    var current = Selector is not null ? Selector(str) : str;
+
+                    Current = current;
+                    _Offset += SegmentLength;
+                } while (Checker?.Invoke(Current) != true);
                 return true;
             }
         }

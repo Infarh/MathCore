@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.91.1</Version>
+    <Version>0.0.91.2</Version>
     <PackageReleaseNotes>
       Добавлены методы-деконструкторы для StringPtr для метода Slice(char) для разделения названия и значения поля с разделителем в виде символа
     </PackageReleaseNotes>
