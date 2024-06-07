@@ -262,7 +262,51 @@ public class StringPtrTests
         var actual_tail = tail.ToString();
 
         actual_name.AssertEquals(expected_name);
-        StringAssert.Equals(expected_value, actual_value);
-        StringAssert.Equals(expected_tail, actual_tail);
+        Assert.AreEqual(expected_value, actual_value);
+        Assert.AreEqual(expected_tail, actual_tail);
+    }
+
+    [TestMethod]
+    public void IndexOfTest()
+    {
+        const string str = "16:0:0.0006-100:s:[-0.1..0.1]";
+
+        var ptr = str.AsStringPtr(str.IndexOf('['));
+
+        var interval = ptr.Substring(1, -1);
+
+        var index = interval.IndexOf("..");
+
+        var s = interval.Substring(index);
+
+        s.ToString().AssertEquals("..0.1");
+    }
+
+    [TestMethod]
+    public void LastIndexOfTest()
+    {
+        const string str = "16:0:0.0006-100:s:[-0.1..0.1]";
+
+        var ptr = str.AsStringPtr(str.IndexOf('['));
+
+        var interval = ptr.Substring(1, -1);
+
+        var index = interval.LastIndexOf("..");
+
+        var s = interval.Substring(index);
+
+        s.ToString().AssertEquals("..0.1");
+    }
+
+    [TestMethod]
+    public void DoubleParseTest()
+    {
+        const string str = "16:0:0.0006-100:s:[-0.1..0.1]";
+
+        var ptr = str.AsStringPtr(5, 6);
+
+        var value = ptr.ParseDouble();
+
+        value.AssertEquals(0.0006);
     }
 }

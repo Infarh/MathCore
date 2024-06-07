@@ -219,7 +219,7 @@ public readonly ref partial struct StringPtr
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Индекс первого вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int IndexOf(string str, StringComparison Comparison) =>
-        str.Length <= Length && str.IndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
+        str.Length <= Length && Source.IndexOf(str, Pos, Length, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
 
@@ -228,7 +228,7 @@ public readonly ref partial struct StringPtr
     /// <param name="Comparison">Способ сравнения строк</param>
     /// <returns>Индекс последнего вхождения указанной строки в подстроке, либо -1 в случае её отсутствия</returns>
     public int LastIndexOf(string str, StringComparison Comparison) =>
-        str.Length <= Length && str.LastIndexOf(str, Pos + Length - 1, Length - Pos, Comparison) is >= 0 and var index
+        str.Length <= Length && Source.LastIndexOf(str, Pos + Length - 1, Length, Comparison) is >= 0 and var index
             ? index - Pos
             : -1;
 
@@ -720,7 +720,7 @@ public readonly ref partial struct StringPtr
                     }
 
                     //Очередной символ был не цифрой
-                    if (Substring(start + index).StartWith(decimal_separator_str))
+                    if (Substring(index).StartWith(decimal_separator_str))
                     {
                         // Если наткнулись на разделитель дробной части числа
                         // то переходим к анализу дробной части
@@ -747,7 +747,7 @@ public readonly ref partial struct StringPtr
                         break;
                     }
 
-                    //Потенциально число закончилось.Пытаемся пропустить конечные пробелы
+                    //Потенциально число закончилось. Пытаемся пропустить конечные пробелы
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
@@ -914,7 +914,7 @@ public readonly ref partial struct StringPtr
                     }
 
                     //Очередной символ был не цифрой
-                    if (Substring(start + index).StartWith(decimal_separator_str))
+                    if (Substring(index).StartWith(decimal_separator_str))
                     {
                         // Если наткнулись на разделитель дробной части числа
                         // то переходим к анализу дробной части

@@ -185,8 +185,8 @@ public readonly ref partial struct StringPtr
                 tail = new(Buffer, StartIndex + Length, 0);
             }
 
-            var value_length = tail_index - StartIndex - head_length - 1;
-            value = new(Buffer, tail_index + 1, value_length);
+            var value_length = tail_index - index - 1;
+            value = new(Buffer, index + 1, value_length);
 
             var tail_length = Length - head_length - value_length - 2;
             tail = new(Buffer, tail_index + 1, tail_length);
