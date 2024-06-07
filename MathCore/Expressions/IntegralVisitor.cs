@@ -71,8 +71,8 @@ internal class IntegralVisitor : ExpressionVisitorEx
         if(l is null && r is null) return b;
         if(l != null && r != null)
             return b.NodeType == ExpressionType.Add
-                ? Expression.Constant((double)l.Value + (double)r.Value)
-                : Expression.Constant((double)l.Value - (double)r.Value);
+                ? Expression.Constant((double)l.Value! + (double)r.Value!)
+                : Expression.Constant((double)l.Value! - (double)r.Value!);
         if(l != null && l.Value.Equals(0.0))
             return b.NodeType == ExpressionType.Add
                 ? b.Right
@@ -94,7 +94,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
         var r = b.Right as ConstantExpression;
         if(l is null && r is null) return b;
         if(l != null && r != null)
-            return Expression.Constant((double)l.Value * (double)r.Value);
+            return Expression.Constant((double)l.Value! * (double)r.Value!);
         if(l?.Value.Equals(0.0) == true) return l;
         if(l?.Value.Equals(1.0) == true) return b.Right;
         if(r?.Value.Equals(0.0) == true) return r;
@@ -114,7 +114,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
         if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant((double)l.Value / (double)r.Value);
+        if(l != null && r != null) return Expression.Constant((double)l.Value! / (double)r.Value!);
         if(l?.Value.Equals(0.0) == true) return l;
         if(l?.Value.Equals(1.0) == true) return b;
         if(r?.Value.Equals(0.0) == true) return Expression.Constant(double.PositiveInfinity);
@@ -131,7 +131,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
         var l = b.Left as ConstantExpression;
         var r = b.Right as ConstantExpression;
         if(l is null && r is null) return b;
-        if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value, (double)r.Value));
+        if(l != null && r != null) return Expression.Constant(Math.Pow((double)l.Value!, (double)r.Value!));
         if(l != null && (l.Value.Equals(0.0) || l.Value.Equals(1.0))) return l;
         if(r?.Value.Equals(0.0) == true) return Expression.Constant(1.0);
         if(r?.Value.Equals(1.0) == true) return b.Left;
@@ -173,8 +173,8 @@ internal class IntegralVisitor : ExpressionVisitorEx
 
     protected override Expression VisitBinary(BinaryExpression b)
     {
-        var NodeType = b.NodeType;
-        switch(NodeType)
+        var node_type = b.NodeType;
+        switch(node_type)
         {
             case ExpressionType.Add:
             case ExpressionType.AddChecked:
@@ -205,7 +205,7 @@ internal class IntegralVisitor : ExpressionVisitorEx
                     if(x is ConstantExpression constant && y is ParameterExpression)
                     {
                         var I = sDivide(1, MathMethod("Log", MathMethod("Abs", y)));
-                        if((double)constant.Value != 1.0)
+                        if((double)constant.Value! != 1.0)
                             I = sMultiply(constant, I);
                         return I;
                     }

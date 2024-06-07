@@ -8,6 +8,12 @@ public class MinMaxValue(double Min, double Max) : IResettable, IFormattable
 {
     public MinMaxValue() : this(double.PositiveInfinity, double.NegativeInfinity) { }
 
+    /// <summary>Количество значений</summary>
+    private int _Count;
+
+    /// <summary>Количество значений</summary>
+    public int Count => _Count;
+
     /// <summary>Минимальное значение</summary>
     private double _Min = Min;
 
@@ -34,11 +40,12 @@ public class MinMaxValue(double Min, double Max) : IResettable, IFormattable
     public double AddValue(double x)
     {
         SetValue(x);
+        _Count++;
         return x;
     }
 
     /// <inheritdoc />
-    public void Reset() => (_Min, _Max) = (double.PositiveInfinity, double.NegativeInfinity);
+    public void Reset() => (_Min, _Max, _Count) = (double.PositiveInfinity, double.NegativeInfinity, 0);
 
     /// <inheritdoc />
     public override string ToString() => $"Min:{_Min}; Max:{_Max}";

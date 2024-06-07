@@ -11,6 +11,12 @@ public class MinValue(double StartValue) : IValue<double>, IResettable, IFormatt
     /// <summary>Инициализация нового экземпляра <see cref="MinValue"/></summary>
     public MinValue() : this(double.PositiveInfinity) { }
 
+    /// <summary>Количество значений</summary>
+    private int _Count;
+
+    /// <summary>Количество значений</summary>
+    public int Count => _Count;
+
     /// <summary>Минимальное значение</summary>
     public double Value { get; set; } = StartValue;
 
@@ -26,11 +32,16 @@ public class MinValue(double StartValue) : IValue<double>, IResettable, IFormatt
     {
         if(value >= Value) return false;
         Value = value;
+        _Count++;
         return true;
     }
 
     /// <summary>Сбросить состояние минимального значения</summary>
-    public void Reset() => Value = double.PositiveInfinity;
+    public void Reset()
+    {
+        Value = double.PositiveInfinity;
+        _Count = 0;
+    }
 
     /// <inheritdoc />
     public override string ToString() => Value.ToString(CultureInfo.CurrentCulture);

@@ -16,6 +16,7 @@ public class AverageValue : ISerializable, IValue<double>, IResettable
 
     /// <summary>Номер итерации усреднения</summary>
     private int _N;
+
     /// <summary>Текущее значение усредняемой величины</summary>
     private double _Value;
 

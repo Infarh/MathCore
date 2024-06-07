@@ -11,16 +11,14 @@ namespace MathCore.Values;
 /// void Test()
 /// {
 ///    //Используем уничтожаемую группу объектов
-///   using(var readers = new DisposableGroup&lt;StreamReader&gt;(//Объекты чтения из потока
-///           Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f))))  //для всех файлов C:\*.txt
-///   {
-///     var rnd = new Random();                                         //Генератор случайных чисел
-///     var o_selector = new ObjectSelector&lt;string&gt;(                     //Создаём объект выбора строк
-///                 SS => rnd.Next(readers.Count),                      //Очередная строка из случайного файла
-///                 () => readers.All(r => !r.EndOfStream),             //Признак возможности чтения - ни один из потоков не закончен
-///                 readers.Select(r => (Func&lt;string&gt;)(r.ReadLine)));   //Инициализатор - метод, возвращающий строку из файла
-///     while(o_selector.CanRead) Console.Write(o_selector.Value);        //Читаем всё построчно в консоль
-///   }
+///   using var readers = new DisposableGroup&lt;StreamReader&gt;(                      //Объекты чтения из потока
+///           Directory.GetFiles(@"c:\", "*.txt").Select(f => new StreamReader(f)));    //для всех файлов C:\*.txt
+///   var rnd = new Random();                                                           //Генератор случайных чисел
+///   var o_selector = new ObjectSelector&lt;string&gt;(                                //Создаём объект выбора строк
+///               SS => rnd.Next(readers.Count),                                        //Очередная строка из случайного файла
+///               () => readers.All(r => !r.EndOfStream),                               //Признак возможности чтения - ни один из потоков не закончен
+///               readers.Select(r => (Func&lt;string&gt;)(r.ReadLine)));               //Инициализатор - метод, возвращающий строку из файла
+///   while(o_selector.CanRead) Console.Write(o_selector.Value);                        //Читаем всё построчно в консоль
 /// }
 /// </example>
 /// <remarks>Новый генератор последовательности объектов из источника параллельных значений</remarks>

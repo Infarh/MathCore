@@ -10,7 +10,7 @@ public class StreamDataSpeedValue
     /* ------------------------------------------------------------------------------------------ */
 
     /// <summary>Названия скоростей</summary>
-    private static readonly string[] __DataNames = Consts.DataLength.Bytes.GetDataNames().Initialize((s, _) => s + "/с");
+    private static readonly string[] __DataNames = Consts.DataLength.Bytes.GetDataNames().Initialize((s, _) => $"{s}/с");
 
     /// <summary>Текущее время</summary>
     private static DateTime Now { [DST] get => DateTime.Now; }

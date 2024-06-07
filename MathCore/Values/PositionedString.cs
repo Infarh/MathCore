@@ -37,6 +37,7 @@ public class PositionedString(string String, int Position = 0)
     }
 
     public void ShowCursor() => ShowCursor(Position);
+
     public void ShowCursor(int position)
     {
         var sub_str    = string.Empty;
