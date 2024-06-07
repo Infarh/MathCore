@@ -1,4 +1,3 @@
-
 using System.Reflection.Emit;
 
 using MathCore.Statistic;
@@ -10,6 +9,14 @@ using MathCore.Text;
 #pragma warning disable CS8321 // Local function is declared but never used
 
 //await ScriptingTest.RunAsync();
+
+var str = "1234567890";
+var v0 = str.AsSpan()[^7..^5];
+var ptr = str.AsStringPtr();
+var vv = ptr[^7..^5];
+
+vv.ParseDouble();
+
 
 var format = new StringFormat("time:{time} value:{value}");
 

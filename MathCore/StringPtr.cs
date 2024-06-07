@@ -33,8 +33,6 @@ public readonly ref partial struct StringPtr
     /// <returns>Указатель на новое положение</returns>
     public StringPtr this[int index, int length] => Substring(index, length);
 
-    //public StringPtr this[Range range] => this[range.Start, range.End - range.End];
-
     /* --------------------------------------------------------------------------------------- */
 
     /// <summary>Инициализация нового указателя на положение в строке</summary>
@@ -77,21 +75,34 @@ public readonly ref partial struct StringPtr
 
     public StringPtr SubstringIndex(int Start, int End) => Substring(Start, Math.Max(0, End - Start));
 
+    /// <summary>
+    /// Получить подстроку до указанного символа. <br/>
+    /// Если символ отсутствует, то возвращается вся строка целиком.
+    /// </summary>
+    /// <param name="Separator">Искомый символ-разделитель</param>
+    /// <returns>Подстрока до указанного разделителя</returns>
     public StringPtr SubstringBefore(char Separator)
     {
         var index = IndexOf(Separator);
-        if (index < 0) return new(Source, Pos, Length);
+        if (index < 0) return this;
         return SubstringIndex(0, index);
     }
 
+    /// <summary>
+    /// Получить подстроку после указанного разделителя. <br/>
+    /// Если разделитель не найден, то возвращается пустая подстрока.
+    /// </summary>
+    /// <param name="Separator">Искомый символ-разделитель</param>
+    /// <returns>Подстрока после указанного символа разделителя</returns>
     public StringPtr SubstringAfter(char Separator)
     {
         var index = LastIndexOf(Separator);
-        if (index < 0) return new(Source, Pos, 0);
+        if (index < 0) return new(Source, Pos + Length, 0);
         return Substring(index + 1);
     }
 
     public bool IsInBracket(char Open, char Close) => Length >= 2 && Source[Pos] == Open && Source[Pos + Length - 1] == Close;
+
     public bool IsInBracket(string Open, string Close)
     {
         var open_length  = Open.Length;
@@ -849,6 +860,9 @@ public readonly ref partial struct StringPtr
     /// <returns>Преобразованное вещественное число</returns>
     public double ParseDouble(IFormatProvider Provider)
     {
+#if NET8_0_OR_GREATER
+        return double.Parse(Span, Provider);
+#else
         var start = Pos;
         var index = 0;
         var length = Length;
@@ -927,7 +941,7 @@ public readonly ref partial struct StringPtr
                         break;
                     }
 
-                    //Потенциально число закончилось.Пытаемся пропустить конечные пробелы
+                    //Потенциально число закончилось. Пытаемся пропустить конечные пробелы
                     while (char.IsWhiteSpace(str, start + index) && index < length)
                         index++;
 
@@ -1005,25 +1019,18 @@ public readonly ref partial struct StringPtr
 
         
         return value * Math.Pow(10, exp_sign * exp);
+#endif
     }
 
     /// <summary>Получить имя (ключ) из пары ключ=значение</summary>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
     /// <returns>Подстрока, содержащая имя (ключ) из пары ключ-значение</returns>
-    public StringPtr GetName(char Separator = '=')
-    {
-        var index = IndexOf(Separator);
-        return index <= 0 ? new(Source, Pos, 0) : Substring(0, index);
-    }
+    public StringPtr GetName(char Separator = '=') => SubstringBefore(Separator);
 
     /// <summary>Получить значение из пары ключ=значение</summary>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
     /// <returns>Подстрока, содержащая значение из пары ключ-значение</returns>
-    public StringPtr GetValueString(char Separator = '=')
-    {
-        var index = IndexOf(Separator);
-        return index <= 0 ? new(Source, Pos, 0) : Substring(index + 1);
-    }
+    public StringPtr GetValueString(char Separator = '=') => SubstringAfter(Separator);
 
     /// <summary>Получить вещественное значение из пары ключ=значение</summary>
     /// <param name="Separator">Символ-разделитель пары ключ-значение</param>
