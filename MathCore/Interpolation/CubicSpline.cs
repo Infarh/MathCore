@@ -21,9 +21,7 @@ public class CubicSpline : Interpolator, IInterpolator
         public double d = d;
         public readonly double x = x;
 
-        public SplineState(double a, double x) : this(a, 0, 0, 0, x)
-        {
-        }
+        public SplineState(double a, double x) : this(a, 0, 0, 0, x) { }
     }
 
     /* -------------------------------------------------------------------------------------------- */
@@ -44,11 +42,7 @@ public class CubicSpline : Interpolator, IInterpolator
         var count = Points.Count;
         var x     = new double[count];
         var y     = new double[count];
-        for(var i = 0; i < count; i++)
-        {
-            x[i] = Points[i].Re;
-            y[i] = Points[i].Im;
-        }
+        for(var i = 0; i < count; i++) (x[i], y[i]) = Points[i];
         Initialize(x, y);
     }
 
@@ -57,11 +51,7 @@ public class CubicSpline : Interpolator, IInterpolator
         var count = Points.Count;
         var x     = new double[count];
         var y     = new double[count];
-        for(var i = 0; i < count; i++)
-        {
-            x[i] = Points[i].X;
-            y[i] = Points[i].Y;
-        }
+        for(var i = 0; i < count; i++) (x[i], y[i]) = Points[i];
         Initialize(x, y);
     }
 
@@ -72,9 +62,9 @@ public class CubicSpline : Interpolator, IInterpolator
     /// <exception cref="ArgumentException">Возникает в случае, если размерности массивов не равны</exception>
     public void Initialize(double[] X, double[] Y)
     {
-        if(X.Length != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
-
         var count = X.Length;
+        if(count != Y.Length) throw new ArgumentException("Размеры массивов должны совпадать");
+
         _SplineStates = new SplineState[count];
 
         for(var i = 0; i < count; i++)
@@ -84,17 +74,16 @@ public class CubicSpline : Interpolator, IInterpolator
 
         // Решение СЛАУ относительно коэффициентов сплайнов c[i] методом прогонки для трехдиагональных матриц
         // Вычисление прогоночных коэффициентов - прямой ход метода прогонки
-        var alpha          = new double[count - 1];
-        var beta           = new double[count - 1];
-        alpha[0] = beta[0] = 0;
+        var alpha = new double[count - 1];
+        var beta  = new double[count - 1];
         for(var i = 1; i < count - 1; i++)
         {
-            var h_i  = X[i] - X[i - 1];
-            var h_i1 = X[i + 1] - X[i];
-            var a    = h_i;
-            var c    = 2 * (h_i + h_i1);
-            var b    = h_i1;
-            var f    = 6 * ((Y[i + 1] - Y[i]) / h_i1 - (Y[i] - Y[i - 1]) / h_i);
+            var dx1  = X[i] - X[i - 1];
+            var dx2  = X[i + 1] - X[i];
+            var a    = dx1;
+            var c    = 2 * (dx1 + dx2);
+            var b    = dx2;
+            var f    = 6 * ((Y[i + 1] - Y[i]) / dx2 - (Y[i] - Y[i - 1]) / dx1);
             var z    = a * alpha[i - 1] + c;
             alpha[i] = -b / z;
             beta[i]  = (f - a * beta[i - 1]) / z;
@@ -117,7 +106,8 @@ public class CubicSpline : Interpolator, IInterpolator
 
     public double Value(double x)
     {
-        var         count = _SplineStates.Length;
+        var count = _SplineStates.Length;
+
         SplineState state;
         if(x <= _SplineStates[0].x) // Если x меньше точки сетки x[0] - пользуемся первым эл-тов массива
             state = _SplineStates[0];
@@ -125,12 +115,18 @@ public class CubicSpline : Interpolator, IInterpolator
             state = _SplineStates[count - 1];
         else // Иначе x лежит между граничными точками сетки - производим бинарный поиск нужного эл-та массива
         {
-            int i = 0, j = count - 1;
+            var i = 0;
+            var j = count - 1;
             while(i + 1 < j)
             {
-                var k                         = i + (j - i) / 2;
-                if(x <= _SplineStates[k].x) j = k; else i = k;
+                var k = i + (j - i) / 2;
+
+                if(x <= _SplineStates[k].x) 
+                    j = k; 
+                else 
+                    i = k;
             }
+
             state = _SplineStates[j];
         }
 

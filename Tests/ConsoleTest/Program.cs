@@ -6,17 +6,18 @@ using ConsoleTest;
 
 using MathCore.Text;
 
+
+int xxx = -8;
+
+for (var i = 0; i < 64; i++)
+{
+    Console.WriteLine($"{xxx:b32}");
+    xxx >>= 1;
+}
+
 #pragma warning disable CS8321 // Local function is declared but never used
 
 //await ScriptingTest.RunAsync();
-
-var str = "1234567890";
-var v0 = str.AsSpan()[^7..^5];
-var ptr = str.AsStringPtr();
-var vv = ptr[^7..^5];
-
-vv.ParseDouble();
-
 
 var format = new StringFormat("time:{time} value:{value}");
 
