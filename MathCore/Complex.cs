@@ -347,14 +347,6 @@ public readonly partial struct Complex : ICloneable<Complex>, IFormattable,
         abs * Cos(arg)
     );
 
-    /// <summary>Вычисление синуса и косинуса аргумента</summary>
-    /// <param name="arg">Аргумент функции</param>
-    public static (Complex Sin, Complex Cos) SinCos(Complex arg) =>
-    (
-        Trigonometry.Sin(arg),
-        Trigonometry.Cos(arg)
-    );
-
     /// <summary>Действительное "комплексное" число</summary>
     public static readonly Complex Real = new(1);
 

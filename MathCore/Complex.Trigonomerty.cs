@@ -48,6 +48,30 @@ public readonly partial struct Complex
             );
         }
 
+        public static (Complex Sin, Complex Cos) SinCos(Complex z)
+        {
+            var (re, im) = z;
+            if (im == 0)
+                return (new(Math.Sin(re)), new(Math.Cos(re)));
+
+            var eb = Math.Exp(im);
+            var eb_inv = 1 / eb;
+
+            var sin = new Complex
+            (
+                Re: .5 * Math.Sin(re) * (eb_inv + eb),
+                Im: .5 * Math.Cos(re) * (eb - eb_inv)
+            );
+
+            var cos = new Complex
+            (
+                Re: .5 * Math.Cos(re) * (eb_inv + eb),
+                Im: .5 * Math.Sin(re) * (eb_inv - eb)
+            );
+
+            return (sin, cos);
+        }
+
         /// <summary>Тангенс</summary>
         /// <param name="z">Комплексный аргумент</param>
         /// <returns>Тангенс комплексного аргумента</returns>
@@ -175,6 +199,23 @@ public readonly partial struct Complex
                     Re: cosh_re * cos_im,
                     Im: sinh_re * sin_im
                 );
+            }
+
+            public static (Complex Sh, Complex Ch) ShCh(Complex z)
+            {
+                var (re, im) = z;
+                if (im == 0)
+                    return (new(Math.Sinh(re)), new(Math.Cosh(re)));
+
+                var exp = Math.Exp(re);
+
+                var sin = Math.Sin(im) * 0.5;
+                var cos = Math.Cos(im) * 0.5;
+
+                var e0 = new Complex(cos * exp, +sin * exp);
+                var e1 = new Complex(cos / exp, -sin / exp);
+
+                return (e0 - e1, e0 + e1);
             }
 
             /// <summary>Гиперболический тангенс</summary>
