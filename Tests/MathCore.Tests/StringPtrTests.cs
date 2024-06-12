@@ -128,7 +128,6 @@ public class StringPtrTests
 
         var ptr = str.AsStringPtr();
 
-        //var ptr2 = ptr.Substring(1, -1);
         var ptr2 = ptr[1, -1];
 
         var actual_index = ptr2.LastIndexOf(':');
@@ -143,8 +142,6 @@ public class StringPtrTests
         const int expected = 10;
 
         var pos = 5;
-
-        var qq = str.LastIndexOf(':', pos + (str.Length - 1 - pos), (str.Length - pos));
 
         var str_ptr = str.AsStringPtr();
 
@@ -240,7 +237,7 @@ public class StringPtrTests
         var actual_value = value.ToString();
 
         actual_name.AssertEquals(expected_name);
-        StringAssert.Equals(expected_value, actual_value);
+        actual_value.AssertEquals(expected_value);
     }
 
     [TestMethod]

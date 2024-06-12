@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.91.2</Version>
+    <Version>0.0.91.3</Version>
     <PackageReleaseNotes>
-      Добавлены методы-деконструкторы для StringPtr для метода Slice(char) для разделения названия и значения поля с разделителем в виде символа
+      Добавлены методы валидации данных
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -35,7 +35,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST"/>
+    <Using Include="MathCore.Extensions" />
+    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST" />
   </ItemGroup>
 
   <PropertyGroup>

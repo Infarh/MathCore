@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
 using MathCore.Annotations;
+
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -10,13 +11,27 @@ namespace MathCore.ViewModels;
 
 public partial class ViewModel
 {
+    protected virtual bool Set<T>(
+        [CanBeNull] T value, 
+        [CanBeNull] T OldValue,
+        Action<T> Setter, 
+        [CanBeNull] Func<T, bool> ValueChecker = null, 
+        [NotNull, CallerMemberName] string PropertyName = null!)
+    {
+        if (Equals(value, OldValue)) return false;
+        if (ValueChecker is { } checker && !checker(value)) return false;
+        Setter(value);
+        OnPropertyChanged(PropertyName!);
+        return true;
+    }
+
     /// <summary>Установить значение поля модели, в котором хранится значение изменяющегося свойства</summary>
     /// <typeparam name="T">Тип значения поля</typeparam>
     /// <param name="field">Ссылка на поле модели</param>
     /// <param name="value">Значение, устанавливаемое для поля</param>
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
-    protected bool Set<T>([CanBeNull] ref T field, [CanBeNull] T value, [NotNull, CallerMemberName] in string PropertyName = null)
+    protected virtual bool Set<T>([CanBeNull/*, NotNullIfNotNull(nameof(field))*/] ref T field, [CanBeNull] T value, [NotNull, CallerMemberName] in string PropertyName = null)
     {
         if (Equals(field, value) || OnPropertyChanging(field, ref value, PropertyName)) return false;
         field = value;
@@ -32,7 +47,7 @@ public partial class ViewModel
     /// <param name="ValueChecker">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
-    protected bool Set<T>(
+    protected virtual bool Set<T>(
         [CanBeNull] ref T field, 
         [CanBeNull] in T value,
         [NotNull] in Func<T, bool> ValueChecker, 
@@ -47,7 +62,7 @@ public partial class ViewModel
     /// <param name="Validator">Метод определения области допустимых значений (должен вернуть истину для корректного значения)</param>
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
-    protected bool Set<T>(
+    protected virtual bool Set<T>(
         [CanBeNull] ref T field, 
         [CanBeNull] in T value,
         [NotNull] in string ErrorMessage,
@@ -64,7 +79,7 @@ public partial class ViewModel
     /// <param name="Setter">Метод установки значения свойства</param>
     /// <param name="PropertyName">Имя метода, вызывавшего обновление. По умолчанию должно быть равно пустоте</param>
     /// <returns>Истина, если метод изменил значение поля и вызвал событие <see cref="PropertyChanged"/></returns>
-    protected bool Set<T>(
+    protected virtual bool Set<T>(
         T value,
         in T OldValue,
         Action<T> Setter,
