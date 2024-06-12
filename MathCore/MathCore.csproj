@@ -35,7 +35,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST"/>
+    <Using Include="MathCore.Extensions" />
+    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST" />
   </ItemGroup>
 
   <PropertyGroup>
