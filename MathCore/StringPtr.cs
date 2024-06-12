@@ -410,6 +410,9 @@ public readonly ref partial struct StringPtr
     /// <returns>Истина, если преобразование выполнено успешно</returns>
     public bool TryParseInt32(out int value)
     {
+#if NET8_0_OR_GREATER
+        return int.TryParse(Span, out value);
+#else
         var start = Pos;
         var index = 0;
         var length = Length;
@@ -484,6 +487,7 @@ public readonly ref partial struct StringPtr
 
         value = sign * result;
         return true;
+#endif
     }
 
     /// <summary>Преобразование подстроки в <see cref="int"/></summary>
@@ -492,7 +496,10 @@ public readonly ref partial struct StringPtr
     /// <exception cref="OverflowException">Если длина строковой записи числа превышает <see cref="int"/>.<see cref="int.MaxValue"/></exception>
     public int ParseInt32()
     {
-        var start = Pos;
+#if NET8_0_OR_GREATER
+        return int.Parse(Span);
+#else
+var start = Pos;
         var index = 0;
         var length = Length;
         var str = Source;
@@ -518,12 +525,12 @@ public readonly ref partial struct StringPtr
                 break;
         }
 
-        var index_before_skip_zerros = index;
+        var index_before_skip_zeros = index;
         while (index < length && str[start + index] == '0') index++;
 
         if (index >= length || !char.IsDigit(str, start + index))
         {
-            if (index > index_before_skip_zerros)
+            if (index > index_before_skip_zeros)
                 return 0;
             throw new FormatException("Строка имела неверный формат");
         }
@@ -555,6 +562,7 @@ public readonly ref partial struct StringPtr
         }
 
         return sign * result;
+#endif
     }
 
     public double? TryParseDouble() => TryParseDouble(out var d) ? d : null;
@@ -564,7 +572,10 @@ public readonly ref partial struct StringPtr
     /// <returns>Истина, если преобразование выполнено успешно</returns>
     public bool TryParseDouble(out double value)
     {
-        var start = Pos;
+#if NET8_0_OR_GREATER
+        return double.TryParse(Span, CultureInfo.InvariantCulture, out value);
+#else
+var start = Pos;
         var index = 0;
         var length = Length;
         var str = Source;
@@ -653,6 +664,7 @@ public readonly ref partial struct StringPtr
 
         value = sign * result;
         return true;
+#endif
     }
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
@@ -661,6 +673,9 @@ public readonly ref partial struct StringPtr
     /// <returns>Истина, если преобразование выполнено успешно</returns>
     public bool TryParseDouble(IFormatProvider Provider, out double value)
     {
+#if NET8_0_OR_GREATER
+        return double.TryParse(Span, Provider, out value);
+#else
         var start = Pos;
         var index = 0;
         var length = Length;
@@ -681,7 +696,7 @@ public readonly ref partial struct StringPtr
 
         if (index >= length)
         {
-            // Если строка коныилась, то выход с ошибкой
+            // Если строка кончилась, то выход с ошибкой
             value = double.NaN;
             return false;
         }
@@ -849,6 +864,7 @@ public readonly ref partial struct StringPtr
             value = -value;
 
         return true;
+#endif
     }
 
     /// <summary>Попытка преобразования подстроки в <see cref="double"/></summary>
@@ -1223,7 +1239,7 @@ public readonly ref partial struct StringPtr
         return Trimmed ? Substring(pos - Pos) : this;
     }
 
-    /// <summary>Удаление символа в конца строки</summary>
+    /// <summary>Удаление символа в конце строки</summary>
     /// <param name="c">Удаляемый символ</param>
     /// <returns>Обрезанная строка</returns>
     public StringPtr TrimEnd(char c) => TrimEnd(out _, c);
@@ -1619,7 +1635,7 @@ public readonly ref partial struct StringPtr
 
     /* --------------------------------------------------------------------------------------- */
 
-    /// <summary>Оператор неявного преобразования строки в фрагмент строки</summary>
+    /// <summary>Оператор неявного преобразования строки во фрагмент строки</summary>
     /// <param name="Source">Исходная строка</param>
     public static implicit operator StringPtr(string Source) => new(Source);
 
@@ -1636,6 +1652,18 @@ public readonly ref partial struct StringPtr
     /// <param name="Ptr">Фрагмент строки</param>
     public static explicit operator double(StringPtr Ptr) => Ptr.ParseDouble();
     public static explicit operator double?(StringPtr Ptr) => Ptr.TryParseDouble();
+
+    public static explicit operator bool(StringPtr Ptr) => (bool?)Ptr ?? throw new FormatException("Строка имела неверный формат");
+
+    public static explicit operator bool?(StringPtr Ptr)
+    {
+        var ptr = Ptr.Trim();
+        if (ptr.Equals(bool.TrueString, StringComparison.InvariantCulture))
+            return true;
+        if (ptr.Equals(bool.FalseString, StringComparison.InvariantCulture))
+            return false;
+        return null;
+    }
 
     /* --------------------------------------------------------------------------------------- */
 }
