@@ -28,9 +28,6 @@ public static class StringExtensionsParse
     public static bool IsShort(this string? s) => short.TryParse(s, out _);
 
     [DST]
-    public static bool IsDouble(this string? s) => double.TryParse(s, out _);
-
-    [DST]
     public static byte AsInt8(this string? s, byte Default) =>
         byte.TryParse(s, out var value)
             ? value
