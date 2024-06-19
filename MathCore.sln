@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Tests\Benchma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCore.Algorithms", "Tests\MathCore.Algorithms\MathCore.Algorithms.csproj", "{2B8FF1EE-42E8-4961-A734-1068F008D7D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathCore.Tests.WPF", "Tests\MathCore.Tests.WPF\MathCore.Tests.WPF.csproj", "{2DDA14D6-76EE-4D0A-B9DE-638778395934}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Debug|x64.Build.0 = Debug|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934}.Release|x64.Build.0 = Release|Any CPU
 		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA60C84-107F-4582-8EED-2273957E89C5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -77,6 +87,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{25AFB0DF-BCC9-45CA-AA0D-CB76AC5F906D} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
+		{2DDA14D6-76EE-4D0A-B9DE-638778395934} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{744E4BA2-2EA7-4AD5-B732-47230ED0A3F1} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{80108823-1EA4-46AC-B365-8B0F9CE59CC6} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
 		{2B8FF1EE-42E8-4961-A734-1068F008D7D1} = {3B53E842-750F-4865-97C0-1703CDDE4C9F}
@@ -85,4 +96,3 @@ Global
 		SolutionGuid = {5C46D916-D8DA-4B92-A70C-6EE0C6B01CAD}
 	EndGlobalSection
 EndGlobal
-bal
