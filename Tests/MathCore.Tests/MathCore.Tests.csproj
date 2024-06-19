@@ -45,4 +45,10 @@
     <ProjectReference Include="..\..\MathCore\MathCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Interpolation\InterpolatorNDData.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

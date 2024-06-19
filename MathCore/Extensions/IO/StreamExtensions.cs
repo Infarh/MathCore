@@ -16,6 +16,14 @@ public static class StreamExtensions
         ? new(stream) 
         : throw new InvalidOperationException("Поток не допускает операций чтения");
 
+    /// <summary>Получить объект чтения текстовых данных</summary>
+    /// <param name="stream">Поток данных</param>
+    /// <returns>Объект <see cref="StreamReader"/></returns>
+    /// <exception cref="InvalidOperationException">Возникает в случае если поток не предоставляет возможности чтения</exception>
+    public static StreamReader GetStreamReader(this Stream stream, Encoding encoding) => stream.CanRead 
+        ? new(stream, encoding) 
+        : throw new InvalidOperationException("Поток не допускает операций чтения");
+
     /// <summary>Получить объект чтения двоичных данных</summary>
     /// <param name="stream">Поток данных</param>
     /// <returns>Объект <see cref="StreamReader"/></returns>
