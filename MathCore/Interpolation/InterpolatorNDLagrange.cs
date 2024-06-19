@@ -4,9 +4,9 @@ using System.IO.Compression;
 
 namespace MathCore.Interpolation;
 
-public sealed class InterpolatorND
+public sealed class InterpolatorNDLagrange
 {
-    public static InterpolatorND LoadCSV(FileInfo file, bool Header = true, char Separator = ';', bool SkipWrongLines = true)
+    public static InterpolatorNDLagrange LoadCSV(FileInfo file, bool Header = true, char Separator = ';', bool SkipWrongLines = true)
     {
         if (string.Equals(file.Extension, ".zip", StringComparison.OrdinalIgnoreCase))
         {
@@ -35,7 +35,7 @@ public sealed class InterpolatorND
             return LoadCSV(reader, Header, Separator, SkipWrongLines);
     }
 
-    public static InterpolatorND LoadCSV(TextReader reader, bool Header = true, char Separator = ';', bool SkipWrongLines = true)
+    public static InterpolatorNDLagrange LoadCSV(TextReader reader, bool Header = true, char Separator = ';', bool SkipWrongLines = true)
     {
         if (Header)
             if (reader.ReadLine() is null)
@@ -167,7 +167,7 @@ public sealed class InterpolatorND
 
     public double this[params IReadOnlyList<double> X0] => GetValue(X0);
 
-    private InterpolatorND(int ArgsCount, double[][] Points, double[] Values, double[] Min, double[] Range)
+    private InterpolatorNDLagrange(int ArgsCount, double[][] Points, double[] Values, double[] Min, double[] Range)
     {
         _Points = Points;
         _ArgsCount = ArgsCount;
@@ -230,7 +230,6 @@ public sealed class InterpolatorND
             return 0;
 
         var p = prod / (len0 * leni).Sqrt();
-        //var p_1 = prod * (len0 * leni).SqrtInvFast3();
 
         return p;
     }

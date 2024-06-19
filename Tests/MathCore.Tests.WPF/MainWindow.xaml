@@ -34,7 +34,7 @@
                 </HeaderedContentControl>
                 <HeaderedContentControl Header="H">
                     <StackPanel>
-                        <TextBox Text="{Binding ValueH, StringFormat=f0}"/>
+                        <TextBox Text="{Binding ValueH, StringFormat=0.#}"/>
                         <Slider Margin="4" Value="{Binding ValueH, Delay=100}" Delay="100"
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"
                                 TickFrequency="1000" TickPlacement="TopLeft"
@@ -54,12 +54,12 @@
                 </HeaderedContentControl>
                 <HeaderedContentControl Header="M">
                     <StackPanel>
-                        <TextBox Text="{Binding ValueM, StringFormat=0.0##}"/>
+                        <TextBox Text="{Binding ValueM, StringFormat=0.0####}"/>
                         <Slider Margin="4" Value="{Binding ValueM, Delay=100}" Delay="100" 
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="3"
                                 TickFrequency="0.01" TickPlacement="TopLeft"
                                 Minimum="0.45" Maximum="0.82" Interval="100"
-                                SmallChange="0.01" LargeChange="0.05"/>
+                                SmallChange="0.001" LargeChange="0.01"/>
                     </StackPanel>
                 </HeaderedContentControl>
                 <HeaderedContentControl Header="SAR">
