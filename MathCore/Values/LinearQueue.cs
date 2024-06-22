@@ -18,8 +18,7 @@ public class LinearQueue<T>(T[] Buffer)
     public int Length => Buffer.Length;
 
     public ref T this[int i] => ref Buffer[(i + _Offset) % Length];
-
-
+    
     public T Add(T t)
     {
         var offset = _Offset;

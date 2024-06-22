@@ -1,10 +1,17 @@
 ﻿#nullable enable
+using System.Runtime.InteropServices;
+
 namespace MathCore;
 
 public readonly ref partial struct StringPtr
 {
+    [StructLayout(LayoutKind.Auto)]
     public readonly ref partial struct TokenizerSingleChar
     {
+        /// <summary>Сформировать перечислитель строковых фрагментов</summary>
+        /// <returns>Перечислитель строковых фрагментов</returns>
+        public TokenEnumerator GetEnumerator() => new(Buffer, Separator, StartIndex, Length, _SkipEmptyElements);
+
         /// <summary>Перечислитель строковых фрагментов</summary>
         /// <remarks>Инициализация нового перечислителя строковых фрагментов</remarks>
         /// <param name="Buffer">Исходный строковый буфер</param>
@@ -14,10 +21,10 @@ public readonly ref partial struct StringPtr
         /// <param name="SkipEmpty">Пропускать пустые фрагменты</param>
         public ref struct TokenEnumerator(string Buffer, char Separator, int StartIndex, int Length, bool SkipEmpty)
         {
+            private readonly int _StartIndex = StartIndex;
+
             /// <summary>Текущая позиция в исходной строке</summary>
-#pragma warning disable CS9124
             private int _CurrentPos = StartIndex;
-#pragma warning restore
 
             /// <summary>Текущий фрагмент строки</summary>
             public StringPtr Current { get; private set; } = default;
@@ -26,7 +33,7 @@ public readonly ref partial struct StringPtr
             /// <returns>Истина, если перемещение выполнено успешно</returns>
             public bool MoveNext()
             {
-                switch (Length - (_CurrentPos - StartIndex))
+                switch (Length - (_CurrentPos - _StartIndex))
                 {
                     case < 0:               return false;
                     case 0 when SkipEmpty: return false;
@@ -38,7 +45,7 @@ public readonly ref partial struct StringPtr
 
                 var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = StartIndex + Length;
+                var end_pos = _StartIndex + Length;
 
                 StringPtr ptr;
                 do
@@ -112,7 +119,7 @@ public readonly ref partial struct StringPtr
             public bool TryParseNextDouble(out double value)
             {
                 value = double.NaN;
-                switch (Length - (_CurrentPos - StartIndex))
+                switch (Length - (_CurrentPos - _StartIndex))
                 {
                     case < 0:               return false;
                     case 0 when SkipEmpty: return false;
@@ -124,7 +131,7 @@ public readonly ref partial struct StringPtr
 
                 var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = StartIndex + Length;
+                var end_pos = _StartIndex + Length;
 
                 StringPtr ptr;
                 do
@@ -159,7 +166,7 @@ public readonly ref partial struct StringPtr
             public bool TryParseNextDouble(IFormatProvider provider, out double value)
             {
                 value = double.NaN;
-                switch (Length - (_CurrentPos - StartIndex))
+                switch (Length - (_CurrentPos - _StartIndex))
                 {
                     case < 0:               return false;
                     case 0 when SkipEmpty: return false;
@@ -171,7 +178,7 @@ public readonly ref partial struct StringPtr
 
                 var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = StartIndex + Length;
+                var end_pos = _StartIndex + Length;
 
                 StringPtr ptr;
                 do
@@ -205,7 +212,7 @@ public readonly ref partial struct StringPtr
             public bool TryParseNextInt32(out int value)
             {
                 value = 0;
-                switch (Length - (_CurrentPos - StartIndex))
+                switch (Length - (_CurrentPos - _StartIndex))
                 {
                     case < 0:               return false;
                     case 0 when SkipEmpty: return false;
@@ -217,7 +224,7 @@ public readonly ref partial struct StringPtr
 
                 var str     = Buffer;
                 var pos     = _CurrentPos;
-                var end_pos = StartIndex + Length;
+                var end_pos = _StartIndex + Length;
 
                 StringPtr ptr;
                 do

@@ -1,5 +1,3 @@
-using System.Reflection.Emit;
-
 using MathCore.Statistic;
 
 using ConsoleTest;
@@ -7,9 +5,16 @@ using ConsoleTest;
 using MathCore.Text;
 
 
+var s = "123;345:567";
+var ps = s.AsStringPtr().Split(';', ':');
 const double value = 10668;
 
-var cc = value.RoundAdaptive(3);
+for (var i = 0; i < 64; i++)
+{
+    Console.WriteLine($"{xxx:b32}");
+    xxx >>= 1;
+}
+
 
 #pragma warning disable CS8321 // Local function is declared but never used
 
