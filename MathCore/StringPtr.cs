@@ -8,6 +8,8 @@ namespace MathCore;
 /// <summary>Указатель на позицию в строке</summary>
 public readonly ref partial struct StringPtr
 {
+    public delegate T Selector<out T>(StringPtr p);
+
     /* --------------------------------------------------------------------------------------- */
 
     /// <summary>Исходная строка</summary>

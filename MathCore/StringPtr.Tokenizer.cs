@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using System.Runtime.InteropServices;
+
 namespace MathCore;
 
 public readonly ref partial struct StringPtr
@@ -10,6 +12,7 @@ public readonly ref partial struct StringPtr
     /// <param name="StartIndex">Индекс начала анализируемой подстроки</param>
     /// <param name="Length">Длина анализируемой подстроки</param>
     /// <param name="SkipEmpty">Пропускать пустые строковые фрагменты</param>
+    [StructLayout(LayoutKind.Auto)]
     public readonly ref partial struct Tokenizer(string Buffer, char[] Separators, int StartIndex, int Length, bool SkipEmpty = false)
     {
         /// <summary>Строковый буфер</summary>
@@ -36,8 +39,18 @@ public readonly ref partial struct StringPtr
         /// <returns>Перечислитель строковых фрагментов с изменённым режимом пропуска строковых фрагментов</returns>
         public Tokenizer SkipEmpty(bool Skip) => new(_Buffer, Separators, StartIndex, _Length, Skip);
 
-        /// <summary>Сформировать перечислитель строковых фрагментов</summary>
-        /// <returns>Перечислитель строковых фрагментов</returns>
-        public TokenEnumerator GetEnumerator() => new(_Buffer, Separators, StartIndex, _Length, _SkipEmpty);
+        public string[] ToArray() => [.. ToList()];
+
+        public List<string> ToList()
+        {
+            var result = new List<string>();
+
+            for (var enumerator = GetEnumerator(); enumerator.MoveNext();)
+                result.Add(enumerator.Current);
+
+            result.TrimExcess();
+
+            return result;
+        }
     }
 }
