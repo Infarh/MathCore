@@ -8,6 +8,12 @@ namespace System.Text;
 
 public static class StringBuilderExtensions
 {
+    public static StringBuilder SetLength(this StringBuilder builder, int length)
+    {
+        builder.Length = length < 0 ? builder.Length + length : length;
+        return builder;
+    }
+
     public static IEnumerable<string> EnumLines(this StringBuilder builder, bool SkipEmpty = false) => builder.ToString().EnumLines(SkipEmpty);
 
     public static IEnumerable<T> EnumLines<T>(this StringBuilder builder, Func<string, T> selector, bool SkipEmpty = false) => builder.ToString().EnumLines(selector, SkipEmpty);
