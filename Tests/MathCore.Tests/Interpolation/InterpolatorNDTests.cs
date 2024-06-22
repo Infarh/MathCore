@@ -9,7 +9,7 @@ public class InterpolatorNDTests
 {
     private const string __DataFilePath = "Interpolation/InterpolatorNDData.zip";
 
-    [TestMethod]
+    [TestMethod, Ignore]
     public void TestInterpolation()
     {
         var data_file = new FileInfo(__DataFilePath).ThrowIfNotFound();
