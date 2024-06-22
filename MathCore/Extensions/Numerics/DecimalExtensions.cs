@@ -459,9 +459,20 @@ public static class DecimalExtensions
 
     public static decimal RoundAdaptive(this decimal x, int n = 1)
     {
+        switch (x)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                return x;
+            case < 0: return -(-x).RoundAdaptive(n);
+        }
+
         if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
         if (n == 0) return x.Round();
-        if (x < 0) return -(-x).RoundAdaptive(n);
 
         var fraction_digits = x.GetZerosCount();
         var b = 10m.Pow(fraction_digits);

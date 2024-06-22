@@ -22,20 +22,18 @@ public static class AssemblyEx
 
     public readonly struct AssemblyIterator(Assembly assembly, System.Runtime.Loader.AssemblyLoadContext? context) : IGraphNode<Assembly>, IDisposable
     {
-        private readonly System.Runtime.Loader.AssemblyLoadContext? _Context = context;
-
         public Assembly Value { get; } = assembly;
 
         public IEnumerable<IGraphNode<Assembly>> Childs
         {
             get
             {
-                if(_Context is null)
-                    foreach (var assembly_name in assembly.GetReferencedAssemblies())
+                if(context is null)
+                    foreach (var assembly_name in Value.GetReferencedAssemblies())
                         yield return new AssemblyIterator(Assembly.Load(assembly_name), null);
                 else
-                    foreach (var assembly_name in assembly.GetReferencedAssemblies())
-                        yield return new AssemblyIterator(_Context.LoadFromAssemblyName(assembly_name), context);
+                    foreach (var assembly_name in Value.GetReferencedAssemblies())
+                        yield return new AssemblyIterator(context.LoadFromAssemblyName(assembly_name), context);
             }
         }
 

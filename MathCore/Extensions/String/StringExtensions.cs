@@ -16,6 +16,19 @@ namespace System;
 /// <summary>Методы-расширения класса <see cref="T:System.String">строк</see></summary>
 public static class StringExtensions
 {
+    public static int CountChar(this string s, char c)
+    {
+        var length = s.Length;
+        if (length == 0) return 0;
+
+        var count = 0;
+        for (var i = 0; i < length; i++)
+            if (s[i] == c)
+                count++;
+
+        return count;
+    }
+
     public static bool TryConvertTo<T>(this string? str, out T? value)
     {
         if(str is null || typeof(T).GetTypeConverter() is not { } converter || !converter.CanConvertFrom(typeof(string)))
