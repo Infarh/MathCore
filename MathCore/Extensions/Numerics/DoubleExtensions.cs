@@ -531,22 +531,21 @@ public static class DoubleExtensions
     {
         switch (x)
         {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case double.NaN or double.PositiveInfinity or double.NegativeInfinity:
-                return x;
+            case double.NaN or double.PositiveInfinity or double.NegativeInfinity: return x;
             case < 0: return -(-x).RoundAdaptive(n);
         }
 
-        if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
-        if (n == 0) return x.Round();
+        switch (n)
+        {
+            case < 0: throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
+            case 0: return x.Round();
+        }
 
         var integer = x.Truncate();
+        if (integer == x) return x;
         var fraction = x - integer;
+
+        if (fraction == 0) return x;
 
         var fraction_digits = (int)Math.Log10(fraction);
         var b = 10d.Pow(fraction_digits);
