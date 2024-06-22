@@ -25,6 +25,7 @@
   <ItemGroup>
     <Using Include="MathCore" />
     <Using Include="System" />
+    <Using Include="System.Diagnostics.DebuggerStepThroughAttribute" Alias="DST"/>
     <Using Include="System.Linq" />
     <Using Include="System.Collections.Generic" />
     <Using Include="System.Threading.Tasks" />
