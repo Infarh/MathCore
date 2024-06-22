@@ -366,4 +366,13 @@ public class DoubleExtensionsTests
 
         actual.AssertEquals(expected, 1.72e-13);
     }
+
+    [TestMethod]
+    public void RoundAdaptive_Value0_Num3()
+    {
+        const double value = 0;
+        const int digits = 3;
+
+        var actual_value = value.RoundAdaptive(digits);
+    }
 }

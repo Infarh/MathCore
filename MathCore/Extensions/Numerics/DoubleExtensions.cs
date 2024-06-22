@@ -529,10 +529,21 @@ public static class DoubleExtensions
     [DST]
     public static double RoundAdaptive(this double x, int n = 1)
     {
+        switch (x)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case double.NaN or double.PositiveInfinity or double.NegativeInfinity:
+                return x;
+            case < 0: return -(-x).RoundAdaptive(n);
+        }
+
         if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), n, "Число разрядов должно быть больше, либо равно 0");
         if (n == 0) return x.Round();
-        if (x is double.NaN or double.PositiveInfinity or double.NegativeInfinity) return x;
-        if (x < 0) return -(-x).RoundAdaptive(n);
 
         var integer = x.Truncate();
         var fraction = x - integer;
