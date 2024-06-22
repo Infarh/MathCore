@@ -7,13 +7,9 @@ using ConsoleTest;
 using MathCore.Text;
 
 
-int xxx = -8;
+const double value = 10668;
 
-for (var i = 0; i < 64; i++)
-{
-    Console.WriteLine($"{xxx:b32}");
-    xxx >>= 1;
-}
+var cc = value.RoundAdaptive(3);
 
 #pragma warning disable CS8321 // Local function is declared but never used
 

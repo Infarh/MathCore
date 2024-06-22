@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.91.4</Version>
+    <Version>0.0.91.5</Version>
     <PackageReleaseNotes>
       Добавлены методы валидации данных
     </PackageReleaseNotes>
