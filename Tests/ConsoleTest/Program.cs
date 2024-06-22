@@ -1,25 +1,45 @@
-using System.Collections;
-using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-var rnd = new Random(2);
+using static ValueSelector;
 
-int[] xx = [50, 49, 51, 48, 52, 47, 53, 46, 54, 45,  55, 44, 56, 43, 57, 42, 58, 41, 59, 40, 60];
+ValueSelector? v = new();
+v.Add($"qwe:{123}{"qwe"} asd:{true,5:qwe}");
 
-var max = new RollingMax<int>(5, Inverted: false);
+StringBuilder s = new();
+s.AppendLine($"qwe:{123}");
 
-var i = 0;
-foreach(var x in xx)
-{
-    var value = max.Add(x);
-
-    Debug.WriteLineIf(x == value, $"MaxCount:{max}");
-
-    i++;
-}
 
 Console.WriteLine("End.");
 
 return;
+
+class ValueSelector
+{
+    public void Add([InterpolatedStringHandlerArgument("")] ref ValuesHandler values) { }
+
+    [InterpolatedStringHandler]
+    public struct ValuesHandler
+    {
+        public ValuesHandler(int LiteralLength, int FormattedCount, ValueSelector sel)
+        {
+            sel = new();
+            this.LiteralLength = LiteralLength;
+            this.FormattedCount = FormattedCount;
+        }
+
+        public int LiteralLength { get; }
+        public int FormattedCount { get; }
+
+        public void AppendLiteral(string value) { }
+        public void AppendFormatted<T>(T value) { }
+        public void AppendFormatted<T>(T value, string? format) { }
+        public void AppendFormatted<T>(T value, int alignment) { }
+        public void AppendFormatted<T>(T value, int alignment, string? format) { }
+        public void AppendFormatted(ReadOnlySpan<char> value) { }
+        public void AppendFormatted(ReadOnlySpan<char> value, int alignment = 0, string? format = null) { }
+        public void AppendFormatted(string? value) { }
+        public void AppendFormatted(string? value, int alignment = 0, string? format = null) { }
+        public void AppendFormatted(object? value, int alignment = 0, string? format = null) { }
+    }
+}
