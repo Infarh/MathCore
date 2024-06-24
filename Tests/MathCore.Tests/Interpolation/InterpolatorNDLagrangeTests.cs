@@ -5,7 +5,7 @@ using MathCore.Interpolation;
 namespace MathCore.Tests.Interpolation;
 
 [TestClass]
-public class InterpolatorNDTests
+public class InterpolatorNDLagrangeTests
 {
     private const string __DataFilePath = "Interpolation/InterpolatorNDData.zip";
 
@@ -14,7 +14,7 @@ public class InterpolatorNDTests
     {
         var data_file = new FileInfo(__DataFilePath).ThrowIfNotFound();
 
-        var interpolator = InterpolatorND.LoadCSV(data_file);
+        var interpolator = InterpolatorNDLagrange.LoadCSV(data_file);
 
         var i = 0;
         var time = Stopwatch.StartNew();
