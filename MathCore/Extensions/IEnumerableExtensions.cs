@@ -3894,4 +3894,12 @@ public static partial class IEnumerableExtensions
                 last = value;
             }
     }
+
+#if !NET8_0_OR_GREATER
+
+    public static IOrderedEnumerable<T> Order<T>(this IEnumerable<T> items) where T : IComparable<T> => items.OrderBy(v => v);
+
+    public static IOrderedEnumerable<T> OrderDescending<T>(this IEnumerable<T> items) where T : IComparable<T> => items.OrderByDescending(v => v);
+
+#endif
 }

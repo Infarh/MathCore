@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
-using System.Text;
+
+using MathCore.Statistic;
 
 using ConsoleTest;
 
@@ -9,11 +10,8 @@ using MathCore.Text;
 ValueSelector? v = new();
 v.Add($"qwe:{123}{"qwe"} asd:{true,5:qwe}");
 
-StringBuilder s = new();
-s.AppendLine($"qwe:{123}");
-
-
-Console.WriteLine("End.");
+var s = "123;345:567";
+var ps = s.AsStringPtr().Split(';', ':');
 
 foreach (var value in ps.Select(v => v.ParseDouble()))
 {

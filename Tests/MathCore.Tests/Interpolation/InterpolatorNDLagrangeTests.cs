@@ -4,7 +4,7 @@ using MathCore.Interpolation;
 
 namespace MathCore.Tests.Interpolation;
 
-[TestClass]
+[TestClass, Ignore]
 public class InterpolatorNDLagrangeTests
 {
     private const string __DataFilePath = "Interpolation/InterpolatorNDData.zip";

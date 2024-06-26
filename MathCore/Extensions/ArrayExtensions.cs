@@ -987,8 +987,11 @@ public static class ArrayExtensions
     /// <typeparam name="TArray">Тип элементов массива</typeparam>
     /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
     [DST]
-    public static void Reverse<TArray>(this TArray[] array) =>
+    public static TArray[] Reverse<TArray>(this TArray[] array)
+    {
         Array.Reverse(array ?? throw new ArgumentNullException(nameof(array)));
+        return array;
+    }
 
     /// <summary>Установить значения ячеек массива</summary>
     /// <param name="array">Массив, значения ячеек которого требуется установить</param>
