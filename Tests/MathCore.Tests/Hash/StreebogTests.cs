@@ -5,7 +5,7 @@ namespace MathCore.Tests.Hash;
 [TestClass]
 public class StreebogTests
 {
-    [TestMethod, Ignore]
+    [TestMethod]
     public void HashTest()
     {
         //byte[] message =
