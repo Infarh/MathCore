@@ -2,58 +2,129 @@
 
 public static class TupleEx
 {
-    public static (T, T) MinMax<T>(this (T, T) value) where T : IComparable<T> => 
+    public static (T min, T max) MinMax<T>(this (T, T) value) where T : IComparable<T> => 
         Comparer<T>.Default.Compare(value.Item1, value.Item2) >= 0 
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (int, int) MinMax(this (int, int) value) =>
+    public static (int min, int max) MinMax(this (int, int) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (uint, uint) MinMax(this (uint, uint) value) =>
+    public static (uint min, uint max) MinMax(this (uint, uint) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (short, short) MinMax(this (short, short) value) =>
+    public static (short min, short max) MinMax(this (short, short) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (ushort, ushort) MinMax(this (ushort, ushort) value) =>
+    public static (ushort min, ushort max) MinMax(this (ushort, ushort) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (long, long) MinMax(this (long, long) value) =>
+    public static (long min, long max) MinMax(this (long, long) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (ulong, ulong) MinMax(this (ulong, ulong) value) =>
+    public static (ulong min, ulong max) MinMax(this (ulong, ulong) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (byte, byte) MinMax(this (byte, byte) value) =>
+    public static (byte min, byte max) MinMax(this (byte, byte) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (sbyte, sbyte) MinMax(this (sbyte, sbyte) value) =>
+    public static (sbyte min, sbyte max) MinMax(this (sbyte, sbyte) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (double, double) MinMax(this (double, double) value) =>
+    public static (double min, double max) MinMax(this (double, double) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
 
-    public static (float, float) MinMax(this (float, float) value) =>
+    public static (float min, float max) MinMax(this (float, float) value) =>
         value.Item1 >= value.Item2
             ? value 
             : (value.Item2, value.Item1);
+
+    public static (decimal min, decimal max) MinMax(this (decimal, decimal) value) =>
+        value.Item1 >= value.Item2
+            ? value 
+            : (value.Item2, value.Item1);
+
+    public static (int min, int len) MinMaxToMinLength(this (int, int) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
+
+    public static (uint min, uint len) MinMaxToMinLength(this (uint, uint) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
+
+    public static (short min, short len) MinMaxToMinLength(this (short, short) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, (short)(max - min));
+    }
+
+    public static (ushort min, ushort len) MinMaxToMinLength(this (ushort, ushort) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, (ushort)(max - min));
+    }
+
+    public static (byte min, byte len) MinMaxToMinLength(this (byte, byte) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, (byte)(max - min));
+    }
+
+    public static (sbyte min, sbyte len) MinMaxToMinLength(this (sbyte, sbyte) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, (sbyte)(max - min));
+    }
+
+    public static (long min, long len) MinMaxToMinLength(this (long, long) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
+
+    public static (ulong min, ulong len) MinMaxToMinLength(this (ulong, ulong) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
+
+    public static (double min, double len) MinMaxToMinLength(this (double, double) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
+
+    public static (float min, float len) MinMaxToMinLength(this (float, float) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
+
+    public static (decimal min, decimal len) MinMaxToMinLength(this (decimal, decimal) value)
+    {
+        var (min, max) = value.MinMax();
+        return (min, max - min);
+    }
 }

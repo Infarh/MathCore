@@ -666,7 +666,8 @@ public static class ArrayExtensions
     /// <param name="array">Инициализируемый массив</param>
     /// <param name="Initializer">
     /// Метод инициализации, получающий в качестве параметров инициализируемый массив и номер элемента,
-    /// а результатом его вызова должно быть значение, помещаемое в ячейку массива
+    /// а результатом его вызова должно быть значение, помещаемое в ячейку массива<br/>
+    /// f(item, index) =&gt; value
     /// </param>
     /// <returns>Инициализированный массив</returns>
     [DST]
@@ -986,7 +987,7 @@ public static class ArrayExtensions
     /// <typeparam name="TArray">Тип элементов массива</typeparam>
     /// <exception cref="ArgumentNullException">Если передана пустая ссылка на исходный массив</exception>
     [DST]
-    public static void Reverse<TArray>(this TArray[] array) =>
+    public static void Inverse<TArray>(this TArray[] array) =>
         Array.Reverse(array ?? throw new ArgumentNullException(nameof(array)));
 
     /// <summary>Установить значения ячеек массива</summary>
