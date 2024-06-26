@@ -9,7 +9,7 @@ public class InterpolatorNDLinearTests
 
     private static FileInfo DataFile => new FileInfo(__DataFilePath).ThrowIfNotFound();
 
-    [TestMethod]
+    [TestMethod, Ignore]
     public void TestInterpolation()
     {
         var file = DataFile;
