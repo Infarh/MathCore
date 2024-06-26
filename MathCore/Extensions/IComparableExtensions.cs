@@ -15,6 +15,14 @@ public static class IComparableExtensions
     /// <summary>Метод поиска элемента в списке половинным делением</summary>
     /// <typeparam name="T">Тип элементов</typeparam>
     /// <param name="list">Список, упорядоченный по возрастанию</param>
+    /// <param name="Item">Искомый элемент</param>
+    /// <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
+    public static int? SearchBinary<T>(this IReadOnlyList<T> list, T Item) where T : IComparable<T> 
+        => list.SearchBinary(0, list.Count - 1, Item);
+
+    /// <summary>Метод поиска элемента в списке половинным делением</summary>
+    /// <typeparam name="T">Тип элементов</typeparam>
+    /// <param name="list">Список, упорядоченный по возрастанию</param>
     /// <param name="From">Начальный индекс поиска</param>
     /// <param name="To">Конечный индекс поиска</param>
     /// <param name="Item">Искомый элемент</param>
@@ -26,6 +34,45 @@ public static class IComparableExtensions
             var middle = (From + To) / 2;
 
             var compare_result = list[middle].CompareTo(Item);
+            switch (compare_result)
+            {
+                case > 0: 
+                    To   = middle - 1;
+                    break;
+                case < 0:
+                    From = middle + 1;
+                    break;
+                default:  
+                    return middle;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Метод поиска элемента в списке половинным делением</summary>
+    /// <typeparam name="T">Тип элементов</typeparam>
+    /// <param name="list">Список, упорядоченный по возрастанию</param>
+    /// <param name="Value">Искомое значение</param>
+    /// <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
+    public static int? SearchBinaryValue<T, TValue>(this IReadOnlyList<T> list, TValue Value)
+       where T : IComparable<T>, IComparable<TValue>
+        => list.SearchBinaryValue(0, list.Count - 1, Value);
+
+    /// <summary>Метод поиска элемента в списке половинным делением</summary>
+    /// <typeparam name="T">Тип элементов</typeparam>
+    /// <param name="list">Список, упорядоченный по возрастанию</param>
+    /// <param name="From">Начальный индекс поиска</param>
+    /// <param name="To">Конечный индекс поиска</param>
+    /// <param name="Value">Искомое значение</param>
+    /// <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
+    public static int? SearchBinaryValue<T, TValue>(this IReadOnlyList<T> list, int From, int To, TValue Value) 
+        where T : IComparable<T>, IComparable<TValue>
+    {
+        while (To >= From)
+        {
+            var middle = (From + To) / 2;
+
+            var compare_result = list[middle].CompareTo(Value);
             switch (compare_result)
             {
                 case > 0: 
