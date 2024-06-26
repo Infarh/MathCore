@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text;
 
 namespace MathCore;
 
@@ -31,6 +32,12 @@ public readonly ref struct ArrayPtr<T>(T[] array, int Offset = 0, int Length = -
 
     public ArrayPtr<T> Slice(int Offset, int Length) => new(_Array, _Offset + Offset, Math.Min(this.Length - Offset, Length));
 
+    public void Deconstruct(out T head, out ArrayPtr<T> tail)
+    {
+        head = this[0];
+        tail = Slice(1);
+    }
+
     public T[] ToArray()
     {
         var result = new T[Length];
@@ -38,7 +45,23 @@ public readonly ref struct ArrayPtr<T>(T[] array, int Offset = 0, int Length = -
         return result;
     }
 
-    public override string ToString() => $"{typeof(T).Name}[off:{_Offset}, len{Length}]*";
+    public override string ToString()
+    {
+        var result = new StringBuilder(100).Append(typeof(T).Name);
+        result.Append($"[{_Offset}:{Length}]");
+        if (Length > 10)
+            result.Append('*');
+        else
+        {
+            result.Append('[');
+            for(var (i, i1) = (_Offset, Math.Min(_Offset + Length, _Array.Length)); i < i1; i++)
+                result.Append(_Array[i]).Append(',');
+            result.Length--;
+            result.Append(']');
+        }
+
+        return result.ToString();
+    }
 
     public override int GetHashCode() => HashBuilder.New(_Array).Append(_Offset).Append(Length);
 

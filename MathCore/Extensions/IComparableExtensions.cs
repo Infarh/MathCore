@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-
 // ReSharper disable once CheckNamespace
 // ReSharper disable UnusedType.Global
 
@@ -27,11 +26,12 @@ public static class IComparableExtensions
     /// <param name="To">Конечный индекс поиска</param>
     /// <param name="Item">Искомый элемент</param>
     /// <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
-    public static int? SearchBinary<T>(this IReadOnlyList<T> list, int From, int To, T Item) where T : IComparable<T>
+    public static int SearchBinary<T>(this IReadOnlyList<T> list, int From, int To, T Item) where T : IComparable<T>
     {
+        var middle = From;
         while (To >= From)
         {
-            var middle = (From + To) / 2;
+            middle = (From + To) / 2;
 
             var compare_result = list[middle].CompareTo(Item);
             switch (compare_result)
@@ -41,51 +41,62 @@ public static class IComparableExtensions
                     break;
                 case < 0:
                     From = middle + 1;
+
+                    if (To - From < 0)
+                        return ~From;
+
                     break;
                 default:  
                     return middle;
             }
         }
-        return null;
+        return ~middle;
     }
 
     /// <summary>Метод поиска элемента в списке половинным делением</summary>
     /// <typeparam name="T">Тип элементов</typeparam>
+    /// <typeparam name="TValue">Искомое значение</typeparam>
     /// <param name="list">Список, упорядоченный по возрастанию</param>
     /// <param name="Value">Искомое значение</param>
     /// <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
-    public static int? SearchBinaryValue<T, TValue>(this IReadOnlyList<T> list, TValue Value)
+    public static int SearchBinaryValue<T, TValue>(this IReadOnlyList<T> list, TValue Value)
        where T : IComparable<T>, IComparable<TValue>
         => list.SearchBinaryValue(0, list.Count - 1, Value);
 
     /// <summary>Метод поиска элемента в списке половинным делением</summary>
     /// <typeparam name="T">Тип элементов</typeparam>
+    /// <typeparam name="TValue">Искомое значение</typeparam>
     /// <param name="list">Список, упорядоченный по возрастанию</param>
     /// <param name="From">Начальный индекс поиска</param>
     /// <param name="To">Конечный индекс поиска</param>
     /// <param name="Value">Искомое значение</param>
     /// <returns>Индекс элемента в списке, либо <see langword="null"/>, если элемент не был найден</returns>
-    public static int? SearchBinaryValue<T, TValue>(this IReadOnlyList<T> list, int From, int To, TValue Value) 
+    public static int SearchBinaryValue<T, TValue>(this IReadOnlyList<T> list, int From, int To, TValue Value) 
         where T : IComparable<T>, IComparable<TValue>
     {
+        var middle = From;
         while (To >= From)
         {
-            var middle = (From + To) / 2;
+            middle = (From + To) / 2;
 
             var compare_result = list[middle].CompareTo(Value);
             switch (compare_result)
             {
-                case > 0: 
+                case > 0:
                     To   = middle - 1;
                     break;
                 case < 0:
                     From = middle + 1;
+
+                    if (To - From < 0)
+                        return ~From;
+
                     break;
-                default:  
+                default:
                     return middle;
             }
         }
-        return null;
+        return ~middle;
     }
 
     /// <summary>Возвращает максимальный элемент из текущего и, элемента, переданного в качестве параметра</summary>
