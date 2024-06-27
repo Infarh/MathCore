@@ -1,10 +1,20 @@
-﻿using System.Globalization;
+﻿#nullable enable
+using System.Collections;
+using System.Globalization;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace MathCore.Interpolation;
+
 public class InterpolatorNDLinear
 {
-    public static InterpolatorNDLinear LoadCSV(FileInfo file, bool Header = true, char Separator = ';', bool SkipWrongLines = true)
+    public static InterpolatorNDLinear LoadCSV(
+        FileInfo file,
+        bool Header = true,
+        char Separator = ';',
+        bool SkipWrongLines = true,
+        Func<double[], double, bool>? ValueSelector = null)
     {
         if (string.Equals(file.Extension, ".zip", StringComparison.OrdinalIgnoreCase))
         {
@@ -30,10 +40,15 @@ public class InterpolatorNDLinear
         }
 
         using (var reader = file.OpenText())
-            return LoadCSV(reader, Header, Separator, SkipWrongLines);
+            return LoadCSV(reader, Header, Separator, SkipWrongLines, ValueSelector);
     }
 
-    public static InterpolatorNDLinear LoadCSV(TextReader reader, bool Header = true, char Separator = ';', bool SkipWrongLines = true)
+    public static InterpolatorNDLinear LoadCSV(
+        TextReader reader,
+        bool Header = true,
+        char Separator = ';',
+        bool SkipWrongLines = true,
+        Func<double[], double, bool>? ValueSelector = null)
     {
         if (Header)
             if (reader.ReadLine() is null)
@@ -96,7 +111,7 @@ public class InterpolatorNDLinear
                 }
             }
 
-            if (error_line)
+            if (error_line || ValueSelector?.Invoke(args, value) == false)
             {
                 line_index++;
                 continue;
@@ -107,18 +122,166 @@ public class InterpolatorNDLinear
 
             line_index++;
         }
-        while ((line = reader.ReadLine()) is not null);
+        while ((line = reader.ReadLine()!) is not null);
 
-        for (var i = 0; i < arguments_count; i++)
-            max[i] -= min[i];
+        var nodes = new List<ValueTreeNode>();
 
+        for (var i = 0; i < values_list.Count; i++)
+        {
+            var argument = arguments_list[i];
+            var value = values_list[i];
 
+            ValueTreeNode.Add(nodes, argument, value);
+        }
 
-        return new();
+        return new(arguments_count, nodes);
     }
 
-    private InterpolatorNDLinear()
+    private readonly int _ArgumentsCount;
+    private readonly List<ValueTreeNode> _Nodes;
+
+    private class ValueTreeNode(double Value, List<ValueTreeNode>? Childs = null) :
+        IComparable<ValueTreeNode>, IComparable<double>,
+        IEnumerable<ValueTreeNode>
     {
-        
+        public ValueTreeNode? this[int ChildIndex] => Childs?[ChildIndex];
+
+        public static void Add(List<ValueTreeNode> nodes, ArrayPtr<double> args, double value)
+        {
+            if (nodes is []) // если в списке нет узлов (пока ещё...)
+                switch (args) // в зависимости от списка аргументов
+                {
+                    case [var arg]: // если аргумент один (последний)
+                        nodes.Add(new(arg, [value])); // то мы добавляем в список новый узел, который будет содержать значение для этого аргумента
+                        return;
+
+                    // если аргументов много (ещё много...)
+                    case [var arg, .. var tail]: // мы отделяем первый аргумент и список оставшихся аргументов
+                        var sub_nodes = new List<ValueTreeNode>(); // создаём список для оставшихся аргументов
+                        Add(sub_nodes, tail, value); // добавляем в этот список узлы для оставшихся аргументов
+                        nodes.Add(new(arg, sub_nodes)); // добавляем в текущий список узел с текущим аргументом
+                        return;
+                }
+
+            var (head_arg, tail_args) = args;
+            var index = nodes.SearchBinaryValue(head_arg);
+
+            if (index >= 0)
+            {
+                var node = nodes[index];
+                node.Add(tail_args, value);
+            }
+            else
+            {
+                var ind = ~index;
+                nodes.Insert(ind, new(head_arg, new(1) { new(value) }));
+            }
+        }
+
+        public double Value { get; } = Value;
+
+        private void Add(ArrayPtr<double> args, double value) => Add(Childs, args, value);
+
+        public double GetValue(ArrayPtr<double> args)
+        {
+            if(args.Length == 0) 
+                return Childs[0].Value;
+
+            var (x, xx) = args;
+
+            var index = Childs.SearchBinaryValue(x);
+
+            if (index >= 0)
+                return Childs[index].GetValue(xx);
+
+            var i1 = Math.Max(0, ~index - 1);
+            var i2 = i1 + 1;
+
+            var node1 = Childs[i1];
+            var node2 = Childs[i2];
+
+            var a = node1.Value;
+            var b = node2.Value;
+
+            var kx = (x - a) / (b - a);
+
+            var y1 = node1.GetValue(xx);
+            var y2 = node2.GetValue(xx);
+
+            var y = y1 * (1 - kx) + y2 * kx;
+            return y;
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder().Append(Value);
+
+            switch (Childs)
+            {
+                case null: break;
+
+                case []:
+                    result.Append("[]");
+                    break;
+
+                case { Count: > 0 }:
+                    result.Append('[');
+                    foreach (var child in Childs)
+                        result.Append(child.Value).Append(',');
+                    result.Length--;
+                    result.Append(']');
+                    break;
+            }
+
+            return result.ToString();
+        }
+
+        public int CompareTo(ValueTreeNode? other) => Value.CompareTo(other.NotNull().Value);
+        public int CompareTo(double other) => Value.CompareTo(other);
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public IEnumerator<ValueTreeNode> GetEnumerator() => Childs.GetEnumerator();
+
+        public static implicit operator ValueTreeNode(double value) => new(value);
+        public static implicit operator double(ValueTreeNode node) => node.Value;
+    }
+
+    public double this[params double[] args] => GetValue(args);
+
+    private InterpolatorNDLinear(int ArgumentsCount, List<ValueTreeNode> nodes)
+    {
+        _ArgumentsCount = ArgumentsCount;
+        _Nodes = nodes;
+    }
+
+    public double GetValue(params double[] arguments)
+    {
+        if (arguments.Length != _ArgumentsCount)
+            throw new ArgumentException($"Передано аргументов {arguments.Length}, а требуется {_ArgumentsCount}");
+
+        var (x, xx) = arguments.ToArrayPtr();
+
+        var index = _Nodes.SearchBinaryValue(x);
+
+        if (index >= 0)
+            return _Nodes[index].GetValue(xx);
+
+        var i1 = Math.Max(0, ~index - 1);
+        var i2 = i1 + 1;
+
+        var node1 = _Nodes[i1];
+        var node2 = _Nodes[i2];
+
+        var a = node1.Value;
+        var b = node2.Value;
+
+        var kx = (x - a) / (b - a);
+
+        var y1 = node1.GetValue(xx);
+        var y2 = node2.GetValue(xx);
+
+        var y = y1 * (1 - kx) + y2 * kx;
+        return y;
     }
 }

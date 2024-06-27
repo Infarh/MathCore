@@ -81,7 +81,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
                     case <0:
 
                         break;
-                }
+        }
 
                 return head;
             }

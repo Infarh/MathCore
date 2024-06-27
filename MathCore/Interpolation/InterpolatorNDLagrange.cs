@@ -230,6 +230,7 @@ public sealed class InterpolatorNDLagrange
             return 0;
 
         var p = prod / (len0 * leni).Sqrt();
+        //var p_1 = prod * (len0 * leni).SqrtInvFast3();
 
         return p;
     }

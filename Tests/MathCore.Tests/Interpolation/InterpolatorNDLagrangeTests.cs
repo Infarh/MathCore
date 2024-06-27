@@ -4,17 +4,19 @@ using MathCore.Interpolation;
 
 namespace MathCore.Tests.Interpolation;
 
-[TestClass, Ignore]
+[TestClass]
 public class InterpolatorNDLagrangeTests
 {
     private const string __DataFilePath = "Interpolation/InterpolatorNDData.zip";
 
-    [TestMethod]
+    private static FileInfo DataFile => new FileInfo(__DataFilePath).ThrowIfNotFound();
+
+    [TestMethod, Ignore]
     public void TestInterpolation()
     {
-        var data_file = new FileInfo(__DataFilePath).ThrowIfNotFound();
+        var file = DataFile;
 
-        var interpolator = InterpolatorNDLagrange.LoadCSV(data_file);
+        var interpolator = InterpolatorNDLagrange.LoadCSV(file);
 
         var i = 0;
         var time = Stopwatch.StartNew();

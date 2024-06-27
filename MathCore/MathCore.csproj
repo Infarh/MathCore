@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.91.5</Version>
+    <Version>0.0.92-alpha</Version>
     <PackageReleaseNotes>
-      Добавлены методы валидации данных
+      Добавлен многомерный линейный интерполятор на основе дерева
     </PackageReleaseNotes>
   </PropertyGroup>
 
