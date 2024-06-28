@@ -90,17 +90,27 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         {
             if (comparer.Compare(value, head) < 0)
             {
-                if (_Count == 1) return head;
-
                 switch (comparer.Compare(value, this[-1]))
                 {
+                    case 0 when _Count < MaxCount - 1:
+                        _Count++;
+                        this[-1] = value;
+                        break;
+
                     case 0:
                         this[-1] = value;
                         break;
+
                     case >0 when _Count == 2:
                         _Count++;
                         (this[-1], this[-2]) = (this[-2], value);
                         break;
+
+                    case <0 when _Count == 1:
+                        _Count++;
+                        this[-1] = value;
+                        break;
+
                     case <0:
                         for (var (i, count) = (1, _Count - 1); i < count; i++)
                         {

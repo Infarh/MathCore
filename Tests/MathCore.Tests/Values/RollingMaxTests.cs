@@ -34,10 +34,14 @@ public class RollingMaxTests
     [TestMethod]
     public void MaxWithRepeatValuesDiff()
     {
-        int[] values = [-1, 3, 3, 2, 3, 1, 5];
+        int[] values = [6, 1, 2, 3, 4, 5, 6];
         var expected_max = values.OrderDescending().Take(5);
 
-        var max = RollingMax.New(5, values);
+        var max = new RollingMax<int>(5);
+
+        foreach (var value in values)
+            max.Add(value);
+
     }
 
     [TestMethod]
