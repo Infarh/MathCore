@@ -11,9 +11,9 @@ using Microsoft.Win32;
 namespace MathCore.Tests.WPF.ViewModels;
 
 [MarkupExtensionReturnType(typeof(MainWindowViewModel))]
-public class MainWindowViewModel() : TitledViewModel("Главное окно")
+public class MainWindowViewModel() : TitledViewModel("SAR")
 {
-    private InterpolatorNDLagrange? _Interpolator = null;
+    private InterpolatorNDLinear? _Interpolator = null;
 
     #region Command - LoadDataCommand
 
@@ -36,7 +36,7 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
         if (dialog.GetFileInfo() is not { Exists: true } file)
             return;
 
-        var interpolator = InterpolatorNDLagrange.LoadCSV(file);
+        var interpolator = InterpolatorNDLinear.LoadCSV(file);
 
         _Interpolator = interpolator;
 

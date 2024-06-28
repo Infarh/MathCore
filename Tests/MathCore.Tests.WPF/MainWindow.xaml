@@ -6,8 +6,9 @@
         xmlns:l="clr-namespace:MathCore.Tests.WPF"
         xmlns:vm="clr-namespace:MathCore.Tests.WPF.ViewModels"
         Title="MainWindow"
-        Height="500" Width="800"
-        MinHeight="500">
+        FontSize="24"
+        Height="700" Width="800"
+        MinHeight="700">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -39,7 +40,7 @@
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"
                                 TickFrequency="1000" TickPlacement="TopLeft"
                                 Minimum="10668" Maximum="12192" Interval="100"
-                                SmallChange="100" LargeChange="1000"/>
+                                SmallChange="10" LargeChange="100"/>
                     </StackPanel>
                 </HeaderedContentControl>
                 <HeaderedContentControl Header="G">
