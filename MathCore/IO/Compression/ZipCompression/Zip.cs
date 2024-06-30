@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 
+using MathCore.Annotations;
+
 // ReSharper disable UnusedMember.Local
 
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -17,6 +19,7 @@ namespace MathCore.IO.Compression.ZipCompression;
 
 /// <summary>Класс zip-архива для работы с файлами zip-архивов (упаковка/распаковка)</summary>
 [Copyright("Jaime Olivares, v2.35 (March 14, 2010)", url = "zipstorer.codeplex.com")]
+[PublicAPI]
 public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 {
     //#region Встроенные типы данных
@@ -100,8 +103,10 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         for (uint i = 0; i < __CrcTable.Length; i++)
         {
             var c = i;
-            for (var j = 0; j < 8; j++)
-                if ((c & 1) != 0) c = 3988292384 ^ (c >> 1); else c >>= 1;
+            for (var j = 0; j < 8; j++) 
+                c = (c & 1) == 0 
+                    ? c >> 1 
+                    : 0xEDB88320 ^ (c >> 1);
             __CrcTable[i] = c;
         }
     }
@@ -111,14 +116,14 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <param name="Comment">Комментарий</param>
     /// <returns>Архив</returns>
     public static Zip Create(string FileName, string? Comment = "") =>
-        Create(new FileStream(FileName ?? throw new ArgumentNullException(nameof(FileName)), FileMode.Create, FileAccess.ReadWrite), Comment ?? "");
+        Create(new FileStream(FileName.NotNull(), FileMode.Create, FileAccess.ReadWrite), Comment ?? "");
 
     /// <summary>Создать новый архиватор в потоке данных</summary>
     /// <param name="Stream">Поток с данными архива</param>
     /// <param name="Comment">Комментарий</param>
     /// <returns>Архив</returns>
     public static Zip Create(Stream Stream, string? Comment = "") =>
-        new(Stream ?? throw new ArgumentNullException(nameof(Stream)), Comment ?? "");
+        new(Stream.NotNull(), Comment ?? "");
 
     /// <summary>Открытие файла архива из файла</summary>
     /// <param name="FileName">Полный путь к файлу</param>
@@ -152,13 +157,13 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <param name="Stream">Открытый поток с содержимым zip-архива и возможностью навигации</param>
     /// <param name="Access">Режим доступа к потоку</param>
     /// <returns>Архив</returns>
-    public static async Task<Zip> OpenAsync(Stream Stream, FileAccess Access = FileAccess.ReadWrite)
+    public static async Task<Zip> OpenAsync(Stream Stream, FileAccess Access = FileAccess.ReadWrite, CancellationToken Cancel = default)
     {
         if (!Stream.NotNull().CanSeek && Access != FileAccess.Read)
             throw new InvalidOperationException("Поток не предоставляет возможности перемещения в нём");
 
         var zip = new Zip(Stream, "", Access);
-        await zip.InitializeAsync().ConfigureAwait(false);
+        await zip.InitializeAsync(Cancel).ConfigureAwait(false);
         return zip;
     }
 
@@ -250,7 +255,13 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <param name="ModificationTime">Время модификации файла в архиве</param>
     /// <param name="Compressed">Метод сжатия</param>
     /// <param name="EntryComment">Комментарий к файлу</param>
-    public async Task<Entry> AddAsync(Stream Source, string FileNameInZip, DateTime ModificationTime, bool Compressed, string? EntryComment = "")
+    public async Task<Entry> AddAsync(
+        Stream Source, 
+        string FileNameInZip, 
+        DateTime ModificationTime, 
+        bool Compressed, 
+        string? EntryComment = "",
+        CancellationToken Cancel = default)
     {
         FileNameInZip.NotNull();
         Source.NotNull();
@@ -272,16 +283,16 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         // Заголовок придётся переписать после определения сжатого размера и контрольной суммы.
 
         // Запись заголовка
-        await WriteLocalHeaderAsync(entry).ConfigureAwait(false);
+        await WriteLocalHeaderAsync(entry, Cancel).ConfigureAwait(false);
         _HasChanges      = true;
         entry.FileOffset = (uint)_ArchiveStream.Position;
 
         // Запись элемента в архив
-        await StoreAsync(entry, Source).ConfigureAwait(false);
+        await StoreAsync(entry, Source, Cancel).ConfigureAwait(false);
         Source.Close();
 
         // Обновление контрольной суммы и размера
-        await UpdateCrcAndSizesAsync(entry).ConfigureAwait(false);
+        await UpdateCrcAndSizesAsync(entry, Cancel).ConfigureAwait(false);
 
         _ArchiveEntries.Add(entry);
         return entry;
@@ -304,7 +315,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             return _HasChanges = true;
         }
 
-        const int buffer_length = 1024;
+        const int buffer_length = 0x400;
 
         var buffer     = new byte[buffer_length];
         var entry_size = entries_to_move[0].HeaderOffset - entry.HeaderOffset;
@@ -323,7 +334,8 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             _ArchiveStream.Write(buffer, 0, bytes_readed);
             _ArchiveStream.Seek(entry_size, SeekOrigin.Current);
 
-        } while (bytes_readed > 0);
+        } 
+        while (bytes_readed > 0);
 
         foreach (var e in entries_to_move)
             e.HeaderOffset -= entry_size;
@@ -401,7 +413,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         for (var ptr = 0; ptr < CentralDirImage.Length; ptr += filename_size + extra_size + comment_size + 46)
         {
             var signature = BitConverter.ToUInt32(CentralDirImage, ptr);
-            if (signature != 0x02_01_4b_50)
+            if (signature != 0x02014b50)
                 throw new FormatException($"Ошибка в формате индекса архива: в записи со смещением {ptr} отсутствует сигнатура 0x02014b50");
 
             var encode_utf8   = (BitConverter.ToUInt16(CentralDirImage, ptr + 8) & 0x0800) != 0;
@@ -450,9 +462,9 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         var buffer = new byte[2];
 
         _ArchiveStream.Seek(HeaderOffset + 26, SeekOrigin.Begin);
-        _ArchiveStream.Read(buffer, 0, 2);
+        _ = _ArchiveStream.Read(buffer, 0, 2);
         var file_name_size = BitConverter.ToUInt16(buffer, 0);
-        _ArchiveStream.Read(buffer, 0, 2);
+        _ = _ArchiveStream.Read(buffer, 0, 2);
         var extra_size = BitConverter.ToUInt16(buffer, 0);
 
         return (uint)(30 + file_name_size + extra_size + HeaderOffset);
@@ -466,9 +478,9 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         var buffer = new byte[2];
 
         _ArchiveStream.Seek(HeaderOffset + 26, SeekOrigin.Begin);
-        await _ArchiveStream.ReadAsync(buffer, 0, 2).ConfigureAwait(false);
+        _ = await _ArchiveStream.ReadAsync(buffer, 0, 2).ConfigureAwait(false);
         var file_name_size = BitConverter.ToUInt16(buffer, 0);
-        await _ArchiveStream.ReadAsync(buffer, 0, 2).ConfigureAwait(false);
+        _ = await _ArchiveStream.ReadAsync(buffer, 0, 2).ConfigureAwait(false);
         var extra_size = BitConverter.ToUInt16(buffer, 0);
 
         return (uint)(30 + file_name_size + extra_size + HeaderOffset);
@@ -550,9 +562,9 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     ///    Длина имени файла                       2 байта
     ///    Длина поля с дополнительной информацией 2 байта
     /// </remarks>
-    private async Task WriteLocalHeaderAsync(Entry entry)
+    private async Task WriteLocalHeaderAsync(Entry entry, CancellationToken Cancel)
     {
-        if (entry is null) throw new ArgumentNullException(nameof(entry));
+        entry.NotNull();
 
         var position         = _ArchiveStream.Position;
         var encoder          = entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
@@ -563,13 +575,13 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         Array.Copy(BitConverter.GetBytes((ushort)(entry.EncodeUTF8 ? 0x0800 : 0)), 0, buffer, 6, 2);
         Array.Copy(BitConverter.GetBytes((ushort)(entry.Compressed ? 8 : 0)), 0, buffer, 8, 2);
         Array.Copy(BitConverter.GetBytes(DateTimeToDosTime(entry.ModifyTime)), 0, buffer, 10, 4);
-        var null_byte12_array = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        byte[] null_byte12_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         Array.Copy(null_byte12_array, 0, buffer, 14, 12);
         Array.Copy(BitConverter.GetBytes((ushort)encoded_filename.Length), 0, buffer, 26, 2);
         Array.Copy(null_byte12_array, 0, buffer, 28, 2);
         Array.Copy(encoded_filename, 0, buffer, 30, encoded_filename.Length);
 
-        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length, Cancel).ConfigureAwait(false);
 
         entry.HeaderSize = (uint)(_ArchiveStream.Position - position);
     }
@@ -807,7 +819,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <summary>Копирование данных из файла-источника в элемент архива</summary>
     /// <param name="entry">Элемент архива</param>
     /// <param name="Source">Источник</param>
-    private async Task StoreAsync(Entry entry, Stream Source)
+    private async Task StoreAsync(Entry entry, Stream Source, CancellationToken Cancel)
     {
         entry.NotNull();
         while (true)
@@ -825,15 +837,15 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
             do
             {
-                bytes_read =  await Source.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                bytes_read =  await Source.ReadAsync(buffer, 0, buffer.Length, Cancel).ConfigureAwait(false);
                 total_read += (uint)bytes_read;
                 if (bytes_read <= 0) continue;
-                await out_stream.WriteAsync(buffer, 0, bytes_read).ConfigureAwait(false);
+                await out_stream.WriteAsync(buffer, 0, bytes_read, Cancel).ConfigureAwait(false);
 
                 for (uint i = 0; i < bytes_read; i++)
                     entry.Crc32 = __CrcTable[(entry.Crc32 ^ buffer[i]) & 0xFF] ^ (entry.Crc32 >> 8);
             } while (bytes_read == buffer.Length);
-            await out_stream.FlushAsync().ConfigureAwait(false);
+            await out_stream.FlushAsync(Cancel).ConfigureAwait(false);
 
             if (entry.Compressed)
                 out_stream.Dispose();
@@ -926,20 +938,20 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// полу равно нулю в локальном заголовке и корректное значение
     /// расположено в дескрипторе данных и в главном индексе
     /// </remarks>
-    private async Task UpdateCrcAndSizesAsync(Entry entry)
+    private async Task UpdateCrcAndSizesAsync(Entry entry, CancellationToken Cancel)
     {
         if (entry is null) throw new ArgumentNullException(nameof(entry));
         var last_pos = _ArchiveStream.Position; // Запоминаем положение в потоке данных
 
         _ArchiveStream.Position = entry.HeaderOffset + 8;
-        await _ArchiveStream.WriteAsync(BitConverter.GetBytes((ushort)(entry.Compressed ? 8 : 0)), 0, 2).ConfigureAwait(false); // метод сжатия
+        await _ArchiveStream.WriteAsync(BitConverter.GetBytes((ushort)(entry.Compressed ? 8 : 0)), 0, 2, Cancel).ConfigureAwait(false); // метод сжатия
 
         _ArchiveStream.Position = entry.HeaderOffset + 14;
         var buffer = new byte[12];
         Array.Copy(BitConverter.GetBytes(entry.Crc32), buffer, 4);
         Array.Copy(BitConverter.GetBytes(entry.CompressedSize), 0, buffer, 4, 4);
         Array.Copy(BitConverter.GetBytes(entry.FileSize), 0, buffer, 8, 4);
-        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length, Cancel).ConfigureAwait(false);
 
         _ArchiveStream.Position = last_pos; // Восстанавливаем положение в потоке
     }
@@ -988,14 +1000,14 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
                 if (comment_size > 0)
                 {
                     var comment_bytes = new byte[comment_size];
-                    _ArchiveStream.Read(comment_bytes, 0, comment_size);
+                    _ = _ArchiveStream.Read(comment_bytes, 0, comment_size);
                     _Comment = Encoding.Default.GetString(comment_bytes);
                 }
 
                 // Копирование индекса в память
                 _ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
                 var central_dir_image = new byte[central_size];
-                _ArchiveStream.Read(central_dir_image, 0, central_size);
+                _ = _ArchiveStream.Read(central_dir_image, 0, central_size);
                 _ArchiveEntries = new LambdaKeyedCollection<string, Entry>(e => e.FileNameInZip, EnumerateEntries(central_dir_image));
                 // Оставляем указатель на начале индекса для добавления новых файлов
                 _ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
@@ -1012,7 +1024,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
     /// <summary>Чтение окончания индекса файла</summary>
     /// <returns>Истина, если чтение прошло успешно</returns>
-    private async Task InitializeAsync()
+    private async Task InitializeAsync(CancellationToken Cancel)
     {
         if (_ArchiveStream.Length < 22) throw new FormatException("Размер файла меньше 22 байт - минимального размера пустого архива");
 
@@ -1023,13 +1035,16 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             {
                 _ArchiveStream.Seek(-5, SeekOrigin.Current);
                 var buffer = new byte[12];
-                if (await _ArchiveStream.ReadAsync(buffer, 0, 4).ConfigureAwait(false) != 4) throw new FormatException("Сигнатура 0x06054b50 индекса архива не найдена");
+                if (await _ArchiveStream.ReadAsync(buffer, 0, 4, Cancel).ConfigureAwait(false) != 4) 
+                    throw new FormatException("Сигнатура 0x06054b50 индекса архива не найдена");
+
                 var sig = BitConverter.ToUInt32(buffer, 0);
                 if (sig != 0x06054b50) continue;
                 _ArchiveStream.Seek(6, SeekOrigin.Current);
 
-                if (await _ArchiveStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false) != buffer.Length)
+                if (await _ArchiveStream.ReadAsync(buffer, 0, buffer.Length, Cancel).ConfigureAwait(false) != buffer.Length)
                     throw new FormatException("Не удалось прочитать индекс архива");
+
                 var central_size       = BitConverter.ToUInt16(buffer, 2);
                 var central_dir_offset = BitConverter.ToUInt16(buffer, 6);
                 var comment_size       = BitConverter.ToUInt16(buffer, 10);
@@ -1041,14 +1056,17 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
                 // Копирование индекса в память
                 _ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
                 var central_dir_image = new byte[central_size];
-                if (await _ArchiveStream.ReadAsync(central_dir_image, 0, central_size).ConfigureAwait(false) != central_size)
+                if (await _ArchiveStream.ReadAsync(central_dir_image, 0, central_size, Cancel).ConfigureAwait(false) != central_size)
                     throw new FormatException("Не удалось считать структуру индекса архива");
+
                 _ArchiveEntries = new LambdaKeyedCollection<string, Entry>(e => e.FileNameInZip, EnumerateEntries(central_dir_image));
 
                 // Оставляем указатель на начале индекса для добавления новых файлов
                 _ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
+
                 return;
-            } while (_ArchiveStream.Position > 0);
+            } 
+            while (_ArchiveStream.Position > 0);
         }
         // ReSharper disable once CatchAllClause
         catch (Exception e)

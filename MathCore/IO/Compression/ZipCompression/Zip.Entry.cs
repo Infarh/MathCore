@@ -1,11 +1,14 @@
 ﻿#nullable enable
 using System.IO.Compression;
 
+using MathCore.Annotations;
+
 namespace MathCore.IO.Compression.ZipCompression;
 
 public sealed partial class Zip
 {
     /// <summary>Элемент архива</summary>
+    [PublicAPI]
     public sealed class Entry(Zip zip)
     {
         /// <summary>Метод сжатия</summary>
@@ -43,15 +46,15 @@ public sealed partial class Zip
             if (File.Exists(zip._FileName))
             {
                 Stream stream = new FileStream(zip._FileName, FileMode.Open, FileAccess.Read);
-                stream.Seek(HeaderOffset, SeekOrigin.Begin);
+                _ = stream.Seek(HeaderOffset, SeekOrigin.Begin);
                 var sign = new byte[4];
-                stream.Read(sign, 0, 4);
+                _ = stream.Read(sign, 0, 4);
                 if (BitConverter.ToUInt32(sign, 0) != 0x04034b50)
                 {
                     stream.Dispose();
                     throw new FormatException("Сигнатура файла в архиве неверна");
                 }
-                stream.Seek(FileOffset, SeekOrigin.Begin);
+                _ = stream.Seek(FileOffset, SeekOrigin.Begin);
                 return Compressed
                     ? new(new DeflateStream(stream, CompressionMode.Decompress, false), FileSize)
                     : new ArchiveStream(stream, FileSize);
@@ -61,12 +64,12 @@ public sealed partial class Zip
             {
                 var result = new MemoryStream();
                 ExtractTo(result);
-                result.Seek(0, SeekOrigin.Begin);
+                _ = result.Seek(0, SeekOrigin.Begin);
                 return result;
             }
 
             var temp_file = Path.GetTempFileName();
-            ExtractTo(temp_file);
+            _ = ExtractTo(temp_file);
             var file_stream    = File.Open(temp_file, FileMode.Open, FileAccess.Read);
             var archive_stream = new ArchiveStream(file_stream, FileSize);
             archive_stream.Disposed += (_,_) =>
@@ -110,7 +113,7 @@ public sealed partial class Zip
         /// <param name="Rewrite">Перезаписывать существующие файлы</param>
         /// <returns>Истина, если файл распакован успешно</returns>
         /// <remarks>Unique compression methods are Store and Deflate</remarks>
-        public async Task<bool> ExtractToAsync(string FileName, bool Rewrite = false)
+        public async Task<bool> ExtractToAsync(string FileName, bool Rewrite = false, CancellationToken Cancel = default)
         {
             if (FileName is null) throw new ArgumentNullException(nameof(FileName));
             // Определение имени директории
@@ -124,7 +127,7 @@ public sealed partial class Zip
 
             bool result;
             using (var output = new FileStream(FileName, FileMode.Create, FileAccess.Write))
-                result = await ExtractToAsync(output).ConfigureAwait(false);
+                result = await ExtractToAsync(output, Cancel).ConfigureAwait(false);
 
             //TODO: разделить время на время последнего доступа, время создания и т.п.
             File.SetCreationTime(FileName, ModifyTime);
@@ -146,8 +149,8 @@ public sealed partial class Zip
             var signature          = new byte[4]; // 4 первых байта должны быть равны 0x04034b50
             var zip_archive_stream = zip._ArchiveStream.NotNull();
             var last_pos           = zip_archive_stream.Position;
-            zip_archive_stream.Seek(HeaderOffset, SeekOrigin.Begin);
-            zip_archive_stream.Read(signature, 0, 4);
+            _ = zip_archive_stream.Seek(HeaderOffset, SeekOrigin.Begin);
+            _ = zip_archive_stream.Read(signature, 0, 4);
             if (BitConverter.ToUInt32(signature, 0) != 0x04034b50)
                 return false; // Сигнатура неверна
 
@@ -166,7 +169,7 @@ public sealed partial class Zip
                 bytes_pending -= (uint)bytes_read;
             }
             Destination.Flush();
-            zip_archive_stream.Seek(last_pos, SeekOrigin.Begin);
+            _ = zip_archive_stream.Seek(last_pos, SeekOrigin.Begin);
             return true;
         }
 
@@ -184,7 +187,7 @@ public sealed partial class Zip
             var signature          = new byte[4]; // 4 первых байта должны быть равны 0x04034b50
             var zip_archive_stream = zip._ArchiveStream.NotNull();
             var last_pos           = zip_archive_stream.Position;
-            zip_archive_stream.Seek(HeaderOffset, SeekOrigin.Begin);
+            _ = zip_archive_stream.Seek(HeaderOffset, SeekOrigin.Begin);
             _ = await zip_archive_stream.ReadAsync(signature, 0, 4, Cancel).ConfigureAwait(false);
             if (BitConverter.ToUInt32(signature, 0) != 0x04034b50)
                 return false; // Сигнатура неверна
@@ -199,7 +202,7 @@ public sealed partial class Zip
 
                 // Копирование с буферизацией
                 var buffer = new byte[0x4000];
-                zip_archive_stream.Seek(FileOffset, SeekOrigin.Begin);
+                _ = zip_archive_stream.Seek(FileOffset, SeekOrigin.Begin);
                 var bytes_pending = FileSize;
                 while (bytes_pending > 0)
                 {
@@ -213,7 +216,7 @@ public sealed partial class Zip
             {
                 if (Compressed) in_stream?.Dispose();
             }
-            zip_archive_stream.Seek(last_pos, SeekOrigin.Begin);
+            _ = zip_archive_stream.Seek(last_pos, SeekOrigin.Begin);
             return true;
         }
 
