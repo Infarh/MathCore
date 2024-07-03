@@ -23,8 +23,8 @@ public class InterpolatorNDLinear
             {
                 0 => throw new InvalidOperationException("Пустой архив"),
                 1 => zip.Entries[0],
-                _ => zip.Entries.FirstOrDefault(e => string.Equals(Path.GetExtension(e.Name), ".csv", StringComparison.OrdinalIgnoreCase))
-                  ?? zip.Entries.FirstOrDefault(e => string.Equals(Path.GetExtension(e.Name), ".txt", StringComparison.OrdinalIgnoreCase))
+                _ => zip.Entries.FirstOrDefault(e => Path.GetExtension(e.Name).EqualsInvariantIgnoreCase(".csv"))
+                  ?? zip.Entries.FirstOrDefault(e => Path.GetExtension(e.Name).EqualsInvariantIgnoreCase(".txt"))
                   ?? zip.Entries[0]
             };
             using var reader = entry.Open().GetStreamReader();
@@ -72,8 +72,7 @@ public class InterpolatorNDLinear
         }
         while (line.Length == 0 && arguments_count == 0);
 
-        var min = new double[arguments_count];
-        var max = new double[arguments_count];
+        var culture = CultureInfo.GetCultureInfo("ru-ru");
 
         do
         {
@@ -86,7 +85,7 @@ public class InterpolatorNDLinear
             var i = 0;
             foreach (var s in line_ptr.Split(Separator))
             {
-                if (!s.TryParseDouble(CultureInfo.CurrentCulture, out var v) && !s.TryParseDouble(CultureInfo.InvariantCulture, out v))
+                if (!double.TryParse(s, NumberStyles.Any, culture, out var v))
                 {
                     if (!SkipWrongLines)
                         throw new InvalidOperationException($"Ошибка формата файла в строке {line_index}: невозможно прочитать вещественное число из значения {i} ({s.ToString()}");
@@ -98,9 +97,6 @@ public class InterpolatorNDLinear
                 if (i < arguments_count)
                 {
                     args[i] = v;
-
-                    min[i] = Math.Min(min[i], v);
-                    max[i] = Math.Max(max[i], v);
 
                     i++;
                 }
@@ -129,6 +125,7 @@ public class InterpolatorNDLinear
         for (var i = 0; i < values_list.Count; i++)
         {
             var argument = arguments_list[i];
+
             var value = values_list[i];
 
             ValueTreeNode.Add(nodes, argument, value);
@@ -174,7 +171,17 @@ public class InterpolatorNDLinear
             else
             {
                 var ind = ~index;
-                nodes.Insert(ind, new(head_arg, new(1) { new(value) }));
+
+                if (tail_args.Length > 0)
+                {
+                    var node = new ValueTreeNode(head_arg, new());
+                    nodes.Insert(ind, node);
+                    node.Add(tail_args, value);
+                }
+                else
+                {
+                    nodes.Insert(ind, new ValueTreeNode(head_arg, new(1) { new(value) }));
+                }
             }
         }
 
@@ -184,7 +191,7 @@ public class InterpolatorNDLinear
 
         public double GetValue(ArrayPtr<double> args)
         {
-            if(args.Length == 0) 
+            if (args.Length == 0)
                 return Childs[0].Value;
 
             var (x, xx) = args;

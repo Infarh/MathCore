@@ -1,4 +1,9 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Markup;
 
 using MathCore.Interpolation;
@@ -8,12 +13,14 @@ using MathCore.WPF.ViewModels;
 
 using Microsoft.Win32;
 
+using OxyPlot;
+
 namespace MathCore.Tests.WPF.ViewModels;
 
 [MarkupExtensionReturnType(typeof(MainWindowViewModel))]
-public class MainWindowViewModel() : TitledViewModel("Главное окно")
+public class MainWindowViewModel() : TitledViewModel("SAR")
 {
-    private InterpolatorNDLagrange? _Interpolator = null;
+    private InterpolatorNDLinear? _Interpolator = null;
 
     #region Command - LoadDataCommand
 
@@ -24,23 +31,44 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
             OnLoadDataCommandExecuted,
             CanLoadDataCommandExecute);
 
-    private bool CanLoadDataCommandExecute() => true;
+    private bool CanLoadDataCommandExecute(object? p) => true;
 
-    private void OnLoadDataCommandExecuted()
+    private void OnLoadDataCommandExecuted(object? p)
     {
-        var dialog = FileDialogEx
-            .OpenFile("Файл данных интерполятора")
-            .AddFilter("CSV", "*.csv", "*.zip")
-            .AddFilterAllFiles();
+        FileInfo? file = null;
+        switch (p)
+        {
+            default:
 
-        if (dialog.GetFileInfo() is not { Exists: true } file)
+                var dialog = FileDialogEx
+                    .OpenFile("Файл данных интерполятора")
+                    .AddFilter("CSV", "*.csv", "*.zip")
+                    .AddFilterAllFiles();
+
+                file = dialog.GetFileInfo();
+
+               
+
+                break;
+
+            case FileInfo { Exists: true } f:
+                file = f;
+                break;
+
+            case string path when File.Exists(path):
+                file = new(path);
+                break;
+        }
+
+        if (file is not { Exists: true })
             return;
 
-        var interpolator = InterpolatorNDLagrange.LoadCSV(file);
+        var interpolator = InterpolatorNDLinear.LoadCSV(file);
 
         _Interpolator = interpolator;
 
         OnPropertyChanged(nameof(ValueSAR));
+        OnGraphChanged();
     }
 
     #endregion
@@ -59,14 +87,36 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
     private void OnCalculateValueCommandExecuted() => OnPropertyChanged(nameof(ValueSAR));
     #endregion
 
-
     #region property ValueT : double - dT
 
     /// <Summary>dT</Summary>
     private double _ValueT = 0;
 
     /// <Summary>dT</Summary>
-    public double ValueT { get => _ValueT; set => Set(ref _ValueT, value); }
+    public double ValueT { get => _ValueT; set => SetValue(ref _ValueT, value, v => v is >= 0 and <= 20).Then(OnGraphChanged); }
+
+    #endregion
+
+    #region property ValueTGraph : bool - График по dT
+
+    /// <Summary>График по dT</Summary>
+    private bool _ValueTGraph;
+
+    /// <Summary>График по dT</Summary>
+    public bool ValueTGraph
+    {
+        get => _ValueTGraph;
+        set
+        {
+            if (!Set(ref _ValueTGraph, value)) return;
+            if (!value) return;
+            //ValueTGraph = false;
+            ValueHGraph = false;
+            ValueGGraph = false;
+            ValueMGraph = false;
+            OnGraphChanged();
+        }
+    }
 
     #endregion
 
@@ -76,7 +126,30 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
     private double _ValueH = 10668;
 
     /// <Summary>H</Summary>
-    public double ValueH { get => _ValueH; set => Set(ref _ValueH, value); }
+    public double ValueH { get => _ValueH; set => SetValue(ref _ValueH, value).Then(OnGraphChanged); }
+
+    #endregion
+
+    #region property ValueHGraph : bool - График по H
+
+    /// <Summary>График по H</Summary>
+    private bool _ValueHGraph;
+
+    /// <Summary>График по H</Summary>
+    public bool ValueHGraph
+    {
+        get => _ValueHGraph;
+        set
+        {
+            if (!Set(ref _ValueHGraph, value)) return;
+            if (!value) return;
+            ValueTGraph = false;
+            //ValueHGraph = false;
+            ValueGGraph = false;
+            ValueMGraph = false;
+            OnGraphChanged();
+        }
+    }
 
     #endregion
 
@@ -86,7 +159,30 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
     private double _ValueG = 28000;
 
     /// <Summary>G</Summary>
-    public double ValueG { get => _ValueG; set => Set(ref _ValueG, value); }
+    public double ValueG { get => _ValueG; set => SetValue(ref _ValueG, value).Then(OnGraphChanged); }
+
+    #endregion
+
+    #region property ValueGGraph : bool - График по G
+
+    /// <Summary>График по G</Summary>
+    private bool _ValueGGraph;
+
+    /// <Summary>График по G</Summary>
+    public bool ValueGGraph
+    {
+        get => _ValueGGraph;
+        set
+        {
+            if (!Set(ref _ValueGGraph, value)) return;
+            if (!value) return;
+            ValueTGraph = false;
+            ValueHGraph = false;
+            //ValueGGraph = false;
+            ValueMGraph = false;
+            OnGraphChanged();
+        }
+    }
 
     #endregion
 
@@ -96,7 +192,30 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
     private double _ValueM = 0.45;
 
     /// <Summary>M</Summary>
-    public double ValueM { get => _ValueM; set => Set(ref _ValueM, value); }
+    public double ValueM { get => _ValueM; set => SetValue(ref _ValueM, value).Then(OnGraphChanged); }
+
+    #endregion
+
+    #region property ValueMGraph : bool - График по M
+
+    /// <Summary>График по M</Summary>
+    private bool _ValueMGraph = true;
+
+    /// <Summary>График по M</Summary>
+    public bool ValueMGraph
+    {
+        get => _ValueMGraph;
+        set
+        {
+            if (!Set(ref _ValueMGraph, value)) return;
+            if (!value) return;
+            ValueTGraph = false;
+            ValueHGraph = false;
+            ValueGGraph = false;
+            //ValueMGraph = false;
+            OnGraphChanged();
+        }
+    }
 
     #endregion
 
@@ -124,4 +243,103 @@ public class MainWindowViewModel() : TitledViewModel("Главное окно")
     }
 
     #endregion
+
+    #region property GraphSAR : IEnumerable<PointF> - График SAR
+
+    private volatile int _OnGraphChangedSyncIndex;
+    private volatile int _Timeout = 10;
+    private async void OnGraphChanged()
+    {
+        if (_Interpolator is not { } interpolator) return;
+        if (!_ValueTGraph && !_ValueGGraph && !_ValueHGraph && !_ValueMGraph)
+        {
+            ArgumentName = "-";
+            GraphSAR = null;
+            return;
+        }
+
+        var time = Environment.TickCount;
+        _OnGraphChangedSyncIndex = time;
+
+        await Task.Delay(_Timeout).ConfigureAwait(false);
+
+        if (_OnGraphChangedSyncIndex != time) return;
+
+        var start_time_ticks = Environment.TickCount64;
+        try
+        {
+            var points = new List<DataPoint>();
+            GraphSAR = null;
+            if (_ValueTGraph)
+            {
+                for (var t = 0.0; t <= 20; t += 0.05)
+                    points.Add(new(t, interpolator[t, _ValueH, _ValueG, _ValueM]));
+                ArgumentName = "dT";
+                GraphSAR = points;
+                return;
+            }
+
+            if (_ValueHGraph)
+            {
+                for (var h = 10668.0; h <= 12192; h += 15.0)
+                    points.Add(new(h, interpolator[_ValueT, h, _ValueG, _ValueM]));
+                ArgumentName = "H";
+                GraphSAR = points;
+                return;
+            }
+
+            if (_ValueGGraph)
+            {
+                for (var g = 28000.0; g <= 52000; g += 10.0)
+                    points.Add(new(g, interpolator[_ValueT, _ValueH, g, _ValueM]));
+                ArgumentName = "G";
+                GraphSAR = points;
+                return;
+            }
+
+            if (_ValueMGraph)
+            {
+                for (var m = 0.45; m <= 0.82; m += 0.005)
+                    points.Add(new(m, interpolator[_ValueT, _ValueH, _ValueG, m]));
+                ArgumentName = "Mach";
+                GraphSAR = points;
+                return;
+            }
+        }
+        finally
+        {
+            var end_time_ticks = Environment.TickCount64;
+            var delta_ms = TimeSpan
+                .FromTicks(end_time_ticks - start_time_ticks)
+                .TotalMilliseconds;
+
+            var new_timeout = _Timeout + (delta_ms - _Timeout) / 10;
+            _Timeout = Math.Max(0, (int)new_timeout);
+        }
+    }
+
+    /// <Summary>График SAR</Summary>
+    private IEnumerable<DataPoint>? _GraphSAR;
+
+    /// <Summary>График SAR</Summary>
+    public IEnumerable<DataPoint>? GraphSAR
+    {
+        get => _GraphSAR;
+        private set => Set(ref _GraphSAR, value);
+    }
+
+    #endregion
+
+
+    #region property ArgumentName : string - название аргумента графика
+
+    /// <Summary>название аргумента графика</Summary>
+    private string _ArgumentName = "-";
+
+    /// <Summary>название аргумента графика</Summary>
+    public string ArgumentName { get => _ArgumentName; private set => Set(ref _ArgumentName!, value); }
+
+    #endregion
+
+
 }

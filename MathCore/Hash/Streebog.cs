@@ -226,20 +226,20 @@ public class Streebog
 
             var temp_array = new byte[8];
             Array.Copy(state, i * 8, temp_array, 0, 8);
-            temp_array.Reverse();
+            temp_array.Inverse();
 
             var temp_bits1 = new BitArray(temp_array);
 
             var temp_bits = new bool[64];
             temp_bits1.CopyTo(temp_bits, 0);
-            temp_bits.Reverse();
+            temp_bits.Inverse();
 
             for (var j = 0; j < 64; j++)
                 if (temp_bits[j])
                     t ^= _A[j];
 
             var res_part = BitConverter.GetBytes(t);
-            res_part.Reverse();
+            res_part.Inverse();
 
             Array.Copy(res_part, 0, result, i * 8, 8);
         }
@@ -299,20 +299,32 @@ public class Streebog
 
         var n_0 = new byte[64];
 
-        if (_OutLen == 512)
-            for (var i = 0; i < 64; i++)
-            {
-                _N[i] = 0x00;
-                _Sigma[i] = 0x00;
-                _Iv[i] = 0x00;
-            }
-        else if (_OutLen == 256)
-            for (var i = 0; i < 64; i++)
-            {
-                _N[i] = 0x00;
-                _Sigma[i] = 0x00;
-                _Iv[i] = 0x01;
-            }
+        switch (_OutLen)
+        {
+            default: throw new InvalidOperationException($"Некорректная длина {nameof(_OutLen)}");
+            case 512:
+                {
+                    for (var i = 0; i < 64; i++)
+                    {
+                        _N[i] = 0x00;
+                        _Sigma[i] = 0x00;
+                        _Iv[i] = 0x00;
+                    }
+
+                    break;
+                }
+            case 256:
+                {
+                    for (var i = 0; i < 64; i++)
+                    {
+                        _N[i] = 0x00;
+                        _Sigma[i] = 0x00;
+                        _Iv[i] = 0x01;
+                    }
+
+                    break;
+                }
+        }
 
         //byte[] n_512 = BitConverter.GetBytes(512);
         //Array.Reverse(n_512);

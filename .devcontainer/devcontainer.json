@@ -1,0 +1,35 @@
+{
+  "name": "dev",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {    
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.dotnet-interactive-vscode",
+        "MS-CEINTL.vscode-language-pack-ru",
+        "hbenl.vscode-test-explorer",
+        "redhat.vscode-yaml",
+
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
+
+        "twxs.cmake",
+
+        "mhutchie.git-graph",
+        "ms-dotnettools.vscodeintellicode-csharp",
+        "yzhang.markdown-all-in-one",
+        "yzane.markdown-pdf",
+
+        "ms-python.debugpy",
+        "mechatroner.rainbow-csv",
+        "rangav.vscode-thunder-client",
+
+        "tonybaloney.vscode-pets"
+      ]
+    }
+  }
+}

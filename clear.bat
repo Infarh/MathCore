@@ -11,4 +11,6 @@ for %%d in (
 	)
 )
 
+rd /s /q TestResults
+
 pause

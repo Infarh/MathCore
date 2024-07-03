@@ -98,10 +98,12 @@ public static class FileInfoExtensions
     /// <param name="Message">Сообщение, добавляемое в исключение</param>
     /// <returns>Информация о файле</returns>
     /// <exception cref="FileNotFoundException">если файл не существует</exception>
-    public static FileInfo ThrowIfNotFound(this FileInfo file, string? Message = null)
+    public static FileInfo ThrowIfNotFound(this FileInfo file, string? Message = null, bool FullPathInMessage = false)
     {
         file.Refresh();
-        return file.Exists ? file : throw new FileNotFoundException(Message ?? $"Файл {file} не найден");
+        return file.Exists
+            ? file 
+            : throw new FileNotFoundException(Message ?? $"Файл {(FullPathInMessage ? file.FullName : file)} не найден");
     }
 
     /// <summary>Вычислить хеш-сумму SHA256</summary>
