@@ -306,4 +306,18 @@ public class StringPtrTests
 
         value.AssertEquals(0.0006);
     }
+
+    [TestMethod]
+    public void SplitDoubleValues()
+    {
+        const string values_str = "0:57,0:185,1:57,1:185,2:57,2:185,3:57,3:185";
+
+        var ptr = values_str.AsStringPtr();
+
+        foreach(var ss in ptr.Split(','))
+        {
+            var first = ss.GetName(':').ParseInt32();
+            var last = ss.GetValueInt32(':');
+        }
+    }
 }

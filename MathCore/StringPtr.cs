@@ -200,7 +200,7 @@ public readonly ref partial struct StringPtr
     /// <returns>Индекс символа в подстроке с конца, либо -1 в случае его отсутствия</returns>
     public int LastIndexOf(char c)
     {
-        if (Source.LastIndexOf(c, Pos + Length - 1, Length - Pos) is >= 0 and var index)
+        if (Source.LastIndexOf(c, Pos + Length - 1, Length) is >= 0 and var index)
             return index - Pos;
 
         return -1;
