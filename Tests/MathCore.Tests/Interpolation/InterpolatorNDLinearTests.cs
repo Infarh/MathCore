@@ -7,7 +7,7 @@ public class InterpolatorNDLinearTests
 {
     private const string __DataFilePath = "Interpolation/InterpolatorNDData.zip";
 
-    private static FileInfo DataFile => new FileInfo(__DataFilePath).ThrowIfNotFound();
+    private static FileInfo DataFile => new FileInfo(__DataFilePath).ThrowIfNotFound(FullPathInMessage: true);
 
     [TestMethod]
     public void TestInterpolation()
