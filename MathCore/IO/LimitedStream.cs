@@ -48,7 +48,6 @@ public class LimitedStream(Stream BaseStream, long Offset, long DataLength) : St
     /// <inheritdoc />
     public override bool CanSeek => _BaseStream.CanSeek;
 
-
     /// <inheritdoc />
     public override bool CanWrite => _CanWrite ?? _BaseStream.CanWrite;
 

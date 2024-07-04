@@ -11,6 +11,7 @@ public partial class TarGZip(string Name) : IEnumerable<TarGZip.Entry>
     private static IEnumerable<Entry> EnumerateEntries(string FileName)
     {
         if (!File.Exists(FileName)) throw new FileNotFoundException("Файл архива не найден", FileName);
+
         using var file_stream = File.OpenRead(FileName);
         using var reader = new BinaryReader(new GZipStream(file_stream, CompressionMode.Decompress));
         while (file_stream.Position < file_stream.Length)
@@ -24,11 +25,10 @@ public partial class TarGZip(string Name) : IEnumerable<TarGZip.Entry>
     public string FileName => Name;
 
     /// <inheritdoc />
-    public IEnumerator<Entry> GetEnumerator() =>
-        // ReSharper disable once NotDisposedResourceIsReturned
-        !File.Exists(Name)
-            ? throw new FileNotFoundException("Файл архива не найден", Name)
-            : EnumerateEntries(Name).GetEnumerator();
+    // ReSharper disable once NotDisposedResourceIsReturned
+    public IEnumerator<Entry> GetEnumerator() => File.Exists(Name)
+            ? EnumerateEntries(Name).GetEnumerator()
+            : throw new FileNotFoundException("Файл архива не найден", Name);
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

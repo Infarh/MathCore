@@ -97,6 +97,8 @@ public class CRC32(uint Polynomial)
 
     public bool RefOut { get; set; }
 
+    public uint Compute(uint crc, byte b) => _Table[(crc ^ b) & 0xff] ^ (crc >> 8);
+
     public uint Compute(params byte[] bytes) => ContinueCompute(State, bytes);
 
     public uint ContinueCompute(uint crc, byte[] bytes)

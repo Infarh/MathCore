@@ -6,6 +6,8 @@ namespace MathCore.Extensions;
 
 public static class SpanEx
 {
+    public static ref T CastTo<T>(this Span<byte> span, int offset = 0) where T : unmanaged => ref span.Cast<T>()[offset];
+
     [DST]
     public static Span<T> Cast<T>(this Span<byte> span) where T : unmanaged => MemoryMarshal.Cast<byte, T>(span);
     [DST]

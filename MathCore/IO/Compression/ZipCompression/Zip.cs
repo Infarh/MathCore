@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using MathCore.Annotations;
+
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
 
 // ReSharper disable UnusedMember.Local
 
@@ -192,20 +197,21 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <summary>Добавить файл в архив</summary>
     /// <param name="SourceFileName">Полный путь к добавляемому файлу</param>
     /// <param name="FileNameInZip">Имя и путь к файлу в архиве</param>
-    /// <param name="Comment">Комментарий</param>
+    /// <param name="EntryComment">Комментарий</param>
     /// <param name="Compressed">Добавлять сжатым</param>
-    public Entry Add(string SourceFileName, string? FileNameInZip = null, string? Comment = "", bool Compressed = true)
+    public Entry Add(string SourceFileName, string? FileNameInZip = null, string? EntryComment = "", bool Compressed = true)
     {
-        if (!File.Exists(SourceFileName.NotNull())) throw new FileNotFoundException("Добавляемый в архив файл отсутствует", SourceFileName);
+        if (!File.Exists(SourceFileName.NotNull())) 
+            throw new FileNotFoundException("Добавляемый в архив файл отсутствует", SourceFileName);
 
         FileNameInZip ??= Path.GetFileName(SourceFileName);
-        Comment ??= "";
+        EntryComment ??= "";
 
         if ((_Access & FileAccess.Write) != FileAccess.Write)
             throw new InvalidOperationException("Архив в режиме только для чтения");
 
         using var stream = new FileStream(SourceFileName, FileMode.Open, FileAccess.Read);
-        return Add(stream, FileNameInZip, File.GetLastWriteTime(SourceFileName), Comment, Compressed);
+        return Add(stream, FileNameInZip, File.GetLastWriteTime(SourceFileName), EntryComment, Compressed);
     }
 
     /// <summary>Добавить потоковое содержимое в архив</summary>
@@ -375,7 +381,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
     /// <summary>При необходимости обновляет главный каталог архива и закрывает архив</summary>
     /// <remarks>Этот шег необходим, если отсутствует явное управление ресурсами через интерфейс <see cref="IDisposable"/></remarks>
-    public async Task CloseAsync()
+    public async Task CloseAsync(CancellationToken Cancel = default)
     {
         if ((_Access & FileAccess.Write) == FileAccess.Write)
         {
@@ -385,17 +391,21 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             foreach (var entry in _ArchiveEntries)
             {
                 var pos = _ArchiveStream.Position;
-                await WriteCentralDirRecordAsync(entry).ConfigureAwait(false);
+                await WriteCentralDirRecordAsync(entry, Cancel).ConfigureAwait(false);
                 central_size += (uint)(_ArchiveStream.Position - pos);
             }
 
-            await WriteEndRecordAsync(central_size, central_offset).ConfigureAwait(false);
+            await WriteEndRecordAsync(central_size, central_offset, Cancel).ConfigureAwait(false);
         }
 
         if (_ArchiveStream is null) return;
 
+#if NET8_0_OR_GREATER
+        await
+#endif
         using(_ArchiveStream)
-            await _ArchiveStream.FlushAsync().ConfigureAwait(false);
+            await _ArchiveStream.FlushAsync(Cancel).ConfigureAwait(false);
+
         _ArchiveStream = null;
     }
 
@@ -416,17 +426,17 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             if (signature != 0x02014b50)
                 throw new FormatException($"Ошибка в формате индекса архива: в записи со смещением {ptr} отсутствует сигнатура 0x02014b50");
 
-            var encode_utf8   = (BitConverter.ToUInt16(CentralDirImage, ptr + 8) & 0x0800) != 0;
-            var method        = BitConverter.ToUInt16(CentralDirImage, ptr + 10);
-            var modify_time   = BitConverter.ToUInt32(CentralDirImage, ptr + 12);
-            var crc32         = BitConverter.ToUInt32(CentralDirImage, ptr + 16);
-            var compr_size    = BitConverter.ToUInt32(CentralDirImage, ptr + 20);
-            var file_size     = BitConverter.ToUInt32(CentralDirImage, ptr + 24);
-            filename_size     = BitConverter.ToUInt16(CentralDirImage, ptr + 28);
-            extra_size        = BitConverter.ToUInt16(CentralDirImage, ptr + 30);
-            comment_size      = BitConverter.ToUInt16(CentralDirImage, ptr + 32);
-            var header_offset = BitConverter.ToUInt32(CentralDirImage, ptr + 42);
-            var header_size   = (uint)(46 + filename_size + extra_size + comment_size);
+            var encode_utf8     = (BitConverter.ToUInt16(CentralDirImage, ptr + 8) & 0x0800) != 0;
+            var method          = BitConverter.ToUInt16(CentralDirImage, ptr + 10);
+            var modify_time     = BitConverter.ToUInt32(CentralDirImage, ptr + 12);
+            var crc32           = BitConverter.ToUInt32(CentralDirImage, ptr + 16);
+            var compressed_size = BitConverter.ToUInt32(CentralDirImage, ptr + 20);
+            var file_size       = BitConverter.ToUInt32(CentralDirImage, ptr + 24);
+            filename_size       = BitConverter.ToUInt16(CentralDirImage, ptr + 28);
+            extra_size          = BitConverter.ToUInt16(CentralDirImage, ptr + 30);
+            comment_size        = BitConverter.ToUInt16(CentralDirImage, ptr + 32);
+            var header_offset   = BitConverter.ToUInt32(CentralDirImage, ptr + 42);
+            var header_size     = (uint)(46 + filename_size + extra_size + comment_size);
 
             var encoder = encode_utf8 ? Encoding.UTF8 : __DefaultEncoding;
 
@@ -436,7 +446,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
                 FileNameInZip  = encoder.GetString(CentralDirImage, ptr + 46, filename_size),
                 FileOffset     = GetFileOffset(header_offset),
                 FileSize       = file_size,
-                CompressedSize = compr_size,
+                CompressedSize = compressed_size,
                 HeaderOffset   = header_offset,
                 HeaderSize     = header_size,
                 Crc32          = crc32,
@@ -457,6 +467,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <summary>Определение смещения файла по информации из заголовка</summary>
     /// <param name="HeaderOffset">Смещение заголовка</param>
     /// <returns>Смещение файла по логическому заголовку</returns>
+#if !NET8_0_OR_GREATER
     private uint GetFileOffset(uint HeaderOffset)
     {
         var buffer = new byte[2];
@@ -469,10 +480,24 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
         return (uint)(30 + file_name_size + extra_size + HeaderOffset);
     }
+#else
+    private uint GetFileOffset(uint HeaderOffset)
+    {
+        _ArchiveStream.Seek(HeaderOffset + 26, SeekOrigin.Begin);
+
+        Span<ushort> buffer_ushort = stackalloc ushort[2];
+        _ = _ArchiveStream.Read(buffer_ushort.CastToByte());
+        var file_name_size = buffer_ushort[0];
+        var extra_size = buffer_ushort[1];
+
+        return (uint)(30 + file_name_size + extra_size + HeaderOffset);
+    }
+#endif
 
     /// <summary>Определение смещения файла по информации из заголовка</summary>
     /// <param name="HeaderOffset">Смещение заголовка</param>
     /// <returns>Смещение файла по логическому заголовку</returns>
+#if !NET8_0_OR_GREATER
     private async Task<uint> GetFileOffsetAsync(uint HeaderOffset)
     {
         var buffer = new byte[2];
@@ -485,6 +510,27 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
         return (uint)(30 + file_name_size + extra_size + HeaderOffset);
     }
+#else
+    private async Task<uint> GetFileOffsetAsync(uint HeaderOffset)
+    {
+        _ArchiveStream.Seek(HeaderOffset + 26, SeekOrigin.Begin);
+
+        var buffer_byte_array = ArrayPool<byte>.Shared.Rent(4);
+        try
+        {
+            var buffer = buffer_byte_array.AsMemory(0, 4);
+            _ = await _ArchiveStream.ReadAsync(buffer).ConfigureAwait(false);
+            var file_name_size = buffer.Span.Cast<uint>()[0];
+            var extra_size = buffer.Span.Cast<uint>()[1];
+
+            return 30 + file_name_size + extra_size + HeaderOffset;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer_byte_array);
+        }
+    }
+#endif
 
     //[Flags]
     //public enum FileHeaderFlags : ushort
@@ -512,23 +558,25 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <param name="entry">Элемент архива</param>
     /// <remarks>
     /// Заголовок файла:
-    ///    Сигнатура логического заголовка         4 байта == 0x04034b50
-    ///    версия содержимого                      2 байта
-    ///    Бит флага общего назначения             2 байта
-    ///    Метод сжатия                            2 байта
-    ///    Время последнего изменения файла        2 байта
-    ///    ДАта последнего изменения файла         2 байта
-    ///    32-битная контрольная сумма             4 байта
-    ///    Сжатый размер                           4 байта
-    ///    Исходный размер                         4 байта
-    ///    Длина имени файла                       2 байта
+    ///    Сигнатура логического заголовка         4 байта == 0x04034b50<br/>
+    ///    версия содержимого                      2 байта<br/>
+    ///    Бит флага общего назначения             2 байта<br/>
+    ///    Метод сжатия                            2 байта<br/>
+    ///    Время последнего изменения файла        2 байта<br/>
+    ///    Дата последнего изменения файла         2 байта<br/>
+    ///    32-битная контрольная сумма             4 байта<br/>
+    ///    Сжатый размер                           4 байта<br/>
+    ///    Исходный размер                         4 байта<br/>
+    ///    Длина имени файла                       2 байта<br/>
     ///    Длина поля с дополнительной информацией 2 байта
     /// </remarks>
+#if !NET8_0_OR_GREATER
     private void WriteLocalHeader(Entry entry)
     {
-        var encoded_filename = (entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding).GetBytes(entry.FileNameInZip);
+        var encoding = entry.NotNull().EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
+        var encoded_file_name = encoding.GetBytes(entry.FileNameInZip);
 
-        var buffer = new byte[30 + encoded_filename.Length];
+        var buffer = new byte[30 + encoded_file_name.Length];
         entry.HeaderSize = (uint)buffer.Length;
         entry.FileOffset = (uint)(_ArchiveStream.Position + buffer.Length);
 
@@ -539,29 +587,77 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         Array.Copy(BitConverter.GetBytes(DateTimeToDosTime(entry.ModifyTime)), 0, buffer, 10, 4); // Время изменения файла
         var null_byte12_array = new byte[12];
         Array.Copy(null_byte12_array, 0, buffer, 14, 12); // Контрольная сумма и размеры файла в сжатом и несжатом виде. Обновляются в последствии
-        Array.Copy(BitConverter.GetBytes((ushort)encoded_filename.Length), 0, buffer, 26, 2); // Длина имени файла
+        Array.Copy(BitConverter.GetBytes((ushort)encoded_file_name.Length), 0, buffer, 26, 2); // Длина имени файла
         Array.Copy(null_byte12_array, 0, buffer, 28, 2); // Длина дополнительных данных
-        Array.Copy(encoded_filename, 0, buffer, 30, encoded_filename.Length);
+        Array.Copy(encoded_file_name, 0, buffer, 30, encoded_file_name.Length);
 
         _ArchiveStream.Write(buffer, 0, buffer.Length);
+    } 
+#else
+    private void WriteLocalHeader(Entry entry)
+    {
+        var encoding = entry.NotNull().EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
+        var encoded_file_name_byte_length = (ushort)encoding.GetByteCount(entry.FileNameInZip);
+
+        entry.HeaderSize = (uint)(30 + encoded_file_name_byte_length);
+        entry.FileOffset = (uint)(_ArchiveStream.Position + 30 + encoded_file_name_byte_length);
+
+        // 0x50, 0x4B, 0x03, 0x04
+        // 0x14, 0x00
+        Span<byte> bytes = stackalloc byte[30]
+        {
+            0x50, 0x4B, 0x03, 0x04, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        };
+
+        FillEntryLocalHeader(bytes, entry);
+
+        _ArchiveStream.Write(bytes);
+
+        using var writer = new StreamWriter(_ArchiveStream, encoding, leaveOpen: true);
+        writer.Write(entry.FileNameInZip);
     }
+
+    private static void FillEntryLocalHeader(Span<byte> bytes, Entry entry)
+    {
+        if (bytes.Length < 30)
+            throw new ArgumentException($"Недостаточно объёма буфера для записи данных. Объём буфера должен быть не менее 30 байт, а получен буфер объёмом {bytes.Length} байт");
+
+        bytes.CastTo<uint>() = 0x04034b50;
+
+        var ushort_buffer = bytes.Cast<ushort>();
+
+        ushort_buffer[2] = 0x0014;
+        ushort_buffer[3] = entry.EncodeUTF8 ? (ushort)0x0800 : (ushort)0x0000;
+        ushort_buffer[4] = entry.Compressed ? (ushort)0x0008 : (ushort)0x0000;
+        bytes[10..].CastTo<uint>() = DateTimeToDosTime(entry.ModifyTime);
+
+        var encoding = entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
+        var encoded_file_name_byte_length = (ushort)encoding.GetByteCount(entry.FileNameInZip);
+
+        bytes[14..30].Clear();
+        bytes[26..].CastTo<ushort>() = encoded_file_name_byte_length;
+    }
+#endif
 
     /// <summary>Запись логического заголовка</summary>
     /// <param name="entry">Элемент архива</param>
     /// <remarks>
-    /// Заголовок файла:
-    ///    Сигнатура логического заголовка         4 байта == 0x04034b50
-    ///    версия содержимого                      2 байта
-    ///    Бит флага общего назначения             2 байта
-    ///    Метод сжатия                            2 байта
-    ///    Время последнего изменения файла        2 байта
-    ///    ДАта последнего изменения файла         2 байта
-    ///    32-битная контрольная сумма             4 байта
-    ///    Сжатый размер                           4 байта
-    ///    Исходный размер                         4 байта
-    ///    Длина имени файла                       2 байта
+    /// Заголовок файла:<br/>
+    ///    Сигнатура логического заголовка         4 байта == 0x04034b50<br/>
+    ///    версия содержимого                      2 байта<br/>
+    ///    Бит флага общего назначения             2 байта<br/>
+    ///    Метод сжатия                            2 байта<br/>
+    ///    Время последнего изменения файла        2 байта<br/>
+    ///    ДАта последнего изменения файла         2 байта<br/>
+    ///    32-битная контрольная сумма             4 байта<br/>
+    ///    Сжатый размер                           4 байта<br/>
+    ///    Исходный размер                         4 байта<br/>
+    ///    Длина имени файла                       2 байта<br/>
     ///    Длина поля с дополнительной информацией 2 байта
     /// </remarks>
+#if !NET8_0_OR_GREATER
     private async Task WriteLocalHeaderAsync(Entry entry, CancellationToken Cancel)
     {
         entry.NotNull();
@@ -585,6 +681,32 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
         entry.HeaderSize = (uint)(_ArchiveStream.Position - position);
     }
+#else
+    private async Task WriteLocalHeaderAsync(Entry entry, CancellationToken Cancel)
+    {
+        entry.NotNull();
+
+        var position = _ArchiveStream.Position;
+
+        var byte_buffer = ArrayPool<byte>.Shared.Rent(30);
+        try
+        {
+            var buffer = byte_buffer.AsMemory(0, 30);
+            FillEntryLocalHeader(buffer.Span, entry);
+
+            await _ArchiveStream.WriteAsync(buffer, Cancel).ConfigureAwait(false);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(byte_buffer);
+        }
+
+        await using var writer = new StreamWriter(_ArchiveStream, entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding, leaveOpen: true);
+        await writer.WriteAsync(entry.FileNameInZip.AsMemory(), Cancel).ConfigureAwait(false);
+
+        entry.HeaderSize = (uint)(_ArchiveStream.Position - position);
+    }
+#endif
 
     /// <summary>Запись индекса архива</summary>
     /// <param name="entry">Элемент архива</param>
@@ -612,6 +734,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     ///     Поле с доп. информацией указанная длина<br/>
     ///     Комментарий                                     указанная длина
     /// </remarks>
+#if !NET8_0_OR_GREATER
     private void WriteCentralDirRecord(Entry entry)
     {
         var encoder          = entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
@@ -640,6 +763,71 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         _ArchiveStream.Write(encoded_filename, 0, encoded_filename.Length);
         _ArchiveStream.Write(encoded_comment, 0, encoded_comment.Length);
     }
+#else
+    private void WriteCentralDirRecord(Entry entry)
+    {
+        Span<byte> buffer = stackalloc byte[46]
+        {
+            0x50, 0x4B, 0x01, 0x02, //  0... 4(4) 0x02014b50
+            0x17, 0x0B,             //  4... 6(2) 0x0b17
+            0x14, 0x00,             //  6... 8(2) 0x0014
+            0x00, 0x00,             //  8...10(2) EncodeUTF8 ? 0x0800 : 0
+            0x00, 0x00,             // 10...12(2) Compressed ? 0x0008 : 0
+            0x00, 0x00, 0x00, 0x00, // 12...16(4) ModifyTime
+            0x00, 0x00, 0x00, 0x00, // 16...20(4) Crc32
+            0x00, 0x00, 0x00, 0x00, // 20...24(4) CompressedSize
+            0x00, 0x00, 0x00, 0x00, // 24...28(4) FileSize
+            0x00, 0x00,             // 28...30(2) encoded_filename.Length
+            0x00, 0x00,             // 30...32(2) Доп. Данные == 0
+            0x00, 0x00,             // 32...34(2) encoded_comment.Length
+            0x00, 0x00,             // 34...36(2) == 0 Том-0
+            0x00, 0x00,             // 36...38(2) == 0 Тип файла: двоичный
+            0x00, 0x00,             // 38...40(2) Внутренние файловые атрибут
+            0x00, 0x81,             // 40...42(2) 0x8100 Внешние файловые атрибуты (нормальный/только для чтения)
+            0x00, 0x00, 0x00, 0x00  // 42...46(4) Смещение заголовка
+        };
+
+        FillCentralDirRecord(buffer, entry);
+
+        _ArchiveStream.Write(buffer);
+
+        using var writer = new StreamWriter(_ArchiveStream, entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding, leaveOpen: true);
+        writer.Write(entry.FileNameInZip);
+        writer.Write(entry.Comment);
+    }
+
+    private static void FillCentralDirRecord(Span<byte> buffer, Entry entry)
+    {
+        var buffer_ushort = buffer.Cast<ushort>();
+
+        buffer.CastTo<uint>() = 0x02014b50;
+        buffer_ushort[2] = 0x0b17;
+        buffer_ushort[3] = 0x0014;
+        buffer_ushort[4] = entry.EncodeUTF8 ? (ushort)0x0800 : (ushort)0;
+        buffer_ushort[5] = entry.Compressed ? (ushort)0x0008 : (ushort)0;
+
+        var buffer_uint_20 = buffer[20..].Cast<uint>();
+
+        buffer_uint_20[0] = DateTimeToDosTime(entry.ModifyTime);
+        buffer_uint_20[1] = entry.Crc32;
+        buffer_uint_20[2] = entry.CompressedSize;
+        buffer_uint_20[3] = entry.FileSize;
+
+        var encoding = entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
+        var encoded_filename_length = (ushort)encoding.GetByteCount(entry.FileNameInZip);
+        var encoded_comment_length = (ushort)encoding.GetByteCount(entry.Comment);
+
+        buffer_ushort[14] = encoded_filename_length;
+        buffer_ushort[15] = 0;
+        buffer_ushort[16] = encoded_comment_length;
+        buffer_ushort[17] = 0;
+        buffer_ushort[18] = 0;
+        buffer_ushort[19] = 0;
+        buffer_ushort[20] = 0x8100;
+
+        buffer[42..].CastTo<uint>() = entry.HeaderOffset;
+    }
+#endif
 
     /// <summary>Запись индекса архива</summary>
     /// <param name="entry">Элемент архива</param>
@@ -667,7 +855,8 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     ///     Поле с доп. информацией указанная длина<br/>
     ///     Комментарий                                     указанная длина
     /// </remarks>
-    private async Task WriteCentralDirRecordAsync(Entry entry)
+#if !NET8_0_OR_GREATER
+    private async Task WriteCentralDirRecordAsync(Entry entry, CancellationToken Cancel)
     {
         var encoder          = entry.NotNull().EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
         var encoded_filename = encoder.GetBytes(entry.FileNameInZip);
@@ -695,8 +884,30 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
 
         Array.Copy(encoded_filename, 0, buffer, 46, encoded_filename.Length);
         Array.Copy(encoded_comment, 0, buffer, 46 + encoded_filename.Length, encoded_comment.Length);
-        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length, Cancel).ConfigureAwait(false);
     }
+#else
+    private async Task WriteCentralDirRecordAsync(Entry entry, CancellationToken Cancel)
+    {
+        var byte_buffer = ArrayPool<byte>.Shared.Rent(48);
+        try
+        {
+            var buffer = byte_buffer.AsMemory(0, 48);
+
+            FillCentralDirRecord(buffer.Span, entry);
+
+            await _ArchiveStream.WriteAsync(buffer, Cancel).ConfigureAwait(false);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(byte_buffer);
+        }
+
+        await using var writer = new StreamWriter(_ArchiveStream, entry.EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding, leaveOpen: true);
+        await writer.WriteAsync(entry.FileNameInZip.AsMemory(), Cancel).ConfigureAwait(false);
+        await writer.WriteAsync(entry.Comment.AsMemory(), Cancel).ConfigureAwait(false);
+    }
+#endif
 
     /// <summary>Запись окончания файла</summary>
     /// <param name="Size">Размер</param>
@@ -713,6 +924,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     ///  Длина комментария архива                        2 байт<br/>
     ///  Комментарий архива                              Указанная длина
     /// </remarks>
+#if !NET8_0_OR_GREATER
     private void WriteEndRecord(uint Size, uint Offset)
     {
         var encoder         = EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
@@ -733,6 +945,53 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         _ArchiveStream.Write(buffer, 0, buffer.Length);
         _ArchiveStream.SetLength(_ArchiveStream.Position);
     }
+#else
+    private void WriteEndRecord(uint Size, uint Offset)
+    {
+        Span<byte> bytes = stackalloc byte[22]
+        {
+            0x50, 0x4B, 0x05, 0x06, //  0... 4(4) 0x06054b50
+            0x00, 0x00,             //  4... 6(2) 0x0000
+            0x00, 0x00,             //  6... 8(2) 0x0000
+
+            0x00, 0x00,             //  8...10(2) tom entries count
+            0x00, 0x00,             // 10...12(2) total entries count
+            0x00, 0x00, 0x00, 0x00, // 12...16(4) Size
+            0x00, 0x00, 0x00, 0x00, // 16...20(4) Offset
+            0x00, 0x00              // 20...22(2) encoded_comment_length
+        };
+
+        FillEndRecord(bytes, Size, Offset);
+
+        _ArchiveStream.Write(bytes);
+
+        using(var writer = new StreamWriter(_ArchiveStream, EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding, leaveOpen: true))
+            writer.Write(_Comment);
+
+        _ArchiveStream.SetLength(_ArchiveStream.Position);
+    }
+
+    private void FillEndRecord(Span<byte> bytes, uint Size, uint Offset)
+    {
+        var buffer_ushort = bytes.Cast<ushort>();
+        var buffer_uint = bytes.Cast<uint>();
+
+        buffer_uint[0] = 0x06054b50;
+        buffer_ushort[2] = 0x0000;
+        buffer_ushort[3] = 0x0000;
+
+        buffer_ushort[4] = (ushort)_ArchiveEntries.Count;
+        buffer_ushort[5] = (ushort)_ArchiveEntries.Count;
+
+        buffer_uint[3] = Size;
+        buffer_uint[4] = Offset;
+
+        var encoding = EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
+        var encoded_comment_length = (ushort)encoding.GetByteCount(_Comment);
+
+        buffer_ushort[10] = encoded_comment_length;
+    }
+#endif
 
     /// <summary>Запись окончания файла</summary>
     /// <param name="Size">Размер</param>
@@ -749,7 +1008,8 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     ///  Длина комментария архива                        2 байт<br/>
     ///  Комментарий архива                              Указанная длина
     /// </remarks>
-    private async Task WriteEndRecordAsync(uint Size, uint Offset)
+#if !NET8_0_OR_GREATER
+    private async Task WriteEndRecordAsync(uint Size, uint Offset, CancellationToken Cancel)
     {
         var encoder         = EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding;
         var encoded_comment = encoder.GetBytes(_Comment);
@@ -762,12 +1022,36 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         Array.Copy(BitConverter.GetBytes(Offset), 0, buffer, 16, 4);
         Array.Copy(BitConverter.GetBytes((ushort)encoded_comment.Length), 0, buffer, 20, 2);
         Array.Copy(encoded_comment, 0, buffer, 22, encoded_comment.Length);
-        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+        await _ArchiveStream.WriteAsync(buffer, 0, buffer.Length, Cancel).ConfigureAwait(false);
     }
+#else
+    private async Task WriteEndRecordAsync(uint Size, uint Offset, CancellationToken Cancel)
+    {
+        var bytes_buffer = ArrayPool<byte>.Shared.Rent(22);
+        try
+        {
+            var bytes = bytes_buffer.AsMemory(0, 22);
+
+            FillEndRecord(bytes.Span, Size, Offset);
+
+            await _ArchiveStream.WriteAsync(bytes, Cancel).ConfigureAwait(false);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(bytes_buffer);
+        }
+
+        await using (var writer = new StreamWriter(_ArchiveStream, EncodeUTF8 ? Encoding.UTF8 : __DefaultEncoding, leaveOpen: true))
+            await writer.WriteAsync(_Comment.AsMemory(), Cancel).ConfigureAwait(false);
+
+        _ArchiveStream.SetLength(_ArchiveStream.Position);
+    }
+#endif
 
     /// <summary>Копирование данных из файла-источника в элемент архива</summary>
     /// <param name="entry">Элемент архива</param>
     /// <param name="Source">Источник</param>
+#if !NET8_0_OR_GREATER
     private void Store(Entry entry, Stream Source)
     {
         while (true)
@@ -815,6 +1099,55 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             entry.CompressedSize = (uint)(_ArchiveStream.Position - source_start);
         }
     }
+#else
+    private void Store(Entry entry, Stream Source)
+    {
+        Span<byte> buffer = stackalloc byte[0x4000];
+        while (true)
+        {
+            int bytes_read;
+            uint total_read = 0;
+
+            var pos_start = _ArchiveStream.Position;
+            var source_start = Source.Position;
+
+            var out_stream = entry.Compressed ? new DeflateStream(_ArchiveStream, CompressionMode.Compress, true) : _ArchiveStream;
+
+            entry.Crc32 = 0 ^ 0xffffffff;
+
+            do
+            {
+                bytes_read = Source.Read(buffer);
+                total_read += (uint)bytes_read;
+                if (bytes_read <= 0) continue;
+                out_stream.Write(buffer[..bytes_read]);
+
+                for (var i = 0; i < bytes_read; i++)
+                    entry.Crc32 = __CrcTable[(entry.Crc32 ^ buffer[i]) & 0xFF] ^ (entry.Crc32 >> 8);
+
+            } while (bytes_read == buffer.Length);
+            out_stream.Flush();
+
+            if (entry.Compressed)
+                out_stream.Dispose();
+
+            entry.Crc32 ^= 0xffffffff;
+            entry.FileSize = total_read;
+            entry.CompressedSize = (uint)(_ArchiveStream.Position - pos_start);
+
+            // Проверка реального уровня сжатия (если без сжатия, либо не включено принудительное сжатие, либо сжатый размер меньше исходного, то выход)
+            if (!entry.Compressed || ForceCompress || !Source.CanSeek || entry.CompressedSize <= entry.FileSize) return;
+
+            // Start operation again with Store algorithm
+            entry.Compressed = false;
+            _ArchiveStream.Seek(pos_start, SeekOrigin.Begin);
+            _ArchiveStream.SetLength(pos_start);
+            Source.Position = source_start;
+            Source.CopyTo(_ArchiveStream);
+            entry.CompressedSize = (uint)(_ArchiveStream.Position - source_start);
+        }
+    }
+#endif
 
     /// <summary>Копирование данных из файла-источника в элемент архива</summary>
     /// <param name="entry">Элемент архива</param>
@@ -973,7 +1306,8 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
     /// <returns>Истина, если чтение прошло успешно</returns>
     private void Initialize()
     {
-        if (_ArchiveStream.Length < 22) throw new FormatException("Размер файла меньше 22 байт - минимального размера пустого архива");
+        if (_ArchiveStream.Length < 22) 
+            throw new FormatException("Размер файла меньше 22 байт - минимального размера пустого архива");
 
         try
         {
@@ -981,10 +1315,14 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
             var reader = new BinaryReader(_ArchiveStream);
             do
             {
-                if (reader.ReadUInt32() != 0x06_05_4b_50) continue;
+                if (reader.ReadUInt32() != 0x06_05_4b_50) 
+                    continue;
+
                 var buffer             = new byte[22];
                 var readed_bytes_count = _ArchiveStream.Read(buffer, 4, buffer.Length - 4);
-                if (readed_bytes_count != 4) throw new FormatException("Сигнатура 0x06054b50 индекса архива не найдена");
+                if (readed_bytes_count != buffer.Length - 4) 
+                    throw new FormatException("Сигнатура 0x06054b50 индекса архива не найдена");
+
                 //var book_no = BitConverter.ToInt16(buffer, 4);
                 //var book_no_start = BitConverter.ToInt16(buffer, 6);
                 //var entries = BitConverter.ToInt16(buffer, 8);
@@ -1005,14 +1343,17 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
                 }
 
                 // Копирование индекса в память
-                _ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
+                //_ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
+                _ArchiveStream.Seek(-22 - central_size, SeekOrigin.End);
                 var central_dir_image = new byte[central_size];
                 _ = _ArchiveStream.Read(central_dir_image, 0, central_size);
                 _ArchiveEntries = new LambdaKeyedCollection<string, Entry>(e => e.FileNameInZip, EnumerateEntries(central_dir_image));
                 // Оставляем указатель на начале индекса для добавления новых файлов
-                _ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
+                _ArchiveStream.Seek(-22 - central_size, SeekOrigin.End);
+                //_ArchiveStream.Seek(central_dir_offset, SeekOrigin.Begin);
                 return;
-            } while (_ArchiveStream.Position > 0);
+            } 
+            while (_ArchiveStream.Position > 0);
         }
         catch (Exception e)
         {
@@ -1078,7 +1419,7 @@ public sealed partial class Zip : IEnumerable<Zip.Entry>, IDisposable
         throw new FormatException("Сигнатура 0x06054b50 индекса архива не найдена");
     }
 
-    #endregion
+#endregion
 
     #region IDisposable
 

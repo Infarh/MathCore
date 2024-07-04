@@ -70,6 +70,7 @@ public partial class TarGZip
 
         public MemoryStream Data => ReadData();
 
+#if !NET8_0_OR_GREATER
         internal Entry(BinaryReader reader)
         {
             _Reader = reader;
@@ -100,6 +101,48 @@ public partial class TarGZip
             DevMinor = BitConverter.ToUInt64(buffer, 337);
             Prefix = encoding.GetString(buffer, 345, 155).Trim('\0');
         }
+#else
+        internal Entry(BinaryReader reader)
+        {
+            _Reader = reader;
+            Span<byte> buffer = stackalloc byte[__BufferLength];
+            if (reader.Read(buffer) != __BufferLength)
+                throw new FormatException("Ошибка формата заголовка элемента архива");
+
+            var encoding = Encoding.ASCII;
+            Name = encoding.GetString(buffer[..100].TrimEnd((byte)0));
+
+            var buffer_ulong = buffer[100..].Cast<ulong>();
+            Mode = buffer_ulong[0];
+            UserID = buffer_ulong[1];
+            GroupID = buffer_ulong[2];
+
+            Size = int.Parse(encoding.GetString(buffer.Slice(124, 12).TrimEnd((byte)0))).FromOctalBase();
+
+            buffer_ulong = buffer[148..].Cast<ulong>();
+            // Time
+            CheckSum = buffer_ulong[0];
+            TypeFlag = (EntryTypeFlag)buffer[156];
+            LinkName = encoding.GetString(buffer.Slice(157, 100).TrimEnd((byte)0));
+
+            var magic = encoding.GetString(buffer.Slice(257, 6));
+            if(buffer.Slice(257, 6) != "ustar\0"u8) throw new FormatException("Ошибка магического числа заголовка элемента архива");
+            //if (magic != "ustar\x00") throw new FormatException("Ошибка магического числа заголовка элемента архива");
+
+            Magic = magic;
+
+            var buffer_ushort = buffer[263..].Cast<ushort>();
+            Version = buffer_ushort[0];
+            UserName = encoding.GetString(buffer.Slice(265, 32).TrimEnd((byte)0));
+            GroupName = encoding.GetString(buffer.Slice(297, 32).TrimEnd((byte)0));
+
+
+            buffer_ulong = buffer[329..].Cast<ulong>();
+            DevMajor = buffer_ulong[0];
+            DevMinor = buffer_ulong[1];
+            Prefix = encoding.GetString(buffer.Slice(345, 155).TrimEnd((byte)0));
+        }
+#endif
 
         public MemoryStream ReadData()
         {

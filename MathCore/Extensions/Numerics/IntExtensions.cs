@@ -295,7 +295,7 @@ public static class IntExtensions
     /// <param name="mod">Модуль</param>
     /// <returns>Остаток от деления</returns>
     [DST]
-    public static int GetAbsMod(this int x, int mod) => (x % mod) + (x < 0 ? mod : 0);
+    public static int GetAbsMod(this int x, int mod) => (mod + x % mod) % mod;
 
     /// <summary>Получить абсолютное значение числа</summary>
     /// <param name="x">Вещественное число</param>
