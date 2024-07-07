@@ -24,6 +24,35 @@ namespace System.Linq;
 [PublicAPI]
 public static partial class IEnumerableExtensions
 {
+    public static string ToArrayFormattedString<T>(this IEnumerable<T> items, Func<T, string>? formatter = null, string? separator = ", ")
+    {
+        var result = new StringBuilder().Append('[');
+
+        if(formatter is null)
+        {
+            if (separator is { Length: > 0 })
+                foreach (var item in items)
+                    result.Append(item).Append(separator);
+            else
+                foreach (var item in items)
+                    result.Append(item);
+        }
+        else
+        {
+            if (separator is { Length: > 0 })
+                foreach (var item in items)
+                    result.Append(formatter(item)).Append(separator);
+            else
+                foreach (var item in items)
+                    result.Append(formatter(item));
+        }
+
+        if (separator is { Length: > 0 } && result.Length > 0)
+            result.Length -= separator.Length;
+
+        return result.Append(']').ToString();
+    }
+
     public static string Sum(this IEnumerable<string> strings)
     {
         var result = new StringBuilder();

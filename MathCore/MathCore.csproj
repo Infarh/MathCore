@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.92-alpha</Version>
+    <Version>0.0.92.0</Version>
     <PackageReleaseNotes>
       Добавлен многомерный линейный интерполятор на основе дерева
     </PackageReleaseNotes>
@@ -21,7 +21,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Copyright>shmachilin@gmail.com</Copyright>
+    <Copyright>shmachilin@yandex.ru</Copyright>
     <Authors>Shmachilin P.A.</Authors>
     <PackageProjectUrl>github.com/infarh/mathcore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/infarh/mathcore.git</RepositoryUrl>

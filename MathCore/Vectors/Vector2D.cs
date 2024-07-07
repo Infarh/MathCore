@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.ComponentModel;
+using System.Text;
 using System.Xml.Serialization;
 
 using static System.Math;
@@ -18,7 +19,8 @@ public readonly struct Vector2D :
     IEquatable<(double X, double Y)>,
     IEquatable<(int X, double Y)>,
     IEquatable<(double X, int Y)>,
-    IEquatable<(int X, int Y)>
+    IEquatable<(int X, int Y)>,
+    IFormattable
 {
     public static readonly Vector2D Zero = new();
 
@@ -51,7 +53,7 @@ public readonly struct Vector2D :
     /// <param name="Y">Координата Y</param>
     public Vector2D(double X, double Y) => (_X, _Y) = (X, Y);
 
-    /// <summary>Инициализация вектора по по комплексному числу</summary>
+    /// <summary>Инициализация вектора по комплексному числу</summary>
     /// <param name="Z">Комплексное число X + iY</param>
     private Vector2D(Complex Z) => (_X, _Y) = Z;
 
@@ -62,6 +64,11 @@ public readonly struct Vector2D :
 
     /// <inheritdoc />
     public override string ToString() => $"({X};{Y})";
+
+    public string ToString(string format, IFormatProvider FormatProvider) => new StringBuilder("(")
+        .Append(X.ToString(format, FormatProvider)).Append(';')
+        .Append(Y.ToString(format, FormatProvider)).Append(')')
+        .ToString();
 
     /// <inheritdoc />
     public Vector2D Clone() => new(_X, _Y);
@@ -154,31 +161,31 @@ public readonly struct Vector2D :
     public static explicit operator Complex(Vector2D P) => new(P._X, P._Y);
 
     /// <summary>Оператор явного преобразования типа <see cref="Vector2D"/> в <see cref="Complex"/></summary>
-    public static explicit operator (double X, double Y)(Vector2D P) => (P._X, P._Y);
+    public static implicit operator (double X, double Y)(Vector2D P) => (P._X, P._Y);
 
     /// <summary>Оператор явного преобразования типа <see cref="Vector2D"/> в <see cref="Complex"/></summary>
-    public static explicit operator (int X, double Y)(Vector2D P) => ((int)P._X, P._Y);
+    public static implicit operator (int X, double Y)(Vector2D P) => ((int)P._X, P._Y);
 
     /// <summary>Оператор явного преобразования типа <see cref="Vector2D"/> в <see cref="Complex"/></summary>
-    public static explicit operator (double X, int Y)(Vector2D P) => (P._X, (int)P._Y);
+    public static implicit operator (double X, int Y)(Vector2D P) => (P._X, (int)P._Y);
 
     /// <summary>Оператор явного преобразования типа <see cref="Vector2D"/> в <see cref="Complex"/></summary>
-    public static explicit operator (int X, int Y)(Vector2D P) => ((int)P._X, (int)P._Y);
+    public static implicit operator (int X, int Y)(Vector2D P) => ((int)P._X, (int)P._Y);
 
     /// <summary>Оператор явного преобразования типа <see cref="Complex"/> в <see cref="Vector2D"/></summary>
     public static explicit operator Vector2D(Complex Z) => new(Z);
 
     /// <summary>Оператор явного преобразования типа <see cref="Complex"/> в <see cref="Vector2D"/></summary>
-    public static explicit operator Vector2D((double X, double Y) Z) => new(Z);
+    public static implicit operator Vector2D((double X, double Y) Z) => new(Z);
 
     /// <summary>Оператор явного преобразования типа <see cref="Complex"/> в <see cref="Vector2D"/></summary>
-    public static explicit operator Vector2D((int X, double Y) Z) => new(Z);
+    public static implicit operator Vector2D((int X, double Y) Z) => new(Z);
 
     /// <summary>Оператор явного преобразования типа <see cref="Complex"/> в <see cref="Vector2D"/></summary>
-    public static explicit operator Vector2D((double X, int Y) Z) => new(Z);
+    public static implicit operator Vector2D((double X, int Y) Z) => new(Z);
 
     /// <summary>Оператор явного преобразования типа <see cref="Complex"/> в <see cref="Vector2D"/></summary>
-    public static explicit operator Vector2D((int X, int Y) Z) => new(Z);
+    public static implicit operator Vector2D((int X, int Y) Z) => new(Z);
 
     /// <summary>Оператор неявного преобразования типа <see cref="double"/> в <see cref="Vector2D"/> (вектор вдоль оси OX)</summary>
     public static implicit operator Vector2D(double x) => new(x, 0);

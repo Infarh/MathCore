@@ -3,11 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxy="http://oxyplot.org/wpf/contrib"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:l="clr-namespace:MathCore.Tests.WPF"
         xmlns:vm="clr-namespace:MathCore.Tests.WPF.ViewModels"
         Title="MainWindow"
-        Height="500" Width="800"
-        MinHeight="500">
+        FontSize="24"
+         Width="800" Height="1000"
+        MinHeight="1000">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -15,47 +18,65 @@
         <Style TargetType="Button" BasedOn="{StaticResource BS-Btn-Outline-Primary}"/>
         <Style TargetType="TextBox" BasedOn="{StaticResource BS-Txb-Outline-Primary}"/>
     </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadDataCommand}"
+                                   CommandParameter="./InterpolatorNDData.zip"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid Margin="10">
         <DockPanel>
             <UniformGrid DockPanel.Dock="Top" Rows="1" HorizontalAlignment="Left">
                 <Button Content="Load data file" Command="{Binding LoadDataCommand}"/>
                 <Button Content="Calculate" Command="{Binding CalculateValueCommand}"/>
             </UniformGrid>
-            <StackPanel>
-                <HeaderedContentControl Header="dT">
+            <StackPanel DockPanel.Dock="Top">
+                <HeaderedContentControl>
+                    <HeaderedContentControl.Header>
+                        <CheckBox Content="dT" IsChecked="{Binding ValueTGraph}" VerticalContentAlignment="Center" Focusable="False"/>
+                    </HeaderedContentControl.Header>
                     <StackPanel>
                         <TextBox Text="{Binding ValueT, StringFormat=0.##}"/>
-                        <Slider Margin="4" Value="{Binding ValueT, Delay=100}" Delay="100"
+                        <Slider Margin="4" Value="{Binding ValueT}" Delay="100"
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="3"
                                 TickFrequency="1" TickPlacement="TopLeft"
                                 Minimum="0" Maximum="20" Interval="100"
                                 SmallChange="0.1" LargeChange="1.0"/>
                     </StackPanel>
                 </HeaderedContentControl>
-                <HeaderedContentControl Header="H">
+                <HeaderedContentControl>
+                    <HeaderedContentControl.Header>
+                        <CheckBox Content="H" IsChecked="{Binding ValueHGraph}" VerticalContentAlignment="Center" Focusable="False"/>
+                    </HeaderedContentControl.Header>
                     <StackPanel>
                         <TextBox Text="{Binding ValueH, StringFormat=0.#}"/>
-                        <Slider Margin="4" Value="{Binding ValueH, Delay=100}" Delay="100"
+                        <Slider Margin="4" Value="{Binding ValueH}" Delay="100"
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"
                                 TickFrequency="1000" TickPlacement="TopLeft"
                                 Minimum="10668" Maximum="12192" Interval="100"
-                                SmallChange="100" LargeChange="1000"/>
+                                SmallChange="10" LargeChange="100"/>
                     </StackPanel>
                 </HeaderedContentControl>
-                <HeaderedContentControl Header="G">
+                <HeaderedContentControl>
+                    <HeaderedContentControl.Header>
+                        <CheckBox Content="G" IsChecked="{Binding ValueGGraph}" VerticalContentAlignment="Center"/>
+                    </HeaderedContentControl.Header>
                     <StackPanel>
                         <TextBox Text="{Binding ValueG, StringFormat=f0}"/>
-                        <Slider Margin="4" Value="{Binding ValueG, Delay=100}" Delay="100"
+                        <Slider Margin="4" Value="{Binding ValueG}" Delay="100"
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"
                                 TickFrequency="1000" TickPlacement="TopLeft"
                                 Minimum="28000" Maximum="52000" Interval="100"
                                 SmallChange="100" LargeChange="1000"/>
                     </StackPanel>
                 </HeaderedContentControl>
-                <HeaderedContentControl Header="M">
+                <HeaderedContentControl>
+                    <HeaderedContentControl.Header>
+                        <CheckBox Content="M" IsChecked="{Binding ValueMGraph}" VerticalContentAlignment="Center"/>
+                    </HeaderedContentControl.Header>
                     <StackPanel>
                         <TextBox Text="{Binding ValueM, StringFormat=0.0####}"/>
-                        <Slider Margin="4" Value="{Binding ValueM, Delay=100}" Delay="100" 
+                        <Slider Margin="4" Value="{Binding ValueM}" Delay="100" 
                                 AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="3"
                                 TickFrequency="0.01" TickPlacement="TopLeft"
                                 Minimum="0.45" Maximum="0.82" Interval="100"
@@ -64,10 +85,36 @@
                 </HeaderedContentControl>
                 <HeaderedContentControl Header="SAR">
                     <StackPanel>
-                        <TextBox IsReadOnly="true" Text="{Binding ValueSAR, Mode=OneWay, StringFormat=0.0#####, IsAsync=true}"/>
+                        <TextBox IsReadOnly="true" Text="{Binding ValueSAR, Mode=OneWay, StringFormat=0.0#####}"/>
                     </StackPanel>
                 </HeaderedContentControl>
             </StackPanel>
+            <Border>
+                <oxy:Plot>
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Position="Bottom" 
+                                        Title="{Binding ArgumentName}"
+                                        MajorGridlineColor="Gray"
+                                        MinorGridlineColor="LightGray"
+                                        MajorGridlineStyle="Dash"
+                                        MinorGridlineStyle="Dot"
+                                        />
+                        <oxy:LinearAxis Position="Left" 
+                                        Title="SAR"
+                                        MajorGridlineColor="Gray"
+                                        MinorGridlineColor="LightGray"
+                                        MajorGridlineStyle="Dash"
+                                        MinorGridlineStyle="Dot"
+                                        />
+                    </oxy:Plot.Axes>
+                    <oxy:Plot.Series>
+                        <oxy:LineSeries ItemsSource="{Binding GraphSAR}"
+                                         Color="Red"
+                                         BorderThickness="2"/>
+                    </oxy:Plot.Series>
+                </oxy:Plot>
+                <!--<ListBox ItemsSource="{Binding GraphSAR}"></ListBox>-->
+            </Border>
         </DockPanel>
     </Grid>
 </Window>

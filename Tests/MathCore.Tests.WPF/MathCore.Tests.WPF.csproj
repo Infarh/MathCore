@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="MathCore.WPF" Version="0.0.47" />
+    <PackageReference Include="OxyPlot.Contrib.Wpf" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <None Update="InterpolatorNDData.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 
