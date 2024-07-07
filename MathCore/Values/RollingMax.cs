@@ -13,10 +13,8 @@ public static class RollingMax
 
     public readonly ref struct RollingMaxBuilder<T>(int Count, IEnumerable<T> items)
     {
-        //public RollingMax<T> New(IComparer<T> comparer) => new RollingMax<T>(Count, comparer) + items;
         public RollingMax<T> New(Comparison<T> comparer) => new RollingMax<T>(Count, comparer) + items;
 
-        public void VV(Func<T, int> Comparer){}
     }
 }
 
@@ -27,7 +25,7 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     { }
 
     public RollingMax(int MaxCount, Comparison<T> comparison, bool Inverted = false)
-        : this(MaxCount, LambdaComparer.New(comparison), Inverted) { }
+        : this(MaxCount, Comparer<T>.Create(comparison), Inverted) { }
 
     private int _Index;
     private int _Count;
@@ -45,6 +43,8 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     public int MaxCount => _Buffer.Length;
 
     public bool Inverted { get; } = Inverted;
+
+    public Interval<T> Interval => new(this[-1], this[0]);
 
     public T this[int index]
     {
@@ -88,26 +88,42 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
         }
         else
         {
+            // [6,1]
+            // [6,2,1]
+            // [6,3,2,1]
+            // [6,4,3,2,1]
+            // [6,5,4,3,2]
+            // [6,6,5,4,3]
+
+            // Если value < head - меньше ведущего элемента,
+            // то, возможно, элемент надо поместить в хвост
             if (comparer.Compare(value, head) < 0)
             {
+                // Сравниваем элемент с последним элементом в хвосте
                 switch (comparer.Compare(value, this[-1]))
                 {
-                    case 0 when _Count < MaxCount - 1:
-                        _Count++;
-                        this[-1] = value;
-                        break;
+                    #region Если добавляемый элемент равен последнему элементу в хвосте
+                    // ... и в хвосте есть ещё пустые места
+                    // .., то добавляем элемент последним в хвост.
+                    case 0 when _Count < MaxCount - 1: Grow(); this[-1] = value; break;
 
-                    case 0:
-                        this[-1] = value;
-                        break;
+                    // ... и в хвосте нет больше места
+                    // .., то записываем элемент последним в хвосте
+                    case 0: this[-1] = value; break; 
+                    #endregion
 
+                    // Если элемент больше чем последний элемент хвоста
+                    // ... и в списке всего 2 элемента
+                    // .., то увеличиваем размер списка
+                    // .., бывший последний элемент делаем текущим последним
+                    // .., а на освободившееся места устанавливаем добавляемый элемент
                     case >0 when _Count == 2:
-                        _Count++;
+                        Grow();
                         (this[-1], this[-2]) = (this[-2], value);
                         break;
 
                     case <0 when _Count == 1:
-                        _Count++;
+                        Grow();
                         this[-1] = value;
                         break;
 
@@ -124,14 +140,22 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
             }
         }
 
-        if (_Count < MaxCount)
-            _Count++;
+        // Тут мы оказываемся если у нас новый максимум,
+        // и его надо добавить в голову.
+        Grow();
 
         _Index++;
 
         this[0] = value;
 
         return value;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void Grow()
+    {
+        if (_Count < MaxCount)
+            _Count++;
     }
 
     public void Add(params IEnumerable<T> items)

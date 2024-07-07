@@ -1,4 +1,5 @@
-﻿using System.Collections.Frozen;
+﻿using System.Collections;
+using System.Collections.Frozen;
 
 using MathCore.Values;
 
@@ -37,11 +38,19 @@ public class RollingMaxTests
         int[] values = [6, 1, 2, 3, 4, 5, 6];
         var expected_max = values.OrderDescending().Take(5);
 
+        
+
         var max = new RollingMax<int>(5);
 
+        // [6]
+        // [6,1]
+        // [6,2,1]
+        // [6,3,2,1]
+        // [6,4,3,2,1]
+        // [6,5,4,3,2]
+        // [6,6,5,4,3]
         foreach (var value in values)
             max.Add(value);
-
     }
 
     [TestMethod]
