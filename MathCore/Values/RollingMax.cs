@@ -99,40 +99,45 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
             // то, возможно, элемент надо поместить в хвост
             if (comparer.Compare(value, head) < 0)
             {
-                // Сравниваем элемент с последним элементом в хвосте
-                switch (comparer.Compare(value, this[-1]))
+                if (_Count == 1)
+                {
+                    if(Grow())
+                        this[-1] = value;
+                }
+                else switch (comparer.Compare(value, this[-1])) // Сравниваем элемент с последним элементом в хвосте
                 {
                     #region Если добавляемый элемент равен последнему элементу в хвосте
-                    // ... и в хвосте есть ещё пустые места
-                    // .., то добавляем элемент последним в хвост.
-                    case 0 when _Count < MaxCount - 1: Grow(); this[-1] = value; break;
-
                     // ... и в хвосте нет больше места
                     // .., то записываем элемент последним в хвосте
-                    case 0: this[-1] = value; break; 
+                    case 0:
+                        Grow();
+                        this[-1] = value; 
+                        break; 
                     #endregion
 
                     // Если элемент больше чем последний элемент хвоста
-                    // ... и в списке всего 2 элемента
-                    // .., то увеличиваем размер списка
-                    // .., бывший последний элемент делаем текущим последним
-                    // .., а на освободившееся места устанавливаем добавляемый элемент
-                    case >0 when _Count == 2:
-                        Grow();
-                        (this[-1], this[-2]) = (this[-2], value);
-                        break;
-
-                    case <0 when _Count == 1:
-                        Grow();
-                        this[-1] = value;
-                        break;
-
-                    case <0:
-                        for (var (i, count) = (1, _Count - 1); i < count; i++)
+                    case >0:
+                        if (_Count == 2 & Grow()) // именно "&"! Местами операнды не менять!
                         {
-                            var cmp = comparer.Compare(value, this[i]);
-                            if(cmp < 0) continue;
+                            (this[-1], this[-2]) = (this[-2], value);
+                            break;
                         }
+
+                        var set = false;
+                        for (var i = 2; i < _Count; i++)
+                        {
+                            this[-(i - 1)] = this[-i];
+                            if (comparer.Compare(value, this[-i]) >= 0) continue;
+
+                            set = true;
+                            this[-i] = value;
+                            break;
+
+                        }
+
+                        if(!set)
+                            this[1] = value;
+
                         break;
                 }
 
@@ -152,10 +157,11 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Grow()
+    private bool Grow()
     {
-        if (_Count < MaxCount)
-            _Count++;
+        if (_Count >= MaxCount) return false;
+        _Count++;
+        return true;
     }
 
     public void Add(params IEnumerable<T> items)
