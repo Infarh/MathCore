@@ -1,5 +1,30 @@
 ﻿# Структура файла Zip
 
+Файл состоит из набора структур (файлов).
+
+Каждый файл представляет собой конструкцию
+- `LocalFileHeader`
+- `Тело файла`
+- Опциональная структура `Data descriptor`.
+
+`LocalFileHeader` хранит информацию о файле:
+- размер сжатый/не сжатый
+- имя
+- crc32:`0xEDB88320`
+- о наличии опциональной стркутуры `Data descriptor` после завершения тела файла
+
+`Data descriptor` хранит информацию о:
+- размере сжатом/не сжатом
+- crc32:`0xEDB88320`
+
+Данная структура появляется лишь в том случае, если архив записывается 
+в однопоточном режиме, и отсутствует возможность вернуться в `LocalFileHeader`
+и дописать туда данные, которые становятся известны лишь по завершении
+процесса сжатия потока байт файла. К примеру, когда архив формируется
+"на лету" записываясь сразу в выходной поток сетевого соединения.
+
+## Структура упаковки файлов
+
 - LocalFileHeader
     + Data
     + Data descriptor (crc32, compressed, uncompressed)
@@ -19,7 +44,9 @@
     + ...
     + File entry N
 
-## LocalFileHeader
+## `LocalFileHeader`
+
+Запись файла начинается с 4 байт сигнатуры `0x04034b50`
 
 Off | Len   | Description
 ---:|:------|------------
@@ -30,29 +57,29 @@ Off | Len   | Description
 10  | 2     | Время модификации файла
 12  | 2     | Дата модификации файла
 14  | 4     | CRC32(0xEDB88320)
-18  | 4     | Сжатый размер файла
-22  | 4     | Несжатый размер файла
+18  | 4     | Сжатый размер файла (либо 0xFFFFFFFF если не известен на начало записи потока в архив)
+22  | 4     | Несжатый размер файла (либо 0xFFFFFFFF если не известен на начало записи потока в архив)
 26  | 4     | Длина массива байт имени файла
 30  | 4     | Длина поля с дополнительными данными
 
 ### Flags
 
-General purpose bit flag:
+#### Бит общего назначения (off:6;len:2)
 
-- Bit 00: encrypted file
-- Bit 01: compression option
-- Bit 02: compression option
-- Bit 03: data descriptor
-- Bit 04: enhanced deflation
-- Bit 05: compressed patched data
-- Bit 06: strong encryption
-- Bit 07-10: unused
+- Bit  0: encrypted file
+- Bit  1: compression option
+- Bit  2: compression option
+- Bit  3: data descriptor
+- Bit  4: enhanced deflation
+- Bit  5: compressed patched data
+- Bit  6: strong encryption
+- Bit  7-10: unused
 - Bit 11: language encoding
 - Bit 12: reserved
 - Bit 13: mask header values
 - Bit 14-15: reserved
 
-### Compression method
+### Метод сжатия
 
 - 00: no compression
 - 01: shrunk
@@ -74,35 +101,37 @@ General purpose bit flag:
 - 19: IBM LZ77 z
 - 98: PPMd version I, Rev 1
 
-### Time
+### Время модификации файла
 
-stored in standard MS-DOS format:
-- Bits 00-04: seconds divided by 2
-- Bits 05-10: minute
-- Bits 11-15: hour
+для хранения времени используется MS-DOS формат:
+- Bits 00-04: секунды, делёные на 2
+- Bits 05-10: минуты
+- Bits 11-15: часы
 
 0x7d1c = 0111110100011100
-- hour = (01111)10100011100 = 15
-- minute = 01111(101000)11100 = 40
-- second = 01111101000(11100) = 28 = 56 seconds
+- часы = (01111)10100011100 = 15
+- минуты = 01111(101000)11100 = 40
+- секунды = 01111101000(11100) = 28 = 56 секунд
 
 15:40:56
 
-### Date
+### Дата модификации файла
 
-stored in standard MS-DOS format:
-- Bits 00-04: day
-- Bits 05-08: month
-- Bits 09-15: years from 1980
+для хранения даты используется MS-DOS фломат:
+- Bits 00-04: день
+- Bits 05-08: месяц
+- Bits 09-15: год, начиная от 1980
 
 0x354b = 0011010101001011
-- year = (0011010)101001011 = 26
-- month = 0011010(1010)01011 = 10
-- day = 00110101010(01011) = 11
+- год = (0011010)101001011 = 26 :: 26 + 1980 = 2006
+- месяц = 0011010(1010)01011 = 10
+- день = 00110101010(01011) = 11
 
-10/11/2006
+11.10.2006
 
-## Central directory file header
+## `Central directory file header`
+
+Запись файла начинается с 4 байт сигнатуры `0x02014b50`
 
 Off | Len   | Description
 ---:|:------|------------
@@ -110,23 +139,23 @@ Off | Len   | Description
  4  | 2     | Версия
  6  | 2     | Версия для распаковки
  8  | 2     | Флаги
-10  | 2     | Сжатие
+10  | 2     | Метод сжатия
 12  | 2     | Время модификации
 14  | 2     | Дата модификации
-16  | 4     | crc32
+16  | 4     | CRC32(0xEDB88320)
 20  | 4     | Сжатый размер
 24  | 4     | Несжатый размер
 28  | 2     | Длина имени файла
 30  | 2     | Длина дополнительного поля данных
-32  | 2     | File common length
-34  | 2     | Disk # start
-36  | 2     | Internal attributes
-38  | 4     | External attributes
-42  | 4     | Offset of local header
+32  | 2     | Длина комментария к файлу
+34  | 2     | Номер текущего диска
+36  | 2     | Внутренние атрибуты файла
+38  | 4     | Внешние атрибуты файла
+42  | 4     | Смещение от начала файла архива до места расположения данных упакованного файла. Там должна быть сигнатура `0x04034b50`.
 
-### Version
+### Версия
 
-upper byte:
+старый байт:
 - 0 - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
 - 1 - Amiga
 - 2 - OpenVMS
@@ -149,8 +178,8 @@ upper byte:
 - 19 - OS/X (Darwin)
 - 20 - 255: unused
 
-lower byte:
-- zip specification version
+младший байт:
+- Версия спецификации zip
 
 ### General propose bit
 - Bit 00: encrypted file
