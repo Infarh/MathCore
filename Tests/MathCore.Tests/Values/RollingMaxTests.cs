@@ -35,21 +35,21 @@ public class RollingMaxTests
     [TestMethod]
     public void MaxWithRepeatValuesDiff()
     {
-        int[] values = [6, 1, 2, 3, 4, 5, 6];
+        int[] values = [7, 1, 3, 2, 4, 5, 6, 7];
         var expected_max = values.OrderDescending().Take(5);
-
-        
 
         var max = new RollingMax<int>(5);
 
-        // [6]
-        // [6,1]
-        // [6,2,1]
-        // [6,3,2,1]
-        // [6,4,3,2,1]
-        // [6,5,4,3,2]
-        // [6,6,5,4,3]
-        foreach (var value in values)
+        // []          << 7
+        // [7]         << 1
+        // [7,1]       << 3
+        // [7,3,1]     << 2
+        // [7,3,2,1]   << 4
+        // [7,4,3,2,1] << 5
+        // [7,5,4,3,2] << 6
+        // [7,6,5,4,3] << 7
+        // [7,7,6,5,4]
+        foreach (var value in values) 
             max.Add(value);
     }
 

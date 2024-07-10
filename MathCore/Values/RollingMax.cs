@@ -66,45 +66,62 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
 
         var head = this[0];
 
-        var comparer = _Comparer;
+        bool set;
         if (Inverted)
         {
-            if (comparer.Compare(value, head) > 0)
+            if (_Comparer.Compare(value, head) > 0)
             {
-                if (_Count == 1) return head;
-
-                switch (comparer.Compare(value, this[-1]))
+                if (_Count == 1)
                 {
+                    if (Grow())
+                        this[-1] = value;
+                }
+                else switch (_Comparer.Compare(value, this[-1])) // Сравниваем элемент с последним элементом в хвосте
+                {
+                    #region Если добавляемый элемент равен последнему элементу в хвосте
                     case 0:
+                        Grow();
                         this[-1] = value;
                         break;
-                    case <0:
+                    #endregion
+
+                    case < 0:
+                        if (_Count == 2 & Grow()) // именно "&"! Местами операнды не менять!
+                        {
+                            (this[-1], this[-2]) = (this[-2], value);
+                            break;
+                        }
+
+                        set = false;
+                        for (var i = 2; i < _Count; this[-(i - 1)] = this[-i], i++)
+                            if (_Comparer.Compare(value, this[-i]) > 0)
+                            {
+                                set = true;
+                                this[-(i - 1)] = value;
+                                break;
+                            }
+
+                        if (!set)
+                            this[1] = value;
 
                         break;
-        }
+                }
 
                 return head;
             }
         }
         else
         {
-            // [6,1]
-            // [6,2,1]
-            // [6,3,2,1]
-            // [6,4,3,2,1]
-            // [6,5,4,3,2]
-            // [6,6,5,4,3]
-
             // Если value < head - меньше ведущего элемента,
             // то, возможно, элемент надо поместить в хвост
-            if (comparer.Compare(value, head) < 0)
+            if (_Comparer.Compare(value, head) < 0)
             {
                 if (_Count == 1)
                 {
                     if(Grow())
                         this[-1] = value;
                 }
-                else switch (comparer.Compare(value, this[-1])) // Сравниваем элемент с последним элементом в хвосте
+                else switch (_Comparer.Compare(value, this[-1])) // Сравниваем элемент с последним элементом в хвосте
                 {
                     #region Если добавляемый элемент равен последнему элементу в хвосте
                     // ... и в хвосте нет больше места
@@ -123,17 +140,14 @@ public class RollingMax<T>(T[] Buffer, IComparer<T>? Comparer = null, bool Inver
                             break;
                         }
 
-                        var set = false;
-                        for (var i = 2; i < _Count; i++)
-                        {
-                            this[-(i - 1)] = this[-i];
-                            if (comparer.Compare(value, this[-i]) >= 0) continue;
-
-                            set = true;
-                            this[-i] = value;
-                            break;
-
-                        }
+                        set = false;
+                        for (var i = 2; i < _Count; this[-(i - 1)] = this[-i], i++)
+                            if (_Comparer.Compare(value, this[-i]) < 0)
+                            {
+                                set = true;
+                                this[-(i - 1)] = value;
+                                break;
+                            }
 
                         if(!set)
                             this[1] = value;
