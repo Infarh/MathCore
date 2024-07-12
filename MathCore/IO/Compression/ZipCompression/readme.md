@@ -1,4 +1,18 @@
-﻿# Структура файла Zip
+﻿<style>
+mark{
+    color:red;
+}
+
+#zip{
+    color:red;
+}
+</style>
+
+# Структура файла Zip
+
+
+
+<mark>what is DataBase</mark>
 
 Файл состоит из набора структур (файлов).
 
