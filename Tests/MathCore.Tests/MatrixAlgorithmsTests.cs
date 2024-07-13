@@ -7,6 +7,45 @@ namespace MathCore.Tests;
 public class MatrixAlgorithmsTests
 {
     [TestMethod]
+    public void TridiagonalAlgorithm()
+    {
+        // https://en.wikibooks.org/wiki/Algorithm_Implementation/Linear_Algebra/Tridiagonal_matrix_algorithm#C++
+
+        double[] a = [-1, -1, -1];
+        double[] b = [+4, +4, +4, +4];
+        double[] c = [-1, -1, -1];
+        double[] d = [+5, +5, 10, 23];
+
+        // | 4 -1       | |x0 = 2| = |  5 |  4 * 2 -1 * 3        =  8  -3    =   5
+        // |-1  4 -1    | |x1 = 3| = |  5 | -1 * 2 +4 * 3 -1 * 5 = -2 +12 -5 =   5
+        // |   -1  4 -1 | |x2 = 5| = | 10 | -1 * 3 +4 * 5 -1 * 7 = -3 +20 -7  = 10
+        // |      -1  4 | |x3 = 7| = | 23 | -1 * 5 +4 * 7        = -5 +28     = 23
+
+
+        double[] expected = [+2, +3, +5, +7];
+
+        var actual = Matrix.TridiagonalAlgorithm(a, b, c, d);
+
+        actual.AssertEquals(expected);
+    }
+
+    [TestMethod]
+    public void TridiagonalAlgorithm1()
+    {
+        double[] a = [-1, +2, -1];
+        double[] b = [+8, +6, 10, +6];
+        double[] c = [-2, -2, -4];
+        double[] d = [+6, +3, +8, +5];
+
+
+        double[] expected = [+1, +1, +1, +1];
+
+        var actual = Matrix.TridiagonalAlgorithm(a, b, c, d);
+
+        actual.AssertEquals(expected);
+    }
+
+    [TestMethod]
     public void CrateZTransformMatrixArray()
     {
         // http://we.easyelectronics.ru/Theory/cifrovye-rekursivnye-filtry-chast-2.html
@@ -31,7 +70,6 @@ public class MatrixAlgorithmsTests
         //    /*15*/ {    15,   -13,   11,   -9,   7,  -5,   3,  -1,  -1,   3,  -5,   7,   -9,   11,   -13,   15 },
         //    /*16*/ {    -1,     1,   -1,    1,  -1,   1,  -1,   1,  -1,   1,  -1,   1,   -1,    1,    -1,    1 },
         //};
-
         static int[,] CreateExpectedMatrix(int MatrixOrder)
         {
             var matrix = new int[MatrixOrder, MatrixOrder];
@@ -45,24 +83,21 @@ public class MatrixAlgorithmsTests
                     matrix[i, j] = matrix[i, j - 1] + matrix[i - 1, j - 1];
 
                 for (var k = 0; k < j; k++)
-                {
-                    var last = matrix[0, k];
-                    for (var i = 1; i < MatrixOrder; i++)
+                    for (var (i, last) = (1, matrix[0, k]); i < MatrixOrder; i++)
                     {
                         var tmp = matrix[i, k];
                         matrix[i, k] -= last;
-                        last     =  tmp;
+                        last = tmp;
                     }
-                }
             }
 
             return matrix;
         }
 
-        const int order    = 16;
+        const int order = 16;
         var expected_matrix = CreateExpectedMatrix(order);
 
-        var actual_matrix       = Matrix.GetZTransformMatrix(order);
+        var actual_matrix = Matrix.GetZTransformMatrix(order);
         var actual_matrix_array = actual_matrix.GetData();
 
         try
