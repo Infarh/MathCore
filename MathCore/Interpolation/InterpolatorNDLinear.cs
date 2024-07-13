@@ -174,13 +174,13 @@ public class InterpolatorNDLinear
 
                 if (tail_args.Length > 0)
                 {
-                    var node = new ValueTreeNode(head_arg, new());
+                    var node = new ValueTreeNode(head_arg, []);
                     nodes.Insert(ind, node);
                     node.Add(tail_args, value);
                 }
                 else
                 {
-                    nodes.Insert(ind, new ValueTreeNode(head_arg, new(1) { new(value) }));
+                    nodes.Insert(ind, new ValueTreeNode(head_arg, [new(value)]));
                 }
             }
         }

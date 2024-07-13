@@ -160,7 +160,7 @@ public static class INotifyCollectionChangedExtensions
     {
         lock (__Subscribers)
         {
-            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new()) ?? throw new InvalidOperationException();
+            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => []) ?? throw new InvalidOperationException();
             var object_subscriber = object_subscribers.GetValueOrAddNew(ChangeType, () => new CollectionChangesSubscriber<T, TItem>(obj, ChangeType)) ?? throw new InvalidOperationException();
             object_subscriber.OnCollectionChangedEvent += Handler;
         }
@@ -191,7 +191,7 @@ public static class INotifyCollectionChangedExtensions
     {
         lock (__Subscribers)
         {
-            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new()) ?? throw new InvalidOperationException();
+            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => []) ?? throw new InvalidOperationException();
             return (CollectionChangesSubscriber<T, TItem>)object_subscribers.GetValueOrAddNew(ChangeType, () => new CollectionChangesSubscriber<T, TItem>(obj, ChangeType)) ?? throw new InvalidOperationException();
         }
     }

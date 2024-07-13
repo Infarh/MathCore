@@ -382,7 +382,7 @@ public static class INotifyPropertyChangedExtensions
         if (obj is null) return;
         lock (__Subscribers)
         {
-            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new()) ?? throw new InvalidOperationException();
+            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => []) ?? throw new InvalidOperationException();
             var object_subscriber = object_subscribers.GetValueOrAddNew(PropertyName, () => new Subscriber<T>(obj, PropertyName)) ?? throw new InvalidOperationException();
             object_subscriber.OnPropertyChangedEvent += Handler;
         }
@@ -393,7 +393,7 @@ public static class INotifyPropertyChangedExtensions
     {
         lock (__Subscribers)
         {
-            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => new()) ?? throw new InvalidOperationException();
+            var object_subscribers = __Subscribers.GetValueOrAddNew(obj, () => []) ?? throw new InvalidOperationException();
             return (Subscriber<T>)object_subscribers.GetValueOrAddNew(PropertyName, () => new Subscriber<T>(obj, PropertyName)) ?? throw new InvalidOperationException();
         }
     }
