@@ -3924,6 +3924,34 @@ public static partial class IEnumerableExtensions
             }
     }
 
+    public static void DisposeAll<T>(this IEnumerable<T> items) where T : IDisposable
+    {
+        var exceptions = new List<Exception>();
+        foreach (var item in items)
+            try
+            {
+                item.Dispose();
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    // Сохраняем стек вызова запуская исключение и перехватывая его
+                    throw new InvalidOperationException($"Ошибка при освобождении ресурсов {item}", e).WithData("item", item);
+                }
+                catch (InvalidOperationException err)
+                {
+                    exceptions.Add(err);
+                }
+            }
+        
+        if(exceptions.Count == 0)
+            return;
+
+        throw new AggregateException("Ошибка в ходе вызова освобождения ресурсов", exceptions.ToArray());
+
+    }
+
 #if !NET8_0_OR_GREATER
 
     public static IOrderedEnumerable<T> Order<T>(this IEnumerable<T> items) where T : IComparable<T> => items.OrderBy(v => v);
