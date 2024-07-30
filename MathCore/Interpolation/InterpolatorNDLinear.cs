@@ -10,6 +10,14 @@ namespace MathCore.Interpolation;
 public class InterpolatorNDLinear
 {
     public static InterpolatorNDLinear LoadCSV(
+        string FilePath,
+        bool Header = true,
+        char Separator = ';',
+        bool SkipWrongLines = true,
+        Func<double[], double, bool>? ValueSelector = null)
+        => LoadCSV(new FileInfo(FilePath), Header, Separator, SkipWrongLines, ValueSelector);
+
+    public static InterpolatorNDLinear LoadCSV(
         FileInfo file,
         bool Header = true,
         char Separator = ';',
