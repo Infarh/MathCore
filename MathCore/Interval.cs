@@ -20,8 +20,8 @@ namespace MathCore;
 /// <typeparam name="T">Тип сравнимых величин</typeparam>
 [StructLayout(LayoutKind.Sequential)]
 [method: DST]
-public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclude) : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
-    where T : IComparable<T>
+public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclude, IComparer<T> Comparer) 
+    : IEquatable<Interval<T>>, IEquatable<(T Min, T Max)>, ICloneable<Interval<T>> 
 {
     /* ------------------------------------------------------------------------------------------ */
 
@@ -31,14 +31,33 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     /// <param name="Min">Нижняя граница интервала</param>
     /// <param name="Max">Верхняя граница интервала</param>
     [DST]
-    public Interval(T Min, T Max) : this(Min, true, Max, true) { }
+    public Interval(T Min, T Max) : this(Min, true, Max, true, Comparer<T>.Default) { }
+
+    /// <summary>Интервал</summary>
+    /// <param name="Min">Нижняя граница интервала</param>
+    /// <param name="Max">Верхняя граница интервала</param>
+    [DST]
+    public Interval(T Min, bool MinInclude, T Max, bool MaxInclude) : this(Min, MinInclude, Max, MaxInclude, Comparer<T>.Default) { }
+
+    /// <summary>Интервал</summary>
+    /// <param name="Min">Нижняя граница интервала</param>
+    /// <param name="Max">Верхняя граница интервала</param>
+    [DST]
+    public Interval(T Min, T Max, IComparer<T> Comparer) : this(Min, true, Max, true, Comparer) { }
 
     /// <summary>Интервал</summary>
     /// <param name="Min">Нижняя граница интервала</param>
     /// <param name="Max">Верхняя граница интервала</param>
     /// <param name="IncludeLimits">Включать пределы? (default:true)</param>
     [DST]
-    public Interval(T Min, T Max, bool IncludeLimits) : this(Min, IncludeLimits, Max, IncludeLimits) { }
+    public Interval(T Min, T Max, bool IncludeLimits) : this(Min, IncludeLimits, Max, IncludeLimits, Comparer<T>.Default) { }
+
+    /// <summary>Интервал</summary>
+    /// <param name="Min">Нижняя граница интервала</param>
+    /// <param name="Max">Верхняя граница интервала</param>
+    /// <param name="IncludeLimits">Включать пределы? (default:true)</param>
+    [DST]
+    public Interval(T Min, T Max, bool IncludeLimits, IComparer<T> Comparer) : this(Min, IncludeLimits, Max, IncludeLimits, Comparer) { }
 
     #endregion
 
@@ -54,6 +73,8 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     /* ------------------------------------------------------------------------------------------ */
 
     #region Поля
+
+    private readonly IComparer<T> Comparer = Comparer;
 
     /// <summary>Включена ли нижняя граница интервала?</summary>
     private readonly bool _MinInclude = MinInclude;
@@ -86,21 +107,21 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     public bool IsEmpty => Equals(_Min, _Max);
 
     /// <summary>Границы интервала инвертированы (минимум больше максимума)</summary>
-    public bool IsInverted => _Min.CompareTo(_Max) > 0;
+    public bool IsInverted => Comparer.Compare(_Min, _Max) > 0;
 
     #endregion
 
     /* ------------------------------------------------------------------------------------------ */
 
-    public Interval<T> IncludeMax(bool Include) => new(_Min, _MinInclude, _Max, Include);
-    public Interval<T> IncludeMin(bool Include) => new(_Min, Include, _Max, _MaxInclude);
-    public Interval<T> Include(bool IncludeMin, bool IncludeMax) => new(_Min, IncludeMin, _Max, IncludeMax);
-    public Interval<T> Include(bool Include) => new(_Min, Include, _Max, Include);
+    public Interval<T> IncludeMax(bool Include) => new(_Min, _MinInclude, _Max, Include, Comparer);
+    public Interval<T> IncludeMin(bool Include) => new(_Min, Include, _Max, _MaxInclude, Comparer);
+    public Interval<T> Include(bool IncludeMin, bool IncludeMax) => new(_Min, IncludeMin, _Max, IncludeMax, Comparer);
+    public Interval<T> Include(bool Include) => new(_Min, Include, _Max, Include, Comparer);
 
-    public Interval<T> SetMin(T Value) => new(Value, _MinInclude, _Max, _MaxInclude);
-    public Interval<T> SetMin(T Value, bool IncludeMin) => new(Value, IncludeMin, _Max, _MaxInclude);
-    public Interval<T> SetMax(T Value) => new(_Min, _MinInclude, Value, _MaxInclude);
-    public Interval<T> SetMax(T Value, bool IncludeMax) => new(_Min, _MinInclude, Value, IncludeMax);
+    public Interval<T> SetMin(T Value) => new(Value, _MinInclude, _Max, _MaxInclude, Comparer);
+    public Interval<T> SetMin(T Value, bool IncludeMin) => new(Value, IncludeMin, _Max, _MaxInclude, Comparer);
+    public Interval<T> SetMax(T Value) => new(_Min, _MinInclude, Value, _MaxInclude, Comparer);
+    public Interval<T> SetMax(T Value, bool IncludeMax) => new(_Min, _MinInclude, Value, IncludeMax, Comparer);
 
     /// <summary>
     /// Метод возвращает указанное значение, если оно находится внутри интервала,
@@ -112,15 +133,15 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     /// иначе соответствующая граница интервала
     /// </returns>
     [DST]
-    public T Normalize(T Value) => Value.CompareTo(_Max) > 0 ? _Max : (Value.CompareTo(_Min) < 0 ? _Min : Value);
+    public T Normalize(T Value) => Comparer.Compare(Value, _Max) > 0 ? _Max : (Comparer.Compare(Value, _Min) < 0 ? _Min : Value);
 
     /// <summary>Замена значения ссылки на значение границы интервала, если значение не входит в интервал</summary>
     /// <param name="Value">Проверяемое значение</param>
     public void Normalize(ref T Value)
     {
-        if (Value.CompareTo(_Max) > 0)
+        if (Comparer.Compare(Value, _Max) > 0)
             Value = _Max;
-        else if (Value.CompareTo(_Min) < 0)
+        else if (Comparer.Compare(Value, _Min) < 0)
             Value = _Min;
     }
 
@@ -129,9 +150,9 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     /// <returns>Истина, если значение входит в интервал</returns>
     [DST]
     public bool Check(T Value) =>
-        (_MinInclude && _Min.CompareTo(Value) == 0)
-        || (_MaxInclude && _Max.CompareTo(Value) == 0)
-        || (Value.CompareTo(_Min) > 0 && Value.CompareTo(_Max) < 0);
+        (_MinInclude && Comparer.Compare(_Min, Value) == 0)
+        || (_MaxInclude && Comparer.Compare(_Max, Value) == 0)
+        || (Comparer.Compare(Value, _Min) > 0 && Comparer.Compare(Value, _Max) < 0);
 
     /// <summary>Проверка - входит ли указанный интервал в текущий</summary>
     /// <param name="I">Проверяемый интервал</param>
@@ -142,11 +163,11 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     [DST]
     public bool IsIntersect(Interval<T> I)
     {
-        var min_to_min_compare = I._Min.CompareTo(_Min);
-        var min_to_max_compare = I._Min.CompareTo(_Max);
+        var min_to_min_compare = Comparer.Compare(I._Min, _Min);
+        var min_to_max_compare = Comparer.Compare(I._Min, _Max);
 
-        var max_to_min_compare = I._Max.CompareTo(_Min);
-        var max_to_max_compare = I._Max.CompareTo(_Max);
+        var max_to_min_compare = Comparer.Compare(I._Max, _Min);
+        var max_to_max_compare = Comparer.Compare(I._Max, _Max);
 
 
         if ((max_to_min_compare < 0 && min_to_min_compare < 0) || (min_to_max_compare > 0 && max_to_max_compare > 0)) return false;
@@ -160,7 +181,7 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
         throw new NotSupportedException($"Ошибка реализации метода проверки на пересечение интервалов {this}|{I}");
     }
 
-    public Interval<T> GetInvertedInterval() => new(Max, MaxInclude, Min, MinInclude);
+    public Interval<T> GetInvertedInterval() => new(Max, MaxInclude, Min, MinInclude, Comparer);
 
     public void WhileInInterval(T start, Action<T> Do, Func<T, T> Pos)
     {
@@ -244,7 +265,7 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     object ICloneable.Clone() => Clone();
 
     /// <inheritdoc />
-    public Interval<T> Clone() => new(_Min, _MinInclude, _Max, _MaxInclude);
+    public Interval<T> Clone() => new(_Min, _MinInclude, _Max, _MaxInclude, Comparer);
 
     /// <inheritdoc />
     [DST]
@@ -301,28 +322,28 @@ public readonly struct Interval<T>(T Min, bool MinInclude, T Max, bool MaxInclud
     [DST]
     public static bool operator >(Interval<T> I, T Value)
     {
-        var result = I._Min.CompareTo(Value);
+        var result = I.Comparer.Compare(I._Min, Value);
         return (result == 0 && !I._MinInclude) || result > 0;
     }
 
     [DST]
     public static bool operator <(Interval<T> I, T Value)
     {
-        var result = I._Max.CompareTo(Value);
+        var result = I.Comparer.Compare(I._Max, Value);
         return (result == 0 && !I._MaxInclude) || result < 0;
     }
 
     [DST]
     public static bool operator >(T Value, Interval<T> I)
     {
-        var result = Value.CompareTo(I._Max);
+        var result = I.Comparer.Compare(Value, I._Max);
         return (result == 0 && !I._MaxInclude) || result > 0;
     }
 
     [DST]
     public static bool operator <(T Value, Interval<T> I)
     {
-        var result = Value.CompareTo(I._Min);
+        var result = I.Comparer.Compare(Value, I._Min);
         return (result == 0 && !I._MinInclude) || result < 0;
     }
 

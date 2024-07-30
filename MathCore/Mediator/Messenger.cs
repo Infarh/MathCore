@@ -15,7 +15,7 @@ public class Messenger : IMessenger
     {
         var messages_type    = typeof(T);
         var handlers         = _Handlers.GetOrAdd(messages_type, _ => new());
-        var address_handlers = handlers.GetOrAdd(Address ?? "", _ => new());
+        var address_handlers = handlers.GetOrAdd(Address ?? "", _ => []);
         lock (address_handlers)
             address_handlers.Add(Handler);
     }

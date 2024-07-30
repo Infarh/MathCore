@@ -1,8 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Windows;
+﻿using System.IO;
 using System.Windows.Input;
 using System.Windows.Markup;
 
@@ -10,8 +6,6 @@ using MathCore.Interpolation;
 using MathCore.WPF;
 using MathCore.WPF.Commands;
 using MathCore.WPF.ViewModels;
-
-using Microsoft.Win32;
 
 using OxyPlot;
 
@@ -220,9 +214,6 @@ public class MainWindowViewModel() : TitledViewModel("SAR")
     #endregion
 
     #region property ValueSAR : double - SAR
-
-    /// <Summary>SAR</Summary>
-    private double _ValueSAR;
 
     /// <Summary>SAR</Summary>
     [DependencyOn(nameof(ValueT))]

@@ -7,7 +7,7 @@ namespace MathCore.Extensions;
 
 public static class MemoryEx
 {
-    public static Memory<T> Cast<T>(this Memory<byte> memory) where T : unmanaged
+    public static Memory<T> Cast<T>(this Memory<byte> memory) where T : struct
     {
         var t_memory = Unsafe.BitCast<Memory<byte>, Memory<T>>(memory);
         var size = Marshal.SizeOf(typeof(T));

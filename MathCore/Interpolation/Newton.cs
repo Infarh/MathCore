@@ -48,7 +48,7 @@ public class Newton : Interpolator, IInterpolator
                     { y_length, Y.Length },
                 }
             };
-
+        
         var length = X.Length;
 
         const string p_length = nameof(P) + "." + nameof(Array.Length);

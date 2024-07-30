@@ -16,6 +16,7 @@ public class InterpolatorNDLinearTests
 
         var interpolator = InterpolatorNDLinear.LoadCSV(file/*, ValueSelector: (_, v) => v > 0*/);
 
+                                  //dT      H      G      M
         var value_480 = interpolator[0, 10668, 28000, 0.480]; //0.504628
         var value_490 = interpolator[0, 10668, 28000, 0.490]; //0.514852
 
