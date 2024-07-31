@@ -89,4 +89,41 @@ public static class StringBuilderExtensions
 
     [StringFormatMethod("Format")]
     public static StringBuilder Append(this StringBuilder builder, bool If, string Format, params object[] args) => If ? builder.AppendFormat(Format, args) : builder;
+
+    public static bool EndWith(this StringBuilder str, string end, StringComparison comparison = StringComparison.Ordinal)
+    {
+        var str_len = str.Length;
+        var end_len = end.Length;
+        if (str_len < end_len) return false;
+
+        switch (comparison)
+        {
+            case StringComparison.CurrentCultureIgnoreCase:
+            case StringComparison.OrdinalIgnoreCase:
+                for (var i = 1; i <= end_len; i++)
+                    if (char.ToUpper(end[^i]) != char.ToUpper(str[^i]))
+                        return false;
+                return true;
+
+            case StringComparison.InvariantCultureIgnoreCase:
+                for (var i = 1; i <= end_len; i++)
+                    if (char.ToUpperInvariant(end[^i]) != char.ToUpperInvariant(str[^i]))
+                        return false;
+                return true;
+
+            default:
+                for (var i = 1; i <= end_len; i++)
+                    if (end[^i] != str[^i])
+                        return false;
+                return true;
+        }
+    }
+
+    public static StringBuilder TrimEnd(this StringBuilder str, string end, StringComparison comparison = StringComparison.Ordinal)
+    {
+        if (str.EndWith(end, comparison))
+            str.Length -= end.Length;
+
+        return str;
+    }
 }
